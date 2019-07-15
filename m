@@ -2,112 +2,104 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1746C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF8C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735002081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B7920868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPvQXZv+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WAVY+C9T";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PINET64B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfGOJn6 (ORCPT
+        id S1729679AbfGOJom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:43:58 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:43744 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbfGOJn5 (ORCPT
+        Mon, 15 Jul 2019 05:44:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41482 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbfGOJol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:43:57 -0400
-Received: by mail-yb1-f195.google.com with SMTP id y123so2908108yby.10;
-        Mon, 15 Jul 2019 02:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fZZ8WVXuOszSeHc/0c/yAH4kX+d3pVHoqUHa9dvC8uU=;
-        b=jPvQXZv+IvQvIOKDrE/1UTf4R3924nDi08kyG+WIj5baR4Tyt2FssXg65QToV335fR
-         C3pQAHW0mt0y+pH4H5pHFNVigxkFaRpqcNAB3MLhLG5q2s+P4LyJ1aghN9dZyKbU8nLb
-         +tDtSYrr0f8gdVeeIZpi09EmIyOIO0Q9X2MLV9gyJ1Q1Q1S5b8+YZVTEsmFL1iodhvC1
-         vwusUno/4/rnjI4P48FdcE7GU2ufn+LjRZS9nxF32RlChRWlIdguzVsFOzZhaO2rojUJ
-         xs1OnFebwIGoS6WFFiJQOVVdiD8lOq9z7qVhJUduZWLJUr9XeHSFuxdMZ1O0A5LWtLQr
-         z1SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fZZ8WVXuOszSeHc/0c/yAH4kX+d3pVHoqUHa9dvC8uU=;
-        b=pyO1WtDMeOlW6MvJToipU1cSmqRLvA/KfO4rN+/t9pKlQBlHZZTzTxJjrMQcRx01ZS
-         sV7Vi4uwhKMgh454ATP9hhY931GTSAA1Ms3MDXCLpEYW+I/Pv/ItZeCD1EYmp8Jk8mPq
-         dA8831Nm2gn5WSHuwknXMXTUjFIuE/YYh6ajWswHFUMxy7+Djj3we+ifCeYrxmSyNPel
-         kgi56hvzfpcCuBMQqD47m4NsFr+eKn8YJC483TC/8PquBU4mm8jy7gw1YglYrU1dTIef
-         IFBVOLQSNmv0Ez+BayTXN5JUjrcUf3tfiJg7lB4OAy/mNBF0vgLATYaLVgo7Qjsem/1k
-         AGxQ==
-X-Gm-Message-State: APjAAAWAuLn9r75DqyxHzo3Pb35hYWP6DYwEAdj/3wpEd1RnUtDCLzdk
-        8e2qOkyRfJISphl3SKFe3X304AoPtB0x7bnpy5leD/3IJk8=
-X-Google-Smtp-Source: APXvYqyshMjLjL343jXJYNns0AL0x11WqCb1cH108fR2yfBk7X87b8Pi43a3JUgN8FWpco10Ejn9jCi8Y49UB0rrw84=
-X-Received: by 2002:a25:768f:: with SMTP id r137mr15582022ybc.8.1563183836782;
- Mon, 15 Jul 2019 02:43:56 -0700 (PDT)
+        Mon, 15 Jul 2019 05:44:41 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4B0166049C; Mon, 15 Jul 2019 09:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563183880;
+        bh=ogNfDzJGeCchNe8Cj5MSCueMmkdzlA9bajadZwl42gg=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=WAVY+C9TLJZMiN4AxK19JddN/m8rBExJZ7kmfX90j6JcvPXD8ILrQC9gekhclHf3X
+         BMyzf5Nk7lXra4iWjIqvG2f2Lz1GG/LeVX0VwMGvGPA789E2zLsxS7bKBtNwJlUc1O
+         Ezt1fjkRrtkZEIUu4r8QylxIo2UjTjNBxMcYYliY=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 124296049C;
+        Mon, 15 Jul 2019 09:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563183879;
+        bh=ogNfDzJGeCchNe8Cj5MSCueMmkdzlA9bajadZwl42gg=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=PINET64BOpNC1lwjrFMaoBGTtCsE3gP3joRwqkgtvCJGY9hHuiNwzzhRZDME6AW/V
+         oY3AJ6i8ftdmCRgl3UlLTKeiIeKQLxuHbwKYrHq/oW9Ab4WnJ+fPTeVoHvS6h6+V9f
+         Nf4aHZro33Q5X+ImkDUtsvNj/+MFYj6HNjM3ODPA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 124296049C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rakesh Pillai <pillair@codeaurora.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Balaji Pothunoori <bpothuno@codeaurora.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        Pradeep kumar Chitrapu <pradeepc@codeaurora.org>,
+        Sriram R <srirrama@codeaurora.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ath10k: work around uninitialized vht_pfr variable
+References: <20190708125050.3689133-1-arnd@arndb.de>
+Date:   Mon, 15 Jul 2019 12:44:33 +0300
+In-Reply-To: <20190708125050.3689133-1-arnd@arndb.de> (Arnd Bergmann's message
+        of "Mon, 8 Jul 2019 14:50:06 +0200")
+Message-ID: <87v9w3pr7i.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <CGME20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd@eucas1p2.samsung.com>
- <20190715031851.6890-1-huangfq.daxian@gmail.com> <37046e7b-fdde-c10f-4850-0b3efd4a00cd@samsung.com>
-In-Reply-To: <37046e7b-fdde-c10f-4850-0b3efd4a00cd@samsung.com>
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Date:   Mon, 15 Jul 2019 17:43:45 +0800
-Message-ID: <CABXRUiQ_N=N=weMnRea4d6PXjfghta=U1xhdv-tZpSvaGBnXGg@mail.gmail.com>
-Subject: Re: [PATCH v3 15/24] media: exynos4-is: Remove call to memset after dma_alloc_coherent
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sylwester Nawrocki <s.nawrocki@samsung.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=
-=8815=E6=97=A5=E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=885:00=E5=AF=AB=E9=81=93=
-=EF=BC=9A
+Arnd Bergmann <arnd@arndb.de> writes:
+
+> As clang points out, the vht_pfr is assigned to a struct member
+> without being initialized in one case:
 >
-> On 7/15/19 05:18, Fuqian Huang wrote:
-> > In commit 518a2f1925c3
-> > ("dma-mapping: zero memory returned from dma_alloc_*"),
-> > dma_alloc_coherent has already zeroed the memory.
-> > So memset is not needed
+> drivers/net/wireless/ath/ath10k/mac.c:7528:7: error: variable 'vht_pfr' is used uninitialized whenever 'if' condition
+>       is false [-Werror,-Wsometimes-uninitialized]
+>                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
+>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/ath/ath10k/mac.c:7551:20: note: uninitialized use occurs here
+>                 arvif->vht_pfr = vht_pfr;
+>                                  ^~~~~~~
+> drivers/net/wireless/ath/ath10k/mac.c:7528:3: note: remove the 'if' if its condition is always true
+>                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
+>                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/ath/ath10k/mac.c:7483:12: note: initialize the variable 'vht_pfr' to silence this warning
+>         u8 vht_pfr;
 >
-> I can't see any changes in the above mentioned commit that would
-> make dma_alloc_coherent() (arm_coherent_dma_alloc()) zeroing its
-> returned memory. Maybe you need to add a reference to some other
-> instead?
+> Add an explicit but probably incorrect initialization here.
+> I suspect we want a better fix here, but chose this approach to
+> illustrate the issue.
 >
-In the last version patch set, I referenced the commit af7ddd8a627c
-("Merge tag 'dma-mapping-4.21' of
-git://git.infradead.org/users/hch/dma-mapping")
-in the commit log.
-The merged commit mentions that
-"ensure dma_alloc_coherent returns zeroed memory to
-avoid kernel data leaks through userspace.
-We already did this for most common architectures,
-but this ensures we do it everywhere."
-dma_alloc_coherent has already zeroed the memory during allocation
-and the commit also deprecates dma_zalloc_coherent.
-Greg and other maintainer told me to use the actual commit
-rather than the merged commit.
-So I reference the commit that ensures the dma_alloc_coherent to
-returns zeroed memory every where.
-Maybe this belongs to the `most common achitectures` and is not impacted
-by the mentioned change.
-Should I rewrite the commit log? Just mention that dma_alloc_coherent
-has already zeroed the memory and not to reference the commit?
+> Fixes: 8b97b055dc9d ("ath10k: fix failure to set multiple fixed rate")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+I'll queue this for v5.3.
+
+-- 
+Kalle Valo
