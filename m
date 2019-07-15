@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE390C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7ECC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C7A212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CE42083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199258;
-	bh=HC93si3eU8rA7ko8jkkmx7/BKlXaMUrZjDSLR/e38WE=;
+	s=default; t=1563199263;
+	bh=Ka9LjuFY7J/pn+330gSHEmJ1nVVqs86F2XRAsFPE378=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PNuBV5f7FOHMBBEeCelZK8Kcp71Pa4S2v/ZrpCmYuQv/QQC0a/L4PFLVWO8ck4Bl8
-	 9rBQRhIim9uiuZOGOs5A4/G6PX2RuAHcH0NghKVrG7cbPtcZ88gO2NRigEyLH5c6jg
-	 O7a4M6PrL22KhRJJ/Mt09R/A0LjTpp+lzgw8TcNg=
+	b=KLNry0+D7FUoPggxwqpXGw1La/6MJeqCFE0WxivOjhH1yHV5iRLcLlV8tsvMunB5j
+	 7e4yz2U1G4VcEje5ERgIaMjYxTIXfhe5508KvyqIFs7ABM3831lRE6keUJNxneCApn
+	 zz5wJ3pCxgIWBk9wS340caqSjERWPrRNhNliTuis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbfGOOA5 (ORCPT
+        id S1733101AbfGOOBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41012 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387444AbfGON77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:59:59 -0400
+        id S2387449AbfGOOA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:00:57 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7906A20C01;
-        Mon, 15 Jul 2019 13:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB93E212F5;
+        Mon, 15 Jul 2019 14:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199198;
-        bh=HC93si3eU8rA7ko8jkkmx7/BKlXaMUrZjDSLR/e38WE=;
+        s=default; t=1563199256;
+        bh=Ka9LjuFY7J/pn+330gSHEmJ1nVVqs86F2XRAsFPE378=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nR74mRFC4cCo+PfCe/bf3lMQRqJZKUqVRQk5l9ZFpoxL+QcTQKC0TZ2+A0hIRKgXb
-         yPYiEO0afnOo/XAwIEKDaB1QpeL/UoVRXsylXkQSfEXueds6xk8a7ndrVSSENhVY4e
-         v/xYFGYhwrCPlp1dhDYd4NxR1v4JFAqwLCC5SIPw=
+        b=YGvy55SioLsVowBsHhlbOfLHjOrQYMX3q8KPTXOLP3qUnMzhRzPLp/IubXQMXe4hO
+         5HbN7zhTQD9r6G1ZaaLyahs+vclC8xUxyn53aaPrFqF6o/6tuDEFrIfqgLzMAsDDSp
+         /8h/xHbtGWq1Nsq/D1KjiQf8iD8GKWB5WpWTgZtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
+Cc:     Phong Tran <tranmanphong@gmail.com>,
+        syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 213/249] bnxt_en: Fix statistics context reservation logic for RDMA driver.
-Date:   Mon, 15 Jul 2019 09:46:18 -0400
-Message-Id: <20190715134655.4076-213-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.2 222/249] net: usb: asix: init MAC address buffers
+Date:   Mon, 15 Jul 2019 09:46:27 -0400
+Message-Id: <20190715134655.4076-222-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,60 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit d77b1ad8e87dc5a6cd0d9158b097a4817946ca3b ]
+[ Upstream commit 78226f6eaac80bf30256a33a4926c194ceefdf36 ]
 
-The current logic assumes that the RDMA driver uses one statistics
-context adjacent to the ones used by the network driver.  This
-assumption is not true and the statistics context used by the
-RDMA driver is tied to its MSIX base vector.  This wrong assumption
-can cause RDMA driver failure after changing ethtool rings on the
-network side.  Fix the statistics reservation logic accordingly.
+This is for fixing bug KMSAN: uninit-value in ax88772_bind
 
-Fixes: 780baad44f0f ("bnxt_en: Reserve 1 stat_ctx for RDMA driver.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Tested by
+https://groups.google.com/d/msg/syzkaller-bugs/aFQurGotng4/eB_HlNhhCwAJ
+
+Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
+
+syzbot found the following crash on:
+
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=136d720ea00000
+kernel config:
+https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link:
+https://syzkaller.appspot.com/bug?extid=8a3fc6674bbc3978ed4e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:
+https://syzkaller.appspot.com/x/repro.syz?x=12788316a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120359aaa00000
+
+==================================================================
+BUG: KMSAN: uninit-value in is_valid_ether_addr
+include/linux/etherdevice.h:200 [inline]
+BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr
+drivers/net/usb/asix_devices.c:73 [inline]
+BUG: KMSAN: uninit-value in ax88772_bind+0x93d/0x11e0
+drivers/net/usb/asix_devices.c:724
+CPU: 0 PID: 3348 Comm: kworker/0:2 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
+  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
+  ax88772_bind+0x93d/0x11e0 drivers/net/usb/asix_devices.c:724
+  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/net/usb/asix_devices.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index b9bc829aa9da..9090c79387c1 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -5508,7 +5508,16 @@ static int bnxt_cp_rings_in_use(struct bnxt *bp)
- 
- static int bnxt_get_func_stat_ctxs(struct bnxt *bp)
+diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
+index c9bc96310ed4..ef548beba684 100644
+--- a/drivers/net/usb/asix_devices.c
++++ b/drivers/net/usb/asix_devices.c
+@@ -226,7 +226,7 @@ static void asix_phy_reset(struct usbnet *dev, unsigned int reset_bits)
+ static int ax88172_bind(struct usbnet *dev, struct usb_interface *intf)
  {
--	return bp->cp_nr_rings + bnxt_get_ulp_stat_ctxs(bp);
-+	int ulp_stat = bnxt_get_ulp_stat_ctxs(bp);
-+	int cp = bp->cp_nr_rings;
-+
-+	if (!ulp_stat)
-+		return cp;
-+
-+	if (bnxt_nq_rings_in_use(bp) > cp + bnxt_get_ulp_msix_num(bp))
-+		return bnxt_get_ulp_msix_base(bp) + ulp_stat;
-+
-+	return cp + ulp_stat;
- }
+ 	int ret = 0;
+-	u8 buf[ETH_ALEN];
++	u8 buf[ETH_ALEN] = {0};
+ 	int i;
+ 	unsigned long gpio_bits = dev->driver_info->data;
  
- static bool bnxt_need_reserve_rings(struct bnxt *bp)
-@@ -7477,11 +7486,7 @@ unsigned int bnxt_get_avail_cp_rings_for_en(struct bnxt *bp)
- 
- unsigned int bnxt_get_avail_stat_ctxs_for_en(struct bnxt *bp)
+@@ -677,7 +677,7 @@ static int asix_resume(struct usb_interface *intf)
+ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
  {
--	unsigned int stat;
--
--	stat = bnxt_get_max_func_stat_ctxs(bp) - bnxt_get_ulp_stat_ctxs(bp);
--	stat -= bp->cp_nr_rings;
--	return stat;
-+	return bnxt_get_max_func_stat_ctxs(bp) - bnxt_get_func_stat_ctxs(bp);
- }
+ 	int ret, i;
+-	u8 buf[ETH_ALEN], chipcode = 0;
++	u8 buf[ETH_ALEN] = {0}, chipcode = 0;
+ 	u32 phyid;
+ 	struct asix_common_private *priv;
  
- int bnxt_get_avail_msix(struct bnxt *bp, int num)
+@@ -1061,7 +1061,7 @@ static const struct net_device_ops ax88178_netdev_ops = {
+ static int ax88178_bind(struct usbnet *dev, struct usb_interface *intf)
+ {
+ 	int ret;
+-	u8 buf[ETH_ALEN];
++	u8 buf[ETH_ALEN] = {0};
+ 
+ 	usbnet_get_endpoints(dev,intf);
+ 
 -- 
 2.20.1
 
