@@ -2,154 +2,82 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE93C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0275C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4289A2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDFC2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbfGOQyM (ORCPT
+        id S1731438AbfGOQ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:54:12 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33086 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729533AbfGOQyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:54:11 -0400
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id DF8A4F5A9A65B8C0C267;
-        Mon, 15 Jul 2019 17:54:09 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 15 Jul
- 2019 17:54:04 +0100
-Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Rob Landley <rob@landley.net>, <hpa@zytor.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-CC:     Mimi Zohar <zohar@linux.ibm.com>, <viro@zeniv.linux.org.uk>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bug-cpio@gnu.org>,
-        <zohar@linux.vnet.ibm.com>, <silviu.vlasceanu@huawei.com>,
-        <dmitry.kasatkin@huawei.com>, <takondra@cisco.com>,
-        <kamensky@cisco.com>, <arnd@arndb.de>, <james.w.mcmechan@gmail.com>
-References: <20190523121803.21638-1-roberto.sassu@huawei.com>
- <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
- <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
- <33cfb804-6a17-39f0-92b7-01d54e9c452d@huawei.com>
- <1561909199.3985.33.camel@linux.ibm.com>
- <45164486-782f-a442-e442-6f56f9299c66@huawei.com>
- <1561991485.4067.14.camel@linux.ibm.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <f85ed711-f583-51cd-34e2-80018a592280@huawei.com>
-Date:   Mon, 15 Jul 2019 18:54:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 15 Jul 2019 12:58:25 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:51743 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729533AbfGOQ6Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 12:58:24 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TX.M-FQ_1563209898;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX.M-FQ_1563209898)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Jul 2019 00:58:20 +0800
+Subject: Re: [PATCH] mm: page_alloc: document kmemleak's non-blockable
+ __GFP_NOFAIL case
+To:     Qian Cai <cai@lca.pw>, Catalin Marinas <catalin.marinas@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     "dvyukov@google.com" <dvyukov@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190715131732.GX29483@dhcp22.suse.cz>
+ <F89E7123-C21C-41AA-8084-1DB4C832D7BD@gmail.com>
+ <1563203882.4610.1.camel@lca.pw>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <82cbc350-c2a8-e653-208a-a533771fe653@linux.alibaba.com>
+Date:   Mon, 15 Jul 2019 09:58:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <1561991485.4067.14.camel@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1563203882.4610.1.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob, Peter, Arvind, did you have the chance to have a look at this
-version of the patch set?
-
-Thanks
-
-Roberto
 
 
-On 7/1/2019 4:31 PM, Mimi Zohar wrote:
-> On Mon, 2019-07-01 at 16:42 +0300, Roberto Sassu wrote:
->> On 6/30/2019 6:39 PM, Mimi Zohar wrote:
->>> On Wed, 2019-06-26 at 10:15 +0200, Roberto Sassu wrote:
->>>> On 6/3/2019 8:32 PM, Rob Landley wrote:
->>>>> On 6/3/19 4:31 AM, Roberto Sassu wrote:
->>>>>>> This patch set aims at solving the following use case: appraise files from
->>>>>>> the initial ram disk. To do that, IMA checks the signature/hash from the
->>>>>>> security.ima xattr. Unfortunately, this use case cannot be implemented
->>>>>>> currently, as the CPIO format does not support xattrs.
->>>>>>>
->>>>>>> This proposal consists in including file metadata as additional files named
->>>>>>> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
->>>>>>> kernel recognizes these special files from the file name, and calls the
->>>>>>> appropriate parser to add metadata to the previously extracted file. It has
->>>>>>> been proposed to use bit 17:16 of the file mode as a way to recognize files
->>>>>>> with metadata, but both the kernel and the cpio tool declare the file mode
->>>>>>> as unsigned short.
->>>>>>
->>>>>> Any opinion on this patch set?
->>>>>>
->>>>>> Thanks
->>>>>>
->>>>>> Roberto
->>>>>
->>>>> Sorry, I've had the window open since you posted it but haven't gotten around to
->>>>> it. I'll try to build it later today.
->>>>>
->>>>> It does look interesting, and I have no objections to the basic approach. I
->>>>> should be able to add support to toybox cpio over a weekend once I've got the
->>>>> kernel doing it to test against.
->>>>
->>>> Ok.
->>>>
->>>> Let me give some instructions so that people can test this patch set.
->>>>
->>>> To add xattrs to the ram disk embedded in the kernel it is sufficient
->>>> to set CONFIG_INITRAMFS_FILE_METADATA="xattr" and
->>>> CONFIG_INITRAMFS_SOURCE="<file with xattr>" in the kernel configuration.
->>>>
->>>> To add xattrs to the external ram disk, it is necessary to patch cpio:
->>>>
->>>> https://github.com/euleros/cpio/commit/531cabc88e9ecdc3231fad6e4856869baa9a91ef
->>>> (xattr-v1 branch)
->>>>
->>>> and dracut:
->>>>
->>>> https://github.com/euleros/dracut/commit/a2dee56ea80495c2c1871bc73186f7b00dc8bf3b
->>>> (digest-lists branch)
->>>>
->>>> The same modification can be done for mkinitramfs (add '-e xattr' to the
->>>> cpio command line).
->>>>
->>>> To simplify the test, it would be sufficient to replace only the cpio
->>>> binary and the dracut script with the modified versions. For dracut, the
->>>> patch should be applied to the local dracut (after it has been renamed
->>>> to dracut.sh).
->>>>
->>>> Then, run:
->>>>
->>>> dracut -e xattr -I <file with xattr> (add -f to overwrite the ram disk)
->>>>
->>>> Xattrs can be seen by stopping the boot process for example by adding
->>>> rd.break to the kernel command line.
->>>
->>> A simple way of testing, without needing any changes other than the
->>> kernel patches, is to save the dracut temporary directory by supplying
->>> "--keep" on the dracut command line, calling
->>> usr/gen_initramfs_list.sh, followed by usr/gen_init_cpio with the "-e
->>> xattr" option.
+On 7/15/19 8:18 AM, Qian Cai wrote:
+> On Mon, 2019-07-15 at 10:01 -0500, Catalin Marinas wrote:
+>> On 15 Jul 2019, at 08:17, Michal Hocko <mhocko@kernel.org> wrote:
+>>> On Sat 13-07-19 04:49:04, Yang Shi wrote:
+>>>> When running ltp's oom test with kmemleak enabled, the below warning was
+>>>> triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
+>>>> passed in:
+>>> kmemleak is broken and this is a long term issue. I thought that
+>>> Catalin had something to address this.
+>> What needs to be done in the short term is revert commit
+>> d9570ee3bd1d4f20ce63485f5ef05663866fe6c0. Longer term the solution is to embed
+>> kmemleak metadata into the slab so that we don’t have the situation where the
+>> primary slab allocation success but the kmemleak metadata fails.
 >>
->> Alternatively, follow the instructions to create the embedded ram disk
->> with xattrs, and use the existing external ram disk created with dracut
->> to check if xattrs are created.
-> 
-> True, but this alternative is for those who normally use dracut to
-> create an initramfs, but don't want to update cpio or dracut.
-> 
-> Mimi
-> 
+>> I’m on holiday for one more week with just a phone to reply from but feel free
+>> to revert the above commit. I’ll follow up with a better solution.
+> Well, the reverting will only make the situation worst for the kmemleak under
+> memory pressure. In the meantime, if someone wants to push for the mempool
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+I think this is expected by reverting that commit since kmemleak 
+metadata could fail. But, it could fail too even though that commit is 
+not reverted if the context is non-blockable.
+
+> solution with tunable pool sizes along with the reverting, that could be an
+> improvement.
+>
+> https://lore.kernel.org/linux-mm/20190328145917.GC10283@arrakis.emea.arm.com/
+
