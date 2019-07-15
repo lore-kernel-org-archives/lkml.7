@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_RED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF5EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F0C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E072054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCF82080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203068;
-	bh=y3JRFyP6Z6LQye0vFZIpV0p99KiojwddtijmBPKCz4k=;
+	s=default; t=1563203071;
+	bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZp1ahRm88EtJ92n0TvlhR1lmBkFmTV2VYXxMwQey+ItKqfOKnsFX4FGUVPEU5FlO
-	 Ei1b+oeKnNSA1GtEANmQ2ZQS90JyA5sjxAVzrr1sNtXK6Ekfkv65zCedm/74J6oeiv
-	 m26QB+XnH5iKoZ4Mzu/bo7rdtH+MpZ2dvaYNLK/U=
+	b=YX0aARuLamNdRw0nlHNZbGlza9jk/zHhN1jgcyPTXmNUXGYg60emTXTM7qxAWXdZd
+	 8zJk5on+mkwzsv8oXj8oP3PCyDDz5OJNoA3EYcRIZLUGzjfjhybTh3Hlzf5iYiSU31
+	 QvdApm992+6dIapueuNwF2GPNp2YDo8OJlt8rBFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387964AbfGOOHv (ORCPT
+        id S2389132AbfGOPEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:07:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388219AbfGOOHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:07:48 -0400
+        id S2388219AbfGOOHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:07:52 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E10E206B8;
-        Mon, 15 Jul 2019 14:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A88D020868;
+        Mon, 15 Jul 2019 14:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199668;
-        bh=y3JRFyP6Z6LQye0vFZIpV0p99KiojwddtijmBPKCz4k=;
+        s=default; t=1563199671;
+        bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UG/80HU47v0bFBZRWPiIgeamvPFtEFEP5HEz5AQdJrJw8AXROHmUqMH3I1fyV+tkg
-         st4yKfybRcItiMvSTdITzrjhyAH3mlyLR+g4fE5mqz+0zPh0V6zBoL9wXozuFVljh0
-         x0omt0y33QnAUljHgVKL6MbSxT9lIfZOfZ45FLdg=
+        b=tuoeG2Il32KuIThAUFzci446jxEmRqd+lxB1GhGq8r9KaaEBG/+94VwiRaOk1t49V
+         dLDK2AsNqUabELA5WTwbrcEATmtwVJcVRueklRiYzGEE/cdNqOzVCq9y6wvvbqbJOP
+         fxZ36kkfQUydIodiniFnhslmUU67NGQjna3Gt0iM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Hancock <hancock@sedsystems.ca>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 066/219] net: axienet: Fix race condition causing TX hang
-Date:   Mon, 15 Jul 2019 10:01:07 -0400
-Message-Id: <20190715140341.6443-66-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 068/219] RAS/CEC: Fix pfn insertion
+Date:   Mon, 15 Jul 2019 10:01:09 -0400
+Message-Id: <20190715140341.6443-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,64 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancock@sedsystems.ca>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
+[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
 
-It is possible that the interrupt handler fires and frees up space in
-the TX ring in between checking for sufficient TX ring space and
-stopping the TX queue in axienet_start_xmit. If this happens, the
-queue wake from the interrupt handler will occur before the queue is
-stopped, causing a lost wakeup and the adapter's transmit hanging.
+When inserting random PFNs for debugging the CEC through
+(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
+multiple values get inserted per a single write.
 
-To avoid this, after stopping the queue, check again whether there is
-sufficient space in the TX ring. If so, wake up the queue again.
+That is because simple_attr_write() interprets a retval of 0 as
+success and claims the whole input. However, pfn_set() returns the
+cec_add_elem() value, which, if > 0 and smaller than the whole input
+length, makes glibc continue issuing the write syscall until there's
+input left:
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  pfn_set
+  simple_attr_write
+  debugfs_attr_write
+  full_proxy_write
+  vfs_write
+  ksys_write
+  do_syscall_64
+  entry_SYSCALL_64_after_hwframe
+
+leading to those repeated calls.
+
+Return 0 to fix that.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/ras/cec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 4041c75997ba..38a8ef194e05 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -614,6 +614,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index f85d6b7a1984..5d2b2c02cbbe 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -369,7 +369,9 @@ static int pfn_set(void *data, u64 val)
+ {
+ 	*(u64 *)data = val;
  
- 	ndev->stats.tx_packets += packets;
- 	ndev->stats.tx_bytes += size;
+-	return cec_add_elem(val);
++	cec_add_elem(val);
 +
-+	/* Matches barrier in axienet_start_xmit */
-+	smp_mb();
-+
- 	netif_wake_queue(ndev);
++	return 0;
  }
  
-@@ -669,9 +673,19 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
- 
- 	if (axienet_check_tx_bd_space(lp, num_frag)) {
--		if (!netif_queue_stopped(ndev))
--			netif_stop_queue(ndev);
--		return NETDEV_TX_BUSY;
-+		if (netif_queue_stopped(ndev))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_stop_queue(ndev);
-+
-+		/* Matches barrier in axienet_start_xmit_done */
-+		smp_mb();
-+
-+		/* Space might have just been freed - check again */
-+		if (axienet_check_tx_bd_space(lp, num_frag))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_wake_queue(ndev);
- 	}
- 
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
+ DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
 -- 
 2.20.1
 
