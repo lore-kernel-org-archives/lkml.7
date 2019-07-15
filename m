@@ -4,94 +4,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA6C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADABC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E5420896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EE720896
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200520;
-	bh=5KpwBiolgatbtUkN/plbwqIBH7FRPYA+Rb8GfzJyAIY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ft6BW7a/Q+w+xnD62HQwPGB0y7+3sqY+/VMthdR8vxKtE4HECw5Y9FQZsMJpaWFa7
-	 dqdGS12vZCw0wVuzr0fW2XDralwyB03AB2zIRCTFR6RXVMtXPub21zuGqCy76nUqPX
-	 QttOv5JUxVzVsJP85bWGRe/mN1exFER9nQUd/0tc=
+	s=default; t=1563200523;
+	bh=8aMhZObp+OV6R+0Pf2IC4tAtq3tomyGvUrXruWhPUoI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iv5tQZqPfwR6uZISLQEq7h5Hs+IGFs2PTmjCuL8r3N9Ms6aByZVgNsaf3+tKC7fn6
+	 n4fyGZrnA8fkAAIu5n6+flvF4ayVhaDxSiGHuGxHD8jj0JL5OOA1Nq4vfFWNNN+5nS
+	 OnMzyNcgY2Yp66+nvspZMQZxdcYLTd0qEGFoD9dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390562AbfGOOV7 (ORCPT
+        id S2390127AbfGOOV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390533AbfGOOVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390004AbfGOOVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 10:21:51 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (d192-24-91-215.try.wideopenwest.com [24.192.215.91])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A00A02184E;
-        Mon, 15 Jul 2019 14:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D342184C;
+        Mon, 15 Jul 2019 14:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1563200510;
-        bh=5KpwBiolgatbtUkN/plbwqIBH7FRPYA+Rb8GfzJyAIY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gkN/fp8M9Evwi0DEeKPAlVexA5/71pA3SmAmd0pmPQFnU4fx8CuEF1h4QlBzmreQ
-         GRM0z2VhYiGFa5nf3d0XEiWZoyN2LrU1GzBB9HT8LVMg9Y+EbSCFBg9kONmip31F9u
-         w3Y0HANHPaUdMbo1PZQGBdZIhEzoJt3et+aAdFAU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 066/158] ASoC: meson: axg-tdm: fix sample clock inversion
-Date:   Mon, 15 Jul 2019 10:16:37 -0400
-Message-Id: <20190715141809.8445-66-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+        bh=8aMhZObp+OV6R+0Pf2IC4tAtq3tomyGvUrXruWhPUoI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CHG6tDR6ScJFj8bAHpOx7eMShmwPYizVnXpdP8cPQMLJgnbg+mW0KuTbNiAWfnT4D
+         ypqe+rM31ZHkrPTu5UGXO42Ag5E2swcKWLFQ4/gguFge9pwJ8TGdHCEfZ40jFmPore
+         8RXk3um9of4WsBsU6mrxx7af7igpveBwmmqRQaag=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] Revert "x86/ptrace: Prevent ptrace from clearing the FS/GS selector" and fix the test
+Date:   Mon, 15 Jul 2019 07:21:44 -0700
+Message-Id: <fca39c478ea7fb15bc76fe8a36bd180810a067f6.1563200250.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+This reverts commit 48f5e52e916b55fb73754833efbacc7f8081a159.
 
-[ Upstream commit cb36ff785e868992e96e8b9e5a0c2822b680a9e2 ]
+The ptrace ABI change was a prerequisite to the proposed design for
+FSGSBASE.  Since FSGSBASE support has been reverted, and since I'm
+not convinced that the ABI was ever adequately tested, revert the
+ABI change as well.
 
-The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
-so the test to check if the format is i2s is wrong. Because of this the
-clock setting may be wrong. For example, the sample clock gets inverted
-in DSP B mode, when it should not.
+This also modifies the test case so that it tests the preexisting
+behavior.
 
-Fix the lrclk invert helper function
-
-Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- sound/soc/meson/axg-tdm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/ptrace.c               | 14 ++++++++++++--
+ tools/testing/selftests/x86/fsgsbase.c | 22 ++++------------------
+ 2 files changed, 16 insertions(+), 20 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
-index e578b6f40a07..5774ce0916d4 100644
---- a/sound/soc/meson/axg-tdm.h
-+++ b/sound/soc/meson/axg-tdm.h
-@@ -40,7 +40,7 @@ struct axg_tdm_iface {
- 
- static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
- {
--	return (fmt & SND_SOC_DAIFMT_I2S) ^
-+	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
- 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
- }
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 3108cdc00b29..a166c960bc9e 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -397,12 +397,22 @@ static int putreg(struct task_struct *child,
+ 	case offsetof(struct user_regs_struct,fs_base):
+ 		if (value >= TASK_SIZE_MAX)
+ 			return -EIO;
+-		x86_fsbase_write_task(child, value);
++		/*
++		 * When changing the FS base, use do_arch_prctl_64()
++		 * to set the index to zero and to set the base
++		 * as requested.
++		 */
++		if (child->thread.fsbase != value)
++			return do_arch_prctl_64(child, ARCH_SET_FS, value);
+ 		return 0;
+ 	case offsetof(struct user_regs_struct,gs_base):
++		/*
++		 * Exactly the same here as the %fs handling above.
++		 */
+ 		if (value >= TASK_SIZE_MAX)
+ 			return -EIO;
+-		x86_gsbase_write_task(child, value);
++		if (child->thread.gsbase != value)
++			return do_arch_prctl_64(child, ARCH_SET_GS, value);
+ 		return 0;
+ #endif
+ 	}
+diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
+index 5ab4c60c100e..15a329da59fa 100644
+--- a/tools/testing/selftests/x86/fsgsbase.c
++++ b/tools/testing/selftests/x86/fsgsbase.c
+@@ -489,25 +489,11 @@ static void test_ptrace_write_gsbase(void)
+ 		 * selector value is changed or not by the GSBASE write in
+ 		 * a ptracer.
+ 		 */
+-		if (gs != *shared_scratch) {
+-			nerrs++;
+-			printf("[FAIL]\tGS changed to %lx\n", gs);
+-
+-			/*
+-			 * On older kernels, poking a nonzero value into the
+-			 * base would zero the selector.  On newer kernels,
+-			 * this behavior has changed -- poking the base
+-			 * changes only the base and, if FSGSBASE is not
+-			 * available, this may have no effect.
+-			 */
+-			if (gs == 0)
+-				printf("\tNote: this is expected behavior on older kernels.\n");
+-		} else if (have_fsgsbase && (base != 0xFF)) {
+-			nerrs++;
+-			printf("[FAIL]\tGSBASE changed to %lx\n", base);
++		if (gs == 0 && base == 0xFF) {
++			printf("[OK]\tGS was reset as expected\n");
+ 		} else {
+-			printf("[OK]\tGS remained 0x%hx%s", *shared_scratch, have_fsgsbase ? " and GSBASE changed to 0xFF" : "");
+-			printf("\n");
++			nerrs++;
++			printf("[FAIL]\tGS=0x%lx, GSBASE=0x%lx (should be 0, 0xFF)\n", gs, base);
+ 		}
+ 	}
  
 -- 
-2.20.1
+2.21.0
 
