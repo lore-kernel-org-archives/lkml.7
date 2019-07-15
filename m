@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3577C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BAFC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B390120C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2728F2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199213;
-	bh=Y89c70ExzTxcWGPHXa29Z8C41o1QTD76E423cWYFRAs=;
+	s=default; t=1563199218;
+	bh=HVwfv/xPdc+JafPoW5hZgKYeM8SgLs9kQUl1bB803XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXG2D1JZnNsie+VaHNoApntpjULoMdQdCZm4EkSDF8XMk5zH+q+lGPEtLjSzXJ6hK
-	 Uc4SqfT6dSoad9DD2NV9DemLGS73f9EJBjP1Gj4l+QndJ1urJaO/u8twPjaZops8tY
-	 zmTXTMmVm7GyfcoPZuuo8bcpG24pUaJsjldkiNOo=
+	b=s5NoCp6OHbGYG97ahrfngPvh3okfjikIlYFuB7GPydaQCwJ7XFcwdCtfwXfM1O34W
+	 FEnRubiNNohOQpnRZ2IQHQ7Xc7ITHkakMhCM7cVRJe3Z8uF4A5ydSo0misWx17cKOv
+	 4dEbuHMQBVM34LUShPj6q9h8c5JMJADIzv1NUz7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbfGOOAM (ORCPT
+        id S1733197AbfGOOAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:00:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:00:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387410AbfGON75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:59:57 -0400
+        id S2387484AbfGOOAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:00:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4418B212F5;
-        Mon, 15 Jul 2019 13:59:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417D0212F5;
+        Mon, 15 Jul 2019 13:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199196;
-        bh=Y89c70ExzTxcWGPHXa29Z8C41o1QTD76E423cWYFRAs=;
+        s=default; t=1563199200;
+        bh=HVwfv/xPdc+JafPoW5hZgKYeM8SgLs9kQUl1bB803XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjQFbG1Q6sViSnzlcj1FctjtncsdyjRc6FoeYgZpY8Ig1yHKLey5i+Hp/jeqWmJTo
-         2hgWSpgq6hPYZIcatGJ0JKkSOs2ZSa1YERaSjtcWN2XGzFgsnrRuHSeTW4rjWWnzFz
-         i/fAERhKooudTYoXIhGR4RArJ7u2XUge0XNoOdDo=
+        b=X2XJ+9yMcI9Vb7IFzI3Cep/fcVwOGdzVLO2nVA/R9iqbCnpVAVzaOHZ0Hc6/sqNEA
+         FA0g1V2NNeE7/JeyRUC/83nZHZexeRS/wMWLEtimZ68HJpu2WUEbA6kf3y+ltNu6yJ
+         wcH1HU3SbOiz+TrfKtMGR3H5XkxeaLRkmSbNkR6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Chan <michael.chan@broadcom.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 212/249] bnxt_en: Disable bus master during PCI shutdown and driver unload.
-Date:   Mon, 15 Jul 2019 09:46:17 -0400
-Message-Id: <20190715134655.4076-212-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 214/249] bnxt_en: Cap the returned MSIX vectors to the RDMA driver.
+Date:   Mon, 15 Jul 2019 09:46:19 -0400
+Message-Id: <20190715134655.4076-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,48 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit c20dc142dd7b2884b8570eeab323bcd4a84294fa ]
+[ Upstream commit 1dbc59fa4bbaa108b641cd65a54f662b75e4ed36 ]
 
-Some chips with older firmware can continue to perform DMA read from
-context memory even after the memory has been freed.  In the PCI shutdown
-method, we need to call pci_disable_device() to shutdown DMA to prevent
-this DMA before we put the device into D3hot.  DMA memory request in
-D3hot state will generate PCI fatal error.  Similarly, in the driver
-remove method, the context memory should only be freed after DMA has
-been shutdown for correctness.
+In an earlier commit to improve NQ reservations on 57500 chips, we
+set the resv_irqs on the 57500 VFs to the fixed value assigned by
+the PF regardless of how many are actually used.  The current
+code assumes that resv_irqs minus the ones used by the network driver
+must be the ones for the RDMA driver.  This is no longer true and
+we may return more MSIX vectors than requested, causing inconsistency.
+Fix it by capping the value.
 
-Fixes: 98f04cf0f1fc ("bnxt_en: Check context memory requirements from firmware.")
+Fixes: 01989c6b69d9 ("bnxt_en: Improve NQ reservations.")
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index f758b2e0591f..b9bc829aa9da 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -10262,10 +10262,10 @@ static void bnxt_remove_one(struct pci_dev *pdev)
- 	bnxt_dcb_free(bp);
- 	kfree(bp->edev);
- 	bp->edev = NULL;
-+	bnxt_cleanup_pci(bp);
- 	bnxt_free_ctx_mem(bp);
- 	kfree(bp->ctx);
- 	bp->ctx = NULL;
--	bnxt_cleanup_pci(bp);
- 	bnxt_free_port_stats(bp);
- 	free_netdev(dev);
- }
-@@ -10859,6 +10859,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+index bfa342a98d08..fc77caf0a076 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+@@ -157,8 +157,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
  
- 	if (system_state == SYSTEM_POWER_OFF) {
- 		bnxt_clear_int_mode(bp);
-+		pci_disable_device(pdev);
- 		pci_wake_from_d3(pdev, bp->wol);
- 		pci_set_power_state(pdev, PCI_D3hot);
+ 	if (BNXT_NEW_RM(bp)) {
+ 		struct bnxt_hw_resc *hw_resc = &bp->hw_resc;
++		int resv_msix;
+ 
+-		avail_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
++		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
++		avail_msix = min_t(int, resv_msix, avail_msix);
+ 		edev->ulp_tbl[ulp_id].msix_requested = avail_msix;
  	}
+ 	bnxt_fill_msix_vecs(bp, ent);
 -- 
 2.20.1
 
