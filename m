@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72076C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F185C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4A82067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 448592067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202488;
-	bh=+l+RU1EN+SlH9uWGDITQYS+b2sZ/zrMGsEGFPYX/EXc=;
+	s=default; t=1563202508;
+	bh=NxLJdjlbJ4kp+I870Br+d1UIqe1sq9tV5ZYemn48wn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=spP2lPW2+K/NbzVdHjPhC87Iunj8uoXPMgX0KeRf8kdng4KajP/fUAIsFGV2jVZ4V
-	 PXdayA3GQNznflt0kLFmUtQ0Ncbj7Od+tMmLmx7PpVCJ8K+sw4sugW15Q/Vnd5e4fW
-	 +iFczFu/H3yHJsB3X5AW9cm2BZRHfWTxZO2Qjk6c=
+	b=B9lUmNzC0RAFDqRQXHnc9XZ47Df/TA4JMAAB/y8cQlwEENkrLYTM93iJq7XFeGayl
+	 8LbaxP0rim12gkf+igVMuQux/DOHxZy4ff7VhTaC6T+5QB8FmH8RbpyNrhqwoANYQM
+	 feAUY5td+QTns26ootcC1zZKID9nPPLVueVLOmVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391471AbfGOO1S (ORCPT
+        id S2392374AbfGOOzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36402 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391448AbfGOO1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:27:15 -0400
+        id S2390774AbfGOO1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:27:02 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B72D21537;
-        Mon, 15 Jul 2019 14:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1901320896;
+        Mon, 15 Jul 2019 14:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200834;
-        bh=+l+RU1EN+SlH9uWGDITQYS+b2sZ/zrMGsEGFPYX/EXc=;
+        s=default; t=1563200821;
+        bh=NxLJdjlbJ4kp+I870Br+d1UIqe1sq9tV5ZYemn48wn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dlq5t2jV5oaDcgL1vhUfyrWSi+7MG68ZRZ6nj1HKNwT07j4DbcIMalQZVyslNQq8f
-         XXaMnd8Nf0eFURpd2ColMadyFg4d00P1Ugz+0/cpDesZux9ptY718aLZjeUNCaF4Hv
-         3kyR83QXFYVGKsKLbjXKYd+IjRm/gprWtyPzrkLM=
+        b=udAOdSx3KLlVUPq7diUMqepml1mINRlXkUQNdLfLhllo0o3dj/KfPG91ZmEF6VNw/
+         XrYNYt2iYePf1jC8YRkP//3ABG5ARHd2lUZaO51yq6oEGkOzT/9adjd40xjdAijrn0
+         yFd2uhy/YJO6cofrpH/1myDcLeKZT9dN26yB8pks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 140/158] rxrpc: Fix oops in tracepoint
-Date:   Mon, 15 Jul 2019 10:17:51 -0400
-Message-Id: <20190715141809.8445-140-sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 137/158] perf stat: Fix group lookup for metric group
+Date:   Mon, 15 Jul 2019 10:17:48 -0400
+Message-Id: <20190715141809.8445-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -60,106 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit 99f0eae653b2db64917d0b58099eb51e300b311d ]
+[ Upstream commit 2f87f33f4226523df9c9cc28f9874ea02fcc3d3f ]
 
-If the rxrpc_eproto tracepoint is enabled, an oops will be cause by the
-trace line that rxrpc_extract_header() tries to emit when a protocol error
-occurs (typically because the packet is short) because the call argument is
-NULL.
+The metric group code tries to find a group it added earlier in the
+evlist. Fix the lookup to handle groups with partially overlaps
+correctly. When a sub string match fails and we reset the match, we have
+to compare the first element again.
 
-Fix this by using ?: to assume 0 as the debug_id if call is NULL.
+I also renamed the find_evsel function to find_evsel_group to make its
+purpose clearer.
 
-This can then be induced by:
+With the earlier changes this fixes:
 
-	echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only <addr> 20001
+Before:
 
-where addr has the following program running on it:
+  % perf stat -M UPI,IPC sleep 1
+  ...
+         1,032,922      uops_retired.retire_slots #      1.1 UPI
+         1,896,096      inst_retired.any
+         1,896,096      inst_retired.any
+         1,177,254      cpu_clk_unhalted.thread
 
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
-	#include <unistd.h>
-	#include <sys/socket.h>
-	#include <arpa/inet.h>
-	#include <linux/rxrpc.h>
-	int main(void)
-	{
-		struct sockaddr_rxrpc srx;
-		int fd;
-		memset(&srx, 0, sizeof(srx));
-		srx.srx_family			= AF_RXRPC;
-		srx.srx_service			= 0;
-		srx.transport_type		= AF_INET;
-		srx.transport_len		= sizeof(srx.transport.sin);
-		srx.transport.sin.sin_family	= AF_INET;
-		srx.transport.sin.sin_port	= htons(0x4e21);
-		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
-		bind(fd, (struct sockaddr *)&srx, sizeof(srx));
-		sleep(20);
-		return 0;
-	}
+After:
 
-It results in the following oops.
+  % perf stat -M UPI,IPC sleep 1
+  ...
+        1,013,193      uops_retired.retire_slots #      1.1 UPI
+           932,033      inst_retired.any
+           932,033      inst_retired.any          #      0.9 IPC
+         1,091,245      cpu_clk_unhalted.thread
 
-	BUG: kernel NULL pointer dereference, address: 0000000000000340
-	#PF: supervisor read access in kernel mode
-	#PF: error_code(0x0000) - not-present page
-	...
-	RIP: 0010:trace_event_raw_event_rxrpc_rx_eproto+0x47/0xac
-	...
-	Call Trace:
-	 <IRQ>
-	 rxrpc_extract_header+0x86/0x171
-	 ? rcu_read_lock_sched_held+0x5d/0x63
-	 ? rxrpc_new_skb+0xd4/0x109
-	 rxrpc_input_packet+0xef/0x14fc
-	 ? rxrpc_input_data+0x986/0x986
-	 udp_queue_rcv_one_skb+0xbf/0x3d0
-	 udp_unicast_rcv_skb.isra.8+0x64/0x71
-	 ip_protocol_deliver_rcu+0xe4/0x1b4
-	 ip_local_deliver+0xf0/0x154
-	 __netif_receive_skb_one_core+0x50/0x6c
-	 netif_receive_skb_internal+0x26b/0x2e9
-	 napi_gro_receive+0xf8/0x1da
-	 rtl8169_poll+0x303/0x4c4
-	 net_rx_action+0x10e/0x333
-	 __do_softirq+0x1a5/0x38f
-	 irq_exit+0x54/0xc4
-	 do_IRQ+0xda/0xf8
-	 common_interrupt+0xf/0xf
-	 </IRQ>
-	 ...
-	 ? cpuidle_enter_state+0x23c/0x34d
-	 cpuidle_enter+0x2a/0x36
-	 do_idle+0x163/0x1ea
-	 cpu_startup_entry+0x1d/0x1f
-	 start_secondary+0x157/0x172
-	 secondary_startup_64+0xa4/0xb0
-
-Fixes: a25e21f0bcd2 ("rxrpc, afs: Use debug_ids rather than pointers in traces")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Fixes: b18f3e365019 ("perf stat: Support JSON metrics in perf stat")
+Link: http://lkml.kernel.org/r/20190624193711.35241-4-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/metricgroup.c | 47 ++++++++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 6d182746afab..147546e0c11b 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1381,7 +1381,7 @@ TRACE_EVENT(rxrpc_rx_eproto,
- 			     ),
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a28f9b5cc4ff..8b3dafe3fac3 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -94,26 +94,49 @@ struct egroup {
+ 	const char *metric_expr;
+ };
  
- 	    TP_fast_assign(
--		    __entry->call = call->debug_id;
-+		    __entry->call = call ? call->debug_id : 0;
- 		    __entry->serial = serial;
- 		    __entry->why = why;
- 			   ),
+-static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
+-				     const char **ids,
+-				     int idnum,
+-				     struct perf_evsel **metric_events)
++static bool record_evsel(int *ind, struct perf_evsel **start,
++			 int idnum,
++			 struct perf_evsel **metric_events,
++			 struct perf_evsel *ev)
++{
++	metric_events[*ind] = ev;
++	if (*ind == 0)
++		*start = ev;
++	if (++*ind == idnum) {
++		metric_events[*ind] = NULL;
++		return true;
++	}
++	return false;
++}
++
++static struct perf_evsel *find_evsel_group(struct perf_evlist *perf_evlist,
++					   const char **ids,
++					   int idnum,
++					   struct perf_evsel **metric_events)
+ {
+ 	struct perf_evsel *ev, *start = NULL;
+ 	int ind = 0;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (ev->collect_stat)
++			continue;
+ 		if (!strcmp(ev->name, ids[ind])) {
+-			metric_events[ind] = ev;
+-			if (ind == 0)
+-				start = ev;
+-			if (++ind == idnum) {
+-				metric_events[ind] = NULL;
++			if (record_evsel(&ind, &start, idnum,
++					 metric_events, ev))
+ 				return start;
+-			}
+ 		} else {
++			/*
++			 * We saw some other event that is not
++			 * in our list of events. Discard
++			 * the whole match and start again.
++			 */
+ 			ind = 0;
+ 			start = NULL;
++			if (!strcmp(ev->name, ids[ind])) {
++				if (record_evsel(&ind, &start, idnum,
++						 metric_events, ev))
++					return start;
++			}
+ 		}
+ 	}
+ 	/*
+@@ -143,8 +166,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
+-				   metric_events);
++		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
++					 metric_events);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
 -- 
 2.20.1
 
