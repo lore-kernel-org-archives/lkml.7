@@ -2,147 +2,90 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A2CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C154C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2562086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201524;
-	bh=Hv/PDyfb1aIpeMnRiCxbxirby6qRvWPxHa6s0ET48ZA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yCIvLCV4aHxmmkJvQQ8abghaOTr7I+SIN5KSp8QmcprepvymPGGXx+lQ8c1X6ddUv
-	 H6arzFoTddVVYBuO0xD4vtkrLcZK5+NGsuWKy4EJXnU8P0RBXSKqUUXX6Xdo0UF1sp
-	 4NSKFj/+2ybQnW4Faqth2zbblYAnjHJmUfLSij8A=
+	by mail.kernel.org (Postfix) with ESMTP id 02B3B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392042AbfGOOin (ORCPT
+        id S2392200AbfGOOiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37052 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:38:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:51010 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730998AbfGOOij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:39 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7B9420651;
-        Mon, 15 Jul 2019 14:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201518;
-        bh=Hv/PDyfb1aIpeMnRiCxbxirby6qRvWPxHa6s0ET48ZA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Nnd6pePqrmxLDL+xePqQk5ov5qYeDuHVhvgCDuApfqvqHIpiA+aHLAUtgrXj0FHE
-         m9GXlAj2XkMc2j37v5LaEpknaJXA+qz9nX6CgLRX8row60Fuc0NUMGiIYQBrzooYqx
-         AP0Oi8R9/XaXkUwGRW8eQJpkj4XVuNfTy4aGYzG4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 32/73] perf test 6: Fix missing kvm module load for s390
-Date:   Mon, 15 Jul 2019 10:35:48 -0400
-Message-Id: <20190715143629.10893-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
-References: <20190715143629.10893-1-sashal@kernel.org>
+        id S2392113AbfGOOiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:38:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C80BF28;
+        Mon, 15 Jul 2019 07:38:44 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1A613F59C;
+        Mon, 15 Jul 2019 07:38:43 -0700 (PDT)
+Subject: Re: [RFC v2 12/14] arm64/lib: asid: Allow user to update the context
+ under the lock
+To:     James Morse <james.morse@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, marc.zyngier@arm.com,
+        julien.thierry@arm.com, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com
+References: <20190620130608.17230-1-julien.grall@arm.com>
+ <20190620130608.17230-13-julien.grall@arm.com>
+ <c5d1257c-b522-152f-cb2f-d23fd8110609@arm.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <446cfa1a-71be-3ae2-4107-02dd0f164843@arm.com>
+Date:   Mon, 15 Jul 2019 15:38:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c5d1257c-b522-152f-cb2f-d23fd8110609@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff ]
 
-Command
+On 03/07/2019 18:35, James Morse wrote:
+> Hi Julien,
 
-   # perf test -Fv 6
+Hi James,
 
-fails with error
+> On 20/06/2019 14:06, Julien Grall wrote:
+>> Some users of the ASID allocator (e.g VMID) will require to update the
+>> context when a new ASID is generated. This has to be protected by a lock
+>> to prevent concurrent modification.
+>>
+>> Rather than introducing yet another lock, it is possible to re-use the
+>> allocator lock for that purpose. This patch introduces a new callback
+>> that will be call when updating the context.
+> 
+> You're using this later in the series to mask out the generation from the atomic64 to
+> leave just the vmid.
 
-   running test 100 'kvm-s390:kvm_s390_create_vm' failed to parse
-    event 'kvm-s390:kvm_s390_create_vm', err -1, str 'unknown tracepoint'
-    event syntax error: 'kvm-s390:kvm_s390_create_vm'
-                         \___ unknown tracepoint
+You are right.
 
-when the kvm module is not loaded or not built in.
+> 
+> Where does this concurrent modification happen? The value is only written if we have a
+> rollover, and while its active the only bits that could change are the generation.
+> (subsequent vCPUs that take the slow path for the same VM will see the updated generation
+> and skip the new_context call)
+> 
+> If we did the generation filtering in update_vmid() after the call to
+> asid_check_context(), what would go wrong?
+> It happens more often than is necessary and would need a WRITE_ONCE(), but the vmid can't
+> change until we become preemptible and another vCPU gets a chance to make its vmid active.
 
-Fix this by adding a valid function which tests if the module
-is loaded. Loaded modules (or builtin KVM support) have a
-directory named
-  /sys/kernel/debug/tracing/events/kvm-s390
-for this tracepoint.
+I think I was over cautious. Pre-filtering after asid_check_context() is equally 
+fine as long as update_vttbr() is called from preemptible context.
 
-Check for existence of this directory.
+Cheers,
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190604053504.43073-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/tests/parse-events.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index aa9276bfe3e9..9134a0c3e99d 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -12,6 +12,32 @@
- #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
- 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
- 
-+#if defined(__s390x__)
-+/* Return true if kvm module is available and loaded. Test this
-+ * and retun success when trace point kvm_s390_create_vm
-+ * exists. Otherwise this test always fails.
-+ */
-+static bool kvm_s390_create_vm_valid(void)
-+{
-+	char *eventfile;
-+	bool rc = false;
-+
-+	eventfile = get_events_file("kvm-s390");
-+
-+	if (eventfile) {
-+		DIR *mydir = opendir(eventfile);
-+
-+		if (mydir) {
-+			rc = true;
-+			closedir(mydir);
-+		}
-+		put_events_file(eventfile);
-+	}
-+
-+	return rc;
-+}
-+#endif
-+
- static int test__checkevent_tracepoint(struct perf_evlist *evlist)
- {
- 	struct perf_evsel *evsel = perf_evlist__first(evlist);
-@@ -1593,6 +1619,7 @@ static struct evlist_test test__events[] = {
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-+		.valid = kvm_s390_create_vm_valid,
- 		.id    = 100,
- 	},
- #endif
 -- 
-2.20.1
-
+Julien Grall
