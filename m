@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C37C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348CDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D52120651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF2920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201801;
-	bh=mynSzExel/lLIRLTUxiJvLSolLoXNFNTrd1QzisdISE=;
+	s=default; t=1563201821;
+	bh=LIVUyXiJJy2i93PADfK/sUcCicuFFHTD68KAW/cqkXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j759B/JfIKjc8ZXOgjXqtX3Rnk0CeyiBi+dixVayI9RBwsCrK5if0lfU26CZaC7up
-	 EnIF8QmPBsSk/arGA38UedrNB47IEmGyAQY90ZXFSF3xbXVtpjelFryFIWgqQ4xkKB
-	 9GhgYefvOJVqiMjf3l58Sem9ilPX6/qc6o0xallg=
+	b=VrT2TPSfO0a5+5oJzIBbVuiSqyh66lzIwSEeFzSVEkzaFgPVlD5r/6xynSRV3/sCp
+	 CZdMRWUlR8qBKnRu4DwSyyEYx69NgUUzd7F2zMPNXFpjR8QFbEGI0SnrGPD2f7mv7I
+	 2q94ZwklS3/aNCwjVeLGyUmY1kiZWvhSjnt58+IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392186AbfGOOis (ORCPT
+        id S2404088AbfGOOnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391945AbfGOOio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:44 -0400
+        id S2391092AbfGOOhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:37:55 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBDC2205ED;
-        Mon, 15 Jul 2019 14:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91186204FD;
+        Mon, 15 Jul 2019 14:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201523;
-        bh=mynSzExel/lLIRLTUxiJvLSolLoXNFNTrd1QzisdISE=;
+        s=default; t=1563201474;
+        bh=LIVUyXiJJy2i93PADfK/sUcCicuFFHTD68KAW/cqkXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOc+8wc/eV4fYLm4CiE4T3t5xfTVIMDt181FVBTt3L3whzU0bvbwiMFmi7pZZUKsR
-         WlAuWIIlC9wjfOVB1oKIWuOgrHstnHtWDwXaeSYNo/lr1RHOIBrPstegmcVrDjCtpO
-         1i8rKD32LmkGV04vtDtgt54KcmQnDvwVwlqqwvHA=
+        b=O9a0szBkEZggTZhvisD8u9+OCOohlZpo0qrcYMKbzXeyPrjwfabJCL/FgNd3y4eS4
+         IGBujGTQnP0rq3lovXLDwTKIPRe8artTIO3opM+bk5tr4nIr+7jQ1zjFE1jJwecjST
+         VhDRPdFXkJJ54KhEPkKGbyNFT6q8cORJUwl4Z3p8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 33/73] gpio: omap: fix lack of irqstatus_raw0 for OMAP4
-Date:   Mon, 15 Jul 2019 10:35:49 -0400
-Message-Id: <20190715143629.10893-33-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 22/73] crypto: talitos - properly handle split ICV.
+Date:   Mon, 15 Jul 2019 10:35:38 -0400
+Message-Id: <20190715143629.10893-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -62,43 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 64ea3e9094a1f13b96c33244a3fb3a0f45690bd2 ]
+[ Upstream commit eae55a586c3c8b50982bad3c3426e9c9dd7a0075 ]
 
-Commit 384ebe1c2849 ("gpio/omap: Add DT support to GPIO driver") added
-the register definition tables to the gpio-omap driver. Subsequently to
-that commit, commit 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx()
-checks from *_runtime_resume()") added definitions for irqstatus_raw*
-registers to the legacy OMAP4 definitions, but missed the DT
-definitions.
+The driver assumes that the ICV is as a single piece in the last
+element of the scatterlist. This assumption is wrong.
 
-This causes an unintentional change of behaviour for the 1.101 errata
-workaround on OMAP4 platforms. Fix this oversight.
+This patch ensures that the ICV is properly handled regardless of
+the scatterlist layout.
 
-Fixes: 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx() checks from *_runtime_resume()")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/talitos.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 038882183bdf..bd12b433f964 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1585,6 +1585,8 @@ static struct omap_gpio_reg_offs omap4_gpio_regs = {
- 	.clr_dataout =		OMAP4_GPIO_CLEARDATAOUT,
- 	.irqstatus =		OMAP4_GPIO_IRQSTATUS0,
- 	.irqstatus2 =		OMAP4_GPIO_IRQSTATUS1,
-+	.irqstatus_raw0 =	OMAP4_GPIO_IRQSTATUSRAW0,
-+	.irqstatus_raw1 =	OMAP4_GPIO_IRQSTATUSRAW1,
- 	.irqenable =		OMAP4_GPIO_IRQSTATUSSET0,
- 	.irqenable2 =		OMAP4_GPIO_IRQSTATUSSET1,
- 	.set_irqenable =	OMAP4_GPIO_IRQSTATUSSET0,
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 166e216b02b2..36d4f2a32e54 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -984,7 +984,6 @@ static void ipsec_esp_encrypt_done(struct device *dev,
+ 	struct crypto_aead *authenc = crypto_aead_reqtfm(areq);
+ 	unsigned int authsize = crypto_aead_authsize(authenc);
+ 	struct talitos_edesc *edesc;
+-	struct scatterlist *sg;
+ 	void *icvdata;
+ 
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+@@ -998,9 +997,8 @@ static void ipsec_esp_encrypt_done(struct device *dev,
+ 		else
+ 			icvdata = &edesc->link_tbl[edesc->src_nents +
+ 						   edesc->dst_nents + 2];
+-		sg = sg_last(areq->dst, edesc->dst_nents);
+-		memcpy((char *)sg_virt(sg) + sg->length - authsize,
+-		       icvdata, authsize);
++		sg_pcopy_from_buffer(areq->dst, edesc->dst_nents ? : 1, icvdata,
++				     authsize, areq->assoclen + areq->cryptlen);
+ 	}
+ 
+ 	kfree(edesc);
+@@ -1016,7 +1014,6 @@ static void ipsec_esp_decrypt_swauth_done(struct device *dev,
+ 	struct crypto_aead *authenc = crypto_aead_reqtfm(req);
+ 	unsigned int authsize = crypto_aead_authsize(authenc);
+ 	struct talitos_edesc *edesc;
+-	struct scatterlist *sg;
+ 	char *oicv, *icv;
+ 	struct talitos_private *priv = dev_get_drvdata(dev);
+ 	bool is_sec1 = has_ftr_sec1(priv);
+@@ -1026,9 +1023,18 @@ static void ipsec_esp_decrypt_swauth_done(struct device *dev,
+ 	ipsec_esp_unmap(dev, edesc, req);
+ 
+ 	if (!err) {
++		char icvdata[SHA512_DIGEST_SIZE];
++		int nents = edesc->dst_nents ? : 1;
++		unsigned int len = req->assoclen + req->cryptlen;
++
+ 		/* auth check */
+-		sg = sg_last(req->dst, edesc->dst_nents ? : 1);
+-		icv = (char *)sg_virt(sg) + sg->length - authsize;
++		if (nents > 1) {
++			sg_pcopy_to_buffer(req->dst, nents, icvdata, authsize,
++					   len - authsize);
++			icv = icvdata;
++		} else {
++			icv = (char *)sg_virt(req->dst) + len - authsize;
++		}
+ 
+ 		if (edesc->dma_len) {
+ 			if (is_sec1)
+@@ -1458,7 +1464,6 @@ static int aead_decrypt(struct aead_request *req)
+ 	struct talitos_ctx *ctx = crypto_aead_ctx(authenc);
+ 	struct talitos_private *priv = dev_get_drvdata(ctx->dev);
+ 	struct talitos_edesc *edesc;
+-	struct scatterlist *sg;
+ 	void *icvdata;
+ 
+ 	req->cryptlen -= authsize;
+@@ -1493,9 +1498,8 @@ static int aead_decrypt(struct aead_request *req)
+ 	else
+ 		icvdata = &edesc->link_tbl[0];
+ 
+-	sg = sg_last(req->src, edesc->src_nents ? : 1);
+-
+-	memcpy(icvdata, (char *)sg_virt(sg) + sg->length - authsize, authsize);
++	sg_pcopy_to_buffer(req->src, edesc->src_nents ? : 1, icvdata, authsize,
++			   req->assoclen + req->cryptlen - authsize);
+ 
+ 	return ipsec_esp(edesc, req, ipsec_esp_decrypt_swauth_done);
+ }
 -- 
 2.20.1
 
