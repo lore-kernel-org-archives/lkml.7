@@ -2,158 +2,114 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAE3C7618A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE6C7618D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B8C20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B006F20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:43:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuCj5ogP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfGOFij (ORCPT
+        id S1728934AbfGOFnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 01:38:39 -0400
-Received: from relay.sw.ru ([185.231.240.75]:40858 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfGOFii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 01:38:38 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hmtgp-00084E-4u; Mon, 15 Jul 2019 08:38:19 +0300
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Xiaoming Ni <nixiaoming@huawei.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
- <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
- <20190712140729.GA11583@kroah.com>
- <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
-Date:   Mon, 15 Jul 2019 08:38:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 01:43:35 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:39002 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfGOFnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 01:43:35 -0400
+Received: by mail-yb1-f196.google.com with SMTP id z128so2370973yba.6;
+        Sun, 14 Jul 2019 22:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=x1fTuAZhIfrlETbUSsP1dpVtOtalwzPUJBl71LNvF/I=;
+        b=kuCj5ogPMdv0UR/QbaMvt17fr1Kks7yEIQad2BJdVAokAZGlp1pIrgGLGzQdE0T1RV
+         He4TDIBNF2P9i7c1V/dsB/e3IQveyT5EDel5NOC4W7KrSmfeqlqj6hkp7T2KAeplDFAE
+         A/Ey/a40RVJy2pswyCyrxpPA6hUPt+ZRXoqg/v8a+5C15YZtMf9Niyg638/l0aneZsUV
+         8NqbReKDtdSyFKHPPXkLvAoe8VjQSr7oeTUH3hxoxVsn6Va/r+CZ3OLFdRA4Hv04sVEh
+         /67D9sbCHe9uCbd9vvLLbgobLk+mhRSNo0VSMRzb70MGGgT7y6W+BUlhjVkbja4k4vyZ
+         lzvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=x1fTuAZhIfrlETbUSsP1dpVtOtalwzPUJBl71LNvF/I=;
+        b=kLsJixhDpK3lpb0ge9nEA+cNaXDLpnTVyqi5heSCk7ZoGsK8mZ/NwIR8Q2rv/Szxkg
+         pIwN9gW5S/ITcjDci8L+82xaYlhw5nbDZHorottW6SWqyjnDFcirAQG8kzeJzgJrqE3j
+         BrhVGk5Q4bv+O/UJyVMlbwPMIsn6PmyLDZXcMNtnqgw6a6GgR/DCjxJFG18LwsTtJ98t
+         HtpxgDZCrBdNBXszjFyWKUUcPUzns7zx4O26EO20EvEmaOw6mqHXmS6TaTfUXhfZ63dQ
+         oc8LKkQe94++e/uy276KLxqM7WDEcWPd4VgWdUGlvgqL7P2kRjqd3he7cmPCUaDxJ//a
+         0C1g==
+X-Gm-Message-State: APjAAAUtSS8vyg7Rv9ziYB2WcHOF9Xp9I/1vLSwBJCu1Etti2MoJABzT
+        JiPuI9+Fg9WVy6hvEA/ZeQ/uc+7lPmbjc83MEnU=
+X-Google-Smtp-Source: APXvYqxAyT0M6B1ZXmetW6nzhOPqBX2DjnMDBB77OGQIp1Q/u6NBc/ONz4SQsmC8fZf4oF3b4dFRdlG5OJHS/2lqFY0=
+X-Received: by 2002:a25:d10c:: with SMTP id i12mr14015312ybg.395.1563169414192;
+ Sun, 14 Jul 2019 22:43:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190715031723.6375-1-huangfq.daxian@gmail.com> <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
+In-Reply-To: <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Date:   Mon, 15 Jul 2019 13:43:23 +0800
+Message-ID: <CABXRUiQXweOLRTpdyhx9xT_B1VBmoSoNm=_+Qr4prmz7u1QRFA@mail.gmail.com>
+Subject: Re: [PATCH v3 04/24] dmaengine: qcom_hidma: Remove call to memset
+ after dmam_alloc_coherent
+To:     Sinan Kaya <Okaya@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/19 5:45 AM, Xiaoming Ni wrote:
-> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
->> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
->>> On 2019/7/11 21:57, Vasily Averin wrote:
->>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
->>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
->>>>>>> list to form a ring or lose other members of the list.
->>>>>>
->>>>>> I think is not enough to _prevent_ 2nd register attempt,
->>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
->>>>>>
->>>>>
->>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
->>>>>
->>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
->>>>>
->>>>> Duplicate registration was checked in notifier_chain_register() but only 
->>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
->>>>> ("kernel/notifier.c: double register detection")
->>>>>
->>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->>>>>  which triggers an alarm and exits when a duplicate registration is detected.
->>>>>
->>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->>>>>> and it can lead to host crash in any time: 
->>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
->>>>>> on the other hand you can never call 2nd unregister at all.
->>>>>
->>>>> Since the member was not added to the linked list at the time of the second registration, 
->>>>> no linked list ring was formed. 
->>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
->>>>> After patching, the fault has been alleviated
->>>>
->>>> You are wrong here.
->>>> 2nd notifier's registration is a pure bug, this should never happen.
->>>> If you know the way to reproduce this situation -- you need to fix it. 
->>>>
->>>> 2nd registration can happen in 2 cases:
->>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
->>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
->>>> 2) some subsystem is registered twice, for example from  different namespaces.
->>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
->>>> in second namespace, it also can lead to unexpacted behaviour.
->>>>
->>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
->>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
->>> notifier_chain_cond_register() direct exit without triggering WARN() ?
->>
->> It should recover from this, if it can be detected.  The main point is
->> that not all apis have to be this "robust" when used within the kernel
->> as we do allow for the callers to know what they are doing :)
->>
-> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
->  We can intercept this situation and avoid forming a linked list ring to make the API more rob
-
-Once again -- yes, you CAN prevent list corruption, but you CANNOT recover the host and return it back to safe state.
-If double register event was detected -- it means you have bug in kernel.
-
-Yes, you can add BUG here and crash the host immediately, but I prefer to use warning in such situations.
-
->> If this does not cause any additional problems or slow downs, it's
->> probably fine to add.
->>
-> Notifier_chain_register() is not a system hotspot function.
-> At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
-> It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
-> At the same time, avoiding the formation of a link ring can make the system more robust.
-
-I disagree, 
-yes, node will have correct list, but anyway node will work wrong and can crash the host in any time.
-
->> thanks,
->>
->> greg k-h
->>
->> .
->>
-> Thanks
-> 
-> Xiaoming Ni
-> 
-> 
-> 
+Sinan Kaya <Okaya@kernel.org> =E6=96=BC 2019=E5=B9=B47=E6=9C=8815=E6=97=A5=
+=E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:17=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On 7/14/2019 11:17 PM, Fuqian Huang wrote:
+> > In commit 518a2f1925c3
+> > ("dma-mapping: zero memory returned from dma_alloc_*"),
+> > dma_alloc_coherent has already zeroed the memory.
+> > So memset is not needed.
+> >
+> > Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+>
+> I don't see SWIO or ARM64 IOMMU drivers getting impacted by
+> the mentioned change above (518a2f1925c3).
+>
+> How does this new behavior apply globally?
+>
+In the last version patch set, I referenced the commit af7ddd8a627c
+("Merge tag 'dma-mapping-4.21' of
+git://git.infradead.org/users/hch/dma-mapping")
+in the commit log.
+The merged commit mentions that
+"ensure dma_alloc_coherent returns zeroed memory to
+avoid kernel data leaks through userspace.
+We already did this for most common architectures,
+but this ensures we do it everywhere."
+dma_alloc_coherent has already zeroed the memory during allocation
+and the commit also deprecates dma_zalloc_coherent.
+Greg and other maintainer told me to use the actual commit
+rather than the merged commit.
+So I reference the commit that ensures the dma_alloc_coherent to
+returns zeroed memory every where.
+Maybe this belongs to the `most common achitectures` and is not impacted
+by the mentioned change.
+Should I rewrite the commit log? Just mention that dma_alloc_coherent
+has already
+zeroed the memory and not to reference the commit?
