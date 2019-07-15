@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2831C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148FB205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2950205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202786;
-	bh=HE6ERcQjIe0JLOZKqju78rK1r/f4JuYXJmjufqB2V4A=;
+	s=default; t=1563202789;
+	bh=L+rBLsU0eTw6Z4CMA658MU7OvvvcaxUg30vK9kB/r1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nz5vr2/0k8o8O/YAF05TOXvlMnzRd5EI6n7cgCjG6qaQy0sb75DA5mpYYXJGJH0Ln
-	 1ScgSVqlyPIU4lfOy7LOxBKzGFUieulYNJ75gs6u8pG5X0oU0I+WusfhQOZVg0gZtx
-	 LXif1DAmf95QDCHRi41sfPEmEy1qZfp4+ztOJjKE=
+	b=R8euphVY/7P/WKHGQC3Iy5R/1el2xyiVjlfouQuz67CR1EsXKr9gpzH9vib3hTKTA
+	 79hIzUgGzuOkoQbul/q2KHrWPeuDFYoj1hoMTj1BPyuzCFVjoC/hZvjqVFp5+4ED95
+	 3kqfjUxXc9sM7agG4fvj/VcdxxV76heWM1u52NDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390586AbfGOO7o (ORCPT
+        id S2389967AbfGOOSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39312 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfGOOSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:18:52 -0400
+        id S2389011AbfGOOSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:18:36 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 139E6205F4;
-        Mon, 15 Jul 2019 14:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358C220868;
+        Mon, 15 Jul 2019 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200331;
-        bh=HE6ERcQjIe0JLOZKqju78rK1r/f4JuYXJmjufqB2V4A=;
+        s=default; t=1563200316;
+        bh=L+rBLsU0eTw6Z4CMA658MU7OvvvcaxUg30vK9kB/r1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCQc1E/W/bh2ONlb0JS1LC+nGqjz68cCNMSZLI7u1RKE+eDomE+fb2yPVX76D5Cdi
-         y9eiQ7SYg+qamirXiqAvKJeRnhZIcWugjgfMFUkcMCMeKmfoLpQKQk5IWra6OZl7Ks
-         5HPeLUi0mmqPdfkK4qUi6Xk+KXO0vEUctbAMfEN4=
+        b=h8yPotMct9mjuIsHUutawl4WSnboFvOMK14HTfPpn5wwSwEhM2zbBMzUf5plPNxpI
+         vSw0OK+dEj9fiAmejI5z3LwhfbT7pLKohJZAwrRjIPkpLaeBQwRMg4+uho/vatH85Y
+         z7wUhUwFRVo2RcqsCVBfJisWPapLND5vuFzUZ36M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Wenyou Yang <wenyou.yang@microchip.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 014/158] media: ov7740: avoid invalid framesize setting
-Date:   Mon, 15 Jul 2019 10:15:45 -0400
-Message-Id: <20190715141809.8445-14-sashal@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 009/158] regmap: debugfs: Fix memory leak in regmap_debugfs_init
+Date:   Mon, 15 Jul 2019 10:15:40 -0400
+Message-Id: <20190715141809.8445-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -62,43 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit 6e4ab830ac6d6a0d7cd7f87dc5d6536369bf24a8 ]
+[ Upstream commit 2899872b627e99b7586fe3b6c9f861da1b4d5072 ]
 
-If the requested framesize by VIDIOC_SUBDEV_S_FMT is larger than supported
-framesizes, it causes an out of bounds array access and the resulting
-framesize is unexpected.
+As detected by kmemleak running on i.MX6ULL board:
 
-Avoid out of bounds array access and select the default framesize.
+nreferenced object 0xd8366600 (size 64):
+  comm "swapper/0", pid 1, jiffies 4294937370 (age 933.220s)
+  hex dump (first 32 bytes):
+    64 75 6d 6d 79 2d 69 6f 6d 75 78 63 2d 67 70 72  dummy-iomuxc-gpr
+    40 32 30 65 34 30 30 30 00 e3 f3 ab fe d1 1b dd  @20e4000........
+  backtrace:
+    [<b0402aec>] kasprintf+0x2c/0x54
+    [<a6fbad2c>] regmap_debugfs_init+0x7c/0x31c
+    [<9c8d91fa>] __regmap_init+0xb5c/0xcf4
+    [<5b1c3d2a>] of_syscon_register+0x164/0x2c4
+    [<596a5d80>] syscon_node_to_regmap+0x64/0x90
+    [<49bd597b>] imx6ul_init_machine+0x34/0xa0
+    [<250a4dac>] customize_machine+0x1c/0x30
+    [<2d19fdaf>] do_one_initcall+0x7c/0x398
+    [<e6084469>] kernel_init_freeable+0x328/0x448
+    [<168c9101>] kernel_init+0x8/0x114
+    [<913268aa>] ret_from_fork+0x14/0x20
+    [<ce7b131a>] 0x0
 
-Cc: Wenyou Yang <wenyou.yang@microchip.com>
-Cc: Eugen Hristev <eugen.hristev@microchip.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Root cause is that map->debugfs_name is allocated using kasprintf
+and then the pointer is lost by assigning it other memory address.
+
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov7740.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/base/regmap/regmap-debugfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
-index f5a1ee90a6c5..8a6a7a5929aa 100644
---- a/drivers/media/i2c/ov7740.c
-+++ b/drivers/media/i2c/ov7740.c
-@@ -761,7 +761,11 @@ static int ov7740_try_fmt_internal(struct v4l2_subdev *sd,
- 
- 		fsize++;
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 87b562e49a43..c9687c8b2347 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -575,6 +575,8 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
  	}
--
-+	if (i >= ARRAY_SIZE(ov7740_framesizes)) {
-+		fsize = &ov7740_framesizes[0];
-+		fmt->width = fsize->width;
-+		fmt->height = fsize->height;
-+	}
- 	if (ret_frmsize != NULL)
- 		*ret_frmsize = fsize;
  
+ 	if (!strcmp(name, "dummy")) {
++		kfree(map->debugfs_name);
++
+ 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
+ 						dummy_index);
+ 		name = map->debugfs_name;
 -- 
 2.20.1
 
