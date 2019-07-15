@@ -6,143 +6,138 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DAAC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5DAC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C642067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7ABC2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbfGOMjH (ORCPT
+        id S1730065AbfGOMkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 08:39:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:6407 "EHLO mga14.intel.com"
+        Mon, 15 Jul 2019 08:40:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41312 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbfGOMjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 08:39:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 05:39:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
-   d="scan'208";a="190548014"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jul 2019 05:39:03 -0700
-Subject: Re: [PATCH] mmc: host: sdhci: Fix the incorrect soft reset operation
- when runtime resuming
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <4c5812f54e5094fa54a85bdc86687a523df254b3.1563184923.git.baolin.wang@linaro.org>
- <c54077a4-3aae-c95c-8491-db5f05b0305c@intel.com>
- <CAMz4kuJVhNFUrDiwiRd-UJ_JnsbxQaV-dE_97m32B+5_53kteg@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6006e00f-4591-6fd1-425f-5bfcc8790e36@intel.com>
-Date:   Mon, 15 Jul 2019 15:37:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1728933AbfGOMkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 08:40:32 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 609E185A03;
+        Mon, 15 Jul 2019 12:40:31 +0000 (UTC)
+Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2EB3760C05;
+        Mon, 15 Jul 2019 12:40:27 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 07:40:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH 04/22] x86/kvm: Don't call kvm_spurious_fault() from
+ .fixup
+Message-ID: <20190715124025.prcetv24oyjnuvip@treble>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
+ <1f37a9e42732c224bc5299dbc827b4101c9deb22.1563150885.git.jpoimboe@redhat.com>
+ <07b8513a-d8f7-f8cf-daf6-83a80ade987a@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMz4kuJVhNFUrDiwiRd-UJ_JnsbxQaV-dE_97m32B+5_53kteg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <07b8513a-d8f7-f8cf-daf6-83a80ade987a@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 15 Jul 2019 12:40:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/19 2:37 PM, Baolin Wang wrote:
-> Hi Adrian,
+On Mon, Jul 15, 2019 at 11:07:28AM +0200, Paolo Bonzini wrote:
+> On 15/07/19 02:36, Josh Poimboeuf wrote:
+> > After making a change to improve objtool's sibling call detection, it
+> > started showing the following warning:
+> > 
+> >   arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
+> > 
+> > The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
+> > fake call by pushing a fake RIP and doing a jump.  That tricks the
+> > unwinder into printing the function which triggered the exception,
+> > rather than the .fixup code.
+> > 
+> > Instead of the hack to make it look like the original function made the
+> > call, just change the macro so that the original function actually does
+> > make the call.  This allows removal of the hack, and also makes objtool
+> > happy.
+> > 
+> > I triggered a vmx instruction exception and verified that the stack
+> > trace is still sane:
+> > 
+> >   kernel BUG at arch/x86/kvm/x86.c:358!
+> >   invalid opcode: 0000 [#1] SMP PTI
+> >   CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
+> >   Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
+> >   RIP: 0010:kvm_spurious_fault+0x5/0x10
+> >   Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
+> >   RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
+> >   RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
+> >   RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
+> >   RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
+> >   R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
+> >   R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
+> >   FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
+> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >   CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
+> >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >   PKRU: 55555554
+> >   Call Trace:
+> >    loaded_vmcs_init+0x4f/0xe0
+> >    alloc_loaded_vmcs+0x38/0xd0
+> >    vmx_create_vcpu+0xf7/0x600
+> >    kvm_vm_ioctl+0x5e9/0x980
+> >    ? __switch_to_asm+0x40/0x70
+> >    ? __switch_to_asm+0x34/0x70
+> >    ? __switch_to_asm+0x40/0x70
+> >    ? __switch_to_asm+0x34/0x70
+> >    ? free_one_page+0x13f/0x4e0
+> >    do_vfs_ioctl+0xa4/0x630
+> >    ksys_ioctl+0x60/0x90
+> >    __x64_sys_ioctl+0x16/0x20
+> >    do_syscall_64+0x55/0x1c0
+> >    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >   RIP: 0033:0x7fa349b1ee5b
+> > 
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > ---
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > ---
+> >  arch/x86/include/asm/kvm_host.h | 33 ++++++++++++++++++---------------
+> >  1 file changed, 18 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index 0cc5b611a113..af7e18c05f98 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1499,22 +1499,25 @@ enum {
+> >  /*
+> >   * Hardware virtualization extension instructions may fault if a
+> >   * reboot turns off virtualization while processes are running.
+> > - * Trap the fault and ignore the instruction if that happens.
+> > + * If that happens, trap the fault and panic (unless we're rebooting).
 > 
-> On Mon, 15 Jul 2019 at 19:20, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 15/07/19 1:58 PM, Baolin Wang wrote:
->>> In sdhci_runtime_resume_host() function, we will always do software reset
->>> for all, but according to the specification, we should issue reset command
->>> and reinitialize the SD/eMMC card.
->>
->> Where does it say that?
-> 
-> I checked the SD host controller simplified specification Ver4.20, and
-> in Page 75, Software Reset For All bit, it says "if this bit is set
-> to1, the host driver should issue reset command and  reinitialize the
-> SD card". (I did not check other versions).
+> Not sure the comment is better than before, but apar from that
 
-That might simply be assuming that the bus power also controls the card power.
+The previous comment didn't seem to match the code, since we only ignore
+the instruction if we're rebooting.
 
-> 
->>
->>>                                    However, we only do reinitialize the
->>> SD/eMMC card when the SD/eMMC card are power down during runtime suspend.
->>>
->>> Thus for those platforms that do not power down the SD/eMMC card during
->>> runtime suspend, we should not do software reset for all.
->>>                                                           To fix this
->>> issue, we can add one condition to validate the MMC_CAP_AGGRESSIVE_PM
->>> to decide if we can do software reset for all or just reset command
->>> and data lines.
->>>
->>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->>> ---
->>>  drivers/mmc/host/sdhci.c |    2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index 9715834..470c5e0 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -3333,7 +3333,7 @@ int sdhci_runtime_resume_host(struct sdhci_host *host)
->>>                       host->ops->enable_dma(host);
->>>       }
->>>
->>> -     sdhci_init(host, 0);
->>> +     sdhci_init(host, !(mmc->caps & MMC_CAP_AGGRESSIVE_PM));
->>
->> We have done a full reset for a long time, so it would be surprising to need
->> to change it.
->>
->> What problem is it causing?
-> 
-> If we did not power down the SD card during runtime suspend, and we
-> reset for all when runtime resume, our SD host controller can not work
-> well, will meet some strange behavior, like:
-> 
-> [    6.525397] mmc0: Got data interrupt 0x00000002 even though no data
-> operation was in progress.
-> [    6.534189] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [    6.540797] mmc0: sdhci: Sys addr:  0x00000008 | Version:  0x00000004
-> [    6.547413] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000000
-> [    6.554029] mmc0: sdhci: Argument:  0x03200101 | Trn mode: 0x00000033
-> [    6.560645] mmc0: sdhci: Present:   0x01f000f0 | Host ctl: 0x00000030
-> [    6.567262] mmc0: sdhci: Power:     0x00000000 | Blk gap:  0x00000000
-> [    6.573877] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
-> [    6.580493] mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00000000
-> [    6.587109] mmc0: sdhci: Int enab:  0x037f000b | Sig enab: 0x037f000b
-> [    6.593726] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
-> [    6.600342] mmc0: sdhci: Caps:      0x1c6d0080 | Caps_1:   0x08000007
-> [    6.606959] mmc0: sdhci: Cmd:       0x0000061b | Max curr: 0x00ffffff
-> [    6.613574] mmc0: sdhci: Resp[0]:   0x00001201 | Resp[1]:  0x00000000
-> [    6.620190] mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
-> [    6.626806] mmc0: sdhci: Host ctl2: 0x00003807
-> [    6.631364] mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x00000000df062000
-> [    6.638697] mmc0: sdhci: ============================================
-> [    6.645379] mmc0: cache flush error -84
-> 
-> Got data interrupt but no data commands are processing now. With this
-> patch, then our SD host controller can work well. Did I miss anything
-> else? Thanks.
+> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-The response seems to show the card in state 9 bus-testing, which would
-suggest the use of CMD19 for eMMC.  Perhaps the wrong command is used for
-eMMC re-tuning?
+Thanks!
 
-The difficulty with changing long standing flow is that it might reveal
-problems for other existing hardware.  Did you consider making a
-driver-specific change?  The ->reset() callback could be used.
+-- 
+Josh
