@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA632C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0AFC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A4B216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBC6206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201008;
-	bh=FE7lZ5WC/f/erkdTV8rx7P7aFcaoA3r7/+nEiPql+Kk=;
+	s=default; t=1563201011;
+	bh=Z2C3HufjUHrPzmgZsm1CRu6TQ4yusZvqq5FNYlE8FfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TjLtFgjtenAJz6VznCrwVlHSuDtj5MzBG985msahpPomFZAYymRi/SLsvuI/c5vuB
-	 YqbpjT+fr7bLOBJkhD2h2WZBfRvLuElX/YZl2EX4f560YyIXcYW9ArVcozCL2kUcD1
-	 vBqGy0TNkIw+bFbNDYGbilSEB8EBwdhd4e8xKP18=
+	b=MB790A3iuJ6TPz3heuXqfDPYqrsOfdLHMjVTdsR7eki/TCOQ1dhfObc1uoaawSg5W
+	 K33rCV0Dgieb4+UMRXsHoqoRscIMiqzS+M1p498AENySKI8VTXjlilXuY8qYuDjiEH
+	 xk1wjzUm3C2TeL0cQWr/ZH6tkD55qWZR9yq42liA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391641AbfGOOaH (ORCPT
+        id S2403886AbfGOOaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42110 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403897AbfGOO36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:29:58 -0400
+        id S2391640AbfGOOaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:30:07 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F997216C4;
-        Mon, 15 Jul 2019 14:29:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC68B205ED;
+        Mon, 15 Jul 2019 14:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200996;
-        bh=FE7lZ5WC/f/erkdTV8rx7P7aFcaoA3r7/+nEiPql+Kk=;
+        s=default; t=1563201006;
+        bh=Z2C3HufjUHrPzmgZsm1CRu6TQ4yusZvqq5FNYlE8FfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wHmQrEFafuSBsaiLJKrDkSkioWce4UARfrjZmxwEz76IsiQZ2BGOOZbAUkcphKnGT
-         OmNbF4NoSkitGWl8rHgbvjlrZWAlVZsfIVsTs/kSbEnD2n4APptbX7jrWdmM91PvkJ
-         /UgLPk/DEm1LKfYR0uZrXfUNI+oGS7KPQIXcdqvM=
+        b=v5BVxSZ/Loqv/pr5bDOjYL9P6uwZ+o8xzoNKL5elcjMrrYQIj0jHQB/AFgOL4ug9z
+         pQYPNYWbhIbk+6Cq/gGbKcI3NrakgOZNx88s2u8LmHNgseDjmAWOiVWvtIVL7uzGj6
+         eG3Wk7SluH76SI1X443m8I3fum2IijJZVBA/20to=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Joseph Yasi <joe.yasi@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 023/105] e1000e: start network tx queue only when link is up
-Date:   Mon, 15 Jul 2019 10:27:17 -0400
-Message-Id: <20190715142839.9896-23-sashal@kernel.org>
+Cc:     Shailendra Verma <shailendra.v@samsung.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 025/105] media: staging: media: davinci_vpfe: - Fix for memory leak if decoder initialization fails.
+Date:   Mon, 15 Jul 2019 10:27:19 -0400
+Message-Id: <20190715142839.9896-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -63,76 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Shailendra Verma <shailendra.v@samsung.com>
 
-[ Upstream commit d17ba0f616a08f597d9348c372d89b8c0405ccf3 ]
+[ Upstream commit 6995a659101bd4effa41cebb067f9dc18d77520d ]
 
-Driver does not want to keep packets in Tx queue when link is lost.
-But present code only reset NIC to flush them, but does not prevent
-queuing new packets. Moreover reset sequence itself could generate
-new packets via netconsole and NIC falls into endless reset loop.
+Fix to avoid possible memory leak if the decoder initialization
+got failed.Free the allocated memory for file handle object
+before return in case decoder initialization fails.
 
-This patch wakes Tx queue only when NIC is ready to send packets.
-
-This is proper fix for problem addressed by commit 0f9e980bf5ee
-("e1000e: fix cyclic resets at link up with active tx").
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Tested-by: Joseph Yasi <joe.yasi@gmail.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Shailendra Verma <shailendra.v@samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/staging/media/davinci_vpfe/vpfe_video.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 5c364321d3c6..1ad345796e80 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4228,7 +4228,7 @@ void e1000e_up(struct e1000_adapter *adapter)
- 		e1000_configure_msix(adapter);
- 	e1000_irq_enable(adapter);
- 
--	netif_start_queue(adapter->netdev);
-+	/* Tx queue started by watchdog timer when link is up */
- 
- 	e1000e_trigger_lsc(adapter);
- }
-@@ -4604,6 +4604,7 @@ int e1000e_open(struct net_device *netdev)
- 	pm_runtime_get_sync(&pdev->dev);
- 
- 	netif_carrier_off(netdev);
-+	netif_stop_queue(netdev);
- 
- 	/* allocate transmit descriptors */
- 	err = e1000e_setup_tx_resources(adapter->tx_ring);
-@@ -4664,7 +4665,6 @@ int e1000e_open(struct net_device *netdev)
- 	e1000_irq_enable(adapter);
- 
- 	adapter->tx_hang_recheck = false;
--	netif_start_queue(netdev);
- 
- 	hw->mac.get_link_status = true;
- 	pm_runtime_put(&pdev->dev);
-@@ -5286,6 +5286,7 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			if (phy->ops.cfg_on_link_up)
- 				phy->ops.cfg_on_link_up(hw);
- 
-+			netif_wake_queue(netdev);
- 			netif_carrier_on(netdev);
- 
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -5299,6 +5300,7 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			/* Link status message must follow this format */
- 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
- 			netif_carrier_off(netdev);
-+			netif_stop_queue(netdev);
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
- 				mod_timer(&adapter->phy_info_timer,
- 					  round_jiffies(jiffies + 2 * HZ));
+diff --git a/drivers/staging/media/davinci_vpfe/vpfe_video.c b/drivers/staging/media/davinci_vpfe/vpfe_video.c
+index 155e8c758e4b..346e60d230f3 100644
+--- a/drivers/staging/media/davinci_vpfe/vpfe_video.c
++++ b/drivers/staging/media/davinci_vpfe/vpfe_video.c
+@@ -422,6 +422,9 @@ static int vpfe_open(struct file *file)
+ 	/* If decoder is not initialized. initialize it */
+ 	if (!video->initialized && vpfe_update_pipe_state(video)) {
+ 		mutex_unlock(&video->lock);
++		v4l2_fh_del(&handle->vfh);
++		v4l2_fh_exit(&handle->vfh);
++		kfree(handle);
+ 		return -ENODEV;
+ 	}
+ 	/* Increment device users counter */
 -- 
 2.20.1
 
