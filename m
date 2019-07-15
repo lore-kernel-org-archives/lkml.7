@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B50C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8EBC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890432054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8ED2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203446;
-	bh=ovg9ZDUI6jl1GuH5iDDALQ2Yb/zQJbhBTTu2XRVRrLg=;
+	s=default; t=1563203453;
+	bh=MZoTV+b3HU5dLeKehg1HKEB6/ZWx9+HGjcpWGQKcmWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wDHrW6mW4kYCPprDRD3OgwdGvlIn72ZhC/3Akw6HZsHm02R1lOXmFAJSIZUG06fOl
-	 cV0R/cWvdMTsi9phwrVEtxJ7lCZOwoN5FYVqJiruNW4HSh1t1XOnkp0XQl4V20d+FI
-	 iqGPxabjWBpnjHiZHuQbPx1GJ+bfwyFD2wQy2KZc=
+	b=d9wafQiMPKHEJf3h8KHFAGO6tcUS74iJsBenaVzW8zuC4uIQFDXHeBqaRngXTNjo3
+	 PqQzR/TBL4QYkV2+ATUybbZnBRCIskoO2c1yugh9h+6N+3XcimVyjpCYkgTF0dUSIn
+	 gXDQQuZFwl7yTJ6X47SdsbBWH3ie5YQuoxKQf8Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387797AbfGOPKp (ORCPT
+        id S1732716AbfGONzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:55:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732728AbfGONzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:55:12 -0400
+        id S1732588AbfGONyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:54:54 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0435B2086C;
-        Mon, 15 Jul 2019 13:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45EC7212F5;
+        Mon, 15 Jul 2019 13:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198911;
-        bh=ovg9ZDUI6jl1GuH5iDDALQ2Yb/zQJbhBTTu2XRVRrLg=;
+        s=default; t=1563198893;
+        bh=MZoTV+b3HU5dLeKehg1HKEB6/ZWx9+HGjcpWGQKcmWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pl1ZHbFx1s32MPtrcjkFOtmm0WwO785ykjOaAoK0r+/XEut2/iFwtHkMQ03D6lOGP
-         fwZpgI5osGnJeOMuo+z46AIsAV9H6vYaKrB6ITlLOxVor52AycW+HKMBkmwuz5iJjZ
-         CSH9fIIuH08UGxbShm1PxC+WJ1nlgk8ijE58gKoU=
+        b=RHK2nerEL0cDcpawpofrmme+tt2WtkYzgKQNcM4Cgn4L7L5S0jBhyNUA/rGEXXscF
+         o2kdh2zAzyY7DTkoNKCUGPdoCyS/FbATUceBDXZVU1AqK0KQXnUgW1QzEwhpjsqLPm
+         qCS1y8bTb94nnZtQ9P4HyyVxE33D0u4O663FXvpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 139/249] nvme-pci: adjust irq max_vector using num_possible_cpus()
-Date:   Mon, 15 Jul 2019 09:45:04 -0400
-Message-Id: <20190715134655.4076-139-sashal@kernel.org>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 131/249] spi: fix ctrl->num_chipselect constraint
+Date:   Mon, 15 Jul 2019 09:44:56 -0400
+Message-Id: <20190715134655.4076-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,97 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minwoo Im <minwoo.im.dev@gmail.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-[ Upstream commit dad77d63903e91a2e97a0c984cabe5d36e91ba60 ]
+[ Upstream commit f9481b08220d7dc1ff21e296a330ee8b721b44e4 ]
 
-If the "irq_queues" are greater than num_possible_cpus(),
-nvme_calc_irq_sets() can have irq set_size for HCTX_TYPE_DEFAULT greater
-than it can be afforded.
-2039         affd->set_size[HCTX_TYPE_DEFAULT] = nrirqs - nr_read_queues;
+at91sam9g25ek showed the following error at probe:
+atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
+for DMA transfers
+atmel_spi: probe of f0000000.spi failed with error -22
 
-It might cause a WARN() from the irq_build_affinity_masks() like [1]:
-220         if (nr_present < numvecs)
-221                 WARN_ON(nr_present + nr_others < numvecs);
+Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
+moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
+but didn't move the !ctrl->num_chipselect check. When there are
+chip selects in the device tree, the spi-atmel driver lets the
+SPI core discover them when registering the SPI master.
+The ctrl->num_chipselect is thus expected to be set by
+spi_get_gpio_descs().
 
-This patch prevents it from the WARN() by adjusting the max_vector value
-from the nvme_setup_irqs().
+Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
+before the aforementioned commit. While touching this block, get rid
+of the explicit comparison with 0 and update the commenting style.
 
-[1] WARN messages when modprobe nvme write_queues=32 poll_queues=0:
-root@target:~/nvme# nproc
-8
-root@target:~/nvme# modprobe nvme write_queues=32 poll_queues=0
-[   17.925326] nvme nvme0: pci function 0000:00:04.0
-[   17.940601] WARNING: CPU: 3 PID: 1030 at kernel/irq/affinity.c:221 irq_create_affinity_masks+0x222/0x330
-[   17.940602] Modules linked in: nvme nvme_core [last unloaded: nvme]
-[   17.940605] CPU: 3 PID: 1030 Comm: kworker/u17:4 Tainted: G        W         5.1.0+ #156
-[   17.940605] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[   17.940608] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
-[   17.940609] RIP: 0010:irq_create_affinity_masks+0x222/0x330
-[   17.940611] Code: 4c 8d 4c 24 28 4c 8d 44 24 30 e8 c9 fa ff ff 89 44 24 18 e8 c0 38 fa ff 8b 44 24 18 44 8b 54 24 1c 5a 44 01 d0 41 39 c4 76 02 <0f> 0b 48 89 df 44 01 e5 e8 f1 ce 10 00 48 8b 34 24 44 89 f0 44 01
-[   17.940611] RSP: 0018:ffffc90002277c50 EFLAGS: 00010216
-[   17.940612] RAX: 0000000000000008 RBX: ffff88807ca48860 RCX: 0000000000000000
-[   17.940612] RDX: ffff88807bc03800 RSI: 0000000000000020 RDI: 0000000000000000
-[   17.940613] RBP: 0000000000000001 R08: ffffc90002277c78 R09: ffffc90002277c70
-[   17.940613] R10: 0000000000000008 R11: 0000000000000001 R12: 0000000000000020
-[   17.940614] R13: 0000000000025d08 R14: 0000000000000001 R15: ffff88807bc03800
-[   17.940614] FS:  0000000000000000(0000) GS:ffff88807db80000(0000) knlGS:0000000000000000
-[   17.940616] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   17.940617] CR2: 00005635e583f790 CR3: 000000000240a000 CR4: 00000000000006e0
-[   17.940617] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   17.940618] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   17.940618] Call Trace:
-[   17.940622]  __pci_enable_msix_range+0x215/0x540
-[   17.940623]  ? kernfs_put+0x117/0x160
-[   17.940625]  pci_alloc_irq_vectors_affinity+0x74/0x110
-[   17.940626]  nvme_reset_work+0xc30/0x1397 [nvme]
-[   17.940628]  ? __switch_to_asm+0x34/0x70
-[   17.940628]  ? __switch_to_asm+0x40/0x70
-[   17.940629]  ? __switch_to_asm+0x34/0x70
-[   17.940630]  ? __switch_to_asm+0x40/0x70
-[   17.940630]  ? __switch_to_asm+0x34/0x70
-[   17.940631]  ? __switch_to_asm+0x40/0x70
-[   17.940632]  ? nvme_irq_check+0x30/0x30 [nvme]
-[   17.940633]  process_one_work+0x20b/0x3e0
-[   17.940634]  worker_thread+0x1f9/0x3d0
-[   17.940635]  ? cancel_delayed_work+0xa0/0xa0
-[   17.940636]  kthread+0x117/0x120
-[   17.940637]  ? kthread_stop+0xf0/0xf0
-[   17.940638]  ret_from_fork+0x3a/0x50
-[   17.940639] ---[ end trace aca8a131361cd42a ]---
-[   17.942124] nvme nvme0: 7/1/0 default/read/poll queues
-
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/spi/spi.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 544d095d44e5..f5bc1c30cef5 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2068,6 +2068,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
- 		.priv		= dev,
- 	};
- 	unsigned int irq_queues, this_p_queues;
-+	unsigned int nr_cpus = num_possible_cpus();
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 5e4654032bfa..29916e446143 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2286,11 +2286,6 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	if (status)
+ 		return status;
  
- 	/*
- 	 * Poll queues don't need interrupts, but we need at least one IO
-@@ -2078,7 +2079,10 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
- 		this_p_queues = nr_io_queues - 1;
- 		irq_queues = 1;
- 	} else {
--		irq_queues = nr_io_queues - this_p_queues + 1;
-+		if (nr_cpus < nr_io_queues - this_p_queues)
-+			irq_queues = nr_cpus + 1;
-+		else
-+			irq_queues = nr_io_queues - this_p_queues + 1;
+-	/* even if it's just one always-selected device, there must
+-	 * be at least one chipselect
+-	 */
+-	if (ctlr->num_chipselect == 0)
+-		return -EINVAL;
+ 	if (ctlr->bus_num >= 0) {
+ 		/* devices with a fixed bus num must check-in with the num */
+ 		mutex_lock(&board_lock);
+@@ -2361,6 +2356,13 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		}
  	}
- 	dev->io_queues[HCTX_TYPE_POLL] = this_p_queues;
  
++	/*
++	 * Even if it's just one always-selected device, there must
++	 * be at least one chipselect.
++	 */
++	if (!ctlr->num_chipselect)
++		return -EINVAL;
++
+ 	status = device_add(&ctlr->dev);
+ 	if (status < 0) {
+ 		/* free bus id */
 -- 
 2.20.1
 
