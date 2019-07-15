@@ -2,68 +2,107 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3618EC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025CDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158C2205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D049620868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563201017;
+	bh=iriXb7Yr7STtE0UEoL34YAtg0DlrF7jdrQaf243Fz/U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BJZBK9k5bfscQt3q9ImC/513W5zloNbtaL+bzvFzIROFDweOFQjqZuf8ZSWtJHd9i
+	 UDrHlSHTIFCUiyk8O0h1+LBPLHlMYlmGLlP6Tlmhl2NI5hO2N8zcXlW7T4ACVF5K7y
+	 n12aptrFeUsPcLdb/lKNCZJSXaAa2nl3EmUFdfUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391664AbfGOOaN (ORCPT
+        id S2391673AbfGOOaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54050 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391643AbfGOOaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:30:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 22189B084;
+        Mon, 15 Jul 2019 10:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403862AbfGOOaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:30:11 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A7520868;
         Mon, 15 Jul 2019 14:30:07 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     preid@electromag.com.au, nishadkamdar@gmail.com,
-        bhanusreemahesh@gmail.com, leobras.c@gmail.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH] Staging: fbtft: Fix wrong check in fbtft_write_wmem16_bus8()
-Date:   Mon, 15 Jul 2019 16:30:02 +0200
-Message-Id: <20190715143003.12819-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.22.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201010;
+        bh=iriXb7Yr7STtE0UEoL34YAtg0DlrF7jdrQaf243Fz/U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Cd3Mz5DwIi3TPNlNkaCFB/ZtEG6lIywo2dLbVU/cBb/rLXdjcY7qlv/DIKRqer4ej
+         IdEK8j38UUZUzPZt26aiXuB8jc8noMvzkhM6FcVGqMFvgT9O46F5qNO8J1b9bQpugO
+         eXchmDjKWOAO6+7pKVxQSLqfURRE4D9gqMD6qzFQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 026/105] net: phy: Check against net_device being NULL
+Date:   Mon, 15 Jul 2019 10:27:20 -0400
+Message-Id: <20190715142839.9896-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
+References: <20190715142839.9896-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We actually want to set the gpio pin if it's avilable, not the other way
-around.
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-Fixes: c440eee1a7a1 ("Staging: fbtft: Switch to the gpio descriptor interface")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+[ Upstream commit 82c76aca81187b3d28a6fb3062f6916450ce955e ]
+
+In general, we don't want MAC drivers calling phy_attach_direct with the
+net_device being NULL. Add checks against this in all the functions
+calling it: phy_attach() and phy_connect_direct().
+
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fbtft/fbtft-bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
-index 2ea814d0dca5..63c65dd67b17 100644
---- a/drivers/staging/fbtft/fbtft-bus.c
-+++ b/drivers/staging/fbtft/fbtft-bus.c
-@@ -135,7 +135,7 @@ int fbtft_write_vmem16_bus8(struct fbtft_par *par, size_t offset, size_t len)
- 	remain = len / 2;
- 	vmem16 = (u16 *)(par->info->screen_buffer + offset);
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index c433be573e0d..ed7e3c70b511 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -729,6 +729,9 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
+ {
+ 	int rc;
  
--	if (!par->gpio.dc)
-+	if (par->gpio.dc)
- 		gpiod_set_value(par->gpio.dc, 1);
++	if (!dev)
++		return -EINVAL;
++
+ 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
+ 	if (rc)
+ 		return rc;
+@@ -1067,6 +1070,9 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
+ 	struct device *d;
+ 	int rc;
  
- 	/* non buffered write */
++	if (!dev)
++		return ERR_PTR(-EINVAL);
++
+ 	/* Search the list of PHY devices on the mdio bus for the
+ 	 * PHY with the requested name
+ 	 */
 -- 
-2.22.0
+2.20.1
 
