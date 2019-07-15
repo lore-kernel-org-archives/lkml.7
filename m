@@ -2,81 +2,107 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C47C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA76C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1F92067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083D92086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563202354;
+	bh=2suqqsT+2Pk6XpVp+/aktRg0n3elcVkBB4wbALp421Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CzPx+LuxyL8AokLq8erxHuP+MO5xMiGVpBGlWLlb9wvZv5PCVsibQcfLS1m9/P3tm
+	 q5deh3btFjksR1QKjXqLimJj4kW4RND9nRGfYZWbskW5EUL2JOLZzmNvXvkeuXlZ5k
+	 nzNxaca2HQ5L4OQeBdW9zotyynCKPrUklnSmFkY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732477AbfGOOwQ (ORCPT
+        id S2391209AbfGOOaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:52:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36524 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391784AbfGOOwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:52:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B6CA2B0B8;
-        Mon, 15 Jul 2019 14:52:12 +0000 (UTC)
-Subject: Re: [PATCH] x86/paravirt: Drop {read,write}_cr8() hooks
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        FengTang <feng.tang@intel.com>, X86 ML <x86@kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alok Kataria <akataria@vmware.com>,
-        Nadav Amit <namit@vmware.com>
-References: <20190715130056.10627-1-andrew.cooper3@citrix.com>
- <a04918d1-975e-5869-1ecd-c9df4ae5b1c1@suse.com>
- <CALCETrX0T=vzyN8gqoBmA72xwzS45d5bDTfcZQJayht9n9ijPA@mail.gmail.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <f51ce980-599b-cae3-e3fa-4a67443ea128@suse.com>
-Date:   Mon, 15 Jul 2019 16:52:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 10:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403902AbfGOOan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:30:43 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC036205ED;
+        Mon, 15 Jul 2019 14:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201042;
+        bh=2suqqsT+2Pk6XpVp+/aktRg0n3elcVkBB4wbALp421Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=illTm88/9dyEoChpyzyvm9IaMkG3XqAleGpfAkuBTuSSKDEypqUluOxnGteJu+gou
+         6yDi5dwYdmZOdzVx8nJ3ciQIV2rdYE7xDE8jA4U24KNogKzb7QsN7WjK01/9RhOQ+c
+         IlMoI0xhwW0irnN5GSliGzw1OyD1AwpK576JRBuQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 034/105] net: fec: Do not use netdev messages too early
+Date:   Mon, 15 Jul 2019 10:27:28 -0400
+Message-Id: <20190715142839.9896-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
+References: <20190715142839.9896-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrX0T=vzyN8gqoBmA72xwzS45d5bDTfcZQJayht9n9ijPA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.19 16:26, Andy Lutomirski wrote:
-> On Mon, Jul 15, 2019 at 6:23 AM Juergen Gross <jgross@suse.com> wrote:
->>
->> On 15.07.19 15:00, Andrew Cooper wrote:
->>> There is a lot of infrastructure for functionality which is used
->>> exclusively in __{save,restore}_processor_state() on the suspend/resume
->>> path.
->>>
->>> cr8 is an alias of APIC_TASKPRI, and APIC_TASKPRI is saved/restored
->>> independently by lapic_{suspend,resume}().
->>
->> Aren't those called only with CONFIG_PM set?
->>
-> 
-> 
-> Unless I'm missing something, we only build any of the restore code
-> (including the write_cr8() call) if CONFIG_PM_SLEEP is set, and that
-> selects CONFIG_PM, so we should be fine, I think.
-> 
+From: Fabio Estevam <festevam@gmail.com>
 
-Okay, in that case I'd suggest to remove "cr8" from struct saved_context
-as it won't be used any longer.
+[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
 
+When a valid MAC address is not found the current messages
+are shown:
 
-Juergen
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
+
+Since the network device has not been registered at this point, it is better
+to use dev_err()/dev_info() instead, which will provide cleaner log
+messages like these:
+
+fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
+
+Tested on a imx6dl-pico-pi board.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 98cd53d380f7..0ae6532b02e0 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1690,10 +1690,10 @@ static void fec_get_mac(struct net_device *ndev)
+ 	 */
+ 	if (!is_valid_ether_addr(iap)) {
+ 		/* Report it and use a random ethernet address instead */
+-		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
++		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
+ 		eth_hw_addr_random(ndev);
+-		netdev_info(ndev, "Using random MAC address: %pM\n",
+-			    ndev->dev_addr);
++		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
++			 ndev->dev_addr);
+ 		return;
+ 	}
+ 
+-- 
+2.20.1
+
