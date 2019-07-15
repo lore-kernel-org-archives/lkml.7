@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66B8C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0E9C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EFA20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4FD20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201911;
-	bh=0M1AXxRjjfxaMQFoRK/xPFp4R+B3OCyCcpSb+7D2T8M=;
+	s=default; t=1563201916;
+	bh=394QZhcBDh/8/E31jIj293uxy+K5rhXIyIdJ1VMo2n8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Evjcs6ptEbKrS5cVG3Fmu0cs1ScIQ1Lzp+tN2pm293uc9RAOysN0r88SSG+sxCsEB
-	 8b3lPYuNPn4ZlZsAnnugon+fvis9caU7p0t8NJ/MQCMk6hprAEhcMpDqZ+DRDKZRP5
-	 /8+O6wvkuh++ifiAK0K/IPF90MupzZoOB/b5tRPY=
+	b=ST5g121XlgiOADzg6i4UDdEw0exgn0pmFdZsvXEvl1CkJoaEt5YkDbRQaQzCd5TN3
+	 YRu2HF6tsGPgAQR/cOzz7ZMVg9Nqkn4pj4de6PMOZTENL8nnMGErOvInTgEuH3ay7z
+	 OK/z+CWwhZMAA9nGlAUnmHC7lkBZ6cS8qWiNN/8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404862AbfGOOpK (ORCPT
+        id S2404411AbfGOOhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58886 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404425AbfGOOhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:20 -0400
+        id S2404036AbfGOOhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:37:04 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402F3217D8;
-        Mon, 15 Jul 2019 14:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349A5217D8;
+        Mon, 15 Jul 2019 14:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201439;
-        bh=0M1AXxRjjfxaMQFoRK/xPFp4R+B3OCyCcpSb+7D2T8M=;
+        s=default; t=1563201424;
+        bh=394QZhcBDh/8/E31jIj293uxy+K5rhXIyIdJ1VMo2n8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulpKuSr7ETrk9xy8hWwe8OLt5zIEKBYPCCyfkbEOBagey2T6yXzFO0OI7RNTuTacn
-         ir5IHPs1XzjfTWYH1kIc+URqOnM1+CacXezvhb7PP6NUAaDqZXwb9+Q5GzyeHMLWdf
-         CUaG8/aBEkHnKc7vSqoYcBjrm1sbgkOOu5GX907o=
+        b=HFaUnuHqSFQOJTNEiP2MhXCzUXQ8Ik9W0O+poSj2r3pGT1rto/klTPvH8DPCola5d
+         pdpD7M2HBXshWYtEyPHhQVfM8sbAr548yUcuAWRSno2v1gRFQis3YhpY8WneVlRjIJ
+         tRZl/voclFraxIV1b0vmP8pEaLcL7GIrqm/Gvyps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Daniel Lezcano <daniel.lezcano@free.fr>,
-        Serge Hallyn <serge@hallyn.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 13/73] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
-Date:   Mon, 15 Jul 2019 10:35:29 -0400
-Message-Id: <20190715143629.10893-13-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Mukesh Ojha <mojha@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/73] media: vpss: fix a potential NULL pointer dereference
+Date:   Mon, 15 Jul 2019 10:35:25 -0400
+Message-Id: <20190715143629.10893-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -61,50 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
+[ Upstream commit e08f0761234def47961d3252eac09ccedfe4c6a0 ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+pointer dereference.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
-
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
-
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Daniel Lezcano <daniel.lezcano@free.fr>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/pid_namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpss.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 3976dd57db78..0eab538841fd 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -344,7 +344,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
- 	}
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index fce86f17dffc..c2c68988e38a 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -523,6 +523,11 @@ static int __init vpss_init(void)
+ 		return -EBUSY;
  
- 	read_lock(&tasklist_lock);
--	force_sig(SIGKILL, pid_ns->child_reaper);
-+	send_sig(SIGKILL, pid_ns->child_reaper, 1);
- 	read_unlock(&tasklist_lock);
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
++	if (unlikely(!oper_cfg.vpss_regs_base2)) {
++		release_mem_region(VPSS_CLK_CTRL, 4);
++		return -ENOMEM;
++	}
++
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+ 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
  
- 	do_exit(0);
 -- 
 2.20.1
 
