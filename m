@@ -2,93 +2,80 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77364C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11CFC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452D72171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563233841;
-	bh=rG3h1CCwAFZcD67QhSxNdHQ/Kh5vcwoW6i8O8rEvLxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VDRVfUFEtVhUpwMmV4QF0xgq6BxM+53FX8+oo7uMMNwh5gFhu6vc0JNcL43NnEQy6
-	 7UmJx9F45af1fkeQ0tDwZZePAURqQx06X1ntFKVAnrHRAA7fjN1hgcDjHhHRAzsHrt
-	 gp1n3pnpfGpJ3cF3JjJX96kSA4R945iYRhXfOu44=
+	by mail.kernel.org (Postfix) with ESMTP id 9888A20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbfGOXhU (ORCPT
+        id S1731957AbfGOXvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbfGOXhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:37:19 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33D9220693;
-        Mon, 15 Jul 2019 23:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563233839;
-        bh=rG3h1CCwAFZcD67QhSxNdHQ/Kh5vcwoW6i8O8rEvLxs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=y4A+RIVv9w6aNcb2AVOqzfA76/Z/mJYm9CUvm+FOJSElGvHz5RJIEE6B0+P/krc93
-         uZUO6RD1vpx5dmlRAX67rdUug14E06LKigjQuU9byBl1w+Ohs1pxLGLDgMgycI2GZb
-         EQKXNxH2fL2zXPa2aMicYFftOFt2VVJbXV9xVX0k=
-Date:   Mon, 15 Jul 2019 18:37:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
- called in include/linux/pci.h
-Message-ID: <20190715233717.GA79424@google.com>
-References: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
- <20190715181312.31403-1-skunberg.kelsey@gmail.com>
- <alpine.DEB.2.21.1907152138120.2564@felia>
+        Mon, 15 Jul 2019 19:51:46 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:32797 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727379AbfGOXvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 19:51:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TX0PJ-d_1563234700;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX0PJ-d_1563234700)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Jul 2019 07:51:42 +0800
+Subject: Re: [v2 PATCH 0/2] mm: mempolicy: fix mbind()'s inconsistent behavior
+ for unmovable pages
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     vbabka@suse.cz, mhocko@kernel.org, mgorman@techsingularity.net,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190715152255.027e2e368e16eb0a862eb9df@linux-foundation.org>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <600c7713-2a6a-efce-69e6-9519d6aafaf1@linux.alibaba.com>
+Date:   Mon, 15 Jul 2019 16:51:40 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907152138120.2564@felia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190715152255.027e2e368e16eb0a862eb9df@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 09:42:47PM +0200, Lukas Bulwahn wrote:
-> On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
-> 
-> > Remove the following uncalled functions from include/linux/pci.h:
-> > 
-> >         pci_block_cfg_access()
-> >         pci_block_cfg_access_in_atomic()
-> >         pci_unblock_cfg_access()
-> > 
-> > Functions were added in patch fb51ccbf217c "PCI: Rework config space
-> > blocking services", ...
 
-> Also note that commits are referred to with this format:
-> 
-> commit <12-character sha prefix> ("<commit message>")
 
-FWIW, I use this shell alias to generate these references:
+On 7/15/19 3:22 PM, Andrew Morton wrote:
+> On Sat, 22 Jun 2019 08:20:07 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>
+>> Changelog
+>> v2: * Fixed the inconsistent behavior by not aborting !vma_migratable()
+>>        immediately by a separate patch (patch 1/2), and this is also the
+>>        preparation for patch 2/2. For the details please see the commit
+>>        log.  Per Vlastimil.
+>>      * Not abort immediately if unmovable page is met. This should handle
+>>        non-LRU movable pages and temporary off-LRU pages more friendly.
+>>        Per Vlastimil and Michal Hocko.
+>>
+>> Yang Shi (2):
+>>        mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
+>>        mm: mempolicy: handle vma with unmovable pages mapped correctly in mbind
+>>
+> I'm seeing no evidence of review on these two.  Could we please take a
+> look?  2/2 fixes a kernel crash so let's please also think about the
+> -stable situation.
 
-  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+Thanks for following up this. It seems I have a few patches stalled due 
+to lack of review.
 
-  $ gsr fb51ccb
-  fb51ccbf217c ("PCI: Rework config space blocking services")
+BTW, this would not crash post-4.9 kernel since that BUG_ON had been 
+removed. But, that behavior is definitely problematic as the commit log 
+elaborated.
 
-Documentation/process/submitting-patches.rst mentions a 12-char (at
-least) SHA-1 but the e21d2170f36 example shows a *20*-char SHA-1,
-which seems excessive to me.
+>
+> I have a note here that Vlastimil had an issue with [1/2] but I seem to
+> hae misplaced that email :(
 
-I personally skip the word "commit" because I figure it's pretty
-obvious what it is, but it's fine either way.
-
-Bjorn
