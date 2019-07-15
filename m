@@ -2,149 +2,171 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA8BC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2434DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CCE20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E8F20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:19:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8MO4MUV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn4hZfwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbfGOUTs (ORCPT
+        id S1732220AbfGOUTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:19:48 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38709 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729844AbfGOUTr (ORCPT
+        Mon, 15 Jul 2019 16:19:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45012 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729844AbfGOUTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:19:47 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so3959766ioa.5;
-        Mon, 15 Jul 2019 13:19:46 -0700 (PDT)
+        Mon, 15 Jul 2019 16:19:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so8241636pgl.11;
+        Mon, 15 Jul 2019 13:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TkjE725QSqZ4dkFuLoG+vA0yMkAoWN7O9RSUdzsebsc=;
-        b=h8MO4MUVIlQqTnfR5Og+DaigKE2QgHB8OsqEZw8GjXFMzJ/FJQCV+1xWDxZ2LZRMzo
-         2T1jGJBMnmVUK38ku38iUns/aLbXXSTtIHZom49OfBN/8dnw1dITnpC1OozlyJcY81WA
-         BLthifxP3ltY85Zu8uJQ+h/quShsxKtyqlo8T2pOzIQa0sn46Ac66NZVMiwmecH7zLez
-         Moh0xTGk/ZaFP711woaccognXfrXgd/9pov2cdIHEA9Wh5GsEFRBhCwNgguytGKVFYJ8
-         klQsX0w5fpXTUHx7gmbpvAp1uZdr2y0Z8PS6MG2a0DPsArDmVPwqJHX0Csq2Z7h08mF/
-         +Ktw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VwVZhf3FGp8Bt78SUPmSIUX1Y2n1U1qykgwrt3l8ads=;
+        b=Pn4hZfwTFRycrCV2z94gxgkFSz5XkJ6yPfiYtZLkTN2uCO3RIeZCZytqJ7Rpr3rKTI
+         r04HdhXREE6pMFFoKTTFieTDZ2xw2ybalxCez+307rae/7FgDJY6V6RntseHSwBYa2xm
+         uc+j13X3Jrm6NOciiM2Ngj2gm7+rM07qs/UYa9Wt5v36VyVdwUTcyxAOFkImu91TyDQe
+         nVueeO+zFNFgndd0T1x2gCs9PoXdVaumpiMd44y7h1h3vP4AP9tzUI1+G4wS4095UnU5
+         /poLqIajRGwKJh98dNZLjmFAceoaLUL/LitB1VJ3gdH51W3zn7XK3wi/1dVxtNjgEf1Q
+         VFew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TkjE725QSqZ4dkFuLoG+vA0yMkAoWN7O9RSUdzsebsc=;
-        b=agu2IlEDcK56PMqXIxdJxRzOPVYsDpO1AGX/rrXPQEhQ1CKZ8weSwu5tf2JDfAtKuC
-         lOaRR2+JeHlXRcEuplwUXbKFkCyh9FR8zH70JexhNbh9vD1aHiUy1yBpFAki4COOHO5P
-         G1m1pFZ22IzG0nhNEZ8NF2ZqREMbjFvK05nXby0XsWJ/uT2CktyNSz1FeDhqDy3oLHNB
-         gJ96KZmlQV51PR1hjjo3fnB7eWbufcA4nTKijxvwiSd9e2NxOdmqH1g+Uo0s4cNEWO4k
-         iaEfsccWylciI+YOEx7CXW+1F91a2jLO32WMJPKDJTCeGn6ct4m8s2/hs8KkuKF3n/Xi
-         WGmA==
-X-Gm-Message-State: APjAAAWjDnAiqadNuL5E7v+aBT08kPxP63OBTwwCvMDUJ+EYDPbGHSMt
-        tAuA4azn13wmQdLI+Xa8V5I=
-X-Google-Smtp-Source: APXvYqy2BPjk2wmAORUmSWSTU02Mv8tX0obRF21Uk45mkpTezjtN1swrS8vDTh6dSs3jRqMqxp5rQg==
-X-Received: by 2002:a05:6638:52:: with SMTP id a18mr30286329jap.75.1563221986160;
-        Mon, 15 Jul 2019 13:19:46 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id d25sm17710468iom.52.2019.07.15.13.19.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VwVZhf3FGp8Bt78SUPmSIUX1Y2n1U1qykgwrt3l8ads=;
+        b=igeoiEnmWsDgPKcY4irSG6mu7gpeKqPNKZJZsk4GnnK/XUbHtNhjREnCV3TeSwVjGk
+         ZwxUlWg+qpGEjno0egXQoHHWBiE20PlHFw8/w8qFidUsY4aoeiI7X36QDYYbGzu0QkxY
+         2HH8PlYp18Aad2Vd3jnxbwuU44dgfyxu349nBmARjCkrgyneJ11uIcx2Nmntr7ORVqkZ
+         fhlPj+xUyKRDgb6ZXrsv4BmFeK2bu+qt7sisUqo/CFU7V7p4oRD6jtWfNFG5vg6g0xwj
+         zoxcYRjiEkwWxOGGxSdVswYaAmk5fRnOgvgoGiH/QSAM0lzjdYzf2oi1CO1zKji4Pbuh
+         KjMA==
+X-Gm-Message-State: APjAAAXziITsPC8nmOVeEBb9bOI0DRuTOfvSIIuJyPB2WhRwCU2FJHWV
+        KuibqWdT2BuV2nab8qSuwtTje6gA
+X-Google-Smtp-Source: APXvYqzR6mDqGeTrVGHyF4Lakpv8XKdXKMk51OnIdeO23HuZFz9V6ShQvEQ5DUhEIa2ZMK6m4FdYGg==
+X-Received: by 2002:a17:90a:b00b:: with SMTP id x11mr31496957pjq.120.1563221989251;
+        Mon, 15 Jul 2019 13:19:49 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id h1sm22730534pfg.55.2019.07.15.13.19.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 13:19:45 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 14:19:44 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
- called in include/linux/pci.h
-Message-ID: <20190715201944.GA36316@JATN>
-References: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
- <20190715181312.31403-1-skunberg.kelsey@gmail.com>
- <alpine.DEB.2.21.1907152138120.2564@felia>
+        Mon, 15 Jul 2019 13:19:48 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/14] crypto: caam - Add i.MX8MQ support
+Date:   Mon, 15 Jul 2019 13:19:28 -0700
+Message-Id: <20190715201942.17309-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907152138120.2564@felia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 09:42:47PM +0200, Lukas Bulwahn wrote:
-> 
-> 
-> On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
-> 
-> > Remove the following uncalled functions from include/linux/pci.h:
-> > 
-> >         pci_block_cfg_access()
-> >         pci_block_cfg_access_in_atomic()
-> >         pci_unblock_cfg_access()
-> > 
-> > Functions were added in patch fb51ccbf217c "PCI: Rework config space
-> > blocking services", though no callers were added. Code continues to be
-> > unused and should be removed.
-> > 
-> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > ---
-> > 
-> 
-> Nice finding. How did you discover this issue? Did you use a tool to find 
-> this ununsed code or stumble over it during your code review?
->
-Stumbled upon it while reviewing include/linux/pci.h to see what
-could be moved to drivers/pci/pci.h.
- 
-> Also note that commits are referred to with this format:
-> 
-> commit <12-character sha prefix> ("<commit message>")
->
-> So, you need to change patch to commit and include brackets around your
-> quoted commit message.
-> 
-> Lukas
+Everyone:
 
-Thank you for letting me know and reviewing! I will update this now.
+Picking up where Chris left off (I chatted with him privately
+beforehead), this series adds support for i.MX8MQ to CAAM driver. Just
+like [v1], this series is i.MX8MQ only.
 
--Kelsey
+Feedback is welcome!
+Thanks,
+Andrey Smirnov
 
-> 
-> > Changes since v1:
-> >   - Fixed Signed-off-by line to show full name
-> > 
-> >  include/linux/pci.h | 5 -----
-> >  1 file changed, 5 deletions(-)
-> > 
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index cf380544c700..3c9ba6133bea 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
-> >  
-> >  static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
-> >  
-> > -static inline void pci_block_cfg_access(struct pci_dev *dev) { }
-> > -static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
-> > -{ return 0; }
-> > -static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
-> > -
-> >  static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
-> >  { return NULL; }
-> >  static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
-> > -- 
-> > 2.20.1
-> > 
-> > _______________________________________________
-> > Linux-kernel-mentees mailing list
-> > Linux-kernel-mentees@lists.linuxfoundation.org
-> > https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
-> > 
+Changes since [v4]:
+
+  - Fixed missing sentinel element in "crypto: caam - simplfy clock
+    initialization"
+    
+  - Squashed all of the devers related patches into a single one and
+    converted IRQ allocation to use devres while at it
+
+  - Added "crypto: caam - request JR IRQ as the last step" as
+    discussed
+
+Changes since [v3]:
+
+  - Patchset changed to select DMA size at runtime in order to enable
+    support for both i.MX8MQ and Layerscape at the same time. I only
+    tested the patches on i.MX6,7 and 8MQ, since I don't have access
+    to any of the Layerscape HW. Any help in that regard would be
+    appareciated.
+
+  - Bulk clocks and their number are now stored as a part of struct
+    caam_drv_private to simplify allocation and cleanup code (no
+    special context needed)
+    
+  - Renamed 'soc_attr' -> 'imx_soc_match' for clarity
+
+Changes since [v2]:
+
+  - Dropped "crypto: caam - do not initialise clocks on the i.MX8" and
+    replaced it with "crypto: caam - simplfy clock initialization" and 
+    "crypto: caam - add clock entry for i.MX8MQ"
+
+
+Changes since [v1]
+
+  - Series reworked to continue using register based interface for
+    queueing RNG initialization job, dropping "crypto: caam - use job
+    ring for RNG instantiation instead of DECO"
+
+  - Added a patch to share DMA mask selection code
+
+  - Added missing Signed-off-by for authors of original NXP tree
+    commits that this sereis is based on
+
+[v4] lore.kernel.org/r/20190703081327.17505-1-andrew.smirnov@gmail.com
+[v3] lore.kernel.org/r/20190617160339.29179-1-andrew.smirnov@gmail.com
+[v2] lore.kernel.org/r/20190607200225.21419-1-andrew.smirnov@gmail.com
+[v1] https://patchwork.kernel.org/cover/10825625/
+
+Andrey Smirnov (14):
+  crypto: caam - move DMA mask selection into a function
+  crypto: caam - simplfy clock initialization
+  crypto: caam - convert caam_jr_init() to use devres
+  crypto: caam - request JR IRQ as the last step
+  crytpo: caam - make use of iowrite64*_hi_lo in wr_reg64
+  crypto: caam - use ioread64*_hi_lo in rd_reg64
+  crypto: caam - drop 64-bit only wr/rd_reg64()
+  crypto: caam - make CAAM_PTR_SZ dynamic
+  crypto: caam - move cpu_to_caam_dma() selection to runtime
+  crypto: caam - drop explicit usage of struct jr_outentry
+  crypto: caam - don't hardcode inpentry size
+  crypto: caam - force DMA address to 32-bit on 64-bit i.MX SoCs
+  crypto: caam - always select job ring via RSR on i.MX8MQ
+  crypto: caam - add clock entry for i.MX8MQ
+
+ drivers/crypto/caam/caamalg.c     |   2 +-
+ drivers/crypto/caam/caamhash.c    |   2 +-
+ drivers/crypto/caam/caampkc.c     |   8 +-
+ drivers/crypto/caam/caamrng.c     |   2 +-
+ drivers/crypto/caam/ctrl.c        | 225 ++++++++++++++----------------
+ drivers/crypto/caam/desc_constr.h |  20 ++-
+ drivers/crypto/caam/error.c       |   3 +
+ drivers/crypto/caam/intern.h      |  32 ++++-
+ drivers/crypto/caam/jr.c          |  95 ++++---------
+ drivers/crypto/caam/pdb.h         |  16 ++-
+ drivers/crypto/caam/pkc_desc.c    |   8 +-
+ drivers/crypto/caam/regs.h        | 139 ++++++++++++------
+ 12 files changed, 306 insertions(+), 246 deletions(-)
+
+-- 
+2.21.0
+
