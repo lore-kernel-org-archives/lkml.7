@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0763DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15FAC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D083E20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF32B2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199830;
-	bh=nQcIkOUEnUbbNZqnik5e7Pcu6uiNFKKEwHeO9bQu4kg=;
+	s=default; t=1563199834;
+	bh=b+kDaSPGElmt9c6tYodtpHuidvasn+5V9Dd80tjOgrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yx0JqP+Wx9KVun8G10WyWiPwpwK0RQxlFNppTbH6jr4ZkYLw+woMvIXICjH3UnU2D
-	 mQvfkeHWST3aCwoQeDu4ZpGKXDMlfyry8DphXSJn4iZ2dNOsRgR77Ec4uRK8aIrxyX
-	 C0HWRxY91gmRl7s9kfeO9+bTE36YGTgaBi93OM8s=
+	b=GKLIgEQaQ4Qm+a421ibWFPQ80fJWWtXA7aXaWBrezL6GT2894kTKy67kLoa/ZeuTQ
+	 vMD4KmvuepJiQQ3a8NeCWPuYJnioR6Z/KwPN0BkD3VGgdfes+YDUWXYP4Pn1VZMCRR
+	 e7bLYV3zFyUXx4ZOk9H4QiQ8sEc0Yh891MgDOzPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388872AbfGOOK3 (ORCPT
+        id S2388624AbfGOOKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39618 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388399AbfGOOKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:10:24 -0400
+        id S2387815AbfGOOKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:10:30 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 419512083D;
-        Mon, 15 Jul 2019 14:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A53C206B8;
+        Mon, 15 Jul 2019 14:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199824;
-        bh=nQcIkOUEnUbbNZqnik5e7Pcu6uiNFKKEwHeO9bQu4kg=;
+        s=default; t=1563199829;
+        bh=b+kDaSPGElmt9c6tYodtpHuidvasn+5V9Dd80tjOgrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c11GuC8dEOoszazM8mrO2z6ad+GoH4fAcsvcjR8AcUrCcj9LJ0CcfcoABkejlg9wY
-         /LGrh+XboTeKKFrMswS308D7cOue3KKkIJXy/7KjT4+VYz1hj/sCfEWLgtEc5tUIHb
-         qGAwkWSlrCfbLhhDWbe8dZ0xmfzGQPgckm0LpiaA=
+        b=piF60kpIzhGb6EoWa+DhmBcHlzawBs42UY3BB5DgcN8G5e/n4j74Bf3FKmAOrgTRl
+         RfTW89Gjs5FLxLS37u3/pPqGN5L5oVF9NCqkqsRgOEVvjCquG3Iuk4pWRr0chGMOuu
+         T0Y7uk1XeKVGqrzNIh7QczBSQ8FG3xG/9tRVEAZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>, Borislav Petkov <bp@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 117/219] EDAC/sysfs: Fix memory leak when creating a csrow object
-Date:   Mon, 15 Jul 2019 10:01:58 -0400
-Message-Id: <20190715140341.6443-117-sashal@kernel.org>
+Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 119/219] nvme-pci: properly report state change failure in nvme_reset_work
+Date:   Mon, 15 Jul 2019 10:02:00 -0400
+Message-Id: <20190715140341.6443-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -62,52 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Minwoo Im <minwoo.im.dev@gmail.com>
 
-[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
+[ Upstream commit cee6c269b016ba89c62e34d6bccb103ee2c7de4f ]
 
-In edac_create_csrow_object(), the reference to the object is not
-released when adding the device to the device hierarchy fails
-(device_add()). This may result in a memory leak.
+If the state change to NVME_CTRL_CONNECTING fails, the dmesg is going to
+be like:
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
+  [  293.689160] nvme nvme0: failed to mark controller CONNECTING
+  [  293.689160] nvme nvme0: Removing after probe failure status: 0
+
+Even it prints the first line to indicate the situation, the second line
+is not proper because the status is 0 which means normally success of
+the previous operation.
+
+This patch makes it indicate the proper error value when it fails.
+  [   25.932367] nvme nvme0: failed to mark controller CONNECTING
+  [   25.932369] nvme nvme0: Removing after probe failure status: -16
+
+This situation is able to be easily reproduced by:
+  root@target:~# rmmod nvme && modprobe nvme && rmmod nvme
+
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index bf9273437e3f..7c01e1cc030c 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -404,6 +404,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
- static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 				    struct csrow_info *csrow, int index)
- {
-+	int err;
-+
- 	csrow->dev.type = &csrow_attr_type;
- 	csrow->dev.groups = csrow_dev_groups;
- 	device_initialize(&csrow->dev);
-@@ -415,7 +417,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 	edac_dbg(0, "creating (virtual) csrow node %s\n",
- 		 dev_name(&csrow->dev));
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 693f2a856200..21a51a0ff4d7 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2545,6 +2545,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
+ 		dev_warn(dev->ctrl.device,
+ 			"failed to mark controller CONNECTING\n");
++		result = -EBUSY;
+ 		goto out;
+ 	}
  
--	return device_add(&csrow->dev);
-+	err = device_add(&csrow->dev);
-+	if (err)
-+		put_device(&csrow->dev);
-+
-+	return err;
- }
- 
- /* Create a CSROW object under specifed edac_mc_device */
 -- 
 2.20.1
 
