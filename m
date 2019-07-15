@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112A2C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7A4C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE04E217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23708217F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202034;
-	bh=rICwTybRnCVcvC1GDeqf6rZ3WYYb1FHZqLdwNlEeVCU=;
+	s=default; t=1563202039;
+	bh=e8Fe9t3zyOgzmgKzPaJgfNh0vVRTM1k/Qcqi8GklCYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpvbaMVKd06/ATwX0WyAiWiXSRfxB9v8Cb13RDUQeF/KdH6VrqveyAFUihiey62y1
-	 BNqedSPTRbN+iD1c9sVhx2SXg7ZKlBb7qpCqfGOvMYB0kDy2oRp3t9uFMvrT1FFS32
-	 fnAC4M+ip2fBYBWkJq3dOQpbCgX/uDvnZjMn8CAo=
+	b=k4rOH7e7MzJQFapCKrymd76OufmGU6AkSfIh1ztNIdEQHOPlY54wCu3da9Q7EXoSJ
+	 RHO1dxuFn+xYGOkk1z0tzsdvqiZYyt+g7eavtv5ztsiHqnua0a9mCU35QKHeGDCiff
+	 H3ZCk4CpaRAZ+Tr421hkCLE/WvNjV51hObR/c/e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391937AbfGOOrN (ORCPT
+        id S2392101AbfGOOrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405147AbfGOOrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:47:01 -0400
+        id S2387393AbfGOOrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:47:11 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C96C20651;
-        Mon, 15 Jul 2019 14:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1815321537;
+        Mon, 15 Jul 2019 14:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202020;
-        bh=rICwTybRnCVcvC1GDeqf6rZ3WYYb1FHZqLdwNlEeVCU=;
+        s=default; t=1563202030;
+        bh=e8Fe9t3zyOgzmgKzPaJgfNh0vVRTM1k/Qcqi8GklCYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1axxnf3Z0SxR0b501Gy7B4DvvKkIf/gDzEEe77yTajsB0lXBtD9FCZxpoAcqu4RYA
-         F9hix3wAwF3CdtUlbfRfOCvytEiTElaqO2E7Kk99CDbLczHG9P1eIxCLqGBA3sJhyU
-         V31PowrG3sI7bORY/63bM62aJ28OJ+9IQHkVFHE4=
+        b=eT7rdsYwpuC1ZWYelYZ+8y08uoa0BnQeKsYj4S+Y8SHSa/RDI86fmwFnFgkejNsRG
+         bwL5NCDWHmqkh67qR5bRhUdrXlNkwVEs0BkQlDPP+KeRwyYT5sMZFp+6FQNkLRMxGP
+         8asUSJEcKtn97U7L/urGsOtB4QYKWd/OrqNcTIRs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 24/53] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Mon, 15 Jul 2019 10:45:06 -0400
-Message-Id: <20190715144535.11636-24-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 26/53] gpio: omap: fix lack of irqstatus_raw0 for OMAP4
+Date:   Mon, 15 Jul 2019 10:45:08 -0400
+Message-Id: <20190715144535.11636-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -59,39 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
+[ Upstream commit 64ea3e9094a1f13b96c33244a3fb3a0f45690bd2 ]
 
-When a CQ-enabled device uses QEBSM for SBAL state inspection,
-get_buf_states() can return the PENDING state for an Output Queue.
-get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
-buffer will permanently stall all further completion processing on this
-Queue.
+Commit 384ebe1c2849 ("gpio/omap: Add DT support to GPIO driver") added
+the register definition tables to the gpio-omap driver. Subsequently to
+that commit, commit 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx()
+checks from *_runtime_resume()") added definitions for irqstatus_raw*
+registers to the legacy OMAP4 definitions, but missed the DT
+definitions.
 
-This isn't a concern for non-QEBSM devices, as get_buf_states() for such
-devices will manually turn PENDING buffers into EMPTY ones.
+This causes an unintentional change of behaviour for the 1.101 errata
+workaround on OMAP4 platforms. Fix this oversight.
 
-Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Fixes: 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx() checks from *_runtime_resume()")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-omap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index d64b401f3d05..8d7fc3b6ca63 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -752,6 +752,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
- 
- 	switch (state) {
- 	case SLSB_P_OUTPUT_EMPTY:
-+	case SLSB_P_OUTPUT_PENDING:
- 		/* the adapter got it */
- 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
- 			"out empty:%1d %02x", q->nr, count);
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index c8c49b1d5f9f..f23136825a6e 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1611,6 +1611,8 @@ static struct omap_gpio_reg_offs omap4_gpio_regs = {
+ 	.clr_dataout =		OMAP4_GPIO_CLEARDATAOUT,
+ 	.irqstatus =		OMAP4_GPIO_IRQSTATUS0,
+ 	.irqstatus2 =		OMAP4_GPIO_IRQSTATUS1,
++	.irqstatus_raw0 =	OMAP4_GPIO_IRQSTATUSRAW0,
++	.irqstatus_raw1 =	OMAP4_GPIO_IRQSTATUSRAW1,
+ 	.irqenable =		OMAP4_GPIO_IRQSTATUSSET0,
+ 	.irqenable2 =		OMAP4_GPIO_IRQSTATUSSET1,
+ 	.set_irqenable =	OMAP4_GPIO_IRQSTATUSSET0,
 -- 
 2.20.1
 
