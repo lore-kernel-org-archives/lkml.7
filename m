@@ -2,141 +2,85 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534DEC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C37C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE682081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:28:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PqyiOrfc"
+	by mail.kernel.org (Postfix) with ESMTP id A9F972083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbfGOT2t (ORCPT
+        id S1730587AbfGOTaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:28:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40592 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfGOT2t (ORCPT
+        Mon, 15 Jul 2019 15:30:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48670 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729948AbfGOTaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:28:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJO7Di018305;
-        Mon, 15 Jul 2019 19:28:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=UpYz68J9SXKjrbYmMLBu27WLSWRHESOgO2cA0Dv9rEc=;
- b=PqyiOrfciKLM+Eu7h/+ffnZYAhF0Jhb8559fZ1toCjPSk5Sbs+46wJVoDd3qN3VcUBfq
- hiZYqojPjKGHAohKUfotJQ+r8QmWiYS6CbDYCLmmI+nDQsMeIw0AqmixDHaE0Bcl8EcT
- zIdxC9+W57ciXJu3otB3CwHrr+aZUPaWsUQrZUfu2pxEo+44QRkeouQZh+p3ONS4qU+t
- 8r55ubLMvQaKaNSzJtlFWGJVeL3ZyognjQvaS3tXo+488S568jlFOT6dLAoCHX2nbmT1
- PTjgfrLwFVYbfl5Ww7SX2VMenDxZ348U2xU/ksCC9S1ZnPER4nGHJWnd3jRffwMnR8Sh hw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2tq6qtgj73-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 19:28:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJMe6T056368;
-        Mon, 15 Jul 2019 19:26:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2tq742prtm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 19:26:00 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6FJPwo6031353;
-        Mon, 15 Jul 2019 19:25:58 GMT
-Received: from ol-bur-x5-4.us.oracle.com (/10.152.128.37)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jul 2019 12:25:58 -0700
-From:   Alex Kogan <alex.kogan@oracle.com>
-To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        alex.kogan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-Subject: [PATCH v3 5/5] locking/qspinlock: Introduce the shuffle reduction optimization into CNA
-Date:   Mon, 15 Jul 2019 15:25:36 -0400
-Message-Id: <20190715192536.104548-6-alex.kogan@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190715192536.104548-1-alex.kogan@oracle.com>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907150221
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907150222
+        Mon, 15 Jul 2019 15:30:15 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hn6fs-00057m-Q9; Mon, 15 Jul 2019 21:30:12 +0200
+Date:   Mon, 15 Jul 2019 21:30:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Uros Bizjak <ubizjak@gmail.com>
+cc:     Andi Kleen <ak@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>
+Subject: Re: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop
+ targets
+In-Reply-To: <CAFULd4bcB8tsgZuxZJm_ksp5zyDQXjO=v_Ov622Bmhx=fr7KuA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907152129350.1767@nanos.tec.linutronix.de>
+References: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com> <8736j7gsza.fsf@linux.intel.com> <alpine.DEB.2.21.1907152033020.1767@nanos.tec.linutronix.de> <CAFULd4bcB8tsgZuxZJm_ksp5zyDQXjO=v_Ov622Bmhx=fr7KuA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This optimization reduces the probability threads will be shuffled between
-the main and secondary queues when the secondary queue is empty.
-It is helpful when the lock is only lightly contended.
+On Mon, 15 Jul 2019, Uros Bizjak wrote:
+> On Mon, Jul 15, 2019 at 8:41 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Mon, 15 Jul 2019, Andi Kleen wrote:
+> > > Uros Bizjak <ubizjak@gmail.com> writes:
+> > >
+> > > > Recent patch [1] disabled a self-snoop feature on a list of processor
+> > > > models with a known errata, so we are confident that the feature
+> > > > should work on remaining models also for other purposes than to speed
+> > > > up MTRR programming.
+> > >
+> > > MTRR is very different than TLBs.
+> > >
+> > > >From my understanding not flushing with PAT is only safe everywhere when
+> > > the memory is only used for coherent devices (like the Internal GPU on
+> > > Intel CPUs). We don't have any infrastructure to track or enforce
+> > > this unfortunately.
+> >
+> > Right, we don't know where the PAT invocation comes from and whether they
+> > are safe to omit flushing the cache. The module load code would be one
+> > obvious candidate.
+> >
+> > But unless there is some really worthwhile speedup, e.g. for boot, then
+> > adding some flag to let CPA know about the safe 'no flush' operation might
+> > be not worth it.
+> 
+> For the reference, FreeBSD implements this approach, later changed to
+> use pmap_invalidate_cache_range ifunc (that calls
+> pmap_invalidate_cache_range_selfsnoop for targets with self-snoop
+> capability) and pmap_force_invalidate_cache_range [1]. The full
+> cross-referenced source is at [2].
 
-Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
----
- kernel/locking/qspinlock_cna.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+That does not answer the question whether it's worthwhile to do that.
 
-diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
-index 3de5be813a46..9e6bd9e6d82b 100644
---- a/kernel/locking/qspinlock_cna.h
-+++ b/kernel/locking/qspinlock_cna.h
-@@ -50,6 +50,15 @@ static DEFINE_PER_CPU(u32, seed);
- #define INTRA_NODE_HANDOFF_PROB_ARG 0x10000
- 
- /*
-+ * Controls the probability for enabling the scan of the main queue when
-+ * the secondary queue is empty. The chosen value reduces the amount of
-+ * unnecessary shuffling of threads between the two waiting queues when
-+ * the contention is low, while responding fast enough and enabling
-+ * the shuffling when the contention is high.
-+ */
-+#define SHUFFLE_REDUCTION_PROB_ARG  0x80
-+
-+/*
-  * Return false with probability 1 / @range.
-  * @range must be a power of 2.
-  */
-@@ -169,6 +178,16 @@ static inline void cna_pass_mcs_lock(struct mcs_spinlock *node,
- 	u64 val = 1;
- 
- 	/*
-+	 * Limit thread shuffling when the secondary queue is empty.
-+	 * This copes with the overhead the shuffling creates when the
-+	 * lock is only lightly contended, and threads do not stay
-+	 * in the secondary queue long enough to reap the benefit of moving
-+	 * them there.
-+	 */
-+	if (node->locked <= 1 && probably(SHUFFLE_REDUCTION_PROB_ARG))
-+		goto pass_lock;
-+
-+	/*
- 	 * Try to pass the lock to a thread running on the same node.
- 	 * For long-term fairness, search for such a thread with high
- 	 * probability rather than always.
-@@ -194,5 +213,6 @@ static inline void cna_pass_mcs_lock(struct mcs_spinlock *node,
- 		 * in the main queue.
- 		 */
- 
-+pass_lock:
- 	arch_mcs_spin_unlock_contended(var, val);
- }
--- 
-2.11.0 (Apple Git-81)
+Thanks,
 
+	tglx
