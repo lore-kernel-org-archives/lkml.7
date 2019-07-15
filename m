@@ -2,137 +2,138 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCB9C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5698C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930CB2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:11:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R4wRB/lV"
+	by mail.kernel.org (Postfix) with ESMTP id 93DFA2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfGOQLX (ORCPT
+        id S1730316AbfGOQMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:11:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50876 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729533AbfGOQLX (ORCPT
+        Mon, 15 Jul 2019 12:12:00 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48273 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfGOQMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:11:23 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FG9K7g046431;
-        Mon, 15 Jul 2019 16:11:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=FHNs/VLuaqZ6nZAgJqcIiUHrYF7VNMT5n+FgGHZ8rBc=;
- b=R4wRB/lVnB1ltWkn/GMHIPbIECr3MzMvRuYL91sqD33inkHwuq+Szs0wGXTlwCC6z0j5
- 7apQxbjsKIBBBrhCePlKJcEWM6pS48zSoAnF49EBkuf40UAZotacRDXx1lEkqzkf0r/6
- u0BSecvo6MhRdZJMcNj3r53xdgxQtSgx2MSBYw1g+k7PMClmOrkqXs4lVVDa1+93zOyB
- G5uIKr+d2OHcUtdqjTIyJV11TQRRN7EqlCDesVWZbrPM5LGjz10FHUqyyCPOglHuK22s
- BJQOEIw5w1zxHzmvXj5tEJPINnAHUZEV/0iiPAXUINZTEuwvRp3HKhgLi7EHqcfHFtbi aQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tq6qtfjbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 16:11:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FG7xVU011256;
-        Mon, 15 Jul 2019 16:10:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tq6mmc445-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 16:10:59 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6FGApLd006898;
-        Mon, 15 Jul 2019 16:10:56 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jul 2019 09:10:51 -0700
-Date:   Mon, 15 Jul 2019 12:10:46 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
- padata jobs
-Message-ID: <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
- <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=876
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907150188
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=921 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907150188
+        Mon, 15 Jul 2019 12:12:00 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hn3Zw-0000Hc-8z; Mon, 15 Jul 2019 18:11:52 +0200
+Message-Id: <20190715150402.798499167@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Mon, 15 Jul 2019 17:04:02 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <clark.williams@gmail.com>,
+        Julia Cartwright <julia@ni.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: [patch 0/1] Kconfig: Introduce CONFIG_PREEMPT_RT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 01:03:21PM +0800, Herbert Xu wrote:
-> On Fri, Jul 12, 2019 at 12:07:37PM -0400, Daniel Jordan wrote:
-> >
-> > modprobe (CPU2)               kworker/21:1-293 (CPU21)                              kworker/5:2-276 (CPU5)
-> > --------------------------    ------------------------                              ----------------------
-> > <submit job, seq_nr=16581>
-> > ...
-> >   padata_do_parallel
-> >     queue_work_on(21, ...)
-> > <sleeps>
-> >                               padata_parallel_worker
-> >                                 pcrypt_aead_dec
-> >                                   padata_do_serial
-> >                                     padata_reorder
-> 
-> This can't happen because if the job started on CPU2 then it must
-> go back to CPU2 for completion.  IOW padata_do_serial should be
-> punting this to a work queue for CPU2 rather than calling
-> padata_reorder on CPU21.
+Linus,
 
-I've been wrong before plenty of times, and there's nothing preventing this
-from being one of those times :) , but in this case I believe what I'm showing
-is correct.
+please consider to apply the following patch, which introduces the Kconfig
+symbol CONFIG_PREEMPT_RT.
 
-The padata_do_serial call for a given job ensures padata_reorder runs on the
-CPU that the job hashed to in padata_do_parallel, which is not necessarily the
-same CPU as the one that padata_do_parallel itself ran on.
+Rationale:
 
-In this case, the padata job in question started via padata_do_parallel, where
-it hashed to CPU 21:
+The real-time preemption patch set exists for almost 15 years now and while
+the vast majority of infrastructure and enhancements have found their way
+into the mainline kernel, the final integration of RT is still missing.
 
-  padata_do_parallel                    // ran on CPU 2
-    ...
-    target_cpu = padata_cpu_hash(pd);   // target_cpu == 21
-    padata->cpu = target_cpu;
-    ...
-    queue_work_on(21, ...)
+Over the course of the last few years, we have worked on reducing the
+intrusivenness of the RT patches by refactoring kernel infrastructure to be
+more real-time friendly. Almost all of these changes were benefitial to
+the mainline kernel on their own, so there was no objection to integrate
+them.
 
-The corresponding kworker then started:
+Though except for the still ongoing printk refactoring, the remaining
+changes which are required to make RT a first class mainline citizen are
+not longer arguable as immediately beneficial for the mainline kernel. Most
+of them are either reordering code flows or adding RT specific functionality.
+But this now has hit a wall and turned into a classic hen and egg problem:
 
-  padata_parallel_worker                // bound to CPU 21
-    pcrypt_aead_dec
-      padata_do_serial
-        padata_reorder
+  Maintainers are rightfully wary vs. these changes as they make only
+  sense if the final integration of RT into the mainline kernel takes
+  place.
 
-Daniel
+Adding CONFIG_PREEMPT_RT aims to solve this as a clear sign that RT will be
+fully integrated into the mainline kernel. The final integration of the
+missing bits and pieces will be of course done with the same careful
+approach as we have used in the past.
+
+While I'm aware that you are not entirely enthusiastic about that, I think
+that RT should receive the same treatment as any other widely used out of
+tree functionality, which we have accepted into mainline over the years.
+
+RT has become the de-facto standard real-time enhancement and is shipped by
+enterprise, embedded and community distros. It's in use throughout a wide
+range of industries: telecommunications, industrial automation, professional
+audio, medical devices, data acquisition, automotive - just to name a
+few major use cases.
+
+RT development is backed by a Linuxfoundation project which is supported
+by major stakeholders of this technology. The funding will continue over
+the actual inclusion into mainline to make sure that the functionality is
+neither introducing regressions, regressing itself, nor becomes subject
+to bitrot. There is also a lifely user community around RT as well, so
+contrary to the grim situation 5 years ago, it's a healthy project.
+
+As RT is still a good vehicle to exercise rarely used code paths and to
+detect hard to trigger issues, you could at least view it as a QA tool if
+nothing else.
+
+The current state of the RT patches against 5.2 is:
+
+   365 files changed, 9396 insertions(+), 3209 deletions(-)
+
+When the already queued changes, agreed on changes and the ongoing printk
+work is taken out then the diffstat is reduced to:
+
+   311 files changed, 6567 insertions(+), 1352 deletions(-)
+
+Out of the 6567 insertions about 4000 lines are the self contained RT
+infrastructure (lock substitutions, scheduler addons, etc.).
+
+The remaining bits and pieces are smallish changes to places which need to
+be slightly modified to cope with the RT semantics.
+
+The current full RT set can be found here:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.2.y-rt
+
+Note that aside of the printk changes (which are under flux due to the
+ongoing review/design discussions) also a large part of the rest is
+not the final state as these changes still need to be discussed with
+the relevant maintainers and we are still working hard on refinining
+them and reducing the impact. So while the big picture is probably
+good reflected, please take the details with a grain of salt.
+
+Thanks,
+
+	Thomas
+
+
+
