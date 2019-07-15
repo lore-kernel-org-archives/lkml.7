@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBBDC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2518CC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4DE2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AD6205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203325;
-	bh=QD7LKwfQZbVaDxLlLsL5KEluEZnTM2NE88iU3wPFvj4=;
+	s=default; t=1563203330;
+	bh=VZ5dWzfU6DSYKWxr1/oUs1EfkFOuTXkKsTHfV3kSy6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTeCS4njN2jyb+xAjC0hNsvIyL8yk1d4FrB7YGSsUNP1KBt73XTUx6/nb1B05vr/c
-	 KLzrkm+0Cv+Nak7+cwaiBQpc99MxkYlzuLVeXK/ybiaJsfNDHsIrkDt254x1I6MBvQ
-	 ClK4WgQN+ZiTSrDOFvKrdpxRp1uJeRJwIRk8HITk=
+	b=flRy8Uiu3cmoileEw31oyvDobUlPqizy4ii5ZjcLE0iQKk2Ob0y9PvHgS8TNyOvvB
+	 5lfIXJbCcrXVyXDi9kJwQGGPuCZ/QU6+uj9kr1B18A/N/qvkX3MVLs4OUsYkzNA0Fm
+	 /2rkJMF3J20FaUGALSCHLDcCLH+BHhsW/C/8/clg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733042AbfGON57 (ORCPT
+        id S1733033AbfGON55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36844 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731678AbfGON54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:56 -0400
+        id S1731845AbfGON5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:54 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E27217D8;
-        Mon, 15 Jul 2019 13:57:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E709621537;
+        Mon, 15 Jul 2019 13:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199076;
-        bh=QD7LKwfQZbVaDxLlLsL5KEluEZnTM2NE88iU3wPFvj4=;
+        s=default; t=1563199073;
+        bh=VZ5dWzfU6DSYKWxr1/oUs1EfkFOuTXkKsTHfV3kSy6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSH8bMXV1Qepk1WfNYOo5WWl6NSERTtowJm02A5kPVDYx2Xd2uGGQde+OqVbm2oVX
-         EwGUwWL1fX3FZKQAEbWy9wzQEyZ/P4CKyJmJX4KM8tJhkIy4r4Xxgao9VBpKa8WkHS
-         Fv0d2vHA992Wwmu+eko2RhhQYZene2sg+AvXSdkk=
+        b=bByhmE0Oobrh4dDymk3I6KpP/uK4sJ1CwolFfwxqBomof7zKDZNTK+kESYWua7yqD
+         mW2LWm0dgtkNpoyU70d41GtXudZ1beleMAHTkJhIR38tS7TPBqWVw3ibbnL9GFvxT7
+         MkeaBXToZidQ977/Cgv2ulb3aN+Ai/omQ4+mh5/A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 182/249] ixgbe: Check DDM existence in transceiver before access
-Date:   Mon, 15 Jul 2019 09:45:47 -0400
-Message-Id: <20190715134655.4076-182-sashal@kernel.org>
+Cc:     Jianbo Liu <jianbol@mellanox.com>, Oz Shlomo <ozsh@mellanox.com>,
+        Eli Britstein <elibr@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 181/249] net/mlx5: Get vport ACL namespace by vport index
+Date:   Mon, 15 Jul 2019 09:45:46 -0400
+Message-Id: <20190715134655.4076-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,63 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
+From: Jianbo Liu <jianbol@mellanox.com>
 
-[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
+[ Upstream commit f53297d67800feb5fafd94abd926c889aefee690 ]
 
-Some transceivers may comply with SFF-8472 but not implement the Digital
-Diagnostic Monitoring (DDM) interface described in it. The existence of
-such area is specified by bit 6 of byte 92, set to 1 if implemented.
+The ingress and egress ACL root namespaces are created per vport and
+stored into arrays. However, the vport number is not the same as the
+index. Passing the array index, instead of vport number, to get the
+correct ingress and egress acl namespace.
 
-Currently, due to not checking this bit ixgbe fails trying to read SFP
-module's eeprom with the follow message:
-
-ethtool -m enP51p1s0f0
-Cannot get Module EEPROM data: Input/output error
-
-Because it fails to read the additional 256 bytes in which it was assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
-data was confirmed by Mellanox as correct and present in other Passive
-DACs in from other manufacturers.
-
-Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 9b93ab981e3b ("net/mlx5: Separate ingress/egress namespaces for each vport")
+Signed-off-by: Jianbo Liu <jianbol@mellanox.com>
+Reviewed-by: Oz Shlomo <ozsh@mellanox.com>
+Reviewed-by: Eli Britstein <elibr@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Mark Bloch <markb@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index acba067cc15a..7c52ae8ac005 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -3226,7 +3226,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
- 		page_swap = true;
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 6a921e24cd5e..acab26b88261 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -939,7 +939,7 @@ int esw_vport_enable_egress_acl(struct mlx5_eswitch *esw,
+ 		  vport->vport, MLX5_CAP_ESW_EGRESS_ACL(dev, log_max_ft_size));
  
--	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
-+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
-+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
- 		/* We have a SFP, but it does not support SFF-8472 */
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-index 214b01085718..6544c4539c0d 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-@@ -45,6 +45,7 @@
- #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
- #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
- #define IXGBE_SFF_ADDRESSING_MODE		0x4
-+#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
- #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
- #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
- #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
+ 	root_ns = mlx5_get_flow_vport_acl_namespace(dev, MLX5_FLOW_NAMESPACE_ESW_EGRESS,
+-						    vport->vport);
++			mlx5_eswitch_vport_num_to_index(esw, vport->vport));
+ 	if (!root_ns) {
+ 		esw_warn(dev, "Failed to get E-Switch egress flow namespace for vport (%d)\n", vport->vport);
+ 		return -EOPNOTSUPP;
+@@ -1057,7 +1057,7 @@ int esw_vport_enable_ingress_acl(struct mlx5_eswitch *esw,
+ 		  vport->vport, MLX5_CAP_ESW_INGRESS_ACL(dev, log_max_ft_size));
+ 
+ 	root_ns = mlx5_get_flow_vport_acl_namespace(dev, MLX5_FLOW_NAMESPACE_ESW_INGRESS,
+-						    vport->vport);
++			mlx5_eswitch_vport_num_to_index(esw, vport->vport));
+ 	if (!root_ns) {
+ 		esw_warn(dev, "Failed to get E-Switch ingress flow namespace for vport (%d)\n", vport->vport);
+ 		return -EOPNOTSUPP;
 -- 
 2.20.1
 
