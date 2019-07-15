@@ -2,115 +2,322 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E01C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13183C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90BCE214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C936E20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MsbiF5+c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kcaGto+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfGOHjo (ORCPT
+        id S1729244AbfGOHsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 03:39:44 -0400
-Received: from mail-eopbgr50077.outbound.protection.outlook.com ([40.107.5.77]:48462
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726748AbfGOHjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 03:39:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UYKUvyXscH3ZCzRPtkB//AbiBT+9Jwrm1HVrjrmc75UKze5OIcBZdaJlUeFQtJ94+2Ukh6VmeWXOUIis0qzItb/2o7Q+PTqLUsDdOrXsHB13rXdZD+BaN/1wbmFhd5nNjnE/eZcbAsVfDyzDYU15+gY6+q25amyY7NJrh//uCmEis0v+f9CXdhcds5zz0IAlabi0AaD8+TAApM25kieDNWUmDHc1dTpGoL1SkvjtZA6QC+6ldQL/Ya1uON5HRGTLQ/HPG2m02trdS/ujHQeIAOzXhDta/ruLvLpiVd2n46rlogMa+kTvAH3cM9a/kCJGzi7rtM56HT7rl6c1UzJB4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ll4OgWaiKtkINPFOigk8/pAgujDLW20gM+zrS31JNbM=;
- b=LdqLiM2E8MQbJ6/dP3wPNErDR2k1SznrNLpf5VUM61ug9f9UuKF/y/eDfh1+jjpXhvzTHpwiLoV+UkxT8PWvfv7a8QX0HzVm4Cj83jfCL1hVTyUr4zY8Kz1kTq8bZ3+LWO9S+6kBoDCl0nlghIFNJJS5Tn1f872hH+NxkrInhxMLma2uWcTiRKsSbtFD05m463QhLQGCFgJvCJ4FbaSHcMni7dfazRx53rFZzSTK6h+Ylmsu39LBJuv+VNpmc6dQgmf1KEzTZyOU7h3mlswkLQM9lFRUv+rK+mR1eC2WQPbb4UPr6jocKE9vwIRPKKT9IRdq7tNaHSXoQLXYP8xGOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ll4OgWaiKtkINPFOigk8/pAgujDLW20gM+zrS31JNbM=;
- b=MsbiF5+cs6TW79er0GJWDL1Hh40bBtq4+nn2zsb3UhUGqorWjpLXR1XoO42kiknednPHVp0LplD7XedK7NA34h6SnXBm+96q4seCIOqsqRAOUMG20izPwcM7Zrrpkj5+ZZH2zqBIp7ad8ojANEK2BuVeXsdnyuv7Y3qmj3+YNd4=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
- VI1PR0402MB3647.eurprd04.prod.outlook.com (52.134.14.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Mon, 15 Jul 2019 07:39:37 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c539:7bdc:7eea:2a52]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c539:7bdc:7eea:2a52%7]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
- 07:39:37 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH nvmem 1/1] nvmem: imx: add i.MX8QM platform
- support
-Thread-Topic: [EXT] Re: [PATCH nvmem 1/1] nvmem: imx: add i.MX8QM platform
- support
-Thread-Index: AQHVMnTq2F+gGEqIWEi9imTz4TJ3wKbLOOvggAAiVICAAAA+0A==
-Date:   Mon, 15 Jul 2019 07:39:37 +0000
-Message-ID: <VI1PR0402MB36001C2ED52203BEA57B5DCCFFCF0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20190704142032.10745-1-fugang.duan@nxp.com>
- <VI1PR0402MB36009610A9F1CCB9D9006349FFCF0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <20190715073657.GA2275@kroah.com>
-In-Reply-To: <20190715073657.GA2275@kroah.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 005604c5-43b9-442f-fed5-08d708f796f3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3647;
-x-ms-traffictypediagnostic: VI1PR0402MB3647:
-x-microsoft-antispam-prvs: <VI1PR0402MB36475C39D1C4AC146884870FFFCF0@VI1PR0402MB3647.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 00997889E7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(366004)(346002)(376002)(199004)(189003)(5660300002)(66066001)(14454004)(6116002)(3846002)(305945005)(2351001)(25786009)(7736002)(74316002)(558084003)(68736007)(14444005)(256004)(11346002)(446003)(54906003)(316002)(6916009)(476003)(76116006)(66446008)(66476007)(66946007)(64756008)(66556008)(76176011)(7696005)(33656002)(102836004)(6506007)(229853002)(486006)(52536014)(186003)(26005)(99286004)(2906002)(55016002)(478600001)(1730700003)(81166006)(81156014)(53936002)(8936002)(71190400001)(9686003)(2501003)(71200400001)(6246003)(86362001)(8676002)(4326008)(5640700003)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3647;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WqlbhBdXDOt01jTiMFGaCSo7et32LOAFFlcix+8ASnOgjWDnJkV5cAHCsMij06L3L40Vn9n3hjd+z48NNrE+FLoDkUp9sb5LFMwDv0Lc6G8HS6mVwhrE0fGeOQmi9O/i26BLZ8Pk9rttw3TnSPo24DxD2/CR2TYqjpRoSkpPxw0MFIxvGjh+DtJk5FJ4Qm3xip61lG11eJUn+0NrRaYnDsUnMCP9NZVT46tSfapj4YzWmBCu7QaMzGp9sOtKB4CFFLAcrcbP500A7AaqXzKbVDBBuqmpkXBzRIsKLZCDFVUyIW01tWf+vMlg5Q9L6PAEyoVpCkrOu3zvViIX9P5txHtufaU4GfABsQlOT4oNdKKJFAYzROtE7oS7DoBl6aYpapnbfBtlBRDw38Wp7vr+a5GvCC+sPtMvEvjYSv30Ehc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 15 Jul 2019 03:48:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50377 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfGOHsm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 03:48:42 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so14097435wml.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 00:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=i0QXQRrN6RhRZnvaWbhvCAiXQYTHsysyFi/snkm39ak=;
+        b=kcaGto+kb9nUbbxwEavJfBH3qyZm9rw+VNpXaASRkcEB4IXpBx3vmUgOwWuEZzk+EO
+         lLrF8t+KpC/4UqhyVfJ/uGdU+7ih3PYqzbUyjBAbk1rRckLgvgK5HnpvBFsJC/qDv8k4
+         FVfs3DIPll2BnKW3WIbbBhDdfmRdzid4a/AuXhAhk90tAxsZG5jWRo7/lP7SsUtubpyh
+         HLOtRIB2Q0lszvFTZjj1si9h7FpSqUqorLRN1Rk20jFc4F+XTukwKta2A5+E2zlQISow
+         xkJwZbgfjl/21P/Z+1sEv9XfiOhFWiG+mc5uquwE2ltT6eErdTkP7Uc7FRKkVLciJGVc
+         4Hpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=i0QXQRrN6RhRZnvaWbhvCAiXQYTHsysyFi/snkm39ak=;
+        b=rNiZmke2VSt20so+7FrIbJTHW1WOo/zLAmFaa1xQuIAkAPgwsEDwj77th0BJh0Wiy2
+         X8pWG8d98k69reEB1ruRex6gqcHHpb45l+IVLcopmWcOXxvY+AzfyQAaUxhHXEXFhZvT
+         Z2ZhnwFu5L+RlLkv8NT2USryNw843UKELt+gSbp2p1zrrvWuB7P4oU0wBI+A9uvgaxMs
+         VUz3M2a6f3VBIiUSlGrrBI9j/DCf7ah5iBu3idBvI/gBjPuV1BqkVyc6S8kwZD8iNqim
+         XRrNOqTJbSFsfwHueB24DUX41OHopeBei+i3A+TfVLNvGBtzIA4ihrtvqPgubxGgVoy4
+         swjg==
+X-Gm-Message-State: APjAAAXNdQLB51ZbDpRJUuk5zC6TjBb1dLbmkHlfFwMM3g5DwXXbjaTJ
+        Gl0g3uFdVjg36MM/pMPvUGuh/n3+B1s=
+X-Google-Smtp-Source: APXvYqyM0OwqhVewvK73SoHG/lt5PyqsSZfbnVCcxLuOXYa89/B768jLb6hQ7yr44nd5fPJKGs88uA==
+X-Received: by 2002:a1c:a5c2:: with SMTP id o185mr22564776wme.172.1563176918143;
+        Mon, 15 Jul 2019 00:48:38 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id b5sm12753689wru.69.2019.07.15.00.48.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jul 2019 00:48:37 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 08:48:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MFD for v5.3
+Message-ID: <20190715074835.GC4401@dell>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 005604c5-43b9-442f-fed5-08d708f796f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 07:39:37.6562
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fugang.duan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3647
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: gregkh@linuxfoundation.org <gregkh@linuxfoundation.org> Sent: Monday,=
- July 15, 2019 3:37 PM
-> On Mon, Jul 15, 2019 at 05:34:47AM +0000, Andy Duan wrote:
-> > Ping...
->=20
-> It's the middle of the merge window, we can't do anything with any patche=
-s
-> until after that.  Please be patient.
->=20
-> greg k-h
+Good morning Linus,
 
-Thanks for kindly reminder !
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-5.3
+
+for you to fetch changes up to 7efd105c27fd2323789b41b64763a0e33ed79c08:
+
+  mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk (2019-07-02 12:11:31 +0100)
+
+----------------------------------------------------------------
+ - Core Frameworks
+   - Set 'struct device' fwnode when registering a new device
+
+ - New Drivers
+   - Add support for ROHM BD70528 PMIC
+
+ - New Device Support
+   - Add support for LP87561 4-Phase Regulator to TI LP87565 PMIC
+   - Add support for RK809 and RK817 to Rockchip RK808
+   - Add support for Lid Angle to ChromeOS core
+   - Add support for CS47L15 CODEC to Madera core
+   - Add support for CS47L92 CODEC to Madera core
+   - Add support for ChromeOS (legacy) Accelerometers in ChromeOS core
+   - Add support for Add Intel Elkhart Lake PCH to Intel LPSS
+
+ - New Functionality
+   - Provide regulator supply information when registering; madera-core
+   - Additional Device Tree support; lp87565, madera, cros-ec, rohm,bd71837-pmic
+   - Allow over-riding power button press via Device Tree; rohm-bd718x7
+   - Differentiate between running processors; cros_ec_dev
+
+ - Fix-ups
+   - Big header file update; cros_ec_commands.h
+   - Split header per-subsystem; rohm-bd718x7
+   - Remove superfluous code; menelaus, cs5535-mfd, cs47lXX-tables
+   - Trivial; sorting, coding style; intel-lpss-pci
+   - Only remove Power Off functionality if set locally; rk808
+   - Make use for Power Off Prepare(); rk808
+   - Fix spelling mistake in header guards; stmfx
+   - Properly free IDA resources
+   - SPDX fixups; cs47lXX-tables, madera
+   - Error path fixups; hi655x-pmic
+
+ - Bug Fixes
+   - Add missing break in case() statement
+   - Repair undefined behaviour when not initialising variables; arizona-core, madera-core
+   - Fix reference to Device Tree documentation; madera
+
+----------------------------------------------------------------
+Alexandre Belloni (1):
+      mfd: menelaus: Remove superfluous error message
+
+Andy Shevchenko (4):
+      mfd: intel-lpss: Keep device tables sorted by ID
+      MAINAINERS: Swap words in INTEL PMIC MULTIFUNCTION DEVICE DRIVERS
+      mfd: intel-lpss: Add Intel Elkhart Lake PCH PCI IDs
+      mfd: intel-lpss: Release IDA resources
+
+Arnd Bergmann (1):
+      mfd: arizona: Fix undefined behavior
+
+Axel Lin (1):
+      mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk
+
+Charles Keepax (3):
+      mfd: madera: Add supply mapping for MICVDD
+      mfd: madera: Remove some unused registers and fix some defaults
+      mfd: madera: Fixup SPDX headers
+
+Colin Ian King (1):
+      regulator: lp87565: Fix missing break in switch statement
+
+Daniel Gomez (1):
+      mfd: madera: Add missing of table registration
+
+Gwendal Grignou (32):
+      mfd: cros_ec: Update license term
+      mfd: cros_ec: Zero BUILD_ macro
+      mfd: cros_ec: set comments properly
+      mfd: cros_ec: add ec_align macros
+      mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
+      mfd: cros_ec: use BIT macro
+      mfd: cros_ec: Update ACPI interface definition
+      mfd: cros_ec: move HDMI CEC API definition
+      mfd: cros_ec: Remove zero-size structs
+      mfd: cros_ec: Add Flash V2 commands API
+      mfd: cros_ec: Add PWM_SET_DUTY API
+      mfd: cros_ec: Add lightbar v2 API
+      mfd: cros_ec: Expand hash API
+      mfd: cros_ec: Add EC transport protocol v4
+      mfd: cros_ec: Complete MEMS sensor API
+      mfd: cros_ec: Fix event processing API
+      mfd: cros_ec: Add fingerprint API
+      mfd: cros_ec: Fix temperature API
+      mfd: cros_ec: Complete Power and USB PD API
+      mfd: cros_ec: Add API for keyboard testing
+      mfd: cros_ec: Add Hibernate API
+      mfd: cros_ec: Add Smart Battery Firmware update API
+      mfd: cros_ec: Add I2C passthru protection API
+      mfd: cros_ec: Add API for EC-EC communication
+      mfd: cros_ec: Add API for Touchpad support
+      mfd: cros_ec: Add API for Fingerprint support
+      mfd: cros_ec: Add API for rwsig
+      mfd: cros_ec: Add SKU ID and Secure storage API
+      mfd: cros_ec: Add Management API entry points
+      mfd: cros_ec: Update I2S API
+      mfd: cros_ec: Register cros_ec_lid_angle driver when presented
+      mfd: cros_ec_dev: Register cros_ec_accel_legacy driver as a subdevice
+
+Heiko Stuebner (1):
+      regulator: rk808: Add RK809 and RK817 support.
+
+Keerthy (3):
+      dt-bindings: mfd: lp87565: Add LP87561 configuration
+      mfd: lp87565: Add support for 4-phase LP87561 combination
+      regulator: lp87565: Add 4-phase lp87561 regulator support
+
+Lee Jones (1):
+      Merge branches 'ib-mfd-clk-gpio-power-regulator-rtc-5.3', 'ib-mfd-clk-regulator-rtc-5.3', 'ib-mfd-cros-5.3' and 'ib-mfd-regulator-5.3' into ibs-for-mfd-merged
+
+Leonard Crestez (3):
+      mfd: bd718x7: Remove hardcoded config for button press duration
+      dt-bindings: mfd: Document short/long press duration for BD718X7
+      mfd: bd718x7: Make power button press duration configurable
+
+Lubomir Rintel (1):
+      mfd: cs5535-mfd: Remove ifdef OLPC noise
+
+Matti Vaittinen (8):
+      mfd: regulator: clk: Split rohm-bd718x7.h
+      mfd: bd70528: Support ROHM bd70528 PMIC core
+      clk: bd718x7: Support ROHM BD70528 clk block
+      dt-bindings: mfd: Document first ROHM BD70528 bindings
+      gpio: Initial support for ROHM bd70528 GPIO block
+      rtc: bd70528: Initial support for ROHM bd70528 RTC
+      power: supply: Initial support for ROHM BD70528 PMIC charger block
+      dt-bindings: mfd: Add link to ROHM BD71847 Datasheet
+
+Nathan Chancellor (1):
+      mfd: stmfx: Fix macro definition spelling
+
+Otto Sabart (1):
+      mfd: madera: Fix bad reference to pinctrl.txt file
+
+Pi-Hsun Shih (2):
+      dt-bindings: Add binding for cros-ec-rpmsg
+      mfd: cros_ec: differentiate SCP from EC by feature bit
+
+Richard Fitzgerald (3):
+      mfd: madera: Update DT bindings to add additional CODECs
+      mfd: madera: Add Madera core support for CS47L15
+      mfd: madera: Add Madera core support for CS47L92
+
+Robert Hancock (1):
+      mfd: core: Set fwnode for created devices
+
+Stefan Mavrodiev (2):
+      mfd: rk808: Check pm_power_off pointer
+      mfd: rk808: Prepare rk805 for poweroff
+
+Stuart Henderson (1):
+      mfd: madera: Fix potential uninitialised use of variable
+
+Tony Xie (4):
+      mfd: rk808: Add RK817 and RK809 support
+      dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
+      rtc: rk808: Add RK809 and RK817 support.
+      clk: RK808: Add RK809 and RK817 support.
+
+ Documentation/devicetree/bindings/mfd/cros-ec.txt  |    5 +-
+ Documentation/devicetree/bindings/mfd/lp87565.txt  |   36 +
+ Documentation/devicetree/bindings/mfd/madera.txt   |    8 +-
+ Documentation/devicetree/bindings/mfd/rk808.txt    |   44 +
+ .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  |  102 +
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |   10 +
+ MAINTAINERS                                        |    2 +-
+ drivers/clk/Kconfig                                |   15 +-
+ drivers/clk/clk-bd718x7.c                          |   24 +-
+ drivers/clk/clk-rk808.c                            |   64 +-
+ drivers/gpio/Kconfig                               |   11 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bd70528.c                        |  232 ++
+ drivers/mfd/Kconfig                                |   37 +-
+ drivers/mfd/Makefile                               |    8 +
+ drivers/mfd/arizona-core.c                         |    2 +-
+ drivers/mfd/cros_ec_dev.c                          |   92 +-
+ drivers/mfd/cs47l15-tables.c                       | 1299 +++++++
+ drivers/mfd/cs47l35-tables.c                       |   60 +-
+ drivers/mfd/cs47l85-tables.c                       |  128 +-
+ drivers/mfd/cs47l90-tables.c                       |   82 +-
+ drivers/mfd/cs47l92-tables.c                       | 1947 +++++++++++
+ drivers/mfd/cs5535-mfd.c                           |   24 +-
+ drivers/mfd/hi655x-pmic.c                          |    2 +
+ drivers/mfd/intel-lpss-pci.c                       |   21 +-
+ drivers/mfd/intel-lpss.c                           |    1 +
+ drivers/mfd/lp87565.c                              |    4 +
+ drivers/mfd/madera-core.c                          |  129 +-
+ drivers/mfd/madera-i2c.c                           |   24 +-
+ drivers/mfd/madera-spi.c                           |   24 +-
+ drivers/mfd/madera.h                               |   13 +
+ drivers/mfd/menelaus.c                             |    2 -
+ drivers/mfd/mfd-core.c                             |    1 +
+ drivers/mfd/rk808.c                                |  257 +-
+ drivers/mfd/rohm-bd70528.c                         |  316 ++
+ drivers/mfd/rohm-bd718x7.c                         |   80 +-
+ drivers/power/supply/Kconfig                       |    9 +
+ drivers/power/supply/Makefile                      |    1 +
+ drivers/power/supply/bd70528-charger.c             |  743 ++++
+ drivers/regulator/Kconfig                          |    4 +-
+ drivers/regulator/bd718x7-regulator.c              |   25 +-
+ drivers/regulator/lp87565-regulator.c              |   18 +-
+ drivers/regulator/rk808-regulator.c                |  646 +++-
+ drivers/rtc/Kconfig                                |   12 +-
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-bd70528.c                          |  500 +++
+ drivers/rtc/rtc-rk808.c                            |   68 +-
+ include/linux/mfd/cros_ec.h                        |    1 +
+ include/linux/mfd/cros_ec_commands.h               | 3658 ++++++++++++++++----
+ include/linux/mfd/lp87565.h                        |    2 +
+ include/linux/mfd/madera/core.h                    |   12 +-
+ include/linux/mfd/madera/pdata.h                   |    9 +-
+ include/linux/mfd/madera/registers.h               |  286 +-
+ include/linux/mfd/rk808.h                          |  177 +
+ include/linux/mfd/rohm-bd70528.h                   |  408 +++
+ include/linux/mfd/rohm-bd718x7.h                   |   22 +-
+ include/linux/mfd/rohm-generic.h                   |   20 +
+ include/linux/mfd/stmfx.h                          |    2 +-
+ sound/soc/codecs/cros_ec_codec.c                   |    8 +-
+ 59 files changed, 10439 insertions(+), 1300 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+ create mode 100644 drivers/mfd/cs47l15-tables.c
+ create mode 100644 drivers/mfd/cs47l92-tables.c
+ create mode 100644 drivers/mfd/rohm-bd70528.c
+ create mode 100644 drivers/power/supply/bd70528-charger.c
+ create mode 100644 drivers/rtc/rtc-bd70528.c
+ create mode 100644 include/linux/mfd/rohm-bd70528.h
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
