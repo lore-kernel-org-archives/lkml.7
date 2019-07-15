@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01212C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC29C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD0421530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F8D21530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201077;
-	bh=Ikp9Z7o6849kEBCtpfBb3J6wCZpMPCOBu9zCpU4cQ2g=;
+	s=default; t=1563201080;
+	bh=h5JUm6AmUPVsOD6rBVTJ4CjFmYZqKxuG1xYZXGsT/2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qhRpjlazqntldR19XKMJ2KMqafuJO0QZD88WH0V6rEeafXLo32RTxPTgPwaHQKNkz
-	 BJM6HHcy6+zxvvwvXn5dc/j2YlcHdzBi8eSJwbHFaHezAVtBSZzj2w2YKU2yIrJmKJ
-	 BVP71Tlb0YZSyer+tJjmomXEav4hjdlIm4gOxX9A=
+	b=NjeDPX7/bTOx5HPIvpUGP9JDAJY9ySEaC7DmW1I8DZV9DA4P5/fLfrWMqchIKk3VJ
+	 sfyYUsHH0ICnAOMX5h7w2EHc+MO4gAA+B3AdurlFPVTFyvnpmnjkjLJm6O1t5kIXG8
+	 948o0F8Fn90xFe/BsDIYrFcQq9DVCHXvqVJuGuBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390939AbfGOObR (ORCPT
+        id S2403894AbfGOObT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44646 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731947AbfGOObL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:31:11 -0400
+        id S1732009AbfGOObN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:31:13 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B89220896;
-        Mon, 15 Jul 2019 14:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3D052182B;
+        Mon, 15 Jul 2019 14:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201070;
-        bh=Ikp9Z7o6849kEBCtpfBb3J6wCZpMPCOBu9zCpU4cQ2g=;
+        s=default; t=1563201072;
+        bh=h5JUm6AmUPVsOD6rBVTJ4CjFmYZqKxuG1xYZXGsT/2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aLpiG4TWu3f77BmZDuFR29XrtrLhgvYCh17o08xtW7tNqUExifXo8/pzqHnUTeeWs
-         rQ0SRLh2C/HoD8/P69CuAWDuSJc4pRcL5N3W9TWwtp+GcQ/XIdeFt2IxjOuOOMv/eX
-         9B1AXE4w05dxWiVXjax3JxELAb+SfmgFKfd7VmKE=
+        b=EDSQjKv0o+qmZxahTlZo3xkInK9QoeDTPjFe3qaB1aVMK6Nsn8rYyCXXrDc1xWSW/
+         /BGt4Z/2MTMLViYIeyVnvIS5oYnNFSOl5i1PkH50Aq/kUqzJ3SEJomx61TZdjodLhk
+         NfWWJ1AUP8DfYidzpRqlFkB7DSwJ5JuDFYfA238c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 042/105] media: fdp1: Support M3N and E3 platforms
-Date:   Mon, 15 Jul 2019 10:27:36 -0400
-Message-Id: <20190715142839.9896-42-sashal@kernel.org>
+Cc:     Eric Auger <eric.auger@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 043/105] iommu: Fix a leak in iommu_insert_resv_region
+Date:   Mon, 15 Jul 2019 10:27:37 -0400
+Message-Id: <20190715142839.9896-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -61,51 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-[ Upstream commit 4e8c120de9268fc26f583268b9d22e7d37c4595f ]
+[ Upstream commit ad0834dedaa15c3a176f783c0373f836e44b4700 ]
 
-New Gen3 R-Car platforms incorporate the FDP1 with an updated version
-register. No code change is required to support these targets, but they
-will currently report an error stating that the device can not be
-identified.
+In case we expand an existing region, we unlink
+this latter and insert the larger one. In
+that case we should free the original region after
+the insertion. Also we can immediately return.
 
-Update the driver to match against the new device types.
+Fixes: 6c65fb318e8b ("iommu: iommu_get_group_resv_regions")
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_fdp1.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/iommu/iommu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
-index 3245bc45f4a0..a889332d5d30 100644
---- a/drivers/media/platform/rcar_fdp1.c
-+++ b/drivers/media/platform/rcar_fdp1.c
-@@ -261,6 +261,8 @@ MODULE_PARM_DESC(debug, "activate debug info");
- #define FD1_IP_H3_ES1			0x02010101
- #define FD1_IP_M3W			0x02010202
- #define FD1_IP_H3			0x02010203
-+#define FD1_IP_M3N			0x02010204
-+#define FD1_IP_E3			0x02010205
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 3de5c0bcb5cc..1620a6f49989 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -205,18 +205,21 @@ static int iommu_insert_resv_region(struct iommu_resv_region *new,
+ 			pos = pos->next;
+ 		} else if ((start >= a) && (end <= b)) {
+ 			if (new->type == type)
+-				goto done;
++				return 0;
+ 			else
+ 				pos = pos->next;
+ 		} else {
+ 			if (new->type == type) {
+ 				phys_addr_t new_start = min(a, start);
+ 				phys_addr_t new_end = max(b, end);
++				int ret;
  
- /* LUTs */
- #define FD1_LUT_DIF_ADJ			0x1000
-@@ -2369,6 +2371,12 @@ static int fdp1_probe(struct platform_device *pdev)
- 	case FD1_IP_H3:
- 		dprintk(fdp1, "FDP1 Version R-Car H3\n");
- 		break;
-+	case FD1_IP_M3N:
-+		dprintk(fdp1, "FDP1 Version R-Car M3N\n");
-+		break;
-+	case FD1_IP_E3:
-+		dprintk(fdp1, "FDP1 Version R-Car E3\n");
-+		break;
- 	default:
- 		dev_err(fdp1->dev, "FDP1 Unidentifiable (0x%08x)\n",
- 				hw_version);
+ 				list_del(&entry->list);
+ 				entry->start = new_start;
+ 				entry->length = new_end - new_start + 1;
+-				iommu_insert_resv_region(entry, regions);
++				ret = iommu_insert_resv_region(entry, regions);
++				kfree(entry);
++				return ret;
+ 			} else {
+ 				pos = pos->next;
+ 			}
+@@ -229,7 +232,6 @@ static int iommu_insert_resv_region(struct iommu_resv_region *new,
+ 		return -ENOMEM;
+ 
+ 	list_add_tail(&region->list, pos);
+-done:
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
