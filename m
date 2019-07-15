@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADF5C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A83C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C832054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231E22054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203149;
-	bh=a38p4zhkTkWbyv49GuuwcUCfXc8SLvwSsrch9QqF9TA=;
+	s=default; t=1563203154;
+	bh=qhF90JaRN9H/Mne/RCsZbQjhkZdpVTzKKYmO16uQJ0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ezl2jMLnF3OziL/8ssAdCeIRzXpkRpMyj6Omhp1FePzyHr+BkmjsAPkeRGrcMVBkB
-	 t6lt+Z8+PZyJrCSB/Ohg7I5A/Zs6DEEs1Fy4fdqVE15YT7/pvKwFtcPdPuiVgdZCJN
-	 t314zhxBX0564R77GxsbKxBwuXvsMrFEBdWL9jaM=
+	b=XqszBOf2kTcuL4MpHVx8aQS1xKqEVqWCEnPKE5dkyhv4waAC47REvu7DD3EAomcod
+	 NmUgYVjjq0B3II4FEA99NlR7A1i887d8SnChgrvkCqIaM556yolUoQuD6Awfog6opr
+	 ZcjnE5aCjs7KsqfZjoZAub7i07mV24BR4VJAy1Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbfGOOFX (ORCPT
+        id S2388070AbfGOOFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:05:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388008AbfGOOFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:05:16 -0400
+        id S2388097AbfGOOFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:08 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DAD212F5;
-        Mon, 15 Jul 2019 14:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1352081C;
+        Mon, 15 Jul 2019 14:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199515;
-        bh=a38p4zhkTkWbyv49GuuwcUCfXc8SLvwSsrch9QqF9TA=;
+        s=default; t=1563199508;
+        bh=qhF90JaRN9H/Mne/RCsZbQjhkZdpVTzKKYmO16uQJ0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNCLTITbvQVXhCtMIsBz6Htc+xGpEBcgOtfWVs9/RzP5DYd2pef7NrZEyn3z38WFV
-         wv3eTNVQB8IVQK21LbfPf6Ixyhi32+2Befty7xDxhPmYIP/eGbMOh1uqfxZs0WoLaK
-         Jq08mIao4sk/43+1gs5RqYlT3mS0lR1/jsiYeAM4=
+        b=kukJPrLra4Z1yMxFlUEwL6GtGFFjW8i++vPXMH/LKFkdT/q/21Xa/un1FiBoELseb
+         /yVfoJwEcQIDWYBcI9yILudMtS6+MxJnmtn+/1ySUtTtGUoBkeEBai/FP6939bQ8oR
+         Sp8InhZhyAXo4rv7lfkpJiWsAAEVezd8TmnYP4TM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 029/219] net: stmmac: dwmac4/5: Clear unused address entries
-Date:   Mon, 15 Jul 2019 10:00:30 -0400
-Message-Id: <20190715140341.6443-29-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 026/219] media: venus: firmware: fix leaked of_node references
+Date:   Mon, 15 Jul 2019 10:00:27 -0400
+Message-Id: <20190715140341.6443-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -63,53 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
+[ Upstream commit 2c41cc0be07b5ee2f1167f41cd8a86fc5b53d82c ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Found out while running stmmac selftests.
+Detected by coccinelle with the following warnings:
+drivers/media/platform/qcom/venus/firmware.c:90:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:94:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:128:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/firmware.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 7e5d5db0d516..a2f3db39221e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -444,14 +444,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		 * are required
- 		 */
- 		value |= GMAC_PACKET_FILTER_PR;
--	} else if (!netdev_uc_empty(dev)) {
--		int reg = 1;
-+	} else {
- 		struct netdev_hw_addr *ha;
-+		int reg = 1;
+diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+index 6cfa8021721e..f81449b400c4 100644
+--- a/drivers/media/platform/qcom/venus/firmware.c
++++ b/drivers/media/platform/qcom/venus/firmware.c
+@@ -87,11 +87,11 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
  
- 		netdev_for_each_uc_addr(ha, dev) {
- 			dwmac4_set_umac_addr(hw, ha->addr, reg);
- 			reg++;
- 		}
-+
-+		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
- 	}
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret)
+-		return ret;
++		goto err_put_node;
  
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+ 	ret = request_firmware(&mdt, fwname, dev);
+ 	if (ret < 0)
+-		return ret;
++		goto err_put_node;
+ 
+ 	fw_size = qcom_mdt_get_size(mdt);
+ 	if (fw_size < 0) {
+@@ -125,6 +125,8 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
+ 	memunmap(mem_va);
+ err_release_fw:
+ 	release_firmware(mdt);
++err_put_node:
++	of_node_put(node);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
