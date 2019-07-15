@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E002C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5840C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D042054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C262054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203007;
-	bh=oLHMVyDyR9D/eTUhXbuQSLHOw8Bnlk5PSTnPXqxZkc4=;
+	s=default; t=1563203012;
+	bh=hpTUL1n6ca/sLrxuDcdi0iMWrpYvhUX7CzDXpyVWs9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uH+hFNt+8CSCJRtXy6XjDp3g2WnV16XP3tu8wq+8VaQ9uET/q2NUE3ojpSgMqJPjJ
-	 x8PCZoGe1G5yzdSsGAJPYKThZUightnYleq7hw+CTuFqGhT9YSu0lNoMlcv9by0Dk7
-	 ioWoPQAYMPzDS5sluNRbEyB4eKsDILCj05AWrIto=
+	b=COrkDrdBroQZppTZNgx2M9Kfe/GmgIlx6EoJzaD6XXrJIIx1vjfIjkzTmWRRo6hlH
+	 3cQ5iTeZ68aygijCzJ2HJpTsmDoIcYk6EFUz8wsc7xqB76rsGzYmUHKXJzm+t3hNwk
+	 JhprLc/s8aMYZ/Fd0wXz0HurhI34Tb25epTtarGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388671AbfGOOJP (ORCPT
+        id S2389163AbfGOPDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388652AbfGOOJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:10 -0400
+        id S2388226AbfGOOJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:14 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DFB212F5;
-        Mon, 15 Jul 2019 14:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1541206B8;
+        Mon, 15 Jul 2019 14:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199749;
-        bh=oLHMVyDyR9D/eTUhXbuQSLHOw8Bnlk5PSTnPXqxZkc4=;
+        s=default; t=1563199753;
+        bh=hpTUL1n6ca/sLrxuDcdi0iMWrpYvhUX7CzDXpyVWs9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pL5//F3DmfgfJ5Pfgtup0TfMdYtqC3iSfwQR4MFCAJrRantYyLFV9qLbsJr2flu3j
-         O98+FS1NlxqKk9kcoY2yhnLZQszCo9RfP25x2JERRP28qRtBxYOzYsH2cPJGwk7pap
-         8SBtJ2RQ9iI6NkQEQ5J4Ylowj+wUVjWhpclk8fnk=
+        b=vdSSI9N3Rjp00M2i3BCwoDqiE5V/eSzOh0i6w4aDf9WoEZAm+3W8KFIi/fMoCEA+p
+         eaLLhY2DoAB2BqgLdXxRMw7DwSiCbyibraXD5HOKtdZI/DDBYGEAYnV2CyS3th9K41
+         8TA9mYXZas9K/0oJHXF+K3U5kgX1CefFVEncarJY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 094/219] net: hns3: delay ring buffer clearing during reset
-Date:   Mon, 15 Jul 2019 10:01:35 -0400
-Message-Id: <20190715140341.6443-94-sashal@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 096/219] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
+Date:   Mon, 15 Jul 2019 10:01:37 -0400
+Message-Id: <20190715140341.6443-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,93 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 3a30964a2eef6aabd3ab18b979ea0eacf1147731 ]
+[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
 
-The driver may not be able to disable the ring through firmware
-when downing the netdev during reset process, which may cause
-hardware accessing freed buffer problem.
+wbc_account_io() collects information on cgroup ownership of writeback
+pages to determine which cgroup should own the inode.  Pages can stay
+associated with dead memcgs but we want to avoid attributing IOs to
+dead blkcgs as much as possible as the association is likely to be
+stale.  However, currently, pages associated with dead memcgs
+contribute to the accounting delaying and/or confusing the
+arbitration.
 
-This patch delays the ring buffer clearing to reset uninit
-process because hardware will not access the ring buffer after
-hardware reset is completed.
+Fix it by ignoring pages associated with dead memcgs.
 
-Fixes: bb6b94a896d4 ("net: hns3: Add reset interface implementation in client")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ fs/fs-writeback.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 6afdd376bc03..7e7c10513d2c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -28,7 +28,7 @@
- #define hns3_tx_bd_count(S)	DIV_ROUND_UP(S, HNS3_MAX_BD_SIZE)
- 
- static void hns3_clear_all_ring(struct hnae3_handle *h);
--static void hns3_force_clear_all_rx_ring(struct hnae3_handle *h);
-+static void hns3_force_clear_all_ring(struct hnae3_handle *h);
- static void hns3_remove_hw_addr(struct net_device *netdev);
- 
- static const char hns3_driver_name[] = "hns3";
-@@ -484,7 +484,12 @@ static void hns3_nic_net_down(struct net_device *netdev)
- 	/* free irq resources */
- 	hns3_nic_uninit_irq(priv);
- 
--	hns3_clear_all_ring(priv->ae_handle);
-+	/* delay ring buffer clearing to hns3_reset_notify_uninit_enet
-+	 * during reset process, because driver may not be able
-+	 * to disable the ring through firmware when downing the netdev.
-+	 */
-+	if (!hns3_nic_resetting(netdev))
-+		hns3_clear_all_ring(priv->ae_handle);
- }
- 
- static int hns3_nic_net_stop(struct net_device *netdev)
-@@ -3737,7 +3742,7 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
- 
- 	hns3_del_all_fd_rules(netdev, true);
- 
--	hns3_force_clear_all_rx_ring(handle);
-+	hns3_force_clear_all_ring(handle);
- 
- 	hns3_uninit_phy(netdev);
- 
-@@ -3909,7 +3914,7 @@ static void hns3_force_clear_rx_ring(struct hns3_enet_ring *ring)
- 	}
- }
- 
--static void hns3_force_clear_all_rx_ring(struct hnae3_handle *h)
-+static void hns3_force_clear_all_ring(struct hnae3_handle *h)
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index b16645b417d9..bd9474e82f38 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -714,6 +714,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 		    size_t bytes)
  {
- 	struct net_device *ndev = h->kinfo.netdev;
- 	struct hns3_nic_priv *priv = netdev_priv(ndev);
-@@ -3917,6 +3922,9 @@ static void hns3_force_clear_all_rx_ring(struct hnae3_handle *h)
- 	u32 i;
++	struct cgroup_subsys_state *css;
+ 	int id;
  
- 	for (i = 0; i < h->kinfo.num_tqps; i++) {
-+		ring = priv->ring_data[i].ring;
-+		hns3_clear_tx_ring(ring);
+ 	/*
+@@ -725,7 +726,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 	if (!wbc->wb)
+ 		return;
+ 
+-	id = mem_cgroup_css_from_page(page)->id;
++	css = mem_cgroup_css_from_page(page);
++	/* dead cgroups shouldn't contribute to inode ownership arbitration */
++	if (!(css->flags & CSS_ONLINE))
++		return;
 +
- 		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
- 		hns3_force_clear_rx_ring(ring);
- 	}
-@@ -4145,7 +4153,8 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
- 		return 0;
- 	}
++	id = css->id;
  
--	hns3_force_clear_all_rx_ring(handle);
-+	hns3_clear_all_ring(handle);
-+	hns3_force_clear_all_ring(handle);
- 
- 	hns3_nic_uninit_vector_data(priv);
- 
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
 -- 
 2.20.1
 
