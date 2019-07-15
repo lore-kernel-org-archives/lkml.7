@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECD6C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA6FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D08204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F390E217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201330;
-	bh=UkPfx47h0KPHGCejOvVDrGMi6d1wV+MkTGB4WcMZeW4=;
+	s=default; t=1563201338;
+	bh=sBrDCeY41yZibmOhrq/uiQA+9bnmb6iEQSAPNEjSEq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZdeRgQAYM0TYVmkgD4i4cUmoQgfwDFkifEhv4XlJh1iWcaLcTFhBIny1rckSSzrIT
-	 JaxLnHKhKyHRAyctu++jezxRvuAidnzCyMKxXgUEg7ua4O71sNCu2EXNdpw5vBjk8b
-	 Kev1PCoZ3XfXwp+LIo/8uQ3GvptT5J5Vdf50ONWM=
+	b=jgBDBnj5Et+iF6a0i0EyJJS3+IKSmSPvBQnvHUSYxRMXffySz1ZHnqjJQ8iWS49rX
+	 U3ZJLv+BTGyGufan5rKEWu7nc4WxHtKHiMPgj2kygONgQb0Cvn1fmQTMwUXlGn5CM1
+	 flQ0lHuPCS7c8UNOvRHcsVLZwBqe0E7wTy44Y1bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392105AbfGOOf3 (ORCPT
+        id S2392126AbfGOOfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:35:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404234AbfGOOfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:35:02 -0400
+        id S2404580AbfGOOfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:35:15 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06058217D8;
-        Mon, 15 Jul 2019 14:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E4BB204FD;
+        Mon, 15 Jul 2019 14:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201301;
-        bh=UkPfx47h0KPHGCejOvVDrGMi6d1wV+MkTGB4WcMZeW4=;
+        s=default; t=1563201314;
+        bh=sBrDCeY41yZibmOhrq/uiQA+9bnmb6iEQSAPNEjSEq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fXLqby3YWmOasxZVJF/ph7zaJEqmsKmxhl5/BDLqA/s9KzabzI3PcUV2BJ78mzsce
-         /uTZNJ3UFl0qBTvPwVkilOsrOQdYMAJ/b6/Hi2z4HFQ12CRvaHCF7nr2LuJZnbuDBH
-         XaRFznnKx+yGrAK0hDE73xvMghgDIi2SivkdxTVg=
+        b=JSNGJj/+FJ8hWQ7PJ4xtLXO+4A1hPe3J6CRCB7WjWOs8oguM+f547Or9HUS7i33M0
+         9yB/TtT0VuO8cP3rykRTqjWZ/aCSBEdFyTUF9S2BP3aOkLjPCe1zoeBBDbjZ3ycAdt
+         QHRKVW26RhLax1clwz+xGoBdVRSquQsEaU1I6GUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
+Cc:     Josua Mayer <josua@solid-run.com>, Andrew Lunn <andrew@lunn.ch>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 102/105] gtp: fix Illegal context switch in RCU read-side critical section.
-Date:   Mon, 15 Jul 2019 10:28:36 -0400
-Message-Id: <20190715142839.9896-102-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 105/105] net: mvmdio: defer probe of orion-mdio if a clock is not ready
+Date:   Mon, 15 Jul 2019 10:28:39 -0400
+Message-Id: <20190715142839.9896-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,71 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Josua Mayer <josua@solid-run.com>
 
-[ Upstream commit 3f167e1921865b379a9becf03828e7202c7b4917 ]
+[ Upstream commit 433a06d7d74e677c40b1148c70c48677ff62fb6b ]
 
-ipv4_pdp_add() is called in RCU read-side critical section.
-So GFP_KERNEL should not be used in the function.
-This patch make ipv4_pdp_add() to use GFP_ATOMIC instead of GFP_KERNEL.
+Defer probing of the orion-mdio interface when getting a clock returns
+EPROBE_DEFER. This avoids locking up the Armada 8k SoC when mdio is used
+before all clocks have been enabled.
 
-Test commands:
-gtp-link add gtp1 &
-gtp-tunnel add gtp1 v1 100 200 1.1.1.1 2.2.2.2
-
-Splat looks like:
-[  130.618881] =============================
-[  130.626382] WARNING: suspicious RCU usage
-[  130.626994] 5.2.0-rc6+ #50 Not tainted
-[  130.627622] -----------------------------
-[  130.628223] ./include/linux/rcupdate.h:266 Illegal context switch in RCU read-side critical section!
-[  130.629684]
-[  130.629684] other info that might help us debug this:
-[  130.629684]
-[  130.631022]
-[  130.631022] rcu_scheduler_active = 2, debug_locks = 1
-[  130.632136] 4 locks held by gtp-tunnel/1025:
-[  130.632925]  #0: 000000002b93c8b7 (cb_lock){++++}, at: genl_rcv+0x15/0x40
-[  130.634159]  #1: 00000000f17bc999 (genl_mutex){+.+.}, at: genl_rcv_msg+0xfb/0x130
-[  130.635487]  #2: 00000000c644ed8e (rtnl_mutex){+.+.}, at: gtp_genl_new_pdp+0x18c/0x1150 [gtp]
-[  130.636936]  #3: 0000000007a1cde7 (rcu_read_lock){....}, at: gtp_genl_new_pdp+0x187/0x1150 [gtp]
-[  130.638348]
-[  130.638348] stack backtrace:
-[  130.639062] CPU: 1 PID: 1025 Comm: gtp-tunnel Not tainted 5.2.0-rc6+ #50
-[  130.641318] Call Trace:
-[  130.641707]  dump_stack+0x7c/0xbb
-[  130.642252]  ___might_sleep+0x2c0/0x3b0
-[  130.642862]  kmem_cache_alloc_trace+0x1cd/0x2b0
-[  130.643591]  gtp_genl_new_pdp+0x6c5/0x1150 [gtp]
-[  130.644371]  genl_family_rcv_msg+0x63a/0x1030
-[  130.645074]  ? mutex_lock_io_nested+0x1090/0x1090
-[  130.645845]  ? genl_unregister_family+0x630/0x630
-[  130.646592]  ? debug_show_all_locks+0x2d0/0x2d0
-[  130.647293]  ? check_flags.part.40+0x440/0x440
-[  130.648099]  genl_rcv_msg+0xa3/0x130
-[ ... ]
-
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvmdio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 2756edd84abc..c751f87c935e 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -956,7 +956,7 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
+diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
+index 0495487f7b42..c8e3c1119313 100644
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -321,6 +321,10 @@ static int orion_mdio_probe(struct platform_device *pdev)
  
- 	}
+ 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
+ 		dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
++		if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto out_clk;
++		}
+ 		if (IS_ERR(dev->clk[i]))
+ 			break;
+ 		clk_prepare_enable(dev->clk[i]);
+@@ -365,6 +369,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
+ 	if (dev->err_interrupt > 0)
+ 		writel(0, dev->regs + MVMDIO_ERR_INT_MASK);
  
--	pctx = kmalloc(sizeof(struct pdp_ctx), GFP_KERNEL);
-+	pctx = kmalloc(sizeof(*pctx), GFP_ATOMIC);
- 	if (pctx == NULL)
- 		return -ENOMEM;
- 
++out_clk:
+ 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
+ 		if (IS_ERR(dev->clk[i]))
+ 			break;
 -- 
 2.20.1
 
