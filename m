@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D6CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C1FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEEF216C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7FF20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198756;
-	bh=KzOSdrebX3KMW/gaQ5FM80gPMnZS1CDMWI74NLOCh6g=;
+	s=default; t=1563198761;
+	bh=hOnzkvj9JBoJAX9b2Kpm3FhvJ+yQPuvI4+b0Ggxgo8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PZllGA3uALscljX+AW84T0kaXvJWJT6OG2dS/WBOmVbzS/MXOokz+WtXPs0x55m7k
-	 KzjU2DYiqAxKTSciMqcuMjbhBPRyF3MHgRx4/xVGjw2l4kiArE4opUYqX3U4CQS/gc
-	 yhqeKjXAaT6jqSfcBlGL0S8COcQ66QanDR7nC2Ps=
+	b=oeM/o8ezIRYuRZjKAAS9gE5YgX9qdQ857R4KJZLzcq18b6Y/V3pPriCgvaSMCJynU
+	 JmNZN8OiTMm0AdqBfZOW+r33J/E8gip6xLCQXmcsHJNd1LGm7mmEu6jLOiel3enwzm
+	 EAxqKk5L0SRgNI2Dm0u597SOAVcHiZ8pUyMPJhRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbfGONwf (ORCPT
+        id S1732243AbfGONwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46740 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731945AbfGONwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:52:31 -0400
+        id S1732222AbfGONwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:52:37 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9BB520651;
-        Mon, 15 Jul 2019 13:52:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18FFC20651;
+        Mon, 15 Jul 2019 13:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198751;
-        bh=KzOSdrebX3KMW/gaQ5FM80gPMnZS1CDMWI74NLOCh6g=;
+        s=default; t=1563198756;
+        bh=hOnzkvj9JBoJAX9b2Kpm3FhvJ+yQPuvI4+b0Ggxgo8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rn30hy8HIDnXDCY2X3fa8WmVJbLr88zacguG5AAwK1SjrtjgueqcArVnD+uWOjQGz
-         OUhRKDFITlSqJKCJEn9pIn0p7054H4nvEF/uxHA1jIlSBixNo/n/ilY9pUyzVpSGyo
-         jij3L+rK3ttUBU8x4cR2AgYNqyaOBT6GdKBOgcJQ=
+        b=s3CHFOfCyDBYpLPjhBmnrQPiJ2NRhsCsOa9y4Zh1h3RLBmK1VtTiMfckUYE5iB6yK
+         KPzH/WWAIXBI5aoecHQD0KSTIE1rD7RPCYpTpHeIXz4EBk5xCWQPipVdizvKiIZojq
+         M6HbfhMV0bYH98jFORPhyWMu3ibmiCiTGOCkINIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>,
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 094/249] media: davinci: vpif_capture: fix memory leak in vpif_probe()
-Date:   Mon, 15 Jul 2019 09:44:19 -0400
-Message-Id: <20190715134655.4076-94-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 096/249] media: s5p-mfc: fix reading min scratch buffer size on MFC v6/v7
+Date:   Mon, 15 Jul 2019 09:44:21 -0400
+Message-Id: <20190715134655.4076-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,72 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 64f883cd98c6d43013fb0cea788b63e50ebc068c ]
+[ Upstream commit be22203aec440c1761ce8542c2636ac6c8951e3a ]
 
-If vpif_probe() fails on v4l2_device_register() and vpif_probe_complete(),
-then memory allocated at initialize_vpif() for global vpif_obj.dev[i]
-become unreleased.
+MFC v6 and v7 has no register to read min scratch buffer size, so it has
+to be read conditionally only if hardware supports it. This fixes following
+NULL pointer exception on SoCs with MFC v6/v7:
 
-The patch adds deallocation of vpif_obj.dev[i] on the error path.
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+pgd = f25837f9
+[00000000] *pgd=bd93d835
+Internal error: Oops: 17 [#1] PREEMPT SMP ARM
+Modules linked in: btmrvl_sdio btmrvl bluetooth mwifiex_sdio mwifiex ecdh_generic ecc
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+PC is at s5p_mfc_get_min_scratch_buf_size+0x30/0x3c
+LR is at s5p_mfc_get_min_scratch_buf_size+0x28/0x3c
+...
+[<c074f998>] (s5p_mfc_get_min_scratch_buf_size) from [<c0745bc0>] (s5p_mfc_irq+0x814/0xa5c)
+[<c0745bc0>] (s5p_mfc_irq) from [<c019a218>] (__handle_irq_event_percpu+0x64/0x3f8)
+[<c019a218>] (__handle_irq_event_percpu) from [<c019a5d8>] (handle_irq_event_percpu+0x2c/0x7c)
+[<c019a5d8>] (handle_irq_event_percpu) from [<c019a660>] (handle_irq_event+0x38/0x5c)
+[<c019a660>] (handle_irq_event) from [<c019ebc4>] (handle_fasteoi_irq+0xc4/0x180)
+[<c019ebc4>] (handle_fasteoi_irq) from [<c0199270>] (generic_handle_irq+0x24/0x34)
+[<c0199270>] (generic_handle_irq) from [<c0199888>] (__handle_domain_irq+0x7c/0xec)
+[<c0199888>] (__handle_domain_irq) from [<c04ac298>] (gic_handle_irq+0x58/0x9c)
+[<c04ac298>] (gic_handle_irq) from [<c0101ab0>] (__irq_svc+0x70/0xb0)
+Exception stack(0xe73ddc60 to 0xe73ddca8)
+...
+[<c0101ab0>] (__irq_svc) from [<c01967d8>] (console_unlock+0x5a8/0x6a8)
+[<c01967d8>] (console_unlock) from [<c01981d0>] (vprintk_emit+0x118/0x2d8)
+[<c01981d0>] (vprintk_emit) from [<c01983b0>] (vprintk_default+0x20/0x28)
+[<c01983b0>] (vprintk_default) from [<c01989b4>] (printk+0x30/0x54)
+[<c01989b4>] (printk) from [<c07500b8>] (s5p_mfc_init_decode_v6+0x1d4/0x284)
+[<c07500b8>] (s5p_mfc_init_decode_v6) from [<c07230d0>] (vb2_start_streaming+0x24/0x150)
+[<c07230d0>] (vb2_start_streaming) from [<c0724e4c>] (vb2_core_streamon+0x11c/0x15c)
+[<c0724e4c>] (vb2_core_streamon) from [<c07478b8>] (vidioc_streamon+0x64/0xa0)
+[<c07478b8>] (vidioc_streamon) from [<c0709640>] (__video_do_ioctl+0x28c/0x45c)
+[<c0709640>] (__video_do_ioctl) from [<c0709bc8>] (video_usercopy+0x260/0x8a4)
+[<c0709bc8>] (video_usercopy) from [<c02b3820>] (do_vfs_ioctl+0xb0/0x9fc)
+[<c02b3820>] (do_vfs_ioctl) from [<c02b41a0>] (ksys_ioctl+0x34/0x58)
+[<c02b41a0>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xe73ddfa8 to 0xe73ddff0)
+...
+---[ end trace 376cf5ba6e0bee93 ]---
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpif_capture.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/media/platform/s5p-mfc/s5p_mfc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-index 61809d2050fa..f0f7ef638c56 100644
---- a/drivers/media/platform/davinci/vpif_capture.c
-+++ b/drivers/media/platform/davinci/vpif_capture.c
-@@ -1376,6 +1376,14 @@ static int initialize_vpif(void)
- 	return err;
- }
- 
-+static inline void free_vpif_objs(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < VPIF_CAPTURE_MAX_DEVICES; i++)
-+		kfree(vpif_obj.dev[i]);
-+}
-+
- static int vpif_async_bound(struct v4l2_async_notifier *notifier,
- 			    struct v4l2_subdev *subdev,
- 			    struct v4l2_async_subdev *asd)
-@@ -1645,7 +1653,7 @@ static __init int vpif_probe(struct platform_device *pdev)
- 	err = v4l2_device_register(vpif_dev, &vpif_obj.v4l2_dev);
- 	if (err) {
- 		v4l2_err(vpif_dev->driver, "Error registering v4l2 device\n");
--		goto cleanup;
-+		goto vpif_free;
- 	}
- 
- 	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, res_idx))) {
-@@ -1692,7 +1700,9 @@ static __init int vpif_probe(struct platform_device *pdev)
- 				  "registered sub device %s\n",
- 				   subdevdata->name);
- 		}
--		vpif_probe_complete();
-+		err = vpif_probe_complete();
-+		if (err)
-+			goto probe_subdev_out;
- 	} else {
- 		vpif_obj.notifier.ops = &vpif_async_ops;
- 		err = v4l2_async_notifier_register(&vpif_obj.v4l2_dev,
-@@ -1711,6 +1721,8 @@ static __init int vpif_probe(struct platform_device *pdev)
- 	kfree(vpif_obj.sd);
- vpif_unregister:
- 	v4l2_device_unregister(&vpif_obj.v4l2_dev);
-+vpif_free:
-+	free_vpif_objs();
- cleanup:
- 	v4l2_async_notifier_cleanup(&vpif_obj.notifier);
- 
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+index 4e936b95018a..481088a83212 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+@@ -523,7 +523,8 @@ static void s5p_mfc_handle_seq_done(struct s5p_mfc_ctx *ctx,
+ 				dev);
+ 		ctx->mv_count = s5p_mfc_hw_call(dev->mfc_ops, get_mv_count,
+ 				dev);
+-		ctx->scratch_buf_size = s5p_mfc_hw_call(dev->mfc_ops,
++		if (FW_HAS_E_MIN_SCRATCH_BUF(dev))
++			ctx->scratch_buf_size = s5p_mfc_hw_call(dev->mfc_ops,
+ 						get_min_scratch_buf_size, dev);
+ 		if (ctx->img_width == 0 || ctx->img_height == 0)
+ 			ctx->state = MFCINST_ERROR;
 -- 
 2.20.1
 
