@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732A2C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B0EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40005217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B228217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201415;
-	bh=p/zt7CQEprrne/xmuzstQLRlFAGT5yUOFb/L2hMdoJo=;
+	s=default; t=1563201434;
+	bh=ISiXIkP7Efpmxbr7CKuGfsjKqSepe7v3jybSx7GJ1LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+RyVJZFs8ngfrC+zk7dd8bdyNT1/P3VXBkJ3B3xgKFdhFym2WeVhEqyEtcr1sl+X
-	 6rUJB989QrXy5wV/jMDX68UEsQppp4OdYXbnXEF3TKGTu1i4roFJR3XKPBs3SL4WO2
-	 AQj+ILr1BBYbyJAWRTV6CA3m3aLWsRURy4RDn8tg=
+	b=SWDBgmsjvjQ/s4iAEhaZZWF7IixsStY1GIaga0zC6RDLWG8H6fXG7jEBRKoE3moys
+	 XVqd2Zcz8TugsOky02f9HFNMLb1s+KeK5T4B1BBRVjD+5SjXVmmXCNkNjU+n5NNret
+	 nhWLqQdFsvAL6vveTY9cEiMM+MDUBZPmImvJz6A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404080AbfGOOgy (ORCPT
+        id S2404328AbfGOOhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404007AbfGOOgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:36:49 -0400
+        id S2404411AbfGOOfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:35:09 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B454B217F9;
-        Mon, 15 Jul 2019 14:36:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEA2D217D8;
+        Mon, 15 Jul 2019 14:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201408;
-        bh=p/zt7CQEprrne/xmuzstQLRlFAGT5yUOFb/L2hMdoJo=;
+        s=default; t=1563201308;
+        bh=ISiXIkP7Efpmxbr7CKuGfsjKqSepe7v3jybSx7GJ1LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wHMZ/ZtspIIR/gJ19LihSdFQSIQkqrX2tnD4wciea7WZ7Yfu1lXUfrOHJ61n/DK9s
-         w2E1NNIuUcWz0hSkv/ud8lcjb1OZrxoC6b1v6hJQ/h+U9c1n1U1AFECsDLPEw6IyVS
-         OmBk/u8C/EbWcgrZC2RfeQLkqHHOZu8X8OxuzLx4=
+        b=lMmYXq3t3VcBTLlbx07piQP2wx7mW6KAKdpuuJ1DmeIGn7MjRJKAw6xe7euG/mo1p
+         WQdpbfPxNdp4lV7j4rpVRSizD9yJIBL2ahbAr8R5klrclzow36Z4dqnLJawQawaYaP
+         GJyt+NARTg0ivUytrQkS4Cj6VM2eVPFEBmf7MMgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Sowden <jeremy@azazel.net>,
-        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/73] batman-adv: fix for leaked TVLV handler.
-Date:   Mon, 15 Jul 2019 10:35:21 -0400
-Message-Id: <20190715143629.10893-5-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 104/105] gtp: fix use-after-free in gtp_newlink()
+Date:   Mon, 15 Jul 2019 10:28:38 -0400
+Message-Id: <20190715142839.9896-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
-References: <20190715143629.10893-1-sashal@kernel.org>
+In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
+References: <20190715142839.9896-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
+[ Upstream commit a2bed90704c68d3763bf24decb1b781a45395de8 ]
 
-A handler for BATADV_TVLV_ROAM was being registered when the
-translation-table was initialized, but not unregistered when the
-translation-table was freed.  Unregister it.
+Current gtp_newlink() could be called after unregister_pernet_subsys().
+gtp_newlink() uses gtp_net but it can be destroyed by
+unregister_pernet_subsys().
+So unregister_pernet_subsys() should be called after
+rtnl_link_unregister().
 
-Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
-Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Test commands:
+   #SHELL 1
+   while :
+   do
+	   for i in {1..5}
+	   do
+		./gtp-link add gtp$i &
+	   done
+	   killall gtp-link
+   done
+
+   #SHELL 2
+   while :
+   do
+	modprobe -rv gtp
+   done
+
+Splat looks like:
+[  753.176631] BUG: KASAN: use-after-free in gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.177722] Read of size 8 at addr ffff8880d48f2458 by task gtp-link/7126
+[  753.179082] CPU: 0 PID: 7126 Comm: gtp-link Tainted: G        W         5.2.0-rc6+ #50
+[  753.185801] Call Trace:
+[  753.186264]  dump_stack+0x7c/0xbb
+[  753.186863]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.187583]  print_address_description+0xc7/0x240
+[  753.188382]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.189097]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.189846]  __kasan_report+0x12a/0x16f
+[  753.190542]  ? gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.191298]  kasan_report+0xe/0x20
+[  753.191893]  gtp_newlink+0x9b4/0xa5c [gtp]
+[  753.192580]  ? __netlink_ns_capable+0xc3/0xf0
+[  753.193370]  __rtnl_newlink+0xb9f/0x11b0
+[ ... ]
+[  753.241201] Allocated by task 7186:
+[  753.241844]  save_stack+0x19/0x80
+[  753.242399]  __kasan_kmalloc.constprop.3+0xa0/0xd0
+[  753.243192]  __kmalloc+0x13e/0x300
+[  753.243764]  ops_init+0xd6/0x350
+[  753.244314]  register_pernet_operations+0x249/0x6f0
+[ ... ]
+[  753.251770] Freed by task 7178:
+[  753.252288]  save_stack+0x19/0x80
+[  753.252833]  __kasan_slab_free+0x111/0x150
+[  753.253962]  kfree+0xc7/0x280
+[  753.254509]  ops_free_list.part.11+0x1c4/0x2d0
+[  753.255241]  unregister_pernet_operations+0x262/0x390
+[ ... ]
+[  753.285883] list_add corruption. next->prev should be prev (ffff8880d48f2458), but was ffff8880d497d878. (next.
+[  753.287241] ------------[ cut here ]------------
+[  753.287794] kernel BUG at lib/list_debug.c:25!
+[  753.288364] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[  753.289099] CPU: 0 PID: 7126 Comm: gtp-link Tainted: G    B   W         5.2.0-rc6+ #50
+[  753.291036] RIP: 0010:__list_add_valid+0x74/0xd0
+[  753.291589] Code: 48 39 da 75 27 48 39 f5 74 36 48 39 dd 74 31 48 83 c4 08 b8 01 00 00 00 5b 5d c3 48 89 d9 48b
+[  753.293779] RSP: 0018:ffff8880cae8f398 EFLAGS: 00010286
+[  753.294401] RAX: 0000000000000075 RBX: ffff8880d497d878 RCX: 0000000000000000
+[  753.296260] RDX: 0000000000000075 RSI: 0000000000000008 RDI: ffffed10195d1e69
+[  753.297070] RBP: ffff8880cd250ae0 R08: ffffed101b4bff21 R09: ffffed101b4bff21
+[  753.297899] R10: 0000000000000001 R11: ffffed101b4bff20 R12: ffff8880d497d878
+[  753.298703] R13: 0000000000000000 R14: ffff8880cd250ae0 R15: ffff8880d48f2458
+[  753.299564] FS:  00007f5f79805740(0000) GS:ffff8880da400000(0000) knlGS:0000000000000000
+[  753.300533] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  753.301231] CR2: 00007fe8c7ef4f10 CR3: 00000000b71a6006 CR4: 00000000000606f0
+[  753.302183] Call Trace:
+[  753.302530]  gtp_newlink+0x5f6/0xa5c [gtp]
+[  753.303037]  ? __netlink_ns_capable+0xc3/0xf0
+[  753.303576]  __rtnl_newlink+0xb9f/0x11b0
+[  753.304092]  ? rtnl_link_unregister+0x230/0x230
+
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/gtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index af4a02ad8503..1fab9bcf535d 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -3700,6 +3700,8 @@ static void batadv_tt_purge(struct work_struct *work)
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 53fd66534e3a..5de4053774b8 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1383,9 +1383,9 @@ late_initcall(gtp_init);
  
- void batadv_tt_free(struct batadv_priv *bat_priv)
+ static void __exit gtp_fini(void)
  {
-+	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
-+
- 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+-	unregister_pernet_subsys(&gtp_net_ops);
+ 	genl_unregister_family(&gtp_genl_family);
+ 	rtnl_link_unregister(&gtp_link_ops);
++	unregister_pernet_subsys(&gtp_net_ops);
  
+ 	pr_info("GTP module unloaded\n");
+ }
 -- 
 2.20.1
 
