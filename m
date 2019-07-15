@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB67C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16064C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03C2214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA20214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563167604;
-	bh=he0cLIlCSxJggZvEU16Jx+uhRxzb4zHCpiAsU+uAfko=;
+	s=default; t=1563167614;
+	bh=BBnueE/U29m6p1IALEJOU3fzZPOV+KZGT85BBOX9OVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gM/MX/DJ/vKA3g8va7uEeVkGjx8fp7BsP4A3PnR3U3tu1b8E43MEcA62gUOMzRdMz
-	 y6eOknv9fxXuaJAM+bAhQCzG8DhUaKwYhEuSZCkedgRJArWYBDf8Ctouwlb+oM1HqF
-	 sqsw83gDrpxWLKWYLduNKyxeQ0sHAiOeM2MzpkzE=
+	b=SS9O9Ns8iXrFsPHc7mzjVMzdG5GCp0tqBnQQfyUHZKlEf24wGFTdz43lnPJCDRpfV
+	 GzuyT1SYy9QnArpLBC/iZjPqq0OaEd38OAnn6eFEBGcUozPKENmQK9sQHooy/BbzoQ
+	 R9g+vuur+GmGXfl80moGF7ck/d5kLbmD2e40Zp6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfGOFNX (ORCPT
+        id S1729321AbfGOFNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 01:13:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 01:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfGOFNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 01:13:23 -0400
+        id S1729302AbfGOFNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 01:13:33 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EAA020868;
-        Mon, 15 Jul 2019 05:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 853B320C01;
+        Mon, 15 Jul 2019 05:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563167601;
-        bh=he0cLIlCSxJggZvEU16Jx+uhRxzb4zHCpiAsU+uAfko=;
+        s=default; t=1563167612;
+        bh=BBnueE/U29m6p1IALEJOU3fzZPOV+KZGT85BBOX9OVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROnWu6dVHYL99vo47cq6HaPR7bjMoubVzc2r8/8N+hRysthg6OXRlNwGwQQMOagzb
-         AaX4C5VJ6Yw2wAUVcTvzo2ibce2KV0brwO2tk2z0qHw1pHLM6B5gHAkydLwJppbnw5
-         5xA9osmy2mQjBAIDXd5wsjkxBjK81lFuPRbYk7Eo=
+        b=1Jl9oy6FRjltpx0aaSuUMJXEMQecEwLjcL/GiAxI8lInp4+DuY0VTePdm3HipGsh+
+         0eKr7ZZq79gNRHzuVDkRGj4W9ixfvbAy4zM5GbksUO0W89GWH4Ga1qyYSCkWx6/lqt
+         nL6yW9y0D2lLXEr2dBvaKEB0qxdO9KuBaeUI7Zlc=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -49,9 +49,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH v2 12/15] tracing: of: Add instance node support
-Date:   Mon, 15 Jul 2019 14:13:16 +0900
-Message-Id: <156316759652.23477.15841482804179404771.stgit@devnote2>
+Subject: [RFC PATCH v2 13/15] tracing: of: Add cpumask property support
+Date:   Mon, 15 Jul 2019 14:13:27 +0900
+Message-Id: <156316760712.23477.13986980388044489506.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
 References: <156316746861.23477.5815110570539190650.stgit@devnote2>
@@ -64,123 +64,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add instance node support to devicetree ftrace binding.
-User can set some options and event nodes in instance node.
+Add cpumask property for tracing. Note that this property accepts
+a string cpumask, not a digit number.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_of.c |   67 +++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 55 insertions(+), 12 deletions(-)
+ kernel/trace/trace.c    |   41 ++++++++++++++++++++++++++++-------------
+ kernel/trace/trace_of.c |   14 ++++++++++++++
+ 2 files changed, 42 insertions(+), 13 deletions(-)
 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6f50c58a3ad4..251d9de14b12 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4437,20 +4437,12 @@ tracing_cpumask_read(struct file *filp, char __user *ubuf,
+ 	return count;
+ }
+ 
+-static ssize_t
+-tracing_cpumask_write(struct file *filp, const char __user *ubuf,
+-		      size_t count, loff_t *ppos)
++int tracing_set_cpumask(struct trace_array *tr, cpumask_var_t tracing_cpumask_new)
+ {
+-	struct trace_array *tr = file_inode(filp)->i_private;
+-	cpumask_var_t tracing_cpumask_new;
+-	int err, cpu;
+-
+-	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
+-		return -ENOMEM;
++	int cpu;
+ 
+-	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
+-	if (err)
+-		goto err_unlock;
++	if (!tr)
++		return -EINVAL;
+ 
+ 	local_irq_disable();
+ 	arch_spin_lock(&tr->max_lock);
+@@ -4474,11 +4466,34 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
+ 	local_irq_enable();
+ 
+ 	cpumask_copy(tr->tracing_cpumask, tracing_cpumask_new);
++
++	return 0;
++}
++
++static ssize_t
++tracing_cpumask_write(struct file *filp, const char __user *ubuf,
++		      size_t count, loff_t *ppos)
++{
++	struct trace_array *tr = file_inode(filp)->i_private;
++	cpumask_var_t tracing_cpumask_new;
++	int err;
++
++	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
++		return -ENOMEM;
++
++	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
++	if (err)
++		goto err_free;
++
++	err = tracing_set_cpumask(tr, tracing_cpumask_new);
++	if (err)
++		goto err_free;
++
+ 	free_cpumask_var(tracing_cpumask_new);
+ 
+ 	return count;
+ 
+-err_unlock:
++err_free:
+ 	free_cpumask_var(tracing_cpumask_new);
+ 
+ 	return err;
 diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index e9142c63ece1..7fe81c25dc59 100644
+index 7fe81c25dc59..14d6c9a8fd81 100644
 --- a/kernel/trace/trace_of.c
 +++ b/kernel/trace/trace_of.c
-@@ -21,9 +21,10 @@ extern int tracing_set_tracer(struct trace_array *tr, const char *buf);
- extern void __init trace_init_tracepoint_printk(void);
+@@ -22,6 +22,8 @@ extern void __init trace_init_tracepoint_printk(void);
  extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
  					  unsigned long size, int cpu_id);
-+extern struct trace_array *trace_array_create(const char *name);
+ extern struct trace_array *trace_array_create(const char *name);
++extern int tracing_set_cpumask(struct trace_array *tr,
++			       cpumask_var_t tracing_cpumask_new);
  
  static void __init
--trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
-+trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
- {
- 	struct property *prop;
- 	const char *p;
-@@ -48,6 +49,24 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
- 			pr_err("Failed to set trace clock: %s\n", p);
+ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+@@ -59,6 +61,18 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+ 			pr_err("Failed to resize trace buffer to %d KB\n",
+ 				v >> 10);
  	}
- 
-+	/* This accepts per-cpu buffer size in KB */
-+	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
++
++	err = of_property_read_string(node, "cpumask", &p);
 +	if (!err) {
-+		v <<= 10;	/* KB to Byte */
-+		if (v < PAGE_SIZE)
-+			pr_err("Buffer size is too small: %d KB\n", v >> 10);
-+		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
-+			pr_err("Failed to resize trace buffer to %d KB\n",
-+				v >> 10);
++		cpumask_var_t new_mask;
++
++		if (alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
++			if (cpumask_parse(p, new_mask) < 0 ||
++			    tracing_set_cpumask(tr, new_mask) < 0)
++				pr_err("Failed to set new CPU mask %s\n", p);
++			free_cpumask_var(new_mask);
++		}
 +	}
-+}
-+
-+static void __init
-+trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
-+{
-+	u32 v = 0;
-+	int err;
-+
- 	/* Command line boot options */
- 	if (of_find_property(node, "dump-on-oops", NULL)) {
- 		err = of_property_read_u32_index(node, "dump-on-oops", 0, &v);
-@@ -63,20 +82,11 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
- 	if (of_find_property(node, "tp-printk", NULL))
- 		trace_init_tracepoint_printk();
- 
--	/* This accepts per-cpu buffer size in KB */
--	err = of_property_read_u32_index(node, "buffer-size-kb", 0, &v);
--	if (!err) {
--		v <<= 10;	/* KB to Byte */
--		if (v < PAGE_SIZE)
--			pr_err("Buffer size is too small: %d KB\n", v >> 10);
--		if (tracing_resize_ring_buffer(tr, v, RING_BUFFER_ALL_CPUS) < 0)
--			pr_err("Failed to resize trace buffer to %d KB\n",
--				v >> 10);
--	}
--
- 	if (of_find_property(node, "alloc-snapshot", NULL))
- 		if (tracing_alloc_snapshot() < 0)
- 			pr_err("Failed to allocate snapshot buffer\n");
-+
-+	trace_of_set_instance_options(tr, node);
  }
  
- #ifdef CONFIG_EVENT_TRACING
-@@ -310,6 +320,38 @@ trace_of_enable_tracer(struct trace_array *tr, struct device_node *node)
- 	}
- }
- 
-+static void __init
-+trace_of_init_instances(struct device_node *__node)
-+{
-+	struct device_node *node;
-+	struct trace_array *tr;
-+	const char *p;
-+	int err;
-+
-+	for_each_child_of_node(__node, node) {
-+		if (!of_node_name_prefix(node, "instance"))
-+			continue;
-+
-+		err = of_property_read_string(node, "instance", &p);
-+		if (err) {
-+			pr_err("Failed to get instance name on %s\n",
-+				of_node_full_name(node));
-+			continue;
-+		}
-+
-+		tr = trace_array_create(p);
-+		if (IS_ERR(tr)) {
-+			pr_err("Failed to create instance %s\n", p);
-+			continue;
-+		}
-+
-+		trace_of_set_instance_options(tr, node);
-+		trace_of_init_events(tr, node);
-+		trace_of_enable_events(tr, node);
-+		trace_of_enable_tracer(tr, node);
-+	}
-+}
-+
- static struct device_node * __init trace_of_find_ftrace_node(void)
- {
- 	if (!of_chosen)
-@@ -337,6 +379,7 @@ static int __init trace_of_init(void)
- 	trace_of_init_events(tr, trace_node);
- 	trace_of_enable_events(tr, trace_node);
- 	trace_of_enable_tracer(tr, trace_node);
-+	trace_of_init_instances(trace_node);
- 
- end:
- 	of_node_put(trace_node);
+ static void __init
 
