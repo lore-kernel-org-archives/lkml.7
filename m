@@ -2,163 +2,128 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0009DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB98AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC932086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4242086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="C00/OWh9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmbhB7Yx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732732AbfGOVEo (ORCPT
+        id S1732836AbfGOVFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:04:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41785 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731927AbfGOVEn (ORCPT
+        Mon, 15 Jul 2019 17:05:21 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44112 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731927AbfGOVFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:04:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d24so17706797ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:04:41 -0700 (PDT)
+        Mon, 15 Jul 2019 17:05:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so36362240iob.11;
+        Mon, 15 Jul 2019 14:05:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nMdAH6nTLDrGvTqGSOAbQkcOJz7RylQFzwai+/2x5Kg=;
-        b=C00/OWh9vq2MRiQn1E4VUuP+O+05mZjNiBnTBYE91LA3zA6l01Y3ZAFqD2sa2HJkYA
-         h5J92fYmst8NEM4kbY7z9ANwjGbMbqg3KDgovAqdXLcZH01wV9eGew+ThGgGmvphgmAD
-         MxCVdar45y7UYA1DDtDoQVv8dYq4cWtZjZQ6/WT8LjTbkRr544wt+KFFducPNhPYqfvf
-         wvewvBAHmtMQ3UdggObhYJdHU1TEreaMfaoyjsOy6hYFNOwCZ9YqhCLMTU3973yjiSJE
-         Yi+PlsVJ+lpWQCfj+ktNFR7xMaZJmXQJhqz9OR+Yp0H3xtV8sPxtgsA5H5qa8lTtOAmU
-         09Kw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SwLuc4Hf2LsLvAkrQGmyQjrb5PcpUEawFEMjfRbkASU=;
+        b=mmbhB7YxKElWEK3UzVJlJpND90jtwj5VhsJtnJ5gN+Jil8o1kkkNQZlASUsLVeeRYx
+         xM7Y6pUMBfJHvmiw4OXxrFp4licPaOgVCLwaxhJJa3XEcTAox0/C2bBwtumR3LLIRHqB
+         jPN1uZxOc/uSLhTNoJyFkBQpGQQYaqHVYKWEXKqts2P7+TfWu9/1aFnocI6Dazd8N+qA
+         7npNVuWLprozGmAeu8NB79MfxHFhblQ66FTck9IuWvGNTSbgKfe55voDLnVdAPXyui5k
+         bty0V3jguFmtiC/s3EVmefyzd49JqNorB7Q+gEzZukuDI9/ot3zsJlxLmDVty54WK+Yt
+         IV4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nMdAH6nTLDrGvTqGSOAbQkcOJz7RylQFzwai+/2x5Kg=;
-        b=h2tucWc2pWYo3bHk7JCAtsQxy+7M3tnxC2bHcChkuYl2CpnRG+Bt9SflLYgj8/0E6n
-         OF12jlFE2ovyuBbkdL43Gw5l+Pboa6k6/AHZuXzH0B09lFEa0Txj1qX40U7+zMivbD74
-         JafshMjQ0pb8fWE3iJvnM5QGHvuLsqfbJyVpB4wr+8LFRY5mSViF4lH4yUQPFqhD2GqA
-         PHg4WuUnFBOFEwkCeYoGTDcp3WDHySjv7vpQG67vhfPULGeobeK/dPIbtrNKXXvVaDpe
-         llO0KcWNG3Ihf1xEwvGg0WeKTSqBHBIuvpawSq0rlv98tuQ7UROfrTGkn81rlVohqQjc
-         f1eQ==
-X-Gm-Message-State: APjAAAUUwYp/qHkvDhm4jpfg9Fz2Pj1diSvAdCMW45Ao/8VHkREMkPkQ
-        N1GHFV9XyEb7msLrtdi0uRESea89MGcRGXpi0A==
-X-Google-Smtp-Source: APXvYqx7xtowySesa4+9lw6Ozl7JVLEqOjJfTZIHvPqefLlVsTXkwA71CsctPNus3iiABl3+IN2es94OlE7TcFEpzio=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr14605368lje.46.1563224680729;
- Mon, 15 Jul 2019 14:04:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco> <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190529153427.GB8959@cisco> <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
- <20190529222835.GD8959@cisco> <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
- <20190530170913.GA16722@mail.hallyn.com> <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
- <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
-In-Reply-To: <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 15 Jul 2019 17:04:29 -0400
-Message-ID: <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SwLuc4Hf2LsLvAkrQGmyQjrb5PcpUEawFEMjfRbkASU=;
+        b=rkt0bza0smZ4kq4BNWFTq7xC5pKTYuqP/Nq4pKIwGyPHyvmE53PkPC2ihypkOZgLMb
+         5EApEwh1oEw575RZakJf6dwq2lg2uVbtm9oQzeMD3vSJLHZ1gR0Xf5NfVnnCoRRdTTBL
+         aGz4pDwh0piw9xm1dLx19/LFs3Seg0KWOahc370Xbtp/t+NNprJbxFLfbihPuY41GE+w
+         aG9FrfBsuq/P9Z1ffGe47TD3SQPkGLuMjFVsMasxnUKpqnr8WvnBB7a4Iuwh7FLhkxWI
+         uiyzSDBQlo1vXOe30qxL99Tf+EsL/Unxno0df/3ypLMWxNfxIzlTE2Y4fOc99VRhW7bt
+         ljvw==
+X-Gm-Message-State: APjAAAV0WNOiCIx6SZZSAnZBVivepkwchpeEwUBmbeoz6VGjrLWxueGC
+        0MKEkXhVS7LyjqA+TttXrVc=
+X-Google-Smtp-Source: APXvYqymJ4dQFo+aNKlEe5L8WXFnYuzuoXmN4/7lbwzrnradKFqTf00Q/eqVwLbpZTxr2cJChHsv2g==
+X-Received: by 2002:a6b:6a01:: with SMTP id x1mr26183439iog.77.1563224720105;
+        Mon, 15 Jul 2019 14:05:20 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id t4sm15223028iop.0.2019.07.15.14.05.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 14:05:19 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Fugang Duan <fugang.duan@nxp.com>
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] net: fec: optionally reset PHY via a reset-controller
+Date:   Mon, 15 Jul 2019 17:05:12 -0400
+Message-Id: <20190715210512.15823-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 2:06 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-05-30 15:29, Paul Moore wrote:
+The current fec driver allows the PHY to be reset via a gpio,
+specified in the devicetree. However, some PHYs need to be reset
+in a more complex way.
 
-...
+To accommodate such PHYs, allow an optional reset controller
+in the fec devicetree. If no reset controller is found, the
+fec will fall back to the legacy reset behaviour.
 
-> > [REMINDER: It is an "*audit* container ID" and not a general
-> > "container ID" ;)  Smiley aside, I'm not kidding about that part.]
-> >
-> > I'm not interested in supporting/merging something that isn't useful;
-> > if this doesn't work for your use case then we need to figure out what
-> > would work.  It sounds like nested containers are much more common in
-> > the lxc world, can you elaborate a bit more on this?
-> >
-> > As far as the possible solutions you mention above, I'm not sure I
-> > like the per-userns audit container IDs, I'd much rather just emit the
-> > necessary tracking information via the audit record stream and let the
-> > log analysis tools figure it out.  However, the bigger question is how
-> > to limit (re)setting the audit container ID when you are in a non-init
-> > userns.  For reasons already mentioned, using capable() is a non
-> > starter for everything but the initial userns, and using ns_capable()
-> > is equally poor as it essentially allows any userns the ability to
-> > munge it's audit container ID (obviously not good).  It appears we
-> > need a different method for controlling access to the audit container
-> > ID.
->
-> We're not quite ready yet for multiple audit daemons and possibly not
-> yet for audit namespaces, but this is starting to look a lot like the
-> latter.
+Example:
+&fec {
+	phy-mode = "rgmii";
+	resets = <&phy_reset>;
+	reset-names = "phy";
+	status = "okay";
+};
 
-A few quick comments on audit namespaces: the audit container ID is
-not envisioned as a new namespace (even in nested form) and neither do
-I consider running multiple audit daemons to be a new namespace.
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
 
-From my perspective we create namespaces to allow us to redefine a
-global resource for some subset of the system, e.g. providing a unique
-/tmp for some number of processes on the system.  While it may be
-tempting to think of the audit container ID as something we could
-"namespace", especially when multiple audit daemons are concerned, in
-some ways this would be counter productive; the audit container ID is
-intended to be a global ID that can be used to associate audit event
-records with a "container" where the "container" is defined by an
-orchestrator outside the audit subsystem.  The global nature of the
-audit container ID allows us to maintain a sane(ish) view of the
-system in the audit log, if we were to "namespace" the audit container
-ID such that the value was no longer guaranteed to be unique
-throughout the system, we would need to additionally track the audit
-namespace along with the audit container ID which starts to border on
-insanity IMHO.
+Will send a Documentation patch if this receives a positive review.
 
-> If we can't trust ns_capable() then why are we passing on
-> CAP_AUDIT_CONTROL?  It is being passed down and not stripped purposely
-> by the orchestrator/engine.  If ns_capable() isn't inherited how is it
-> gained otherwise?  Can it be inserted by cotainer image?  I think the
-> answer is "no".  Either we trust ns_capable() or we have audit
-> namespaces (recommend based on user namespace) (or both).
+ drivers/net/ethernet/freescale/fec_main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-My thinking is that since ns_capable() checks the credentials with
-respect to the current user namespace we can't rely on it to control
-access since it would be possible for a privileged process running
-inside an unprivileged container to manipulate the audit container ID
-(containerized process has CAP_AUDIT_CONTROL, e.g. running as root in
-the container, while the container itself does not).
-
-> At this point I would say we are at an impasse unless we trust
-> ns_capable() or we implement audit namespaces.
-
-I'm not sure how we can trust ns_capable(), but if you can think of a
-way I would love to hear it.  I'm also not sure how namespacing audit
-is helpful (see my above comments), but if you think it is please
-explain.
-
-> I don't think another mechanism to trust nested orchestrators/engines
-> will buy us anything.
->
-> Am I missing something?
-
-Based on your questions/comments above it looks like your
-understanding of ns_capable() does not match mine; if I'm thinking
-about ns_capable() incorrectly, please educate me.
-
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 38f10f7dcbc3..5a5f3ed6f16d 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -61,6 +61,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/if_vlan.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/reset.h>
+ #include <linux/prefetch.h>
+ #include <soc/imx/cpuidle.h>
+ 
+@@ -3335,6 +3336,7 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
+ static int
+ fec_probe(struct platform_device *pdev)
+ {
++	struct reset_control *phy_reset;
+ 	struct fec_enet_private *fep;
+ 	struct fec_platform_data *pdata;
+ 	struct net_device *ndev;
+@@ -3490,7 +3492,9 @@ fec_probe(struct platform_device *pdev)
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	ret = fec_reset_phy(pdev);
++	phy_reset = devm_reset_control_get_exclusive(&pdev->dev, "phy");
++	ret = IS_ERR(phy_reset) ? fec_reset_phy(pdev) :
++			reset_control_reset(phy_reset);
+ 	if (ret)
+ 		goto failed_reset;
+ 
 -- 
-paul moore
-www.paul-moore.com
+2.17.1
+
