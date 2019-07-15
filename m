@@ -2,112 +2,201 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6E4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CC9C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C2220659
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E5B20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563220179;
+	bh=CWlhifr0S74KzpUYXPlw1+4sVyl5iHaUCHdWSKTfiZE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=oNH6nx5L3dJcBwZIZtoiSl3dxpmV978qg8MDglPQXFtjqhz+n6/2ackXtNIolTawe
+	 U6UMQOeaWTupuJhtF0uaLMIJbea96PZjv5kW7DQ3yHl0KC1n4rWVpkRSkTR0o97Kaz
+	 CdXjZxZF+/M6AEMhMoW03tfYpwrdz6oAY+XAdXXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbfGOTta (ORCPT
+        id S1731901AbfGOTth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:49:30 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:56859 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730487AbfGOTta (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:49:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TX.eHB5_1563220162;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX.eHB5_1563220162)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 16 Jul 2019 03:49:25 +0800
-Subject: Re: [v3 PATCH 0/2] Fix false negative of shmem vma's THP eligibility
-To:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <11e1c58e-ffa4-fcb0-dc9e-95354e21c392@linux.alibaba.com>
-Date:   Mon, 15 Jul 2019 12:49:19 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 15 Jul 2019 15:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730487AbfGOTtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 15:49:36 -0400
+Received: from earth.universe (ip4d16e7f3.dynamic.kabel-deutschland.de [77.22.231.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA20720659;
+        Mon, 15 Jul 2019 19:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563220175;
+        bh=CWlhifr0S74KzpUYXPlw1+4sVyl5iHaUCHdWSKTfiZE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Vh4JMDIBGrMfrDLOhPvg1XQqHtTBYrMeSem0llhZz4Y82PBKnq46/oDCLlRe6czjG
+         MxOTE7k3mlJrxu9etpDNcVOwKY99ovUU/Y5suDXbWy/BP4N6mg9RtApqxfxCIge0s1
+         3dVfy84G64/qRu9ir90iG5VAtEos6ZqnmN4ydWvM=
+Received: by earth.universe (Postfix, from userid 1000)
+        id D26513C0944; Mon, 15 Jul 2019 21:49:33 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 21:49:33 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: [GIT PULL] power-supply changes for 5.3
+Message-ID: <20190715194933.cq3cfz7g6j3mnbmc@earth.universe>
 MIME-Version: 1.0
-In-Reply-To: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oilo27qmkp2bf3ya"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hugh,
 
+--oilo27qmkp2bf3ya
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Any comments for this version? Although they have been in -mm tree, they 
-didn't make in 5.3 merge window, I'm supposed Andrew needs ack from you 
-or someone else.
+Hi Linus,
 
+Here is the power-supply pull request for v5.3. Stephen reported a
+merge conflict with the PCI tree in linux-next, which contains a
+patch updating the power related documentation files to ReST format.
+The merge conflict solution from Stephen looks correct to me:
 
-Thanks,
+https://lkml.org/lkml/2019/6/27/1284
 
-Yang
+-- Sebastian
 
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-On 6/12/19 9:43 PM, Yang Shi wrote:
-> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
-> vma") introduced THPeligible bit for processes' smaps. But, when checking
-> the eligibility for shmem vma, __transparent_hugepage_enabled() is
-> called to override the result from shmem_huge_enabled().  It may result
-> in the anonymous vma's THP flag override shmem's.  For example, running a
-> simple test which create THP for shmem, but with anonymous THP disabled,
-> when reading the process's smaps, it may show:
->
-> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
-> Size:               4096 kB
-> ...
-> [snip]
-> ...
-> ShmemPmdMapped:     4096 kB
-> ...
-> [snip]
-> ...
-> THPeligible:    0
->
-> And, /proc/meminfo does show THP allocated and PMD mapped too:
->
-> ShmemHugePages:     4096 kB
-> ShmemPmdMapped:     4096 kB
->
-> This doesn't make too much sense.  The shmem objects should be treated
-> separately from anonymous THP.  Calling shmem_huge_enabled() with checking
-> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
-> dax vma check since we already checked if the vma is shmem already.
->
-> The transhuge_vma_suitable() is needed to check vma, but it was only
-> available for shmem THP.  The patch 1/2 makes it available for all kind of
-> THPs and does some code duplication cleanup, so it is made a separate patch.
->
->
-> Changelog:
-> v3: * Check if vma is suitable for allocating THP per Hugh Dickins
->      * Fixed smaps output alignment and documentation per Hugh Dickins
-> v2: * Check VM_NOHUGEPAGE per Michal Hocko
->
->
-> Yang Shi (2):
->        mm: thp: make transhuge_vma_suitable available for anonymous THP
->        mm: thp: fix false negative of shmem vma's THP eligibility
->
->   Documentation/filesystems/proc.txt |  4 ++--
->   fs/proc/task_mmu.c                 |  3 ++-
->   mm/huge_memory.c                   | 11 ++++++++---
->   mm/internal.h                      | 25 +++++++++++++++++++++++++
->   mm/memory.c                        | 13 -------------
->   mm/shmem.c                         |  3 +++
->   6 files changed, 40 insertions(+), 19 deletions(-)
+are available in the Git repository at:
 
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.3
+
+for you to fetch changes up to caa2b557841c8cedc1d4862cd31cf76ee940d105:
+
+  power: reset: nvmem-reboot-mode: add CONFIG_OF dependency (2019-07-09 00:28:49 +0200)
+
+----------------------------------------------------------------
+power supply and reset changes for the v5.3 series
+
+Core:
+ * Add HWMON compat layer
+ * New properties
+  - input power limit
+  - input voltage limit
+
+Drivers:
+ * qcom-pon: add gen2 support
+ * New driver for storing reboot move in NVMEM
+ * New driver for Wilco EC charger configuration
+ * simplify getting the adapter of a client
+
+----------------------------------------------------------------
+Andrey Smirnov (1):
+      power: supply: Add HWMON compatibility layer
+
+Arnd Bergmann (1):
+      power: reset: nvmem-reboot-mode: add CONFIG_OF dependency
+
+Enric Balletbo i Serra (2):
+      power: supply: add input power and voltage limit properties
+      power: supply: cros: allow to set input voltage and current limit
+
+Han Nandor (2):
+      dt-bindings: power: reset: add document for NVMEM based reboot-mode
+      power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface
+
+John Stultz (2):
+      dt-bindings: power: reset: qcom: Add qcom,pm8998-pon compatibility line
+      reset: qcom-pon: Add support for gen2 pon
+
+Nick Crews (2):
+      platform/chrome: wilco_ec: Add property helper library
+      power_supply: wilco_ec: Add charging config driver
+
+Sebastian Reichel (1):
+      Merge tag 'tags/ib-chrome-psy-5.3' into psy-next
+
+Wolfram Sang (9):
+      power: supply: bq24190_charger: simplify getting the adapter of a client
+      power: supply: bq24257_charger: simplify getting the adapter of a client
+      power: supply: bq25890_charger: simplify getting the adapter of a client
+      power: supply: max14656_charger_detector: simplify getting the adapter of a client
+      power: supply: max17040_battery: simplify getting the adapter of a client
+      power: supply: max17042_battery: simplify getting the adapter of a client
+      power: supply: rt5033_battery: simplify getting the adapter of a client
+      power: supply: rt9455_charger: simplify getting the adapter of a client
+      power: supply: sbs-manager: simplify getting the adapter of a client
+
+kbuild test robot (1):
+      power: supply: fix semicolon.cocci warnings
+
+ Documentation/ABI/testing/sysfs-class-power        |  32 ++
+ Documentation/ABI/testing/sysfs-class-power-wilco  |  30 ++
+ .../bindings/power/reset/nvmem-reboot-mode.txt     |  26 ++
+ .../devicetree/bindings/power/reset/qcom,pon.txt   |   1 +
+ Documentation/power/power_supply_class.txt         |   4 +
+ drivers/platform/chrome/wilco_ec/Makefile          |   2 +-
+ drivers/platform/chrome/wilco_ec/properties.c      | 132 ++++++++
+ drivers/power/reset/Kconfig                        |  10 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/nvmem-reboot-mode.c            |  76 +++++
+ drivers/power/reset/qcom-pon.c                     |  12 +-
+ drivers/power/supply/Kconfig                       |  23 ++
+ drivers/power/supply/Makefile                      |   2 +
+ drivers/power/supply/bq24190_charger.c             |   2 +-
+ drivers/power/supply/bq24257_charger.c             |   2 +-
+ drivers/power/supply/bq25890_charger.c             |   2 +-
+ drivers/power/supply/cros_usbpd-charger.c          | 116 +++++++
+ drivers/power/supply/max14656_charger_detector.c   |   2 +-
+ drivers/power/supply/max17040_battery.c            |   2 +-
+ drivers/power/supply/max17042_battery.c            |   2 +-
+ drivers/power/supply/power_supply_core.c           |   7 +
+ drivers/power/supply/power_supply_hwmon.c          | 355 +++++++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c          |   2 +
+ drivers/power/supply/rt5033_battery.c              |   2 +-
+ drivers/power/supply/rt9455_charger.c              |   2 +-
+ drivers/power/supply/sbs-manager.c                 |   2 +-
+ drivers/power/supply/ucs1002_power.c               |   2 +-
+ drivers/power/supply/wilco-charger.c               | 187 +++++++++++
+ include/linux/platform_data/wilco-ec.h             |  71 +++++
+ include/linux/power_supply.h                       |  15 +
+ 30 files changed, 1110 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-wilco
+ create mode 100644 Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
+ create mode 100644 drivers/platform/chrome/wilco_ec/properties.c
+ create mode 100644 drivers/power/reset/nvmem-reboot-mode.c
+ create mode 100644 drivers/power/supply/power_supply_hwmon.c
+ create mode 100644 drivers/power/supply/wilco-charger.c
+
+--oilo27qmkp2bf3ya
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0s2MoACgkQ2O7X88g7
++prt0RAAgV6wJa9RgwamhO5IAoxGjhgzkTDNVmAyKcplFjsOEORihCc3iIcbc1Kg
+PaaYdLaArxBBBhIvFvxx5G+sXNrppe2aFv32g6X6pagZDouq1IWE8JmjUrb0sX0u
+2FnEzK26Vzk2oc9yjsEWXxI/IEGt4ia6QLvtqCH2mryIT1lFivdaNMAT0v3kZd8l
+nAzCU7sbA4iiZbq9SDJHrf+8vWmmo3ZD8hhbWm75itXmJW+w3+wnjoJHYiybcGXb
+Nc5EzB8S75yv8Jb6wcMzRCu71S7U9EULcBqtEXoAXfKJSW0mBo2vC4EtP6TDSJGX
+pSShwTztRacr4HajPpPBL7Wn8N1Cv0DbLmz4YRGeqqJ8Q85V0OUhdJpU60KIUr0v
+x6hMC8XgtoQxus8LlsW+Y1EWUrgIHWSKFXIHvlZgZS8heDCW/X3hAgUHvAZ6DIjU
+wuBqNteGsX2e+4Y6RrAouO3JjBlnYurbpa0YGN01FOSmaoxgFC0rfhN3hhZ25oOL
+iAOpLrV/MlVRt09M5fZIVIF5OZiNoalFRYeBe3YCXg/Z1E9ev9GtTLK/DTrRuNG7
+6smyD/TNM1dioVCyGsf7QxcH0OyYX6Ytu7BaOr5tpanrgfDKUX0/KfoKdexfa8+O
+zxs1UeAiS5cjzuQskFJrd17qbwp8qVkdxBx9yLR+1E1deVTRSnI=
+=qOqz
+-----END PGP SIGNATURE-----
+
+--oilo27qmkp2bf3ya--
