@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF621C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25C7C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04120C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CA52086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197791;
-	bh=tAtuICIV1U+7yLjSH6QQHcFpIEFMJc06cGhrtThDr/g=;
+	s=default; t=1563197796;
+	bh=+tfDLiCMFVeiznMrly76v6ecB2cjl4qeybA1V5HmG8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzNnXqBgvnYeUNBIiaQC7wp8VR87mSV5tmI/7zy+lCk2pYtepXmJ9eJmr54ZgJnyW
-	 QCf6ndVsO6yTe3OoFhDrh7kz72c3np8JaQWLJXmSroZSd4Cz7x4KtW7HNvmrySfSuK
-	 dYMO0C4wx89AxECZ+BZN65WH29bOvpeM+DMdi6zM=
+	b=dB5rp9KwGziwKJXqIMPPZJyufMAOOpiUoFevt7jQ00NP6YoEfVh6eu3hGzz4VYLQs
+	 +Es2mQoC8qyK0E1+M4pEdvueAEAZovXXQGIVMVY7F0Hh3rk0I+oSEeIhEuwWeIDEnI
+	 9+/F58a3LrXn4taZMySIEEx5vgqeWS3xBUvPmwFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbfGONga (ORCPT
+        id S1730687AbfGONge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32768 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730623AbfGONg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:36:27 -0400
+        id S1730656AbfGONga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:36:30 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC382083D;
-        Mon, 15 Jul 2019 13:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C58662083D;
+        Mon, 15 Jul 2019 13:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197787;
-        bh=tAtuICIV1U+7yLjSH6QQHcFpIEFMJc06cGhrtThDr/g=;
+        s=default; t=1563197790;
+        bh=+tfDLiCMFVeiznMrly76v6ecB2cjl4qeybA1V5HmG8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KiS27vvaWiju07lRNsFRiWP5M1+UUqChotIMzbWXCC1d6mPvY3zp2nD98ETc8fKt
-         QQCTDVJcIGN54VXgwrxD06VZADRB0npYujcU93pUgvniC3O3nRBjpWJZbMTawskyRN
-         MOhEGgBv+IIcUx27xWhG1g6ZqEL4Bbxy69EIJGTI=
+        b=jwfLFRpHDV16oGwj/kJPUqLr2IseP1duJcExs6Zw9A2P53UmUIBVgI6pqvA9KFbk7
+         UJBobMhMQBlmTqJN2Osby1M0zVVeDHYwi6sUkjzAfwkOL0JlCvz8QIFOoNZGItUBlA
+         QSgxxwCWI5tFQklzET7MLDWEJKDYXZpfzLzUFSo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maya Erez <merez@codeaurora.org>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 010/249] wil6210: fix missed MISC mbox interrupt
-Date:   Mon, 15 Jul 2019 09:31:51 -0400
-Message-Id: <20190715133550.1772-10-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 011/249] ath6kl: add some bounds checking
+Date:   Mon, 15 Jul 2019 09:31:52 -0400
+Message-Id: <20190715133550.1772-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133550.1772-1-sashal@kernel.org>
 References: <20190715133550.1772-1-sashal@kernel.org>
@@ -61,42 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maya Erez <merez@codeaurora.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7441be71ba7e07791fd4fa2b07c932dff14ff4d9 ]
+[ Upstream commit 5d6751eaff672ea77642e74e92e6c0ac7f9709ab ]
 
-When MISC interrupt is triggered due to HALP bit, in parallel
-to mbox events handling by the MISC threaded IRQ, new mbox
-interrupt can be missed in the following scenario:
-1. MISC ICR is read in the IRQ handler
-2. Threaded IRQ is completed and all MISC interrupts are unmasked
-3. mbox interrupt is set by FW
-4. HALP is masked
-The mbox interrupt in step 3 can be missed due to constant high level
-of ICM.
-Masking all MISC IRQs instead of masking only HALP bit in step 4
-will guarantee that ICM will drop to 0 and interrupt will be triggered
-once MISC interrupts will be unmasked.
+The "ev->traffic_class" and "reply->ac" variables come from the network
+and they're used as an offset into the wmi->stream_exist_for_ac[] array.
+Those variables are u8 so they can be 0-255 but the stream_exist_for_ac[]
+array only has WMM_NUM_AC (4) elements.  We need to add a couple bounds
+checks to prevent array overflows.
 
-Signed-off-by: Maya Erez <merez@codeaurora.org>
+I also modified one existing check from "if (traffic_class > 3) {" to
+"if (traffic_class >= WMM_NUM_AC) {" just to make them all consistent.
+
+Fixes: bdcd81707973 (" Add ath6kl cleaned up driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/interrupt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath6kl/wmi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/interrupt.c b/drivers/net/wireless/ath/wil6210/interrupt.c
-index 3f5bd177d55f..e41ba24011d8 100644
---- a/drivers/net/wireless/ath/wil6210/interrupt.c
-+++ b/drivers/net/wireless/ath/wil6210/interrupt.c
-@@ -580,7 +580,7 @@ static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
- 			/* no need to handle HALP ICRs until next vote */
- 			wil->halp.handle_icr = false;
- 			wil_dbg_irq(wil, "irq_misc: HALP IRQ invoked\n");
--			wil6210_mask_halp(wil);
-+			wil6210_mask_irq_misc(wil, true);
- 			complete(&wil->halp.comp);
- 		}
+diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+index 68854c45d0a4..9ab6aa9ded5c 100644
+--- a/drivers/net/wireless/ath/ath6kl/wmi.c
++++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+@@ -1176,6 +1176,10 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
+ 		return -EINVAL;
+ 
+ 	ev = (struct wmi_pstream_timeout_event *) datap;
++	if (ev->traffic_class >= WMM_NUM_AC) {
++		ath6kl_err("invalid traffic class: %d\n", ev->traffic_class);
++		return -EINVAL;
++	}
+ 
+ 	/*
+ 	 * When the pstream (fat pipe == AC) timesout, it means there were
+@@ -1517,6 +1521,10 @@ static int ath6kl_wmi_cac_event_rx(struct wmi *wmi, u8 *datap, int len,
+ 		return -EINVAL;
+ 
+ 	reply = (struct wmi_cac_event *) datap;
++	if (reply->ac >= WMM_NUM_AC) {
++		ath6kl_err("invalid AC: %d\n", reply->ac);
++		return -EINVAL;
++	}
+ 
+ 	if ((reply->cac_indication == CAC_INDICATION_ADMISSION_RESP) &&
+ 	    (reply->status_code != IEEE80211_TSPEC_STATUS_ADMISS_ACCEPTED)) {
+@@ -2633,7 +2641,7 @@ int ath6kl_wmi_delete_pstream_cmd(struct wmi *wmi, u8 if_idx, u8 traffic_class,
+ 	u16 active_tsids = 0;
+ 	int ret;
+ 
+-	if (traffic_class > 3) {
++	if (traffic_class >= WMM_NUM_AC) {
+ 		ath6kl_err("invalid traffic class: %d\n", traffic_class);
+ 		return -EINVAL;
  	}
 -- 
 2.20.1
