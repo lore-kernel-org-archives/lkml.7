@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C28C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F7BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DDB205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5A5205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200884;
-	bh=SbEH40A99/CV4klBOaA1lpJjoIMpOGg6K6xG/CnHSDI=;
+	s=default; t=1563200892;
+	bh=Ew34IS4c/YSyOPNEahM7m8KTTx0XZaWp+16rB2LbThU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uikxY3jeG9fV6Td75Ie8DwccnWXjDo1rAO4Xt+gOstrZhwx9rkD7BWkRBzMSMXblr
-	 KW1XwVFMX+DvX8CnInwmhaoAlbRCd3SxZ6H1CBriv8Mjp8k/tVb6Ms8uR8aj/frVnz
-	 seuc33Rk1X36A0ibsaPfqW9lGCDJC/zLTVAdUJYY=
+	b=paCdVA4tZqnQN5nO/XnYyieVO8sCFRqmOQ1Vl/wfHLXEdpPfYXZEyq55BfKK5ly0s
+	 ncwEB7m1m2QaFjVQCVrOW71rjOPGqE6IsJguA3XfPXqHdLSZBjl2o0GiPdDxl1IzFC
+	 dpUsSpsJk1AJZ44R16+ZfezRX/mKWjJgSdIWmuno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403771AbfGOO2D (ORCPT
+        id S2390138AbfGOO2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:28:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37876 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403758AbfGOO2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:28:00 -0400
+        id S2391166AbfGOO2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:28:07 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3789220896;
-        Mon, 15 Jul 2019 14:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779BA21848;
+        Mon, 15 Jul 2019 14:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200879;
-        bh=SbEH40A99/CV4klBOaA1lpJjoIMpOGg6K6xG/CnHSDI=;
+        s=default; t=1563200887;
+        bh=Ew34IS4c/YSyOPNEahM7m8KTTx0XZaWp+16rB2LbThU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t8dkYaQjkfgWmV9CuN/Ed9zDe3A1ycGbBdb/unxp7PIc59aIx15SIebToONCxk5/v
-         Xp2aDN1k7Zdfq4dI8A97V+X9y070klKJE/KQHjfTAVQJ3XfdykU6ujkfA0QxOCtuvl
-         PvdQ1I72CA2VelfFpAtcHT9fv92HO74CO2oHm/HQ=
+        b=iK5srweKE2cvkUxcJ+uWsGvMdIvzwfrosdE3nL8+q45GjpoLc/TxtOJehOsSsLHdi
+         8iS+5YQfP7ZSor4dhT7O5SQClrIiN49G/eAdatjQC5UH+8VM3cHJ9AqJ5DcW8wQZ0B
+         vOzeiRLTVNmV98LsitvxyCl9eq7Fl84vnobYo7K0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     csonsino <csonsino@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 153/158] Bluetooth: validate BLE connection interval updates
-Date:   Mon, 15 Jul 2019 10:18:04 -0400
-Message-Id: <20190715141809.8445-153-sashal@kernel.org>
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 155/158] gtp: fix Illegal context switch in RCU read-side critical section.
+Date:   Mon, 15 Jul 2019 10:18:06 -0400
+Message-Id: <20190715141809.8445-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -60,92 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: csonsino <csonsino@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit c49a8682fc5d298d44e8d911f4fa14690ea9485e ]
+[ Upstream commit 3f167e1921865b379a9becf03828e7202c7b4917 ]
 
-Problem: The Linux Bluetooth stack yields complete control over the BLE
-connection interval to the remote device.
+ipv4_pdp_add() is called in RCU read-side critical section.
+So GFP_KERNEL should not be used in the function.
+This patch make ipv4_pdp_add() to use GFP_ATOMIC instead of GFP_KERNEL.
 
-The Linux Bluetooth stack provides access to the BLE connection interval
-min and max values through /sys/kernel/debug/bluetooth/hci0/
-conn_min_interval and /sys/kernel/debug/bluetooth/hci0/conn_max_interval.
-These values are used for initial BLE connections, but the remote device
-has the ability to request a connection parameter update. In the event
-that the remote side requests to change the connection interval, the Linux
-kernel currently only validates that the desired value is within the
-acceptable range in the Bluetooth specification (6 - 3200, corresponding to
-7.5ms - 4000ms). There is currently no validation that the desired value
-requested by the remote device is within the min/max limits specified in
-the conn_min_interval/conn_max_interval configurations. This essentially
-leads to Linux yielding complete control over the connection interval to
-the remote device.
+Test commands:
+gtp-link add gtp1 &
+gtp-tunnel add gtp1 v1 100 200 1.1.1.1 2.2.2.2
 
-The proposed patch adds a verification step to the connection parameter
-update mechanism, ensuring that the desired value is within the min/max
-bounds of the current connection. If the desired value is outside of the
-current connection min/max values, then the connection parameter update
-request is rejected and the negative response is returned to the remote
-device. Recall that the initial connection is established using the local
-conn_min_interval/conn_max_interval values, so this allows the Linux
-administrator to retain control over the BLE connection interval.
+Splat looks like:
+[  130.618881] =============================
+[  130.626382] WARNING: suspicious RCU usage
+[  130.626994] 5.2.0-rc6+ #50 Not tainted
+[  130.627622] -----------------------------
+[  130.628223] ./include/linux/rcupdate.h:266 Illegal context switch in RCU read-side critical section!
+[  130.629684]
+[  130.629684] other info that might help us debug this:
+[  130.629684]
+[  130.631022]
+[  130.631022] rcu_scheduler_active = 2, debug_locks = 1
+[  130.632136] 4 locks held by gtp-tunnel/1025:
+[  130.632925]  #0: 000000002b93c8b7 (cb_lock){++++}, at: genl_rcv+0x15/0x40
+[  130.634159]  #1: 00000000f17bc999 (genl_mutex){+.+.}, at: genl_rcv_msg+0xfb/0x130
+[  130.635487]  #2: 00000000c644ed8e (rtnl_mutex){+.+.}, at: gtp_genl_new_pdp+0x18c/0x1150 [gtp]
+[  130.636936]  #3: 0000000007a1cde7 (rcu_read_lock){....}, at: gtp_genl_new_pdp+0x187/0x1150 [gtp]
+[  130.638348]
+[  130.638348] stack backtrace:
+[  130.639062] CPU: 1 PID: 1025 Comm: gtp-tunnel Not tainted 5.2.0-rc6+ #50
+[  130.641318] Call Trace:
+[  130.641707]  dump_stack+0x7c/0xbb
+[  130.642252]  ___might_sleep+0x2c0/0x3b0
+[  130.642862]  kmem_cache_alloc_trace+0x1cd/0x2b0
+[  130.643591]  gtp_genl_new_pdp+0x6c5/0x1150 [gtp]
+[  130.644371]  genl_family_rcv_msg+0x63a/0x1030
+[  130.645074]  ? mutex_lock_io_nested+0x1090/0x1090
+[  130.645845]  ? genl_unregister_family+0x630/0x630
+[  130.646592]  ? debug_show_all_locks+0x2d0/0x2d0
+[  130.647293]  ? check_flags.part.40+0x440/0x440
+[  130.648099]  genl_rcv_msg+0xa3/0x130
+[ ... ]
 
-The one downside that I see is that the current default Linux values for
-conn_min_interval and conn_max_interval typically correspond to 30ms and
-50ms respectively. If this change were accepted, then it is feasible that
-some devices would no longer be able to negotiate to their desired
-connection interval values. This might be remedied by setting the default
-Linux conn_min_interval and conn_max_interval values to the widest
-supported range (6 - 3200 / 7.5ms - 4000ms). This could lead to the same
-behavior as the current implementation, where the remote device could
-request to change the connection interval value to any value that is
-permitted by the Bluetooth specification, and Linux would accept the
-desired value.
-
-Signed-off-by: Carey Sonsino <csonsino@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_event.c  | 5 +++++
- net/bluetooth/l2cap_core.c | 9 ++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/net/gtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 3e7badb3ac2d..0adcddb211fa 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5545,6 +5545,11 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_UNKNOWN_CONN_ID);
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index f45a806b6c06..6f1ad7ccaea6 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -958,7 +958,7 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
  
-+	if (min < hcon->le_conn_min_interval ||
-+	    max > hcon->le_conn_max_interval)
-+		return send_conn_param_neg_reply(hdev, handle,
-+						 HCI_ERROR_INVALID_LL_PARAMS);
-+
- 	if (hci_check_conn_params(min, max, latency, timeout))
- 		return send_conn_param_neg_reply(hdev, handle,
- 						 HCI_ERROR_INVALID_LL_PARAMS);
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 260ef5426e0c..a54dadf4a6ca 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -5287,7 +5287,14 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
+ 	}
  
- 	memset(&rsp, 0, sizeof(rsp));
+-	pctx = kmalloc(sizeof(struct pdp_ctx), GFP_KERNEL);
++	pctx = kmalloc(sizeof(*pctx), GFP_ATOMIC);
+ 	if (pctx == NULL)
+ 		return -ENOMEM;
  
--	err = hci_check_conn_params(min, max, latency, to_multiplier);
-+	if (min < hcon->le_conn_min_interval ||
-+	    max > hcon->le_conn_max_interval) {
-+		BT_DBG("requested connection interval exceeds current bounds.");
-+		err = -EINVAL;
-+	} else {
-+		err = hci_check_conn_params(min, max, latency, to_multiplier);
-+	}
-+
- 	if (err)
- 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
- 	else
 -- 
 2.20.1
 
