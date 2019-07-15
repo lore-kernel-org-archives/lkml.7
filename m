@@ -2,164 +2,172 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998EEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0669EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631522083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27992081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bj7U5cnI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fW0H3IJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbfGOPou (ORCPT
+        id S1731041AbfGOPox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:44:50 -0400
-Received: from mail-eopbgr800075.outbound.protection.outlook.com ([40.107.80.75]:39488
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730257AbfGOPot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:44:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A8hy4etxacvzqFWy9OvzYQBeASyMkUdHiNPXEUK0Yrpr/kYGRFsp+KoCDC3SstEq5DbFBcjB9gR6wG7/sgumWbHnPtnboWfqyuP5ZbVNGdKLb+FvOBXBxUNN6/4kHvZ8jeb33IP/31gGzZw4ZsEwEa1R3T5eBb9NknuGOlbBG3usThtcOgz85jibe5/8rnPeu41pzu1SVYcQKAnfIuYX0jDmbzY0nixcDrG24zCfenAkiJEJ/SyUD9RhKxKbvqIcvF8X1QcODH4n6lRFnXM4CaxrAPzTFUry+nIb+hlgyNMw4IZg7nQ57OOYgMJy/gBNNtRXjpPzJj7+sAtia0oDHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rkm7TlCflg2h/1CDmf+8ktI4jTUVpUIqS9NvG32ss0E=;
- b=Q3TEMDGLmrzHkZNfYET3SxOeYOxs2dRsO9RULb7ewz7RMTGJ+Rwj7l5VuWJ3sykW9mBNazOFoHAbGFIeZpZRol8o9NKjN3rA4+vo3yM8YdiDnHpOOUeLRkCVq3CGYYGGD4GtdA8YZuC6myjDWMzk+4Y5spMVR7fGIyH8L3VDtypVJghLWZ1/gc//8Jnt2AvA3aEAQxGyN/Rylv3kBPGh2L4AByOirtbx8U7XRtz37ednZ2m0kQhRH++QdIzThvX68yW7mu55/gq0qvmumZGudNE400tRgKxC3CbTT2Sjcu/bFMggxH78VrGcfUYAxgg+jbf90ej3y/S7LUXUtH7E4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rkm7TlCflg2h/1CDmf+8ktI4jTUVpUIqS9NvG32ss0E=;
- b=bj7U5cnIW6AfdWq+we005xBQxadaCFpeY1/gm0mdbZAGbud9J1i+DMw94xDsCBNkecLNcStk4a79Q73ZzEJHWsVVxjFhx3RMyMdQhr5hCq6kMgTfkZprPI2ACy+3hLPrDlnEbBeWiEBN26+P+om8Giw9py2CgGszqpA3q/dczUA=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB4220.namprd12.prod.outlook.com (10.141.187.71) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Mon, 15 Jul 2019 15:44:45 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
- 15:44:45 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Christoph Hellwig <hch@lst.de>, Halil Pasic <pasic@linux.ibm.com>
-CC:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mon, 15 Jul 2019 11:44:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46634 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730257AbfGOPov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 11:44:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FFhqTs021946;
+        Mon, 15 Jul 2019 15:43:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=l/u+2fguqZgRhJpV4dlrbyYA/Dtl3SrTOUeeBoUA+oE=;
+ b=fW0H3IJiwQoBM9x7mkpoTVBjzeWsJ+7OYm7KKUI1j93xQFeQf428au+Q+tgWS1pA2Apj
+ lpi3GRrmzixEmdwrfLPupjMZ4JeZRditrdiMpyUuVVIuQkRfGcXz+mN8VNpDY5I6J/Fc
+ 12tRm0yyC/iIpogVxAH6RjUfMCpUvWyk58/wL7jLe/Z9MsZ7Rp5aarm49H/FBpcbDqNh
+ xz8wzv3YSLABCMDItqzi0nbvnMiYZl2/rVs1hUX4UVE1JYCC8McSP3XucHCvfmWegVvy
+ QoP1oDdfyFhetcfNznmxwpZyO+wcYosuvYfkGqZt71bTqXJdlsSDuDRh8xcv+Lp5EeIr RQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2tq6qtfcp6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 15:43:52 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FFge8S173725;
+        Mon, 15 Jul 2019 15:43:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tq5bbvewc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 15:43:48 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6FFhjg9011527;
+        Mon, 15 Jul 2019 15:43:45 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jul 2019 08:43:45 -0700
+Subject: Re: [PATCH 1/2] x86/xen: remove 32-bit Xen PV guest support
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-Thread-Topic: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-Thread-Index: AQHVOHSFvIHUoc7V+E67qRA9cO0Ig6bG9RYAgACTIICABDL6gIAAB6aAgAAUsAA=
-Date:   Mon, 15 Jul 2019 15:44:45 +0000
-Message-ID: <56b79040-257b-3a89-c9d2-5842594cad17@amd.com>
-References: <20190712053631.9814-1-bauerman@linux.ibm.com>
- <20190712053631.9814-4-bauerman@linux.ibm.com>
- <20190712150912.3097215e.pasic@linux.ibm.com>
- <87tvbqgboc.fsf@morokweng.localdomain>
- <20190715160317.7e3dfb33.pasic@linux.ibm.com> <20190715143039.GA6892@lst.de>
-In-Reply-To: <20190715143039.GA6892@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN1PR12CA0093.namprd12.prod.outlook.com
- (2603:10b6:802:21::28) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d1b8e82-6d74-4a39-35fb-08d7093b5c1c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB4220;
-x-ms-traffictypediagnostic: DM6PR12MB4220:
-x-microsoft-antispam-prvs: <DM6PR12MB42209CF912174AD934AC70A3ECCF0@DM6PR12MB4220.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00997889E7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(366004)(189003)(199004)(8936002)(305945005)(14454004)(14444005)(186003)(256004)(26005)(478600001)(81166006)(68736007)(8676002)(7736002)(36756003)(81156014)(2616005)(31686004)(446003)(54906003)(6246003)(11346002)(316002)(99286004)(476003)(486006)(6486002)(53936002)(6512007)(6436002)(7416002)(102836004)(53546011)(110136005)(66066001)(3846002)(6116002)(386003)(2906002)(6506007)(76176011)(52116002)(66446008)(5660300002)(66946007)(64756008)(66556008)(66476007)(71200400001)(71190400001)(86362001)(31696002)(4326008)(25786009)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4220;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2o3CgTK+bX0s2m1XSegvscLbDT6F58lpElIkDqZpZU26BvxzZNhleRjrqJv+HR0G8yUEdUOAN/zrpN3wnXm8EsKQPjXZMjOg2pGr9PoQP0vj77hYLrd6xq6CQx2B3FqvB78bXjK8CcfgkOa09BP5acePv1z4g/E3srFrQpXB/KOtBk3wjjy0bLrrDM8HrbRwElah4N2CuXJjgPBgesiawmgYzTlTAOXBzkWlLiWtFW8zftxNcjxnwGoAluVWm1encfoKx+VbBFdTTE7WQGF7ZvllMOJ5pUVuvuz9VHBMPRuJ12gIVN329z9BgoKX+16C8lgd2Fj4hey4LFDJrfFkkawpVI/j8bumX2zjDjpROooNyoE1qxBXbVokIXRpQXaX+vfqU0O4RF0dobkMpFj87nq1Yh8t4LQqQY7X//6OuzY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E0FC09AEBDB7CF40BCF8F08977DC2498@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20190715113739.17694-1-jgross@suse.com>
+ <20190715113739.17694-2-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <91ed11a0-c97e-8caf-c71c-4595be4dbbb4@oracle.com>
+Date:   Mon, 15 Jul 2019 11:44:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d1b8e82-6d74-4a39-35fb-08d7093b5c1c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 15:44:45.1446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4220
+In-Reply-To: <20190715113739.17694-2-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907150185
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907150185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xNS8xOSA5OjMwIEFNLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4gT24gTW9uLCBK
-dWwgMTUsIDIwMTkgYXQgMDQ6MDM6MTdQTSArMDIwMCwgSGFsaWwgUGFzaWMgd3JvdGU6DQo+Pj4g
-SSB0aG91Z2h0IGFib3V0IHRoYXQgYnV0IGNvdWxkbid0IHB1dCBteSBmaW5nZXIgb24gYSBnZW5l
-cmFsIGNvbmNlcHQuDQo+Pj4gSXMgaXQgImd1ZXN0IHdpdGggbWVtb3J5IGluYWNjZXNzaWJsZSB0
-byB0aGUgaG9zdCI/DQo+Pj4NCj4+DQo+PiBXZWxsLCBmb3JjZV9kbWFfdW5lbmNyeXB0ZWQoKSBp
-cyBhIG11Y2ggYmV0dGVyIG5hbWUgdGhhdG4gc2V2X2FjdGl2ZSgpOg0KPj4gczM5MCBoYXMgbm8g
-QU1EIFNFViwgdGhhdCBpcyBzdXJlLCBidXQgZm9yIHZpcnRpbyB0byB3b3JrIHdlIGRvIG5lZWQg
-dG8NCj4+IG1ha2Ugb3VyIGRtYSBhY2Nlc3NpYmxlIHRvIHRoZSBoeXBlcnZpc29yLiBZZXMsIHlv
-dXIgImd1ZXN0IHdpdGggbWVtb3J5DQo+PiBpbmFjY2Vzc2libGUgdG8gdGhlIGhvc3QiIHNob3dz
-IGludG8gdGhlIHJpZ2h0IGRpcmVjdGlvbiBJTUhPLg0KPj4gVW5mb3J0dW5hdGVseSBJIGRvbid0
-IGhhdmUgdG9vIG1hbnkgY3ljbGVzIHRvIHNwZW5kIG9uIHRoaXMgcmlnaHQgbm93Lg0KPiANCj4g
-SW4geDg2IGl0IG1lYW5zIHRoYXQgd2UgbmVlZCB0byByZW1vdmUgZG1hIGVuY3J5cHRpb24gdXNp
-bmcNCj4gc2V0X21lbW9yeV9kZWNyeXB0ZWQgYmVmb3JlIHVzaW5nIGl0IGZvciBETUEgcHVycG9z
-ZXMuICBJbiB0aGUgU0VWDQo+IGNhc2UgdGhhdCBzZWVtcyB0byBiZSBzbyB0aGF0IHRoZSBoeXBl
-cnZpc29yIGNhbiBhY2Nlc3MgaXQsIGluIHRoZSBTTUUNCj4gY2FzZSB0aGF0IFRvbSBqdXN0IGZp
-eGVzIGl0IGlzIGJlY2F1c2UgdGhlcmUgaXMgYW4gZW5jcnlwdGVkIGJpdCBzZXQNCj4gaW4gdGhl
-IHBoeXNpY2FsIGFkZHJlc3MsIGFuZCBpZiB0aGUgZGV2aWNlIGRvZXNuJ3Qgc3VwcG9ydCBhIGxh
-cmdlDQo+IGVub3VnaCBETUEgYWRkcmVzcyB0aGUgZGlyZWN0IG1hcHBpbmcgY29kZSBoYXMgdG8g
-ZW5jcnlwdCB0aGUgcGFnZXMNCj4gdXNlZCBmb3IgdGhlIGNvbnRpZ291cyBhbGxvY2F0aW9uLg0K
-DQpKdXN0IGEgY29ycmVjdGlvbi9jbGFyaWZpY2F0aW9uLi4uDQoNCkZvciBTTUUsIHdoZW4gYSBk
-ZXZpY2UgZG9lc24ndCBzdXBwb3J0IGEgbGFyZ2UgZW5vdWdoIERNQSBhZGRyZXNzIHRvDQphY2Nv
-bW1vZGF0ZSB0aGUgZW5jcnlwdGlvbiBiaXQgYXMgcGFydCBvZiB0aGUgRE1BIGFkZHJlc3MsIHRo
-ZSBkaXJlY3QNCm1hcHBpbmcgY29kZSBoYXMgdG8gcHJvdmlkZSB1bi1lbmNyeXB0ZWQgcGFnZXMu
-IEZvciB1bi1lbmNyeXB0ZWQgcGFnZXMsDQp0aGUgRE1BIGFkZHJlc3Mgbm93IGRvZXMgbm90IGlu
-Y2x1ZGUgdGhlIGVuY3J5cHRpb24gYml0LCBtYWtpbmcgaXQNCmFjY2VwdGFibGUgdG8gdGhlIGRl
-dmljZS4gU2luY2UgdGhlIGRldmljZSBpcyBub3cgdXNpbmcgYSBETUEgYWRkcmVzcw0Kd2l0aG91
-dCB0aGUgZW5jcnlwdGlvbiBiaXQsIHRoZSBwaHlzaWNhbCBhZGRyZXNzIGluIHRoZSBDUFUgcGFn
-ZSB0YWJsZQ0KbXVzdCBtYXRjaCAodGhlIGNhbGwgdG8gc2V0X21lbW9yeV9kZWNyeXB0ZWQpIHNv
-IHRoYXQgYm90aCB0aGUgZGV2aWNlIGFuZA0KdGhlIENQVSBpbnRlcmFjdCBpbiB0aGUgc2FtZSB3
-YXkgd2l0aCB0aGUgbWVtb3J5Lg0KDQpUaGFua3MsDQpUb20NCg0KPiANCj4+IEJlaW5nIG9uIGNj
-IGZvciB5b3VyIHBhdGNoIG1hZGUgbWUgcmVhbGl6ZSB0aGF0IHRoaW5ncyBnb3QgYnJva2VuIG9u
-DQo+PiBzMzkwLiBUaGFua3MhIEkndmUgc2VudCBvdXQgYSBwYXRjaCB0aGF0IGZpeGVzIHByb3R2
-aXJ0LCBidXQgd2UgYXJlIGdvaW5nDQo+PiB0byBiZW5lZml0IGZyb20geW91ciBjbGVhbnVwcy4g
-SSB0aGluayB3aXRoIHlvdXIgY2xlYW51cHMgYW5kIHRoYXQgcGF0Y2gNCj4+IG9mIG1pbmUgYm90
-aCBzZXZfYWN0aXZlKCkgYW5kIHNtZV9hY3RpdmUoKSBjYW4gYmUgcmVtb3ZlZC4gRmVlbCBmcmVl
-IHRvDQo+PiBkbyBzby4gSWYgbm90LCBJIGNhbiBhdHRlbmQgdG8gaXQgYXMgd2VsbC4NCj4gDQo+
-IFllcywgSSB0aGluayB3aXRoIHRoZSBkbWEtbWFwcGluZyBmaXggYW5kIHRoaXMgc2VyaWVzIHNt
-ZV9hY3RpdmUgYW5kDQo+IHNldl9hY3RpdmUgc2hvdWxkIGJlIGdvbmUgZnJvbSBjb21tb24gY29k
-ZS4gIFdlIHNob3VsZCBhbHNvIGJlIGFibGUNCj4gdG8gcmVtb3ZlIHRoZSBleHBvcnRzIHg4NiBo
-YXMgZm9yIHRoZW0uDQo+IA0KPiBJJ2xsIHdhaXQgYSBmZXcgZGF5cyBhbmQgd2lsbCB0aGVuIGZl
-ZWQgdGhlIGRtYS1tYXBwaW5nIGZpeCB0byBMaW51cywNCj4gaXQgbWlnaHQgbWFrZSBzZW5zZSB0
-byBlaXRoZXIgcmViYXNlIFRoaWFnb3Mgc2VyaWVzIG9uIHRvcCBvZiB0aGUNCj4gZG1hLW1hcHBp
-bmcgZm9yLW5leHQgYnJhbmNoLCBvciB3YWl0IGEgZmV3IGRheXMgYmVmb3JlIHJlcG9zdGluZy4N
-Cj4gDQo=
+
+> diff --git a/arch/x86/xen/Makefile b/arch/x86/xen/Makefile
+> index 084de77a109e..d42737f31304 100644
+> --- a/arch/x86/xen/Makefile
+> +++ b/arch/x86/xen/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -OBJECT_FILES_NON_STANDARD_xen-asm_$(BITS).o := y
+> +OBJECT_FILES_NON_STANDARD_xen-asm_64.o := y
+>  
+>  ifdef CONFIG_FUNCTION_TRACER
+>  # Do not profile debug and lowlevel utilities
+> @@ -34,7 +34,7 @@ obj-$(CONFIG_XEN_PV)		+= mmu_pv.o
+>  obj-$(CONFIG_XEN_PV)		+= irq.o
+>  obj-$(CONFIG_XEN_PV)		+= multicalls.o
+>  obj-$(CONFIG_XEN_PV)		+= xen-asm.o
+> -obj-$(CONFIG_XEN_PV)		+= xen-asm_$(BITS).o
+> +obj-$(CONFIG_XEN_PV)		+= xen-asm_64.o
+
+We should be able to merge xen-asm_64.S into xen-asm.S, shouldn't we?
+
+
+> @@ -1312,15 +1290,7 @@ asmlinkage __visible void __init xen_start_kernel(void)
+>  
+>  	/* keep using Xen gdt for now; no urgent need to change it */
+>  
+> -#ifdef CONFIG_X86_32
+> -	pv_info.kernel_rpl = 1;
+> -	if (xen_feature(XENFEAT_supervisor_mode_kernel))
+> -		pv_info.kernel_rpl = 0;
+> -#else
+>  	pv_info.kernel_rpl = 0;
+
+Is kernel_rpl needed anymore?
+
+
+-boris
+
+
