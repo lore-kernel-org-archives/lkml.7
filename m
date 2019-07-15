@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6129AC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D88C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3127B20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADE120868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199670;
-	bh=ode6917U6GR0FYujY7U8gRtJst3Lbg8ZlGUdNqat0m4=;
+	s=default; t=1563199675;
+	bh=OYEwGVmIPNLLr8M63NDjwv0pbARc87LufXdORz3byx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OYBoCSbin5R818OZaUJXGH8nL6g7ziH1vCpodVhYPSX85UOyciR4oZY4Dui2ybame
-	 gkwDkGgXXCnljytyAOR/8/a2eMBsQYsgBhhrVGlsUVCJapmSQOKWDT5GZ7Gh2Lk1SA
-	 fj86F4+Y/ZP4GJ3WsRPHMIFsij6PeA5ztWaPKf0I=
+	b=BBwOEWtyjBI/eVW3PJWe/kn/ZFH48NvoB+aN7U8K6CheP6EpPHZS3ng6Ms/y4gKJT
+	 4nstHfH0qRR2KTFxBiBxdUfYckIYjcwj/846BSDmCS3bLj2Cy51mGrPxc81w1Az2qe
+	 RVtdpY3O27dhA6IbX2pNxswuE9oZc6fXONFqAiFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388392AbfGOOHo (ORCPT
+        id S2388417AbfGOOHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56488 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388199AbfGOOHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:07:38 -0400
+        id S2388409AbfGOOHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:07:50 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DE3F2081C;
-        Mon, 15 Jul 2019 14:07:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1A942081C;
+        Mon, 15 Jul 2019 14:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199657;
-        bh=ode6917U6GR0FYujY7U8gRtJst3Lbg8ZlGUdNqat0m4=;
+        s=default; t=1563199670;
+        bh=OYEwGVmIPNLLr8M63NDjwv0pbARc87LufXdORz3byx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aTacA1K7V5FUOzZzHOde7juQ1TulRbslYJbLMiYks8af84IBX0elyL8M8yObNwECM
-         Unh7i8ytbkq6yifw5SXQKJWyxApdyS2NesnPjSZFOo5iTO0K3WP0yCuzPYcjJdFIRt
-         CDjytzbECSYIQ6Cus3Lga4pYNoGFfB9urWqTpdew=
+        b=sI8b6/goaoucA/9dg6FbigtrLBOqMDO3D3XHyzbARuUu/1QeHs6GUYhR83jdjKPpl
+         WusfKl2Yqk6vbhkFAscHzlFrQ9DXzqlkMRVZkBXgkVYYGkx6qfQftY/eODrmaiJr0S
+         KDFPUU1k0k8XPitxbuxZqnCZmn31m/nHyvFff12M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biao Huang <biao.huang@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 063/219] net: stmmac: modify default value of tx-frames
-Date:   Mon, 15 Jul 2019 10:01:04 -0400
-Message-Id: <20190715140341.6443-63-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 067/219] s390/qdio: handle PENDING state for QEBSM devices
+Date:   Mon, 15 Jul 2019 10:01:08 -0400
+Message-Id: <20190715140341.6443-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,49 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit d2facb4b3983425f6776c24dd678a82dbe673773 ]
+[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
 
-the default value of tx-frames is 25, it's too late when
-passing tstamp to stack, then the ptp4l will fail:
+When a CQ-enabled device uses QEBSM for SBAL state inspection,
+get_buf_states() can return the PENDING state for an Output Queue.
+get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
+buffer will permanently stall all further completion processing on this
+Queue.
 
-ptp4l -i eth0 -f gPTP.cfg -m
-ptp4l: selected /dev/ptp0 as PTP clock
-ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
-ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
-ptp4l: port 1: link up
-ptp4l: timed out while polling for tx timestamp
-ptp4l: increasing tx_timestamp_timeout may correct this issue,
-       but it is likely caused by a driver bug
-ptp4l: port 1: send peer delay response failed
-ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+This isn't a concern for non-QEBSM devices, as get_buf_states() for such
+devices will manually turn PENDING buffers into EMPTY ones.
 
-ptp4l tests pass when changing the tx-frames from 25 to 1 with
-ethtool -C option.
-It should be fine to set tx-frames default value to 1, so ptp4l will pass
-by default.
-
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 272b9ca66314..b069b3a2453b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -261,7 +261,7 @@ struct stmmac_safety_stats {
- #define STMMAC_COAL_TX_TIMER	1000
- #define STMMAC_MAX_COAL_TX_TICK	100000
- #define STMMAC_TX_MAX_FRAMES	256
--#define STMMAC_TX_FRAMES	25
-+#define STMMAC_TX_FRAMES	1
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 9537e656e927..06b94b2ee199 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -738,6 +738,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
  
- /* Packets types */
- enum packets_types {
+ 	switch (state) {
+ 	case SLSB_P_OUTPUT_EMPTY:
++	case SLSB_P_OUTPUT_PENDING:
+ 		/* the adapter got it */
+ 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
+ 			"out empty:%1d %02x", q->nr, count);
 -- 
 2.20.1
 
