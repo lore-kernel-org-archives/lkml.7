@@ -2,82 +2,142 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A4EC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AA9C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E752067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD79206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XFtS7SqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731515AbfGOQmz (ORCPT
+        id S1731549AbfGOQnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:42:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40738 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729941AbfGOQmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:42:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9A306AF7A;
-        Mon, 15 Jul 2019 16:42:53 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 18:42:49 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v11 4/5] sched/core: uclamp: Use TG's clamps to restrict
- TASK's clamps
-Message-ID: <20190715164248.GA21982@blackbody.suse.cz>
-References: <20190708084357.12944-1-patrick.bellasi@arm.com>
- <20190708084357.12944-5-patrick.bellasi@arm.com>
+        Mon, 15 Jul 2019 12:43:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39776 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730874AbfGOQnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 12:43:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RSkHGbyKshnf7brwgRog4FDJoLltbAeNAqTZqLgrOwY=; b=XFtS7SqPr0O7CD4ceZo/N+zxa
+        Hp78Ke84ABnLHxgSSlz/cF6IDlSJ+dVng6vqz0iHJN2WXypfdOfQATpnB2Qngv2wROo6A9xTfv73y
+        MJmxV6xSY7elM3bt0d+cBRu1NU0Ej6musiTFiT2wIy/q9yuQIfXayyN1Fd/M8qVxNRxk/LCfkXXan
+        qookMFgHS40TQrNxj+eJ1k7jJNSzqOS2SU+ySJbRnBC2PLsio09Fgco20A17UENfISYGeK+LeQM2b
+        3gzqN2zhvwdewf8JZadvhnZqEDXkIYBIe69pdDn5dBZa4jO8e32l5FdLbl1nRPNmyMB059dVdF13L
+        AXNvXk2Jg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hn44f-0006wc-9g; Mon, 15 Jul 2019 16:43:41 +0000
+Subject: Re: linux-next: Tree for Jul 15 (HEADERS_TEST w/ netfilter tables
+ offload)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20190715144848.4cc41e07@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ccb5b818-c191-2d9e-311f-b2c79b7f6823@infradead.org>
+Date:   Mon, 15 Jul 2019 09:43:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190715144848.4cc41e07@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190708084357.12944-5-patrick.bellasi@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 09:43:56AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> This mimics what already happens for a task's CPU affinity mask when the
-> task is also in a cpuset, i.e. cgroup attributes are always used to
-> restrict per-task attributes.
-If I am not mistaken when set_schedaffinity(2) call is made that results
-in an empty cpuset, the call fails with EINVAL [1].
+On 7/14/19 9:48 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Please do not add v5.4 material to your linux-next included branches
+> until after v5.3-rc1 has been released.
+> 
+> Changes since 20190712:
+> 
 
-If I track the code correctly, the values passed to sched_setattr(2) are
-checked against the trivial validity (umin <= umax) and later on, they
-are adjusted to match the effective clamping of the containing
-task_group. Is that correct?
+Hi,
 
-If the user attempted to sched_setattr [a, b], and the effective uclamp
-was [c, d] such that [a, b] âˆ© [c, d] = âˆ…, the set uclamp will be
-silently moved out of their intended range. Wouldn't it be better to
-return with EINVAL too when the intersection is empty (since the user
-supplied range won't be attained)?
+I am seeing these build errors from HEADERS_TEST (or KERNEL_HEADERS_TEST)
+for include/net/netfilter/nf_tables_offload.h.s:
 
-Michal
+  CC      include/net/netfilter/nf_tables_offload.h.s
+In file included from ./../include/net/netfilter/nf_tables_offload.h:5:0,
+                 from <command-line>:0:
+../include/net/netfilter/nf_tables.h: In function ‘nft_gencursor_next’:
+../include/net/netfilter/nf_tables.h:1223:14: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return net->nft.gencursor + 1 == 1 ? 1 : 0;
+              ^~~
+              nf
+In file included from ../include/linux/kernel.h:11:0,
+                 from ../include/net/flow_offload.h:4,
+                 from ./../include/net/netfilter/nf_tables_offload.h:4,
+                 from <command-line>:0:
+../include/net/netfilter/nf_tables.h: In function ‘nft_genmask_cur’:
+../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:261:17: note: in definition of macro ‘__READ_ONCE’
+  union { typeof(x) __val; char __c[1]; } __u;   \
+                 ^
+../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:263:22: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size(&(x), __u.__c, sizeof(x));  \
+                      ^
+../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:263:42: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size(&(x), __u.__c, sizeof(x));  \
+                                          ^
+../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:265:30: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size_nocheck(&(x), __u.__c, sizeof(x)); \
+                              ^
+../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:265:50: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size_nocheck(&(x), __u.__c, sizeof(x)); \
+                                                  ^
+../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+make[2]: *** [../scripts/Makefile.build:304: include/net/netfilter/nf_tables_offload.h.s] Error 1
 
-[1] http://www.linux-arm.org/git?p=linux-pb.git;a=blob;f=kernel/sched/core.c;h=ddc5fcd4b9cfaa95496b24d8599c03bc140e768e;hb=2c15043a2a2b5d86eb409556cbe1e36d4fd275b5#l1660
 
+Should this header file not be tested?
+
+thanks.
+-- 
+~Randy
