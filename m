@@ -2,92 +2,395 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7315C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAE3C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9182145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D13B20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbfGOVfL (ORCPT
+        id S1732126AbfGOVhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:35:11 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:59365 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730156AbfGOVfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:35:11 -0400
-Received: from xps13 ([83.160.161.190])
-        by smtp-cloud9.xs4all.net with ESMTPSA
-        id n8cdhhG1kuEBxn8cghMp2U; Mon, 15 Jul 2019 23:35:08 +0200
-Message-ID: <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
-Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-From:   Paul Bolle <pebolle@tiscali.nl>
-To:     "Souza, Jose" <jose.souza@intel.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 15 Jul 2019 23:34:59 +0200
-In-Reply-To: <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-         <1562875878.2840.0.camel@HansenPartnership.com>
-         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
-         <1562876880.2840.12.camel@HansenPartnership.com>
-         <1562882235.13723.1.camel@HansenPartnership.com>
-         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
-         <1562884722.15001.3.camel@HansenPartnership.com>
-         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
-         <1562888433.2915.0.camel@HansenPartnership.com>
-         <1562941185.3398.1.camel@HansenPartnership.com>
-         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
-         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        Mon, 15 Jul 2019 17:37:08 -0400
+Received: from sauhun.de ([88.99.104.3]:54650 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730156AbfGOVhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:37:08 -0400
+Received: from localhost (p5486CFD1.dip0.t-ipconnect.de [84.134.207.209])
+        by pokefinder.org (Postfix) with ESMTPSA id A48E72C7BD8;
+        Mon, 15 Jul 2019 23:37:03 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 23:37:03 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.3
+Message-ID: <20190715213658.GA5361@kunai>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfH6I1vuIhhM+oakc5dwVYTm3I/Gg+CbbYwfjkax0Kna5ekLjxFrG0nbLTCBLvqmk8OQI6i15Dn5y6XOuuoxMcJfqnCXICRSmfCGLQCnrwR30VbKzZ9QB
- 8N+lHPKORktdnAsANPfx3qsJaWItk9IeAy84ugJfL9Ix6b3GkjpMP9t/CyXX0AG4Q/0jW3IDnlvuSDkriIL1BSH5D5spyWCs11Af+F/OivP58lMk9sb3X3EV
- 1IkvWL3f+6zsekrQPCs0F62nnDImRNPD0dXm2aevHZ1ZZ8RyWfxJW0ePkO48QaNQw0LVYrybuYah4R4KeKio2KNKWUc+vqNro254SK3fS+4=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jose,
 
-Souza, Jose schreef op ma 15-07-2019 om 21:03 [+0000]:
-> So the issue did not happened again with the patch applied?
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Not in the three days that I've been running 5.2 kernels with the hack applied
-(so that should be about twelve hours of proper uptime).
+Linus,
 
-> If you still have the kernel 5.1 installed could you share your
-> /sys/kernel/debug/dri/0/i915_edp_psr_status with the older kernel?
-> We want to check if training values changed between kernel versions.
+new stuff from the I2C world:
 
-Sure. On 5.1.17 I get:
-    Sink support: yes [0x01]
-    PSR mode: PSR1 enabled
-    Source PSR ctl: enabled [0x81f00626]
-    Source PSR status: IDLE [0x040b0001]
-    Busy frontbuffer bits: 0x00000000
+* in the core, getting irqs from ACPI is now similar to OF
+* new driver for MediaTek MT7621/7628/7688 SoCs
+* bcm2835, i801, and tegra drivers got some more attention
+* GPIO API cleanups
+* cleanups in the core headers
+* lots of usual driver updates
 
-And, in case you need it, on 5.2.1+hack I get:
-    Sink support: yes [0x01]
-    PSR mode: PSR1 enabled
-    Source PSR ctl: enabled [0x81f00626]
-    Source PSR status: IDLE [0x04030006]
-    Busy frontbuffer bits: 0x00000000
+There is a trivial merge conflict (SPDX header) in the meson driver.
 
-Hope this helps,
+Please pull.
+
+Thanks,
+
+   Wolfram
 
 
-Paul
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.3
+
+for you to fetch changes up to cc6b9dfb2c5769afeb3335048173c730bdf8dbe1:
+
+  i2c: mt7621: Fix platform_no_drv_owner.cocci warnings (2019-07-06 17:04:32 +0200)
+
+----------------------------------------------------------------
+Ajay Gupta (5):
+      i2c: nvidia-gpu: refactor master_xfer
+      i2c: nvidia-gpu: add runtime pm support
+      usb: typec: ucsi: ccg: enable runtime pm support
+      i2c: nvidia-gpu: resume ccgx i2c client
+      usb: typec: ucsi: ccg: add runtime pm workaround
+
+Alexander Sverdlin (1):
+      i2c: i801: Add Block Write-Block Read Process Call support
+
+Andy Shevchenko (2):
+      i2c: i801: Fix kernel crash in is_dell_system_with_lis3lv02d()
+      i2c: i801: Use match_string() helper to simplify the code
+
+Annaliese McDermond (3):
+      i2c: bcm2835: Model Divider in CCF
+      i2c: bcm2835: Move IRQ request after clock code in probe
+      i2c: bcm2835: Ensure clock exists when probing
+
+Anson Huang (1):
+      i2c: imx: Use __maybe_unused instead of #if CONFIG_PM
+
+Bartosz Golaszewski (3):
+      eeprom: at24: use devm_i2c_new_dummy_device()
+      eeprom: at24: drop unnecessary label
+      eeprom: at24: modify a comment referring to platform data
+
+Bitan Biswas (7):
+      i2c: tegra: clean up macros
+      i2c: tegra: remove unnecessary variable init
+      i2c: tegra: fix alignment and spacing violations
+      i2c: tegra: add spinlock definition comment
+      i2c: tegra: fix msleep warning
+      i2c: tegra: Add suspend-resume support
+      i2c: tegra: remove BUG() macro
+
+Charles Keepax (6):
+      i2c: core: Allow whole core to use i2c_dev_irq_from_resources
+      i2c: acpi: Use available IRQ helper functions
+      i2c: acpi: Factor out getting the IRQ from ACPI
+      i2c: core: Move ACPI IRQ handling to probe time
+      i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
+      i2c: core: Tidy up handling of init_irq
+
+Fabrice Gasnier (3):
+      i2c: stm32f7: fix the get_irq error cases
+      i2c: i2c-stm32f7: Add I2C_SMBUS_I2C_BLOCK_DATA support
+      dt-bindings: i2c-stm32: document optional dmas
+
+Gustavo A. R. Silva (3):
+      eeprom: at24: use struct_size() in devm_kzalloc()
+      i2c: mux: Use struct_size() in devm_kzalloc()
+      i2c: mux: pinctrl: use flexible-array member and struct_size() helper
+
+Jarkko Nikula (3):
+      i2c: i801: Add support for Intel Elkhart Lake
+      i2c: i801: Fix PCI ID sorting
+      i2c: i801: Add support for Intel Tiger Lake
+
+Jean Delvare (1):
+      i2c: i801: Documentation update
+
+Kamal Dasu (1):
+      i2c: Allow selecting BCM2835 I2C controllers on ARCH_BRCMSTB
+
+Lee Jones (2):
+      i2c: qcom-geni: Signify successful driver probe
+      i2c: qcom-geni: Provide support for ACPI
+
+Linus Walleij (4):
+      i2c: mux: arb-gpio: Rewrite to use GPIO descriptors
+      i2c: s3c2410: Convert to use GPIO descriptors
+      i2c: iop: Use GPIO descriptors
+      i2c: mux/i801: Switch to use descriptor passing
+
+Maxime Ripard (4):
+      dt-bindings: i2c: sun6i-p2wi: Add YAML schemas
+      dt-bindings: i2c: mv64xxx: Add YAML schemas
+      dt-bindings: i2c: mv64xxx: Fix the example compatible
+      dt-bindings: i2c: sun6i-p2wi: Fix the binding example
+
+Neil Armstrong (1):
+      i2c: meson: update with SPDX Licence identifier
+
+Oliver O'Halloran (1):
+      i2c: fsi: Create busses for all ports
+
+Pali Roh??r (1):
+      i2c: i801: Register optional lis3lv02d I2C device on Dell machines
+
+Paul Cercueil (1):
+      i2c: jz4780: Drop dependency on MACH_JZ4780
+
+Peter Ujfalusi (1):
+      dt-bindings: i2c: omap: Add new compatible for J721E SoCs
+
+Rayagonda Kokatanur (1):
+      i2c: iproc: Add multi byte read-write support for slave mode
+
+Ruslan Babayev (1):
+      i2c: acpi: export i2c_acpi_find_adapter_by_handle
+
+Sagar Shrikant Kadam (3):
+      dt-bindings: i2c: extend existing opencore bindings
+      i2c: ocores: add support for i2c device on Sifive FU540-c000 SoC
+      i2c: ocores: add polling mode workaround for Sifive FU540-C000 SoC
+
+Stefan Roese (2):
+      dt-bindings: i2c: i2c-mt7621: Add bindings for MediaTek MT7621/28/88 I2C
+      i2c: mt7621: Add MediaTek MT7621/7628/7688 I2C driver
+
+Thierry Reding (1):
+      i2c: tegra: Avoid error message on deferred probe
+
+Vasyl Gomonovych (1):
+      i2c: cpm: remove casting dma_alloc
+
+Wolfram Sang (11):
+      i2c: headers: don't use 'dev' as adapter variable
+      i2c: headers: always have a named variable in arguments
+      i2c: core: always have a named variable in arguments
+      i2c: headers: update docs about I2C_CLIENT_*
+      i2c: headers: reformat header comment and update copyright
+      i2c: mux: add sysfs header
+      i2c: mux: demux-pinctrl: use proper email address for ABI requests
+      i2c: add newly exported functions to the header, too
+      i2c: core: add sysfs header
+      Merge tag 'at24-v5.3-updates-for-wolfram' of git://git.kernel.org/.../brgl/linux into i2c/for-5.3
+      Merge branch 'i2c-mux/for-next' of https://github.com/peda-r/i2c-mux into i2c/for-5.3
+
+YueHaibing (2):
+      eeprom: at24: Remove set but not used variable 'addr'
+      i2c: mt7621: Fix platform_no_drv_owner.cocci warnings
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Andrew Lunn (3):
+      (Rev.) i2c: ocores: add polling mode workaround for Sifive FU540-C000 SoC
+      (Rev.) i2c: ocores: add support for i2c device on Sifive FU540-c000 SoC
+      (Rev.) i2c: acpi: export i2c_acpi_find_adapter_by_handle
+
+Andy Shevchenko (7):
+      (Rev.) i2c: core: Tidy up handling of init_irq
+      (Rev.) i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
+      (Rev.) i2c: core: Move ACPI IRQ handling to probe time
+      (Rev.) i2c: acpi: Factor out getting the IRQ from ACPI
+      (Rev.) i2c: acpi: Use available IRQ helper functions
+      (Rev.) i2c: core: Allow whole core to use i2c_dev_irq_from_resources
+      (Rev.) i2c: mux/i801: Switch to use descriptor passing
+
+Bartosz Golaszewski (1):
+      (Rev.) i2c: add newly exported functions to the header, too
+
+Dmitry Osipenko (8):
+      (Rev.) i2c: tegra: remove BUG() macro
+      (Test) i2c: tegra: remove BUG() macro
+      (Rev.) i2c: tegra: Add suspend-resume support
+      (Rev.) i2c: tegra: fix msleep warning
+      (Rev.) i2c: tegra: add spinlock definition comment
+      (Rev.) i2c: tegra: fix alignment and spacing violations
+      (Rev.) i2c: tegra: remove unnecessary variable init
+      (Rev.) i2c: tegra: clean up macros
+
+Dong Aisheng (1):
+      (Rev.) i2c: imx: Use __maybe_unused instead of #if CONFIG_PM
+
+Douglas Anderson (1):
+      (Rev.) i2c: mux: arb-gpio: Rewrite to use GPIO descriptors
+
+Eddie James (1):
+      (Rev.) i2c: fsi: Create busses for all ports
+
+Eric Anholt (1):
+      (Rev.) i2c: bcm2835: Model Divider in CCF
+
+Jarkko Nikula (1):
+      (Rev.) i2c: i801: Documentation update
+
+Jean Delvare (7):
+      (Rev.) i2c: i801: Add support for Intel Tiger Lake
+      (Rev.) i2c: i801: Fix PCI ID sorting
+      (Rev.) i2c: i801: Add support for Intel Elkhart Lake
+      (Rev.) i2c: i801: Add Block Write-Block Read Process Call support
+      (Rev.) i2c: i801: Use match_string() helper to simplify the code
+      (Rev.) i2c: i801: Register optional lis3lv02d I2C device on Dell machines
+      (Rev.) i2c: Allow selecting BCM2835 I2C controllers on ARCH_BRCMSTB
+
+Kieran Bingham (1):
+      (Rev.) i2c: add newly exported functions to the header, too
+
+Marek Szyprowski (1):
+      (Test) i2c: mux: arb-gpio: Rewrite to use GPIO descriptors
+
+Mika Westerberg (7):
+      (Rev.) i2c: core: Tidy up handling of init_irq
+      (Rev.) i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
+      (Rev.) i2c: core: Move ACPI IRQ handling to probe time
+      (Rev.) i2c: acpi: Factor out getting the IRQ from ACPI
+      (Rev.) i2c: acpi: Use available IRQ helper functions
+      (Rev.) i2c: core: Allow whole core to use i2c_dev_irq_from_resources
+      (Rev.) i2c: mux/i801: Switch to use descriptor passing
+
+Pali Roh??r (2):
+      (Rev.) i2c: i801: Use match_string() helper to simplify the code
+      (Rev.) i2c: i801: Fix kernel crash in is_dell_system_with_lis3lv02d()
+
+Pierre-Yves MORDRET (3):
+      (Rev.) dt-bindings: i2c-stm32: document optional dmas
+      (Rev.) i2c: i2c-stm32f7: Add I2C_SMBUS_I2C_BLOCK_DATA support
+      (Rev.) i2c: stm32f7: fix the get_irq error cases
+
+Ray Jui (1):
+      (Rev.) i2c: iproc: Add multi byte read-write support for slave mode
+
+Ren?? van Dorst (1):
+      (Test) i2c: mt7621: Add MediaTek MT7621/7628/7688 I2C driver
+
+Rob Herring (5):
+      (Rev.) dt-bindings: i2c: sun6i-p2wi: Fix the binding example
+      (Rev.) dt-bindings: i2c: mv64xxx: Fix the example compatible
+      (Rev.) dt-bindings: i2c: mv64xxx: Add YAML schemas
+      (Rev.) dt-bindings: i2c: sun6i-p2wi: Add YAML schemas
+      (Rev.) dt-bindings: i2c: extend existing opencore bindings
+
+Simon Horman (1):
+      (Rev.) i2c: mux: demux-pinctrl: use proper email address for ABI requests
+
+Stefan Roese (1):
+      (Rev.) i2c: mt7621: Fix platform_no_drv_owner.cocci warnings
+
+Wolfram Sang (1):
+      (Rev.) eeprom: at24: use devm_i2c_new_dummy_device()
+
+ .../ABI/testing/sysfs-platform-i2c-demux-pinctrl   |   4 +-
+ .../bindings/i2c/allwinner,sun6i-a31-p2wi.yaml     |  65 ++++
+ .../devicetree/bindings/i2c/i2c-mt7621.txt         |  25 ++
+ .../devicetree/bindings/i2c/i2c-mv64xxx.txt        |  64 ----
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |   9 +-
+ Documentation/devicetree/bindings/i2c/i2c-omap.txt |   1 +
+ .../devicetree/bindings/i2c/i2c-stm32.txt          |   2 +
+ .../devicetree/bindings/i2c/i2c-sun6i-p2wi.txt     |  41 ---
+ .../bindings/i2c/marvell,mv64xxx-i2c.yaml          | 124 +++++++
+ Documentation/i2c/busses/i2c-i801                  |  20 +-
+ MAINTAINERS                                        |   7 +
+ arch/arm/include/asm/hardware/iop3xx.h             |   2 +
+ arch/arm/mach-iop32x/em7210.c                      |   3 +
+ arch/arm/mach-iop32x/glantank.c                    |   3 +
+ arch/arm/mach-iop32x/iq31244.c                     |   3 +
+ arch/arm/mach-iop32x/iq80321.c                     |   3 +
+ arch/arm/mach-iop32x/n2100.c                       |   2 +
+ arch/arm/plat-iop/i2c.c                            |  24 ++
+ drivers/gpio/gpio-iop.c                            |   1 +
+ drivers/i2c/busses/Kconfig                         |  13 +-
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-bcm-iproc.c                 | 117 +++----
+ drivers/i2c/busses/i2c-bcm2835.c                   | 135 ++++++--
+ drivers/i2c/busses/i2c-cpm.c                       |   4 +-
+ drivers/i2c/busses/i2c-fsi.c                       |  32 +-
+ drivers/i2c/busses/i2c-i801.c                      | 206 +++++++++++-
+ drivers/i2c/busses/i2c-imx.c                       |  11 +-
+ drivers/i2c/busses/i2c-iop3xx.c                    |  32 +-
+ drivers/i2c/busses/i2c-iop3xx.h                    |   2 +
+ drivers/i2c/busses/i2c-meson.c                     |   5 +-
+ drivers/i2c/busses/i2c-mt7621.c                    | 356 +++++++++++++++++++++
+ drivers/i2c/busses/i2c-nvidia-gpu.c                |  64 +++-
+ drivers/i2c/busses/i2c-ocores.c                    |  33 +-
+ drivers/i2c/busses/i2c-qcom-geni.c                 |  17 +-
+ drivers/i2c/busses/i2c-s3c2410.c                   |  47 +--
+ drivers/i2c/busses/i2c-stm32f7.c                   |  32 +-
+ drivers/i2c/busses/i2c-tegra.c                     | 136 +++++---
+ drivers/i2c/i2c-core-acpi.c                        |  61 ++--
+ drivers/i2c/i2c-core-base.c                        |  20 +-
+ drivers/i2c/i2c-core-of.c                          |   1 +
+ drivers/i2c/i2c-core.h                             |   9 +
+ drivers/i2c/i2c-mux.c                              |   4 +-
+ drivers/i2c/muxes/i2c-arb-gpio-challenge.c         |  79 ++---
+ drivers/i2c/muxes/i2c-mux-gpio.c                   | 116 ++-----
+ drivers/i2c/muxes/i2c-mux-pinctrl.c                |   5 +-
+ drivers/misc/eeprom/at24.c                         |  86 ++---
+ drivers/platform/x86/dell-smo8800.c                |   1 +
+ drivers/usb/typec/ucsi/ucsi.c                      |  10 +
+ drivers/usb/typec/ucsi/ucsi.h                      |   1 +
+ drivers/usb/typec/ucsi/ucsi_ccg.c                  | 118 ++++++-
+ include/linux/i2c.h                                |  99 +++---
+ include/linux/platform_data/i2c-mux-gpio.h         |   7 -
+ 52 files changed, 1614 insertions(+), 649 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/allwinner,sun6i-a31-p2wi.yaml
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mt7621.txt
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-sun6i-p2wi.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-mt7621.c
+
+--Kj7319i9nmIyA2yE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0s8fYACgkQFA3kzBSg
+KbYISw//bQP9mHtjo2GGon7ctZ4pLYySDqBy6FcMadwz7Y9MrOLWs1cJswX2cTqa
+9vprpqb94NG7RMzxhofzQKdG78aoZFavy47zAwiaZIy3X625rws5qDu4HeYeUtFm
+63Sw2gXkmDzS8n2/dNE22vE7IO+wirPB+Ltocs6Yu18fQQ4uyR3wZ8ZSlgTeyb7+
+8rmXDuhOhvXQ8EjWkS6AP0tURiTd17+srJYJlhKNsQzRK9wRfToZDyUuA4Uclly/
+y7iILhn1USANZ/FpxYiSMOKxZhA8x9ujU/9wfam4P1JAVU05oSJKw2uBlEaiUjip
+sCD9kkh56a7rNtPylRwoZfnf8nEeD1j8zha9MsFyGY3qA86xYlfkoj/8Jpw6q7uA
+aIMbX+Rda+JewZwONH4d6d2z1qgd4PMelLAGosoGcV6NPmyWvq0MBccjvCAFMoTI
+pi7QmzWFGBa39oLY3s6pWdAXbBAtMbtjHhQR+qwPTmx+Redr8WIJ55kEReVlYnTX
+oXLCMxoNB3knUN80pyDdnFc3i1KGIde/J8NgGlft/lzE7f1yEuHv++Us5YuaWQkf
+61NjocyxKWCLH4lxO04u2ArkauHk6KkR3sASan9tUuvMLuh7mM9QBSansEdDaKaO
+WVsC+PHL6INCawNlgvaVX+Oy9FMFoiJ5O8W99TtLwqnr1eMNlbs=
+=DECq
+-----END PGP SIGNATURE-----
+
+--Kj7319i9nmIyA2yE--
