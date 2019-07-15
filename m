@@ -2,294 +2,114 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD3AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBB0C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC902081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B440D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:33:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNcr3acw"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lDJpYRQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbfGON3q (ORCPT
+        id S1730325AbfGONd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:29:46 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34274 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730286AbfGON3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:29:46 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so15523105edb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 06:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=buEajWT+1jShDNDDmzeUQAsrsLgoZdl26EuhBKfYvFE=;
-        b=iNcr3acwzMK3mLhrxGk1qUFsSrDtBLyupcgnAlBPohC0nsi7ACiN8sFs1iTJVaX2DH
-         VxFisn1RpjdV3FmrKCEbxicEjmpSygdOipN+nqNNCKWQ/j/AGApD1oS8ZA8IJLOcFfmx
-         TIpBaqceY5PIx/64QJ6Owkv3Hz+2B6o2QbXzGgyzrLxRmi+PO8HY3/Rd6lgHODIAJ1tw
-         StjJRkBxaU0ojMK1oXy9RCmy0FG4tHH6fXF3m267W7am4dv0/xuIvKlObGUJLYWQg5dz
-         tpQjh/Ew7CPhEjUH6VMhY4Iygc2XITJ6Sj2zuD5wKe5ldvt9cmVu3QExE4zHxK25Bm6E
-         YC2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=buEajWT+1jShDNDDmzeUQAsrsLgoZdl26EuhBKfYvFE=;
-        b=nzIg2nC6sW/AZ8zu4Y2iS9hhQZCQY0ctjkMFxYXdQbhXrFDKiM6jfZSEkLDIv4+WSo
-         EiFGD/HyjAKHZbteYBW5ahBOVMPmX5aCWCIdeAnnCtRukvgLEdnn1e3GbUojeR7xrSZG
-         6+NI82joSPV6+0Hkd8wlJkRQ0+MLD0gRmeDLDxrYSOIaPHJZnDtRTD2a+SLVs/ib5o3G
-         HF3n9iBQcXT0j5WHAGZwF7/iN/y8+RJYanK0RSCb1+8ShAzmmezOKDJ4dhgQ99eW3/ky
-         44qPHxDTqGzk0DK9INP6pE3ypqBuaIEgO+wT8AIlxn2PzH0dS7GPcTxq/ZoaCdMDnk6v
-         xV/Q==
-X-Gm-Message-State: APjAAAUombm+qPtoJclIK6wjlRPuQwRw0k9hXuP/lmOYzPTXLd2S1UH2
-        jb5axMw5BxG6ENFNFUfxhDVHaAQze1YC5QZdY+o68g==
-X-Google-Smtp-Source: APXvYqzek7Bo7XArBcfNuU44O8huZixFfM9kpJqCJ0dmWGvcOZnT2Xq+F2035UMbwuIKGwL2GLJ4HryDPsyzZYY4b1M=
-X-Received: by 2002:a17:906:644c:: with SMTP id l12mr19807605ejn.142.1563197383529;
- Mon, 15 Jul 2019 06:29:43 -0700 (PDT)
+        Mon, 15 Jul 2019 09:33:28 -0400
+Received: from mout.web.de ([212.227.15.14]:34615 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730224AbfGONd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:33:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563197593;
+        bh=NnJ/McBC1xY+rwzKCrlqJKC2Om2QgKLKoSPz2k86HZs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=lDJpYRQKu5cnV6RPREucuIc2C+kjFqX+K/O7AUztCw1LIETvORDnda7OuCBA53W1/
+         fIZEwItysUbuafGbil2oGWZqhmOYyIfgWHMD1w3bzTh1l7+4rH9gw5qnS0qkTxSqzr
+         4QnZy/VjwM9ekhTelGt/gYpopGw88xEHvO/jTisI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.58.28] ([62.227.175.184]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lvf5Q-1iW6qK3s9E-017SQx; Mon, 15
+ Jul 2019 15:33:13 +0200
+Subject: Re: [PATCH v2 1/2] rt2x00usb: fix rx queue hang
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Stanislaw Gruszka <sgruszka@redhat.com>, stable@vger.kernel.org,
+        Helmut Schaa <helmut.schaa@googlemail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190701105314.9707-1-smoch@web.de>
+ <874l3nadjf.fsf@kamboji.qca.qualcomm.com>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <dd1caa78-182e-b0ce-c90c-9670f8455389@web.de>
+Date:   Mon, 15 Jul 2019 15:33:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190705191055.GT26519@linux.ibm.com> <20190706042801.GD11665@mit.edu>
- <20190706061631.GV26519@linux.ibm.com> <20190706150226.GG11665@mit.edu>
- <20190706180311.GW26519@linux.ibm.com> <20190707011655.GA22081@linux.ibm.com>
- <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
- <20190714190522.GA24049@mit.edu> <20190714192951.GM26519@linux.ibm.com>
- <20190715031027.GA3336@linux.ibm.com> <20190715130101.GA5527@linux.ibm.com>
-In-Reply-To: <20190715130101.GA5527@linux.ibm.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 15 Jul 2019 15:29:31 +0200
-Message-ID: <CACT4Y+ZXKyB-ApBzitHiYuuQRS5hPqZS0BM2SosYQqea8Xevdg@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <874l3nadjf.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:djE4WeLVs9SwBsKtd/iffOLzKtax0CXU3ew0/RjUPxtGqz5u7ox
+ ADBvZQTsFuUUtFrSk57QUyzDEY/v+2aWt5NmmVAlnALwq42qsVbjjuCD2cN+MTSAbfgfdm9
+ gEad7au1pRtSGxj6SaNYNEXbbSZfq7H5jp4qLTgeUN/aJy1Q9HnPRcuNyIeyGXMpRq8Uuqh
+ Sg6JOso+O3hgaKDkXgZkw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:88IpjVHAKF4=:FAfP5y9ry6qRspW+01MVoY
+ uTosMf6N4OodFVYQ/q+FFT31SDaWWH6OUBlHd5sG+hevUXouT6lfeH3iHPpfpoNbC4Op8CYzL
+ /8SeazaalhETrwEzm+VmhlGxkrQbyybKgOL4PHdnlfOY2mOyZ9/3dhmsalUeccxUEoHkjFlzh
+ B6LI8BTuocvgX0cn5XEHwol2d+pYbD+u5ICQjMvVfBdAN8LC1ihXaAQcNWdSu1EE2cMJ/WyLq
+ SM1A53iiXVZsvbPHTQ7Jv406P3xsj4NDJrScAJIvHdUSIT7fPcCv1reK4S89LdL1kNnNW7wQ0
+ FO+N0O6j9nD4eFHUAaBPc5FM78v590lAU7zmPyY1rzMzX6hmzLHmUy/bUI7XuvexKwa8c8XgW
+ FvEM6b22G+uk9REz69S/N4hWASCYoaeFWEApTOBs1UhDniQyc17IWKGtHNUpqj6y/zD++YOrA
+ vJmgILErvu+jSU8HaTcMmsP7cevw4TYiIf1FtCqolK1+wnBk/vkhZNh3kFFfnWe5Q3iFm3RRI
+ fK2HWF/Fvb/r7LCV0FWEDZ8kq1+Deb+tY4Z2PF2KP5KuFBlfi9feKwvp3V3DGRe+ib1g6B2sr
+ ClJYUFIG8wsTg9z87TcwoPhXH+whPHUs1UbbC6vwF0FoXg1SIqfERBruUJXvrl1UJLOcLqdqx
+ IcArd6Qe0t89t4mBKmfxbRiWY6l5eIatU/wPrWAAYT0FhTqPyUEdorF8i2dTUdonQQpnZuuKK
+ 8aCz/BDnfSWxcLYLVsDeJ+sCd7I8mM/TuckEbb/PjOXVAkoWLR1Nc40Q63sNloIkADl+/wZkA
+ eYapr6XgtCdb4SGEg0G8UvH5qmlR1isUqlfLLr08nWu4y87Nx/F4SYpzR1Ci/tWdmlQ9LyF9/
+ GdOhn/p//SCorO7Ykv5QWbymVmcZ0uW5qi/0fmdy9jcUIUZdWaMJ0YFX6+KYUrLc7Pry/rXS5
+ cFiZlAPgaqLg6F5Qdch04z7jSYiZrrrWxFqRk5sUrIGJtkvNW8EuaKvABiOE4Vmbn8AfkmLQB
+ llXXKDxW6ex9nQzD7qGmVXcGe19MAInvB+ez4fTmiEVuUzWpSDzecjNn4z1S7LnvA4MKHNR4n
+ O+2GCnFLaFpztQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 3:01 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
->
-> On Sun, Jul 14, 2019 at 08:10:27PM -0700, Paul E. McKenney wrote:
-> > On Sun, Jul 14, 2019 at 12:29:51PM -0700, Paul E. McKenney wrote:
-> > > On Sun, Jul 14, 2019 at 03:05:22PM -0400, Theodore Ts'o wrote:
-> > > > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
-> > > > > But short term I don't see any other solution than stop testing
-> > > > > sched_setattr because it does not check arguments enough to prevent
-> > > > > system misbehavior. Which is a pity because syzkaller has found some
-> > > > > bad misconfigurations that were oversight on checking side.
-> > > > > Any other suggestions?
-> > > >
-> > > > Or maybe syzkaller can put its own limitations on what parameters are
-> > > > sent to sched_setattr?  In practice, there are any number of ways a
-> > > > root user can shoot themselves in the foot when using sched_setattr or
-> > > > sched_setaffinity, for that matter.  I imagine there must be some such
-> > > > constraints already --- or else syzkaller might have set a kernel
-> > > > thread to run with priority SCHED_BATCH, with similar catastrophic
-> > > > effects --- or do similar configurations to make system threads
-> > > > completely unschedulable.
-> > > >
-> > > > Real time administrators who know what they are doing --- and who know
-> > > > that their real-time threads are well behaved --- will always want to
-> > > > be able to do things that will be catastrophic if the real-time thread
-> > > > is *not* well behaved.  I don't it is possible to add safety checks
-> > > > which would allow the kernel to automatically detect and reject unsafe
-> > > > configurations.
-> > > >
-> > > > An apt analogy might be civilian versus military aircraft.  Most
-> > > > airplanes are designed to be "inherently stable"; that way, modulo
-> > > > buggy/insane control systems like on the 737 Max, the airplane will
-> > > > automatically return to straight and level flight.  On the other hand,
-> > > > some military planes (for example, the F-16, F-22, F-36, the
-> > > > Eurofighter, etc.) are sometimes designed to be unstable, since that
-> > > > way they can be more maneuverable.
-> > > >
-> > > > There are use cases for real-time Linux where this flexibility/power
-> > > > vs. stability tradeoff is going to argue for giving root the
-> > > > flexibility to crash the system.  Some of these systems might
-> > > > literally involve using real-time Linux in military applications,
-> > > > something for which Paul and I have had some experience.  :-)
-> > > >
-> > > > Speaking of sched_setaffinity, one thing which we can do is have
-> > > > syzkaller move all of the system threads to they run on the "system
-> > > > CPU's", and then move the syzkaller processes which are testing the
-> > > > kernel to be on the "system under test CPU's".  Then regardless of
-> > > > what priority the syzkaller test programs try to run themselves at,
-> > > > they can't crash the system.
-> > > >
-> > > > Some real-time systems do actually run this way, and it's a
-> > > > recommended configuration which is much safer than letting the
-> > > > real-time threads take over the whole system:
-> > > >
-> > > > http://linuxrealtime.org/index.php/Improving_the_Real-Time_Properties#Isolating_the_Application
-> > >
-> > > Good point!  We might still have issues with some per-CPU kthreads,
-> > > but perhaps use of nohz_full would help at least reduce these sorts
-> > > of problems.  (There could still be issues on CPUs with more than
-> > > one runnable threads.)
-> >
-> > I looked at testing limitations in a bit more detail from an RCU
-> > viewpoint, and came up with the following rough rule of thumb (which of
-> > course might or might not survive actual testing experience, but should at
-> > least be a good place to start).  I believe that the sched_setaffinity()
-> > testing rule should be that the SCHED_DEADLINE cycle be no more than
-> > two-thirds of the RCU CPU stall warning timeout, which defaults to 21
-> > seconds in mainline and 60 seconds in many distro kernels.
-> >
-> > That is, the SCHED_DEADLINE cycle should never exceed 14 seconds when
-> > testing mainline on the one hand or 40 seconds when testing enterprise
-> > distros on the other.
-> >
-> > This assumes quite a bit, though:
-> >
-> > o     The system has ample memory to spare, and isn't running a
-> >       callback-hungry workload.  For example, if you "only" have 100MB
-> >       of spare memory and you are also repeatedly and concurrently
-> >       expanding (say) large source trees from tarballs and then deleting
-> >       those source trees, the system might OOM.  The reason OOM might
-> >       happen is that each close() of a file generates an RCU callback,
-> >       and 40 seconds worth of waiting-for-a-grace-period structures
-> >       takes up a surprisingly large amount of memory.
-> >
-> >       So please be careful when combining tests.  ;-)
-> >
-> > o     There are no aggressive real-time workloads on the system.
-> >       The reason for this is that RCU is going to start sending IPIs
-> >       halfway to the RCU CPU stall timeout, and, in certain situations
-> >       on CONFIG_NO_HZ_FULL kernels, much earlier.  (These situations
-> >       constitute abuse of CONFIG_NO_HZ_FULL, but then again carefully
-> >       calibrated abuse is what stress testing is all about.)
-> >
-> > o     The various RCU kthreads will get a chance to run at least once
-> >       during the SCHED_DEADLINE cycle.  If in real life, they only
-> >       get a chance to run once per two SCHED_DEADLINE cycles, then of
-> >       course the 14 seconds becomes 7 and the 40 seconds becomes 20.
->
-> And there are configurations and workloads that might require division
-> by three, so that (assuming one chance to run per cycle), the 14 seconds
-> becomes about 5 and the 40 seconds becomes about 15.
->
-> > o     The current RCU CPU stall warning defaults remain in
-> >       place.  These are set by the CONFIG_RCU_CPU_STALL_TIMEOUT
-> >       Kconfig parameter, which may in turn be overridden by the
-> >       rcupdate.rcu_cpu_stall_timeout kernel boot parameter.
-> >
-> > o     The current SCHED_DEADLINE default for providing spare cycles
-> >       for other uses remains in place.
-> >
-> > o     Other kthreads might have other constraints, but given that you
-> >       were seeing RCU CPU stall warnings instead of other failures,
-> >       the needs of RCU's kthreads seem to be a good place to start.
-> >
-> > Again, the candidate rough rule of thumb is that the the SCHED_DEADLINE
-> > cycle be no more than 14 seconds when testing mainline kernels on the one
-> > hand and 40 seconds when testing enterprise distro kernels on the other.
-> >
-> > Dmitry, does that help?
->
-> I checked with the people running the Linux Plumbers Conference Scheduler
-> Microconference, and they said that they would welcome a proposal on
-> this topic, which I have submitted (please see below).  Would anyone
-> like to join as co-conspirator?
->
->                                                         Thanx, Paul
->
-> ------------------------------------------------------------------------
->
-> Title: Making SCHED_DEADLINE safe for kernel kthreads
->
-> Abstract:
->
-> Dmitry Vyukov's testing work identified some (ab)uses of sched_setattr()
-> that can result in SCHED_DEADLINE tasks starving RCU's kthreads for
-> extended time periods, not millisecond, not seconds, not minutes, not even
-> hours, but days. Given that RCU CPU stall warnings are issued whenever
-> an RCU grace period fails to complete within a few tens of seconds,
-> the system did not suffer silently. Although one could argue that people
-> should avoid abusing sched_setattr(), people are human and humans make
-> mistakes. Responding to simple mistakes with RCU CPU stall warnings is
-> all well and good, but a more severe case could OOM the system, which
-> is a particularly unhelpful error message.
->
-> It would be better if the system were capable of operating reasonably
-> despite such abuse. Several approaches have been suggested.
->
-> First, sched_setattr() could recognize parameter settings that put
-> kthreads at risk and refuse to honor those settings. This approach
-> of course requires that we identify precisely what combinations of
-> sched_setattr() parameters settings are risky, especially given that there
-> are likely to be parameter settings that are both risky and highly useful.
->
-> Second, in theory, RCU could detect this situation and take the "dueling
-> banjos" approach of increasing its priority as needed to get the CPU time
-> that its kthreads need to operate correctly. However, the required amount
-> of CPU time can vary greatly depending on the workload. Furthermore,
-> non-RCU kthreads also need some amount of CPU time, and replicating
-> "dueling banjos" across all such Linux-kernel subsystems seems both
-> wasteful and error-prone. Finally, experience has shown that setting
-> RCU's kthreads to real-time priorities significantly harms performance
-> by increasing context-switch rates.
->
-> Third, stress testing could be limited to non-risky regimes, such that
-> kthreads get CPU time every 5-40 seconds, depending on configuration
-> and experience. People needing risky parameter settings could then test
-> the settings that they actually need, and also take responsibility for
-> ensuring that kthreads get the CPU time that they need. (This of course
-> includes per-CPU kthreads!)
->
-> Fourth, bandwidth throttling could treat tasks in other scheduling classes
-> as an aggregate group having a reasonable aggregate deadline and CPU
-> budget. This has the advantage of allowing "abusive" testing to proceed,
-> which allows people requiring risky parameter settings to rely on this
-> testing. Additionally, it avoids complex progress checking and priority
-> setting on the part of many kthreads throughout the system. However,
-> if this was an easy choice, the SCHED_DEADLINE developers would likely
-> have selected it. For example, it is necessary to determine what might
-> be a "reasonable" aggregate deadline and CPU budget. Reserving 5%
-> seems quite generous, and RCU's grace-period kthread would optimally
-> like a deadline in the milliseconds, but would do reasonably well with
-> many tens of milliseconds, and absolutely needs a few seconds. However,
-> for CONFIG_RCU_NOCB_CPU=y, the RCU's callback-offload kthreads might
-> well need a full CPU each! (This happens when the CPU being offloaded
-> generates a high rate of callbacks.)
->
-> The goal of this proposal is therefore to generate face-to-face
-> discussion, hopefully resulting in a good and sufficient solution to
-> this problem.
 
 
-I would be happy to attend if this won't conflict with important
-things on the testing and fuzzing MC.
-
-If we restrict arguments for sched_attr, what would be the criteria
-for 100% safe arguments? Moving the check from kernel to user-space
-does not relief us from explicitly stating the condition in
-black-and-white way. All of sched_runtime/sched_deadline/sched_period
-be not larger than 1 second?
-
-The problem is that syzkaller does not allow 100% reliable enforcement
-for indirect arguments in memory. E.g. inputs arguments can overlap,
-input/output can overlap, weird races affect what's actually being
-passed to kernel, the memory being mapped from a weird device, etc.
-And that's also useful as it can discover TOCTOU bugs, deadlocks, etc.
-We could try to wrap sched_setattr and do some additional restrictions
-by giving up on TOCTOU, device-mapped memory, etc.
-
-I am also thinking about dropping CAP_SYS_NICE, it should still allow
-some configurations, but no inherently unsafe ones.
+On 15.07.19 10:48, Kalle Valo wrote:
+> Soeren Moch <smoch@web.de> writes:
+>
+>> Since commit ed194d136769 ("usb: core: remove local_irq_save() around
+>>  ->complete() handler") the handler rt2x00usb_interrupt_rxdone() is
+>> not running with interrupts disabled anymore. So this completion handler
+>> is not guaranteed to run completely before workqueue processing starts
+>> for the same queue entry.
+>> Be sure to set all other flags in the entry correctly before marking
+>> this entry ready for workqueue processing. This way we cannot miss error
+>> conditions that need to be signalled from the completion handler to the
+>> worker thread.
+>> Note that rt2x00usb_work_rxdone() processes all available entries, not
+>> only such for which queue_work() was called.
+>>
+>> This patch is similar to what commit df71c9cfceea ("rt2x00: fix order
+>> of entry flags modification") did for TX processing.
+>>
+>> This fixes a regression on a RT5370 based wifi stick in AP mode, which
+>> suddenly stopped data transmission after some period of heavy load. Also
+>> stopping the hanging hostapd resulted in the error message "ieee80211
+>> phy0: rt2x00queue_flush_queue: Warning - Queue 14 failed to flush".
+>> Other operation modes are probably affected as well, this just was
+>> the used testcase.
+>>
+>> Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete() handler")
+>> Cc: stable@vger.kernel.org # 4.20+
+>> Signed-off-by: Soeren Moch <smoch@web.de>
+> I'll queue this for v5.3.
+>
+OK, thanks,
+Soeren
