@@ -2,66 +2,90 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94118C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B935C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7262083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D479D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VRX6bsGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbfGONXA (ORCPT
+        id S1730265AbfGONXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:23:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51232 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730071AbfGONXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:23:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 11051AF25;
-        Mon, 15 Jul 2019 13:22:59 +0000 (UTC)
-Subject: Re: [PATCH] x86/paravirt: Drop {read,write}_cr8() hooks
-To:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        FengTang <feng.tang@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Alok Kataria <akataria@vmware.com>,
-        Nadav Amit <namit@vmware.com>
-References: <20190715130056.10627-1-andrew.cooper3@citrix.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <a04918d1-975e-5869-1ecd-c9df4ae5b1c1@suse.com>
-Date:   Mon, 15 Jul 2019 15:22:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 09:23:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33784 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730071AbfGONXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yQyxE1Ka8nS34umw3hpmbSbzTCZ5gJ0CQHD8yI5d4wk=; b=VRX6bsGYqh416y4aHeiEW2HRR
+        6U+RV1QBT3iWnePTvztjbiwJ6Dw1g4V6gbHjzBquAlktAysb5xe8Elj+DFs/+zggxWT4mL7Sm2Ri5
+        fHm4Q3muM/TT7s8uHEZfI70HDeRCRWYEzUCENr9fMWYdA63nqnjrRWx91eXlxaIDQNTzqW9m0MR8H
+        PiPSxpcQBnL8UqCTkAi8AkD1LfO+EmBF6e28iKnYFl/NiGMmIAAw8YDMqedVqmBPUk4LzAP78wZZL
+        831kS76LQRdcs4aLioKEbymcdcm/qRxDfp5LLGAk6VxfPdhX05NjUDTegHXjehwZmYDinafYHbHD5
+        g/l0dv4DQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hn0wO-0006PM-LJ; Mon, 15 Jul 2019 13:22:52 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E508120A7A4EF; Mon, 15 Jul 2019 15:22:50 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 15:22:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190715132250.GF3419@hirez.programming.kicks-ass.net>
+References: <20190626224709.GH3116@mit.edu>
+ <CACT4Y+YTpUErjEmjrqki-tJ0Lyx0c53MQDGVS4CixfmcAnuY=A@mail.gmail.com>
+ <20190705151658.GP26519@linux.ibm.com>
+ <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com>
+ <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190715130056.10627-1-andrew.cooper3@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190707011655.GA22081@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.19 15:00, Andrew Cooper wrote:
-> There is a lot of infrastructure for functionality which is used
-> exclusively in __{save,restore}_processor_state() on the suspend/resume
-> path.
-> 
-> cr8 is an alias of APIC_TASKPRI, and APIC_TASKPRI is saved/restored
-> independently by lapic_{suspend,resume}().
+On Sat, Jul 06, 2019 at 06:16:55PM -0700, Paul E. McKenney wrote:
+> 4.	SCHED_DEADLINE treats the other three scheduling classes as each
+> 	having a period, deadline, and a modest CPU consumption budget
+> 	for the members of the class in aggregate.  But this has to have
+> 	been discussed before.  How did that go?
 
-Aren't those called only with CONFIG_PM set?
+Yeah; this has been proposed a number of times; and I think everybody
+agrees that it is a good idea, but nobody has so far sat down and wrote
+the patches.
 
+Or rather; we would've gotten this for 'free' with the rt-cgroup
+rewrite, but that's been stuck forever due to affinity being difficult.
 
-Juergen
