@@ -2,64 +2,84 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57008C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E40BC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351E72077A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735922077A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbfGOTii (ORCPT
+        id S1731242AbfGOTim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:38:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:28806 "EHLO mga06.intel.com"
+        Mon, 15 Jul 2019 15:38:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39844 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730362AbfGOTih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:38:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 12:38:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,494,1557212400"; 
-   d="scan'208";a="318771531"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga004.jf.intel.com with ESMTP; 15 Jul 2019 12:38:36 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id AA1BA301AE9; Mon, 15 Jul 2019 12:38:36 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 12:38:36 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>
-Subject: Re: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop targets
-Message-ID: <20190715193836.GF32439@tassilo.jf.intel.com>
-References: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
- <8736j7gsza.fsf@linux.intel.com>
- <alpine.DEB.2.21.1907152033020.1767@nanos.tec.linutronix.de>
- <CAFULd4bcB8tsgZuxZJm_ksp5zyDQXjO=v_Ov622Bmhx=fr7KuA@mail.gmail.com>
- <alpine.DEB.2.21.1907152129350.1767@nanos.tec.linutronix.de>
+        id S1730362AbfGOTij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 15:38:39 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A955F3082A9A;
+        Mon, 15 Jul 2019 19:38:38 +0000 (UTC)
+Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CF8641001B04;
+        Mon, 15 Jul 2019 19:38:36 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 14:38:34 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 00/22] x86, objtool: several fixes/improvements
+Message-ID: <20190715193834.5tvzukcwq735ufgb@treble>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907152129350.1767@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <cover.1563150885.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 15 Jul 2019 19:38:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 14, 2019 at 07:36:55PM -0500, Josh Poimboeuf wrote:
+> There have been a lot of objtool bug reports lately, mainly related to
+> Clang and BPF.  As part of fixing those bugs, I added some improvements
+> to objtool which uncovered yet more bugs (some kernel, some objtool).
 > 
-> That does not answer the question whether it's worthwhile to do that.
+> I've given these patches a lot of testing with both GCC and Clang.  More
+> compile testing of objtool would be appreciated, as the kbuild test
+> robot doesn't seem to be paying much attention to my branches lately.
+> 
+> There are still at least three outstanding issues:
+> 
+> 1) With clang I see:
+> 
+>      drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x88: redundant UACCESS disable
+> 
+>    I haven't dug into it yet.
+> 
+> 2) There's also an issue in clang where a large switch table had a bunch
+>    of unused (bad) entries.  It's not a code correctness issue, but
+>    hopefully it can get fixed in clang anyway.  See patch 20/22 for more
+>    details.
+> 
+> 3) CONFIG_LIVEPATCH is causing some objtool "unreachable instruction"
+>    warnings due to the new -flive-patching flag.  I have some fixes
+>    pending, but this patch set is already long enough.
 
-It's likely worthwhile for (Intel integrated) graphics. 
+These patches are also at:
 
-There was also a recent issue with 3dxp/dax, which uses ioremap in some
-cases.
+  git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git objtool-many-fixes
 
--Andi
+-- 
+Josh
