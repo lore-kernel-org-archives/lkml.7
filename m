@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D609AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C88C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01AC2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E2221530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199050;
-	bh=rMVqSQ6+pvF22ZkGVY3/e8ESWsuFmRElwpN3Z+zx7r0=;
+	s=default; t=1563199054;
+	bh=ASNncooLMAe2WlOLPQ9S5PVEfbaLbqkIaWcRYHeE12I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZLcwoOHWMHsuzEki5lUNAPYfe7jJmXvmcCj8mtUt1wzb8BZlcPMtdJrywlDq917r
-	 6OWICapT7W8vWOvsH3WFeOFvpIKvP1YpIaV+1wmvhgbxSrNIl9gQbv4oi/UShs/Nw7
-	 E79e1oa9ISZTCEEY8dTNc4Gtn/sDbNt6VeNg7SDc=
+	b=VONuvjJml7/Mhdl00QgaJC1BRGA9qcUuMRQpcNL9ZzZqTnt7ACfKO176lAHl9FZ9E
+	 TwngVNS3FJqunTjobdcqfGuRPRrG0Ujr2/Bz4vDRyZtaUmEIDYup2y6cygl7KCxxbs
+	 uHlquM0lq1IrqkwmkII+WRNKWI3Cb9ZX8w7w9leY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbfGON53 (ORCPT
+        id S1732591AbfGON5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:57:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732571AbfGON50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:26 -0400
+        id S1730440AbfGON53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:29 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4832C20C01;
-        Mon, 15 Jul 2019 13:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DF07212F5;
+        Mon, 15 Jul 2019 13:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199045;
-        bh=rMVqSQ6+pvF22ZkGVY3/e8ESWsuFmRElwpN3Z+zx7r0=;
+        s=default; t=1563199048;
+        bh=ASNncooLMAe2WlOLPQ9S5PVEfbaLbqkIaWcRYHeE12I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OQSYmRcCO8je7syzX075IeZA+0GeENJn4yqX25z8pzJATjG0c9JAu/GOdVDmZRhDT
-         Ep2NF1pgYR0o3zJDQgWizF2T/ozHoHpyxc1hguEgp4lUM27ClygTKfokviAyG5h/A+
-         NfXXS5Q6lgPZ+vt/A5KFL1sgdtue1KYjs0qOHoHQ=
+        b=We7LObAy1ez4k2SsgpHenLsLyfyLY3yp+xCbmN8NStxC5KQROvUISAgQeFopDktfs
+         pYX8s60gQ+KWPfBZgggLYry15eX35Dfu5TA1932Zb0ezQXOqgRnTMY0KZdW7Iid1zW
+         Jr0DZboICY+4qnXQzG9sZ0yhYwGK+sMTA7wLPXaU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 173/249] clocksource/drivers/exynos_mct: Increase priority over ARM arch timer
-Date:   Mon, 15 Jul 2019 09:45:38 -0400
-Message-Id: <20190715134655.4076-173-sashal@kernel.org>
+Cc:     Felix Kaechele <felix@kaechele.ca>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 174/249] netfilter: ctnetlink: Fix regression in conntrack entry deletion
+Date:   Mon, 15 Jul 2019 09:45:39 -0400
+Message-Id: <20190715134655.4076-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,76 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Felix Kaechele <felix@kaechele.ca>
 
-[ Upstream commit 6282edb72bed5324352522d732080d4c1b9dfed6 ]
+[ Upstream commit e7600865db32b69deb0109b8254244dca592adcf ]
 
-Exynos SoCs based on CA7/CA15 have 2 timer interfaces: custom Exynos MCT
-(Multi Core Timer) and standard ARM Architected Timers.
+Commit f8e608982022 ("netfilter: ctnetlink: Resolve conntrack
+L3-protocol flush regression") introduced a regression in which deletion
+of conntrack entries would fail because the L3 protocol information
+is replaced by AF_UNSPEC. As a result the search for the entry to be
+deleted would turn up empty due to the tuple used to perform the search
+is now different from the tuple used to initially set up the entry.
 
-There are use cases, where both timer interfaces are used simultanously.
-One of such examples is using Exynos MCT for the main system timer and
-ARM Architected Timers for the KVM and virtualized guests (KVM requires
-arch timers).
+For flushing the conntrack table we do however want to keep the option
+for nfgenmsg->version to have a non-zero value to allow for newer
+user-space tools to request treatment under the new behavior. With that
+it is possible to independently flush tables for a defined L3 protocol.
+This was introduced with the enhancements in in commit 59c08c69c278
+("netfilter: ctnetlink: Support L3 protocol-filter on flush").
 
-Exynos Multi-Core Timer driver (exynos_mct) must be however started
-before ARM Architected Timers (arch_timer), because they both share some
-common hardware blocks (global system counter) and turning on MCT is
-needed to get ARM Architected Timer working properly.
+Older user-space tools will retain the behavior of flushing all tables
+regardless of defined L3 protocol.
 
-To ensure selecting Exynos MCT as the main system timer, increase MCT
-timer rating. To ensure proper starting order of both timers during
-suspend/resume cycle, increase MCT hotplug priority over ARM Archictected
-Timers.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Fixes: f8e608982022 ("netfilter: ctnetlink: Resolve conntrack L3-protocol flush regression")
+Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/exynos_mct.c | 4 ++--
- include/linux/cpuhotplug.h       | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nf_conntrack_netlink.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index e8eab16b154b..74cb299f5089 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -206,7 +206,7 @@ static void exynos4_frc_resume(struct clocksource *cs)
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 7db79c1b8084..1b77444d5b52 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -1256,7 +1256,6 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
+ 	struct nf_conntrack_tuple tuple;
+ 	struct nf_conn *ct;
+ 	struct nfgenmsg *nfmsg = nlmsg_data(nlh);
+-	u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
+ 	struct nf_conntrack_zone zone;
+ 	int err;
  
- static struct clocksource mct_frc = {
- 	.name		= "mct-frc",
--	.rating		= 400,
-+	.rating		= 450,	/* use value higher than ARM arch timer */
- 	.read		= exynos4_frc_read,
- 	.mask		= CLOCKSOURCE_MASK(32),
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -461,7 +461,7 @@ static int exynos4_mct_starting_cpu(unsigned int cpu)
- 	evt->set_state_oneshot_stopped = set_state_shutdown;
- 	evt->tick_resume = set_state_shutdown;
- 	evt->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
--	evt->rating = 450;
-+	evt->rating = 500;	/* use value higher than ARM arch timer */
+@@ -1266,11 +1265,13 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
  
- 	exynos4_mct_write(TICK_BASE_CNT, mevt->base + MCT_L_TCNTB_OFFSET);
- 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 5c6062206760..87c211adf49e 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -116,10 +116,10 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_ARM_ACPI_STARTING,
- 	CPUHP_AP_PERF_ARM_STARTING,
- 	CPUHP_AP_ARM_L2X0_STARTING,
-+	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
- 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
- 	CPUHP_AP_JCORE_TIMER_STARTING,
--	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_TWD_STARTING,
- 	CPUHP_AP_QCOM_TIMER_STARTING,
- 	CPUHP_AP_TEGRA_TIMER_STARTING,
+ 	if (cda[CTA_TUPLE_ORIG])
+ 		err = ctnetlink_parse_tuple(cda, &tuple, CTA_TUPLE_ORIG,
+-					    u3, &zone);
++					    nfmsg->nfgen_family, &zone);
+ 	else if (cda[CTA_TUPLE_REPLY])
+ 		err = ctnetlink_parse_tuple(cda, &tuple, CTA_TUPLE_REPLY,
+-					    u3, &zone);
++					    nfmsg->nfgen_family, &zone);
+ 	else {
++		u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
++
+ 		return ctnetlink_flush_conntrack(net, cda,
+ 						 NETLINK_CB(skb).portid,
+ 						 nlmsg_report(nlh), u3);
 -- 
 2.20.1
 
