@@ -2,115 +2,145 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EF3C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104F2C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE88E20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCEYP/Pv"
+	by mail.kernel.org (Postfix) with ESMTP id DE46121530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563200487;
+	bh=3TnNcnGmbLBj4xFdkRKtQmgSBitRAxeaVM2Kpj2E0uo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SswiVtz2QYjFTMrI3Uko8L2XJ+z1onNkNwxa/Sv4toQd3cH0i0rq6O/n4fqCouG0B
+	 b0vTyGkRHaQL4XMnY7UenOOEsOfTUKLSqzFtNVNRV4M8KQqyunwH8OwqPOQkqUd4tU
+	 KQ2L8splyPIJ/853mSmo9OBcCBMgfHwINTlXJU+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390293AbfGOOVX (ORCPT
+        id S2390321AbfGOOV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 15 Jul 2019 10:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390277AbfGOOVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 10:21:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42221 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390004AbfGOOVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:21:18 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x1so2308776wrr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wP59Gx3m7Jou+yXtjCzXvgdV35CA8Lfqjz/4jKFq3O4=;
-        b=pCEYP/PvfZqosCmkP7JoAmOtLKbETj/1CU/2OxY7E/V6SyHtYpTGre2MQHMm7D4dmb
-         7cVZllfkUiXxDvsjyyJLbkiH30aJzUdCYTni2ka/NVOm+TH22/U3EbR0cEtT/a5DqnWp
-         m076BIqncH37M37LT84LcisvJJYkklw8N2F1Ql2F9MIc9SLe6zgF3DqjXIooeBfQRt2j
-         qG7O+Tw7C7gn0in0Ac4pYb+Wrqa7ZmFIRN8QeQHru9ruLEuQcnTC1Bj7+fdf31KUZ774
-         855dHOt/2hp4gueVyvNC42RE+SIIVxeRkWFu5/6tWnRchaj1H0VYVGlcDg0pyXMpiNCd
-         Edyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wP59Gx3m7Jou+yXtjCzXvgdV35CA8Lfqjz/4jKFq3O4=;
-        b=MT0+j9ARdoVFsKLF+5JDBEij6ggUBZmXT+1eh+qxyYdKfzIzCqFvV9+m6Sxnexf3ZL
-         cGTWyvNjce370hgPC6Nn/6PX2/Ar8i40Lh/kHJOgNNR7XY6aVxpM9BA4h302Px/5aZbl
-         CSeCiXXkcHnSjRdhu7+hNTJcoL/We34DeeSIuk3Wq4UqgULXwgKeN1TwJBrqCXUetkiA
-         HLOa0omQgD1aYKtsjCyUJR/I27UDSbUuqpgUtLk3Z1EAkcaP5uXdMAFLxlN8R8xf5uf4
-         lD4TpcU1XB7rbTHgoju+CLO8getn815zIdUSLof77YLpMqbwA8AWiJLmzoh8gRX1GD02
-         4ngw==
-X-Gm-Message-State: APjAAAVFBAUKeBty/lNaqS0CIJK0xnB45VcBEHGHKPfFr/qVrlWU6hPQ
-        I6eStn95FIrXNsD2eHI40fQ=
-X-Google-Smtp-Source: APXvYqz72sz0aUW74u06qoXBxafELDcjaFP4f7IgKBlvWIkJvCMqUbPEdmj93TOma02OuZWVJHfTbQ==
-X-Received: by 2002:adf:db8e:: with SMTP id u14mr5420843wri.314.1563200476039;
-        Mon, 15 Jul 2019 07:21:16 -0700 (PDT)
-Received: from localhost.localdomain.com (93-103-18-160.static.t-2.net. [93.103.18.160])
-        by smtp.gmail.com with ESMTPSA id i18sm19986388wrp.91.2019.07.15.07.21.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 07:21:15 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     tglx@linutronix.de, luto@amacapital.net, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>
-Subject: [PATCH] x86/cpu/intel: Skip CPA cache flush on CPUs with cache self-snooping
-Date:   Mon, 15 Jul 2019 16:21:09 +0200
-Message-Id: <20190715142109.3063-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C3820868;
+        Mon, 15 Jul 2019 14:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563200482;
+        bh=3TnNcnGmbLBj4xFdkRKtQmgSBitRAxeaVM2Kpj2E0uo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F1mVYv5lXak/KcxjPBU3j/STvuhXzDySmGvQgcTBF7sh71h+1gEHCjh51M4IqRreF
+         WrfU/FbtZlPcGNJzxv043U5tlV8U93RRxLOsPhQUMrVnRi2KXE0h5PU2O0bujn5V3A
+         2dYTyS2YVHEciVE48n7RDqawe142H3V1/CQ3F4eA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 060/158] gpio: omap: ensure irq is enabled before wakeup
+Date:   Mon, 15 Jul 2019 10:16:31 -0400
+Message-Id: <20190715141809.8445-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPUs which have self-snooping capability can handle conflicting
-memory type across CPUs by snooping its own cache. Commit #fd329f276ecaa
-("x86/mtrr: Skip cache flushes on CPUs with cache self-snooping")
-avoids cache flushes when MTRR registers are programmed. The Page
-Attribute Table (PAT) is a companion feature to the MTRRs, and according
-to section 11.12.4 of the Intel 64 and IA 32 Architectures Software
-Developer's Manual, if the CPU supports cache self-snooping, it is not
-necessary to flush caches when remapping a page that was previously
-mapped as a different memory type.
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Note that commit #1e03bff360010
-("x86/cpu/intel: Clear cache self-snoop capability in CPUs with known errata")
-cleared cache self-snoop capability for CPUs where conflicting memory types
-lead to unpredictable behavior, machine check errors, or hangs.
+[ Upstream commit c859e0d479b3b4f6132fc12637c51e01492f31f6 ]
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Documentation states:
+
+  NOTE: There must be a correlation between the wake-up enable and
+  interrupt-enable registers. If a GPIO pin has a wake-up configured
+  on it, it must also have the corresponding interrupt enabled (on
+  one of the two interrupt lines).
+
+Ensure that this condition is always satisfied by enabling the detection
+events after enabling the interrupt, and disabling the detection before
+disabling the interrupt.  This ensures interrupt/wakeup events can not
+happen until both the wakeup and interrupt enables correlate.
+
+If we do any clearing, clear between the interrupt enable/disable and
+trigger setting.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pageattr.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-omap.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 6a9a77a403c9..e2704996f9c5 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -1725,10 +1725,11 @@ static int change_page_attr_set_clr(unsigned long *addr, int numpages,
- 		goto out;
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 9254bcf7f647..feabac40743e 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -837,9 +837,9 @@ static void omap_gpio_irq_shutdown(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+ 	bank->irq_usage &= ~(BIT(offset));
+-	omap_set_gpio_irqenable(bank, offset, 0);
+-	omap_clear_gpio_irqstatus(bank, offset);
+ 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
++	omap_clear_gpio_irqstatus(bank, offset);
++	omap_set_gpio_irqenable(bank, offset, 0);
+ 	if (!LINE_USED(bank->mod_usage, offset))
+ 		omap_clear_gpio_debounce(bank, offset);
+ 	omap_disable_gpio_module(bank, offset);
+@@ -881,8 +881,8 @@ static void omap_gpio_mask_irq(struct irq_data *d)
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+-	omap_set_gpio_irqenable(bank, offset, 0);
+ 	omap_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
++	omap_set_gpio_irqenable(bank, offset, 0);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
+@@ -894,9 +894,6 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+-	if (trigger)
+-		omap_set_gpio_triggering(bank, offset, trigger);
+-
+ 	omap_set_gpio_irqenable(bank, offset, 1);
  
  	/*
--	 * No need to flush, when we did not set any of the caching
--	 * attributes:
-+	 * No need to flush when CPU supports self-snoop or
-+	 * when we did not set any of the caching attributes:
+@@ -904,9 +901,13 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	 * is cleared, thus after the handler has run. OMAP4 needs this done
+ 	 * after enabing the interrupt to clear the wakeup status.
  	 */
--	cache = !!pgprot2cachemode(mask_set);
-+	cache = !static_cpu_has(X86_FEATURE_SELFSNOOP) &&
-+		pgprot2cachemode(mask_set);
+-	if (bank->level_mask & BIT(offset))
++	if (bank->regs->leveldetect0 && bank->regs->wkup_en &&
++	    trigger & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+ 		omap_clear_gpio_irqstatus(bank, offset);
  
- 	/*
- 	 * On error; flush everything to be sure.
++	if (trigger)
++		omap_set_gpio_triggering(bank, offset, trigger);
++
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
 -- 
-2.21.0
+2.20.1
 
