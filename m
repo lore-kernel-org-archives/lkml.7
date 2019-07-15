@@ -7,127 +7,191 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D91C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9127C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF4520659
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8477720659
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QgsOBiTZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gaIqn5n2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732809AbfGOUBT (ORCPT
+        id S1732829AbfGOUBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:01:19 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:38309 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732764AbfGOUBK (ORCPT
+        Mon, 15 Jul 2019 16:01:25 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:42636 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732745AbfGOUBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:01:10 -0400
-Received: by mail-pl1-f201.google.com with SMTP id s22so8830205plp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:01:10 -0700 (PDT)
+        Mon, 15 Jul 2019 16:01:05 -0400
+Received: by mail-pf1-f201.google.com with SMTP id 21so10848532pfu.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:01:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=dW3mrZIEp1awhdhw/Gqc2hqiwmL3xRsZmPf/kk0Pt2o=;
-        b=QgsOBiTZ0JhGodLW/2DddiolYVh1/RB2P89soOifvOkQAzAzj6aYj874inMcQbf3VF
-         xIIB2u2IJscrI0ajrGL9OY7tvtGZ2dRmXXPfodDUx8Tc2cRd3DS3+JRzX6JPu5ld1fiq
-         ktIEGLvBlrPjHXVdJZU5GlDhxSfY/1VeW1AWBneKr1dmb/b8/ToFzQieChyjqVJy2rct
-         T1oAJMJFnipJ6mKvQ43tWK4kMMM7LgHioVLczeGji5iBUo6NUPumV98PLuxE9R7R+m+r
-         Y+b3mu0fnGkey7EA1KW2dWvIVqjz7n2nY+aaqtE34JAljTplN395F2YnFoxko5GiYLNg
-         b53g==
+        bh=tkMY5oaKzsB1Pqxhl3bO3jhBsQDfIdKwMj02mn1y4qc=;
+        b=gaIqn5n2zaAML3AcWDxxFLtVKFE2mxwCCzBUkP/chMhNRpUHfCJwX8zK+3rutqXATC
+         /cMfRHB6XJz2FZWFr87AFUcsJfzA2tAcBQPMBEnqJuGd1netSwRImF5pTDbRRaR5DAIV
+         T1ugwqG7EHCm8uKIueDC8PA/lmKT9LjJ2DTS54K9Vjds/N3jpWykUKk2eqh7d3SC/ydY
+         5hPh6oDnA6KdmmHary9oDLdnqgXIqv7Xm9qtC1W/G4jUpfJX0kCApNeRkpiP8lmho0+z
+         pT11fdn5YiLqQyPtjadDGcE3q/uH2y/M8ax4lwKLBpRWO0cLUYgEKzii7kaOODHlHEVy
+         wI9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=dW3mrZIEp1awhdhw/Gqc2hqiwmL3xRsZmPf/kk0Pt2o=;
-        b=F3lWZqwV9QDbqg2TYZlaJM9laCF5seNUh3GZ//x76vcvwEtFQWf3NrOal+xuy1tQVK
-         PAi1RaF+q+8AlKTTIL7BmltvLWiY7KrJFSZKe2GLAruSBwrw7S1gA1Vlxv4Pg5Wm4oln
-         WYUgexehbo99kAugnRrVwaWmmmDM7LADAYEvV7QrMd91NdgzK94Sq1YPbaoKef0iBgIc
-         2xfzVjHZvhlt3iWEBy7tey7Cz3OrvLiYcKwjJNkMkH+PRhzDPN3Klvbp0TnhqAnyXqC6
-         EIMUExHmLTz/LSw/ZQIWHCbT4zgAO1fy8ccStIpBe+KmXgaIRLV87UljvVQTWcJ4niQx
-         jCvw==
-X-Gm-Message-State: APjAAAW2IgcBQdAf3SiiBiH44oB/aNXEqvoYeauFBLXGzFZ7efkMtAQD
-        VYorVk/F5PxxwKHCn78AaGD+FQvnlvkFD1hbX+akow==
-X-Google-Smtp-Source: APXvYqxyIbjo/rprP2+a3LVCiD9lzTGJMTCQXA9mBfowhfTZ5DAkTI1aTkwiyc4SG4vQGr0LCsXl7VoQfC/s7XMPlfaSAw==
-X-Received: by 2002:a63:c748:: with SMTP id v8mr12746095pgg.418.1563220869628;
- Mon, 15 Jul 2019 13:01:09 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 12:59:46 -0700
+        bh=tkMY5oaKzsB1Pqxhl3bO3jhBsQDfIdKwMj02mn1y4qc=;
+        b=mbzirJrvaeyhBeezQy38rBAEzpvne4P8mwDtgWeSuGzEL+P9Muur3zW7yNeuEfk9tj
+         zkhWu20/Eu++2oeeFtgJRYPdiO8LzmFXJbrbxhF0ujDYQZ2CjqpIk0gJE9VLbT8FGlVw
+         MGQtCdWwly65qg64fyfLl/KQ28bzNDKHjgLQdVvTbK1b4fCByBfa0IGGyuacPNS+7MaG
+         iHD6U002EMwiL+GMH3SwveTjak6Ca011+a6thTsmO16BBGq76dDPgDfEmNBXTImw00JL
+         28ZlZqmxl6ZFqNijarBA/wrQL13p2TuwcM11Z7TaHGxbTseys5z3QnknviBluq6tY5/M
+         9o1Q==
+X-Gm-Message-State: APjAAAUP6qp7v0mR+ZH2tdDlWnOyPHuNqFA4ETf5FScwjweQZQgi3TO1
+        c+zzal+mR0WBnJvZAyCc4RyywSMzAWWPo4icudfZAQ==
+X-Google-Smtp-Source: APXvYqxK0dFi/fS4M8pEnYmQwGYG1r9vWj+oqdoSezkRwICSEdjfjPf9nn5i3PDLYlzh4gi//XvIQfu3ZuuF2/nRph4rPw==
+X-Received: by 2002:a65:5082:: with SMTP id r2mr3913629pgp.170.1563220864659;
+ Mon, 15 Jul 2019 13:01:04 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 12:59:44 -0700
 In-Reply-To: <20190715195946.223443-1-matthewgarrett@google.com>
-Message-Id: <20190715195946.223443-30-matthewgarrett@google.com>
+Message-Id: <20190715195946.223443-28-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190715195946.223443-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-Subject: [PATCH V35 29/29] lockdown: Print current->comm in restriction messages
+Subject: [PATCH V35 27/29] tracefs: Restrict tracefs when the kernel is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
         Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>
+        Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print the content of current->comm in messages generated by lockdown to
-indicate a restriction that was hit.  This makes it a bit easier to find
-out what caused the message.
+Tracefs may release more information about the kernel than desirable, so
+restrict it when the kernel is locked down in confidentiality mode by
+preventing open().
 
-The message now patterned something like:
-
-        Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
-
-Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
- fs/proc/kcore.c              | 5 +++--
- security/lockdown/lockdown.c | 8 ++++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ fs/tracefs/inode.c           | 38 +++++++++++++++++++++++++++++++++++-
+ include/linux/security.h     |  1 +
+ security/lockdown/lockdown.c |  1 +
+ 3 files changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index ee2c576cc94e..e2ed8e08cc7a 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -548,11 +548,12 @@ static int open_kcore(struct inode *inode, struct file *filp)
- {
- 	int ret = security_locked_down(LOCKDOWN_KCORE);
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index eeeae0475da9..4c04c0c89514 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -20,6 +20,7 @@
+ #include <linux/parser.h>
+ #include <linux/magic.h>
+ #include <linux/slab.h>
++#include <linux/security.h>
  
--	if (ret)
--		return ret;
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
+ #define TRACEFS_DEFAULT_MODE	0700
  
+@@ -27,6 +28,23 @@ static struct vfsmount *tracefs_mount;
+ static int tracefs_mount_count;
+ static bool tracefs_registered;
+ 
++static int default_open_file(struct inode *inode, struct file *filp)
++{
++	struct dentry *dentry = filp->f_path.dentry;
++	struct file_operations *real_fops;
++	int ret;
++
++	if (!dentry)
++		return -EINVAL;
++
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
 +	if (ret)
 +		return ret;
 +
- 	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
- 	if (!filp->private_data)
- 		return -ENOMEM;
++	real_fops = dentry->d_fsdata;
++	return real_fops->open(inode, filp);
++}
++
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+ 				 size_t count, loff_t *ppos)
+ {
+@@ -221,6 +239,12 @@ static int tracefs_apply_options(struct super_block *sb)
+ 	return 0;
+ }
+ 
++static void tracefs_destroy_inode(struct inode *inode)
++{
++	if (S_ISREG(inode->i_mode))
++		kfree(inode->i_fop);
++}
++
+ static int tracefs_remount(struct super_block *sb, int *flags, char *data)
+ {
+ 	int err;
+@@ -256,6 +280,7 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
+ 
+ static const struct super_operations tracefs_super_operations = {
+ 	.statfs		= simple_statfs,
++	.destroy_inode  = tracefs_destroy_inode,
+ 	.remount_fs	= tracefs_remount,
+ 	.show_options	= tracefs_show_options,
+ };
+@@ -389,6 +414,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ {
+ 	struct dentry *dentry;
+ 	struct inode *inode;
++	struct file_operations *proxy_fops;
+ 
+ 	if (!(mode & S_IFMT))
+ 		mode |= S_IFREG;
+@@ -402,8 +428,18 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 	if (unlikely(!inode))
+ 		return failed_creating(dentry);
+ 
++	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
++	if (!proxy_fops)
++		return failed_creating(dentry);
++
++	if (fops)
++		fops = &tracefs_file_operations;
++
++	dentry->d_fsdata = (void *)fops;
++	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
++	proxy_fops->open = default_open_file;
+ 	inode->i_mode = mode;
+-	inode->i_fop = fops ? fops : &tracefs_file_operations;
++	inode->i_fop = proxy_fops;
+ 	inode->i_private = data;
+ 	d_instantiate(dentry, inode);
+ 	fsnotify_create(dentry->d_parent->d_inode, dentry);
+diff --git a/include/linux/security.h b/include/linux/security.h
+index d92323b44a3f..807dc0d24982 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -121,6 +121,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_KPROBES,
+ 	LOCKDOWN_BPF_READ,
+ 	LOCKDOWN_PERF,
++	LOCKDOWN_TRACEFS,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+ 
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index fd7cdbddd814..bbf30d34542c 100644
+index 37ef46320ef4..fd7cdbddd814 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -81,10 +81,14 @@ early_param("lockdown", lockdown_param);
-  */
- static int lockdown_is_locked_down(enum lockdown_reason what)
- {
-+	if (WARN(what >= LOCKDOWN_CONFIDENTIALITY_MAX,
-+		 "Invalid lockdown reason"))
-+		return -EPERM;
-+
- 	if (kernel_locked_down >= what) {
- 		if (lockdown_reasons[what])
--			pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
--				  lockdown_reasons[what]);
-+			pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
-+				  current->comm, lockdown_reasons[what]);
- 		return -EPERM;
- 	}
+@@ -36,6 +36,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_KPROBES] = "use of kprobes",
+ 	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
+ 	[LOCKDOWN_PERF] = "unsafe use of perf",
++	[LOCKDOWN_TRACEFS] = "use of tracefs",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
  
 -- 
 2.22.0.510.g264f2c817a-goog
