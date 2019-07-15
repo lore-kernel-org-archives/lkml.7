@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F464C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89E0C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7B120651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81ACA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201927;
-	bh=topN1GWpfG8FQg4+A2HTT1/4Fr+0TOAmqhJ5qbjWa4U=;
+	s=default; t=1563201938;
+	bh=o2D2aC/CkFcyzg7+s4XH0B7zF875nLWpvl0fABClzJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDXqGFCZ1yQtFbRWYsNKQO62jUUm4Oo7tXp+/PGr5L7jiuogCfDGssDdv1MZKaW0A
-	 2kvWy7q+Qh2P9+j2iYHQzDgJO5rijNxzHKqwt7QQIGS/o5ZdCSIbtBz5+U1zgHkAOj
-	 PYAczEV340EUmemSv1B5qSq1A/IfPNBDX1ZgL0wQ=
+	b=FOCJzLAmCqtvi3tr7/c974GNf8ePpTWczrOz5dUYFUhvExC56C4qSAAF35Ps5pTnm
+	 w1SXwTJORiWaXWt4WKo9/JDT+GtKyNPxb1uRYzYzw4fxcGxvxx2bAXlBNEJAEqDnOX
+	 u32QfW9Lln3cbQRGjEvRG+zQyoV19WsrtruguM/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405006AbfGOOpZ (ORCPT
+        id S2403991AbfGOOph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390737AbfGOOhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:15 -0400
+        id S2404300AbfGOOhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:37:11 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2D98204FD;
-        Mon, 15 Jul 2019 14:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C5E217D8;
+        Mon, 15 Jul 2019 14:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201434;
-        bh=topN1GWpfG8FQg4+A2HTT1/4Fr+0TOAmqhJ5qbjWa4U=;
+        s=default; t=1563201431;
+        bh=o2D2aC/CkFcyzg7+s4XH0B7zF875nLWpvl0fABClzJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UjKLPabGJCV1NA2rl4W+KON3O99cFVTbeJaolazw46fMzJS2hqo8nNXyEghISHyh
-         N9hZtM8/j7avGeAmTX/TbuUAOSRaz6T8/FFWcgwOqkGu6u70G1tThakD8H9j74dxDJ
-         oAMu1JYLxW12AwPkkVXxQSyOOuk6ggYGPs0AktAY=
+        b=g9V3Kufw/8UA8LVb2aBx78LFV0qn9yw79qq78UcyrcpAzZkywJysSp44v6/1oGR2M
+         l7i7cV1G4j08Gv3CTNKJxtYhuzptW8vmcRzbhpzqa3YxW45rQKgJk0G1Z328ddQulh
+         Wy1BknUW7nvS0yXFpHAPMRXTdPxyNb1yuaFPLFHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
@@ -48,9 +48,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/73] net: stmmac: dwmac4/5: Clear unused address entries
-Date:   Mon, 15 Jul 2019 10:35:28 -0400
-Message-Id: <20190715143629.10893-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/73] net: stmmac: dwmac1000: Clear unused address entries
+Date:   Mon, 15 Jul 2019 10:35:27 -0400
+Message-Id: <20190715143629.10893-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -65,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
+[ Upstream commit 9463c445590091202659cdfdd44b236acadfbd84 ]
 
 In case we don't use a given address entry we need to clear it because
 it could contain previous values that are no longer valid.
@@ -80,36 +80,26 @@ Cc: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 51019b794be5..f46f2bfc2cc0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -173,14 +173,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		 * are required
- 		 */
- 		value |= GMAC_PACKET_FILTER_PR;
--	} else if (!netdev_uc_empty(dev)) {
--		int reg = 1;
-+	} else {
- 		struct netdev_hw_addr *ha;
-+		int reg = 1;
- 
- 		netdev_for_each_uc_addr(ha, dev) {
- 			dwmac4_set_umac_addr(hw, ha->addr, reg);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 7d19029e2564..093e58e94075 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -213,6 +213,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 					    GMAC_ADDR_LOW(reg));
  			reg++;
  		}
 +
-+		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
++		while (reg <= perfect_addr_number) {
 +			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
 +			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
 +			reg++;
 +		}
  	}
  
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+ #ifdef FRAME_FILTER_DEBUG
 -- 
 2.20.1
 
