@@ -2,144 +2,130 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B0C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CC5C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7AB721738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04892086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M2BUBHzk"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="b+RfaTs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732865AbfGOVpw (ORCPT
+        id S1732281AbfGOVsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:45:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46884 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732820AbfGOVpv (ORCPT
+        Mon, 15 Jul 2019 17:48:25 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45513 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730467AbfGOVsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:45:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so8939925plz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:45:51 -0700 (PDT)
+        Mon, 15 Jul 2019 17:48:25 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m206so13891765oib.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=android.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hqueIpy9HKyEPPNOnbRMjYrxKpy7dIPibRkspPVD1Rk=;
-        b=M2BUBHzkDMP+Fy0+hAqanjqz5peT9rQY0H9qyM3J2LD51m7Bpo/2ZpzIwYdkvHeuQs
-         o6WkGGlypNVXtnfgchnLzMiinYbp56C6ft1FyrillW63+TdkQ6uGKiJpfILS8Yivy9AA
-         iTYbSo2RISTDu4EWRziBkqro4i5Bf+/aVf8ijSAhzTe/M72rWB83jL1DSS8OkUeMTRoA
-         sdXLfXDYTjBkOC3OD9ZaPM5Ezju0iAH7aVsVy9bUgfCj6sg7J++Y7JwyL8ZAU5FDkMsx
-         G5AwWrwj9tknul1EfiWQYPWB8ie70eHNgvoSqCT4oGhATRbPdNEURhGhwiLXuBgKC7A9
-         paqA==
+        bh=I6e7DRMuQdVok4h9s3bFzY/fVAesWrHCG++TXs3wwJc=;
+        b=b+RfaTs//kWIhveDSusgI4qjyvX0eUrbNXorBAg27bcO9UpmJ4T2qDep9avaJUwfT0
+         kDsl4ZumaPNqw0I4YBrS5IYFs7EQ0wuzE7vNuHJlS2uF7TGlPuB637tG1TeAWyIvfr0c
+         pgoY6TuZDTvWTjE1RXRX7i/OB/omeFq2khiE7Md2ZgKF/7ZpBpZMXp5f696nB/um3kHH
+         smsCwp1vvsLFB+dxz3LlQoeg9++1+xgff51PUlsDp7OLXqD9qfRSTgIYtx5ahOx6/qqe
+         8VBAMiFgtbMey8lFx4HCeQ0hOruTIX4l1lqLgEQnNkJS3n3AqxsHc/mPiYs51Bi45pnb
+         2T9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hqueIpy9HKyEPPNOnbRMjYrxKpy7dIPibRkspPVD1Rk=;
-        b=lPEz0mLsFJvGoef3aAy+Kf3EFzNcymdb0ws7ddCFk83n5T6rnlidGhTlFc43OOPnGT
-         YSJDCH8tZAozFz/RzCei5C7yPygmcEw4jd0DTs7zZrwdeW1CsvidOtqbi7ZQUj7FbM1C
-         Mtosxq6h3cKknmxDp4SUAXUZ2zFP7KAFlqCe0dDHVoxpPSM6wKahODvuW7qUtcmPary0
-         DL6kJjF4/Rzz7ryPBn31MMIDxmUGzfs3sQfQI1sOM/VS7jkkOsM+gX1T57BTjNLggYuv
-         +LQWUHqzFqpgjW8REDuMgd8F4iq8jgn5jkuJPVnCd9Fw33hk9ays+6aDJ18Bi/9KTNfE
-         66xw==
-X-Gm-Message-State: APjAAAXT8K4Ujmd0gv3nA3oHsou8uDjHptu7bRlMyZC1FSiqXJyW3DHw
-        9ieNPpNF7rLgvxgcnKKTOa8Xb2MYEjKnosq7+iC6/g==
-X-Google-Smtp-Source: APXvYqx3+5tO30WhO0nchpxkml29BpDJYkg5+1AHx+oFnyVETCA/qhmD8kPKKgIFqPFtjwzExPGYOtJkbl5s58En02Y=
-X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr29488310pld.119.1563227150812;
- Mon, 15 Jul 2019 14:45:50 -0700 (PDT)
+        bh=I6e7DRMuQdVok4h9s3bFzY/fVAesWrHCG++TXs3wwJc=;
+        b=nh7aJF0IYh81wIqaQDyim+OtIz2At1APWZAbPZpPCzzh3uMTS+5bzggOnYW9q4J7XW
+         /0gf/aCne1lh+faZ4RWUcrnevZytEBYyhv7fblHiPmHT6G1bHdcaBJ08wlmllcrpjpF/
+         ZuzXORyumgsIWwCctZlXCsQkwbCCAcAUMAZxiiliCbGTmF2zVeOTNyeTHCt4Rl6xGFAL
+         Uji4RoU2qgePJgk6TjoWTGk89NEPFToODQcRIxxVtteAac+UwFU9du0O+ZdYffi3SHrS
+         iqWDFM7NCY7dRAZ8xu4EqLQd3NWL1e2o+2x3KjmR8B3yyatMMbEqtPq6o76agydp8vHz
+         bJig==
+X-Gm-Message-State: APjAAAWqwcGbOAOxVCfvdDSS9vW7BXcR5TPnjkZV8koiCNkfdA7fTcQt
+        qQaMt/Odi4evRIkdPrFRWR04pw2L64mjwQWYfB0=
+X-Google-Smtp-Source: APXvYqw9dke1ghFxnHX6HAV2lmdw3RdzqwaSF9V28TbiYgFTCr6s6WN4r5ruqE3Ue2Mqdc0xMnuCjFZwdezWm01SCQk=
+X-Received: by 2002:aca:3509:: with SMTP id c9mr15286738oia.179.1563227304035;
+ Mon, 15 Jul 2019 14:48:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1563150885.git.jpoimboe@redhat.com> <20190715193834.5tvzukcwq735ufgb@treble>
-In-Reply-To: <20190715193834.5tvzukcwq735ufgb@treble>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 15 Jul 2019 14:45:39 -0700
-Message-ID: <CAKwvOdnXt=_NVjK7+RjuxeyESytO6ra769i4qjSwt1Gd1G22dA@mail.gmail.com>
-Subject: Re: [PATCH 00/22] x86, objtool: several fixes/improvements
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+References: <CANA+-vAxU5jp6PQ26NU+UMc6iyw6KkBS9nbd6wj0qqkO-1WhYg@mail.gmail.com>
+ <20190715201116.221078-1-trong@android.com> <20190715203651.GA7513@kroah.com>
+In-Reply-To: <20190715203651.GA7513@kroah.com>
+From:   Tri Vo <trong@android.com>
+Date:   Mon, 15 Jul 2019 14:48:13 -0700
+Message-ID: <CANA+-vC+_Gp4RwdLH_XYDAepRONB66PdekvaCxNT3ZVGx73G6A@mail.gmail.com>
+Subject: Re: [PATCH v3] PM / wakeup: show wakeup sources stats in sysfs
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>, kaleshsingh@google.com,
         LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 12:38 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Mon, Jul 15, 2019 at 1:37 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> On Sun, Jul 14, 2019 at 07:36:55PM -0500, Josh Poimboeuf wrote:
-> > There have been a lot of objtool bug reports lately, mainly related to
-> > Clang and BPF.  As part of fixing those bugs, I added some improvements
-> > to objtool which uncovered yet more bugs (some kernel, some objtool).
+> On Mon, Jul 15, 2019 at 01:11:16PM -0700, Tri Vo wrote:
+> > Userspace can use wakeup_sources debugfs node to plot history of suspend
+> > blocking wakeup sources over device's boot cycle. This information can
+> > then be used (1) for power-specific bug reporting and (2) towards
+> > attributing battery consumption to specific processes over a period of
+> > time.
 > >
-> > I've given these patches a lot of testing with both GCC and Clang.  More
-> > compile testing of objtool would be appreciated, as the kbuild test
-> > robot doesn't seem to be paying much attention to my branches lately.
+> > However, debugfs doesn't have stable ABI. For this reason, create a
+> > 'struct device' to expose wakeup sources statistics in sysfs under
+> > /sys/class/wakeup/<name>/.
 > >
-> > There are still at least three outstanding issues:
+> > Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> > source statistics in sysfs.
 > >
-> > 1) With clang I see:
-> >
-> >      drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x88: redundant UACCESS disable
+> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Tri Vo <trong@android.com>
+> > Tested-by: Tri Vo <trong@android.com>
+>
+> Co-Developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> perhaps given that I rewrote the whole file last time?  :)
 
-For a defconfig, that's the only issue I see.
-(Note that I just landed https://reviews.llvm.org/rL366130 for fixing
-up bugs from loop unrolling loops containing asm goto with Clang, so
-anyone else testing w/ clang will see fewer objtool warnings with that
-patch applied.  A follow up is being worked on in
-https://reviews.llvm.org/D64101).
+Thanks again for the help!
+>
+>
+> > ---
+> >  Documentation/ABI/testing/sysfs-power |  73 ++++++++++++-
+> >  drivers/base/power/Makefile           |   1 +
+> >  drivers/base/power/wakeup.c           |  12 ++-
+> >  drivers/base/power/wakeup_stats.c     | 148 ++++++++++++++++++++++++++
+> >  include/linux/pm_wakeup.h             |  19 ++++
+> >  kernel/power/Kconfig                  |  10 ++
+> >  kernel/power/wakelock.c               |  10 ++
+> >  7 files changed, 270 insertions(+), 3 deletions(-)
+> >  create mode 100644 drivers/base/power/wakeup_stats.c
+>
+> What changed from v2?  :)
 
-For allmodconfig:
-arch/x86/ia32/ia32_signal.o: warning: objtool:
-ia32_setup_rt_frame()+0x247: call to memset() with UACCESS enabled
-mm/kasan/common.o: warning: objtool: kasan_report()+0x52: call to
-__stack_chk_fail() with UACCESS enabled
-arch/x86/kernel/signal.o: warning: objtool:
-x32_setup_rt_frame()+0x255: call to memset() with UACCESS enabled
-arch/x86/kernel/signal.o: warning: objtool: __setup_rt_frame()+0x254:
-call to memset() with UACCESS enabled
-drivers/ata/sata_dwc_460ex.o: warning: objtool:
-sata_dwc_bmdma_start_by_tag()+0x3a0: can't find switch jump table
-lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x88:
-call to memset() with UACCESS enabled
-lib/ubsan.o: warning: objtool: ubsan_type_mismatch_common()+0x610:
-call to __stack_chk_fail() with UACCESS enabled
-lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x88:
-call to memset() with UACCESS enabled
-drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:
-.altinstr_replacement+0x56: redundant UACCESS disable
+Oops, my bad.
 
-Without your series, I see them anyways, so I don't consider them
-regressions added by this series.  Let's follow up on these maybe in a
-new thread?  (Shall I send you these object files?)
+> And I am guessing that you actually tested this all out, and it works
+> for you?
 
-So for the series:
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Yes, I played around with wakelocks to make sure that wakeup source
+stats are added/updated/removed as expected.
 
-> >
-> >    I haven't dug into it yet.
-> >
-> > 2) There's also an issue in clang where a large switch table had a bunch
-> >    of unused (bad) entries.  It's not a code correctness issue, but
-> >    hopefully it can get fixed in clang anyway.  See patch 20/22 for more
-> >    details.
+> Have you changed Android userspace to use the new api with no
+> problems?
 
-Thanks for the report, let's follow up on steps for me to reproduce.
-
-> > These patches are also at:
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git objtool-many-fixes
-
-Are these the same patches? Some of the commit messages look different, like:
-https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=objtool-many-fixes&id=3e39561c52c4f0062207d604c972148b7b60c341
-
-
---
-Thanks,
-~Nick Desaulniers
+Kalesh helped me test this patch (added him in Tested-by: field in
+latest patch version). We haven't tested beyond booting and manual
+inspection on android devices. Android userspace changes should be
+fairly trivial though.
