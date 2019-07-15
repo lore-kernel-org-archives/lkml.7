@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D01CC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD2FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2862217D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122F8217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199088;
-	bh=ZS55mG+paP+L29yblX7J5SeVoO5OrFk/y/5CPeKCzEA=;
+	s=default; t=1563199093;
+	bh=97Q3CfjQC/RAT6mrkOvfJELQhlqT+olkTSGEkR8ZWk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=InjduPvTk2JRy9EjgdQ5Pv5N20dW5+8nejs9eabfKmROe1MLir5m9lWkpLtmnbnxY
-	 6WvAivtYZZ/qJq4zF/2qgc3jwZ4wms2l80zV5rXT72TPpb/8zb4LBNBCHxSAg29la7
-	 C8L4o6N6pySzdxpIHU3G+su4HhjZirBCr+2ndBIk=
+	b=t7HQuZYnohLGAB1P6vAfafRkPPvLQOGE/3lHIvhjlM4Hl0DDufMu+4G4qhEbVLpCk
+	 64AnkI3rV64BQeP5MidATZmFdwndhFtFMCA24MYBF04Y45PLKmIK02H+HULVOlviHk
+	 RmltSNOHITOPw7HUjYIKndbBewnhJLhTl3RJGzfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbfGON6H (ORCPT
+        id S1733103AbfGON6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:58:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733060AbfGON6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:58:04 -0400
+        id S1731422AbfGON6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:58:09 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19694212F5;
-        Mon, 15 Jul 2019 13:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9931C212F5;
+        Mon, 15 Jul 2019 13:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199083;
-        bh=ZS55mG+paP+L29yblX7J5SeVoO5OrFk/y/5CPeKCzEA=;
+        s=default; t=1563199088;
+        bh=97Q3CfjQC/RAT6mrkOvfJELQhlqT+olkTSGEkR8ZWk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jtgoz4blmGQd9F8M3Jr2xH5MSu/uvveAlxgzsmjvnFXOW2Cjw4h2hiIGjYZhQVrc7
-         Xi556+EWnaW/GyBhfdvN9Iu/ULdODDs1wuzoL4+1f28TVbGPmB0EoI2yeQ10y91kFj
-         6L8/vkFIHGfFj0+Yk4mC6isWtKmhS7MLRvj7kldw=
+        b=y7PT3UMCDnkt2xiK7SqLkmKwGGcSk+NifPMb/cjBSqyViBNB7iAMDIuphz3cT792N
+         nfBcG1dDaUl+Qe+5YeXWehlLbafaFu2MZpURQRf6YCPeyoyvH6uIXgHjQe7B9zAk8p
+         JI4haIY18o6AAwAV9dJtTgM5RoVfnVlx/vpxTP3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 185/249] PCI / ACPI: Use cached ACPI device state to get PCI device power state
-Date:   Mon, 15 Jul 2019 09:45:50 -0400
-Message-Id: <20190715134655.4076-185-sashal@kernel.org>
+Cc:     Ahmad Masri <amasri@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 187/249] wil6210: drop old event after wmi_call timeout
+Date:   Mon, 15 Jul 2019 09:45:52 -0400
+Message-Id: <20190715134655.4076-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,89 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Ahmad Masri <amasri@codeaurora.org>
 
-[ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
+[ Upstream commit 1a276003111c0404f6bfeffe924c5a21f482428b ]
 
-The ACPI power state returned by acpi_device_get_power() may depend on
-the configuration of ACPI power resources in the system which may change
-any time after acpi_device_get_power() has returned, unless the
-reference counters of the ACPI power resources in question are set to
-prevent that from happening. Thus it is invalid to use acpi_device_get_power()
-in acpi_pci_get_power_state() the way it is done now and the value of
-the ->power.state field in the corresponding struct acpi_device objects
-(which reflects the ACPI power resources reference counting, among other
-things) should be used instead.
+This change fixes a rare race condition of handling WMI events after
+wmi_call expires.
 
-As an example where this becomes an issue is Intel Ice Lake where the
-Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
-all share the same power resources. The following picture with power
-resources marked with [] shows the topology:
+wmi_recv_cmd immediately handles an event when reply_buf is defined and
+a wmi_call is waiting for the event.
+However, in case the wmi_call has already timed-out, there will be no
+waiting/running wmi_call and the event will be queued in WMI queue and
+will be handled later in wmi_event_handle.
+Meanwhile, a new similar wmi_call for the same command and event may
+be issued. In this case, when handling the queued event we got WARN_ON
+printed.
 
-  Host bridge
-    |
-    +- RP0 ---\
-    +- RP1 ---|--+--> [TBT]
-    +- NHI --/   |
-    |            |
-    |            v
-    +- xHCI --> [D3C]
+Fixing this case as a valid timeout and drop the unexpected event.
 
-Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
-of the devices in question returns either TBT or D3C or both.
-
-Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
-since the TBT power resource is still on when the root ports are runtime
-suspended their dev->current_state is set to D3hot. When NHI is runtime
-suspended TBT is finally turned off but state of the root ports remain
-to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
-off. PCI core thus has power states of these devices cached in their
-dev->current_state as follows:
-
-  RP0 -> D3hot
-  RP1 -> D3hot
-  NHI -> D3cold
-  xHCI -> D3cold
-
-If the user now runs lspci for instance, the result is all 1's like in
-the below output (00:07.0 is the first root port, RP0):
-
-00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
-    !!! Unknown header type 7f
-    Kernel driver in use: pcieport
-
-In short the hardware state is not in sync with the software state
-anymore. The exact same thing happens with the PME polling thread which
-ends up bringing the root ports back into D0 after they are runtime
-suspended.
-
-For this reason, modify acpi_pci_get_power_state() so that it uses the
-ACPI device power state that was cached by the ACPI core. This makes the
-PCI device power state match the ACPI device power state regardless of
-state of the shared power resources which may still be on at this point.
-
-Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-acpi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/wmi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 1897847ceb0c..b782acac26c5 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -685,7 +685,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
- 	if (!adev || !acpi_device_power_manageable(adev))
- 		return PCI_UNKNOWN;
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index d89cd41e78ac..89a75ff29410 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -3220,7 +3220,18 @@ static void wmi_event_handle(struct wil6210_priv *wil,
+ 		/* check if someone waits for this event */
+ 		if (wil->reply_id && wil->reply_id == id &&
+ 		    wil->reply_mid == mid) {
+-			WARN_ON(wil->reply_buf);
++			if (wil->reply_buf) {
++				/* event received while wmi_call is waiting
++				 * with a buffer. Such event should be handled
++				 * in wmi_recv_cmd function. Handling the event
++				 * here means a previous wmi_call was timeout.
++				 * Drop the event and do not handle it.
++				 */
++				wil_err(wil,
++					"Old event (%d, %s) while wmi_call is waiting. Drop it and Continue waiting\n",
++					id, eventid2name(id));
++				return;
++			}
  
--	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
-+	state = adev->power.state;
-+	if (state == ACPI_STATE_UNKNOWN)
- 		return PCI_UNKNOWN;
- 
- 	return state_conv[state];
+ 			wmi_evt_call_handler(vif, id, evt_data,
+ 					     len - sizeof(*wmi));
 -- 
 2.20.1
 
