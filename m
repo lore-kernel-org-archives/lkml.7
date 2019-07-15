@@ -2,135 +2,118 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94717C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B875EC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DB920693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3620693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="FupgII/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732693AbfGOWyR (ORCPT
+        id S1732071AbfGOW5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 18:54:17 -0400
-Received: from www62.your-server.de ([213.133.104.62]:38728 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730960AbfGOWyR (ORCPT
+        Mon, 15 Jul 2019 18:57:34 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33272 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730960AbfGOW5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 18:54:17 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hn9rI-0004FB-U8; Tue, 16 Jul 2019 00:54:12 +0200
-Received: from [99.0.85.34] (helo=localhost.localdomain)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hn9rI-0001NB-Cu; Tue, 16 Jul 2019 00:54:12 +0200
-Subject: Re: [PATCH V35 23/29] bpf: Restrict bpf when kernel lockdown is in
- confidentiality mode
-To:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matthew Garrett <mjg59@google.com>, netdev@vger.kernel.org,
-        Chun-Yi Lee <jlee@suse.com>
-References: <20190715195946.223443-1-matthewgarrett@google.com>
- <20190715195946.223443-24-matthewgarrett@google.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <5d363f09-d649-5693-45c0-bb99d69f0f38@iogearbox.net>
-Date:   Tue, 16 Jul 2019 00:54:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 18:57:33 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so15353190wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 15:57:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7VSl4WMlmc5jmN5dNuL2dV5fcPROFvmtmokhA+NF36I=;
+        b=FupgII/o9bbimWyh0bR/UkrMCpIcBrEpJ9ja2EO6K5VA/hOxrdLwUrKeytS0QyP0Y0
+         OhXsBBkmUiEHwe9vHBVKjTY1KbQ8/G/lcXfmnhG5kapCPmdHusIlp+cwSXAld52Wnqa/
+         nRh649s69N06QxHZL6McwutEtJnh9SDnxj+SU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7VSl4WMlmc5jmN5dNuL2dV5fcPROFvmtmokhA+NF36I=;
+        b=lN8mKffqgyC+3vN5LTFhfQHpW37GMUNpkM6cA2R8M6Yxfx2p4G1vdfXX41NBMw/0Td
+         n1a22zNCnuM44Keld6Uc2jRC+yWf/VImuiUSVQ8scL/xI+O+a0L3y+7pgTjrtIRYWi93
+         cIvyZCUy2BsqIfx4QPabzHIYysDltxYGH4z29ne4x+t56HD2AKUeDAdCHrBGTTswzomN
+         5F8RGsgXZtmwwYVA4utLl0UuBIZ1Lety++Zv3/Zr3xJagQdYtCFfX0wnp5Z17eh5Bz5p
+         CSb4NWcy0PqqIe1FfzcS/vViZ+v81a7ZC89KtIBC69VfZj4jK9uK20bDDFGDeqWi/eS9
+         wN9Q==
+X-Gm-Message-State: APjAAAVary0jrBKeH5Wgr9X1N2f9XM9N5uBU0UDUB4No99LlvOtSzYSM
+        +bn7tdRTRWyzJG2HwlNjGhc/uA==
+X-Google-Smtp-Source: APXvYqy3qZPv7NxVmAgsG8P+5YpErVdVg3oEYNfChcxlHtHFxfOQT0uIAVxdzoD2pqCzf24bVM8CQw==
+X-Received: by 2002:a7b:c766:: with SMTP id x6mr27363436wmk.40.1563231451449;
+        Mon, 15 Jul 2019 15:57:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c092:180::1:d8da])
+        by smtp.gmail.com with ESMTPSA id h8sm17918169wmf.12.2019.07.15.15.57.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 15:57:30 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 23:57:29 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH] mm: Proportional memory.{low,min} reclaim
+Message-ID: <20190715225729.GA19191@chrisdown.name>
+References: <20190124014455.GA6396@chrisdown.name>
+ <20190128210031.GA31446@castle.DHCP.thefacebook.com>
+ <20190128214213.GB15349@chrisdown.name>
+ <20190128215230.GA32069@castle.DHCP.thefacebook.com>
+ <20190715153527.86a3f6e65ecf5d501252dbf1@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190715195946.223443-24-matthewgarrett@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25511/Mon Jul 15 10:10:35 2019)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190715153527.86a3f6e65ecf5d501252dbf1@linux-foundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 9:59 PM, Matthew Garrett wrote:
-> From: David Howells <dhowells@redhat.com>
-> 
-> bpf_read() and bpf_read_str() could potentially be abused to (eg) allow
-> private keys in kernel memory to be leaked. Disable them if the kernel
-> has been locked down in confidentiality mode.
-> 
-> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> cc: netdev@vger.kernel.org
-> cc: Chun-Yi Lee <jlee@suse.com>
-> cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> ---
->  include/linux/security.h     |  1 +
->  kernel/trace/bpf_trace.c     | 10 ++++++++++
->  security/lockdown/lockdown.c |  1 +
->  3 files changed, 12 insertions(+)
-> 
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 987d8427f091..8dd1741a52cd 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -118,6 +118,7 @@ enum lockdown_reason {
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_KCORE,
->  	LOCKDOWN_KPROBES,
-> +	LOCKDOWN_BPF_READ,
->  	LOCKDOWN_CONFIDENTIALITY_MAX,
->  };
->  
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index ca1255d14576..605908da61c5 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -142,7 +142,12 @@ BPF_CALL_3(bpf_probe_read, void *, dst, u32, size, const void *, unsafe_ptr)
->  {
->  	int ret;
->  
-> +	ret = security_locked_down(LOCKDOWN_BPF_READ);
-> +	if (ret)
-> +		goto out;
-> +
->  	ret = probe_kernel_read(dst, unsafe_ptr, size);
-> +out:
->  	if (unlikely(ret < 0))
->  		memset(dst, 0, size);
+Hey Andrew,
 
-Hmm, does security_locked_down() ever return a code > 0 or why do you
-have the double check on return code? If not, then for clarity the
-ret code from security_locked_down() should be checked as 'ret < 0'
-as well and out label should be at the memset directly instead.
+Andrew Morton writes:
+>On Mon, 28 Jan 2019 21:52:40 +0000 Roman Gushchin <guro@fb.com> wrote:
+>
+>> > Hmm, this isn't really a common situation that I'd thought about, but it
+>> > seems reasonable to make the boundaries when in low reclaim to be between
+>> > min and low, rather than 0 and low. I'll add another patch with that. Thanks
+>>
+>> It's not a stopper, so I'm perfectly fine with a follow-up patch.
+>
+>Did this happen?
 
-> @@ -569,6 +574,10 @@ BPF_CALL_3(bpf_probe_read_str, void *, dst, u32, size,
->  {
->  	int ret;
->  
-> +	ret = security_locked_down(LOCKDOWN_BPF_READ);
-> +	if (ret)
-> +		goto out;
-> +
->  	/*
->  	 * The strncpy_from_unsafe() call will likely not fill the entire
->  	 * buffer, but that's okay in this circumstance as we're probing
-> @@ -579,6 +588,7 @@ BPF_CALL_3(bpf_probe_read_str, void *, dst, u32, size,
->  	 * is returned that can be used for bpf_perf_event_output() et al.
->  	 */
->  	ret = strncpy_from_unsafe(dst, unsafe_ptr, size);
-> +out:
->  	if (unlikely(ret < 0))
->  		memset(dst, 0, size);
+Yes, that's "mm, memcg: make memory.emin the baseline for utilisation 
+determination" :-)
 
-Ditto.
+>I'm still trying to get this five month old patchset unstuck :(.
 
-Thanks,
-Daniel
+Thank you for your help. The patches are stable and proven to do what they're 
+intended to do at scale (both shown by the test results, and production use 
+inside FB at scale).
+
+>I do have a note here that mhocko intended to take a closer look but I
+>don't recall whether that happened.
+>
+>I could
+>
+>a) say what the hell and merge them or
+>b) sit on them for another cycle or
+>c) drop them and ask Chris for a resend so we can start again.
+
+Is there any reason to resend? As far as I know these patches are good to go.  
+I'm happy to rebase them, as long as it doesn't extend the time they're being 
+sat on. I don't see anything changing before the next release, though, and I 
+feel any reviews are clearly not coming at this series with any urgency.
+
+Thanks for the poke on this, I appreciate it.
