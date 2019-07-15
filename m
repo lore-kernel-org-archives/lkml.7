@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10842C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2C6C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93B821530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AE720868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200462;
-	bh=zvVaimIqmMtPFymMmSVC+XhJocKCIfsY7KZqvrpIHFU=;
+	s=default; t=1563200467;
+	bh=uD0iJ8pg9FMGfYsCPPx6lt0Ci+QLueRNLz1NcRGd82I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqK6m48xErUwbht869B7n00KVwUgHdCr2o1C3C3aAVDIY2d+XDr7mjbpFDXgzygn1
-	 iXUyeWyWRE1NZlRZd/tuU05r32VhYAT8gbEOZpAc/CFBEceX+nw9KpZELnFbvDmYru
-	 nMnVd3Xq2ibNF++pTve6HqLbHNxerm3d30TZOt+w=
+	b=hKZBB+ay8cDhYL3jpYxOyEDFTWbW0TwvF6jmvVhvvF8vI/YYQmdTh+eYNS5EkG+RE
+	 ykWO3FXuzQjMAhEG4hz0DeEr55CR8dfMSNG7nYM34r8uew+F7Cm5yMAeMJBVQWz3XL
+	 TBbb7jX22rZd1N6yVkzeCjIakEu1uvsUUS4OQ544=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390478AbfGOOVB (ORCPT
+        id S2390500AbfGOOVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42634 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390196AbfGOOT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:19:57 -0400
+        id S2390015AbfGOOVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:21:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F83B217D8;
-        Mon, 15 Jul 2019 14:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08F71217D8;
+        Mon, 15 Jul 2019 14:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200396;
-        bh=zvVaimIqmMtPFymMmSVC+XhJocKCIfsY7KZqvrpIHFU=;
+        s=default; t=1563200460;
+        bh=uD0iJ8pg9FMGfYsCPPx6lt0Ci+QLueRNLz1NcRGd82I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WhrcpfRhsfVjnxWHWQz4taafQhMW7v259EEWm2Yc24naecVz2zRupe8m+7+hEGPkv
-         /9dTNr3Sme3rNPbReoPvFFta6G4iNJTYFHW9aKoFVGTTz43NwIQU62dAL4gMZ8qrqu
-         9k6KiJD4DzCPb9nSNhz6mR25B6AB3n2qohKN1KkU=
+        b=kMitWB63w9MdMNSIR8AQmkBoIx+Zy5neUdG4WKEFr7S+CpuujOL/A077gOdlYSIi2
+         KGQGNp2DA4VqLo0u/wt2tnBlT+2HGy8Ev6tqCfEt52bCIbErJGCdxtrfwQ2F6jpFuP
+         cQZx909UCJFySy9fiqkEG0dTgeEBrxQVb+D3fNPA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Imre Deak <imre.deak@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 037/158] locking/lockdep: Fix merging of hlocks with non-zero references
-Date:   Mon, 15 Jul 2019 10:16:08 -0400
-Message-Id: <20190715141809.8445-37-sashal@kernel.org>
+Cc:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 055/158] irqchip/meson-gpio: Add support for Meson-G12A SoC
+Date:   Mon, 15 Jul 2019 10:16:26 -0400
+Message-Id: <20190715141809.8445-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -64,102 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Xingyu Chen <xingyu.chen@amlogic.com>
 
-[ Upstream commit d9349850e188b8b59e5322fda17ff389a1c0cd7d ]
+[ Upstream commit c64a9e804ccf86eb202bfd1c6a8c5233c75a0431 ]
 
-The sequence
+The Meson-G12A SoC uses the same GPIO interrupt controller IP block as the
+other Meson SoCs, A totle of 100 pins can be spied on, which is the sum of:
 
-	static DEFINE_WW_CLASS(test_ww_class);
+- 223:100 undefined (no interrupt)
+- 99:97   3 pins on bank GPIOE
+- 96:77   20 pins on bank GPIOX
+- 76:61   16 pins on bank GPIOA
+- 60:53   8 pins on bank GPIOC
+- 52:37   16 pins on bank BOOT
+- 36:28   9 pins on bank GPIOH
+- 27:12   16 pins on bank GPIOZ
+- 11:0    12 pins in the AO domain
 
-	struct ww_acquire_ctx ww_ctx;
-	struct ww_mutex ww_lock_a;
-	struct ww_mutex ww_lock_b;
-	struct ww_mutex ww_lock_c;
-	struct mutex lock_c;
-
-	ww_acquire_init(&ww_ctx, &test_ww_class);
-
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
-	ww_mutex_init(&ww_lock_c, &test_ww_class);
-
-	mutex_init(&lock_c);
-
-	ww_mutex_lock(&ww_lock_a, &ww_ctx);
-
-	mutex_lock(&lock_c);
-
-	ww_mutex_lock(&ww_lock_b, &ww_ctx);
-	ww_mutex_lock(&ww_lock_c, &ww_ctx);
-
-	mutex_unlock(&lock_c);	(*)
-
-	ww_mutex_unlock(&ww_lock_c);
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
-
-	ww_acquire_fini(&ww_ctx); (**)
-
-will trigger the following error in __lock_release() when calling
-mutex_release() at **:
-
-	DEBUG_LOCKS_WARN_ON(depth <= 0)
-
-The problem is that the hlock merging happening at * updates the
-references for test_ww_class incorrectly to 3 whereas it should've
-updated it to 4 (representing all the instances for ww_ctx and
-ww_lock_[abc]).
-
-Fix this by updating the references during merging correctly taking into
-account that we can have non-zero references (both for the hlock that we
-merge into another hlock or for the hlock we are merging into).
-
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20190524201509.9199-2-imre.deak@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/irqchip/irq-meson-gpio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 26b57e24476f..e810e8cb17e1 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3326,17 +3326,17 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 	if (depth) {
- 		hlock = curr->held_locks + depth - 1;
- 		if (hlock->class_idx == class_idx && nest_lock) {
--			if (hlock->references) {
--				/*
--				 * Check: unsigned int references:12, overflow.
--				 */
--				if (DEBUG_LOCKS_WARN_ON(hlock->references == (1 << 12)-1))
--					return 0;
-+			if (!references)
-+				references++;
+diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+index 7b531fd075b8..7599b10ecf09 100644
+--- a/drivers/irqchip/irq-meson-gpio.c
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -73,6 +73,7 @@ static const struct of_device_id meson_irq_gpio_matches[] = {
+ 	{ .compatible = "amlogic,meson-gxbb-gpio-intc", .data = &gxbb_params },
+ 	{ .compatible = "amlogic,meson-gxl-gpio-intc", .data = &gxl_params },
+ 	{ .compatible = "amlogic,meson-axg-gpio-intc", .data = &axg_params },
++	{ .compatible = "amlogic,meson-g12a-gpio-intc", .data = &axg_params },
+ 	{ }
+ };
  
-+			if (!hlock->references)
- 				hlock->references++;
--			} else {
--				hlock->references = 2;
--			}
-+
-+			hlock->references += references;
-+
-+			/* Overflow */
-+			if (DEBUG_LOCKS_WARN_ON(hlock->references < references))
-+				return 0;
- 
- 			return 1;
- 		}
 -- 
 2.20.1
 
