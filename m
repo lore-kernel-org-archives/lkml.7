@@ -2,64 +2,95 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D3AC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B79C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0583E2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114FC205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563202806;
+	bh=6FtXUU8xqX1YpoNLCB5U17+hbveBVqfMJZXl/C9MpYg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zw+ybuHy3+niwhfMjKSDUyvvAs+A3N7BJC3BVcimgg8tEbta3On/ABlsKJrMQ/Txm
+	 8UYdmVEzDzYorXFlkl6STvXPdPiOQfXE7IvpITpc5pG5M0w36w21cBB7G9I52waj5G
+	 PoqNNRgvgj8KnQ+qlvl5THg1AJOY/bwmmAHywVxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390774AbfGOO7y (ORCPT
+        id S2391470AbfGOPAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:59:54 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:56733 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390634AbfGOO7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:59:49 -0400
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 01B4B240005;
-        Mon, 15 Jul 2019 14:56:38 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 16:56:37 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [v4,1/2] rtc/fsl: add FTM alarm driver as the wakeup source
-Message-ID: <20190715145637.GG4732@piout.net>
-References: <20190715101520.22562-1-biwen.li@nxp.com>
+        Mon, 15 Jul 2019 11:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731727AbfGOOSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:18:38 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A880217D9;
+        Mon, 15 Jul 2019 14:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563200317;
+        bh=6FtXUU8xqX1YpoNLCB5U17+hbveBVqfMJZXl/C9MpYg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UJ8ByV9bcPB77OpxqsnU0+s7u9jTrQ1iOZ4CD0xyZA8dGw4fhf/fqgVu/wxKRsTkJ
+         9NpEH3gN1ab1I1YJ5hpSc8pB6cOapPFxBGosoYho+HEiinu3B+FtUK0xQ+/aizYmGA
+         Lj+ioX2nLMcEnGRs2UYZpaBEYl7aApP9qQaOS3vE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 010/158] batman-adv: fix for leaked TVLV handler.
+Date:   Mon, 15 Jul 2019 10:15:41 -0400
+Message-Id: <20190715141809.8445-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715101520.22562-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/07/2019 18:15:19+0800, Biwen Li wrote:
-> +	device_init_wakeup(&pdev->dev, true);
-> +	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, "ftm-alarm",
-> +							&ftm_rtc_ops,
-> +							THIS_MODULE);
+From: Jeremy Sowden <jeremy@azazel.net>
 
-To be clear, I want you to not use devm_rtc_device_register and use
-devm_rtc_allocate_device and rtc_register_device.
+[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
 
-> +	if (IS_ERR(rtc->rtc_dev)) {
-> +		dev_err(&pdev->dev, "can't register rtc device\n");
-> +		return PTR_ERR(rtc->rtc_dev);
-> +	}
-> +
+A handler for BATADV_TVLV_ROAM was being registered when the
+translation-table was initialized, but not unregistered when the
+translation-table was freed.  Unregister it.
 
+Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
+Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Sven Eckelmann <sven@narfation.org
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/batman-adv/translation-table.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+index 359ec1a6e822..9fa5389ea244 100644
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -3821,6 +3821,8 @@ static void batadv_tt_purge(struct work_struct *work)
+  */
+ void batadv_tt_free(struct batadv_priv *bat_priv)
+ {
++	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
++
+ 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
