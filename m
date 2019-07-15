@@ -2,100 +2,133 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE49DC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49034C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7423206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563211703;
-	bh=9E0ZytSBTx4ARSQXikFxFqt26WTjZZg9YEuzJOE71XY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oiouq+NFdQiNacUj0n/6GfU9Af9JQvPaRw6F5tZbbXBsdIL0GXaLXK6pbwBZCpdwc
-	 tcyUL9Ino0UnUq4ly/p8B2OC+Dx6P/sql33ST+Bvdb/9T5Nm0BEDZTYcH9B8yd9bBU
-	 FowHlFYC7Y+++OeJePq1xvLK88JpTYNVNtckfDX0=
+	by mail.kernel.org (Postfix) with ESMTP id 1B548206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731707AbfGOR2X (ORCPT
+        id S1731723AbfGOR3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 13:29:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51708 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731244AbfGOR2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:28:20 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730774AbfGOR3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 13:29:37 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EED7921537
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 17:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563211699;
-        bh=9E0ZytSBTx4ARSQXikFxFqt26WTjZZg9YEuzJOE71XY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CvQyWlBHJkYMir6qOJgjnjkTNYuDngouMYZ2nM0oVQkb9xzSIvJe/qiRYXQDXjMPB
-         7lVAOCBykBf4qxlzEEPF2ZuEcjSLtiH9TBJOFmQnrCvchgMrQ5KDFopNebDD+yulBB
-         qN0sJe/fvbW15UKisT/n89ScJ8kZ0+b1BwOd14yg=
-Received: by mail-wr1-f46.google.com with SMTP id n9so18002387wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:28:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAXYE8mXuhwL5Frgq/gFUNJbBUg/h3RfDWWoaPmEcuHMs+t+Vf4T
-        dXokj3ML9cyWNsiEBrRBTolzR+n1anADYUMSKO9Qyw==
-X-Google-Smtp-Source: APXvYqz1bcfnUp0J1AeVS+zB00SN2CvvFrutc7PmnWTPZk+ekXhDQO1E9JPmdpKMMm6yj0t8VwFOW7L195SLye6jbF0=
-X-Received: by 2002:adf:cf02:: with SMTP id o2mr11075557wrj.352.1563211697557;
- Mon, 15 Jul 2019 10:28:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190715113739.17694-1-jgross@suse.com> <87y30zfe9z.fsf@linux.intel.com>
-In-Reply-To: <87y30zfe9z.fsf@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 15 Jul 2019 10:28:06 -0700
-X-Gmail-Original-Message-ID: <CALCETrUn=gho5Oug-yYvF2d1WYCe7gvtx+bXuhJ8LTjb9guvuA@mail.gmail.com>
-Message-ID: <CALCETrUn=gho5Oug-yYvF2d1WYCe7gvtx+bXuhJ8LTjb9guvuA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Remove 32-bit Xen PV guest support
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Juergen Gross <jgross@suse.com>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id ED72A4E93D;
+        Mon, 15 Jul 2019 17:29:36 +0000 (UTC)
+Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1DDB1001925;
+        Mon, 15 Jul 2019 17:29:35 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 12:29:34 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Alok Kataria <akataria@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 20/22] objtool: Fix seg fault on bad switch table entry
+Message-ID: <20190715172934.4uinmu3ba65vcphv@treble>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
+ <9f67aa11794e9eebe5a3249529d1ecf60abf370f.1563150885.git.jpoimboe@redhat.com>
+ <CAKwvOdmUX31KcvDpdzOkrO=Jw+FFQ8MuiQkVFFnNeG9n28k5Aw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmUX31KcvDpdzOkrO=Jw+FFQ8MuiQkVFFnNeG9n28k5Aw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 15 Jul 2019 17:29:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 9:34 AM Andi Kleen <ak@linux.intel.com> wrote:
->
-> Juergen Gross <jgross@suse.com> writes:
->
-> > The long term plan has been to replace Xen PV guests by PVH. The first
-> > victim of that plan are now 32-bit PV guests, as those are used only
-> > rather seldom these days. Xen on x86 requires 64-bit support and with
-> > Grub2 now supporting PVH officially since version 2.04 there is no
-> > need to keep 32-bit PV guest support alive in the Linux kernel.
-> > Additionally Meltdown mitigation is not available in the kernel running
-> > as 32-bit PV guest, so dropping this mode makes sense from security
-> > point of view, too.
->
-> Normally we have a deprecation period for feature removals like this.
-> You would make the kernel print a warning for some releases, and when
-> no user complains you can then remove. If a user complains you can't.
->
+On Mon, Jul 15, 2019 at 10:24:24AM -0700, Nick Desaulniers wrote:
+> On Sun, Jul 14, 2019 at 5:37 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > In one rare case, Clang generated the following code:
+> >
+> >  5ca:       83 e0 21                and    $0x21,%eax
+> >  5cd:       b9 04 00 00 00          mov    $0x4,%ecx
+> >  5d2:       ff 24 c5 00 00 00 00    jmpq   *0x0(,%rax,8)
+> >                     5d5: R_X86_64_32S       .rodata+0x38
+> >
+> > which uses the corresponding jump table relocations:
+> >
+> >   000000000038  000200000001 R_X86_64_64       0000000000000000 .text + 834
+> >   000000000040  000200000001 R_X86_64_64       0000000000000000 .text + 5d9
+> >   000000000048  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000050  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000058  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000060  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000068  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000070  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000078  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000080  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000088  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000090  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000098  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000a0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000a8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000b0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000b8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000c0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000c8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000d0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000d8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000e0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000e8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000f0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   0000000000f8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000100  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000108  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000110  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000118  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000120  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000128  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000130  000200000001 R_X86_64_64       0000000000000000 .text + b96
+> >   000000000138  000200000001 R_X86_64_64       0000000000000000 .text + 82f
+> >   000000000140  000200000001 R_X86_64_64       0000000000000000 .text + 828
+> >
+> > Since %eax was masked with 0x21, only the first two and the last two
+> > entries are possible.
+> >
+> > Objtool doesn't actually emulate all the code, so it isn't smart enough
+> > to know that all the middle entries aren't reachable.  They point to the
+> > NOP padding area after the end of the function, so objtool seg faulted
+> > when it tried to dereference a NULL insn->func.
+> >
+> > After this fix, objtool still gives an "unreachable" error because it
+> > stops reading the jump table when it encounters the bad addresses:
+> >
+> >   /home/jpoimboe/objtool-tests/adm1275.o: warning: objtool: adm1275_probe()+0x828: unreachable instruction
+> >
+> > While the above code is technically correct, it's very wasteful of
+> > memory -- it uses 34 jump table entries when only 4 are needed.  It's
+> > also not possible for objtool to validate this type of switch table
+> > because the unused entries point outside the function and objtool has no
+> > way of determining if that's intentional.  Hopefully the Clang folks can
+> > fix it.
+> 
+> So this came from
+> drivers/hwmon/pmbus/adm1275.c ?
+> Any special configuration?
 
-As I understand it, the kernel rules do allow changes like this even
-if there's a complaint: this is a patch that removes what is
-effectively hardware support.  If the maintenance cost exceeds the
-value, then removal is fair game.  (Obviously we weight the value to
-preserving compatibility quite highly, but in this case, Xen dropped
-32-bit hardware support a long time ago.  If the Xen hypervisor says
-that 32-bit PV guest support is deprecated, it's deprecated.)
+Arnd shared the config and the .o file here:
 
-That being said, a warning might not be a bad idea.  What's the
-current status of this in upstream Xen?
+  https://lkml.kernel.org/r/CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com
+
+I used Arnd's .o file for testing.
+
+-- 
+Josh
