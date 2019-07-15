@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB68C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6197C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5D92067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8112A2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202207;
-	bh=V4R1L9a5YNbGviYLLm60M4YAyK7BBIasy/uKmjh7m9k=;
+	s=default; t=1563202226;
+	bh=jxyT0o8DtbEyQgkMxqbkf+7eZ7dbzsjSvzuHu3Qh1HA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CUNfD4YOIbMXDSC1Nj0TFdE/HqvkuL+q8NQZe5JHT/KcbB6sgsX2R4S01lpHJVBkY
-	 RPuW7GhvgQ11JIiYSIo1w7WObomiQXU869I1v9bgNcckmsTbJwjPy/aFNN7EOmubrd
-	 XPL9cefPSyqpXGqiNNHOJFgdl1FyVLHubbH0p9VY=
+	b=GXbXhrhSHGbe8egrtfC95YyEBGTNslnxUNIzeXJ+rD1OJPgFzq41TGxAfijRgkIzj
+	 Nqu4+klJY8sSUFrBUDXYuCh6zG4GNMcqkkozqXiPgZDjIHAwcUlHBbCs22hwAKbEmw
+	 ghegQYgs0WS42gCbAfrbL1BOaP4aybCP0iQPzna0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404951AbfGOOuG (ORCPT
+        id S2404510AbfGOOqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41024 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405169AbfGOOrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:47:06 -0400
+        id S2404788AbfGOOqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:46:11 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0F4C20861;
-        Mon, 15 Jul 2019 14:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD2320651;
+        Mon, 15 Jul 2019 14:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202026;
-        bh=V4R1L9a5YNbGviYLLm60M4YAyK7BBIasy/uKmjh7m9k=;
+        s=default; t=1563201970;
+        bh=jxyT0o8DtbEyQgkMxqbkf+7eZ7dbzsjSvzuHu3Qh1HA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZf1CIJi6b7u1Xqvq9CqcLMCHb/tWwpUJdCj5/cLXUscdCrp0PONDXtJvRiJ2jgwn
-         eIaPb6acM+NDJ5bPxY/QVaY5LnrTLeGQw5ixN4ob7Zdky6/Q/RjI6pHJIJow/5a1Kf
-         SkpNSwN+i6jXJXHY1Mcp0D5nB0xeVEH0EBMx0f0M=
+        b=Rb5mRNV2qZAmw07F86HuAnkMWjTymHs+H54DOuRl1tzF10MiqWnto14Uv4iwUpPKq
+         eKwyabQIt8nTjyUO5w23h51TLp/30sX4kZAl+ql3pPSjaTkDaQT2+57gwRusG5g5jR
+         jYAimjUq4KGrytIZhwBJg4PRLKlQvYEwD4oXnLlU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 25/53] perf test 6: Fix missing kvm module load for s390
-Date:   Mon, 15 Jul 2019 10:45:07 -0400
-Message-Id: <20190715144535.11636-25-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/53] net: stmmac: dwmac1000: Clear unused address entries
+Date:   Mon, 15 Jul 2019 10:44:52 -0400
+Message-Id: <20190715144535.11636-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -62,87 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff ]
+[ Upstream commit 9463c445590091202659cdfdd44b236acadfbd84 ]
 
-Command
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
 
-   # perf test -Fv 6
+Found out while running stmmac selftests.
 
-fails with error
-
-   running test 100 'kvm-s390:kvm_s390_create_vm' failed to parse
-    event 'kvm-s390:kvm_s390_create_vm', err -1, str 'unknown tracepoint'
-    event syntax error: 'kvm-s390:kvm_s390_create_vm'
-                         \___ unknown tracepoint
-
-when the kvm module is not loaded or not built in.
-
-Fix this by adding a valid function which tests if the module
-is loaded. Loaded modules (or builtin KVM support) have a
-directory named
-  /sys/kernel/debug/tracing/events/kvm-s390
-for this tracepoint.
-
-Check for existence of this directory.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190604053504.43073-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/parse-events.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 54af2f2e2ee4..1a35ab044c11 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -12,6 +12,32 @@
- #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
- 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
- 
-+#if defined(__s390x__)
-+/* Return true if kvm module is available and loaded. Test this
-+ * and retun success when trace point kvm_s390_create_vm
-+ * exists. Otherwise this test always fails.
-+ */
-+static bool kvm_s390_create_vm_valid(void)
-+{
-+	char *eventfile;
-+	bool rc = false;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 371a669d69fd..1df84c8de9d7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -187,6 +187,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 					    GMAC_ADDR_LOW(reg));
+ 			reg++;
+ 		}
 +
-+	eventfile = get_events_file("kvm-s390");
-+
-+	if (eventfile) {
-+		DIR *mydir = opendir(eventfile);
-+
-+		if (mydir) {
-+			rc = true;
-+			closedir(mydir);
++		while (reg <= perfect_addr_number) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
 +		}
-+		put_events_file(eventfile);
-+	}
-+
-+	return rc;
-+}
-+#endif
-+
- static int test__checkevent_tracepoint(struct perf_evlist *evlist)
- {
- 	struct perf_evsel *evsel = perf_evlist__first(evlist);
-@@ -1561,6 +1587,7 @@ static struct evlist_test test__events[] = {
- 	{
- 		.name  = "kvm-s390:kvm_s390_create_vm",
- 		.check = test__checkevent_tracepoint,
-+		.valid = kvm_s390_create_vm_valid,
- 		.id    = 100,
- 	},
- #endif
+ 	}
+ 
+ #ifdef FRAME_FILTER_DEBUG
 -- 
 2.20.1
 
