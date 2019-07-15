@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0523AC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFEC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EA12081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DD22081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198639;
-	bh=CGAunlT7Noi4iBaQk9/HGjgIGmvAcb1wMMKm1D0nFvM=;
+	s=default; t=1563198642;
+	bh=JV4TrjCHig5M5UhLF1ST/rLvQTLID1nlFJm13/fztfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dL8vtwPUk6U3oiUvjR9dfVJp9OqChLen8fbaZS/J51CtMQunmjStrjNarjMz0PTCZ
-	 gkjtReLS1biN76iN/2E5K1szEcX3gYUbG2/RLDObNO6iOd+tbv4GrfIcVMJiHJ0F5R
-	 XmBL/5EPdphPtctBuZDpS3kDkUxUC62gEwFzb8Ys=
+	b=EnLGKp4jlL+84gIr34kqTbg3/l7c2ETlgtscdEeW2avVl22NX2B5HOXU1hg0kJ/Fo
+	 Qj2LLFxv8E378B0Bfxh5ChrxndkdTRfuFqtv2R5cPcVa8mbZziVsTzSxCIZFaM3e+U
+	 XTlDZgVjo3TOgu+qrj/uE4iSgTwz8ZkgTRZR12jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbfGONui (ORCPT
+        id S1731511AbfGONul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40512 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:50:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731955AbfGONu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:50:29 -0400
+        id S1731975AbfGONug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:50:36 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 896AB2067C;
-        Mon, 15 Jul 2019 13:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B15C2067C;
+        Mon, 15 Jul 2019 13:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198628;
-        bh=CGAunlT7Noi4iBaQk9/HGjgIGmvAcb1wMMKm1D0nFvM=;
+        s=default; t=1563198635;
+        bh=JV4TrjCHig5M5UhLF1ST/rLvQTLID1nlFJm13/fztfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Chkfwv/uYzfUJKPwX+OmvPlqJ9XSbZme/e/ArGZnl5to39bdAgYTDgrTjwZH3RyDv
-         Fndr5HYunIknUM5HjI/z0hmddgF5Dlq65c7EQZpog+VKfgcVs+1OLhg6/ixa/TVgIQ
-         LQw4JjE1AGXhqui79BpcaO5i1B/0Gk6v3JBCwFyo=
+        b=ydqWtFbRKoJsHDczE+kzXNzYxfhnIicdew5nq877QkN7eI5raNfiAdwcOkdk3VwjM
+         P7KYvVXgL++KzdyCTJWvSXdsCfJ2OWWYf4AoiKlOj4QbJHPltdQpnZr4aLwCQl3aFM
+         6FI4uvC9bMP7qu5zieYL0+zoIoWv1Oots54p+0J0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 064/249] net: hns3: add a check to pointer in error_detected and slot_reset
-Date:   Mon, 15 Jul 2019 09:43:49 -0400
-Message-Id: <20190715134655.4076-64-sashal@kernel.org>
+Cc:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
+        Thomas Renninger <trenn@suse.de>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 066/249] cpupower : frequency-set -r option misses the last cpu in related cpu list
+Date:   Mon, 15 Jul 2019 09:43:51 -0400
+Message-Id: <20190715134655.4076-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,53 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+From: Abhishek Goel <huntbag@linux.vnet.ibm.com>
 
-[ Upstream commit 661262bc3e0ecc9a1aed39c6b2a99766da2c22e2 ]
+[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
 
-If we add a VF without loading hclgevf.ko and then there is a RAS error
-occurs, PCIe AER will call error_detected and slot_reset of all functions,
-and will get a NULL pointer when we check ad_dev->ops->handle_hw_ras_error.
-This will cause a call trace and failures on handling of follow-up RAS
-errors.
+To set frequency on specific cpus using cpupower, following syntax can
+be used :
+cpupower -c #i frequency-set -f #f -r
 
-This patch check ae_dev and ad_dev->ops at first to solve above issues.
+While setting frequency using cpupower frequency-set command, if we use
+'-r' option, it is expected to set frequency for all cpus related to
+cpu #i. But it is observed to be missing the last cpu in related cpu
+list. This patch fixes the problem.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/power/cpupower/utils/cpufreq-set.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index cd59c0cc636a..5611b990ac34 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1916,9 +1916,9 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
- 	if (state == pci_channel_io_perm_failure)
- 		return PCI_ERS_RESULT_DISCONNECT;
- 
--	if (!ae_dev) {
-+	if (!ae_dev || !ae_dev->ops) {
- 		dev_err(&pdev->dev,
--			"Can't recover - error happened during device init\n");
-+			"Can't recover - error happened before device initialized\n");
- 		return PCI_ERS_RESULT_NONE;
+diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
+index f49bc4aa2a08..6ed82fba5aaa 100644
+--- a/tools/power/cpupower/utils/cpufreq-set.c
++++ b/tools/power/cpupower/utils/cpufreq-set.c
+@@ -305,6 +305,8 @@ int cmd_freq_set(int argc, char **argv)
+ 				bitmask_setbit(cpus_chosen, cpus->cpu);
+ 				cpus = cpus->next;
+ 			}
++			/* Set the last cpu in related cpus list */
++			bitmask_setbit(cpus_chosen, cpus->cpu);
+ 			cpufreq_put_related_cpus(cpus);
+ 		}
  	}
- 
-@@ -1937,6 +1937,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
- 
- 	dev_info(dev, "requesting reset due to PCI error\n");
- 
-+	if (!ae_dev || !ae_dev->ops)
-+		return PCI_ERS_RESULT_NONE;
-+
- 	/* request the reset */
- 	if (ae_dev->ops->reset_event) {
- 		if (!ae_dev->override_pci_need_reset)
 -- 
 2.20.1
 
