@@ -2,157 +2,99 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F0DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08231C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691EE217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Irsk1l+c"
+	by mail.kernel.org (Postfix) with ESMTP id C7C4F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563201484;
+	bh=IQWtWVWlYst0iv+lxsOcqXI1qfOtoqpIzwP7TNFbAhA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NlPLN0Z55L5vypaeuQH3bsTAGTkIPSxVUvIjsu8VzqfTFwR89y/9B4IBp3RtvgfgT
+	 dUSyFr1YJeu3Dk/rqJR6VEkdagS/4pdOEeQZYj+EFxyPz7wRkAh1ep2kCPkyo6PGDa
+	 1sU/Nlav8GbZ3FCQLf2NYQsj1uooJ7OgYpc3Up6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391891AbfGOOh7 (ORCPT
+        id S2392151AbfGOOiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:37:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39295 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391363AbfGOOhw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:52 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b7so8397982pls.6
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3/Yc3rMkHMZtDKtPxvXMbpuJtYxFK974gkQSASG7nfg=;
-        b=Irsk1l+cCvhHrnLDCclN8wIYVEkPEbD9MdUbMAfJ0kSrDpX7chroJyo2YF46UzcBkM
-         XJuVwKS6BKM9ZHR0du6EvejWG8y2q+OPRVvdrOulKML9bNBty7xmC4DwYF/BBFtQPuLu
-         EwiuS9bOEcElBlknIAsc95qH+foz6NeembQns=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3/Yc3rMkHMZtDKtPxvXMbpuJtYxFK974gkQSASG7nfg=;
-        b=DIDozj5iMUqFBSVyiEcAlsgEJFMZjBmRqjHlo5adETw0Yjyu3xJ8kN5s69i/Du86Sy
-         dCsTHwSo/TsFgbecotqjuWS10jX0DHtT+5SbUZFDPIxDfU+lnIArQuNGj5OTeNkArT4n
-         pUQaWyaaC+lqOeC2Pcs0R/5SaQoZLKhXJ+Z2hd/lz0LNyqpJ4mfkVC8mqo6X7JXjX4gf
-         3UVfVsVfFg07y3U7FdGNuXF861ibCsZruKel0YS4saIRK4OMsmf8+HlejVPrdS0+v8jk
-         fsAAMYrv7G55XDkSEBeXO/g3yOQbDzogjUZtRpD/T+TGJC065+m6Rvt47vLBCZoEjbo1
-         gs1g==
-X-Gm-Message-State: APjAAAX2BKZo8Zd924YmrhL2jPUkxUoeq0aI9PEj2JLCbSn1ooLDtM0N
-        uGKpJhztuuBcq08C6VVHiS9ARAAd
-X-Google-Smtp-Source: APXvYqwiS/rB81iw9YBrF0TFJUziDe1TQrXSMZ4COSYLaJJSbdiihNhGfcJrAEF9RQGi29HbbCoEvQ==
-X-Received: by 2002:a17:902:27e6:: with SMTP id i35mr28686773plg.190.1563201470637;
-        Mon, 15 Jul 2019 07:37:50 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s66sm18381852pfs.8.2019.07.15.07.37.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 07:37:49 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH 9/9] doc: Update documentation about list_for_each_entry_rcu (v1)
-Date:   Mon, 15 Jul 2019 10:37:05 -0400
-Message-Id: <20190715143705.117908-10-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-In-Reply-To: <20190715143705.117908-1-joel@joelfernandes.org>
-References: <20190715143705.117908-1-joel@joelfernandes.org>
+        Mon, 15 Jul 2019 10:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391820AbfGOOh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:37:58 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57669217F9;
+        Mon, 15 Jul 2019 14:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201477;
+        bh=IQWtWVWlYst0iv+lxsOcqXI1qfOtoqpIzwP7TNFbAhA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GFkoZ9G0Zl1vfTVnMeKL9H8qwR55959bkNXmksmejHnlTqsm9J8dCNKWwyHHwDGde
+         /EWIaUXXGSlcbp+XYtDWozm1kBf8kndDe2r6e3apGpeerP9kMfhieodmaKshGUNnZY
+         /A0t612c4VhE0jS+bpcWooWyR7rIOc6R56K5eP1A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 23/73] crypto: talitos - Align SEC1 accesses to 32 bits boundaries.
+Date:   Mon, 15 Jul 2019 10:35:39 -0400
+Message-Id: <20190715143629.10893-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
+References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the documentation with information about
-usage of lockdep with list_for_each_entry_rcu().
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+[ Upstream commit c9cca7034b34a2d82e9a03b757de2485c294851c ]
+
+The MPC885 reference manual states:
+
+SEC Lite-initiated 8xx writes can occur only on 32-bit-word boundaries, but
+reads can occur on any byte boundary. Writing back a header read from a
+non-32-bit-word boundary will yield unpredictable results.
+
+In order to ensure that, cra_alignmask is set to 3 for SEC1.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/RCU/lockdep.txt   | 15 +++++++++++----
- Documentation/RCU/whatisRCU.txt |  9 ++++++++-
- 2 files changed, 19 insertions(+), 5 deletions(-)
+ drivers/crypto/talitos.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/RCU/lockdep.txt b/Documentation/RCU/lockdep.txt
-index da51d3068850..3d967df3a801 100644
---- a/Documentation/RCU/lockdep.txt
-+++ b/Documentation/RCU/lockdep.txt
-@@ -96,7 +96,14 @@ other flavors of rcu_dereference().  On the other hand, it is illegal
- to use rcu_dereference_protected() if either the RCU-protected pointer
- or the RCU-protected data that it points to can change concurrently.
- 
--There are currently only "universal" versions of the rcu_assign_pointer()
--and RCU list-/tree-traversal primitives, which do not (yet) check for
--being in an RCU read-side critical section.  In the future, separate
--versions of these primitives might be created.
-+Similar to rcu_dereference_protected, The RCU list and hlist traversal
-+primitives also check for whether there are called from within a reader
-+section. However, an optional lockdep expression can be passed to them as
-+the last argument in case they are called under other non-RCU protection.
-+
-+For example, the workqueue for_each_pwq() macro is implemented as follows.
-+It is safe to call for_each_pwq() outside a reader section but under protection
-+of wq->mutex:
-+#define for_each_pwq(pwq, wq)
-+	list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,
-+				lock_is_held(&(wq->mutex).dep_map))
-diff --git a/Documentation/RCU/whatisRCU.txt b/Documentation/RCU/whatisRCU.txt
-index 7e1a8721637a..00fe77ede1e2 100644
---- a/Documentation/RCU/whatisRCU.txt
-+++ b/Documentation/RCU/whatisRCU.txt
-@@ -290,7 +290,7 @@ rcu_dereference()
- 	at any time, including immediately after the rcu_dereference().
- 	And, again like rcu_assign_pointer(), rcu_dereference() is
- 	typically used indirectly, via the _rcu list-manipulation
--	primitives, such as list_for_each_entry_rcu().
-+	primitives, such as list_for_each_entry_rcu() [2].
- 
- 	[1] The variant rcu_dereference_protected() can be used outside
- 	of an RCU read-side critical section as long as the usage is
-@@ -305,6 +305,13 @@ rcu_dereference()
- 	a lockdep splat is emitted.  See RCU/Design/Requirements/Requirements.html
- 	and the API's code comments for more details and example usage.
- 
-+	[2] In case the list_for_each_entry_rcu() primitive is intended
-+	to be used outside of an RCU reader section such as when
-+	protected by a lock, then an additional lockdep expression can be
-+	passed as the last argument to it so that RCU lockdep checking code
-+	knows that the dereference of the list pointers are safe. If the
-+	indicated protection is not provided, a lockdep splat is emitted.
-+
- The following diagram shows how each API communicates among the
- reader, updater, and reclaimer.
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 36d4f2a32e54..e15c10414e60 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -3119,7 +3119,10 @@ static struct talitos_crypto_alg *talitos_alg_alloc(struct device *dev,
+ 		alg->cra_priority = t_alg->algt.priority;
+ 	else
+ 		alg->cra_priority = TALITOS_CRA_PRIORITY;
+-	alg->cra_alignmask = 0;
++	if (has_ftr_sec1(priv))
++		alg->cra_alignmask = 3;
++	else
++		alg->cra_alignmask = 0;
+ 	alg->cra_ctxsize = sizeof(struct talitos_ctx);
+ 	alg->cra_flags |= CRYPTO_ALG_KERN_DRIVER_ONLY;
  
 -- 
-2.22.0.510.g264f2c817a-goog
+2.20.1
 
