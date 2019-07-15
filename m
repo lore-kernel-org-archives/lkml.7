@@ -2,97 +2,98 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3501DC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2A2C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D65621734
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233AC214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfGOIYa (ORCPT
+        id S1729450AbfGOI05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 04:24:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46660 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfGOIY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 04:24:27 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hmwHW-00059u-Qz; Mon, 15 Jul 2019 10:24:24 +0200
-Date:   Mon, 15 Jul 2019 10:24:21 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Uros Bizjak <ubizjak@gmail.com>
-cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andrew Lutomirski <luto@kernel.org>
-Subject: Re: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop
- targets
-In-Reply-To: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907151020320.1669@nanos.tec.linutronix.de>
-References: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 15 Jul 2019 04:26:57 -0400
+Received: from mail.us.es ([193.147.175.20]:56146 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729207AbfGOI05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 04:26:57 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id B5F141031EB
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:26:55 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A6FC6D2F98
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:26:55 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 8DD1D1150DD; Mon, 15 Jul 2019 10:26:55 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 74EE1DA704;
+        Mon, 15 Jul 2019 10:26:53 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Mon, 15 Jul 2019 10:26:53 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 443C44265A2F;
+        Mon, 15 Jul 2019 10:26:53 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 10:26:52 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     yangxingwu <xingwu.yang@gmail.com>
+Cc:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org, joe@perches.com
+Subject: Re: [PATCH] ipvs: remove unnecessary space
+Message-ID: <20190715082652.nwwugofsnaihlrjg@salvia>
+References: <80a4e132f3be48899904eccdc023f5c53229840b.camel@perches.com>
+ <20190712130721.7168-1-xingwu.yang@gmail.com>
+ <20190715075703.ak6nk3sbnqksjh72@salvia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715075703.ak6nk3sbnqksjh72@salvia>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uros,
-
-On Thu, 11 Jul 2019, Uros Bizjak wrote:
-> Recent patch [1] disabled a self-snoop feature on a list of processor
-> models with a known errata, so we are confident that the feature
-> should work on remaining models also for other purposes than to speed
-> up MTRR programming.
+On Mon, Jul 15, 2019 at 09:57:03AM +0200, Pablo Neira Ayuso wrote:
+> On Fri, Jul 12, 2019 at 09:07:21PM +0800, yangxingwu wrote:
+> > this patch removes the extra space and use bitmap_zalloc instead
+> > 
+> > Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
+> > ---
+> >  net/netfilter/ipvs/ip_vs_mh.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs_mh.c
+> > index 94d9d34..3229867 100644
+> > --- a/net/netfilter/ipvs/ip_vs_mh.c
+> > +++ b/net/netfilter/ipvs/ip_vs_mh.c
+> > @@ -174,8 +174,7 @@ static int ip_vs_mh_populate(struct ip_vs_mh_state *s,
+> >  		return 0;
+> >  	}
+> >  
+> > -	table =  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
+> > -			 sizeof(unsigned long), GFP_KERNEL);
+> > +	table = bitmap_zalloc(IP_VS_MH_TAB_SIZE, GFP_KERNEL);
 > 
-> I would like to resurrect an old patch [2] that avoids calling clflush
-> and wbinvd
-> to invalidate caches when CPU supports selfsnoop.
-
-Please do not attach patches, send them inline and please add a proper
-changelog. Just saying 'Disable CPA cache flush for selfsnoop targets' in
-the subject line then nada gives absolutely zero information.
- 
-> The patch was ported to latest Fedora kernel (5.1.16) and tested with
-> CONFIG_CPA_DEBUG on INTEL_FAM6_IVYBRIDGE_X. The relevant ports of
-> dmesg show:
+> By doing:
 > 
-> ...
-> < hundreds of CPA protect messages, resulting from set_memory_rw CPA
-> undo test in mm/init_64.c >
-> CPA  protect  Rodata RO: 0xffffffffbd1fe000 - 0xffffffffbd1fefff PFN
-> 1461fe req 8000000000000063 prevent 0000000000000002
-> CPA  protect  Rodata RO: 0xffff889c461fe000 - 0xffff889c461fefff PFN
-> 1461fe req 8000000000000063 prevent 0000000000000002
-> Testing CPA: again
-> Freeing unused kernel image memory: 2016K
-> Freeing unused kernel image memory: 4K
-> x86/mm: Checked W+X mappings: passed, no W+X pages found.
-> rodata_test: all tests were successful
-> x86/mm: Checking user space page tables
-> x86/mm: Checked W+X mappings: passed, no W+X pages found.
+>         git grep "=  " ...
 > 
-> and from CPA selftest:
-> 
-> CPA self-test:
->  4k 36352 large 4021 gb 0 x 81[ffff889b00098000-ffff889bdf7ff000] miss 133120
->  4k 180224 large 3740 gb 0 x 81[ffff889b00098000-ffff889bdf7ff000] miss 133120
->  4k 180224 large 3740 gb 0 x 81[ffff889b00098000-ffff889bdf7ff000] miss 133120
-> ok.
+> on the netfilter folders, I see more of these, it would be good if you
+> fix them at once or, probably, you want to use coccinelle for this.
 
-These outputs are pretty useless simply because the selftest only verifies
-the inner workings of CPA itself, but has nothing to do with the
-correctness vs. cache flushing.
-
-Thanks,
-
-	tglx
+If patch subject is "remove unnecessary space" then just remove
+unnecessary spaces in the patch, otherwise I suggest you rename this
+to "ipvs: use bitmap_zalloc()" or such, since the space removal here
+is irrelevant.
