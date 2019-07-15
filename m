@@ -2,135 +2,123 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506DFC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00551C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2742320838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C977820838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/+vMyBo"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mNuPpWJU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbfGOG7j (ORCPT
+        id S1729179AbfGOHCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 02:59:39 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36672 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfGOG7i (ORCPT
+        Mon, 15 Jul 2019 03:02:09 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:8358 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbfGOHCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 02:59:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so7244577pgm.3;
-        Sun, 14 Jul 2019 23:59:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IwKOrj6wOs1CFDvdOT5gCaug974d+VVC2EWPEZyUC1Y=;
-        b=t/+vMyBobZw0yRt1qj7jE3Hv3+ghewmbrlf1rvJGn+lPMgvyfvDx6cugAWNVxd8j97
-         hVwx5mP2evT4/5buRUfwS8eLDCxI+aBX3bgCz20FFQApUJ56xzyc13BmxDzwNYE8jtdP
-         5kVdnTfQCP2I6xoQWTBcnZRuiq5fxBeBK5pJ+ztIPKWpUD5GeFX4RFrdyOjovs9+vR3V
-         xRzXOvvIagWzbmeCdNDvSLmFsoun9S1NnAZximqWbTF5UJU/N+cTCzk3SV4cVA5ph1fI
-         G8NDPKhHyemJg5LOOz3NLKuEXNeAogyGjjXQq8sWXD2JtdeO3CnG6GLJ2pe09Z64g0rL
-         eB3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IwKOrj6wOs1CFDvdOT5gCaug974d+VVC2EWPEZyUC1Y=;
-        b=LjzR8JRvE/ih9KzS8JFdv8+IyiXIelW/EXM0164NS+wOvRVFWt9qs0zIhmhmaStA2R
-         rcCKxAfb6Vj6uRZoVW3eJLnwGb9WV0MRIPQbAsIfLGCUIThneFJySlv1e3HC44L28CX4
-         RxYe6jkDRojvRUnOxLO02kUfqxPVtJVdGW0pX2mTeMPzT0HrXMLqT1typHDCbJwrMWpW
-         fF+ayX14PSje6bqbbkNUlEOna/FX4MEvwmfk8Bwn88KykFrVzEcvVG3XKzR+KpUBJjb3
-         NwjcHL/010LnmNNy0/A8dU2povkPNQw8pt/Pme8f7t4u3skSjcDuLCLKQy/G2GCZ69/m
-         yRNA==
-X-Gm-Message-State: APjAAAW9TXIx3ibKtM8gEyagKivbK7DpNEkaKqnBqdK3oRLdkGy87caX
-        SYSEZ07i4MJCg6edSmNIsgE=
-X-Google-Smtp-Source: APXvYqxlTY9pqlj/BPGdaqjVxWccUIuIsUVjY5d4MIOOEnUblRLiyLEc5qKix+00afDAkA/xNHMT2g==
-X-Received: by 2002:a63:224a:: with SMTP id t10mr25187948pgm.289.1563173976925;
-        Sun, 14 Jul 2019 23:59:36 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id o130sm27438459pfg.171.2019.07.14.23.59.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 23:59:36 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 12:29:17 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     akpm@linux-foundation.org, ira.weiny@intel.com,
-        jhubbard@nvidia.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Matt Sickler <Matt.Sickler@daktronics.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org
-Subject: Re: [PATCH] mm/gup: Use put_user_page*() instead of put_page*()
-Message-ID: <20190715065917.GB3716@bharath12345-Inspiron-5559>
-References: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
- <018ee3d1-e2f0-ca12-9f63-945056c09985@kernel.dk>
+        Mon, 15 Jul 2019 03:02:08 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6F6uSio030992;
+        Mon, 15 Jul 2019 09:01:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Zl4deGZbQ+vwkjKjMySHruoNEZ/Tdqr9qboU+Ck4czs=;
+ b=mNuPpWJUbgOtsdKvOrrjxjRe5FJn4yQ5m9gUfKCWt4Az42LPaH/qFaD6E5SKi5Sr3khE
+ P4urEGi0kp9oYCLif+cM3vFABuf0kmRFrSqlwBQD56IM5MGYxFfrAl/VM4NkZMqU5Ka0
+ W6bFfGJwZwgrRb8bYKCpUNvf98urVDrhNGBKdGuUSfvc/LqWGob3Pt3N+ltZTwN7Xknz
+ vaOPqmF5MasW0iGCW68hvqF4OpaWz0OHHcb8TAsHDMVJbVqFoA2byGwYpVN+3LZQJEec
+ bVWGt9WrvuwTOkuLPH63oj6+iboOzdKlQCi4yNn0bcqY4RqPsvilzISC+CYcZL1gGvY4 cQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2tq52u3xy5-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 15 Jul 2019 09:01:10 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6839A38;
+        Mon, 15 Jul 2019 07:01:08 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0FEA515AB;
+        Mon, 15 Jul 2019 07:01:08 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 15 Jul
+ 2019 09:01:07 +0200
+Received: from [10.48.0.167] (10.48.0.167) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 15 Jul 2019 09:01:07
+ +0200
+Subject: Re: [PATCH v2 3/3] ARM: dts: stm32: add syscfg to ADC on stm32mp157c
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1562148496-26789-1-git-send-email-fabrice.gasnier@st.com>
+ <1562148496-26789-4-git-send-email-fabrice.gasnier@st.com>
+ <20190714171310.1816afe3@archlinux>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <c69cff23-b67e-2aed-f250-c237e9cd4a3d@st.com>
+Date:   Mon, 15 Jul 2019 09:01:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <018ee3d1-e2f0-ca12-9f63-945056c09985@kernel.dk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190714171310.1816afe3@archlinux>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.0.167]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 08:33:57PM -0600, Jens Axboe wrote:
-> On 7/14/19 1:08 PM, Bharath Vedartham wrote:
-> > diff --git a/fs/io_uring.c b/fs/io_uring.c
-> > index 4ef62a4..b4a4549 100644
-> > --- a/fs/io_uring.c
-> > +++ b/fs/io_uring.c
-> > @@ -2694,10 +2694,9 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
-> >   			 * if we did partial map, or found file backed vmas,
-> >   			 * release any pages we did get
-> >   			 */
-> > -			if (pret > 0) {
-> > -				for (j = 0; j < pret; j++)
-> > -					put_page(pages[j]);
-> > -			}
-> > +			if (pret > 0)
-> > +				put_user_pages(pages, pret);
-> > +
-> >   			if (ctx->account_mem)
-> >   				io_unaccount_mem(ctx->user, nr_pages);
-> >   			kvfree(imu->bvec);
+On 7/14/19 6:13 PM, Jonathan Cameron wrote:
+> On Wed, 3 Jul 2019 12:08:16 +0200
+> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 > 
-> You handled just the failure case of the buffer registration, but not
-> the actual free in io_sqe_buffer_unregister().
+>> On stm32mp157c, the ADC inputs are multiplexed with analog switches which
+>> have reduced performances when their supply is below 2.7V (vdda by
+>> default).
+>> Add syscfg registers that can be used on stm32mp157c, to get full ADC
+>> analog performances.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> I've applied the patches using this on the assumption this will go via
+> the usual SoC route.
 > 
-> -- 
-> Jens Axboe
-Yup got it! Thanks! I won't be sending a patch again as fs/io_uring.c
-may have larger local changes for put_user_pages.
+> Thanks,
 
-Thanks
+Hi Jonathan,
+
+Many thanks,
+Fabrice
+
+> 
+> Jonathan
+> 
+>> ---
+>>  arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+>> index 2dd5162..b9a5b58 100644
+>> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+>> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+>> @@ -862,6 +862,7 @@
+>>  			clocks = <&rcc ADC12>, <&rcc ADC12_K>;
+>>  			clock-names = "bus", "adc";
+>>  			interrupt-controller;
+>> +			st,syscfg = <&syscfg>;
+>>  			#interrupt-cells = <1>;
+>>  			#address-cells = <1>;
+>>  			#size-cells = <0>;
+> 
