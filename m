@@ -2,261 +2,133 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D46C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A045FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544532182B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7082D21743
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AuDyEey8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732703AbfGOXSC (ORCPT
+        id S1732266AbfGOXTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:18:02 -0400
-Received: from namei.org ([65.99.196.166]:35432 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731752AbfGOXSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:18:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x6FNHRHO025817;
-        Mon, 15 Jul 2019 23:17:27 GMT
-Date:   Tue, 16 Jul 2019 09:17:27 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Matthew Garrett <matthewgarrett@google.com>,
-        Greg KH <greg@kroah.com>, rafael@kernel.org
-cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH V35 26/29] debugfs: Restrict debugfs when the kernel is
- locked down
-In-Reply-To: <20190715195946.223443-27-matthewgarrett@google.com>
-Message-ID: <alpine.LRH.2.21.1907160915280.25034@namei.org>
-References: <20190715195946.223443-1-matthewgarrett@google.com> <20190715195946.223443-27-matthewgarrett@google.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Mon, 15 Jul 2019 19:19:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34113 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731058AbfGOXTo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 19:19:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so37013329iot.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EDmRR/vRbt+A2ief6crqAJXdmNg5zgD9ViO0y/y+K/4=;
+        b=AuDyEey8sj9EZmfHdHR97PiwIe23ssCUNmLyXv8ti3LIChHAWTXegMwBW8LDeZs8dc
+         tpii8Z3z1nGfMJaRRPQ7rD761FeRaM5IfzUi6Zzkk7pzptI2lX7WJKdIQbwZmNWiSZ+/
+         5ED3TCcE6Ue/VvB+BOtC3qSSrmssXOCCbpQfU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EDmRR/vRbt+A2ief6crqAJXdmNg5zgD9ViO0y/y+K/4=;
+        b=LDssXPwi+LgPByAhLS+Eo0aGUi9Y2nTRHFxVca5Ifl3rVTVJDxoQ//5c/mUdhvE6UN
+         Ge4XbtTTSd3H7TLKBa43i5EvppsL41ewJAzyRAsuXtghmN3bVKyo+om6ExEGkHCm4bod
+         mEJYCfjafBQ8Z1OFe7CH7aF6B4DeiaXmd+NH91LAdpAhjYoni14X11eD7maurQhllveR
+         4HzKuihlwP4eg5ONfW3qNhh8yNFC3eV+ctg9EOagZP501RmVxvPbqIdfcW3NdqgTyY6o
+         pA76PI/bZ/GVeIFqOlBrAO+QhiIFYJAPApsdH8Gr4mbN89xxWgYVT2XVdcB7ay/YuAzS
+         /aaA==
+X-Gm-Message-State: APjAAAVeZfcWr3tbCuX/CuEJ37K/JgqcmO/F8X1jNCt9F8UEfXXdWw0K
+        +ix+7h2vhmUXT5hozto+FVgml3WDnAzhs8oWn0w4Fg==
+X-Google-Smtp-Source: APXvYqzzWW01yuCzViFRgMbu8UpxSBrq3RKAQSYrNoa27kuoHHz7A4tvWLqlWhsZkKeSZF0c3LIFPTozkh5f/P2Uiks=
+X-Received: by 2002:a6b:8bd1:: with SMTP id n200mr28478471iod.134.1563232784019;
+ Mon, 15 Jul 2019 16:19:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190715191017.98488-1-mka@chromium.org> <20190715195557.GA29926@google.com>
+ <20190715200447.GT250418@google.com> <CAPUE2us7HZvSbpCddx4u_5KcdxedNd43-o=MZDiNfcpbzt9aXA@mail.gmail.com>
+In-Reply-To: <CAPUE2us7HZvSbpCddx4u_5KcdxedNd43-o=MZDiNfcpbzt9aXA@mail.gmail.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Mon, 15 Jul 2019 16:19:32 -0700
+Message-ID: <CAPUE2uvjnPfBUTDMXoNbcz1TM++F=MaO7cViNs4LsCPN7DX5tA@mail.gmail.com>
+Subject: Re: [PATCH] iio: cros_ec_accel_legacy: Always release lock when
+ returning from _read()
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Benson Leung <bleung@google.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jul 2019, Matthew Garrett wrote:
+Let's use Matthias CL.
 
-> From: David Howells <dhowells@redhat.com>
-> 
-> Disallow opening of debugfs files that might be used to muck around when
-> the kernel is locked down as various drivers give raw access to hardware
-> through debugfs.  Given the effort of auditing all 2000 or so files and
-> manually fixing each one as necessary, I've chosen to apply a heuristic
-> instead.  The following changes are made:
-
-Adding the debugfs maintainers.
-
-> 
->  (1) chmod and chown are disallowed on debugfs objects (though the root dir
->      can be modified by mount and remount, but I'm not worried about that).
-> 
->  (2) When the kernel is locked down, only files with the following criteria
->      are permitted to be opened:
-> 
-> 	- The file must have mode 00444
-> 	- The file must not have ioctl methods
-> 	- The file must not have mmap
-> 
->  (3) When the kernel is locked down, files may only be opened for reading.
-> 
-> Normal device interaction should be done through configfs, sysfs or a
-> miscdev, not debugfs.
-> 
-> Note that this makes it unnecessary to specifically lock down show_dsts(),
-> show_devs() and show_call() in the asus-wmi driver.
-> 
-> I would actually prefer to lock down all files by default and have the
-> the files unlocked by the creator.  This is tricky to manage correctly,
-> though, as there are 19 creation functions and ~1600 call sites (some of
-> them in loops scanning tables).
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> cc: acpi4asus-user@lists.sourceforge.net
-> cc: platform-driver-x86@vger.kernel.org
-> cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
-> ---
->  fs/debugfs/file.c            | 30 ++++++++++++++++++++++++++++++
->  fs/debugfs/inode.c           | 32 ++++++++++++++++++++++++++++++--
->  include/linux/security.h     |  1 +
->  security/lockdown/lockdown.c |  1 +
->  4 files changed, 62 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-> index 93e4ca6b2ad7..87846aad594b 100644
-> --- a/fs/debugfs/file.c
-> +++ b/fs/debugfs/file.c
-> @@ -19,6 +19,7 @@
->  #include <linux/atomic.h>
->  #include <linux/device.h>
->  #include <linux/poll.h>
-> +#include <linux/security.h>
->  
->  #include "internal.h"
->  
-> @@ -136,6 +137,25 @@ void debugfs_file_put(struct dentry *dentry)
->  }
->  EXPORT_SYMBOL_GPL(debugfs_file_put);
->  
-> +/*
-> + * Only permit access to world-readable files when the kernel is locked down.
-> + * We also need to exclude any file that has ways to write or alter it as root
-> + * can bypass the permissions check.
-> + */
-> +static bool debugfs_is_locked_down(struct inode *inode,
-> +				   struct file *filp,
-> +				   const struct file_operations *real_fops)
-> +{
-> +	if ((inode->i_mode & 07777) == 0444 &&
-> +	    !(filp->f_mode & FMODE_WRITE) &&
-> +	    !real_fops->unlocked_ioctl &&
-> +	    !real_fops->compat_ioctl &&
-> +	    !real_fops->mmap)
-> +		return false;
-> +
-> +	return security_locked_down(LOCKDOWN_DEBUGFS);
-> +}
-> +
->  static int open_proxy_open(struct inode *inode, struct file *filp)
->  {
->  	struct dentry *dentry = F_DENTRY(filp);
-> @@ -147,6 +167,11 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
->  		return r == -EIO ? -ENOENT : r;
->  
->  	real_fops = debugfs_real_fops(filp);
-> +
-> +	r = debugfs_is_locked_down(inode, filp, real_fops);
-> +	if (r)
-> +		goto out;
-> +
->  	real_fops = fops_get(real_fops);
->  	if (!real_fops) {
->  		/* Huh? Module did not clean up after itself at exit? */
-> @@ -272,6 +297,11 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
->  		return r == -EIO ? -ENOENT : r;
->  
->  	real_fops = debugfs_real_fops(filp);
-> +
-> +	r = debugfs_is_locked_down(inode, filp, real_fops);
-> +	if (r)
-> +		goto out;
-> +
->  	real_fops = fops_get(real_fops);
->  	if (!real_fops) {
->  		/* Huh? Module did not cleanup after itself at exit? */
-> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-> index 042b688ed124..7b975dbb2bb4 100644
-> --- a/fs/debugfs/inode.c
-> +++ b/fs/debugfs/inode.c
-> @@ -26,6 +26,7 @@
->  #include <linux/parser.h>
->  #include <linux/magic.h>
->  #include <linux/slab.h>
-> +#include <linux/security.h>
->  
->  #include "internal.h"
->  
-> @@ -35,6 +36,32 @@ static struct vfsmount *debugfs_mount;
->  static int debugfs_mount_count;
->  static bool debugfs_registered;
->  
-> +/*
-> + * Don't allow access attributes to be changed whilst the kernel is locked down
-> + * so that we can use the file mode as part of a heuristic to determine whether
-> + * to lock down individual files.
-> + */
-> +static int debugfs_setattr(struct dentry *dentry, struct iattr *ia)
-> +{
-> +	int ret = security_locked_down(LOCKDOWN_DEBUGFS);
-> +
-> +	if (ret && (ia->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)))
-> +		return ret;
-> +	return simple_setattr(dentry, ia);
-> +}
-> +
-> +static const struct inode_operations debugfs_file_inode_operations = {
-> +	.setattr	= debugfs_setattr,
-> +};
-> +static const struct inode_operations debugfs_dir_inode_operations = {
-> +	.lookup		= simple_lookup,
-> +	.setattr	= debugfs_setattr,
-> +};
-> +static const struct inode_operations debugfs_symlink_inode_operations = {
-> +	.get_link	= simple_get_link,
-> +	.setattr	= debugfs_setattr,
-> +};
-> +
->  static struct inode *debugfs_get_inode(struct super_block *sb)
->  {
->  	struct inode *inode = new_inode(sb);
-> @@ -369,6 +396,7 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
->  	inode->i_mode = mode;
->  	inode->i_private = data;
->  
-> +	inode->i_op = &debugfs_file_inode_operations;
->  	inode->i_fop = proxy_fops;
->  	dentry->d_fsdata = (void *)((unsigned long)real_fops |
->  				DEBUGFS_FSDATA_IS_REAL_FOPS_BIT);
-> @@ -532,7 +560,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
->  	}
->  
->  	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-> -	inode->i_op = &simple_dir_inode_operations;
-> +	inode->i_op = &debugfs_dir_inode_operations;
->  	inode->i_fop = &simple_dir_operations;
->  
->  	/* directory inodes start off with i_nlink == 2 (for "." entry) */
-> @@ -632,7 +660,7 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
->  		return failed_creating(dentry);
->  	}
->  	inode->i_mode = S_IFLNK | S_IRWXUGO;
-> -	inode->i_op = &simple_symlink_inode_operations;
-> +	inode->i_op = &debugfs_symlink_inode_operations;
->  	inode->i_link = link;
->  	d_instantiate(dentry, inode);
->  	return end_creating(dentry);
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 8ef366de70b0..d92323b44a3f 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -115,6 +115,7 @@ enum lockdown_reason {
->  	LOCKDOWN_TIOCSSERIAL,
->  	LOCKDOWN_MODULE_PARAMETERS,
->  	LOCKDOWN_MMIOTRACE,
-> +	LOCKDOWN_DEBUGFS,
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_KCORE,
->  	LOCKDOWN_KPROBES,
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index e43c9d001e49..37ef46320ef4 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -30,6 +30,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
->  	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
->  	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
-> +	[LOCKDOWN_DEBUGFS] = "debugfs access",
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_KCORE] = "/proc/kcore access",
->  	[LOCKDOWN_KPROBES] = "use of kprobes",
-> 
-
--- 
-James Morris
-<jmorris@namei.org>
-
+On Mon, Jul 15, 2019 at 4:17 PM Gwendal Grignou <gwendal@chromium.org> wrote:
+>
+> Sorry for the original mistake. I upload a patch at
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1702884.
+>
+> On Mon, Jul 15, 2019 at 1:04 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Hi Benson,
+> >
+> > On Mon, Jul 15, 2019 at 12:55:57PM -0700, Benson Leung wrote:
+> > > Hi Matthias,
+> > >
+> > > On Mon, Jul 15, 2019 at 12:10:17PM -0700, Matthias Kaehlcke wrote:
+> > > > Before doing any actual work cros_ec_accel_legacy_read() acquires
+> > > > a mutex, which is released at the end of the function. However for
+> > > > 'calibbias' channels the function returns directly, without releasing
+> > > > the lock. The next attempt to acquire the lock blocks forever. Instead
+> > > > of an explicit return statement use the common return path, which
+> > > > releases the lock.
+> > > >
+> > > > Fixes: 11b86c7004ef1 ("platform/chrome: Add cros_ec_accel_legacy driver")
+> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > ---
+> > > >  drivers/iio/accel/cros_ec_accel_legacy.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
+> > > > index 46bb2e421bb9..27ca4a64dddf 100644
+> > > > --- a/drivers/iio/accel/cros_ec_accel_legacy.c
+> > > > +++ b/drivers/iio/accel/cros_ec_accel_legacy.c
+> > > > @@ -206,7 +206,8 @@ static int cros_ec_accel_legacy_read(struct iio_dev *indio_dev,
+> > > >     case IIO_CHAN_INFO_CALIBBIAS:
+> > > >             /* Calibration not supported. */
+> > > >             *val = 0;
+> > > > -           return IIO_VAL_INT;
+> > > > +           ret = IIO_VAL_INT;
+> > > > +           break;
+> > >
+> > > The value of ret is not used below this. It seems to be only used in
+> > > case IIO_CHAN_INFO_RAW. In fact, with your change,
+> > > there's no return value at all and we just reach the end of
+> > > cros_ec_accel_legacy_read.
+> > >
+> > > >     default:
+> > > >             return -EINVAL;
+> > > >     }
+> > >
+> >
+> > I messed up. I was over-confident that a FROMLIST patch in our 4.19
+> > kernel + this patch applying on upstream means that upstream uses the
+> > same code. I should have double-checked that the upstream context is
+> > actually the same.
+> >
+> > Sorry for the noise.
