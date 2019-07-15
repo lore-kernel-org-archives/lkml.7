@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D4C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF12C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B15206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7A62081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200013;
-	bh=hmiW3UkNL87MzxfzpVhbPNhWNuSCqEVc9R8JSmPMPpQ=;
+	s=default; t=1563200016;
+	bh=1tGrLwkwkkeKN/uqZzZc54Hw04C36XMH00VDe3wzt0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VWPqUKISb/agawuJZsJ6Cz0H6vw2yCLTIOw+IJobFk3RTDTkVCRrmgieojGk2vFXv
-	 Ciuz+8gH8/slwE0X1maLvsq6oO5jWosbBUbPSUYOHhOJ3v84j35cwpVnC6x4dJFMTs
-	 7lNn0wnt6K/02yzOmObL/tI6c/z/ljZs04YsyMGM=
+	b=j4DNrjls54kxcR7xErMwSe+6VSKvOFJvYfET7LfHNhEI8i7btuU1muIDuFEf0tymg
+	 19BHhq7RlY8XvDCdBOpTNH6je19E9XlKYAiSh0hMhetRpUxkTScfoVCgB6x1Gs9vUd
+	 DrrXrCqpXxLswSL9qP38iyHj5upDPL/J92gGdbjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389197AbfGOONb (ORCPT
+        id S2389213AbfGOONd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388771AbfGOON3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:13:29 -0400
+        id S2389195AbfGOONb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:13:31 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE4E2083D;
-        Mon, 15 Jul 2019 14:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B75020868;
+        Mon, 15 Jul 2019 14:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200008;
-        bh=hmiW3UkNL87MzxfzpVhbPNhWNuSCqEVc9R8JSmPMPpQ=;
+        s=default; t=1563200011;
+        bh=1tGrLwkwkkeKN/uqZzZc54Hw04C36XMH00VDe3wzt0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1wAu4Ma0az9fRgtM5aCKQulScX3As7frA/09MteARlSCkoSbxZm7p/KJgRTmQv2QB
-         3o6dzP5NpVnYeWfC8M9G8LFIPWAPLngwOyW2sOZ+7rFqs9tUgXdvSgmEsIjl1G0Q0H
-         isNVRNyDjycipfpr9B97yCFtfzgpBhPMlwJ5STOA=
+        b=wzwmYFjThoG+jJyMidkirAzzSeWOmlBpAZ5Pv3EewAt5sFTS/fai+XUy4WiFjxnDH
+         s12ES4DetkRML68j6moUDhdrcJSxxoOQJ4ZUgUVkPA41SGY/Bm/ipmlBNfFakoj+sk
+         21Np2BgK4JxExle1bIbqdw2jm/p/fwk9+/s9+6Pk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waibel Georg <Georg.Waibel@sensor-technik.de>,
-        Georg Waibel <georg.waibel@sensor-technik.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 158/219] gpio: Fix return value mismatch of function gpiod_get_from_of_node()
-Date:   Mon, 15 Jul 2019 10:02:39 -0400
-Message-Id: <20190715140341.6443-158-sashal@kernel.org>
+Cc:     Jianbo Liu <jianbol@mellanox.com>, Oz Shlomo <ozsh@mellanox.com>,
+        Eli Britstein <elibr@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 159/219] net/mlx5: Get vport ACL namespace by vport index
+Date:   Mon, 15 Jul 2019 10:02:40 -0400
+Message-Id: <20190715140341.6443-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -63,128 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waibel Georg <Georg.Waibel@sensor-technik.de>
+From: Jianbo Liu <jianbol@mellanox.com>
 
-[ Upstream commit 025bf37725f1929542361eef2245df30badf242e ]
+[ Upstream commit f53297d67800feb5fafd94abd926c889aefee690 ]
 
-In case the requested gpio property is not found in the device tree, some
-callers of gpiod_get_from_of_node() expect a return value of NULL, others
-expect -ENOENT.
-In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-Currently it gets a NULL, which breaks the loop that tries all
-gpio_suffixes. The result is that a gpio property is not found, even
-though it is there.
+The ingress and egress ACL root namespaces are created per vport and
+stored into arrays. However, the vport number is not the same as the
+index. Passing the array index, instead of vport number, to get the
+correct ingress and egress acl namespace.
 
-This patch changes gpiod_get_from_of_node() to return -ENOENT instead
-of NULL when the requested gpio property is not found in the device
-tree. Additionally it modifies all calling functions to properly
-evaluate the return value.
-
-Another approach would be to leave the return value of
-gpiod_get_from_of_node() as is and fix the bug in
-devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
-to be reworked. The effort would be the same as with the chosen solution.
-
-Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9b93ab981e3b ("net/mlx5: Separate ingress/egress namespaces for each vport")
+Signed-off-by: Jianbo Liu <jianbol@mellanox.com>
+Reviewed-by: Oz Shlomo <ozsh@mellanox.com>
+Reviewed-by: Eli Britstein <elibr@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Mark Bloch <markb@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c                 | 6 +-----
- drivers/regulator/da9211-regulator.c   | 2 ++
- drivers/regulator/s2mps11.c            | 4 +++-
- drivers/regulator/s5m8767.c            | 4 +++-
- drivers/regulator/tps65090-regulator.c | 7 ++++---
- 5 files changed, 13 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index bca3e7740ef6..fd1344056e1d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4232,8 +4232,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
-  *
-  * Returns:
-  * On successful request the GPIO pin is configured in accordance with
-- * provided @dflags. If the node does not have the requested GPIO
-- * property, NULL is returned.
-+ * provided @dflags.
-  *
-  * In case of error an ERR_PTR() is returned.
-  */
-@@ -4255,9 +4254,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
- 					index, &flags);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 8a67fd197b79..16ed6ebd31ee 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -950,7 +950,7 @@ static int esw_vport_enable_egress_acl(struct mlx5_eswitch *esw,
+ 		  vport->vport, MLX5_CAP_ESW_EGRESS_ACL(dev, log_max_ft_size));
  
- 	if (!desc || IS_ERR(desc)) {
--		/* If it is not there, just return NULL */
--		if (PTR_ERR(desc) == -ENOENT)
--			return NULL;
- 		return desc;
- 	}
+ 	root_ns = mlx5_get_flow_vport_acl_namespace(dev, MLX5_FLOW_NAMESPACE_ESW_EGRESS,
+-						    vport->vport);
++			mlx5_eswitch_vport_num_to_index(esw, vport->vport));
+ 	if (!root_ns) {
+ 		esw_warn(dev, "Failed to get E-Switch egress flow namespace for vport (%d)\n", vport->vport);
+ 		return -EOPNOTSUPP;
+@@ -1068,7 +1068,7 @@ static int esw_vport_enable_ingress_acl(struct mlx5_eswitch *esw,
+ 		  vport->vport, MLX5_CAP_ESW_INGRESS_ACL(dev, log_max_ft_size));
  
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index 4d7fe4819c1c..4e95e3d0fcd5 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -299,6 +299,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
-+		if (IS_ERR(pdata->gpiod_ren[n]))
-+			pdata->gpiod_ren[n] = NULL;
- 		n++;
- 	}
- 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 134c62db36c5..b518a81f75a3 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
--		if (IS_ERR(gpio[reg])) {
-+		if (PTR_ERR(gpio[reg]) == -ENOENT)
-+			gpio[reg] = NULL;
-+		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
- 			continue;
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index bb9d1a083299..6ca27e9d5ef7 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 			0,
- 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 			"s5m8767");
--		if (IS_ERR(rdata->ext_control_gpiod))
-+		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
-+			rdata->ext_control_gpiod = NULL;
-+		else if (IS_ERR(rdata->ext_control_gpiod))
- 			return PTR_ERR(rdata->ext_control_gpiod);
- 
- 		rdata->id = i;
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index 0614551796a1..f6466db57900 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -381,11 +381,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 								    "dcdc-ext-control-gpios", 0,
- 								    gflags,
- 								    "tps65090");
--			if (IS_ERR(rpdata->gpiod))
--				return ERR_CAST(rpdata->gpiod);
--			if (!rpdata->gpiod)
-+			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
- 				dev_err(&pdev->dev,
- 					"could not find DCDC external control GPIO\n");
-+				rpdata->gpiod = NULL;
-+			} else if (IS_ERR(rpdata->gpiod))
-+				return ERR_CAST(rpdata->gpiod);
- 		}
- 
- 		if (of_property_read_u32(tps65090_matches[idx].of_node,
+ 	root_ns = mlx5_get_flow_vport_acl_namespace(dev, MLX5_FLOW_NAMESPACE_ESW_INGRESS,
+-						    vport->vport);
++			mlx5_eswitch_vport_num_to_index(esw, vport->vport));
+ 	if (!root_ns) {
+ 		esw_warn(dev, "Failed to get E-Switch ingress flow namespace for vport (%d)\n", vport->vport);
+ 		return -EOPNOTSUPP;
 -- 
 2.20.1
 
