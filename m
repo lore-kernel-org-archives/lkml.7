@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C69C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1BFC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD7E21530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3935206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201235;
-	bh=cjZ9eAPwV6ur75qjON8eiNmZuZzBrIOiIC+AGvUlH9A=;
+	s=default; t=1563201242;
+	bh=MdR5tsNN1koq0rMpbWOje/a5NBEkteuGSOnJsUhnn68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxi4Thve3LkFsrjm1rH8ajaViSHvHaqBcTJwzsQQ7bMHF6Mw9zdFzTiOpzk+K60Pr
-	 9YhMS8T6wqXevsM4IxJpWD3ygsgjHuaBWzihtSKbhs1nIObxvd426PvnoOGR+tTqjY
-	 Ra5Egt4thnREX0Ln0wBJj7SdA+Oi3VMGF9x85WSE=
+	b=h+eZT1z+fLUeLCfHmGdLmLJGeuuB23aqrMorVoutD25NTibV2gHJ9/rIvbKaU9sdT
+	 Fc9ArOniXLLJQ70KhME+AwLokhjcCzR65wf3zFuKUUayawloW2HiVY+ChIkD/OudI7
+	 0wkz6c/1tKz6/bTe6dWELPz1iYNjoC+7NttCfZmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391974AbfGOOdw (ORCPT
+        id S2391987AbfGOOeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391698AbfGOOdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:33:49 -0400
+        id S2391698AbfGOOdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:33:55 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CB121842;
-        Mon, 15 Jul 2019 14:33:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C7B3206B8;
+        Mon, 15 Jul 2019 14:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201228;
-        bh=cjZ9eAPwV6ur75qjON8eiNmZuZzBrIOiIC+AGvUlH9A=;
+        s=default; t=1563201234;
+        bh=MdR5tsNN1koq0rMpbWOje/a5NBEkteuGSOnJsUhnn68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FPkT6i+/+crP3KWvOd035XWO+ev0mgQNH0gKZYDrrBVMDq2hHXWUOgJjSYn+7m4U+
-         F94a3Od1pvKslH+225wGPsPD4FdW40en5IpJ7TaxmY5Sasn7yMzLYJdwNw5CjiuupB
-         H4ZTiD9DLEXiudC+hwJrGsdrDtRUalNNyO+I5e4w=
+        b=KnxD2xWKjX7uFpkwecyU1w61fKW9niH6Ev/8Srab5Q4UM4zVEh1ukF78WLRLPnCg5
+         8in+nMhwiXaWKKYSm9MnrjE1U5ESbCakcipLcsXeFk5V889j9q6anIun5vaQ9D/Cn6
+         kdZyQT3sOKWNiCpDVHTPkH7R2gSie0aYcNRItTM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 083/105] ixgbe: Check DDM existence in transceiver before access
-Date:   Mon, 15 Jul 2019 10:28:17 -0400
-Message-Id: <20190715142839.9896-83-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 085/105] crypto: asymmetric_keys - select CRYPTO_HASH where needed
+Date:   Mon, 15 Jul 2019 10:28:19 -0400
+Message-Id: <20190715142839.9896-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -61,63 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
+[ Upstream commit 90acc0653d2bee203174e66d519fbaaa513502de ]
 
-Some transceivers may comply with SFF-8472 but not implement the Digital
-Diagnostic Monitoring (DDM) interface described in it. The existence of
-such area is specified by bit 6 of byte 92, set to 1 if implemented.
+Build testing with some core crypto options disabled revealed
+a few modules that are missing CRYPTO_HASH:
 
-Currently, due to not checking this bit ixgbe fails trying to read SFP
-module's eeprom with the follow message:
+crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
+x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
+x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
+crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
+pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
+pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
+pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
+pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
 
-ethtool -m enP51p1s0f0
-Cannot get Module EEPROM data: Input/output error
+This normally doesn't show up in randconfig tests because there is
+a large number of other options that select CRYPTO_HASH.
 
-Because it fails to read the additional 256 bytes in which it was assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
-data was confirmed by Mellanox as correct and present in other Passive
-DACs in from other manufacturers.
-
-Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
-Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ crypto/asymmetric_keys/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-index c3e7a8191128..f7e68083200c 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
-@@ -3237,7 +3237,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
- 		page_swap = true;
- 	}
- 
--	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
-+	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
-+	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
- 		/* We have a SFP, but it does not support SFF-8472 */
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-index b0cac961df3b..94df1d99be95 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
-@@ -70,6 +70,7 @@
- #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
- #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
- #define IXGBE_SFF_ADDRESSING_MODE		0x4
-+#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
- #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
- #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
- #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
+diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+index f3702e533ff4..d8a73d94bb30 100644
+--- a/crypto/asymmetric_keys/Kconfig
++++ b/crypto/asymmetric_keys/Kconfig
+@@ -15,6 +15,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+ 	select MPILIB
+ 	select CRYPTO_HASH_INFO
+ 	select CRYPTO_AKCIPHER
++	select CRYPTO_HASH
+ 	help
+ 	  This option provides support for asymmetric public key type handling.
+ 	  If signature generation and/or verification are to be used,
+@@ -34,6 +35,7 @@ config X509_CERTIFICATE_PARSER
+ config PKCS7_MESSAGE_PARSER
+ 	tristate "PKCS#7 message parser"
+ 	depends on X509_CERTIFICATE_PARSER
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
+@@ -56,6 +58,7 @@ config SIGNED_PE_FILE_VERIFICATION
+ 	bool "Support for PE file signature verification"
+ 	depends on PKCS7_MESSAGE_PARSER=y
+ 	depends on SYSTEM_DATA_VERIFICATION
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
 -- 
 2.20.1
 
