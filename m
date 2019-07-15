@@ -2,141 +2,135 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF52C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1EDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AE3205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5BE2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5PTHPzJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m3ylaWA1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfGOQBB (ORCPT
+        id S1731367AbfGOQBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:01:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34454 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731074AbfGOQBB (ORCPT
+        Mon, 15 Jul 2019 12:01:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43594 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731311AbfGOQBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:01:01 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so4129663lfq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 09:00:59 -0700 (PDT)
+        Mon, 15 Jul 2019 12:01:41 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so7916280pgv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 09:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jG4VdXmMyoFpVc6NE61bUixbe9slfFe01xROPhYpMig=;
-        b=e5PTHPzJ994GNrOlaHnu48Kx8anQPqPS+EE773SxOJVUZ/SYAuvGcwf8gdsTmOC+uW
-         6pQdRNNPUSnorHQJeyfyIJ4SQyRQhrT6N6HVWQoa8NYljURxsNcAUd8rnlkJVPsT2V7Y
-         adM/O1IBhBvTw/kJxUc+/sHbrAaqXuqtvDRI8UN74N1+AGDrUiecIXZRqsVY02GuP9Sm
-         Gbe67YjBkXNaTkWph3pf7vm01CpMn4DNnOHYqwbW1A9mA5NXdpI9RWf0GAxjuoDNKh4V
-         npdUlFUBKhNyUms2UrEFu+XvmGG3ySH5mCdHydaDo07riYRjgGalP3VlGFU5edXYrKbi
-         Ibrg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lChEEghQFkJA0ae9eAwhZ0QJmvdqy/WLUOFz361BXCQ=;
+        b=m3ylaWA1nfDKOLFQBZbi5lVR91/hvH9n6ddTo7/UGe/KLQTke6nfJGGnTYTOxi8VCA
+         HfS0hKS7p+bVQo6gCnikJZrIRnFAsBOo76vo66MNNR76VN9RpCPaB5uiN9mXzb/wKBaC
+         2YPMCtyHAVUy8c0n2Hy0noVhGDDAso8pOP+OWaQofcmHPvFQjxyIKXwz5wkCf0bTrn7S
+         NzX5/+eAUp4zqkWQrLjg7UELrWGHhufD8/uShStHD6i3q1aY9KquzAKDzGkmcTnssS5F
+         Z3nCiKnfqdcqBaEFScvEV6fXgwg7XscQvG1/2qeAbDEIc8Yoj5aguZfuLCcnlHXlWZQG
+         m73g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jG4VdXmMyoFpVc6NE61bUixbe9slfFe01xROPhYpMig=;
-        b=g6y1JSleVInE4O/ytg5+hep4DlwzMeI7Gk6lswR+5OLsplimQl9ohcKYjh2w7WYAhd
-         ojUhr33sIp6isWUiuPnbnBUDJgTVBdJ5Wx7ICUbu5hOYf2pwFYWgtBrBdG5kNEE8je1g
-         1iSd0ew5rWNqVIpvkoqrEkncvav2dt4TT7Oo/tjqaaguH4KjWjzn76cWXAON+TeFixFj
-         JCplkTNwI0IwAQajreT6fhxySy0WUYpkbkAET2sLBKUipl84KALWSplKqEjNT9MfMAY+
-         T4kqJcTP15U22FU9IgPHiRt0MJOUHu6fANl191CZ/Pt01jaMKP4uIihL8z3Csq4mzybJ
-         29mw==
-X-Gm-Message-State: APjAAAVcSbSr3u37rNS3q831CvWZrWCpgSufBml2Y0kGxzfeilg+78Ia
-        rzS9vwox78f/2nXkUIvlAoSdvA==
-X-Google-Smtp-Source: APXvYqzpO/d721H8WmEWknLzWu8P2CBGQsu+CdgDvcYjaeYxVVcvsWqTCVaZyda1gLViNxrDs++qQQ==
-X-Received: by 2002:ac2:5b49:: with SMTP id i9mr11725604lfp.116.1563206458930;
-        Mon, 15 Jul 2019 09:00:58 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id w1sm2408001lfe.50.2019.07.15.09.00.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 09:00:58 -0700 (PDT)
-Subject: Re: [PATCH v4 4/4] media: venus: Update core selection
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1562078787-516-1-git-send-email-amasule@codeaurora.org>
- <1562078787-516-5-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <66c52577-fae8-9b3d-ec1d-886b97897729@linaro.org>
-Date:   Mon, 15 Jul 2019 19:00:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lChEEghQFkJA0ae9eAwhZ0QJmvdqy/WLUOFz361BXCQ=;
+        b=nYNcGs7p4CzRL/BrmVJJ1IJHIkbmabpUHTFI1ihVwfCU4hUD13SMdiE+ewwLIHgyG2
+         0s1iab7GIylGUXNV8M/i9NmQq99IPR+/j2F1+RnJDWW8GHRn6JhZhmRK++Mc2J9bYA+m
+         nL6YWsx970m+QrvZkKTa/AFsnk/No8XcLq4Q4stNlD9DOdQcrfIPOJVU18rB9kq/a313
+         WciNN0VRpb4DS1wAoqj4R7d5LJiooqmgGI6lzI1zNcVkuxlWkyLjs+kxSypTuM7x/TJ4
+         qij7LLEm5z+af83LLpBmUz1sAV0VAjY/bvPXrAzOSwQFYJsUkpFLujX9eN7r+JDccYpv
+         Q/jw==
+X-Gm-Message-State: APjAAAXfliO/RvuOjklSJLLWk2q981LyvWPBj9Ct+a9VZyX14XZKHQN3
+        /vP9GFerFrNEx5H8eAkExYcuu8tN4yCUQu/kVvPdZg==
+X-Google-Smtp-Source: APXvYqyLZ0wS0QgBngEcy3YbbCLzw5RatJ3FtyfhyqUYHKhFv456jIze9R6yuxvC6+RP9cmNsJEN8HfxXPuILyhJ/1w=
+X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr29861239pjp.47.1563206500702;
+ Mon, 15 Jul 2019 09:01:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1562078787-516-5-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1561386715.git.andreyknvl@google.com> <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
+ <20190624174015.GL29120@arrakis.emea.arm.com>
+In-Reply-To: <20190624174015.GL29120@arrakis.emea.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 15 Jul 2019 18:01:29 +0200
+Message-ID: <CAAeHK+y8vE=G_odK6KH=H064nSQcVgkQkNwb2zQD9swXxKSyUQ@mail.gmail.com>
+Subject: Re: [PATCH v18 11/15] IB/mlx4: untag user pointers in mlx4_get_umem_mr
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jun 24, 2019 at 7:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Mon, Jun 24, 2019 at 04:32:56PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends kernel ABI to allow to pass
+> > tagged user pointers (with the top byte set to something else other than
+> > 0x00) as syscall arguments.
+> >
+> > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
+> > only by done with untagged pointers.
+> >
+> > Untag user pointers in this function.
+> >
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+>
+> This patch also needs an ack from the infiniband maintainers (Jason).
 
-On 7/2/19 5:46 PM, Aniket Masule wrote:
-> Present core assignment is static. Introduced load balancing
-> across the cores. Load on earch core is calculated and core
-> with minimum load is assigned to given instance.
-> 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/helpers.c    | 69 +++++++++++++++++++++++---
->  drivers/media/platform/qcom/venus/helpers.h    |  2 +-
->  drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
->  drivers/media/platform/qcom/venus/hfi_parser.h |  5 ++
->  drivers/media/platform/qcom/venus/vdec.c       |  2 +-
->  drivers/media/platform/qcom/venus/venc.c       |  2 +-
->  6 files changed, 72 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index 5726d86..321e9f7 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -26,6 +26,7 @@
->  #include "helpers.h"
->  #include "hfi_helper.h"
->  #include "hfi_venus_io.h"
-> +#include "hfi_parser.h"
->  
->  struct intbuf {
->  	struct list_head list;
-> @@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst *inst)
->  	return mbs * inst->fps;
->  }
->  
-> +static u32 load_per_core(struct venus_core *core, u32 core_id)
-> +{
-> +	struct venus_inst *inst = NULL;
-> +	u32 mbs_per_sec = 0, load = 0;
-> +
-> +	mutex_lock(&core->lock);
-> +	list_for_each_entry(inst, &core->instances, list) {
-> +		if (!(inst->clk_data.core_id == core_id))
+Hi Jason,
 
-		if (inst->clk_data.core_id != core_id)
+Could you take a look and give your acked-by?
 
-I guess will be more readable?
+Thanks!
 
-> +			continue;
-> +
-> +		mbs_per_sec = load_per_instance(inst);
-> +		load = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
-> +	}
-> +	mutex_unlock(&core->lock);
-> +
-> +	return load;
-> +}
-> +
-
-<cut>
-
--- 
-regards,
-Stan
+>
+> --
+> Catalin
