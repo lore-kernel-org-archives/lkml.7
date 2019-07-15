@@ -2,132 +2,69 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2709C74A41
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93D5C73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA778214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="QrISUnxC"
+	by mail.kernel.org (Postfix) with ESMTP id A36DA20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563158417;
+	bh=9FH02/3Hdqa5ERHuroMXsK0MggGoBBK6d2frKzvNqLU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=IBjDpgzsteAX75hpUx1mgGHUApSTv1YK+xZxEmQuzC6IdGHZd+PcTRoKWRWEo4HBw
+	 Ok97wIMaik+ynP7hPHiAf2LxfeYSGmDu8cBjJBwetl3y5ZBDVr8+RXvnsmWhlJi2GJ
+	 ONOT7hLz+kFh0P5tuxGEikvnxrNelVYEcRfZlmu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfGOCeE (ORCPT
+        id S1728936AbfGOCkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 22:34:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36756 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728914AbfGOCeE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 22:34:04 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so6697799pfl.3
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 19:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j1D3jAEemUPemgo3Jj5nb6GS6101sWhcpLMgfsoNq8g=;
-        b=QrISUnxCSscxlNiF2KqrOgYSELv84+I/OVPUsZDhEuEi4r7R8YUKcUPEfdayuPSfK0
-         wrQ3Q089jqbmouyR+NoH07yfRGBgepPs66CHFe5siqBvErBCrBMbICucDPWVzgWos38b
-         Wf2Rms1UOmhDfsHeziRBcVVeqhPowRnyQF6ZIirk9sqy61+7brb3XjH5WSXDOqEwMkq3
-         q0U1QstYRjrFeTUkIvslQ7dopjLzTMUk5/MTR7wo3HmTm88DIkL2jdeSCkahHTIsS0XU
-         2mC5wBJ5eaM50hskzzZTjH7Ed3Xloa++ONtGgIN+sj2f13lAUYZHfj/Zj0wydtFoffX+
-         bJXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j1D3jAEemUPemgo3Jj5nb6GS6101sWhcpLMgfsoNq8g=;
-        b=oQtQyqKSSWxrweyPYW/8RSWmp+yGefdhVo8LS4csrztcc2g6/E8c6lVueozy9dCOL5
-         dMcFjQ5OR7tEfgWwLRzBfeM64Py0bjY85VUBbDL0bW3pO9nu5xEIcSZB4nWvUR/g/FLx
-         cAfwnMxtJ/w3alGttU+WKSsopmxzproXW6Fe/36RbQ3xCgPadoJWsotFa9Qq9IZcRpnW
-         45Xhsh0PzJVOM1MHtNloDOGM6MuIsxTpSxNA+5hWmK0gCidvNM/2YwqoOfa0sbKMLHb9
-         /Dr20TRg4ajqTFiiAqAZ7QMKiATQBguCmH90nshdAFph8np6xqEoKiodZfjbPRjuMmtZ
-         Seeg==
-X-Gm-Message-State: APjAAAXr7sOCUrp+OnSx42vQIx+WKI839GyKjTAoyZyaoXpX83AY2hiz
-        d+ZaCHh+6hzNHUTaTmXm8r4=
-X-Google-Smtp-Source: APXvYqwy96VWEm0MA4ILQTD2TtjFzmkAMeu1HQIcFyR05bl5hBBOCB7OmlKryt9SnBNgiGdMCiKl3g==
-X-Received: by 2002:a63:7a01:: with SMTP id v1mr25024594pgc.310.1563158042768;
-        Sun, 14 Jul 2019 19:34:02 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id d129sm16418490pfc.168.2019.07.14.19.33.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 19:34:01 -0700 (PDT)
-Subject: Re: [PATCH] mm/gup: Use put_user_page*() instead of put_page*()
-To:     Bharath Vedartham <linux.bhar@gmail.com>,
-        akpm@linux-foundation.org, ira.weiny@intel.com, jhubbard@nvidia.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Matt Sickler <Matt.Sickler@daktronics.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org
-References: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <018ee3d1-e2f0-ca12-9f63-945056c09985@kernel.dk>
-Date:   Sun, 14 Jul 2019 20:33:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1563131456-11488-1-git-send-email-linux.bhar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 14 Jul 2019 22:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfGOCkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 22:40:16 -0400
+Subject: Re: [GIT PULL] eCryptfs fixes for 5.3-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563158415;
+        bh=9FH02/3Hdqa5ERHuroMXsK0MggGoBBK6d2frKzvNqLU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=F5r5awOA3KbuhzNUx6Vp7+C3VTk3JnTg9CsJ/Hfna09jDXs3O5aD61Vb0G+hEGWYj
+         gcEJpDxoOC/Ox/E9KNvpnyJil4METR5HeKLmonV/j8OYDH3IQgBOraxgnJwf6m/lJz
+         nw2v2MX1z4meyGjxax5yzw/ARpfRFvfdQMzoVViY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190715010612.GA13363@sec>
+References: <20190715010612.GA13363@sec>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190715010612.GA13363@sec>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/ecryptfs.git
+ tags/ecryptfs-5.3-rc1-fixes
+X-PR-Tracked-Commit-Id: 7451c54abc9139585492605d9e91dec2d26c6457
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fa6e951a2a440babd7a7310d0f4713e618061767
+Message-Id: <156315841516.18482.6666782783340343610.pr-tracker-bot@kernel.org>
+Date:   Mon, 15 Jul 2019 02:40:15 +0000
+To:     Tyler Hicks <tyhicks@canonical.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/19 1:08 PM, Bharath Vedartham wrote:
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 4ef62a4..b4a4549 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2694,10 +2694,9 @@ static int io_sqe_buffer_register(struct io_ring_ctx *ctx, void __user *arg,
->   			 * if we did partial map, or found file backed vmas,
->   			 * release any pages we did get
->   			 */
-> -			if (pret > 0) {
-> -				for (j = 0; j < pret; j++)
-> -					put_page(pages[j]);
-> -			}
-> +			if (pret > 0)
-> +				put_user_pages(pages, pret);
-> +
->   			if (ctx->account_mem)
->   				io_unaccount_mem(ctx->user, nr_pages);
->   			kvfree(imu->bvec);
+The pull request you sent on Mon, 15 Jul 2019 01:08:43 +0000:
 
-You handled just the failure case of the buffer registration, but not
-the actual free in io_sqe_buffer_unregister().
+> git://git.kernel.org/pub/scm/linux/kernel/git/tyhicks/ecryptfs.git tags/ecryptfs-5.3-rc1-fixes
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fa6e951a2a440babd7a7310d0f4713e618061767
+
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
