@@ -2,127 +2,98 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B01C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DC1C76192
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6902081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mIwS6hkh"
+	by mail.kernel.org (Postfix) with ESMTP id E55D92081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfGOLph (ORCPT
+        id S1729923AbfGOLzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 07:45:37 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:38767 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729821AbfGOLpg (ORCPT
+        Mon, 15 Jul 2019 07:55:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44986 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729725AbfGOLzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 07:45:36 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190715114535euoutp0197fdb3aa4a293520c108791ed69bd435~xkg46H8_X0688506885euoutp01z
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:45:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190715114535euoutp0197fdb3aa4a293520c108791ed69bd435~xkg46H8_X0688506885euoutp01z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563191135;
-        bh=40EiB4H7MoaZdiztRc8Rbtl8i2zVu2AnjhBYn0gk6s0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=mIwS6hkh1LL71wO4330XqTcQBmBnsZgEvly6TGYBfa1CDt7/efDw3JbO41b/38kC3
-         S+x68Q0ddXuWE5IGQGwRFiATDgAAqA4+EL1njAttbINXjo7hzjjvkQakbkvHQIPZf6
-         BmHDKiHg+DEQ/PEUaqPQ56C2bhwcdTmbN67O+EAA=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190715114534eucas1p2b8e224d4e3d879926dbf649c9b26fb1f~xkg4PVTSx2237422374eucas1p2w;
-        Mon, 15 Jul 2019 11:45:34 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id C1.3D.04298.E576C2D5; Mon, 15
-        Jul 2019 12:45:34 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190715114533eucas1p2e63b98faa6d3888df025cedde5bc2696~xkg3hUdfd2942729427eucas1p2g;
-        Mon, 15 Jul 2019 11:45:33 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190715114533eusmtrp2313d430b7d78b03a8408c11b8f7f1ca0~xkg3TL7bB2232122321eusmtrp2h;
-        Mon, 15 Jul 2019 11:45:33 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-28-5d2c675e54e0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5B.A8.04146.D576C2D5; Mon, 15
-        Jul 2019 12:45:33 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190715114533eusmtip10934fe449ce2140be28b810f11969a5d~xkg22_9KH0872608726eusmtip1m;
-        Mon, 15 Jul 2019 11:45:33 +0000 (GMT)
-Subject: Re: [PATCH v3 15/24] media: exynos4-is: Remove call to memset after
- dma_alloc_coherent
-To:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-media@vger.kernel.org
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <92ced8c7-22cb-c6a2-6390-2f68f88e6841@samsung.com>
-Date:   Mon, 15 Jul 2019 13:45:30 +0200
+        Mon, 15 Jul 2019 07:55:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p17so16744968wrf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 04:55:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MT8e1cyvm40khAU3BWxt6sY48mhIMavsPPDqaVWfXiU=;
+        b=GwbrbGImtGYF2ghiPj9AzdaOTC89bIoLE3fiPu2zXLjUaJZsDvjlSLFpMYQHzAtf4O
+         24Riy3wGGWJ04nHjbBQHdjBY9mnf3TZ6l+6elE9yzvMkYVQvtxjdbeZNkT4m3AhGIm6E
+         pSNQA7kinOXRZYgR+I0YG/6IiyRZWHGMHVCm4zzzIThZH+MFbUKPRgP17xoy7MEnLPQr
+         6AvdooysgRHRoJGIRB7uRofZ9Cu9+NQX1pZiGOiFXpEZ6wRevVxbJW683ru9U443KMlU
+         70L3gRFECXuUvyWW9PzFIyi0S+PHHYuYiHmyXJLmLBMHml//e1ue/72uVO03wZVlLx5s
+         MmSg==
+X-Gm-Message-State: APjAAAVdEFi4/HP1pPf7uL9fmWsPeJEoSBrJ0vSMfIwtVYb6d6vvfSfi
+        uXpWosW1rru6Yk/KHCeiGbl5sQ==
+X-Google-Smtp-Source: APXvYqxC9YiUwr5hsEC2BB/KlyWT6kwb5KhcaQw+5zzusx7rjcV4TeWdEoHli/nfGYhXiSqdu/Y+Aw==
+X-Received: by 2002:adf:8183:: with SMTP id 3mr29119354wra.181.1563191747594;
+        Mon, 15 Jul 2019 04:55:47 -0700 (PDT)
+Received: from [192.168.178.40] ([151.20.129.151])
+        by smtp.gmail.com with ESMTPSA id b5sm13437570wru.69.2019.07.15.04.55.46
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 04:55:46 -0700 (PDT)
+Subject: Re: [PATCH] kvm: vmx: fix coccinelle warnings
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
+References: <1563165317-5996-1-git-send-email-wang.yi59@zte.com.cn>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <a29ec5f9-2f35-5d85-a321-002315591c66@redhat.com>
+Date:   Mon, 15 Jul 2019 13:55:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190715031851.6890-1-huangfq.daxian@gmail.com>
-Content-Language: en-GB
+In-Reply-To: <1563165317-5996-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUURjtzntv5s3kyHU0/FDJmBawcoOiB6YoWQ4E0Y8gMaymfKnoqM1z
-        bzMVKbesNGswtXBrIpMZcyXD0TRNG1wSwVJRf1SORS6UaJnPp+S/853vnHu+A5cmFEbKgQ6P
-        imW1UepIpVhG1nUsfnA9G7o/2GPsriNT0d1FMXcmpwnGbK6RML2pFgljmByimIGmIjGTXfOK
-        Yh6aW0RMhWFZ5CtVNeo+S1QG/W2xylh2Q5Vbq0eqOcP2k1SQ7HAIGxkez2rdfc7Lwiw5xWRM
-        hyix9etTMgXdF2UiKQ34ALzR56BMJKMVuApBxuQoKQzzCIZ+pFDCMIegwPia2LCY+w1iHitw
-        JYIX0wGCaAaBKX0M8QtbrIbsB/NrGXZYBa1dLWJeROBsEeRPVK+9JMaekPM2d9VA03LsA78X
-        T/E0iXfDwGD9WsA2HAjd7cUkj+XYBroeTZG8XIq9Yewnw9MEtofU+WeUgJ2hfqaI4KMAd0hg
-        rrsZCUf7Q595cL2zLXzrrJUI2AlWGktEgiENQXbziEQY8hCMdZauu72grbOP4pMJ7AIvm9wF
-        2g/SLCNingZsDcMzNsIR1nCvrpAQaDncylAI6l2wpC9cP8EBsqZWyDyk1G1qpttUR7epju5/
-        biki9ciejeM0oSznGcUmuHFqDRcXFep2MVpjQKtf6f3fztkGtNB/wYQwjZRWct+QfcEKSh3P
-        JWlMCGhCaSf3Xlil5CHqpGRWG31OGxfJcibkSJNKe/mVLeNnFDhUHctGsGwMq93YimipQwqy
-        vfSkR+kcabEKu/p4ydj+q8Dp4LEg/7q+svLrbONKt4cZ4q85TuwJLM5NSPbjDKWmTKxMPLIj
-        Aj9vasifkiUPX77ZM9DAaI7Hjm59V3jIaiXoe/msdVB6dXXlaZfCLK+BBBefo1ZecV9kjsuf
-        2iqNveOuJR/TdwacsFQN/ZF2xCpJLkztuZfQcup/hIOQPEYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xu7qx6TqxBjufalgsO3WS1aL/8Wtm
-        i/PnN7BbnG16w26x6fE1VovLu+awWfRs2MpqMeP8PiaLZZv+MDlweuycdZfdY9OqTjaPzUvq
-        Pfq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
-        syy1SN8uQS/jTe88loJjTBUHXy5iaWCczNTFyMkhIWAicf7SJjYQW0hgKaPE6y7BLkYOoLiU
-        xPwWJYgSYYk/17qASriASl4zSmxdeJMZJCEskCjRM+0L2BwRAQ+Jgyf3gRUxC/QwSdxY/5gV
-        ZJCQgI3EsTdcIDVsAoYSvUf7GEHCvAJ2Ej9+hoCEWQRUJS5f2Q52gqhAhMSkaztZQGxeAUGJ
-        kzOfsICUcwrYStz/aAESZhZQl/gz7xIzhC0u0fRlJSuELS+x/e0c5gmMQrOQdM9C0jILScss
-        JC0LGFlWMYqklhbnpucWG+oVJ+YWl+al6yXn525iBMbftmM/N+9gvLQx+BCjAAejEg+vQ4p2
-        rBBrYllxZe4hRgkOZiURXtuvQCHelMTKqtSi/Pii0pzU4kOMpkC/TWSWEk3OB6aGvJJ4Q1ND
-        cwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjDP0Ovn3lyw783vFu9TVD5ks
-        XwksEi6brnoguLJ24rK2yXuuLjC79n6JjtR0HeeMRyaF8jf2qmVfztr0qifnbOJzpdb4vlA9
-        u3dTOxbuff9GX/fhwXmzHWaeUzpXuM8nrvG/cqL47dUZR9a6aLt3X9j8ZEv0PsZNKgt+F/be
-        tL0tV/eB6+yXJ7+UWIozEg21mIuKEwEm36Gf1QIAAA==
-X-CMS-MailID: 20190715114533eucas1p2e63b98faa6d3888df025cedde5bc2696
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190715114533eucas1p2e63b98faa6d3888df025cedde5bc2696
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190715114533eucas1p2e63b98faa6d3888df025cedde5bc2696
-References: <20190715031851.6890-1-huangfq.daxian@gmail.com>
-        <CGME20190715114533eucas1p2e63b98faa6d3888df025cedde5bc2696@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 05:18, Fuqian Huang wrote:
-> In commit 518a2f1925c3
-> ("dma-mapping: zero memory returned from dma_alloc_*"),
-> dma_alloc_coherent has already zeroed the memory.
-> So memset is not needed
+On 15/07/19 06:35, Yi Wang wrote:
+> This fixes the following coccinelle warning:
 > 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> WARNING: return of 0/1 in function 'vmx_need_emulation_on_page_fault'
+> with return type bool
+> 
+> Return false instead of 0.
+> 
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index d98eac3..8b5f352 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7418,7 +7418,7 @@ static int enable_smi_window(struct kvm_vcpu *vcpu)
+>  
+>  static bool vmx_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
+>  {
+> -	return 0;
+> +	return false;
+>  }
+>  
+>  static __init int hardware_setup(void)
+> 
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Queued, thanks.
+
+Paolo
