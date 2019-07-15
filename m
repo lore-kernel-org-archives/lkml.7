@@ -3,185 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6089C76192
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7957C76192
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7921A2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E80B206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N+v3iZfz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iarDya1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfGOKPw (ORCPT
+        id S1729717AbfGOKRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:15:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:42583 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfGOKPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:15:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45nKDM6h0xz9sNy;
-        Mon, 15 Jul 2019 20:15:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563185749;
-        bh=jsWNP/KQzccDDDLR5oNKr0dnsNeu8nGq7K7jrvJpn2c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N+v3iZfz3Z3sIjJn76r2EucYfJc3BUn9wQa/iH/stkhzk4HDQyqFapUvk7e3PNNu4
-         B7vKTbso21HAjPNstYXhjs2vvypSJPkCseTZJR5sYcUgK+D6vaTUyWWNtGJDlAp4wO
-         nOZguZZcs6Wzj8byWYBViOgj4KVI8GEE3F8XHMyDXlsBRW4GOUUYQ0Q6q8nR08y9bj
-         P4mZGTRKO/y2hWz8l1/zKNn9BpEukko61F3lPHZgfOqn51B97+aE+GFSqlOwtsUgdZ
-         NdPADPAG7CyHsi385gOVX8NQQQopbhnrFmntxlmkVT6smPmEAeBJUejAteNEAYjnq2
-         ApaC694bG3IdA==
-Date:   Mon, 15 Jul 2019 20:15:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH] MIPS: perf events: handle switch statement falling through
- warnings
-Message-ID: <20190715201540.1e4bb96a@canb.auug.org.au>
+        Mon, 15 Jul 2019 06:17:34 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:36832 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbfGOKRd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:17:33 -0400
+Received: by mail-ua1-f66.google.com with SMTP id v20so6522497uao.3;
+        Mon, 15 Jul 2019 03:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DgcIwiNdH47qmFy1UXoTt6v8pvUcjELhaZQ83WLJUic=;
+        b=iarDya1JAIMHrCYlXI6PhMlRgc6ek150qGC+56H99xhylxo++Pt/kx+QSbRaq6vqkm
+         AAj6I1B5aK7BALpIM6pGBbHhhzeqr+tGRbrjEwJwCzBN5ZzhJvHb2EVT2KBs4yfJLt+x
+         Kz5X6u98oDRUAyzQL2fyexYQs3Bk/yZCAAYQk5tEIEc08MMJXAuoTyokqGiP/cJ5Yqqw
+         c5s/pZ6g3Qtf1hvoAMcz8WpAmslz9BYLFO5YwiobETQhtf7Mex62LYxXS80fIt6Orf+g
+         GXmNcj8KnoTqc3qxD7fpj0MsRdTvGnhn/qLiFxQqQ9NYXGCDnzn6MhghaJwkyhd+js4C
+         rNoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DgcIwiNdH47qmFy1UXoTt6v8pvUcjELhaZQ83WLJUic=;
+        b=hROlFgx8cqFyTQIupauUd1zCNf/p/FiKWrvks7Y+s6ZeKcIQ9DS0BxWcxN5G5u21pR
+         /RB+vUKMCCyTsE0yEqFAgozeF9tWYaQ88rLZ5i1sXQBOYdlFqPLEN1gwfxhUqgJPsEup
+         ii64JOaKCqp7gcaHJstMt7CO9MgRNEOV22BB//vot2so/3bROJFFT7uFiV5RMBQZyLZb
+         lCFizLqSSXssKdHHUsx33BVEp1Z9PEZYIAcfn10kDz49iWY0KArzl6+fOseImc1MvEk/
+         pUUfnCp6mBN4AQuETTaqlWt8kwX/xhjKaL3CoA+bzBAVZSYwLmqUQznl5eVR/VXOYX/b
+         cK0A==
+X-Gm-Message-State: APjAAAUmnDE8QWas+sou/Dsny+Vz2jP06gv+wpUzh9+hhoMuKEGfMUe2
+        GmAW53/mXc/Vz9ElHI4AvcFpXBCNpDb2HDaYxpo=
+X-Google-Smtp-Source: APXvYqyuqhT1lnSacrPXMfkLjVFBLaZzAvCOeqLjDTCPBvjMQo1z5TTyM/ofDHL8m8ImMKvdq65hEER8t/Z5+SNC0Bw=
+X-Received: by 2002:ab0:60ad:: with SMTP id f13mr5615069uam.129.1563185852742;
+ Mon, 15 Jul 2019 03:17:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/oJPxDdAJbbb=sRcigzwe5Q7"; protocol="application/pgp-signature"
+References: <20190327164339.31205-1-heikki.krogerus@linux.intel.com> <20190327164339.31205-4-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190327164339.31205-4-heikki.krogerus@linux.intel.com>
+From:   Jun Li <lijun.kernel@gmail.com>
+Date:   Mon, 15 Jul 2019 18:17:21 +0800
+Message-ID: <CAKgpwJXu1VP8Wq5OhUrThMR+63OiM9Lstn0ycijxSLBko_+pTw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] usb: typec: mux: Use the "compatible" property
+ instead of a boolean property
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oJPxDdAJbbb=sRcigzwe5Q7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Heikki,
 
-Now that we build with -Wimplicit-fallthrough=3D3, some warnings are
-produced in the arch/mips perf events code that are promoted to errors:
+Heikki Krogerus <heikki.krogerus@linux.intel.com> =E4=BA=8E2019=E5=B9=B43=
+=E6=9C=8828=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8A=E5=8D=8812:45=E5=86=99=E9=
+=81=93=EF=BC=9A
+>
+> Instead of searching for a boolean property, matching
+> against the "compatible" property.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/usb/typec/mux.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
+> index 2ce54f3fc79c..9462b90f1c09 100644
+> --- a/drivers/usb/typec/mux.c
+> +++ b/drivers/usb/typec/mux.c
+> @@ -32,11 +32,7 @@ static void *typec_switch_match(struct device_connecti=
+on *con, int ep,
+>                 return ERR_PTR(-EPROBE_DEFER);
+>         }
+>
+> -       /*
+> -        * With OF graph the mux node must have a boolean device property=
+ named
+> -        * "orientation-switch".
+> -        */
+> -       if (con->id && !fwnode_property_present(con->fwnode, con->id))
+> +       if (con->id && !fwnode_is_compatible(con->fwnode, con->id))
 
- arch/mips/kernel/perf_event_mipsxx.c:792:3: error: this statement may fall=
- through [-Werror=3Dimplicit-fallthrough=3D]
- arch/mips/kernel/perf_event_mipsxx.c:795:3: error: this statement may fall=
- through [-Werror=3Dimplicit-fallthrough=3D]
- arch/mips/kernel/perf_event_mipsxx.c:798:3: error: this statement may fall=
- through [-Werror=3Dimplicit-fallthrough=3D]
- arch/mips/kernel/perf_event_mipsxx.c:1407:6: error: this statement may fal=
-l through [-Werror=3Dimplicit-fallthrough=3D]
+This is still the right approach for orientation switch match, right?
 
-Assume the fall throughs are deliberate amd annotate/eliminate them.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/mips/kernel/perf_event_mipsxx.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-I haven't even build tested this, sorry, but will add it to linux-next
-tomorrow.  It should be no worse than the current state :-)
-
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_e=
-vent_mipsxx.c
-index e0ebaa0a333e..40106731e97e 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -790,15 +790,19 @@ static void reset_counters(void *arg)
- 	case 4:
- 		mipsxx_pmu_write_control(3, 0);
- 		mipspmu.write_counter(3, 0);
-+		/* fall through */
- 	case 3:
- 		mipsxx_pmu_write_control(2, 0);
- 		mipspmu.write_counter(2, 0);
-+		/* fall through */
- 	case 2:
- 		mipsxx_pmu_write_control(1, 0);
- 		mipspmu.write_counter(1, 0);
-+		/* fall through */
- 	case 1:
- 		mipsxx_pmu_write_control(0, 0);
- 		mipspmu.write_counter(0, 0);
-+		/* fall through */
- 	}
- }
-=20
-@@ -1379,7 +1383,7 @@ static int mipsxx_pmu_handle_shared_irq(void)
- 	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
- 	struct perf_sample_data data;
- 	unsigned int counters =3D mipspmu.num_counters;
--	u64 counter;
-+	unsigned int n;
- 	int handled =3D IRQ_NONE;
- 	struct pt_regs *regs;
-=20
-@@ -1401,20 +1405,16 @@ static int mipsxx_pmu_handle_shared_irq(void)
-=20
- 	perf_sample_data_init(&data, 0, 0);
-=20
--	switch (counters) {
--#define HANDLE_COUNTER(n)						\
--	case n + 1:							\
--		if (test_bit(n, cpuc->used_mask)) {			\
--			counter =3D mipspmu.read_counter(n);		\
--			if (counter & mipspmu.overflow) {		\
--				handle_associated_event(cpuc, n, &data, regs); \
--				handled =3D IRQ_HANDLED;			\
--			}						\
-+	for (n =3D (counters > 4) ? 3 : (counters - 1); n >=3D 0; n--) {
-+		u64 counter;
-+
-+		if (test_bit(n, cpuc->used_mask)) {
-+			counter =3D mipspmu.read_counter(n);
-+			if (counter & mipspmu.overflow) {
-+				handle_associated_event(cpuc, n, &data, regs);
-+				handled =3D IRQ_HANDLED;
-+			}
- 		}
--	HANDLE_COUNTER(3)
--	HANDLE_COUNTER(2)
--	HANDLE_COUNTER(1)
--	HANDLE_COUNTER(0)
- 	}
-=20
- #ifdef CONFIG_MIPS_PERF_SHARED_TC_COUNTERS
---=20
-2.22.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/oJPxDdAJbbb=sRcigzwe5Q7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0sUkwACgkQAVBC80lX
-0GwDUwgAh2SIHjC/h//i4BX8AOnHj4bNibfhzoI/HVKv5V92vJZXU3hqUnjdF/5W
-ebzV+Ql37tu4vxdKRz1dMxKVnnG5jPZPy9RO0Ypk6yaDFD2fB2VE+J1JiBGUJx6l
-dFYtnVC4caMp76esSyVHTL1wnby1DBJEmCR63+SplYTRFsOP6Q9ZvBjvDSXoe7Qk
-LF2+4edvibne51hb8jMXWFKfaZiNmEyQtv7zAVN0izYpPW7CaqzOpfI7Qk8yjWtP
-DwkYvEukwjCUJuJ/TyqcbSXFzLdV99kEridDRs2s94vriT2JRwHdYSnrhD38PBNR
-xm/7mtII8pjQQuD9EI5X1pSQdRH+Zw==
-=V54a
------END PGP SIGNATURE-----
-
---Sig_/oJPxDdAJbbb=sRcigzwe5Q7--
+Li Jun
+>                 return NULL;
+>
+>         list_for_each_entry(sw, &switch_list, entry)
+> @@ -148,7 +144,7 @@ static void *typec_mux_match(struct device_connection=
+ *con, int ep, void *data)
+>
+>         /* Accessory Mode muxes */
+>         if (!desc) {
+> -               match =3D fwnode_property_present(con->fwnode, "accessory=
+");
+> +               match =3D fwnode_is_compatible(con->fwnode, "accessory");
+>                 if (match)
+>                         goto find_mux;
+>                 return NULL;
+> --
+> 2.20.1
+>
