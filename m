@@ -2,124 +2,197 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A954C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873EFC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17AE7206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4322145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OKadg9ad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbfGOVYP (ORCPT
+        id S1732478AbfGOVZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:24:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52126 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730076AbfGOVYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:24:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8BAF6AE16;
-        Mon, 15 Jul 2019 21:24:13 +0000 (UTC)
-Message-ID: <1563225851.3143.24.camel@suse.de>
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: Fix shrink_{zone,node}_span
-From:   Oscar Salvador <osalvador@suse.de>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, david@redhat.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 15 Jul 2019 23:24:11 +0200
-In-Reply-To: <87tvbne0rd.fsf@linux.ibm.com>
-References: <20190715081549.32577-1-osalvador@suse.de>
-         <20190715081549.32577-3-osalvador@suse.de> <87tvbne0rd.fsf@linux.ibm.com>
+        Mon, 15 Jul 2019 17:25:59 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44647 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730268AbfGOVZ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:25:58 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so8001903pfe.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L1iVnKb9KyH2VdRaa+1X1AxuS2MqitxfIlVlkn/kOv8=;
+        b=OKadg9adfR8FnEoQT6HdGl96SBZxASHai1a3d6JJ7kS2KeuZ1gp/Sww0dZ4FNnRfmX
+         dsWE9zqYktoShjIU+eYZsCRcFIJfFws6QoK2qlbR+qOq4rr/hOZP2M3LcnN2q482/I73
+         uk9eNSjzCb/KkfhP4BJ2nmSyKV5xwGPcSeH7IrIsnT+SSVepNWQYB1x9JIyW2ECp5yWy
+         v4jcSyoBZJSrmeWQFBgJn1mNjyDuuQcjVCEz7vy2pTS+5CwXEpnaX+c+7wd+NdqiTuWs
+         jLfiDc8e4oMqUtNtGi1qAx20ReiWP9Qgxngtq/5EbA2D41xPwKDuHWOLS0EUq/G9lFRU
+         uKpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L1iVnKb9KyH2VdRaa+1X1AxuS2MqitxfIlVlkn/kOv8=;
+        b=fvNVx3aNEE7qxQ2XYRB8E8guc3ktPS0CPE3Fmw8Yd60Q971POCGweH7Ja5Bzb0hdsK
+         svoPVoYqPmo9PlTbm4C03pELHob9tXxILFtCUkaVhHBV4zBmci7apIvPrwHTuqwnuUdW
+         ojna604rXFx2BIHfu2dAxD9cBA7ZVtSNx6b07zOYcpcavYKRRwXvyVgyZqSsQUttYOnI
+         ZNihn11biaAZTXh5lFWmNDRNGgIAWgOelO5DNsU/OqCKq0aBupLOrAersPIQcGC9+zf2
+         AwbVMR2BM2tvElbU3/ugtjE1a48zrlsjifc6iXwpUCgnpDbqRAWnmapqgHaHGxAaGaUU
+         B7lw==
+X-Gm-Message-State: APjAAAXtgmSR4V0j0OfSYSMyz6xmSR4hX4Vlbcohl/hxgO7b+mdoiTH2
+        uAi8iytAxqtEzAp7arlXjk61wOm1UPVXttWbYe6Gtw==
+X-Google-Smtp-Source: APXvYqxYpwH7M9Tn69WNYt23pvYEmwOFSLt2yT+zRsvwVW6B093wD7DIpVEsyGIo3whwBHoCVELofo1GZGIk7QmjTys=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr29138784pgm.159.1563225956600;
+ Mon, 15 Jul 2019 14:25:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190712081744.87097-1-brendanhiggins@google.com>
+ <20190712081744.87097-2-brendanhiggins@google.com> <20190715201054.C69AA2086C@mail.kernel.org>
+In-Reply-To: <20190715201054.C69AA2086C@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 15 Jul 2019 14:25:45 -0700
+Message-ID: <CAFd5g44kWHYceo85qxL98JKH2FYBwVLFuLzqNR+APpMC1aKWUQ@mail.gmail.com>
+Subject: Re: [PATCH v9 01/18] kunit: test: add KUnit test runner core
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-15 at 21:41 +0530, Aneesh Kumar K.V wrote:
-> Oscar Salvador <osalvador@suse.de> writes:
-> 
-> > Since [1], shrink_{zone,node}_span work on PAGES_PER_SUBSECTION
-> > granularity.
-> > The problem is that deactivation of the section occurs later on in
-> > sparse_remove_section, so pfn_valid()->pfn_section_valid() will
-> > always return
-> > true before we deactivate the {sub}section.
-> 
-> Can you explain this more? The patch doesn't update section_mem_map
-> update sequence. So what changed? What is the problem in finding
-> pfn_valid() return true there?
+On Mon, Jul 15, 2019 at 1:10 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-07-12 01:17:27)
+> > Add core facilities for defining unit tests; this provides a common way
+> > to define test cases, functions that execute code which is under test
+> > and determine whether the code under test behaves as expected; this also
+> > provides a way to group together related test cases in test suites (here
+> > we call them test_modules).
+> >
+> > Just define test cases and how to execute them for now; setting
+> > expectations on code will be defined later.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>
+> Minor nits below.
+>
+> > diff --git a/kunit/test.c b/kunit/test.c
+> > new file mode 100644
+> > index 0000000000000..571e4c65deb5c
+> > --- /dev/null
+> > +++ b/kunit/test.c
+> > @@ -0,0 +1,189 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Base unit test (KUnit) API.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <kunit/test.h>
+> > +
+> > +static void kunit_set_failure(struct kunit *test)
+> > +{
+> > +       WRITE_ONCE(test->success, false);
+> > +}
+> > +
+> [...]
+> > +
+> > +void kunit_init_test(struct kunit *test, const char *name)
+> > +{
+> > +       test->name = name;
+> > +       test->success = true;
+> > +}
+> > +
+> > +/*
+> > + * Performs all logic to run a test case.
+> > + */
+> > +static void kunit_run_case(struct kunit_suite *suite,
+> > +                          struct kunit_case *test_case)
+> > +{
+> > +       struct kunit test;
+> > +       int ret = 0;
+> > +
+> > +       kunit_init_test(&test, test_case->name);
+> > +
+> > +       if (suite->init) {
+> > +               ret = suite->init(&test);
+>
+> Can you push the ret definition into this if scope? That way we can
+> avoid default initialize to 0 for it.
 
-I realized that the changelog was quite modest, so a better explanation
- will follow.
+Sure! I would actually prefer that from a cosmetic standpoint. I just
+thought that mixing declarations and code was against the style guide.
 
-Let us analize what shrink_{zone,node}_span does.
-We have to remember that shrink_zone_span gets called every time a
-section is to be removed.
+> > +               if (ret) {
+> > +                       kunit_err(&test, "failed to initialize: %d\n", ret);
+> > +                       kunit_set_failure(&test);
+>
+> Do we need to 'test_case->success = test.success' here too? Or is the
+> test failure extracted somewhere else?
 
-There can be three possibilites:
+Er, yes. That's kind of embarrassing. Good catch.
 
-1) section to be removed is the first one of the zone
-2) section to be removed is the last one of the zone
-3) section to be removed falls in the middle
- 
-For 1) and 2) cases, we will try to find the next section from
-bottom/top, and in the third case we will check whether the section
-contains only holes.
+> > +                       return;
+> > +               }
+> > +       }
+> > +
+> > +       test_case->run_case(&test);
+> > +
+> > +       if (suite->exit)
+> > +               suite->exit(&test);
+> > +
+> > +       test_case->success = test.success;
 
-Now, let us take the example where a ZONE contains only 1 section, and
-we remove it.
-The last loop of shrink_zone_span, will check for {start_pfn,end_pfn]
-PAGES_PER_SECTION block the following:
-
-- section is valid
-- pfn relates to the current zone/nid
-- section is not the section to be removed
-
-Since we only got 1 section here, the check "start_pfn == pfn" will make us to continue the loop and then we are done.
-
-Now, what happens after the patch?
-
-We increment pfn on subsection basis, since "start_pfn == pfn", we jump
-to the next sub-section (pfn+512), and call pfn_valid()-
->pfn_section_valid().
-Since section has not been yet deactivded, pfn_section_valid() will
-return true, and we will repeat this until the end of the loop.
-
-What should happen instead is:
-
-- we deactivate the {sub}-section before calling
-shirnk_{zone,node}_span
-- calls to pfn_valid() will now return false for the sections that have
-been deactivated, and so we will get the pfn from the next activaded
-sub-section, or nothing if the section is empty (section do not contain
-active sub-sections).
-
-The example relates to the last loop in shrink_zone_span, but the same
-applies to find_{smalles,biggest}_section.
-
-Please, note that we could probably do some hack like replacing:
-
-start_pfn == pfn 
-
-with
-
-pfn < end_pfn
-
-But the way to fix this is to 1) deactivate {sub}-section and 2) let
-shrink_{node,zone}_span find the next active {sub-section}.
-
-I hope this makes it more clear.
-
-
--- 
-Oscar Salvador
-SUSE L3
+Thanks!
