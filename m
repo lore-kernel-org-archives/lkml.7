@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE67C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5B0C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7240A20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C543620868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200138;
-	bh=3tm0O9vKFq6xQLQTTQHLCmlCsbnPPandPuISTbA4hW8=;
+	s=default; t=1563200140;
+	bh=sWs75kMv5SbJX3sSqtr7kqjR9As/V0r5DSmaOku8aQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWQ6LlNsk08Cv5ubqe48NkE/GEngDqg3/9lMI/NnJ0lG8pXTtrdCzFI8H6ipwbPQ5
-	 jh2+NysRs5ECNamiLC9xItgshcNqYFCq3S7jvRgDxC0xVKeJwQmnj9PZfEgUnTZVx5
-	 blkA/A3ZoK6//NqKMVdLXoPsZY9Pul5FoZpJKR9A=
+	b=TH4Q8bOjTc0EyApgOJXZ2tBzjD+3ulCT8JfWXhjO6sUlxMbtCZppjdZJKMUJkmSAV
+	 NIHlUFozWFgP4mSceap/5gO/wmS6c1MoeKS27wUT1b+yes7t/nKLyyjQc2iSx8z+uI
+	 LRWhE+7uaF67AOfRPrSMEFOob9xc7LqSmH/FcnPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388902AbfGOOPK (ORCPT
+        id S2389571AbfGOOPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58792 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732233AbfGOOPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:15:05 -0400
+        id S1730888AbfGOOPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:15:34 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850E1206B8;
-        Mon, 15 Jul 2019 14:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88E452083D;
+        Mon, 15 Jul 2019 14:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200104;
-        bh=3tm0O9vKFq6xQLQTTQHLCmlCsbnPPandPuISTbA4hW8=;
+        s=default; t=1563200133;
+        bh=sWs75kMv5SbJX3sSqtr7kqjR9As/V0r5DSmaOku8aQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHMTSSdYpSDVQl+fxg4Cz0K+PJ1y93DoKo14Lh6cBEAngbCKUKtmaA4hb1xrvmR0X
-         RADpWYSC9DBmpSFxhTHhMapWocWxibNUxJb57NNraxXOUEQpCu49R9P93SnXYOkHAK
-         8hdFS8Ulp5yN+jbRjRrlYaCJ7mRiz7i2xBWSGlWg=
+        b=liD9mCU5+kaxtzQ0OC8gO6WUCnf3Ve/V/sse6/jszNTncx8QjmNP1Csvyo0KldYrI
+         gtnXvN2bobnv3tZ2k+ytWab2abCMT8wfSoI3TVD7TlFDB3Qw5X54kmEVkB0/3LgEFz
+         LWxaP4zlsGBz8sU3ZUxYCKVmzevZTpRO9yqCgDjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 184/219] iwlwifi: dbg: fix debug monitor stop and restart delays
-Date:   Mon, 15 Jul 2019 10:03:05 -0400
-Message-Id: <20190715140341.6443-184-sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 191/219] perf stat: Fix group lookup for metric group
+Date:   Mon, 15 Jul 2019 10:03:12 -0400
+Message-Id: <20190715140341.6443-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,67 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit fc838c775f35e272e5cc7ef43853f0b55babbe37 ]
+[ Upstream commit 2f87f33f4226523df9c9cc28f9874ea02fcc3d3f ]
 
-The driver should delay only in recording stop flow between writing to
-DBGC_IN_SAMPLE register and DBGC_OUT_CTRL register. Any other delay is
-not needed.
+The metric group code tries to find a group it added earlier in the
+evlist. Fix the lookup to handle groups with partially overlaps
+correctly. When a sub string match fails and we reset the match, we have
+to compare the first element again.
 
-Change the following:
-1. Remove any unnecessary delays in the flow
-2. Increase the delay in the stop recording flow since 100 micro is
-   not enough
-3. Use usleep_range instead of delay since the driver is allowed to
-   sleep in this flow.
+I also renamed the find_evsel function to find_evsel_group to make its
+purpose clearer.
 
-Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-Fixes: 5cfe79c8d92a ("iwlwifi: fw: stop and start debugging using host command")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+With the earlier changes this fixes:
+
+Before:
+
+  % perf stat -M UPI,IPC sleep 1
+  ...
+         1,032,922      uops_retired.retire_slots #      1.1 UPI
+         1,896,096      inst_retired.any
+         1,896,096      inst_retired.any
+         1,177,254      cpu_clk_unhalted.thread
+
+After:
+
+  % perf stat -M UPI,IPC sleep 1
+  ...
+        1,013,193      uops_retired.retire_slots #      1.1 UPI
+           932,033      inst_retired.any
+           932,033      inst_retired.any          #      0.9 IPC
+         1,091,245      cpu_clk_unhalted.thread
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Fixes: b18f3e365019 ("perf stat: Support JSON metrics in perf stat")
+Link: http://lkml.kernel.org/r/20190624193711.35241-4-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 2 --
- drivers/net/wireless/intel/iwlwifi/fw/dbg.h | 6 ++++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/metricgroup.c | 47 ++++++++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index d7380016f1c0..c30f626b1602 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -2146,8 +2146,6 @@ void iwl_fw_dbg_collect_sync(struct iwl_fw_runtime *fwrt)
- 	/* start recording again if the firmware is not crashed */
- 	if (!test_bit(STATUS_FW_ERROR, &fwrt->trans->status) &&
- 	    fwrt->fw->dbg.dest_tlv) {
--		/* wait before we collect the data till the DBGC stop */
--		udelay(500);
- 		iwl_fw_dbg_restart_recording(fwrt, &params);
- 	}
- }
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
-index a199056234d3..97fcd57e17d8 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
-@@ -297,7 +297,10 @@ _iwl_fw_dbg_stop_recording(struct iwl_trans *trans,
- 	}
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index b8d864ed4afe..a48895c4324a 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -94,26 +94,49 @@ struct egroup {
+ 	const char *metric_expr;
+ };
  
- 	iwl_write_umac_prph(trans, DBGC_IN_SAMPLE, 0);
--	udelay(100);
-+	/* wait for the DBGC to finish writing the internal buffer to DRAM to
-+	 * avoid halting the HW while writing
-+	 */
-+	usleep_range(700, 1000);
- 	iwl_write_umac_prph(trans, DBGC_OUT_CTRL, 0);
- #ifdef CONFIG_IWLWIFI_DEBUGFS
- 	trans->dbg_rec_on = false;
-@@ -327,7 +330,6 @@ _iwl_fw_dbg_restart_recording(struct iwl_trans *trans,
- 		iwl_set_bits_prph(trans, MON_BUFF_SAMPLE_CTL, 0x1);
- 	} else {
- 		iwl_write_umac_prph(trans, DBGC_IN_SAMPLE, params->in_sample);
--		udelay(100);
- 		iwl_write_umac_prph(trans, DBGC_OUT_CTRL, params->out_ctrl);
+-static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
+-				     const char **ids,
+-				     int idnum,
+-				     struct perf_evsel **metric_events)
++static bool record_evsel(int *ind, struct perf_evsel **start,
++			 int idnum,
++			 struct perf_evsel **metric_events,
++			 struct perf_evsel *ev)
++{
++	metric_events[*ind] = ev;
++	if (*ind == 0)
++		*start = ev;
++	if (++*ind == idnum) {
++		metric_events[*ind] = NULL;
++		return true;
++	}
++	return false;
++}
++
++static struct perf_evsel *find_evsel_group(struct perf_evlist *perf_evlist,
++					   const char **ids,
++					   int idnum,
++					   struct perf_evsel **metric_events)
+ {
+ 	struct perf_evsel *ev, *start = NULL;
+ 	int ind = 0;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (ev->collect_stat)
++			continue;
+ 		if (!strcmp(ev->name, ids[ind])) {
+-			metric_events[ind] = ev;
+-			if (ind == 0)
+-				start = ev;
+-			if (++ind == idnum) {
+-				metric_events[ind] = NULL;
++			if (record_evsel(&ind, &start, idnum,
++					 metric_events, ev))
+ 				return start;
+-			}
+ 		} else {
++			/*
++			 * We saw some other event that is not
++			 * in our list of events. Discard
++			 * the whole match and start again.
++			 */
+ 			ind = 0;
+ 			start = NULL;
++			if (!strcmp(ev->name, ids[ind])) {
++				if (record_evsel(&ind, &start, idnum,
++						 metric_events, ev))
++					return start;
++			}
+ 		}
  	}
- }
+ 	/*
+@@ -143,8 +166,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
+-				   metric_events);
++		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
++					 metric_events);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
 -- 
 2.20.1
 
