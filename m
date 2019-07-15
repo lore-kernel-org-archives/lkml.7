@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F06C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6CDC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8750021530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7632067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202047;
-	bh=Y5+ESfZ0z8Nov1UDBvP2MAC9WsYBTug6SOqGrGTnQfE=;
+	s=default; t=1563202051;
+	bh=56azNwCvYBtyInd81c/jF2pAQmMyoZ+3vK1UrtbwvAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xrcrAcdJ2DBWp+mAv2RspKtTe0OfAhCkC6thUgx113UDv2oemzzpGuHT+FxMQwaCd
-	 M8UUY/qfZpLiB/sA+GbMgesCP3rwbTl8/7PD6kmM2PeXfvBxnwz/fKQxhF5WV3HTyL
-	 1sUF61Ys55l2+Tw9jR2CfkU9Pw40PzE7FGgNS8+I=
+	b=0OxhXtXZx2zEA7LWQmR53/BHayNyq5U/cqFJoqQJ/zFAXWcCIPyADGFR9nF0myPCV
+	 xP6H2h5pQ1dBxxpaaGELdlJFpp9KOIXZFkHGr9IR0Pkf6PEBQPwfPvwxW5kf6MJwMz
+	 NM7/YzuiMnM85T7FeqjSfVyFUj67Orytg4zFH+hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404441AbfGOOr0 (ORCPT
+        id S2405182AbfGOOr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41502 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392084AbfGOOrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:47:16 -0400
+        id S2392154AbfGOOrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:47:21 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 610C8217D9;
-        Mon, 15 Jul 2019 14:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17296217F4;
+        Mon, 15 Jul 2019 14:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202036;
-        bh=Y5+ESfZ0z8Nov1UDBvP2MAC9WsYBTug6SOqGrGTnQfE=;
+        s=default; t=1563202040;
+        bh=56azNwCvYBtyInd81c/jF2pAQmMyoZ+3vK1UrtbwvAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0zjDpbtUS9/86/arZT0trecaEiggi7Ok4/L7AIPCJozrte8Ue2ae4aJow7jGQ4Hz
-         GPwDxGoNgkUuzQITtfhivx4qUb92EklDhDErHbBOeWYeNhd6eFZB4lMirY7OmJkA1n
-         6/tpg2IogQ8E7ZVyj/4tSpS/A5cbRz37SQS1QloY=
+        b=nCgdP2MChA4oXMAUDLm3LE9on99npkCjIZtBK/RvGwcG1tYvw1sxWTewzergjCy32
+         UAB0euyvVE9jQ6R/clppKYOKzPZbELewVDqQPDBl6iWx+MgtnslDxl87cem1GAnMtU
+         Dj+9c61d5i3iBfiCHj/loqDCT0mqjxRAlz/66r9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 28/53] regmap: fix bulk writes on paged registers
-Date:   Mon, 15 Jul 2019 10:45:10 -0400
-Message-Id: <20190715144535.11636-28-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 30/53] rcu: Force inlining of rcu_read_lock()
+Date:   Mon, 15 Jul 2019 10:45:12 -0400
+Message-Id: <20190715144535.11636-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -59,42 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit db057679de3e9e6a03c1bcd5aee09b0d25fd9f5b ]
+[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
 
-On buses like SlimBus and SoundWire which does not support
-gather_writes yet in regmap, A bulk write on paged register
-would be silently ignored after programming page.
-This is because local variable 'ret' value in regmap_raw_write_impl()
-gets reset to 0 once page register is written successfully and the
-code below checks for 'ret' value to be -ENOTSUPP before linearising
-the write buffer to send to bus->write().
+When debugging options are turned on, the rcu_read_lock() function
+might not be inlined. This results in lockdep's print_lock() function
+printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
+For example:
 
-Fix this by resetting the 'ret' value to -ENOTSUPP in cases where
-gather_writes() is not supported or single register write is
-not possible.
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+These "rcu_read_lock+0x0/0x70" strings are not providing any useful
+information.  This commit therefore forces inlining of the rcu_read_lock()
+function so that rcu_read_lock()'s caller is instead shown.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/rcupdate.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index fd377b956199..77cabde977ed 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1358,6 +1358,8 @@ int _regmap_raw_write(struct regmap *map, unsigned int reg,
- 					     map->format.reg_bytes +
- 					     map->format.pad_bytes,
- 					     val, val_len);
-+	else
-+		ret = -ENOTSUPP;
- 
- 	/* If that didn't work fall back on linearising by hand. */
- 	if (ret == -ENOTSUPP) {
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index addd03641e1a..0a93e9d1708e 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -852,7 +852,7 @@ static inline void rcu_preempt_sleep_check(void)
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
+ {
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
 -- 
 2.20.1
 
