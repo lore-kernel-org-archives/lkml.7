@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B35C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C256DC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF70220868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F6C206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201058;
-	bh=eQJs6jpX4HDyLOG8yKg/tO63IJGZS3h9Y5ylv26XbxA=;
+	s=default; t=1563201061;
+	bh=sDmUSSz8ZTV+tBUjyQFQxP5poyM+OJUvThrnZApX6Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7gT2rByHOkPJYa9ZYFqvSXM49076Xzmb1hkd0IQJ/UYKdF4XeMqEklRQ69UwbfKX
-	 ucM++Cp7vAGY/qraVqssSb3xtYeTV6Dac+JZNwWjn3QkF/rr/eWqyhap3obpYtKb4t
-	 powes9rqS+4fxA6NEWLTPOeVb2dIAVDM/APrtZhA=
+	b=JjJf1ffV9nqxgn5VOIceUCy0K3meXIWpbgPbctaxFesgydNUhU2qqlqBEa/55NtKy
+	 4v8ef/uL4nFRfYLaSYLcbpXyM5QIrWJQJc9QnPmqfJ9xn//ajoirEFZZLZQa3m1g6l
+	 BaC9u/a/uCboRXZufH9WoNW3IUMc8bB0cKrKwkBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbfGOOa5 (ORCPT
+        id S2403922AbfGOOa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:30:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732124AbfGOOaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:30:55 -0400
+        id S2390949AbfGOOaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:30:52 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0195206B8;
-        Mon, 15 Jul 2019 14:30:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BDEE205ED;
+        Mon, 15 Jul 2019 14:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201054;
-        bh=eQJs6jpX4HDyLOG8yKg/tO63IJGZS3h9Y5ylv26XbxA=;
+        s=default; t=1563201050;
+        bh=sDmUSSz8ZTV+tBUjyQFQxP5poyM+OJUvThrnZApX6Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pag1FwrTjLt5+Y3otpDznAoxfdzFqEyYnTl2aCcUKZrv2UIsGlS6Oy+DYdyWD/f0W
-         kQKSZLJWePiJXIcsSmjFta8kSwngzgxSOLZ0epqaC9Oh0zBzkq4W52Er8ZXF0Oa4Bq
-         pwELhyZpShlD55nyUIb8bToyKWVaWZ8EoMZILNWU=
+        b=qFx7mK2LkUZr5DxcbfBberMD88nAAA9MQExIvr2ESWcRMuA1Zce/e3BsCSc8t/hlN
+         D6bOaz4H997aWs2IotGDjrtGT1wx0/q5de13D+FkrswE009cEFb2umpBUT4+1G8f+P
+         9DYQ5r9dljEbJSCMSdNxqX5GizPp2hXFSRhp7xQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Hancock <hancock@sedsystems.ca>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 038/105] net: sfp: add mutex to prevent concurrent state checks
-Date:   Mon, 15 Jul 2019 10:27:32 -0400
-Message-Id: <20190715142839.9896-38-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 037/105] RAS/CEC: Fix pfn insertion
+Date:   Mon, 15 Jul 2019 10:27:31 -0400
+Message-Id: <20190715142839.9896-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,65 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancock@sedsystems.ca>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 2158e856f56bb762ef90f3ec244d41a519826f75 ]
+[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
 
-sfp_check_state can potentially be called by both a threaded IRQ handler
-and delayed work. If it is concurrently called, it could result in
-incorrect state management. Add a st_mutex to protect the state - this
-lock gets taken outside of code that checks and handle state changes, and
-the existing sm_mutex nests inside of it.
+When inserting random PFNs for debugging the CEC through
+(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
+multiple values get inserted per a single write.
 
-Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+That is because simple_attr_write() interprets a retval of 0 as
+success and claims the whole input. However, pfn_set() returns the
+cec_add_elem() value, which, if > 0 and smaller than the whole input
+length, makes glibc continue issuing the write syscall until there's
+input left:
+
+  pfn_set
+  simple_attr_write
+  debugfs_attr_write
+  full_proxy_write
+  vfs_write
+  ksys_write
+  do_syscall_64
+  entry_SYSCALL_64_after_hwframe
+
+leading to those repeated calls.
+
+Return 0 to fix that.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/sfp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/ras/cec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-index 2dcb25aa0452..9cef89fe410d 100644
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -115,10 +115,11 @@ struct sfp {
- 	struct gpio_desc *gpio[GPIO_MAX];
- 
- 	bool attached;
-+	struct mutex st_mutex;			/* Protects state */
- 	unsigned int state;
- 	struct delayed_work poll;
- 	struct delayed_work timeout;
--	struct mutex sm_mutex;
-+	struct mutex sm_mutex;			/* Protects state machine */
- 	unsigned char sm_mod_state;
- 	unsigned char sm_dev_state;
- 	unsigned short sm_state;
-@@ -738,6 +739,7 @@ static void sfp_check_state(struct sfp *sfp)
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index c7205cdcc11a..97cf40a522be 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -373,7 +373,9 @@ static int pfn_set(void *data, u64 val)
  {
- 	unsigned int state, i, changed;
+ 	*(u64 *)data = val;
  
-+	mutex_lock(&sfp->st_mutex);
- 	state = sfp_get_state(sfp);
- 	changed = state ^ sfp->state;
- 	changed &= SFP_F_PRESENT | SFP_F_LOS | SFP_F_TX_FAULT;
-@@ -763,6 +765,7 @@ static void sfp_check_state(struct sfp *sfp)
- 		sfp_sm_event(sfp, state & SFP_F_LOS ?
- 				SFP_E_LOS_HIGH : SFP_E_LOS_LOW);
- 	rtnl_unlock();
-+	mutex_unlock(&sfp->st_mutex);
+-	return cec_add_elem(val);
++	cec_add_elem(val);
++
++	return 0;
  }
  
- static irqreturn_t sfp_irq(int irq, void *data)
-@@ -793,6 +796,7 @@ static struct sfp *sfp_alloc(struct device *dev)
- 	sfp->dev = dev;
- 
- 	mutex_init(&sfp->sm_mutex);
-+	mutex_init(&sfp->st_mutex);
- 	INIT_DELAYED_WORK(&sfp->poll, sfp_poll);
- 	INIT_DELAYED_WORK(&sfp->timeout, sfp_timeout);
- 
+ DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
 -- 
 2.20.1
 
