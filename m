@@ -7,53 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A60C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FB7C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1F2217D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694BD21842
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200872;
-	bh=NhkvRiGCiCbpY1sPPEiGpIr+Vj7nd35lVd4Kmh4LB24=;
+	s=default; t=1563200875;
+	bh=MRuoeZo2dWpHz8nyaOXwZYILKFW//UU99AgewcmcHME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JtDKHSKCL9Idx9e2rRyHvqCXkB6/VaBF7rbTPRFZedPCkd+GJY1d6ydhJE+YJSFnk
-	 JxyIYZJl5IRxYFQgQE3ARjVBJYYn7VwmpUuA15qmyuUOFzDR1uI2WzGTjmAvCKf3Tj
-	 jsuklbJdPLC/3C3RrOWJLU/Grq1PSvthGHRFQnVM=
+	b=Jxt1kTYGhsnxYu0XFJw4GUyEqgyAGYgjbA5pEHle9uPSzpV9amylQZSxTMDkWmK6X
+	 hjqG0b6Tpg8zHJSRSPmBH5yYkjkZtu+XTlCkMSMAdhq4j7AXJ0GBCRA1CMOTMuXvGB
+	 +yTbOF4jewKq+lvny4LqLu5vXHC1igkmAOqSbUdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391493AbfGOO1q (ORCPT
+        id S2391059AbfGOO1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391197AbfGOO1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:27:42 -0400
+        id S1731849AbfGOO1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:27:52 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A782217D8;
-        Mon, 15 Jul 2019 14:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1615E21537;
+        Mon, 15 Jul 2019 14:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200861;
-        bh=NhkvRiGCiCbpY1sPPEiGpIr+Vj7nd35lVd4Kmh4LB24=;
+        s=default; t=1563200870;
+        bh=MRuoeZo2dWpHz8nyaOXwZYILKFW//UU99AgewcmcHME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+Uf+1btKCuTccX/i62HPMjwfnyMKw5PjkItMy0uR/IP6n5HyhFmqn/rhAk8KYW4u
-         rVOFW9jhm+Ih2YklYDEz2pUkzK8gcW633scP34RlZfV+vI9/JKa9saWtdAnh0fFJNE
-         haA2lWKb1egDyKZEoNLvm5TY9bKQGx4Ak/QT5eRc=
+        b=giIKWChJpEWbRLgyIwdq4XAdESfwdtbXp1ecQQCHYVRe/HKrSPyfSXr7AK3eDt245
+         557wD8s36MdBanAc61xOAvDFC2cj5ToJUqNRBI64/k7NYwxQ6Np+hb9TXRa7rqqO1U
+         GiZ+sR1tO1S7tmlU3DpNK9wApKOZ4c/YpxkXifyc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 148/158] Bluetooth: Add new 13d3:3501 QCA_ROME device
-Date:   Mon, 15 Jul 2019 10:17:59 -0400
-Message-Id: <20190715141809.8445-148-sashal@kernel.org>
+Cc:     Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 150/158] perf tests: Fix record+probe_libc_inet_pton.sh for powerpc64
+Date:   Mon, 15 Jul 2019 10:18:01 -0400
+Message-Id: <20190715141809.8445-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,39 +67,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: João Paulo Rechi Vita <jprvita@gmail.com>
+From: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 
-[ Upstream commit 881cec4f6b4da78e54b73c046a60f39315964c7d ]
+[ Upstream commit bff5a556c149804de29347a88a884d25e4e4e3a2 ]
 
-Without the QCA ROME setup routine this adapter fails to establish a SCO
-connection.
+'probe libc's inet_pton & backtrace it with ping' testcase sometimes
+fails on powerpc because distro ping binary does not have symbol
+information and thus it prints "[unknown]" function name in the
+backtrace.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=04 Cnt=01 Dev#=  2 Spd=12  MxCh= 0
-D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3501 Rev=00.01
-C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+Accept "[unknown]" as valid function name for powerpc as well.
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+ # perf test -v "probe libc's inet_pton & backtrace it with ping"
+
+Before:
+
+  59: probe libc's inet_pton & backtrace it with ping       :
+  --- start ---
+  test child forked, pid 79695
+  ping 79718 [077] 96483.787025: probe_libc:inet_pton: (7fff83a754c8)
+  7fff83a754c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
+  7fff83a2b7a0 gaih_inet.constprop.7+0x1020
+  (/usr/lib64/power9/libc-2.28.so)
+  7fff83a2c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
+  1171830f4 [unknown] (/usr/bin/ping)
+  FAIL: expected backtrace entry
+  ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
+  got "1171830f4 [unknown] (/usr/bin/ping)"
+  test child finished with -1
+  ---- end ----
+  probe libc's inet_pton & backtrace it with ping: FAILED!
+
+After:
+
+  59: probe libc's inet_pton & backtrace it with ping       :
+  --- start ---
+  test child forked, pid 79085
+  ping 79108 [045] 96400.214177: probe_libc:inet_pton: (7fffbb9654c8)
+  7fffbb9654c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
+  7fffbb91b7a0 gaih_inet.constprop.7+0x1020
+  (/usr/lib64/power9/libc-2.28.so)
+  7fffbb91c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
+  132e830f4 [unknown] (/usr/bin/ping)
+  test child finished with 0
+  ---- end ----
+  probe libc's inet_pton & backtrace it with ping: Ok
+
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Reviewed-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sandipan Das <sandipan@linux.ibm.com>
+Fixes: 1632936480a5 ("perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo")
+Link: http://lkml.kernel.org/r/1561630614-3216-1-git-send-email-s1seetee@linux.vnet.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index f494fa30a912..75cf605f54e5 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -279,6 +279,7 @@ static const struct usb_device_id blacklist_table[] = {
- 	{ USB_DEVICE(0x04ca, 0x301a), .driver_info = BTUSB_QCA_ROME },
- 	{ USB_DEVICE(0x13d3, 0x3491), .driver_info = BTUSB_QCA_ROME },
- 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
-+	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
- 
- 	/* Broadcom BCM2035 */
- 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index cab7b0aea6ea..f5837f28f3af 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -43,7 +43,7 @@ trace_libc_inet_pton_backtrace() {
+ 		eventattr='max-stack=4'
+ 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+ 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+-		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
++		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
+ 	*)
+ 		eventattr='max-stack=3'
 -- 
 2.20.1
 
