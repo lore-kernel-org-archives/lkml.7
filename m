@@ -2,278 +2,476 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0190BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE3FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB9020838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931D42080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U/BiFxO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfGOQML (ORCPT
+        id S1730263AbfGOQPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:12:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729533AbfGOQML (ORCPT
+        Mon, 15 Jul 2019 12:15:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56380 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfGOQPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:12:11 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FGBeNV111482
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:12:10 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2trvcm1bss-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:12:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Mon, 15 Jul 2019 17:12:07 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Jul 2019 17:12:03 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FGC2eg24379518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 16:12:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B302E52054;
-        Mon, 15 Jul 2019 16:12:02 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.85.70.182])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4009E5204F;
-        Mon, 15 Jul 2019 16:11:38 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     dan.j.williams@intel.com, david@redhat.com,
-        pasha.tatashin@soleen.com, mhocko@suse.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: Fix shrink_{zone,node}_span
-In-Reply-To: <20190715081549.32577-3-osalvador@suse.de>
-References: <20190715081549.32577-1-osalvador@suse.de> <20190715081549.32577-3-osalvador@suse.de>
-Date:   Mon, 15 Jul 2019 21:41:18 +0530
+        Mon, 15 Jul 2019 12:15:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FGDl7p050404;
+        Mon, 15 Jul 2019 16:15:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=Z1Sl3n2A7aVWbKVdQVBmc+ovEDzlLmaJ9Z24xRGIjmY=;
+ b=U/BiFxO7XaeL8/5608nvbb4AzzeR1B5WBcRR90F+/3/d74sMSceRBkq/xcvmakNB7heH
+ hnVM1nnGbFrMLXyTxw7ueU6Eh+GCCMH53eX7mQUCjSIAKeZj2Z9nyP3niKDeu3a/tex/
+ XxWODp9R3olXMMnPIYhccAOgYxm/Gl0xQjvSY0eSrCqVjWG+qA6zuuY7xCa2szSgK7bT
+ 34a2nEUKLCO6x894H42ad3rm+HmuZC1zhit90qTvXT/c/bmhrTd0IQsjxP6KZafo5K2F
+ 6ql/i+vxVN0TgXoFhjSnfqZIHppf2ETNJiMkC2jCkcrR6zCdVIf361/O3D2UV5ezr/sb nA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtfk70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 16:15:43 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FGCoKI137426;
+        Mon, 15 Jul 2019 16:13:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2tq4dtde1q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 16:13:42 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6FGDffW017240;
+        Mon, 15 Jul 2019 16:13:41 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jul 2019 09:13:41 -0700
+Date:   Mon, 15 Jul 2019 09:13:40 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Sheriff Esseson <sheriffesseson@gmail.com>
+Cc:     skhan@linuxfoundation.org, linux-xfs@vger.kernel.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v8] Documentation: filesystem: Convert xfs.txt to ReST
+Message-ID: <20190715161340.GB6147@magnolia>
+References: <20190714125831.GA19200@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071516-0028-0000-0000-0000038471A4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071516-0029-0000-0000-000024449011
-Message-Id: <87tvbne0rd.fsf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=920 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907150188
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190714125831.GA19200@localhost>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907150189
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907150189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oscar Salvador <osalvador@suse.de> writes:
+On Sun, Jul 14, 2019 at 01:58:31PM +0100, Sheriff Esseson wrote:
+> Move xfs.txt to admin-guide, convert xfs.txt to ReST and broken references
+> 
+> Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
 
-> Since [1], shrink_{zone,node}_span work on PAGES_PER_SUBSECTION granularity.
-> The problem is that deactivation of the section occurs later on in
-> sparse_remove_section, so pfn_valid()->pfn_section_valid() will always return
-> true before we deactivate the {sub}section.
+Looks ok, will pull through the XFS tree.  Thanks for the submission!
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Can you explain this more? The patch doesn't update section_mem_map
-update sequence. So what changed? What is the problem in finding
-pfn_valid() return true there?
+--D
 
->
-> I spotted this during hotplug hotremove tests, there I always saw that
-> spanned_pages was, at least, left with PAGES_PER_SECTION, even if we
-> removed all memory linked to that zone.
->
-> Fix this by decoupling section_deactivate from sparse_remove_section, and
-> re-order the function calls.
->
-> Now, __remove_section will:
->
-> 1) deactivate section
-> 2) shrink {zone,node}'s pages
-> 3) remove section
->
-> [1] https://patchwork.kernel.org/patch/11003467/
->
-> Fixes: mmotm ("mm/hotplug: prepare shrink_{zone, pgdat}_span for sub-section removal")
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
 > ---
->  include/linux/memory_hotplug.h |  7 ++--
->  mm/memory_hotplug.c            |  6 +++-
->  mm/sparse.c                    | 77 +++++++++++++++++++++++++++++-------------
->  3 files changed, 62 insertions(+), 28 deletions(-)
->
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f46ea71b4ffd..d2eb917aad5f 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -348,9 +348,10 @@ extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  extern bool is_memblock_offlined(struct memory_block *mem);
->  extern int sparse_add_section(int nid, unsigned long pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap);
-> -extern void sparse_remove_section(struct mem_section *ms,
-> -		unsigned long pfn, unsigned long nr_pages,
-> -		unsigned long map_offset, struct vmem_altmap *altmap);
-> +int sparse_deactivate_section(unsigned long pfn, unsigned long nr_pages);
-> +void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
-> +                           unsigned long map_offset, struct vmem_altmap *altmap,
-> +                           int section_empty);
->  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
->  					  unsigned long pnum);
->  extern bool allow_online_pfn_range(int nid, unsigned long pfn, unsigned long nr_pages,
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index b9ba5b85f9f7..03d535eee60d 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -517,12 +517,16 @@ static void __remove_section(struct zone *zone, unsigned long pfn,
->  		struct vmem_altmap *altmap)
->  {
->  	struct mem_section *ms = __nr_to_section(pfn_to_section_nr(pfn));
-> +	int ret;
+> 
+> changes in v8:
+> 	- fix table of Deprecated and Removed options.
+> 
+>  Documentation/admin-guide/index.rst           |   1 +
+>  .../xfs.txt => admin-guide/xfs.rst}           | 132 +++++++++---------
+>  Documentation/filesystems/dax.txt             |   2 +-
+>  MAINTAINERS                                   |   2 +-
+>  4 files changed, 67 insertions(+), 70 deletions(-)
+>  rename Documentation/{filesystems/xfs.txt => admin-guide/xfs.rst} (80%)
+> 
+> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+> index 24fbe0568eff..0615ea3a744c 100644
+> --- a/Documentation/admin-guide/index.rst
+> +++ b/Documentation/admin-guide/index.rst
+> @@ -70,6 +70,7 @@ configure specific aspects of kernel behavior to your liking.
+>     ras
+>     bcache
+>     ext4
+> +   xfs
+>     binderfs
+>     pm/index
+>     thunderbolt
+> diff --git a/Documentation/filesystems/xfs.txt b/Documentation/admin-guide/xfs.rst
+> similarity index 80%
+> rename from Documentation/filesystems/xfs.txt
+> rename to Documentation/admin-guide/xfs.rst
+> index a5cbb5e0e3db..e76665a8f2f2 100644
+> --- a/Documentation/filesystems/xfs.txt
+> +++ b/Documentation/admin-guide/xfs.rst
+> @@ -1,4 +1,6 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 >  
->  	if (WARN_ON_ONCE(!valid_section(ms)))
->  		return;
+> +======================
+>  The SGI XFS Filesystem
+>  ======================
 >  
-> +	ret = sparse_deactivate_section(pfn, nr_pages);
->  	__remove_zone(zone, pfn, nr_pages);
-> -	sparse_remove_section(ms, pfn, nr_pages, map_offset, altmap);
-> +	if (ret >= 0)
-> +		sparse_remove_section(pfn, nr_pages, map_offset, altmap,
-> +				      ret);
->  }
+> @@ -18,8 +20,6 @@ Mount Options
+>  =============
 >  
->  /**
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 1e224149aab6..d4953ee1d087 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -732,16 +732,47 @@ static void free_map_bootmem(struct page *memmap)
->  }
->  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>  When mounting an XFS filesystem, the following options are accepted.
+> -For boolean mount options, the names with the (*) suffix is the
+> -default behaviour.
 >  
-> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> -		struct vmem_altmap *altmap)
-> +static void section_remove(unsigned long pfn, unsigned long nr_pages,
-> +			   struct vmem_altmap *altmap, int section_empty)
-> +{
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	bool section_early = early_section(ms);
-> +	struct page *memmap = NULL;
-> +
-> +	if (section_empty) {
-> +		unsigned long section_nr = pfn_to_section_nr(pfn);
-> +
-> +		if (!section_early) {
-> +			kfree(ms->usage);
-> +			ms->usage = NULL;
-> +		}
-> +		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> +		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-> +	}
-> +
-> +        if (section_early && memmap)
-> +		free_map_bootmem(memmap);
-> +        else
-> +		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +}
-> +
-> +/**
-> + * section_deactivate: Deactivate a {sub}section.
-> + *
-> + * Return:
-> + * * -1         - {sub}section has already been deactivated.
-> + * * 0          - Section is not empty
-> + * * 1          - Section is empty
-> + */
-> +
-> +static int section_deactivate(unsigned long pfn, unsigned long nr_pages)
->  {
->  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
->  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
->  	struct mem_section *ms = __pfn_to_section(pfn);
-> -	bool section_is_early = early_section(ms);
-> -	struct page *memmap = NULL;
->  	unsigned long *subsection_map = ms->usage
->  		? &ms->usage->subsection_map[0] : NULL;
-> +	int section_empty = 0;
+>    allocsize=size
+>  	Sets the buffered I/O end-of-file preallocation size when
+> @@ -31,46 +31,43 @@ default behaviour.
+>  	preallocation size, which uses a set of heuristics to
+>  	optimise the preallocation size based on the current
+>  	allocation patterns within the file and the access patterns
+> -	to the file. Specifying a fixed allocsize value turns off
+> +	to the file. Specifying a fixed ``allocsize`` value turns off
+>  	the dynamic behaviour.
 >  
->  	subsection_mask_set(map, pfn, nr_pages);
->  	if (subsection_map)
-> @@ -750,7 +781,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
->  				"section already deactivated (%#lx + %ld)\n",
->  				pfn, nr_pages))
-> -		return;
-> +		return -1;
+> -  attr2
+> -  noattr2
+> +  attr2 or noattr2
+>  	The options enable/disable an "opportunistic" improvement to
+>  	be made in the way inline extended attributes are stored
+>  	on-disk.  When the new form is used for the first time when
+> -	attr2 is selected (either when setting or removing extended
+> +	``attr2`` is selected (either when setting or removing extended
+>  	attributes) the on-disk superblock feature bit field will be
+>  	updated to reflect this format being in use.
 >  
->  	/*
->  	 * There are 3 cases to handle across two configurations
-> @@ -770,21 +801,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
->  	 */
->  	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> -	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
-> -		unsigned long section_nr = pfn_to_section_nr(pfn);
+>  	The default behaviour is determined by the on-disk feature
+> -	bit indicating that attr2 behaviour is active. If either
+> -	mount option it set, then that becomes the new default used
+> +	bit indicating that ``attr2`` behaviour is active. If either
+> +	mount option is set, then that becomes the new default used
+>  	by the filesystem.
+>  
+> -	CRC enabled filesystems always use the attr2 format, and so
+> -	will reject the noattr2 mount option if it is set.
+> +	CRC enabled filesystems always use the ``attr2`` format, and so
+> +	will reject the ``noattr2`` mount option if it is set.
+>  
+> -  discard
+> -  nodiscard (*)
+> +  discard or nodiscard (default)
+>  	Enable/disable the issuing of commands to let the block
+>  	device reclaim space freed by the filesystem.  This is
+>  	useful for SSD devices, thinly provisioned LUNs and virtual
+>  	machine images, but may have a performance impact.
+>  
+> -	Note: It is currently recommended that you use the fstrim
+> -	application to discard unused blocks rather than the discard
+> +	Note: It is currently recommended that you use the ``fstrim``
+> +	application to ``discard`` unused blocks rather than the ``discard``
+>  	mount option because the performance impact of this option
+>  	is quite severe.
+>  
+> -  grpid/bsdgroups
+> -  nogrpid/sysvgroups (*)
+> +  grpid/bsdgroups or nogrpid/sysvgroups (default)
+>  	These options define what group ID a newly created file
+> -	gets.  When grpid is set, it takes the group ID of the
+> +	gets.  When ``grpid`` is set, it takes the group ID of the
+>  	directory in which it is created; otherwise it takes the
+> -	fsgid of the current process, unless the directory has the
+> -	setgid bit set, in which case it takes the gid from the
+> -	parent directory, and also gets the setgid bit set if it is
+> +	``fsgid`` of the current process, unless the directory has the
+> +	``setgid`` bit set, in which case it takes the ``gid`` from the
+> +	parent directory, and also gets the ``setgid`` bit set if it is
+>  	a directory itself.
+>  
+>    filestreams
+> @@ -78,46 +75,42 @@ default behaviour.
+>  	across the entire filesystem rather than just on directories
+>  	configured to use it.
+>  
+> -  ikeep
+> -  noikeep (*)
+> -	When ikeep is specified, XFS does not delete empty inode
+> -	clusters and keeps them around on disk.  When noikeep is
+> +  ikeep or noikeep (default)
+> +	When ``ikeep`` is specified, XFS does not delete empty inode
+> +	clusters and keeps them around on disk.  When ``noikeep`` is
+>  	specified, empty inode clusters are returned to the free
+>  	space pool.
+>  
+> -  inode32
+> -  inode64 (*)
+> -	When inode32 is specified, it indicates that XFS limits
+> +  inode32 or inode64 (default)
+> +	When ``inode32`` is specified, it indicates that XFS limits
+>  	inode creation to locations which will not result in inode
+>  	numbers with more than 32 bits of significance.
+>  
+> -	When inode64 is specified, it indicates that XFS is allowed
+> +	When ``inode64`` is specified, it indicates that XFS is allowed
+>  	to create inodes at any location in the filesystem,
+>  	including those which will result in inode numbers occupying
+> -	more than 32 bits of significance. 
+> +	more than 32 bits of significance.
+>  
+> -	inode32 is provided for backwards compatibility with older
+> +	``inode32`` is provided for backwards compatibility with older
+>  	systems and applications, since 64 bits inode numbers might
+>  	cause problems for some applications that cannot handle
+>  	large inode numbers.  If applications are in use which do
+> -	not handle inode numbers bigger than 32 bits, the inode32
+> +	not handle inode numbers bigger than 32 bits, the ``inode32``
+>  	option should be specified.
+>  
 > -
-> -		if (!section_is_early) {
-> -			kfree(ms->usage);
-> -			ms->usage = NULL;
-> -		}
-> -		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> -		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-> -	}
-> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
-> +		section_empty = 1;
+> -  largeio
+> -  nolargeio (*)
+> -	If "nolargeio" is specified, the optimal I/O reported in
+> -	st_blksize by stat(2) will be as small as possible to allow
+> +  largeio or nolargeio (default)
+> +	If ``nolargeio`` is specified, the optimal I/O reported in
+> +	``st_blksize`` by **stat(2)** will be as small as possible to allow
+>  	user applications to avoid inefficient read/modify/write
+>  	I/O.  This is typically the page size of the machine, as
+>  	this is the granularity of the page cache.
 >  
-> -	if (section_is_early && memmap)
-> -		free_map_bootmem(memmap);
-> -	else
-> -		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +	return section_empty;
->  }
+> -	If "largeio" specified, a filesystem that was created with a
+> -	"swidth" specified will return the "swidth" value (in bytes)
+> -	in st_blksize. If the filesystem does not have a "swidth"
+> -	specified but does specify an "allocsize" then "allocsize"
+> +	If ``largeio`` is specified, a filesystem that was created with a
+> +	``swidth`` specified will return the ``swidth`` value (in bytes)
+> +	in ``st_blksize``. If the filesystem does not have a ``swidth``
+> +	specified but does specify an ``allocsize`` then ``allocsize``
+>  	(in bytes) will be returned instead. Otherwise the behaviour
+> -	is the same as if "nolargeio" was specified.
+> +	is the same as if ``nolargeio`` was specified.
 >  
->  static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> @@ -834,7 +854,11 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>    logbufs=value
+>  	Set the number of in-memory log buffers.  Valid numbers
+> @@ -127,7 +120,7 @@ default behaviour.
 >  
->  	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap);
->  	if (!memmap) {
-> -		section_deactivate(pfn, nr_pages, altmap);
-> +		int ret;
-> +
-> +		ret = section_deactivate(pfn, nr_pages);
-> +		if (ret >= 0)
-> +			section_remove(pfn, nr_pages, altmap, ret);
->  		return ERR_PTR(-ENOMEM);
->  	}
+>  	If the memory cost of 8 log buffers is too high on small
+>  	systems, then it may be reduced at some cost to performance
+> -	on metadata intensive workloads. The logbsize option below
+> +	on metadata intensive workloads. The ``logbsize`` option below
+>  	controls the size of each buffer and so is also relevant to
+>  	this case.
 >  
-> @@ -919,12 +943,17 @@ static inline void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
->  }
->  #endif
+> @@ -138,7 +131,7 @@ default behaviour.
+>  	and 32768 (32k).  Valid sizes for version 2 logs also
+>  	include 65536 (64k), 131072 (128k) and 262144 (256k). The
+>  	logbsize must be an integer multiple of the log
+> -	stripe unit configured at mkfs time.
+> +	stripe unit configured at **mkfs(8)** time.
 >  
-> -void sparse_remove_section(struct mem_section *ms, unsigned long pfn,
-> -		unsigned long nr_pages, unsigned long map_offset,
-> -		struct vmem_altmap *altmap)
-> +int sparse_deactivate_section(unsigned long pfn, unsigned long nr_pages)
-> +{
-> +	return section_deactivate(pfn, nr_pages);
-> +}
-> +
-> +void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
-> +			   unsigned long map_offset, struct vmem_altmap *altmap,
-> +			   int section_empty)
->  {
->  	clear_hwpoisoned_pages(pfn_to_page(pfn) + map_offset,
->  			nr_pages - map_offset);
-> -	section_deactivate(pfn, nr_pages, altmap);
-> +	section_remove(pfn, nr_pages, altmap, section_empty);
->  }
->  #endif /* CONFIG_MEMORY_HOTPLUG */
+>  	The default value for for version 1 logs is 32768, while the
+>  	default value for version 2 logs is MAX(32768, log_sunit).
+> @@ -153,21 +146,21 @@ default behaviour.
+>    noalign
+>  	Data allocations will not be aligned at stripe unit
+>  	boundaries. This is only relevant to filesystems created
+> -	with non-zero data alignment parameters (sunit, swidth) by
+> -	mkfs.
+> +	with non-zero data alignment parameters (``sunit``, ``swidth``) by
+> +	**mkfs(8)**.
+>  
+>    norecovery
+>  	The filesystem will be mounted without running log recovery.
+>  	If the filesystem was not cleanly unmounted, it is likely to
+> -	be inconsistent when mounted in "norecovery" mode.
+> +	be inconsistent when mounted in ``norecovery`` mode.
+>  	Some files or directories may not be accessible because of this.
+> -	Filesystems mounted "norecovery" must be mounted read-only or
+> +	Filesystems mounted ``norecovery`` must be mounted read-only or
+>  	the mount will fail.
+>  
+>    nouuid
+>  	Don't check for double mounted file systems using the file
+> -	system uuid.  This is useful to mount LVM snapshot volumes,
+> -	and often used in combination with "norecovery" for mounting
+> +	system ``uuid``.  This is useful to mount LVM snapshot volumes,
+> +	and often used in combination with ``norecovery`` for mounting
+>  	read-only snapshots.
+>  
+>    noquota
+> @@ -176,15 +169,15 @@ default behaviour.
+>  
+>    uquota/usrquota/uqnoenforce/quota
+>  	User disk quota accounting enabled, and limits (optionally)
+> -	enforced.  Refer to xfs_quota(8) for further details.
+> +	enforced.  Refer to **xfs_quota(8)** for further details.
+>  
+>    gquota/grpquota/gqnoenforce
+>  	Group disk quota accounting enabled and limits (optionally)
+> -	enforced.  Refer to xfs_quota(8) for further details.
+> +	enforced.  Refer to **xfs_quota(8)** for further details.
+>  
+>    pquota/prjquota/pqnoenforce
+>  	Project disk quota accounting enabled and limits (optionally)
+> -	enforced.  Refer to xfs_quota(8) for further details.
+> +	enforced.  Refer to **xfs_quota(8)** for further details.
+>  
+>    sunit=value and swidth=value
+>  	Used to specify the stripe unit and width for a RAID device
+> @@ -192,11 +185,11 @@ default behaviour.
+>  	block units. These options are only relevant to filesystems
+>  	that were created with non-zero data alignment parameters.
+>  
+> -	The sunit and swidth parameters specified must be compatible
+> +	The ``sunit`` and ``swidth`` parameters specified must be compatible
+>  	with the existing filesystem alignment characteristics.  In
+> -	general, that means the only valid changes to sunit are
+> -	increasing it by a power-of-2 multiple. Valid swidth values
+> -	are any integer multiple of a valid sunit value.
+> +	general, that means the only valid changes to ``sunit`` are
+> +	increasing it by a power-of-2 multiple. Valid ``swidth`` values
+> +	are any integer multiple of a valid ``sunit`` value.
+>  
+>  	Typically the only time these mount options are necessary if
+>  	after an underlying RAID device has had it's geometry
+> @@ -221,22 +214,25 @@ default behaviour.
+>  Deprecated Mount Options
+>  ========================
+>  
+> +===========================     ================
+>    Name				Removal Schedule
+> -  ----				----------------
+> +===========================     ================
+> +===========================     ================
+>  
+>  
+>  Removed Mount Options
+>  =====================
+>  
+> +===========================     =======
+>    Name				Removed
+> -  ----				-------
+> +===========================	=======
+>    delaylog/nodelaylog		v4.0
+>    ihashsize			v4.0
+>    irixsgid			v4.0
+>    osyncisdsync/osyncisosync	v4.0
+>    barrier			v4.19
+>    nobarrier			v4.19
+> -
+> +===========================     =======
+>  
+>  sysctls
+>  =======
+> @@ -302,27 +298,27 @@ The following sysctls are available for the XFS filesystem:
+>  
+>    fs.xfs.inherit_sync		(Min: 0  Default: 1  Max: 1)
+>  	Setting this to "1" will cause the "sync" flag set
+> -	by the xfs_io(8) chattr command on a directory to be
+> +	by the **xfs_io(8)** chattr command on a directory to be
+>  	inherited by files in that directory.
+>  
+>    fs.xfs.inherit_nodump		(Min: 0  Default: 1  Max: 1)
+>  	Setting this to "1" will cause the "nodump" flag set
+> -	by the xfs_io(8) chattr command on a directory to be
+> +	by the **xfs_io(8)** chattr command on a directory to be
+>  	inherited by files in that directory.
+>  
+>    fs.xfs.inherit_noatime	(Min: 0  Default: 1  Max: 1)
+>  	Setting this to "1" will cause the "noatime" flag set
+> -	by the xfs_io(8) chattr command on a directory to be
+> +	by the **xfs_io(8)** chattr command on a directory to be
+>  	inherited by files in that directory.
+>  
+>    fs.xfs.inherit_nosymlinks	(Min: 0  Default: 1  Max: 1)
+>  	Setting this to "1" will cause the "nosymlinks" flag set
+> -	by the xfs_io(8) chattr command on a directory to be
+> +	by the **xfs_io(8)** chattr command on a directory to be
+>  	inherited by files in that directory.
+>  
+>    fs.xfs.inherit_nodefrag	(Min: 0  Default: 1  Max: 1)
+>  	Setting this to "1" will cause the "nodefrag" flag set
+> -	by the xfs_io(8) chattr command on a directory to be
+> +	by the **xfs_io(8)** chattr command on a directory to be
+>  	inherited by files in that directory.
+>  
+>    fs.xfs.rotorstep		(Min: 1  Default: 1  Max: 256)
+> @@ -368,7 +364,7 @@ handler:
+>   -error handlers:
+>  	Defines the behavior for a specific error.
+>  
+> -The filesystem behavior during an error can be set via sysfs files. Each
+> +The filesystem behavior during an error can be set via ``sysfs`` files. Each
+>  error handler works independently - the first condition met by an error handler
+>  for a specific class will cause the error to be propagated rather than reset and
+>  retried.
+> @@ -419,7 +415,7 @@ level directory:
+>  	handler configurations.
+>  
+>  	Note: there is no guarantee that fail_at_unmount can be set while an
+> -	unmount is in progress. It is possible that the sysfs entries are
+> +	unmount is in progress. It is possible that the ``sysfs`` entries are
+>  	removed by the unmounting filesystem before a "retry forever" error
+>  	handler configuration causes unmount to hang, and hence the filesystem
+>  	must be configured appropriately before unmount begins to prevent
+> @@ -428,7 +424,7 @@ level directory:
+>  Each filesystem has specific error class handlers that define the error
+>  propagation behaviour for specific errors. There is also a "default" error
+>  handler defined, which defines the behaviour for all errors that don't have
+> -specific handlers defined. Where multiple retry constraints are configuredi for
+> +specific handlers defined. Where multiple retry constraints are configured for
+>  a single error, the first retry configuration that expires will cause the error
+>  to be propagated. The handler configurations are found in the directory:
+>  
+> @@ -463,7 +459,7 @@ to be propagated. The handler configurations are found in the directory:
+>  	Setting the value to "N" (where 0 < N < Max) will allow XFS to retry the
+>  	operation for up to "N" seconds before propagating the error.
+>  
+> -Note: The default behaviour for a specific error handler is dependent on both
+> +**Note:** The default behaviour for a specific error handler is dependent on both
+>  the class and error context. For example, the default values for
+>  "metadata/ENODEV" are "0" rather than "-1" so that this error handler defaults
+>  to "fail immediately" behaviour. This is done because ENODEV is a fatal,
+> diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+> index 6d2c0d340dea..679729442fd2 100644
+> --- a/Documentation/filesystems/dax.txt
+> +++ b/Documentation/filesystems/dax.txt
+> @@ -76,7 +76,7 @@ exposure of uninitialized data through mmap.
+>  These filesystems may be used for inspiration:
+>  - ext2: see Documentation/filesystems/ext2.txt
+>  - ext4: see Documentation/filesystems/ext4/
+> -- xfs:  see Documentation/filesystems/xfs.txt
+> +- xfs:  see Documentation/admin-guide/xfs.rst
+>  
+>  
+>  Handling Media Errors
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 43ca94856944..3b6e0b6d8cbd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17453,7 +17453,7 @@ L:	linux-xfs@vger.kernel.org
+>  W:	http://xfs.org/
+>  T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+>  S:	Supported
+> -F:	Documentation/filesystems/xfs.txt
+> +F:	Documentation/admin-guide/xfs.rst
+>  F:	fs/xfs/
+>  
+>  XILINX AXI ETHERNET DRIVER
 > -- 
-> 2.12.3
-
+> 2.22.0
+> 
