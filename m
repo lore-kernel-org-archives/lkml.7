@@ -2,104 +2,96 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C399CC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C198C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D6E2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C701F206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203193;
-	bh=FMLCJaIguW6YWjuMGHKMm+W18reEkOZbzo2vwzvBfvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nIwefDiGZ0DB+k+5JrmiaV/UAFv8TY/na16fpTvzW+SNnfz6MelKUPPp7AT+WW5MJ
-	 yUz2RST0t6wKVQDwzT9owifevt83xJ/yDn70qrvHoO2enV8LLE8c6Rq7FXqzcwYgNd
-	 TU/Uekyk/ZbDSoAteQnWhxMJlWw5B3kZqgrWM66s=
+	s=default; t=1563203208;
+	bh=7EtuJgPzcudiPk5xwcfFj98UTAkfr0vJDCgWmRFLuU8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nsVo/vInkmLSiTt/MlxmcRcC+O9/Sr4cr1vpexmEpoTAmGSWM3YHQyo1bQ8VpLYN2
+	 rJcMly09aUIEu2hA8rb7jwGHgKVjFE6lOD6gT7X3XRRHiqnywWVamoDcZ+L5kSJOJY
+	 aRiXjT7jo/axcetJmIw25tkqVl4Y2Yd7RPD3rZqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388516AbfGOPGc (ORCPT
+        id S2388531AbfGOPGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:06:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46294 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387958AbfGOOEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:04:41 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2387723AbfGOOE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:04:29 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A6DE21842;
-        Mon, 15 Jul 2019 14:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199480;
-        bh=FMLCJaIguW6YWjuMGHKMm+W18reEkOZbzo2vwzvBfvM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uG9OSQCRsFiXy9YOPQBXOezyQVvKZZEs4mVgeNrItxy05g5gaf6LTGHN3wnMlFkDZ
-         AneCgBM2OV50eyPKqxSZW4Dd8XEDfLtNx8jy8i2PVrJcu5tEHDdyirrWeiNl+HNrNW
-         6Jm4as3uln6e/cv95rkniZ69vSTYHwttNLk/wHx8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 016/219] ath10k: Fix encoding for protected management frames
-Date:   Mon, 15 Jul 2019 10:00:17 -0400
-Message-Id: <20190715140341.6443-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
-References: <20190715140341.6443-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id A6D3759440;
+        Mon, 15 Jul 2019 14:04:29 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.205.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B45B6085B;
+        Mon, 15 Jul 2019 14:04:26 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     David Carrillo-Cisneros <davidcc@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: [PATCH] perf tools: Fix proper buffer size for feature processing
+Date:   Mon, 15 Jul 2019 16:04:26 +0200
+Message-Id: <20190715140426.32509-1-jolsa@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 15 Jul 2019 14:04:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+After Song Liu's segfault fix for pipe mode, Arnaldo reported
+following error:
 
-[ Upstream commit 42f1bc43e6a97b9ddbe976eba9bd05306c990c75 ]
+  # perf record -o - | perf script
+  0x514 [0x1ac]: failed to process type: 80
 
-Currently the protected management frames are
-not appended with the MIC_LEN which results in
-the protected management frames being encoded
-incorrectly.
+It's caused by wrong buffer size setup in feature processing,
+which makes cpu topology feature fail, because it's using
+buffer size to recognize its header version.
 
-Add the extra space at the end of the protected
-management frames to fix this encoding error for
-the protected management frames.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
+Link: http://lkml.kernel.org/n/tip-2lj87zz8tq9ye1ntax3ulw0n@git.kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index 582fb11f648a..02709fc99034 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2840,8 +2840,10 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if ((ieee80211_is_action(hdr->frame_control) ||
- 	     ieee80211_is_deauth(hdr->frame_control) ||
- 	     ieee80211_is_disassoc(hdr->frame_control)) &&
--	     ieee80211_has_protected(hdr->frame_control))
-+	     ieee80211_has_protected(hdr->frame_control)) {
-+		skb_put(msdu, IEEE80211_CCMP_MIC_LEN);
- 		buf_len += IEEE80211_CCMP_MIC_LEN;
-+	}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index c24db7f4909c..20111f8da5cb 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3747,7 +3747,7 @@ int perf_event__process_feature(struct perf_session *session,
+ 		return 0;
  
- 	buf_len = min_t(u32, buf_len, WMI_TLV_MGMT_TX_FRAME_MAX_LEN);
- 	buf_len = round_up(buf_len, 4);
+ 	ff.buf  = (void *)fe->data;
+-	ff.size = event->header.size - sizeof(event->header);
++	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
+ 
+ 	if (feat_ops[feat].process(&ff, NULL))
 -- 
-2.20.1
+2.21.0
 
