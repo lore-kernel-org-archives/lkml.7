@@ -2,178 +2,138 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E57EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C637C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C9720665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4176620659
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+1GpKUr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TtALnbKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbfGOUAy (ORCPT
+        id S1732853AbfGOUBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:00:54 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41137 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731262AbfGOUAr (ORCPT
+        Mon, 15 Jul 2019 16:01:53 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:42270 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732601AbfGOUAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:00:47 -0400
-Received: by mail-io1-f66.google.com with SMTP id j5so31951472ioj.8;
-        Mon, 15 Jul 2019 13:00:46 -0700 (PDT)
+        Mon, 15 Jul 2019 16:00:50 -0400
+Received: by mail-pg1-f201.google.com with SMTP id d3so11095423pgc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D/u//h9h5nsqAs7HfcVGU38KKZeeeobvjpeQ+T4FGUw=;
-        b=j+1GpKUrI57uEEkfPvTStFfut1NiVn1A/l+zGXIuClHjPdQD7GXUijxd0dyBo/CsHQ
-         Bq+TMIDTowgY+dRMVYFTZ2HIrQGlPbl2nDVWBNL8QS0YA7558NLf56+vQGk1UMdNOgis
-         nAoemWbyrgtjGFlo3eID4MX8RVG6FBdGwDmU/NVsbjwh7jIEM5FyCgIMl1BH19pVQcKM
-         cUdAKEgppV50CRqrdYISBXXGCJI/RavB27InkgiS0hXPNXeTiSw622gRa6r/Gtlr7mvT
-         SlJkBY8aSoJ0R9k83EqBbMR6P0xNMrpAIqeJdIcRpEVeMgM5+hSInJUK7aSgeLYOVTsk
-         bGqg==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=27bG30v551PCUw49w0IhwfwVjWUxHkMd+OR3VLoSFAQ=;
+        b=TtALnbKpnTpmzFXbZcyThBpPXUD2vVMXHLz9/K8WCJZcT3sMigJcUb/tqieCDmJYOh
+         LKx1gN0TYA3+pZ4/kF+qHhWNB06etdiDXdmEYNb/MtNPes8oGYvUJlPhfR4z8qXd4ldc
+         q3cHPE6KMeWpAwlHSonpn/7Li7o6pH7n3SRDWVXWy0KDhxAewWkmSChbNmDmbAwsy+OO
+         m/KF6f0nDfVKtyBESrNNS6tPtxph9XndwqSrxe5fJU3pbkhLrN14ZuxLHqMZ6DVhzq3x
+         Ll+p9sRpyRcNcxXNlcvQmuSwnxf+IIPUZzC2PZ56UEdGVoIGdscmmb0Tqyh/yQPbDJ0N
+         HL/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D/u//h9h5nsqAs7HfcVGU38KKZeeeobvjpeQ+T4FGUw=;
-        b=oK1enitWxYSgaUeP5++jpqFmnNY3xAOw8NtsM+CBv1IpvAVVzh7F25fOOUwRCaGK0q
-         LoTj2hb7kJwF5Z1JyehTPIGy6rHtQSZCpBgLMiCBc6mWetXkjvM34ybbv/fx9dJVy9lL
-         TeOhLi88lDChEPIyR6+86kY0d0UOLcaJB4sfG0iSLqaTTAdjtiICNltDRsUEewKk66ni
-         NJ0aSWdanRLD7LUo8J95VSPTJKFmmMa19qbFCV8fUQStMNo97MDXjkxUEketnpgXPDWm
-         wxuAQkKYYmg9p2SYN1vU8qmrAcGkOkK8fD3w/loG6Huxelp+UEY0I0LlU1FqkiNlGNSo
-         iMoA==
-X-Gm-Message-State: APjAAAWtrplWTohFL5FPw8yEMXx4AwxBtZBi8U0JHBAGpD/6iSXg7pmr
-        2u/3YiPKGlSloa2r5RG2mPuTsBVUgOe8er8Qmn0=
-X-Google-Smtp-Source: APXvYqyA6vQUGkrRdX/HxIitR7pnzYfqz0G0jJgjDOfZSZ3zx/ehoosjvpOq9MEMo4CpKvX4MGgoRTmUe1f03Nyg/e8=
-X-Received: by 2002:a6b:f90f:: with SMTP id j15mr21440225iog.43.1563220845620;
- Mon, 15 Jul 2019 13:00:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190419081926.13567-1-ronald@innovation.ch> <20190419081926.13567-2-ronald@innovation.ch>
- <CGME20190702135052eucas1p11e2621af0514505789c7947b84cf133c@eucas1p1.samsung.com>
- <2d0fe94c-a2c9-a8f6-967f-c33b53e86518@samsung.com> <20190703063956.GA32102@innovation.ch>
- <20190715180407.GB131063@dtor-ws>
-In-Reply-To: <20190715180407.GB131063@dtor-ws>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Mon, 15 Jul 2019 13:00:34 -0700
-Message-ID: <CAKdAkRTGXNbUsuKASNGLfwUwC7Asod9K5baYLPWPU7EX-42-yA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] drm/bridge: sil_sii8620: make remote control optional.
-To:     "Life is hard, and then you die" <ronald@innovation.ch>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=27bG30v551PCUw49w0IhwfwVjWUxHkMd+OR3VLoSFAQ=;
+        b=N6WSd/JDggobGUkTdu0awGVXEZG48NI93PV0XUgdHnVTbcNAesPUHoupyoDHZB/lbu
+         ZiawLShhTOGpNAmzM7tken5qdjp7KxTHaQrmznb7XjyFg6oZG23PXzHWUtv4cnI2QJ9J
+         34dmIoE+QAeBlOrg454wLOZmTC+3MAs2T4SWCluV0SFACOv+XeZOrFKc3rTlNlCYC3t3
+         BHyS0ptv09tzV02LQplUcd4lXYXCn4cHEzLkRS3uQ13QS0J0SsD13wokqFe3QhdSilU7
+         AEUCDzAfp7vBDEk9R8EEJtBPQC8AgY1HGjjUCBQfiuhh+Ib1o41bWsMZSPR4N+ZF/Sot
+         Jorg==
+X-Gm-Message-State: APjAAAU2YJC2KGA8mEYmEcHvU5XcB/tQWis5jiPO185fTq2nADd32Zu9
+        F8ZH+6sXcUdkFUuhFxJetOvntXowxJ+9O0gZLi5gUg==
+X-Google-Smtp-Source: APXvYqzkGmLJbJxcjs2hj9aWPl3QD/H1QcvcXF5PeHJYQdVT4P2+EUPV+l8kcWG1CRmP7Y/ux0sv82HRaOS4eeckdgZiew==
+X-Received: by 2002:a63:4522:: with SMTP id s34mr28567890pga.362.1563220849269;
+ Mon, 15 Jul 2019 13:00:49 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 12:59:38 -0700
+In-Reply-To: <20190715195946.223443-1-matthewgarrett@google.com>
+Message-Id: <20190715195946.223443-22-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190715195946.223443-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH V35 21/29] Lock down /proc/kcore
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:04 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi,
->
-> On Tue, Jul 02, 2019 at 11:39:56PM -0700, Life is hard, and then you die =
-wrote:
-> >
-> > On Tue, Jul 02, 2019 at 03:50:49PM +0200, Andrzej Hajda wrote:
-> > > On 19.04.2019 10:19, Ronald Tschal=C3=A4r wrote:
-> > > > commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a depende=
-ncy
-> > > > of RC_CORE) changed the driver to select both RC_CORE and INPUT.
-> > > > However, this causes problems with other drivers, in particular an =
-input
-> > > > driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separat=
-e
-> > > > commit):
-> > > >
-> > > >   drivers/clk/Kconfig:9:error: recursive dependency detected!
-> > > >   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MF=
-D_INTEL_LPSS
-> > > >   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected b=
-y MFD_INTEL_LPSS_PCI
-> > > >   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implie=
-d by KEYBOARD_APPLESPI
-> > > >   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI de=
-pends on INPUT
-> > > >   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL=
-_SII8620
-> > > >   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depe=
-nds on DRM_BRIDGE
-> > > >   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is select=
-ed by DRM_PL111
-> > > >   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on=
- COMMON_CLK
-> > > >
-> > > > According to the docs and general consensus, select should only be =
-used
-> > > > for non user-visible symbols, but both RC_CORE and INPUT are
-> > > > user-visible. Furthermore almost all other references to INPUT
-> > > > throughout the kernel config are depends, not selects. For this rea=
-son
-> > > > the first part of this change reverts commit d6abe6df706c.
-> > > >
-> > > > In order to address the original reason for commit d6abe6df706c, na=
-mely
-> > > > that not all boards use the remote controller functionality and hen=
-ce
-> > > > should not need have to deal with RC_CORE, the second part of this
-> > > > change now makes the remote control support in the driver optional =
-and
-> > > > contingent on RC_CORE being defined. And with this the hard depende=
-ncy
-> > > > on INPUT also goes away as that is only needed if RC_CORE is define=
-d
-> > > > (which in turn already depends on INPUT).
-> > > >
-> > > > CC: Inki Dae <inki.dae@samsung.com>
-> > > > CC: Andrzej Hajda <a.hajda@samsung.com>
-> > > > CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > Signed-off-by: Ronald Tschal=C3=A4r <ronald@innovation.ch>
-> > > > Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> > >
-> > >
-> > > Apparently this patch was not queued to kernel yet. If there are no
-> > > objections I will queue it via drm-misc-next tree tomorrow.
-> >
-> > If this patch set won't be queued for 5.3 then I guess that would be a
-> > good idea.
-> >
-> > But may I ask what is preventing this patch set from being queued for
-> > upstream, so I can try and fix whatever the issue is?
->
-> As I mentioned in my pull request to Linux I will be picking up the
-> Apple keyboard driver for this merge window even though it was not in
-> next (my fault).
->
-> I created and immutable branch for this change if you'd like to pull it
-> in so we do not duplicate commit and risk the conflicts (but I believe
-> git should resolve it either way).
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git id/5.2-sil=
-_sii8620-rc-optional
+From: David Howells <dhowells@redhat.com>
 
-Sorry, that should have read:
+Disallow access to /proc/kcore when the kernel is locked down to prevent
+access to cryptographic data. This is limited to lockdown
+confidentiality mode and is still permitted in integrity mode.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
-ib/5.2-sil_sii8620-rc-optional
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+ fs/proc/kcore.c              | 5 +++++
+ include/linux/security.h     | 1 +
+ security/lockdown/lockdown.c | 1 +
+ 3 files changed, 7 insertions(+)
 
-Thanks.
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index f5834488b67d..ee2c576cc94e 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -31,6 +31,7 @@
+ #include <linux/ioport.h>
+ #include <linux/memory.h>
+ #include <linux/sched/task.h>
++#include <linux/security.h>
+ #include <asm/sections.h>
+ #include "internal.h"
+ 
+@@ -545,6 +546,10 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 
+ static int open_kcore(struct inode *inode, struct file *filp)
+ {
++	int ret = security_locked_down(LOCKDOWN_KCORE);
++
++	if (ret)
++		return ret;
+ 	if (!capable(CAP_SYS_RAWIO))
+ 		return -EPERM;
+ 
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 3f7b6a4cd65a..f0cffd0977d3 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -116,6 +116,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_MODULE_PARAMETERS,
+ 	LOCKDOWN_MMIOTRACE,
+ 	LOCKDOWN_INTEGRITY_MAX,
++	LOCKDOWN_KCORE,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+ 
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index e725f63c29d2..9c097240a3a6 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -31,6 +31,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+ 	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
++	[LOCKDOWN_KCORE] = "/proc/kcore access",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+ 
+-- 
+2.22.0.510.g264f2c817a-goog
 
---=20
-Dmitry
