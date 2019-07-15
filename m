@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8EBC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CAC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8ED2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C782054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203453;
-	bh=MZoTV+b3HU5dLeKehg1HKEB6/ZWx9+HGjcpWGQKcmWI=;
+	s=default; t=1563203463;
+	bh=GRdJJ4B83AfJF8aHUll+amuq345dPXlfxOAT4/iRX60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9wafQiMPKHEJf3h8KHFAGO6tcUS74iJsBenaVzW8zuC4uIQFDXHeBqaRngXTNjo3
-	 PqQzR/TBL4QYkV2+ATUybbZnBRCIskoO2c1yugh9h+6N+3XcimVyjpCYkgTF0dUSIn
-	 gXDQQuZFwl7yTJ6X47SdsbBWH3ie5YQuoxKQf8Yk=
+	b=XeQfzL/ztr8a4IzE28+qv5z74ce8b+LJfMhPHTVlpgB3TAE6+SAe8BctHnFu6LFsx
+	 s5y94anNs9Nb9M3IiZerg17zxFybvmp5Zfc7rdNNSKyY2W9+tdBFMRjThAqy3acGz9
+	 7vP0iVcevXVBM0pj2qsO1SN0VbMLx5YwMLEb9cgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732716AbfGONzH (ORCPT
+        id S1732075AbfGOPLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732588AbfGONyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:54:54 -0400
+        id S1732715AbfGONzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:55:07 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45EC7212F5;
-        Mon, 15 Jul 2019 13:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF15C20C01;
+        Mon, 15 Jul 2019 13:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198893;
-        bh=MZoTV+b3HU5dLeKehg1HKEB6/ZWx9+HGjcpWGQKcmWI=;
+        s=default; t=1563198906;
+        bh=GRdJJ4B83AfJF8aHUll+amuq345dPXlfxOAT4/iRX60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RHK2nerEL0cDcpawpofrmme+tt2WtkYzgKQNcM4Cgn4L7L5S0jBhyNUA/rGEXXscF
-         o2kdh2zAzyY7DTkoNKCUGPdoCyS/FbATUceBDXZVU1AqK0KQXnUgW1QzEwhpjsqLPm
-         qCS1y8bTb94nnZtQ9P4HyyVxE33D0u4O663FXvpc=
+        b=jKQbFPdjofCCAD84I8BeaIPMSqJi3CEKmXRNBSfHuGe250SgBESR+YiHWhZH+8pEj
+         u1AGFXzM96tscL+UftosX5azDumXYUF30gMK6vJVBEjfQwwWLShb70iBfZr56+ww/C
+         VZLq92FVnMgL+NBpsWjmnWjvSGOZ6mhHu9Y8gkCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 131/249] spi: fix ctrl->num_chipselect constraint
-Date:   Mon, 15 Jul 2019 09:44:56 -0400
-Message-Id: <20190715134655.4076-131-sashal@kernel.org>
+Cc:     Heiner Litz <hlitz@ucsc.edu>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 137/249] lightnvm: pblk: fix freeing of merged pages
+Date:   Mon, 15 Jul 2019 09:45:02 -0400
+Message-Id: <20190715134655.4076-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,65 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Heiner Litz <hlitz@ucsc.edu>
 
-[ Upstream commit f9481b08220d7dc1ff21e296a330ee8b721b44e4 ]
+[ Upstream commit 510fd8ea98fcb586c01aef93d87c060a159ac30a ]
 
-at91sam9g25ek showed the following error at probe:
-atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
-for DMA transfers
-atmel_spi: probe of f0000000.spi failed with error -22
+bio_add_pc_page() may merge pages when a bio is padded due to a flush.
+Fix iteration over the bio to free the correct pages in case of a merge.
 
-Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
-but didn't move the !ctrl->num_chipselect check. When there are
-chip selects in the device tree, the spi-atmel driver lets the
-SPI core discover them when registering the SPI master.
-The ctrl->num_chipselect is thus expected to be set by
-spi_get_gpio_descs().
-
-Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
-before the aforementioned commit. While touching this block, get rid
-of the explicit comparison with 0 and update the commenting style.
-
-Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Heiner Litz <hlitz@ucsc.edu>
+Reviewed-by: Javier González <javier@javigon.com>
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/lightnvm/pblk-core.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 5e4654032bfa..29916e446143 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2286,11 +2286,6 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	if (status)
- 		return status;
- 
--	/* even if it's just one always-selected device, there must
--	 * be at least one chipselect
--	 */
--	if (ctlr->num_chipselect == 0)
--		return -EINVAL;
- 	if (ctlr->bus_num >= 0) {
- 		/* devices with a fixed bus num must check-in with the num */
- 		mutex_lock(&board_lock);
-@@ -2361,6 +2356,13 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		}
- 	}
- 
-+	/*
-+	 * Even if it's just one always-selected device, there must
-+	 * be at least one chipselect.
-+	 */
-+	if (!ctlr->num_chipselect)
-+		return -EINVAL;
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index 773537804319..f546e6f28b8a 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -323,14 +323,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
+ void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
+ 			 int nr_pages)
+ {
+-	struct bio_vec bv;
+-	int i;
+-
+-	WARN_ON(off + nr_pages != bio->bi_vcnt);
+-
+-	for (i = off; i < nr_pages + off; i++) {
+-		bv = bio->bi_io_vec[i];
+-		mempool_free(bv.bv_page, &pblk->page_bio_pool);
++	struct bio_vec *bv;
++	struct page *page;
++	int i, e, nbv = 0;
 +
- 	status = device_add(&ctlr->dev);
- 	if (status < 0) {
- 		/* free bus id */
++	for (i = 0; i < bio->bi_vcnt; i++) {
++		bv = &bio->bi_io_vec[i];
++		page = bv->bv_page;
++		for (e = 0; e < bv->bv_len; e += PBLK_EXPOSED_PAGE_SIZE, nbv++)
++			if (nbv >= off)
++				mempool_free(page++, &pblk->page_bio_pool);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
