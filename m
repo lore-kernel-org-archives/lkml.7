@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF14C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511B7C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D20E206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2E521530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199846;
-	bh=Aa20z2hwguTgvagup2iWVwNzGjHe3N1ptoZOEn/D3nE=;
+	s=default; t=1563199851;
+	bh=5P/j83qoemKekGey4T33iwBjD9Z/xzLz7d5l5edrEZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n6x7sYL9e1iqQCn+Ze3zDocmIqG44tiYVvQ/y9zuTgNXf2oIbBqK6y4vUWs7/P/Rh
-	 X6ju8vyevEZwIMZg7yn8euiWtwgIaGU+NXJL4oQtQGmuiwBkZdmigqmnKuIED9b0Et
-	 Y7L0AX8pfL3yasXGvRe2k+N9UftCraqrJqoROiK8=
+	b=cW+xZLO3njqUea4nawnEAlTHHfZqreuS2bhZ9urNsErIzZsJyjaMOUhdOa93nzlCS
+	 O6hGVfGRsoKca/u1+kCi4E3Yi1tt3QXOOg10Vhvd7IMe48u5VaYjGdxo6zRZAJYjej
+	 zIEBVrxViVrQbjX/nUX3s1AfX6wfZ2euLmRzVYB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388907AbfGOOKo (ORCPT
+        id S2388919AbfGOOKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:10:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40862 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388669AbfGOOKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:10:42 -0400
+        id S2387721AbfGOOKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:10:37 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72E1B206B8;
-        Mon, 15 Jul 2019 14:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2BD620868;
+        Mon, 15 Jul 2019 14:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199841;
-        bh=Aa20z2hwguTgvagup2iWVwNzGjHe3N1ptoZOEn/D3nE=;
+        s=default; t=1563199836;
+        bh=5P/j83qoemKekGey4T33iwBjD9Z/xzLz7d5l5edrEZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u6G3VUywn3FXENppq/8p4kRqs/auIIwkjX25Mxawbp9Wv88YUomG9yLa44SVueUEm
-         7Ot70YWJiLXZJtazdhthlvzEPdrytFcTzhXyExJ0uJ+4gwyyLQ/CSqKPtmLm1zQ9MO
-         EuvwJkEupQLOQf9mZrcNP5AFR8p+S6mYgPXpmDVg=
+        b=qiK8Jbw9NBdwoW9xdGPZoEMExKdafnuhNhTSafjZlwexbIy5eifPY61H0YG0gUjfY
+         XHdXGKH/6qrwBMVyWCRHQCUfMReWs6Im1ow2kD2mvAeHc1FM3deChDRB/9EWdaq/mU
+         6BP9Tzspg9qpmvhNX3jdBJhSNnCmG2Ak7TwHUHxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Thierry <julien.thierry@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 123/219] arm64: Do not enable IRQs for ct_user_exit
-Date:   Mon, 15 Jul 2019 10:02:04 -0400
-Message-Id: <20190715140341.6443-123-sashal@kernel.org>
+Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 122/219] nvme-pci: adjust irq max_vector using num_possible_cpus()
+Date:   Mon, 15 Jul 2019 10:02:03 -0400
+Message-Id: <20190715140341.6443-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -63,56 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+From: Minwoo Im <minwoo.im.dev@gmail.com>
 
-[ Upstream commit 9034f6251572a4744597c51dea5ab73a55f2b938 ]
+[ Upstream commit dad77d63903e91a2e97a0c984cabe5d36e91ba60 ]
 
-For el0_dbg and el0_error, DAIF bits get explicitly cleared before
-calling ct_user_exit.
+If the "irq_queues" are greater than num_possible_cpus(),
+nvme_calc_irq_sets() can have irq set_size for HCTX_TYPE_DEFAULT greater
+than it can be afforded.
+2039         affd->set_size[HCTX_TYPE_DEFAULT] = nrirqs - nr_read_queues;
 
-When context tracking is disabled, DAIF gets set (almost) immediately
-after. When context tracking is enabled, among the first things done
-is disabling IRQs.
+It might cause a WARN() from the irq_build_affinity_masks() like [1]:
+220         if (nr_present < numvecs)
+221                 WARN_ON(nr_present + nr_others < numvecs);
 
-What is actually needed is:
-- PSR.D = 0 so the system can be debugged (should be already the case)
-- PSR.A = 0 so async error can be handled during context tracking
+This patch prevents it from the WARN() by adjusting the max_vector value
+from the nvme_setup_irqs().
 
-Do not clear PSR.I in those two locations.
+[1] WARN messages when modprobe nvme write_queues=32 poll_queues=0:
+root@target:~/nvme# nproc
+8
+root@target:~/nvme# modprobe nvme write_queues=32 poll_queues=0
+[   17.925326] nvme nvme0: pci function 0000:00:04.0
+[   17.940601] WARNING: CPU: 3 PID: 1030 at kernel/irq/affinity.c:221 irq_create_affinity_masks+0x222/0x330
+[   17.940602] Modules linked in: nvme nvme_core [last unloaded: nvme]
+[   17.940605] CPU: 3 PID: 1030 Comm: kworker/u17:4 Tainted: G        W         5.1.0+ #156
+[   17.940605] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+[   17.940608] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
+[   17.940609] RIP: 0010:irq_create_affinity_masks+0x222/0x330
+[   17.940611] Code: 4c 8d 4c 24 28 4c 8d 44 24 30 e8 c9 fa ff ff 89 44 24 18 e8 c0 38 fa ff 8b 44 24 18 44 8b 54 24 1c 5a 44 01 d0 41 39 c4 76 02 <0f> 0b 48 89 df 44 01 e5 e8 f1 ce 10 00 48 8b 34 24 44 89 f0 44 01
+[   17.940611] RSP: 0018:ffffc90002277c50 EFLAGS: 00010216
+[   17.940612] RAX: 0000000000000008 RBX: ffff88807ca48860 RCX: 0000000000000000
+[   17.940612] RDX: ffff88807bc03800 RSI: 0000000000000020 RDI: 0000000000000000
+[   17.940613] RBP: 0000000000000001 R08: ffffc90002277c78 R09: ffffc90002277c70
+[   17.940613] R10: 0000000000000008 R11: 0000000000000001 R12: 0000000000000020
+[   17.940614] R13: 0000000000025d08 R14: 0000000000000001 R15: ffff88807bc03800
+[   17.940614] FS:  0000000000000000(0000) GS:ffff88807db80000(0000) knlGS:0000000000000000
+[   17.940616] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   17.940617] CR2: 00005635e583f790 CR3: 000000000240a000 CR4: 00000000000006e0
+[   17.940617] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   17.940618] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   17.940618] Call Trace:
+[   17.940622]  __pci_enable_msix_range+0x215/0x540
+[   17.940623]  ? kernfs_put+0x117/0x160
+[   17.940625]  pci_alloc_irq_vectors_affinity+0x74/0x110
+[   17.940626]  nvme_reset_work+0xc30/0x1397 [nvme]
+[   17.940628]  ? __switch_to_asm+0x34/0x70
+[   17.940628]  ? __switch_to_asm+0x40/0x70
+[   17.940629]  ? __switch_to_asm+0x34/0x70
+[   17.940630]  ? __switch_to_asm+0x40/0x70
+[   17.940630]  ? __switch_to_asm+0x34/0x70
+[   17.940631]  ? __switch_to_asm+0x40/0x70
+[   17.940632]  ? nvme_irq_check+0x30/0x30 [nvme]
+[   17.940633]  process_one_work+0x20b/0x3e0
+[   17.940634]  worker_thread+0x1f9/0x3d0
+[   17.940635]  ? cancel_delayed_work+0xa0/0xa0
+[   17.940636]  kthread+0x117/0x120
+[   17.940637]  ? kthread_stop+0xf0/0xf0
+[   17.940638]  ret_from_fork+0x3a/0x50
+[   17.940639] ---[ end trace aca8a131361cd42a ]---
+[   17.942124] nvme nvme0: 7/1/0 default/read/poll queues
 
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/entry.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/host/pci.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index c50a7a75f2e0..6a3890393963 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -855,7 +855,7 @@ el0_dbg:
- 	mov	x1, x25
- 	mov	x2, sp
- 	bl	do_debug_exception
--	enable_daif
-+	enable_da_f
- 	ct_user_exit
- 	b	ret_to_user
- el0_inv:
-@@ -907,7 +907,7 @@ el0_error_naked:
- 	enable_dbg
- 	mov	x0, sp
- 	bl	do_serror
--	enable_daif
-+	enable_da_f
- 	ct_user_exit
- 	b	ret_to_user
- ENDPROC(el0_error)
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 9c956ff5344d..914eea2ea557 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2085,6 +2085,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 		.priv		= dev,
+ 	};
+ 	unsigned int irq_queues, this_p_queues;
++	unsigned int nr_cpus = num_possible_cpus();
+ 
+ 	/*
+ 	 * Poll queues don't need interrupts, but we need at least one IO
+@@ -2095,7 +2096,10 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 		this_p_queues = nr_io_queues - 1;
+ 		irq_queues = 1;
+ 	} else {
+-		irq_queues = nr_io_queues - this_p_queues + 1;
++		if (nr_cpus < nr_io_queues - this_p_queues)
++			irq_queues = nr_cpus + 1;
++		else
++			irq_queues = nr_io_queues - this_p_queues + 1;
+ 	}
+ 	dev->io_queues[HCTX_TYPE_POLL] = this_p_queues;
+ 
 -- 
 2.20.1
 
