@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECE7C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D392C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC2520868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528AB2184C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201574;
-	bh=FSZoq9WrIW60R8uTCwm1dsGcg3a3pKKxZCGZIwUgr7E=;
+	s=default; t=1563201579;
+	bh=U2LkgR4sI+q4YHxUuBafA+He8xzaKYy9a9ZftGmaqk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzAJU+KdmeGq0pt2JqyuIYEHIadBo9yh8EFwCMCDWap0Cray7qGHoWRF/MRZ9BC4Z
-	 fcIT64fXSNVhn6DSDa6ciEcXMeRa9O6dZahqcMHxHeMdnO8U/BIfq8JwEOXqDpdgoJ
-	 CZPOIuVlaBQ/gKUlNY4rjLl1PrRqjxuFpUI4vjJE=
+	b=OJ8V6IEhPidLmL0DXDuBcfHiJGaiYocNUEys3R8FEkN7zJTrvmFjEbWAH2WM5NASj
+	 4qr3F8RrahdwluHWg4u5D4rBupjl05XviPMLdP8A6HywbdPOM8Ano026RQ1/Cw1Vr2
+	 n14/LDUIyXdVOlbA/y7pG8YFP+J6BwCZcWpX4qwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404301AbfGOOjd (ORCPT
+        id S2404321AbfGOOjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38578 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391901AbfGOOjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:39:16 -0400
+        id S2404254AbfGOOj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:39:26 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7188A2086C;
-        Mon, 15 Jul 2019 14:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF5921850;
+        Mon, 15 Jul 2019 14:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201555;
-        bh=FSZoq9WrIW60R8uTCwm1dsGcg3a3pKKxZCGZIwUgr7E=;
+        s=default; t=1563201565;
+        bh=U2LkgR4sI+q4YHxUuBafA+He8xzaKYy9a9ZftGmaqk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LL1unzeYM9KVRkaJcDd/Co61vjByfDxzd/4O4kTth3nYe7Pm41b/CoYEqKT4QygAD
-         jySGWVNy46OVejwDCME/pYC6FhXN0FSV1yT0L1hZpfSrPVhS/x96GXWsuR5ph0l5EV
-         d3aKto+D+heEIToiC/Y20yPhnd1HGKXH6slFO65M=
+        b=b1Q/gf31TAeXdnWS7puQuqhNIDAe20clma6U3L16iMiqwPXkFRK/6azCbxScuW4qF
+         CU4bYFBqw2HoFHAOGuZiE2Xgqewa9hGapGxUQTYc4iTUfWnQJJm2zh7iiyuv/Ul6Pl
+         B9+Yvfm7CXADR0mQ+K720iYnEr+DbepbUVSmuwP4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 41/73] vhost_net: disable zerocopy by default
-Date:   Mon, 15 Jul 2019 10:35:57 -0400
-Message-Id: <20190715143629.10893-41-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 44/73] ipsec: select crypto ciphers for xfrm_algo
+Date:   Mon, 15 Jul 2019 10:36:00 -0400
+Message-Id: <20190715143629.10893-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -61,43 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
+[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
 
-Vhost_net was known to suffer from HOL[1] issues which is not easy to
-fix. Several downstream disable the feature by default. What's more,
-the datapath was split and datacopy path got the support of batching
-and XDP support recently which makes it faster than zerocopy part for
-small packets transmission.
+kernelci.org reports failed builds on arc because of what looks
+like an old missed 'select' statement:
 
-It looks to me that disable zerocopy by default is more
-appropriate. It cold be enabled by default again in the future if we
-fix the above issues.
+net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
+xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
 
-[1] https://patchwork.kernel.org/patch/3787671/
+I don't see this in randconfig builds on other architectures, but
+it's fairly clear we want to select the hash code for it, like we
+do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
+is also required even though it has not popped up in build tests.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 681d0eade82f..75e1089dfb01 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -30,7 +30,7 @@
+diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
+index bda1a13628a8..c09336b5a028 100644
+--- a/net/xfrm/Kconfig
++++ b/net/xfrm/Kconfig
+@@ -9,6 +9,8 @@ config XFRM_ALGO
+ 	tristate
+ 	select XFRM
+ 	select CRYPTO
++	select CRYPTO_HASH
++	select CRYPTO_BLKCIPHER
  
- #include "vhost.h"
- 
--static int experimental_zcopytx = 1;
-+static int experimental_zcopytx = 0;
- module_param(experimental_zcopytx, int, 0444);
- MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
- 		                       " 1 -Enable; 0 - Disable");
+ config XFRM_USER
+ 	tristate "Transformation user configuration interface"
 -- 
 2.20.1
 
