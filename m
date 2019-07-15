@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89E0C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD05C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81ACA2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5CF2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201938;
-	bh=o2D2aC/CkFcyzg7+s4XH0B7zF875nLWpvl0fABClzJU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FOCJzLAmCqtvi3tr7/c974GNf8ePpTWczrOz5dUYFUhvExC56C4qSAAF35Ps5pTnm
-	 w1SXwTJORiWaXWt4WKo9/JDT+GtKyNPxb1uRYzYzw4fxcGxvxx2bAXlBNEJAEqDnOX
-	 u32QfW9Lln3cbQRGjEvRG+zQyoV19WsrtruguM/k=
+	s=default; t=1563201945;
+	bh=F/3Yu9F8Yg7390e8aDrvVnWJyw1DVgBdBCAfaAM2QtA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Dr0wUR5gedf4VEbvpJ8Yx7Q1Wj3M4XdPu/A8oObMsskfkZ2zzk+Z/wxneaqzcDVzx
+	 4uSThAaUsSDc5KBU3M8dcCReu4DtHoc3/fxzv+VL4CWHy+Q+7eVV0db5ZUJKburqzz
+	 rYROTHTXFgcG/XOEXKndT9K8eLkBvx5e0jo4/VJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403991AbfGOOph (ORCPT
+        id S2404537AbfGOOpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:45:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404300AbfGOOhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:11 -0400
+        id S2404134AbfGOOpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:45:40 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C5E217D8;
-        Mon, 15 Jul 2019 14:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3787620651;
+        Mon, 15 Jul 2019 14:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201431;
-        bh=o2D2aC/CkFcyzg7+s4XH0B7zF875nLWpvl0fABClzJU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9V3Kufw/8UA8LVb2aBx78LFV0qn9yw79qq78UcyrcpAzZkywJysSp44v6/1oGR2M
-         l7i7cV1G4j08Gv3CTNKJxtYhuzptW8vmcRzbhpzqa3YxW45rQKgJk0G1Z328ddQulh
-         Wy1BknUW7nvS0yXFpHAPMRXTdPxyNb1yuaFPLFHE=
+        s=default; t=1563201940;
+        bh=F/3Yu9F8Yg7390e8aDrvVnWJyw1DVgBdBCAfaAM2QtA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V7NQNNFirOKFuniarJ+o63vHV+ddFAo8dyl4DrWnwM/sJM4vFBmc7o09U3H2VWZ21
+         6Ot5fQUV1cYiP0MMAIIbwWXOQGp36lJYjDQbXWyk2ZtKGrmsfAXpFirPOFB9qCi5e/
+         gez19cADwekduZ1I08i2fgfOQ17ZjT9FaDQEIjNA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/73] net: stmmac: dwmac1000: Clear unused address entries
-Date:   Mon, 15 Jul 2019 10:35:27 -0400
-Message-Id: <20190715143629.10893-11-sashal@kernel.org>
+Cc:     Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/53] ath10k: Do not send probe response template for mesh
+Date:   Mon, 15 Jul 2019 10:44:43 -0400
+Message-Id: <20190715144535.11636-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
-References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,43 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Surabhi Vishnoi <svishnoi@codeaurora.org>
 
-[ Upstream commit 9463c445590091202659cdfdd44b236acadfbd84 ]
+[ Upstream commit 97354f2c432788e3163134df6bb144f4b6289d87 ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+Currently mac80211 do not support probe response template for
+mesh point. When WMI_SERVICE_BEACON_OFFLOAD is enabled, host
+driver tries to configure probe response template for mesh, but
+it fails because the interface type is not NL80211_IFTYPE_AP but
+NL80211_IFTYPE_MESH_POINT.
 
-Found out while running stmmac selftests.
+To avoid this failure, skip sending probe response template to
+firmware for mesh point.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested HW: WCN3990/QCA6174/QCA9984
+
+Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 7d19029e2564..093e58e94075 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -213,6 +213,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
- 					    GMAC_ADDR_LOW(reg));
- 			reg++;
- 		}
-+
-+		while (reg <= perfect_addr_number) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
- 	}
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 398068ad0b62..5a0138c1c045 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -1502,6 +1502,10 @@ static int ath10k_mac_setup_prb_tmpl(struct ath10k_vif *arvif)
+ 	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
+ 		return 0;
  
- #ifdef FRAME_FILTER_DEBUG
++	 /* For mesh, probe response and beacon share the same template */
++	if (ieee80211_vif_is_mesh(vif))
++		return 0;
++
+ 	prb = ieee80211_proberesp_get(hw, vif);
+ 	if (!prb) {
+ 		ath10k_warn(ar, "failed to get probe resp template from mac80211\n");
 -- 
 2.20.1
 
