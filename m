@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72821C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7555CC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3AB20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5CA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202436;
-	bh=cQnQ6JVQxl+9ImpfiG/lnyZwnK4VP0BO4OxM6qtO480=;
+	s=default; t=1563202440;
+	bh=FE4buOuM9E+w3Kznym8jQnHPs+FEQlUnJAhidHgfQ9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4IbWXAYJyq7SWp486H0ShY46uRUx4txTK0ClBWMOrZ49PK+K2MwWLaxvqZRs24AV
-	 a2WDg32gPij5UbwWPrnQJi8cAR4lTcU3vRQqCqdhCLI+cDi0wRf4mXuTpWMk+kkRzM
-	 P8WBFdym73lXSGJEfR/fgvXTEi5zx+qaTQTEDg7k=
+	b=jOz8qv0BsQEkqHj4jjL9GpgC9ywSJ5ds9DN9JX8SMsMzkg3UtMUU6VS77UrpXR1jM
+	 viuEuKu7rTVK+aM4OMHTq0D8dUpOHr8GHuwplxQe/OG71JbhPBMvs3/Rv2t63OeLLU
+	 gfaHcW8ZzQQ3gk11DxohHdAxEHWlEPzuLs20TjhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391531AbfGOO3O (ORCPT
+        id S2403785AbfGOO3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39986 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389334AbfGOO3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:29:05 -0400
+        id S2391510AbfGOO3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:29:03 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4405F2086C;
-        Mon, 15 Jul 2019 14:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA11E20868;
+        Mon, 15 Jul 2019 14:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200944;
-        bh=cQnQ6JVQxl+9ImpfiG/lnyZwnK4VP0BO4OxM6qtO480=;
+        s=default; t=1563200942;
+        bh=FE4buOuM9E+w3Kznym8jQnHPs+FEQlUnJAhidHgfQ9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyD1MBA7LUq0XaU4/kpzQ+DPgsrKZ818BA6Jy/p+6HWL7PtLIimGOhZhot9TFc1Yb
-         kN8xfAJ+/gY89cfpKR8jISFu1mSik/7gzAJ5q22/qq2LHEhtn+4hYz5y1Ih144VCEl
-         v7p+5pjHimVVpt1s7iTMcClZtbfmHesJfi3Ra6XY=
+        b=vEZ+/srdPnIfNu6ZlPLCXQ1aN4kdyH26CqnPv3qaS6amV9kYUii6MhzfF5zCD08qz
+         0bHxO8byNJjvbexlpVAbuwOkA9M1CydbRI3+YaJrmAvo/kERrNA6nKHNcsGI5/agDo
+         S9Q8NJji4MUVlJvmOJgLykc+TttrD/q0MK9m+mXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Sowden <jeremy@azazel.net>,
-        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 007/105] batman-adv: fix for leaked TVLV handler.
-Date:   Mon, 15 Jul 2019 10:27:01 -0400
-Message-Id: <20190715142839.9896-7-sashal@kernel.org>
+Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
+        Tamizh chelvam <tamizhr@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 006/105] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
+Date:   Mon, 15 Jul 2019 10:27:00 -0400
+Message-Id: <20190715142839.9896-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Anilkumar Kolli <akolli@codeaurora.org>
 
-[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
+[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
 
-A handler for BATADV_TVLV_ROAM was being registered when the
-translation-table was initialized, but not unregistered when the
-translation-table was freed.  Unregister it.
+Increase pulse width range from 1-2usec to 0-4usec.
+During data traffic HW occasionally fails detecting radar pulses,
+so that SW cannot get enough radar reports to achieve the success rate.
 
-Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
-Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Tested ath10k hw and fw:
+	* QCA9888(10.4-3.5.1-00052)
+	* QCA4019(10.4-3.2.1.1-00017)
+	* QCA9984(10.4-3.6-00104)
+	* QCA988X(10.2.4-1.0-00041)
+
+Tested ath9k hw: AR9300
+
+Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 020a8adc4cce..2c2670b85fa9 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -3750,6 +3750,8 @@ static void batadv_tt_purge(struct work_struct *work)
- 
- void batadv_tt_free(struct batadv_priv *bat_priv)
- {
-+	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
-+
- 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 
+diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
+index 4100ffd42a43..78146607f16e 100644
+--- a/drivers/net/wireless/ath/dfs_pattern_detector.c
++++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
+@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
+ 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
+ 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
+ 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
+-	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
++	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
+ 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
+ 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
+ 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
 -- 
 2.20.1
 
