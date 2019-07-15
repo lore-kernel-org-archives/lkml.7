@@ -3,159 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86FC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B2C76192
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292C82081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E55920665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irVWGx/J"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="I25kFIGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfGOLPq (ORCPT
+        id S1729906AbfGOLU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 07:15:46 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40823 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729755AbfGOLPq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 07:15:46 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y20so581924otk.7;
-        Mon, 15 Jul 2019 04:15:45 -0700 (PDT)
+        Mon, 15 Jul 2019 07:20:28 -0400
+Received: from mail-eopbgr820102.outbound.protection.outlook.com ([40.107.82.102]:56313
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729756AbfGOLU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 07:20:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oBC7N6ApxgruKVGwI7udCNBhGWEEyc7kTUdT5i/P7USjn+YDeO1gE2mXkA/OvtS/Y+ssFdzT64GjYZeisDKHozf+dn1OBoVjNiYr57iLC4a4DjuV+t6iv/Vw3S119NRfh33p8B6ZMXsjaLnRqDBXivquK0MRtEqA6j4WOGtGuVmJGswnm7xM4xz5EbLi0r5hNy6OYhkkcDPoeXKhEWyoIP1WYuL0MF/uKtyQNt2CByizL0mVaVVVNYBPsnbnB8a86ZV/+dXPSLZtv4RNxyh6iWwqIHFPGkJiB+sl7a+tjVzyH0+u9NCVoMLIlVCBYv7Mq54aX2tqTw2OgVEXLYY4hA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LxaX8F2NgcCtkZbTG7UWxgFVvpGQS2Noj8yvgkoMqYc=;
+ b=D3JrYx2IUx8NEwA5zw0ffE2uYJtOkb39qQAhJLy8F5PgQmyAjF0dGB4mle0sMUavHrOKv4KeZzRv/SmkFWgiGABS5fAaztxOO4I1xYOTvlutDPVD0dqi7TjEw3i4KFB7PM08Tjk6aQdYC2/sLVb2wG8Cvyv7F0jrBnAS04hQj7Lq29EKq4iqU9hAkSPGgKepoR+HUMrU3/GAQAY73xdOhjVWcet4nP+No9T/CyYzZn2QYHOF3S2iDHspptjHuuJYf2OReTaABAKRhnxlAEB3UNBj8kNSToa2iFjVHXw76KeRwRWhz5IqyFpIkJcqwTxKFhS4QX9arSVbztPYIs85Og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vK1EJ0Smk9pXngHgA0jbq10uDF/odQe70t91y6XYjW0=;
-        b=irVWGx/JbfrIHNKOdi4NZAj1LcPRC1dF96HOO3CTIhHBKa0JhFoRG1egyswiRVblV3
-         qwG1kaMC4CND+4tTSUugXr3774mIsIBOvm5/aHmmTjbrK2f8+ieCB72hhQ1jws/kbjxb
-         hdzCTu3ihFqriRpPhQHxarsaeu+noCUgHITYbRLmo9yW3QZRaOK+4f0UqKzxjToov72U
-         Lh9NbAH9/Wx0JfiwjW5vpCmtSBN6OTtvjeRtOh9QYipwdsSk2d6TztC4HuVtxk3qtqkD
-         nc+FezZhPUWY4G8ff5FOCqYRmEyOiJT3ysQPmia56iElmrVcIgw1wcvYaA1UTEcKm3J5
-         DXBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vK1EJ0Smk9pXngHgA0jbq10uDF/odQe70t91y6XYjW0=;
-        b=LcCl7GyKyqDuz6zMsDf0mBAL7nOuNrhQn/eGW4xdLWWFwjkSmpnzkFzDLd09NcJvpR
-         UjTTm4RDEmQshs1SUERAtGncAwq/TvizJ56WsZPYOfC8b55EvYhlrhDzCFMahlLmDcHu
-         IZtGNKXAz5kam6rXlDW0ARsoMmJBKapITlPPcuD136dTIpFnfzexRl284NJrH41+7Kd/
-         UqDB/tPA/IGOo9IYyhlBoulZ4kL13cW7SuiSl8OYz7+wTTEcob6Nhw7+IrmUfWvFIf55
-         rXKVCMqpBhYyvG/mIKtAr++Ixhqyz3zLhz0xeJT/YJvgn6elOo+hAtBOXMWaBCp6n8bE
-         OW7Q==
-X-Gm-Message-State: APjAAAUFsSBPiDgkqCQ3kGNb0xf3QpdP4DgjYE91vx49BMw5t+H5fWg9
-        EX+OIyTrVM4YkaG6i1B7hMbh5kpkXi/4IACxssULKuJz
-X-Google-Smtp-Source: APXvYqx6jFELxmjiq1pnfkF6W04weLLG3wRgidgkcX7KYwuxd/GsbO3RahMF76SFisErkPa17A5wXEUg8GMUn8hNXZg=
-X-Received: by 2002:a9d:1b02:: with SMTP id l2mr1255636otl.45.1563189345011;
- Mon, 15 Jul 2019 04:15:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562915435-8818-1-git-send-email-wanpengli@tencent.com> <326787d2-4cc6-82e5-f158-1e6899e40f63@de.ibm.com>
-In-Reply-To: <326787d2-4cc6-82e5-f158-1e6899e40f63@de.ibm.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 15 Jul 2019 19:15:36 +0800
-Message-ID: <CANRm+Cy=kOR350gegx=oh08nAQvZ+qzvgpqChUat917+wiWh3A@mail.gmail.com>
-Subject: Re: [PATCH] KVM: Boosting vCPUs that are delivering interrupts
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LxaX8F2NgcCtkZbTG7UWxgFVvpGQS2Noj8yvgkoMqYc=;
+ b=I25kFIGjcUvEk5wJgbYWYv0UoHdE9hPftparGa74C1u+BgD4LX3KkOna5HpQSKoRozqb/9fwO06w5eIzPqE2NyfRJ2TaBHXNNHrjEeRH+qprYoOYNOL+6ItomZUZXI3+oRMSLBcnOdDTH0BlPptYcKuI4buOmhdSp06MGc6/ago=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1261.namprd22.prod.outlook.com (10.172.60.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Mon, 15 Jul 2019 11:20:25 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::746d:883d:31:522e]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::746d:883d:31:522e%5]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
+ 11:20:25 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] mips/kprobes: Export kprobe_fault_handler()
+Thread-Topic: [PATCH] mips/kprobes: Export kprobe_fault_handler()
+Thread-Index: AQHVKEu2eh9RzrG0MEKfVg9WqAObeabLrfYA
+Date:   Mon, 15 Jul 2019 11:20:24 +0000
+Message-ID: <MWHPR2201MB12774E1E320594611842D690C1CF0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <1561133358-8876-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1561133358-8876-1-git-send-email-anshuman.khandual@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CWLP123CA0085.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:401:5b::25) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [188.30.202.102]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e00871f0-1722-4db4-8d82-08d709166e94
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1261;
+x-ms-traffictypediagnostic: MWHPR2201MB1261:
+x-microsoft-antispam-prvs: <MWHPR2201MB12610E31B075EE3F284A2CF7C1CF0@MWHPR2201MB1261.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(39840400004)(366004)(189003)(199004)(478600001)(4326008)(44832011)(33656002)(66066001)(71190400001)(71200400001)(4744005)(53936002)(68736007)(6246003)(52536014)(7736002)(305945005)(2906002)(229853002)(256004)(8676002)(6916009)(74316002)(102836004)(14454004)(6116002)(3846002)(186003)(99286004)(55236004)(26005)(11346002)(54906003)(55016002)(476003)(9686003)(25786009)(81156014)(81166006)(486006)(64756008)(66556008)(66476007)(8936002)(66946007)(66446008)(52116002)(7696005)(42882007)(386003)(76176011)(6506007)(5660300002)(316002)(446003)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1261;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sJOYNKg9JNgh4n9gJ2k/r1FS3MIkc0xnjNrdqN13E///KDtT4dZaIZwXZ8+EV0SGge2J4DYxKmIi7UZ47YILKCvVvM+Zs2EOxLHEQDUOz+2+1F0wWhNTvLttOGvFeyYXesbjpq6l5TquTon7hmvZLUDm9ZG7xaiwmUODoJ+/8mlGm4oiko1F/SPAqQ93nXKqLuYooptxGwQgG6ACwa42c1MShuxPG7KiDOh+pt8YNg8FDuywgxq3e8glOC1fmtH07ZdRgdmc3Y7XM5694WTPnMJ0kYo+3Pxwd/e/ixQTl3t+Ujwom7H5xo1fMSqis/OdUvpSVb4gEo7m3oShKeQxpRJfnM5j4F91d57AnC0tdP9EXKzogffpjlfx378QFenTmB4QJBfE1wYPvgBXTp23yDOGVsZT1dvLTj6cd44xzUo=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e00871f0-1722-4db4-8d82-08d709166e94
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 11:20:24.9327
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1261
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc arm and powerpc people,
-On Mon, 15 Jul 2019 at 18:53, Christian Borntraeger
-<borntraeger@de.ibm.com> wrote:
->
->
->
-> On 12.07.19 09:10, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during vcpu=
- wakeup
-> > and interrupt delivery), except the lock holder, we want to also boost =
-vCPUs
-> > that are delivering interrupts. Actually most smp_call_function_many ca=
-lls are
-> > synchronous ipi calls, the ipi target vCPUs are also good yield candida=
-tes.
-> > This patch sets preempted flag during wakeup and interrupt delivery tim=
-e.
-> >
-> > Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RA=
-M:
-> > ebizzy -M
-> >
-> >             vanilla     boosting    improved
-> > 1VM          23000       21232        -9%
-> > 2VM           2800        8000       180%
-> > 3VM           1800        3100        72%
-> >
-> > Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs,
-> > one running ebizzy -M, the other running 'stress --cpu 2':
-> >
-> > w/ boosting + w/o pv sched yield(vanilla)
-> >
-> >             vanilla     boosting   improved
-> >                        1570         4000       55%
-> >
-> > w/ boosting + w/ pv sched yield(vanilla)
-> >
-> >                       vanilla     boosting   improved
-> >              1844         5157       79%
-> >
-> > w/o boosting, perf top in VM:
-> >
-> >  72.33%  [kernel]       [k] smp_call_function_many
-> >   4.22%  [kernel]       [k] call_function_i
-> >   3.71%  [kernel]       [k] async_page_fault
-> >
-> > w/ boosting, perf top in VM:
-> >
-> >  38.43%  [kernel]       [k] smp_call_function_many
-> >   6.31%  [kernel]       [k] async_page_fault
-> >   6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
-> >   4.88%  [kernel]       [k] call_function_interrupt
-> This certainly made sense for s390 so I guess that this also makes sense
-> for others.
-> Nnote we (s390) do not use kvm_vcpu_kick, so this should not cause
-> any issue for s390.
->
->
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  virt/kvm/kvm_main.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index b4ab59d..2c46705 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
-> >       int me;
-> >       int cpu =3D vcpu->cpu;
-> >
-> > -     if (kvm_vcpu_wake_up(vcpu))
-> > +     if (kvm_vcpu_wake_up(vcpu)) {
-> > +             vcpu->preempted =3D true;
-> >               return;
-> > +     }
-> >
-> >       me =3D get_cpu();
-> >       if (cpu !=3D me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
-> >
->
+Hello,
+
+Anshuman Khandual wrote:
+> Generic kprobe_page_fault() calls into kprobe_fault_handler() which must =
+be
+> available with and without CONFIG_KPROBES. There is one stub implementati=
+on
+> for !CONFIG_KPROBES. For CONFIG_KPROBES all subscribing archs must provid=
+e
+> a kprobe_fault_handler() definition. Currently mips has an implementation
+> which is defined as 'static inline'. Make it available for generic kprobe=
+s
+> to comply with the above new requirement.
+>=20
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-mm@kvack.org
+>=20
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Applied to mips-next.
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
