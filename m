@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154CEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBCAC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB43212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67454212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199026;
-	bh=1vuppLEe4c9McwgEoTdwhfd5u9V66r5gDa7g32TfWCE=;
+	s=default; t=1563199029;
+	bh=ifm9BaJa8jPBE/MqI6oKR7zqVQZgvgLz4itICySiQdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u4CmtDt2kzYSnjnVC+zxWds9lGuVUQMYdxPG9nNKBepz3+QqfqyCmM1lk4i8nGC58
-	 4XTOnxoNAPhRs6T/0wtRdZgGZCR/cdn6JExkAW9COCXUKT1tZlShrIHCXyZZInpnQI
-	 6/045Mv8keLNGqRPxSPdyJkHD/to5bRk3jZmIcu8=
+	b=uGkI4/TSGs7s6o+dJ1et4T7FR3+I11pSgm4aoGHRbHtA/Or7Tv7v8Edm670Hn6O/K
+	 b2iuE1cLqYr1BWo5oz58a4z28ivcJurGJvX7R7J2KvKFbq26YkI2fmcriZU78g9EtL
+	 SAl88OsRaCc9qxtQvqiUEhO71Aw+UKiUNy8VLew8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732941AbfGON5B (ORCPT
+        id S1732508AbfGON5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33776 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732907AbfGON4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:56:52 -0400
+        id S1732545AbfGON5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:05 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 361BE21537;
-        Mon, 15 Jul 2019 13:56:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F9C7212F5;
+        Mon, 15 Jul 2019 13:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199011;
-        bh=1vuppLEe4c9McwgEoTdwhfd5u9V66r5gDa7g32TfWCE=;
+        s=default; t=1563199025;
+        bh=ifm9BaJa8jPBE/MqI6oKR7zqVQZgvgLz4itICySiQdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vv8AZDLC9q0TetpVLxvqPvQDbGHdrQPcevi7rAuXd+hxt8H6CWWHqlt6sX0Hwsjjb
-         uiAizeHOvZ7C2z2+TuwylQ3RXn38i3oTImXugfWuW0Vrx7+kfW5F1pnPazKpkibwAX
-         VkYvECmZRZ7u3pcKGx0aV6gzm9q4SWFMfIQX7vHI=
+        b=QH/Fnd18GqkSE3/y/jUg3vWdF3WJZr0GD76iMozhLKNUjexXd8HzCZo/HuovYei+L
+         6mj+E15xv9NUb2fZp3mMQTpYUagHKgHKtzJTJI44fT+2Q1YEMhVSBXdftBLkihvs93
+         Rgbel6wdwBnv3GgisPg4n8NRVG4kC214SICtBzbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 165/249] ath10k: fix PCIE device wake up failed
-Date:   Mon, 15 Jul 2019 09:45:30 -0400
-Message-Id: <20190715134655.4076-165-sashal@kernel.org>
+Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 168/249] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
+Date:   Mon, 15 Jul 2019 09:45:33 -0400
+Message-Id: <20190715134655.4076-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,49 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 011d4111c8c602ea829fa4917af1818eb0500a90 ]
+[ Upstream commit 0f6ff78540bd1b4df1e0f17806b0ce2e1dff0d78 ]
 
-Observed PCIE device wake up failed after ~120 iterations of
-soft-reboot test. The error message is
-"ath10k_pci 0000:01:00.0: failed to wake up device : -110"
+When we unload Skylake driver we may end up calling
+hdac_component_master_unbind(), it uses acomp->audio_ops, which we set
+in hdmi_codec_probe(), so we need to set it to NULL in hdmi_codec_remove(),
+otherwise we will dereference no longer existing pointer.
 
-The call trace as below:
-ath10k_pci_probe -> ath10k_pci_force_wake -> ath10k_pci_wake_wait ->
-ath10k_pci_is_awake
-
-Once trigger the device to wake up, we will continuously check the RTC
-state until it returns RTC_STATE_V_ON or timeout.
-
-But for QCA99x0 chips, we use wrong value for RTC_STATE_V_ON.
-Occasionally, we get 0x7 on the fist read, we thought as a failure
-case, but actually is the right value, also verified with the spec.
-So fix the issue by changing RTC_STATE_V_ON from 0x5 to 0x7, passed
-~2000 iterations.
-
-Tested HW: QCA9984
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/hw.c b/drivers/net/wireless/ath/ath10k/hw.c
-index ad082b7d7643..b242085c3c16 100644
---- a/drivers/net/wireless/ath/ath10k/hw.c
-+++ b/drivers/net/wireless/ath/ath10k/hw.c
-@@ -158,7 +158,7 @@ const struct ath10k_hw_values qca6174_values = {
- };
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index 1f57126708e7..c9f9820968bb 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1859,6 +1859,12 @@ static void hdmi_codec_remove(struct snd_soc_component *component)
+ {
+ 	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
+ 	struct hdac_device *hdev = hdmi->hdev;
++	int ret;
++
++	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
++	if (ret < 0)
++		dev_err(&hdev->dev, "notifier unregister failed: err: %d\n",
++				ret);
  
- const struct ath10k_hw_values qca99x0_values = {
--	.rtc_state_val_on		= 5,
-+	.rtc_state_val_on		= 7,
- 	.ce_count			= 12,
- 	.msi_assign_ce_max		= 12,
- 	.num_target_ce_config_wlan	= 10,
+ 	pm_runtime_disable(&hdev->dev);
+ }
 -- 
 2.20.1
 
