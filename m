@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11C8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE67C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B867020868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7240A20868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200133;
-	bh=pyhPrbh1XOTjaWo9uHPUbe0I0LpiCkHg1aPTI9p8rgI=;
+	s=default; t=1563200138;
+	bh=3tm0O9vKFq6xQLQTTQHLCmlCsbnPPandPuISTbA4hW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aT+zktEtWvOJ9yQ9aP6EPaTrkQXutccsiGTnn3i3kXJbXFmx7+xc6yYq0da30Fd76
-	 g3EkLNXO6yCZneEISuc/+QlIIPvrLVbQoKTRC1NTJcZmMmM8BRKeItjsW/u1t3pvai
-	 i3dZw6s88kfC7/kla4RCctSYoOaiVPcxgKKCdrTw=
+	b=oWQ6LlNsk08Cv5ubqe48NkE/GEngDqg3/9lMI/NnJ0lG8pXTtrdCzFI8H6ipwbPQ5
+	 jh2+NysRs5ECNamiLC9xItgshcNqYFCq3S7jvRgDxC0xVKeJwQmnj9PZfEgUnTZVx5
+	 blkA/A3ZoK6//NqKMVdLXoPsZY9Pul5FoZpJKR9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389565AbfGOOPc (ORCPT
+        id S2388902AbfGOOPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388748AbfGOOPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:15:31 -0400
+        id S1732233AbfGOOPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:15:05 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25CB21530;
-        Mon, 15 Jul 2019 14:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 850E1206B8;
+        Mon, 15 Jul 2019 14:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200130;
-        bh=pyhPrbh1XOTjaWo9uHPUbe0I0LpiCkHg1aPTI9p8rgI=;
+        s=default; t=1563200104;
+        bh=3tm0O9vKFq6xQLQTTQHLCmlCsbnPPandPuISTbA4hW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJbTg/+fmxF/m/dv69+rcbP2AbId05x5yuh66sxaYyxySjQ92q+N1zzH7n3nrE02y
-         q+3f3sMryoyZiUSxHPY1tGG4gs8wXiGmDCcjQBOL2e8Z2pMC509oIzb0ru8FJF1e98
-         mvrjhNT+yHjhxp10Y8B3d58UE1hB7p4JMh4ftqpI=
+        b=MHMTSSdYpSDVQl+fxg4Cz0K+PJ1y93DoKo14Lh6cBEAngbCKUKtmaA4hb1xrvmR0X
+         RADpWYSC9DBmpSFxhTHhMapWocWxibNUxJb57NNraxXOUEQpCu49R9P93SnXYOkHAK
+         8hdFS8Ulp5yN+jbRjRrlYaCJ7mRiz7i2xBWSGlWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 190/219] perf stat: Don't merge events in the same PMU
-Date:   Mon, 15 Jul 2019 10:03:11 -0400
-Message-Id: <20190715140341.6443-190-sashal@kernel.org>
+Cc:     Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 184/219] iwlwifi: dbg: fix debug monitor stop and restart delays
+Date:   Mon, 15 Jul 2019 10:03:05 -0400
+Message-Id: <20190715140341.6443-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,53 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
 
-[ Upstream commit 6c5f4e5cb35b4694dc035d91092d23f596ecd06a ]
+[ Upstream commit fc838c775f35e272e5cc7ef43853f0b55babbe37 ]
 
-Event merging is mainly to collapse similar events in lots of different
-duplicated PMUs.
+The driver should delay only in recording stop flow between writing to
+DBGC_IN_SAMPLE register and DBGC_OUT_CTRL register. Any other delay is
+not needed.
 
-It can break metric displaying. It's possible for two metrics to have
-the same event, and when the two events happen in a row the second
-wouldn't be displayed.  This would also not show the second metric.
+Change the following:
+1. Remove any unnecessary delays in the flow
+2. Increase the delay in the stop recording flow since 100 micro is
+   not enough
+3. Use usleep_range instead of delay since the driver is allowed to
+   sleep in this flow.
 
-To avoid this don't merge events in the same PMU. This makes sense, if
-we have multiple events in the same PMU there is likely some reason for
-it (e.g. using multiple groups) and we better not merge them.
-
-While in theory it would be possible to construct metrics that have
-events with the same name in different PMU no current metrics have this
-problem.
-
-This is the fix for perf stat -M UPI,IPC (needs also another bug fix to
-completely work)
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: 430daf2dc7af ("perf stat: Collapse identically named events")
-Link: http://lkml.kernel.org/r/20190624193711.35241-3-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+Fixes: 5cfe79c8d92a ("iwlwifi: fw: stop and start debugging using host command")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/stat-display.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 2 --
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.h | 6 ++++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 6d043c78f3c2..9c940242dcbe 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -539,7 +539,8 @@ static void collect_all_aliases(struct perf_stat_config *config, struct perf_evs
- 		    alias->scale != counter->scale ||
- 		    alias->cgrp != counter->cgrp ||
- 		    strcmp(alias->unit, counter->unit) ||
--		    perf_evsel__is_clock(alias) != perf_evsel__is_clock(counter))
-+		    perf_evsel__is_clock(alias) != perf_evsel__is_clock(counter) ||
-+		    !strcmp(alias->pmu_name, counter->pmu_name))
- 			break;
- 		alias->merged_stat = true;
- 		cb(config, alias, data, false);
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+index d7380016f1c0..c30f626b1602 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -2146,8 +2146,6 @@ void iwl_fw_dbg_collect_sync(struct iwl_fw_runtime *fwrt)
+ 	/* start recording again if the firmware is not crashed */
+ 	if (!test_bit(STATUS_FW_ERROR, &fwrt->trans->status) &&
+ 	    fwrt->fw->dbg.dest_tlv) {
+-		/* wait before we collect the data till the DBGC stop */
+-		udelay(500);
+ 		iwl_fw_dbg_restart_recording(fwrt, &params);
+ 	}
+ }
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
+index a199056234d3..97fcd57e17d8 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
+@@ -297,7 +297,10 @@ _iwl_fw_dbg_stop_recording(struct iwl_trans *trans,
+ 	}
+ 
+ 	iwl_write_umac_prph(trans, DBGC_IN_SAMPLE, 0);
+-	udelay(100);
++	/* wait for the DBGC to finish writing the internal buffer to DRAM to
++	 * avoid halting the HW while writing
++	 */
++	usleep_range(700, 1000);
+ 	iwl_write_umac_prph(trans, DBGC_OUT_CTRL, 0);
+ #ifdef CONFIG_IWLWIFI_DEBUGFS
+ 	trans->dbg_rec_on = false;
+@@ -327,7 +330,6 @@ _iwl_fw_dbg_restart_recording(struct iwl_trans *trans,
+ 		iwl_set_bits_prph(trans, MON_BUFF_SAMPLE_CTL, 0x1);
+ 	} else {
+ 		iwl_write_umac_prph(trans, DBGC_IN_SAMPLE, params->in_sample);
+-		udelay(100);
+ 		iwl_write_umac_prph(trans, DBGC_OUT_CTRL, params->out_ctrl);
+ 	}
+ }
 -- 
 2.20.1
 
