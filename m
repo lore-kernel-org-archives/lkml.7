@@ -2,121 +2,143 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C698BC76192
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757BFC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F208214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563177443;
-	bh=mroLkCCn2tDhUBkSu/vA39E++KpXetGzGIWhdAxd0ts=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UPjmpteDFO/AG92nab9DLXWQfakGW133c+FYtWzlc4RpfB3uB78hB5510vscXPnSa
-	 4GUeFIsXpGH3dFAZ1Guf7126AfmMie87nTP0xUL5rNcfb97WdwLp05ASdrajF5q4Df
-	 At00dX1FpEebhWZsPwa0ojzSnpYtzQNjn5pKQw2M=
+	by mail.kernel.org (Postfix) with ESMTP id 4D3EA21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbfGOH5W (ORCPT
+        id S1729323AbfGOH7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 03:57:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34870 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfGOH5V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 03:57:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eJlbjim1fxU57ZaVX/VVgKi/dG9GtJerPxx9UJo7Fww=; b=JcDzLwBGAR3DIQ5PzjliPmdfB
-        wt3f3sg2z3AO/OuERhsRmMQS2qwxDHfr81HUZ8bO4iiwRmK3RrOm2h4/5DNGgtFEZDvuz7A8dJNNm
-        8SC+KQ1Nwm9BOBk47L69bPbiRtcflOhdeLDtFR53AOVtvZ10BSu6RTR+jOSoexCb+TOn62JzVO7/Z
-        O55lv0FaRBBJ2LYyXSZdelp0ocAQap0NW6KHdOxn0lTVtf8TDPBJOZV7LLeVVU8RcXQa7O955vRo5
-        mleM8mlHWSbuEWzj/LK75trdO7CY3hdfI2sN1X09S7ln7kgJuHQUi7kWjs9YHKWyAOp1nM2lXWTrS
-        FqvVaEtvQ==;
-Received: from [189.27.46.152] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hmvrD-0003qC-8d; Mon, 15 Jul 2019 07:57:11 +0000
-Date:   Mon, 15 Jul 2019 04:57:02 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Markus Heiser <markus.heiser@darmarit.de>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org,
-        linux-sh@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 8/8] docs: remove extra conf.py files
-Message-ID: <20190715045702.1e2b569b@coco.lan>
-In-Reply-To: <e3ff0a8a-6956-3855-07be-9c126df2da2d@darmarit.de>
-References: <cover.1563115732.git.mchehab+samsung@kernel.org>
-        <12a160afc9e70156f671010bd4ccff9311acdc5e.1563115732.git.mchehab+samsung@kernel.org>
-        <e3ff0a8a-6956-3855-07be-9c126df2da2d@darmarit.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 15 Jul 2019 03:59:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39580 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbfGOH7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 03:59:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8893D3DD47;
+        Mon, 15 Jul 2019 07:59:16 +0000 (UTC)
+Received: from krava (unknown [10.40.205.8])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D441E6090E;
+        Mon, 15 Jul 2019 07:59:13 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 09:59:12 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, mbd@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH] Fix perf stat repeat segfault
+Message-ID: <20190715075912.GA2821@krava>
+References: <20190710204540.176495-1-nums@google.com>
+ <20190714204432.GA8120@krava>
+ <20190714205505.GB8120@krava>
+ <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 15 Jul 2019 07:59:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 15 Jul 2019 08:16:54 +0200
-Markus Heiser <markus.heiser@darmarit.de> escreveu:
+On Sun, Jul 14, 2019 at 02:36:42PM -0700, Stephane Eranian wrote:
+> On Sun, Jul 14, 2019 at 1:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Sun, Jul 14, 2019 at 10:44:36PM +0200, Jiri Olsa wrote:
+> > > On Wed, Jul 10, 2019 at 01:45:40PM -0700, Numfor Mbiziwo-Tiapo wrote:
+> > > > When perf stat is called with event groups and the repeat option,
+> > > > a segfault occurs because the cpu ids are stored on each iteration
+> > > > of the repeat, when they should only be stored on the first iteration,
+> > > > which causes a buffer overflow.
+> > > >
+> > > > This can be replicated by running (from the tip directory):
+> > > >
+> > > > make -C tools/perf
+> > > >
+> > > > then running:
+> > > >
+> > > > tools/perf/perf stat -e '{cycles,instructions}' -r 10 ls
+> > > >
+> > > > Since run_idx keeps track of the current iteration of the repeat,
+> > > > only storing the cpu ids on the first iteration (when run_idx < 1)
+> > > > fixes this issue.
+> > > >
+> > > > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+> > > > ---
+> > > >  tools/perf/builtin-stat.c | 7 ++++---
+> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > > > index 63a3afc7f32b..92d6694367e4 100644
+> > > > --- a/tools/perf/builtin-stat.c
+> > > > +++ b/tools/perf/builtin-stat.c
+> > > > @@ -378,9 +378,10 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
+> > > >     workload_exec_errno = info->si_value.sival_int;
+> > > >  }
+> > > >
+> > > > -static bool perf_evsel__should_store_id(struct perf_evsel *counter)
+> > > > +static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
+> > > >  {
+> > > > -   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
+> > > > +   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
+> > > > +           && run_idx < 1;
+> > >
+> > > we create counters for every iteration, so this can't be
+> > > based on iteration
+> > >
+> > > I think that's just a workaround for memory corruption,
+> > > that's happening for repeating groupped events stats,
+> > > I'll check on this
+> >
+> > how about something like this? we did not cleanup
+> > ids on evlist close, so it kept on raising and
+> > causing corruption in next iterations
+> >
+> not sure, that would realloc on each iteration of the repeats.
 
-> Hi Mauro,
+well, we need new ids, because we create new events every iteration
+
+jirka
+
 > 
-> sorry, I havn't tested your patch, but one question ...
-> 
-> Am 14.07.19 um 17:10 schrieb Mauro Carvalho Chehab:
-> > Now that the latex_documents are handled automatically, we can
-> > remove those extra conf.py files.  
-> 
-> We need these conf.py also for compiling books' into HTML.  For this
-> the tags.add("subproject") is needed.  Should we realy drop this feature?
-> 
-> -- Markus --
-
-You're right: adding "subproject" tags is needed for html. Folding this
-to patch 7/8 makes both htmldocs and pdfdocs to work with SPHINXDIRS
-without the need of a per-subdir conf.py.
-
-Regards,
-Mauro
-
-diff --git a/Documentation/sphinx/load_config.py b/Documentation/sphinx/load_config.py
-index 75f527ff4c95..e4a04f367b41 100644
---- a/Documentation/sphinx/load_config.py
-+++ b/Documentation/sphinx/load_config.py
-@@ -51,3 +51,7 @@ def loadConfig(namespace):
-             execfile_(config_file, config)
-             del config['__file__']
-             namespace.update(config)
-+        else:
-+            config = namespace.copy()
-+            config['tags'].add("subproject")
-+            namespace.update(config)
-
-Thanks,
-Mauro
+> >
+> > jirka
+> >
+> >
+> > ---
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index ebb46da4dfe5..52459dd5ad0c 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
+> >         xyarray__delete(evsel->sample_id);
+> >         evsel->sample_id = NULL;
+> >         zfree(&evsel->id);
+> > +       evsel->ids = 0;
+> >  }
+> >
+> >  static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
+> > @@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
+> >
+> >         perf_evsel__close_fd(evsel);
+> >         perf_evsel__free_fd(evsel);
+> > +       perf_evsel__free_id(evsel);
+> >  }
+> >
+> >  int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
