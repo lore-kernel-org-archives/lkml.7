@@ -2,67 +2,69 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B8AC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBDEC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684042086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15742086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fTil10kg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A5XGb1C/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbfGOXPA (ORCPT
+        id S1732536AbfGOXPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:15:00 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45756 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731589AbfGOXO7 (ORCPT
+        Mon, 15 Jul 2019 19:15:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34300 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbfGOXPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:14:59 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so9048351plr.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:14:59 -0700 (PDT)
+        Mon, 15 Jul 2019 19:15:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so8131142pfo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:15:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FU8IMjJPzjG6kKRsyfcfIbyIZ6mHmsnfbPuAZ82K2Hg=;
-        b=fTil10kgtaNkg9CYmDnlWNkcgIQA4uv+PbV22af1r36JLYHbZ5Vi8IDjnUFVmheOH+
-         v/QTk1S38lyMQe1KdC9ukshk/5R+3/fbYys3xbjphyN2MqWYxl5J/TgOPxvu6eYawT2F
-         odbwyTxQEMraYhd0Xn/wDFSAxcE5nN5XP0soM=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WTST8xYEYceYV0LXdWiwDDXFT69vjhpN5CuO+9nfLhc=;
+        b=A5XGb1C/TSinuAe1zfk7UExKA3J35xN0BfF97rVRF43VNbo3zr6qpvMF8zZVSr0GUc
+         m6FavsQAjyxbFZQKB8+hXBKAHggXN5AidzDWtGGykPlnsTUCbL2sEXFNDTZPnf1woSfN
+         wi/QsKeZ/soaz5EDJAqOaXm7EynwRt93148QM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FU8IMjJPzjG6kKRsyfcfIbyIZ6mHmsnfbPuAZ82K2Hg=;
-        b=kkJmpzcXqpzdpgsvwsz+g8mge9UrR+UrueGCfaF6ZW39aIZIkPSTvZWbadavX8WWQm
-         zhHiKb6aN/JCEK05hJL07ulSvq5ck7y2Xx0eMqgGDdIIppwt9cIE8bUtrYtFxqIGN6LZ
-         A1Ja4hE+1v2SO6Vg9btu5/TTzlsVMmrAJ2VHZwzJn8DPqu6JWr0YxmcGzZOduEAvVYb9
-         gzerSN5mo2em1/sBOE9LqR1Qtum7nNtGsd0lzftLzQGPv73yVdkKcmO9NesMXw9c8qu5
-         WSOVZoqBTokZvh0PonWScZRTmbCMp8LUPQPILEE/jyZar0QJ/fEsQn+/8k5pV3RfDnf8
-         ZiEg==
-X-Gm-Message-State: APjAAAW57sb7qIrsJBnytapxCuquu2baajXVDDCY7TDhT8lSBVZrMgCE
-        DUal76ixlmXO7ZfeDhyltnR79w==
-X-Google-Smtp-Source: APXvYqzaFE7wI61EvT9ji/uduljupNw5mhDUENedOWsCFlmaNupV9td4MfU2vBVAZ4zHYCMcdbYdtA==
-X-Received: by 2002:a17:902:724:: with SMTP id 33mr30530789pli.49.1563232499034;
-        Mon, 15 Jul 2019 16:14:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WTST8xYEYceYV0LXdWiwDDXFT69vjhpN5CuO+9nfLhc=;
+        b=nJMuPd2sLpRWPNBoarlFRjGdfxkpY8PZk2io4two89jd6+kEgq8q0AOh+NgBGhp7Ni
+         4zyg/UxLuJSgTJaKFlQSDBBE1VghFsfgIUbb9kzl7ajCZYLExos+54DVmGsPCvlTKLec
+         hZXswiIhVyhOhO7QGSJTgNPw9y3v0ToRvrvU/u/SyHPK1DpxplevWH60Xca2LDInluJm
+         yHkrXAVFWAUNFaan42pSmpULK1sLsxDVFp48ErinOc5sdByFpgAFsi39Rvzb2h7jLQwj
+         Geq5ZNZxwFxTamfsg5JTe+fwOJ15V0o9oS8gP4c4X8NMd+yrFyh7Qd3au4pEGC515WDR
+         neSA==
+X-Gm-Message-State: APjAAAWntpmEiMrbRtjm0m/jRGlRAdFIhcLoc1EFXKgqKqBT9lr1vYHR
+        KV9mk3ikHyvArk6ml+3RNDycT1y8Lnw=
+X-Google-Smtp-Source: APXvYqxuWm9+wghenWJCt5B5nPmj83WxzbY6f3N14RcnDevhAzqpobVk9u+nwzI1eQPV0HIKeA63Bg==
+X-Received: by 2002:a17:90a:bb8a:: with SMTP id v10mr32530182pjr.78.1563232501601;
+        Mon, 15 Jul 2019 16:15:01 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id a3sm20225805pfo.49.2019.07.15.16.14.58
+        by smtp.gmail.com with ESMTPSA id 97sm17539388pjz.12.2019.07.15.16.15.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 16:14:58 -0700 (PDT)
+        Mon, 15 Jul 2019 16:15:01 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     jic23@kernel.org, bleung@chromium.org,
         enric.balletbo@collabora.com, groeck@chromium.org,
         fabien.lahoudere@collabora.com, dianders@chromium.org
 Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v6 0/4] Support accelerometers for veyron_minnie
-Date:   Mon, 15 Jul 2019 16:14:50 -0700
-Message-Id: <20190715231454.189459-1-gwendal@chromium.org>
+Subject: [PATCH v6 2/4] iio: cros_ec_accel_legacy: Fix incorrect channel setting
+Date:   Mon, 15 Jul 2019 16:14:52 -0700
+Message-Id: <20190715231454.189459-3-gwendal@chromium.org>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+In-Reply-To: <20190715231454.189459-1-gwendal@chromium.org>
+References: <20190715231454.189459-1-gwendal@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,52 +72,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-veyron_minnie - ASUS Chromebook Flip C100PA - embedded controller
-controls two accelerometers, one in the lid, one in the base.
-However, the EC firmware does not follow the new interface that
-cros_ec_accel driver use.
-Extend the legacy driver used on glimmer - Lenovo ThinkPad 11e
-Chromebook - to veyron_minnie.
-veyron_minnie being ARM based, issue command over the I2C bus to the EC
-instead of relying on the shared registers over LPC.
+INFO_SCALE is set both for each channel and all channels.
+iio is using all channel setting, so the error was not user visible.
 
-Gwendal Grignou (4):
-  iio: cros_ec: Add sign vector in core for backward compatibility
-  iio: cros_ec_accel_legacy: Fix incorrect channel setting
-  iio: cros_ec_accel_legacy: Use cros_ec_sensors_core
-  iio: cros_ec_accel_legacy: Add support for veyron-minnie
+Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+---
+ drivers/iio/accel/cros_ec_accel_legacy.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Changes in v5:
-- In "Use cros_ec_sensors_core", fix return without unlock on the error
-  path properly.
-
-Changes in v5:
-- In "Use cros_ec_sensors_core", fix return without unlock on the error
-  path.
-- Add acked for the last 2 patches.
-
-Changes in v4:
-- No change in iio/common/cros_ec_sensors
-- Split cros_ec_accel_legacy code in 3:
-  - fix an error in channel setting.
-  - remove duplicate code in cros_ec_accel, use cros_ec_sensors_core.
-  - extend cros_ec_accel to ARM device.
-- Define cros_ec_accel_legacy_read_cmd() as static.
-
-Changes in v3:
-- Fix commit message, add reviewed-by for first patch.
-
-Changes in v2:
-- Readd empty line to reduce amount of change in patch.
-- Remove Keywords used by ChromeOS commit queue.
-
-
- drivers/iio/accel/Kconfig                     |   4 +-
- drivers/iio/accel/cros_ec_accel_legacy.c      | 353 ++++--------------
- .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +
- .../linux/iio/common/cros_ec_sensors_core.h   |   1 +
- 4 files changed, 86 insertions(+), 276 deletions(-)
-
+diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
+index 46bb2e421bb9..ad19d9c716f4 100644
+--- a/drivers/iio/accel/cros_ec_accel_legacy.c
++++ b/drivers/iio/accel/cros_ec_accel_legacy.c
+@@ -319,7 +319,6 @@ static const struct iio_chan_spec_ext_info cros_ec_accel_legacy_ext_info[] = {
+ 		.modified = 1,					        \
+ 		.info_mask_separate =					\
+ 			BIT(IIO_CHAN_INFO_RAW) |			\
+-			BIT(IIO_CHAN_INFO_SCALE) |			\
+ 			BIT(IIO_CHAN_INFO_CALIBBIAS),			\
+ 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
+ 		.ext_info = cros_ec_accel_legacy_ext_info,		\
 -- 
 2.22.0.510.g264f2c817a-goog
 
