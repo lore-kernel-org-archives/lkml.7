@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EEDC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5E8C7618E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229F820C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5827620838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfGOG5p (ORCPT
+        id S1729256AbfGOG6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 02:57:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33734 "EHLO mx1.suse.de"
+        Mon, 15 Jul 2019 02:58:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33896 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725787AbfGOG5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 02:57:44 -0400
+        id S1728933AbfGOG6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 02:58:14 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3A8C1AF8E;
-        Mon, 15 Jul 2019 06:57:43 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 08:57:43 +0200
-Message-ID: <s5h1ryrg4yg.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 9EE6FAF8C;
+        Mon, 15 Jul 2019 06:58:13 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 08:58:13 +0200
+Message-ID: <s5hzhlfeqd6.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Hariprasad Kelam" <hariprasad.kelam@gmail.com>
 Cc:     <alsa-devel@alsa-project.org>,
@@ -34,9 +34,9 @@ Cc:     <alsa-devel@alsa-project.org>,
         "Jaroslav Kysela" <perex@perex.cz>,
         "Richard Fontana" <rfontana@redhat.com>,
         "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sound: pci: emu10k1: Remove unneeded variable "change"
-In-Reply-To: <20190711171726.GA4356@hari-Inspiron-1545>
-References: <20190711171726.GA4356@hari-Inspiron-1545>
+Subject: Re: [PATCH] sound: pci: rme9652: Unneeded variable: "result".
+In-Reply-To: <20190711172107.GA5008@hari-Inspiron-1545>
+References: <20190711172107.GA5008@hari-Inspiron-1545>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,12 +47,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jul 2019 19:17:26 +0200,
+On Thu, 11 Jul 2019 19:21:07 +0200,
 Hariprasad Kelam wrote:
 > 
-> fix below issue reported by coccicheck
-> sound/pci/emu10k1/emu10k1x.c:1077:5-11: Unneeded variable: "change".
-> Return "0" on line 1092
+> This patch fixes below issue reported by coccicheck
+> 
+> sound/pci/rme9652/rme9652.c:2161:5-11: Unneeded variable: "result".
+> Return "0" on line 2167
 > 
 > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
