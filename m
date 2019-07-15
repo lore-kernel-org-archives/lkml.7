@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAE3C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01918C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09C721530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0232081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199818;
-	bh=LaQblhdiV7y0KVA9JzhqcAZ/O1ITWftSFhPSvbzR3lI=;
+	s=default; t=1563199820;
+	bh=fE8MCPhaLGyGE62LvAfXF6y/04ieaUvtCQnj5FQcWUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gz3S6oOKKSJmT2ggL63dCLTdg4AqQM1QMScq9V38lHbXIYSnNvEAoGJvGCIPcPMru
-	 HYRa+rwVw1r5Hln5d7CGjtwhgyzMDL1rQ4nyrzfKMKKECBfntZXDzNKC2Zr0eZIe6v
-	 6S1a4+pQC5rxms85Xu0pG+sbFo4uKdhaBUk5xvoI=
+	b=pzRBnz69gZfIus0/BHuS48V5ge/KQqJNlxIqHrV7xTnsjZP9ALufF186nuu4aEN6s
+	 UBSqfUzw/Ck1ABKOW8Jno/p+THNi8IB3YSVePBR99qu9RFZUuHTR55RFNLckr4egFc
+	 qGUR7M93kxERKdopewRWiuGUrNT8g6mCbgl6/UUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388586AbfGOOKN (ORCPT
+        id S2388613AbfGOOKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36468 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388061AbfGOOKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:10:06 -0400
+        id S2388788AbfGOOKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:10:13 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA88E2081C;
-        Mon, 15 Jul 2019 14:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2563C2182B;
+        Mon, 15 Jul 2019 14:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199805;
-        bh=LaQblhdiV7y0KVA9JzhqcAZ/O1ITWftSFhPSvbzR3lI=;
+        s=default; t=1563199813;
+        bh=fE8MCPhaLGyGE62LvAfXF6y/04ieaUvtCQnj5FQcWUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a22VD5DhqzTsPRnw1HzfTbqh2FoPR3pLOohjm6TooRdD2/N/Ai5H6R8dOfrI/iqXA
-         rer2QAryn/AjUt4fdRbzEtyiOnn9+ueGVCAu4fYPCLcZmj1lJVEiuzTs2trgNhr/Cz
-         Uz2erWjNJht63oMM5TMcuzhvcY6PjXGEiVARUgfY=
+        b=0TjPLkAyonBmILuIo+agEiAzEtt0LShzFZtiu0VIax/DnNlyzNrkoNJ92v4YwV/VX
+         ruVxZxPMPLBxjgWC4CqHXKt0cArIl8LxRMzoiQwb4wnqNaNlCcDqbbSE7cOgd0z02U
+         CQSiqHllVMwJgxwHEyquL+Z44HudyVhMq2Ao4uB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 111/219] net: netsec: initialize tx ring on ndo_open
-Date:   Mon, 15 Jul 2019 10:01:52 -0400
-Message-Id: <20190715140341.6443-111-sashal@kernel.org>
+Cc:     Dennis Zhou <dennis@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 113/219] blk-iolatency: only account submitted bios
+Date:   Mon, 15 Jul 2019 10:01:54 -0400
+Message-Id: <20190715140341.6443-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,92 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+From: Dennis Zhou <dennis@kernel.org>
 
-[ Upstream commit 39e3622edeffa63c2871153d8743c5825b139968 ]
+[ Upstream commit a3fb01ba5af066521f3f3421839e501bb2c71805 ]
 
-Since we changed the Tx ring handling and now depends on bit31 to figure
-out the owner of the descriptor, we should initialize this every time
-the device goes down-up instead of doing it once on driver init. If the
-value is not correctly initialized the device won't have any available
-descriptors
+As is, iolatency recognizes done_bio and cleanup as ending paths. If a
+request is marked REQ_NOWAIT and fails to get a request, the bio is
+cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
+This results in underflowing the inflight counter. Fix this by only
+accounting bios that were actually submitted.
 
-Changes since v1:
-- Typo fixes
-
-Fixes: 35e07d234739 ("net: socionext: remove mmio reads on Tx")
-Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/socionext/netsec.c | 32 ++++++++++++++-----------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ block/blk-iolatency.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
-index cba5881b2746..a10ef700f16d 100644
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -1029,7 +1029,6 @@ static void netsec_free_dring(struct netsec_priv *priv, int id)
- static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
- {
- 	struct netsec_desc_ring *dring = &priv->desc_ring[id];
--	int i;
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index 507212d75ee2..58bac44ba78a 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -599,6 +599,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
+ 		return;
  
- 	dring->vaddr = dma_alloc_coherent(priv->dev, DESC_SZ * DESC_NUM,
- 					  &dring->desc_dma, GFP_KERNEL);
-@@ -1040,19 +1039,6 @@ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
- 	if (!dring->desc)
- 		goto err;
- 
--	if (id == NETSEC_RING_TX) {
--		for (i = 0; i < DESC_NUM; i++) {
--			struct netsec_de *de;
--
--			de = dring->vaddr + (DESC_SZ * i);
--			/* de->attr is not going to be accessed by the NIC
--			 * until netsec_set_tx_de() is called.
--			 * No need for a dma_wmb() here
--			 */
--			de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
--		}
--	}
--
- 	return 0;
- err:
- 	netsec_free_dring(priv, id);
-@@ -1060,6 +1046,23 @@ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
- 	return -ENOMEM;
- }
- 
-+static void netsec_setup_tx_dring(struct netsec_priv *priv)
-+{
-+	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_TX];
-+	int i;
++	/* We didn't actually submit this bio, don't account it. */
++	if (bio->bi_status == BLK_STS_AGAIN)
++		return;
 +
-+	for (i = 0; i < DESC_NUM; i++) {
-+		struct netsec_de *de;
-+
-+		de = dring->vaddr + (DESC_SZ * i);
-+		/* de->attr is not going to be accessed by the NIC
-+		 * until netsec_set_tx_de() is called.
-+		 * No need for a dma_wmb() here
-+		 */
-+		de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
-+	}
-+}
-+
- static int netsec_setup_rx_dring(struct netsec_priv *priv)
- {
- 	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_RX];
-@@ -1361,6 +1364,7 @@ static int netsec_netdev_open(struct net_device *ndev)
- 
- 	pm_runtime_get_sync(priv->dev);
- 
-+	netsec_setup_tx_dring(priv);
- 	ret = netsec_setup_rx_dring(priv);
- 	if (ret) {
- 		netif_err(priv, probe, priv->ndev,
+ 	iolat = blkg_to_lat(bio->bi_blkg);
+ 	if (!iolat)
+ 		return;
 -- 
 2.20.1
 
