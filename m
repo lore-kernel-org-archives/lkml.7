@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C979C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BCDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B852086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A3020868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201004;
-	bh=RuK9NKmln2hk0uVgLD/nX40G6kLTyplV6MehOBZ9bWs=;
+	s=default; t=1563201006;
+	bh=s53WbnFm4I6XyE3LnDexWv29+hu4nWC7lg1rwZPd+18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QbO+QHwQGWA2o/xbk/BDF7l1sCU1r/S0L71glVbIGG5/FWjYwzeA8mBgi0BvoD/Sj
-	 tyS9pAwnGDz3fh4pnyqHKikACAGAwUO1V2seDilM3VlymuOO5RIst3+wPgrxSShd/w
-	 TePw5C5ZRrS2buxSx3NOZUBzy5tX/D+wdSsxmu/8=
+	b=I+QQtC/hhQojkg1wk1AXO+isO8N7YqIl4utGJ4OeK15117NGsRvKcrCjU5WPd1rwc
+	 +PwY9GKtpaa1zzS5oe1Vp1s9eON+ie1t1RW/HpOdVGDngAd7H6YkIZ5IaKgH7z/q2l
+	 0BIAWBIzRHDfyBnnA9BsDyk75eUNLuJ7g/h/1dP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391623AbfGOOaC (ORCPT
+        id S2391486AbfGOOaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41852 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403821AbfGOO3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:29:50 -0400
+        id S2403836AbfGOO3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:29:54 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C487C2086C;
-        Mon, 15 Jul 2019 14:29:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC45721537;
+        Mon, 15 Jul 2019 14:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200989;
-        bh=RuK9NKmln2hk0uVgLD/nX40G6kLTyplV6MehOBZ9bWs=;
+        s=default; t=1563200993;
+        bh=s53WbnFm4I6XyE3LnDexWv29+hu4nWC7lg1rwZPd+18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8xk7Y77uSHKWDoh+jk4HsC/qVFV2ZJJIE58M/73aj53hOYRUiiwzdS2scixND0ca
-         GOiDRAmeMEprhnKy2AdbL0xVvAwVjwSyaLoT5eYoDlYTSqaaRhGzFW2geRGB72d4ks
-         +SWV8N3uYML8JBuHzo7oym9x6nUG1Cquy51j+Tn4=
+        b=J61m+C0sJMkvTfyCC69YIFWD8GZNx5xSBpQB4ODKuisngl5vGBSkC3nXqoMi9IPPJ
+         0e9wMy9AZ+/1AaMe2DQovSzGgl+c4YeqYV2A0gnvhTMdLeoJxMhGG0Td4DFtBmd4GS
+         rStmgNJBjx1VAkOfnI9HZMa2bP/PupkfgAFmRKXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fscrypt@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 021/105] fscrypt: clean up some BUG_ON()s in block encryption/decryption
-Date:   Mon, 15 Jul 2019 10:27:15 -0400
-Message-Id: <20190715142839.9896-21-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Joseph Yasi <joe.yasi@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 022/105] Revert "e1000e: fix cyclic resets at link up with active tx"
+Date:   Mon, 15 Jul 2019 10:27:16 -0400
+Message-Id: <20190715142839.9896-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -59,69 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
+[ Upstream commit caff422ea81e144842bc44bab408d85ac449377b ]
 
-Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
-and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
-fscrypt_crypt_block() so that it's done for both encryption and
-decryption, not just encryption.
+This reverts commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61.
 
-Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+That change cased false-positive warning about hardware hang:
+
+e1000e: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
+IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+e1000e 0000:00:1f.6 eth0: Detected Hardware Unit Hang:
+   TDH                  <0>
+   TDT                  <1>
+   next_to_use          <1>
+   next_to_clean        <0>
+buffer_info[next_to_clean]:
+   time_stamp           <fffba7a7>
+   next_to_watch        <0>
+   jiffies              <fffbb140>
+   next_to_watch.status <0>
+MAC Status             <40080080>
+PHY Status             <7949>
+PHY 1000BASE-T Status  <0>
+PHY Extended Status    <3000>
+PCI Status             <10>
+e1000e: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
+
+Besides warning everything works fine.
+Original issue will be fixed property in following patch.
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Joseph Yasi <joe.yasi@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203175
+Tested-by: Joseph Yasi <joe.yasi@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/crypto/crypto.c | 15 +++++++++------
+ drivers/net/ethernet/intel/e1000e/netdev.c | 15 +++++++++------
  1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-index daf2683f0655..f862ad19c714 100644
---- a/fs/crypto/crypto.c
-+++ b/fs/crypto/crypto.c
-@@ -157,7 +157,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
- 	struct crypto_skcipher *tfm = ci->ci_ctfm;
- 	int res = 0;
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 3c214a47c1c4..5c364321d3c6 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5306,13 +5306,8 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
+-			 *
+-			 * If the link is lost the controller stops DMA, but
+-			 * if there is queued Tx work it cannot be done.  So
+-			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
+-			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
++			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5335,6 +5330,14 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
--	BUG_ON(len == 0);
-+	if (WARN_ON_ONCE(len <= 0))
-+		return -EINVAL;
-+	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
-+		return -EINVAL;
- 
- 	BUILD_BUG_ON(sizeof(iv) != FS_IV_SIZE);
- 	BUILD_BUG_ON(AES_BLOCK_SIZE != FS_IV_SIZE);
-@@ -257,8 +260,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
- 	struct page *ciphertext_page = page;
- 	int err;
- 
--	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
--
- 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
- 		/* with inplace-encryption we just encrypt the page */
- 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
-@@ -270,7 +271,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
- 		return ciphertext_page;
- 	}
- 
--	BUG_ON(!PageLocked(page));
-+	if (WARN_ON_ONCE(!PageLocked(page)))
-+		return ERR_PTR(-EINVAL);
- 
- 	ctx = fscrypt_get_ctx(inode, gfp_flags);
- 	if (IS_ERR(ctx))
-@@ -318,8 +320,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
- int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
- 			unsigned int len, unsigned int offs, u64 lblk_num)
- {
--	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
--		BUG_ON(!PageLocked(page));
-+	if (WARN_ON_ONCE(!PageLocked(page) &&
-+			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
-+		return -EINVAL;
- 
- 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
- 				      len, offs, GFP_NOFS);
++	/* If the link is lost the controller stops DMA, but
++	 * if there is queued Tx work it cannot be done.  So
++	 * reset the controller to flush the Tx packet buffers.
++	 */
++	if (!netif_carrier_ok(netdev) &&
++	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
++		adapter->flags |= FLAG_RESTART_NOW;
++
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
 -- 
 2.20.1
 
