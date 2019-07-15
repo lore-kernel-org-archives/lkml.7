@@ -2,104 +2,115 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6862CC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B7920868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WAVY+C9T";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PINET64B"
+	by mail.kernel.org (Postfix) with ESMTP id 4A92C2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbfGOJom (ORCPT
+        id S1729693AbfGOJow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:44:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41482 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbfGOJol (ORCPT
+        Mon, 15 Jul 2019 05:44:52 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41121 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbfGOJov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:44:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4B0166049C; Mon, 15 Jul 2019 09:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563183880;
-        bh=ogNfDzJGeCchNe8Cj5MSCueMmkdzlA9bajadZwl42gg=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=WAVY+C9TLJZMiN4AxK19JddN/m8rBExJZ7kmfX90j6JcvPXD8ILrQC9gekhclHf3X
-         BMyzf5Nk7lXra4iWjIqvG2f2Lz1GG/LeVX0VwMGvGPA789E2zLsxS7bKBtNwJlUc1O
-         Ezt1fjkRrtkZEIUu4r8QylxIo2UjTjNBxMcYYliY=
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 124296049C;
-        Mon, 15 Jul 2019 09:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563183879;
-        bh=ogNfDzJGeCchNe8Cj5MSCueMmkdzlA9bajadZwl42gg=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=PINET64BOpNC1lwjrFMaoBGTtCsE3gP3joRwqkgtvCJGY9hHuiNwzzhRZDME6AW/V
-         oY3AJ6i8ftdmCRgl3UlLTKeiIeKQLxuHbwKYrHq/oW9Ab4WnJ+fPTeVoHvS6h6+V9f
-         Nf4aHZro33Q5X+ImkDUtsvNj/+MFYj6HNjM3ODPA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 124296049C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Balaji Pothunoori <bpothuno@codeaurora.org>,
-        Wen Gong <wgong@codeaurora.org>,
-        Pradeep kumar Chitrapu <pradeepc@codeaurora.org>,
-        Sriram R <srirrama@codeaurora.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] ath10k: work around uninitialized vht_pfr variable
-References: <20190708125050.3689133-1-arnd@arndb.de>
-Date:   Mon, 15 Jul 2019 12:44:33 +0300
-In-Reply-To: <20190708125050.3689133-1-arnd@arndb.de> (Arnd Bergmann's message
-        of "Mon, 8 Jul 2019 14:50:06 +0200")
-Message-ID: <87v9w3pr7i.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 15 Jul 2019 05:44:51 -0400
+Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 82efc516f3121cff; Mon, 15 Jul 2019 11:44:48 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+Subject: Re: linux-next: build failure after merge of the pm tree
+Date:   Mon, 15 Jul 2019 11:44:48 +0200
+Message-ID: <34005749.9vH1ANRJSZ@kreacher>
+In-Reply-To: <20190715100236.1e019f2c@canb.auug.org.au>
+References: <20190715100236.1e019f2c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+Hi Stephen,
 
-> As clang points out, the vht_pfr is assigned to a struct member
-> without being initialized in one case:
->
-> drivers/net/wireless/ath/ath10k/mac.c:7528:7: error: variable 'vht_pfr' is used uninitialized whenever 'if' condition
->       is false [-Werror,-Wsometimes-uninitialized]
->                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
->                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/ath/ath10k/mac.c:7551:20: note: uninitialized use occurs here
->                 arvif->vht_pfr = vht_pfr;
->                                  ^~~~~~~
-> drivers/net/wireless/ath/ath10k/mac.c:7528:3: note: remove the 'if' if its condition is always true
->                 if (!ath10k_mac_can_set_bitrate_mask(ar, band, mask,
->                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/ath/ath10k/mac.c:7483:12: note: initialize the variable 'vht_pfr' to silence this warning
->         u8 vht_pfr;
->
-> Add an explicit but probably incorrect initialization here.
-> I suspect we want a better fix here, but chose this approach to
-> illustrate the issue.
->
-> Fixes: 8b97b055dc9d ("ath10k: fix failure to set multiple fixed rate")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Monday, July 15, 2019 2:02:36 AM CEST Stephen Rothwell wrote:
+> 
+> --Sig_/JvAwh/r3+t+V+F.+O2706e.
+> Content-Type: text/plain; charset=US-ASCII
+> Content-Transfer-Encoding: quoted-printable
+> 
+> Hi all,
+> 
+> After merging the pm tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+> 
+> In file included from <command-line>:
+> include/linux/intel_rapl.h:116:19: error: field 'pcap_rapl_online' has inco=
+> mplete type
+>   enum cpuhp_state pcap_rapl_online;
+>                    ^~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   7ebf8eff63b4 ("intel_rapl: introduce struct rapl_if_private")
+> 
+> This was detected by the new test that attempts to build each include
+> file standalone.
+> 
+> I have added the following fix patch for today:
 
-I'll queue this for v5.3.
+I've applied this patch on top of the RAPL series and added it to my linux-next branch.
 
--- 
-Kalle Valo
+Thanks!
+
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 15 Jul 2019 09:56:30 +1000
+> Subject: [PATCH] intel_rapl: need linux/cpuhotplug.h for enum cpuhp_state
+> 
+> Fixes: 7ebf8eff63b4 ("intel_rapl: introduce struct rapl_if_private")
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/linux/intel_rapl.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/intel_rapl.h b/include/linux/intel_rapl.h
+> index 0c179d92d110..efb3ce892c20 100644
+> --- a/include/linux/intel_rapl.h
+> +++ b/include/linux/intel_rapl.h
+> @@ -12,6 +12,7 @@
+> =20
+>  #include <linux/types.h>
+>  #include <linux/powercap.h>
+> +#include <linux/cpuhotplug.h>
+> =20
+>  enum rapl_domain_type {
+>  	RAPL_DOMAIN_PACKAGE,	/* entire package/socket */
+> --=20
+> 2.20.1
+> 
+> --=20
+> Cheers,
+> Stephen Rothwell
+> 
+> --Sig_/JvAwh/r3+t+V+F.+O2706e.
+> Content-Type: application/pgp-signature
+> Content-Description: OpenPGP digital signature
+> 
+> 
+> --Sig_/JvAwh/r3+t+V+F.+O2706e.--
+> 
+
+
+
+
