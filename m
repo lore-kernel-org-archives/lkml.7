@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38F5C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9A8C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA21206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345D921537
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200052;
-	bh=K+nAwaSCsOLoCXrGtSvB3b+I+/5rVnIHdUozmEvOe+E=;
+	s=default; t=1563200055;
+	bh=TfVJwqEhKVcrhrXorGrG1M0YxCr2T8aqpxLOONU0Ry8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRRbI9H9upyYMVmVAszGOsKDhVXc9LNzpt+lHOOY2QK0TOgR79/heTeZOW2LqPdOt
-	 5ScX6CR4Pt/jl5rPNO9VeAGcOP+foVzgrrSRc+gWoAyhCcaIjolZ53xtd2grUSnBgN
-	 uZ10lzUFXgs3tnLnrta+u5c8o0Z0nfdcYnW9c7vg=
+	b=BiL4gJxhGLoQi/2bykpYniDYIThOsExnlPG/4Oges4k2rnAEd8u/xDXNMHD1Yu1E/
+	 LIh4U2BZwBJHdI4Q9CiOSNpX0W7te1ABYgeRZX4OkUlz1+AOs3MfPn5SWJYGX/71dq
+	 aVHlZCHPGTt7qE+bdOt4E+G6X5J5v+YwIsAPVJ4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389305AbfGOOOL (ORCPT
+        id S2389058AbfGOOOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55108 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388619AbfGOOOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:14:03 -0400
+        id S2388947AbfGOOOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:14:06 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A79A520651;
-        Mon, 15 Jul 2019 14:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE592081C;
+        Mon, 15 Jul 2019 14:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200042;
-        bh=K+nAwaSCsOLoCXrGtSvB3b+I+/5rVnIHdUozmEvOe+E=;
+        s=default; t=1563200045;
+        bh=TfVJwqEhKVcrhrXorGrG1M0YxCr2T8aqpxLOONU0Ry8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIaMTfX/tlHd9L395k84wPX2yZus6tN+iWWen+2ca7v0DRHv6C8svBoMvGGNCYbyq
-         p/lAyyCrBgC8bulbgjtxEOFAN+5Gl4PERZ8sYnF2CmTjJddpjNwyw2jY2ECUTtn/ml
-         j/qts0H1vY+1QLU8h0kURBtiwybwcQnN9BovDS3E=
+        b=NnVekSI5uzDF/uNeL0ayeA17UZzHaziK0JLyiFhEz5qww5OUAz+j/rPlO6LN9FMui
+         MJqsEv5B2+de1mApEAB389/tTMVAEK60Y7jmeD+eKCSqRuynqNFphF7xoYMJkOrRgu
+         Q8UakOVRxYcV0aSS8deqSQ/3oyJqs7bIVA5PPOFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 167/219] cpufreq: Don't skip frequency validation for has_target() drivers
-Date:   Mon, 15 Jul 2019 10:02:48 -0400
-Message-Id: <20190715140341.6443-167-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 169/219] bcache: check CACHE_SET_IO_DISABLE bit in bch_journal()
+Date:   Mon, 15 Jul 2019 10:02:50 -0400
+Message-Id: <20190715140341.6443-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,81 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 9801522840cc1073f8064b4c979b7b6995c74bca ]
+[ Upstream commit 383ff2183ad16a8842d1fbd9dd3e1cbd66813e64 ]
 
-CPUFREQ_CONST_LOOPS was introduced in a very old commit from pre-2.6
-kernel release by commit 6a4a93f9c0d5 ("[CPUFREQ] Fix 'out of sync'
-issue").
+When too many I/O errors happen on cache set and CACHE_SET_IO_DISABLE
+bit is set, bch_journal() may continue to work because the journaling
+bkey might be still in write set yet. The caller of bch_journal() may
+believe the journal still work but the truth is in-memory journal write
+set won't be written into cache device any more. This behavior may
+introduce potential inconsistent metadata status.
 
-Basically, that commit does two things:
+This patch checks CACHE_SET_IO_DISABLE bit at the head of bch_journal(),
+if the bit is set, bch_journal() returns NULL immediately to notice
+caller to know journal does not work.
 
- - It adds the frequency verification code (which is quite similar to
-   what we have today as well).
-
- - And it sets the CPUFREQ_CONST_LOOPS flag only for setpolicy drivers,
-   rightly so based on the code we had then. The idea was to avoid
-   frequency validation for setpolicy drivers as the cpufreq core doesn't
-   know what frequency the hardware is running at and so no point in
-   doing frequency verification.
-
-The problem happened when we started to use the same CPUFREQ_CONST_LOOPS
-flag for constant loops-per-jiffy thing as well and many has_target()
-drivers started using the same flag and unknowingly skipped the
-verification of frequency. There is no logical reason behind skipping
-frequency validation because of the presence of CPUFREQ_CONST_LOOPS
-flag otherwise.
-
-Fix this issue by skipping frequency validation only for setpolicy
-drivers and always doing it for has_target() drivers irrespective of
-the presence or absence of CPUFREQ_CONST_LOOPS flag.
-
-cpufreq_notify_transition() is only called for has_target() type driver
-and not for set_policy type, and the check is simply redundant. Remove
-it as well.
-
-Also remove () around freq comparison statement as they aren't required
-and checkpatch also warns for them.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/md/bcache/journal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index bbf79544d0ad..86dbb784a0b8 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -316,12 +316,10 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
- 		 * which is not equal to what the cpufreq core thinks is
- 		 * "old frequency".
- 		 */
--		if (!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
--			if (policy->cur && (policy->cur != freqs->old)) {
--				pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
--					 freqs->old, policy->cur);
--				freqs->old = policy->cur;
--			}
-+		if (policy->cur && policy->cur != freqs->old) {
-+			pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
-+				 freqs->old, policy->cur);
-+			freqs->old = policy->cur;
- 		}
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 6c94fa007796..ac3cec56ec19 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -810,6 +810,10 @@ atomic_t *bch_journal(struct cache_set *c,
+ 	struct journal_write *w;
+ 	atomic_t *ret;
  
- 		for_each_cpu(freqs->cpu, policy->cpus) {
-@@ -1563,8 +1561,7 @@ static unsigned int __cpufreq_get(struct cpufreq_policy *policy)
- 	if (policy->fast_switch_enabled)
- 		return ret_freq;
++	/* No journaling if CACHE_SET_IO_DISABLE set already */
++	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &c->flags)))
++		return NULL;
++
+ 	if (!CACHE_SYNC(&c->sb))
+ 		return NULL;
  
--	if (ret_freq && policy->cur &&
--		!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
-+	if (has_target() && ret_freq && policy->cur) {
- 		/* verify no discrepancy between actual and
- 					saved value exists */
- 		if (unlikely(ret_freq != policy->cur)) {
 -- 
 2.20.1
 
