@@ -2,90 +2,166 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8153C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20D8C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9466E214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FBFXRjg8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F+FWrVn9"
+	by mail.kernel.org (Postfix) with ESMTP id 8A0BF2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfGOJcl (ORCPT
+        id S1729666AbfGOJdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:32:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37758 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfGOJck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:32:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4D18C60A50; Mon, 15 Jul 2019 09:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563183160;
-        bh=lYstfhNXFss73ifzPEP+0gLV51khNw6rqOGncRTDN8o=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=FBFXRjg8p2/Zz7bVeHNb572FVTPLTYwSKUgOqOjTHAcU3MXr4z6Ad2oB0mKzeTJdO
-         IU5OnMEVhC0g5R0S7RL+MD3hHF54KDyHqA1QrsKz5iSYd30RQXWisoU7b/k+Kxk45l
-         if7fds/OHbt+uaT37utvK3R9qA8AsitfLAr4uRRw=
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 15 Jul 2019 05:33:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59654 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729514AbfGOJdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 05:33:15 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F26D60591;
-        Mon, 15 Jul 2019 09:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563183159;
-        bh=lYstfhNXFss73ifzPEP+0gLV51khNw6rqOGncRTDN8o=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=F+FWrVn9wFIk75Pr57NwX/i4pnd7rs8qiHAtBQFzwHF4Z/yfPIL/BV989uqS0gvAp
-         7fHAgFYAE3LQtASnabekp4WrhNRGZ5rPVlddbnRghpaGo31ZTAi43CWracrHK0SvWw
-         Xl0QzEca/eyUAt4SaWqV1hzx8pFlCNegdIZXeAeQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F26D60591
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/30] net/wireless: Use kmemdup rather than duplicating its implementation
-References: <20190703131614.25408-1-huangfq.daxian@gmail.com>
-Date:   Mon, 15 Jul 2019 12:32:35 +0300
-In-Reply-To: <20190703131614.25408-1-huangfq.daxian@gmail.com> (Fuqian Huang's
-        message of "Wed, 3 Jul 2019 21:16:14 +0800")
-Message-ID: <878sszr6bw.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7342B3084248;
+        Mon, 15 Jul 2019 09:33:14 +0000 (UTC)
+Received: from [10.36.117.137] (ovpn-117-137.ams2.redhat.com [10.36.117.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E5745C231;
+        Mon, 15 Jul 2019 09:33:01 +0000 (UTC)
+Subject: Re: [RFC][Patch v11 1/2] mm: page_hinting: core infrastructure
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        pbonzini@redhat.com, lcapitulino@redhat.com, pagupta@redhat.com,
+        wei.w.wang@intel.com, yang.zhang.wz@gmail.com, riel@surriel.com,
+        mst@redhat.com, dodgen@google.com, konrad.wilk@oracle.com,
+        dhildenb@redhat.com, aarcange@redhat.com,
+        alexander.duyck@gmail.com, john.starks@microsoft.com,
+        mhocko@suse.com
+References: <20190710195158.19640-1-nitesh@redhat.com>
+ <20190710195158.19640-2-nitesh@redhat.com>
+ <f9bca947-f88e-51a7-fdaf-4403fda1b783@intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <46336efb-3243-0083-1d20-7e8578131679@redhat.com>
+Date:   Mon, 15 Jul 2019 11:33:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <f9bca947-f88e-51a7-fdaf-4403fda1b783@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 15 Jul 2019 09:33:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fuqian Huang <huangfq.daxian@gmail.com> writes:
+On 11.07.19 20:21, Dave Hansen wrote:
+> On 7/10/19 12:51 PM, Nitesh Narayan Lal wrote:
+>> +static void bm_set_pfn(struct page *page)
+>> +{
+>> +	struct zone *zone = page_zone(page);
+>> +	int zone_idx = page_zonenum(page);
+>> +	unsigned long bitnr = 0;
+>> +
+>> +	lockdep_assert_held(&zone->lock);
+>> +	bitnr = pfn_to_bit(page, zone_idx);
+>> +	/*
+>> +	 * TODO: fix possible underflows.
+>> +	 */
+>> +	if (free_area[zone_idx].bitmap &&
+>> +	    bitnr < free_area[zone_idx].nbits &&
+>> +	    !test_and_set_bit(bitnr, free_area[zone_idx].bitmap))
+>> +		atomic_inc(&free_area[zone_idx].free_pages);
+>> +}
+> 
+> Let's say I have two NUMA nodes, each with ZONE_NORMAL and ZONE_MOVABLE
+> and each zone with 1GB of memory:
+> 
+> Node:         0        1
+> NORMAL   0->1GB   2->3GB
+> MOVABLE  1->2GB   3->4GB
+> 
+> This code will allocate two bitmaps.  The ZONE_NORMAL bitmap will
+> represent data from 0->3GB and the ZONE_MOVABLE bitmap will represent
+> data from 1->4GB.  That's the result of this code:
+> 
+>> +			if (free_area[zone_idx].base_pfn) {
+>> +				free_area[zone_idx].base_pfn =
+>> +					min(free_area[zone_idx].base_pfn,
+>> +					    zone->zone_start_pfn);
+>> +				free_area[zone_idx].end_pfn =
+>> +					max(free_area[zone_idx].end_pfn,
+>> +					    zone->zone_start_pfn +
+>> +					    zone->spanned_pages);
+> 
+> But that means that both bitmaps will have space for PFNs in the other
+> zone type, which is completely bogus.  This is fundamental because the
+> data structures are incorrectly built per zone *type* instead of per zone.
+> 
 
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memset, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memset.
->
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+I don't think it's incorrect, it's just not optimal in all scenarios.
+E.g., in you example, this approach would "waste" 2 * 1GB of tracking
+data for the wholes (2* 64bytes when using 1 bit for 2MB).
 
-I assume I can take this to wireless-drivers-next. If not, please
-holler.
+FWIW, this is not a numa-specific thingy. We can have sparse zones
+easily on single-numa systems.
 
-Fuqian, it would help the maintainers a lot if you could clearly
-indicate to which tree the patches are planned to be commited. If I just
-see one patch from a 30 patch set I have no clue what is your plan,
-either is someone else going to apply the full patchset or the
-maintainers should pick respective patches individually.
+Node:                 0
+NORMAL   0->1GB, 2->3GB
+MOVABLE  1->2GB, 3->4GB
+
+So tracking it per zones instead instead of zone type is only one part
+of the story.
 
 -- 
-Kalle Valo
+
+Thanks,
+
+David / dhildenb
