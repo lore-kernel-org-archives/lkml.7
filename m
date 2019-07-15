@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D5C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4139FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C94B206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194B62182B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199837;
-	bh=7UG0nrF22yhrDipXTNw8TTJF5gVp6UDRWvICFZJ+Ze0=;
+	s=default; t=1563199841;
+	bh=P+a33z2AUuQ3biJYt7k2JnSFAiYRG/ndINhwwrXdH70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAk2q3KYfGqF4YfnRWf4d4jn4sTnuXoQ4JGQkV/fCYCbUjFyqQdo/6iXHcLaF6LA8
-	 KVnsTCWPLbJqX4OGjExLgu4ZJkjTlDcSRek5vDakDcy2+fSiiiDAVBkhf464kUDVgY
-	 FpubDmLi51fJlJvzLKYUVS12bUTb4yX9ST+f7f3I=
+	b=Jn0L5yEAhmrJa6PUH2YQ0K1U24QfX4XOZFw+1owJ+aTwwFZfMFuOpVtsJmb2S/Xmk
+	 31888m/XuOFg97Fr+L5w33PxXrt0Rdx091fwptVdN0whAkwFA2hcz1jcSTC5ERFbM/
+	 MI+nLdnM6k5Kgboe5bf4NDb9YCDKp3YdG9iZPJzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388891AbfGOOKg (ORCPT
+        id S2388898AbfGOOKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40380 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:10:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388880AbfGOOKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:10:32 -0400
+        id S2388887AbfGOOKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:10:34 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB722083D;
-        Mon, 15 Jul 2019 14:10:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51A7206B8;
+        Mon, 15 Jul 2019 14:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199831;
-        bh=7UG0nrF22yhrDipXTNw8TTJF5gVp6UDRWvICFZJ+Ze0=;
+        s=default; t=1563199834;
+        bh=P+a33z2AUuQ3biJYt7k2JnSFAiYRG/ndINhwwrXdH70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJ/SFZh3LHEKFBUPSSXQk7K9yvB7mhC1ZZ7U1CsvSABoM2SR1NhCLpdwWUugOEjPm
-         DVuXzhfsSti80ahBwT1bVZcNwDCJYRKP8tR4Ukkjtg8m/fLQBXhzrdeg7WyA4qFJSR
-         wttmu323lOJWm9y4eeQkZqE/PFC86Wq2Nx3lDwxc=
+        b=JKyubp7YvCaouWhiUxIevyT649pDpAAllTTp2u1Y0yFngW+PHu1IXdxspFIorMYiu
+         j57PHhyP6rpthIpp0njIn1I8LHdIS/I4YqGcVCjylpQohnzjWwm2cxY4trmGfoJ2ID
+         jOd70vE56QOIZXX6276kC38R7CS6tKB9NJmrf6NI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 120/219] nvme-pci: set the errno on ctrl state change error
-Date:   Mon, 15 Jul 2019 10:02:01 -0400
-Message-Id: <20190715140341.6443-120-sashal@kernel.org>
+Cc:     Heiner Litz <hlitz@ucsc.edu>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 121/219] lightnvm: pblk: fix freeing of merged pages
+Date:   Mon, 15 Jul 2019 10:02:02 -0400
+Message-Id: <20190715140341.6443-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,53 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Heiner Litz <hlitz@ucsc.edu>
 
-[ Upstream commit e71afda49335620e3d9adf56015676db33a3bd86 ]
+[ Upstream commit 510fd8ea98fcb586c01aef93d87c060a159ac30a ]
 
-This patch removes the confusing assignment of the variable result at
-the time of declaration and sets the value in error cases next to the
-places where the actual error is happening.
+bio_add_pc_page() may merge pages when a bio is padded due to a flush.
+Fix iteration over the bio to free the correct pages in case of a merge.
 
-Here we also set the result value to -ENODEV when we fail at the final
-ctrl state transition in nvme_reset_work(). Without this assignment
-result will hold 0 from nvme_setup_io_queue() and on failure 0 will be
-passed to he nvme_remove_dead_ctrl() from final state transition.
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Heiner Litz <hlitz@ucsc.edu>
+Reviewed-by: Javier González <javier@javigon.com>
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/lightnvm/pblk-core.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 21a51a0ff4d7..9c956ff5344d 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2504,11 +2504,13 @@ static void nvme_reset_work(struct work_struct *work)
- 	struct nvme_dev *dev =
- 		container_of(work, struct nvme_dev, ctrl.reset_work);
- 	bool was_suspend = !!(dev->ctrl.ctrl_config & NVME_CC_SHN_NORMAL);
--	int result = -ENODEV;
-+	int result;
- 	enum nvme_ctrl_state new_state = NVME_CTRL_LIVE;
- 
--	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING))
-+	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING)) {
-+		result = -ENODEV;
- 		goto out;
-+	}
- 
- 	/*
- 	 * If we're called to reset a live controller first shut it down before
-@@ -2606,6 +2608,7 @@ static void nvme_reset_work(struct work_struct *work)
- 	if (!nvme_change_ctrl_state(&dev->ctrl, new_state)) {
- 		dev_warn(dev->ctrl.device,
- 			"failed to mark controller state %d\n", new_state);
-+		result = -ENODEV;
- 		goto out;
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index 6ca868868fee..7393d64757a1 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -323,14 +323,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
+ void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
+ 			 int nr_pages)
+ {
+-	struct bio_vec bv;
+-	int i;
+-
+-	WARN_ON(off + nr_pages != bio->bi_vcnt);
+-
+-	for (i = off; i < nr_pages + off; i++) {
+-		bv = bio->bi_io_vec[i];
+-		mempool_free(bv.bv_page, &pblk->page_bio_pool);
++	struct bio_vec *bv;
++	struct page *page;
++	int i, e, nbv = 0;
++
++	for (i = 0; i < bio->bi_vcnt; i++) {
++		bv = &bio->bi_io_vec[i];
++		page = bv->bv_page;
++		for (e = 0; e < bv->bv_len; e += PBLK_EXPOSED_PAGE_SIZE, nbv++)
++			if (nbv >= off)
++				mempool_free(page++, &pblk->page_bio_pool);
  	}
+ }
  
 -- 
 2.20.1
