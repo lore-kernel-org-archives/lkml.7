@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B79C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A70C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114FC205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F8D2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202806;
-	bh=6FtXUU8xqX1YpoNLCB5U17+hbveBVqfMJZXl/C9MpYg=;
+	s=default; t=1563202858;
+	bh=BjOl+J090RIzEtaT3kR8G4TlYxlA1Brk2oMem9nGmQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zw+ybuHy3+niwhfMjKSDUyvvAs+A3N7BJC3BVcimgg8tEbta3On/ABlsKJrMQ/Txm
-	 8UYdmVEzDzYorXFlkl6STvXPdPiOQfXE7IvpITpc5pG5M0w36w21cBB7G9I52waj5G
-	 PoqNNRgvgj8KnQ+qlvl5THg1AJOY/bwmmAHywVxg=
+	b=VmpPl1ZqwsqyXLNShGmYFbtp2OZ/P/c8c2zX7FBXZv3FvxlWnqhOjY9VMdqefFtZ7
+	 AXZlNlU7GeeBLsScn62YVUf/N0X+qzZwj00fNU04whdWWBmNRq2r3hku19nFTKpwq9
+	 isWXbH28r219sx8gRJsjQIJiuOORipsu96TM2T50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391470AbfGOPAE (ORCPT
+        id S2389717AbfGOPA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731727AbfGOOSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:18:38 -0400
+        id S2387719AbfGOOPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:15:08 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A880217D9;
-        Mon, 15 Jul 2019 14:18:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF5E721530;
+        Mon, 15 Jul 2019 14:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200317;
-        bh=6FtXUU8xqX1YpoNLCB5U17+hbveBVqfMJZXl/C9MpYg=;
+        s=default; t=1563200107;
+        bh=BjOl+J090RIzEtaT3kR8G4TlYxlA1Brk2oMem9nGmQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJ8ByV9bcPB77OpxqsnU0+s7u9jTrQ1iOZ4CD0xyZA8dGw4fhf/fqgVu/wxKRsTkJ
-         9NpEH3gN1ab1I1YJ5hpSc8pB6cOapPFxBGosoYho+HEiinu3B+FtUK0xQ+/aizYmGA
-         Lj+ioX2nLMcEnGRs2UYZpaBEYl7aApP9qQaOS3vE=
+        b=IMRRODilxg5QzSqMGoqYyvYnLPipHfXpO6Rcvz68qlrSmP0Ggal9Irs/y6x2j9EF5
+         +n/5Iv+VMIDKD4T5pk4JPO1U1domJPvZImsmql9kcaCHI3X0LzZ0fHb9ue1rcULOLd
+         Es83e3P+v4AZ2fJBq1X5EtjzuWhCFcn0XAXwiUV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Sowden <jeremy@azazel.net>,
-        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 010/158] batman-adv: fix for leaked TVLV handler.
-Date:   Mon, 15 Jul 2019 10:15:41 -0400
-Message-Id: <20190715141809.8445-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 185/219] bnxt_en: Disable bus master during PCI shutdown and driver unload.
+Date:   Mon, 15 Jul 2019 10:03:06 -0400
+Message-Id: <20190715140341.6443-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
+References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
+[ Upstream commit c20dc142dd7b2884b8570eeab323bcd4a84294fa ]
 
-A handler for BATADV_TVLV_ROAM was being registered when the
-translation-table was initialized, but not unregistered when the
-translation-table was freed.  Unregister it.
+Some chips with older firmware can continue to perform DMA read from
+context memory even after the memory has been freed.  In the PCI shutdown
+method, we need to call pci_disable_device() to shutdown DMA to prevent
+this DMA before we put the device into D3hot.  DMA memory request in
+D3hot state will generate PCI fatal error.  Similarly, in the driver
+remove method, the context memory should only be freed after DMA has
+been shutdown for correctness.
 
-Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
-Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 98f04cf0f1fc ("bnxt_en: Check context memory requirements from firmware.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 359ec1a6e822..9fa5389ea244 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -3821,6 +3821,8 @@ static void batadv_tt_purge(struct work_struct *work)
-  */
- void batadv_tt_free(struct batadv_priv *bat_priv)
- {
-+	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
-+
- 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 30cafe4cdb6e..bf1fd513fa02 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10165,10 +10165,10 @@ static void bnxt_remove_one(struct pci_dev *pdev)
+ 	bnxt_dcb_free(bp);
+ 	kfree(bp->edev);
+ 	bp->edev = NULL;
++	bnxt_cleanup_pci(bp);
+ 	bnxt_free_ctx_mem(bp);
+ 	kfree(bp->ctx);
+ 	bp->ctx = NULL;
+-	bnxt_cleanup_pci(bp);
+ 	bnxt_free_port_stats(bp);
+ 	free_netdev(dev);
+ }
+@@ -10730,6 +10730,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
  
+ 	if (system_state == SYSTEM_POWER_OFF) {
+ 		bnxt_clear_int_mode(bp);
++		pci_disable_device(pdev);
+ 		pci_wake_from_d3(pdev, bp->wol);
+ 		pci_set_power_state(pdev, PCI_D3hot);
+ 	}
 -- 
 2.20.1
 
