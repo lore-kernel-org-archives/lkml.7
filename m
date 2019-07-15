@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C55C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE2FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3055206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F49206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200827;
-	bh=hj4vGmAb84gtpeiOmJFY/Zmxwr42PhWcjIBKg2/kEXE=;
+	s=default; t=1563200833;
+	bh=6PkvfdoVeYzmKyGDYX7Mc7xSEm+kB0gC4JqS/ob04Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EP83vVw7zAWK0OJkd2bVt7jfgJ1PBI7p1vZdQHqGB81m/rV7QhlvTVm10VuASpbRL
-	 kUVTeFoQRlR1WYRe93OGqYUBvw/tA5hFTfCAJUn2a+34n5xtY30fnauL4f3GlAApI9
-	 IMoKHkMHCpKR2NgS2WyEDtx/tTEycc+0a0mNYFr4=
+	b=JNhWhJPqiNTi7+9u97b2saf87cVPEBOyKLOEmLO4EgOyIH9WETxjk8rOD0JpzfpOp
+	 9tqD2tMlxaMRkZWtvX5i5x5WLfAwhJfKiBCuH1DceQVojKoz5sHRMv5Ij3KS6RzLFn
+	 p4YhnR2YvJ0J9b4rHTYn02zzFgL6jRfxLdkFJ6QI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390794AbfGOO1G (ORCPT
+        id S2391079AbfGOO1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390911AbfGOOY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:24:27 -0400
+        id S2391433AbfGOO1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:27:06 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EFA021842;
-        Mon, 15 Jul 2019 14:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38F36206B8;
+        Mon, 15 Jul 2019 14:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200665;
-        bh=hj4vGmAb84gtpeiOmJFY/Zmxwr42PhWcjIBKg2/kEXE=;
+        s=default; t=1563200825;
+        bh=6PkvfdoVeYzmKyGDYX7Mc7xSEm+kB0gC4JqS/ob04Sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2lQ+5tsnJf/kFk3yj10LkHxLQxoeGawxR25a+ZUSr25ys7CsAS4vYOlqb93c+/C5C
-         Ituvbn+0P0QWS2MaeSThUKGw+JDwrkcsv2UCPZD8WNm7nKr9VPvXFSxNs6YytE38Vk
-         jbnn+WH1l7xMS8M2volmGm0h9YaNOgZFzKv3ZXwM=
+        b=Mmx8bVR3hFssp3xxQB7h3vxVN0CvlxI+kN03+fE0TXbR2Ny4qokXQFzQVvYBNmrSz
+         MB6qykX1Pxwbx8lQZPoTY8OI/M2tytpHUU+Ju5JtSsHH8bBq71//jQaxxO49GkqrCB
+         enxl8U2GNfd5PY/mRMF0jUyOIMzz2hwilc0gjZDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Anastasov <ja@ssi.bg>,
-        syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: [PATCH AUTOSEL 4.19 107/158] ipvs: fix tinfo memory leak in start_sync_thread
-Date:   Mon, 15 Jul 2019 10:17:18 -0400
-Message-Id: <20190715141809.8445-107-sashal@kernel.org>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Przemyslaw Hausman <przemyslaw.hausman@canonical.com>,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 138/158] bnx2x: Prevent ptp_task to be rescheduled indefinitely
+Date:   Mon, 15 Jul 2019 10:17:49 -0400
+Message-Id: <20190715141809.8445-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -64,399 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 
-[ Upstream commit 5db7c8b9f9fc2aeec671ae3ca6375752c162e0e7 ]
+[ Upstream commit 3c91f25c2f72ba6001775a5932857c1d2131c531 ]
 
-syzkaller reports for memory leak in start_sync_thread [1]
+Currently bnx2x ptp worker tries to read a register with timestamp
+information in case of TX packet timestamping and in case it fails,
+the routine reschedules itself indefinitely. This was reported as a
+kworker always at 100% of CPU usage, which was narrowed down to be
+bnx2x ptp_task.
 
-As Eric points out, kthread may start and stop before the
-threadfn function is called, so there is no chance the
-data (tinfo in our case) to be released in thread.
+By following the ioctl handler, we could narrow down the problem to
+an NTP tool (chrony) requesting HW timestamping from bnx2x NIC with
+RX filter zeroed; this isn't reproducible for example with ptp4l
+(from linuxptp) since this tool requests a supported RX filter.
+It seems NIC FW timestamp mechanism cannot work well with
+RX_FILTER_NONE - driver's PTP filter init routine skips a register
+write to the adapter if there's not a supported filter request.
 
-Fix this by releasing tinfo in the controlling code instead.
+This patch addresses the problem of bnx2x ptp thread's everlasting
+reschedule by retrying the register read 10 times; between the read
+attempts the thread sleeps for an increasing amount of time starting
+in 1ms to give FW some time to perform the timestamping. If it still
+fails after all retries, we bail out in order to prevent an unbound
+resource consumption from bnx2x.
 
-[1]
-BUG: memory leak
-unreferenced object 0xffff8881206bf700 (size 32):
- comm "syz-executor761", pid 7268, jiffies 4294943441 (age 20.470s)
- hex dump (first 32 bytes):
-   00 40 7c 09 81 88 ff ff 80 45 b8 21 81 88 ff ff  .@|......E.!....
-   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- backtrace:
-   [<0000000057619e23>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-   [<0000000057619e23>] slab_post_alloc_hook mm/slab.h:439 [inline]
-   [<0000000057619e23>] slab_alloc mm/slab.c:3326 [inline]
-   [<0000000057619e23>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-   [<0000000086ce5479>] kmalloc include/linux/slab.h:547 [inline]
-   [<0000000086ce5479>] start_sync_thread+0x5d2/0xe10 net/netfilter/ipvs/ip_vs_sync.c:1862
-   [<000000001a9229cc>] do_ip_vs_set_ctl+0x4c5/0x780 net/netfilter/ipvs/ip_vs_ctl.c:2402
-   [<00000000ece457c8>] nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-   [<00000000ece457c8>] nf_setsockopt+0x4c/0x80 net/netfilter/nf_sockopt.c:115
-   [<00000000942f62d4>] ip_setsockopt net/ipv4/ip_sockglue.c:1258 [inline]
-   [<00000000942f62d4>] ip_setsockopt+0x9b/0xb0 net/ipv4/ip_sockglue.c:1238
-   [<00000000a56a8ffd>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
-   [<00000000fa895401>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-   [<0000000095eef4cf>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-   [<000000009747cf88>] __do_sys_setsockopt net/socket.c:2089 [inline]
-   [<000000009747cf88>] __se_sys_setsockopt net/socket.c:2086 [inline]
-   [<000000009747cf88>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-   [<00000000ded8ba80>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-   [<00000000893b4ac8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The patch also adds an ethtool statistic for accounting the skipped
+TX timestamp packets and it reduces the priority of timestamping
+error messages to prevent log flooding. The code was tested using
+both linuxptp and chrony.
 
-Reported-by: syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com
-Suggested-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 998e7a76804b ("ipvs: Use kthread_run() instead of doing a double-fork via kernel_thread()")
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-and-tested-by: Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
+Suggested-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h             |   6 +-
- net/netfilter/ipvs/ip_vs_ctl.c  |   4 -
- net/netfilter/ipvs/ip_vs_sync.c | 134 +++++++++++++++++---------------
- 3 files changed, 76 insertions(+), 68 deletions(-)
+ .../net/ethernet/broadcom/bnx2x/bnx2x_cmn.c   |  5 ++-
+ .../ethernet/broadcom/bnx2x/bnx2x_ethtool.c   |  4 ++-
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 33 ++++++++++++++-----
+ .../net/ethernet/broadcom/bnx2x/bnx2x_stats.h |  3 ++
+ 4 files changed, 34 insertions(+), 11 deletions(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index a0d2e0bb9a94..0e3c0d83bd99 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -806,11 +806,12 @@ struct ipvs_master_sync_state {
- 	struct ip_vs_sync_buff	*sync_buff;
- 	unsigned long		sync_queue_len;
- 	unsigned int		sync_queue_delay;
--	struct task_struct	*master_thread;
- 	struct delayed_work	master_wakeup_work;
- 	struct netns_ipvs	*ipvs;
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+index 5a727d4729da..e3ce29951c5e 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -3858,9 +3858,12 @@ netdev_tx_t bnx2x_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
+ 		if (!(bp->flags & TX_TIMESTAMPING_EN)) {
++			bp->eth_stats.ptp_skip_tx_ts++;
+ 			BNX2X_ERR("Tx timestamping was not enabled, this packet will not be timestamped\n");
+ 		} else if (bp->ptp_tx_skb) {
+-			BNX2X_ERR("The device supports only a single outstanding packet to timestamp, this packet will not be timestamped\n");
++			bp->eth_stats.ptp_skip_tx_ts++;
++			netdev_err_once(bp->dev,
++					"Device supports only a single outstanding packet to timestamp, this packet won't be timestamped\n");
+ 		} else {
+ 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+ 			/* schedule check for Tx timestamp */
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+index c428b0655c26..00f9ed93360c 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -182,7 +182,9 @@ static const struct {
+ 	{ STATS_OFFSET32(driver_filtered_tx_pkt),
+ 				4, false, "driver_filtered_tx_pkt" },
+ 	{ STATS_OFFSET32(eee_tx_lpi),
+-				4, true, "Tx LPI entry count"}
++				4, true, "Tx LPI entry count"},
++	{ STATS_OFFSET32(ptp_skip_tx_ts),
++				4, false, "ptp_skipped_tx_tstamp" },
  };
  
-+struct ip_vs_sync_thread_data;
+ #define BNX2X_NUM_STATS		ARRAY_SIZE(bnx2x_stats_arr)
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index a585f1025a58..2c9af0f420e5 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -15244,11 +15244,24 @@ static void bnx2x_ptp_task(struct work_struct *work)
+ 	u32 val_seq;
+ 	u64 timestamp, ns;
+ 	struct skb_shared_hwtstamps shhwtstamps;
++	bool bail = true;
++	int i;
 +
- /* How much time to keep dests in trash */
- #define IP_VS_DEST_TRASH_PERIOD		(120 * HZ)
- 
-@@ -941,7 +942,8 @@ struct netns_ipvs {
- 	spinlock_t		sync_lock;
- 	struct ipvs_master_sync_state *ms;
- 	spinlock_t		sync_buff_lock;
--	struct task_struct	**backup_threads;
-+	struct ip_vs_sync_thread_data *master_tinfo;
-+	struct ip_vs_sync_thread_data *backup_tinfo;
- 	int			threads_mask;
- 	volatile int		sync_state;
- 	struct mutex		sync_mutex;
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 2d4e048762f6..3df94a499126 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -2382,9 +2382,7 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 			cfg.syncid = dm->syncid;
- 			ret = start_sync_thread(ipvs, &cfg, dm->state);
- 		} else {
--			mutex_lock(&ipvs->sync_mutex);
- 			ret = stop_sync_thread(ipvs, dm->state);
--			mutex_unlock(&ipvs->sync_mutex);
- 		}
- 		goto out_dec;
- 	}
-@@ -3492,10 +3490,8 @@ static int ip_vs_genl_del_daemon(struct netns_ipvs *ipvs, struct nlattr **attrs)
- 	if (!attrs[IPVS_DAEMON_ATTR_STATE])
- 		return -EINVAL;
- 
--	mutex_lock(&ipvs->sync_mutex);
- 	ret = stop_sync_thread(ipvs,
- 			       nla_get_u32(attrs[IPVS_DAEMON_ATTR_STATE]));
--	mutex_unlock(&ipvs->sync_mutex);
- 	return ret;
- }
- 
-diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
-index d4020c5e831d..ecb71062fcb3 100644
---- a/net/netfilter/ipvs/ip_vs_sync.c
-+++ b/net/netfilter/ipvs/ip_vs_sync.c
-@@ -195,6 +195,7 @@ union ip_vs_sync_conn {
- #define IPVS_OPT_F_PARAM	(1 << (IPVS_OPT_PARAM-1))
- 
- struct ip_vs_sync_thread_data {
-+	struct task_struct *task;
- 	struct netns_ipvs *ipvs;
- 	struct socket *sock;
- 	char *buf;
-@@ -374,8 +375,11 @@ static inline void sb_queue_tail(struct netns_ipvs *ipvs,
- 					      max(IPVS_SYNC_SEND_DELAY, 1));
- 		ms->sync_queue_len++;
- 		list_add_tail(&sb->list, &ms->sync_queue);
--		if ((++ms->sync_queue_delay) == IPVS_SYNC_WAKEUP_RATE)
--			wake_up_process(ms->master_thread);
-+		if ((++ms->sync_queue_delay) == IPVS_SYNC_WAKEUP_RATE) {
-+			int id = (int)(ms - ipvs->ms);
-+
-+			wake_up_process(ipvs->master_tinfo[id].task);
++	/* FW may take a while to complete timestamping; try a bit and if it's
++	 * still not complete, may indicate an error state - bail out then.
++	 */
++	for (i = 0; i < 10; i++) {
++		/* Read Tx timestamp registers */
++		val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
++				 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
++		if (val_seq & 0x10000) {
++			bail = false;
++			break;
 +		}
- 	} else
- 		ip_vs_sync_buff_release(sb);
- 	spin_unlock(&ipvs->sync_lock);
-@@ -1636,8 +1640,10 @@ static void master_wakeup_work_handler(struct work_struct *work)
- 	spin_lock_bh(&ipvs->sync_lock);
- 	if (ms->sync_queue_len &&
- 	    ms->sync_queue_delay < IPVS_SYNC_WAKEUP_RATE) {
-+		int id = (int)(ms - ipvs->ms);
-+
- 		ms->sync_queue_delay = IPVS_SYNC_WAKEUP_RATE;
--		wake_up_process(ms->master_thread);
-+		wake_up_process(ipvs->master_tinfo[id].task);
- 	}
- 	spin_unlock_bh(&ipvs->sync_lock);
- }
-@@ -1703,10 +1709,6 @@ static int sync_thread_master(void *data)
- 	if (sb)
- 		ip_vs_sync_buff_release(sb);
- 
--	/* release the sending multicast socket */
--	sock_release(tinfo->sock);
--	kfree(tinfo);
--
- 	return 0;
- }
- 
-@@ -1740,11 +1742,6 @@ static int sync_thread_backup(void *data)
- 		}
- 	}
- 
--	/* release the sending multicast socket */
--	sock_release(tinfo->sock);
--	kfree(tinfo->buf);
--	kfree(tinfo);
--
- 	return 0;
- }
- 
-@@ -1752,8 +1749,8 @@ static int sync_thread_backup(void *data)
- int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 		      int state)
- {
--	struct ip_vs_sync_thread_data *tinfo = NULL;
--	struct task_struct **array = NULL, *task;
-+	struct ip_vs_sync_thread_data *ti = NULL, *tinfo;
-+	struct task_struct *task;
- 	struct net_device *dev;
- 	char *name;
- 	int (*threadfn)(void *data);
-@@ -1822,7 +1819,7 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 		threadfn = sync_thread_master;
- 	} else if (state == IP_VS_STATE_BACKUP) {
- 		result = -EEXIST;
--		if (ipvs->backup_threads)
-+		if (ipvs->backup_tinfo)
- 			goto out_early;
- 
- 		ipvs->bcfg = *c;
-@@ -1849,28 +1846,22 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 					  master_wakeup_work_handler);
- 			ms->ipvs = ipvs;
- 		}
--	} else {
--		array = kcalloc(count, sizeof(struct task_struct *),
--				GFP_KERNEL);
--		result = -ENOMEM;
--		if (!array)
--			goto out;
- 	}
-+	result = -ENOMEM;
-+	ti = kcalloc(count, sizeof(struct ip_vs_sync_thread_data),
-+		     GFP_KERNEL);
-+	if (!ti)
-+		goto out;
- 
- 	for (id = 0; id < count; id++) {
--		result = -ENOMEM;
--		tinfo = kmalloc(sizeof(*tinfo), GFP_KERNEL);
--		if (!tinfo)
--			goto out;
-+		tinfo = &ti[id];
- 		tinfo->ipvs = ipvs;
--		tinfo->sock = NULL;
- 		if (state == IP_VS_STATE_BACKUP) {
-+			result = -ENOMEM;
- 			tinfo->buf = kmalloc(ipvs->bcfg.sync_maxlen,
- 					     GFP_KERNEL);
- 			if (!tinfo->buf)
- 				goto out;
--		} else {
--			tinfo->buf = NULL;
- 		}
- 		tinfo->id = id;
- 		if (state == IP_VS_STATE_MASTER)
-@@ -1885,17 +1876,15 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 			result = PTR_ERR(task);
- 			goto out;
- 		}
--		tinfo = NULL;
--		if (state == IP_VS_STATE_MASTER)
--			ipvs->ms[id].master_thread = task;
--		else
--			array[id] = task;
-+		tinfo->task = task;
- 	}
- 
- 	/* mark as active */
- 
--	if (state == IP_VS_STATE_BACKUP)
--		ipvs->backup_threads = array;
-+	if (state == IP_VS_STATE_MASTER)
-+		ipvs->master_tinfo = ti;
-+	else
-+		ipvs->backup_tinfo = ti;
- 	spin_lock_bh(&ipvs->sync_buff_lock);
- 	ipvs->sync_state |= state;
- 	spin_unlock_bh(&ipvs->sync_buff_lock);
-@@ -1910,29 +1899,31 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 
- out:
- 	/* We do not need RTNL lock anymore, release it here so that
--	 * sock_release below and in the kthreads can use rtnl_lock
--	 * to leave the mcast group.
-+	 * sock_release below can use rtnl_lock to leave the mcast group.
- 	 */
- 	rtnl_unlock();
--	count = id;
--	while (count-- > 0) {
--		if (state == IP_VS_STATE_MASTER)
--			kthread_stop(ipvs->ms[count].master_thread);
--		else
--			kthread_stop(array[count]);
-+	id = min(id, count - 1);
-+	if (ti) {
-+		for (tinfo = ti + id; tinfo >= ti; tinfo--) {
-+			if (tinfo->task)
-+				kthread_stop(tinfo->task);
-+		}
- 	}
- 	if (!(ipvs->sync_state & IP_VS_STATE_MASTER)) {
- 		kfree(ipvs->ms);
- 		ipvs->ms = NULL;
- 	}
- 	mutex_unlock(&ipvs->sync_mutex);
--	if (tinfo) {
--		if (tinfo->sock)
--			sock_release(tinfo->sock);
--		kfree(tinfo->buf);
--		kfree(tinfo);
-+
-+	/* No more mutexes, release socks */
-+	if (ti) {
-+		for (tinfo = ti + id; tinfo >= ti; tinfo--) {
-+			if (tinfo->sock)
-+				sock_release(tinfo->sock);
-+			kfree(tinfo->buf);
-+		}
-+		kfree(ti);
- 	}
--	kfree(array);
- 	return result;
- 
- out_early:
-@@ -1944,15 +1935,18 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 
- int stop_sync_thread(struct netns_ipvs *ipvs, int state)
- {
--	struct task_struct **array;
-+	struct ip_vs_sync_thread_data *ti, *tinfo;
- 	int id;
- 	int retc = -EINVAL;
- 
- 	IP_VS_DBG(7, "%s(): pid %d\n", __func__, task_pid_nr(current));
- 
-+	mutex_lock(&ipvs->sync_mutex);
- 	if (state == IP_VS_STATE_MASTER) {
-+		retc = -ESRCH;
- 		if (!ipvs->ms)
--			return -ESRCH;
-+			goto err;
-+		ti = ipvs->master_tinfo;
- 
- 		/*
- 		 * The lock synchronizes with sb_queue_tail(), so that we don't
-@@ -1971,38 +1965,56 @@ int stop_sync_thread(struct netns_ipvs *ipvs, int state)
- 			struct ipvs_master_sync_state *ms = &ipvs->ms[id];
- 			int ret;
- 
-+			tinfo = &ti[id];
- 			pr_info("stopping master sync thread %d ...\n",
--				task_pid_nr(ms->master_thread));
-+				task_pid_nr(tinfo->task));
- 			cancel_delayed_work_sync(&ms->master_wakeup_work);
--			ret = kthread_stop(ms->master_thread);
-+			ret = kthread_stop(tinfo->task);
- 			if (retc >= 0)
- 				retc = ret;
- 		}
- 		kfree(ipvs->ms);
- 		ipvs->ms = NULL;
-+		ipvs->master_tinfo = NULL;
- 	} else if (state == IP_VS_STATE_BACKUP) {
--		if (!ipvs->backup_threads)
--			return -ESRCH;
-+		retc = -ESRCH;
-+		if (!ipvs->backup_tinfo)
-+			goto err;
-+		ti = ipvs->backup_tinfo;
- 
- 		ipvs->sync_state &= ~IP_VS_STATE_BACKUP;
--		array = ipvs->backup_threads;
- 		retc = 0;
- 		for (id = ipvs->threads_mask; id >= 0; id--) {
- 			int ret;
- 
-+			tinfo = &ti[id];
- 			pr_info("stopping backup sync thread %d ...\n",
--				task_pid_nr(array[id]));
--			ret = kthread_stop(array[id]);
-+				task_pid_nr(tinfo->task));
-+			ret = kthread_stop(tinfo->task);
- 			if (retc >= 0)
- 				retc = ret;
- 		}
--		kfree(array);
--		ipvs->backup_threads = NULL;
-+		ipvs->backup_tinfo = NULL;
-+	} else {
-+		goto err;
- 	}
-+	id = ipvs->threads_mask;
-+	mutex_unlock(&ipvs->sync_mutex);
-+
-+	/* No more mutexes, release socks */
-+	for (tinfo = ti + id; tinfo >= ti; tinfo--) {
-+		if (tinfo->sock)
-+			sock_release(tinfo->sock);
-+		kfree(tinfo->buf);
++		msleep(1 << i);
 +	}
-+	kfree(ti);
  
- 	/* decrease the module use count */
- 	ip_vs_use_count_dec();
-+	return retc;
+-	/* Read Tx timestamp registers */
+-	val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
+-			 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
+-	if (val_seq & 0x10000) {
++	if (!bail) {
+ 		/* There is a valid timestamp value */
+ 		timestamp = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_TS_MSB :
+ 				   NIG_REG_P0_TLLH_PTP_BUF_TS_MSB);
+@@ -15263,16 +15276,18 @@ static void bnx2x_ptp_task(struct work_struct *work)
+ 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+ 		shhwtstamps.hwtstamp = ns_to_ktime(ns);
+ 		skb_tstamp_tx(bp->ptp_tx_skb, &shhwtstamps);
+-		dev_kfree_skb_any(bp->ptp_tx_skb);
+-		bp->ptp_tx_skb = NULL;
  
-+err:
-+	mutex_unlock(&ipvs->sync_mutex);
- 	return retc;
+ 		DP(BNX2X_MSG_PTP, "Tx timestamp, timestamp cycles = %llu, ns = %llu\n",
+ 		   timestamp, ns);
+ 	} else {
+-		DP(BNX2X_MSG_PTP, "There is no valid Tx timestamp yet\n");
+-		/* Reschedule to keep checking for a valid timestamp value */
+-		schedule_work(&bp->ptp_task);
++		DP(BNX2X_MSG_PTP,
++		   "Tx timestamp is not recorded (register read=%u)\n",
++		   val_seq);
++		bp->eth_stats.ptp_skip_tx_ts++;
+ 	}
++
++	dev_kfree_skb_any(bp->ptp_tx_skb);
++	bp->ptp_tx_skb = NULL;
  }
  
-@@ -2021,7 +2033,6 @@ void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs)
- {
- 	int retc;
+ void bnx2x_set_rx_ts(struct bnx2x *bp, struct sk_buff *skb)
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
+index b2644ed13d06..d55e63692cf3 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
+@@ -207,6 +207,9 @@ struct bnx2x_eth_stats {
+ 	u32 driver_filtered_tx_pkt;
+ 	/* src: Clear-on-Read register; Will not survive PMF Migration */
+ 	u32 eee_tx_lpi;
++
++	/* PTP */
++	u32 ptp_skip_tx_ts;
+ };
  
--	mutex_lock(&ipvs->sync_mutex);
- 	retc = stop_sync_thread(ipvs, IP_VS_STATE_MASTER);
- 	if (retc && retc != -ESRCH)
- 		pr_err("Failed to stop Master Daemon\n");
-@@ -2029,5 +2040,4 @@ void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs)
- 	retc = stop_sync_thread(ipvs, IP_VS_STATE_BACKUP);
- 	if (retc && retc != -ESRCH)
- 		pr_err("Failed to stop Backup Daemon\n");
--	mutex_unlock(&ipvs->sync_mutex);
- }
+ struct bnx2x_eth_q_stats {
 -- 
 2.20.1
 
