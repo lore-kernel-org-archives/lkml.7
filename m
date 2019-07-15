@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EEAC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E41C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901CA212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF2B2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198672;
-	bh=tCAFSJ72N2B7u1RuSo/hxbVTBdcMr4i+W3a7SrvW+nk=;
+	s=default; t=1563198677;
+	bh=oRqbOAySbboqMZbkmrXo2KQeXzm8NK/i+iZVt347v4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7S+8/4weGUzl/Gbz3l8OWydM3LGmXCQqwTl1ZrgnXJG+OcZVS9SAPmqBtu9U/BVr
-	 4JLOB1yMyOOL9BZHREIPFsGl8zMUR4eSFGMDYZG79kjShEFVCdMwXGY6RCHsTg+p6P
-	 f2TBdS/Z94MkSeWRq034I3op0E9Wo1CUVWA3Lk1w=
+	b=XRNVKpkEP+Db7oNrb0aifMoVWeqeIU/23VKvWW9SssP6MGST07u+V4dM3Uner+Qc7
+	 6AtKkPzL0eqlD5zIuhOY3AtR++ERMRJJOub8mpteTLAYYbd/FbfyTd3IfFh7PK3Wu4
+	 DDcGxWVhAJq4g0TJ4vJMiO0QVZwvl5xB4yo+WAEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731864AbfGONvK (ORCPT
+        id S1731848AbfGONvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41768 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731819AbfGONvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:51:07 -0400
+        id S1731879AbfGONvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:51:08 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 714722086C;
-        Mon, 15 Jul 2019 13:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB63920C01;
+        Mon, 15 Jul 2019 13:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198666;
-        bh=tCAFSJ72N2B7u1RuSo/hxbVTBdcMr4i+W3a7SrvW+nk=;
+        s=default; t=1563198668;
+        bh=oRqbOAySbboqMZbkmrXo2KQeXzm8NK/i+iZVt347v4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHvDIzL38gzkQr1dIJBRq+WhXxPvtXY9ZQzj4wCbL1RC40HFCZ62wKQ7ueFuh1efe
-         8efayA/FVzKQJ6UWrG39+Vv2wdWEmnUniUIDG76HLRQL1TjM01ltsrUZFPyai+85sQ
-         +hTjzgOCUs/iqzaJzP+E+WFTqDXo1uw0RpRzU3tM=
+        b=SrEnjZdDaTnhnlwK01RWmiHuyNnvHJfPeoVJS32FwWCJZ62QWXgQhyABsHBIR3x4I
+         TwsM1cZWpyBEmZn/z/6iD6breyO3zZX+lnX6ZGjmiKgo3rZm65xfxRt7n5H/PXWLoZ
+         6e7mmVe4av44sQqis9bIklyhTk+G2+lKU85eJFYc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 078/249] RAS/CEC: Fix pfn insertion
-Date:   Mon, 15 Jul 2019 09:44:03 -0400
-Message-Id: <20190715134655.4076-78-sashal@kernel.org>
+Cc:     Robert Hancock <hancock@sedsystems.ca>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 079/249] net: sfp: add mutex to prevent concurrent state checks
+Date:   Mon, 15 Jul 2019 09:44:04 -0400
+Message-Id: <20190715134655.4076-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,56 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Robert Hancock <hancock@sedsystems.ca>
 
-[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
+[ Upstream commit 2158e856f56bb762ef90f3ec244d41a519826f75 ]
 
-When inserting random PFNs for debugging the CEC through
-(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
-multiple values get inserted per a single write.
+sfp_check_state can potentially be called by both a threaded IRQ handler
+and delayed work. If it is concurrently called, it could result in
+incorrect state management. Add a st_mutex to protect the state - this
+lock gets taken outside of code that checks and handle state changes, and
+the existing sm_mutex nests inside of it.
 
-That is because simple_attr_write() interprets a retval of 0 as
-success and claims the whole input. However, pfn_set() returns the
-cec_add_elem() value, which, if > 0 and smaller than the whole input
-length, makes glibc continue issuing the write syscall until there's
-input left:
-
-  pfn_set
-  simple_attr_write
-  debugfs_attr_write
-  full_proxy_write
-  vfs_write
-  ksys_write
-  do_syscall_64
-  entry_SYSCALL_64_after_hwframe
-
-leading to those repeated calls.
-
-Return 0 to fix that.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
+Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/phy/sfp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 673f8a128397..f5795adc5a6e 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -369,7 +369,9 @@ static int pfn_set(void *data, u64 val)
- {
- 	*(u64 *)data = val;
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index 71812be0ac64..b6efd2d41dce 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -186,10 +186,11 @@ struct sfp {
+ 	struct gpio_desc *gpio[GPIO_MAX];
  
--	return cec_add_elem(val);
-+	cec_add_elem(val);
-+
-+	return 0;
+ 	bool attached;
++	struct mutex st_mutex;			/* Protects state */
+ 	unsigned int state;
+ 	struct delayed_work poll;
+ 	struct delayed_work timeout;
+-	struct mutex sm_mutex;
++	struct mutex sm_mutex;			/* Protects state machine */
+ 	unsigned char sm_mod_state;
+ 	unsigned char sm_dev_state;
+ 	unsigned short sm_state;
+@@ -1719,6 +1720,7 @@ static void sfp_check_state(struct sfp *sfp)
+ {
+ 	unsigned int state, i, changed;
+ 
++	mutex_lock(&sfp->st_mutex);
+ 	state = sfp_get_state(sfp);
+ 	changed = state ^ sfp->state;
+ 	changed &= SFP_F_PRESENT | SFP_F_LOS | SFP_F_TX_FAULT;
+@@ -1744,6 +1746,7 @@ static void sfp_check_state(struct sfp *sfp)
+ 		sfp_sm_event(sfp, state & SFP_F_LOS ?
+ 				SFP_E_LOS_HIGH : SFP_E_LOS_LOW);
+ 	rtnl_unlock();
++	mutex_unlock(&sfp->st_mutex);
  }
  
- DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
+ static irqreturn_t sfp_irq(int irq, void *data)
+@@ -1774,6 +1777,7 @@ static struct sfp *sfp_alloc(struct device *dev)
+ 	sfp->dev = dev;
+ 
+ 	mutex_init(&sfp->sm_mutex);
++	mutex_init(&sfp->st_mutex);
+ 	INIT_DELAYED_WORK(&sfp->poll, sfp_poll);
+ 	INIT_DELAYED_WORK(&sfp->timeout, sfp_timeout);
+ 
 -- 
 2.20.1
 
