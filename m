@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D041C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211F5C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D87120896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEECB206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200661;
-	bh=Kt7BcCS8y0HPbDKyGiyQBD+74w3LqOFCaaM41qDhzp0=;
+	s=default; t=1563200666;
+	bh=EN1VGAmwQYb36LQxnniDnKoT6mmzJlnr1MpSLKTcmyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rmef1YnSSAOhrOKcdRoyHCvp79gE72qQIxSJSnM4uyndB4Ao2PpEcbXIVDnv3eQg5
-	 qxrWGtQe70CxFmAHIhyFt+XEqFu0LqqYseOvXG/GXoWa7gcyfYyFN+Y8zVh7ywCi9x
-	 XZmSI4oyPGwtPupoK//UTN5UEnHYLOGvJE3U0E8M=
+	b=teC+SeQm1/DWRdNsATFVa8Vc5AVeh4i7dqY/8VP65Q/GrPcaNvTSDi8nVlyAnP6zJ
+	 QmNdkaKsCdvCCNc5zAY2PaW5yaTLnztiPBLu+Vs0gkjzlkLUkY4YZRyMhPle9ATIUf
+	 nb3mI+NRWHjAkZAyRY4/v8wM0HDZXE2TKD+VmnWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390886AbfGOOYU (ORCPT
+        id S2390910AbfGOOYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389997AbfGOOYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:24:16 -0400
+        id S2389736AbfGOOYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:24:12 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 317C5206B8;
-        Mon, 15 Jul 2019 14:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3640206B8;
+        Mon, 15 Jul 2019 14:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200656;
-        bh=Kt7BcCS8y0HPbDKyGiyQBD+74w3LqOFCaaM41qDhzp0=;
+        s=default; t=1563200651;
+        bh=EN1VGAmwQYb36LQxnniDnKoT6mmzJlnr1MpSLKTcmyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GXO9BWR26+cFFZgDF8Lik9p2D49HUxmaPtxD/909wiR8zMvF+QmhXT28jc5k+EMd7
-         eXk8/QX6pvk/xnWAwnITHyqOUgxG098S3JLRZg8OVmeH938ThiTPEmdkDRnaVXj1gl
-         /CYjvylmOCDS0mqS9Ru+hIEYVIuByyzdJG3qjm5o=
+        b=GG/NsWenJkg7g8ixYo8GobiPJASoiM4BDCD9JWoscAyxk2l5HHiIGDbOzZ4pipvFH
+         hNtnaOenEkW1Q2WB7XgqyuiKSyVu0IF/WmK1ZI7u9KtPHw0kI2JZdupYLB3W53oLSL
+         nXjtXuMIRjyXLkif1aazBbefYQofcnx645vvLEtE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 105/158] x86/build: Add 'set -e' to mkcapflags.sh to delete broken capflags.c
-Date:   Mon, 15 Jul 2019 10:17:16 -0400
-Message-Id: <20190715141809.8445-105-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 104/158] mt7601u: do not schedule rx_tasklet when the device has been disconnected
+Date:   Mon, 15 Jul 2019 10:17:15 -0400
+Message-Id: <20190715141809.8445-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -60,52 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit bc53d3d777f81385c1bb08b07bd1c06450ecc2c1 ]
+[ Upstream commit 4079e8ccabc3b6d1b503f2376123cb515d14921f ]
 
-Without 'set -e', shell scripts continue running even after any
-error occurs. The missed 'set -e' is a typical bug in shell scripting.
+Do not schedule rx_tasklet when the usb dongle is disconnected.
+Moreover do not grub rx_lock in mt7601u_kill_rx since usb_poison_urb
+can run concurrently with urb completion and we can unlink urbs from rx
+ring in any order.
+This patch fixes the common kernel warning reported when
+the device is removed.
 
-For example, when a disk space shortage occurs while this script is
-running, it actually ends up with generating a truncated capflags.c.
+[   24.921354] usb 3-14: USB disconnect, device number 7
+[   24.921593] ------------[ cut here ]------------
+[   24.921594] RX urb mismatch
+[   24.921675] WARNING: CPU: 4 PID: 163 at drivers/net/wireless/mediatek/mt7601u/dma.c:200 mt7601u_complete_rx+0xcb/0xd0 [mt7601u]
+[   24.921769] CPU: 4 PID: 163 Comm: kworker/4:2 Tainted: G           OE     4.19.31-041931-generic #201903231635
+[   24.921770] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./Z97 Extreme4, BIOS P1.30 05/23/2014
+[   24.921782] Workqueue: usb_hub_wq hub_event
+[   24.921797] RIP: 0010:mt7601u_complete_rx+0xcb/0xd0 [mt7601u]
+[   24.921800] RSP: 0018:ffff9bd9cfd03d08 EFLAGS: 00010086
+[   24.921802] RAX: 0000000000000000 RBX: ffff9bd9bf043540 RCX: 0000000000000006
+[   24.921803] RDX: 0000000000000007 RSI: 0000000000000096 RDI: ffff9bd9cfd16420
+[   24.921804] RBP: ffff9bd9cfd03d28 R08: 0000000000000002 R09: 00000000000003a8
+[   24.921805] R10: 0000002f485fca34 R11: 0000000000000000 R12: ffff9bd9bf043c1c
+[   24.921806] R13: ffff9bd9c62fa3c0 R14: 0000000000000082 R15: 0000000000000000
+[   24.921807] FS:  0000000000000000(0000) GS:ffff9bd9cfd00000(0000) knlGS:0000000000000000
+[   24.921808] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.921808] CR2: 00007fb2648b0000 CR3: 0000000142c0a004 CR4: 00000000001606e0
+[   24.921809] Call Trace:
+[   24.921812]  <IRQ>
+[   24.921819]  __usb_hcd_giveback_urb+0x8b/0x140
+[   24.921821]  usb_hcd_giveback_urb+0xca/0xe0
+[   24.921828]  xhci_giveback_urb_in_irq.isra.42+0x82/0xf0
+[   24.921834]  handle_cmd_completion+0xe02/0x10d0
+[   24.921837]  xhci_irq+0x274/0x4a0
+[   24.921838]  xhci_msi_irq+0x11/0x20
+[   24.921851]  __handle_irq_event_percpu+0x44/0x190
+[   24.921856]  handle_irq_event_percpu+0x32/0x80
+[   24.921861]  handle_irq_event+0x3b/0x5a
+[   24.921867]  handle_edge_irq+0x80/0x190
+[   24.921874]  handle_irq+0x20/0x30
+[   24.921889]  do_IRQ+0x4e/0xe0
+[   24.921891]  common_interrupt+0xf/0xf
+[   24.921892]  </IRQ>
+[   24.921900] RIP: 0010:usb_hcd_flush_endpoint+0x78/0x180
+[   24.921354] usb 3-14: USB disconnect, device number 7
 
-Yet, mkcapflags.sh continues running and exits with 0. So, the build
-system assumes it has succeeded.
-
-It will not be re-generated in the next invocation of Make since its
-timestamp is newer than that of any of the source files.
-
-Add 'set -e' so that any error in this script is caught and propagated
-to the build system.
-
-Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
-make automatically deletes the target on any failure. So, the broken
-capflags.c will be deleted automatically.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lkml.kernel.org/r/20190625072622.17679-1-yamada.masahiro@socionext.com
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/mediatek/mt7601u/dma.c | 33 +++++++++++----------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
-index d0dfb892c72f..aed45b8895d5 100644
---- a/arch/x86/kernel/cpu/mkcapflags.sh
-+++ b/arch/x86/kernel/cpu/mkcapflags.sh
-@@ -4,6 +4,8 @@
- # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
- #
+diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
+index 7f3e3983b781..bc36712cfffc 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/dma.c
++++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
+@@ -193,10 +193,23 @@ static void mt7601u_complete_rx(struct urb *urb)
+ 	struct mt7601u_rx_queue *q = &dev->rx_q;
+ 	unsigned long flags;
  
-+set -e
-+
- IN=$1
- OUT=$2
+-	spin_lock_irqsave(&dev->rx_lock, flags);
++	/* do no schedule rx tasklet if urb has been unlinked
++	 * or the device has been removed
++	 */
++	switch (urb->status) {
++	case -ECONNRESET:
++	case -ESHUTDOWN:
++	case -ENOENT:
++		return;
++	default:
++		dev_err_ratelimited(dev->dev, "rx urb failed: %d\n",
++				    urb->status);
++		/* fall through */
++	case 0:
++		break;
++	}
  
+-	if (mt7601u_urb_has_error(urb))
+-		dev_err(dev->dev, "Error: RX urb failed:%d\n", urb->status);
++	spin_lock_irqsave(&dev->rx_lock, flags);
+ 	if (WARN_ONCE(q->e[q->end].urb != urb, "RX urb mismatch"))
+ 		goto out;
+ 
+@@ -363,19 +376,9 @@ int mt7601u_dma_enqueue_tx(struct mt7601u_dev *dev, struct sk_buff *skb,
+ static void mt7601u_kill_rx(struct mt7601u_dev *dev)
+ {
+ 	int i;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dev->rx_lock, flags);
+-
+-	for (i = 0; i < dev->rx_q.entries; i++) {
+-		int next = dev->rx_q.end;
+-
+-		spin_unlock_irqrestore(&dev->rx_lock, flags);
+-		usb_poison_urb(dev->rx_q.e[next].urb);
+-		spin_lock_irqsave(&dev->rx_lock, flags);
+-	}
+-
+-	spin_unlock_irqrestore(&dev->rx_lock, flags);
++	for (i = 0; i < dev->rx_q.entries; i++)
++		usb_poison_urb(dev->rx_q.e[i].urb);
+ }
+ 
+ static int mt7601u_submit_rx_buf(struct mt7601u_dev *dev,
 -- 
 2.20.1
 
