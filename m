@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1CCC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7726C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E429A217D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9077821537
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200759;
-	bh=Lo/dg4Nr8Ce0I1Oh7H0j1fB2Z+ZADu/ZeN8l/mueJ4E=;
+	s=default; t=1563200762;
+	bh=Mw8zLDtV9BRhHcQ8YsKWL1X90TkecEVO3fMbNuhtLBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qL8rArtyjSAOMGEDF/NCoSE53WJWhM4xVogLa0AuXcMmJLdFau30kXNcTpM3ePB8B
-	 T0u/2ROGmMqxYbcQJDH+uQEBxr8n0rcmbtykawRWSNjughZlN35j3nPwG3tdMhReOJ
-	 /njWbx7AnpzwvdRRjJmP3+v2HFujl1KkyXm4gk8M=
+	b=SVCq7K+14lhYDBisO+kVj0IvDZqSDhl/qz/VCZHPyzW6AsSP9LWcT41WTE8ghEaW8
+	 SpffU7ISg037LwXm7M8rfEu5wHW8p+04+CvrQ98CO4EiTrABeoBqo8hYKvlQlMK7JC
+	 VJ+GglmLGZpMSL0V9rkcmprhX1O9cJwH+4L3t8fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391035AbfGOOZ6 (ORCPT
+        id S2390795AbfGOO0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33288 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389964AbfGOOZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:25:53 -0400
+        id S2390757AbfGOOZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:25:57 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F260921537;
-        Mon, 15 Jul 2019 14:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E445421849;
+        Mon, 15 Jul 2019 14:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200752;
-        bh=Lo/dg4Nr8Ce0I1Oh7H0j1fB2Z+ZADu/ZeN8l/mueJ4E=;
+        s=default; t=1563200756;
+        bh=Mw8zLDtV9BRhHcQ8YsKWL1X90TkecEVO3fMbNuhtLBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qv2JwOeOWvUPUT46AZ6xggakK59AfkaGJsvfR4PSUEhKjh8U7vdYh/PdzWz+lhoxm
-         b5irv7o2hzsaNRFQdQayNf6im8AlgfFBK4C5kxNt74hX8E1sgffl1TlE2dHs8oPadp
-         pDLDD7gsAj34q7OsGzkFJujFGrMCo44cQR3r1N88=
+        b=QIk1MhyoFdO3J2mXzzyK3WFRCqxY/pbz5EP8xjowGmb3GQzlsXLiFPjdhV1yrLcr1
+         Lp+16Kc13mEIl1U2gWrLmU/yn+Mm4xyt1AbIPV599U/vtxH1Ql7AubLV6dADxOj38H
+         bSGGR8nhMFoQMIyMKNFXBATTTXf8Ru2IRJkvSNBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        James Morse <james.morse@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 122/158] EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec
-Date:   Mon, 15 Jul 2019 10:17:33 -0400
-Message-Id: <20190715141809.8445-122-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 123/158] cpufreq: Don't skip frequency validation for has_target() drivers
+Date:   Mon, 15 Jul 2019 10:17:34 -0400
+Message-Id: <20190715141809.8445-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -60,159 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit d8655e7630dafa88bc37f101640e39c736399771 ]
+[ Upstream commit 9801522840cc1073f8064b4c979b7b6995c74bca ]
 
-Commit 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2") assumes
-edac_mc_poll_msec to be unsigned long, but the type of the variable still
-remained as int. Setting edac_mc_poll_msec can trigger out-of-bounds
-write.
+CPUFREQ_CONST_LOOPS was introduced in a very old commit from pre-2.6
+kernel release by commit 6a4a93f9c0d5 ("[CPUFREQ] Fix 'out of sync'
+issue").
 
-Reproducer:
+Basically, that commit does two things:
 
-  # echo 1001 > /sys/module/edac_core/parameters/edac_mc_poll_msec
+ - It adds the frequency verification code (which is quite similar to
+   what we have today as well).
 
-KASAN report:
+ - And it sets the CPUFREQ_CONST_LOOPS flag only for setpolicy drivers,
+   rightly so based on the code we had then. The idea was to avoid
+   frequency validation for setpolicy drivers as the cpufreq core doesn't
+   know what frequency the hardware is running at and so no point in
+   doing frequency verification.
 
-  BUG: KASAN: global-out-of-bounds in edac_set_poll_msec+0x140/0x150
-  Write of size 8 at addr ffffffffb91b2d00 by task bash/1996
+The problem happened when we started to use the same CPUFREQ_CONST_LOOPS
+flag for constant loops-per-jiffy thing as well and many has_target()
+drivers started using the same flag and unknowingly skipped the
+verification of frequency. There is no logical reason behind skipping
+frequency validation because of the presence of CPUFREQ_CONST_LOOPS
+flag otherwise.
 
-  CPU: 1 PID: 1996 Comm: bash Not tainted 5.2.0-rc6+ #23
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-  Call Trace:
-   dump_stack+0xca/0x13e
-   print_address_description.cold+0x5/0x246
-   __kasan_report.cold+0x75/0x9a
-   ? edac_set_poll_msec+0x140/0x150
-   kasan_report+0xe/0x20
-   edac_set_poll_msec+0x140/0x150
-   ? dimmdev_location_show+0x30/0x30
-   ? vfs_lock_file+0xe0/0xe0
-   ? _raw_spin_lock+0x87/0xe0
-   param_attr_store+0x1b5/0x310
-   ? param_array_set+0x4f0/0x4f0
-   module_attr_store+0x58/0x80
-   ? module_attr_show+0x80/0x80
-   sysfs_kf_write+0x13d/0x1a0
-   kernfs_fop_write+0x2bc/0x460
-   ? sysfs_kf_bin_read+0x270/0x270
-   ? kernfs_notify+0x1f0/0x1f0
-   __vfs_write+0x81/0x100
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   ? __ia32_sys_read+0xb0/0xb0
-   ? do_syscall_64+0x1f/0x390
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7fa7caa5e970
-  Code: 73 01 c3 48 8b 0d 28 d5 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 99 2d 2c 00 00 75 10 b8 01 00 00 00 04
-  RSP: 002b:00007fff6acfdfe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa7caa5e970
-  RDX: 0000000000000005 RSI: 0000000000e95c08 RDI: 0000000000000001
-  RBP: 0000000000e95c08 R08: 00007fa7cad1e760 R09: 00007fa7cb36a700
-  R10: 0000000000000073 R11: 0000000000000246 R12: 0000000000000005
-  R13: 0000000000000001 R14: 00007fa7cad1d600 R15: 0000000000000005
+Fix this issue by skipping frequency validation only for setpolicy
+drivers and always doing it for has_target() drivers irrespective of
+the presence or absence of CPUFREQ_CONST_LOOPS flag.
 
-  The buggy address belongs to the variable:
-   edac_mc_poll_msec+0x0/0x40
+cpufreq_notify_transition() is only called for has_target() type driver
+and not for set_policy type, and the check is simply redundant. Remove
+it as well.
 
-  Memory state around the buggy address:
-   ffffffffb91b2c00: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-   ffffffffb91b2c80: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
-  >ffffffffb91b2d00: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-                     ^
-   ffffffffb91b2d80: 04 fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
-   ffffffffb91b2e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Also remove () around freq comparison statement as they aren't required
+and checkpatch also warns for them.
 
-Fix it by changing the type of edac_mc_poll_msec to unsigned int.
-The reason why this patch adopts unsigned int rather than unsigned long
-is msecs_to_jiffies() assumes arg to be unsigned int. We can avoid
-integer conversion bugs and unsigned int will be large enough for
-edac_mc_poll_msec.
-
-Reviewed-by: James Morse <james.morse@arm.com>
-Fixes: 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 16 ++++++++--------
- drivers/edac/edac_module.h   |  2 +-
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/cpufreq/cpufreq.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index e50610b5bd06..d4545a9222a0 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -26,7 +26,7 @@
- static int edac_mc_log_ue = 1;
- static int edac_mc_log_ce = 1;
- static int edac_mc_panic_on_ue;
--static int edac_mc_poll_msec = 1000;
-+static unsigned int edac_mc_poll_msec = 1000;
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index d3213594d1a7..80942ec34efd 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -321,12 +321,10 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+ 		 * which is not equal to what the cpufreq core thinks is
+ 		 * "old frequency".
+ 		 */
+-		if (!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
+-			if (policy->cur && (policy->cur != freqs->old)) {
+-				pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
+-					 freqs->old, policy->cur);
+-				freqs->old = policy->cur;
+-			}
++		if (policy->cur && policy->cur != freqs->old) {
++			pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
++				 freqs->old, policy->cur);
++			freqs->old = policy->cur;
+ 		}
  
- /* Getter functions for above */
- int edac_mc_get_log_ue(void)
-@@ -45,30 +45,30 @@ int edac_mc_get_panic_on_ue(void)
- }
+ 		for_each_cpu(freqs->cpu, policy->cpus) {
+@@ -1543,8 +1541,7 @@ static unsigned int __cpufreq_get(struct cpufreq_policy *policy)
+ 	if (policy->fast_switch_enabled)
+ 		return ret_freq;
  
- /* this is temporary */
--int edac_mc_get_poll_msec(void)
-+unsigned int edac_mc_get_poll_msec(void)
- {
- 	return edac_mc_poll_msec;
- }
- 
- static int edac_set_poll_msec(const char *val, const struct kernel_param *kp)
- {
--	unsigned long l;
-+	unsigned int i;
- 	int ret;
- 
- 	if (!val)
- 		return -EINVAL;
- 
--	ret = kstrtoul(val, 0, &l);
-+	ret = kstrtouint(val, 0, &i);
- 	if (ret)
- 		return ret;
- 
--	if (l < 1000)
-+	if (i < 1000)
- 		return -EINVAL;
- 
--	*((unsigned long *)kp->arg) = l;
-+	*((unsigned int *)kp->arg) = i;
- 
- 	/* notify edac_mc engine to reset the poll period */
--	edac_mc_reset_delay_period(l);
-+	edac_mc_reset_delay_period(i);
- 
- 	return 0;
- }
-@@ -82,7 +82,7 @@ MODULE_PARM_DESC(edac_mc_log_ue,
- module_param(edac_mc_log_ce, int, 0644);
- MODULE_PARM_DESC(edac_mc_log_ce,
- 		 "Log correctable error to console: 0=off 1=on");
--module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_int,
-+module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_uint,
- 		  &edac_mc_poll_msec, 0644);
- MODULE_PARM_DESC(edac_mc_poll_msec, "Polling period in milliseconds");
- 
-diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
-index dec88dcea036..c9f0e73872a6 100644
---- a/drivers/edac/edac_module.h
-+++ b/drivers/edac/edac_module.h
-@@ -36,7 +36,7 @@ extern int edac_mc_get_log_ue(void);
- extern int edac_mc_get_log_ce(void);
- extern int edac_mc_get_panic_on_ue(void);
- extern int edac_get_poll_msec(void);
--extern int edac_mc_get_poll_msec(void);
-+extern unsigned int edac_mc_get_poll_msec(void);
- 
- unsigned edac_dimm_info_location(struct dimm_info *dimm, char *buf,
- 				 unsigned len);
+-	if (ret_freq && policy->cur &&
+-		!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
++	if (has_target() && ret_freq && policy->cur) {
+ 		/* verify no discrepancy between actual and
+ 					saved value exists */
+ 		if (unlikely(ret_freq != policy->cur)) {
 -- 
 2.20.1
 
