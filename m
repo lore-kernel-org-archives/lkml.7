@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2664C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261D5C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A182086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE3620C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198454;
-	bh=tAtuICIV1U+7yLjSH6QQHcFpIEFMJc06cGhrtThDr/g=;
+	s=default; t=1563198457;
+	bh=v1PQWlyIIUKb7uwAvPPpO/t5SdRgQrA1dwadJe0wwAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QR1w/yvK+E78xSM/JTvjoXzD7xnTLFL3KBjWVX+ltmAeY0iqs8cdy7pFbnNsVWFVx
-	 iEWXdZriDkWEOuCfQS9YH5KxoinOaQzn+4/NZ+uysFd2tEU1SBRKpUYy69hbkQExO4
-	 AevJ6nm5PvnTmDX6Ygb9j2dL152czfgFWB/SE3RY=
+	b=Dr4r57igcVo0pi9dqqV2rjBfK8cIsySn8doE12+emHLx1MQ0q7C1pR6FzKgbvfa33
+	 UMVskcPlcNr3svbt8R5ypl3Ok4H7iCt/zJMD4pfJdWjxWd1KW0jxBk7ks/UZwmiNw9
+	 qyzk6NPy6QU3CEmLhHjrjf3moYC66ZHZXmrMmrWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbfGONrc (ORCPT
+        id S1731119AbfGONrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:47:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbfGONr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:47:27 -0400
+        id S1731063AbfGONrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:47:32 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C56212F5;
-        Mon, 15 Jul 2019 13:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5472086C;
+        Mon, 15 Jul 2019 13:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198447;
-        bh=tAtuICIV1U+7yLjSH6QQHcFpIEFMJc06cGhrtThDr/g=;
+        s=default; t=1563198451;
+        bh=v1PQWlyIIUKb7uwAvPPpO/t5SdRgQrA1dwadJe0wwAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DF0bqqqoU3pPMBNa8xbkstplIN5ltQvx5tx6ZJDNqbaVjxaLZywbYhzrx8umCwae/
-         1LRH/Ad5sFmxNLTPcmi40fEklJ5QqlTcBeNcAlotWVbu2QrC3UecPD0lQ0f9VzGvfs
-         6yewJW616x3Cf6Btx+7IW6qdLmwoCDCz4gutYlJc=
+        b=L/r623pTIb2ynDcxx6ty43DW47yoxVn4ioeCcJ00TZ5qWr3GAsFEX5JtGyEJa+zsc
+         NVZsbmZIAoXOK0hmFtkiFYuxcdNT01QZmtSne9tTG2bAFeLvkg//3BShPzyLV9+139
+         VqzoXWesqsz8nqABEyejhohbUWe7yt4QBgYH2SqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 010/249] wil6210: fix missed MISC mbox interrupt
-Date:   Mon, 15 Jul 2019 09:42:55 -0400
-Message-Id: <20190715134655.4076-10-sashal@kernel.org>
+Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 012/249] ath10k: add peer id check in ath10k_peer_find_by_id
+Date:   Mon, 15 Jul 2019 09:42:57 -0400
+Message-Id: <20190715134655.4076-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,43 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maya Erez <merez@codeaurora.org>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit 7441be71ba7e07791fd4fa2b07c932dff14ff4d9 ]
+[ Upstream commit 49ed34b835e231aa941257394716bc689bc98d9f ]
 
-When MISC interrupt is triggered due to HALP bit, in parallel
-to mbox events handling by the MISC threaded IRQ, new mbox
-interrupt can be missed in the following scenario:
-1. MISC ICR is read in the IRQ handler
-2. Threaded IRQ is completed and all MISC interrupts are unmasked
-3. mbox interrupt is set by FW
-4. HALP is masked
-The mbox interrupt in step 3 can be missed due to constant high level
-of ICM.
-Masking all MISC IRQs instead of masking only HALP bit in step 4
-will guarantee that ICM will drop to 0 and interrupt will be triggered
-once MISC interrupts will be unmasked.
+For some SDIO chip, the peer id is 65535 for MPDU with error status,
+then test_bit will trigger buffer overflow for peer's memory, if kasan
+enabled, it will report error.
 
-Signed-off-by: Maya Erez <merez@codeaurora.org>
+Reason is when station is in disconnecting status, firmware do not delete
+the peer info since it not disconnected completely, meanwhile some AP will
+still send data packet to station, then hardware will receive the packet
+and send to firmware, firmware's logic will report peer id of 65535 for
+MPDU with error status.
+
+Add check for overflow the size of peer's peer_ids will avoid the buffer
+overflow access.
+
+Call trace of kasan:
+dump_backtrace+0x0/0x2ec
+show_stack+0x20/0x2c
+__dump_stack+0x20/0x28
+dump_stack+0xc8/0xec
+print_address_description+0x74/0x240
+kasan_report+0x250/0x26c
+__asan_report_load8_noabort+0x20/0x2c
+ath10k_peer_find_by_id+0x180/0x1e4 [ath10k_core]
+ath10k_htt_t2h_msg_handler+0x100c/0x2fd4 [ath10k_core]
+ath10k_htt_htc_t2h_msg_handler+0x20/0x34 [ath10k_core]
+ath10k_sdio_irq_handler+0xcc8/0x1678 [ath10k_sdio]
+process_sdio_pending_irqs+0xec/0x370
+sdio_run_irqs+0x68/0xe4
+sdio_irq_work+0x1c/0x28
+process_one_work+0x3d8/0x8b0
+worker_thread+0x508/0x7cc
+kthread+0x24c/0x264
+ret_from_fork+0x10/0x18
+
+Tested with QCA6174 SDIO with firmware
+WLAN.RMH.4.4.1-00007-QCARMSWP-1.
+
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/interrupt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/txrx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/wil6210/interrupt.c b/drivers/net/wireless/ath/wil6210/interrupt.c
-index 3f5bd177d55f..e41ba24011d8 100644
---- a/drivers/net/wireless/ath/wil6210/interrupt.c
-+++ b/drivers/net/wireless/ath/wil6210/interrupt.c
-@@ -580,7 +580,7 @@ static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
- 			/* no need to handle HALP ICRs until next vote */
- 			wil->halp.handle_icr = false;
- 			wil_dbg_irq(wil, "irq_misc: HALP IRQ invoked\n");
--			wil6210_mask_halp(wil);
-+			wil6210_mask_irq_misc(wil, true);
- 			complete(&wil->halp.comp);
- 		}
- 	}
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index c5818d28f55a..4102df016931 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -150,6 +150,9 @@ struct ath10k_peer *ath10k_peer_find_by_id(struct ath10k *ar, int peer_id)
+ {
+ 	struct ath10k_peer *peer;
+ 
++	if (peer_id >= BITS_PER_TYPE(peer->peer_ids))
++		return NULL;
++
+ 	lockdep_assert_held(&ar->data_lock);
+ 
+ 	list_for_each_entry(peer, &ar->peers, list)
 -- 
 2.20.1
 
