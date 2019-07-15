@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075F0C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4989C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8068212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E382080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198023;
-	bh=8MFIeyxHNO4CRPVVo0iFOLtHIhxgcEGt+NoS7XE7A2k=;
+	s=default; t=1563198040;
+	bh=HE6ERcQjIe0JLOZKqju78rK1r/f4JuYXJmjufqB2V4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A3nTcm7p6hsqi8Y0xsq2PMxtV7nxB4uJGuWJmZm/lhYy0kWzV1G/1Yo8yudxb8a8K
-	 290P/9/GYLdTejGTsNqF8YRr0Dnj0A687ryH2H44x1N4n5TGuS+ZHpaAQBdanbUVXZ
-	 MK6+gKLDClRTDYwL7rvU7vsnIcwWTaKJgo2x6PLU=
+	b=iuxhdCObeSmVT7TuhCLa8gG5jsRcGsTHqKE85IN7L7jVSbjVhXwT5JIMQtvLfkVSK
+	 q7cXpe0k/jqBE4U8N5VHk4YdUy/59YQ9HfCUGPO5pKcZGhW4HBXFZTOvK9sDiyRCNy
+	 iFRTGrFMhBqdF0vS/BCB2Wf3GTC5CnEkQPd6xr84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731421AbfGONkW (ORCPT
+        id S1730869AbfGONkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42156 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbfGONkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:40:19 -0400
+        id S1730589AbfGONkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:40:05 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876AF2086C;
-        Mon, 15 Jul 2019 13:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D9012086C;
+        Mon, 15 Jul 2019 13:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198018;
-        bh=8MFIeyxHNO4CRPVVo0iFOLtHIhxgcEGt+NoS7XE7A2k=;
+        s=default; t=1563198004;
+        bh=HE6ERcQjIe0JLOZKqju78rK1r/f4JuYXJmjufqB2V4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wChblI5+6Rl3NFmdHu8kPoz3voYXHA+MMrzeB+HcQ6iMlEFUwCA6KzVxdfvO+tJ0s
-         IN4dHQQDt9bCQchNxUNh/7s93sjuaLbHzLgoXePqo2DCPRg5kf62rYsGa7eXIrgLrF
-         0MOrbHbB3r23DKA9IFtFK5XXngpWboXEfycpicYE=
+        b=HL2dFePtzwiR8U5R6b0jjgMkbLdxkIdpVW6s/KcRpnRCmpt8GQ2vKkFwRjhUXQzdn
+         wd7sycjtojpaXWG2x4YEeaj0E2Bx3zfw+8MYvvVnELGVu9/cKqYCmAeHDSlwA8lMvj
+         AF2eGkppT29JRb7uuP8mtf4poHeJ/P6mZ+A24IUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Surabhi Vishnoi <svishnoi@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 002/105] ath10k: Do not send probe response template for mesh
-Date:   Mon, 15 Jul 2019 09:38:28 -0400
-Message-Id: <20190715134012.3226-2-sashal@kernel.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Wenyou Yang <wenyou.yang@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 014/158] media: ov7740: avoid invalid framesize setting
+Date:   Mon, 15 Jul 2019 09:36:59 -0400
+Message-Id: <20190715133923.2890-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134012.3226-1-sashal@kernel.org>
-References: <20190715134012.3226-1-sashal@kernel.org>
+In-Reply-To: <20190715133923.2890-1-sashal@kernel.org>
+References: <20190715133923.2890-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,43 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Surabhi Vishnoi <svishnoi@codeaurora.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
 
-[ Upstream commit 97354f2c432788e3163134df6bb144f4b6289d87 ]
+[ Upstream commit 6e4ab830ac6d6a0d7cd7f87dc5d6536369bf24a8 ]
 
-Currently mac80211 do not support probe response template for
-mesh point. When WMI_SERVICE_BEACON_OFFLOAD is enabled, host
-driver tries to configure probe response template for mesh, but
-it fails because the interface type is not NL80211_IFTYPE_AP but
-NL80211_IFTYPE_MESH_POINT.
+If the requested framesize by VIDIOC_SUBDEV_S_FMT is larger than supported
+framesizes, it causes an out of bounds array access and the resulting
+framesize is unexpected.
 
-To avoid this failure, skip sending probe response template to
-firmware for mesh point.
+Avoid out of bounds array access and select the default framesize.
 
-Tested HW: WCN3990/QCA6174/QCA9984
-
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Wenyou Yang <wenyou.yang@microchip.com>
+Cc: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/i2c/ov7740.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index cdcfb175ad9b..58a3c42c4aed 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -1611,6 +1611,10 @@ static int ath10k_mac_setup_prb_tmpl(struct ath10k_vif *arvif)
- 	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
- 		return 0;
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index f5a1ee90a6c5..8a6a7a5929aa 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -761,7 +761,11 @@ static int ov7740_try_fmt_internal(struct v4l2_subdev *sd,
  
-+	 /* For mesh, probe response and beacon share the same template */
-+	if (ieee80211_vif_is_mesh(vif))
-+		return 0;
-+
- 	prb = ieee80211_proberesp_get(hw, vif);
- 	if (!prb) {
- 		ath10k_warn(ar, "failed to get probe resp template from mac80211\n");
+ 		fsize++;
+ 	}
+-
++	if (i >= ARRAY_SIZE(ov7740_framesizes)) {
++		fsize = &ov7740_framesizes[0];
++		fmt->width = fsize->width;
++		fmt->height = fsize->height;
++	}
+ 	if (ret_frmsize != NULL)
+ 		*ret_frmsize = fsize;
+ 
 -- 
 2.20.1
 
