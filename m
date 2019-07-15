@@ -2,502 +2,124 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C49C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62666C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861C02083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3700620838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="icAaogfi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dCelnzTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfGORJC (ORCPT
+        id S1731617AbfGORWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:09:02 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43139 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730782AbfGORJB (ORCPT
+        Mon, 15 Jul 2019 13:22:48 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:45898 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730566AbfGORWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:09:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id k20so35241700ios.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:09:00 -0700 (PDT)
+        Mon, 15 Jul 2019 13:22:48 -0400
+Received: by mail-yb1-f196.google.com with SMTP id s41so3710068ybe.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:22:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NnoZ4/HFhj2UbNdbGL5aDJZT5s20+EkEZMM07AUmzTk=;
-        b=icAaogfiaMOh2TbeD51vIbWHEWwDaX5V/JeMzJRRR4rUyoGleaQFWR+KKjI6yQ0Ebi
-         GANtulF/OCXC2iP2veMJkSRS+Mk+Mc1xccTbXzd/Gbf2B7O227sbKPL4Olhr20+pkEB/
-         UVPZ3tWxuaiuwCciPg4SICLz9sTZG+iSDMLSE=
+        bh=UscG4WxjnjQLRRcfnLMqxRe1yzGwBuLWPpq8Fn0xt8Q=;
+        b=dCelnzTW9yVty3d0zlRTYG3AJUta/BwdSagZLphy7SUDCPw0lYhayrZl5azIY8Po6K
+         B6PcLuuOJVyIxwiflObjLQxgwM5LdzBm9j2APNC/1sPWiDeIVumlaaSR3cBownQl1gZ7
+         cmNM24365G9Kw33r/XyMye07LnJCa0G4XuKu3nH+stcJAD3HS2uHdNOlq2NHdW329Kw2
+         jEJCSCUJ5tFA21J/y5+gY4zuSpH9pE+SJy2MUjCxIUX/v4EZqtd+ycfE4D0VdA/uMj+1
+         lQiPTa3FPre/OAiF6DLgOrahbWMjYOGi4K0cps9eFLAe/W937jrg8dyOuSOGvbo+fxxf
+         TPWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NnoZ4/HFhj2UbNdbGL5aDJZT5s20+EkEZMM07AUmzTk=;
-        b=OoDDF7BWpf7VesjR8lMjarDsGmNPLnqPAj114Fd/h1T0N1Eb6+V3RsGCxoMtEZNgbE
-         5+14PLuHNTT89k7hdTRdfuuL62G25FHkldoOxjLiBZ82fzjfCcRMk92VChZzvLpLmfLo
-         EM73SL0nCuKqFxawFkSv9UUZNzaU2/iw5cRMTPCT2HArt9gjSUgC8CRh8QBVfEPaZhYW
-         u8SuawAcREhTiRaSMEMAOx5RV7j0wSRFQpqyRB9sbkqLgp1/00ZTvh8Pl/E6d30pS3rC
-         azVV66p2JYL2UNVxR9UPxY3LdxVAfGBWjhrZe21gNbjBLHIj4tUD2NCfvo3rp27nlnph
-         +7bw==
-X-Gm-Message-State: APjAAAUn46D2TuhgmgOmnGMjP5opg0QG0ys+71m4j80WZzicKIp1UZL0
-        w9m9/3+BsnopbQZcEPGeDuDTj/Lna7Xr1boUtdfgUw==
-X-Google-Smtp-Source: APXvYqz6gVGNMNgIejnLcoxmlRYUjAA+otNiSEmQ6jYHENvTg4INzu+VPSUulDAhN39/+u62zUUT/fP+RiUPjwyEBlI=
-X-Received: by 2002:a6b:8bd1:: with SMTP id n200mr26733724iod.134.1563210540403;
- Mon, 15 Jul 2019 10:09:00 -0700 (PDT)
+        bh=UscG4WxjnjQLRRcfnLMqxRe1yzGwBuLWPpq8Fn0xt8Q=;
+        b=MMOJjvwL176Sza2zrmPUbEG5lFZ3BAX8mzbGf9K2VsRHQwlktpmZpg3SlwBUQCndMe
+         qyBbjCAG4xpRQfLxMioWy0uMifyg2E+1qqGGmLiUxomsOgWV8iadKw06dy3yrOR/WgNQ
+         NmED8TDQHXC8D8TDo5alWGRCi8ulWadZcTnRDMeQisu4YE2D6Ry7cpXD+q9IACpGEUKZ
+         h4tYcgL4qE1/7nNGviyh/XAXClqtqPwk41QlrQj4sFnC1mBhFGge87AfrOBZrw8KCCea
+         /hTlNZAx1y3KTCWOcUNpFzos5CHxZjrQKWIsDmzkZqirnxis4TZTyQxH9V5NSLsiaVn+
+         rk2w==
+X-Gm-Message-State: APjAAAVoCrIzwCdvpw+vzb8AjARbX4iivG0E5jQrTTjkycTh6pmyXZ0A
+        6m7LoU4IwS0O+z02icpTScZdblva7Q4ERc568tskLA==
+X-Google-Smtp-Source: APXvYqwD4/nxpkfvH9bQCh/AJuvk/pIr8m7HB8haGrUylB3B6/r9kLVpIkwVT3ZqE0R7QG11+C5RIC8Tuuc4Lid14w8=
+X-Received: by 2002:a25:7c05:: with SMTP id x5mr16996019ybc.358.1563211367257;
+ Mon, 15 Jul 2019 10:22:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190627104039.26285-1-enric.balletbo@collabora.com> <20190627104039.26285-4-enric.balletbo@collabora.com>
-In-Reply-To: <20190627104039.26285-4-enric.balletbo@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Mon, 15 Jul 2019 10:08:49 -0700
-Message-ID: <CAPUE2utn8+0kF63JAh=JHLrOahrAHAhKUQFUM9w+eAtj5hM_mQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] mfd / platform: cros_ec: Miscellaneous character
- device to talk with the EC
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20190715164705.220693-1-henryburns@google.com>
+In-Reply-To: <20190715164705.220693-1-henryburns@google.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 15 Jul 2019 10:22:36 -0700
+Message-ID: <CALvZod73xAMUT0-zEHZO+J5xRa7HLhKobaDzchpT-CxiPtKTRg@mail.gmail.com>
+Subject: Re: [PATCH] mm/z3fold.c: Reinitialize zhdr structs after migration
+To:     Henry Burns <henryburns@google.com>
+Cc:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 3:40 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
+On Mon, Jul 15, 2019 at 9:47 AM Henry Burns <henryburns@google.com> wrote:
 >
-> That's a driver to talk with the ChromeOS Embedded Controller via a
-> miscellaneous character device, it creates an entry in /dev for every
-> instance and implements basic file operations for communicating with the
-> Embedded Controller with an userspace application. The API is moved to
-> the uapi folder, which is supposed to contain the user space API of the
-> kernel.
+> z3fold_page_migration() calls memcpy(new_zhdr, zhdr, PAGE_SIZE).
+> However, zhdr contains fields that can't be directly coppied over (ex:
+> list_head, a circular linked list). We only need to initialize the
+> linked lists in new_zhdr, as z3fold_isolate_page() already ensures
+> that these lists are empty.
 >
-> Note that this will replace current character device interface
-> implemented in the cros-ec-dev driver in the MFD subsystem. The idea is
-> to move all the functionality that extends the bounds of what MFD was
-> designed to platform/chrome subsystem.
+> Additionally it is possible that zhdr->work has been placed in a
+> workqueue. In this case we shouldn't migrate the page, as zhdr->work
+> references zhdr as opposed to new_zhdr.
 >
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> Fixes: bba4c5f96ce4 ("mm/z3fold.c: support page migration")
+> Signed-off-by: Henry Burns <henryburns@google.com>
+
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+
 > ---
+>  mm/z3fold.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
-> Changes in v4: None
-> Changes in v3:
-> - Fix 'linux/mfd/cros_ec.h' is not exported (reported by lkp)
->
-> Changes in v2:
-> - Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
-> - Remove dev_info in probe, anyway we will see the chardev or not if the
->   probe fails (Greg Kroah-Hartman)
->
->  Documentation/ioctl/ioctl-number.txt          |   2 +-
->  drivers/mfd/cros_ec_dev.c                     |   4 +-
->  drivers/platform/chrome/Kconfig               |  11 +
->  drivers/platform/chrome/Makefile              |   1 +
->  drivers/platform/chrome/cros_ec_chardev.c     | 253 ++++++++++++++++++
->  .../uapi/linux/cros_ec_chardev.h              |  21 +-
->  6 files changed, 273 insertions(+), 19 deletions(-)
->  create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
->  rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (50%)
->
-> diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-> index c9558146ac58..8bd7907ee36d 100644
-> --- a/Documentation/ioctl/ioctl-number.txt
-> +++ b/Documentation/ioctl/ioctl-number.txt
-> @@ -340,7 +340,7 @@ Code  Seq#(hex)     Include File            Comments
->  0xDD   00-3F   ZFCP device driver      see drivers/s390/scsi/
->                                         <mailto:aherrman@de.ibm.com>
->  0xE5   00-3F   linux/fuse.h
-> -0xEC   00-01   drivers/platform/chrome/cros_ec_dev.h   ChromeOS EC driver
-> +0xEC   00-01   include/uapi/linux/cros_ec_chardev.h    ChromeOS EC driver
->  0xF3   00-3F   drivers/usb/misc/sisusbvga/sisusb.h     sisfb (in development)
->                                         <mailto:thomas@winischhofer.net>
->  0xF4   00-1F   video/mbxfb.h           mbxfb
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index eb77bf6406f3..3334bc4e42ee 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -19,6 +19,8 @@
->
->  #include <linux/fs.h>
->  #include <linux/mfd/core.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/mfd/cros_ec_commands.h>
->  #include <linux/module.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/of_platform.h>
-> @@ -27,7 +29,7 @@
->  #include <linux/slab.h>
->  #include <linux/uaccess.h>
->
-> -#include "cros_ec_dev.h"
-> +#include <uapi/linux/cros_ec_chardev.h>
->
->  #define DRV_NAME "cros-ec-dev"
->
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index 1e7a10500b3f..221e709358c0 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -133,6 +133,17 @@ config CROS_KBD_LED_BACKLIGHT
->           To compile this driver as a module, choose M here: the
->           module will be called cros_kbd_led_backlight.
->
-> +config CROS_EC_CHARDEV
-> +       tristate "ChromeOS EC miscdevice"
-> +       depends on MFD_CROS_EC_CHARDEV
-> +       default MFD_CROS_EC_CHARDEV
-> +       help
-> +         This driver adds file operations support to talk with the
-> +         ChromeOS EC from userspace via a character device.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called cros_ec_chardev.
-> +
->  config CROS_EC_LIGHTBAR
->         tristate "Chromebook Pixel's lightbar support"
->         depends on MFD_CROS_EC_CHARDEV
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index f69e0be98bd6..e6758e967ac5 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -15,6 +15,7 @@ cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)        += cros_ec_lpc_mec.o
->  obj-$(CONFIG_CROS_EC_LPC)              += cros_ec_lpcs.o
->  obj-$(CONFIG_CROS_EC_PROTO)            += cros_ec_proto.o cros_ec_trace.o
->  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)   += cros_kbd_led_backlight.o
-> +obj-$(CONFIG_CROS_EC_CHARDEV)          += cros_ec_chardev.o
->  obj-$(CONFIG_CROS_EC_LIGHTBAR)         += cros_ec_lightbar.o
->  obj-$(CONFIG_CROS_EC_VBC)              += cros_ec_vbc.o
->  obj-$(CONFIG_CROS_EC_DEBUGFS)          += cros_ec_debugfs.o
-> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-> new file mode 100644
-> index 000000000000..ce77839b0dcb
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_chardev.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Miscellaneous character driver for ChromeOS Embedded Controller
-> + *
-> + * Copyright 2014 Google, Inc.
-> + * Copyright 2019 Google LLC
-> + *
-> + * This file is a rework and part of the code is ported from
-> + * drivers/mfd/cros_ec_dev.c that was originally written by
-> + * Bill Richardson.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/mfd/cros_ec_commands.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include <uapi/linux/cros_ec_chardev.h>
-> +
-> +#define DRV_NAME               "cros-ec-chardev"
-> +
-> +struct chardev_data {
-> +       struct cros_ec_dev *ec_dev;
-> +       struct miscdevice misc;
-> +};
-> +
-> +static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
-> +{
-> +       static const char * const current_image_name[] = {
-> +               "unknown", "read-only", "read-write", "invalid",
-> +       };
-> +       struct ec_response_get_version *resp;
-> +       struct cros_ec_command *msg;
-> +       int ret;
-> +
-> +       msg = kzalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
-> +       if (!msg)
-> +               return -ENOMEM;
-> +
-> +       msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
-> +       msg->insize = sizeof(*resp);
-> +
-> +       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> +       if (ret < 0) {
-> +               snprintf(str, maxlen,
-> +                        "Unknown EC version, returned error: %d\n",
-> +                        msg->result);
-> +               goto exit;
+> diff --git a/mm/z3fold.c b/mm/z3fold.c
+> index 42ef9955117c..9da471bcab93 100644
+> --- a/mm/z3fold.c
+> +++ b/mm/z3fold.c
+> @@ -1352,12 +1352,22 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+>                 z3fold_page_unlock(zhdr);
+>                 return -EBUSY;
+>         }
+> +       if (work_pending(&zhdr->work)) {
+> +               z3fold_page_unlock(zhdr);
+> +               return -EAGAIN;
 > +       }
-> +
-> +       resp = (struct ec_response_get_version *)msg->data;
-> +       if (resp->current_image >= ARRAY_SIZE(current_image_name))
-> +               resp->current_image = 3; /* invalid */
-> +
-> +       snprintf(str, maxlen, "%s\n%s\n%s\n",
-We need to keep the same output as it was implemented in
-ec_get_version in cros_ec_dev.c [See "mfd: cros_ec: Switch to use the
-new cros-ec-chardev driver"]:
-In particular, we need to prefix the versions strings with
-CROS_EC_DEV_VERSION ["1.0.0"], as user space tools are relying on that
-marker to keep going.
-> +                resp->version_string_ro,
-> +                resp->version_string_rw,
-> +                current_image_name[resp->current_image]);
-> +
-> +       ret = 0;
-> +exit:
-> +       kfree(msg);
-> +       return ret;
-> +}
-> +
-> +/*
-> + * Device file ops
-> + */
-> +static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
-> +{
-> +       struct miscdevice *mdev = filp->private_data;
-> +       struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
-> +
-> +       filp->private_data = ec_dev;
-> +       nonseekable_open(inode, filp);
-> +
-> +       return 0;
-> +}
-> +
-> +static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
-> +                                    size_t length, loff_t *offset)
-> +{
-> +       char msg[sizeof(struct ec_response_get_version) +
-> +                sizeof(CROS_EC_DEV_VERSION)];
-> +       struct cros_ec_dev *ec = filp->private_data;
-> +       size_t count;
-> +       int ret;
-> +
-> +       if (*offset != 0)
-> +               return 0;
-> +
-> +       ret = ec_get_version(ec, msg, sizeof(msg));
-> +       if (ret)
-> +               return ret;
-> +
-> +       count = min(length, strlen(msg));
-> +
-> +       if (copy_to_user(buffer, msg, count))
-> +               return -EFAULT;
-> +
-> +       *offset = count;
-> +       return count;
-> +}
-> +
-> +/*
-> + * Ioctls
-> + */
-> +static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
-> +{
-> +       struct cros_ec_command *s_cmd;
-> +       struct cros_ec_command u_cmd;
-> +       long ret;
-> +
-> +       if (copy_from_user(&u_cmd, arg, sizeof(u_cmd)))
-> +               return -EFAULT;
-> +
-> +       if (u_cmd.outsize > EC_MAX_MSG_BYTES ||
-> +           u_cmd.insize > EC_MAX_MSG_BYTES)
-> +               return -EINVAL;
-> +
-> +       s_cmd = kmalloc(sizeof(*s_cmd) + max(u_cmd.outsize, u_cmd.insize),
-> +                       GFP_KERNEL);
-> +       if (!s_cmd)
-> +               return -ENOMEM;
-> +
-> +       if (copy_from_user(s_cmd, arg, sizeof(*s_cmd) + u_cmd.outsize)) {
-> +               ret = -EFAULT;
-> +               goto exit;
-> +       }
-> +
-> +       if (u_cmd.outsize != s_cmd->outsize ||
-> +           u_cmd.insize != s_cmd->insize) {
-> +               ret = -EINVAL;
-> +               goto exit;
-> +       }
-> +
-> +       s_cmd->command += ec->cmd_offset;
-> +       ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
-> +       /* Only copy data to userland if data was received. */
-> +       if (ret < 0)
-> +               goto exit;
-> +
-> +       if (copy_to_user(arg, s_cmd, sizeof(*s_cmd) + s_cmd->insize))
-> +               ret = -EFAULT;
-> +exit:
-> +       kfree(s_cmd);
-> +       return ret;
-> +}
-> +
-> +static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
-> +                                          void __user *arg)
-> +{
-> +       struct cros_ec_device *ec_dev = ec->ec_dev;
-> +       struct cros_ec_readmem s_mem = { };
-> +       long num;
-> +
-> +       /* Not every platform supports direct reads */
-> +       if (!ec_dev->cmd_readmem)
-> +               return -ENOTTY;
-> +
-> +       if (copy_from_user(&s_mem, arg, sizeof(s_mem)))
-> +               return -EFAULT;
-> +
-> +       num = ec_dev->cmd_readmem(ec_dev, s_mem.offset, s_mem.bytes,
-> +                                 s_mem.buffer);
-> +       if (num <= 0)
-> +               return num;
-> +
-> +       if (copy_to_user((void __user *)arg, &s_mem, sizeof(s_mem)))
-> +               return -EFAULT;
-> +
-> +       return num;
-> +}
-> +
-> +static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
-> +                                  unsigned long arg)
-> +{
-> +       struct cros_ec_dev *ec = filp->private_data;
-> +
-> +       if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
-> +               return -ENOTTY;
-> +
-> +       switch (cmd) {
-> +       case CROS_EC_DEV_IOCXCMD:
-> +               return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
-> +       case CROS_EC_DEV_IOCRDMEM:
-> +               return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
-> +       }
-> +
-> +       return -ENOTTY;
-> +}
-> +
-> +static const struct file_operations chardev_fops = {
-> +       .open           = cros_ec_chardev_open,
-> +       .read           = cros_ec_chardev_read,
-> +       .unlocked_ioctl = cros_ec_chardev_ioctl,
-> +#ifdef CONFIG_COMPAT
-> +       .compat_ioctl   = cros_ec_chardev_ioctl,
-> +#endif
-> +};
-> +
-> +static int cros_ec_chardev_probe(struct platform_device *pdev)
-> +{
-> +       struct cros_ec_dev *ec_dev = dev_get_drvdata(pdev->dev.parent);
-> +       struct cros_ec_platform *ec_platform = dev_get_platdata(ec_dev->dev);
-> +       struct chardev_data *data;
-> +
-> +       /* Create a char device: we want to create it anew */
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->ec_dev = ec_dev;
-> +       data->misc.minor = MISC_DYNAMIC_MINOR;
-> +       data->misc.fops = &chardev_fops;
-> +       data->misc.name = ec_platform->ec_name;
-> +       data->misc.parent = pdev->dev.parent;
-> +
-> +       dev_set_drvdata(&pdev->dev, data);
-> +
-> +       return misc_register(&data->misc);
-> +}
-> +
-> +static int cros_ec_chardev_remove(struct platform_device *pdev)
-> +{
-> +       struct chardev_data *data = dev_get_drvdata(&pdev->dev);
-> +
-> +       misc_deregister(&data->misc);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct platform_driver cros_ec_chardev_driver = {
-> +       .driver = {
-> +               .name = DRV_NAME,
-> +       },
-> +       .probe = cros_ec_chardev_probe,
-> +       .remove = cros_ec_chardev_remove,
-> +};
-> +
-> +module_platform_driver(cros_ec_chardev_driver);
-> +
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
-> +MODULE_DESCRIPTION("ChromeOS EC Miscellaneous Character Driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/mfd/cros_ec_dev.h b/include/uapi/linux/cros_ec_chardev.h
-> similarity index 50%
-> rename from drivers/mfd/cros_ec_dev.h
-> rename to include/uapi/linux/cros_ec_chardev.h
-> index ec750433455a..8aceb4ac8ec5 100644
-> --- a/drivers/mfd/cros_ec_dev.h
-> +++ b/include/uapi/linux/cros_ec_chardev.h
-> @@ -1,28 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->  /*
-> - * cros_ec_dev - expose the Chrome OS Embedded Controller to userspace
-> + * ChromeOS EC device interface.
->   *
->   * Copyright (C) 2014 Google, Inc.
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> - * GNU General Public License for more details.
-> - *
-> - * You should have received a copy of the GNU General Public License
-> - * along with this program. If not, see <http://www.gnu.org/licenses/>.
->   */
->
-> -#ifndef _CROS_EC_DEV_H_
-> -#define _CROS_EC_DEV_H_
-> +#ifndef _UAPI_LINUX_CROS_EC_DEV_H_
-> +#define _UAPI_LINUX_CROS_EC_DEV_H_
->
->  #include <linux/ioctl.h>
->  #include <linux/types.h>
-> -#include <linux/mfd/cros_ec.h>
->
->  #define CROS_EC_DEV_VERSION "1.0.0"
->
+>         new_zhdr = page_address(newpage);
+>         memcpy(new_zhdr, zhdr, PAGE_SIZE);
+>         newpage->private = page->private;
+>         page->private = 0;
+>         z3fold_page_unlock(zhdr);
+>         spin_lock_init(&new_zhdr->page_lock);
+> +       INIT_WORK(&new_zhdr->work, compact_page_work);
+> +       /*
+> +        * z3fold_page_isolate() ensures that this list is empty, so we only
+> +        * have to reinitialize it.
+> +        */
+> +       INIT_LIST_HEAD(&new_zhdr->buddy);
+>         new_mapping = page_mapping(page);
+>         __ClearPageMovable(page);
+>         ClearPagePrivate(page);
 > --
-> 2.20.1
+> 2.22.0.510.g264f2c817a-goog
 >
