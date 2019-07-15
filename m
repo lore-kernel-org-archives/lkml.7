@@ -2,145 +2,80 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDB0C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 04:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133E1C7618A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 04:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677002067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 04:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563164252;
-	bh=h6ve6cvW4XyaTTMxlohrQk7j8eV+7C61i83DWFIugRA=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=09O/VjLLTj4X4/2YCpDEALjcPaCXG6Zm6/fEgG+1jZT5G+7kyVNRRJIoqKExsbe6q
-	 VdCDgs2S1+wQNi5Vk3h3l8G69NfYkC1zjvivTx2yYJrFkq3HpA/3Nxb1iDsxBIXHjc
-	 EY9GpkKXyaVAR5QkWxgu/2HLX5JOiC3i9syla8CM=
+	by mail.kernel.org (Postfix) with ESMTP id DB8B220644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 04:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfGOERb (ORCPT
+        id S1726384AbfGOEhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 00:17:31 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:34908 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfGOERa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 00:17:30 -0400
-Received: by mail-yw1-f66.google.com with SMTP id g19so6312446ywe.2;
-        Sun, 14 Jul 2019 21:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:openpgp:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZU+N+jdHFGLm83s+Rk1MKxPtLrSDeM3IVCQzNfaWkQc=;
-        b=tH0GJeQ0Qsos4Kd3Jn1sI+2rqlqRqd78CBBlGmEY08eAsMLyduNekysuXcKb3uFlwa
-         KLYQaZzNdRkvHKmcpZhJ/GHR1aq6jpvFJgW/+OVF0J4HvDHcGpVp0Ot5WkCE5bkMatkE
-         e0jY5TSrHfe2LGdgzwMearR6W5AOtCtWyFg9qPY9ATC+HwtVfQCPanaXoXb4zAKu9IYQ
-         6ZprZsP7CR2eMNZUY6rK1ZmWrIz9AumuIuxA10MYnigbkdh1L0vjOIBmfC16lKulHw7E
-         QC8EJDT2XVlnfd9CdqMbEquokiGhNglfDRjYsdflw+LPxSXKO6gxgTqJWF0fR4FCmCoi
-         U3jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:openpgp
-         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZU+N+jdHFGLm83s+Rk1MKxPtLrSDeM3IVCQzNfaWkQc=;
-        b=sJp59MKitXa3TEDz45rpwEwRBvqriJp1cHdnftXpbztsOHDNJ7Ecrl6e0iDv1Bdqmj
-         EADg1p4On6VtJvZqUGbOzsNTJAHasWGpjx/RyQCkofqJbdZTIGh0kT5K+0Y97Zprr8Ky
-         1yeMpvU2Rnm7ANJhrBtYhYjLhnGEhY62KDBOdUxDL0M6izXh3bjxNfurY6ybw7bboILF
-         mYzaflSsrkZc2NQgRj06YhMfNYJbk4ialKhVdlXIadWBHQX5Z39ElP2KzDumz6CpkYaR
-         T+b09oA6vYt/zb6aLP5eecxLccxgu1GUlFEP5Gsa3mkyJcEpuUsxYcZ8pZzNQW+7qnBj
-         25QQ==
-X-Gm-Message-State: APjAAAXePZcnl54RWLUw8i5I6KMrL/1NLDyYd2ZMFzdgFGNEEAwqBl6c
-        NA3Kzchf6zpLl7WzckDTaoA=
-X-Google-Smtp-Source: APXvYqygnT51jLI54Y7e4aJEwRF3BA/oh+jUvTlqNkFwBwPCh0tQZ4TodICNd7QYqSTmcFpz2ky6VQ==
-X-Received: by 2002:a81:ae0e:: with SMTP id m14mr15251245ywh.308.1563164249752;
-        Sun, 14 Jul 2019 21:17:29 -0700 (PDT)
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net. [75.58.59.55])
-        by smtp.gmail.com with ESMTPSA id 206sm4035932ywu.34.2019.07.14.21.17.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 21:17:28 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH v3 04/24] dmaengine: qcom_hidma: Remove call to memset
- after dmam_alloc_coherent
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20190715031723.6375-1-huangfq.daxian@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
-Date:   Mon, 15 Jul 2019 00:17:27 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190715031723.6375-1-huangfq.daxian@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Jul 2019 00:37:39 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:18860 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfGOEhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 00:37:39 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id D529DF892833B90D37C6;
+        Mon, 15 Jul 2019 12:37:36 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x6F4bFC2019355;
+        Mon, 15 Jul 2019 12:37:15 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019071512371737-2348121 ;
+          Mon, 15 Jul 2019 12:37:17 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     pbonzini@redhat.com
+Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: [PATCH] kvm: vmx: fix coccinelle warnings
+Date:   Mon, 15 Jul 2019 12:35:17 +0800
+Message-Id: <1563165317-5996-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-15 12:37:17,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-15 12:37:17,
+        Serialize complete at 2019-07-15 12:37:17
+X-MAIL: mse-fl1.zte.com.cn x6F4bFC2019355
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/2019 11:17 PM, Fuqian Huang wrote:
-> In commit 518a2f1925c3
-> ("dma-mapping: zero memory returned from dma_alloc_*"),
-> dma_alloc_coherent has already zeroed the memory.
-> So memset is not needed.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+This fixes the following coccinelle warning:
 
-I don't see SWIO or ARM64 IOMMU drivers getting impacted by
-the mentioned change above (518a2f1925c3).
+WARNING: return of 0/1 in function 'vmx_need_emulation_on_page_fault'
+with return type bool
 
- arch/alpha/kernel/pci_iommu.c    | 2 +-
- arch/arc/mm/dma.c                | 2 +-
- arch/c6x/mm/dma-coherent.c       | 5 ++++-
- arch/m68k/kernel/dma.c           | 2 +-
- arch/microblaze/mm/consistent.c  | 2 +-
- arch/openrisc/kernel/dma.c       | 2 +-
- arch/parisc/kernel/pci-dma.c     | 4 ++--
- arch/s390/pci/pci_dma.c          | 2 +-
- arch/sparc/kernel/ioport.c       | 2 +-
- arch/sparc/mm/io-unit.c          | 2 +-
- arch/sparc/mm/iommu.c            | 2 +-
- arch/xtensa/kernel/pci-dma.c     | 2 +-
- drivers/misc/mic/host/mic_boot.c | 2 +-
- kernel/dma/virt.c                | 2 +-
- 14 files changed, 18 insertions(+), 15 deletions(-)
+Return false instead of 0.
 
-How does this new behavior apply globally?
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ arch/x86/kvm/vmx/vmx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d98eac3..8b5f352 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7418,7 +7418,7 @@ static int enable_smi_window(struct kvm_vcpu *vcpu)
+ 
+ static bool vmx_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
+ {
+-	return 0;
++	return false;
+ }
+ 
+ static __init int hardware_setup(void)
+-- 
+1.8.3.1
 
