@@ -2,129 +2,125 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8B2C74A44
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72E5C73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6796214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A53920868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFsY4oNs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8NhfdRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbfGOB0A (ORCPT
+        id S1729037AbfGOB2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 21:26:00 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37707 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfGOB0A (ORCPT
+        Sun, 14 Jul 2019 21:28:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39735 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfGOB2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 21:26:00 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so13475785wme.2;
-        Sun, 14 Jul 2019 18:25:58 -0700 (PDT)
+        Sun, 14 Jul 2019 21:28:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so6899652pgi.6;
+        Sun, 14 Jul 2019 18:28:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MXtprjYX3LMZPcPvIkCQpHQOi7CXiEJzMLuO2MOHDFY=;
-        b=JFsY4oNs0InJ0zKTLAT5/DNZA3GeQ5vUGlzj4vJoyukxjE9wh31D0X5E2dFcXBkuu9
-         5baYD+BB44bzldFblCMubnJYeJQHfm+bo8qvYWrq7FCoCCyNcEos9rL8vCxW80743jj4
-         djzYr+jT48v68VGOmXfKBu3szUoeqTYbIoQcYpMzOKVoMpyiZN+psoOl5RnCea+QznzW
-         u/GrX5TTepNy2ZGNckHIRJWkEtOBfIPZsFJnVrI6VK85cFq90YQ0oV33WqMnvuGZRV4N
-         5HhfV9vrDA1aLeatn8qE221SvZsxUuJzvEFhzSgrEuapTnXcocerUWiLIDXfdgvxUkZJ
-         VDfw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J0uuieNJWIEqFucVVL6HHob/1V+xJ9X3pNwzM9VDJZ0=;
+        b=i8NhfdRWTkmqEfZfCzU6oPHv7PGnVKfRg+X/b4xOt2S5SqMQ29UUIxVI2TlfpZu76f
+         vOMoGM8eRo5AZgdPp1J8r7HMj+Ge6VoyzIGyVqiLtccwhIPCJtjH3W22rdKgjWO05S1I
+         6T4XK6CF/169lYtJ41je6yOzqDUa7h/d2x5ZXm5s3J1Cimo6rI0gqMUFMdQ4A4CjH9PH
+         fD3f404sOpFSlsFAw8Zy16LwPNz0YiT6YEDkvLqggQWB4gV5G7imDyKMkEqArivlODTP
+         myfYxTKqPpkNZJPpbxYBKSW7rj7EZwTGw3oA0F6AzUBMzL6XYWKsEwYEDYUjlom36WEz
+         Ic0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MXtprjYX3LMZPcPvIkCQpHQOi7CXiEJzMLuO2MOHDFY=;
-        b=DNX1pTWBCiEWhroEWUAJRCDdNUOhXN1W+yKcYjiHdjqLr/ofhVIdnvYbbp6KB45nvK
-         Fa/X+elZB5M5OcbpBWwRbdlSgJ6OadZX1Oq1+WT0+XIj6c/rSttW0yQaiBrz0wS3djrc
-         agFYBZ7pzzLJ+DjxDfcYFKlQaiadbfxWzSoBR4uD2fgULti7SVue420lfPko1OiRKk2Y
-         7RuA/YrX7Oj72t/bGA1BtpbAx2yT4ogT6NwbMNlYoE1wubw6Pv1dhoo6MPv7ckFNbWak
-         Z0cL7Xsfs87UZAog0j1UPBsMatbPts5c4eGTMywtTmv2TbxA8o9TDmBYjabCaoAGhHJ6
-         Qe5g==
-X-Gm-Message-State: APjAAAVenMoK/7whlCGPlyuAdFu40PH/BaUq/Lcv9YT/LPc85RO2oSps
-        b1TZtTykqh3bDgsf1q478JHBQ1vEx2irAPyzfeg=
-X-Google-Smtp-Source: APXvYqySfMIGh9QaP384gEwM9t69jEpaX7PiQK1qs9kxdiu7h7Kj/FqkvR6LDKFq42u1aaGMZWWhp3rmBxjL7I8ruZg=
-X-Received: by 2002:a05:600c:204c:: with SMTP id p12mr20916333wmg.121.1563153957506;
- Sun, 14 Jul 2019 18:25:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J0uuieNJWIEqFucVVL6HHob/1V+xJ9X3pNwzM9VDJZ0=;
+        b=epmZ7ifMZkqDnVEAACgqjajXxSJ+o7nI8qSui8svCaP3xutXRVJ6dSgSI+Lar85YP7
+         wFsIHnzyVpNXFV7Xxf34t9GrWF8dEo4ydj7PvQnqQrZgN22mfIT5Udi4u1AjB1STcB0d
+         OYyZ7/IVoksMFjDCREeirYrKy/PO3kgfYBxVZ1QilQKQ44+7DtTCF4+5fA6nJhYfCvWA
+         nyrfkozFzxSEriClLflkoCh/Zht6XhAX/SLo5TMsZPgPnIMCP1LBerCfkPAmguA32ch7
+         +8eoIhzon7Ltl6XQYajjcuPNExS1rga8PYVslQNLcgRxZ5JGM1KeuJ0g7IoE1g4E8eqh
+         V/Vw==
+X-Gm-Message-State: APjAAAVZH6NnUGC6uttueW5m0Qv1YbNt6cJMzhrlmgwdoVKxDOk1qGzi
+        aWuDuarRosbJJjxyzDQB734pBB2Za98=
+X-Google-Smtp-Source: APXvYqxs3OG0BKcfq0rH3+05QtGWcstr5HpP1eAAxWdX97TW47eRmkiqekNJ2fdh2UAMVwsZROCxIw==
+X-Received: by 2002:a17:90a:2247:: with SMTP id c65mr25371401pje.24.1563154133835;
+        Sun, 14 Jul 2019 18:28:53 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id o14sm15386915pjp.29.2019.07.14.18.28.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 14 Jul 2019 18:28:53 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>
+Subject: [PATCH RESEND] i386/kvm: support guest access CORE cstate
+Date:   Mon, 15 Jul 2019 09:28:44 +0800
+Message-Id: <1563154124-18579-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1563087801-7373-1-git-send-email-wang6495@umn.edu>
-In-Reply-To: <1563087801-7373-1-git-send-email-wang6495@umn.edu>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Mon, 15 Jul 2019 09:25:46 +0800
-Message-ID: <CACVXFVOXZCtYtt3UuYBa7OYHEwsMkYFznfpL=1q9HkJV8xcx0Q@mail.gmail.com>
-Subject: Re: [PATCH] blk-mq: fix a memory leak bug
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 3:04 PM Wenwen Wang <wang6495@umn.edu> wrote:
->
-> From: Wenwen Wang <wenwen@cs.uga.edu>
->
-> In blk_mq_init_allocated_queue(), a kernel buffer is allocated through
-> kcalloc_node() to hold hardware dispatch queues in the request queue 'q',
-> i.e., 'q->queue_hw_ctx'.  Later on, if the blk-mq device has no scheduler
-> set, a scheduler will be initialized through elevator_init_mq(). If this
-> initialization fails, blk_mq_init_allocated_queue() needs to be terminated
-> with an error code returned to indicate this failure. However, the
-> allocated buffer is not freed on this execution path, leading to a memory
-> leak bug. Moreover, the required cleanup work is also missed on this path.
->
-> To fix the above issues, free the allocated buffer and invoke the cleanup
-> functions.
->
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> ---
->  block/blk-mq.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index e5ef40c..04fe077 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2845,6 +2845,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
->  struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
->                                                   struct request_queue *q)
->  {
-> +       int ret = -ENOMEM;
-> +
+From: Wanpeng Li <wanpengli@tencent.com>
 
-The above isn't necessary because the function always returns
-ERR_PTR(-ENOMEM) in case of failure.
+Allow guest reads CORE cstate when exposing host CPU power management capabilities 
+to the guest. PKG cstate is restricted to avoid a guest to get the whole package 
+information in multi-tenant scenario.
 
->         /* mark the queue as mq asap */
->         q->mq_ops = set->ops;
->
-> @@ -2906,11 +2908,9 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
->         blk_mq_map_swqueue(q);
->
->         if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
-> -               int ret;
-> -
->                 ret = elevator_init_mq(q);
->                 if (ret)
-> -                       return ERR_PTR(ret);
-> +                       goto err_hctxs;
+Cc: Eduardo Habkost <ehabkost@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ linux-headers/linux/kvm.h | 4 +++-
+ target/i386/kvm.c         | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-The above change itself is fine.
+diff --git a/linux-headers/linux/kvm.h b/linux-headers/linux/kvm.h
+index b53ee59..d648fde 100644
+--- a/linux-headers/linux/kvm.h
++++ b/linux-headers/linux/kvm.h
+@@ -696,9 +696,11 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_MWAIT          (1 << 0)
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
++#define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
+ #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
+                                               KVM_X86_DISABLE_EXITS_HLT | \
+-                                              KVM_X86_DISABLE_EXITS_PAUSE)
++                                              KVM_X86_DISABLE_EXITS_PAUSE | \
++                                              KVM_X86_DISABLE_EXITS_CSTATE)
+ 
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+diff --git a/target/i386/kvm.c b/target/i386/kvm.c
+index 3b29ce5..49a0cc1 100644
+--- a/target/i386/kvm.c
++++ b/target/i386/kvm.c
+@@ -1645,7 +1645,8 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
+         if (disable_exits) {
+             disable_exits &= (KVM_X86_DISABLE_EXITS_MWAIT |
+                               KVM_X86_DISABLE_EXITS_HLT |
+-                              KVM_X86_DISABLE_EXITS_PAUSE);
++                              KVM_X86_DISABLE_EXITS_PAUSE |
++                              KVM_X86_DISABLE_EXITS_CSTATE);
+         }
+ 
+         ret = kvm_vm_enable_cap(s, KVM_CAP_X86_DISABLE_EXITS, 0,
+-- 
+2.7.4
 
-However, elevator_init_mq() shouldn't return failure since none should
-work any time.
-That said 'none' should be fallback to in case that default
-mq-deadline can't be initialized.
-
-thanks,
-Ming Lei
