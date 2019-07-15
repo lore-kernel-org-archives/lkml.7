@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79EEC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2133BC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E402067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B202067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201963;
-	bh=yqqZV7e6Pp76TRRYXnnbhhcjAyGdslCzs4u6H2foZDg=;
+	s=default; t=1563201970;
+	bh=w2c9BXZmSW7V2md9maWmGard3o02db6IsynKA2OL1NQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ut7IS4pOcSEAHSWO3HcebUaszPBUSQ8t/8YOdf79gvFLWe974GezbK8Lr+2nzIcln
-	 alLT0TrnNenY5rx40gxYGBPy6hxIIySSAK4vQiLd/1h91iFmWuHgMgYjF6VgpB5GZy
-	 iTTp2p4bSc7/2gdetzY52+VV1OMcdCplasA93u9U=
+	b=NVxeCkBi4HVcVq9KqQWkSu09PEe3qELZuYc6Z4clzKm+etmnD08HecLqMMF8efWNV
+	 GhLOXOyxFK1TxGzs6r42OtX/1UmLpKC+yb16zOXGYZKBj9FeZDY20bImigBMC/UqyU
+	 dkTBxtk6uNP7PAaObxQ6KVpv6mgEr9var1bwSyG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392041AbfGOOqC (ORCPT
+        id S1732013AbfGOOqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405023AbfGOOpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:45:53 -0400
+        id S2404788AbfGOOqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:46:04 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D5620651;
-        Mon, 15 Jul 2019 14:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 574C220651;
+        Mon, 15 Jul 2019 14:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201952;
-        bh=yqqZV7e6Pp76TRRYXnnbhhcjAyGdslCzs4u6H2foZDg=;
+        s=default; t=1563201963;
+        bh=w2c9BXZmSW7V2md9maWmGard3o02db6IsynKA2OL1NQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CGGnLXzGEgdv1wXr39V9n4O7YuJbLxlxB07tdXZeZwzJL6mUHbHbsl8Ww0O1D2kp9
-         P4q0e4cXc4QdKYSOJ1YDdDczpQdLpyhnAmu2+FI8Upnt+OqYPbLgpIyUWzfoTs1XUO
-         t5+JXKxIVsfoUem31W3Cp4HD+vbGIYia5jinjMOk=
+        b=RK2/fkYbKxutXAXK1RAoI+W5Rf9/+hLumRa3GxaGMdRqht5a6yBJdAcjdpGNYzfjA
+         3r6h1NWnX5QNDcrua0P+vnPOxcNr4YL2dk02v8Ll3LzKD7RYEANuvb3md2yA4pIrhT
+         02n2ZzqgL4uHtYgbMp5WRacGwlNAKnxuPQJsB6ik=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Sowden <jeremy@azazel.net>,
-        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/53] batman-adv: fix for leaked TVLV handler.
-Date:   Mon, 15 Jul 2019 10:44:47 -0400
-Message-Id: <20190715144535.11636-5-sashal@kernel.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 08/53] media: marvell-ccic: fix DMA s/g desc number calculation
+Date:   Mon, 15 Jul 2019 10:44:50 -0400
+Message-Id: <20190715144535.11636-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -60,37 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
+[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
 
-A handler for BATADV_TVLV_ROAM was being registered when the
-translation-table was initialized, but not unregistered when the
-translation-table was freed.  Unregister it.
+The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+left dma_desc_nent unset. It previously contained the number of DMA
+descriptors as returned from dma_map_sg().
 
-Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
-Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+We can now (since the commit referred to above) obtain the same value from
+the sg_table and drop dma_desc_nent altogether.
+
+Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
+driver, since that one doesn't do DMA.
+
+[mchehab+samsung@kernel.org: fix a checkpatch warning]
+
+Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index f2079acb555d..ffd49b40e76a 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -3158,6 +3158,8 @@ static void batadv_tt_purge(struct work_struct *work)
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index aa2b44041d3f..22fe771d4dd2 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -209,7 +209,6 @@ struct mcam_vb_buffer {
+ 	struct list_head queue;
+ 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
+ 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
+-	int dma_desc_nent;		/* Number of mapped descriptors */
+ };
  
- void batadv_tt_free(struct batadv_priv *bat_priv)
+ static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
+@@ -616,9 +615,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
+ static void mcam_sg_next_buffer(struct mcam_camera *cam)
  {
-+	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
-+
- 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 	struct mcam_vb_buffer *buf;
++	struct sg_table *sg_table;
  
+ 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
+ 	list_del_init(&buf->queue);
++	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
+ 	/*
+ 	 * Very Bad Not Good Things happen if you don't clear
+ 	 * C1_DESC_ENA before making any descriptor changes.
+@@ -626,7 +627,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
+ 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
+ 	mcam_reg_write(cam, REG_DESC_LEN_Y,
+-			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
++			sg_table->nents * sizeof(struct mcam_dma_desc));
+ 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
+ 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
+ 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
 -- 
 2.20.1
 
