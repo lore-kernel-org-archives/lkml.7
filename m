@@ -2,107 +2,70 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF6EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452EFC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4407A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202659;
-	bh=vhmKp3aKuQEd8ZMj/JyL4uUeXtbyVAxmL2QRhcu2wLI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qaHGZLtBODmRKul/BYqs80IwFM+30ytUT2bz1qvXNgFz5Nqr0KxdhtzEn2Z2TOwjZ
-	 vjO9nShU9GwRNQ/+IccpxwHNSzQZeaTZG1T/jFNAxOic9c1Z05dW5ahxXM0mX6CmMJ
-	 zQMm3ycT89ze1RiTVTaU6tRNlTHpAQFRWu2gBsv4=
+	by mail.kernel.org (Postfix) with ESMTP id 24F4B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391121AbfGOO5h (ORCPT
+        id S2391152AbfGOO5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389330AbfGOOUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:20:30 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EB420651;
-        Mon, 15 Jul 2019 14:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200430;
-        bh=vhmKp3aKuQEd8ZMj/JyL4uUeXtbyVAxmL2QRhcu2wLI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjLD+M4V5BDXHdS4Oh9wggrI6xT2zhsj9ZiauVxLMjESSLhSUMUo/wpO+YpVEzU0j
-         ZK/CiyQRIV11M7spmw5EW7QP/hszGkUOMk3GNpKuNp/uzpFqros6bzdoAPd5tRGYEa
-         HAfLqNG341IRnIMZ8ONCWQa3LJNil3VJMkNZdY78=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/158] net: fec: Do not use netdev messages too early
-Date:   Mon, 15 Jul 2019 10:16:17 -0400
-Message-Id: <20190715141809.8445-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 15 Jul 2019 10:57:46 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:39271 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391156AbfGOO5n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:57:43 -0400
+Received: from orion.localdomain ([95.118.111.244]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MD9Kp-1heY5r1xHV-0099xY; Mon, 15 Jul 2019 16:57:38 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        linux-leds@vger.kernel.org
+Subject: leds: apu: drop obsolete support for apu>=2
+Date:   Mon, 15 Jul 2019 16:57:27 +0200
+Message-Id: <1563202653-20994-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:bjFr0P34zwiwycyYooXN3gJkPyUMnzKh8TAai8QjjD7P+jPKx2y
+ WyKnPaduPkTjD8w6/TIxmlobgiDmXFHOT8h9wdFt/oZwF7WxTUNrspQjz+P2jrMyir7Suy8
+ KI+IDFa1BKa+EfmK/h/AE/sEmU6/EM1Q6eCstSEtXOFO3wVRSdFfx9PP6R1gnMlfZkloJOr
+ kHWimJpwyN9TrpKaKuhiA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:brXsJ+7J2ag=:2Hrh3GyFKmNSrBJg7E8a4q
+ 31jgTlWMxMfuJDca2c/SDY4UME51Eb10rP7k5uv2H7Z3HgpTSCkTnD8DCJ/sDETOx6GeaFDDl
+ YFCB59of1eEO2OB8lO/ucdtlC2CbndegoYCEJ6dpL2kqwRyqRmC7h+50UdF2CKGwX0svHLpg7
+ kFk4TbnEnU4e2S+hCAVcqWfM/qbSAAgEJYDJphahDJFe+ttVwoc16To2UBpG8pvtI737NKEx/
+ jGDFAD75aOd/Rm0fCZsfgtopDTO/O4p+4Wtu1CUbaurB2OsQihFskYpLRAfwBsQT251D4soPp
+ 6zeLk62VBrCb6b9yHdpwgb9+d7Tw6HWITEl+DqRwr31i+9Ne6mQq9BBWXB6yrSZ3E8Hp5mOvp
+ 1HV3RVm3tAfrHMkIPdcEsbkgqzKOnNiM040LWZu8fGTPrUGIktnbWdRWhwhvACkbtJMCxNWWL
+ lF7C69uSsBlW4Xy2DySzrbBJIRliRDDaiG5fziYiS5YBqYaUv0GPoME6qtPxJ9bJp9emugzyZ
+ rE/EJ4xEYSJhRXCDALU7R0kNBDNFjfvM7/rJeLnlipfadZJmaOjkyEsX/l9KNxkHCxf+d2Vhy
+ 1Ibpq0VWp9NhDIO5JvyUYma8CZ+hdKadr3DarT19RXrZsQPYE39TvNZx5NkviduppU/tMubnC
+ jB+k/49L824fPF5+hno9evc5XGLVoz/97TDdHDLfZhf0e1djMWNAaG7BbwKoe2drmOEk0Eaw0
+ SAtKm9fSIvkwCEj1gKIcndoNFF4s7hweWOcpbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+Hi folks,
 
-[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
 
-When a valid MAC address is not found the current messages
-are shown:
+the legacy apu LEDs driver has been superseded by the more complete
+pcengines-apu2 platform driver, for APU >= 2. It only supports
+the three front LEDs, but lacks all the other GPIOs (eg. button
+or simsw), and conflicts with the pcengines-apu2 driver.
 
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
+Old APUv1 has a very different chipset.
 
-Since the network device has not been registered at this point, it is better
-to use dev_err()/dev_info() instead, which will provide cleaner log
-messages like these:
+Therefore I propose dropping the apu>=2 support from the legacy
+driver, reducing it to only the old (obsolete) APUv1 boards.
 
-fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
 
-Tested on a imx6dl-pico-pi board.
+--mtx
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/freescale/fec_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index bf715a367273..4cf80de4c471 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1689,10 +1689,10 @@ static void fec_get_mac(struct net_device *ndev)
- 	 */
- 	if (!is_valid_ether_addr(iap)) {
- 		/* Report it and use a random ethernet address instead */
--		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
-+		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
- 		eth_hw_addr_random(ndev);
--		netdev_info(ndev, "Using random MAC address: %pM\n",
--			    ndev->dev_addr);
-+		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
-+			 ndev->dev_addr);
- 		return;
- 	}
- 
--- 
-2.20.1
 
