@@ -2,162 +2,280 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EECC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2AAC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499942083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF3720C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563199350;
+	bh=S7OXffTe5FqOGkBXoljy59Nxs1lvp2QP0JykA4QQ3ts=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OpQqz3v8W9seFIDgtS+Bi4G+VlBvQ1N7rt/ABOp7oHPfrr90tWL90zJ5wEAW5rhUb
+	 qzcw6l7ZPXe3++Je7kI8fDYKgr0COc/bj6noHCOGTmXc8d2MYVMzO9FoVeW6VZqZK1
+	 iUT50d9mJz5i3ZFof3vaacbEYqQSF5+RfDnSKV3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387626AbfGOOCZ (ORCPT
+        id S1732664AbfGOOC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:02:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5440 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733199AbfGOOCW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:02:22 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FDvL2Y074450
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:02:21 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2trscfd3pj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:02:19 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 15 Jul 2019 15:02:16 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Jul 2019 15:02:10 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FE29an44237218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 14:02:09 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3D36B2068;
-        Mon, 15 Jul 2019 14:02:09 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 731A9B205F;
-        Mon, 15 Jul 2019 14:02:09 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.164.210])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jul 2019 14:02:09 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 2038916C8E9B; Mon, 15 Jul 2019 07:02:09 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 07:02:09 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        David Miller <davem@davemloft.net>, eladr@mellanox.com,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: INFO: rcu detected stall in ext4_write_checks
-Reply-To: paulmck@linux.ibm.com
-References: <20190706042801.GD11665@mit.edu>
- <20190706061631.GV26519@linux.ibm.com>
- <20190706150226.GG11665@mit.edu>
- <20190706180311.GW26519@linux.ibm.com>
- <20190707011655.GA22081@linux.ibm.com>
- <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
- <20190714184915.GK26519@linux.ibm.com>
- <20190715132911.GG3419@hirez.programming.kicks-ass.net>
- <CACT4Y+bmgdOExBHnLJ+jgWKWQzNK9CFT6_eTxFE3hoK=0YresQ@mail.gmail.com>
- <20190715134651.GI3419@hirez.programming.kicks-ass.net>
+        Mon, 15 Jul 2019 10:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387630AbfGOOC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:02:27 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A6620C01;
+        Mon, 15 Jul 2019 14:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563199345;
+        bh=S7OXffTe5FqOGkBXoljy59Nxs1lvp2QP0JykA4QQ3ts=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RJxlqPX5pp0Jq/TB3tph0/hEYjPKObhiSxGgFcigW8NUECasUFP19kBlllpSgJtpq
+         9f0u8AWnn5Vg1Yaj3BB7rSkiFUUm4NG3mANghxt5ksj4FmI7dpAWJ8AbzrfTLLwVOY
+         prFPF5pu4vr8mwBNE0MN2oIB++FhtZkThc3OlHSk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Matias Karhumaa <matias.karhumaa@gmail.com>,
+        Matti Kamunen <matti.kamunen@synopsys.com>,
+        Ari Timonen <ari.timonen@synopsys.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 240/249] Bluetooth: Check state in l2cap_disconnect_rsp
+Date:   Mon, 15 Jul 2019 09:46:45 -0400
+Message-Id: <20190715134655.4076-240-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715134651.GI3419@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19071514-0072-0000-0000-000004491B87
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011432; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01232545; UDB=6.00649376; IPR=6.01013847;
- MB=3.00027725; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-15 14:02:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071514-0073-0000-0000-00004CB964A3
-Message-Id: <20190715140209.GQ26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907150167
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:46:51PM +0200, Peter Zijlstra wrote:
-> On Mon, Jul 15, 2019 at 03:33:11PM +0200, Dmitry Vyukov wrote:
-> > On Mon, Jul 15, 2019 at 3:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Sun, Jul 14, 2019 at 11:49:15AM -0700, Paul E. McKenney wrote:
-> > > > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
-> > > > > But short term I don't see any other solution than stop testing
-> > > > > sched_setattr because it does not check arguments enough to prevent
-> > > > > system misbehavior. Which is a pity because syzkaller has found some
-> > > > > bad misconfigurations that were oversight on checking side.
-> > > > > Any other suggestions?
-> > > >
-> > > > Keep the times down to a few seconds?  Of course, that might also
-> > > > fail to find interesting bugs.
-> > >
-> > > Right, if syzcaller can put a limit on the period/deadline parameters
-> > > (and make sure to not write "-1" to
-> > > /proc/sys/kernel/sched_rt_runtime_us) then per the in-kernel
-> > > access-control should not allow these things to happen.
-> > 
-> > Since we are racing with emails, could you suggest a 100% safe
-> > parameters? Because I only hear people saying "safe", "sane",
-> > "well-behaving" :)
-> > If we move the check to user-space, it does not mean that we can get
-> > away without actually defining what that means.
-> 
-> Right, well, that's part of the problem. I think Paul just did the
-> reverse math and figured that 95% of X must not be larger than my
-> watchdog timeout and landed on 14 seconds.
+From: Matias Karhumaa <matias.karhumaa@gmail.com>
 
-I was actually working backwards from thw 21-second RCU CPU stall
-timeout, but there are likely many other limits to consider.
+[ Upstream commit 28261da8a26f4915aa257d12d506c6ba179d961f ]
 
-> I'm thinking 4 seconds (or rather 4.294967296) would be a very nice
-> number.
+Because of both sides doing L2CAP disconnection at the same time, it
+was possible to receive L2CAP Disconnection Response with CID that was
+already freed. That caused problems if CID was already reused and L2CAP
+Connection Request with same CID was sent out. Before this patch kernel
+deleted channel context regardless of the state of the channel.
 
-Works for me!  That should give the various RCU kthreads ample
-opportunities to execute within the RCU CPU stall timeout.
+Example where leftover Disconnection Response (frame #402) causes local
+device to delete L2CAP channel which was not yet connected. This in
+turn confuses remote device's stack because same CID is re-used without
+properly disconnecting.
 
-The rcuo callback-offload kthreads will need special handling, but if
-someone has 100 CPUs wildly generating callbacks and allocates but one
-CPU to invoke them, there is not much either the RCU or the scheduler
-can do to make that work.  ;-)
+Btmon capture before patch:
+** snip **
+> ACL Data RX: Handle 43 flags 0x02 dlen 8                #394 [hci1] 10.748949
+      Channel: 65 len 4 [PSM 3 mode 0] {chan 2}
+      RFCOMM: Disconnect (DISC) (0x43)
+         Address: 0x03 cr 1 dlci 0x00
+         Control: 0x53 poll/final 1
+         Length: 0
+         FCS: 0xfd
+< ACL Data TX: Handle 43 flags 0x00 dlen 8                #395 [hci1] 10.749062
+      Channel: 65 len 4 [PSM 3 mode 0] {chan 2}
+      RFCOMM: Unnumbered Ack (UA) (0x63)
+         Address: 0x03 cr 1 dlci 0x00
+         Control: 0x73 poll/final 1
+         Length: 0
+         FCS: 0xd7
+< ACL Data TX: Handle 43 flags 0x00 dlen 12               #396 [hci1] 10.749073
+      L2CAP: Disconnection Request (0x06) ident 17 len 4
+        Destination CID: 65
+        Source CID: 65
+> HCI Event: Number of Completed Packets (0x13) plen 5    #397 [hci1] 10.752391
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> HCI Event: Number of Completed Packets (0x13) plen 5    #398 [hci1] 10.753394
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> ACL Data RX: Handle 43 flags 0x02 dlen 12               #399 [hci1] 10.756499
+      L2CAP: Disconnection Request (0x06) ident 26 len 4
+        Destination CID: 65
+        Source CID: 65
+< ACL Data TX: Handle 43 flags 0x00 dlen 12               #400 [hci1] 10.756548
+      L2CAP: Disconnection Response (0x07) ident 26 len 4
+        Destination CID: 65
+        Source CID: 65
+< ACL Data TX: Handle 43 flags 0x00 dlen 12               #401 [hci1] 10.757459
+      L2CAP: Connection Request (0x02) ident 18 len 4
+        PSM: 1 (0x0001)
+        Source CID: 65
+> ACL Data RX: Handle 43 flags 0x02 dlen 12               #402 [hci1] 10.759148
+      L2CAP: Disconnection Response (0x07) ident 17 len 4
+        Destination CID: 65
+        Source CID: 65
+= bluetoothd: 00:1E:AB:4C:56:54: error updating services: Input/o..   10.759447
+> HCI Event: Number of Completed Packets (0x13) plen 5    #403 [hci1] 10.759386
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> ACL Data RX: Handle 43 flags 0x02 dlen 12               #404 [hci1] 10.760397
+      L2CAP: Connection Request (0x02) ident 27 len 4
+        PSM: 3 (0x0003)
+        Source CID: 65
+< ACL Data TX: Handle 43 flags 0x00 dlen 16               #405 [hci1] 10.760441
+      L2CAP: Connection Response (0x03) ident 27 len 8
+        Destination CID: 65
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+< ACL Data TX: Handle 43 flags 0x00 dlen 27               #406 [hci1] 10.760449
+      L2CAP: Configure Request (0x04) ident 19 len 19
+        Destination CID: 65
+        Flags: 0x0000
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 1013
+        Option: Retransmission and Flow Control (0x04) [mandatory]
+          Mode: Basic (0x00)
+          TX window size: 0
+          Max transmit: 0
+          Retransmission timeout: 0
+          Monitor timeout: 0
+          Maximum PDU size: 0
+> HCI Event: Number of Completed Packets (0x13) plen 5    #407 [hci1] 10.761399
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> ACL Data RX: Handle 43 flags 0x02 dlen 16               #408 [hci1] 10.762942
+      L2CAP: Connection Response (0x03) ident 18 len 8
+        Destination CID: 66
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+*snip*
 
-							Thanx, Paul
+Similar case after the patch:
+*snip*
+> ACL Data RX: Handle 43 flags 0x02 dlen 8            #22702 [hci0] 1664.411056
+      Channel: 65 len 4 [PSM 3 mode 0] {chan 3}
+      RFCOMM: Disconnect (DISC) (0x43)
+         Address: 0x03 cr 1 dlci 0x00
+         Control: 0x53 poll/final 1
+         Length: 0
+         FCS: 0xfd
+< ACL Data TX: Handle 43 flags 0x00 dlen 8            #22703 [hci0] 1664.411136
+      Channel: 65 len 4 [PSM 3 mode 0] {chan 3}
+      RFCOMM: Unnumbered Ack (UA) (0x63)
+         Address: 0x03 cr 1 dlci 0x00
+         Control: 0x73 poll/final 1
+         Length: 0
+         FCS: 0xd7
+< ACL Data TX: Handle 43 flags 0x00 dlen 12           #22704 [hci0] 1664.411143
+      L2CAP: Disconnection Request (0x06) ident 11 len 4
+        Destination CID: 65
+        Source CID: 65
+> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22705 [hci0] 1664.414009
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22706 [hci0] 1664.415007
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> ACL Data RX: Handle 43 flags 0x02 dlen 12           #22707 [hci0] 1664.418674
+      L2CAP: Disconnection Request (0x06) ident 17 len 4
+        Destination CID: 65
+        Source CID: 65
+< ACL Data TX: Handle 43 flags 0x00 dlen 12           #22708 [hci0] 1664.418762
+      L2CAP: Disconnection Response (0x07) ident 17 len 4
+        Destination CID: 65
+        Source CID: 65
+< ACL Data TX: Handle 43 flags 0x00 dlen 12           #22709 [hci0] 1664.421073
+      L2CAP: Connection Request (0x02) ident 12 len 4
+        PSM: 1 (0x0001)
+        Source CID: 65
+> ACL Data RX: Handle 43 flags 0x02 dlen 12           #22710 [hci0] 1664.421371
+      L2CAP: Disconnection Response (0x07) ident 11 len 4
+        Destination CID: 65
+        Source CID: 65
+> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22711 [hci0] 1664.424082
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22712 [hci0] 1664.425040
+        Num handles: 1
+        Handle: 43
+        Count: 1
+> ACL Data RX: Handle 43 flags 0x02 dlen 12           #22713 [hci0] 1664.426103
+      L2CAP: Connection Request (0x02) ident 18 len 4
+        PSM: 3 (0x0003)
+        Source CID: 65
+< ACL Data TX: Handle 43 flags 0x00 dlen 16           #22714 [hci0] 1664.426186
+      L2CAP: Connection Response (0x03) ident 18 len 8
+        Destination CID: 66
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+< ACL Data TX: Handle 43 flags 0x00 dlen 27           #22715 [hci0] 1664.426196
+      L2CAP: Configure Request (0x04) ident 13 len 19
+        Destination CID: 65
+        Flags: 0x0000
+        Option: Maximum Transmission Unit (0x01) [mandatory]
+          MTU: 1013
+        Option: Retransmission and Flow Control (0x04) [mandatory]
+          Mode: Basic (0x00)
+          TX window size: 0
+          Max transmit: 0
+          Retransmission timeout: 0
+          Monitor timeout: 0
+          Maximum PDU size: 0
+> ACL Data RX: Handle 43 flags 0x02 dlen 16           #22716 [hci0] 1664.428804
+      L2CAP: Connection Response (0x03) ident 12 len 8
+        Destination CID: 66
+        Source CID: 65
+        Result: Connection successful (0x0000)
+        Status: No further information available (0x0000)
+*snip*
 
-> > Now thinking of this, if we come up with some simple criteria, could
-> > we have something like a sysctl that would allow only really "safe"
-> > parameters?
-> 
-> I suppose we could do that, something like:
-> sysctl_deadline_period_{min,max}. I'll have to dig back a bit on where
-> we last talked about that and what the problems where.
-> 
-> For one, setting the min is a lot harder, but I suppose we can start at
-> TICK_NSEC or something.
+Fix is to check that channel is in state BT_DISCONN before deleting the
+channel.
+
+This bug was found while fuzzing Bluez's OBEX implementation using
+Synopsys Defensics.
+
+Reported-by: Matti Kamunen <matti.kamunen@synopsys.com>
+Reported-by: Ari Timonen <ari.timonen@synopsys.com>
+Signed-off-by: Matias Karhumaa <matias.karhumaa@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/bluetooth/l2cap_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 5406d7cd46ad..771e3e17bb6a 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -4394,6 +4394,12 @@ static inline int l2cap_disconnect_rsp(struct l2cap_conn *conn,
+ 
+ 	l2cap_chan_lock(chan);
+ 
++	if (chan->state != BT_DISCONN) {
++		l2cap_chan_unlock(chan);
++		mutex_unlock(&conn->chan_lock);
++		return 0;
++	}
++
+ 	l2cap_chan_hold(chan);
+ 	l2cap_chan_del(chan, 0);
+ 
+-- 
+2.20.1
 
