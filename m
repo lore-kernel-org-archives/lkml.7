@@ -2,135 +2,81 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AE4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AC720868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200211;
-	bh=cAUwIub1pI+rARba9PzikXlrQ0MtODg9OBKPnMzw8nY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vWHTrzv+0f2Lmb1SBtdJl20QXtfvmHslHtGkVF0Erb++g1Kp6wVRaAb//pp/sc8s
-	 IcxT2aXkg5KTECgTpRalSFD1BU8hVnCjLuh2clU2L9wsJfQh8gF+mMNTajoavKWlIw
-	 Q4a12AkUv2BooBfN8IfCt+zF2vWS+F4E8RpmySkE=
+	by mail.kernel.org (Postfix) with ESMTP id 0FF79212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389436AbfGOOQt (ORCPT
+        id S2389738AbfGOOQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34834 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:16:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1226 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389764AbfGOOQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:16:47 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4D18206B8;
-        Mon, 15 Jul 2019 14:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200206;
-        bh=cAUwIub1pI+rARba9PzikXlrQ0MtODg9OBKPnMzw8nY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTuHHsCXU1hwIbHVKbv3TDyyeWG5gJEKUB6wWrZHbGziQfnPmzJ53HFLqFhHLCA1E
-         ZDB9Hn8LzX0QqrhMCAAvXuvATEdIJehBz0wJf1czmbOB2KFfKoFFauSUtvSMKMoUP3
-         WzTNAfK96FjnmbrixTDm3kKhUhORAvTzcX42Kxxw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shijith Thotton <sthotton@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 208/219] genirq: Update irq stats from NMI handlers
-Date:   Mon, 15 Jul 2019 10:03:29 -0400
-Message-Id: <20190715140341.6443-208-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
-References: <20190715140341.6443-1-sashal@kernel.org>
+        id S1731676AbfGOOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:16:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 07:16:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
+   d="scan'208";a="167347987"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Jul 2019 07:16:36 -0700
+Date:   Mon, 15 Jul 2019 07:16:36 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
+        jingqi.liu@intel.com
+Subject: Re: [PATCH v7 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+Message-ID: <20190715141636.GB442@linux.intel.com>
+References: <20190712082907.29137-1-tao3.xu@intel.com>
+ <20190712082907.29137-3-tao3.xu@intel.com>
+ <20190712155202.GC29659@linux.intel.com>
+ <8ed3cec5-8ba9-b2ed-f0e4-eefb0a988bc8@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ed3cec5-8ba9-b2ed-f0e4-eefb0a988bc8@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shijith Thotton <sthotton@marvell.com>
+On Mon, Jul 15, 2019 at 09:22:14AM +0800, Tao Xu wrote:
+> On 7/12/2019 11:52 PM, Sean Christopherson wrote:
+> >The SDM only defines bits 31:0, and the kernel uses a u32 to cache its
+> >value.  I assume bits 63:32 are reserved?  I'm guessing we also need an
+> >SDM update...
+> >
+> 
+> The SDM define IA32_UMWAIT_CONTROL is a 32bit MSR. So need me to set 63:32
+> reserved?
 
-[ Upstream commit c09cb1293523dd786ae54a12fd88001542cba2f6 ]
+Huh, I didn't realize the SDM allows 32 bit MSRs, I assumed all bits
+needed to be explicitly defined even if the underlying implementation only
+tracked 32 bits.
 
-The NMI handlers handle_percpu_devid_fasteoi_nmi() and handle_fasteoi_nmi()
-do not update the interrupt counts. Due to that the NMI interrupt count
-does not show up correctly in /proc/interrupts.
+RDMSR:
 
-Add the statistics and treat the NMI handlers in the same way as per cpu
-interrupts and prevent them from updating irq_desc::tot_count as this might
-be corrupted due to concurrency.
+  If fewer than 64 bits are implemented in the MSR being read, the values
+  return in EDX:EAX in unimplemented bit locations are undefined.
 
-[ tglx: Massaged changelog ]
+WRMSR:
 
-Fixes: 2dcf1fbcad35 ("genirq: Provide NMI handlers")
-Signed-off-by: Shijith Thotton <sthotton@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1562313336-11888-1-git-send-email-sthotton@marvell.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/irq/chip.c    | 4 ++++
- kernel/irq/irqdesc.c | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+  Undefined or reserved bits in an MSR should be set to values previously
+  read.
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 51128bea3846..9209a60d9b85 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -748,6 +748,8 @@ void handle_fasteoi_nmi(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
-+	__kstat_incr_irqs_this_cpu(desc);
-+
- 	trace_irq_handler_entry(irq, action);
- 	/*
- 	 * NMIs cannot be shared, there is only one action.
-@@ -962,6 +964,8 @@ void handle_percpu_devid_fasteoi_nmi(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
-+	__kstat_incr_irqs_this_cpu(desc);
-+
- 	trace_irq_handler_entry(irq, action);
- 	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
- 	trace_irq_handler_exit(irq, action, res);
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 9f8a709337cf..8a93df71673d 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -945,6 +945,11 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
- 			*per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
- }
- 
-+static bool irq_is_nmi(struct irq_desc *desc)
-+{
-+	return desc->istate & IRQS_NMI;
-+}
-+
- /**
-  * kstat_irqs - Get the statistics for an interrupt
-  * @irq:	The interrupt number
-@@ -962,7 +967,8 @@ unsigned int kstat_irqs(unsigned int irq)
- 	if (!desc || !desc->kstat_irqs)
- 		return 0;
- 	if (!irq_settings_is_per_cpu_devid(desc) &&
--	    !irq_settings_is_per_cpu(desc))
-+	    !irq_settings_is_per_cpu(desc) &&
-+	    !irq_is_nmi(desc))
- 	    return desc->tot_count;
- 
- 	for_each_possible_cpu(cpu)
--- 
-2.20.1
-
+From KVM's perspective, bits 63:32 should be treated as reserved-to-zero.
+This also means that struct vcpu_vmx can track a u32 instead of a u64
+for msr_ia32_umwait_control.
