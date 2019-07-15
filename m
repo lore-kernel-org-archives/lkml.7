@@ -5,194 +5,223 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9127C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6366DC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8477720659
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F98A2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gaIqn5n2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nYfXtqFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732829AbfGOUBZ (ORCPT
+        id S1732845AbfGOUBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:01:25 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:42636 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732745AbfGOUBF (ORCPT
+        Mon, 15 Jul 2019 16:01:30 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:44997 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732711AbfGOUBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:01:05 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 21so10848532pfu.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:01:05 -0700 (PDT)
+        Mon, 15 Jul 2019 16:01:00 -0400
+Received: by mail-pg1-f201.google.com with SMTP id a21so11081479pgh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tkMY5oaKzsB1Pqxhl3bO3jhBsQDfIdKwMj02mn1y4qc=;
-        b=gaIqn5n2zaAML3AcWDxxFLtVKFE2mxwCCzBUkP/chMhNRpUHfCJwX8zK+3rutqXATC
-         /cMfRHB6XJz2FZWFr87AFUcsJfzA2tAcBQPMBEnqJuGd1netSwRImF5pTDbRRaR5DAIV
-         T1ugwqG7EHCm8uKIueDC8PA/lmKT9LjJ2DTS54K9Vjds/N3jpWykUKk2eqh7d3SC/ydY
-         5hPh6oDnA6KdmmHary9oDLdnqgXIqv7Xm9qtC1W/G4jUpfJX0kCApNeRkpiP8lmho0+z
-         pT11fdn5YiLqQyPtjadDGcE3q/uH2y/M8ax4lwKLBpRWO0cLUYgEKzii7kaOODHlHEVy
-         wI9g==
+        bh=7AN62uUjggsGkjuR8QbGPFtdpCdy/nAEaFCETV075VE=;
+        b=nYfXtqFp5FLgsTl8pZGFenfAnwsXmlefH7SI4eBPK7rsLgTBTW80J9EyEUmyu/hNt2
+         NX5HZEqJ2BSuU/Uh6ge6MS58RHOOFFWd3N24Yzd0IXbi/ypUhi5O5gT1tRnYFCa4QsHw
+         J3BbNIAqto+NfQr2Vnh9ewyGrWPdlUUAYbUNfGWd0EwCeswjvLylfuIW1hWdEGyOI8uX
+         mud0kvUHOZjqQykLAaetipJ1/EPph1jHn/GRpJJhN6GW44GhYMFwQrNWO/a0gUeidxbT
+         havga/zHmY1SkUyNyYgRDpfHWudIkh56dDfvZpYE85QVjNHh/rjk+Y8fW/X1SqzyluWH
+         Vzkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tkMY5oaKzsB1Pqxhl3bO3jhBsQDfIdKwMj02mn1y4qc=;
-        b=mbzirJrvaeyhBeezQy38rBAEzpvne4P8mwDtgWeSuGzEL+P9Muur3zW7yNeuEfk9tj
-         zkhWu20/Eu++2oeeFtgJRYPdiO8LzmFXJbrbxhF0ujDYQZ2CjqpIk0gJE9VLbT8FGlVw
-         MGQtCdWwly65qg64fyfLl/KQ28bzNDKHjgLQdVvTbK1b4fCByBfa0IGGyuacPNS+7MaG
-         iHD6U002EMwiL+GMH3SwveTjak6Ca011+a6thTsmO16BBGq76dDPgDfEmNBXTImw00JL
-         28ZlZqmxl6ZFqNijarBA/wrQL13p2TuwcM11Z7TaHGxbTseys5z3QnknviBluq6tY5/M
-         9o1Q==
-X-Gm-Message-State: APjAAAUP6qp7v0mR+ZH2tdDlWnOyPHuNqFA4ETf5FScwjweQZQgi3TO1
-        c+zzal+mR0WBnJvZAyCc4RyywSMzAWWPo4icudfZAQ==
-X-Google-Smtp-Source: APXvYqxK0dFi/fS4M8pEnYmQwGYG1r9vWj+oqdoSezkRwICSEdjfjPf9nn5i3PDLYlzh4gi//XvIQfu3ZuuF2/nRph4rPw==
-X-Received: by 2002:a65:5082:: with SMTP id r2mr3913629pgp.170.1563220864659;
- Mon, 15 Jul 2019 13:01:04 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 12:59:44 -0700
+        bh=7AN62uUjggsGkjuR8QbGPFtdpCdy/nAEaFCETV075VE=;
+        b=pIX0a3m4vidtCzv2DFQPeOSAO4DBLJ3dw17AMgzifDDQZcTQ3TOG9d7pO0E7wMumgX
+         74v8EpLoaU0pRMe/hYjAjoHJwZEQiKlCurjZ8O9YUT76mpQXCfYrCvtg3KEFNCfxAMfw
+         nYHEF9Ggfsl2AN9KyZCn6gYjXAj4McL0GEiR6IMm2AGraG9cGdvssfbnz7B3QMAQh8Xx
+         egOTQSH+XjYIoylZL0eGNAeilTcytVum4XuuPJX0d3KsUceL04dI/1iUnCubqufk6kvn
+         mYNgo8D7R4hjC2v0f6ab7YW65lS3JJWHiP3YPiC3vqjOGEu1vqWyKKJfz/jBoLbp0BXF
+         6Rzw==
+X-Gm-Message-State: APjAAAVxi4WUyEwlMSHyLCnHiAQy6AF3QDo9hfPI3C9TJ16a4+Vm87r+
+        yxZ1jvhQgZLd5LGAkJD2klpvrdpcg8v5V84v0yfZOQ==
+X-Google-Smtp-Source: APXvYqw82UEBKJiBPfo6CHgts6BJHnNBk8mmORY2P9YBkhrle331njX7YlHvBzaq4hJ9V3RAeLcJexIq9SecpHpQ0NvkbA==
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr28757422pgj.4.1563220859521;
+ Mon, 15 Jul 2019 13:00:59 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 12:59:42 -0700
 In-Reply-To: <20190715195946.223443-1-matthewgarrett@google.com>
-Message-Id: <20190715195946.223443-28-matthewgarrett@google.com>
+Message-Id: <20190715195946.223443-26-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190715195946.223443-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-Subject: [PATCH V35 27/29] tracefs: Restrict tracefs when the kernel is locked down
+Subject: [PATCH V35 25/29] kexec: Allow kexec_file() with appropriate IMA
+ policy when locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Matthew Garrett <matthewgarrett@google.com>,
         Matthew Garrett <mjg59@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tracefs may release more information about the kernel than desirable, so
-restrict it when the kernel is locked down in confidentiality mode by
-preventing open().
+Systems in lockdown mode should block the kexec of untrusted kernels.
+For x86 and ARM we can ensure that a kernel is trustworthy by validating
+a PE signature, but this isn't possible on other architectures. On those
+platforms we can use IMA digital signatures instead. Add a function to
+determine whether IMA has or will verify signatures for a given event type,
+and if so permit kexec_file() even if the kernel is otherwise locked down.
+This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
+in order to prevent an attacker from loading additional keys at runtime.
 
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
+Acked-by: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: linux-integrity@vger.kernel.org
 ---
- fs/tracefs/inode.c           | 38 +++++++++++++++++++++++++++++++++++-
- include/linux/security.h     |  1 +
- security/lockdown/lockdown.c |  1 +
- 3 files changed, 39 insertions(+), 1 deletion(-)
+ include/linux/ima.h                 |  9 ++++++
+ kernel/kexec_file.c                 | 12 +++++--
+ security/integrity/ima/ima.h        |  2 ++
+ security/integrity/ima/ima_main.c   |  2 +-
+ security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
+ 5 files changed, 72 insertions(+), 3 deletions(-)
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index eeeae0475da9..4c04c0c89514 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -20,6 +20,7 @@
- #include <linux/parser.h>
- #include <linux/magic.h>
- #include <linux/slab.h>
-+#include <linux/security.h>
- 
- #define TRACEFS_DEFAULT_MODE	0700
- 
-@@ -27,6 +28,23 @@ static struct vfsmount *tracefs_mount;
- static int tracefs_mount_count;
- static bool tracefs_registered;
- 
-+static int default_open_file(struct inode *inode, struct file *filp)
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index a20ad398d260..1c37f17f7203 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -131,4 +131,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
+ 	return 0;
+ }
+ #endif /* CONFIG_IMA_APPRAISE */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++extern bool ima_appraise_signature(enum kernel_read_file_id func);
++#else
++static inline bool ima_appraise_signature(enum kernel_read_file_id func)
 +{
-+	struct dentry *dentry = filp->f_path.dentry;
-+	struct file_operations *real_fops;
-+	int ret;
-+
-+	if (!dentry)
-+		return -EINVAL;
-+
-+	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	if (ret)
-+		return ret;
-+
-+	real_fops = dentry->d_fsdata;
-+	return real_fops->open(inode, filp);
++	return false;
 +}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+ #endif /* _LINUX_IMA_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index dd06f1070d66..13c9960a5860 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -228,9 +228,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			goto out;
+ 		}
+ 
+-		ret = security_locked_down(LOCKDOWN_KEXEC);
+-		if (ret)
++		ret = 0;
 +
- static ssize_t default_read_file(struct file *file, char __user *buf,
- 				 size_t count, loff_t *ppos)
- {
-@@ -221,6 +239,12 @@ static int tracefs_apply_options(struct super_block *sb)
++		/* If IMA is guaranteed to appraise a signature on the kexec
++		 * image, permit it even if the kernel is otherwise locked
++		 * down.
++		 */
++		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
++		    security_locked_down(LOCKDOWN_KEXEC)) {
++			ret = -EPERM;
+ 			goto out;
++		}
+ 
+ 		break;
+ 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 011b91c79351..64dcb11cf444 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -113,6 +113,8 @@ struct ima_kexec_hdr {
+ 	u64 count;
+ };
+ 
++extern const int read_idmap[];
++
+ #ifdef CONFIG_HAVE_IMA_KEXEC
+ void ima_load_kexec_buffer(void);
+ #else
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 584019728660..b9f57503af2c 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -502,7 +502,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
  	return 0;
  }
  
-+static void tracefs_destroy_inode(struct inode *inode)
+-static const int read_idmap[READING_MAX_ID] = {
++const int read_idmap[READING_MAX_ID] = {
+ 	[READING_FIRMWARE] = FIRMWARE_CHECK,
+ 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
+ 	[READING_MODULE] = MODULE_CHECK,
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 6df7f641ff66..827f1e33fe86 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1456,3 +1456,53 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ #endif	/* CONFIG_IMA_READ_POLICY */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++/*
++ * ima_appraise_signature: whether IMA will appraise a given function using
++ * an IMA digital signature. This is restricted to cases where the kernel
++ * has a set of built-in trusted keys in order to avoid an attacker simply
++ * loading additional keys.
++ */
++bool ima_appraise_signature(enum kernel_read_file_id id)
 +{
-+	if (S_ISREG(inode->i_mode))
-+		kfree(inode->i_fop);
++	struct ima_rule_entry *entry;
++	bool found = false;
++	enum ima_hooks func;
++
++	if (id >= READING_MAX_ID)
++		return false;
++
++	func = read_idmap[id] ?: FILE_CHECK;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, ima_rules, list) {
++		if (entry->action != APPRAISE)
++			continue;
++
++		/*
++		 * A generic entry will match, but otherwise require that it
++		 * match the func we're looking for
++		 */
++		if (entry->func && entry->func != func)
++			continue;
++
++		/*
++		 * We require this to be a digital signature, not a raw IMA
++		 * hash.
++		 */
++		if (entry->flags & IMA_DIGSIG_REQUIRED)
++			found = true;
++
++		/*
++		 * We've found a rule that matches, so break now even if it
++		 * didn't require a digital signature - a later rule that does
++		 * won't override it, so would be a false positive.
++		 */
++		break;
++	}
++
++	rcu_read_unlock();
++	return found;
 +}
-+
- static int tracefs_remount(struct super_block *sb, int *flags, char *data)
- {
- 	int err;
-@@ -256,6 +280,7 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
- 
- static const struct super_operations tracefs_super_operations = {
- 	.statfs		= simple_statfs,
-+	.destroy_inode  = tracefs_destroy_inode,
- 	.remount_fs	= tracefs_remount,
- 	.show_options	= tracefs_show_options,
- };
-@@ -389,6 +414,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
- {
- 	struct dentry *dentry;
- 	struct inode *inode;
-+	struct file_operations *proxy_fops;
- 
- 	if (!(mode & S_IFMT))
- 		mode |= S_IFREG;
-@@ -402,8 +428,18 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
- 	if (unlikely(!inode))
- 		return failed_creating(dentry);
- 
-+	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
-+	if (!proxy_fops)
-+		return failed_creating(dentry);
-+
-+	if (fops)
-+		fops = &tracefs_file_operations;
-+
-+	dentry->d_fsdata = (void *)fops;
-+	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
-+	proxy_fops->open = default_open_file;
- 	inode->i_mode = mode;
--	inode->i_fop = fops ? fops : &tracefs_file_operations;
-+	inode->i_fop = proxy_fops;
- 	inode->i_private = data;
- 	d_instantiate(dentry, inode);
- 	fsnotify_create(dentry->d_parent->d_inode, dentry);
-diff --git a/include/linux/security.h b/include/linux/security.h
-index d92323b44a3f..807dc0d24982 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -121,6 +121,7 @@ enum lockdown_reason {
- 	LOCKDOWN_KPROBES,
- 	LOCKDOWN_BPF_READ,
- 	LOCKDOWN_PERF,
-+	LOCKDOWN_TRACEFS,
- 	LOCKDOWN_CONFIDENTIALITY_MAX,
- };
- 
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 37ef46320ef4..fd7cdbddd814 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -36,6 +36,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_KPROBES] = "use of kprobes",
- 	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
- 	[LOCKDOWN_PERF] = "unsafe use of perf",
-+	[LOCKDOWN_TRACEFS] = "use of tracefs",
- 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
- };
- 
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
 -- 
 2.22.0.510.g264f2c817a-goog
 
