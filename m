@@ -2,84 +2,120 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC85C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC10FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B712220665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E15A2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RpIk7j3A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rC6eJWEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731943AbfGOUeS (ORCPT
+        id S1732122AbfGOUec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:34:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45481 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729505AbfGOUeS (ORCPT
+        Mon, 15 Jul 2019 16:34:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46768 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729505AbfGOUec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:34:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id g20so36254676ioc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:34:17 -0700 (PDT)
+        Mon, 15 Jul 2019 16:34:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id i10so36228952iol.13;
+        Mon, 15 Jul 2019 13:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=AAx+KCYrMtY/ELRUUN49P20LRASTzqK4lZ6I/S93X28=;
-        b=RpIk7j3AS+hWigOL4/NO0cAujJh97clQ3BtY/u3jVW6nPPtiOE+viFrVvz1BSw1jkq
-         880IhXGdnLCoHPy7+X/IKtRH1i7P5ceG2u7W5MJbkzF2OztF7v4ydbwKsHWiTTMAK0SF
-         iw4K1QKMbkgiintmdjECPloTU31lbV8Kobm9JhSUiPTFIVXKlebvDbx2ZRIyh/3IKB6a
-         xZbNPDGZbCO+yXvorzfXx5/ieunWgh7zYy/W4s8BTzoUQBeZg7vEJPlqlM1A5X85zBsh
-         iVh/hqli58GoSSj3JED7K6kjIoMdDJ3oFdKgUThYX03SmVwWru6AOF13fgiLF34Gbb1L
-         yT1A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HBie7otf80rgDGiazaDW8PBGVn1VumKxsE27SC5Sres=;
+        b=rC6eJWEwepYtls3lBXBpmXnPCiwbJl4joI/yxVusE/cMPcigm20YPxLZiAOYf/yC6i
+         jcEZOh5ERS2NzfUip2c7VhCpduwmb7Tc3a+ddiJa9zNF3lOBWX5Fg9ftQDpfDatgobpl
+         YrT/Tyl0yONCz+ecZAsUOEpYBicP5v9vHBtOKA4gJ0f5mIlx3hUOXpxwQy3us1xB9F/2
+         4fkfPSz4xK4tkiMPCO952rMKOS81FquaSzb52oM4bSCpp/Aa5WbEETwAtlX1iaPDogNh
+         hKFvNFyuiE6gSiVNvX9HPFW9Pymed5iAAPMNltJxsz9yvpPEs75d+WIku8RRM4GVmk9e
+         s/RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=AAx+KCYrMtY/ELRUUN49P20LRASTzqK4lZ6I/S93X28=;
-        b=jUkYHszcZItZQLYCaJ37ypwyN6cFSP3aw8PFUcNswNJ2oKV+eL2aaR6laDkJ5d0N42
-         QPqqnPfl+8C/ZnTfB5mpF1UliSBkiqukcMkZTRfQV/UuvbmSfU2C3fyPnmrFo6H4ZqlF
-         oJYW440AaOo0oUeW9xm4y1TICxlseKcZlYqvZ2+YBvKVLeW7nq3GNc2qS863ty7y3wyG
-         xt867oTz9EQiafgY4uWYnH1MgpyrcFIVo1kwPI7Oaq04PWG6x8cgZSPGItUJwXAGMjwj
-         IKxfmYWPwOpGJqkVz6DSvT32RC3ljb5cn8uK8gvovtmit+BLADYNi+WToGnl2wWHem6e
-         tsDA==
-X-Gm-Message-State: APjAAAXBdMxhCo/xq6m3S737W/1ev7VhgSnctsDnpCK9j1uMQSMl3bIy
-        24SLCtgx5Ye+GXJN1H+2TO/Ghw==
-X-Google-Smtp-Source: APXvYqywZfe4luOYTPj2bKAQyrauUOFxlaTpfEZs9VJMfxXbS3dpLgxSPAbPdcnwrPKuMusn2uh4OQ==
-X-Received: by 2002:a5e:d80d:: with SMTP id l13mr27309709iok.292.1563222857310;
-        Mon, 15 Jul 2019 13:34:17 -0700 (PDT)
-Received: from localhost (c-24-118-241-30.hsd1.mn.comcast.net. [24.118.241.30])
-        by smtp.googlemail.com with ESMTPSA id n22sm40057663iob.37.2019.07.15.13.34.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jul 2019 13:34:16 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH RESEND] arm64: dts: meson-g12a-sei510: enable IR controller
-In-Reply-To: <20190701115724.15801-1-narmstrong@baylibre.com>
-References: <20190701115724.15801-1-narmstrong@baylibre.com>
-Date:   Mon, 15 Jul 2019 15:34:12 -0500
-Message-ID: <7hef2ryr3v.fsf@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HBie7otf80rgDGiazaDW8PBGVn1VumKxsE27SC5Sres=;
+        b=npJ23p9vqcmj19M1KQVBvE2ZGpAW9cRMJvXRexCFkkWj8SR67Q/15x8b1lKrjjinFt
+         Eum92EYqHDgoavRcGhFZKFohWLpem8kURgVNT/wkXNcxZM4cmb8Z4IBAx+BDETAKTgEL
+         QrBOdqfpMwXXhfmu52t3tHGj+gzTvWCFdR0h04txxU4CrX5kwaM+zUtZP+57jOYWloLj
+         SBBpKjXpAAefHD9TFGdw35PpFljfzsqkZRQgwHFy9n7RIMWaV+grwCt+aZJck6DVGIqB
+         G23L8GZ8NSfdyN+jDwj+eWVaV7AK9lZ8Y4A9FxqewwmN/BtV05ji7lS+2pOE7PofcZGp
+         SF7w==
+X-Gm-Message-State: APjAAAXN63ljGhq1kU0huiwjLRIXcLOpB/wSUye754S3X7AOuWHGcaCi
+        et8CFs/VrmLttXDNce3ZcXJo6AZDR5qgmQ==
+X-Google-Smtp-Source: APXvYqzDvTSFTIC6paITsqmFwwpFSLkd7vvCTB7wHn9UFX+ASKNtctCq+iLLhMby6ygx4Rc1nYMWbg==
+X-Received: by 2002:a6b:621a:: with SMTP id f26mr21256111iog.127.1563222870832;
+        Mon, 15 Jul 2019 13:34:30 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id c81sm25401252iof.28.2019.07.15.13.34.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 13:34:29 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skunberg.kelsey@gmail.com
+Subject: [PATCH v3] PCI: Remove functions not called in include/linux/pci.h
+Date:   Mon, 15 Jul 2019 14:34:16 -0600
+Message-Id: <20190715203416.37547-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+References: <20190715181312.31403-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Remove the following uncalled functions from include/linux/pci.h:
 
-> Enable the IR receiver controller on the SEI510 board.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
+        pci_block_cfg_access()
+        pci_block_cfg_access_in_atomic()
+        pci_unblock_cfg_access()
 
-Queued for v5.3-rc,
+Functions were added in commit fb51ccbf217c ("PCI: Rework config space
+blocking services"), though no callers were added. Code continues to be
+unused and should be removed.
 
-Kevin
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+---
+
+Changes since v1:
+  - Fixed Signed-off-by line to show full name
+
+Changes since v2:
+  - Change commit message to reference prior commit properly with the
+    following format:
+	commit <12-character sha prefix> ("<commit message>")
+
+ include/linux/pci.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index cf380544c700..3c9ba6133bea 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
+ 
+ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ 
+-static inline void pci_block_cfg_access(struct pci_dev *dev) { }
+-static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
+-{ return 0; }
+-static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
+-
+ static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
+ { return NULL; }
+ static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
+-- 
+2.20.1
 
