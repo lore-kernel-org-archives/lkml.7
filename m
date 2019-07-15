@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4F4C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BB5C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5067620C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969B621537
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197951;
-	bh=VRgrytHTVCFlT5csoh3aKEF0uzbhluzYmPoRtKfok/0=;
+	s=default; t=1563197953;
+	bh=Fvb/B/ZkadAFgu13GC6Ecqxc7DWyO5rwggfJfhzi+m8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UzVgDUKpoiqVTD3WvBfpB/qfhRnecVgs9/9QBiIL2oPMeG3awv1hIR8JLTGr/VEoN
-	 ntecapg9TL3wVNIkkvR67q6G+oATpE2bbi+GnOfKrm+lVmYenTBEVSzSrhu2w1Wxkm
-	 ZOveyNE6G+uB4veHcmQBzyUB4ICPLjqnudX0KHuE=
+	b=ZToETPu4LS0vAkWPz4/shSsEL9P4CqeINWnVdV2vh1igH9GpQVRs9Whetiv31U8ET
+	 WQCJFQV9hdGOpXLxXQGAb76+2TqShNhosBw65di06Y5YMsoayBkffqu9Snf+RHaXx8
+	 h+H/X7UwnZDkMohHwOlR7EZEW+vsbAXxVjv5/eoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbfGONjJ (ORCPT
+        id S1731157AbfGONjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:39:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731151AbfGONjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 09:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730370AbfGONjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:39:03 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A7622080A;
-        Mon, 15 Jul 2019 13:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D4602086C;
+        Mon, 15 Jul 2019 13:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197947;
-        bh=VRgrytHTVCFlT5csoh3aKEF0uzbhluzYmPoRtKfok/0=;
+        s=default; t=1563197942;
+        bh=Fvb/B/ZkadAFgu13GC6Ecqxc7DWyO5rwggfJfhzi+m8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2qDO6XlVoBnFHHBoTge6FS8J2kZA2pFSSGonP4Jk3qkoZsBxqRku3cY8TAqpBzzg
-         rQM46VMrJtGPuiNLPhRqh/JevI9Gdgbv7LZiCWcPmPCoJPpvMWx4AVLrrkxuKpVJF2
-         bQjDhjTly5HslCj2FK2lvnddj32zxWR4TE6PX7F8=
+        b=m2uba879++0BQXS/WabZ84p+abCcCukleFzi4b2hmrYbCXSjKOK/0eesxK0EEGh0p
+         Cbm5X1nKGMr1qpVNYpg5EmiwczPD//xi0i6OpUKLzlwgqE51xiupaq9llXv23kxQnL
+         P57J3cU1aSSVDC50j2Y+OrzA90W0JxEctcPmsFaE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Gomez <dagmcr@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com,
         Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 020/219] media: spi: IR LED: add missing of table registration
-Date:   Mon, 15 Jul 2019 09:34:52 -0400
-Message-Id: <20190715133811.2441-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 019/219] media: dvb: usb: fix use after free in dvb_usb_device_exit
+Date:   Mon, 15 Jul 2019 09:34:51 -0400
+Message-Id: <20190715133811.2441-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133811.2441-1-sashal@kernel.org>
 References: <20190715133811.2441-1-sashal@kernel.org>
@@ -61,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Gomez <dagmcr@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 24e4cf770371df6ad49ed873f21618d9878f64c8 ]
+[ Upstream commit 6cf97230cd5f36b7665099083272595c55d72be7 ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
-OF mathing mechanism and register it.
+dvb_usb_device_exit() frees and uses the device name in that order.
+Fix by storing the name in a buffer before freeing it.
 
-Before this patch:
-modinfo drivers/media/rc/ir-spi.ko  | grep alias
-
-After this patch:
-modinfo drivers/media/rc/ir-spi.ko  | grep alias
-alias:          of:N*T*Cir-spi-ledC*
-alias:          of:N*T*Cir-spi-led
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
 Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/ir-spi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
-index 66334e8d63ba..c58f2d38a458 100644
---- a/drivers/media/rc/ir-spi.c
-+++ b/drivers/media/rc/ir-spi.c
-@@ -161,6 +161,7 @@ static const struct of_device_id ir_spi_of_match[] = {
- 	{ .compatible = "ir-spi-led" },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, ir_spi_of_match);
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index 99951e02a880..dd063a736df5 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -287,12 +287,15 @@ EXPORT_SYMBOL(dvb_usb_device_init);
+ void dvb_usb_device_exit(struct usb_interface *intf)
+ {
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+-	const char *name = "generic DVB-USB module";
++	const char *default_name = "generic DVB-USB module";
++	char name[40];
  
- static struct spi_driver ir_spi_driver = {
- 	.probe = ir_spi_probe,
+ 	usb_set_intfdata(intf, NULL);
+ 	if (d != NULL && d->desc != NULL) {
+-		name = d->desc->name;
++		strscpy(name, d->desc->name, sizeof(name));
+ 		dvb_usb_exit(d);
++	} else {
++		strscpy(name, default_name, sizeof(name));
+ 	}
+ 	info("%s successfully deinitialized and disconnected.", name);
+ 
 -- 
 2.20.1
 
