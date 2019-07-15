@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E7C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE73C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE8720651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559E32083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198559;
-	bh=EJrmTFq8qPLA23Rps+5UrYy0QiP0pC4wxMdMrJYK50o=;
+	s=default; t=1563198562;
+	bh=2MT316orRpKV/zz0pt5fGQlodNtGuYB5QOV1wiMuewY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zHjlVhw3D1Gyb6m7OIAIJRD3pqcrxXAK4Dw0RclUrj4oVNiVERywZZHCISMj1oMG0
-	 qpD7/VYbKYwsBzdzffFGV1Kvbn1KYIf2aj98amE40DtIs2f2pN79ZEeQ1YpZilKtTA
-	 H/7eKEa80rCksySDFHdkj5ed3DM+MEa8wQm0Pf7U=
+	b=2OFccloQ3whik5qgp++i92ar7hyiCZ6H3ai6FsDtksxP+cNxn1aGK+UiZL9IWPzpD
+	 feK04+Wp6uXQlAia6pO9NVDvoBD0tf+3CtdIgHz4JVLl6AKlDQsurzHekruVuxTj1V
+	 yREreTTa5LGDUqAmaX8DueC7xAtihhpwbZjwV+e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfGONtS (ORCPT
+        id S1731713AbfGONtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32768 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:49:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731693AbfGONtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:49:16 -0400
+        id S1730996AbfGONtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:49:18 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 160FD20651;
-        Mon, 15 Jul 2019 13:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 114262067C;
+        Mon, 15 Jul 2019 13:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198555;
-        bh=EJrmTFq8qPLA23Rps+5UrYy0QiP0pC4wxMdMrJYK50o=;
+        s=default; t=1563198557;
+        bh=2MT316orRpKV/zz0pt5fGQlodNtGuYB5QOV1wiMuewY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=naAilg34zetJPIU1cA5Y51FKWOqGXhSNeb3Me/Jt11V0icaX3tKF53CLm3kUQzsIR
-         4o98GtV//JzPEtBOZ/ooeabmWjpIaHQapGFQy6QWxA7qmC3RGCSVlDBjY05a0mzUVy
-         EFTJNH72+yTntSI9L9BjKJ1xBXtnM0lgP6xSrUsE=
+        b=woq3kK208csxKkxgg2v2p7tqtmPsNw4hrx193c6KEERaH4/ICIm8CR5nAc+I8VWUk
+         bGznHD4QKD+qhB/SBveXnqg1SSYSuce6s2nlTQurH1OeJLsY3usbfS5ewUDXvQgKpX
+         FLGaqHZ95lrpEhDPJpJKUS5iog8UqlIwrOdWbx9w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     sumitg <sumitg@nvidia.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 043/249] media: v4l2-core: fix use-after-free error
-Date:   Mon, 15 Jul 2019 09:43:28 -0400
-Message-Id: <20190715134655.4076-43-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fscrypt@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 044/249] fscrypt: clean up some BUG_ON()s in block encryption/decryption
+Date:   Mon, 15 Jul 2019 09:43:29 -0400
+Message-Id: <20190715134655.4076-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,91 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: sumitg <sumitg@nvidia.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 3e0f724346e96daae7792262c6767449795ac3b5 ]
+[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
 
-Fixing use-after-free within __v4l2_ctrl_handler_setup().
-Memory is being freed with kfree(new_ref) for duplicate
-control reference entry but ctrl->cluster pointer is still
-referring to freed duplicate entry resulting in error on
-access. Change done to update cluster pointer only when new
-control reference is added.
+Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
+and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
+fscrypt_crypt_block() so that it's done for both encryption and
+decryption, not just encryption.
 
- ==================================================================
- BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
- Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
-
- Allocated by task 312:
-
- Freed by task 312:
-
- The buggy address belongs to the object at ffffffc324e78600
-  which belongs to the cache kmalloc-64 of size 64
- The buggy address is located 24 bytes inside of
-  64-byte region [ffffffc324e78600, ffffffc324e78640)
- The buggy address belongs to the page:
- page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
-					(null) index:0xffffffc324e78f80
- flags: 0x4000000000000100(slab)
- raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
- raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
- page dumped because: kasan: bad access detected
-
- Memory state around the buggy address:
-  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                             ^
-  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
- ==================================================================
-
-Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ fs/crypto/crypto.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 7d3a33258748..3c720f54efa8 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -2149,15 +2149,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
- 	if (size_extra_req)
- 		new_ref->p_req.p = &new_ref[1];
+diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+index 335a362ee446..6f753198eeef 100644
+--- a/fs/crypto/crypto.c
++++ b/fs/crypto/crypto.c
+@@ -154,7 +154,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
+ 	struct crypto_skcipher *tfm = ci->ci_ctfm;
+ 	int res = 0;
  
--	if (ctrl->handler == hdl) {
--		/* By default each control starts in a cluster of its own.
--		   new_ref->ctrl is basically a cluster array with one
--		   element, so that's perfect to use as the cluster pointer.
--		   But only do this for the handler that owns the control. */
--		ctrl->cluster = &new_ref->ctrl;
--		ctrl->ncontrols = 1;
--	}
+-	BUG_ON(len == 0);
++	if (WARN_ON_ONCE(len <= 0))
++		return -EINVAL;
++	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
++		return -EINVAL;
+ 
+ 	fscrypt_generate_iv(&iv, lblk_num, ci);
+ 
+@@ -238,8 +241,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 	struct page *ciphertext_page = page;
+ 	int err;
+ 
+-	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
 -
- 	INIT_LIST_HEAD(&new_ref->node);
+ 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
+ 		/* with inplace-encryption we just encrypt the page */
+ 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
+@@ -251,7 +252,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 		return ciphertext_page;
+ 	}
  
- 	mutex_lock(hdl->lock);
-@@ -2190,6 +2181,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
- 	hdl->buckets[bucket] = new_ref;
- 	if (ctrl_ref)
- 		*ctrl_ref = new_ref;
-+	if (ctrl->handler == hdl) {
-+		/* By default each control starts in a cluster of its own.
-+		 * new_ref->ctrl is basically a cluster array with one
-+		 * element, so that's perfect to use as the cluster pointer.
-+		 * But only do this for the handler that owns the control.
-+		 */
-+		ctrl->cluster = &new_ref->ctrl;
-+		ctrl->ncontrols = 1;
-+	}
+-	BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page)))
++		return ERR_PTR(-EINVAL);
  
- unlock:
- 	mutex_unlock(hdl->lock);
+ 	ctx = fscrypt_get_ctx(gfp_flags);
+ 	if (IS_ERR(ctx))
+@@ -299,8 +301,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
+ int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
+ 			unsigned int len, unsigned int offs, u64 lblk_num)
+ {
+-	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
+-		BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page) &&
++			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
++		return -EINVAL;
+ 
+ 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
+ 				      len, offs, GFP_NOFS);
 -- 
 2.20.1
 
