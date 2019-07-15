@@ -2,221 +2,129 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E66DC73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6156EC73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B1320C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2633720C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Zn7MMKTG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HKUWpvyh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYpuhAds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfGOCaq (ORCPT
+        id S1728975AbfGOCdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 22:30:46 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:41513 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726025AbfGOCap (ORCPT
+        Sun, 14 Jul 2019 22:33:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33578 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfGOCdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 22:30:45 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4827F2438;
-        Sun, 14 Jul 2019 22:30:44 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 14 Jul 2019 22:30:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=8PAqwlgjdusJcJsV/ER++KrpN/QjUb2
-        C+McWIpc95aI=; b=Zn7MMKTG/N0hIAqpr6U2P3rR8uuih0dpktX5UP23GxBiqKb
-        IGq6Mu5YcLnJIAxNsYZg9fpMdKVLX+4jPgNpSdRiy3o4M8EQAtl5MaIWyDuF9QAm
-        kntRmYY9LydzG3kOyRDebZN1ZSzwoCDcCtAtfHb/ersKcB5W3g/maymJRiWgqrB9
-        X3IpJtQ8Z35klRtN+fJvZbpRgyoq7Q9IFt97ATA733OvBC9xM2Gi7k32JUKfTW9q
-        3YjnMoizzpTHg8FCvruuV4rTF9AQrmuqAbZVCKLZfHkZfbNWDvJJUjO+/Xi6ExX0
-        uid+AiW5y/M933n5uasEL/a6Il8L2svkaKomZtA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8PAqwl
-        gjdusJcJsV/ER++KrpN/QjUb2C+McWIpc95aI=; b=HKUWpvyhh5HjlEXQ6PnAt9
-        LpFcYzeykPSA7yiyLihVw0GUoc1aQ/2A49XiPxOwMs3Bc0x2H6NFz0ThyafkXPMf
-        caJazejBSLzCMzPqNduLp31hniMgl5zeuqozHCoRNWUfSe8KbejWB/cFbhsezkI4
-        iNJXN7gHsZD2vo4xNuItJtf56p9+nAbtqrvDuCG5b0Sk92ZAmrBJzXvKVnwqsJVk
-        URBX/iCM7gjyeb1t21TcKLzLInPCXisGHtRJzpa967X4ZxLj53iErveQkzsOj4ij
-        sVQe8Zm2yIQRihKjDSqjqLUS70IPCOInjC5R+JU5+fy/Ui1uGCCFpkNTpjxGp/yg
-        ==
-X-ME-Sender: <xms:UuUrXZQIHtCvu8L0EFuL5VK5wZkueralwqJ-7qRNZyaCQlnCkqkQWA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrheejgdeffecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
-    hinhepsghoohhtlhhinhdrtghomhdpuggvvhhitggvthhrvggvrdhorhhgnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrh
-    fuihiivgeptd
-X-ME-Proxy: <xmx:UuUrXc2p2HFO4fIvPUthNItjF-iEv3Uw-kOVSQPdOo5PVgHJp7BzOQ>
-    <xmx:UuUrXTzGdH5Ae_5p9EwuNR1Hs46Ks1guoCO3vHcyUJhJLxxYkkMGmw>
-    <xmx:UuUrXYwyEAMIvev_3xEU_XwF0jr81pklcAWuDkexuZeAdG54yw9VAQ>
-    <xmx:VOUrXcfV9pE5yGkvpr2ppxUq4JYI9NYjE2gYtsssTyY_CiEak84BLg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 495A7E00CC; Sun, 14 Jul 2019 22:30:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <5c831fd3-d0e2-474b-8a6e-8f51f92fbdf8@www.fastmail.com>
-In-Reply-To: <20190712131028.ba4d4jetg4btsx4u@flea>
-References: <20190712033214.24713-1-andrew@aj.id.au>
- <20190712033214.24713-2-andrew@aj.id.au>
- <20190712131028.ba4d4jetg4btsx4u@flea>
-Date:   Mon, 15 Jul 2019 12:00:51 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Maxime Ripard" <maxime.ripard@bootlin.com>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>, mark.rutland@arm.com,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Ryan Chen" <ryanchen.aspeed@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document Aspeed SD controller
-Content-Type: text/plain
+        Sun, 14 Jul 2019 22:33:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g2so6705197pfq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 19:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KjOgtmjAShvysCpnJPF+GHktVC67BkBC8WbgBwfjF9A=;
+        b=vYpuhAdsW6W+p45fSG94mKzFXf1BQLw9uNlLvr5fhEzMg5PPydZpFKzl1QwxIaayMF
+         yO5wntR7n78E6Ug4UnuR+rE6LCNUk9P5+A9kiUcYSSWml1haJ7IQUkrWNDkcPHEasdmW
+         bAwvu0pp+llO5zrDwYpHW2z3kHOfBZRGQSQ0FRVNVSk+wkGmbnd72nGMLzPeJ3tYrkvf
+         Oz3YdeYig6J3VRdep2Pn9jAc3OOaHEOG2v/Y8UtI6IMQLIjFzdQP2Xlr7N6e2Y97tHpo
+         z7iGUbonZdrLS8UsYl/LuheMCDDRqZL53UzDrfAY9Q3plb7sN29SwLb4dIYysYohw4uT
+         Vnxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KjOgtmjAShvysCpnJPF+GHktVC67BkBC8WbgBwfjF9A=;
+        b=d7Dko1QW345+j/eUonDqpd/3D/9hs4yx8/f7GwCRN5rfycDU4HHrblcSvSjoG+2K8o
+         Mk/MlcQK4cxAzEb6A20gKdeAmut2/0ke4GIfDz7vBTUET9yaNvGinAp1se3oXhsSCWr/
+         4vcC6bdA+7c1brFklL0qt31yTmKNCwfmZfqceV40Csij/Knji9b/iAecYiBqhnnjkZ57
+         fNB+juhEorc8/lSiHjoM2z58itarxOIkQ/To5JASRRBM8gCj5yowoDEFRb+Jsx0Vi5aF
+         Grc58JV8kH2HPMzflwLqS8+FPwr2TdLG7RSeDHnjegEuLxapy3DcSq6gxKu4CQrXqs6H
+         ZmDg==
+X-Gm-Message-State: APjAAAWM/nwUdlMknkSwtE1sFWTXb4mqV/f50IByGUTNK+plu3oViQhV
+        Cm63o1fnH6FaZjwb9uFwZ6Y=
+X-Google-Smtp-Source: APXvYqz3nVnYpZn7aGyfcOtT67ia8899EWaxY+MCycp7jxkqNSVbDSJvuqTtwiMYtfVCusiba0IpgA==
+X-Received: by 2002:a63:e24c:: with SMTP id y12mr23736283pgj.81.1563158022541;
+        Sun, 14 Jul 2019 19:33:42 -0700 (PDT)
+Received: from localhost ([39.7.59.60])
+        by smtp.gmail.com with ESMTPSA id d17sm1148446pgl.66.2019.07.14.19.33.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 14 Jul 2019 19:33:41 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 11:33:38 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Konstantin Khlebnikov <koct9i@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] kernel/printk: prevent deadlock at calling kmsg_dump
+ from NMI context
+Message-ID: <20190715023338.GB3653@jagdpanzerIV>
+References: <156294329676.1745.2620297516210526183.stgit@buzz>
+ <20190713060929.GB1038@tigerII.localdomain>
+ <CALYGNiPedT3wyZ3CrvJra=382g6ETUvrhirHJMb29XkBA3uMyg@mail.gmail.com>
+ <20190713131947.GA4464@tigerII.localdomain>
+ <CALYGNiPp8546yGcC-TYSVq5X9tnPmrQsDecZxZ2smex9zKB5wg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALYGNiPp8546yGcC-TYSVq5X9tnPmrQsDecZxZ2smex9zKB5wg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Fri, 12 Jul 2019, at 22:41, Maxime Ripard wrote:
-> Hi,
-> 
-> On Fri, Jul 12, 2019 at 01:02:13PM +0930, Andrew Jeffery wrote:
-> > The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
-> > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> > data bus if only a single slot is enabled.
+On (07/13/19 17:03), Konstantin Khlebnikov wrote:
+> > We call kmsg_dump(KMSG_DUMP_PANIC) after smp_send_stop() and after
+> > printk_safe_flush_on_panic(). printk_safe_flush_on_panic() resets
+> > the state of logbuf_lock, so logbuf_lock, in general case, should
+> > be unlocked by the time we call kmsg_dump(KMSG_DUMP_PANIC).
+> > Even for nested contexts.
 > >
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> > In v2:
+> >         CPU0
+> >         printk()
+> >          logbuf_lock_irqsave(flags)
+> >           -> NMI
+> >            panic()
+> >             smp_send_stop()
+> >              printk_safe_flush_on_panic()
+> >               raw_spin_lock_init(&logbuf_lock) << reinit >>
+> >             kmsg_dump(KMSG_DUMP_PANIC)
+> >              logbuf_lock_irqsave(flags)        << expected to be OK >>
 > >
-> > * Rename to aspeed,sdhci.yaml
-> > * Rename sd-controller compatible
-> > * Add `maxItems: 1` for reg properties
-> > * Move sdhci subnode description to patternProperties
-> > * Drop sdhci compatible requirement
-> > * #address-cells and #size-cells are required
-> > * Prevent additional properties
-> > * Implement explicit ranges in example
-> > * Remove slot property
+> > So do we have strong reasons to disable NMI->panic->kmsg_dump(DUMP_PANIC)?
 > >
-> >  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 90 +++++++++++++++++++
-> >  1 file changed, 90 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> > new file mode 100644
-> > index 000000000000..67a691c3348c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> > @@ -0,0 +1,90 @@
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ASPEED SD/SDIO/eMMC Controller
-> > +
-> > +maintainers:
-> > +  - Andrew Jeffery <andrew@aj.id.au>
-> > +  - Ryan Chen <ryanchen.aspeed@gmail.com>
-> > +
-> > +description: |+
-> > +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
-> > +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
-> > +  only a single slot is enabled.
-> > +
-> > +  The two slots are supported by a common configuration area. As the SDHCIs for
-> > +  the slots are dependent on the common configuration area, they are described
-> > +  as child nodes.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum: [ aspeed,ast2400-sd-controller, aspeed,ast2500-sd-controller ]
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: Common configuration registers
-> > +  ranges: true
-> > +  clocks:
-> > +    maxItems: 1
-> > +    description: The SD/SDIO controller clock gate
+> > Other kmsg_dump(), maybe, can experience some troubles sometimes,
+> > need to check that.
 > 
-> #address-cells and #size-cells have not been described here.
+> Indeed, panic is especially handled and looks fine.
 > 
-> > +patternProperties:
-> > +  "^sdhci@[0-9a-f]+$":
-> > +    type: object
-> > +    properties:
-> > +      compatible:
-> > +        enum: [ aspeed,ast2400-sdhci, aspeed,ast2500-sdhci ]
-> > +      reg:
-> > +        maxItems: 1
-> > +        description: The SDHCI registers
-> > +      clocks:
-> > +        maxItems: 1
-> > +        description: The SD bus clock
-> > +      interrupts:
-> > +        maxItems: 1
-> > +        description: The SD interrupt shared between both slots
-> > +    required:
-> > +      - compatible
-> > +      - reg
-> > +      - clocks
-> > +      - interrupts
-> > +
-> > +additionalProperties: false
+> Sanity check in my patch could be relaxed:
 > 
-> But that means that it will generate a warning in your DT if you ever
-> use them.
-> 
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - ranges
-> > +  - clocks
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/aspeed-clock.h>
-> > +    sdc@1e740000 {
-> > +            compatible = "aspeed,ast2500-sd-controller";
-> > +            reg = <0x1e740000 0x100>;
-> > +            #address-cells = <1>;
-> > +            #size-cells = <1>;
-> 
-> Starting with your example.
+>        if (WARN_ON_ONCE(reason != KMSG_DUMP_PANIC && in_nmi()))
+>                return;
 
-Heh, right. Thanks. I was inspecting the output of the `dt_binding_check` and
-`dtbs_check` make targets, though maybe I overlooked this. The aspeed dtsis
-do generate a quite a number of warnings which make it hard to parse, so I'm
-going to send a series to clean that up too.
+How critical kmsg_dump() is? We deadlock only if NMI->kmsg_dump()
+happens on the CPU which already holds the logbuf_lock; in any
+other case logbuf_lock is owned by another CPU which is expected
+to unlock it eventually. So it doesn't look like disabling all
+NMI->kmsg_dump() is the only way to fix it.
 
-Andrew
+When we lock logbuf_lock we increment per-CPU printk_context
+(PRINTK_SAFE_CONTEXT_MASK bits); when we unlock logbuf_lock
+we decrement printk_context. Thus we always can tell if the
+logbuf_lock was locked on the very same CPU - this_cpu printk_context
+has PRINTK_SAFE_CONTEXT_MASK bits sets - and we are about to deadlock
+in a nested context (NMI), or the lock was locked on another CPU and
+it's "safe" to spin on logbuf_lock and wait for logbuf_lock to become
+available.
 
-> 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
-> Attachments:
-> * signature.asc
+	-ss
