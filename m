@@ -2,322 +2,516 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13183C7618E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92DDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C936E20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB4B214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kcaGto+k"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UP0uGiHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfGOHsm (ORCPT
+        id S1729310AbfGOHss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 03:48:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50377 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfGOHsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 03:48:42 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v15so14097435wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 00:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=i0QXQRrN6RhRZnvaWbhvCAiXQYTHsysyFi/snkm39ak=;
-        b=kcaGto+kb9nUbbxwEavJfBH3qyZm9rw+VNpXaASRkcEB4IXpBx3vmUgOwWuEZzk+EO
-         lLrF8t+KpC/4UqhyVfJ/uGdU+7ih3PYqzbUyjBAbk1rRckLgvgK5HnpvBFsJC/qDv8k4
-         FVfs3DIPll2BnKW3WIbbBhDdfmRdzid4a/AuXhAhk90tAxsZG5jWRo7/lP7SsUtubpyh
-         HLOtRIB2Q0lszvFTZjj1si9h7FpSqUqorLRN1Rk20jFc4F+XTukwKta2A5+E2zlQISow
-         xkJwZbgfjl/21P/Z+1sEv9XfiOhFWiG+mc5uquwE2ltT6eErdTkP7Uc7FRKkVLciJGVc
-         4Hpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=i0QXQRrN6RhRZnvaWbhvCAiXQYTHsysyFi/snkm39ak=;
-        b=rNiZmke2VSt20so+7FrIbJTHW1WOo/zLAmFaa1xQuIAkAPgwsEDwj77th0BJh0Wiy2
-         X8pWG8d98k69reEB1ruRex6gqcHHpb45l+IVLcopmWcOXxvY+AzfyQAaUxhHXEXFhZvT
-         Z2ZhnwFu5L+RlLkv8NT2USryNw843UKELt+gSbp2p1zrrvWuB7P4oU0wBI+A9uvgaxMs
-         VUz3M2a6f3VBIiUSlGrrBI9j/DCf7ah5iBu3idBvI/gBjPuV1BqkVyc6S8kwZD8iNqim
-         XRrNOqTJbSFsfwHueB24DUX41OHopeBei+i3A+TfVLNvGBtzIA4ihrtvqPgubxGgVoy4
-         swjg==
-X-Gm-Message-State: APjAAAXNdQLB51ZbDpRJUuk5zC6TjBb1dLbmkHlfFwMM3g5DwXXbjaTJ
-        Gl0g3uFdVjg36MM/pMPvUGuh/n3+B1s=
-X-Google-Smtp-Source: APXvYqyM0OwqhVewvK73SoHG/lt5PyqsSZfbnVCcxLuOXYa89/B768jLb6hQ7yr44nd5fPJKGs88uA==
-X-Received: by 2002:a1c:a5c2:: with SMTP id o185mr22564776wme.172.1563176918143;
-        Mon, 15 Jul 2019 00:48:38 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id b5sm12753689wru.69.2019.07.15.00.48.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jul 2019 00:48:37 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 08:48:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MFD for v5.3
-Message-ID: <20190715074835.GC4401@dell>
+        Mon, 15 Jul 2019 03:48:48 -0400
+Received: from mail-eopbgr20049.outbound.protection.outlook.com ([40.107.2.49]:39001
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726948AbfGOHsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 03:48:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gzy2IXOxWfIuJhOnRvU5plwoPT1FdnIvKm3Nb2ij2ODMrFA79DtSVqNTdVS/nE+WV1ZM8066jPaa8T0oa8+G5Muvw2GLFUVxPuGCznHMoq8Tfbti3f4zybYMBzw0D5LelwDyFA8uvaPNoA/z4oH/V8pcXDyIkhLH7MItYft9fvewwOTYUvRZwV8QmwEe6XdJ3IOpnkpnBj+O2/C8uitDElWYCY2r+2h3Gs0Rs+R42L5RgVxgYPvKM/XzFeYySqiR2TU3zjoEtcYzueVIxgWsnYt80auv0t2MUzN1GUn6UDeLN/GZ1Fvu4vYhqX/5BnexmVyvLloW8XpzUucB/ABO/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VwLHAtC93b+6gFtqlofBl+kbImbQexi66cq5ipQg72s=;
+ b=LC3zCbyMBGS9BHFZN/Ch+3lrva/uFbfOW7ZFhdAQs7XyiFhNW5jf1ehevAY2OAlRLDO6uyLByM/8RVb6BLPzb4AF+6wXgSXADcKMvL0UAIEjJbOKLTrEZAqp/VQsa/1arDf2rHIT3d1YGfyrbHd7bpuEFvlroGHWXck0gIqFuBV3frOudvulKTZ/wkudBEsipapNImyAXdosxXheLsGIMIqY1+V9kQ9Q02uQOOd1ErByqSxMzpGYTdUFg6ix+1v/3IdRdHTufY/KCBDf0iG4HX3QbcJ/AhOj8UZ4U6Hu+e4/lF90SZdOc8iwucFZZ/y93ZYReaOHVlCoC4MiLOfrbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VwLHAtC93b+6gFtqlofBl+kbImbQexi66cq5ipQg72s=;
+ b=UP0uGiHquY4R0AqgWj5oYPOgpnki70Cls9hJyXelaW3g+m7b9IivNFtrfZMvpXb4JESS7hdNMN8nG0RuXj8mSqDY6eWR+rY9JSjP/Gy7ojU/a3fDO15EQ+uMt24NWdaWBkq2rOlQcduW2IcXHQT1Pc6VRUSxOGmsD4XuR/mzJ+0=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4538.eurprd04.prod.outlook.com (52.135.134.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.10; Mon, 15 Jul 2019 07:48:36 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::413e:84ea:f3bb:40bd]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::413e:84ea:f3bb:40bd%5]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
+ 07:48:36 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: RE: [EXT] Re: [v3,1/2] rtc/fsl: add FTM alarm driver as the wakeup
+ source
+Thread-Topic: [EXT] Re: [v3,1/2] rtc/fsl: add FTM alarm driver as the wakeup
+ source
+Thread-Index: AQHVN/eHsG2LuP6l8ECMTPX15gaoUKbJEvAAgAHyrzA=
+Date:   Mon, 15 Jul 2019 07:48:35 +0000
+Message-ID: <DB7PR04MB449082EBF037005EF97429458FCF0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190711143748.10808-1-biwen.li@nxp.com>
+ <20190713212504.GE4732@piout.net>
+In-Reply-To: <20190713212504.GE4732@piout.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa04e0cd-1919-470c-dbb7-08d708f8d7f4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4538;
+x-ms-traffictypediagnostic: DB7PR04MB4538:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB7PR04MB4538BF46CDF9DD690ADFB3788FCF0@DB7PR04MB4538.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(199004)(189003)(14444005)(256004)(8936002)(966005)(33656002)(99286004)(478600001)(76176011)(7696005)(14454004)(45080400002)(54906003)(316002)(66946007)(64756008)(66446008)(66556008)(76116006)(66476007)(446003)(26005)(6506007)(186003)(7736002)(6306002)(3846002)(6116002)(102836004)(68736007)(6436002)(6246003)(9686003)(53936002)(55016002)(2906002)(6916009)(229853002)(11346002)(44832011)(305945005)(52536014)(5660300002)(486006)(476003)(66066001)(4326008)(81166006)(86362001)(25786009)(8676002)(81156014)(74316002)(30864003)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4538;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NnSILWrfEmzIIpD/AfGFUGrCxuEECRtlkY19S7ehAoE68nl+8pohKscejXI5UdRqDlE637GpIDhMhD9p1Bqon4IrnSDxFVePTu6aLRwi1siRCSYQp1xGRhuiFPiIEROp4DHLb3xsF6szTf+oagumoGaIZhbdwVltvY806tXFs+RdjIgIWoxGbDRiXnjPxHg2qSpXDuwrfOHyVDvXcS5zHGmiCz7lRa/3cc2SE2dvW5KFuGYR/2qk9/sskB5Ips3qy67kPmFPAfAcGt2KrEOTkVVCtsWqV/IR1qgsLAnVXirvD0R8dHgI3787xq4lZeqLc9i/KuqT3Swj9oBq5YOlvFE970ics85vovpDZCEiPEoYA5/YPKCBm4ZqfXzrOaqk6J5qCvoA/k41FexC+bPu9uaXEv8xFTjYMfg9gW8+4HU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa04e0cd-1919-470c-dbb7-08d708f8d7f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 07:48:35.9447
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: biwen.li@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4538
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good morning Linus,
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-5.3
-
-for you to fetch changes up to 7efd105c27fd2323789b41b64763a0e33ed79c08:
-
-  mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk (2019-07-02 12:11:31 +0100)
-
-----------------------------------------------------------------
- - Core Frameworks
-   - Set 'struct device' fwnode when registering a new device
-
- - New Drivers
-   - Add support for ROHM BD70528 PMIC
-
- - New Device Support
-   - Add support for LP87561 4-Phase Regulator to TI LP87565 PMIC
-   - Add support for RK809 and RK817 to Rockchip RK808
-   - Add support for Lid Angle to ChromeOS core
-   - Add support for CS47L15 CODEC to Madera core
-   - Add support for CS47L92 CODEC to Madera core
-   - Add support for ChromeOS (legacy) Accelerometers in ChromeOS core
-   - Add support for Add Intel Elkhart Lake PCH to Intel LPSS
-
- - New Functionality
-   - Provide regulator supply information when registering; madera-core
-   - Additional Device Tree support; lp87565, madera, cros-ec, rohm,bd71837-pmic
-   - Allow over-riding power button press via Device Tree; rohm-bd718x7
-   - Differentiate between running processors; cros_ec_dev
-
- - Fix-ups
-   - Big header file update; cros_ec_commands.h
-   - Split header per-subsystem; rohm-bd718x7
-   - Remove superfluous code; menelaus, cs5535-mfd, cs47lXX-tables
-   - Trivial; sorting, coding style; intel-lpss-pci
-   - Only remove Power Off functionality if set locally; rk808
-   - Make use for Power Off Prepare(); rk808
-   - Fix spelling mistake in header guards; stmfx
-   - Properly free IDA resources
-   - SPDX fixups; cs47lXX-tables, madera
-   - Error path fixups; hi655x-pmic
-
- - Bug Fixes
-   - Add missing break in case() statement
-   - Repair undefined behaviour when not initialising variables; arizona-core, madera-core
-   - Fix reference to Device Tree documentation; madera
-
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      mfd: menelaus: Remove superfluous error message
-
-Andy Shevchenko (4):
-      mfd: intel-lpss: Keep device tables sorted by ID
-      MAINAINERS: Swap words in INTEL PMIC MULTIFUNCTION DEVICE DRIVERS
-      mfd: intel-lpss: Add Intel Elkhart Lake PCH PCI IDs
-      mfd: intel-lpss: Release IDA resources
-
-Arnd Bergmann (1):
-      mfd: arizona: Fix undefined behavior
-
-Axel Lin (1):
-      mfd: hi655x-pmic: Fix missing return value check for devm_regmap_init_mmio_clk
-
-Charles Keepax (3):
-      mfd: madera: Add supply mapping for MICVDD
-      mfd: madera: Remove some unused registers and fix some defaults
-      mfd: madera: Fixup SPDX headers
-
-Colin Ian King (1):
-      regulator: lp87565: Fix missing break in switch statement
-
-Daniel Gomez (1):
-      mfd: madera: Add missing of table registration
-
-Gwendal Grignou (32):
-      mfd: cros_ec: Update license term
-      mfd: cros_ec: Zero BUILD_ macro
-      mfd: cros_ec: set comments properly
-      mfd: cros_ec: add ec_align macros
-      mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
-      mfd: cros_ec: use BIT macro
-      mfd: cros_ec: Update ACPI interface definition
-      mfd: cros_ec: move HDMI CEC API definition
-      mfd: cros_ec: Remove zero-size structs
-      mfd: cros_ec: Add Flash V2 commands API
-      mfd: cros_ec: Add PWM_SET_DUTY API
-      mfd: cros_ec: Add lightbar v2 API
-      mfd: cros_ec: Expand hash API
-      mfd: cros_ec: Add EC transport protocol v4
-      mfd: cros_ec: Complete MEMS sensor API
-      mfd: cros_ec: Fix event processing API
-      mfd: cros_ec: Add fingerprint API
-      mfd: cros_ec: Fix temperature API
-      mfd: cros_ec: Complete Power and USB PD API
-      mfd: cros_ec: Add API for keyboard testing
-      mfd: cros_ec: Add Hibernate API
-      mfd: cros_ec: Add Smart Battery Firmware update API
-      mfd: cros_ec: Add I2C passthru protection API
-      mfd: cros_ec: Add API for EC-EC communication
-      mfd: cros_ec: Add API for Touchpad support
-      mfd: cros_ec: Add API for Fingerprint support
-      mfd: cros_ec: Add API for rwsig
-      mfd: cros_ec: Add SKU ID and Secure storage API
-      mfd: cros_ec: Add Management API entry points
-      mfd: cros_ec: Update I2S API
-      mfd: cros_ec: Register cros_ec_lid_angle driver when presented
-      mfd: cros_ec_dev: Register cros_ec_accel_legacy driver as a subdevice
-
-Heiko Stuebner (1):
-      regulator: rk808: Add RK809 and RK817 support.
-
-Keerthy (3):
-      dt-bindings: mfd: lp87565: Add LP87561 configuration
-      mfd: lp87565: Add support for 4-phase LP87561 combination
-      regulator: lp87565: Add 4-phase lp87561 regulator support
-
-Lee Jones (1):
-      Merge branches 'ib-mfd-clk-gpio-power-regulator-rtc-5.3', 'ib-mfd-clk-regulator-rtc-5.3', 'ib-mfd-cros-5.3' and 'ib-mfd-regulator-5.3' into ibs-for-mfd-merged
-
-Leonard Crestez (3):
-      mfd: bd718x7: Remove hardcoded config for button press duration
-      dt-bindings: mfd: Document short/long press duration for BD718X7
-      mfd: bd718x7: Make power button press duration configurable
-
-Lubomir Rintel (1):
-      mfd: cs5535-mfd: Remove ifdef OLPC noise
-
-Matti Vaittinen (8):
-      mfd: regulator: clk: Split rohm-bd718x7.h
-      mfd: bd70528: Support ROHM bd70528 PMIC core
-      clk: bd718x7: Support ROHM BD70528 clk block
-      dt-bindings: mfd: Document first ROHM BD70528 bindings
-      gpio: Initial support for ROHM bd70528 GPIO block
-      rtc: bd70528: Initial support for ROHM bd70528 RTC
-      power: supply: Initial support for ROHM BD70528 PMIC charger block
-      dt-bindings: mfd: Add link to ROHM BD71847 Datasheet
-
-Nathan Chancellor (1):
-      mfd: stmfx: Fix macro definition spelling
-
-Otto Sabart (1):
-      mfd: madera: Fix bad reference to pinctrl.txt file
-
-Pi-Hsun Shih (2):
-      dt-bindings: Add binding for cros-ec-rpmsg
-      mfd: cros_ec: differentiate SCP from EC by feature bit
-
-Richard Fitzgerald (3):
-      mfd: madera: Update DT bindings to add additional CODECs
-      mfd: madera: Add Madera core support for CS47L15
-      mfd: madera: Add Madera core support for CS47L92
-
-Robert Hancock (1):
-      mfd: core: Set fwnode for created devices
-
-Stefan Mavrodiev (2):
-      mfd: rk808: Check pm_power_off pointer
-      mfd: rk808: Prepare rk805 for poweroff
-
-Stuart Henderson (1):
-      mfd: madera: Fix potential uninitialised use of variable
-
-Tony Xie (4):
-      mfd: rk808: Add RK817 and RK809 support
-      dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
-      rtc: rk808: Add RK809 and RK817 support.
-      clk: RK808: Add RK809 and RK817 support.
-
- Documentation/devicetree/bindings/mfd/cros-ec.txt  |    5 +-
- Documentation/devicetree/bindings/mfd/lp87565.txt  |   36 +
- Documentation/devicetree/bindings/mfd/madera.txt   |    8 +-
- Documentation/devicetree/bindings/mfd/rk808.txt    |   44 +
- .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  |  102 +
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |   10 +
- MAINTAINERS                                        |    2 +-
- drivers/clk/Kconfig                                |   15 +-
- drivers/clk/clk-bd718x7.c                          |   24 +-
- drivers/clk/clk-rk808.c                            |   64 +-
- drivers/gpio/Kconfig                               |   11 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-bd70528.c                        |  232 ++
- drivers/mfd/Kconfig                                |   37 +-
- drivers/mfd/Makefile                               |    8 +
- drivers/mfd/arizona-core.c                         |    2 +-
- drivers/mfd/cros_ec_dev.c                          |   92 +-
- drivers/mfd/cs47l15-tables.c                       | 1299 +++++++
- drivers/mfd/cs47l35-tables.c                       |   60 +-
- drivers/mfd/cs47l85-tables.c                       |  128 +-
- drivers/mfd/cs47l90-tables.c                       |   82 +-
- drivers/mfd/cs47l92-tables.c                       | 1947 +++++++++++
- drivers/mfd/cs5535-mfd.c                           |   24 +-
- drivers/mfd/hi655x-pmic.c                          |    2 +
- drivers/mfd/intel-lpss-pci.c                       |   21 +-
- drivers/mfd/intel-lpss.c                           |    1 +
- drivers/mfd/lp87565.c                              |    4 +
- drivers/mfd/madera-core.c                          |  129 +-
- drivers/mfd/madera-i2c.c                           |   24 +-
- drivers/mfd/madera-spi.c                           |   24 +-
- drivers/mfd/madera.h                               |   13 +
- drivers/mfd/menelaus.c                             |    2 -
- drivers/mfd/mfd-core.c                             |    1 +
- drivers/mfd/rk808.c                                |  257 +-
- drivers/mfd/rohm-bd70528.c                         |  316 ++
- drivers/mfd/rohm-bd718x7.c                         |   80 +-
- drivers/power/supply/Kconfig                       |    9 +
- drivers/power/supply/Makefile                      |    1 +
- drivers/power/supply/bd70528-charger.c             |  743 ++++
- drivers/regulator/Kconfig                          |    4 +-
- drivers/regulator/bd718x7-regulator.c              |   25 +-
- drivers/regulator/lp87565-regulator.c              |   18 +-
- drivers/regulator/rk808-regulator.c                |  646 +++-
- drivers/rtc/Kconfig                                |   12 +-
- drivers/rtc/Makefile                               |    1 +
- drivers/rtc/rtc-bd70528.c                          |  500 +++
- drivers/rtc/rtc-rk808.c                            |   68 +-
- include/linux/mfd/cros_ec.h                        |    1 +
- include/linux/mfd/cros_ec_commands.h               | 3658 ++++++++++++++++----
- include/linux/mfd/lp87565.h                        |    2 +
- include/linux/mfd/madera/core.h                    |   12 +-
- include/linux/mfd/madera/pdata.h                   |    9 +-
- include/linux/mfd/madera/registers.h               |  286 +-
- include/linux/mfd/rk808.h                          |  177 +
- include/linux/mfd/rohm-bd70528.h                   |  408 +++
- include/linux/mfd/rohm-bd718x7.h                   |   22 +-
- include/linux/mfd/rohm-generic.h                   |   20 +
- include/linux/mfd/stmfx.h                          |    2 +-
- sound/soc/codecs/cros_ec_codec.c                   |    8 +-
- 59 files changed, 10439 insertions(+), 1300 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
- create mode 100644 drivers/gpio/gpio-bd70528.c
- create mode 100644 drivers/mfd/cs47l15-tables.c
- create mode 100644 drivers/mfd/cs47l92-tables.c
- create mode 100644 drivers/mfd/rohm-bd70528.c
- create mode 100644 drivers/power/supply/bd70528-charger.c
- create mode 100644 drivers/rtc/rtc-bd70528.c
- create mode 100644 include/linux/mfd/rohm-bd70528.h
- create mode 100644 include/linux/mfd/rohm-generic.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Hi,
+>=20
+> On 11/07/2019 22:37:48+0800, Biwen Li wrote:
+> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile index
+> > 9d997fa..5cccb07 100644
+> > --- a/drivers/rtc/Makefile
+> > +++ b/drivers/rtc/Makefile
+> > @@ -79,6 +79,7 @@ obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) +=3D
+> rtc-hid-sensor-time.o
+> >  obj-$(CONFIG_RTC_DRV_HYM8563)        +=3D rtc-hym8563.o
+> >  obj-$(CONFIG_RTC_DRV_IMXDI)  +=3D rtc-imxdi.o
+> >  obj-$(CONFIG_RTC_DRV_IMX_SC) +=3D rtc-imx-sc.o
+> > +obj-$(CONFIG_RTC_DRV_FSL_FTM_ALARM)  +=3D rtc-fsl-ftm-alarm.o
+>=20
+> This file is sorted alphabetically.
+I will correct it in v4.
+>=20
+> >  obj-$(CONFIG_RTC_DRV_ISL12022)       +=3D rtc-isl12022.o
+> >  obj-$(CONFIG_RTC_DRV_ISL12026)       +=3D rtc-isl12026.o
+> >  obj-$(CONFIG_RTC_DRV_ISL1208)        +=3D rtc-isl1208.o
+> > diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c
+> > b/drivers/rtc/rtc-fsl-ftm-alarm.c new file mode 100644 index
+> > 0000000..4fd0d6b
+> > --- /dev/null
+> > +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+> > @@ -0,0 +1,347 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Freescale FlexTimer Module (FTM) alarm device driver.
+> > + *
+> > + * Copyright 2014 Freescale Semiconductor, Inc.
+> > + * Copyright 2019 NXP
+> > + *
+> > + */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/fsl/ftm.h>
+> > +#include <linux/rtc.h>
+> > +#include <linux/time.h>
+> > +
+> > +#define FTM_SC_CLK(c)                ((c) <<
+> FTM_SC_CLK_MASK_SHIFT)
+> > +
+> > +/*
+> > + * Select Fixed frequency clock (32KHz) as clock source
+> > + * of FlexTimer Module
+> > + */
+> > +#define FTM_SC_CLKS_FIXED_FREQ       0x02
+> > +#define FIXED_FREQ_CLK               32000
+> > +
+> > +/* Select 128 (2^7) as divider factor */
+> > +#define MAX_FREQ_DIV         (1 << FTM_SC_PS_MASK)
+> > +
+> > +/* Maximum counter value in FlexTimer's CNT registers */
+> > +#define MAX_COUNT_VAL                0xffff
+> > +
+> > +struct ftm_rtc {
+> > +     struct rtc_device *rtc_dev;
+> > +     void __iomem *base;
+> > +     bool big_endian;
+> > +     u32 alarm_freq;
+> > +};
+> > +
+> > +static inline u32 rtc_readl(struct ftm_rtc *dev, u32 reg) {
+> > +     if (dev->big_endian)
+> > +             return ioread32be(dev->base + reg);
+> > +     else
+> > +             return ioread32(dev->base + reg); }
+> > +
+> > +static inline void rtc_writel(struct ftm_rtc *dev, u32 reg, u32 val)
+> > +{
+> > +     if (dev->big_endian)
+> > +             iowrite32be(val, dev->base + reg);
+> > +     else
+> > +             iowrite32(val, dev->base + reg); }
+> > +
+> > +static inline void ftm_counter_enable(struct ftm_rtc *rtc) {
+> > +     u32 val;
+> > +
+> > +     /* select and enable counter clock source */
+> > +     val =3D rtc_readl(rtc, FTM_SC);
+> > +     val &=3D ~(FTM_SC_PS_MASK | FTM_SC_CLK_MASK);
+> > +     val |=3D (FTM_SC_PS_MASK |
+> FTM_SC_CLK(FTM_SC_CLKS_FIXED_FREQ));
+> > +     rtc_writel(rtc, FTM_SC, val);
+> > +}
+> > +
+> > +static inline void ftm_counter_disable(struct ftm_rtc *rtc) {
+> > +     u32 val;
+> > +
+> > +     /* disable counter clock source */
+> > +     val =3D rtc_readl(rtc, FTM_SC);
+> > +     val &=3D ~(FTM_SC_PS_MASK | FTM_SC_CLK_MASK);
+> > +     rtc_writel(rtc, FTM_SC, val);
+> > +}
+> > +
+> > +static inline void ftm_irq_acknowledge(struct ftm_rtc *rtc) {
+> > +     unsigned int timeout =3D 100;
+> > +
+> > +     /*
+> > +      *Fix errata A-007728 for flextimer
+> > +      *      If the FTM counter reaches the FTM_MOD value between
+> > +      *      the reading of the TOF bit and the writing of 0 to
+> > +      *      the TOF bit, the process of clearing the TOF bit
+> > +      *      does not work as expected when FTMx_CONF[NUMTOF] !=3D 0
+> > +      *      and the current TOF count is less than
+> FTMx_CONF[NUMTOF].
+> > +      *      If the above condition is met, the TOF bit remains set.
+> > +      *      If the TOF interrupt is enabled (FTMx_SC[TOIE] =3D 1),the
+> > +      *      TOF interrupt also remains asserted.
+> > +      *
+> > +      *      Above is the errata discription
+> > +      *
+> > +      *      In one word: software clearing TOF bit not works when
+> > +      *      FTMx_CONF[NUMTOF] was seted as nonzero and FTM
+> counter
+> > +      *      reaches the FTM_MOD value.
+> > +      *
+> > +      *      The workaround is clearing TOF bit until it works
+> > +      *      (FTM counter doesn't always reache the FTM_MOD anyway),
+> > +      *      which may cost some cycles.
+> > +      */
+> > +     while ((FTM_SC_TOF & rtc_readl(rtc, FTM_SC)) && timeout--)
+> > +             rtc_writel(rtc, FTM_SC, rtc_readl(rtc, FTM_SC) &
+> > +(~FTM_SC_TOF)); }
+> > +
+> > +static inline void ftm_irq_enable(struct ftm_rtc *rtc) {
+> > +     u32 val;
+> > +
+> > +     val =3D rtc_readl(rtc, FTM_SC);
+> > +     val |=3D FTM_SC_TOIE;
+> > +     rtc_writel(rtc, FTM_SC, val);
+> > +}
+> > +
+> > +static inline void ftm_irq_disable(struct ftm_rtc *rtc) {
+> > +     u32 val;
+> > +
+> > +     val =3D rtc_readl(rtc, FTM_SC);
+> > +     val &=3D ~FTM_SC_TOIE;
+> > +     rtc_writel(rtc, FTM_SC, val);
+> > +}
+> > +
+> > +static inline void ftm_reset_counter(struct ftm_rtc *rtc) {
+> > +     /*
+> > +      * The CNT register contains the FTM counter value.
+> > +      * Reset clears the CNT register. Writing any value to COUNT
+> > +      * updates the counter with its initial value, CNTIN.
+> > +      */
+> > +     rtc_writel(rtc, FTM_CNT, 0x00);
+> > +}
+> > +
+> > +static void ftm_clean_alarm(struct ftm_rtc *rtc) {
+> > +     ftm_counter_disable(rtc);
+> > +
+> > +     rtc_writel(rtc, FTM_CNTIN, 0x00);
+> > +     rtc_writel(rtc, FTM_MOD, ~0U);
+> > +
+> > +     ftm_reset_counter(rtc);
+> > +}
+> > +
+> > +static irqreturn_t ftm_rtc_alarm_interrupt(int irq, void *dev) {
+> > +     struct ftm_rtc *rtc =3D dev;
+> > +
+> > +     ftm_irq_acknowledge(rtc);
+> > +     ftm_irq_disable(rtc);
+> > +     ftm_clean_alarm(rtc);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int ftm_rtc_alarm_irq_enable(struct device *dev,
+> > +             unsigned int enabled)
+> > +{
+> > +     struct ftm_rtc *rtc =3D dev_get_drvdata(dev);
+> > +
+> > +     if (enabled)
+> > +             ftm_irq_enable(rtc);
+> > +     else
+> > +             ftm_irq_disable(rtc);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * Note:
+> > + *   The function is not really getting time from the RTC
+> > + *   since FlexTimer is not a RTC device, but we need to
+> > + *   get time to setup alarm, so we are using system time
+> > + *   for now.
+> > + */
+> > +static int ftm_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +     struct timespec64 ts64;
+> > +     unsigned long local_time;
+> > +
+> > +     ktime_get_real_ts64(&ts64);
+> > +     local_time =3D (unsigned long)(ts64.tv_sec -
+> > + (sys_tz.tz_minuteswest * 60));
+>=20
+> The RTC time is in UTC time, you should not care about the timezone here.
+I will correct it in v4.
+>=20
+> > +
+> > +     rtc_time_to_tm(local_time, tm);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int ftm_rtc_read_alarm(struct device *dev, struct rtc_wkalrm
+> > +*alm) {
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * 1. Select fixed frequency clock (32KHz) as clock source;
+> > + * 2. Select 128 (2^7) as divider factor;
+> > + * So clock is 250 Hz (32KHz/128).
+> > + *
+> > + * 3. FlexTimer's CNT register is a 32bit register,
+> > + * but the register's 16 bit as counter value,it's other 16 bit
+> > + * is reserved.So minimum counter value is 0x0,maximum counter
+> > + * value is 0xffff.
+> > + * So max alarm value is 262 (65536 / 250) seconds  */ static int
+> > +ftm_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm) {
+> > +     struct rtc_time tm;
+> > +     unsigned long now, alm_time, cycle;
+> > +     struct ftm_rtc *rtc =3D dev_get_drvdata(dev);
+> > +
+> > +     ftm_rtc_read_time(dev, &tm);
+> > +     rtc_tm_to_time(&tm, &now);
+> > +     rtc_tm_to_time(&alm->time, &alm_time);
+> > +
+> > +     ftm_clean_alarm(rtc);
+> > +     cycle =3D (alm_time - now) * rtc->alarm_freq;
+> > +     if (cycle > MAX_COUNT_VAL) {
+> > +             pr_err("Out of alarm range {0~262} seconds.\n");
+> > +             return -EINVAL;
+>=20
+> Use -ERANGE here.
+I will correct it in v4.
+>=20
+> > +     }
+> > +
+> > +     ftm_irq_disable(rtc);
+> > +
+> > +     /*
+> > +      * The counter increments until the value of MOD is reached,
+> > +      * at which point the counter is reloaded with the value of CNTIN=
+.
+> > +      * The TOF (the overflow flag) bit is set when the FTM counter
+> > +      * changes from MOD to CNTIN. So we should using the cycle - 1.
+> > +      */
+> > +     rtc_writel(rtc, FTM_MOD, cycle - 1);
+> > +
+> > +     ftm_counter_enable(rtc);
+> > +     ftm_irq_enable(rtc);
+> > +
+> > +     return 0;
+> > +
+> > +}
+> > +
+> > +static const struct rtc_class_ops ftm_rtc_ops =3D {
+> > +     .read_time              =3D ftm_rtc_read_time,
+> > +     .read_alarm             =3D ftm_rtc_read_alarm,
+> > +     .set_alarm              =3D ftm_rtc_set_alarm,
+> > +     .alarm_irq_enable       =3D ftm_rtc_alarm_irq_enable,
+> > +};
+> > +
+> > +static int ftm_rtc_probe(struct platform_device *pdev) {
+> > +     struct device_node *np =3D pdev->dev.of_node;
+> > +     struct resource *r;
+> > +     int irq;
+> > +     int ret;
+> > +     struct ftm_rtc *rtc;
+> > +
+> > +     rtc =3D devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+> > +     if (unlikely(!rtc)) {
+> > +             pr_err("ftm: cannot alloc memery for rtc\n");
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     platform_set_drvdata(pdev, rtc);
+> > +
+> > +     r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +     if (!r) {
+> > +             pr_err("ftm: cannot get resource for rtc\n");
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     rtc->base =3D devm_ioremap_resource(&pdev->dev, r);
+> > +     if (IS_ERR(rtc->base)) {
+> > +             pr_err("ftm: cannot ioremap resource for rtc\n");
+> > +             return PTR_ERR(rtc->base);
+> > +     }
+> > +
+> > +     irq =3D irq_of_parse_and_map(np, 0);
+> > +     if (irq <=3D 0) {
+> > +             pr_err("ftm: unable to get IRQ from DT, %d\n", irq);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     rtc->big_endian =3D of_property_read_bool(np, "big-endian");
+> > +
+> > +     ret =3D devm_request_irq(&pdev->dev, irq, ftm_rtc_alarm_interrupt=
+,
+> > +                            IRQF_NO_SUSPEND,
+> dev_name(&pdev->dev),
+> > + rtc);
+>=20
+> There is a possible race condition here. As soon as devm_request_irq is c=
+alled,
+> the interrupt handler may be called leading to a null pointer dereference
+> because rtc->rtc_dev is not yet allocated. Please use devm_rtc_allocate_d=
+evice
+> and rtc_register_device to solve that.
+I will request irq after calling devm_rtc_device_register in v4.
+>=20
+> > +     if (ret < 0) {
+> > +             dev_err(&pdev->dev, "failed to request irq\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     rtc->alarm_freq =3D (u32)FIXED_FREQ_CLK / (u32)MAX_FREQ_DIV;
+> > +
+> > +     ftm_clean_alarm(rtc);
+> > +
+>=20
+> Do you really need to remove the alarm here?
+Needn't,register's value of flextimer is 0 when reset.I will remove it in v=
+4.
+>=20
+> > +     device_init_wakeup(&pdev->dev, true);
+> > +     rtc->rtc_dev =3D devm_rtc_device_register(&pdev->dev, "ftm-alarm"=
+,
+> > +
+> &ftm_rtc_ops,
+> > +
+> THIS_MODULE);
+> > +     if (IS_ERR(rtc->rtc_dev)) {
+> > +             dev_err(&pdev->dev, "can't register rtc device\n");
+> > +             return PTR_ERR(rtc->rtc_dev);
+> > +     }
+> > +     return ret;
+> > +}
+> > +
+> > +static const struct of_device_id ftm_rtc_match[] =3D {
+> > +     { .compatible =3D "fsl,ls1012a-ftm-alarm", },
+> > +     { .compatible =3D "fsl,ls1021a-ftm-alarm", },
+> > +     { .compatible =3D "fsl,ls1043a-ftm-alarm", },
+> > +     { .compatible =3D "fsl,ls1046a-ftm-alarm", },
+> > +     { .compatible =3D "fsl,ls1088a-ftm-alarm", },
+> > +     { .compatible =3D "fsl,ls208xa-ftm-alarm", },
+> > +     { .compatible =3D "fsl,ls1028a-ftm-alarm", },
+> > +     { },
+> > +};
+> > +
+> > +static struct platform_driver ftm_rtc_driver =3D {
+> > +     .probe          =3D ftm_rtc_probe,
+> > +     .driver         =3D {
+> > +             .name   =3D "ftm-alarm",
+> > +             .of_match_table =3D ftm_rtc_match,
+> > +     },
+> > +};
+> > +
+> > +static int __init ftm_alarm_init(void) {
+> > +     return platform_driver_register(&ftm_rtc_driver);
+> > +}
+> > +
+> > +/*
+> > + * Ensure that the driver is initialized after
+> > + * any real rtc driver
+> > + *   - The flextimer is not a real rtc device,
+> > + *     it don't have time and date registers of rtc.
+> > + *   - The flextimer rtc alarm driver gets time from wall time,
+> > + *     but the wall time is not ready.so the time from the driver is w=
+rong.
+> > + *   - If system regist it before any other real rtc device,it will
+> > + *     be emulated as rtc0,date command will read wrong time for user.
+> > + */
+> > +device_initcall_sync(ftm_alarm_init);
+>=20
+> No, please register that as a regular RTC driver and stop using RTC_HCTOS=
+YS or
+> use the DT aliases to ensure it is not used as the primary RTC.
+I will register that as a regular RTC driver in v4.
+>=20
+> > +
+> > +MODULE_DESCRIPTION("NXP/Freescale FlexTimer alarm driver");
+> > +MODULE_AUTHOR("Biwen Li <biwen.li@nxp.com>");
+> MODULE_LICENSE("GPL");
+> > --
+> > 2.7.4
+> >
+>=20
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbootl=
+in.
+> com&amp;data=3D02%7C01%7Cbiwen.li%40nxp.com%7C4e834acfe10d4480c30
+> 308d707d89428%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63
+> 6986499109183286&amp;sdata=3DfPH%2BL%2Bp7tQOk8HmGZjd%2Bjj8r0s%2
+> Bix9lD%2B9HWLXpuk2M%3D&amp;reserved=3D0
