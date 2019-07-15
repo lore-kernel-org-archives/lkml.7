@@ -2,134 +2,129 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0ABC73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8B2C74A44
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81C120868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6796214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:26:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFsY4oNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfGOBWS (ORCPT
+        id S1729023AbfGOB0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 21:22:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:17201 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfGOBWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 21:22:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jul 2019 18:22:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,492,1557212400"; 
-   d="scan'208";a="160946445"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.203]) ([10.239.196.203])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jul 2019 18:22:15 -0700
-Subject: Re: [PATCH v7 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-3-tao3.xu@intel.com>
- <20190712155202.GC29659@linux.intel.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <8ed3cec5-8ba9-b2ed-f0e4-eefb0a988bc8@intel.com>
-Date:   Mon, 15 Jul 2019 09:22:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 14 Jul 2019 21:26:00 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37707 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfGOB0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 21:26:00 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f17so13475785wme.2;
+        Sun, 14 Jul 2019 18:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MXtprjYX3LMZPcPvIkCQpHQOi7CXiEJzMLuO2MOHDFY=;
+        b=JFsY4oNs0InJ0zKTLAT5/DNZA3GeQ5vUGlzj4vJoyukxjE9wh31D0X5E2dFcXBkuu9
+         5baYD+BB44bzldFblCMubnJYeJQHfm+bo8qvYWrq7FCoCCyNcEos9rL8vCxW80743jj4
+         djzYr+jT48v68VGOmXfKBu3szUoeqTYbIoQcYpMzOKVoMpyiZN+psoOl5RnCea+QznzW
+         u/GrX5TTepNy2ZGNckHIRJWkEtOBfIPZsFJnVrI6VK85cFq90YQ0oV33WqMnvuGZRV4N
+         5HhfV9vrDA1aLeatn8qE221SvZsxUuJzvEFhzSgrEuapTnXcocerUWiLIDXfdgvxUkZJ
+         VDfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MXtprjYX3LMZPcPvIkCQpHQOi7CXiEJzMLuO2MOHDFY=;
+        b=DNX1pTWBCiEWhroEWUAJRCDdNUOhXN1W+yKcYjiHdjqLr/ofhVIdnvYbbp6KB45nvK
+         Fa/X+elZB5M5OcbpBWwRbdlSgJ6OadZX1Oq1+WT0+XIj6c/rSttW0yQaiBrz0wS3djrc
+         agFYBZ7pzzLJ+DjxDfcYFKlQaiadbfxWzSoBR4uD2fgULti7SVue420lfPko1OiRKk2Y
+         7RuA/YrX7Oj72t/bGA1BtpbAx2yT4ogT6NwbMNlYoE1wubw6Pv1dhoo6MPv7ckFNbWak
+         Z0cL7Xsfs87UZAog0j1UPBsMatbPts5c4eGTMywtTmv2TbxA8o9TDmBYjabCaoAGhHJ6
+         Qe5g==
+X-Gm-Message-State: APjAAAVenMoK/7whlCGPlyuAdFu40PH/BaUq/Lcv9YT/LPc85RO2oSps
+        b1TZtTykqh3bDgsf1q478JHBQ1vEx2irAPyzfeg=
+X-Google-Smtp-Source: APXvYqySfMIGh9QaP384gEwM9t69jEpaX7PiQK1qs9kxdiu7h7Kj/FqkvR6LDKFq42u1aaGMZWWhp3rmBxjL7I8ruZg=
+X-Received: by 2002:a05:600c:204c:: with SMTP id p12mr20916333wmg.121.1563153957506;
+ Sun, 14 Jul 2019 18:25:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190712155202.GC29659@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1563087801-7373-1-git-send-email-wang6495@umn.edu>
+In-Reply-To: <1563087801-7373-1-git-send-email-wang6495@umn.edu>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Mon, 15 Jul 2019 09:25:46 +0800
+Message-ID: <CACVXFVOXZCtYtt3UuYBa7OYHEwsMkYFznfpL=1q9HkJV8xcx0Q@mail.gmail.com>
+Subject: Re: [PATCH] blk-mq: fix a memory leak bug
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/2019 11:52 PM, Sean Christopherson wrote:
-> On Fri, Jul 12, 2019 at 04:29:06PM +0800, Tao Xu wrote:
->> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
->> index 6a204e7336c1..631152a67c6e 100644
->> --- a/arch/x86/kernel/cpu/umwait.c
->> +++ b/arch/x86/kernel/cpu/umwait.c
->> @@ -15,7 +15,8 @@
->>    * Cache IA32_UMWAIT_CONTROL MSR. This is a systemwide control. By default,
->>    * umwait max time is 100000 in TSC-quanta and C0.2 is enabled
->>    */
->> -static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
->> +u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLE);
->> +EXPORT_SYMBOL_GPL(umwait_control_cached);
-> 
-> It'd probably be better to add an accessor to expose umwait_control_cached
-> given that umwait.c is using {READ,WRITE}_ONCE() and there shouldn't be a
-> need to write it outside of umwait.c.
-> 
+On Sun, Jul 14, 2019 at 3:04 PM Wenwen Wang <wang6495@umn.edu> wrote:
+>
+> From: Wenwen Wang <wenwen@cs.uga.edu>
+>
+> In blk_mq_init_allocated_queue(), a kernel buffer is allocated through
+> kcalloc_node() to hold hardware dispatch queues in the request queue 'q',
+> i.e., 'q->queue_hw_ctx'.  Later on, if the blk-mq device has no scheduler
+> set, a scheduler will be initialized through elevator_init_mq(). If this
+> initialization fails, blk_mq_init_allocated_queue() needs to be terminated
+> with an error code returned to indicate this failure. However, the
+> allocated buffer is not freed on this execution path, leading to a memory
+> leak bug. Moreover, the required cleanup work is also missed on this path.
+>
+> To fix the above issues, free the allocated buffer and invoke the cleanup
+> functions.
+>
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> ---
+>  block/blk-mq.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index e5ef40c..04fe077 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2845,6 +2845,8 @@ static unsigned int nr_hw_queues(struct blk_mq_tag_set *set)
+>  struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+>                                                   struct request_queue *q)
+>  {
+> +       int ret = -ENOMEM;
+> +
 
-OKay
+The above isn't necessary because the function always returns
+ERR_PTR(-ENOMEM) in case of failure.
 
->>   /*
->>    * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR in
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index f411c9ae5589..0787f140d155 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -1676,6 +1676,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   #endif
->>   	case MSR_EFER:
->>   		return kvm_get_msr_common(vcpu, msr_info);
->> +	case MSR_IA32_UMWAIT_CONTROL:
->> +		if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
->> +			return 1;
->> +
->> +		msr_info->data = vmx->msr_ia32_umwait_control;
->> +		break;
->>   	case MSR_IA32_SPEC_CTRL:
->>   		if (!msr_info->host_initiated &&
->>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->> @@ -1838,6 +1844,16 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>   			return 1;
->>   		vmcs_write64(GUEST_BNDCFGS, data);
->>   		break;
->> +	case MSR_IA32_UMWAIT_CONTROL:
->> +		if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
->> +			return 1;
->> +
->> +		/* The reserved bit IA32_UMWAIT_CONTROL[1] should be zero */
->> +		if (data & BIT_ULL(1))
->> +			return 1;
->> +
->> +		vmx->msr_ia32_umwait_control = data;
-> 
-> The SDM only defines bits 31:0, and the kernel uses a u32 to cache its
-> value.  I assume bits 63:32 are reserved?  I'm guessing we also need an
-> SDM update...
-> 
+>         /* mark the queue as mq asap */
+>         q->mq_ops = set->ops;
+>
+> @@ -2906,11 +2908,9 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
+>         blk_mq_map_swqueue(q);
+>
+>         if (!(set->flags & BLK_MQ_F_NO_SCHED)) {
+> -               int ret;
+> -
+>                 ret = elevator_init_mq(q);
+>                 if (ret)
+> -                       return ERR_PTR(ret);
+> +                       goto err_hctxs;
 
-The SDM define IA32_UMWAIT_CONTROL is a 32bit MSR. So need me to set 
-63:32 reserved?
+The above change itself is fine.
 
->> +		break;
->>   	case MSR_IA32_SPEC_CTRL:
->>   		if (!msr_info->host_initiated &&
->>   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->> @@ -4139,6 +4155,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->>   	vmx->rmode.vm86_active = 0;
->>   	vmx->spec_ctrl = 0;
->>   
->> +	vmx->msr_ia32_umwait_control = 0;
->> +
->>   	vcpu->arch.microcode_version = 0x100000000ULL;
->>   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->>   	kvm_set_cr8(vcpu, 0);
->> @@ -6352,6 +6370,19 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->>   					msrs[i].host, false);
->>   }
->>   
+However, elevator_init_mq() shouldn't return failure since none should
+work any time.
+That said 'none' should be fallback to in case that default
+mq-deadline can't be initialized.
 
+thanks,
+Ming Lei
