@@ -2,66 +2,81 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF799C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD3AC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DA220665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6E820665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfGOK0Y (ORCPT
+        id S1729773AbfGOK10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:26:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:46870 "EHLO foss.arm.com"
+        Mon, 15 Jul 2019 06:27:26 -0400
+Received: from relay.sw.ru ([185.231.240.75]:55870 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbfGOK0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:26:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 818D8150C;
-        Mon, 15 Jul 2019 03:26:19 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 909773F59C;
-        Mon, 15 Jul 2019 03:26:18 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, mgorman@suse.de,
-        riel@surriel.com
-Subject: [PATCH 3/3] sched/fair: Change task_numa_work() storage to static
-Date:   Mon, 15 Jul 2019 11:25:08 +0100
-Message-Id: <20190715102508.32434-4-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190715102508.32434-1-valentin.schneider@arm.com>
-References: <20190715102508.32434-1-valentin.schneider@arm.com>
+        id S1729591AbfGOK10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:27:26 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hmyCS-0000zj-Bu; Mon, 15 Jul 2019 13:27:16 +0300
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH] generic arch_futex_atomic_op_inuser() cleanup
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Message-ID: <7b963f9a-21b1-4c6d-3ece-556d018508b4@virtuozzo.com>
+Date:   Mon, 15 Jul 2019 13:27:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no callers outside of fair.c.
+Access to 'op' variable does not require pagefault_disable(),
+'ret' variable should be initialized before using,
+'oldval' variable can be replaced by constant.
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/asm-generic/futex.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 74faa55bc52a..c747ce05e726 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2428,7 +2428,7 @@ static void reset_ptenuma_scan(struct task_struct *p)
-  * The expensive part of numa migration is done from task_work context.
-  * Triggered from task_tick_numa().
-  */
--void task_numa_work(struct callback_head *work)
-+static void task_numa_work(struct callback_head *work)
+diff --git a/include/asm-generic/futex.h b/include/asm-generic/futex.h
+index 8666fe7f35d7..e9a9655d786d 100644
+--- a/include/asm-generic/futex.h
++++ b/include/asm-generic/futex.h
+@@ -118,9 +118,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ static inline int
+ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
  {
- 	unsigned long migrate, next_scan, now = jiffies;
- 	struct task_struct *p = current;
+-	int oldval = 0, ret;
+-
+-	pagefault_disable();
++	int ret = 0;
+ 
+ 	switch (op) {
+ 	case FUTEX_OP_SET:
+@@ -132,10 +130,8 @@ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
+ 		ret = -ENOSYS;
+ 	}
+ 
+-	pagefault_enable();
+-
+ 	if (!ret)
+-		*oval = oldval;
++		*oval = 0;
+ 
+ 	return ret;
+ }
 -- 
-2.22.0
+2.17.1
 
