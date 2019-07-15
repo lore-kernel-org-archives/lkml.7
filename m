@@ -2,116 +2,94 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A084C73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B0AC73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12FD520820
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF89420820
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbfGOCqg (ORCPT
+        id S1728996AbfGOCrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 22:46:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:8339 "EHLO mga18.intel.com"
+        Sun, 14 Jul 2019 22:47:45 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:35460 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfGOCqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 22:46:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jul 2019 19:46:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,492,1557212400"; 
-   d="scan'208";a="160960032"
-Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.238.128.226]) ([10.238.128.226])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jul 2019 19:46:33 -0700
-Subject: Re: [PATCH v1] KVM: x86: expose AVX512_BF16 feature to guest
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <1562824197-13658-1-git-send-email-jing2.liu@linux.intel.com>
- <305e2a40-93a3-23ed-71a2-d3f2541e837a@redhat.com>
-From:   Jing Liu <jing2.liu@linux.intel.com>
-Message-ID: <9a9226bb-8050-e650-a8e5-0030cdd6862d@linux.intel.com>
-Date:   Mon, 15 Jul 2019 10:46:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <305e2a40-93a3-23ed-71a2-d3f2541e837a@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726025AbfGOCrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 22:47:45 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 10CE852413BCD4FE596A;
+        Mon, 15 Jul 2019 10:47:43 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x6F2lMco084815;
+        Mon, 15 Jul 2019 10:47:22 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019071510472352-2346524 ;
+          Mon, 15 Jul 2019 10:47:23 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     mingo@redhat.com
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [PATCH] sched/fair: fix coccinelle warnings
+Date:   Mon, 15 Jul 2019 10:45:26 +0800
+Message-Id: <1563158726-43940-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-15 10:47:23,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-15 10:47:23,
+        Serialize complete at 2019-07-15 10:47:23
+X-MAIL: mse-fl2.zte.com.cn x6F2lMco084815
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
-Thanks for your reviewing! There also has Qemu patch sent here,
-https://www.mail-archive.com/qemu-devel@nongnu.org/msg630359.html
+This fixes the following coccinelle warning:
+./kernel/sched/fair.c:8688:9-10: WARNING: return of 0/1 in function 'voluntary_active_balance' with return type bool
 
-Could you please review that? Thanks very much!
+Return type bool instead of 0/1.
 
-Jing
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ kernel/sched/fair.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 036be95..c44b157 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8685,7 +8685,7 @@ static struct rq *find_busiest_queue(struct lb_env *env,
+ 	struct sched_domain *sd = env->sd;
+ 
+ 	if (asym_active_balance(env))
+-		return 1;
++		return true;
+ 
+ 	/*
+ 	 * The dst_cpu is idle and the src_cpu CPU has only 1 CFS task.
+@@ -8697,13 +8697,13 @@ static struct rq *find_busiest_queue(struct lb_env *env,
+ 	    (env->src_rq->cfs.h_nr_running == 1)) {
+ 		if ((check_cpu_capacity(env->src_rq, sd)) &&
+ 		    (capacity_of(env->src_cpu)*sd->imbalance_pct < capacity_of(env->dst_cpu)*100))
+-			return 1;
++			return true;
+ 	}
+ 
+ 	if (env->src_grp_type == group_misfit_task)
+-		return 1;
++		return true;
+ 
+-	return 0;
++	return false;
+ }
+ 
+ static int need_active_balance(struct lb_env *env)
+-- 
+1.8.3.1
 
-On 7/13/2019 6:37 PM, Paolo Bonzini wrote:
-> On 11/07/19 07:49, Jing Liu wrote:
->> AVX512 BFLOAT16 instructions support 16-bit BFLOAT16 floating-point
->> format (BF16) for deep learning optimization.
->>
->> Intel adds AVX512 BFLOAT16 feature in CooperLake, which is CPUID.7.1.EAX[5].
->>
->> Detailed information of the CPUID bit can be found here,
->> https://software.intel.com/sites/default/files/managed/c5/15/\
->> architecture-instruction-set-extensions-programming-reference.pdf.
->>
->> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
->> ---
->>
->> This patch depends on kernel patch https://lkml.org/lkml/2019/6/19/912
->> and Paolo's patch set https://lkml.org/lkml/2019/7/4/468.
->>
->>   arch/x86/kvm/cpuid.c | 12 +++++++++++-
->>   1 file changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index 8fc6039..0c125dd 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -358,9 +358,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
->>   		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
->>   		F(MD_CLEAR);
->>   
->> +	/* cpuid 7.1.eax */
->> +	const u32 kvm_cpuid_7_1_eax_x86_features =
->> +		F(AVX512_BF16);
->> +
->>   	switch (index) {
->>   	case 0:
->> -		entry->eax = 0;
->> +		entry->eax = min(entry->eax, 1);
->>   		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
->>   		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
->>   		/* TSC_ADJUST is emulated */
->> @@ -384,6 +388,12 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
->>   		 */
->>   		entry->edx |= F(ARCH_CAPABILITIES);
->>   		break;
->> +	case 1:
->> +		entry->eax &= kvm_cpuid_7_1_eax_x86_features;
->> +		entry->ebx = 0;
->> +		entry->ecx = 0;
->> +		entry->edx = 0;
->> +		break;
->>   	default:
->>   		WARN_ON_ONCE(1);
->>   		entry->eax = 0;
->>
-> 
-> Queued, thanks.
-> 
-> Paolo
-> 
