@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0F1C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E133C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5856321537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D96321530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199728;
-	bh=eX5Dh/FSm7XbycA/GmS0XdIfSyzLkNPai12gSFWdfU0=;
+	s=default; t=1563199732;
+	bh=w5v7sWLAcSUnhsaiQsTidlDrLl91cqg976ss1tbUK9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWk5DK+3H9WFptJp2TnEwg8CJQYRPuOB/cGLb6OdXDua0AALL/Cvhe0HhQPeTzrp7
-	 fOoTaJzkQ4pfkOftQyZutzSy8maO5bHN4f6Y0KgxRLBnBGnexvUWzb1BH1/dE/vQ8X
-	 QjR6miRoAUpvbhS1zPlQT01kcNYphHbBM7QmxShQ=
+	b=Agjfr++lECqRIWerrEI+di8CrjIlWPXwq9dB0qfgs9f4/wk5zJFdiLJn8h40oT5LQ
+	 rqFwtdU3bw1iJiOHQLZvC+tteU8rSUTkEV+GZRE/bNlTZTPkTiSkv72vjjuDkL5fNZ
+	 aWJP4IKRYMzKrhXOP7CpzJm5heNC5kwCajB41OoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbfGOOIr (ORCPT
+        id S2388597AbfGOOIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59446 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388584AbfGOOIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:08:45 -0400
+        id S2388577AbfGOOIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:08:44 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D4E02081C;
-        Mon, 15 Jul 2019 14:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9514C20C01;
+        Mon, 15 Jul 2019 14:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199725;
-        bh=eX5Dh/FSm7XbycA/GmS0XdIfSyzLkNPai12gSFWdfU0=;
+        s=default; t=1563199723;
+        bh=w5v7sWLAcSUnhsaiQsTidlDrLl91cqg976ss1tbUK9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhlUnexoDTZZIPn9M1/NQmg3enw86gv/G26GAhUQ634YcjizhZsT21/eZSJY4iRuf
-         YxZnd9LoTKmc7D9Yu5oKjnLKPOyPcwQa7bjvF/vzmD3EGZa0gz9P5nLHzN9D2OXoMo
-         eGMC2uh6bJ2U+sK5pPrUpQ85wLWyzfRdVBjOYlM4=
+        b=OWkM9gRjavzej2RGTNA3ISY2sK5DSLNEWI1Yi83iRI0ipP5O5XEf5sZ+1HP+gsqg5
+         pGBz6AjPf4U7UhpmxC/PUez9SZ2keE6DE2n55iSYdP752OLDj4PaYiSl7XXxvDe1mu
+         c4gVV/hcRunfcTvoLahb8NF+OTBoyd/K2Rd8iYpY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 086/219] crypto: testmgr - add some more preemption points
-Date:   Mon, 15 Jul 2019 10:01:27 -0400
-Message-Id: <20190715140341.6443-86-sashal@kernel.org>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Kir Kolyshkin <kir@sacred.ru>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 085/219] selinux: fix empty write to keycreate file
+Date:   Mon, 15 Jul 2019 10:01:26 -0400
+Message-Id: <20190715140341.6443-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,76 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-[ Upstream commit e63e1b0dd0003dc31f73d875907432be3a2abe5d ]
+[ Upstream commit 464c258aa45b09f16aa0f05847ed8895873262d9 ]
 
-Call cond_resched() after each fuzz test iteration.  This avoids stall
-warnings if fuzz_iterations is set very high for testing purposes.
+When sid == 0 (we are resetting keycreate_sid to the default value), we
+should skip the KEY__CREATE check.
 
-While we're at it, also call cond_resched() after finishing testing each
-test vector.
+Before this patch, doing a zero-sized write to /proc/self/keycreate
+would check if the current task can create unlabeled keys (which would
+usually fail with -EACCESS and generate an AVC). Now it skips the check
+and correctly sets the task's keycreate_sid to 0.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Bug report: https://bugzilla.redhat.com/show_bug.cgi?id=1719067
+
+Tested using the reproducer from the report above.
+
+Fixes: 4eb582cf1fbd ("[PATCH] keys: add a way to store the appropriate context for newly-created keys")
+Reported-by: Kir Kolyshkin <kir@sacred.ru>
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/testmgr.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ security/selinux/hooks.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 8386038d67c7..51540dbee23b 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -1050,6 +1050,7 @@ static int test_hash_vec(const char *driver, const struct hash_testvec *vec,
- 						req, tsgl, hashstate);
- 			if (err)
- 				return err;
-+			cond_resched();
- 		}
- 	}
- #endif
-@@ -1105,6 +1106,7 @@ static int __alg_test_hash(const struct hash_testvec *vecs,
- 		err = test_hash_vec(driver, &vecs[i], i, req, tsgl, hashstate);
- 		if (err)
- 			goto out;
-+		cond_resched();
- 	}
- 	err = 0;
- out:
-@@ -1346,6 +1348,7 @@ static int test_aead_vec(const char *driver, int enc,
- 						&cfg, req, tsgls);
- 			if (err)
- 				return err;
-+			cond_resched();
- 		}
- 	}
- #endif
-@@ -1365,6 +1368,7 @@ static int test_aead(const char *driver, int enc,
- 				    tsgls);
- 		if (err)
- 			return err;
-+		cond_resched();
- 	}
- 	return 0;
- }
-@@ -1679,6 +1683,7 @@ static int test_skcipher_vec(const char *driver, int enc,
- 						    &cfg, req, tsgls);
- 			if (err)
- 				return err;
-+			cond_resched();
- 		}
- 	}
- #endif
-@@ -1698,6 +1703,7 @@ static int test_skcipher(const char *driver, int enc,
- 					tsgls);
- 		if (err)
- 			return err;
-+		cond_resched();
- 	}
- 	return 0;
- }
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 614bc753822c..bf37bdce9918 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -6269,11 +6269,12 @@ static int selinux_setprocattr(const char *name, void *value, size_t size)
+ 	} else if (!strcmp(name, "fscreate")) {
+ 		tsec->create_sid = sid;
+ 	} else if (!strcmp(name, "keycreate")) {
+-		error = avc_has_perm(&selinux_state,
+-				     mysid, sid, SECCLASS_KEY, KEY__CREATE,
+-				     NULL);
+-		if (error)
+-			goto abort_change;
++		if (sid) {
++			error = avc_has_perm(&selinux_state, mysid, sid,
++					     SECCLASS_KEY, KEY__CREATE, NULL);
++			if (error)
++				goto abort_change;
++		}
+ 		tsec->keycreate_sid = sid;
+ 	} else if (!strcmp(name, "sockcreate")) {
+ 		tsec->sockcreate_sid = sid;
 -- 
 2.20.1
 
