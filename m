@@ -2,295 +2,145 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB0BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2984BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FBF20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18E720868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u3ZMvk7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbfGOI42 (ORCPT
+        id S1729483AbfGOJA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 04:56:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39840 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729245AbfGOI42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 04:56:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 659A2AEBF;
-        Mon, 15 Jul 2019 08:56:26 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 659D9DA89D; Mon, 15 Jul 2019 10:57:04 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs updates for 5.3
-Date:   Mon, 15 Jul 2019 10:57:01 +0200
-Message-Id: <cover.1563178381.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 15 Jul 2019 05:00:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37654 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbfGOJA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 05:00:26 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190715090024euoutp01a1be92244d918a28908f9c08ac8627ff~xiQqzZMZT1307213072euoutp01c
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 09:00:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190715090024euoutp01a1be92244d918a28908f9c08ac8627ff~xiQqzZMZT1307213072euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563181224;
+        bh=4Pc+fO1+/ZMl5J0ti/1yRmjXong6iDuRO9je3QCE9Q0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=u3ZMvk7jnxyJLVLbr/+tv1MzHMvram7blahiR5CjL73c+nCMzAGpq/VqSdAa+cBLz
+         xynNOxsr1UPT+hvgwI6ob0cVPnl5LNxhSn5WP/awFnkqgTzgEb5DWIaQRzMMkDcMA2
+         eX5DOSc1UTWVu+VeN3Tl7lfkwTadrzLZO5EyXrZI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190715090024eucas1p26e6f7a1817078948ccb0674890a12909~xiQqMM2wy1153111531eucas1p2e;
+        Mon, 15 Jul 2019 09:00:24 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 05.B3.04325.7A04C2D5; Mon, 15
+        Jul 2019 10:00:23 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd~xiQpaqaWs2765727657eucas1p2T;
+        Mon, 15 Jul 2019 09:00:23 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190715090023eusmtrp1f100dd8f1e965e9836e58ab0e75d3a31~xiQpMgm-i2192721927eusmtrp1R;
+        Mon, 15 Jul 2019 09:00:23 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-a4-5d2c40a78be5
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id FE.E3.04146.6A04C2D5; Mon, 15
+        Jul 2019 10:00:22 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190715090022eusmtip2c2db709b559c4ac92afa9b8002fb0a03~xiQoxN0U10255602556eusmtip2U;
+        Mon, 15 Jul 2019 09:00:22 +0000 (GMT)
+Subject: Re: [PATCH v3 15/24] media: exynos4-is: Remove call to memset after
+ dma_alloc_coherent
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <37046e7b-fdde-c10f-4850-0b3efd4a00cd@samsung.com>
+Date:   Mon, 15 Jul 2019 11:01:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190715031851.6890-1-huangfq.daxian@gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7djPc7rLHXRiDVbOMbBYduokq0X/49fM
+        FufPb2C3ONv0ht1i0+NrrBaXd81hs+jZsJXVYsb5fUwWyzb9YXLg9Ng56y67x6ZVnWwem5fU
+        e/RtWcXo8XmTXABrFJdNSmpOZllqkb5dAlfGmatXmAtmcVR0bXnD3MD4i62LkZNDQsBE4u71
+        y6xdjFwcQgIrGCWWrrsO5XxhlNg6azUjhPOZUWLGvbeMMC2f1i5lg0gsZ5T4uPs3E4TzllFi
+        cU8rK0iVsECiRM+0L0wgtoiAtsTH0y3MIEXMAquZJDYeWA+2nU3AUKL3aB/YWF4BO4kJzdtY
+        QGwWAVWJXdP/g8VFBSIkTh2ZxwJRIyhxcuYTIJuDg1PAVuL+RwuQMLOAuETTl5WsELa8xPa3
+        c8B2SQgcYpd4vegc1NkuEj29TSwQtrDEq+Nb2CFsGYnTk3tYIBqaGSV6dt9mh3AmMErcP74A
+        qtta4vDxi6wgm5kFNCXW79IHMSUEHCWu3DKBMPkkbrwVhLiBT2LStunMEGFeiY42IYgZKhK/
+        V01ngrClJLqf/GeZwKg0C8ljs5B8MwvJN7MQ1i5gZFnFKJ5aWpybnlpsnJdarlecmFtcmpeu
+        l5yfu4kRmJZO/zv+dQfjvj9JhxgFOBiVeHgdUrRjhVgTy4orcw8xSnAwK4nw2n4FCvGmJFZW
+        pRblxxeV5qQWH2KU5mBREuetZngQLSSQnliSmp2aWpBaBJNl4uCUamCUVkw/tnjF35jmrImr
+        zCJEjQ8dqpgaqJNVe+NY1zJh4dq126yMtp6R1ln5/rqS0kw/3wX6r6ofb34bJsCXLGTRs0z6
+        8vf+Q/GrTzyYcJaB60GA4zmG9EVNslaRr4oiry1eecn/QMLiO4o/U/WV9mz/81h57ob1p+b8
+        V2tKW+H8cEbu6pvVCVNblViKMxINtZiLihMBUmnC3UcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xe7rLHHRiDRoOWFosO3WS1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWfRs2MpqMeP8PiaLZZv+MDlweuycdZfdY9OqTjaPzUvq
+        Pfq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUn
+        syy1SN8uQS/jzNUrzAWzOCq6trxhbmD8xdbFyMkhIWAi8WntUiCbi0NIYCmjxNojk9i7GDmA
+        ElIS81uUIGqEJf5c64Kqec0osX/HH1aQhLBAokTPtC9MILaIgLbEx9MtzCBFzAKrmSRWLFrN
+        BDJISMBG4tgbLpAaNgFDid6jfYwgNq+AncSE5m0sIDaLgKrErun/weKiAhESk67tZIGoEZQ4
+        OfMJC8gYTgFbifsfLUDCzALqEn/mXWKGsMUlmr6sZIWw5SW2v53DPIFRaBaS7llIWmYhaZmF
+        pGUBI8sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwBjcduzn5h2MlzYGH2IU4GBU4uF1SNGO
+        FWJNLCuuzD3EKMHBrCTCa/sVKMSbklhZlVqUH19UmpNafIjRFOi3icxSosn5wPSQVxJvaGpo
+        bmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qBkf/Ym/VskxWjrjHe2x/S4prB
+        HL1gYVX77W1lG8r/KBp7VjFs23rlW1Rroeketabd53huBTU/XlU6LZfLJrT8/fyCSylWH+fq
+        1AcWzaqI37lsu1r0hdoXAi/KNsatSE9ekTzre4jXgcVqlo9DX72PDNohJ/N3ddfD8oxP3BkT
+        3nnvFsw+862nS4mlOCPRUIu5qDgRAKgQjlbXAgAA
+X-CMS-MailID: 20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd
+References: <20190715031851.6890-1-huangfq.daxian@gmail.com>
+        <CGME20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 7/15/19 05:18, Fuqian Huang wrote:
+> In commit 518a2f1925c3
+> ("dma-mapping: zero memory returned from dma_alloc_*"),
+> dma_alloc_coherent has already zeroed the memory.
+> So memset is not needed
 
-there's majority of cleanups and refactoring, no big new features made
-it to the final branch, the rest are fixes.
+I can't see any changes in the above mentioned commit that would
+make dma_alloc_coherent() (arm_coherent_dma_alloc()) zeroing its
+returned memory. Maybe you need to add a reference to some other
+instead?
 
-No merge conflicts. Please pull, thanks.
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-Hilights:
-
-- chunks that have been trimmed and unchanged since last mount are
-  tracked and skipped on repeated trims
-
-- use hw assissed crc32c on more arches, speedups if native instructions
-  or optimized implementation is available
-
-- the RAID56 incompat bit is automatically removed when the last block
-  group of that type is removed
-
-Fixes:
-
-- fsync fix for reflink on NODATACOW files that could lead to ENOSPC
-
-- fix data loss after inode eviction, renaming it, and fsync it
-
-- fix fsync not persisting dentry deletions due to inode evictions
-
-- update ctime/mtime/iversion after hole punching
-
-- fix compression type validation (reported by KASAN)
-
-- send won't be allowed to start when relocation is in progress, this
-  can cause spurious errors or produce incorrect send stream
-
-Core:
-
-- new tracepoints for space update
-
-- tree-checker: better check for end of extents for some tree items
-
-- preparatory work for more checksum algorithms
-
-- run delayed iput at unlink time and don't push the work to cleaner
-  thread where it's not properly throttled
-
-- wrap block mapping to structures and helpers, base for further
-  refactoring
-
-- split large files, part 1:
-  - space info handling
-  - block group reservations
-  - delayed refs
-  - delayed allocation
-
-- other cleanups and refactoring
-
-----------------------------------------------------------------
-The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
-
-  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-tag
-
-for you to fetch changes up to e02d48eaaed77f6c36916a7aa65c451e1f9d9aab:
-
-  btrfs: fix memory leak of path on error return path (2019-07-05 18:47:57 +0200)
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      btrfs: shut up bogus -Wmaybe-uninitialized warning
-
-Colin Ian King (1):
-      btrfs: fix memory leak of path on error return path
-
-David Sterba (32):
-      btrfs: detect fast implementation of crc32c on all architectures
-      btrfs: fiemap: preallocate ulists for btrfs_check_shared
-      btrfs: fix minimum number of chunk errors for DUP
-      btrfs: raid56: allow the exact minimum number of devices for balance convert
-      btrfs: remove mapping tree structures indirection
-      btrfs: use raid_attr table in get_profile_num_devs
-      btrfs: use raid_attr in btrfs_chunk_max_errors
-      btrfs: use raid_attr to get allowed profiles for balance conversion
-      btrfs: use raid_attr table to find profiles for integrity lowering
-      btrfs: use raid_attr table for btrfs_bg_type_to_factor
-      btrfs: factor out helper for counting data stripes
-      btrfs: use u8 for raid_array members
-      btrfs: factor out devs_max setting in __btrfs_alloc_chunk
-      btrfs: refactor helper for bg flags to name conversion
-      btrfs: constify map parameter for nr_parity_stripes and nr_data_stripes
-      btrfs: read number of data stripes from map only once
-      btrfs: use file:line format for assertion report
-      btrfs: tests: add locks around add_extent_mapping
-      btrfs: assert delayed ref lock in btrfs_find_delayed_ref_head
-      btrfs: switch extent_buffer blocking_writers from atomic to int
-      btrfs: switch extent_buffer spinning_writers from atomic to int
-      btrfs: switch extent_buffer write_locks from atomic to int
-      btrfs: raid56: clear incompat block group flags after removing the last one
-      btrfs: add mask for all RAID1 types
-      btrfs: use mask for RAID56 profiles
-      btrfs: document BTRFS_MAX_MIRRORS
-      btrfs: improve messages when updating feature flags
-      btrfs: use common helpers for extent IO state insertion messages
-      btrfs: drop default value assignments in enums
-      btrfs: use raid_attr to adjust minimal stripe size in btrfs_calc_avail_data_space
-      btrfs: use raid_attr for minimum stripe count in btrfs_calc_avail_data_space
-      btrfs: lift bio_set_dev from bio allocation helpers
-
-Filipe Manana (4):
-      Btrfs: fix data loss after inode eviction, renaming it, and fsync it
-      Btrfs: prevent send failures and crashes due to concurrent relocation
-      Btrfs: fix fsync not persisting dentry deletions due to inode evictions
-      Btrfs: add missing inode version, ctime and mtime updates when punching hole
-
-Goldwyn Rodrigues (3):
-      btrfs: Remove unused variable mode in btrfs_mount
-      btrfs: Simplify update of space_info in __reserve_metadata_bytes()
-      btrfs: Evaluate io_tree in find_lock_delalloc_range()
-
-Johannes Thumshirn (13):
-      btrfs: use btrfs_csum_data() instead of directly calling crc32c
-      btrfs: resurrect btrfs_crc32c()
-      btrfs: use btrfs_crc32c{,_final}() in for free space cache
-      btrfs: don't assume ordered sums to be 4 bytes
-      btrfs: don't assume compressed_bio sums to be 4 bytes
-      btrfs: format checksums according to type for printing
-      btrfs: add common checksum type validation
-      btrfs: check for supported superblock checksum type before checksum validation
-      btrfs: Simplify btrfs_check_super_csum() and get rid of size assumptions
-      btrfs: add boilerplate code for directly including the crypto framework
-      btrfs: directly call into crypto framework for checksumming
-      btrfs: remove assumption about csum type form btrfs_print_data_csum_error()
-      btrfs: correctly validate compression type
-
-Josef Bacik (23):
-      btrfs: run delayed iput at unlink time
-      btrfs: move space_info to space-info.h
-      btrfs: rename do_chunk_alloc to btrfs_chunk_alloc
-      btrfs: export space_info_add_*_bytes
-      btrfs: move the space_info handling code to space-info.c
-      btrfs: move and export can_overcommit
-      btrfs: move the space info update macro to space-info.h
-      btrfs: move btrfs_space_info_add_*_bytes to space-info.c
-      btrfs: export block_rsv_use_bytes
-      btrfs: move dump_space_info to space-info.c
-      btrfs: move reserve_metadata_bytes and supporting code to space-info.c
-      btrfs: unexport can_overcommit
-      btrfs: move btrfs_block_rsv definitions into it's own header
-      btrfs: export btrfs_block_rsv_add_bytes
-      btrfs: export __btrfs_block_rsv_release
-      btrfs: cleanup the target logic in __btrfs_block_rsv_release
-      btrfs: stop using block_rsv_release_bytes everywhere
-      btrfs: migrate the block-rsv code to block-rsv.c
-      btrfs: migrate the global_block_rsv helpers to block-rsv.c
-      btrfs: migrate the delayed refs rsv code
-      btrfs: migrate btrfs_trans_release_chunk_metadata
-      btrfs: migrate the delalloc space stuff to it's own home
-      btrfs: move the subvolume reservation stuff out of extent-tree.c
-
-Liu Bo (1):
-      Btrfs: remove unused variables in __btrfs_unlink_inode
-
-Nikolay Borisov (17):
-      btrfs: Don't opencode sync_blockdev in btrfs_init_dev_replace_tgtdev
-      btrfs: Reduce critical section in btrfs_init_dev_replace_tgtdev
-      btrfs: dev-replace: Remove impossible WARN_ON
-      btrfs: Ensure btrfs_init_dev_replace_tgtdev sees up to date values
-      btrfs: Streamline replace sem unlock in btrfs_dev_replace_start
-      btrfs: Explicitly reserve space for devreplace item
-      btrfs: Remove redundant assignment of tgt_device->commit_total_bytes
-      btrfs: add new helper btrfs_lock_and_flush_ordered_range
-      btrfs: Use newly introduced btrfs_lock_and_flush_ordered_range
-      btrfs: Always use a cached extent_state in btrfs_lock_and_flush_ordered_range
-      btrfs: Add comments on locking of several device-related fields
-      btrfs: Return EAGAIN if we can't start no snpashot write in check_can_nocow
-      btrfs: trim: make reserved device area adjustments more explicit
-      btrfs: Don't trim returned range based on input value in find_first_clear_extent_bit
-      btrfs: Document __etree_search
-      btrfs: Introduce btrfs_io_geometry infrastructure
-      btrfs: Use btrfs_get_io_geometry appropriately
-
-Qu Wenruo (7):
-      btrfs: extent-tree: Refactor add_pinned_bytes() to add|sub_pinned_bytes()
-      btrfs: tree-checker: Check if the file extent end overflows
-      btrfs: extent-tree: Add lockdep assert when updating space info
-      btrfs: extent-tree: Add trace events for space info numbers update
-      btrfs: remove the incorrect comment on RO fs when btrfs_run_delalloc_range() fails
-      btrfs: Flush before reflinking any extent to prevent NOCOW write falling back to COW without data reservation
-      btrfs: qgroup: Don't hold qgroup_ioctl_lock in btrfs_qgroup_inherit()
-
-Su Yue (1):
-      btrfs: switch order of unlocks of space_info and bg in do_trimming()
-
- fs/btrfs/Kconfig                  |    3 +-
- fs/btrfs/Makefile                 |    3 +-
- fs/btrfs/backref.c                |   17 +-
- fs/btrfs/backref.h                |    3 +-
- fs/btrfs/block-rsv.c              |  425 ++++++
- fs/btrfs/block-rsv.h              |  101 ++
- fs/btrfs/btrfs_inode.h            |   22 +-
- fs/btrfs/check-integrity.c        |   11 +-
- fs/btrfs/compression.c            |   65 +-
- fs/btrfs/compression.h            |    3 +-
- fs/btrfs/ctree.h                  |  282 ++--
- fs/btrfs/delalloc-space.c         |  494 +++++++
- fs/btrfs/delalloc-space.h         |   23 +
- fs/btrfs/delayed-ref.c            |  181 ++-
- fs/btrfs/delayed-ref.h            |   10 +
- fs/btrfs/dev-replace.c            |   31 +-
- fs/btrfs/disk-io.c                |  166 ++-
- fs/btrfs/disk-io.h                |    2 -
- fs/btrfs/extent-tree.c            | 2755 ++++---------------------------------
- fs/btrfs/extent_io.c              |  149 +-
- fs/btrfs/extent_io.h              |   10 +-
- fs/btrfs/file-item.c              |   43 +-
- fs/btrfs/file.c                   |   28 +-
- fs/btrfs/free-space-cache.c       |   16 +-
- fs/btrfs/inode-map.c              |    1 +
- fs/btrfs/inode.c                  |  109 +-
- fs/btrfs/ioctl.c                  |   23 +
- fs/btrfs/locking.c                |   62 +-
- fs/btrfs/ordered-data.c           |   56 +-
- fs/btrfs/ordered-data.h           |    8 +-
- fs/btrfs/print-tree.c             |    6 +-
- fs/btrfs/props.c                  |    8 +-
- fs/btrfs/qgroup.c                 |   24 +-
- fs/btrfs/raid56.h                 |    4 +-
- fs/btrfs/relocation.c             |    1 +
- fs/btrfs/root-tree.c              |   56 +
- fs/btrfs/scrub.c                  |   50 +-
- fs/btrfs/send.c                   |   16 +-
- fs/btrfs/space-info.c             | 1094 +++++++++++++++
- fs/btrfs/space-info.h             |  133 ++
- fs/btrfs/super.c                  |   30 +-
- fs/btrfs/sysfs.c                  |    1 +
- fs/btrfs/tests/extent-io-tests.c  |  117 +-
- fs/btrfs/tests/extent-map-tests.c |   22 +
- fs/btrfs/transaction.c            |   18 +
- fs/btrfs/transaction.h            |    1 +
- fs/btrfs/tree-checker.c           |   11 +
- fs/btrfs/tree-log.c               |   40 +-
- fs/btrfs/volumes.c                |  376 ++---
- fs/btrfs/volumes.h                |   52 +-
- include/trace/events/btrfs.h      |   40 +
- include/uapi/linux/btrfs_tree.h   |    2 +
- 52 files changed, 3954 insertions(+), 3250 deletions(-)
- create mode 100644 fs/btrfs/block-rsv.c
- create mode 100644 fs/btrfs/block-rsv.h
- create mode 100644 fs/btrfs/delalloc-space.c
- create mode 100644 fs/btrfs/delalloc-space.h
- create mode 100644 fs/btrfs/space-info.c
- create mode 100644 fs/btrfs/space-info.h
+>  drivers/media/platform/exynos4-is/fimc-is.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+> index e043d55133a3..77633e356305 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-is.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-is.c
+> @@ -341,7 +341,6 @@ static int fimc_is_alloc_cpu_memory(struct fimc_is *is)
+>  		return -ENOMEM;
+>  
+>  	is->memory.size = FIMC_IS_CPU_MEM_SIZE;
+> -	memset(is->memory.vaddr, 0, is->memory.size);
+--
+Thanks, 
+Sylwester
