@@ -2,112 +2,127 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC7AC742D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3D6C73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEE321734
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:30:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gnWDsEn2"
+	by mail.kernel.org (Postfix) with ESMTP id 9052420868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbfGOAac (ORCPT
+        id S1728956AbfGOAh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 20:30:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53074 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728953AbfGOAab (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 20:30:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so13412392wms.2
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jul 2019 17:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RQN6nIE7YhXdUO5xObjkK2NfXESo8Rmaaa2vkcOFN4Q=;
-        b=gnWDsEn2/Utp302o3nKRrdJVFB0hvujnrL9Icy5Pl3zlkqMSybizldTwcbc9WwZJox
-         GN1RvXFR8zTPGu3YeoEVxSKcN4noWGOPjzFwlsjdl+hLb5mZcWd8yO2tl4wLno7XMDm7
-         2aqVxE69iuIVut+9DM0eGI7m4nUsBYjK8QAvA314j/VPrXFS/ootaVzI8aQqMe57FiFG
-         Q+hHaaGi3xUeNh3FOJahshYOQHqhAb0W6r3DtPwMdG/MIQq5WL8SncPBLwbd3GI1cFce
-         ReoBAPANBgiwq/V2LVAIG1SJw9vKUuFwOAc77gALK7+TbJHYydviwDgfmxMwWLbDsXg1
-         v32Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RQN6nIE7YhXdUO5xObjkK2NfXESo8Rmaaa2vkcOFN4Q=;
-        b=Zdm3e/22xdwJtpevmJc+XEWPNTV8yqIxXD7XIcIO8MCqP93iJAlGLrXKsLq8weyn9d
-         Cksmld+V00W9RsmZ/CkiiEOT04K18u+ot5EIhmDSOr1eQDV189vhrfjzgrsxbTxIgocf
-         zlf+3IwrFR1SxcpGj/4jfn251UGbT3zW8o52op+GQiNGeIzEeJg00c+t0Y/2p9gVcWf6
-         Xo1i4Rj7sHqSfa6x66KdfjpvC66favVnWuzfev9HNK5CSHGq7R9XP2RqaIo1eqYPAola
-         XPs4l0CfRkY8ZkLIU5nIllndFJLE/v3C7lzfM/s3pLnzo75qsJS3hCwzucgOhIZutPeB
-         f2Gw==
-X-Gm-Message-State: APjAAAWmvMRtpigL3SLfE7Os/PAQ09RbtZStueiRGh9zoX44FnbjTql5
-        qPp0ZoRRkYI4MV5QuPymAGjhCarlSU4=
-X-Google-Smtp-Source: APXvYqy3CVVdmdRSTboWnh4OtQEuKfxnoLlF/tnVr42yAjft3cD12KULQq3VcxsfUHDep/4DFMCr5Q==
-X-Received: by 2002:a7b:c40c:: with SMTP id k12mr19349720wmi.122.1563150630130;
-        Sun, 14 Jul 2019 17:30:30 -0700 (PDT)
-Received: from localhost.localdomain ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id h133sm16246142wme.28.2019.07.14.17.30.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 14 Jul 2019 17:30:29 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     linux-kernel@vger.kernel.org
-Cc:     joe@perches.com, davem@davemloft.net, gregkh@linuxfoundation.org,
-        mchehab+samsung@kernel.org,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v1] MAINTAINERS: add new entry for pidfd api
-Date:   Mon, 15 Jul 2019 02:30:21 +0200
-Message-Id: <20190715003021.25040-1-christian@brauner.io>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <8dbfa2d12bb0c76a19f46128af083921c8feb562.camel@perches.com>
-References: <8dbfa2d12bb0c76a19f46128af083921c8feb562.camel@perches.com>
+        Sun, 14 Jul 2019 20:37:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43872 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbfGOAh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 20:37:26 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1045F30820C9;
+        Mon, 15 Jul 2019 00:37:26 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DF5765D9D2;
+        Mon, 15 Jul 2019 00:37:24 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH 00/22] x86, objtool: several fixes/improvements
+Date:   Sun, 14 Jul 2019 19:36:55 -0500
+Message-Id: <cover.1563150885.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 15 Jul 2019 00:37:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add me as a maintainer for pidfd stuff so people know who to yell at and
-to easily keep track of incoming changes.
+There have been a lot of objtool bug reports lately, mainly related to
+Clang and BPF.  As part of fixing those bugs, I added some improvements
+to objtool which uncovered yet more bugs (some kernel, some objtool).
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
----
-v1:
-- Joe Perches <joe@perches.com>:
-  - remove N: pidfd line
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+I've given these patches a lot of testing with both GCC and Clang.  More
+compile testing of objtool would be appreciated, as the kbuild test
+robot doesn't seem to be paying much attention to my branches lately.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1be025959be9..63522c0043d4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12567,6 +12567,17 @@ F:	arch/arm/boot/dts/picoxcell*
- F:	arch/arm/mach-picoxcell/
- F:	drivers/crypto/picoxcell*
- 
-+PIDFD API
-+M:	Christian Brauner <christian@brauner.io>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
-+F:	samples/pidfd/
-+F:	tools/testing/selftests/pidfd/
-+K:	(?i)pidfd
-+K:	(?i)clone3
-+K:	\b(clone_args|kernel_clone_args)\b
-+
- PIN CONTROL SUBSYSTEM
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-gpio@vger.kernel.org
+There are still at least three outstanding issues:
+
+1) With clang I see:
+
+     drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x88: redundant UACCESS disable
+
+   I haven't dug into it yet.
+
+2) There's also an issue in clang where a large switch table had a bunch
+   of unused (bad) entries.  It's not a code correctness issue, but
+   hopefully it can get fixed in clang anyway.  See patch 20/22 for more
+   details.
+
+3) CONFIG_LIVEPATCH is causing some objtool "unreachable instruction"
+   warnings due to the new -flive-patching flag.  I have some fixes
+   pending, but this patch set is already long enough.
+
+
+Jann Horn (1):
+  objtool: Support repeated uses of the same C jump table
+
+Josh Poimboeuf (21):
+  x86/paravirt: Fix callee-saved function ELF sizes
+  x86/kvm: Fix fastop function ELF metadata
+  x86/kvm: Fix frame pointer usage in vmx_vmenter()
+  x86/kvm: Don't call kvm_spurious_fault() from .fixup
+  x86/entry: Fix thunk function ELF sizes
+  x86/head/64: Annotate start_cpu0() as non-callable
+  x86/uaccess: Remove ELF function annotation from
+    copy_user_handle_tail()
+  x86/uaccess: Don't leak AC flag into fentry from mcsafe_handle_tail()
+  x86/uaccess: Remove redundant CLACs in getuser/putuser error paths
+  bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
+  objtool: Add mcsafe_handle_tail() to the uaccess safe list
+  objtool: Track original function across branches
+  objtool: Refactor function alias logic
+  objtool: Warn on zero-length functions
+  objtool: Change dead_end_function() to return boolean
+  objtool: Do frame pointer check before dead end check
+  objtool: Refactor sibling call detection logic
+  objtool: Refactor jump table code
+  objtool: Fix seg fault on bad switch table entry
+  objtool: convert insn type to enum
+  objtool: Support conditional retpolines
+
+ arch/x86/entry/thunk_64.S       |   5 +-
+ arch/x86/include/asm/kvm_host.h |  33 ++--
+ arch/x86/include/asm/paravirt.h |   1 +
+ arch/x86/kernel/head_64.S       |   4 +-
+ arch/x86/kernel/kvm.c           |   1 +
+ arch/x86/kvm/emulate.c          |  44 +++--
+ arch/x86/kvm/vmx/vmenter.S      |  10 +-
+ arch/x86/lib/copy_user_64.S     |   2 +-
+ arch/x86/lib/getuser.S          |  20 +--
+ arch/x86/lib/putuser.S          |  29 +--
+ arch/x86/lib/usercopy_64.c      |   2 +-
+ include/linux/compiler-gcc.h    |   2 +
+ include/linux/compiler_types.h  |   4 +
+ kernel/bpf/core.c               |   2 +-
+ tools/objtool/arch.h            |  36 ++--
+ tools/objtool/arch/x86/decode.c |   2 +-
+ tools/objtool/check.c           | 308 ++++++++++++++++----------------
+ tools/objtool/check.h           |   3 +-
+ tools/objtool/elf.c             |   4 +-
+ tools/objtool/elf.h             |   3 +-
+ 20 files changed, 281 insertions(+), 234 deletions(-)
+
 -- 
-2.22.0
+2.20.1
 
