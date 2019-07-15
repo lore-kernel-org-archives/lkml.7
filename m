@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13552C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F88C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEB02081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973362086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199624;
-	bh=NxR1O/I/hIfhqdyulvO0C54GBXOGciqYLrSTo9SyB0k=;
+	s=default; t=1563199632;
+	bh=LmXZnOHv3NAGVLafslyPQnv9A/6RbdCMEAOVl74Cvow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iD/gwVLFJ3eTvUKF9Kg8GXS/Ji+h3gj5LZgsRFHyI1mhbXkvuLS7vWF7k9QHBR00z
-	 3CSgW+GsWqFHX8ZqBvje59UwNnAAvnntbcsR3Dd0d54K0kSlRGOGT6xws3CbRAIGxU
-	 kpC/3HzzH+Cm1itKeRD13tHLaS1PNxw5vBZJ2ZuE=
+	b=HUWCmw/3eL1DKFw1L8cxZyHVxtJ4baJj/I8zKzfbFeOFz2VdP+h8anxNwd6LIOquh
+	 o3NV+Ej+Edo0MhewfbQITmVI20UZKtekYTmip46qweZbtuYgaF36DYrkCRnNgaeEyZ
+	 w/88rnT6OMHqdHr9C2yHf2ebTNmTmCRsbeKluNNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbfGOOG5 (ORCPT
+        id S2388003AbfGOOHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51092 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388004AbfGOOE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:04:57 -0400
+        id S2387629AbfGOOGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:06:53 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B94421848;
-        Mon, 15 Jul 2019 14:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787732081C;
+        Mon, 15 Jul 2019 14:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199496;
-        bh=NxR1O/I/hIfhqdyulvO0C54GBXOGciqYLrSTo9SyB0k=;
+        s=default; t=1563199612;
+        bh=LmXZnOHv3NAGVLafslyPQnv9A/6RbdCMEAOVl74Cvow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AAvZu3dcrvE0leftPmF2n9IJGdNYGx4H4xIXf98OLBjZkTDV63gSFKamTyBrYyLIC
-         UkV19O/6DBj0/LdQl4mbVl7A7aGCz5gJBEUWQRaQwH9B1eQIump4vu7dWu4Frf53I+
-         DhKnn5VlF0jhESJYCsZbTDPv22HEcBarUi9ztd5U=
+        b=p/KjXv6auWrrWtD5ydLbWo6C1AAkScRvSXIag0DL+RFJDfmFij0GXXuOBofq3fmkt
+         RHHPG7sB87XVIpGSWLW9Ew92je/tsk5imVOArYFzwAYtKsEvi0HsR8noP+KLyA43FK
+         M3d7gkOk+TnS7gNAQG1t6ykYWNv8nc0PfzerXdAI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 021/219] crypto: talitos - fix skcipher failure due to wrong output IV
-Date:   Mon, 15 Jul 2019 10:00:22 -0400
-Message-Id: <20190715140341.6443-21-sashal@kernel.org>
+Cc:     Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 055/219] net: hns3: add a check to pointer in error_detected and slot_reset
+Date:   Mon, 15 Jul 2019 10:00:56 -0400
+Message-Id: <20190715140341.6443-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,52 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Weihang Li <liweihang@hisilicon.com>
 
-[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
+[ Upstream commit 661262bc3e0ecc9a1aed39c6b2a99766da2c22e2 ]
 
-Selftests report the following:
+If we add a VF without loading hclgevf.ko and then there is a RAS error
+occurs, PCIe AER will call error_detected and slot_reset of all functions,
+and will get a NULL pointer when we check ad_dev->ops->handle_hw_ras_error.
+This will cause a call trace and failures on handling of follow-up RAS
+errors.
 
-[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
-[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.043185] 00000000: fe dc ba 98 76 54 32 10
-[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+This patch check ae_dev and ad_dev->ops at first to solve above issues.
 
-This above dumps show that the actual output IV is indeed the input IV.
-This is due to the IV not being copied back into the request.
-
-This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/talitos.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 0fee83b2eb91..83883438d134 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1571,11 +1571,15 @@ static void ablkcipher_done(struct device *dev,
- 			    int err)
- {
- 	struct ablkcipher_request *areq = context;
-+	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
-+	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
-+	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
- 	struct talitos_edesc *edesc;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 5e41ed4954f9..cac17152157d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1847,9 +1847,9 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
+ 	if (state == pci_channel_io_perm_failure)
+ 		return PCI_ERS_RESULT_DISCONNECT;
  
- 	edesc = container_of(desc, struct talitos_edesc, desc);
+-	if (!ae_dev) {
++	if (!ae_dev || !ae_dev->ops) {
+ 		dev_err(&pdev->dev,
+-			"Can't recover - error happened during device init\n");
++			"Can't recover - error happened before device initialized\n");
+ 		return PCI_ERS_RESULT_NONE;
+ 	}
  
- 	common_nonsnoop_unmap(dev, edesc, areq);
-+	memcpy(areq->info, ctx->iv, ivsize);
+@@ -1868,6 +1868,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
  
- 	kfree(edesc);
+ 	dev_info(dev, "requesting reset due to PCI error\n");
  
++	if (!ae_dev || !ae_dev->ops)
++		return PCI_ERS_RESULT_NONE;
++
+ 	/* request the reset */
+ 	if (ae_dev->ops->reset_event) {
+ 		if (!ae_dev->override_pci_need_reset)
 -- 
 2.20.1
 
