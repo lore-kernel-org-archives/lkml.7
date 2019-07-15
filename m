@@ -2,48 +2,48 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD37C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3D3C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B876E20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B69520868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbfGOJEH (ORCPT
+        id S1729553AbfGOJFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:04:07 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35640 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729394AbfGOJEG (ORCPT
+        Mon, 15 Jul 2019 05:05:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38529 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729394AbfGOJFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:04:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y4so16213342wrm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 02:04:05 -0700 (PDT)
+        Mon, 15 Jul 2019 05:05:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s15so14345628wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 02:05:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=zaW9Ln2eViteis0SzN8eDS27HJJtwmEpY/UJ4Ot2aDg=;
-        b=Z1lpo2wk0k4TkcVcj0dxFFaPqtui3zpkYwRZct8JMotgkxl38q7If9uXINjLFd9wqt
-         JojIkH3OGBy8QqiyugIlXAmoybLb7e+ZSJz2uPeXVZVVa/ni4WZZBO835A5+CP0+bd8G
-         p4C348ZsKRela9oD/UDEVbW9T4f/VnwdXlYDH/eKyvsTw0y5dBgLmtQJeUN0X++8PXj0
-         TH3Nm9zq0021YR/wcnlJwAHIG8qP2g0SKW+QKOC+bRSL1zq+uGdfYkcb3cEJP83bYP3J
-         7VoUuuTZJEnDV+PeK4QFZ0ovrQW1z4Hx2Qu4onEEhNx7CyHucXpKCCR3rw2K/vS9sf9p
-         fDAg==
-X-Gm-Message-State: APjAAAUSanz5ZmekUAWl9qoKhWKB0T0Hs4EVTOdUMwAzHecfZlw2PvZF
-        HtzJjh8HZ97jDYx6YHZCD96vmw==
-X-Google-Smtp-Source: APXvYqzCbHKbiWKZPwHQkIK1QRMRaZPl1mK+IkeVteiND7mvCxwwLL7IFCtkWhS9otBCQftFyrZJow==
-X-Received: by 2002:a5d:6b11:: with SMTP id v17mr27217363wrw.323.1563181444853;
-        Mon, 15 Jul 2019 02:04:04 -0700 (PDT)
+        bh=egmDJtEjXK3av0tmMhAsLM9EbPwBz9YJTS8y1gbMsMk=;
+        b=Mskq42cvP04DuYnJMKZf5AmKqH1cQTzfZI9bxGJJyNJSHdb+AkKiRh5Pb07YrN4KTw
+         jj6OxUBaM4sYAc4IB2vc9h/qS2lHu8I0p8bEjSyhHoeSegI4IfJeSjsy/wOlH196hvm0
+         Nd/FcMrmEjOqNG+B8hTsjv5bwdY9LH43/zcvTvjihoZlYQ5lLjOeoCTosNYbejiZoVTD
+         r/dFy0UqzlA/ZCLnHCeP+1plcXGT5Y0q8hgrcx+UtRloR4TgroOximEWEvzx3B+1PFtc
+         jIinwiEaWVIYldgX6q5BmzG/XiFti+wMRmXG7BYrapBwGfgfRdBzEEei3KswuVRBSXzZ
+         XggA==
+X-Gm-Message-State: APjAAAVyiOcyEvoY5D+iUpQIRjQO0sA+eg8iJsKPztqbTCFL64h++rgK
+        6BbwZ9RAULYeKHE0Gu8ho0HTSQ==
+X-Google-Smtp-Source: APXvYqyoYPZPqtS3k6O3cNZwDgQaA3ikdBZXFcNe+QAbkrqrOC6W0TK+vRHAktA1AaVnRVRWKNIa4w==
+X-Received: by 2002:a7b:cc09:: with SMTP id f9mr24309151wmh.68.1563181501612;
+        Mon, 15 Jul 2019 02:05:01 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:e983:8394:d6:a612? ([2001:b07:6468:f312:e983:8394:d6:a612])
-        by smtp.gmail.com with ESMTPSA id j189sm16472543wmb.48.2019.07.15.02.04.03
+        by smtp.gmail.com with ESMTPSA id a6sm12382767wmj.15.2019.07.15.02.05.00
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 02:04:04 -0700 (PDT)
-Subject: Re: [PATCH 03/22] x86/kvm: Fix frame pointer usage in vmx_vmenter()
+        Mon, 15 Jul 2019 02:05:01 -0700 (PDT)
+Subject: Re: [PATCH 02/22] x86/kvm: Fix fastop function ELF metadata
 To:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
@@ -53,42 +53,143 @@ Cc:     linux-kernel@vger.kernel.org,
         Randy Dunlap <rdunlap@infradead.org>,
         =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 References: <cover.1563150885.git.jpoimboe@redhat.com>
- <299fe4adb78cff0a182f8376c23a445b94d7c782.1563150885.git.jpoimboe@redhat.com>
+ <649348878d7def10e578e7a85ef853b6314f8979.1563150885.git.jpoimboe@redhat.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
 Openpgp: preference=signencrypt
-Message-ID: <0b37031b-1043-8274-a086-2b5d0b02b5ef@redhat.com>
-Date:   Mon, 15 Jul 2019 11:04:03 +0200
+Message-ID: <a78c29e4-5377-88c1-28a9-b04569fdb0c9@redhat.com>
+Date:   Mon, 15 Jul 2019 11:05:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <299fe4adb78cff0a182f8376c23a445b94d7c782.1563150885.git.jpoimboe@redhat.com>
+In-Reply-To: <649348878d7def10e578e7a85ef853b6314f8979.1563150885.git.jpoimboe@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 15/07/19 02:36, Josh Poimboeuf wrote:
-> With CONFIG_FRAME_POINTER, vmx_vmenter() needs to do frame pointer setup
-> before calling kvm_spurious_fault().
+> Some of the fastop functions, e.g. em_setcc(), are actually just used as
+> global labels which point to blocks of functions.  The global labels are
+> incorrectly annotated as functions.  Also the functions themselves don't
+> have size annotations.
 > 
-> Fixes the following warning:
+> Fixes a bunch of warnings like the following:
 > 
->   arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
+>   arch/x86/kvm/emulate.o: warning: objtool: seto() is missing an ELF size annotation
+>   arch/x86/kvm/emulate.o: warning: objtool: em_setcc() is missing an ELF size annotation
+>   arch/x86/kvm/emulate.o: warning: objtool: setno() is missing an ELF size annotation
+>   arch/x86/kvm/emulate.o: warning: objtool: setc() is missing an ELF size annotation
 > 
 > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> ---
+>  arch/x86/kvm/emulate.c | 44 +++++++++++++++++++++++++++++-------------
+>  1 file changed, 31 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index 8e409ad448f9..718f7d9afedc 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -312,29 +312,42 @@ static void invalidate_registers(struct x86_emulate_ctxt *ctxt)
+>  
+>  static int fastop(struct x86_emulate_ctxt *ctxt, void (*fop)(struct fastop *));
+>  
+> -#define FOP_FUNC(name) \
+> +#define __FOP_FUNC(name) \
+>  	".align " __stringify(FASTOP_SIZE) " \n\t" \
+>  	".type " name ", @function \n\t" \
+>  	name ":\n\t"
+>  
+> -#define FOP_RET   "ret \n\t"
+> +#define FOP_FUNC(name) \
+> +	__FOP_FUNC(#name)
+> +
+> +#define __FOP_RET(name) \
+> +	"ret \n\t" \
+> +	".size " name ", .-" name "\n\t"
+> +
+> +#define FOP_RET(name) \
+> +	__FOP_RET(#name)
+>  
+>  #define FOP_START(op) \
+>  	extern void em_##op(struct fastop *fake); \
+>  	asm(".pushsection .text, \"ax\" \n\t" \
+>  	    ".global em_" #op " \n\t" \
+> -	    FOP_FUNC("em_" #op)
+> +	    ".align " __stringify(FASTOP_SIZE) " \n\t" \
+> +	    "em_" #op ":\n\t"
+>  
+>  #define FOP_END \
+>  	    ".popsection")
+>  
+> +#define __FOPNOP(name) \
+> +	__FOP_FUNC(name) \
+> +	__FOP_RET(name)
+> +
+>  #define FOPNOP() \
+> -	FOP_FUNC(__stringify(__UNIQUE_ID(nop))) \
+> -	FOP_RET
+> +	__FOPNOP(__stringify(__UNIQUE_ID(nop)))
+>  
+>  #define FOP1E(op,  dst) \
+> -	FOP_FUNC(#op "_" #dst) \
+> -	"10: " #op " %" #dst " \n\t" FOP_RET
+> +	__FOP_FUNC(#op "_" #dst) \
+> +	"10: " #op " %" #dst " \n\t" \
+> +	__FOP_RET(#op "_" #dst)
+>  
+>  #define FOP1EEX(op,  dst) \
+>  	FOP1E(op, dst) _ASM_EXTABLE(10b, kvm_fastop_exception)
+> @@ -366,8 +379,9 @@ static int fastop(struct x86_emulate_ctxt *ctxt, void (*fop)(struct fastop *));
+>  	FOP_END
+>  
+>  #define FOP2E(op,  dst, src)	   \
+> -	FOP_FUNC(#op "_" #dst "_" #src) \
+> -	#op " %" #src ", %" #dst " \n\t" FOP_RET
+> +	__FOP_FUNC(#op "_" #dst "_" #src) \
+> +	#op " %" #src ", %" #dst " \n\t" \
+> +	__FOP_RET(#op "_" #dst "_" #src)
+>  
+>  #define FASTOP2(op) \
+>  	FOP_START(op) \
+> @@ -405,8 +419,9 @@ static int fastop(struct x86_emulate_ctxt *ctxt, void (*fop)(struct fastop *));
+>  	FOP_END
+>  
+>  #define FOP3E(op,  dst, src, src2) \
+> -	FOP_FUNC(#op "_" #dst "_" #src "_" #src2) \
+> -	#op " %" #src2 ", %" #src ", %" #dst " \n\t" FOP_RET
+> +	__FOP_FUNC(#op "_" #dst "_" #src "_" #src2) \
+> +	#op " %" #src2 ", %" #src ", %" #dst " \n\t"\
+> +	__FOP_RET(#op "_" #dst "_" #src "_" #src2)
+>  
+>  /* 3-operand, word-only, src2=cl */
+>  #define FASTOP3WCL(op) \
+> @@ -423,7 +438,7 @@ static int fastop(struct x86_emulate_ctxt *ctxt, void (*fop)(struct fastop *));
+>  	".type " #op ", @function \n\t" \
+>  	#op ": \n\t" \
+>  	#op " %al \n\t" \
+> -	FOP_RET
+> +	__FOP_RET(#op)
+>  
+>  asm(".pushsection .fixup, \"ax\"\n"
+>      ".global kvm_fastop_exception \n"
+> @@ -449,7 +464,10 @@ FOP_SETCC(setle)
+>  FOP_SETCC(setnle)
+>  FOP_END;
+>  
+> -FOP_START(salc) "pushf; sbb %al, %al; popf \n\t" FOP_RET
+> +FOP_START(salc)
+> +FOP_FUNC(salc)
+> +"pushf; sbb %al, %al; popf \n\t"
+> +FOP_RET(salc)
+>  FOP_END;
+>  
+>  /*
+> 
 
-This is not enough, because the RSP value must match what is computed at
-this place:
-
-        /* Adjust RSP to account for the CALL to vmx_vmenter(). */
-        lea -WORD_SIZE(%_ASM_SP), %_ASM_ARG2
-        call vmx_update_host_rsp
-
-Is this important since kvm_spurious_fault is just BUG()?  There is no
-macro currently to support CONFIG_DEBUG_BUGVERBOSE in assembly code, but
-it's also fine if you just change the call to ud2.
-
-Paolo
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
