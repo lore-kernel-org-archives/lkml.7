@@ -6,114 +6,101 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998E3C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF69C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CB12067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D182067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbfGOQkf (ORCPT
+        id S1731456AbfGOQmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:40:35 -0400
-Received: from sobre.alvarezp.com ([173.230.155.94]:54078 "EHLO
-        sobre.alvarezp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731220AbfGOQkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:40:35 -0400
-Received: from [192.168.15.3] (187-177-154-156.dynamic.axtel.net [187.177.154.156])
-        by sobre.alvarezp.com (Postfix) with ESMTPSA id 573971E31B;
-        Mon, 15 Jul 2019 11:40:33 -0500 (CDT)
-From:   Octavio Alvarez <octallk1@alvarezp.org>
-Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiang Biao <jiang.biao2@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org>
- <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org>
- <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de>
- <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org>
- <alpine.DEB.2.21.1906221523340.5503@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1906231448540.32342@nanos.tec.linutronix.de>
- <098de4c3-5f71-f84d-8b49-d2f43e18ed91@alvarezp.org>
- <alpine.DEB.2.21.1906271632300.32342@nanos.tec.linutronix.de>
-Message-ID: <82fa0f47-ccb9-18fc-e35d-af02df37e3fb@alvarezp.org>
-Date:   Mon, 15 Jul 2019 11:40:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 12:42:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40512 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730503AbfGOQmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 12:42:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 70162AF7A;
+        Mon, 15 Jul 2019 16:42:05 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 18:42:00 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v11 2/5] sched/core: uclamp: Propagate parent clamps
+Message-ID: <20190715164200.GA30862@blackbody.suse.cz>
+References: <20190708084357.12944-1-patrick.bellasi@arm.com>
+ <20190708084357.12944-3-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906271632300.32342@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-MX
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708084357.12944-3-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/19 9:38 AM, Thomas Gleixner wrote:
->> I did two tests:
->>
->> If I boot with sky2.disable_msi=1 on the kernel cmdline then the problem goes
->> away (when back from hibernation, the NIC works OK).
->>
->> If I boot regularly (disable_msi not set) and then do modprobe -r sky2;
->> modprobe sky2 disable_msi=1, the problem stays (when back from hibernation,
->> the NIC does not work).
+On Mon, Jul 08, 2019 at 09:43:54AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> Since it's possible for a cpu.uclamp.min value to be bigger than the
+> cpu.uclamp.max value, ensure local consistency by restricting each
+> "protection"
+> (i.e. min utilization) with the corresponding "limit" (i.e. max
+> utilization).
+I think this constraint should be mentioned in the Documentation/....
+
+> +static void cpu_util_update_eff(struct cgroup_subsys_state *css)
+> +{
+> +	struct cgroup_subsys_state *top_css = css;
+> +	struct uclamp_se *uc_se = NULL;
+> +	unsigned int eff[UCLAMP_CNT];
+> +	unsigned int clamp_id;
+> +	unsigned int clamps;
+> +
+> +	css_for_each_descendant_pre(css, top_css) {
+> +		uc_se = css_tg(css)->parent
+> +			? css_tg(css)->parent->uclamp : NULL;
+> +
+> +		for_each_clamp_id(clamp_id) {
+> +			/* Assume effective clamps matches requested clamps */
+> +			eff[clamp_id] = css_tg(css)->uclamp_req[clamp_id].value;
+> +			/* Cap effective clamps with parent's effective clamps */
+> +			if (uc_se &&
+> +			    eff[clamp_id] > uc_se[clamp_id].value) {
+> +				eff[clamp_id] = uc_se[clamp_id].value;
+> +			}
+> +		}
+> +		/* Ensure protection is always capped by limit */
+> +		eff[UCLAMP_MIN] = min(eff[UCLAMP_MIN], eff[UCLAMP_MAX]);
+> +
+> +		/* Propagate most restrictive effective clamps */
+> +		clamps = 0x0;
+> +		uc_se = css_tg(css)->uclamp;
+(Nitpick only, reassigning child where was parent before decreases
+readibility. IMO)
+
+> +		for_each_clamp_id(clamp_id) {
+> +			if (eff[clamp_id] == uc_se[clamp_id].value)
+> +				continue;
+> +			uc_se[clamp_id].value = eff[clamp_id];
+> +			uc_se[clamp_id].bucket_id = uclamp_bucket_id(eff[clamp_id]);
+Shouldn't these writes be synchronized with writes from
+__setscheduler_uclamp()?
+
 > 
-> Interesting. Did you verify that the driver still uses INTx after
-> hibernation in /proc/interrupts?
-> 
->   cat /proc/interrupts | grep eth0
-> 
-> The 6st column should show IO-APIC for INTx. If it shows PCI-MSI then
-> something went wrong
-
-Hi, Thomas,
-
-If I reboot with sky2.disable_msi=1, then I get IO-APIC and the bug does 
-not occur:
-
-  19:          0          0          0          0   IO-APIC  19-fasteoi eth0
-
-However, if I reboot without sky2.disable_msi=1 it properly starts as 
-PCI-MSI and then, after re-modprobing it it goes to IO-APIC, but the bug 
-occurs anyway:
-
-$ cat /proc/interrupts | grep eth
-  27:          0          1          0          0   PCI-MSI 3145728-edge 
-      eth0
-
-$ sudo modprobe -r sky2
-[sudo] password for alvarezp:
-
-$ sudo modprobe sky2 disable_msi=1
-
-$ # hibernating and coming back hibernation
-
-$ cat /proc/interrupts | grep eth
-  19:          0          0          0          0   IO-APIC  19-fasteoi 
-  eth0
-
-
-> Also please check Linus suspicion about the module being reloaded after
-> hibernation through some distro magic.
-
-This is not happening. Each time the driver is loaded the message "sky2: 
-driver version 1.30" is shown.
-
-I confirm only 1 line for the sky2.disable_msi=1 from kernel boot and 
-only 2 lines for re-modprobing.
-
-Best regards,
-Octavio.
