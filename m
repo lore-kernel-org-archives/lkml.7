@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49FEC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718C5C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E3A21841
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4129021537
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200541;
-	bh=Fel56vlLm3EcR8vmb380+JKCns3ZiwAaYRzP9HrPJ0o=;
+	s=default; t=1563200544;
+	bh=UZazOLY4xLkk2qBr8+dsHkB/Jc4iCiMRLqDD81r72bM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0DcEamgJxykk6DosvkmiIR3gdDnuyWU+4D7WHVYFbxCztF/LNuWFS+H08FJWcuqRf
-	 RkKk8y/aZTNK4IzQjr+S3ttPBBICw+WhuVrtVsu5GSn9VmcAiW/72qYuiUqVOKss43
-	 p/+VmTn8Mr8MYg3tXdFVaH+S8oHjtK/VGxBnA7u4=
+	b=ZjQTxBC94b3EJFJcsVaDb+qELZs1ETzqci1xTuKS+0iI+Miyv9cTtlEsjUbcUPfSn
+	 YJ/Ov8rq3NIybTjd9CidY9tAtGX4VpDH5rmpnw+bS0i96VLAI/Bg8xRoL3nJNHGlux
+	 A1GlMjjya9rSuasXB+VYKmIZ+YjFepg2MrNYLlUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390176AbfGOOWU (ORCPT
+        id S2390600AbfGOOWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390579AbfGOOWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:22:16 -0400
+        id S2390274AbfGOOWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:22:19 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E19E217F4;
-        Mon, 15 Jul 2019 14:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72BA21537;
+        Mon, 15 Jul 2019 14:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200535;
-        bh=Fel56vlLm3EcR8vmb380+JKCns3ZiwAaYRzP9HrPJ0o=;
+        s=default; t=1563200538;
+        bh=UZazOLY4xLkk2qBr8+dsHkB/Jc4iCiMRLqDD81r72bM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1BAgxhW2wgZuNvi2nSA1wKhJFDH8dk6jvn71fTe2BHziDxUEboOYhYfBFpiIsOC96
-         TA2n8WnzAtrjqgpHdbttThZQdzWRXTFqCNhvOla3vbtnZIr3oW8Cy1XpEc19nn0D2t
-         HvhNOP8T/qdb3q07ms4o6I5FFT+zDj5rXQUSkonk=
+        b=TcwtL/YqCHC9B2ikeXDnr/8LSLHM6tCPPSJj+DGH92G9x7BM3FrYjHsD3o86jdXMk
+         BvLMphCUHZT/91vAJp18jnIwwSpU21v73ivjntZ/O7DqtYi28OS5ycehVoJU3vB9WN
+         6M+q+wmFGPaFMnNTm4RSC09W4FuMYahQwvGdqkWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 070/158] net: hns3: fix for skb leak when doing selftest
-Date:   Mon, 15 Jul 2019 10:16:41 -0400
-Message-Id: <20190715141809.8445-70-sashal@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 072/158] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
+Date:   Mon, 15 Jul 2019 10:16:43 -0400
+Message-Id: <20190715141809.8445-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -61,48 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 8f9eed1a8791b83eb1c54c261d68424717e4111e ]
+[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
 
-If hns3_nic_net_xmit does not return NETDEV_TX_BUSY when doing
-a loopback selftest, the skb is not freed in hns3_clean_tx_ring
-or hns3_nic_net_xmit, which causes skb not freed problem.
+wbc_account_io() collects information on cgroup ownership of writeback
+pages to determine which cgroup should own the inode.  Pages can stay
+associated with dead memcgs but we want to avoid attributing IOs to
+dead blkcgs as much as possible as the association is likely to be
+stale.  However, currently, pages associated with dead memcgs
+contribute to the accounting delaying and/or confusing the
+arbitration.
 
-This patch fixes it by freeing skb when hns3_nic_net_xmit does
-not return NETDEV_TX_OK.
+Fix it by ignoring pages associated with dead memcgs.
 
-Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/fs-writeback.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 9684ad015c42..6a3c6b02a77c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -245,11 +245,13 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index 9544e2f8b79f..7ee86d8f313d 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -721,6 +721,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 		    size_t bytes)
+ {
++	struct cgroup_subsys_state *css;
+ 	int id;
  
- 		skb_get(skb);
- 		tx_ret = hns3_nic_net_xmit(skb, ndev);
--		if (tx_ret == NETDEV_TX_OK)
-+		if (tx_ret == NETDEV_TX_OK) {
- 			good_cnt++;
--		else
-+		} else {
-+			kfree_skb(skb);
- 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
- 				   tx_ret);
-+		}
- 	}
- 	if (good_cnt != HNS3_NIC_LB_TEST_PKT_NUM) {
- 		ret_val = HNS3_NIC_LB_TEST_TX_CNT_ERR;
+ 	/*
+@@ -732,7 +733,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 	if (!wbc->wb)
+ 		return;
+ 
+-	id = mem_cgroup_css_from_page(page)->id;
++	css = mem_cgroup_css_from_page(page);
++	/* dead cgroups shouldn't contribute to inode ownership arbitration */
++	if (!(css->flags & CSS_ONLINE))
++		return;
++
++	id = css->id;
+ 
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
 -- 
 2.20.1
 
