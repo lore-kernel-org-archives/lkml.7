@@ -4,114 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F092FC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39374C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92A020C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B152081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198764;
-	bh=ZdbnfVsO+QWddwSs2T2SECs1mmxbuL1FjvRE+RRAlxM=;
+	s=default; t=1563198773;
+	bh=lk6I4aH5+0b+VVVofMZ3cbJ7lsWFwa2u5jH2KKaaD+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kIOsmHACB/8M+ncqEkV5VZXkFJTTabv8KOf32NL2QUAluUo6dVXBhfmB+X0okNkZA
-	 gWJD+unl7bxqDY4q215rjiWQTLveNeEwPlHcxBYHf2SwlwIPCH1JBNaeCba2LiUyVq
-	 JiSwkRhfydhzIWEmyH/HvcEdOcJUv5Zi7TsWHaa0=
+	b=Qb9OC0+8cYUZi2CgWDlDf9LTeLz8AYPhJmpszNjKen1K4B5gNN3gQ5mhBNKXNBp6T
+	 mv182USzCJhqAYeiyhV8Wdjb1MV00kh57JXwFUD5w27EuqAXxEbQEt6gL9RsSjDPmB
+	 +7O95t6h9wENShxTwQWYS7zc72kflC0VeJaVTPkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfGONwn (ORCPT
+        id S1732273AbfGONww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46832 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731951AbfGONwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:52:35 -0400
+        id S1731928AbfGONws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:52:48 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46A842081C;
-        Mon, 15 Jul 2019 13:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDB2206B8;
+        Mon, 15 Jul 2019 13:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198754;
-        bh=ZdbnfVsO+QWddwSs2T2SECs1mmxbuL1FjvRE+RRAlxM=;
+        s=default; t=1563198767;
+        bh=lk6I4aH5+0b+VVVofMZ3cbJ7lsWFwa2u5jH2KKaaD+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkeO3f5CgJaD/PyFC/wZXLRtT4MEHgyrdvCGR97cAK89DL0pKwQi/b/+S68Ty4OCc
-         t0NFHZRHQfvdfkvgXVFnjbtSsXXmhpNrQGqhbFL9NSOMeyINJVgBknADdObhiHKr5p
-         gBJyK3mAVheFQYtwCvI5gdvDkqo5thsIhBrF6pL4=
+        b=xcabodyGG4f8uomb5IXOJ+fbz+IWphmWmE/Y2JRU9tZSTZn5dOnO3oaGzL2yQIj86
+         8s6h/Oz6QNfZo8AdJMBQkhcCvdWUfH2W/eGfSrN1zQII01QE7ED2RtwcyS1OcEmZTG
+         2ucP/F/TBx/x/fo7uj8G1c3b39By22cdXd/lbbZA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 095/249] bpf: silence warning messages in core
-Date:   Mon, 15 Jul 2019 09:44:20 -0400
-Message-Id: <20190715134655.4076-95-sashal@kernel.org>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 099/249] x86/cpu: Add Ice Lake NNPI to Intel family
+Date:   Mon, 15 Jul 2019 09:44:24 -0400
+Message-Id: <20190715134655.4076-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-[ Upstream commit aee450cbe482a8c2f6fa5b05b178ef8b8ff107ca ]
+[ Upstream commit e32d045cd4ba06b59878323e434bad010e78e658 ]
 
-Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
+Add the CPUID model number of Ice Lake Neural Network Processor for Deep
+Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
+model number 0x9D and this will be documented in a future version of Intel
+Software Development Manual.
 
-kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
-kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
-
-98 copies of the above.
-
-The attached patch silences the warnings, because we *know* we're overwriting
-the default initializer. That leaves bpf/core.c with only 6 other warnings,
-which become more visible in comparison.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@suse.de
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/Makefile | 1 +
+ arch/x86/include/asm/intel-family.h | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-index 4c2fa3ac56f6..29d781061cd5 100644
---- a/kernel/bpf/Makefile
-+++ b/kernel/bpf/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y := core.o
-+CFLAGS_core.o += $(call cc-disable-warning, override-init)
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 310118805f57..f60ddd655c78 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -56,6 +56,7 @@
+ #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
+ #define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++#define INTEL_FAM6_ICELAKE_NNPI		0x9D
  
- obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o tnum.o
- obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o bpf_lru_list.o lpm_trie.o map_in_map.o
+ /* "Small Core" Processors (Atom) */
+ 
 -- 
 2.20.1
 
