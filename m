@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A763C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BEEC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230C5205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB867205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202634;
-	bh=wBaZIto2KQUWpNiGmWaEiO53glht9iybHwomjelBnnE=;
+	s=default; t=1563202640;
+	bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHIeOyAi9HJHSjJu9flJGTWRR0s+ImmeDyZyxMHjiXAaoW8JPADQTpnz4Jnbyfwfw
-	 idcOWNQkM7o0if3KotiZmBtc/k8KkbNlYLHE7Y1vcxu1QiAnUl89iittDp5Fusf1N1
-	 gq0t3xptDo6yvD2IRUrVM8l/CoafnMNWePPFZDMQ=
+	b=RC9xaSEAz+uY3SmaKR5r6u69LMRQsoeYFKI1X4BR6HBd3VW/dmQAx7BYXv1ScKqTQ
+	 UOm5ygWHM8INYsXMNOrZ7Pf6WYYfreHaHyU9V5435nkj5psNGA0CEjgGc/z9YPrH7U
+	 b+EwCq8MiViI1AJSXusnrhmmskJsZmLhw4RAVeTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391239AbfGOO5M (ORCPT
+        id S2390373AbfGOOUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388929AbfGOOU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:20:56 -0400
+        id S2390270AbfGOOUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:35 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E576420868;
-        Mon, 15 Jul 2019 14:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80EB6206B8;
+        Mon, 15 Jul 2019 14:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200455;
-        bh=wBaZIto2KQUWpNiGmWaEiO53glht9iybHwomjelBnnE=;
+        s=default; t=1563200434;
+        bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qtOm6RGh61L46rFIMoDoZ4mWqlylbgqzf+XLr7AytC2bvfx48JWbNfjJnA+3EZdlL
-         IE6XsVrH3GxgYbQD5j8dhQR79KClfoFc4MUdGSTAqYclOMTct4TY3kp8NhXCg0ZvF0
-         zdDLtG5fxXzT36lFaiWPqrVsjSSFnObY27y5LJzg=
+        b=a4d834uNMEexN0EPLNlV+D2e9PPp/LcJwGvzVhZR9lNiiBSoClHSnvy9x3kpzV2VG
+         rbmOvJT1P4kWroe9TWG8AIxnSOOTNLybXhWWh8KCnOjBIOsf3AdQ6ivBsuTzr7Ipbg
+         hpHZxJWY8DBSn0tKq9u09sV0YJ8rEiIZh8pNBYaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 054/158] perf report: Fix OOM error in TUI mode on s390
-Date:   Mon, 15 Jul 2019 10:16:25 -0400
-Message-Id: <20190715141809.8445-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 049/158] RAS/CEC: Fix pfn insertion
+Date:   Mon, 15 Jul 2019 10:16:20 -0400
+Message-Id: <20190715141809.8445-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -62,118 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 8a07aa4e9b7b0222129c07afff81634a884b2866 ]
+[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
 
-Debugging a OOM error using the TUI interface revealed this issue
-on s390:
+When inserting random PFNs for debugging the CEC through
+(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
+multiple values get inserted per a single write.
 
-[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
-....
-00000001119b7158 B radix_tree_node_cachep
-00000001119b8000 B __bss_stop
-00000001119b8000 B _end
-000003ff80002850 t autofs_mount	[autofs4]
-000003ff80002868 t autofs_show_options	[autofs4]
-000003ff80002a98 t autofs_evict_inode	[autofs4]
-....
+That is because simple_attr_write() interprets a retval of 0 as
+success and claims the whole input. However, pfn_set() returns the
+cec_add_elem() value, which, if > 0 and smaller than the whole input
+length, makes glibc continue issuing the write syscall until there's
+input left:
 
-There is a huge gap between the last kernel symbol
-__bss_stop/_end and the first kernel module symbol
-autofs_mount (from autofs4 module).
+  pfn_set
+  simple_attr_write
+  debugfs_attr_write
+  full_proxy_write
+  vfs_write
+  ksys_write
+  do_syscall_64
+  entry_SYSCALL_64_after_hwframe
 
-After reading the kernel symbol table via functions:
+leading to those repeated calls.
 
- dso__load()
- +--> dso__load_kernel_sym()
-      +--> dso__load_kallsyms()
-	   +--> __dso_load_kallsyms()
-	        +--> symbols__fixup_end()
+Return 0 to fix that.
 
-the symbol __bss_stop has a start address of 1119b8000 and
-an end address of 3ff80002850, as can be seen by this debug statement:
-
-  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
-
-The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
-It is the last kernel symbol and fills up the space until
-the first kernel module symbol.
-
-This size kills the TUI interface when executing the following
-code:
-
-  process_sample_event()
-    hist_entry_iter__add()
-      hist_iter__report_callback()
-        hist_entry__inc_addr_samples()
-          symbol__inc_addr_samples(symbol = __bss_stop)
-            symbol__cycles_hist()
-               annotated_source__alloc_histograms(...,
-				                symbol__size(sym),
-		                                ...)
-
-This function allocates memory to save sample histograms.
-The symbol_size() marco is defined as sym->end - sym->start, which
-results in above value of 0x3fe6e64a850 bytes and
-the call to calloc() in annotated_source__alloc_histograms() fails.
-
-The histgram memory allocation might fail, make this failure
-no-fatal and continue processing.
-
-Output before:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
-		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
-		func: 0
-problem adding hist entry, skipping event
-0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
-[tmricht@m83lp54 perf]$
-
-Output after:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
-   symbol__hists notes->src:0x2aa2a70 nr_hists:1
-   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
-   __symbol__inc_addr_samples: addr=0x11094c69e
-   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
-   	=> nr_samples: 1, period: 526008
-[tmricht@m83lp54 perf]$
-
-There is no error about failed memory allocation and the TUI interface
-shows all entries.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/90cb5607-3e12-5167-682d-978eba7dafa8@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/ras/cec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index dfee110b3a58..c357051dd2b6 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -911,9 +911,8 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
- 	if (sym == NULL)
- 		return 0;
- 	src = symbol__hists(sym, evsel->evlist->nr_entries);
--	if (src == NULL)
--		return -ENOMEM;
--	return __symbol__inc_addr_samples(sym, map, src, evsel->idx, addr, sample);
-+	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
-+						   addr, sample) : 0;
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index f85d6b7a1984..5d2b2c02cbbe 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -369,7 +369,9 @@ static int pfn_set(void *data, u64 val)
+ {
+ 	*(u64 *)data = val;
+ 
+-	return cec_add_elem(val);
++	cec_add_elem(val);
++
++	return 0;
  }
  
- static int symbol__account_cycles(u64 addr, u64 start,
+ DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
 -- 
 2.20.1
 
