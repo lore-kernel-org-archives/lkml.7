@@ -2,111 +2,196 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4655C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F006C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45E42145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:36:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VlBPvlGu"
+	by mail.kernel.org (Postfix) with ESMTP id 084252171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563223035;
+	bh=f6vha8teZ7Sy/LhmbX8Bp2eqOvg07oKQIDJMB60rAoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EnQO8ZPBDUf6+B3bm8Sh2zBorx7kGNPcScHzqSCnzg9scMSBCXPet+ITAVEVxQoul
+	 Z2B1d+DqM9uk2q9BLO5CMIGKsFHATuq7Fjg3/wzi2APmLzZmrekWlsuT+4uqx3L922
+	 RQvglDqGZDsdsRvFBzy+i0B6UmAKuZASqdPjtLeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbfGOUgg (ORCPT
+        id S1732363AbfGOUhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:36:36 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39976 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729505AbfGOUgg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:36:36 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m8so17613705lji.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:36:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w2Dnxb2ns6xhEs9ebe85/XBNTscvREDwZrH85VfP+g0=;
-        b=VlBPvlGu2PgZxgv6ta6aut6KF0nQGbi1u6jjNATnVkQJ1iCQIpVTClPnc1UQhiJ2Ph
-         MTqXGZiONw8zUZ4ZzXj9qIsIwAdJ5QRdm1vU/6p9WUyRfgBSZQZ4PqJR+XTcs9f3W0we
-         j8aSLMeRF1CuhnEgciNBw5S+9nu71pLJXWgkAny7Kh/ku987MUW3ypEGR04IsTWhG2Wx
-         a4WRjgMfbqxuNU4ZdeKXF4hidIW5zO72icBLjclFBAawGPKcB6M8uR7ZgskMOJDZjK2Z
-         Vafbdx3moO3D5Q6c84CDj4hFpXhL1Xe3cDLsNQEYM9fZ82YwYL5m5BjhoTY/Sxp6S1L2
-         d2Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w2Dnxb2ns6xhEs9ebe85/XBNTscvREDwZrH85VfP+g0=;
-        b=bmFhZBs62ieAOc3y6uy59zjtrsSZTrvIcZqbIMljvhdYpHMeL7b8r3geUGS4SkOoSk
-         QMU699i44z9yQAN3orAfQETdACeKKB0oidJZlr8A33kYY3GF1jWEnOuxpSI1QoeHXbBO
-         LfYY/ySeCj/gDglkFX55I5KicCH4OfPyPD2rXxtDE3ojfxHFbOGJ35/Aq+JJM5ibEIIK
-         QB8+vdhT/72j9oED0Zn0idijdmyeUn3F2u+0HQmdw8+oapxQ/EdYT/TzCnK9se8CeAb5
-         8W22kWPIcY5d9+hWnLhTj2sO8HyNTVnb1QCnTVMxe4DVf3mwV/gorlhdJS43DIIAR8Fa
-         o6dw==
-X-Gm-Message-State: APjAAAXrc2WcqOEDqvB+K7RAtQZEZPXE8bXv65YOaZolPQQiG1nsMNP/
-        KDeNmfoMj5gMvskTQF41yhyQhYZWutp76dCYNa7VzA==
-X-Google-Smtp-Source: APXvYqwREjbA8VK0ftOGlkm4hSR26WLhAC+bf/M1wq9gN8iee0N6YxAzGgqTOUVxwTDkOVRm/XCm3sPwj0OkDsxALOo=
-X-Received: by 2002:a2e:98d7:: with SMTP id s23mr14805474ljj.179.1563222993638;
- Mon, 15 Jul 2019 13:36:33 -0700 (PDT)
+        Mon, 15 Jul 2019 16:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729505AbfGOUhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 16:37:13 -0400
+Received: from localhost (unknown [88.128.80.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F39A2145D;
+        Mon, 15 Jul 2019 20:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563223032;
+        bh=f6vha8teZ7Sy/LhmbX8Bp2eqOvg07oKQIDJMB60rAoE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OpE0NTgYLB+9Yhlw2OTVeb/KKRgaAT0OZR8zmLJDkIjYW8vhFWb9D92fkh37F0r23
+         62YYv/t32JesZf4+BoabX8nvU8CtjvDGmARuIOYUP2601S+j3n8GmORpzU4lExoVf2
+         W4GyZ1tFIG2+U6fTJ9kfQtdMmAytXDZoQ85tpNXU=
+Date:   Mon, 15 Jul 2019 22:36:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tri Vo <trong@android.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, rafael@kernel.org,
+        hridya@google.com, sspatil@google.com, kaleshsingh@google.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v3] PM / wakeup: show wakeup sources stats in sysfs
+Message-ID: <20190715203651.GA7513@kroah.com>
+References: <CANA+-vAxU5jp6PQ26NU+UMc6iyw6KkBS9nbd6wj0qqkO-1WhYg@mail.gmail.com>
+ <20190715201116.221078-1-trong@android.com>
 MIME-Version: 1.0
-References: <20190715191804.112933-1-hridya@google.com>
-In-Reply-To: <20190715191804.112933-1-hridya@google.com>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Mon, 15 Jul 2019 13:36:22 -0700
-Message-ID: <CAHRSSEwUJvO-iG6D-w8RUCi9S+iBRrX9pN3oJ=SbcHLHd0b74A@mail.gmail.com>
-Subject: Re: [PATCH] binder: prevent transactions to context manager from its
- own process.
-To:     Hridya Valsaraju <hridya@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        syzbot <syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715201116.221078-1-trong@android.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 12:18 PM Hridya Valsaraju <hridya@google.com> wrote:
->
-> Currently, a transaction to context manager from its own process
-> is prevented by checking if its binder_proc struct is the same as
-> that of the sender. However, this would not catch cases where the
-> process opens the binder device again and uses the new fd to send
-> a transaction to the context manager.
->
-> Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
-> Signed-off-by: Hridya Valsaraju <hridya@google.com>
+On Mon, Jul 15, 2019 at 01:11:16PM -0700, Tri Vo wrote:
+> Userspace can use wakeup_sources debugfs node to plot history of suspend
+> blocking wakeup sources over device's boot cycle. This information can
+> then be used (1) for power-specific bug reporting and (2) towards
+> attributing battery consumption to specific processes over a period of
+> time.
+> 
+> However, debugfs doesn't have stable ABI. For this reason, create a
+> 'struct device' to expose wakeup sources statistics in sysfs under
+> /sys/class/wakeup/<name>/.
+> 
+> Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> source statistics in sysfs.
+> 
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Tri Vo <trong@android.com>
+> Tested-by: Tri Vo <trong@android.com>
 
-Acked-by: Todd Kjos <tkjos@google.com>
+Co-Developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+perhaps given that I rewrote the whole file last time?  :)
+
 
 > ---
->  drivers/android/binder.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index e4d25ebec5be..89b9cedae088 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -3138,7 +3138,7 @@ static void binder_transaction(struct binder_proc *proc,
->                         else
->                                 return_error = BR_DEAD_REPLY;
->                         mutex_unlock(&context->context_mgr_node_lock);
-> -                       if (target_node && target_proc == proc) {
-> +                       if (target_node && target_proc->pid == proc->pid) {
->                                 binder_user_error("%d:%d got transaction to context manager from process owning it\n",
->                                                   proc->pid, thread->pid);
->                                 return_error = BR_FAILED_REPLY;
-> --
-> 2.22.0.510.g264f2c817a-goog
->
+>  Documentation/ABI/testing/sysfs-power |  73 ++++++++++++-
+>  drivers/base/power/Makefile           |   1 +
+>  drivers/base/power/wakeup.c           |  12 ++-
+>  drivers/base/power/wakeup_stats.c     | 148 ++++++++++++++++++++++++++
+>  include/linux/pm_wakeup.h             |  19 ++++
+>  kernel/power/Kconfig                  |  10 ++
+>  kernel/power/wakelock.c               |  10 ++
+>  7 files changed, 270 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/base/power/wakeup_stats.c
+
+What changed from v2?  :)
+
+> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+> index 18b7dc929234..ef92628e6fc3 100644
+> --- a/Documentation/ABI/testing/sysfs-power
+> +++ b/Documentation/ABI/testing/sysfs-power
+> @@ -300,4 +300,75 @@ Description:
+>  		attempt.
+>  
+>  		Using this sysfs file will override any values that were
+> -		set using the kernel command line for disk offset.
+> \ No newline at end of file
+> +		set using the kernel command line for disk offset.
+> +
+> +What:		/sys/class/wakeup/
+
+My fault, this should be a new ABI/testing file, don't use sysfs-power
+as it does not make any sense now, right?
+
+> --- /dev/null
+> +++ b/drivers/base/power/wakeup_stats.c
+> @@ -0,0 +1,148 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Wakeup statistics in sysfs
+> + *
+> + * Copyright (c) 2019 Linux Foundation <gregkh@linuxfoundation.org>
+
+My fault on the original here, this line should be 2 lines:
+
+> + * Copyright (c) 2019 Linux Foundation
+> + * Copyright (c) 2019 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+as those are two different entities that have copyright here on this
+file.
+
+> +config PM_SLEEP_STATS
+> +	bool "Wakeup sources statistics"
+> +	depends on PM_SLEEP
+> +	help
+> +	  Expose wakeup sources statistics to user space via sysfs. Collected
+> +	  statistics are located under /sys/power/wakeup_sources. For more
+> +	  information, read <file:Documentation/ABI/testing/sysfs-power>.
+
+Filename should be changed.
+
+
+> +
+> +	  If in doubt, say N.
+> +
+>  config DPM_WATCHDOG
+>  	bool "Device suspend/resume watchdog"
+>  	depends on PM_DEBUG && PSTORE && EXPERT
+> diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
+> index 4210152e56f0..32726da3d6e6 100644
+> --- a/kernel/power/wakelock.c
+> +++ b/kernel/power/wakelock.c
+> @@ -122,6 +122,7 @@ static void __wakelocks_gc(struct work_struct *work)
+>  
+>  		if (!active) {
+>  			wakeup_source_remove(&wl->ws);
+> +			wakeup_source_sysfs_remove(&wl->ws);
+>  			rb_erase(&wl->node, &wakelocks_tree);
+>  			list_del(&wl->lru);
+>  			kfree(wl->name);
+> @@ -153,6 +154,7 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
+>  	struct rb_node **node = &wakelocks_tree.rb_node;
+>  	struct rb_node *parent = *node;
+>  	struct wakelock *wl;
+> +	int ret;
+>  
+>  	while (*node) {
+>  		int diff;
+> @@ -189,6 +191,14 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
+>  	}
+>  	wl->ws.name = wl->name;
+>  	wl->ws.last_time = ktime_get();
+> +
+> +	ret = wakeup_source_sysfs_add(&wl->ws);
+> +	if (ret) {
+> +		kfree(wl->name);
+> +		kfree(wl);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+>  	wakeup_source_add(&wl->ws);
+>  	rb_link_node(&wl->node, parent, node);
+>  	rb_insert_color(&wl->node, &wakelocks_tree);
+
+Nice, you got rid of the extra change in this file, making this much
+simpler.
+
+Can you make these minor tweaks?  If so, I'll be glad to queue this up
+after 5.3-rc1 is out.
+
+And I am guessing that you actually tested this all out, and it works
+for you?  Have you changed Android userspace to use the new api with no
+problems?
+
+thanks,
+
+greg k-h
