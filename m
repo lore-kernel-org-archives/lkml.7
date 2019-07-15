@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34D7C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20124C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3B420896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E362E212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198710;
-	bh=Ffp64TdZCsIwXhtYCKk22WhWHY0Yl/3XVhpzg9tgNA0=;
+	s=default; t=1563198719;
+	bh=HRAFbx1xYWOwGiCw4W5CgM34/HvkthqXp936qN+zz0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xD6D+5YK8OC66hT8PFKNZGAKEhhkWXGmb5g48tsLB98WoIDdxSRFkvStL2ThHMSbB
-	 +8DEe9q9KQzqtQ4hS0Umws9jRkDZVZIgkDbgUcFSypUilcitxm3esyEEKTMR5r6d/o
-	 JUogYV1KtYV0j6EP2oYM2urSJItUya9q7r+YCssg=
+	b=yIm6GVnmjPJ/tAT2zrrsnOXgM4JmDTGsImHyVV0ahkMVsz6Hy9RSA7R8xjXRK7VIM
+	 iO6l6yrHy6D5HKb3vPtWNDMbLhOkFSdw1LuGlpZ5wJWEHfiQYa336XsCC7yC0Fr3k9
+	 flW+p0owSXL6g0pup5pCNfYHLsKc6A7WZo8WxRKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732150AbfGONvt (ORCPT
+        id S1732160AbfGONv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:51:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731709AbfGONvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:51:46 -0400
+        id S1731103AbfGONvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:51:54 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD7020896;
-        Mon, 15 Jul 2019 13:51:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D96F020896;
+        Mon, 15 Jul 2019 13:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198705;
-        bh=Ffp64TdZCsIwXhtYCKk22WhWHY0Yl/3XVhpzg9tgNA0=;
+        s=default; t=1563198713;
+        bh=HRAFbx1xYWOwGiCw4W5CgM34/HvkthqXp936qN+zz0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xiRcM0fFBWSU0dpsFoJr/YiPPOCfy4AGDYn32e4HQ4ajFM+5MbX0kEjLGeS1secsp
-         z7hvbb19ySyzu8411ucabEfmYK7ySBHNgVYTMvLi9ZY1uc99xrxn9IADZWx5k87S/5
-         yxRuLGf+HW3r41pa28tnmhCtODSa0v0Uv4RAzHnY=
+        b=u+aRyV4Ar3DE1n+fJdxgn7UiVdy2LIF5krsEoQ1v54IKaVb7Y8K0+tKCZf5MZv1PA
+         w9oQQoA/PmFb00awPN4ZnO72FbQxLL7VUu7c8yCswmH7NNJ698CJ30LKHW7/Cw/CjV
+         fiUa0VEmTIhxVSNs1IisVUKOjeYNQwAUsGOXdPPI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 088/249] media: fdp1: Support M3N and E3 platforms
-Date:   Mon, 15 Jul 2019 09:44:13 -0400
-Message-Id: <20190715134655.4076-88-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 090/249] gpio: omap: fix lack of irqstatus_raw0 for OMAP4
+Date:   Mon, 15 Jul 2019 09:44:15 -0400
+Message-Id: <20190715134655.4076-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,51 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 4e8c120de9268fc26f583268b9d22e7d37c4595f ]
+[ Upstream commit 64ea3e9094a1f13b96c33244a3fb3a0f45690bd2 ]
 
-New Gen3 R-Car platforms incorporate the FDP1 with an updated version
-register. No code change is required to support these targets, but they
-will currently report an error stating that the device can not be
-identified.
+Commit 384ebe1c2849 ("gpio/omap: Add DT support to GPIO driver") added
+the register definition tables to the gpio-omap driver. Subsequently to
+that commit, commit 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx()
+checks from *_runtime_resume()") added definitions for irqstatus_raw*
+registers to the legacy OMAP4 definitions, but missed the DT
+definitions.
 
-Update the driver to match against the new device types.
+This causes an unintentional change of behaviour for the 1.101 errata
+workaround on OMAP4 platforms. Fix this oversight.
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx() checks from *_runtime_resume()")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_fdp1.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpio-omap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
-index 6a90bc4c476e..b8615a288e2b 100644
---- a/drivers/media/platform/rcar_fdp1.c
-+++ b/drivers/media/platform/rcar_fdp1.c
-@@ -257,6 +257,8 @@ MODULE_PARM_DESC(debug, "activate debug info");
- #define FD1_IP_H3_ES1			0x02010101
- #define FD1_IP_M3W			0x02010202
- #define FD1_IP_H3			0x02010203
-+#define FD1_IP_M3N			0x02010204
-+#define FD1_IP_E3			0x02010205
- 
- /* LUTs */
- #define FD1_LUT_DIF_ADJ			0x1000
-@@ -2365,6 +2367,12 @@ static int fdp1_probe(struct platform_device *pdev)
- 	case FD1_IP_H3:
- 		dprintk(fdp1, "FDP1 Version R-Car H3\n");
- 		break;
-+	case FD1_IP_M3N:
-+		dprintk(fdp1, "FDP1 Version R-Car M3N\n");
-+		break;
-+	case FD1_IP_E3:
-+		dprintk(fdp1, "FDP1 Version R-Car E3\n");
-+		break;
- 	default:
- 		dev_err(fdp1->dev, "FDP1 Unidentifiable (0x%08x)\n",
- 			hw_version);
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 9276ef616430..7632c98aa3a4 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1453,6 +1453,8 @@ static struct omap_gpio_reg_offs omap4_gpio_regs = {
+ 	.clr_dataout =		OMAP4_GPIO_CLEARDATAOUT,
+ 	.irqstatus =		OMAP4_GPIO_IRQSTATUS0,
+ 	.irqstatus2 =		OMAP4_GPIO_IRQSTATUS1,
++	.irqstatus_raw0 =	OMAP4_GPIO_IRQSTATUSRAW0,
++	.irqstatus_raw1 =	OMAP4_GPIO_IRQSTATUSRAW1,
+ 	.irqenable =		OMAP4_GPIO_IRQSTATUSSET0,
+ 	.irqenable2 =		OMAP4_GPIO_IRQSTATUSSET1,
+ 	.set_irqenable =	OMAP4_GPIO_IRQSTATUSSET0,
 -- 
 2.20.1
 
