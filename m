@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D9C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D43C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41AD021842
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0AF206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199546;
-	bh=j+BQ01EWDQFk4EWnsQA580I1Cevoo20aZTWTabtNWH8=;
+	s=default; t=1563199552;
+	bh=WeOczSlAxi1PpfYbpQfUm578xh1Zna2AUiZaBBpukxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiwSsOthylHpV4t++m0Oy6aI7tX090bjhRIxe1j7/IftFe8A8rxTGI48Y7bi1qcR7
-	 e3M9IzrQzpgHsq2yiS9RgKNtuWG0v1lMQIMC+lgEbmXEt6cnJVbSOAcOPanso/e8pM
-	 8gLvnJb9GGeb5OIakSlnAxebg7w3penr1trI19ts=
+	b=uuObErqIQje3UgEp8F3uJjcJ+7+F78PBPXAFCJIxlSkExk8Md1diaskxPhyQOkXVa
+	 CRR3PdObymoi+DRLg/5uyLyd6rk9WGXUq9p2gqRxc/ptfEON/80Csl/QN8W/GluWqe
+	 4qpL0z5Z6DrIrh+ArhmXcbO4fRC7RFchp7LToQkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388191AbfGOOFo (ORCPT
+        id S2388204AbfGOOFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:05:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52276 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733242AbfGOOFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:05:36 -0400
+        id S1731284AbfGOOFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:46 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A136B21842;
-        Mon, 15 Jul 2019 14:05:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4BF217F9;
+        Mon, 15 Jul 2019 14:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199535;
-        bh=j+BQ01EWDQFk4EWnsQA580I1Cevoo20aZTWTabtNWH8=;
+        s=default; t=1563199546;
+        bh=WeOczSlAxi1PpfYbpQfUm578xh1Zna2AUiZaBBpukxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K5cIFSwoSYYj10fWaBG+ZqQAVm2sh8EK2FPrZER41XXQu0lKpgiZZ1rbrnQ/ttSIq
-         DfXm7szwfdSW6slYqoCJarzop72puS8mKb0+5xFDVi6RjRjlZ9O8ov1WYGf2pzNikH
-         6EH71xe192u+8nO6Bol4bsnhGLRUpdO4WqXdjQQE=
+        b=W6wJkQAHcSr4bR3nQRzorM1NxHgBEU0j1RPf7w4xiuyuv66zElOVdJf5D8lxcJigl
+         jTUGuIoIzhucqZR8JGyo5l+wniYBWStIf93Mq7/cZNDrsKAZRdHjdDQnCPfAAf4S1a
+         zzOX+OyytoBe15sEcq3wugqk7JPtQWGrkoO/PZgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anirudh Gupta <anirudhrudr@gmail.com>,
-        Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 036/219] xfrm: Fix xfrm sel prefix length validation
-Date:   Mon, 15 Jul 2019 10:00:37 -0400
-Message-Id: <20190715140341.6443-36-sashal@kernel.org>
+Cc:     sumitg <sumitg@nvidia.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 038/219] media: v4l2-core: fix use-after-free error
+Date:   Mon, 15 Jul 2019 10:00:39 -0400
+Message-Id: <20190715140341.6443-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,56 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anirudh Gupta <anirudhrudr@gmail.com>
+From: sumitg <sumitg@nvidia.com>
 
-[ Upstream commit b38ff4075a80b4da5cb2202d7965332ca0efb213 ]
+[ Upstream commit 3e0f724346e96daae7792262c6767449795ac3b5 ]
 
-Family of src/dst can be different from family of selector src/dst.
-Use xfrm selector family to validate address prefix length,
-while verifying new sa from userspace.
+Fixing use-after-free within __v4l2_ctrl_handler_setup().
+Memory is being freed with kfree(new_ref) for duplicate
+control reference entry but ctrl->cluster pointer is still
+referring to freed duplicate entry resulting in error on
+access. Change done to update cluster pointer only when new
+control reference is added.
 
-Validated patch with this command:
-ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-0x1111016400000000000000000000000044440001 128 \
-sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
+ ==================================================================
+ BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
+ Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
 
-Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+ Allocated by task 312:
+
+ Freed by task 312:
+
+ The buggy address belongs to the object at ffffffc324e78600
+  which belongs to the cache kmalloc-64 of size 64
+ The buggy address is located 24 bytes inside of
+  64-byte region [ffffffc324e78600, ffffffc324e78640)
+ The buggy address belongs to the page:
+ page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
+					(null) index:0xffffffc324e78f80
+ flags: 0x4000000000000100(slab)
+ raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
+ raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
+ page dumped because: kasan: bad access detected
+
+ Memory state around the buggy address:
+  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                             ^
+  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+ ==================================================================
+
+Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 6916931b1de1..ee91f939903e 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 54d66dbc2a31..fd18923ccc14 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2148,15 +2148,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	if (size_extra_req)
+ 		new_ref->p_req.p = &new_ref[1];
  
- 	err = -EINVAL;
- 	switch (p->family) {
-+	case AF_INET:
-+		break;
-+
-+	case AF_INET6:
-+#if IS_ENABLED(CONFIG_IPV6)
-+		break;
-+#else
-+		err = -EAFNOSUPPORT;
-+		goto out;
-+#endif
-+
-+	default:
-+		goto out;
+-	if (ctrl->handler == hdl) {
+-		/* By default each control starts in a cluster of its own.
+-		   new_ref->ctrl is basically a cluster array with one
+-		   element, so that's perfect to use as the cluster pointer.
+-		   But only do this for the handler that owns the control. */
+-		ctrl->cluster = &new_ref->ctrl;
+-		ctrl->ncontrols = 1;
+-	}
+-
+ 	INIT_LIST_HEAD(&new_ref->node);
+ 
+ 	mutex_lock(hdl->lock);
+@@ -2189,6 +2180,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	hdl->buckets[bucket] = new_ref;
+ 	if (ctrl_ref)
+ 		*ctrl_ref = new_ref;
++	if (ctrl->handler == hdl) {
++		/* By default each control starts in a cluster of its own.
++		 * new_ref->ctrl is basically a cluster array with one
++		 * element, so that's perfect to use as the cluster pointer.
++		 * But only do this for the handler that owns the control.
++		 */
++		ctrl->cluster = &new_ref->ctrl;
++		ctrl->ncontrols = 1;
 +	}
-+
-+	switch (p->sel.family) {
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+ 
+ unlock:
+ 	mutex_unlock(hdl->lock);
 -- 
 2.20.1
 
