@@ -2,140 +2,114 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B22BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D346BC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058F5204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2292054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563202713;
+	bh=dMS4IlMtitQta4w5eymfq+mTgMKszYDZ+A8Kxy3G5DA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=W0RyLyrPXjmKd8jmlOYGwlTUAxai5u0m+XaztNWhz9E1uTlXY+KUiibBykguCTs8l
+	 kOxuFYPtGVHnC/6cA46lzf1TpPtXbu3e3crrg6sXNEBb+4mezEEJNxUwPR2ScT75wH
+	 +YYWB8KZg2DIgdnOzvdPZikMkZ/EvhXYzkZ9+8Ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391634AbfGOO6Z (ORCPT
+        id S2391679AbfGOO6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:58:25 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:42089 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390903AbfGOO5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:57:44 -0400
-Received: from orion.localdomain ([95.118.111.244]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MOzKk-1i5nCR2tVE-00PLVd; Mon, 15 Jul 2019 16:57:39 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        linux-leds@vger.kernel.org
-Subject: [PATCH 4/6] leds: apu: drop profile field from priv data
-Date:   Mon, 15 Jul 2019 16:57:31 +0200
-Message-Id: <1563202653-20994-5-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1563202653-20994-1-git-send-email-info@metux.net>
-References: <1563202653-20994-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:/XuT5C5+ZAd8EZV57RjhC1vSM1n2EnuzZFECLA56V3Uz7rBFADh
- rS7H91OCIwDT+ngUcqwzWyR6poASpCtFBY5cGLpF2ApYS7Aunsxcg0HOli3DY0ayinJFpX1
- uFSxVzGegIT4xLsI1+HJrYSqJb/RNlMPyogNFlN7zg0kEG4YHOgtI8ycdPRK17xXXEBDl3v
- LqFs+TpB4yuoy29lNA10w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t/j9D14XzVI=:QxMs7OptdsJotNbcM77P2W
- B4SZ2Yc5dqRJcyKXwEqUyvY5mDSOYwK/cCUUq/ClUPRu2lHXDczvahn2fF5P2/8LTGW41RkTR
- 49CASclXakqezdHiPOO/glwmGnQ56O8qn2P9YYAWgiUTKyQE42reeW0soTm0cd6ntkhInLIXg
- OJt39VXCEPtDE4P2aFs2jRLePbMYLPob5Hr5+pQsyTxDerwY2sP+Ek8VMh9zOt5GGP+OjBhj8
- rNPw59as+n7g/k277cH54gnZUdTOyTHEruW8MJpw09I3zfiO12WVfIDJyp/I6YtOhW5qCe5Sa
- 3CRoPkFdi59EyFxZaaH3DOvaDvSUehv0O7rsqha0wp9Xpe7xg7sHvBvviaEbCUovfZXVXvwYN
- u3OYtui+C0rpUxxMU2SRr5w5R+tiKgWmS/wCByLH0nND8OcttaiaCxT7HVBH3AERXk8LR00hj
- O6MyKHl4KMEonUXO9Kn29FNelFLHpzVNY1Xk1Li+KVSbIsSVRiz6EJwQy92d1bAtv4ER4Hkpz
- EaYkmDsa0UxEWPw9SSbBOLWaDmumgZGBGGJGXK0bYH6Y/5Fekep3ONRbKk/2mmJ0PIuKx5r1q
- CU5qrTTa/XBgzXkGSP1HL2+MfYdSDU88+xSQxUqMeZirFmxSqscYTfQweZ1M3tZXL6Friouxd
- HQGHOo8dslOxa9a8pO5jkkbsjTt6ou5Qj7SVdAZZKIWUh8X9ZHVRFtKXjySFe/wImdAy5o3rB
- xGCCtQhIs159zT20doOn1ttwZ9Hu+N4NFieJ5Q==
+        Mon, 15 Jul 2019 10:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390437AbfGOOUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:25 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B72820868;
+        Mon, 15 Jul 2019 14:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563200424;
+        bh=dMS4IlMtitQta4w5eymfq+mTgMKszYDZ+A8Kxy3G5DA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z6OlgDTYlt1S7HVVcgvohklsHj1zlNx0ZUaETOOzohvIDg1e1emgvISf8OreffpUb
+         gTyv6471lJt6Xq4of37WtxB084qe4piuI2IYaPTwnJq0xyNJwGg1L/ThCVYJi6789n
+         gj/S+QS8ZrKp159GBPLYaV0ckaOwhT2ZMzBSswhA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Biao Huang <biao.huang@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 043/158] net: stmmac: dwmac4: fix flow control issue
+Date:   Mon, 15 Jul 2019 10:16:14 -0400
+Message-Id: <20190715141809.8445-43-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+From: Biao Huang <biao.huang@mediatek.com>
 
-As this driver now only supports the APU1 boards, we don't need
-to handle profiles anymore and just can use the only one global
-array directly.
+[ Upstream commit ee326fd01e79dfa42014d55931260b68b9fa3273 ]
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
+Current dwmac4_flow_ctrl will not clear
+GMAC_RX_FLOW_CTRL_RFE/GMAC_RX_FLOW_CTRL_RFE bits,
+so MAC hw will keep flow control on although expecting
+flow control off by ethtool. Add codes to fix it.
+
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-apu.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-apu.c b/drivers/leds/leds-apu.c
-index f79146c..451cb9f 100644
---- a/drivers/leds/leds-apu.c
-+++ b/drivers/leds/leds-apu.c
-@@ -69,8 +69,6 @@ struct apu_led_profile {
- struct apu_led_pdata {
- 	struct platform_device *pdev;
- 	struct apu_led_priv *pled;
--	const struct apu_led_profile *profile;
--	int num_led_instances;
- 	spinlock_t lock;
- };
- 
-@@ -109,24 +107,24 @@ static int apu_led_config(struct device *dev, struct apu_led_pdata *apuld)
- 	int err;
- 
- 	apu_led->pled = devm_kcalloc(dev,
--		apu_led->num_led_instances, sizeof(struct apu_led_priv),
-+		ARRAY_SIZE(apu1_led_profile), sizeof(struct apu_led_priv),
- 		GFP_KERNEL);
- 
- 	if (!apu_led->pled)
- 		return -ENOMEM;
- 
--	for (i = 0; i < apu_led->num_led_instances; i++) {
-+	for (i = 0; i < ARRAY_SIZE(apu1_led_profile); i++) {
- 		struct apu_led_priv *pled = &apu_led->pled[i];
- 		struct led_classdev *led_cdev = &pled->cdev;
- 
--		led_cdev->name = apu_led->profile[i].name;
--		led_cdev->brightness = apu_led->profile[i].brightness;
-+		led_cdev->name = apu1_led_profile[i].name;
-+		led_cdev->brightness = apu1_led_profile[i].brightness;
- 		led_cdev->max_brightness = 1;
- 		led_cdev->flags = LED_CORE_SUSPENDRESUME;
- 		led_cdev->brightness_set = apu1_led_brightness_set;
- 
- 		pled->param.addr = devm_ioremap(dev,
--				apu_led->profile[i].offset, APU1_IOSIZE);
-+				apu1_led_profile[i].offset, APU1_IOSIZE);
- 		if (!pled->param.addr) {
- 			err = -ENOMEM;
- 			goto error;
-@@ -136,7 +134,7 @@ static int apu_led_config(struct device *dev, struct apu_led_pdata *apuld)
- 		if (err)
- 			goto error;
- 
--		apu1_led_brightness_set(led_cdev, apu_led->profile[i].brightness);
-+		apu1_led_brightness_set(led_cdev, apu1_led_profile[i].brightness);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index a2f3db39221e..d0e6e1503581 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -475,8 +475,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 	if (fc & FLOW_RX) {
+ 		pr_debug("\tReceive Flow-Control ON\n");
+ 		flow |= GMAC_RX_FLOW_CTRL_RFE;
+-		writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
  	}
++	writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
++
+ 	if (fc & FLOW_TX) {
+ 		pr_debug("\tTransmit Flow-Control ON\n");
  
- 	return 0;
-@@ -157,9 +155,6 @@ static int __init apu_led_probe(struct platform_device *pdev)
+@@ -484,7 +485,7 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 			pr_debug("\tduplex mode: PAUSE %d\n", pause_time);
  
- 	apu_led->pdev = pdev;
+ 		for (queue = 0; queue < tx_cnt; queue++) {
+-			flow |= GMAC_TX_FLOW_CTRL_TFE;
++			flow = GMAC_TX_FLOW_CTRL_TFE;
  
--	apu_led->profile = apu1_led_profile;
--	apu_led->num_led_instances = ARRAY_SIZE(apu1_led_profile);
--
- 	spin_lock_init(&apu_led->lock);
- 	return apu_led_config(&pdev->dev, apu_led);
+ 			if (duplex)
+ 				flow |=
+@@ -492,6 +493,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 
+ 			writel(flow, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
+ 		}
++	} else {
++		for (queue = 0; queue < tx_cnt; queue++)
++			writel(0, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
+ 	}
  }
-@@ -204,7 +199,7 @@ static void __exit apu_led_exit(void)
- {
- 	int i;
  
--	for (i = 0; i < apu_led->num_led_instances; i++)
-+	for (i = 0; i < ARRAY_SIZE(apu1_led_profile); i++)
- 		led_classdev_unregister(&apu_led->pled[i].cdev);
- 
- 	platform_device_unregister(apu_led->pdev);
 -- 
-1.9.1
+2.20.1
 
