@@ -2,111 +2,159 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998F1C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F328C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E49205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201779;
-	bh=dWoLosDNIg5sdKZ9+ybWvRAOyFngUrfDTgHKbGOtVdw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W+EHjtLuvOWxhLaxxaexEK1eAgrhcs4lWsJz4baMXSuhjnuhbzwjAcoKhGws3SELW
-	 xjBLL73KeYaVkAgkj1Uz4BH+Ajcam7rf7Jmk8vEDg6KpQZu2Rwic2n7743gOO+RDj1
-	 8yOn6OpwFyZPFy4T/KubiMvPjes26MRrxkB1WKmQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2421A20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyNlaoh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404214AbfGOOjR (ORCPT
+        id S2392063AbfGOOnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:39:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403788AbfGOOjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:39:01 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6604120896;
-        Mon, 15 Jul 2019 14:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201540;
-        bh=dWoLosDNIg5sdKZ9+ybWvRAOyFngUrfDTgHKbGOtVdw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZTpGA9EjmLvvC7OCt+1AtsSaQILfea+LCVO6y4qiATBv74QSnU5BEOW6827n/rtVU
-         t23hCaXighezhjWtCERCa+VKrw/XY9fJ0k6NK6eizQOygHmqrIpWLJ0IEDHlQe4jhs
-         FyvQiCMQAhZ/F+/hgAowT3ld/EtQqC5A2WRbuUvU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 38/73] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
-Date:   Mon, 15 Jul 2019 10:35:54 -0400
-Message-Id: <20190715143629.10893-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
-References: <20190715143629.10893-1-sashal@kernel.org>
+        Mon, 15 Jul 2019 10:43:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50778 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391753AbfGOOnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:43:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v15so15479887wml.0;
+        Mon, 15 Jul 2019 07:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X/BMY7zzwOav0m72UIxct/q6KfFqA8uXilpppT8A16E=;
+        b=FyNlaoh6KzGIfcneFIP0S8aPVZjlzGYNylLqlX2tUvlGGmTf7lyZS029GCvtGo8ENq
+         ju4TUCvMFLdvwYlT/VRrY6srviBZopHL4DH8Eyld/n4OixSOwAE3TkKD9fBKYWJQ/Ggl
+         6nVl/QcPsr9jVLaZhMwnfDVzVh41pwQm0aPgs2mFAJBacEj0xdqREUAdBSQaBqnKZoXg
+         I7I42ahXjyiiWIWcR+7ev9OmmfFiHF+zz43hOqF27FqjtWODa3DqELNG7t4UV5yWzyC3
+         KhbkCeG0swdVamt147KVH+6pInGKj2wMyLiwHynr1hjb3ZbE7zdNdvOTrjUCEp/2qRaa
+         twQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X/BMY7zzwOav0m72UIxct/q6KfFqA8uXilpppT8A16E=;
+        b=ABmdp04y9VVXQGvcARK/7NpLOlnk5x42IcfjJ4BoI+Y7hirguQKM1LTlIMcx62eu0K
+         vVnb+H/qts+9AvjAV7vl7dBd8zsZlfaJzD0F/ak8n5TCN1zWfcZxy++pNMdGOFuJwp9x
+         V1WhLPOq1bQKBMQPdYWX3FXve5okK6db86JwT2yXbd3qAoTqJhMyufi355KZKyWmrSr2
+         QJ+Dy2uk2fKJtupvwUB2VidVBYHKpldYJKtMjgT78uhgGfhTXiELK9cXZYpxaN21ztbX
+         gTuiyQb1EvDdGnlVo5QH5m80T8yKHwQAUjY0aCDLHlCBOu+T0Xih8w35BNFefXWn7jYI
+         tNjw==
+X-Gm-Message-State: APjAAAUPlAZLhpl6+DDwrfrDDDOFtP8zfSTfqC3MAwhlCjUKgSjRhSk9
+        JoLFmkEB/he/ome38jArTLnAulTb
+X-Google-Smtp-Source: APXvYqzSKyoVikQPwCxk8zlZVwWFm3fjsUNrV+8j4Zfhhz8UByhySKR4NSIed5Kfi+h866uogV6dTQ==
+X-Received: by 2002:a1c:acc8:: with SMTP id v191mr25765820wme.177.1563201788572;
+        Mon, 15 Jul 2019 07:43:08 -0700 (PDT)
+Received: from arch-x1c3 ([2a00:5f00:102:0:9665:9cff:feee:aa4d])
+        by smtp.gmail.com with ESMTPSA id y16sm36938898wrg.85.2019.07.15.07.43.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 07:43:07 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 15:43:06 +0100
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] modpost: check for static EXPORT_SYMBOL* functions
+Message-ID: <20190715144306.GA24120@arch-x1c3>
+References: <20190714152817.24693-1-efremov@linux.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190714152817.24693-1-efremov@linux.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+Hi Denis,
 
-[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
+On 2019/07/14, Denis Efremov wrote:
+> This patch adds a check to warn about static EXPORT_SYMBOL* functions
+> during the modpost. In most of the cases, a static symbol marked for
+> exporting is an odd combination that should be fixed either by deleting
+> the exporting mark or by removing the static attribute and adding the
+> appropriate declaration to headers.
+> 
+> If this check will be considered useful, I will resend the patch with
+> review fixes.
+> 
+> Currently, this check emits the warnings on the following symbols, most
+> of which are accepted to be fixed:
+> 1. "sas_wait_eh" [drivers/scsi/libsas/libsas]
+>    Patch: https://lkml.org/lkml/2019/7/8/970 (accepted)
+> 2. "torture_onoff_cleanup" [kernel/torture]
+>    "torture_shuffle_cleanup" [kernel/torture]
+>    Patch: https://lkml.org/lkml/2019/7/4/411 (accepted)
+> 3. "LZ4HC_setExternalDict" [lib/lz4/lz4hc_compress]
+>    Patch: https://lkml.org/lkml/2019/7/8/842
+> 4. "drm_client_close" [drivers/gpu/drm/drm]
+>    Patch: https://lkml.org/lkml/2019/7/3/758 (accepted)
+> 5. "gve_probe" [drivers/net/ethernet/google/gve/gve]
+>    Patch: https://lkml.org/lkml/2019/7/14/65
+> 6. "i2c_new_client_device" [vmlinux]
+>    "i2c_new_dummy_device" [vmlinux]
+>    Patch: https://lkml.org/lkml/2019/7/7/226 (fixed in a different patch)
+> 7. "ahci_em_messages" [drivers/ata/libahci]
+>    Patch: https://lkml.org/lkml/2019/7/10/550 (reviwed)
+> 8. "ftrace_set_clr_event" [vmlinux]
+>    Patch: https://lkml.org/lkml/2019/7/4/609 (reviwed)
+> 9. "rmi_2d_sensor_set_input_params" [drivers/input/rmi4/rmi_core]
+>    Patch: https://lkml.org/lkml/2019/7/8/999
+> 10. "empty_zero_page" [vmlinux]
+> 11. "phys_base" [vmlinux]
+> 12. "hypercall_page" [vmlinux]
+> 
+> Similar commits:
+> 1. 54638c6eaf44 ("net: phy: make exported variables non-static")
+> 2. 98ef2046f28b ("mm: remove the exporting of totalram_pages")
+> 3. 73df167c819e ("s390/zcrypt: remove the exporting of ap_query_configuration")
+> 4. a57caf8c527f ("sunrpc/cache: remove the exporting of cache_seq_next")
+> 5. e4e4730698c9 ("crypto: skcipher - remove the exporting of skcipher_walk_next")
+> 
+> Build time impact, allmodconfig, Dell XPS 15 9570 (measurements 3x):
+> $ make mrproper; make allmodconfig; time make -j12; \
+>   git checkout HEAD~1; \
+>   make mrproper; make allmodconfig; time make -j12
+> 1.
+>    (with patch) 17635,94s user 1895,54s system 1085% cpu 29:59,22 total
+>    (w/o  patch) 17275,42s user 1803,87s system 1112% cpu 28:35,66 total
+> 2.
+>    (with patch) 17369,51s user 1763,28s system 1111% cpu 28:41,47 total
+>    (w/o  patch) 16880,50s user 1670,93s system 1113% cpu 27:46,56 total
+> 3.
+>    (with patch) 17937,88s user 1842,53s system 1109% cpu 29:42,26 total
+>    (w/o  patch) 17267,55s user 1725,09s system 1111% cpu 28:28,17 total
+> 
+> Thus, the current implementation adds approx. 1 min for allmodconfig.
+> However, it's possible to do the check in a more optimal way if it will
+> be considered useful.
+> 
+> Also, this kind of check could be implemented as a separate script instead.
+> Here is the implementation:
+> https://gist.github.com/evdenis/bf2322d094f0c02c0f60fe0a225848b2
+> 
 
-wbc_account_io() collects information on cgroup ownership of writeback
-pages to determine which cgroup should own the inode.  Pages can stay
-associated with dead memcgs but we want to avoid attributing IOs to
-dead blkcgs as much as possible as the association is likely to be
-stale.  However, currently, pages associated with dead memcgs
-contribute to the accounting delaying and/or confusing the
-arbitration.
+Personally I think this is a pretty good feature.
 
-Fix it by ignoring pages associated with dead memcgs.
+If I did my numbers correctly, the above numbers show ~2% increase.
+Although one should be able to reduce that if people feel too strongly.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/fs-writeback.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+That said, the patch is:
+Acked-by: Emil Velikov <emil.l.velikov@gmail.com>
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 8b93d4b98428..baaed9369ab4 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -721,6 +721,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
- void wbc_account_io(struct writeback_control *wbc, struct page *page,
- 		    size_t bytes)
- {
-+	struct cgroup_subsys_state *css;
- 	int id;
- 
- 	/*
-@@ -732,7 +733,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
- 	if (!wbc->wb)
- 		return;
- 
--	id = mem_cgroup_css_from_page(page)->id;
-+	css = mem_cgroup_css_from_page(page);
-+	/* dead cgroups shouldn't contribute to inode ownership arbitration */
-+	if (!(css->flags & CSS_ONLINE))
-+		return;
-+
-+	id = css->id;
- 
- 	if (id == wbc->wb_id) {
- 		wbc->wb_bytes += bytes;
--- 
-2.20.1
+Can we make sure that patches for all issues are out (on the respective
+mailing lists, or merged) before this lands.
 
+
+HTH
+Emil
