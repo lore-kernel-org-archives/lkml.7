@@ -2,99 +2,91 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FBAC76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B07C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67FB2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EAC2083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttETt1Q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbfGOJ2j (ORCPT
+        id S1729563AbfGOJcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:28:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:34757 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbfGOJ2j (ORCPT
+        Mon, 15 Jul 2019 05:32:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38847 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729376AbfGOJcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:28:39 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N1cvQ-1iSrg40HAu-011ysw; Mon, 15 Jul 2019 11:28:12 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
-        Yuyang Du <duyuyang@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, frederic@kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] locking/lockdep: hide unused 'class' variable
-Date:   Mon, 15 Jul 2019 11:27:49 +0200
-Message-Id: <20190715092809.736834-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 15 Jul 2019 05:32:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so14441233wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 02:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2eM8zTsGyf584RmX/FkfC6pSZbSa4qt71o0cGq7/Ass=;
+        b=ttETt1Q5sinqI8hZDNkG/TMjeRA5i6HVLX4POPVD5jCR71MlEtJ2S6jSSTWUiHS/Np
+         ILij4ADgSI7gyshL56Yb/bcxN/Obvy48UOq/4P7gmxvanXIHdtwg5UNgcZkqEXrPgFVE
+         0SgfMl7/tibK8yB+Kept+iY1mm+vOQvERkCZOC6ciogzck711bFVH/5+8wCSl7JP35Gi
+         S1OcmqQcyOANTBkmzbFXiUiRLLLwh+CeRhs4+/+dWJsRFsQkk58ePdVBQCWCpdEG6kmr
+         b/9iltvzo/UHWnUSI7wUpOhfcuwFXjrNxwnFd+JSRpXYeH2dT2KVBJ5nIXCevInoju8K
+         2N6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2eM8zTsGyf584RmX/FkfC6pSZbSa4qt71o0cGq7/Ass=;
+        b=ZhWR4LzHuvqLLyxDy/2dBnmVOG+Gdroia/d/39PGF2cXVNQtuHSgnwMQKswJE1KvJl
+         GvgWHl3z9XOrnAug6tHQe2DbgTB7R4YCnJNef2k0JyBSBJt0kK2MMlBDo8N74HaR9JXI
+         OSG4pOBI28RDckNQhe6RVKTo3oC5dr9AUXWCZIxbGjCBHoHwqpuDTp0dgI9ekdz/cFcy
+         4T3V6hm47oTfv8hDql9e2+KaSahQqC/f3yx+7uirBlGRle/uK0CVJnedYzVd158XXymy
+         acu8DchhsTQmqaXl196WrXMTxGzrfEK5h3QQqG5qhqvkxwJc7ULQqyKNwYA5520vw9RP
+         NCAw==
+X-Gm-Message-State: APjAAAUISw4if15MwVCmU+JrMvx7ObQeI2xkTP+/3Ftoto7Ey3kE0W39
+        lxuFGTJlgBFFHA+u8nt0ucR4vQ==
+X-Google-Smtp-Source: APXvYqxjaXB7dBtLJSDCQ1FAMQDvr+AHekW2YTw088x8woO8LTCaZpggG1e+c1gd2u9LFH1R4Zbf2g==
+X-Received: by 2002:a1c:b706:: with SMTP id h6mr23020807wmf.119.1563183127246;
+        Mon, 15 Jul 2019 02:32:07 -0700 (PDT)
+Received: from localhost.localdomain (146-241-97-230.dyn.eolo.it. [146.241.97.230])
+        by smtp.gmail.com with ESMTPSA id g12sm22544993wrv.9.2019.07.15.02.32.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 02:32:06 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT 0/1] block, bfq: eliminate latency regression with fast drives
+Date:   Mon, 15 Jul 2019 11:31:52 +0200
+Message-Id: <20190715093153.19821-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wZfW9h1qpdFpJ4IpaPX7d0kXx4FD5/38Kk/764IrBkHKfldxQKY
- ugCf+FDOZLmnZfoVoJa/wOEI/nwzr59F3Dhtb50i6IvjAAoZgK5H7Q4ZrjUtzn19wnZ7h9S
- RUXJG2ERKsgAMmPOqXI96d5nMWgmtiIedzF3d5z/a/BZ8F7cAJ1WHCm7Cd7o4F9JeF/aJp3
- SJqihu1wl4HTqK9Ro19eA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mni9IFMBseU=:K+uZJ5nr/DZWB5GJmnsDls
- DnmwxopoOaRB00WdcDYzRFwkIw6dMLTefYSbxWwagwCMkx9ZfIltqXSuPw0tlLW2X4Lw8TnXZ
- MitLXKpcdPv+CcHFDrnntsgNn2cCXDvGe6KFXYfXhu3dHTxOZ4RBTHOnrNS/evYc1uERJzos1
- 4fQ3SVvY9qJ4CIBt2NamS/8S9EJkxwzhoGBygRG70iL8VYCWIEgo76ccrwah/HtuVxV3ZOS/+
- kkVhMNgis9MGC6jwnbFA5BTafhKoTZs+2W11oXwD6JGqpR3nMR8v9aY+53VyDGSaFUllWsDtO
- RzUExDovWCPv78zkuUCTKTHyFL/nD8x9O0XUPLswifAhq+Lx96+VNIAgjlhz9dRJmcjEYVNGF
- rwSLcvE7NPkTz2vld1yxrGbX8p1juz0b+H/cvmVSbYyLzvtEm2i2q/yuoFqdy9RIAVAdEaeTU
- ccgvbbigJCaFywo89+G+0WPTBwIhnczy88ALhIje8bh0yWFbthn7RqXJ0pZImxDdDj+54km/0
- nWrpU/nAMDgzzd1eQW0qcyC7vc8NKqfvXfik4iEXfNGzD9k2pTE9Oc45VQdVbNlxvKVlF6Bhs
- nk7ktw5nuzCHjU3YNxbJPRQyvDxlWXe1LOerLujjzgWdTLcqxXUMUx1jkppxv+/rGtuJ4Fk8h
- fVOy2wIlJrnwQ3/04VVf5ybO8qu977QsggE+VTDPL4uVXSN8f9/CVIloQBFB5B4v6UcLgrbuw
- 4hNdeTB5XuALsY99JNANic4aANgvxlP2adxhrw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage is now hidden in an #ifdef, so we need to move
-the variable itself in there as well to avoid this warning:
+Hi Jens,
+I've spotted a regression on a fast SSD: a loss of I/O-latency control
+with interactive tasks (such as the application start up I usually
+test). Details in the commit.
 
-kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
+I do hope that, after proper review, this commit makes it for 5.3.
 
-Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- kernel/locking/lockdep_proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks,
+Paolo
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 65b6a1600c8f..bda006f8a88b 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -200,7 +200,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
- 
- static int lockdep_stats_show(struct seq_file *m, void *v)
- {
--	struct lock_class *class;
- 	unsigned long nr_unused = 0, nr_uncategorized = 0,
- 		      nr_irq_safe = 0, nr_irq_unsafe = 0,
- 		      nr_softirq_safe = 0, nr_softirq_unsafe = 0,
-@@ -211,6 +210,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 		      sum_forward_deps = 0;
- 
- #ifdef CONFIG_PROVE_LOCKING
-+	struct lock_class *class;
-+
- 	list_for_each_entry(class, &all_lock_classes, lock_entry) {
- 
- 		if (class->usage_mask == 0)
--- 
-2.20.0
+Paolo Valente (1):
+  block, bfq: check also in-flight I/O in dispatch plugging
 
+ block/bfq-iosched.c | 67 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 43 insertions(+), 24 deletions(-)
+
+--
+2.20.1
