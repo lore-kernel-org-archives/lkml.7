@@ -2,90 +2,95 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF782C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72821C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836422086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="YDX5Cni6"
+	by mail.kernel.org (Postfix) with ESMTP id 3F3AB20868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563202436;
+	bh=cQnQ6JVQxl+9ImpfiG/lnyZwnK4VP0BO4OxM6qtO480=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y4IbWXAYJyq7SWp486H0ShY46uRUx4txTK0ClBWMOrZ49PK+K2MwWLaxvqZRs24AV
+	 a2WDg32gPij5UbwWPrnQJi8cAR4lTcU3vRQqCqdhCLI+cDi0wRf4mXuTpWMk+kkRzM
+	 P8WBFdym73lXSGJEfR/fgvXTEi5zx+qaTQTEDg7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391575AbfGOOxs (ORCPT
+        id S2391531AbfGOO3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:53:48 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35284 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391543AbfGOO3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:29:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j19so17201952otq.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6QkSbJ8pehcPJsEqSW/0Jw3Kj7WtEh8gEc9PVJH1CrA=;
-        b=YDX5Cni69En7Hnte+J3OlCSJ0HlBPkTtUerLm+TEt90UKpDUfDuJvjCxyA/xsbdN+4
-         NlM28WRfcpu6byVaPN4oE7VH4s3k0vd1hEb+a57aabIHxBzldliL2Htoq2btKjK4n7AS
-         dEk3INMwrusBqXJOHjVd5y+1ZYzs3lAeIPfrwgpru+b49OUDLgXf6+CpcsZ6fG8itG0F
-         1l0rPwOFa7qBIOGncKcrTTI0b32v3jNfOV6b+s6CSQAQGdFNyL4RrykbWCb0WlSmG84g
-         rPg2y0ELpTG/hNU8ek2ztwI6ffWkYO0HuhjiHpT2javBLichO07Q+0RuqzlaxnSebk5a
-         7e7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6QkSbJ8pehcPJsEqSW/0Jw3Kj7WtEh8gEc9PVJH1CrA=;
-        b=WxEbnyG9Zm0vVyWAsbEeia1sGY30bi2iS3qMr/53VdiMte7ou95Q8g8YbcgPVAMnUd
-         7j6KdrKeDp38/816Rqcd4+fPKoad8OvvTvrugRd+to5Ohe/YR/4UHTQu2u4HvuzP668Q
-         uwBp/kvDRXv+ap1Km31qoPJsgG79TjWfWGWSqHE9RL/a4fPUYEPy1mBvair/kRuRM4aa
-         iDl5mjfLLD321uO+JY9WNhZ2ZSZJQSK9esfOUvFTbIpu0oVTxgnMV+11DmWuhDZJhHv9
-         4tLkQAoKLyyMWRIDyauN73ij0IkrbJrzSmAVV8wdTsxAT7yRHsB53frVXltM1zvOfmMO
-         oixA==
-X-Gm-Message-State: APjAAAVXTpI3d8+LmhdlDtY5KizEqUAxN3xZvW5RYdytC6xy0FrCeyJ3
-        /r2o9eeztba/fZDhHsFyWrU=
-X-Google-Smtp-Source: APXvYqyjL0Ot/+YneSRjZE4d+NlwotmvVCLCkSyihKbIEGxxfUrBUzxa4ggVFEdDWrNvLtFCu+w3cQ==
-X-Received: by 2002:a05:6830:193:: with SMTP id q19mr20811013ota.187.1563200957973;
-        Mon, 15 Jul 2019 07:29:17 -0700 (PDT)
-Received: from brauner.io ([208.54.86.135])
-        by smtp.gmail.com with ESMTPSA id a94sm6577090otb.15.2019.07.15.07.29.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 07:29:16 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 16:29:09 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
-Message-ID: <20190715142907.7p43dgmx5sz5oouz@brauner.io>
-References: <20190714192205.27190-1-christian@brauner.io>
- <20190714192205.27190-2-christian@brauner.io>
- <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+        Mon, 15 Jul 2019 10:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389334AbfGOO3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:29:05 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4405F2086C;
+        Mon, 15 Jul 2019 14:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563200944;
+        bh=cQnQ6JVQxl+9ImpfiG/lnyZwnK4VP0BO4OxM6qtO480=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YyD1MBA7LUq0XaU4/kpzQ+DPgsrKZ818BA6Jy/p+6HWL7PtLIimGOhZhot9TFc1Yb
+         kN8xfAJ+/gY89cfpKR8jISFu1mSik/7gzAJ5q22/qq2LHEhtn+4hYz5y1Ih144VCEl
+         v7p+5pjHimVVpt1s7iTMcClZtbfmHesJfi3Ra6XY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 007/105] batman-adv: fix for leaked TVLV handler.
+Date:   Mon, 15 Jul 2019 10:27:01 -0400
+Message-Id: <20190715142839.9896-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
+References: <20190715142839.9896-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
-> I think Vasily already has a clone3 patch for s390x with 435. 
+From: Jeremy Sowden <jeremy@azazel.net>
 
-Excellent. I'll leave the # 435 reserved for clone3 on s390x in until
-this patch has landed. It shouldn't be a merge conflict and if so it
-should be trivial.
+[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
 
-Christian
+A handler for BATADV_TVLV_ROAM was being registered when the
+translation-table was initialized, but not unregistered when the
+translation-table was freed.  Unregister it.
+
+Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
+Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Sven Eckelmann <sven@narfation.org
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/batman-adv/translation-table.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+index 020a8adc4cce..2c2670b85fa9 100644
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -3750,6 +3750,8 @@ static void batadv_tt_purge(struct work_struct *work)
+ 
+ void batadv_tt_free(struct batadv_priv *bat_priv)
+ {
++	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
++
+ 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 
+-- 
+2.20.1
+
