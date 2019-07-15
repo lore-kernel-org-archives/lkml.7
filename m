@@ -2,104 +2,161 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A37C7618A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA3FC7618A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6A520868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167DD20868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="wjhDRBgy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNP6KnN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfGOGFy (ORCPT
+        id S1729103AbfGOGHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 02:05:54 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56402 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfGOGFy (ORCPT
+        Mon, 15 Jul 2019 02:07:05 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34138 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfGOGHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 02:05:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563170752; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z1MaOt0jW59xYgvE7c4XkSzT9zY9zvt+sXJ111t6oK4=;
-        b=wjhDRBgyh9wpm9oRX0H1916idSKCg0Ie8HZwIh6+VLKjzbLkSFTPT0Es6B81OLvJ3lxWu8
-        JNddxONRUczkKGDRXrB6wRxXkzafNLmBpM1ORhkdE8I1EAm0eWCWun3FDkkTPsR3tJ245f
-        y8cvtm2KBkAf1Qf5MLBYd6WSAvJduKY=
-Date:   Mon, 15 Jul 2019 02:05:40 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] usb: musb: Disable pullup in gadget setup
-To:     Bin Liu <b-liu@ti.com>
-Cc:     od@zcrc.me, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1563170740.1702.0@crapouillou.net>
-In-Reply-To: <20190430150506.GF20993@uda0271908>
-References: <20190404093743.6470-1-paul@crapouillou.net>
-        <20190404161046.GA30182@uda0271908> <20190430150506.GF20993@uda0271908>
+        Mon, 15 Jul 2019 02:07:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so15780453otk.1;
+        Sun, 14 Jul 2019 23:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=e/V3fOKAqFz7F8UXbx8aEY6Mof27QH3jzM2T/OFVXo4=;
+        b=cNP6KnN2CVYzZklUDMO268TTsTR3Oo0Izc/87Xvc6415jKGeT+RGKSYpKnMoMl8t+7
+         kMO7Q+ieZfcTwDV5VCWKZ4SShAqu2x7CWJ8LY/kNEdTr2IVrcXtRlgVCF/xPFOQdsPLX
+         j55LJQ0HcEaUs7QG/gzdU/FquOnnCYW9W8yNcB3H8i6Gtuf/RNBXk1IkzXnHTKRNBJbL
+         lWI4M3PNZD0TvYHvgyrJYivgHfJVdG+f82WsL8GjLhPJDdJ0ndWaFm6kG1kqtqPc3yMF
+         2H+P8E1LRjvuED4LNqSWdOUZflu+Xn43uhi1wpa9MjMAYbuePi4AN//6XbfITpZfKdUd
+         +Dvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=e/V3fOKAqFz7F8UXbx8aEY6Mof27QH3jzM2T/OFVXo4=;
+        b=PIWAt6siy4sZHfm7Zltivy+pqd9REN7MPOCBw9ek/xUWQXVBQIQ1MV1DCAUxYnfqen
+         4HGe+wJg7qQSgVjB0R/WiliPnVPQEA/TDk/an8P83Qn506EdRHx8ts8T61P6/7WRb8nF
+         EDxscQ4pxiiiG3x3Fnx7ly/VGqY93yXRt3hYewqQvqO0a6DVYpPX1Wy8ZrRHv2nmxXuD
+         elhWpH+rE3fr17PQr1ho93tmVBC+4IsGySjQlV5RAtDYmyXyJo/tJ3CbyaTfeICT7V02
+         6IF86pwZOm5VhKngGVaEL9TZvhs8TohyU0TKv2iuX/7HhnLIgZ814dkdw6T5TkD83MR8
+         QN/A==
+X-Gm-Message-State: APjAAAWk+tfIESKiLxmJvV3xpXNmCypcWGHDBiBXJp4bv4WmdvGwKkoZ
+        ga8i2k0phviQwU+d7bySmDch+Fj3XdpzhdsIjclFHBF29T8=
+X-Google-Smtp-Source: APXvYqzApiSqvTXuZTSRWeHV9EozVFnTRZ81DrkcKPtu4rWfAj+PD4gqULP0rPXSOydUG70DXUf2COjPa1j7OqQImiQ=
+X-Received: by 2002:a9d:4590:: with SMTP id x16mr17332980ote.254.1563170824512;
+ Sun, 14 Jul 2019 23:07:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+References: <1562824197-13658-1-git-send-email-jing2.liu@linux.intel.com> <305e2a40-93a3-23ed-71a2-d3f2541e837a@redhat.com>
+In-Reply-To: <305e2a40-93a3-23ed-71a2-d3f2541e837a@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 15 Jul 2019 14:06:56 +0800
+Message-ID: <CANRm+CzOp6orH+7sqCQjLuxsYRccfq7H-o4QBcgxGfT-=RaJ-w@mail.gmail.com>
+Subject: Re: [PATCH v1] KVM: x86: expose AVX512_BF16 feature to guest
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jing Liu <jing2.liu@linux.intel.com>, kvm <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bin,
+On Sat, 13 Jul 2019 at 18:40, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 11/07/19 07:49, Jing Liu wrote:
+> > AVX512 BFLOAT16 instructions support 16-bit BFLOAT16 floating-point
+> > format (BF16) for deep learning optimization.
+> >
+> > Intel adds AVX512 BFLOAT16 feature in CooperLake, which is CPUID.7.1.EA=
+X[5].
+> >
+> > Detailed information of the CPUID bit can be found here,
+> > https://software.intel.com/sites/default/files/managed/c5/15/\
+> > architecture-instruction-set-extensions-programming-reference.pdf.
+> >
+> > Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
+> > ---
+> >
+> > This patch depends on kernel patch https://lkml.org/lkml/2019/6/19/912
+> > and Paolo's patch set https://lkml.org/lkml/2019/7/4/468.
+> >
+> >  arch/x86/kvm/cpuid.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 8fc6039..0c125dd 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -358,9 +358,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpui=
+d_entry2 *entry, int index)
+> >               F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP)=
+ |
+> >               F(MD_CLEAR);
+> >
+> > +     /* cpuid 7.1.eax */
+> > +     const u32 kvm_cpuid_7_1_eax_x86_features =3D
+> > +             F(AVX512_BF16);
+> > +
+> >       switch (index) {
+> >       case 0:
+> > -             entry->eax =3D 0;
+> > +             entry->eax =3D min(entry->eax, 1);
+> >               entry->ebx &=3D kvm_cpuid_7_0_ebx_x86_features;
+> >               cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
+> >               /* TSC_ADJUST is emulated */
+> > @@ -384,6 +388,12 @@ static inline void do_cpuid_7_mask(struct kvm_cpui=
+d_entry2 *entry, int index)
+> >                */
+> >               entry->edx |=3D F(ARCH_CAPABILITIES);
+> >               break;
+> > +     case 1:
+> > +             entry->eax &=3D kvm_cpuid_7_1_eax_x86_features;
+> > +             entry->ebx =3D 0;
+> > +             entry->ecx =3D 0;
+> > +             entry->edx =3D 0;
+> > +             break;
+> >       default:
+> >               WARN_ON_ONCE(1);
+> >               entry->eax =3D 0;
+> >
+>
+> Queued, thanks.
 
+I see this in kvm/queue:
 
-Le mar. 30 avril 2019 =E0 11:05, Bin Liu <b-liu@ti.com> a =E9crit :
-> Hi Paul,
->=20
-> On Thu, Apr 04, 2019 at 11:10:46AM -0500, Bin Liu wrote:
->>  On Thu, Apr 04, 2019 at 11:37:43AM +0200, Paul Cercueil wrote:
->>  > The pullup may be already enabled before the driver is=20
->> initialized.
->>  > It has to be disabled at init time, as we cannot guarantee that a=20
->> gadget
->>  > driver will be bound to the UDC.
->>  >
->>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > ---
->>  >  drivers/usb/musb/musb_gadget.c | 1 +
->>  >  1 file changed, 1 insertion(+)
->>  >
->>  > diff --git a/drivers/usb/musb/musb_gadget.c=20
->> b/drivers/usb/musb/musb_gadget.c
->>  > index ffe462a657b1..094dc59c834c 100644
->>  > --- a/drivers/usb/musb/musb_gadget.c
->>  > +++ b/drivers/usb/musb/musb_gadget.c
->>  > @@ -1794,6 +1794,7 @@ int musb_gadget_setup(struct musb *musb)
->>  >
->>  >  	musb->is_active =3D 0;
->>  >  	musb_platform_try_idle(musb, 0);
->>  > +	musb_pullup(musb, 0);
->>  >
->>  >  	status =3D usb_add_gadget_udc(musb->controller, &musb->g);
->>  >  	if (status)
->>=20
->>  Applied.
->=20
-> Sorry, I have dropped this patch from my tree. I realized the gadget
-> core already defines callbacks to control the pullup. I think the
-> proper fix should be calling usb_udc_vbus_handler() in musb gadget or
-> glue layers.
->=20
-> -Bin.
-
-usb_udc_vbus_handler() requires a usb_gadget *, I don't see where I can
-get that from the struct musb.
-
-Besides, the point is to have the pullup disabled before a gadget is=20
-bound,
-so I don't understand why you suggest that?
-
--Paul
-
-=
-
+In file included from ./include/linux/list.h:9:0,
+                 from ./include/linux/preempt.h:11,
+                 from ./include/linux/hardirq.h:5,
+                 from ./include/linux/kvm_host.h:7,
+                 from /home/kernel/data/kvm/arch/x86/kvm//cpuid.c:12:
+/home/kernel/data/kvm/arch/x86/kvm//cpuid.c: In function =E2=80=98do_cpuid_=
+7_mask=E2=80=99:
+./include/linux/kernel.h:819:29: warning: comparison of distinct
+pointer types lacks a cast
+   (!!(sizeof((typeof(x) *)1 =3D=3D (typeof(y) *)1)))
+                             ^
+./include/linux/kernel.h:833:4: note: in expansion of macro =E2=80=98__type=
+check=E2=80=99
+   (__typecheck(x, y) && __no_side_effects(x, y))
+    ^
+./include/linux/kernel.h:843:24: note: in expansion of macro =E2=80=98__saf=
+e_cmp=E2=80=99
+  __builtin_choose_expr(__safe_cmp(x, y), \
+                        ^
+./include/linux/kernel.h:852:19: note: in expansion of macro =E2=80=98__car=
+eful_cmp=E2=80=99
+ #define min(x, y) __careful_cmp(x, y, <)
+                   ^
+/home/kernel/data/kvm/arch/x86/kvm//cpuid.c:377:16: note: in expansion
+of macro =E2=80=98min=E2=80=99
+   entry->eax =3D min(entry->eax, 1);
+                ^
