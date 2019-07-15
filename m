@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B6EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EC6C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448C62054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13D92054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203353;
-	bh=UG91chrN/OOTQ14wBt92dwxM7zmzpsR+J/5kc7HEd+I=;
+	s=default; t=1563203357;
+	bh=qiWEQsMoOF8CbECWiUS/CREgaxAk21F8tOV41lwaEsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyAgQic7/Y8iWAZ8Hxr5/lFg28112Dx+UKbh6C2IGvYsDRtGKNNMwMg5+7r2ZWWgu
-	 MMoOZGvgHR1EiGI+THNbKg02FxGevccth6Aql2NrVUYMdyt13gIr29PKsAuQBHwoTb
-	 IZP3MbzZB+twjTkwMnK83y2PU8yW1PDLTOV54Ijw=
+	b=0jTRjWVMPKXJYbmjnzmkUmH35WjPpIOzyTOs0CaaQTzjrQ4x5UGznqvMcDVF9aGVr
+	 5E0EcKB4sCDwvGORJoeBiiQIJzffuYiiP7EtYSaTDoY5JykNA8vkKWYULB2GDS6jOM
+	 8uljiOzWsc6VVEVNOk0pU6F0D4o5woyayy56CvzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732675AbfGON5S (ORCPT
+        id S1732628AbfGON5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35082 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732630AbfGON5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:14 -0400
+        id S1732713AbfGON5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD70212F5;
-        Mon, 15 Jul 2019 13:57:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AE7220C01;
+        Mon, 15 Jul 2019 13:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199033;
-        bh=UG91chrN/OOTQ14wBt92dwxM7zmzpsR+J/5kc7HEd+I=;
+        s=default; t=1563199020;
+        bh=qiWEQsMoOF8CbECWiUS/CREgaxAk21F8tOV41lwaEsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KiQKYZ+PYEZbiJ34LUmout3LUTtYCJRglmnHR9L62Oj/3wsT0FfeBKqHWtxqEBKqa
-         RS8ZAUltbaXHqRO6qJ+frstqlQLDoYup9RlvggzCNWCLYjhZaZNz3NKukoJRCPxKAD
-         RkIIrekUYskx5yYGLZ1AxXlWkxi/NKqXUzc0+xkg=
+        b=PzHNayi6bgwmI2tJ6gd7RWldIZDP+m9PBDZZsrl2+4MmzqcHy1O3PoBu2G5F7YTJw
+         XyMZXMo5kwtOJXS8G4BBhFJL8Rnz40rHPYZ3JS3drAYJ37tE2GBhxxf2T6oE2t7EFQ
+         HW1t/46ESLvDTm9keKNbBZo8BaOeSQHQ1noelcLQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 170/249] clocksource/drivers/tegra: Release all IRQ's on request_irq() error
-Date:   Mon, 15 Jul 2019 09:45:35 -0400
-Message-Id: <20190715134655.4076-170-sashal@kernel.org>
+Cc:     Kyle Meyer <kyle.meyer@hpe.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 167/249] perf tools: Increase MAX_NR_CPUS and MAX_CACHES
+Date:   Mon, 15 Jul 2019 09:45:32 -0400
+Message-Id: <20190715134655.4076-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,44 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Kyle Meyer <kyle.meyer@hpe.com>
 
-[ Upstream commit 7a3916706e858ad0bc3b5629c68168e1449de26a ]
+[ Upstream commit 9f94c7f947e919c343b30f080285af53d0fa9902 ]
 
-Release all requested IRQ's on the request error to properly clean up
-allocated resources.
+Attempting to profile 1024 or more CPUs with perf causes two errors:
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  way too many cpu caches..
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+
+  perf report -C 1024
+  Error: failed to set  cpu bitmap
+  Requested CPU 1024 too large. Consider raising MAX_NR_CPUS
+
+  Increasing MAX_NR_CPUS from 1024 to 2048 and redefining MAX_CACHES as
+  MAX_NR_CPUS * 4 returns normal functionality to perf:
+
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+
+  perf report -C 1024
+  ...
+
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-tegra20.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/perf.h        | 2 +-
+ tools/perf/util/header.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index 1e7ece279730..fe5cc0963ac9 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -288,7 +288,7 @@ static int __init tegra_init_timer(struct device_node *np)
- 			pr_err("%s: can't map IRQ for CPU%d\n",
- 			       __func__, cpu);
- 			ret = -EINVAL;
--			goto out;
-+			goto out_irq;
- 		}
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index d59dee61b64d..a26555baf692 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -26,7 +26,7 @@ static inline unsigned long long rdclock(void)
+ }
  
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
-@@ -298,7 +298,8 @@ static int __init tegra_init_timer(struct device_node *np)
- 		if (ret) {
- 			pr_err("%s: cannot setup irq %d for CPU%d\n",
- 				__func__, cpu_to->clkevt.irq, cpu);
--			ret = -EINVAL;
-+			irq_dispose_mapping(cpu_to->clkevt.irq);
-+			cpu_to->clkevt.irq = 0;
- 			goto out_irq;
- 		}
- 	}
+ #ifndef MAX_NR_CPUS
+-#define MAX_NR_CPUS			1024
++#define MAX_NR_CPUS			2048
+ #endif
+ 
+ extern const char *input_name;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index fb0aa661644b..b82d4577d969 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1100,7 +1100,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 	return 0;
+ }
+ 
+-#define MAX_CACHES 2000
++#define MAX_CACHES (MAX_NR_CPUS * 4)
+ 
+ static int write_cache(struct feat_fd *ff,
+ 		       struct perf_evlist *evlist __maybe_unused)
 -- 
 2.20.1
 
