@@ -2,91 +2,104 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21712C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120B5C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC564206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFF321880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200804;
-	bh=DNqlzREK4dV/aPzROroMGAgiODE6UVu/9+MH9locEQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cYJUGZvngeD0BW/nUmjlM/99sBawgpdzhXH4fnZgwVetWVmrzgAKiX4tTvThPEHuJ
-	 EDj22XjJG51uSwDxFPEvZ6NzBbOHS11R+CDFWWLhtxon1SGCFA1owFugLeCOtvBC+V
-	 rFvzzP8t7jCUBF03Mb3jGzw3x1iRi4OdoAxPMUh0=
+	s=default; t=1563200808;
+	bh=DZ7BiE3VghbRO+3KluHtvVWdyC9txZKmk4GLMbplidA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lwrAlH3Z/aqEZnBGU848mlt1MCGjSkpahZIMyQ4g1yycJ142MeHIbU+NH9X1Sg/5M
+	 exps/Tcd8f0DvuVdTVkSPquE8yR9xLTLENKlIZwB+jCcr6Nxe8624ezJAjZiR65rqC
+	 VxCnQ/lXWXD2dRMb3bF4m2wummWKW9qfqQftYifg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390771AbfGOO0m (ORCPT
+        id S2391383AbfGOO0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390462AbfGOO0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:26:39 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        id S2391301AbfGOO0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:26:40 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E1C021897
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:26:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A9F0206B8;
+        Mon, 15 Jul 2019 14:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200798;
-        bh=DNqlzREK4dV/aPzROroMGAgiODE6UVu/9+MH9locEQ4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SabY96C/POfFbxV/Umsy2WGXdijJG7KF8f3Ysqqdifd7WqBbEJx+xG8P7Mmx5WDBz
-         q3jA6uUizcJUa+q10TuC7UrMWVr4NRyvH6PaW3VSAzRFj033Puah609iqGVB5ULYFh
-         WWDH1OLKrjzSjdlcJvmRoz/+0x0+44lupFxtDxGM=
-Received: by mail-wr1-f41.google.com with SMTP id p17so17309328wrf.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:26:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAUmT7CkchuRovuWrwd0s4r31JPTt3bNV/jt7JQDcIToouuGDwfq
-        xLPG+TVxXXUB8QciTIo458bgOVDQrishDYyZrqrRow==
-X-Google-Smtp-Source: APXvYqww0AN3+Pb54VR+Bz/+6fgGsdMSZEJs1XScvHSY8TTgNMqkXTS8y1miAw5Idq1Dc5EeFC1Tkcu7M/Wx0leEMSw=
-X-Received: by 2002:adf:dd0f:: with SMTP id a15mr27817870wrm.265.1563200796986;
- Mon, 15 Jul 2019 07:26:36 -0700 (PDT)
+        s=default; t=1563200799;
+        bh=DZ7BiE3VghbRO+3KluHtvVWdyC9txZKmk4GLMbplidA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ai00eFYrV5t4XdE4JKR5XWMX6mye42Jid2Lb7C4bYl5Lr50CzzZl1Oy3I0hFwkDk6
+         rP6R/FJynwW0rZu3u8VKX7Gz+mZ3nAiZ40oDrWTqgdv7hz2PtZ2NLdkfF0O+KyN8iU
+         jnl8SgZE8hj9706RQzAtLTYAdOFs3HaoNKelBiTM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vedang Patel <vedang.patel@intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 133/158] igb: clear out skb->tstamp after reading the txtime
+Date:   Mon, 15 Jul 2019 10:17:44 -0400
+Message-Id: <20190715141809.8445-133-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190715130056.10627-1-andrew.cooper3@citrix.com> <a04918d1-975e-5869-1ecd-c9df4ae5b1c1@suse.com>
-In-Reply-To: <a04918d1-975e-5869-1ecd-c9df4ae5b1c1@suse.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 15 Jul 2019 07:26:25 -0700
-X-Gmail-Original-Message-ID: <CALCETrX0T=vzyN8gqoBmA72xwzS45d5bDTfcZQJayht9n9ijPA@mail.gmail.com>
-Message-ID: <CALCETrX0T=vzyN8gqoBmA72xwzS45d5bDTfcZQJayht9n9ijPA@mail.gmail.com>
-Subject: Re: [PATCH] x86/paravirt: Drop {read,write}_cr8() hooks
-To:     Juergen Gross <jgross@suse.com>
-Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        FengTang <feng.tang@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J.Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Alok Kataria <akataria@vmware.com>,
-        Nadav Amit <namit@vmware.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 6:23 AM Juergen Gross <jgross@suse.com> wrote:
->
-> On 15.07.19 15:00, Andrew Cooper wrote:
-> > There is a lot of infrastructure for functionality which is used
-> > exclusively in __{save,restore}_processor_state() on the suspend/resume
-> > path.
-> >
-> > cr8 is an alias of APIC_TASKPRI, and APIC_TASKPRI is saved/restored
-> > independently by lapic_{suspend,resume}().
->
-> Aren't those called only with CONFIG_PM set?
->
+From: Vedang Patel <vedang.patel@intel.com>
 
+[ Upstream commit 1e08511d5d01884a3c9070afd52a47799312074a ]
 
-Unless I'm missing something, we only build any of the restore code
-(including the write_cr8() call) if CONFIG_PM_SLEEP is set, and that
-selects CONFIG_PM, so we should be fine, I think.
+If a packet which is utilizing the launchtime feature (via SO_TXTIME socket
+option) also requests the hardware transmit timestamp, the hardware
+timestamp is not delivered to the userspace. This is because the value in
+skb->tstamp is mistaken as the software timestamp.
+
+Applications, like ptp4l, request a hardware timestamp by setting the
+SOF_TIMESTAMPING_TX_HARDWARE socket option. Whenever a new timestamp is
+detected by the driver (this work is done in igb_ptp_tx_work() which calls
+igb_ptp_tx_hwtstamps() in igb_ptp.c[1]), it will queue the timestamp in the
+ERR_QUEUE for the userspace to read. When the userspace is ready, it will
+issue a recvmsg() call to collect this timestamp.  The problem is in this
+recvmsg() call. If the skb->tstamp is not cleared out, it will be
+interpreted as a software timestamp and the hardware tx timestamp will not
+be successfully sent to the userspace. Look at skb_is_swtx_tstamp() and the
+callee function __sock_recv_timestamp() in net/socket.c for more details.
+
+Signed-off-by: Vedang Patel <vedang.patel@intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/igb/igb_main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 5aa083d9a6c9..ab76a5f77cd0 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -5703,6 +5703,7 @@ static void igb_tx_ctxtdesc(struct igb_ring *tx_ring,
+ 	 */
+ 	if (tx_ring->launchtime_enable) {
+ 		ts = ns_to_timespec64(first->skb->tstamp);
++		first->skb->tstamp = 0;
+ 		context_desc->seqnum_seed = cpu_to_le32(ts.tv_nsec / 32);
+ 	} else {
+ 		context_desc->seqnum_seed = 0;
+-- 
+2.20.1
+
