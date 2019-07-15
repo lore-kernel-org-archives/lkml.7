@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73397C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF5FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473B5217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D401421848
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199569;
-	bh=HDoaoUKX3dESTZItHWvYWot9k/WWo6rBxxTNXP9UZl4=;
+	s=default; t=1563199575;
+	bh=tFcLzwTgGiyMA/mZ12kgnVzj8S5mIUQXmlKfKm3TltQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wlmpx43FWcmjaPmOyL3qSGlhaxx8x3TWWBIz7Zb/yZk3iQAKZ7P5P/kHXyG/znN3Q
-	 19FPnP94FIRpR4DrGzU/BtAyCq+PtQTaUcN5uGGgnXl0tRSkTMJXcYuLc5j5pXA879
-	 ucGOUASK5TWBwZ5CabuyJ1Rv9ARp7bERkxwFsTSs=
+	b=KPYWU+qojyCENpVLvpnsDkzrwZ/ZcfZIPuiuD3LqcURarVkdob56HDSAkulm1JmaN
+	 apzhf1raZDzO1lxUYAEYQmJdIIAXzzaEqIwrvDyigXcXdDrT9cjSq5hBQOjqg3fdUY
+	 pPUkswoZbxajqyi0RwcgWZL6bJP6onQma4cEm5Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733306AbfGOOGI (ORCPT
+        id S2388000AbfGOOGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53238 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388227AbfGOOGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:06:03 -0400
+        id S2387762AbfGOOGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:06:12 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C776217D9;
-        Mon, 15 Jul 2019 14:05:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D53217D9;
+        Mon, 15 Jul 2019 14:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199563;
-        bh=HDoaoUKX3dESTZItHWvYWot9k/WWo6rBxxTNXP9UZl4=;
+        s=default; t=1563199570;
+        bh=tFcLzwTgGiyMA/mZ12kgnVzj8S5mIUQXmlKfKm3TltQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjRhcWa+FBNguytFw4DBErcyJhus4Dpxv5bKE4jrk4qTUrEgpalBPkEkE8641eykg
-         7CqUX7CXeNcq1svkl38QSl+ylVtgc2DmZB8ASfS/jOZRb3ikM9S+ixtNVF8IW7YwAD
-         aq+UjEYO6CKMAvK67K732u74xSGviqEaxG/+oOPQ=
+        b=aL5uxlwkP7Wx8OVl6TPR2c9mQ4YAKRJTADiCWAxbC1aA+XiCHpRqVDgvcwJXt5+ED
+         EaAldHOTZu6bMWy+ZWj4xwvQwvKdO7Rk5H/gVSSgUgPr9cedIdAPBrzc3yv7SVwnZy
+         h7B1VQIgWpmXIrYmGFmNycUJp7tW9+W32gHfZ9vw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Joseph Yasi <joe.yasi@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 043/219] e1000e: start network tx queue only when link is up
-Date:   Mon, 15 Jul 2019 10:00:44 -0400
-Message-Id: <20190715140341.6443-43-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 045/219] media: saa7164: fix remove_proc_entry warning
+Date:   Mon, 15 Jul 2019 10:00:46 -0400
+Message-Id: <20190715140341.6443-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -63,76 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit d17ba0f616a08f597d9348c372d89b8c0405ccf3 ]
+[ Upstream commit 50710eeefbc1ed25375942aad0c4d1eb4af0f330 ]
 
-Driver does not want to keep packets in Tx queue when link is lost.
-But present code only reset NIC to flush them, but does not prevent
-queuing new packets. Moreover reset sequence itself could generate
-new packets via netconsole and NIC falls into endless reset loop.
+if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
 
-This patch wakes Tx queue only when NIC is ready to send packets.
+name 'saa7164'
+WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
+  ? remove_proc_entry+0x1e8/0x3a0
+  ? try_stop_module+0x7b/0x240
+  ? proc_readdir+0x70/0x70
+  ? rcu_read_lock_sched_held+0xd7/0x100
+  saa7164_fini+0x13/0x1f [saa7164]
+  __x64_sys_delete_module+0x30c/0x480
+  ? __ia32_sys_delete_module+0x480/0x480
+  ? __x64_sys_clock_gettime+0x11e/0x1c0
+  ? __x64_sys_timer_create+0x1a0/0x1a0
+  ? trace_hardirqs_off_caller+0x40/0x180
+  ? do_syscall_64+0x18/0x450
+  do_syscall_64+0x9f/0x450
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This is proper fix for problem addressed by commit 0f9e980bf5ee
-("e1000e: fix cyclic resets at link up with active tx").
+Fix it by checking the return of proc_create_single() before
+calling remove_proc_entry().
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-Tested-by: Joseph Yasi <joe.yasi@gmail.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: use 0444 instead of S_IRUGO]
+[hverkuil-cisco@xs4all.nl: use pr_info instead of KERN_INFO]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 6230b4bb1699..f4a00ee39834 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4209,7 +4209,7 @@ void e1000e_up(struct e1000_adapter *adapter)
- 		e1000_configure_msix(adapter);
- 	e1000_irq_enable(adapter);
- 
--	netif_start_queue(adapter->netdev);
-+	/* Tx queue started by watchdog timer when link is up */
- 
- 	e1000e_trigger_lsc(adapter);
+diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
+index 05f25c9bb308..f5ad3cf207d3 100644
+--- a/drivers/media/pci/saa7164/saa7164-core.c
++++ b/drivers/media/pci/saa7164/saa7164-core.c
+@@ -1122,16 +1122,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
+ 	return 0;
  }
-@@ -4607,6 +4607,7 @@ int e1000e_open(struct net_device *netdev)
- 	pm_runtime_get_sync(&pdev->dev);
  
- 	netif_carrier_off(netdev);
-+	netif_stop_queue(netdev);
++static struct proc_dir_entry *saa7164_pe;
++
+ static int saa7164_proc_create(void)
+ {
+-	struct proc_dir_entry *pe;
+-
+-	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
+-	if (!pe)
++	saa7164_pe = proc_create_single("saa7164", 0444, NULL, saa7164_proc_show);
++	if (!saa7164_pe)
+ 		return -ENOMEM;
  
- 	/* allocate transmit descriptors */
- 	err = e1000e_setup_tx_resources(adapter->tx_ring);
-@@ -4667,7 +4668,6 @@ int e1000e_open(struct net_device *netdev)
- 	e1000_irq_enable(adapter);
+ 	return 0;
+ }
++
++static void saa7164_proc_destroy(void)
++{
++	if (saa7164_pe)
++		remove_proc_entry("saa7164", NULL);
++}
++#else
++static int saa7164_proc_create(void) { return 0; }
++static void saa7164_proc_destroy(void) {}
+ #endif
  
- 	adapter->tx_hang_recheck = false;
--	netif_start_queue(netdev);
+ static int saa7164_thread_function(void *data)
+@@ -1503,19 +1512,21 @@ static struct pci_driver saa7164_pci_driver = {
  
- 	hw->mac.get_link_status = true;
- 	pm_runtime_put(&pdev->dev);
-@@ -5289,6 +5289,7 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			if (phy->ops.cfg_on_link_up)
- 				phy->ops.cfg_on_link_up(hw);
+ static int __init saa7164_init(void)
+ {
+-	printk(KERN_INFO "saa7164 driver loaded\n");
++	int ret = pci_register_driver(&saa7164_pci_driver);
++
++	if (ret)
++		return ret;
  
-+			netif_wake_queue(netdev);
- 			netif_carrier_on(netdev);
+-#ifdef CONFIG_PROC_FS
+ 	saa7164_proc_create();
+-#endif
+-	return pci_register_driver(&saa7164_pci_driver);
++
++	pr_info("saa7164 driver loaded\n");
++
++	return 0;
+ }
  
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -5302,6 +5303,7 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			/* Link status message must follow this format */
- 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
- 			netif_carrier_off(netdev);
-+			netif_stop_queue(netdev);
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
- 				mod_timer(&adapter->phy_info_timer,
- 					  round_jiffies(jiffies + 2 * HZ));
+ static void __exit saa7164_fini(void)
+ {
+-#ifdef CONFIG_PROC_FS
+-	remove_proc_entry("saa7164", NULL);
+-#endif
++	saa7164_proc_destroy();
+ 	pci_unregister_driver(&saa7164_pci_driver);
+ }
+ 
 -- 
 2.20.1
 
