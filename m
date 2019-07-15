@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A004CC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810B4C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751EC2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABD52081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199972;
-	bh=lOE15GJAkkPs907XzEXCOpEE2O4/Jf4GNtl+bvxUd8M=;
+	s=default; t=1563199974;
+	bh=NZBbR48CYq+XLqySJkdrYuibf43IYtPTCwtonKiURyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJ0CVC0A+cw2R/0eH5PwtdnvPMpckHNnOd3MbrRTXTMROCqtnRAQJr/Arq6kGU0wM
-	 xgM8E4iTEjkjuU/NcHBptlFo/jqufsWiPH2VlIH1dgKriL/k8dwI6IkCSaS7TmjIqs
-	 /TmuDO6xrzbMq1//MHBKiS4dozaVgdqIfK+yoDCo=
+	b=LnbCCaDFob/6b4SDdb4swAoJPFf4Lisn34ysv5B59JHabg8sILSnPKHbxveF76omz
+	 g1IuvzjQx7zKPmCHPZARioVbFNJ0ViqvBMBJsd//j5rKH3RowE1n5ST5CbNbcwx4oA
+	 orbVr1YV5nH9N0jgKhW6GJWVb05dEk4S/BHNFWFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389127AbfGOOMv (ORCPT
+        id S2389138AbfGOOMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52144 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389122AbfGOOMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:12:49 -0400
+        id S2389120AbfGOOMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:12:51 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96872083D;
-        Mon, 15 Jul 2019 14:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7931420868;
+        Mon, 15 Jul 2019 14:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199967;
-        bh=lOE15GJAkkPs907XzEXCOpEE2O4/Jf4GNtl+bvxUd8M=;
+        s=default; t=1563199970;
+        bh=NZBbR48CYq+XLqySJkdrYuibf43IYtPTCwtonKiURyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kr6Eb6UmMhNF3U3EntBknwUCN6uSKmYO4sPworlR+r7qMBlcq0BK9nN6H4/S37bT6
-         m/DAvdvHC6jLP6/GVqv51y8fU7n/uq6HLa4anFoUYz9K6jMl4w8710p0zJv4yhS8TU
-         ghqnzjm7s2aTtzF0n5SaZ6zQGaNASDKwGgq8D/+0=
+        b=TE0eKAG3yl5IFj7K5MlYbgxbXXkOe6HeYvYDH09ejRkYPPC1r98+qBbMeIMRHHQ8i
+         iNLn7/MaNOMNvt5lzZSiZ7r8B2vrGaZ4L8BVe0SuLgh+OU+0EC++QxhznsHcXr4YFB
+         58oiRIBc7yp+95+lIlkxAr0PGN2jkx3MGpCCS7Gs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 149/219] clocksource/drivers/tegra: Release all IRQ's on request_irq() error
-Date:   Mon, 15 Jul 2019 10:02:30 -0400
-Message-Id: <20190715140341.6443-149-sashal@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Hannes Reinecke <hare@suse.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 150/219] libata: don't request sense data on !ZAC ATA devices
+Date:   Mon, 15 Jul 2019 10:02:31 -0400
+Message-Id: <20190715140341.6443-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,44 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 7a3916706e858ad0bc3b5629c68168e1449de26a ]
+[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
 
-Release all requested IRQ's on the request error to properly clean up
-allocated resources.
+ZAC support added sense data requesting on error for both ZAC and ATA
+devices. This seems to cause erratic error handling behaviors on some
+SSDs where the device reports sense data availability and then
+delivers the wrong content making EH take the wrong actions.  The
+failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
+reproduced.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+There is no value in requesting sense data from non-ZAC ATA devices
+while there's a significant risk of introducing EH misbehaviors which
+are difficult to reproduce and fix.  Let's do the sense data dancing
+only for ZAC devices.
+
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-tegra20.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/ata/libata-eh.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index fdb3d795a409..cc18bb135a17 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -310,7 +310,7 @@ static int __init tegra_init_timer(struct device_node *np)
- 			pr_err("%s: can't map IRQ for CPU%d\n",
- 			       __func__, cpu);
- 			ret = -EINVAL;
--			goto out;
-+			goto out_irq;
- 		}
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 938ed513b070..6215680418c4 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1486,7 +1486,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
+ 	tf->hob_lbah = buf[10];
+ 	tf->nsect = buf[12];
+ 	tf->hob_nsect = buf[13];
+-	if (ata_id_has_ncq_autosense(dev->id))
++	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
+ 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
  
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
-@@ -320,7 +320,8 @@ static int __init tegra_init_timer(struct device_node *np)
- 		if (ret) {
- 			pr_err("%s: cannot setup irq %d for CPU%d\n",
- 				__func__, cpu_to->clkevt.irq, cpu);
--			ret = -EINVAL;
-+			irq_dispose_mapping(cpu_to->clkevt.irq);
-+			cpu_to->clkevt.irq = 0;
- 			goto out_irq;
- 		}
+ 	return 0;
+@@ -1733,7 +1733,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 	memcpy(&qc->result_tf, &tf, sizeof(tf));
+ 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
+ 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
+-	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
++	if (dev->class == ATA_DEV_ZAC &&
++	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
+ 		char sense_key, asc, ascq;
+ 
+ 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
+@@ -1787,10 +1788,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
  	}
+ 
+ 	switch (qc->dev->class) {
+-	case ATA_DEV_ATA:
+ 	case ATA_DEV_ZAC:
+ 		if (stat & ATA_SENSE)
+ 			ata_eh_request_sense(qc, qc->scsicmd);
++		/* fall through */
++	case ATA_DEV_ATA:
+ 		if (err & ATA_ICRC)
+ 			qc->err_mask |= AC_ERR_ATA_BUS;
+ 		if (err & (ATA_UNC | ATA_AMNF))
 -- 
 2.20.1
 
