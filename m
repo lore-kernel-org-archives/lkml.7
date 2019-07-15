@@ -2,92 +2,112 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C81EC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FE9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D46862086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="e4FGYwqA"
+	by mail.kernel.org (Postfix) with ESMTP id 0C0E52067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563202322;
+	bh=7fHPvCVBGKCPN35gkNFefzowEuvD7QoyxUco+5Dv4no=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PWImErx2buZIsqW8v0n1dOLXjS+N+NhMPYIflJ72yVo6IAodG4NgnG/OPyIphTqSD
+	 hI76wejdecZTZZL/yf5redj/6l0Qlp5dn7bg/JrYIUOfih71H4gleh9Y0iTm8ulD3T
+	 1Y1B/59ER/toMiHXtZkG8mImdPNkq+MtS2qlZanc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404893AbfGOOvw (ORCPT
+        id S2404915AbfGOOwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:51:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40457 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732151AbfGOObg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:31:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so17329565wrl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/kOuHIwdV1cmMgDdELPfBrpuX2BOQd/yGACKLJjUP3M=;
-        b=e4FGYwqAaI4jLb4Z0KPbQ0yK1YMlM/CILrvUEl+SG3ooRm6VM2lnqwzf3NldmberP9
-         6HwinXj0gqjPCOxdGUz2/1FKdYuIESyshiEu8Dda6Egk0TaNUelDsdVp/b/O+vuqQ/Sh
-         lFafZYsYtewywPdAPJ/xnWCBhy05gJuEptPRhYuUWvKA8A3tk9+ULP4AhQk4pHND7FyP
-         kt9rvOZpBhkYH3EaxEjHKiR3btyAx9dfJE1M9KvSP5GfyFAZ5nnFon+X7brtFooBjw7r
-         xYjLFO+GcbP22eIB4t2rSTyO0iioQXbWkj+EWs0j1OL4Mc5seuzg2xcGvywE603taiho
-         eQtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/kOuHIwdV1cmMgDdELPfBrpuX2BOQd/yGACKLJjUP3M=;
-        b=TcU9XZ1D/orsWzHnx/gtUkXP5JgIuk5gfL6dLxCmHvjiCErrequ+amBNo362DZAsws
-         3FxHb2ouz2+glhr7ZCE5OfLfRobGYdBvSCZtOG3ke3Jxc+jzuRzptri3gTDfa7i/xlhW
-         0USg8yDnca6/lOvvrmHFbKW/sUOjm/FWWY5JU21Fk1r3kRUw11Tn5lNQB+Rj4Y2VIC7h
-         6inJswNyLBDCovonblB77lL4IBQhkdh50PpaWwYiOOwTWxijzRprxIH1/u7/+MYPI62s
-         sXz8OygZflR/owZJ6+QLhVABTeaBjqLj0+qYt4oX7lJK6G/FNUe/2TxfN1GWQ7xpFXuh
-         UEUA==
-X-Gm-Message-State: APjAAAVj4gbnBKb0iQW+IjBrbWKof42ChGI43O10pop0tvgPE3T1qVnt
-        eSPP4QxG7vmqJhzBB8tStjXO11vWZJ/Kq+9hsGjwnw==
-X-Google-Smtp-Source: APXvYqxEFYaVkFCKSYyYJRZ9VyyeeGht77z9ZnbIbaqpGuILzPfl5OBcTvCYx1mkWojen86iw2roVhpWZPHBCOougv0=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr30519437wro.343.1563201095116;
- Mon, 15 Jul 2019 07:31:35 -0700 (PDT)
+        Mon, 15 Jul 2019 10:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390959AbfGOOb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:31:27 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F07A620C01;
+        Mon, 15 Jul 2019 14:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201087;
+        bh=7fHPvCVBGKCPN35gkNFefzowEuvD7QoyxUco+5Dv4no=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dkueXbMNwWkw47DUmcWfxyC1yGmCgRHmUCjfPxIhkTXG67xIM16RFg3CeBzDlhNBG
+         T66nSB7ghXw8F7XgJE0s5u6cCBTURGXYt4OQw0glCiDFj7YIiT6yagylaQf3Pkh1Oc
+         u3QcKKxXF++0H5Ef4b/Mv/BGGUj+L5j95TcqMfDs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Waiman Long <longman@redhat.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 048/105] rcu: Force inlining of rcu_read_lock()
+Date:   Mon, 15 Jul 2019 10:27:42 -0400
+Message-Id: <20190715142839.9896-48-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
+References: <20190715142839.9896-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190715142109.3063-1-ubizjak@gmail.com>
-In-Reply-To: <20190715142109.3063-1-ubizjak@gmail.com>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Mon, 15 Jul 2019 07:31:23 -0700
-Message-ID: <CALCETrXQaayeV-6n_2dycMo7ienQPizTqYQDEAy1C2KLPrCt8Q@mail.gmail.com>
-Subject: Re: [PATCH] x86/cpu/intel: Skip CPA cache flush on CPUs with cache self-snooping
-To:     Uros Bizjak <ubizjak@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 7:21 AM Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> CPUs which have self-snooping capability can handle conflicting
-> memory type across CPUs by snooping its own cache. Commit #fd329f276ecaa
-> ("x86/mtrr: Skip cache flushes on CPUs with cache self-snooping")
-> avoids cache flushes when MTRR registers are programmed. The Page
-> Attribute Table (PAT) is a companion feature to the MTRRs, and according
-> to section 11.12.4 of the Intel 64 and IA 32 Architectures Software
-> Developer's Manual, if the CPU supports cache self-snooping, it is not
-> necessary to flush caches when remapping a page that was previously
-> mapped as a different memory type.
->
-> Note that commit #1e03bff360010
-> ("x86/cpu/intel: Clear cache self-snoop capability in CPUs with known errata")
-> cleared cache self-snoop capability for CPUs where conflicting memory types
-> lead to unpredictable behavior, machine check errors, or hangs.
+From: Waiman Long <longman@redhat.com>
 
-It looks like this won't affect the SEV code paths, so I'm not
-thinking of anything that this will break.  But Dave and Peter are
-much, much more familiar with the messes this could cause than I am.
+[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
 
---Andy
+When debugging options are turned on, the rcu_read_lock() function
+might not be inlined. This results in lockdep's print_lock() function
+printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
+For example:
+
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+
+These "rcu_read_lock+0x0/0x70" strings are not providing any useful
+information.  This commit therefore forces inlining of the rcu_read_lock()
+function so that rcu_read_lock()'s caller is instead shown.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/rcupdate.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index f960c85cd9ec..8d570190e9b4 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -622,7 +622,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
+ {
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
+-- 
+2.20.1
+
