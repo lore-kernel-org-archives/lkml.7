@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0245C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150A9C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FDA2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCCA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202062;
-	bh=rU3Ez2wWMrrE/iar+jy6anGCgLmCwgHT+Bint4y05vo=;
+	s=default; t=1563202065;
+	bh=S89wtKpOCJz7nJ6m9Ov9WsEA1pWOQbr17/Vr/qbYNIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FWj9q2ho4Aje6w9NB06Sje7q1c/vVj17pR6EQjSmHdM7r4n/IDt+h0Sm0vrWluj57
-	 vzt2k7AMX/kYa1dMyodmFTJjTQxbMPDb0eBzjDUWZrm9zCbMJcGNrzMh0CxX9YT+Kc
-	 PFOveIQDHRjIkvpDPv3gvxJRE+GRgbOw8ABo2iSM=
+	b=2UiyMz+twUlgCA13GzDeV8ibJozlM6dfv+VDn3KAmvpBlw1R0et75LlRCnlCLV/Dy
+	 AlBepBNlLdmpbmyfCF7tzGvh6Cky8KhUUVzLR57tXrMbYnfpGe4M6V/vGmWu6860+s
+	 yAyAyEtuaxNIXmJma4KZilbYynwRSjKNNHEDKE9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405207AbfGOOrh (ORCPT
+        id S2405225AbfGOOro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42380 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405195AbfGOOre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:47:34 -0400
+        id S2404361AbfGOOrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:47:41 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F8D621530;
-        Mon, 15 Jul 2019 14:47:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6B2420C01;
+        Mon, 15 Jul 2019 14:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202053;
-        bh=rU3Ez2wWMrrE/iar+jy6anGCgLmCwgHT+Bint4y05vo=;
+        s=default; t=1563202060;
+        bh=S89wtKpOCJz7nJ6m9Ov9WsEA1pWOQbr17/Vr/qbYNIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVyJ3iXksY9MVgxHgc0hcVaBiwsCjF5g0imSXYrjQubrpe79iNi2OV5WJxf6RBBrn
-         PVch88OIUWEnKOssvz57aiaCWzAMv8Dql3R5EnLPlbDsx22yVyZeYW1Hu44+JtEz3p
-         iQIUdcvXoNg/ubbq3ehj2SLY29A9AkTU8gJzEowo=
+        b=12BZew0OOK+YRzyG0m+mRny+9KbS8eGHnM1Cv1ULzfFBjifEGBadd+Pq1Q0REAdDD
+         ljFfjyEgpSVLzDP/cD20ZnsXjvLOxty0eQ8cDJz9ex5o+Arhnp92niCuR9j7dBkwBk
+         wKMkw36BpQ2+VjNuV5+1POHKi0L4JSGSmGrYVDec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 33/53] vhost_net: disable zerocopy by default
-Date:   Mon, 15 Jul 2019 10:45:15 -0400
-Message-Id: <20190715144535.11636-33-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 35/53] media: i2c: fix warning same module names
+Date:   Mon, 15 Jul 2019 10:45:17 -0400
+Message-Id: <20190715144535.11636-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -61,43 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
+[ Upstream commit b2ce5617dad254230551feda3599f2cc68e53ad8 ]
 
-Vhost_net was known to suffer from HOL[1] issues which is not easy to
-fix. Several downstream disable the feature by default. What's more,
-the datapath was split and datacopy path got the support of batching
-and XDP support recently which makes it faster than zerocopy part for
-small packets transmission.
+When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
+enabled as loadable modules, we see the following warning:
 
-It looks to me that disable zerocopy by default is more
-appropriate. It cold be enabled by default again in the future if we
-fix the above issues.
+  drivers/gpu/drm/bridge/adv7511/adv7511.ko
+  drivers/media/i2c/adv7511.ko
 
-[1] https://patchwork.kernel.org/patch/3787671/
+Rework so that the file is named adv7511-v4l2.c.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/Makefile                      | 2 +-
+ drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+ rename drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} (99%)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 645b2197930e..f46317135224 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -30,7 +30,7 @@
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index 07db257abfc1..d5711def1fff 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -28,7 +28,7 @@ obj-$(CONFIG_VIDEO_ADV7393) += adv7393.o
+ obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
+ obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
+ obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
+-obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
++obj-$(CONFIG_VIDEO_ADV7511) += adv7511-v4l2.o
+ obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
+ obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
+ obj-$(CONFIG_VIDEO_BT819) += bt819.o
+diff --git a/drivers/media/i2c/adv7511.c b/drivers/media/i2c/adv7511-v4l2.c
+similarity index 99%
+rename from drivers/media/i2c/adv7511.c
+rename to drivers/media/i2c/adv7511-v4l2.c
+index c24839cfcc35..b35400e4e9af 100644
+--- a/drivers/media/i2c/adv7511.c
++++ b/drivers/media/i2c/adv7511-v4l2.c
+@@ -17,6 +17,11 @@
+  * SOFTWARE.
+  */
  
- #include "vhost.h"
++/*
++ * This file is named adv7511-v4l2.c so it doesn't conflict with the Analog
++ * Device ADV7511 (config fragment CONFIG_DRM_I2C_ADV7511).
++ */
++
  
--static int experimental_zcopytx = 1;
-+static int experimental_zcopytx = 0;
- module_param(experimental_zcopytx, int, 0444);
- MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
- 		                       " 1 -Enable; 0 - Disable");
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 -- 
 2.20.1
 
