@@ -2,174 +2,177 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0BFC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75C1C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5633A20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x8qRxSKX"
+	by mail.kernel.org (Postfix) with ESMTP id 6CDEF2182B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563222269;
+	bh=z/3S4xXt/Rio/ofj03vwkBIO5OR52dDSZ9Eeq6mO6XI=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=OP5CWvRyrovWnjCrrANmDlflFANSC7spqEbtOS4ugsH9mn5wvDUHZrn9AsOVPC0dH
+	 G471Heaz3LJHWwblmmcTpa53iJLkhEIEz3GDhNuwz0cSWrvI6PS5vx+LhHq3gQP0sc
+	 Z8xVxNkEhvF68vJSrf4J6HG4VIovGJq/ylC9G2Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfGOUXB (ORCPT
+        id S1732275AbfGOUY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:23:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40107 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731055AbfGOUXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:23:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so36234930iom.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P4sgcLOMbyXJn+TV7zW0h6BmBF+H1WzQkFZRqrEO1yk=;
-        b=x8qRxSKXM/VFrSA9MdVLx5KR/z6b3iDcECgXoECDoiVev6JVwoSBGpwetlt5thhq44
-         mY09gs1r9IhHQVndWTzDlOjvOu4KG8gL+sgLdJSxK3igsH2XG067Hzry6zF87XPqWHOM
-         FXCowuUymmjDVWwzpv9J229PtLmL00goBLAvK1tzs2m+j1JcuKhz7xvFk+Yyw2PimOpZ
-         E4dmSDWdV7RfrlmV5Su2W3xFWcWHZKi/SnrW+emDui2uJNr0Injpf6LZ9IUBS75tkPBF
-         fUduPlI1iZUSCdklu3x/8fULWTmd4CjtfS9AKA6puwH6vHNJdgA3zPnQAxdEZxG1TjI0
-         JfxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P4sgcLOMbyXJn+TV7zW0h6BmBF+H1WzQkFZRqrEO1yk=;
-        b=P9Ces+fZheBDYsCJe4BKGnso4AyOATGsRtiycenbfUsT9+1fC48/84KjAzDLt5xF4p
-         hwcJTroqknOoK3kXz09fw8aADP+Q1eYLYZB2yz0mk2wMJ9bdUUhX9QMF+F6CLSRORQq0
-         zrrzbqdH9qEdiQlvJR3uJ84+AQdDHM++tvo4ZqMT5mepv/YmI3ShQWgGIY1dIkbyl8x+
-         yGD6OySdPL5ULe4Sh60jrCok5U7CemitVLBrcEyoxgaKcZjzpGzV6fSHe5pF0p5skH1q
-         vUPrQQYyB5tOr8G79dyHQ/citCG87iaxdbD7gfaGFgCmhMAvN+saKLBEAqu6sIbXflt7
-         XwbA==
-X-Gm-Message-State: APjAAAW+bid0xvtcDjOw06v/rz75e9Y7NjTkoo+BJvXdnQ+OvtGGiaQs
-        Bp7UCybotsXhmVO1XZUxLyRa44gCf4IYQn2nsegYqQ==
-X-Google-Smtp-Source: APXvYqxUdBXLkQNSTCf6BXUxQvwj8MwgN2wmZfnscGiL9J14U4GCW3ly/hYqzCTiXdS6t7GAf8gb6+fDRIEbeN5DQq4=
-X-Received: by 2002:a5d:8e08:: with SMTP id e8mr28360386iod.139.1563222180157;
- Mon, 15 Jul 2019 13:23:00 -0700 (PDT)
+        Mon, 15 Jul 2019 16:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731055AbfGOUY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 16:24:27 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE64C20665;
+        Mon, 15 Jul 2019 20:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563222265;
+        bh=z/3S4xXt/Rio/ofj03vwkBIO5OR52dDSZ9Eeq6mO6XI=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=BXkGMbTaQqFfurRCy1g8au7AeTtgOFutLGJt3puQKKnveCArE1l5n+TvNB5nyLQN2
+         RewIrkkACOQLU4j8bdd/A1S3ea0t6aCgTcsSBEisWmgVGg22p/nmZ63GDKRcOxtMyZ
+         60uqJ7tvYGN5awKtcLQiKpJWBRakwwDtbA+09H2w=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190701190940.7f23ac15@canb.auug.org.au> <20190712105340.1520bce0@canb.auug.org.au>
-In-Reply-To: <20190712105340.1520bce0@canb.auug.org.au>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 15 Jul 2019 14:22:49 -0600
-Message-ID: <CANLsYkwNM7c6d-3+jpf+V=HppQ9cnA-RDmam_6qUuKC_g_Tq7A@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the char-misc tree with the
- driver-core tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190712081744.87097-3-brendanhiggins@google.com>
+References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-3-brendanhiggins@google.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v9 02/18] kunit: test: add test resource management API
+User-Agent: alot/0.8.1
+Date:   Mon, 15 Jul 2019 13:24:25 -0700
+Message-Id: <20190715202425.CE64C20665@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Quoting Brendan Higgins (2019-07-12 01:17:28)
+> diff --git a/kunit/test.c b/kunit/test.c
+> index 571e4c65deb5c..f165c9d8e10b0 100644
+> --- a/kunit/test.c
+> +++ b/kunit/test.c
+> @@ -171,6 +175,96 @@ int kunit_run_tests(struct kunit_suite *suite)
+>         return 0;
+>  }
+> =20
+> +struct kunit_resource *kunit_alloc_resource(struct kunit *test,
+> +                                           kunit_resource_init_t init,
+> +                                           kunit_resource_free_t free,
+> +                                           void *context)
+> +{
+> +       struct kunit_resource *res;
+> +       int ret;
+> +
+> +       res =3D kzalloc(sizeof(*res), GFP_KERNEL);
 
-On Thu, 11 Jul 2019 at 18:53, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> On Mon, 1 Jul 2019 19:09:40 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Today's linux-next merge of the char-misc tree got a conflict in:
-> >
-> >   drivers/hwtracing/coresight/of_coresight.c
-> >
-> > between commit:
-> >
-> >   418e3ea157ef ("bus_find_device: Unify the match callback with class_find_device")
-> >
-> > from the driver-core tree and commits:
-> >
-> >   22aa495a6477 ("coresight: Rename of_coresight to coresight-platform")
-> >   20961aea982e ("coresight: platform: Use fwnode handle for device search")
-> >
-> > from the char-misc tree.
-> >
-> > I fixed it up (I removed the file and added the following merge fix patch)
-> > and can carry the fix as necessary. This is now fixed as far as linux-next
-> > is concerned, but any non trivial conflicts should be mentioned to your
-> > upstream maintainer when your tree is submitted for merging.  You may
-> > also want to consider cooperating with the maintainer of the conflicting
-> > tree to minimise any particularly complex conflicts.
-> >
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Mon, 1 Jul 2019 19:07:20 +1000
-> > Subject: [PATCH] coresight: fix for "bus_find_device: Unify the match callback
-> >  with class_find_device"
-> >
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/hwtracing/coresight/coresight-platform.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> > index 3c5ceda8db24..fc67f6ae0b3e 100644
-> > --- a/drivers/hwtracing/coresight/coresight-platform.c
-> > +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> > @@ -37,7 +37,7 @@ static int coresight_alloc_conns(struct device *dev,
-> >       return 0;
-> >  }
-> >
-> > -int coresight_device_fwnode_match(struct device *dev, void *fwnode)
-> > +int coresight_device_fwnode_match(struct device *dev, const void *fwnode)
-> >  {
-> >       return dev_fwnode(dev) == fwnode;
-> >  }
->
-> This is now a conflict between the driver-core tree and Linus' tree.
->
-> The declaration of coresight_device_fwnode_match() also needs fixing up
-> in drivers/hwtracing/coresight/coresight-priv.h (as done in the patch
-> below supplied by Nathan Chancellor).
+This uses GFP_KERNEL.
 
-I have updated my next branch and you shouldn't see this again.
+> +       if (!res)
+> +               return NULL;
+> +
+> +       ret =3D init(res, context);
+> +       if (ret)
+> +               return NULL;
+> +
+> +       res->free =3D free;
+> +       mutex_lock(&test->lock);
 
-Thanks,
-Mathieu
+And this can sleep.
 
->
-> From: Nathan Chancellor <natechancellor@gmail.com>
-> Date: Mon, 1 Jul 2019 11:28:08 -0700
-> Subject: [PATCH] coresight: Make the coresight_device_fwnode_match declaration's fwnode parameter const
->
-> drivers/hwtracing/coresight/coresight.c:1051:11: error: incompatible pointer types passing 'int (struct device *, void *)' to parameter of type 'int (*)(struct device *, const void *)' [-Werror,-Wincompatible-pointer-types]
->                                       coresight_device_fwnode_match);
->                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/device.h:173:17: note: passing argument to parameter 'match' here
->                                int (*match)(struct device *dev, const void *data));
->                                      ^
-> 1 error generated.
->
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/hwtracing/coresight/coresight-priv.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 8b07fe55395a..7d401790dd7e 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -202,6 +202,6 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
->
->  void coresight_release_platform_data(struct coresight_platform_data *pdata);
->
-> -int coresight_device_fwnode_match(struct device *dev, void *fwnode);
-> +int coresight_device_fwnode_match(struct device *dev, const void *fwnode);
->
->  #endif
-> --
-> 2.22.0
->
-> --
-> Cheers,
-> Stephen Rothwell
+> +       list_add_tail(&res->node, &test->resources);
+> +       mutex_unlock(&test->lock);
+> +
+> +       return res;
+> +}
+> +
+> +void kunit_free_resource(struct kunit *test, struct kunit_resource *res)
+
+Should probably add a note that we assume the test lock is held here, or
+even add a lockdep_assert_held(&test->lock) into the function to
+document that and assert it at the same time.
+
+> +{
+> +       res->free(res);
+> +       list_del(&res->node);
+> +       kfree(res);
+> +}
+> +
+> +struct kunit_kmalloc_params {
+> +       size_t size;
+> +       gfp_t gfp;
+> +};
+> +
+> +static int kunit_kmalloc_init(struct kunit_resource *res, void *context)
+> +{
+> +       struct kunit_kmalloc_params *params =3D context;
+> +
+> +       res->allocation =3D kmalloc(params->size, params->gfp);
+> +       if (!res->allocation)
+> +               return -ENOMEM;
+> +
+> +       return 0;
+> +}
+> +
+> +static void kunit_kmalloc_free(struct kunit_resource *res)
+> +{
+> +       kfree(res->allocation);
+> +}
+> +
+> +void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
+> +{
+> +       struct kunit_kmalloc_params params;
+> +       struct kunit_resource *res;
+> +
+> +       params.size =3D size;
+> +       params.gfp =3D gfp;
+> +
+> +       res =3D kunit_alloc_resource(test,
+
+This calls that sleeping function above...
+
+> +                                  kunit_kmalloc_init,
+> +                                  kunit_kmalloc_free,
+> +                                  &params);
+
+but this passes a GFP flags parameter through to the
+kunit_kmalloc_init() function. How is this going to work if some code
+uses GFP_ATOMIC, but then we try to allocate and sleep in
+kunit_alloc_resource() with GFP_KERNEL?=20
+
+One solution would be to piggyback on all the existing devres allocation
+logic we already have and make each struct kunit a device that we pass
+into the devres functions. A far simpler solution would be to just
+copy/paste what devres does and use a spinlock and an allocation
+function that takes GFP flags.
+
+> +
+> +       if (res)
+> +               return res->allocation;
+> +
+> +       return NULL;
+> +}
