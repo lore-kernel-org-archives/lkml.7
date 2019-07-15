@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BACC76191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD61FC76197
 	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C3F204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869CF217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1563201319;
-	bh=T/rEm6dfBuoUIPZwn0Ts5aPqe93cRaC6IMXhjHkGeTk=;
+	bh=dc0s9BhvmSkVRg78pZTayKIR8WMQmOghBDfTgVaAZyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NEWhE+COrrUlAyZx3/teyjSQBGp2OJqFa7cD7vgkv72gEPcnL52hnB6NrHeSDawQ
-	 rDPgo3EP0dT2lB01acCow3sWFF/n49dhisi/xSrv2Wq/qaQwykwduDgGzYjUT0Q59j
-	 iT9+WC1jq9ni2kRJ3WVJof8zt6ebhX0FLcJtu6eM=
+	b=faE78GR+5szOvMyq3Z8gNVR2Pwgl8rlBxPOoh8v/Skj9Ub1YQSDADL2x6wm0gtEQw
+	 2FfzUaRGvyJPCYZXxbaZeozvlldRGBcGHXys/rUv0Nvt5uji7J33JWUqS8B6R1U0AU
+	 sicIhf+jv7bs3rUJtvndd0X04aJF1JA3dLsv4Tnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392076AbfGOOez (ORCPT
+        id S2403963AbfGOOeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389089AbfGOOeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:34:50 -0400
+        id S2391989AbfGOOeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:34:02 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8788121530;
-        Mon, 15 Jul 2019 14:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 088BD204FD;
+        Mon, 15 Jul 2019 14:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201289;
-        bh=T/rEm6dfBuoUIPZwn0Ts5aPqe93cRaC6IMXhjHkGeTk=;
+        s=default; t=1563201241;
+        bh=dc0s9BhvmSkVRg78pZTayKIR8WMQmOghBDfTgVaAZyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yeq6dY6YKu/89/ZgICdaI0nCbyQnxGf+gYdZ6Lx5DpEu/kGz4pDirG6x/6OLxYJ40
-         a+9AKxRjnJfA8oEY+l9WgbFMFbMU+IJmOo/Hhri88FTH4XZsAA7WkBhAPk4ecO+tPN
-         NpW306upEVvzKe4obEZQfVbq9ciDUvqKyBBISG2A=
+        b=PYLNKvvRl8Z9IARSdotia0GL/amfZGxKhvVVzcGARGqMW5wFHIDlO7GI8fDS30RUS
+         sds0tdl8qpzpLNioQBqTtVZKLB+8QW5VR9UFTMTL+AcVbs73XQUBhCrFGfWHIt57VX
+         2lZ72KcYVsZg+1iUcA/1hWAKf6zegnHe/4EJtqWM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matias Karhumaa <matias.karhumaa@gmail.com>,
-        Matti Kamunen <matti.kamunen@synopsys.com>,
-        Ari Timonen <ari.timonen@synopsys.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 098/105] Bluetooth: Check state in l2cap_disconnect_rsp
-Date:   Mon, 15 Jul 2019 10:28:32 -0400
-Message-Id: <20190715142839.9896-98-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/105] bcache: check c->gc_thread by IS_ERR_OR_NULL in cache_set_flush()
+Date:   Mon, 15 Jul 2019 10:28:22 -0400
+Message-Id: <20190715142839.9896-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -62,220 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matias Karhumaa <matias.karhumaa@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 28261da8a26f4915aa257d12d506c6ba179d961f ]
+[ Upstream commit b387e9b58679c60f5b1e4313939bd4878204fc37 ]
 
-Because of both sides doing L2CAP disconnection at the same time, it
-was possible to receive L2CAP Disconnection Response with CID that was
-already freed. That caused problems if CID was already reused and L2CAP
-Connection Request with same CID was sent out. Before this patch kernel
-deleted channel context regardless of the state of the channel.
+When system memory is in heavy pressure, bch_gc_thread_start() from
+run_cache_set() may fail due to out of memory. In such condition,
+c->gc_thread is assigned to -ENOMEM, not NULL pointer. Then in following
+failure code path bch_cache_set_error(), when cache_set_flush() gets
+called, the code piece to stop c->gc_thread is broken,
+         if (!IS_ERR_OR_NULL(c->gc_thread))
+                 kthread_stop(c->gc_thread);
 
-Example where leftover Disconnection Response (frame #402) causes local
-device to delete L2CAP channel which was not yet connected. This in
-turn confuses remote device's stack because same CID is re-used without
-properly disconnecting.
+And KASAN catches such NULL pointer deference problem, with the warning
+information:
 
-Btmon capture before patch:
-** snip **
-> ACL Data RX: Handle 43 flags 0x02 dlen 8                #394 [hci1] 10.748949
-      Channel: 65 len 4 [PSM 3 mode 0] {chan 2}
-      RFCOMM: Disconnect (DISC) (0x43)
-         Address: 0x03 cr 1 dlci 0x00
-         Control: 0x53 poll/final 1
-         Length: 0
-         FCS: 0xfd
-< ACL Data TX: Handle 43 flags 0x00 dlen 8                #395 [hci1] 10.749062
-      Channel: 65 len 4 [PSM 3 mode 0] {chan 2}
-      RFCOMM: Unnumbered Ack (UA) (0x63)
-         Address: 0x03 cr 1 dlci 0x00
-         Control: 0x73 poll/final 1
-         Length: 0
-         FCS: 0xd7
-< ACL Data TX: Handle 43 flags 0x00 dlen 12               #396 [hci1] 10.749073
-      L2CAP: Disconnection Request (0x06) ident 17 len 4
-        Destination CID: 65
-        Source CID: 65
-> HCI Event: Number of Completed Packets (0x13) plen 5    #397 [hci1] 10.752391
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> HCI Event: Number of Completed Packets (0x13) plen 5    #398 [hci1] 10.753394
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> ACL Data RX: Handle 43 flags 0x02 dlen 12               #399 [hci1] 10.756499
-      L2CAP: Disconnection Request (0x06) ident 26 len 4
-        Destination CID: 65
-        Source CID: 65
-< ACL Data TX: Handle 43 flags 0x00 dlen 12               #400 [hci1] 10.756548
-      L2CAP: Disconnection Response (0x07) ident 26 len 4
-        Destination CID: 65
-        Source CID: 65
-< ACL Data TX: Handle 43 flags 0x00 dlen 12               #401 [hci1] 10.757459
-      L2CAP: Connection Request (0x02) ident 18 len 4
-        PSM: 1 (0x0001)
-        Source CID: 65
-> ACL Data RX: Handle 43 flags 0x02 dlen 12               #402 [hci1] 10.759148
-      L2CAP: Disconnection Response (0x07) ident 17 len 4
-        Destination CID: 65
-        Source CID: 65
-= bluetoothd: 00:1E:AB:4C:56:54: error updating services: Input/o..   10.759447
-> HCI Event: Number of Completed Packets (0x13) plen 5    #403 [hci1] 10.759386
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> ACL Data RX: Handle 43 flags 0x02 dlen 12               #404 [hci1] 10.760397
-      L2CAP: Connection Request (0x02) ident 27 len 4
-        PSM: 3 (0x0003)
-        Source CID: 65
-< ACL Data TX: Handle 43 flags 0x00 dlen 16               #405 [hci1] 10.760441
-      L2CAP: Connection Response (0x03) ident 27 len 8
-        Destination CID: 65
-        Source CID: 65
-        Result: Connection successful (0x0000)
-        Status: No further information available (0x0000)
-< ACL Data TX: Handle 43 flags 0x00 dlen 27               #406 [hci1] 10.760449
-      L2CAP: Configure Request (0x04) ident 19 len 19
-        Destination CID: 65
-        Flags: 0x0000
-        Option: Maximum Transmission Unit (0x01) [mandatory]
-          MTU: 1013
-        Option: Retransmission and Flow Control (0x04) [mandatory]
-          Mode: Basic (0x00)
-          TX window size: 0
-          Max transmit: 0
-          Retransmission timeout: 0
-          Monitor timeout: 0
-          Maximum PDU size: 0
-> HCI Event: Number of Completed Packets (0x13) plen 5    #407 [hci1] 10.761399
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> ACL Data RX: Handle 43 flags 0x02 dlen 16               #408 [hci1] 10.762942
-      L2CAP: Connection Response (0x03) ident 18 len 8
-        Destination CID: 66
-        Source CID: 65
-        Result: Connection successful (0x0000)
-        Status: No further information available (0x0000)
-*snip*
+[  561.207881] ==================================================================
+[  561.207900] BUG: KASAN: null-ptr-deref in kthread_stop+0x3b/0x440
+[  561.207904] Write of size 4 at addr 000000000000001c by task kworker/15:1/313
 
-Similar case after the patch:
-*snip*
-> ACL Data RX: Handle 43 flags 0x02 dlen 8            #22702 [hci0] 1664.411056
-      Channel: 65 len 4 [PSM 3 mode 0] {chan 3}
-      RFCOMM: Disconnect (DISC) (0x43)
-         Address: 0x03 cr 1 dlci 0x00
-         Control: 0x53 poll/final 1
-         Length: 0
-         FCS: 0xfd
-< ACL Data TX: Handle 43 flags 0x00 dlen 8            #22703 [hci0] 1664.411136
-      Channel: 65 len 4 [PSM 3 mode 0] {chan 3}
-      RFCOMM: Unnumbered Ack (UA) (0x63)
-         Address: 0x03 cr 1 dlci 0x00
-         Control: 0x73 poll/final 1
-         Length: 0
-         FCS: 0xd7
-< ACL Data TX: Handle 43 flags 0x00 dlen 12           #22704 [hci0] 1664.411143
-      L2CAP: Disconnection Request (0x06) ident 11 len 4
-        Destination CID: 65
-        Source CID: 65
-> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22705 [hci0] 1664.414009
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22706 [hci0] 1664.415007
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> ACL Data RX: Handle 43 flags 0x02 dlen 12           #22707 [hci0] 1664.418674
-      L2CAP: Disconnection Request (0x06) ident 17 len 4
-        Destination CID: 65
-        Source CID: 65
-< ACL Data TX: Handle 43 flags 0x00 dlen 12           #22708 [hci0] 1664.418762
-      L2CAP: Disconnection Response (0x07) ident 17 len 4
-        Destination CID: 65
-        Source CID: 65
-< ACL Data TX: Handle 43 flags 0x00 dlen 12           #22709 [hci0] 1664.421073
-      L2CAP: Connection Request (0x02) ident 12 len 4
-        PSM: 1 (0x0001)
-        Source CID: 65
-> ACL Data RX: Handle 43 flags 0x02 dlen 12           #22710 [hci0] 1664.421371
-      L2CAP: Disconnection Response (0x07) ident 11 len 4
-        Destination CID: 65
-        Source CID: 65
-> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22711 [hci0] 1664.424082
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> HCI Event: Number of Completed Pac.. (0x13) plen 5  #22712 [hci0] 1664.425040
-        Num handles: 1
-        Handle: 43
-        Count: 1
-> ACL Data RX: Handle 43 flags 0x02 dlen 12           #22713 [hci0] 1664.426103
-      L2CAP: Connection Request (0x02) ident 18 len 4
-        PSM: 3 (0x0003)
-        Source CID: 65
-< ACL Data TX: Handle 43 flags 0x00 dlen 16           #22714 [hci0] 1664.426186
-      L2CAP: Connection Response (0x03) ident 18 len 8
-        Destination CID: 66
-        Source CID: 65
-        Result: Connection successful (0x0000)
-        Status: No further information available (0x0000)
-< ACL Data TX: Handle 43 flags 0x00 dlen 27           #22715 [hci0] 1664.426196
-      L2CAP: Configure Request (0x04) ident 13 len 19
-        Destination CID: 65
-        Flags: 0x0000
-        Option: Maximum Transmission Unit (0x01) [mandatory]
-          MTU: 1013
-        Option: Retransmission and Flow Control (0x04) [mandatory]
-          Mode: Basic (0x00)
-          TX window size: 0
-          Max transmit: 0
-          Retransmission timeout: 0
-          Monitor timeout: 0
-          Maximum PDU size: 0
-> ACL Data RX: Handle 43 flags 0x02 dlen 16           #22716 [hci0] 1664.428804
-      L2CAP: Connection Response (0x03) ident 12 len 8
-        Destination CID: 66
-        Source CID: 65
-        Result: Connection successful (0x0000)
-        Status: No further information available (0x0000)
-*snip*
+[  561.207913] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G        W         5.0.0-vanilla+ #3
+[  561.207916] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
+[  561.207935] Workqueue: events cache_set_flush [bcache]
+[  561.207940] Call Trace:
+[  561.207948]  dump_stack+0x9a/0xeb
+[  561.207955]  ? kthread_stop+0x3b/0x440
+[  561.207960]  ? kthread_stop+0x3b/0x440
+[  561.207965]  kasan_report+0x176/0x192
+[  561.207973]  ? kthread_stop+0x3b/0x440
+[  561.207981]  kthread_stop+0x3b/0x440
+[  561.207995]  cache_set_flush+0xd4/0x6d0 [bcache]
+[  561.208008]  process_one_work+0x856/0x1620
+[  561.208015]  ? find_held_lock+0x39/0x1d0
+[  561.208028]  ? drain_workqueue+0x380/0x380
+[  561.208048]  worker_thread+0x87/0xb80
+[  561.208058]  ? __kthread_parkme+0xb6/0x180
+[  561.208067]  ? process_one_work+0x1620/0x1620
+[  561.208072]  kthread+0x326/0x3e0
+[  561.208079]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  561.208090]  ret_from_fork+0x3a/0x50
+[  561.208110] ==================================================================
+[  561.208113] Disabling lock debugging due to kernel taint
+[  561.208115] irq event stamp: 11800231
+[  561.208126] hardirqs last  enabled at (11800231): [<ffffffff83008538>] do_syscall_64+0x18/0x410
+[  561.208127] BUG: unable to handle kernel NULL pointer dereference at 000000000000001c
+[  561.208129] #PF error: [WRITE]
+[  561.312253] hardirqs last disabled at (11800230): [<ffffffff830052ff>] trace_hardirqs_off_thunk+0x1a/0x1c
+[  561.312259] softirqs last  enabled at (11799832): [<ffffffff850005c7>] __do_softirq+0x5c7/0x8c3
+[  561.405975] PGD 0 P4D 0
+[  561.442494] softirqs last disabled at (11799821): [<ffffffff831add2c>] irq_exit+0x1ac/0x1e0
+[  561.791359] Oops: 0002 [#1] SMP KASAN NOPTI
+[  561.791362] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G    B   W         5.0.0-vanilla+ #3
+[  561.791363] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
+[  561.791371] Workqueue: events cache_set_flush [bcache]
+[  561.791374] RIP: 0010:kthread_stop+0x3b/0x440
+[  561.791376] Code: 00 00 65 8b 05 26 d5 e0 7c 89 c0 48 0f a3 05 ec aa df 02 0f 82 dc 02 00 00 4c 8d 63 20 be 04 00 00 00 4c 89 e7 e8 65 c5 53 00 <f0> ff 43 20 48 8d 7b 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+[  561.791377] RSP: 0018:ffff88872fc8fd10 EFLAGS: 00010286
+[  561.838895] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838916] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838934] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838948] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838966] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838979] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838996] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  563.067028] RAX: 0000000000000000 RBX: fffffffffffffffc RCX: ffffffff832dd314
+[  563.067030] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000297
+[  563.067032] RBP: ffff88872fc8fe88 R08: fffffbfff0b8213d R09: fffffbfff0b8213d
+[  563.067034] R10: 0000000000000001 R11: fffffbfff0b8213c R12: 000000000000001c
+[  563.408618] R13: ffff88dc61cc0f68 R14: ffff888102b94900 R15: ffff88dc61cc0f68
+[  563.408620] FS:  0000000000000000(0000) GS:ffff888f7dc00000(0000) knlGS:0000000000000000
+[  563.408622] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  563.408623] CR2: 000000000000001c CR3: 0000000f48a1a004 CR4: 00000000007606e0
+[  563.408625] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  563.408627] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  563.904795] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  563.915796] PKRU: 55555554
+[  563.915797] Call Trace:
+[  563.915807]  cache_set_flush+0xd4/0x6d0 [bcache]
+[  563.915812]  process_one_work+0x856/0x1620
+[  564.001226] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.033563]  ? find_held_lock+0x39/0x1d0
+[  564.033567]  ? drain_workqueue+0x380/0x380
+[  564.033574]  worker_thread+0x87/0xb80
+[  564.062823] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.118042]  ? __kthread_parkme+0xb6/0x180
+[  564.118046]  ? process_one_work+0x1620/0x1620
+[  564.118048]  kthread+0x326/0x3e0
+[  564.118050]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  564.167066] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.252441]  ret_from_fork+0x3a/0x50
+[  564.252447] Modules linked in: msr rpcrdma sunrpc rdma_ucm ib_iser ib_umad rdma_cm ib_ipoib i40iw configfs iw_cm ib_cm libiscsi scsi_transport_iscsi mlx4_ib ib_uverbs mlx4_en ib_core nls_iso8859_1 nls_cp437 vfat fat intel_rapl skx_edac x86_pkg_temp_thermal coretemp iTCO_wdt iTCO_vendor_support crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ses raid0 aesni_intel cdc_ether enclosure usbnet ipmi_ssif joydev aes_x86_64 i40e scsi_transport_sas mii bcache md_mod crypto_simd mei_me ioatdma crc64 ptp cryptd pcspkr i2c_i801 mlx4_core glue_helper pps_core mei lpc_ich dca wmi ipmi_si ipmi_devintf nd_pmem dax_pmem nd_btt ipmi_msghandler device_dax pcc_cpufreq button hid_generic usbhid mgag200 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect xhci_pci sysimgblt fb_sys_fops xhci_hcd ttm megaraid_sas drm usbcore nfit libnvdimm sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua efivarfs
+[  564.299390] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.348360] CR2: 000000000000001c
+[  564.348362] ---[ end trace b7f0e5cc7b2103b0 ]---
 
-Fix is to check that channel is in state BT_DISCONN before deleting the
-channel.
+Therefore, it is not enough to only check whether c->gc_thread is NULL,
+we should use IS_ERR_OR_NULL() to check both NULL pointer and error
+value.
 
-This bug was found while fuzzing Bluez's OBEX implementation using
-Synopsys Defensics.
+This patch changes the above buggy code piece in this way,
+         if (!IS_ERR_OR_NULL(c->gc_thread))
+                 kthread_stop(c->gc_thread);
 
-Reported-by: Matti Kamunen <matti.kamunen@synopsys.com>
-Reported-by: Ari Timonen <ari.timonen@synopsys.com>
-Signed-off-by: Matias Karhumaa <matias.karhumaa@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/md/bcache/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 0ee64f67300a..0c2219f483d7 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -4384,6 +4384,12 @@ static inline int l2cap_disconnect_rsp(struct l2cap_conn *conn,
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 85a5afe01d39..1a270e2262f5 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1402,7 +1402,7 @@ static void cache_set_flush(struct closure *cl)
+ 	kobject_put(&c->internal);
+ 	kobject_del(&c->kobj);
  
- 	l2cap_chan_lock(chan);
+-	if (c->gc_thread)
++	if (!IS_ERR_OR_NULL(c->gc_thread))
+ 		kthread_stop(c->gc_thread);
  
-+	if (chan->state != BT_DISCONN) {
-+		l2cap_chan_unlock(chan);
-+		mutex_unlock(&conn->chan_lock);
-+		return 0;
-+	}
-+
- 	l2cap_chan_hold(chan);
- 	l2cap_chan_del(chan, 0);
- 
+ 	if (!IS_ERR_OR_NULL(c->root))
 -- 
 2.20.1
 
