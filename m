@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19268C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C95C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD56D2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF79212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198992;
-	bh=Rm6MVyJU38VGCSnk1TiCZNGXqe3ztzVx7QzzXFt8vb8=;
+	s=default; t=1563199006;
+	bh=A/XpATUw5mCYjSAZ+Cg8opTeNa6c0gK1Fk1eGEFeR5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xnVzRM3NX9e6j0ZCnhiWz4+5WbIBINoqeBqcnRgysI7kDX2afak+XRAyhvj07f/m6
-	 ZhK9yNqf86D9+0gLlQiYacD4LAoipDph6MKgl0wPv9/zo7Vv4ENRbnJ2FdWfK3PhyK
-	 mA5YjKH1GVee2VVVs508YobZojxlb48HrtZbqvG0=
+	b=IXXkjWsqiLSeRn0+0ejzMN6o2Axw+YzYTnSvW1QgYmvlwzIJoE6Yg+GqJfUa07OnF
+	 cMk8e8Hs6nCPPE0yt8k2BgOLI+9ETWpjCr2Im1+Hg6wojody7oIhgXJHGBwPOdG1xZ
+	 Ymf15gIcCs6/NrthSPMeyLobG7bJA0f2WlqPuOMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732882AbfGON4a (ORCPT
+        id S1732555AbfGON4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732859AbfGON42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:56:28 -0400
+        id S1732313AbfGON4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:56:13 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09F3621537;
-        Mon, 15 Jul 2019 13:56:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D16420C01;
+        Mon, 15 Jul 2019 13:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198986;
-        bh=Rm6MVyJU38VGCSnk1TiCZNGXqe3ztzVx7QzzXFt8vb8=;
+        s=default; t=1563198972;
+        bh=A/XpATUw5mCYjSAZ+Cg8opTeNa6c0gK1Fk1eGEFeR5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NkkXV6695vHjAz79eAq2PVXwCnYSFu5SF1/LV1OLxn8ue1dqVTUSfcm+ApnOW5I91
-         832250iGIsO8csIgg6fg4I4HCAToI375J7Bir41d5EFHAKpxDpele3GCeJb3scDdFe
-         2JScOzMhSHmDDgH5ANNWxPq6rkM6M86/+8vm4WPY=
+        b=Z5fqqcP1VnSYsLMhTp393nIH9CPipiQTOHP7PjW4uNMorrqIvj69kbhhoQjKgCsuL
+         bnZqT08sSNwhBfOqBxXkRIGHraLVraJauOLW1PudkTNoNTPUC7Ee8Euw/aws6j5aaS
+         W2m4jXmwWAyiLgtGK5WU2xLi0MBAbcPIjDhiG5mw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Anastasov <ja@ssi.bg>,
-        syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: [PATCH AUTOSEL 5.2 161/249] ipvs: fix tinfo memory leak in start_sync_thread
-Date:   Mon, 15 Jul 2019 09:45:26 -0400
-Message-Id: <20190715134655.4076-161-sashal@kernel.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        syzbot+1fcc5ef45175fc774231@syzkaller.appspotmail.com,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 157/249] rtlwifi: rtl8192cu: fix error handle when usb probe failed
+Date:   Mon, 15 Jul 2019 09:45:22 -0400
+Message-Id: <20190715134655.4076-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -64,399 +62,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 5db7c8b9f9fc2aeec671ae3ca6375752c162e0e7 ]
+[ Upstream commit 6c0ed66f1a5b84e2a812c7c2d6571a5621bf3396 ]
 
-syzkaller reports for memory leak in start_sync_thread [1]
+rtl_usb_probe() must do error handle rtl_deinit_core() only if
+rtl_init_core() is done, otherwise goto error_out2.
 
-As Eric points out, kthread may start and stop before the
-threadfn function is called, so there is no chance the
-data (tinfo in our case) to be released in thread.
+| usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+| rtl_usb: reg 0xf0, usbctrl_vendorreq TimeOut! status:0xffffffb9 value=0x0
+| rtl8192cu: Chip version 0x10
+| rtl_usb: reg 0xa, usbctrl_vendorreq TimeOut! status:0xffffffb9 value=0x0
+| rtl_usb: Too few input end points found
+| INFO: trying to register non-static key.
+| the code is fine but needs lockdep annotation.
+| turning off the locking correctness validator.
+| CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+| Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+| Google 01/01/2011
+| Workqueue: usb_hub_wq hub_event
+| Call Trace:
+|   __dump_stack lib/dump_stack.c:77 [inline]
+|   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+|   assign_lock_key kernel/locking/lockdep.c:786 [inline]
+|   register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+|   __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+|   lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+|   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+|   _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+|   rtl_c2hcmd_launcher+0xd1/0x390
+| drivers/net/wireless/realtek/rtlwifi/base.c:2344
+|   rtl_deinit_core+0x25/0x2d0 drivers/net/wireless/realtek/rtlwifi/base.c:574
+|   rtl_usb_probe.cold+0x861/0xa70
+| drivers/net/wireless/realtek/rtlwifi/usb.c:1093
+|   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+|   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+|   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+|   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+|   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+|   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+|   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+|   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+|   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+|   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+|   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+|   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+|   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+|   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+|   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+|   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+|   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+|   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+|   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+|   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+|   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+|   port_event drivers/usb/core/hub.c:5350 [inline]
+|   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+|   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+|   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+|   kthread+0x313/0x420 kernel/kthread.c:253
+|   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Fix this by releasing tinfo in the controlling code instead.
-
-[1]
-BUG: memory leak
-unreferenced object 0xffff8881206bf700 (size 32):
- comm "syz-executor761", pid 7268, jiffies 4294943441 (age 20.470s)
- hex dump (first 32 bytes):
-   00 40 7c 09 81 88 ff ff 80 45 b8 21 81 88 ff ff  .@|......E.!....
-   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
- backtrace:
-   [<0000000057619e23>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-   [<0000000057619e23>] slab_post_alloc_hook mm/slab.h:439 [inline]
-   [<0000000057619e23>] slab_alloc mm/slab.c:3326 [inline]
-   [<0000000057619e23>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-   [<0000000086ce5479>] kmalloc include/linux/slab.h:547 [inline]
-   [<0000000086ce5479>] start_sync_thread+0x5d2/0xe10 net/netfilter/ipvs/ip_vs_sync.c:1862
-   [<000000001a9229cc>] do_ip_vs_set_ctl+0x4c5/0x780 net/netfilter/ipvs/ip_vs_ctl.c:2402
-   [<00000000ece457c8>] nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-   [<00000000ece457c8>] nf_setsockopt+0x4c/0x80 net/netfilter/nf_sockopt.c:115
-   [<00000000942f62d4>] ip_setsockopt net/ipv4/ip_sockglue.c:1258 [inline]
-   [<00000000942f62d4>] ip_setsockopt+0x9b/0xb0 net/ipv4/ip_sockglue.c:1238
-   [<00000000a56a8ffd>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2616
-   [<00000000fa895401>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-   [<0000000095eef4cf>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-   [<000000009747cf88>] __do_sys_setsockopt net/socket.c:2089 [inline]
-   [<000000009747cf88>] __se_sys_setsockopt net/socket.c:2086 [inline]
-   [<000000009747cf88>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-   [<00000000ded8ba80>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-   [<00000000893b4ac8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported-by: syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com
-Suggested-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 998e7a76804b ("ipvs: Use kthread_run() instead of doing a double-fork via kernel_thread()")
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: syzbot+1fcc5ef45175fc774231@syzkaller.appspotmail.com
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h             |   6 +-
- net/netfilter/ipvs/ip_vs_ctl.c  |   4 -
- net/netfilter/ipvs/ip_vs_sync.c | 134 +++++++++++++++++---------------
- 3 files changed, 76 insertions(+), 68 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 2ac40135b576..b36a1df93e7c 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -808,11 +808,12 @@ struct ipvs_master_sync_state {
- 	struct ip_vs_sync_buff	*sync_buff;
- 	unsigned long		sync_queue_len;
- 	unsigned int		sync_queue_delay;
--	struct task_struct	*master_thread;
- 	struct delayed_work	master_wakeup_work;
- 	struct netns_ipvs	*ipvs;
- };
- 
-+struct ip_vs_sync_thread_data;
-+
- /* How much time to keep dests in trash */
- #define IP_VS_DEST_TRASH_PERIOD		(120 * HZ)
- 
-@@ -943,7 +944,8 @@ struct netns_ipvs {
- 	spinlock_t		sync_lock;
- 	struct ipvs_master_sync_state *ms;
- 	spinlock_t		sync_buff_lock;
--	struct task_struct	**backup_threads;
-+	struct ip_vs_sync_thread_data *master_tinfo;
-+	struct ip_vs_sync_thread_data *backup_tinfo;
- 	int			threads_mask;
- 	volatile int		sync_state;
- 	struct mutex		sync_mutex;
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 776c87ed4813..741d91aa4a8d 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -2396,9 +2396,7 @@ do_ip_vs_set_ctl(struct sock *sk, int cmd, void __user *user, unsigned int len)
- 			cfg.syncid = dm->syncid;
- 			ret = start_sync_thread(ipvs, &cfg, dm->state);
- 		} else {
--			mutex_lock(&ipvs->sync_mutex);
- 			ret = stop_sync_thread(ipvs, dm->state);
--			mutex_unlock(&ipvs->sync_mutex);
- 		}
- 		goto out_dec;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index e24fda5e9087..34d68dbf4b4c 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -1064,13 +1064,13 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	rtlpriv->cfg->ops->read_eeprom_info(hw);
+ 	err = _rtl_usb_init(hw);
+ 	if (err)
+-		goto error_out;
++		goto error_out2;
+ 	rtl_usb_init_sw(hw);
+ 	/* Init mac80211 sw */
+ 	err = rtl_init_core(hw);
+ 	if (err) {
+ 		pr_err("Can't allocate sw for mac80211\n");
+-		goto error_out;
++		goto error_out2;
  	}
-@@ -3515,10 +3513,8 @@ static int ip_vs_genl_del_daemon(struct netns_ipvs *ipvs, struct nlattr **attrs)
- 	if (!attrs[IPVS_DAEMON_ATTR_STATE])
- 		return -EINVAL;
+ 	if (rtlpriv->cfg->ops->init_sw_vars(hw)) {
+ 		pr_err("Can't init_sw_vars\n");
+@@ -1091,6 +1091,7 @@ int rtl_usb_probe(struct usb_interface *intf,
  
--	mutex_lock(&ipvs->sync_mutex);
- 	ret = stop_sync_thread(ipvs,
- 			       nla_get_u32(attrs[IPVS_DAEMON_ATTR_STATE]));
--	mutex_unlock(&ipvs->sync_mutex);
- 	return ret;
- }
- 
-diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
-index 2526be6b3d90..a4a78c4b06de 100644
---- a/net/netfilter/ipvs/ip_vs_sync.c
-+++ b/net/netfilter/ipvs/ip_vs_sync.c
-@@ -195,6 +195,7 @@ union ip_vs_sync_conn {
- #define IPVS_OPT_F_PARAM	(1 << (IPVS_OPT_PARAM-1))
- 
- struct ip_vs_sync_thread_data {
-+	struct task_struct *task;
- 	struct netns_ipvs *ipvs;
- 	struct socket *sock;
- 	char *buf;
-@@ -374,8 +375,11 @@ static inline void sb_queue_tail(struct netns_ipvs *ipvs,
- 					      max(IPVS_SYNC_SEND_DELAY, 1));
- 		ms->sync_queue_len++;
- 		list_add_tail(&sb->list, &ms->sync_queue);
--		if ((++ms->sync_queue_delay) == IPVS_SYNC_WAKEUP_RATE)
--			wake_up_process(ms->master_thread);
-+		if ((++ms->sync_queue_delay) == IPVS_SYNC_WAKEUP_RATE) {
-+			int id = (int)(ms - ipvs->ms);
-+
-+			wake_up_process(ipvs->master_tinfo[id].task);
-+		}
- 	} else
- 		ip_vs_sync_buff_release(sb);
- 	spin_unlock(&ipvs->sync_lock);
-@@ -1636,8 +1640,10 @@ static void master_wakeup_work_handler(struct work_struct *work)
- 	spin_lock_bh(&ipvs->sync_lock);
- 	if (ms->sync_queue_len &&
- 	    ms->sync_queue_delay < IPVS_SYNC_WAKEUP_RATE) {
-+		int id = (int)(ms - ipvs->ms);
-+
- 		ms->sync_queue_delay = IPVS_SYNC_WAKEUP_RATE;
--		wake_up_process(ms->master_thread);
-+		wake_up_process(ipvs->master_tinfo[id].task);
- 	}
- 	spin_unlock_bh(&ipvs->sync_lock);
- }
-@@ -1703,10 +1709,6 @@ static int sync_thread_master(void *data)
- 	if (sb)
- 		ip_vs_sync_buff_release(sb);
- 
--	/* release the sending multicast socket */
--	sock_release(tinfo->sock);
--	kfree(tinfo);
--
- 	return 0;
- }
- 
-@@ -1740,11 +1742,6 @@ static int sync_thread_backup(void *data)
- 		}
- 	}
- 
--	/* release the sending multicast socket */
--	sock_release(tinfo->sock);
--	kfree(tinfo->buf);
--	kfree(tinfo);
--
- 	return 0;
- }
- 
-@@ -1752,8 +1749,8 @@ static int sync_thread_backup(void *data)
- int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 		      int state)
- {
--	struct ip_vs_sync_thread_data *tinfo = NULL;
--	struct task_struct **array = NULL, *task;
-+	struct ip_vs_sync_thread_data *ti = NULL, *tinfo;
-+	struct task_struct *task;
- 	struct net_device *dev;
- 	char *name;
- 	int (*threadfn)(void *data);
-@@ -1822,7 +1819,7 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 		threadfn = sync_thread_master;
- 	} else if (state == IP_VS_STATE_BACKUP) {
- 		result = -EEXIST;
--		if (ipvs->backup_threads)
-+		if (ipvs->backup_tinfo)
- 			goto out_early;
- 
- 		ipvs->bcfg = *c;
-@@ -1849,28 +1846,22 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 					  master_wakeup_work_handler);
- 			ms->ipvs = ipvs;
- 		}
--	} else {
--		array = kcalloc(count, sizeof(struct task_struct *),
--				GFP_KERNEL);
--		result = -ENOMEM;
--		if (!array)
--			goto out;
- 	}
-+	result = -ENOMEM;
-+	ti = kcalloc(count, sizeof(struct ip_vs_sync_thread_data),
-+		     GFP_KERNEL);
-+	if (!ti)
-+		goto out;
- 
- 	for (id = 0; id < count; id++) {
--		result = -ENOMEM;
--		tinfo = kmalloc(sizeof(*tinfo), GFP_KERNEL);
--		if (!tinfo)
--			goto out;
-+		tinfo = &ti[id];
- 		tinfo->ipvs = ipvs;
--		tinfo->sock = NULL;
- 		if (state == IP_VS_STATE_BACKUP) {
-+			result = -ENOMEM;
- 			tinfo->buf = kmalloc(ipvs->bcfg.sync_maxlen,
- 					     GFP_KERNEL);
- 			if (!tinfo->buf)
- 				goto out;
--		} else {
--			tinfo->buf = NULL;
- 		}
- 		tinfo->id = id;
- 		if (state == IP_VS_STATE_MASTER)
-@@ -1885,17 +1876,15 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 			result = PTR_ERR(task);
- 			goto out;
- 		}
--		tinfo = NULL;
--		if (state == IP_VS_STATE_MASTER)
--			ipvs->ms[id].master_thread = task;
--		else
--			array[id] = task;
-+		tinfo->task = task;
- 	}
- 
- 	/* mark as active */
- 
--	if (state == IP_VS_STATE_BACKUP)
--		ipvs->backup_threads = array;
-+	if (state == IP_VS_STATE_MASTER)
-+		ipvs->master_tinfo = ti;
-+	else
-+		ipvs->backup_tinfo = ti;
- 	spin_lock_bh(&ipvs->sync_buff_lock);
- 	ipvs->sync_state |= state;
- 	spin_unlock_bh(&ipvs->sync_buff_lock);
-@@ -1910,29 +1899,31 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 
- out:
- 	/* We do not need RTNL lock anymore, release it here so that
--	 * sock_release below and in the kthreads can use rtnl_lock
--	 * to leave the mcast group.
-+	 * sock_release below can use rtnl_lock to leave the mcast group.
- 	 */
- 	rtnl_unlock();
--	count = id;
--	while (count-- > 0) {
--		if (state == IP_VS_STATE_MASTER)
--			kthread_stop(ipvs->ms[count].master_thread);
--		else
--			kthread_stop(array[count]);
-+	id = min(id, count - 1);
-+	if (ti) {
-+		for (tinfo = ti + id; tinfo >= ti; tinfo--) {
-+			if (tinfo->task)
-+				kthread_stop(tinfo->task);
-+		}
- 	}
- 	if (!(ipvs->sync_state & IP_VS_STATE_MASTER)) {
- 		kfree(ipvs->ms);
- 		ipvs->ms = NULL;
- 	}
- 	mutex_unlock(&ipvs->sync_mutex);
--	if (tinfo) {
--		if (tinfo->sock)
--			sock_release(tinfo->sock);
--		kfree(tinfo->buf);
--		kfree(tinfo);
-+
-+	/* No more mutexes, release socks */
-+	if (ti) {
-+		for (tinfo = ti + id; tinfo >= ti; tinfo--) {
-+			if (tinfo->sock)
-+				sock_release(tinfo->sock);
-+			kfree(tinfo->buf);
-+		}
-+		kfree(ti);
- 	}
--	kfree(array);
- 	return result;
- 
- out_early:
-@@ -1944,15 +1935,18 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
- 
- int stop_sync_thread(struct netns_ipvs *ipvs, int state)
- {
--	struct task_struct **array;
-+	struct ip_vs_sync_thread_data *ti, *tinfo;
- 	int id;
- 	int retc = -EINVAL;
- 
- 	IP_VS_DBG(7, "%s(): pid %d\n", __func__, task_pid_nr(current));
- 
-+	mutex_lock(&ipvs->sync_mutex);
- 	if (state == IP_VS_STATE_MASTER) {
-+		retc = -ESRCH;
- 		if (!ipvs->ms)
--			return -ESRCH;
-+			goto err;
-+		ti = ipvs->master_tinfo;
- 
- 		/*
- 		 * The lock synchronizes with sb_queue_tail(), so that we don't
-@@ -1971,38 +1965,56 @@ int stop_sync_thread(struct netns_ipvs *ipvs, int state)
- 			struct ipvs_master_sync_state *ms = &ipvs->ms[id];
- 			int ret;
- 
-+			tinfo = &ti[id];
- 			pr_info("stopping master sync thread %d ...\n",
--				task_pid_nr(ms->master_thread));
-+				task_pid_nr(tinfo->task));
- 			cancel_delayed_work_sync(&ms->master_wakeup_work);
--			ret = kthread_stop(ms->master_thread);
-+			ret = kthread_stop(tinfo->task);
- 			if (retc >= 0)
- 				retc = ret;
- 		}
- 		kfree(ipvs->ms);
- 		ipvs->ms = NULL;
-+		ipvs->master_tinfo = NULL;
- 	} else if (state == IP_VS_STATE_BACKUP) {
--		if (!ipvs->backup_threads)
--			return -ESRCH;
-+		retc = -ESRCH;
-+		if (!ipvs->backup_tinfo)
-+			goto err;
-+		ti = ipvs->backup_tinfo;
- 
- 		ipvs->sync_state &= ~IP_VS_STATE_BACKUP;
--		array = ipvs->backup_threads;
- 		retc = 0;
- 		for (id = ipvs->threads_mask; id >= 0; id--) {
- 			int ret;
- 
-+			tinfo = &ti[id];
- 			pr_info("stopping backup sync thread %d ...\n",
--				task_pid_nr(array[id]));
--			ret = kthread_stop(array[id]);
-+				task_pid_nr(tinfo->task));
-+			ret = kthread_stop(tinfo->task);
- 			if (retc >= 0)
- 				retc = ret;
- 		}
--		kfree(array);
--		ipvs->backup_threads = NULL;
-+		ipvs->backup_tinfo = NULL;
-+	} else {
-+		goto err;
- 	}
-+	id = ipvs->threads_mask;
-+	mutex_unlock(&ipvs->sync_mutex);
-+
-+	/* No more mutexes, release socks */
-+	for (tinfo = ti + id; tinfo >= ti; tinfo--) {
-+		if (tinfo->sock)
-+			sock_release(tinfo->sock);
-+		kfree(tinfo->buf);
-+	}
-+	kfree(ti);
- 
- 	/* decrease the module use count */
- 	ip_vs_use_count_dec();
-+	return retc;
- 
-+err:
-+	mutex_unlock(&ipvs->sync_mutex);
- 	return retc;
- }
- 
-@@ -2021,7 +2033,6 @@ void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs)
- {
- 	int retc;
- 
--	mutex_lock(&ipvs->sync_mutex);
- 	retc = stop_sync_thread(ipvs, IP_VS_STATE_MASTER);
- 	if (retc && retc != -ESRCH)
- 		pr_err("Failed to stop Master Daemon\n");
-@@ -2029,5 +2040,4 @@ void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs)
- 	retc = stop_sync_thread(ipvs, IP_VS_STATE_BACKUP);
- 	if (retc && retc != -ESRCH)
- 		pr_err("Failed to stop Backup Daemon\n");
--	mutex_unlock(&ipvs->sync_mutex);
- }
+ error_out:
+ 	rtl_deinit_core(hw);
++error_out2:
+ 	_rtl_usb_io_handler_release(hw);
+ 	usb_put_dev(udev);
+ 	complete(&rtlpriv->firmware_loading_complete);
 -- 
 2.20.1
 
