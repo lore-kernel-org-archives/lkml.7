@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7D9C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA806C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE65E2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A1F20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198505;
-	bh=ohdKLHSaUs+t+7NPiPPa2edaBTzJE8O1R0rFulprvcs=;
+	s=default; t=1563198509;
+	bh=kMyFtTLqDFPXCD2RXSJyC9UwfPtmClLqXRL/vWMyeQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGj1w1ASYqJ2zqLszMqVBCoseVFBB/waem69oLv0N4WQPnu219FbDZGiCKAEtc4lD
-	 DnD9EqlpYB7M/6QIrHfxKgoOmq789cNEnIi4vQHnQcQilJPYYuJwCupyWuIVqOMUin
-	 5G1UdKBeD3q5Krme80zHOT4xhyslj2dmJ5bkz/Aw=
+	b=cRz1g9jLrD85DV/j2Oj4+wkVF66q/AQTPqBlwcYrGifMj+TpNwTA3diSpwXtGGL0C
+	 qrqdBP/e4ONiq7A5bVJAVeMknAENeW+7aZ7L/5OFcN0AiXXY71rMLfGHP+O9HAI/p9
+	 zEjz5pSqNhQSjX5CwfWA2e4K5/qOJubrBoRFcK5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfGONsX (ORCPT
+        id S1731502AbfGONs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58270 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbfGONsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:48:18 -0400
+        id S1731476AbfGONsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:48:24 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1515A2067C;
-        Mon, 15 Jul 2019 13:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7930120651;
+        Mon, 15 Jul 2019 13:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198497;
-        bh=ohdKLHSaUs+t+7NPiPPa2edaBTzJE8O1R0rFulprvcs=;
+        s=default; t=1563198503;
+        bh=kMyFtTLqDFPXCD2RXSJyC9UwfPtmClLqXRL/vWMyeQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSRzEHVDbe9ujhewNpjP/5vmYQW5IrjfS4BGwNr5J15gRWc/9LWoEBf7RiG+T7Xs6
-         smsoO5KUVtBNsdYkLtPP0YXUcfvPZ2JLKx7u5V4+nE42nftg5VprKUh6/o00zwsdSF
-         L30B2JZKJtbfZ6RrOFBxQ38miJX/PJGmhISrVdIU=
+        b=Vtt+1w6+MdTJ9wk4e6hHtPOuQKJdu7UpJQs1lGXWJQoqHMecJVz5So61AhV+4bQlO
+         lvMHQb2GAj98DbeVlh8bjZvO+z0exwnxKNt7QVyVK1yXpgHOsyyttxSBYP3Sx066Hv
+         A6GfATvJcH1Vimr7LIMpbj6U2rm1L6lPSE84C4zI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jungo Lin <jungo.lin@mediatek.com>,
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 026/249] media: media_device_enum_links32: clean a reserved field
-Date:   Mon, 15 Jul 2019 09:43:11 -0400
-Message-Id: <20190715134655.4076-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 028/249] media: venus: firmware: fix leaked of_node references
+Date:   Mon, 15 Jul 2019 09:43:13 -0400
+Message-Id: <20190715134655.4076-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,55 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jungo Lin <jungo.lin@mediatek.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
+[ Upstream commit 2c41cc0be07b5ee2f1167f41cd8a86fc5b53d82c ]
 
-In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
-will check whether reserved field of media_links_enum filled
-with zero.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-However, for 32 bit program, the reserved field is missing
-copy from kernel space to user space in media_device_enum_links32
-function.
+Detected by coccinelle with the following warnings:
+drivers/media/platform/qcom/venus/firmware.c:90:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:94:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:128:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
 
-This patch adds the cleaning a reserved field logic in
-media_device_enum_links32 function.
-
-Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/media-device.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/media/platform/qcom/venus/firmware.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index 9ae481ddd975..b9bb4904bba1 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -494,6 +494,7 @@ static long media_device_enum_links32(struct media_device *mdev,
- {
- 	struct media_links_enum links;
- 	compat_uptr_t pads_ptr, links_ptr;
-+	int ret;
+diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+index 1eba23409ff3..d3d1748a7ef6 100644
+--- a/drivers/media/platform/qcom/venus/firmware.c
++++ b/drivers/media/platform/qcom/venus/firmware.c
+@@ -78,11 +78,11 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
  
- 	memset(&links, 0, sizeof(links));
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret)
+-		return ret;
++		goto err_put_node;
  
-@@ -505,7 +506,13 @@ static long media_device_enum_links32(struct media_device *mdev,
- 	links.pads = compat_ptr(pads_ptr);
- 	links.links = compat_ptr(links_ptr);
+ 	ret = request_firmware(&mdt, fwname, dev);
+ 	if (ret < 0)
+-		return ret;
++		goto err_put_node;
  
--	return media_device_enum_links(mdev, &links);
-+	ret = media_device_enum_links(mdev, &links);
-+	if (ret)
-+		return ret;
-+
-+	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
-+
-+	return 0;
+ 	fw_size = qcom_mdt_get_size(mdt);
+ 	if (fw_size < 0) {
+@@ -116,6 +116,8 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
+ 	memunmap(mem_va);
+ err_release_fw:
+ 	release_firmware(mdt);
++err_put_node:
++	of_node_put(node);
+ 	return ret;
  }
  
- #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
 -- 
 2.20.1
 
