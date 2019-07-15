@@ -2,111 +2,136 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EFEC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C0BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E73D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21141205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mUMMPxaN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4DV6iqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfGOPTs (ORCPT
+        id S1731164AbfGOPUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:19:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38769 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730548AbfGOPTs (ORCPT
+        Mon, 15 Jul 2019 11:20:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34402 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730548AbfGOPUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:19:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so15636717wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 08:19:46 -0700 (PDT)
+        Mon, 15 Jul 2019 11:20:41 -0400
+Received: by mail-io1-f65.google.com with SMTP id k8so34762011iot.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 08:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HHztAI/ZQoVWsQtGtZCm40CW/6TH0AHaPswdjI5N1oQ=;
-        b=mUMMPxaN+YcHfpcJeojEBde29eKqocO/DZ1FrwPpV6dC9y5f09wS6nUZWtc1tMnLuv
-         w1kky1RxU5cFckBDOOsmjWc6qYct//DeNf8lxmicE6v2alZlhbSJz6c4C/KTNLJ/NA3Z
-         eeJTQAV39FIouQXo3wyEP2I89bFZZ03QLZagts2eWDi6VbA3euGhZJVipzVo2tj6gV54
-         Tmpzw9J9q5/e8rTXDKIulB1VPt46+sQK52s6i9iDNLp1KI6YMxCiadbheJTFkSEHc/JO
-         nImamz6P3N1doomh0IYSSJz9EvXtQ9g/pMZQXiO/PcBiGaTT9aLek769kEERYMBnVIyH
-         c7lA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jDhyWC5m7v6jwYwWBJCZO8vmmCQJIMiVT+1lgsXb/hQ=;
+        b=A4DV6iqs0VowpYFUQPzk7PIRlj/q0buwiqqVo5Tnn2W1bYwZH3LZjdymyVpEyNHb58
+         ANeMlc1dL7qmCH+KPGrrtDM3c4VaZ3v98djrhl92Tr3wXo9b3nheYpu/PTxXo7M1IIGS
+         BttFTY/OlGhHbhqsh3A5BUs/9QBZa0xTD5rhO355ySRzpmzoU6sn9bBF+E4Dr+uSKbt2
+         lH/sq1QunSO29z5EuknVg6nZx7sqzSiIUeXHiDm+wFNqB01HXxLqzDs3YZ2gOR0rkBi4
+         c/dpw0kqhkkwDH7emRIRSNvrD1YNfFAcsy5QjXERSpI/2Vvc3276b+ud4LPtojDdWAO1
+         4UBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HHztAI/ZQoVWsQtGtZCm40CW/6TH0AHaPswdjI5N1oQ=;
-        b=kKJOfxSbphhh/N+Hw1kvJbgAgV4KpqrSBGNR6lq4GZbCgsvXe3uBY6cvcoZs3EaXtr
-         2diSptTPsNvK3DBJAiDNgiGked//uORs3lkTbPpmYuBfGzHRM3bNLoF/z9XkHs+hsSJ3
-         eHRVx+1y+WdBlKtLXkVnojhb1ZdxLCTarBOjatd+9jkQFum58J+LvX/L6hDnkMqjMdo6
-         XFiNL5iqx+u7dL2/u17tMgUn+DsMJM+96pYrpLLclk/NOUHO/JrL7rhsW+o3nGRDeLMB
-         YEYUG9e7FWDeXJKrnQH6cnn3Xy4WUp6kHXAYwDMssaATfc1Ub9eWld6r9pndinkmE1yn
-         dcxQ==
-X-Gm-Message-State: APjAAAWLIPqpbmWuCaKXknZZFlswE3LsTkwBc8SqOt7v9FEdPar4ZgaZ
-        j8YSKIYoC1HXHXLPcBL+iWNVeKfDVWT5bA==
-X-Google-Smtp-Source: APXvYqw1KkKk6QFk1n8Mx4/eZF0c9gqDHwWbqFleJnMcfVrqqH/7TK3PX3BO5WoKr9F0daRiY9Jdfw==
-X-Received: by 2002:a05:600c:2146:: with SMTP id v6mr24391543wml.59.1563203985761;
-        Mon, 15 Jul 2019 08:19:45 -0700 (PDT)
-Received: from holly.lan (82-132-244-224.dab.02.net. [82.132.244.224])
-        by smtp.gmail.com with ESMTPSA id g17sm13049119wrm.7.2019.07.15.08.19.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 08:19:44 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 16:19:35 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] leds: Add control of the voltage/current regulator
- to the LED core
-Message-ID: <20190715151935.4ci23aqw4liz56fg@holly.lan>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-2-jjhiblot@ti.com>
- <56d16260-ff82-3439-4c1f-2a3a1552bc7d@ti.com>
- <ab4818c0-bc7a-13e1-c6ce-e977b0234de0@ti.com>
- <20190715092400.sedjumqkecglheyu@holly.lan>
- <9c53f54f-d0d4-50d4-09da-34389085269a@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jDhyWC5m7v6jwYwWBJCZO8vmmCQJIMiVT+1lgsXb/hQ=;
+        b=WF8cICYJypdQZ6ZBXI26klahogch2ZwwgDmMV0Q0lc9JprFxrCPHkyCLbI5/PeSKg7
+         0vqbzrbllPjIMkzSY/XxbdqL/cj96x1AuP4OnWIwuVwJNveeDjULf5BV1ZZK61H5QANu
+         m1Qm6v8yem8qx0oIlVv36pzELKksjzukeyoVtu4QNINmrS39Ol0GhqEt+Pd79h3YuhFW
+         sXGOBLMrTxD35hzk/ziGY1m9enxbsXUu/tqAHbxYbmUnaH987dyKDaKeok36vCihYGdZ
+         NH9rpnsXgdQHEcEAGwV6qgSJAkXsaKxWw/uwEeoHH8fuBRUKLp3K11WnX9pHNNywu+cn
+         uM/Q==
+X-Gm-Message-State: APjAAAX55ElshSuGsP8LyFyEHWNfV3qqiiTQqHmHa/2rNGwbUOx4yRQq
+        EzCjib4KOto7jaqAxUVsqLMoh/oZOPY86KCO7A==
+X-Google-Smtp-Source: APXvYqzC8yGnKfFvwdN89UqQ62Tki+6ejCY+Deplht8t5Vgn2sTMJOv2JhaN1FzfdK/Soa13Xo1cL5BZNCYT1PloOH0=
+X-Received: by 2002:a02:cd83:: with SMTP id l3mr28157334jap.66.1563204041005;
+ Mon, 15 Jul 2019 08:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c53f54f-d0d4-50d4-09da-34389085269a@ti.com>
-User-Agent: NeoMutt/20180716
+References: <CAKKbWA6S7KotAFtLO=ow=XYnLL2Ny5Mz2kcgM1cs+j=5mHQNmw@mail.gmail.com>
+In-Reply-To: <CAKKbWA6S7KotAFtLO=ow=XYnLL2Ny5Mz2kcgM1cs+j=5mHQNmw@mail.gmail.com>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Mon, 15 Jul 2019 18:19:54 +0300
+Message-ID: <CAKKbWA5nwsa5kcZ8GCuC3WKJptb6RtZ65izFphd=KaALqeg+BA@mail.gmail.com>
+Subject: [PATCH] [v2] clocksource/drivers/npcm: fix GENMASK and timer operation
+To:     Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Avi Fishman <avifishman70@gmail.com>
+Cc:     OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:47:08AM +0200, Jean-Jacques Hiblot wrote:
-> > > > > +    if (IS_ERR(led_cdev->regulator)) {
-> > > > > +        dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-> > > > > +            led_cdev->name);
-> > > > > +        device_unregister(led_cdev->dev);
-> > > > > +        mutex_unlock(&led_cdev->led_access);
-> > > > > +        return PTR_ERR(led_cdev->regulator);
-> > > > This is listed as optional in the DT doc.  This appears to be required.
-> > > The regulator core will provide a dummy regulator if none is given in the
-> > > device tree. I would rather have an error in that case, but that is not how
-> > > it works.
-> > If you actively wanted to get -ENODEV back when there is no regulator
-> > then you can use devm_regulator_get_optional() for that.
-> > 
-> > However perhaps be careful what you wish for. If you use get_optional()
-> > then you will have to sprinkle NULL or IS_ERR() checks everywhere. I'd
-> > favour using the current approach!
-> 
-> Thanks for the info. I think I'll use the get_optionnal(). That will add a
-> bit of complexity, but it will avoid deferring some work in
-> led_set_brightness_nopm() when it is not needed.
+clocksource/drivers/npcm: fix GENMASK and timer operation
 
-Makes sense, I didn't notice that it allows you to avoid deferred work.
+NPCM7XX_Tx_OPER GENMASK() changed from (27, 3) to (28, 27)
 
+in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
+read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
+take effect.
 
-Daniel.
+npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR0
+in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
+confusing.
+
+Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+---
+ drivers/clocksource/timer-npcm7xx.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clocksource/timer-npcm7xx.c
+b/drivers/clocksource/timer-npcm7xx.c
+index 8a30da7f083b..9780ffd8010e 100644
+--- a/drivers/clocksource/timer-npcm7xx.c
++++ b/drivers/clocksource/timer-npcm7xx.c
+@@ -32,7 +32,7 @@
+ #define NPCM7XX_Tx_INTEN               BIT(29)
+ #define NPCM7XX_Tx_COUNTEN             BIT(30)
+ #define NPCM7XX_Tx_ONESHOT             0x0
+-#define NPCM7XX_Tx_OPER                        GENMASK(27, 3)
++#define NPCM7XX_Tx_OPER                        GENMASK(28, 27)
+ #define NPCM7XX_Tx_MIN_PRESCALE                0x1
+ #define NPCM7XX_Tx_TDR_MASK_BITS       24
+ #define NPCM7XX_Tx_MAX_CNT             0xFFFFFF
+@@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct
+clock_event_device *evt)
+
+        val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+        val &= ~NPCM7XX_Tx_OPER;
+-
+-       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+        val |= NPCM7XX_START_ONESHOT_Tx;
+        writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
+
+@@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct
+clock_event_device *evt)
+        struct timer_of *to = to_timer_of(evt);
+        u32 val;
+
++       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
++
+        val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
+        val &= ~NPCM7XX_Tx_OPER;
+-
+-       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
+        val |= NPCM7XX_START_PERIODIC_Tx;
+-
+        writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
+
+        return 0;
+
+-- 
+2.18.0
