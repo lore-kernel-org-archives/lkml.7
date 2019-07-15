@@ -2,511 +2,428 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15760C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA616C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FF02086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877F121738
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563227322;
-	bh=MEhXgUJBvq5ZwqCh/csSmCHOAVmy/iuCVieOBLScO2A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lP7g6Pk62CAscoNc4BgH7jG0wtTdpYPv5yI3tnbG9ng3P0YuVJsvfu5BfjyCB5eNv
-	 NlxuwD7mwCJITehJMDe4Vb/FclsAW8vk8iQATSnmgLVAdFbVuuIlFVfo8X7K8fBGcE
-	 ffFW/FK5f8tcQH35xRZse5A8oHwpX6DwAYFuby9s=
+	s=default; t=1563227368;
+	bh=8Fj6fQ+IHvyEjrlhShFe5T2apErAkOW1vs46drBaWHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EX/1fldB7tArqv5SdPim0/SzZVFk40pVb+aybWbpgxTK3XSNbJaJnAGuQvqfoQ+F7
+	 Ukk9kqlkxp9aapT6fR56jzxp9hvO75Pmi6JAD6KuMO2MJCMyEWn5pMShIW218Z/dUy
+	 VTA6I2CGC5mXFU3erjktKCeP4Mc9Ng/IyTRri6KU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732863AbfGOVsm (ORCPT
+        id S1732905AbfGOVt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:48:42 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34254 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730984AbfGOVsl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:48:41 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l12so13925612oil.1;
-        Mon, 15 Jul 2019 14:48:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=thge4lAfWLVlF+efN7sXKAd1L8zk2D5WDEt6/zrCN6I=;
-        b=DCYXfll845hK8vAssrMGKK4vdukNsvDqjm5Dx0zC2Jui03OKmJGl55KHOxRj6N9ve/
-         lskpIkWpBWCNPbfs+DkZxiq15F0mAiVeqZ2GJJNT/UOTCs6sC3BO8RKImmggqi1JWyU/
-         voldqFkb0/i/RjrhB0N9U1s+KUyPy7xAX3hO4BQFV/p24B6pnJjHTfpML4Pt7mh+FMUE
-         gitk3ZBUoaqfcW418WBubrMs4GYXOK/PW56WAyzkEBlun5Fx7xPefHb91OLa5lPn8QEY
-         ZZlhwT3eOyiw0K0DfCRLgN3vdttSDH2w6wo6Z2KMH9JjeaiMR20SKGchy0d8oQ/yrzHg
-         d4ZA==
-X-Gm-Message-State: APjAAAUg8TCcn2UuWXIpHWDdfyFOG60XFkHZ2en1MaA7E7y9hqHuCb9H
-        P0Pey+PYQ0iKHZ8A2k4MlG0MWli8ljIBLCLeLg4=
-X-Google-Smtp-Source: APXvYqzO3sHrLWBWLn/CdmbBZfDMn2sfRaD9MLGoJHaY2rJD/p4751CSMgsD0/J96NcWhvB/uP+kkgsDrkni/39U8QU=
-X-Received: by 2002:aca:edc8:: with SMTP id l191mr14249176oih.103.1563227319625;
- Mon, 15 Jul 2019 14:48:39 -0700 (PDT)
+        Mon, 15 Jul 2019 17:49:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730647AbfGOVt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:49:27 -0400
+Received: from localhost.localdomain (unknown [151.66.36.246])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6692086C;
+        Mon, 15 Jul 2019 21:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563227365;
+        bh=8Fj6fQ+IHvyEjrlhShFe5T2apErAkOW1vs46drBaWHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vIdl59B/s+/j1G0oxywBB4yA+BuzRTIpbT83oUviQgfDp22yygtKWEzZS7ytjQxmJ
+         R4/mY41n1WfVu9PJS+rjdSm/Yfh1gferMGDzQmhvw2MYJjsF/SZ34PJcqGMKtYkMMk
+         cukKj8o+gNcPwRkOTx8Z4pc9DeabWEi+Cb/H2kL8=
+Date:   Mon, 15 Jul 2019 23:49:20 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] iio: imu: st_lsm6dsx: add support for accel/gyro
+ unit of lsm9sd1
+Message-ID: <20190715214920.GB23126@localhost.localdomain>
+References: <20190715131919.31938-1-martin.kepplinger@puri.sm>
+ <20190715131919.31938-2-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-References: <20190715203651.GA7513@kroah.com> <20190715214348.81865-1-trong@android.com>
-In-Reply-To: <20190715214348.81865-1-trong@android.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 15 Jul 2019 23:48:27 +0200
-Message-ID: <CAJZ5v0gEzZkbeLFtW5yadwxBryvL3vWcUoQTkUy3VkxiTV+UrA@mail.gmail.com>
-Subject: Re: [PATCH v4] PM / wakeup: show wakeup sources stats in sysfs
-To:     Tri Vo <trong@android.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>, sspatil@google.com,
-        kaleshsingh@google.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Content-Disposition: inline
+In-Reply-To: <20190715131919.31938-2-martin.kepplinger@puri.sm>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:44 PM Tri Vo <trong@android.com> wrote:
->
-> Userspace can use wakeup_sources debugfs node to plot history of suspend
-> blocking wakeup sources over device's boot cycle. This information can
-> then be used (1) for power-specific bug reporting and (2) towards
-> attributing battery consumption to specific processes over a period of
-> time.
->
-> However, debugfs doesn't have stable ABI. For this reason, create a
-> 'struct device' to expose wakeup sources statistics in sysfs under
-> /sys/class/wakeup/<name>/.
->
-> Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
-> source statistics in sysfs.
 
-I'm not sure if this is really needed, but I'll let Greg decide.
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Apart from this
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
->
-> Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Tri Vo <trong@android.com>
-> Tested-by: Tri Vo <trong@android.com>
-> Tested-by: Kalesh Singh <kaleshsingh@google.com>
+> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separ=
+ately
+> supported in iio/magnetometer/st_magn*) are located on a separate i2c add=
+resses
+> on the bus.
+>=20
+> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.p=
+df
+>=20
+> Treat it just like the LSM6* devices and, despite it's name, hook it up
+> to the st_lsm6dsx driver, using it's basic functionality.
+>=20
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 > ---
->  Documentation/ABI/testing/sysfs-class-wakeup |  70 +++++++++
->  drivers/base/power/Makefile                  |   1 +
->  drivers/base/power/wakeup.c                  |  12 +-
->  drivers/base/power/wakeup_stats.c            | 149 +++++++++++++++++++
->  include/linux/pm_wakeup.h                    |  19 +++
->  kernel/power/Kconfig                         |  10 ++
->  kernel/power/wakelock.c                      |  10 ++
->  7 files changed, 269 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-wakeup
->  create mode 100644 drivers/base/power/wakeup_stats.c
->
-> v2:
-> - Updated Documentation/ABI/, as per Greg.
-> - Removed locks in attribute functions, as per Greg.
-> - Lifetimes of struct wakelock and struck wakeup_source are now different due to
->   the latter embedding a refcounted kobject. Changed it so that struct wakelock
->   only has a pointer to struct wakeup_source, instead of embedding it.
-> - Added CONFIG_PM_SLEEP_STATS that enables/disables wakeup source statistics in
->   sysfs.
->
-> v3:
-> Changes by Greg:
-> - Reworked code to use 'struct device' instead of raw kobjects.
-> - Updated documentation file.
-> - Only link wakeup_stats.o when CONFIG_PM_SLEEP_STATS is enabled.
-> Changes by Tri:
-> - Reverted changes to kernel/power/wakelock.c. 'struct device' hides kobject
->   operations. So no need to handle lifetimes in wakelock.c
->
-> v4:
-> - Added 'Co-developed-by:' and 'Tested-by:' fields to commit message.
-> - Moved new documentation to a separate file
->   Documentation/ABI/testing/sysfs-class-wakeup, as per Greg.
-> - Fixed copyright header in drivers/base/power/wakeup_stats.c, as per Greg.
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-wakeup b/Documentation/ABI/testing/sysfs-class-wakeup
-> new file mode 100644
-> index 000000000000..30fb23eb9112
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-wakeup
-> @@ -0,0 +1,70 @@
-> +What:          /sys/class/wakeup/
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               The /sys/class/wakeup/ directory contains pointers to all
-> +               wakeup sources in the kernel at that moment in time.
-> +
-> +What:          /sys/class/wakeup/.../active_count
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the number of times the wakeup source was
-> +               activated.
-> +
-> +What:          /sys/class/wakeup/.../event_count
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the number of signaled wakeup events
-> +               associated with the wakeup source.
-> +
-> +What:          /sys/class/wakeup/.../wakeup_count
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the number of times the wakeup source might
-> +               abort suspend.
-> +
-> +What:          /sys/class/wakeup/.../expire_count
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the number of times the wakeup source's
-> +               timeout has expired.
-> +
-> +What:          /sys/class/wakeup/.../active_time_ms
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the amount of time the wakeup source has
-> +               been continuously active, in milliseconds.  If the wakeup
-> +               source is not active, this file contains '0'.
-> +
-> +What:          /sys/class/wakeup/.../total_time_ms
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the total amount of time this wakeup source
-> +               has been active, in milliseconds.
-> +
-> +What:          /sys/class/wakeup/.../max_time_ms
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the maximum amount of time this wakeup
-> +               source has been continuously active, in milliseconds.
-> +
-> +What:          /sys/class/wakeup/.../last_change_ms
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               This file contains the monotonic clock time when the wakeup
-> +               source was touched last time, in milliseconds.
-> +
-> +What:          /sys/class/wakeup/.../prevent_suspend_time_ms
-> +Date:          June 2019
-> +Contact:       Tri Vo <trong@android.com>
-> +Description:
-> +               The file contains the total amount of time this wakeup source
-> +               has been preventing autosleep, in milliseconds.
-> diff --git a/drivers/base/power/Makefile b/drivers/base/power/Makefile
-> index e1bb691cf8f1..1963f53d9982 100644
-> --- a/drivers/base/power/Makefile
-> +++ b/drivers/base/power/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_PM)       += sysfs.o generic_ops.o common.o qos.o runtime.o wakeirq.o
->  obj-$(CONFIG_PM_SLEEP) += main.o wakeup.o
-> +obj-$(CONFIG_PM_SLEEP_STATS)   += wakeup_stats.o
->  obj-$(CONFIG_PM_TRACE_RTC)     += trace.o
->  obj-$(CONFIG_PM_GENERIC_DOMAINS)       +=  domain.o domain_governor.o
->  obj-$(CONFIG_HAVE_CLK) += clock_ops.o
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 5b2b6a05a4f3..fd48e78c06b9 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -205,11 +205,18 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
->  struct wakeup_source *wakeup_source_register(const char *name)
->  {
->         struct wakeup_source *ws;
-> +       int ret;
->
->         ws = wakeup_source_create(name);
-> -       if (ws)
-> +       if (ws) {
-> +               ret = wakeup_source_sysfs_add(ws);
-> +               if (ret) {
-> +                       kfree_const(ws->name);
-> +                       kfree(ws);
-> +                       return NULL;
-> +               }
->                 wakeup_source_add(ws);
-> -
-> +       }
->         return ws;
->  }
->  EXPORT_SYMBOL_GPL(wakeup_source_register);
-> @@ -222,6 +229,7 @@ void wakeup_source_unregister(struct wakeup_source *ws)
->  {
->         if (ws) {
->                 wakeup_source_remove(ws);
-> +               wakeup_source_sysfs_remove(ws);
->                 wakeup_source_destroy(ws);
->         }
->  }
-> diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_stats.c
-> new file mode 100644
-> index 000000000000..45e15856105b
-> --- /dev/null
-> +++ b/drivers/base/power/wakeup_stats.c
-> @@ -0,0 +1,149 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Wakeup statistics in sysfs
-> + *
-> + * Copyright (c) 2019 Linux Foundation
-> + * Copyright (c) 2019 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> + * Copyright (c) 2019 Google Inc.
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include <linux/kdev_t.h>
-> +
-> +#include "power.h"
-> +
-> +static struct class *wakeup_class;
-> +
-> +#define wakeup_attr(_name)                                             \
-> +static ssize_t _name##_show(struct device *dev,                                \
-> +                           struct device_attribute *attr, char *buf)   \
-> +{                                                                      \
-> +       struct wakeup_source *ws = dev_get_drvdata(dev);                \
-> +                                                                       \
-> +       return sprintf(buf, "%lu\n", ws->_name);                        \
-> +}                                                                      \
-> +static DEVICE_ATTR_RO(_name)
-> +
-> +wakeup_attr(active_count);
-> +wakeup_attr(event_count);
-> +wakeup_attr(wakeup_count);
-> +wakeup_attr(expire_count);
-> +
-> +static ssize_t active_time_ms_show(struct device *dev,
-> +                                  struct device_attribute *attr, char *buf)
-> +{
-> +       struct wakeup_source *ws = dev_get_drvdata(dev);
-> +       ktime_t active_time =
-> +               ws->active ? ktime_sub(ktime_get(), ws->last_time) : 0;
-> +
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(active_time));
-> +}
-> +static DEVICE_ATTR_RO(active_time_ms);
-> +
-> +static ssize_t total_time_ms_show(struct device *dev,
-> +                                 struct device_attribute *attr, char *buf)
-> +{
-> +       struct wakeup_source *ws = dev_get_drvdata(dev);
-> +       ktime_t active_time;
-> +       ktime_t total_time = ws->total_time;
-> +
-> +       if (ws->active) {
-> +               active_time = ktime_sub(ktime_get(), ws->last_time);
-> +               total_time = ktime_add(total_time, active_time);
-> +       }
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(total_time));
-> +}
-> +static DEVICE_ATTR_RO(total_time_ms);
-> +
-> +static ssize_t max_time_ms_show(struct device *dev,
-> +                               struct device_attribute *attr, char *buf)
-> +{
-> +       struct wakeup_source *ws = dev_get_drvdata(dev);
-> +       ktime_t active_time;
-> +       ktime_t max_time = ws->max_time;
-> +
-> +       if (ws->active) {
-> +               active_time = ktime_sub(ktime_get(), ws->last_time);
-> +               if (active_time > max_time)
-> +                       max_time = active_time;
-> +       }
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(max_time));
-> +}
-> +static DEVICE_ATTR_RO(max_time_ms);
-> +
-> +static ssize_t last_change_ms_show(struct device *dev,
-> +                                  struct device_attribute *attr, char *buf)
-> +{
-> +       struct wakeup_source *ws = dev_get_drvdata(dev);
-> +
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(ws->last_time));
-> +}
-> +static DEVICE_ATTR_RO(last_change_ms);
-> +
-> +static ssize_t prevent_suspend_time_ms_show(struct device *dev,
-> +                                           struct device_attribute *attr,
-> +                                           char *buf)
-> +{
-> +       struct wakeup_source *ws = dev_get_drvdata(dev);
-> +       ktime_t prevent_sleep_time = ws->prevent_sleep_time;
-> +
-> +       if (ws->active && ws->autosleep_enabled) {
-> +               prevent_sleep_time = ktime_add(prevent_sleep_time,
-> +                       ktime_sub(ktime_get(), ws->start_prevent_time));
-> +       }
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(prevent_sleep_time));
-> +}
-> +static DEVICE_ATTR_RO(prevent_suspend_time_ms);
-> +
-> +static struct attribute *wakeup_source_attrs[] = {
-> +       &dev_attr_active_count.attr,
-> +       &dev_attr_event_count.attr,
-> +       &dev_attr_wakeup_count.attr,
-> +       &dev_attr_expire_count.attr,
-> +       &dev_attr_active_time_ms.attr,
-> +       &dev_attr_total_time_ms.attr,
-> +       &dev_attr_max_time_ms.attr,
-> +       &dev_attr_last_change_ms.attr,
-> +       &dev_attr_prevent_suspend_time_ms.attr,
-> +       NULL,
-> +};
-> +ATTRIBUTE_GROUPS(wakeup_source);
-> +
-> +/**
-> + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
-> + * @ws: Wakeup source to be added in sysfs.
-> + */
-> +int wakeup_source_sysfs_add(struct wakeup_source *ws)
-> +{
-> +       struct device *dev;
-> +
-> +       dev = device_create_with_groups(wakeup_class, NULL, MKDEV(0, 0), ws,
-> +                                       wakeup_source_groups, "%s", ws->name);
-> +       if (IS_ERR(dev))
-> +               return PTR_ERR(dev);
-> +
-> +       ws->dev = dev;
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_add);
-> +
-> +/**
-> + * wakeup_source_sysfs_remove - Remove wakeup_source attributes from sysfs.
-> + * @ws: Wakeup source to be removed from sysfs.
-> + */
-> +void wakeup_source_sysfs_remove(struct wakeup_source *ws)
-> +{
-> +       device_unregister(ws->dev);
-> +}
-> +EXPORT_SYMBOL_GPL(wakeup_source_sysfs_remove);
-> +
-> +static int __init wakeup_sources_sysfs_init(void)
-> +{
-> +       wakeup_class = class_create(THIS_MODULE, "wakeup");
-> +       if (IS_ERR(wakeup_class))
-> +               return PTR_ERR(wakeup_class);
-> +
-> +       return 0;
-> +}
-> +
-> +postcore_initcall(wakeup_sources_sysfs_init);
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index ce57771fab9b..734141869c17 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -35,6 +35,7 @@ struct wake_irq;
->   * @relax_count: Number of times the wakeup source was deactivated.
->   * @expire_count: Number of times the wakeup source's timeout has expired.
->   * @wakeup_count: Number of times the wakeup source might abort suspend.
-> + * @dev: Struct device for sysfs statistics about the wakeup source.
->   * @active: Status of the wakeup source.
->   * @has_timeout: The wakeup source has been activated with a timeout.
->   */
-> @@ -55,6 +56,7 @@ struct wakeup_source {
->         unsigned long           relax_count;
->         unsigned long           expire_count;
->         unsigned long           wakeup_count;
-> +       struct device           *dev;
->         bool                    active:1;
->         bool                    autosleep_enabled:1;
+>=20
+> What do you think about an addition like this? How confusing is it to sup=
+port
+> an LSM9 module by the lsm6 driver, despite it's name? It requires almost =
+no
+> code, so why not think about it, right?
+
+I am fine with (it was on my ToDo list, so thanks for working on this).
+I have just posted the following series that will help you adding support f=
+or
+LSM9DS1
+https://patchwork.kernel.org/cover/11045061/
+I think you just need to take care of gyro channels allocating iio devices =
+(you
+probably need to pass hw_id to st_lsm6dsx_alloc_iiodev())
+
+>=20
+> Oh, I'm not 100% convinced by my new "if" in probe(), but even that is
+> not too confusing I guess.
+>=20
+> thanks,
+>=20
+>                            martin
+>=20
+> p.s.: todos:
+> * hook up the fifo / buffer / trigger functionality,
+> * (off-topic a bit) move the (currently strange) gyro-only support
+>   for lsm9ds0 to this driver as well.
+
+Regarding FIFO I guess it is enough to set decimator factor to 1 for both a=
+ccel
+and gyro.
+
+Regards,
+Lorenzo
+
+>=20
+>=20
+>=20
+>  drivers/iio/imu/st_lsm6dsx/Kconfig           |   3 +-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |   4 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 105 ++++++++++++++++++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |   5 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |   5 +
+>  5 files changed, 117 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6=
+dsx/Kconfig
+> index 002a423eae52..0b5a568e4c16 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -10,7 +10,8 @@ config IIO_ST_LSM6DSX
+>  	help
+>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+> -	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr
+> +	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr and the
+> +	  accelerometer/gyroscope of lsm9ds1.
+> =20
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called st_lsm6dsx.
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st=
+_lsm6dsx/st_lsm6dsx.h
+> index f072ac14f213..8af9641260fa 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -22,6 +22,7 @@
+>  #define ST_ASM330LHH_DEV_NAME	"asm330lhh"
+>  #define ST_LSM6DSOX_DEV_NAME	"lsm6dsox"
+>  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
+> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
+> =20
+>  enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DS3_ID,
+> @@ -33,6 +34,7 @@ enum st_lsm6dsx_hw_id {
+>  	ST_ASM330LHH_ID,
+>  	ST_LSM6DSOX_ID,
+>  	ST_LSM6DSR_ID,
+> +	ST_LSM9DS1_ID,
+>  	ST_LSM6DSX_MAX_ID,
 >  };
-> @@ -181,6 +183,23 @@ static inline void pm_wakeup_dev_event(struct device *dev, unsigned int msec,
->
->  #endif /* !CONFIG_PM_SLEEP */
->
-> +#ifdef CONFIG_PM_SLEEP_STATS
+> =20
+> @@ -230,6 +232,8 @@ enum st_lsm6dsx_sensor_id {
+>  	ST_LSM6DSX_ID_EXT0,
+>  	ST_LSM6DSX_ID_EXT1,
+>  	ST_LSM6DSX_ID_EXT2,
+> +	ST_LSM9DSX_ID_GYRO,
+> +	ST_LSM9DSX_ID_ACC,
+>  	ST_LSM6DSX_ID_MAX,
+>  };
+> =20
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
+mu/st_lsm6dsx/st_lsm6dsx_core.c
+> index 7a4fe70a8f20..6acfe63073de 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -10,6 +10,8 @@
+>   * +-125/+-245/+-500/+-1000/+-2000 dps
+>   * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
+>   * allowing dynamic batching of sensor data.
+> + * LSM9DSx series is similar but includes an additional magnetometer, ha=
+ndled
+> + * by a different driver.
+>   *
+>   * Supported sensors:
+>   * - LSM6DS3:
+> @@ -30,6 +32,13 @@
+>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-=
+2000
+>   *   - FIFO size: 3KB
+>   *
+> + * - LSM9DS1:
+> + *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
+> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
+> + *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
+> + *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
+> + *   - FIFO size: 32
+> + *
+>   * Copyright 2016 STMicroelectronics Inc.
+>   *
+>   * Lorenzo Bianconi <lorenzo.bianconi@st.com>
+> @@ -64,6 +73,10 @@
+>  #define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
+>  #define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
+> =20
+> +#define ST_LSM9DSX_REG_GYRO_OUT_X_L_ADDR	0x18
+> +#define ST_LSM9DSX_REG_GYRO_OUT_Y_L_ADDR	0x1a
+> +#define ST_LSM9DSX_REG_GYRO_OUT_Z_L_ADDR	0x1c
 > +
-> +/* drivers/base/power/wakeup_stats.c */
-> +int wakeup_source_sysfs_add(struct wakeup_source *ws);
-> +void wakeup_source_sysfs_remove(struct wakeup_source *ws);
+>  static const struct st_lsm6dsx_odr_table_entry st_lsm6dsx_odr_table[] =
+=3D {
+>  	[ST_LSM6DSX_ID_ACC] =3D {
+>  		.reg =3D {
+> @@ -88,6 +101,30 @@ static const struct st_lsm6dsx_odr_table_entry st_lsm=
+6dsx_odr_table[] =3D {
+>  		.odr_avl[3] =3D { 104, 0x04 },
+>  		.odr_avl[4] =3D { 208, 0x05 },
+>  		.odr_avl[5] =3D { 416, 0x06 },
+> +	},
+> +	[ST_LSM9DSX_ID_ACC] =3D {
+> +		.reg =3D {
+> +			.addr =3D 0x20,
+> +			.mask =3D GENMASK(7, 5),
+> +		},
+> +		.odr_avl[0] =3D {  10, 0x01 },
+> +		.odr_avl[1] =3D {  50, 0x02 },
+> +		.odr_avl[2] =3D { 119, 0x03 },
+> +		.odr_avl[3] =3D { 238, 0x04 },
+> +		.odr_avl[4] =3D { 476, 0x05 },
+> +		.odr_avl[5] =3D { 952, 0x06 },
+> +	},
+> +	[ST_LSM9DSX_ID_GYRO] =3D {
+> +		.reg =3D {
+> +			.addr =3D 0x10,
+> +			.mask =3D GENMASK(7, 5),
+> +		},
+> +		.odr_avl[0] =3D {  15, 0x01 },
+> +		.odr_avl[1] =3D {  60, 0x02 },
+> +		.odr_avl[2] =3D { 119, 0x03 },
+> +		.odr_avl[3] =3D { 238, 0x04 },
+> +		.odr_avl[4] =3D { 476, 0x05 },
+> +		.odr_avl[5] =3D { 952, 0x06 },
+>  	}
+>  };
+> =20
+> @@ -111,10 +148,43 @@ static const struct st_lsm6dsx_fs_table_entry st_ls=
+m6dsx_fs_table[] =3D {
+>  		.fs_avl[1] =3D { IIO_DEGREE_TO_RAD(17500), 0x1 },
+>  		.fs_avl[2] =3D { IIO_DEGREE_TO_RAD(35000), 0x2 },
+>  		.fs_avl[3] =3D { IIO_DEGREE_TO_RAD(70000), 0x3 },
+> +	},
+> +	[ST_LSM9DSX_ID_ACC] =3D {
+> +		.reg =3D {
+> +			.addr =3D 0x20,
+> +			.mask =3D GENMASK(4, 3),
+> +		},
+> +		.fs_avl[0] =3D {  599, 0x0 },
+> +		.fs_avl[1] =3D { 1197, 0x2 },
+> +		.fs_avl[2] =3D { 2394, 0x3 },
+> +		.fs_avl[3] =3D { 4788, 0x1 },
+> +	},
+> +	[ST_LSM9DSX_ID_GYRO] =3D {
+> +		.reg =3D {
+> +			.addr =3D 0x10,
+> +			.mask =3D GENMASK(4, 3),
+> +		},
+> +		.fs_avl[0] =3D { IIO_DEGREE_TO_RAD(245), 0x0 },
+> +		.fs_avl[1] =3D { IIO_DEGREE_TO_RAD(500), 0x1 },
+> +		.fs_avl[2] =3D { IIO_DEGREE_TO_RAD(0), 0x2 },
+> +		.fs_avl[3] =3D { IIO_DEGREE_TO_RAD(2000), 0x3 },
+>  	}
+>  };
+> =20
+>  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] =3D=
+ {
+> +	{
+> +		.wai =3D 0x68,
+> +		.reg_int1_addr =3D 0x0c,
+> +		.reg_int2_addr =3D 0x0d,
+> +		.reg_reset_addr =3D 0x22,
+> +		.max_fifo_size =3D 32,
+> +		.id =3D {
+> +			{
+> +				.hw_id =3D ST_LSM9DS1_ID,
+> +				.name =3D ST_LSM9DS1_DEV_NAME,
+> +			},
+> +		},
+> +	},
+>  	{
+>  		.wai =3D 0x69,
+>  		.reg_int1_addr =3D 0x0d,
+> @@ -492,6 +562,16 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_ch=
+annels[] =3D {
+>  	IIO_CHAN_SOFT_TIMESTAMP(3),
+>  };
+> =20
+> +static const struct iio_chan_spec st_lsm9dsx_gyro_channels[] =3D {
+> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_X_L_ADDR,
+> +			   IIO_MOD_X, 0),
+> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_Y_L_ADDR,
+> +			   IIO_MOD_Y, 1),
+> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_Z_L_ADDR,
+> +			   IIO_MOD_Z, 2),
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
 > +
-> +#else /* !CONFIG_PM_SLEEP_STATS */
-> +
-> +static inline int wakeup_source_sysfs_add(struct wakeup_source *ws)
-> +{
-> +       return 0;
-> +}
-> +static inline void wakeup_source_sysfs_remove(struct wakeup_source *ws)
-> +{ }
-> +
-> +#endif /* !CONFIG_PM_SLEEP_STATS */
-> +
->  static inline void wakeup_source_init(struct wakeup_source *ws,
->                                       const char *name)
+>  int st_lsm6dsx_set_page(struct st_lsm6dsx_hw *hw, bool enable)
 >  {
-> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-> index ff8592ddedee..604e1f087f14 100644
-> --- a/kernel/power/Kconfig
-> +++ b/kernel/power/Kconfig
-> @@ -195,6 +195,16 @@ config PM_SLEEP_DEBUG
->         def_bool y
->         depends on PM_DEBUG && PM_SLEEP
->
-> +config PM_SLEEP_STATS
-> +       bool "Wakeup sources statistics"
-> +       depends on PM_SLEEP
-> +       help
-> +         Expose wakeup sources statistics to user space via sysfs. Collected
-> +         statistics are located under /sys/power/wakeup_sources. For more
-> +         information, read <file:Documentation/ABI/testing/sysfs-class-wakeup>.
+>  	const struct st_lsm6dsx_shub_settings *hub_settings;
+> @@ -1056,6 +1136,7 @@ static struct iio_dev *st_lsm6dsx_alloc_iiodev(stru=
+ct st_lsm6dsx_hw *hw,
+> =20
+>  	switch (id) {
+>  	case ST_LSM6DSX_ID_ACC:
+> +	case ST_LSM9DSX_ID_ACC:
+>  		iio_dev->channels =3D st_lsm6dsx_acc_channels;
+>  		iio_dev->num_channels =3D ARRAY_SIZE(st_lsm6dsx_acc_channels);
+>  		iio_dev->info =3D &st_lsm6dsx_acc_info;
+> @@ -1068,6 +1149,14 @@ static struct iio_dev *st_lsm6dsx_alloc_iiodev(str=
+uct st_lsm6dsx_hw *hw,
+>  		iio_dev->num_channels =3D ARRAY_SIZE(st_lsm6dsx_gyro_channels);
+>  		iio_dev->info =3D &st_lsm6dsx_gyro_info;
+> =20
+> +		scnprintf(sensor->name, sizeof(sensor->name), "%s_gyro",
+> +			  name);
+> +		break;
+> +	case ST_LSM9DSX_ID_GYRO:
+> +		iio_dev->channels =3D st_lsm9dsx_gyro_channels;
+> +		iio_dev->num_channels =3D ARRAY_SIZE(st_lsm9dsx_gyro_channels);
+> +		iio_dev->info =3D &st_lsm6dsx_gyro_info;
 > +
-> +         If in doubt, say N.
-> +
->  config DPM_WATCHDOG
->         bool "Device suspend/resume watchdog"
->         depends on PM_DEBUG && PSTORE && EXPERT
-> diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
-> index 4210152e56f0..32726da3d6e6 100644
-> --- a/kernel/power/wakelock.c
-> +++ b/kernel/power/wakelock.c
-> @@ -122,6 +122,7 @@ static void __wakelocks_gc(struct work_struct *work)
->
->                 if (!active) {
->                         wakeup_source_remove(&wl->ws);
-> +                       wakeup_source_sysfs_remove(&wl->ws);
->                         rb_erase(&wl->node, &wakelocks_tree);
->                         list_del(&wl->lru);
->                         kfree(wl->name);
-> @@ -153,6 +154,7 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
->         struct rb_node **node = &wakelocks_tree.rb_node;
->         struct rb_node *parent = *node;
->         struct wakelock *wl;
-> +       int ret;
->
->         while (*node) {
->                 int diff;
-> @@ -189,6 +191,14 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
->         }
->         wl->ws.name = wl->name;
->         wl->ws.last_time = ktime_get();
-> +
-> +       ret = wakeup_source_sysfs_add(&wl->ws);
-> +       if (ret) {
-> +               kfree(wl->name);
-> +               kfree(wl);
-> +               return ERR_PTR(ret);
-> +       }
-> +
->         wakeup_source_add(&wl->ws);
->         rb_link_node(&wl->node, parent, node);
->         rb_insert_color(&wl->node, &wakelocks_tree);
-> --
-> 2.22.0.510.g264f2c817a-goog
->
+>  		scnprintf(sensor->name, sizeof(sensor->name), "%s_gyro",
+>  			  name);
+>  		break;
+> @@ -1109,10 +1198,18 @@ int st_lsm6dsx_probe(struct device *dev, int irq,=
+ int hw_id,
+>  	if (err < 0)
+>  		return err;
+> =20
+> -	for (i =3D 0; i < ST_LSM6DSX_ID_EXT0; i++) {
+> -		hw->iio_devs[i] =3D st_lsm6dsx_alloc_iiodev(hw, i, name);
+> -		if (!hw->iio_devs[i])
+> -			return -ENOMEM;
+> +	if (hw_id =3D=3D ST_LSM9DS1_ID) {
+> +		for (i =3D ST_LSM9DSX_ID_GYRO; i <=3D ST_LSM9DSX_ID_ACC; i++) {
+> +			hw->iio_devs[i] =3D st_lsm6dsx_alloc_iiodev(hw, i, name);
+> +			if (!hw->iio_devs[i])
+> +				return -ENOMEM;
+> +		}
+> +	} else {
+> +		for (i =3D 0; i < ST_LSM6DSX_ID_EXT0; i++) {
+> +			hw->iio_devs[i] =3D st_lsm6dsx_alloc_iiodev(hw, i, name);
+> +			if (!hw->iio_devs[i])
+> +				return -ENOMEM;
+> +		}
+>  	}
+> =20
+>  	err =3D st_lsm6dsx_init_device(hw);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/im=
+u/st_lsm6dsx/st_lsm6dsx_i2c.c
+> index b3211e0ac07b..a684e7db1299 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> @@ -75,6 +75,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_mat=
+ch[] =3D {
+>  		.compatible =3D "st,lsm6dsr",
+>  		.data =3D (void *)ST_LSM6DSR_ID,
+>  	},
+> +	{
+> +		.compatible =3D "st,lsm9ds1",
+> +		.data =3D (void *)ST_LSM9DS1_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+> @@ -89,6 +93,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_tab=
+le[] =3D {
+>  	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
+>  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
+>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
+> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/im=
+u/st_lsm6dsx/st_lsm6dsx_spi.c
+> index c9d3c4711018..709769177e91 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> @@ -75,6 +75,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_mat=
+ch[] =3D {
+>  		.compatible =3D "st,lsm6dsr",
+>  		.data =3D (void *)ST_LSM6DSR_ID,
+>  	},
+> +	{
+> +		.compatible =3D "st,lsm9ds1",
+> +		.data =3D (void *)ST_LSM9DS1_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+> @@ -89,6 +93,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_tab=
+le[] =3D {
+>  	{ ST_ASM330LHH_DEV_NAME, ST_ASM330LHH_ID },
+>  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
+>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
+> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
+> --=20
+> 2.20.1
+>=20
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXSz03AAKCRA6cBh0uS2t
+rD8JAPwKvRhU0aFfBA29F+DYdajJpKTmFoucevwd8l6DdfOXZwEAkyKFbvgwLlfF
+C+tQIsjcNpLd2Od0rwj+B+YgTH+6Dgw=
+=bubu
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
