@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8FFC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA962083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894172083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198528;
-	bh=M8oYnJxeXBPkY5HQOxKLmoImQd3w9QKWiQyKPguFl00=;
+	s=default; t=1563198531;
+	bh=x0S9E0Jb2QEYD+Kb6UdY4P521AflidKAJvaEs5Vmf+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sa24uAK85sjqqu70vRLkgPOB1yKKtt24bffsLaUF29VBNkTTF2YrcUVdlr+o5j84e
-	 K3BuClBRZ/HCGlSaOqD4KFSjRX5a4PbJn0d5FAljobl7A/n1HF4KGL/QmEeUmWkaP/
-	 pmZKlXQfzDJGEeVtujnAbMtMnkU8lRvgxbfLOSt8=
+	b=WO75fL0qzusAPXUiN5BOGIMlQdnZ4saM3BC16W6K5tTC4Nbc+pUu4YuG/Av8z8BUt
+	 FnIwviKjI9cB2hqDRwhOxFlGllAPV9oYndVAbNCCkl11gCOEzK5d5yR/3jZ3aQ5FTD
+	 w2Z1D8dECU9I6O1ZLGfWDx9CuuZINzmaS12y0lR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfGONsr (ORCPT
+        id S1730572AbfGONsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59736 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731564AbfGONso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:48:44 -0400
+        id S1731568AbfGONsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:48:47 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3173B2067C;
-        Mon, 15 Jul 2019 13:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39AB12081C;
+        Mon, 15 Jul 2019 13:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198523;
-        bh=M8oYnJxeXBPkY5HQOxKLmoImQd3w9QKWiQyKPguFl00=;
+        s=default; t=1563198525;
+        bh=x0S9E0Jb2QEYD+Kb6UdY4P521AflidKAJvaEs5Vmf+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EENsJRpFQnL0pjEja3j/o8O12O75GxO1vdzrneEzIPJFMKFpVV1jogMbzjX70zdTf
-         PVa8aVU8QIgftMNSQFchjmQU8YQk925zaKNuYRNudhcwVPzHFaNvigFKi1Gr8MshgX
-         +RfIoDWAfjqm19aMh9sQygE2Oe4QAB6O+cg1R8fs=
+        b=HW5yfuMEhUlmMkdtfZWVN5FW/LowIgoZYThW2IKVisospoKMPNtWI+wrW5Lo6kWbB
+         P+SsrJUhonyBDqEyn+3JWQ1bga2/BBUL+blPxxA07EVvxRt8oKv+koYgWasv8LNy4p
+         MwrK1QnFEiU06A9mhZMxA0RQoh1Pf36tHlLJs4v8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+Cc:     Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 034/249] net: mvpp2: cls: Extract the RSS context when parsing the ethtool rule
-Date:   Mon, 15 Jul 2019 09:43:19 -0400
-Message-Id: <20190715134655.4076-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 035/249] net: hns3: initialize CPU reverse mapping
+Date:   Mon, 15 Jul 2019 09:43:20 -0400
+Message-Id: <20190715134655.4076-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,41 +60,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit c561da68038a738f30eca21456534c2d1872d13d ]
+[ Upstream commit ffab9691bcb2fe2594f4c38bfceb4d9685b93b87 ]
 
-ethtool_rx_flow_rule_create takes into parameter the ethtool flow spec,
-which doesn't contain the rss context id. We therefore need to extract
-it ourself before parsing the ethtool rule.
+Allocate CPU rmap and add entry for each irq. CPU rmap is
+used in aRFS to get the queue number of the rx completion
+interrupts.
 
-The FLOW_RSS flag is only set in info->fs.flow_type, and not
-info->flow_type.
+In additional, remove the calling of
+irq_set_affinity_notifier() in hns3_nic_init_irq(), because
+we have registered notifier in irq_cpu_rmap_add() for each
+vector, otherwise it may cause use-after-free issue.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 77 ++++++++++++-------
+ 1 file changed, 48 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index a57d17ab91f0..fb06c0aa620a 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1242,6 +1242,12 @@ int mvpp2_ethtool_cls_rule_ins(struct mvpp2_port *port,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index f326805543a4..cd59c0cc636a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -4,6 +4,9 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/etherdevice.h>
+ #include <linux/interrupt.h>
++#ifdef CONFIG_RFS_ACCEL
++#include <linux/cpu_rmap.h>
++#endif
+ #include <linux/if_vlan.h>
+ #include <linux/ip.h>
+ #include <linux/ipv6.h>
+@@ -79,23 +82,6 @@ static irqreturn_t hns3_irq_handle(int irq, void *vector)
+ 	return IRQ_HANDLED;
+ }
  
- 	input.fs = &info->fs;
+-/* This callback function is used to set affinity changes to the irq affinity
+- * masks when the irq_set_affinity_notifier function is used.
+- */
+-static void hns3_nic_irq_affinity_notify(struct irq_affinity_notify *notify,
+-					 const cpumask_t *mask)
+-{
+-	struct hns3_enet_tqp_vector *tqp_vectors =
+-		container_of(notify, struct hns3_enet_tqp_vector,
+-			     affinity_notify);
+-
+-	tqp_vectors->affinity_mask = *mask;
+-}
+-
+-static void hns3_nic_irq_affinity_release(struct kref *ref)
+-{
+-}
+-
+ static void hns3_nic_uninit_irq(struct hns3_nic_priv *priv)
+ {
+ 	struct hns3_enet_tqp_vector *tqp_vectors;
+@@ -107,8 +93,7 @@ static void hns3_nic_uninit_irq(struct hns3_nic_priv *priv)
+ 		if (tqp_vectors->irq_init_flag != HNS3_VECTOR_INITED)
+ 			continue;
  
-+	/* We need to manually set the rss_ctx, since this info isn't present
-+	 * in info->fs
-+	 */
-+	if (info->fs.flow_type & FLOW_RSS)
-+		input.rss_ctx = info->rss_context;
+-		/* clear the affinity notifier and affinity mask */
+-		irq_set_affinity_notifier(tqp_vectors->vector_irq, NULL);
++		/* clear the affinity mask */
+ 		irq_set_affinity_hint(tqp_vectors->vector_irq, NULL);
+ 
+ 		/* release the irq resource */
+@@ -161,12 +146,6 @@ static int hns3_nic_init_irq(struct hns3_nic_priv *priv)
+ 			return ret;
+ 		}
+ 
+-		tqp_vectors->affinity_notify.notify =
+-					hns3_nic_irq_affinity_notify;
+-		tqp_vectors->affinity_notify.release =
+-					hns3_nic_irq_affinity_release;
+-		irq_set_affinity_notifier(tqp_vectors->vector_irq,
+-					  &tqp_vectors->affinity_notify);
+ 		irq_set_affinity_hint(tqp_vectors->vector_irq,
+ 				      &tqp_vectors->affinity_mask);
+ 
+@@ -340,6 +319,40 @@ static void hns3_tqp_disable(struct hnae3_queue *tqp)
+ 	hns3_write_dev(tqp, HNS3_RING_EN_REG, rcb_reg);
+ }
+ 
++static void hns3_free_rx_cpu_rmap(struct net_device *netdev)
++{
++#ifdef CONFIG_RFS_ACCEL
++	free_irq_cpu_rmap(netdev->rx_cpu_rmap);
++	netdev->rx_cpu_rmap = NULL;
++#endif
++}
 +
- 	ethtool_rule = ethtool_rx_flow_rule_create(&input);
- 	if (IS_ERR(ethtool_rule)) {
- 		ret = PTR_ERR(ethtool_rule);
++static int hns3_set_rx_cpu_rmap(struct net_device *netdev)
++{
++#ifdef CONFIG_RFS_ACCEL
++	struct hns3_nic_priv *priv = netdev_priv(netdev);
++	struct hns3_enet_tqp_vector *tqp_vector;
++	int i, ret;
++
++	if (!netdev->rx_cpu_rmap) {
++		netdev->rx_cpu_rmap = alloc_irq_cpu_rmap(priv->vector_num);
++		if (!netdev->rx_cpu_rmap)
++			return -ENOMEM;
++	}
++
++	for (i = 0; i < priv->vector_num; i++) {
++		tqp_vector = &priv->tqp_vector[i];
++		ret = irq_cpu_rmap_add(netdev->rx_cpu_rmap,
++				       tqp_vector->vector_irq);
++		if (ret) {
++			hns3_free_rx_cpu_rmap(netdev);
++			return ret;
++		}
++	}
++#endif
++	return 0;
++}
++
+ static int hns3_nic_net_up(struct net_device *netdev)
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+@@ -351,11 +364,16 @@ static int hns3_nic_net_up(struct net_device *netdev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* the device can work without cpu rmap, only aRFS needs it */
++	ret = hns3_set_rx_cpu_rmap(netdev);
++	if (ret)
++		netdev_warn(netdev, "set rx cpu rmap fail, ret=%d!\n", ret);
++
+ 	/* get irq resource for all vectors */
+ 	ret = hns3_nic_init_irq(priv);
+ 	if (ret) {
+ 		netdev_err(netdev, "hns init irq failed! ret=%d\n", ret);
+-		return ret;
++		goto free_rmap;
+ 	}
+ 
+ 	clear_bit(HNS3_NIC_STATE_DOWN, &priv->state);
+@@ -384,7 +402,8 @@ static int hns3_nic_net_up(struct net_device *netdev)
+ 		hns3_vector_disable(&priv->tqp_vector[j]);
+ 
+ 	hns3_nic_uninit_irq(priv);
+-
++free_rmap:
++	hns3_free_rx_cpu_rmap(netdev);
+ 	return ret;
+ }
+ 
+@@ -467,6 +486,8 @@ static void hns3_nic_net_down(struct net_device *netdev)
+ 	if (ops->stop)
+ 		ops->stop(priv->ae_handle);
+ 
++	hns3_free_rx_cpu_rmap(netdev);
++
+ 	/* free irq resources */
+ 	hns3_nic_uninit_irq(priv);
+ 
+@@ -3331,8 +3352,6 @@ static void hns3_nic_uninit_vector_data(struct hns3_nic_priv *priv)
+ 		hns3_free_vector_ring_chain(tqp_vector, &vector_ring_chain);
+ 
+ 		if (tqp_vector->irq_init_flag == HNS3_VECTOR_INITED) {
+-			irq_set_affinity_notifier(tqp_vector->vector_irq,
+-						  NULL);
+ 			irq_set_affinity_hint(tqp_vector->vector_irq, NULL);
+ 			free_irq(tqp_vector->vector_irq, tqp_vector);
+ 			tqp_vector->irq_init_flag = HNS3_VECTOR_NOT_INITED;
 -- 
 2.20.1
 
