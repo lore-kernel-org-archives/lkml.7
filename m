@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE91C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B75C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC1F20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8220420868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sa2Juxny"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ia7CT42t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbfGOMpI (ORCPT
+        id S1730398AbfGOMpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 08:45:08 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60479 "EHLO
+        Mon, 15 Jul 2019 08:45:11 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60536 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730333AbfGOMpG (ORCPT
+        with ESMTP id S1730368AbfGOMpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 08:45:06 -0400
+        Mon, 15 Jul 2019 08:45:08 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190715124504euoutp0146f599a0f471cb791228d6a9b9553263~xlU09EK_D1972419724euoutp01c
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:45:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190715124504euoutp0146f599a0f471cb791228d6a9b9553263~xlU09EK_D1972419724euoutp01c
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190715124507euoutp01209ea732e70fec190073e2f37feca7c5~xlU3ZalUN1961119611euoutp01x
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:45:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190715124507euoutp01209ea732e70fec190073e2f37feca7c5~xlU3ZalUN1961119611euoutp01x
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563194704;
-        bh=T1XbMxdJSXy/jko0p7zCuk+CitX2KHWmq2EdXnF1nsA=;
+        s=mail20170921; t=1563194707;
+        bh=j5TaKzjwXWO0slJIy85XDb0TdS8H6AlFvyUZNbcpDis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sa2JuxnyG8nMajoSqcw2WT85fdm7q7LMHBLfqH0tuy9gALnJvV9mDLet3AXW74bXv
-         HaAeFbPiMGf4SMSvE9e4Eol5Q7FHKkn/1IDvq6CYQkSZIozFhdTkHMLUxsww4ckwqB
-         VxGTwIP3pOP8kPIJIndXvEahXJdsMQCILG0DtgLY=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190715124503eucas1p259c18fc319d64a67c9908325a912bad0~xlU0MhKGq2241922419eucas1p29;
-        Mon, 15 Jul 2019 12:45:03 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 08.C0.04325.F457C2D5; Mon, 15
-        Jul 2019 13:45:03 +0100 (BST)
+        b=Ia7CT42t/ZH6q0QPHbB9Cii6f6y2cvd71iUU5238LIwEHMghCyutJJvjMU5uhdgqO
+         tMFX+UKbYOG+4zXtof6uIeJ3aLiVNQZ74ucygLJHiufJC/iMGhV2DlvtixSqwAce4B
+         kCWXRj+wFb1U9dc35btR91sjCfj9nxr5t27uprC0=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190715124506eucas1p1ecb230a4d7648efbb4292c1604c873f9~xlU2fFbc43056930569eucas1p1r;
+        Mon, 15 Jul 2019 12:45:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 56.35.04298.1557C2D5; Mon, 15
+        Jul 2019 13:45:06 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190715124502eucas1p1b795c100232b405070f4700e3ca6130b~xlUzYdfxY3056930569eucas1p1k;
-        Mon, 15 Jul 2019 12:45:02 +0000 (GMT)
+        20190715124505eucas1p14e68a537cb53cda2cfd832e59425cd25~xlU1silrT0571105711eucas1p1R;
+        Mon, 15 Jul 2019 12:45:05 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190715124502eusmtrp17c00525fb22ba0900dd008f7310cf81f~xlUzKP1t10488104881eusmtrp1_;
-        Mon, 15 Jul 2019 12:45:02 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-fe-5d2c754fbd2f
+        20190715124505eusmtrp1707efe250da92fa1641bdffe8b2f4481~xlU1qxVLr0488104881eusmtrp1O;
+        Mon, 15 Jul 2019 12:45:05 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-ec-5d2c75513367
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E8.17.04140.E457C2D5; Mon, 15
-        Jul 2019 13:45:02 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DD.17.04140.1557C2D5; Mon, 15
+        Jul 2019 13:45:05 +0100 (BST)
 Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190715124501eusmtip2fe8b09249a1b491b97f07079193e7347~xlUyTW3zf0528005280eusmtip20;
-        Mon, 15 Jul 2019 12:45:01 +0000 (GMT)
+        20190715124504eusmtip217a627d4fe60fb1b3302a6b57e00d008~xlU0rtPq21173411734eusmtip2y;
+        Mon, 15 Jul 2019 12:45:04 +0000 (GMT)
 From:   Lukasz Luba <l.luba@partner.samsung.com>
 To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
@@ -67,78 +67,77 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org,
         kyungmin.park@samsung.com, a.hajda@samsung.com,
         m.szyprowski@samsung.com, s.nawrocki@samsung.com,
         myungjoo.ham@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v1 35/50] ARM: dts: exynos: change speed and parent of NoC
- clock in Exynos5420
-Date:   Mon, 15 Jul 2019 14:44:02 +0200
-Message-Id: <20190715124417.4787-36-l.luba@partner.samsung.com>
+Subject: [PATCH v1 38/50] ARM: dts: exynos: change parent and rate of
+ bus_fsys2 in Exynos5422
+Date:   Mon, 15 Jul 2019 14:44:05 +0200
+Message-Id: <20190715124417.4787-39-l.luba@partner.samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190715124417.4787-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFKsWRmVeSWpSXmKPExsWy7djP87r+pTqxBqfvylrcWneO1WLjjPWs
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djPc7pBpTqxBls3MFrcWneO1WLjjPWs
         Fte/PGe1mH8EyO1//JrZ4vz5DewWZ5vesFvcapCx2PT4GqvFx557rBaXd81hs5hxfh+Txdoj
         d9ktll6/yGRx8ZSrxe3GFWwWrXuPsFscftPOavHv2kYWB2GPNfPWMHq8v9HK7rFpVSebx+Yl
-        9R4H3+1h8ujbsorR4/MmuQD2KC6blNSczLLUIn27BK6MyadiC+5xVLRPv8bewLiWvYuRk0NC
-        wETi+4ULLCC2kMAKRonDv126GLmA7C+MEje2PmOGcD4zSuzd+YEFpuNM9z5GiMRyRonj308x
-        Q7SDtFxz6GLk4GAT0JPYsaoQJCwisIRR4sjPJJB6ZoGbTBJ7nuxkBUkICyRI/Jh0HayXRUBV
-        4v/UzWALeAXsJe7P2MUKsUxeYvWGA2A1nEDxn9MusEHEL7FLNL0UhrBdJLZsewFVLyzx6vgW
-        qNdkJE5P7oE6uliioXchI4RdI/G4fy5UjbXE4eMXWUFuZhbQlFi/Sx8i7CixduZzZpCwhACf
-        xI23giBhZiBz0rbpUGFeiY42IYhqDYktPReYIGwxieVrpkEN95BYu62bBRJSkxglXv87wTaB
-        UX4WwrIFjIyrGMVTS4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxAlPU6X/Hv+5g3Pcn6RCjAAej
-        Eg+vQ4p2rBBrYllxZe4hRgkOZiURXtuvQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK81QwPooUE
-        0hNLUrNTUwtSi2CyTBycUg2M607s4+VMtDu1ZNfxXYY/bsRM1dR9G2Ndyv/kFJ/ijoyZIp5q
-        vxPSnsowqu1/O/PXL9cjXs+FPixu2pKqfin4m2jUpQnMD1PuMaySvu+dsHtXQeS/HwUTvS9N
-        afz/+rBUsCPzhEXJvYZOch8lbLcvaeR9GtWrf+308u33zi5hsk8WcgjlOWC2TImlOCPRUIu5
-        qDgRAPS7YHxNAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsVy+t/xe7p+pTqxBrumqVrcWneO1WLjjPWs
-        Fte/PGe1mH8EyO1//JrZ4vz5DewWZ5vesFvcapCx2PT4GqvFx557rBaXd81hs5hxfh+Txdoj
-        d9ktll6/yGRx8ZSrxe3GFWwWrXuPsFscftPOavHv2kYWB2GPNfPWMHq8v9HK7rFpVSebx+Yl
-        9R4H3+1h8ujbsorR4/MmuQD2KD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1Ml
-        fTublNSczLLUIn27BL2MyadiC+5xVLRPv8bewLiWvYuRk0NCwETiTPc+RhBbSGApo8TRdxYQ
-        cTGJSfu2Q9UIS/y51sXWxcgFVPOJUaL77VmWLkYODjYBPYkdqwpBakQEVjBKTD7hDVLDLPCa
-        SeLI0XesIAlhgTiJqQdOMYHYLAKqEv+nbmYBsXkF7CXuz9jFCrFAXmL1hgPMIDYnUPzntAts
-        EAfZSSw++pNpAiPfAkaGVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIFxs+3Yzy07GLveBR9i
-        FOBgVOLhdUjRjhViTSwrrsw9xCjBwawkwmv7FSjEm5JYWZValB9fVJqTWnyI0RToqInMUqLJ
-        +cCYziuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwJj8uevtqdXP
-        t1TW7g6buXvx+bm/3GQcnxy878epvLPUo9ec/dE/rpssjU5qyVyLAuayP5RYvfmNobFat8Ll
-        VzyX3TeesvRQefTUUeYmy7owz7lPVoeXcf2228V//d7+g4Jflm9mvKkZ8uzUeY5tOTE/tZju
-        qhtt+cBVzquRH6XB0v9wk2gdv7wSS3FGoqEWc1FxIgCMVJuvsQIAAA==
-X-CMS-MailID: 20190715124502eucas1p1b795c100232b405070f4700e3ca6130b
+        9R4H3+1h8ujbsorR4/MmuQD2KC6blNSczLLUIn27BK6Ms+deMxc0clRMW7qHpYHxAVsXIyeH
+        hICJxNuVW5m7GLk4hARWMErcuXqVCcL5wiix98dFqMxnRonXBy8zw7Q0bL4JVbWcUWLjlFfs
+        cC1bP68FquLgYBPQk9ixqhCkQURgCaPEkZ9JIDXMAjeZJPY82ckKkhAWiJf4/OEsE4jNIqAq
+        sft0NwuIzStgL9G2ewI7xDZ5idUbDoBt5gSK/5x2gQ1kkITAOXaJzvnroU5ykZh0YDIThC0s
+        8er4FqhmGYnTk3tYIOxiiYbehYwQdo3E4/65UDXWEoePX2QFOZpZQFNi/S59iLCjxPquGWBh
+        CQE+iRtvBUHCzEDmpG3TmSHCvBIdbUIQ1RoSW3ouQB0gJrF8zTSo4R4SS/69hgbPJEaJbZ1z
+        WScwys9CWLaAkXEVo3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYKo6/e/4px2MXy8lHWIU
+        4GBU4uF1SNGOFWJNLCuuzD3EKMHBrCTCa/sVKMSbklhZlVqUH19UmpNafIhRmoNFSZy3muFB
+        tJBAemJJanZqakFqEUyWiYNTqoHRxVq7JrT9TDf7vxS76bN3b6twzHx78OTNEouItRrz5Z45
+        FlT+nheV3Vf42eFBkOHXl+UHsnxawuZbtYWceP06ZuvSgv71fkvyZv297pUpd+yBX4HyPeGT
+        MRY7PL/9ZGqN3MMXePk558Fs67Itybm2MYKtsh9aMsI9RF34rdj6P/gq6SZNDFBiKc5INNRi
+        LipOBAAgtkkqUQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsVy+t/xe7qBpTqxBh2/RCxurTvHarFxxnpW
+        i+tfnrNazD8C5PY/fs1scf78BnaLs01v2C1uNchYbHp8jdXiY889VovLu+awWcw4v4/JYu2R
+        u+wWS69fZLK4eMrV4nbjCjaL1r1H2C0Ov2lntfh3bSOLg7DHmnlrGD3e32hl99i0qpPNY/OS
+        eo+D7/YwefRtWcXo8XmTXAB7lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamS
+        vp1NSmpOZllqkb5dgl7G2XOvmQsaOSqmLd3D0sD4gK2LkZNDQsBEomHzTSYQW0hgKaPEl3Ma
+        EHExiUn7trND2MISf651AdVzAdV8YpT4tvI0UIKDg01AT2LHqkKQGhGBFYwSk094g9QwC7xm
+        kjhy9B0rSEJYIFbi4IIfYMtYBFQldp/uZgGxeQXsJdp2T4BaIC+xesMBZhCbEyj+c9oFNoiD
+        7CQWH/3JNIGRbwEjwypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAyNl27OeWHYxd74IPMQpw
+        MCrx8DqkaMcKsSaWFVfmHmKU4GBWEuG1/QoU4k1JrKxKLcqPLyrNSS0+xGgKdNREZinR5Hxg
+        VOeVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamAM8ir2cImTDa+z
+        aKm02z9RL+dS6vKd320ZFQ5UO16zFU1/eshsvwCzyzwXnslPTROuWd6bX6r/NOsXy2ShhJrG
+        F/WrlTnzNlWtuSXUG2/64ePZla/nTZj3bMduFwOJbCdlu7qwF+pqX2L/CwUevqU4aRbvQR8D
+        +zqjW1bb6yYWOwuvOynR81KJpTgj0VCLuag4EQBKudLKsgIAAA==
+X-CMS-MailID: 20190715124505eucas1p14e68a537cb53cda2cfd832e59425cd25
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190715124502eucas1p1b795c100232b405070f4700e3ca6130b
+X-RootMTR: 20190715124505eucas1p14e68a537cb53cda2cfd832e59425cd25
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190715124502eucas1p1b795c100232b405070f4700e3ca6130b
+X-CMS-RootMailID: 20190715124505eucas1p14e68a537cb53cda2cfd832e59425cd25
 References: <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <CGME20190715124502eucas1p1b795c100232b405070f4700e3ca6130b@eucas1p1.samsung.com>
+        <CGME20190715124505eucas1p14e68a537cb53cda2cfd832e59425cd25@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes speed and parent of NoC WCORE bus to 400MHz. The clock
-is now attached to a branch were the root is the DPLL which speed is set to
-1200MHz. The OPPs are aligned to this rate accordingly.
+The FSYS2 bus OPP table has been aligned to the new parent rate.  The OPP
+table is also shared with bus_fsys. This patch sets the proper parent and
+picks the init frequency before the devfreq governor starts working. It
+sets also parent rate (DPLL to 1200MHz).
 
 Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 ---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index 25d95de15c9b..aaf18653d8ac 100644
+index 6a82dd175b8a..0e71ba64a4fe 100644
 --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
 +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -46,6 +46,13 @@
- 			<&nocp_mem1_0>, <&nocp_mem1_1>;
- 	vdd-supply = <&buck3_reg>;
- 	exynos,saturation-ratio = <100>;
-+	assigned-clocks = <&clock CLK_MOUT_ACLK400_WCORE>,
-+			  <&clock CLK_MOUT_SW_ACLK400_WCORE>,
-+			  <&clock CLK_DOUT_ACLK400_WCORE>,
+@@ -82,6 +82,11 @@
+ 
+ &bus_fsys2 {
+ 	devfreq = <&bus_wcore>;
++	assigned-clocks = <&clock CLK_MOUT_ACLK200_FSYS2>,
++			  <&clock CLK_DOUT_ACLK200_FSYS2>,
 +			  <&clock CLK_FOUT_DPLL>;
-+	assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>,
-+				 <&clock CLK_DOUT_ACLK400_WCORE>;
-+	assigned-clock-rates = <0>, <0>, <400000000>, <1200000000>;
++	assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>;
++	assigned-clock-rates = <0>, <240000000>,<1200000000>;
  	status = "okay";
  };
  
