@@ -2,80 +2,117 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E92C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D959C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C2C2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BAE2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qenKTZRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbfGOKBY (ORCPT
+        id S1729751AbfGOKBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:01:24 -0400
-Received: from gate.crashing.org ([63.228.1.57]:50397 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729518AbfGOKBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:01:24 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6FA15xe030672;
-        Mon, 15 Jul 2019 05:01:06 -0500
-Message-ID: <c82b6aa094f1681272ec1e2a55e47758c435f784.camel@kernel.crashing.org>
-Subject: Re: [PATCH] nvme: Add support for Apple 2018+ models
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Paul Pawlowski <paul@mrarm.io>
-Date:   Mon, 15 Jul 2019 20:01:05 +1000
-In-Reply-To: <4caeb954b2fa91445e02bac7ac9610ca886b4dd8.camel@redhat.com>
-References: <71b009057582cd9c82cff2b45bc1af846408bcf7.camel@kernel.crashing.org>
-         <20190715081041.GB31791@lst.de>
-         <c088cb27f99adbcc1f8faf8e86167903f11593b8.camel@kernel.crashing.org>
-         <25c3813ab1c2943658d7e79756803801b14a34db.camel@kernel.crashing.org>
-         <4caeb954b2fa91445e02bac7ac9610ca886b4dd8.camel@redhat.com>
+        Mon, 15 Jul 2019 06:01:48 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37836 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbfGOKBr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:01:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id q22so33111724iog.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 03:01:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r72g4AHaLYsLu+ECpLbOshR1f0RyFtH3KsKDeo19VX4=;
+        b=qenKTZRrwpA3m+Rvbzx7aJwKJ3c6QULx3EbIlYCuUP6y9OJLFfkELnN0GQ/XE2odVL
+         yIB1XSFQnovfhkxpEqaRycjKX3caAYS2FtuVD0eC3YW+pBSrpR/vg8NFSVCrob/4sDGj
+         LPWYOFOa7kC0B21jLpmaGjoKHqFxCK/v2wJUrYC1pqHugJSepfhUAcl//vuILlwm5QPs
+         nSJSnlUEJq1TIeDGRQf9NTu9jzN2mWakvrHwjiZEIUN6bKkJX71XJKOgOG9neBPMM0MR
+         14W9NSRp6O54zRfMj+LUNzA9jNTKwD4Uh4bEP0ZUzkFyhvTDcW4gooJN0X5JFPvNt5Ht
+         PNQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r72g4AHaLYsLu+ECpLbOshR1f0RyFtH3KsKDeo19VX4=;
+        b=FNJtM0u2NaFx1E8SExst1jsTjrQTv9rQoElDYQ4wCXgpobNuaTUzaYERpXStoEDVo9
+         iIjdJpn/FGaNGGPAAmHxxOihXsLvmcbQ/8SpLvLe8OOSffXvbSrjVSuTdPGii0HPwq4S
+         h7ZPNGhu8rk0TwmYMaVmYc2SoNNMLjQvz/o1nQ8AwT+tpdZuMdgzP91vqTDfCX9SjHBX
+         iyiKnq+7yt4W7rpWi4A8HYmxGHWxniI+DLyLGeAYpgDZe7tnDpEeGwhHIP8nc6uCh8SJ
+         davK5T6+mKzo1ASNyIfYg718fXbDSvSxa6IGhH9LOvSMqKvSen+R2PAxCRKseqcUTVZo
+         HDGQ==
+X-Gm-Message-State: APjAAAUORad3vh6epZqok9Zi1911L4qpekO0BbhsefdkOhbiSTIymD/R
+        HdUFoHqh2dPk4tudJ5yAHwOHFsBr4z1cry5msg==
+X-Google-Smtp-Source: APXvYqxSCDk+fzKKVONVjrymqYcqpaN4MvCEPmUU7sSzkNI6vIArrmTZCtALv27QP/IiPqc7dmvqWYaI0ShuCCiXrKw=
+X-Received: by 2002:a5d:9f07:: with SMTP id q7mr22524327iot.21.1563184907080;
+ Mon, 15 Jul 2019 03:01:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1562734889.git.joe@perches.com> <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
+In-Reply-To: <d6a9d49c9837d38816b71d783f5aed7235e8ca94.1562734889.git.joe@perches.com>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Mon, 15 Jul 2019 13:00:59 +0300
+Message-ID: <CAKKbWA4caPMN=h_6bxQ-s9ga+snwsBsMsT05t4vyHWYpLnSH8w@mail.gmail.com>
+Subject: Re: [PATCH 02/12] clocksource/drivers/npcm: Fix misuse of GENMASK macro
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-15 at 12:28 +0300, Maxim Levitsky wrote:
-> 
-> To be honest, the spec explicitly states that minimum submission queue entry size is 64 
-> and minimum completion entry size should be is 16 bytes for NVM command set:
-> 
-> "Bits 3:0 define the required (i.e., minimum) Submission Queue Entry size when
-> using the NVM Command Set. This is the minimum entry size that may be used.
-> The value is in bytes and is reported as a power of two (2^n). The required value
-> shall be 6, corresponding to 64."
+Hi,
+I noticed that this is totaly wrong, so I will fix here.
+If you wan I will put a separate patch.
 
-Yes, I saw that :-) Apple seems to ignore this and CC:IOSQES and
-effectively hard wire a size of 7 (128 bytes) for the IO queue.
+On Wed, Jul 10, 2019 at 8:04 AM Joe Perches <joe@perches.com> wrote:
+>
+> Arguments are supposed to be ordered high then low.
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/clocksource/timer-npcm7xx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
+> index 7a9bb5532d99..8a30da7f083b 100644
+> --- a/drivers/clocksource/timer-npcm7xx.c
+> +++ b/drivers/clocksource/timer-npcm7xx.c
+> @@ -32,7 +32,7 @@
+>  #define NPCM7XX_Tx_INTEN               BIT(29)
+>  #define NPCM7XX_Tx_COUNTEN             BIT(30)
+>  #define NPCM7XX_Tx_ONESHOT             0x0
+> -#define NPCM7XX_Tx_OPER                        GENMASK(3, 27)
+> +#define NPCM7XX_Tx_OPER                        GENMASK(27, 3)
 
-> "Bits 3:0 define the required (i.e., minimum) Completion Queue entry size when using
-> the NVM Command Set. This is the minimum entry size that may be used. The value
-> is in bytes and is reported as a power of two (2^n). The required value shall be 4,
-> corresponding to 16."
-> 
-> Pages 136/137, NVME 1.3d.
-> 
-> In theory the spec allows for non NVM IO command set, and for which the sq/cq entry sizes can be of any size,
-> as indicated in SQES/CQES and set in CC.IOCQES/CC.IOSQES, but than most of the spec won't apply to it.
-> 
-> 
-> Also FYI, values in CC (IOCQES/IOSQES) are for I/O queues, which kind of implies that admin queue,
-> should always use the 64/16 bytes entries, although I haven't found any explicit mention of that.
+It should be:
++#define NPCM7XX_Tx_OPER                        GENMASK(28, 27)
+but I need to do another change.
 
-Right, and it does on the Apple HW as well.
-
-Cheers,
-Ben.
+>  #define NPCM7XX_Tx_MIN_PRESCALE                0x1
+>  #define NPCM7XX_Tx_TDR_MASK_BITS       24
+>  #define NPCM7XX_Tx_MAX_CNT             0xFFFFFF
+> --
+> 2.15.0
+>
 
 
+-- 
+Regards,
+Avi
