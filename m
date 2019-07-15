@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EDBC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE3AC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C01920449
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D13920449
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563225254;
-	bh=V2AOtZAj5hgsl5MN+QbfZVB9JIFthfWkj8+jM/g6tMI=;
+	s=default; t=1563225258;
+	bh=Olz0CnjJxMfBl4EwOx1kmCz81KW4dHyIn0WSOOAwvgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTLdLPi/RfhU588XC/ggcKR5FuLunv8JBftjRAJeMVGDfqyB7EQiEdviLjFJYKZzt
-	 3BEIWGqdx8QNTXqHbto9PyDpDGw7PCUwc78QbvM3Qfi64TJflV6sMkvKWWB6pvrW1F
-	 Kn5qd3c9g8QiXqczD1Jr3OHvIcDaa5FM9FCaKPco=
+	b=AbuM7swXzK1uJugZP1tRo6155MhHHH6MVESU18+jqCrtuYiSnFY5B7vurpE5SFaUB
+	 Mi/+nFQB6GfT2XWVITt1aTRi3BQZ7GP/l9JpViwx8iL/Pur/7fNPGoEW9ftnVW1HjV
+	 jAaWguv2SindtJQRJvojbmTGvXBCBQd4s2YTOdns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbfGOVOM (ORCPT
+        id S2387418AbfGOVOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45022 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 17:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbfGOVOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:14:11 -0400
+        id S1731486AbfGOVOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:14:16 -0400
 Received: from quaco.ghostprotocols.net (179-240-129-12.3g.claro.net.br [179.240.129.12])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 847922171F;
-        Mon, 15 Jul 2019 21:14:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21F121721;
+        Mon, 15 Jul 2019 21:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563225249;
-        bh=V2AOtZAj5hgsl5MN+QbfZVB9JIFthfWkj8+jM/g6tMI=;
+        s=default; t=1563225254;
+        bh=Olz0CnjJxMfBl4EwOx1kmCz81KW4dHyIn0WSOOAwvgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LZN/4Y6rQGi4ASN4yAhjaWjXP9xYN/3fHt39BT2HJPQJfW4jjs2c1MVyYWNCftz67
-         +UYhzp+MZ0IT3ophHPCw0u31ppmixW38W/L/cJJGP3mDCeuimLx5dzN14gzuwa4YxK
-         DqSJgCMG5WkzEGt4+4EPVQvruc18/nFyWtjooooc=
+        b=RpECbgyMvWNMoO3ETCCfRTKBEInhB1YQhjeUkcnA8vmIYOrq5hoMiYvdeDWpGKdbp
+         sMUa0SGyz+iqnBIYqjYu89tC9Xf4/TOFv5q1ssizRZ246p9U7RzDJAnxEoz0g8hQCW
+         zGWQKAeN88rraVXXasssgg7toomYMf7P7xySXKb8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,11 +46,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 23/28] perf scripts python: export-to-sqlite.py: Export switch events
-Date:   Mon, 15 Jul 2019 18:11:55 -0300
-Message-Id: <20190715211200.10984-24-acme@kernel.org>
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 24/28] perf scripts python: export-to-postgresql.py: Export switch events
+Date:   Mon, 15 Jul 2019 18:11:56 -0300
+Message-Id: <20190715211200.10984-25-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190715211200.10984-1-acme@kernel.org>
 References: <20190715211200.10984-1-acme@kernel.org>
@@ -64,41 +64,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Adrian Hunter <adrian.hunter@intel.com>
 
 Export switch events to a new table 'context_switches' and create a view
-'context_switches_view'. The table and view will show automatically in
-the exported-sql-viewer.py script.
+'context_switches_view'. The table and view will show automatically in the
+exported-sql-viewer.py script.
 
 If the table ends up empty, then it and the view are dropped.
 
-Committer testing:
-
-Use the exported-sql-viewer.py and look at "Tables" ->
-"context_switches":
-
-  id  machine_id  time             cpu  thread_out_id  comm_out_id  thread_in_id  comm_in_id  flags
-  1   1           187836111885918  7    1              1            2             2           3
-  2   1           187836111889369  7    1              1            2             2           0
-  3   1           187836112464618  7    2              3            1             1           1
-  4   1           187836112465511  7    2              3            1             1           0
-
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-21-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190710085810.1650-22-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-sqlite.py | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ .../scripts/python/export-to-postgresql.py    | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index 9156f6a1e5f0..8043a7272a56 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -306,6 +306,17 @@ do_query(query, 'CREATE TABLE pwrx ('
- 		'last_cstate	integer,'
- 		'wake_reason	integer)')
+diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+index 13205e4e5b3b..7bd73a904b4e 100644
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -482,6 +482,17 @@ do_query(query, 'CREATE TABLE pwrx ('
+ 	'last_cstate	integer,'
+ 	'wake_reason	integer)')
  
 +do_query(query, 'CREATE TABLE context_switches ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
++		'id		bigint		NOT NULL,'
 +		'machine_id	bigint,'
 +		'time		bigint,'
 +		'cpu		integer,'
@@ -108,12 +96,12 @@ index 9156f6a1e5f0..8043a7272a56 100644
 +		'comm_in_id	bigint,'
 +		'flags		integer)')
 +
- # printf was added to sqlite in version 3.8.3
- sqlite_has_printf = False
- try:
-@@ -530,6 +541,29 @@ do_query(query, 'CREATE VIEW power_events_view AS '
- 	' INNER JOIN selected_events ON selected_events.id = evsel_id'
- 	' WHERE selected_events.name IN (\'cbr\',\'mwait\',\'exstop\',\'pwre\',\'pwrx\')')
+ do_query(query, 'CREATE VIEW machines_view AS '
+ 	'SELECT '
+ 		'id,'
+@@ -695,6 +706,29 @@ do_query(query, 'CREATE VIEW power_events_view AS '
+ 	' INNER JOIN selected_events ON selected_events.id = samples.evsel_id'
+ 	' ORDER BY samples.id')
  
 +do_query(query, 'CREATE VIEW context_switches_view AS '
 +	'SELECT '
@@ -130,7 +118,7 @@ index 9156f6a1e5f0..8043a7272a56 100644
 +		'CASE	  WHEN context_switches.flags = 0 THEN \'in\''
 +			' WHEN context_switches.flags = 1 THEN \'out\''
 +			' WHEN context_switches.flags = 3 THEN \'out preempt\''
-+			' ELSE context_switches.flags '
++			' ELSE CAST ( context_switches.flags AS VARCHAR(11) )'
 +		'END AS flags'
 +	' FROM context_switches'
 +	' INNER JOIN threads AS th_out ON th_out.id   = context_switches.thread_out_id'
@@ -138,19 +126,55 @@ index 9156f6a1e5f0..8043a7272a56 100644
 +	' INNER JOIN comms AS comm_out ON comm_out.id = context_switches.comm_out_id'
 +	' INNER JOIN comms AS comm_in  ON comm_in.id  = context_switches.comm_in_id')
 +
- do_query(query, 'END TRANSACTION')
+ file_header = struct.pack("!11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
+ file_trailer = b"\377\377"
  
- evsel_query = QSqlQuery(db)
-@@ -571,6 +605,8 @@ exstop_query = QSqlQuery(db)
- exstop_query.prepare("INSERT INTO exstop VALUES (?, ?)")
- pwrx_query = QSqlQuery(db)
- pwrx_query.prepare("INSERT INTO pwrx VALUES (?, ?, ?, ?)")
-+context_switch_query = QSqlQuery(db)
-+context_switch_query.prepare("INSERT INTO context_switches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+@@ -759,6 +793,7 @@ mwait_file		= open_output_file("mwait_table.bin")
+ pwre_file		= open_output_file("pwre_table.bin")
+ exstop_file		= open_output_file("exstop_table.bin")
+ pwrx_file		= open_output_file("pwrx_table.bin")
++context_switches_file	= open_output_file("context_switches_table.bin")
  
  def trace_begin():
- 	printdate("Writing records...")
-@@ -620,6 +656,8 @@ def trace_end():
+ 	printdate("Writing to intermediate files...")
+@@ -807,6 +842,7 @@ def trace_end():
+ 	copy_output_file(pwre_file,		"pwre")
+ 	copy_output_file(exstop_file,		"exstop")
+ 	copy_output_file(pwrx_file,		"pwrx")
++	copy_output_file(context_switches_file,	"context_switches")
+ 
+ 	printdate("Removing intermediate files...")
+ 	remove_output_file(evsel_file)
+@@ -828,6 +864,7 @@ def trace_end():
+ 	remove_output_file(pwre_file)
+ 	remove_output_file(exstop_file)
+ 	remove_output_file(pwrx_file)
++	remove_output_file(context_switches_file)
+ 	os.rmdir(output_dir_name)
+ 	printdate("Adding primary keys")
+ 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
+@@ -849,6 +886,7 @@ def trace_end():
+ 	do_query(query, 'ALTER TABLE pwre            ADD PRIMARY KEY (id)')
+ 	do_query(query, 'ALTER TABLE exstop          ADD PRIMARY KEY (id)')
+ 	do_query(query, 'ALTER TABLE pwrx            ADD PRIMARY KEY (id)')
++	do_query(query, 'ALTER TABLE context_switches ADD PRIMARY KEY (id)')
+ 
+ 	printdate("Adding foreign keys")
+ 	do_query(query, 'ALTER TABLE threads '
+@@ -900,6 +938,12 @@ def trace_end():
+ 					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
+ 	do_query(query, 'ALTER TABLE  pwrx '
+ 					'ADD CONSTRAINT idfk        FOREIGN KEY (id)           REFERENCES samples   (id)')
++	do_query(query, 'ALTER TABLE  context_switches '
++					'ADD CONSTRAINT machinefk   FOREIGN KEY (machine_id)    REFERENCES machines (id),'
++					'ADD CONSTRAINT toutfk      FOREIGN KEY (thread_out_id) REFERENCES threads  (id),'
++					'ADD CONSTRAINT tinfk       FOREIGN KEY (thread_in_id)  REFERENCES threads  (id),'
++					'ADD CONSTRAINT coutfk      FOREIGN KEY (comm_out_id)   REFERENCES comms    (id),'
++					'ADD CONSTRAINT cinfk       FOREIGN KEY (comm_in_id)    REFERENCES comms    (id)')
+ 
+ 	printdate("Dropping unused tables")
+ 	if is_table_empty("ptwrite"):
+@@ -912,6 +956,8 @@ def trace_end():
  		drop("pwrx")
  		if is_table_empty("cbr"):
  			drop("cbr")
@@ -159,13 +183,15 @@ index 9156f6a1e5f0..8043a7272a56 100644
  
  	if (unhandled_count):
  		printdate("Warning: ", unhandled_count, " unhandled events")
-@@ -753,3 +791,6 @@ def synth_data(id, config, raw_buf, *x):
+@@ -1058,3 +1104,8 @@ def synth_data(id, config, raw_buf, *x):
  		pwrx(id, raw_buf)
  	elif config == 5:
  		cbr(id, raw_buf)
 +
-+def context_switch_table(*x):
-+	bind_exec(context_switch_query, 9, x)
++def context_switch_table(id, machine_id, time, cpu, thread_out_id, comm_out_id, thread_in_id, comm_in_id, flags, *x):
++	fmt = "!hiqiqiqiiiqiqiqiqii"
++	value = struct.pack(fmt, 9, 8, id, 8, machine_id, 8, time, 4, cpu, 8, thread_out_id, 8, comm_out_id, 8, thread_in_id, 8, comm_in_id, 4, flags)
++	context_switches_file.write(value)
 -- 
 2.21.0
 
