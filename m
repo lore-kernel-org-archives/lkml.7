@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74486C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9244FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F462204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69554217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201266;
-	bh=g6FeDpZMbvqQEdTPMB47Po8DSAzxTD5qheByBCtU7LE=;
+	s=default; t=1563201270;
+	bh=ci51GlKlB0gWk2OYWZkEr7WOj9TcrELnUfardrK6y68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3s4tDVqUR8du23Tf9ljCHDX8tzE33x2ljfZL+TFcu3O8/KyGOFNkM03T8FkiqkUP
-	 zjj1O82IapWxJlfxapiWGRCXpMr56Bf7QkGCyabJTXewDp/SmAVOR1vLh+ZwV4bEjF
-	 501J0roDb4gidx/5tBrbbNTYCGManCxcWd02xhJc=
+	b=wmdYdpcaGdWx16GQid4/fWcMK4+h5NbUc47CqdzVvKFZ9ekAN1HX+iq3FaowV6qMZ
+	 dV/mi6BvuUjtu/4/U0ltI1q+38PM8UOLLHgh85AvIfrBpLg8IIMxSYLfSK0Q+UmQpV
+	 Jd2+u4bmsAOSkA0BG+A1iLTZMM1z3gVsPKyA9oBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392015AbfGOOeY (ORCPT
+        id S2392034AbfGOOe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:34:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391815AbfGOOeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:34:18 -0400
+        id S2391048AbfGOOeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:34:25 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03FC9204FD;
-        Mon, 15 Jul 2019 14:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81A9D204FD;
+        Mon, 15 Jul 2019 14:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201258;
-        bh=g6FeDpZMbvqQEdTPMB47Po8DSAzxTD5qheByBCtU7LE=;
+        s=default; t=1563201264;
+        bh=ci51GlKlB0gWk2OYWZkEr7WOj9TcrELnUfardrK6y68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwIaSa69CwnhGgInY+Ncp5zU+c37/TD6N6EQWTKbRWoFgH0uuZ441fJz5WeOjVX86
-         S6wwdetQ3m7ObPoLXMz7YcS8O0LSy6iDhIpZpNmaMAjctMQDLSZ6i2UixhOGQdC+lX
-         PDPMyMY30aF+D2+doDGdzbebOB32tE0bqSjYoViw=
+        b=HHCMprupUmuzrBY7B+T7CpZNy1P1pQuccYbg94XPC4tz2ruA2mM60CT3+M65uxowM
+         UsMWAUH4wkpwZeDTcgZ/R2OMqLMfUDdOdoKJy+pcfZrmIFuMdaI3KM/OVTo+cm7Er4
+         V6g0uy7SgzxTco91aPxri5DrHWSGkgKmg6Bj83bk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Gong <wgong@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 091/105] ath10k: destroy sdio workqueue while remove sdio module
-Date:   Mon, 15 Jul 2019 10:28:25 -0400
-Message-Id: <20190715142839.9896-91-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 092/105] iwlwifi: mvm: Drop large non sta frames
+Date:   Mon, 15 Jul 2019 10:28:26 -0400
+Message-Id: <20190715142839.9896-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -59,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Gong <wgong@codeaurora.org>
+From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-[ Upstream commit 3ed39f8e747a7aafeec07bb244f2c3a1bdca5730 ]
+[ Upstream commit ac70499ee97231a418dc1a4d6c9dc102e8f64631 ]
 
-The workqueue need to flush and destory while remove sdio module,
-otherwise it will have thread which is not destory after remove
-sdio modules.
+In some buggy scenarios we could possible attempt to transmit frames larger
+than maximum MSDU size. Since our devices don't know how to handle this,
+it may result in asserts, hangs etc.
+This can happen, for example, when we receive a large multicast frame
+and try to transmit it back to the air in AP mode.
+Since in a legal scenario this should never happen, drop such frames and
+warn about it.
 
-Tested with QCA6174 SDIO with firmware
-WLAN.RMH.4.4.1-00007-QCARMSWP-1.
-
-Signed-off-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 3 +++
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index c6440d28ab48..0a1248ebccf5 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -2076,6 +2076,9 @@ static void ath10k_sdio_remove(struct sdio_func *func)
- 	cancel_work_sync(&ar_sdio->wr_async_work);
- 	ath10k_core_unregister(ar);
- 	ath10k_core_destroy(ar);
-+
-+	flush_workqueue(ar_sdio->workqueue);
-+	destroy_workqueue(ar_sdio->workqueue);
- }
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 62a6e293cf12..f0f2be432d20 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -621,6 +621,9 @@ int iwl_mvm_tx_skb_non_sta(struct iwl_mvm *mvm, struct sk_buff *skb)
  
- static const struct sdio_device_id ath10k_sdio_devices[] = {
+ 	memcpy(&info, skb->cb, sizeof(info));
+ 
++	if (WARN_ON_ONCE(skb->len > IEEE80211_MAX_DATA_LEN + hdrlen))
++		return -1;
++
+ 	if (WARN_ON_ONCE(info.flags & IEEE80211_TX_CTL_AMPDU))
+ 		return -1;
+ 
 -- 
 2.20.1
 
