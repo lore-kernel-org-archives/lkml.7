@@ -2,161 +2,131 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E868C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120DDC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC892067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QeLmVu2E"
+	by mail.kernel.org (Postfix) with ESMTP id E62FF2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbfGONnN (ORCPT
+        id S1730836AbfGONnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:43:13 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46381 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfGONnM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:43:12 -0400
-Received: by mail-qk1-f193.google.com with SMTP id r4so11552765qkm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 06:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=acQPukXBvJBOs+Csp0bFQoolQgtDonf3OOjuV7K26cg=;
-        b=QeLmVu2Ec51StMehpBdqKOJcnc6809a0Te+oZDlReyMcQ2425Mn0AOFLE+qo8qe0SH
-         pIxNBk0iiouIk9w9HzQDSQZ/hBwn0DaoOA8Og8Ud4c+f7Z52fFP86cGKWR6pUwnF2pWN
-         iw09VXz+M4RzW9vAWjUOcR5OMTl8OiQo/ODo2zkGBDDqC0ZQQRQ2Y7HF/+xixGVnyOK9
-         qIbyU4jBa+UHKQh0Fze50N9G5ovvFRGlfuUT6AbLFPJTy9XAD/NLGdX5GuALxypgs/Ug
-         Nvqbef8NON8FPuaVLwfFj6rRfEL+wwo1gAiuO+2JEs1EE3+nTAO0h0KqQT/ie5lGJ6YP
-         /Qmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=acQPukXBvJBOs+Csp0bFQoolQgtDonf3OOjuV7K26cg=;
-        b=tFNRvYcj+I43H4AhKr9Kbag93bogHaBDOpWRkskHr8aJKcOcuM8LVQAM9fwD83mJ/A
-         9UOBVfCnwHFXMRrCH1slo2SvcpYDiY79E/HYgjZCu/XMbG76p+ohjeBiUENWuZaoaLrp
-         GJVnessgNlmBgmYGdqkjeC+OlbF/zvnfneozhyoO3/xQc+QNP6yCg40nqwvXnJCgeubr
-         P0HAmnhhH/aVpFC2o25N/Zr/rBmA8ZrJsE+bt8h6oarP4RtxH3ATakfGhIQm0c+6zZyx
-         z9DpuxBs7kDv4cjIqwuWfoKBJ67bEYydKB7H21ngpBxiqHs0dNcMEJK3BRLqxUMnOrbi
-         8ZjA==
-X-Gm-Message-State: APjAAAVCbEU07SjQHZXVPRhgcjVO+wOBby1bIUFGV3kAleensNzzt9oG
-        4z30XyvdtSXsvzpzVL9x0rnx3g==
-X-Google-Smtp-Source: APXvYqzvUmAodjBwJQuKPzE2kilUHmZpzOUfF0Z9D+86p7J2KP5R2wAj5e1shFThrzBlDC1/gmrr2g==
-X-Received: by 2002:a37:a010:: with SMTP id j16mr17159282qke.152.1563198191721;
-        Mon, 15 Jul 2019 06:43:11 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id s11sm7571874qkm.51.2019.07.15.06.43.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 06:43:10 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     emil.l.velikov@gmail.com
-Cc:     maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] gpu/drm: fix a few kernel-doc "/**" mark warnings
-Date:   Mon, 15 Jul 2019 09:42:53 -0400
-Message-Id: <1563198173-7317-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 15 Jul 2019 09:43:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:49374 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730286AbfGONnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:43:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 720C228;
+        Mon, 15 Jul 2019 06:43:20 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77153F71F;
+        Mon, 15 Jul 2019 06:43:17 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/3] Support CPU hotplug for ARM64
+To:     Maran Wilson <maran.wilson@oracle.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        guohanjun@huawei.com, john.garry@huawei.com, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        huawei.libin@huawei.com, jonathan.cameron@huawei.com,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
+ <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
+ <51cc9a5c-9968-c4b1-0bc7-870f44a3a761@oracle.com>
+ <06ef13e1-fffe-d4a2-721e-f666f331fb3c@arm.com>
+ <d65c2aca-470f-177d-57cf-6375c989054c@oracle.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <5f1cba3d-d9aa-b17c-8e10-721ac69b921f@arm.com>
+Date:   Mon, 15 Jul 2019 14:43:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <d65c2aca-470f-177d-57cf-6375c989054c@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The opening comment mark "/**" is reserved for kernel-doc comments, so
-it will generate warnings for comments that are not kernel-doc with
-"make W=1". For example,
+Hi Maran,
 
-drivers/gpu/drm/drm_memory.c:2: warning: Cannot understand  * \file
-drm_memory.c
+On 10/07/2019 17:05, Maran Wilson wrote:
+> On 7/10/2019 2:15 AM, Marc Zyngier wrote:
+>> On 09/07/2019 20:06, Maran Wilson wrote:
+>>> On 7/5/2019 3:12 AM, James Morse wrote:
+>>>> On 29/06/2019 03:42, Xiongfeng Wang wrote:
+>>>>> This patchset mark all the GICC node in MADT as possible CPUs even though it
+>>>>> is disabled. But only those enabled GICC node are marked as present CPUs.
+>>>>> So that kernel will initialize some CPU related data structure in advance before
+>>>>> the CPU is actually hot added into the system. This patchset also implement
+>>>>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
+>>>>> needed to enable CPU hotplug.
+>>>>>
+>>>>> To support CPU hotplug, we need to add all the possible GICC node in MADT
+>>>>> including those CPUs that are not present but may be hot added later. Those
+>>>>> CPUs are marked as disabled in GICC nodes.
+>>>> ... what do you need this for?
+>>>>
+>>>> (The term cpu-hotplug in the arm world almost never means hot-adding a new package/die to
+>>>> the platform, we usually mean taking CPUs online/offline for power management. e.g.
+>>>> cpuhp_offline_cpu_device())
+>>>>
+>>>> It looks like you're adding support for hot-adding a new package/die to the platform ...
+>>>> but only for virtualisation.
+>>>>
+>>>> I don't see why this is needed for virtualisation. The in-kernel irqchip needs to know
+>>>> these vcpu exist before you can enter the guest for the first time. You can't create them
+>>>> late. At best you're saving the host scheduling a vcpu that is offline. Is this really a
+>>>> problem?
+>>>>
+>>>> If we moved PSCI support to user-space, you could avoid creating host vcpu threads until
+>>>> the guest brings the vcpu online, which would solve that problem, and save the host
+>>>> resources for the thread too. (and its acpi/dt agnostic)
+>>>>
+>>>> I don't see the difference here between booting the guest with 'maxcpus=1', and bringing
+>>>> the vcpu online later. The only real difference seems to be moving the can-be-online
+>>>> policy into the hypervisor/VMM...
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/gpu/drm/drm_agpsupport.c  | 2 +-
- drivers/gpu/drm/drm_dma.c         | 2 +-
- drivers/gpu/drm/drm_legacy_misc.c | 2 +-
- drivers/gpu/drm/drm_lock.c        | 2 +-
- drivers/gpu/drm/drm_memory.c      | 2 +-
- drivers/gpu/drm/drm_scatter.c     | 2 +-
- drivers/gpu/drm/drm_vm.c          | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+>>> Isn't that an important distinction from a cloud service provider's
+>>> perspective?
 
-diff --git a/drivers/gpu/drm/drm_agpsupport.c b/drivers/gpu/drm/drm_agpsupport.c
-index 40fba1c04dfc..ef549c95b0b9 100644
---- a/drivers/gpu/drm/drm_agpsupport.c
-+++ b/drivers/gpu/drm/drm_agpsupport.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_agpsupport.c
-  * DRM support for AGP/GART backend
-  *
-diff --git a/drivers/gpu/drm/drm_dma.c b/drivers/gpu/drm/drm_dma.c
-index 3f83e2ca80ad..cbfaa2eaab00 100644
---- a/drivers/gpu/drm/drm_dma.c
-+++ b/drivers/gpu/drm/drm_dma.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_dma.c
-  * DMA IOCTL and function support
-  *
-diff --git a/drivers/gpu/drm/drm_legacy_misc.c b/drivers/gpu/drm/drm_legacy_misc.c
-index 2fe786839ca8..745eb9939414 100644
---- a/drivers/gpu/drm/drm_legacy_misc.c
-+++ b/drivers/gpu/drm/drm_legacy_misc.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_legacy_misc.c
-  * Misc legacy support functions.
-  *
-diff --git a/drivers/gpu/drm/drm_lock.c b/drivers/gpu/drm/drm_lock.c
-index b70058e77a28..2610bff3d539 100644
---- a/drivers/gpu/drm/drm_lock.c
-+++ b/drivers/gpu/drm/drm_lock.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_lock.c
-  * IOCTLs for locking
-  *
-diff --git a/drivers/gpu/drm/drm_memory.c b/drivers/gpu/drm/drm_memory.c
-index 132fef8ff1b6..d92f24c308a1 100644
---- a/drivers/gpu/drm/drm_memory.c
-+++ b/drivers/gpu/drm/drm_memory.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_memory.c
-  * Memory management wrappers for DRM
-  *
-diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
-index bb829a115fc6..b6d863699d0f 100644
---- a/drivers/gpu/drm/drm_scatter.c
-+++ b/drivers/gpu/drm/drm_scatter.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_scatter.c
-  * IOCTLs to manage scatter/gather memory
-  *
-diff --git a/drivers/gpu/drm/drm_vm.c b/drivers/gpu/drm/drm_vm.c
-index 10cf83d569e1..6c74c68f192a 100644
---- a/drivers/gpu/drm/drm_vm.c
-+++ b/drivers/gpu/drm/drm_vm.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * \file drm_vm.c
-  * Memory mapping for DRM
-  *
--- 
-1.8.3.1
+Host cpu-time is. Describing this as guest vcpu's is a bit weird.
 
+I'd expect the statement be something like "you're paying for 50% of one Xeon v-whatever".
+It shouldn't make a difference if I run 8 vcpus or 2, the amount of cpu-time would still
+be constrained by the cloud provider.
+
+
+>>> As far as I understand it, you also need CPU hotplug capabilities to
+>>> support things like Kata runtime under Kubernetes. i.e. when
+>>> implementing your containers in the form of light weight VMs for the
+>>> additional security ... and the orchestration layer cannot determine
+>>> ahead of time how much CPU/memory resources are going to be needed to
+>>> run the pod(s).
+
+>> Why would it be any different? You can pre-allocate your vcpus, leave
+>> them parked until some external agent decides to signal the container
+>> that it it can use another bunch of CPUs. At that point, the container
+>> must actively boot these vcpus (they aren't going to come up by magic).
+>>
+>> Given that you must have sized your virtual platform to deal with the
+>> maximum set of resources you anticipate (think of the GIC
+>> redistributors, for example), I really wonder what you gain here.
+
+> Maybe I'm not following the alternative proposal completely, but wouldn't a guest VM (who
+> happens to be in control of its OS) be able to add/online vCPU resources without approval
+> from the VMM this way?
+
+The in-kernel PSCI implementation will allow all CPUs to be online/offline. If we moved
+that support to the VMM, it could apply some policy as to whether a cpu-online call
+succeeds or fails.
+
+
+Thanks,
+
+James
