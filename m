@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E241FC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA173C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50F72064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAE82064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfGOKnM (ORCPT
+        id S1729810AbfGOKnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:43:12 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:43354 "EHLO honk.sigxcpu.org"
+        Mon, 15 Jul 2019 06:43:14 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43334 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729603AbfGOKnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729591AbfGOKnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 06:43:11 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 776DBFB04;
-        Mon, 15 Jul 2019 12:43:09 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id D1690FB02;
+        Mon, 15 Jul 2019 12:43:08 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mfQiNqbJ9g80; Mon, 15 Jul 2019 12:43:07 +0200 (CEST)
+        with ESMTP id lposayujEtm8; Mon, 15 Jul 2019 12:43:08 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 74E8D40178; Mon, 15 Jul 2019 12:43:06 +0200 (CEST)
+        id 7BEFB40DAA; Mon, 15 Jul 2019 12:43:06 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -46,9 +46,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Andrey Smirnov <andrew.smirnov@gmail.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] arm64: dts: imx8mq: Add MIPI D-PHY
-Date:   Mon, 15 Jul 2019 12:43:05 +0200
-Message-Id: <30c7622bf590670190b93c9b5b6dd1e8f809bbb2.1563187253.git.agx@sigxcpu.org>
+Subject: [PATCH v2 2/2] arm64: dts: imx8mq-librem5: Enable MIPI D-PHY
+Date:   Mon, 15 Jul 2019 12:43:06 +0200
+Message-Id: <f80df8fcae320eb6eb4937fb5a07799fc610adae.1563187253.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1563187253.git.agx@sigxcpu.org>
 References: <cover.1563187253.git.agx@sigxcpu.org>
@@ -60,38 +60,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a node for the Mixel MIPI D-PHY, "disabled" by default.
+This enables the Mixel MIPI D-PHY on the Librem 5 devkit
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
 Acked-by: Angus Ainslie (Purism) <angus@akkea.ca>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808eff87..891ee7578c2d 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -728,6 +728,19 @@
- 				status = "disabled";
- 			};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 5179e22f5126..683a11035643 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -174,6 +174,10 @@
+ 	assigned-clock-rates = <786432000>, <722534400>;
+ };
  
-+			dphy: dphy@30a00300 {
-+				compatible = "fsl,imx8mq-mipi-dphy";
-+				reg = <0x30a00300 0x100>;
-+				clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-+				clock-names = "phy_ref";
-+				assigned-clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-+				assigned-clock-parents = <&clk IMX8MQ_VIDEO_PLL1_OUT>;
-+				assigned-clock-rates = <24000000>;
-+				#phy-cells = <0>;
-+				power-domains = <&pgc_mipi>;
-+				status = "disabled";
-+			};
++&dphy {
++	status = "okay";
++};
 +
- 			i2c1: i2c@30a20000 {
- 				compatible = "fsl,imx8mq-i2c", "fsl,imx21-i2c";
- 				reg = <0x30a20000 0x10000>;
+ &fec1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_fec1>;
 -- 
 2.20.1
 
