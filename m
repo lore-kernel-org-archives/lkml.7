@@ -2,100 +2,257 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A6C76186
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DBDC7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BADD20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:21:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbAowxVq"
+	by mail.kernel.org (Postfix) with ESMTP id 194D920868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbfGODV0 (ORCPT
+        id S1729020AbfGODn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 23:21:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46434 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfGODV0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 23:21:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i8so6983394pgm.13;
-        Sun, 14 Jul 2019 20:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=fQU3ZitNVbm8g6DoiatmHMkRIAL8qxW71kXnvl1QgC8=;
-        b=XbAowxVqvNdy8E1lQinnYcjQHKkyTRK4zaOdGeWMOJAtvSf53PE1wo4OfS7WjZvTE0
-         FO8caUAxXl+wk+s2u2Eb8t6oGYsitr911KwmFgSTk3erDsqjpFNT81Ac16bF23GOfe5l
-         Z8PsEviv+DA6JMaWvyjp9qKRdXP/owmolf65Ul/Qb51H7vkFTlJoq8ghRhytxSp9Qybl
-         RAEGDvdcGVRBTn9M2s6i3aqn23QJszAIqhfxc9UWlhuxYUmrINZ+oLPLCKCqkmw9mF2q
-         hoITZTklk/JrP+H9sbaSbrm9MxHRcD2nd/qVS7Fkcm72EHttsGEnb3g5G3lPumDRplSV
-         qKpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fQU3ZitNVbm8g6DoiatmHMkRIAL8qxW71kXnvl1QgC8=;
-        b=s0rv3N8gvZF/PeMPaqfL5sPRdeXfZug2empiAKHUh3ZiTXPtCuMcZhhuhOz+tYSgDk
-         K+LTsmGGFVNHq5u8eoD7kUXGOG2UTh874AA57bdxeDv93uFgKf4mpjU+cdNWN+VX97Gp
-         URszdWN/z9Jy/X8NTuxmQ9Upwg1u56QEp6LSdF+wKA0hawacOvqpOP1jBTSAMLC5xGA7
-         JVN6KYNFO3ZgzgqDfdcu+S3do8GC+u26kQv+skTBbWF4td6kL2gP/AiurpqQ0y2M9ITR
-         MN1h/cjBfdB932Lbeh9R9QdRhERQX0NYKDc9viS9D+1edl3TfZJR435qpYzQ3rPdSNia
-         v2NQ==
-X-Gm-Message-State: APjAAAX83ofJhvPvtaXY0P0OfIj9Rnd1cbqZ0pNCzzZQ8NtSsM4ky+SI
-        GxTLQUZRyUXLKPCpqyFYeug=
-X-Google-Smtp-Source: APXvYqw1SWs+vEujyYwb300maXHvrIECcJMnhv9T7DAFz24xMqClCEgqiec77HLsNWJls9sIMsovmA==
-X-Received: by 2002:a63:e54f:: with SMTP id z15mr24551571pgj.4.1563160885244;
-        Sun, 14 Jul 2019 20:21:25 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id n26sm16548898pfa.83.2019.07.14.20.21.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 14 Jul 2019 20:21:24 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Ronak Doshi <doshir@vmware.com>,
-        "VMware Inc ." <pv-drivers@vmware.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v3 19/24] vmxnet3: Remove call to memset after dma_alloc_coherent
-Date:   Mon, 15 Jul 2019 11:21:18 +0800
-Message-Id: <20190715032118.7417-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Sun, 14 Jul 2019 23:43:58 -0400
+Received: from gate.crashing.org ([63.228.1.57]:42039 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727721AbfGODn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 23:43:58 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6F3hbhI016855;
+        Sun, 14 Jul 2019 22:43:38 -0500
+Message-ID: <71b009057582cd9c82cff2b45bc1af846408bcf7.camel@kernel.crashing.org>
+Subject: [PATCH] nvme: Add support for Apple 2018+ models
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     linux-nvme@lists.infradead.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Paul Pawlowski <paul@mrarm.io>
+Date:   Mon, 15 Jul 2019 13:43:37 +1000
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 518a2f1925c3
-("dma-mapping: zero memory returned from dma_alloc_*"),
-dma_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+Based on reverse engineering and original patch by
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Paul Pawlowski <paul@mrarm.io>
+
+This adds support for Apple weird implementation of NVME in their
+2018 or later machines. It accounts for the twice-as-big SQ entries
+for the IO queues, and the fact that only interrupt vector 0 appears
+to function properly.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
-Changes in v3:
-  - Use actual commit rather than the merge commit in the commit message
 
- drivers/net/vmxnet3/vmxnet3_drv.c | 1 -
- 1 file changed, 1 deletion(-)
+I reworked Paul's patch to be less invasive in nvme_submit_cmd()
+hot path, effectively only adding a shift with a value hopefully
+coming from the same cache line as existing stuff.
 
-diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index 3f48f05dd2a6..2a1918f25e47 100644
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -3430,7 +3430,6 @@ vmxnet3_probe_device(struct pci_dev *pdev,
- 			err = -ENOMEM;
- 			goto err_ver;
- 		}
--		memset(adapter->coal_conf, 0, sizeof(*adapter->coal_conf));
- 		adapter->coal_conf->coalMode = VMXNET3_COALESCE_DISABLED;
- 		adapter->default_coal_mode = true;
+It could probably be made even less by making sq_extra_shift be
+instead "sq_shift" and contain the complete shift between entries,
+ie, 6 or 7, and then replacing the memcpy to
+
+	&nvmeq->sq_cmds[nvmeq->sq_tail]
+
+With something like
+
+	((char *)nvmeq->sq_cmds) + ((size_t)nvmeq->sq_tail) << nvmeq->sq_shift
+
+But I doubt the difference will be measurable anywhere and it makes
+the code grosser imho.
+
+Note: I'm not subscribed to linux-nvme, please CC me on replies.
+
+ drivers/nvme/host/nvme.h |  5 ++++
+ drivers/nvme/host/pci.c  | 59 ++++++++++++++++++++++++++++------------
+ 2 files changed, 47 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 55553d293a98..9ae53cbfb320 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -92,6 +92,11 @@ enum nvme_quirks {
+ 	 * Broken Write Zeroes.
+ 	 */
+ 	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
++
++	/*
++	 * Apple 2018 and latter variant has a few issues
++	 */
++	NVME_QUIRK_APPLE_2018			= (1 << 10),
+ };
+ 
+ /*
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 524d6bd6d095..1a41412fc48b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -27,8 +27,8 @@
+ #include "trace.h"
+ #include "nvme.h"
+ 
+-#define SQ_SIZE(depth)		(depth * sizeof(struct nvme_command))
+-#define CQ_SIZE(depth)		(depth * sizeof(struct nvme_completion))
++#define SQ_SIZE(q)	((((size_t)(q)->q_depth) << (q)->sq_extra_shift) * sizeof(struct nvme_command))
++#define CQ_SIZE(q)	(((size_t)(q)->q_depth) * sizeof(struct nvme_completion))
+ 
+ #define SGES_PER_PAGE	(PAGE_SIZE / sizeof(struct nvme_sgl_desc))
+ 
+@@ -195,6 +195,7 @@ struct nvme_queue {
+ 	u16 last_cq_head;
+ 	u16 qid;
+ 	u8 cq_phase;
++	u8 sq_extra_shift;
+ 	unsigned long flags;
+ #define NVMEQ_ENABLED		0
+ #define NVMEQ_SQ_CMB		1
+@@ -504,8 +505,11 @@ static inline void nvme_write_sq_db(struct nvme_queue *nvmeq, bool write_sq)
+ static void nvme_submit_cmd(struct nvme_queue *nvmeq, struct nvme_command *cmd,
+ 			    bool write_sq)
+ {
++	u16 sq_actual_pos;
++
+ 	spin_lock(&nvmeq->sq_lock);
+-	memcpy(&nvmeq->sq_cmds[nvmeq->sq_tail], cmd, sizeof(*cmd));
++	sq_actual_pos = nvmeq->sq_tail << nvmeq->sq_extra_shift;
++	memcpy(&nvmeq->sq_cmds[sq_actual_pos], cmd, sizeof(*cmd));
+ 	if (++nvmeq->sq_tail == nvmeq->q_depth)
+ 		nvmeq->sq_tail = 0;
+ 	nvme_write_sq_db(nvmeq, write_sq);
+@@ -1361,16 +1365,16 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+ 
+ static void nvme_free_queue(struct nvme_queue *nvmeq)
+ {
+-	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq->q_depth),
++	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq),
+ 				(void *)nvmeq->cqes, nvmeq->cq_dma_addr);
+ 	if (!nvmeq->sq_cmds)
+ 		return;
+ 
+ 	if (test_and_clear_bit(NVMEQ_SQ_CMB, &nvmeq->flags)) {
+ 		pci_free_p2pmem(to_pci_dev(nvmeq->dev->dev),
+-				nvmeq->sq_cmds, SQ_SIZE(nvmeq->q_depth));
++				nvmeq->sq_cmds, SQ_SIZE(nvmeq));
+ 	} else {
+-		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq->q_depth),
++		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq),
+ 				nvmeq->sq_cmds, nvmeq->sq_dma_addr);
  	}
--- 
-2.11.0
+ }
+@@ -1450,12 +1454,12 @@ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
+ }
+ 
+ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+-				int qid, int depth)
++				int qid)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 
+ 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+-		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
++		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(nvmeq));
+ 		nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+ 						nvmeq->sq_cmds);
+ 		if (nvmeq->sq_dma_addr) {
+@@ -1464,7 +1468,7 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+ 		}
+ 	}
+ 
+-	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(depth),
++	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(nvmeq),
+ 				&nvmeq->sq_dma_addr, GFP_KERNEL);
+ 	if (!nvmeq->sq_cmds)
+ 		return -ENOMEM;
+@@ -1478,12 +1482,24 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 	if (dev->ctrl.queue_count > qid)
+ 		return 0;
+ 
+-	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(depth),
++	/*
++	 * On Apple 2018 or later implementations, the IO submission
++	 * queue(s) have twice as large entries. Current implementations
++	 * seem to only have qid 1, let's assume this is true of all IO
++	 * queues until we know better.
++	 */
++	if (qid && (dev->ctrl.quirks & NVME_QUIRK_APPLE_2018))
++		nvmeq->sq_extra_shift = 1;
++	else
++		nvmeq->sq_extra_shift = 0;
++
++	nvmeq->q_depth = depth;
++	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(nvmeq),
+ 					 &nvmeq->cq_dma_addr, GFP_KERNEL);
+ 	if (!nvmeq->cqes)
+ 		goto free_nvmeq;
+ 
+-	if (nvme_alloc_sq_cmds(dev, nvmeq, qid, depth))
++	if (nvme_alloc_sq_cmds(dev, nvmeq, qid))
+ 		goto free_cqdma;
+ 
+ 	nvmeq->dev = dev;
+@@ -1492,15 +1508,14 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 	nvmeq->cq_head = 0;
+ 	nvmeq->cq_phase = 1;
+ 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
+-	nvmeq->q_depth = depth;
+ 	nvmeq->qid = qid;
+ 	dev->ctrl.queue_count++;
+ 
+ 	return 0;
+ 
+  free_cqdma:
+-	dma_free_coherent(dev->dev, CQ_SIZE(depth), (void *)nvmeq->cqes,
+-							nvmeq->cq_dma_addr);
++	dma_free_coherent(dev->dev, CQ_SIZE(nvmeq), (void *)nvmeq->cqes,
++			  nvmeq->cq_dma_addr);
+  free_nvmeq:
+ 	return -ENOMEM;
+ }
+@@ -1527,8 +1542,9 @@ static void nvme_init_queue(struct nvme_queue *nvmeq, u16 qid)
+ 	nvmeq->last_sq_tail = 0;
+ 	nvmeq->cq_head = 0;
+ 	nvmeq->cq_phase = 1;
++
+ 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
+-	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq->q_depth));
++	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq));
+ 	nvme_dbbuf_init(dev, nvmeq, qid);
+ 	dev->online_queues++;
+ 	wmb(); /* ensure the first interrupt sees the initialization */
+@@ -1546,9 +1562,16 @@ static int nvme_create_queue(struct nvme_queue *nvmeq, int qid, bool polled)
+ 	 * A queue's vector matches the queue identifier unless the controller
+ 	 * has only one vector available.
+ 	 */
+-	if (!polled)
++	if (!polled) {
+ 		vector = dev->num_vecs == 1 ? 0 : qid;
+-	else
++
++		/*
++		 * On Apple 2018 or later implementations, only vector 0 is accepted
++		 * by the drive firmware
++		 */
++		if (dev->ctrl.quirks & NVME_QUIRK_APPLE_2018)
++			vector = 0;
++	} else
+ 		set_bit(NVMEQ_POLLED, &nvmeq->flags);
+ 
+ 	result = adapter_alloc_cq(dev, qid, nvmeq, vector);
+@@ -2949,6 +2972,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
++		.driver_data = NVME_QUIRK_APPLE_2018},
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, nvme_id_table);
+
 
