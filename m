@@ -2,115 +2,98 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77386C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D20C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514FB20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE498206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9r1UpHe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H7jvnJXU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfGORak (ORCPT
+        id S1731700AbfGORdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:30:40 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43447 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731820AbfGOR3y (ORCPT
+        Mon, 15 Jul 2019 13:33:39 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37574 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731574AbfGORdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:29:54 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so17082390ljv.10;
-        Mon, 15 Jul 2019 10:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YB/K51J2yBjrGqQBOAGlFNTt2rdW770Na58VRvSkzkE=;
-        b=G9r1UpHe9emFel8CP1Z4Q/bhOOyPPtMwUPGjut2D2WJ5X7sg4agszqUKUO42WEeXxO
-         1P7iKfqH87IK9lPCUtqFtNDS7Y7ETgi9VOuufW9wEt0GpnZzfvUgQIczex830SIwXAQe
-         tgAppGVlXy7vn1hY6MRXISj6MJH0nksjUdyEtOtf+oG1AbeQ3HgTr8BiFfwmNxx2Q0aT
-         +k4pdY/TSo0M8pbgIibURbNgg+Czv6saq/6yVQlzWO5VnMDYV77Im8fdJnCKkfaKceJy
-         HKmHmt/U/lii15n2Cev059HpaEWR5zxR57bEnrPjRTNJqxiZ/n3rHPFHx6RSnZjzDSLi
-         MmSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YB/K51J2yBjrGqQBOAGlFNTt2rdW770Na58VRvSkzkE=;
-        b=UZFDIVNCvCPW1SRDrj9dhrFjv4FLkWzDfkDD+z+XMfWluM0VVE2vHBGtOHRcdUarMb
-         mS4YrnQqnrY6KKHuRjPpv45FaIUAZKEm2SUCcOcp6gCmPAuujfEOmTqMZaleN6zSbUl4
-         xjQBEogb2te9Yd1AEtOfXZGRe4Gq987XwyNf4KvFqIr29phzrtMlYOke+9Jr8rJT3BhC
-         W+iZIxXhDNa6qJyxEjBeqdy0P/n8A+1It5TymcPUqRcVoz1ORxXM4Jtw1QkZAkwvlmvO
-         I0WPcdujtoOTEK3TX9Pe7LIAGRkcOXZtQQSjkG2HanObbnzPlkfDfxncnP87WJmy+q1y
-         hsdA==
-X-Gm-Message-State: APjAAAU6ZNDLLWkvD9Qpjnzqvf68MoCoNGfuvDgP40LbNoRS5ygmJTwY
-        cOVh1mRkZAW2KiBWIqwzSNQ=
-X-Google-Smtp-Source: APXvYqzYar7cir4nEVfsw6pDWLzHKGGrWy3yMbYTr6PHAK+wnKscoo/k7Aj37D/0aOCGiOjSrG7D/g==
-X-Received: by 2002:a2e:9213:: with SMTP id k19mr12089693ljg.237.1563211792709;
-        Mon, 15 Jul 2019 10:29:52 -0700 (PDT)
-Received: from localhost.localdomain (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.gmail.com with ESMTPSA id b17sm3248765ljf.34.2019.07.15.10.29.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 10:29:52 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/13] clk: tegra: Add missing stubs for the case of !CONFIG_PM_SLEEP
-Date:   Mon, 15 Jul 2019 20:26:24 +0300
-Message-Id: <20190715172629.4437-9-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190715172629.4437-1-digetx@gmail.com>
-References: <20190715172629.4437-1-digetx@gmail.com>
+        Mon, 15 Jul 2019 13:33:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FHXN4s121134;
+        Mon, 15 Jul 2019 17:33:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=gexxm3URun3t6lGz43qhoYeB1J6VhTPrI1NDhmfisns=;
+ b=H7jvnJXUCnBQ32KffKAvXVMToEYJwjQAZixNdxTyXrDMOihdVbRb+DCoVORek7Rj3PC6
+ 2a2O65v8hb1g6t90c5HrTn4e3nkm3sp597K55lcbE0uoP+BoQrXg0W0/WX9nrhvtwhLj
+ 2MvO/N7DBu+HzmwwZi7owCKRPHuPrgAVvaOOoMLD6UE7sup5T4lbJoMVnxTVWmWpj94X
+ Y4CDslnc3t2B2KkoR2A1H/99fLCNBUb2e5sz7H45KvT0RTZ8uLLcZbW0CxmtLI1rcrSO
+ rxJ1hKdelcuXw7h/yNWeCBqhjU/3zcCuJ/q7uJ59n6L1BElAT62+sbYySFSC6lPx+s+p fw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtg0hh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 17:33:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FHSSqb120414;
+        Mon, 15 Jul 2019 17:33:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2tq4dten0h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 17:33:19 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6FHXEOP025118;
+        Mon, 15 Jul 2019 17:33:14 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jul 2019 10:33:14 -0700
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: properly communicate queue limits to the DMA layer v2
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190617122000.22181-1-hch@lst.de>
+        <20190715165823.GA10029@lst.de>
+Date:   Mon, 15 Jul 2019 13:33:11 -0400
+In-Reply-To: <20190715165823.GA10029@lst.de> (Christoph Hellwig's message of
+        "Mon, 15 Jul 2019 18:58:23 +0200")
+Message-ID: <yq1tvbn2ofc.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=619
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907150204
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=686 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907150204
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new CPUIDLE driver uses the Tegra's CLK API and that driver won't
-strictly depend on CONFIG_PM_SLEEP, hence add the required stubs in
-order to allow compiling of the new driver with the CONFIG_PM_SLEEP=n.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- include/linux/clk/tegra.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Christoph,
 
-diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
-index b8aef62cc3f5..cf0f2cb5e109 100644
---- a/include/linux/clk/tegra.h
-+++ b/include/linux/clk/tegra.h
-@@ -108,6 +108,19 @@ static inline void tegra_cpu_clock_resume(void)
- 
- 	tegra_cpu_car_ops->resume();
- }
-+#else
-+static inline bool tegra_cpu_rail_off_ready(void)
-+{
-+	return false;
-+}
-+
-+static inline void tegra_cpu_clock_suspend(void)
-+{
-+}
-+
-+static inline void tegra_cpu_clock_resume(void)
-+{
-+}
- #endif
- 
- extern void tegra210_xusb_pll_hw_control_enable(void);
+> Ping?  What happened to this set of bug fixes?
+
+I thought they depended on Jens' tree?
+
 -- 
-2.22.0
-
+Martin K. Petersen	Oracle Linux Engineering
