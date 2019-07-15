@@ -7,111 +7,120 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A24C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA28C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFF820896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2519C212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201090;
-	bh=/uiIlwgGYuoMy8LSVF0CpVjdN/gR/zSBu46b8OgFjfs=;
+	s=default; t=1563201096;
+	bh=Dt1XW2Wj4UkA3O8cjRveBiHK9T1bNOVNtGlcV9g/pHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9RsObj5ILhXOfZoH82PVM9d1hSVVXl0hyRNlW7lCO4ZBitCQm2NKPThZ49K9W6qi
-	 QG4f1S1s4bq805EEyswNUSWAxZk3/8L7+RydjAP1R7UGGg8pisBAcvOakSabWk8YD2
-	 9VF4jROn+0lZllLy4rAAWiml70lXb1gg6Pe81iZQ=
+	b=IGmgg0iSZMsqdtuCqhxA4J0iGn/0q4YOFmjBvzv2X/NJH6aOS4oa/D+0TkDX1NrsB
+	 ernFOboa+/7C4KVppo8VUcaMHZB0mQPKvhfe1J+2eYN57CWXf3k0BytwJF1K3hB7al
+	 MpHjrdnCrNbx99lpwkRIufrrrcSIJHPLVyF7OoV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403935AbfGOOb3 (ORCPT
+        id S2403945AbfGOObf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45258 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391792AbfGOObZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:31:25 -0400
+        id S2388927AbfGOObd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:31:33 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B049221537;
-        Mon, 15 Jul 2019 14:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972712086C;
+        Mon, 15 Jul 2019 14:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201084;
-        bh=/uiIlwgGYuoMy8LSVF0CpVjdN/gR/zSBu46b8OgFjfs=;
+        s=default; t=1563201092;
+        bh=Dt1XW2Wj4UkA3O8cjRveBiHK9T1bNOVNtGlcV9g/pHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8lgDqA9la4nV+dDkA13inCg3ARZNa3TJNmQILNoURFY9ODYrwwaMI8vua7VMZohF
-         qH5eiN9XLq77QbBnO4fPsmO+9SRpZLygXzEkmrd/SWoCp+BbNgL1lKuPso5lnByVcq
-         +du1qfS5CQES3MWdx+CMe+YxUfL1SDnrgf5SSfos=
+        b=hF5j2OdurPFk6CaA1qExxlMqRb2O1c3k0CvUomaLSnng8vI6y27JIByMss+s4YsN9
+         TBsQJjS2i78NxaSSCnEVkyDc+jUfxw8bs8QJoHV0UsDTE62saM/uRW3fVp6ugG3m8o
+         VPo0sptRTJWex2kUFAPh/1/jMf62nFyXhEKARNTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 047/105] bpf: silence warning messages in core
-Date:   Mon, 15 Jul 2019 10:27:41 -0400
-Message-Id: <20190715142839.9896-47-sashal@kernel.org>
+Cc:     Aaron Lewis <aaronlewis@google.com>, Borislav Petkov <bp@suse.de>,
+        Jim Mattson <jmattson@google.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        marcorr@google.com, Peter Feiner <pfeiner@google.com>,
+        pshier@google.com, Robert Hoo <robert.hu@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 049/105] x86/cpufeatures: Add FDP_EXCPTN_ONLY and ZERO_FCS_FDS
+Date:   Mon, 15 Jul 2019 10:27:43 -0400
+Message-Id: <20190715142839.9896-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Aaron Lewis <aaronlewis@google.com>
 
-[ Upstream commit aee450cbe482a8c2f6fa5b05b178ef8b8ff107ca ]
+[ Upstream commit cbb99c0f588737ec98c333558922ce47e9a95827 ]
 
-Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
+Add the CPUID enumeration for Intel's de-feature bits to accommodate
+passing these de-features through to kvm guests.
 
-kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
-kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
+These de-features are (from SDM vol 1, section 8.1.8):
+ - X86_FEATURE_FDP_EXCPTN_ONLY: If CPUID.(EAX=07H,ECX=0H):EBX[bit 6] = 1, the
+   data pointer (FDP) is updated only for the x87 non-control instructions that
+   incur unmasked x87 exceptions.
+ - X86_FEATURE_ZERO_FCS_FDS: If CPUID.(EAX=07H,ECX=0H):EBX[bit 13] = 1, the
+   processor deprecates FCS and FDS; it saves each as 0000H.
 
-98 copies of the above.
-
-The attached patch silences the warnings, because we *know* we're overwriting
-the default initializer. That leaves bpf/core.c with only 6 other warnings,
-which become more visible in comparison.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Aaron Lewis <aaronlewis@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: marcorr@google.com
+Cc: Peter Feiner <pfeiner@google.com>
+Cc: pshier@google.com
+Cc: Robert Hoo <robert.hu@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190605220252.103406-1-aaronlewis@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/cpufeatures.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-index af3ab6164ff5..be282c135a66 100644
---- a/kernel/bpf/Makefile
-+++ b/kernel/bpf/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y := core.o
-+CFLAGS_core.o += $(call cc-disable-warning, override-init)
- 
- obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o tnum.o
- obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o bpf_lru_list.o lpm_trie.o map_in_map.o
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 48ef9ed8226d..4cb8315c521f 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -239,12 +239,14 @@
+ #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
++#define X86_FEATURE_FDP_EXCPTN_ONLY	( 9*32+ 6) /* "" FPU data pointer updated only on x87 exceptions */
+ #define X86_FEATURE_SMEP		( 9*32+ 7) /* Supervisor Mode Execution Protection */
+ #define X86_FEATURE_BMI2		( 9*32+ 8) /* 2nd group bit manipulation extensions */
+ #define X86_FEATURE_ERMS		( 9*32+ 9) /* Enhanced REP MOVSB/STOSB instructions */
+ #define X86_FEATURE_INVPCID		( 9*32+10) /* Invalidate Processor Context ID */
+ #define X86_FEATURE_RTM			( 9*32+11) /* Restricted Transactional Memory */
+ #define X86_FEATURE_CQM			( 9*32+12) /* Cache QoS Monitoring */
++#define X86_FEATURE_ZERO_FCS_FDS	( 9*32+13) /* "" Zero out FPU CS and FPU DS */
+ #define X86_FEATURE_MPX			( 9*32+14) /* Memory Protection Extension */
+ #define X86_FEATURE_RDT_A		( 9*32+15) /* Resource Director Technology Allocation */
+ #define X86_FEATURE_AVX512F		( 9*32+16) /* AVX-512 Foundation */
 -- 
 2.20.1
 
