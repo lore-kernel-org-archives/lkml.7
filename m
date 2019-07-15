@@ -2,177 +2,153 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75C1C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A68C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDEF2182B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563222269;
-	bh=z/3S4xXt/Rio/ofj03vwkBIO5OR52dDSZ9Eeq6mO6XI=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=OP5CWvRyrovWnjCrrANmDlflFANSC7spqEbtOS4ugsH9mn5wvDUHZrn9AsOVPC0dH
-	 G471Heaz3LJHWwblmmcTpa53iJLkhEIEz3GDhNuwz0cSWrvI6PS5vx+LhHq3gQP0sc
-	 Z8xVxNkEhvF68vJSrf4J6HG4VIovGJq/ylC9G2Lw=
+	by mail.kernel.org (Postfix) with ESMTP id 149E920665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732275AbfGOUY2 (ORCPT
+        id S1732326AbfGOUZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 16:25:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33206 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbfGOUY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:24:27 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731055AbfGOUZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 16:25:03 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE64C20665;
-        Mon, 15 Jul 2019 20:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563222265;
-        bh=z/3S4xXt/Rio/ofj03vwkBIO5OR52dDSZ9Eeq6mO6XI=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=BXkGMbTaQqFfurRCy1g8au7AeTtgOFutLGJt3puQKKnveCArE1l5n+TvNB5nyLQN2
-         RewIrkkACOQLU4j8bdd/A1S3ea0t6aCgTcsSBEisWmgVGg22p/nmZ63GDKRcOxtMyZ
-         60uqJ7tvYGN5awKtcLQiKpJWBRakwwDtbA+09H2w=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 62F673081244;
+        Mon, 15 Jul 2019 20:25:02 +0000 (UTC)
+Received: from torg.redhat.com (ovpn-121-239.rdu2.redhat.com [10.10.121.239])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 958225D721;
+        Mon, 15 Jul 2019 20:25:01 +0000 (UTC)
+From:   Clark Williams <williams@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        RT List <linux-rt-users@vger.kernel.org>
+Subject: [PATCH] x86_pkg_temp_thermal: make pkg_temp_lock a raw spinlock
+Date:   Mon, 15 Jul 2019 15:25:00 -0500
+Message-Id: <20190715202500.6742-1-williams@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190712081744.87097-3-brendanhiggins@google.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-3-brendanhiggins@google.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 02/18] kunit: test: add test resource management API
-User-Agent: alot/0.8.1
-Date:   Mon, 15 Jul 2019 13:24:25 -0700
-Message-Id: <20190715202425.CE64C20665@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 15 Jul 2019 20:25:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-07-12 01:17:28)
-> diff --git a/kunit/test.c b/kunit/test.c
-> index 571e4c65deb5c..f165c9d8e10b0 100644
-> --- a/kunit/test.c
-> +++ b/kunit/test.c
-> @@ -171,6 +175,96 @@ int kunit_run_tests(struct kunit_suite *suite)
->         return 0;
->  }
-> =20
-> +struct kunit_resource *kunit_alloc_resource(struct kunit *test,
-> +                                           kunit_resource_init_t init,
-> +                                           kunit_resource_free_t free,
-> +                                           void *context)
-> +{
-> +       struct kunit_resource *res;
-> +       int ret;
-> +
-> +       res =3D kzalloc(sizeof(*res), GFP_KERNEL);
+The spinlock pkg_temp_lock has the potential of being taken in atomic
+context on v5.2-rt PREEMPT_RT. It's static and limited scope so
+go ahead and make it a raw spinlock.
 
-This uses GFP_KERNEL.
+Signed-off-by: Clark Williams <williams@redhat.com>
+---
+ drivers/thermal/intel/x86_pkg_temp_thermal.c | 24 ++++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-> +       if (!res)
-> +               return NULL;
-> +
-> +       ret =3D init(res, context);
-> +       if (ret)
-> +               return NULL;
-> +
-> +       res->free =3D free;
-> +       mutex_lock(&test->lock);
+diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+index 319b77126168..92ceed3de6f3 100644
+--- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
++++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+@@ -63,7 +63,7 @@ static int max_packages __read_mostly;
+ /* Array of package pointers */
+ static struct pkg_device **packages;
+ /* Serializes interrupt notification, work and hotplug */
+-static DEFINE_SPINLOCK(pkg_temp_lock);
++static DEFINE_RAW_SPINLOCK(pkg_temp_lock);
+ /* Protects zone operation in the work function against hotplug removal */
+ static DEFINE_MUTEX(thermal_zone_mutex);
+ 
+@@ -279,12 +279,12 @@ static void pkg_temp_thermal_threshold_work_fn(struct work_struct *work)
+ 	u64 msr_val, wr_val;
+ 
+ 	mutex_lock(&thermal_zone_mutex);
+-	spin_lock_irq(&pkg_temp_lock);
++	raw_spin_lock_irq(&pkg_temp_lock);
+ 	++pkg_work_cnt;
+ 
+ 	pkgdev = pkg_temp_thermal_get_dev(cpu);
+ 	if (!pkgdev) {
+-		spin_unlock_irq(&pkg_temp_lock);
++		raw_spin_unlock_irq(&pkg_temp_lock);
+ 		mutex_unlock(&thermal_zone_mutex);
+ 		return;
+ 	}
+@@ -298,7 +298,7 @@ static void pkg_temp_thermal_threshold_work_fn(struct work_struct *work)
+ 	}
+ 
+ 	enable_pkg_thres_interrupt();
+-	spin_unlock_irq(&pkg_temp_lock);
++	raw_spin_unlock_irq(&pkg_temp_lock);
+ 
+ 	/*
+ 	 * If tzone is not NULL, then thermal_zone_mutex will prevent the
+@@ -323,7 +323,7 @@ static int pkg_thermal_notify(u64 msr_val)
+ 	struct pkg_device *pkgdev;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&pkg_temp_lock, flags);
++	raw_spin_lock_irqsave(&pkg_temp_lock, flags);
+ 	++pkg_interrupt_cnt;
+ 
+ 	disable_pkg_thres_interrupt();
+@@ -335,7 +335,7 @@ static int pkg_thermal_notify(u64 msr_val)
+ 		pkg_thermal_schedule_work(pkgdev->cpu, &pkgdev->work);
+ 	}
+ 
+-	spin_unlock_irqrestore(&pkg_temp_lock, flags);
++	raw_spin_unlock_irqrestore(&pkg_temp_lock, flags);
+ 	return 0;
+ }
+ 
+@@ -381,9 +381,9 @@ static int pkg_temp_thermal_device_add(unsigned int cpu)
+ 	      pkgdev->msr_pkg_therm_high);
+ 
+ 	cpumask_set_cpu(cpu, &pkgdev->cpumask);
+-	spin_lock_irq(&pkg_temp_lock);
++	raw_spin_lock_irq(&pkg_temp_lock);
+ 	packages[pkgid] = pkgdev;
+-	spin_unlock_irq(&pkg_temp_lock);
++	raw_spin_unlock_irq(&pkg_temp_lock);
+ 	return 0;
+ }
+ 
+@@ -420,7 +420,7 @@ static int pkg_thermal_cpu_offline(unsigned int cpu)
+ 	}
+ 
+ 	/* Protect against work and interrupts */
+-	spin_lock_irq(&pkg_temp_lock);
++	raw_spin_lock_irq(&pkg_temp_lock);
+ 
+ 	/*
+ 	 * Check whether this cpu was the current target and store the new
+@@ -452,9 +452,9 @@ static int pkg_thermal_cpu_offline(unsigned int cpu)
+ 		 * To cancel the work we need to drop the lock, otherwise
+ 		 * we might deadlock if the work needs to be flushed.
+ 		 */
+-		spin_unlock_irq(&pkg_temp_lock);
++		raw_spin_unlock_irq(&pkg_temp_lock);
+ 		cancel_delayed_work_sync(&pkgdev->work);
+-		spin_lock_irq(&pkg_temp_lock);
++		raw_spin_lock_irq(&pkg_temp_lock);
+ 		/*
+ 		 * If this is not the last cpu in the package and the work
+ 		 * did not run after we dropped the lock above, then we
+@@ -465,7 +465,7 @@ static int pkg_thermal_cpu_offline(unsigned int cpu)
+ 			pkg_thermal_schedule_work(target, &pkgdev->work);
+ 	}
+ 
+-	spin_unlock_irq(&pkg_temp_lock);
++	raw_spin_unlock_irq(&pkg_temp_lock);
+ 
+ 	/* Final cleanup if this is the last cpu */
+ 	if (lastcpu)
+-- 
+2.21.0
 
-And this can sleep.
-
-> +       list_add_tail(&res->node, &test->resources);
-> +       mutex_unlock(&test->lock);
-> +
-> +       return res;
-> +}
-> +
-> +void kunit_free_resource(struct kunit *test, struct kunit_resource *res)
-
-Should probably add a note that we assume the test lock is held here, or
-even add a lockdep_assert_held(&test->lock) into the function to
-document that and assert it at the same time.
-
-> +{
-> +       res->free(res);
-> +       list_del(&res->node);
-> +       kfree(res);
-> +}
-> +
-> +struct kunit_kmalloc_params {
-> +       size_t size;
-> +       gfp_t gfp;
-> +};
-> +
-> +static int kunit_kmalloc_init(struct kunit_resource *res, void *context)
-> +{
-> +       struct kunit_kmalloc_params *params =3D context;
-> +
-> +       res->allocation =3D kmalloc(params->size, params->gfp);
-> +       if (!res->allocation)
-> +               return -ENOMEM;
-> +
-> +       return 0;
-> +}
-> +
-> +static void kunit_kmalloc_free(struct kunit_resource *res)
-> +{
-> +       kfree(res->allocation);
-> +}
-> +
-> +void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
-> +{
-> +       struct kunit_kmalloc_params params;
-> +       struct kunit_resource *res;
-> +
-> +       params.size =3D size;
-> +       params.gfp =3D gfp;
-> +
-> +       res =3D kunit_alloc_resource(test,
-
-This calls that sleeping function above...
-
-> +                                  kunit_kmalloc_init,
-> +                                  kunit_kmalloc_free,
-> +                                  &params);
-
-but this passes a GFP flags parameter through to the
-kunit_kmalloc_init() function. How is this going to work if some code
-uses GFP_ATOMIC, but then we try to allocate and sleep in
-kunit_alloc_resource() with GFP_KERNEL?=20
-
-One solution would be to piggyback on all the existing devres allocation
-logic we already have and make each struct kunit a device that we pass
-into the devres functions. A far simpler solution would be to just
-copy/paste what devres does and use a spinlock and an allocation
-function that takes GFP flags.
-
-> +
-> +       if (res)
-> +               return res->allocation;
-> +
-> +       return NULL;
-> +}
