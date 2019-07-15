@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BAFC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAD1C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2728F2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968092083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199218;
-	bh=HVwfv/xPdc+JafPoW5hZgKYeM8SgLs9kQUl1bB803XQ=;
+	s=default; t=1563199221;
+	bh=2T8+ByuMN2NdbOvNMHdiLKBNNI5BJwAvDd5WZM9gBQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5NoCp6OHbGYG97ahrfngPvh3okfjikIlYFuB7GPydaQCwJ7XFcwdCtfwXfM1O34W
-	 FEnRubiNNohOQpnRZ2IQHQ7Xc7ITHkakMhCM7cVRJe3Z8uF4A5ydSo0misWx17cKOv
-	 4dEbuHMQBVM34LUShPj6q9h8c5JMJADIzv1NUz7U=
+	b=MOd3BV9YGPTIR0sO+DomCjncyrsbn52wtX77MWjrkM10BALW02ZO3Uhsbs3kpoe9h
+	 AamVwrCGx+8U/kMQT/BZ5O1XEV58lsQH3E914rLy9Ga54bg0fJBdHBMDYToEoYnLGB
+	 vp8L9TeGWg78FciEL/LzWYOyN/1XiAOHT1VIL0MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733197AbfGOOAQ (ORCPT
+        id S2387541AbfGOOAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41040 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbfGOOAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:00:01 -0400
+        id S2387534AbfGOOAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:00:10 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 417D0212F5;
-        Mon, 15 Jul 2019 13:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8D7212F5;
+        Mon, 15 Jul 2019 14:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199200;
-        bh=HVwfv/xPdc+JafPoW5hZgKYeM8SgLs9kQUl1bB803XQ=;
+        s=default; t=1563199210;
+        bh=2T8+ByuMN2NdbOvNMHdiLKBNNI5BJwAvDd5WZM9gBQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X2XJ+9yMcI9Vb7IFzI3Cep/fcVwOGdzVLO2nVA/R9iqbCnpVAVzaOHZ0Hc6/sqNEA
-         FA0g1V2NNeE7/JeyRUC/83nZHZexeRS/wMWLEtimZ68HJpu2WUEbA6kf3y+ltNu6yJ
-         wcH1HU3SbOiz+TrfKtMGR3H5XkxeaLRkmSbNkR6M=
+        b=C/09Lk2oqcI2aWKq3GlMXHyv/UiHm7tgL+dLfKJ+Psrctjtfwqa4/QTVSRJLYaxEU
+         1Ndgc1+hb9s09vZOG0iAYSkkNekroCqFKJjwAp6xRS30ciysR16ZtAQo9OV4VVOGlz
+         WHB8n67FbAdCc8NxZrC/FX18bNBxI0byAqQsApVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 214/249] bnxt_en: Cap the returned MSIX vectors to the RDMA driver.
-Date:   Mon, 15 Jul 2019 09:46:19 -0400
-Message-Id: <20190715134655.4076-214-sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 216/249] perf stat: Make metric event lookup more robust
+Date:   Mon, 15 Jul 2019 09:46:21 -0400
+Message-Id: <20190715134655.4076-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -59,42 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit 1dbc59fa4bbaa108b641cd65a54f662b75e4ed36 ]
+[ Upstream commit 145c407c808352acd625be793396fd4f33c794f8 ]
 
-In an earlier commit to improve NQ reservations on 57500 chips, we
-set the resv_irqs on the 57500 VFs to the fixed value assigned by
-the PF regardless of how many are actually used.  The current
-code assumes that resv_irqs minus the ones used by the network driver
-must be the ones for the RDMA driver.  This is no longer true and
-we may return more MSIX vectors than requested, causing inconsistency.
-Fix it by capping the value.
+After setting up metric groups through the event parser, the metricgroup
+code looks them up again in the event list.
 
-Fixes: 01989c6b69d9 ("bnxt_en: Improve NQ reservations.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Make sure we only look up events that haven't been used by some other
+metric. The data structures currently cannot handle more than one metric
+per event. This avoids problems with multiple events partially
+overlapping.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-index bfa342a98d08..fc77caf0a076 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-@@ -157,8 +157,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 83d8094be4fe..e545e2a8ae71 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -303,7 +303,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
+ 	struct perf_evsel *c2;
  
- 	if (BNXT_NEW_RM(bp)) {
- 		struct bnxt_hw_resc *hw_resc = &bp->hw_resc;
-+		int resv_msix;
- 
--		avail_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
-+		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
-+		avail_msix = min_t(int, resv_msix, avail_msix);
- 		edev->ulp_tbl[ulp_id].msix_requested = avail_msix;
+ 	evlist__for_each_entry (evsel_list, c2) {
+-		if (!strcasecmp(c2->name, name))
++		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
+ 			return c2;
  	}
- 	bnxt_fill_msix_vecs(bp, ent);
+ 	return NULL;
+@@ -342,7 +342,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
+ 			if (leader) {
+ 				/* Search in group */
+ 				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name, metric_names[i])) {
++					if (!strcasecmp(oc->name, metric_names[i]) &&
++						!oc->collect_stat) {
+ 						found = true;
+ 						break;
+ 					}
 -- 
 2.20.1
 
