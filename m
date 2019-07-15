@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B24CC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9840C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5249E20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AE920C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198911;
-	bh=5/M9/vcs/yaJ+rSk97Wt73wlP2NREFP4DiFcpbDHYkM=;
+	s=default; t=1563198916;
+	bh=ezzxhSD1Dmn4AJxk5jGKLJlF5eQJDRM4jGDIi8e52E8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GleYAoMMyU4MMl663IhDi3XbRkb/qDrcwLHkdg+66BcQkOn/Z7CzWJUg2tT6s3bVx
-	 RZdNVgBNEzphZ1LJrs6FvopDNHHPS5t7y2ZJ0Q3ANFPfMYt+OIO/uhZ5HOW9qDFxGw
-	 Y0dQ9E9VOPT5pcCZ8xg0fRu3htf5bqJow+5bX2Xc=
+	b=sDiOixdSco1WEoRmlKicBJjL650vntugiUthn38AiqLBtc0Og85JOxw0ddCgdm1U2
+	 pNxBshf2lv7bOqJo0kAjJX6+7vxrIoSh/fj916Z7mXtHgSZOErB5vAvI9xzag6EtBx
+	 c8FwPru0h5yf1CK9IGeJGjMglyZJWksMEFxrzS+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732722AbfGONzK (ORCPT
+        id S1732286AbfGONzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:55:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732043AbfGONyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:54:53 -0400
+        id S1731823AbfGONzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:55:04 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D09B42081C;
-        Mon, 15 Jul 2019 13:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92AD5212F5;
+        Mon, 15 Jul 2019 13:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198891;
-        bh=5/M9/vcs/yaJ+rSk97Wt73wlP2NREFP4DiFcpbDHYkM=;
+        s=default; t=1563198902;
+        bh=ezzxhSD1Dmn4AJxk5jGKLJlF5eQJDRM4jGDIi8e52E8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ag2Fg7HYC5mDqPgCWPiUHlLv5CKbSA+7p/D3q4B+mMs0AMW7JocAtUpZkfAUYJOuP
-         Kh1fxe0zUQk4CwjCBVoIQahY8/xMfZRZAqqlfHk4gZ4x5nkdRtDiLCA2IzgrdahmFn
-         cT2U9LBJptwCeQYqmOulTOzc3+hhLPfqur19WBOI=
+        b=zO/C/+ufOhB8BXeCCwQ903tBA/ncVPsQJFs7KThAMlZ6Ubu542jb8+IzAXlaNaxa8
+         qR/r4DXmMU6ZgTABIYQHXIZMM2Xe8QYzW9uptSOfzVy+QdSTR4WUTHNARcYt4qxV6y
+         +6KIJaAMGP44R/qwHXPThcRWAsKT8xUsOLOlkH8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Subject: [PATCH AUTOSEL 5.2 130/249] ACPICA: Clear status of GPEs on first direct enable
-Date:   Mon, 15 Jul 2019 09:44:55 -0400
-Message-Id: <20190715134655.4076-130-sashal@kernel.org>
+Cc:     Minwoo Im <minwoo.im.dev@gmail.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 135/249] nvme-pci: properly report state change failure in nvme_reset_work
+Date:   Mon, 15 Jul 2019 09:45:00 -0400
+Message-Id: <20190715134655.4076-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,132 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Minwoo Im <minwoo.im.dev@gmail.com>
 
-[ Upstream commit 44758bafa53602f2581a6857bb20b55d4d8ad5b2 ]
+[ Upstream commit cee6c269b016ba89c62e34d6bccb103ee2c7de4f ]
 
-ACPI GPEs (other than the EC one) can be enabled in two situations.
-First, the GPEs with existing _Lxx and _Exx methods are enabled
-implicitly by ACPICA during system initialization.  Second, the
-GPEs without these methods (like GPEs listed by _PRW objects for
-wakeup devices) need to be enabled directly by the code that is
-going to use them (e.g. ACPI power management or device drivers).
+If the state change to NVME_CTRL_CONNECTING fails, the dmesg is going to
+be like:
 
-In the former case, if the status of a given GPE is set to start
-with, its handler method (either _Lxx or _Exx) needs to be invoked
-to take care of the events (possibly) signaled before the GPE was
-enabled.  In the latter case, however, the first caller of
-acpi_enable_gpe() for a given GPE should not be expected to care
-about any events that might be signaled through it earlier.  In
-that case, it is better to clear the status of the GPE before
-enabling it, to prevent stale events from triggering unwanted
-actions (like spurious system resume, for example).
+  [  293.689160] nvme nvme0: failed to mark controller CONNECTING
+  [  293.689160] nvme nvme0: Removing after probe failure status: 0
 
-For this reason, modify acpi_ev_add_gpe_reference() to take an
-additional boolean argument indicating whether or not the GPE
-status needs to be cleared when its reference counter changes from
-zero to one and make acpi_enable_gpe() pass TRUE to it through
-that new argument.
+Even it prints the first line to indicate the situation, the second line
+is not proper because the status is 0 which means normally success of
+the previous operation.
 
-Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
-Reported-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This patch makes it indicate the proper error value when it fails.
+  [   25.932367] nvme nvme0: failed to mark controller CONNECTING
+  [   25.932369] nvme nvme0: Removing after probe failure status: -16
+
+This situation is able to be easily reproduced by:
+  root@target:~# rmmod nvme && modprobe nvme && rmmod nvme
+
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/acevents.h | 3 ++-
- drivers/acpi/acpica/evgpe.c    | 8 +++++++-
- drivers/acpi/acpica/evgpeblk.c | 2 +-
- drivers/acpi/acpica/evxface.c  | 2 +-
- drivers/acpi/acpica/evxfgpe.c  | 2 +-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/nvme/host/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
-index 831660179662..c8652f91054e 100644
---- a/drivers/acpi/acpica/acevents.h
-+++ b/drivers/acpi/acpica/acevents.h
-@@ -69,7 +69,8 @@ acpi_status
- acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable);
- 
- acpi_status
- acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
-index 62d3aa74277b..344feba29063 100644
---- a/drivers/acpi/acpica/evgpe.c
-+++ b/drivers/acpi/acpica/evgpe.c
-@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
-  * FUNCTION:    acpi_ev_add_gpe_reference
-  *
-  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
-+ *              clear_on_enable         - Clear GPE status before enabling it
-  *
-  * RETURN:      Status
-  *
-@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
-  ******************************************************************************/
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable)
- {
- 	acpi_status status = AE_OK;
- 
-@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
- 
- 		/* Enable on first reference */
- 
-+		if (clear_on_enable) {
-+			(void)acpi_hw_clear_gpe(gpe_event_info);
-+		}
-+
- 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
- 		if (ACPI_SUCCESS(status)) {
- 			status = acpi_ev_enable_gpe(gpe_event_info);
-diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
-index 328d1d6123ad..fb15e9e2373b 100644
---- a/drivers/acpi/acpica/evgpeblk.c
-+++ b/drivers/acpi/acpica/evgpeblk.c
-@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
- 				continue;
- 			}
- 
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 			if (ACPI_FAILURE(status)) {
- 				ACPI_EXCEPTION((AE_INFO, status,
- 					"Could not enable GPE 0x%02X",
-diff --git a/drivers/acpi/acpica/evxface.c b/drivers/acpi/acpica/evxface.c
-index 3df00eb6621b..279ef0557aa3 100644
---- a/drivers/acpi/acpica/evxface.c
-+++ b/drivers/acpi/acpica/evxface.c
-@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_device,
- 	      ACPI_GPE_DISPATCH_METHOD) ||
- 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
- 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
--		(void)acpi_ev_add_gpe_reference(gpe_event_info);
-+		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
- 			/* Poll edge triggered GPEs to handle existing events */
-diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
-index 30a083902f52..710488ec59e9 100644
---- a/drivers/acpi/acpica/evxfgpe.c
-+++ b/drivers/acpi/acpica/evxfgpe.c
-@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	if (gpe_event_info) {
- 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
- 		    ACPI_GPE_DISPATCH_NONE) {
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 524d6bd6d095..385ba7a1e23b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2528,6 +2528,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
+ 		dev_warn(dev->ctrl.device,
+ 			"failed to mark controller CONNECTING\n");
++		result = -EBUSY;
+ 		goto out;
+ 	}
  
 -- 
 2.20.1
