@@ -2,272 +2,140 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3CFC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0A9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A82B2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563228957;
-	bh=i+e+XmewuTOKZMYujCCinWE6HQCvbqktbBhowFdAdPg=;
-	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
-	b=C0yc8SpZzQSwdh6JQNkWs6Z99gvH8tIDRXEJvyhTVAhwXKzZ8X4OJWnkCNBvIL3QC
-	 uGY5uIIPHwvAfff1TDHwIWpMgtXb+geRIr5AiCg/GRq4u+1WwPyJFcjGTc718c2KIt
-	 QQDgGwl4Z+XCQ5DE8ay/oFNBloKS5stUT79V5w2E=
+	by mail.kernel.org (Postfix) with ESMTP id C509A20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732779AbfGOWP4 (ORCPT
+        id S1732919AbfGOWQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 18:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 18:16:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57850 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbfGOWP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 18:15:56 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727862AbfGOWQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 18:16:21 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8417320665;
-        Mon, 15 Jul 2019 22:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563228954;
-        bh=i+e+XmewuTOKZMYujCCinWE6HQCvbqktbBhowFdAdPg=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
-        b=nit3wmf2HR893QM2K8DruIfSbcU7b/R5ef7zr8W96bJJyHcozB5YCZpfps75qxqEO
-         oicHCnXQygK86xyEFQeyuPLu1I0HibYMiVLkrgmRaDPIEiL9kInXH2fdL5MKbiGjz1
-         8gYmu0T+bLrbzSn3Rx2ZadHnq+yjFPagC4HFhmqk=
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id B9D85C0495A6;
+        Mon, 15 Jul 2019 22:16:20 +0000 (UTC)
+Received: from redhat.com (ovpn-125-108.rdu2.redhat.com [10.10.125.108])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AB0995D71B;
+        Mon, 15 Jul 2019 22:16:15 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 18:16:14 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+Message-ID: <20190715181449-mutt-send-email-mst@kernel.org>
+References: <20190520090939-mutt-send-email-mst@kernel.org>
+ <877ea26tk8.fsf@morokweng.localdomain>
+ <20190603211528-mutt-send-email-mst@kernel.org>
+ <877e96qxm7.fsf@morokweng.localdomain>
+ <20190701092212-mutt-send-email-mst@kernel.org>
+ <87d0id9nah.fsf@morokweng.localdomain>
+ <20190715103411-mutt-send-email-mst@kernel.org>
+ <874l3nnist.fsf@morokweng.localdomain>
+ <20190715163453-mutt-send-email-mst@kernel.org>
+ <8736j7neg8.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190712081744.87097-5-brendanhiggins@google.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-5-brendanhiggins@google.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-User-Agent: alot/0.8.1
-Date:   Mon, 15 Jul 2019 15:15:53 -0700
-Message-Id: <20190715221554.8417320665@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8736j7neg8.fsf@morokweng.localdomain>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 15 Jul 2019 22:16:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-07-12 01:17:30)
-> diff --git a/include/kunit/kunit-stream.h b/include/kunit/kunit-stream.h
-> new file mode 100644
-> index 0000000000000..a7b53eabf6be4
-> --- /dev/null
-> +++ b/include/kunit/kunit-stream.h
-> @@ -0,0 +1,81 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * C++ stream style string formatter and printer used in KUnit for outpu=
-tting
-> + * KUnit messages.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
-> +
-> +#ifndef _KUNIT_KUNIT_STREAM_H
-> +#define _KUNIT_KUNIT_STREAM_H
-> +
-> +#include <linux/types.h>
-> +#include <kunit/string-stream.h>
-> +
-> +struct kunit;
-> +
-> +/**
-> + * struct kunit_stream - a std::stream style string builder.
-> + *
-> + * A std::stream style string builder. Allows messages to be built up and
-> + * printed all at once.
-> + */
-> +struct kunit_stream {
-> +       /* private: internal use only. */
-> +       struct kunit *test;
-> +       const char *level;
+On Mon, Jul 15, 2019 at 07:03:03PM -0300, Thiago Jung Bauermann wrote:
+> 
+> Michael S. Tsirkin <mst@redhat.com> writes:
+> 
+> > On Mon, Jul 15, 2019 at 05:29:06PM -0300, Thiago Jung Bauermann wrote:
+> >>
+> >> Michael S. Tsirkin <mst@redhat.com> writes:
+> >>
+> >> > On Sun, Jul 14, 2019 at 02:51:18AM -0300, Thiago Jung Bauermann wrote:
+> >> >>
+> >> >>
+> >> >> Michael S. Tsirkin <mst@redhat.com> writes:
+> >> >>
+> >> >> > So this is what I would call this option:
+> >> >> >
+> >> >> > VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS
+> >> >> >
+> >> >> > and the explanation should state that all device
+> >> >> > addresses are translated by the platform to identical
+> >> >> > addresses.
+> >> >> >
+> >> >> > In fact this option then becomes more, not less restrictive
+> >> >> > than VIRTIO_F_ACCESS_PLATFORM - it's a promise
+> >> >> > by guest to only create identity mappings,
+> >> >> > and only before driver_ok is set.
+> >> >> > This option then would always be negotiated together with
+> >> >> > VIRTIO_F_ACCESS_PLATFORM.
+> >> >> >
+> >> >> > Host then must verify that
+> >> >> > 1. full 1:1 mappings are created before driver_ok
+> >> >> >     or can we make sure this happens before features_ok?
+> >> >> >     that would be ideal as we could require that features_ok fails
+> >> >> > 2. mappings are not modified between driver_ok and reset
+> >> >> >     i guess attempts to change them will fail -
+> >> >> >     possibly by causing a guest crash
+> >> >> >     or some other kind of platform-specific error
+> >> >>
+> >> >> I think VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS is good, but requiring
+> >> >> it to be accompanied by ACCESS_PLATFORM can be a problem. One reason is
+> >> >> SLOF as I mentioned above, another is that we would be requiring all
+> >> >> guests running on the machine (secure guests or not, since we would use
+> >> >> the same configuration for all guests) to support it. But
+> >> >> ACCESS_PLATFORM is relatively recent so it's a bit early for that. For
+> >> >> instance, Ubuntu 16.04 LTS (which is still supported) doesn't know about
+> >> >> it and wouldn't be able to use the device.
+> >> >
+> >> > OK and your target is to enable use with kernel drivers within
+> >> > guests, right?
+> >>
+> >> Right.
+> >>
+> >> > My question is, we are defining a new flag here, I guess old guests
+> >> > then do not set it. How does it help old guests? Or maybe it's
+> >> > not designed to ...
+> >>
+> >> Indeed. The idea is that QEMU can offer the flag, old guests can reject
+> >> it (or even new guests can reject it, if they decide not to convert into
+> >> secure VMs) and the feature negotiation will succeed with the flag
+> >> unset.
+> >
+> > OK. And then what does QEMU do? Assume guest is not encrypted I guess?
+> 
+> There's nothing different that QEMU needs to do, with or without the
+> flag. the perspective of the host, a secure guest and a regular guest
+> work the same way with respect to virtio.
 
-Is the level changed? See my comment below, but I wonder if this whole
-struct can go away and the wrappers can just operate on 'struct
-string_stream' instead.
+OK. So now let's get back to implementation. What will
+Linux guest driver do? It can't activate DMA API blindly since that
+will assume translation also works, right?
+Or do we somehow limit it to just a specific platform?
 
-> +       struct string_stream *internal_stream;
-> +};
-> diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
-> new file mode 100644
-> index 0000000000000..8bea1f22eafb5
-> --- /dev/null
-> +++ b/kunit/kunit-stream.c
-> @@ -0,0 +1,123 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * C++ stream style string formatter and printer used in KUnit for outpu=
-tting
-> + * KUnit messages.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
-> +
-> +#include <kunit/test.h>
-> +#include <kunit/kunit-stream.h>
-> +#include <kunit/string-stream.h>
-> +
-> +void kunit_stream_add(struct kunit_stream *kstream, const char *fmt, ...)
-> +{
-> +       va_list args;
-> +       struct string_stream *stream =3D kstream->internal_stream;
-> +
-> +       va_start(args, fmt);
-> +
-> +       if (string_stream_vadd(stream, fmt, args) < 0)
-> +               kunit_err(kstream->test,
-> +                         "Failed to allocate fragment: %s\n",
-> +                         fmt);
-> +
-> +       va_end(args);
-> +}
-> +
-> +void kunit_stream_append(struct kunit_stream *kstream,
-> +                               struct kunit_stream *other)
-> +{
-> +       struct string_stream *other_stream =3D other->internal_stream;
-> +       const char *other_content;
-> +
-> +       other_content =3D string_stream_get_string(other_stream);
-> +
-> +       if (!other_content) {
-> +               kunit_err(kstream->test,
-> +                         "Failed to get string from second argument for =
-appending\n");
-> +               return;
-> +       }
-> +
-> +       kunit_stream_add(kstream, other_content);
-> +}
-
-Why can't this function be implemented in the string_stream API? Seems
-valid to want to append one stream to another and that isn't
-kunit_stream specific.
-
-> +
-> +void kunit_stream_clear(struct kunit_stream *kstream)
-> +{
-> +       string_stream_clear(kstream->internal_stream);
-> +}
-> +
-> +void kunit_stream_commit(struct kunit_stream *kstream)
-> +{
-> +       struct string_stream *stream =3D kstream->internal_stream;
-> +       struct string_stream_fragment *fragment;
-> +       struct kunit *test =3D kstream->test;
-> +       char *buf;
-> +
-> +       buf =3D string_stream_get_string(stream);
-> +       if (!buf) {
-> +               kunit_err(test,
-> +                         "Could not allocate buffer, dumping stream:\n");
-> +               list_for_each_entry(fragment, &stream->fragments, node) {
-> +                       kunit_err(test, fragment->fragment);
-> +               }
-> +               kunit_err(test, "\n");
-> +               goto cleanup;
-> +       }
-> +
-> +       kunit_printk(kstream->level, test, buf);
-> +       kfree(buf);
-> +
-> +cleanup:
-
-Drop the goto and use an 'else' please.
-
-> +       kunit_stream_clear(kstream);
-> +}
-> +
-> +static int kunit_stream_init(struct kunit_resource *res, void *context)
-> +{
-> +       struct kunit *test =3D context;
-> +       struct kunit_stream *stream;
-> +
-> +       stream =3D kzalloc(sizeof(*stream), GFP_KERNEL);
-> +       if (!stream)
-> +               return -ENOMEM;
-> +
-> +       res->allocation =3D stream;
-> +       stream->test =3D test;
-> +       stream->internal_stream =3D alloc_string_stream(test);
-> +
-> +       if (!stream->internal_stream)
-> +               return -ENOMEM;
-> +
-> +       return 0;
-> +}
-> +
-> +static void kunit_stream_free(struct kunit_resource *res)
-> +{
-> +       struct kunit_stream *stream =3D res->allocation;
-> +
-> +       if (!string_stream_is_empty(stream->internal_stream)) {
-> +               kunit_err(stream->test,
-> +                         "End of test case reached with uncommitted stre=
-am entries\n");
-> +               kunit_stream_commit(stream);
-> +       }
-> +}
-> +
-
-Nitpick: Drop this extra newline.
-
-> diff --git a/kunit/test.c b/kunit/test.c
-> index f165c9d8e10b0..29edf34a89a37 100644
-> --- a/kunit/test.c
-> +++ b/kunit/test.c
-> @@ -120,6 +120,12 @@ static void kunit_print_test_case_ok_not_ok(struct k=
-unit_case *test_case,
->                               test_case->name);
->  }
-> =20
-> +void kunit_fail(struct kunit *test, struct kunit_stream *stream)
-
-Why doesn't 'struct kunit' have a 'struct kunit_stream' inside of it? It
-seems that the two are highly related, to the point that it might just
-make sense to have
-
-	struct kunit {
-		struct kunit_stream stream;
-		...
-	};
-
-> +{
-> +       kunit_set_failure(test);
-> +       kunit_stream_commit(stream);
-
-And then this function can just take a test and the stream can be
-associated with the test directly. Use container_of() to get to the test
-when the only pointer in hand is for the stream too.
-
-> +}
-> +
->  void kunit_init_test(struct kunit *test, const char *name)
->  {
->         mutex_init(&test->lock);
+> --
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
