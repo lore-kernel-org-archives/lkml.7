@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0070C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD90C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3072054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93ACF2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203121;
-	bh=2gzpnHJpu2UxoceTvfn/3W2fb5i1A+gYyHKP7Gi/5d8=;
+	s=default; t=1563203124;
+	bh=zFInjbow4awvTzD4uAikcRsrf4nCIxFXk5C0Gq0NVHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uj845tV93eu/ic/VnASWnMSYc+hszm9Bvz8ug6Sf1sgRmSfr77hE7YndHxOSHZnyf
-	 aY2mB11PX6f0f4Z8H4PZRlzF/vSZHx54X8Ejv5B6tmuuS2i8EhPC1zY19n5jsN4Iy9
-	 xAxqYdu79BHvaB/QGE9Am6zlWbASyMp2gNqlkRRU=
+	b=XIonZrzOT56Mnk7HM9tNWUkXb/rpmzHBvzbmunO8u6rukRDgLfntDvVngQBVKNVHX
+	 EulW8amYz7wS8n7RY+6WLANuGyWGbenUxZD4XmT/IJv/gQIwryC4Ji6yj4z+eL5wTo
+	 kAWe0sikT2MmG0LG6oktXZBlXxUtOMzQNgFICobY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388198AbfGOOFs (ORCPT
+        id S2388422AbfGOPFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52452 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388176AbfGOOFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:05:42 -0400
+        id S2387920AbfGOOFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:48 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A177217D9;
-        Mon, 15 Jul 2019 14:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D33C9206B8;
+        Mon, 15 Jul 2019 14:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199541;
-        bh=2gzpnHJpu2UxoceTvfn/3W2fb5i1A+gYyHKP7Gi/5d8=;
+        s=default; t=1563199548;
+        bh=zFInjbow4awvTzD4uAikcRsrf4nCIxFXk5C0Gq0NVHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QBsv12tb0FKGpm4PfjaAGQ2w1Sf2HOwUZATdycO6XyTov1jQlWs05PzED4IGGDWXt
-         z66XitBTdofhUItImPeLrwf660HaknjpeH0lMB459GzdCQTFrDHCCJPrLeLPwoCY+1
-         ActOHzA0/PphchI3CtLaSlwIXE16u1Y12mrp+MaM=
+        b=mg9Fau34i3Qdxoh4vGvA0lLePVXwFOTQAKMA9UEgdwnP+LtHKTsagay5XrF30yAyZ
+         cczR2OqfJQgDMCT/yONDV5/8irs5SoUV/3QvSrB/cCbtMlRaNiQ9WSPHZOVkgx/YHu
+         aA+jmKefMkFOctJ69/KVwCMQaBQGNnMTLxCtaKlw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 037/219] media: vim2m: fix two double-free issues
-Date:   Mon, 15 Jul 2019 10:00:38 -0400
-Message-Id: <20190715140341.6443-37-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fscrypt@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 039/219] fscrypt: clean up some BUG_ON()s in block encryption/decryption
+Date:   Mon, 15 Jul 2019 10:00:40 -0400
+Message-Id: <20190715140341.6443-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -62,57 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 20059cbbf981ca954be56f7963ae494d18e2dda1 ]
+[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
 
-vim2m_device_release() will be called by video_unregister_device() to release
-various objects.
+Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
+and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
+fscrypt_crypt_block() so that it's done for both encryption and
+decryption, not just encryption.
 
-There are two double-free issue,
-1. dev->m2m_dev will be freed twice in error_m2m path/vim2m_device_release
-2. the error_v4l2 and error_free path in vim2m_probe() will release
-   same objects, since vim2m_device_release has done.
-
-Fixes: ea6c7e34f3b2 ("media: vim2m: replace devm_kzalloc by kzalloc")
-
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vim2m.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/crypto/crypto.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
-index dd47821fc661..240327d2a3ad 100644
---- a/drivers/media/platform/vim2m.c
-+++ b/drivers/media/platform/vim2m.c
-@@ -1355,7 +1355,7 @@ static int vim2m_probe(struct platform_device *pdev)
- 						 MEDIA_ENT_F_PROC_VIDEO_SCALER);
- 	if (ret) {
- 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem media controller\n");
--		goto error_m2m;
-+		goto error_dev;
+diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+index fe38b5306045..5b3d525aa213 100644
+--- a/fs/crypto/crypto.c
++++ b/fs/crypto/crypto.c
+@@ -159,7 +159,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
+ 	struct crypto_skcipher *tfm = ci->ci_ctfm;
+ 	int res = 0;
+ 
+-	BUG_ON(len == 0);
++	if (WARN_ON_ONCE(len <= 0))
++		return -EINVAL;
++	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
++		return -EINVAL;
+ 
+ 	fscrypt_generate_iv(&iv, lblk_num, ci);
+ 
+@@ -243,8 +246,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 	struct page *ciphertext_page = page;
+ 	int err;
+ 
+-	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
+-
+ 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
+ 		/* with inplace-encryption we just encrypt the page */
+ 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
+@@ -256,7 +257,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
+ 		return ciphertext_page;
  	}
  
- 	ret = media_device_register(&dev->mdev);
-@@ -1369,11 +1369,11 @@ static int vim2m_probe(struct platform_device *pdev)
- #ifdef CONFIG_MEDIA_CONTROLLER
- error_m2m_mc:
- 	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
--error_m2m:
--	v4l2_m2m_release(dev->m2m_dev);
- #endif
- error_dev:
- 	video_unregister_device(&dev->vfd);
-+	/* vim2m_device_release called by video_unregister_device to release various objects */
-+	return ret;
- error_v4l2:
- 	v4l2_device_unregister(&dev->v4l2_dev);
- error_free:
+-	BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page)))
++		return ERR_PTR(-EINVAL);
+ 
+ 	ctx = fscrypt_get_ctx(inode, gfp_flags);
+ 	if (IS_ERR(ctx))
+@@ -304,8 +306,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
+ int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
+ 			unsigned int len, unsigned int offs, u64 lblk_num)
+ {
+-	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
+-		BUG_ON(!PageLocked(page));
++	if (WARN_ON_ONCE(!PageLocked(page) &&
++			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
++		return -EINVAL;
+ 
+ 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
+ 				      len, offs, GFP_NOFS);
 -- 
 2.20.1
 
