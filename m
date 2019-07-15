@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF5BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E45AC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477B3205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB0D20868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202412;
-	bh=6Fp3pNfiYGjsf+z9kZJlTa73q6XBBoC14w3XL3B6JOc=;
+	s=default; t=1563202421;
+	bh=j9Smzo+13AKt6noigqKwBIDWb9ULFOYIJjlw9cKEzsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUluAvgJDdcYB+e2qLUQHG/f/8UPjddNb72ev+aHnHABT4rfdfgZdOLsiJ2mIbYCS
-	 BDA4Tc0cyypoFJQv1WLIMpjpq3fViaaFx+xbkiFRrji8hBoh4yNsg7dLUOQosyPh2N
-	 UlolX2VH8zu/j1d2egRaXjoMq9GmDmJQZgbcFG1c=
+	b=L5HJPBSfe14LM+K6LfxLCp3jTgiRtxeJpxSlWP0+CXv5Ni0dLu+X2ii2RWgU29yde
+	 OH7ib/5U1C48ZCXVClNpsQf/6cKmYqzsVGPosfD/Z6BAs47RRt2+nDeHTN0CW9K0Y3
+	 FkeEVAmTU4UMk0+qQrZVn1r56qda8MOZhhb/LnVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732097AbfGOOxa (ORCPT
+        id S2404205AbfGOOxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41198 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391475AbfGOO3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:29:34 -0400
+        id S2391570AbfGOO33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:29:29 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF671206B8;
-        Mon, 15 Jul 2019 14:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C5D2205ED;
+        Mon, 15 Jul 2019 14:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200973;
-        bh=6Fp3pNfiYGjsf+z9kZJlTa73q6XBBoC14w3XL3B6JOc=;
+        s=default; t=1563200968;
+        bh=j9Smzo+13AKt6noigqKwBIDWb9ULFOYIJjlw9cKEzsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vm8Aa9E+WdCiZ/26gc9CdZSj2cW6TLhca5SD8eoYmYv0Ps3zOZbyMeW15+3pD1RGP
-         rEzYx8BPkXARXQB0hij1lAUH1fu+XA7dRBxT2MU40bQDL8lsO6/k8WeKUyfPyFUXQr
-         xf0knIZ1GtzAKPIrH8erAWcBLTCMlgOsdu1VuJQM=
+        b=y37i0Pt2QcpeZL96NArqtT+Aoo6rcuGXHjFFxYDzVQ+JlABI43T8xitQqdrObgx+u
+         7BBQbZVEMqn3CbNvc3THd7pKaMV1kM4EmuNSvToDhZ3hxIUzDe+dLxJWJVQ01AS8Ni
+         F+iOesQkxnSSLYd9GINJKEM6sjDSJjMPB7Vh2QvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 015/105] net: stmmac: dwmac4/5: Clear unused address entries
-Date:   Mon, 15 Jul 2019 10:27:09 -0400
-Message-Id: <20190715142839.9896-15-sashal@kernel.org>
+Cc:     Jungo Lin <jungo.lin@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 013/105] media: media_device_enum_links32: clean a reserved field
+Date:   Mon, 15 Jul 2019 10:27:07 -0400
+Message-Id: <20190715142839.9896-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -63,53 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Jungo Lin <jungo.lin@mediatek.com>
 
-[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
+[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
+will check whether reserved field of media_links_enum filled
+with zero.
 
-Found out while running stmmac selftests.
+However, for 32 bit program, the reserved field is missing
+copy from kernel space to user space in media_device_enum_links32
+function.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch adds the cleaning a reserved field logic in
+media_device_enum_links32 function.
+
+Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/media-device.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 55ae14a6bb8c..ed5fcd4994f2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -443,14 +443,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		 * are required
- 		 */
- 		value |= GMAC_PACKET_FILTER_PR;
--	} else if (!netdev_uc_empty(dev)) {
--		int reg = 1;
-+	} else {
- 		struct netdev_hw_addr *ha;
-+		int reg = 1;
+diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
+index 62b2c5d9bdfb..a6d56154fac7 100644
+--- a/drivers/media/media-device.c
++++ b/drivers/media/media-device.c
+@@ -470,6 +470,7 @@ static long media_device_enum_links32(struct media_device *mdev,
+ {
+ 	struct media_links_enum links;
+ 	compat_uptr_t pads_ptr, links_ptr;
++	int ret;
  
- 		netdev_for_each_uc_addr(ha, dev) {
- 			dwmac4_set_umac_addr(hw, ha->addr, reg);
- 			reg++;
- 		}
+ 	memset(&links, 0, sizeof(links));
+ 
+@@ -481,7 +482,13 @@ static long media_device_enum_links32(struct media_device *mdev,
+ 	links.pads = compat_ptr(pads_ptr);
+ 	links.links = compat_ptr(links_ptr);
+ 
+-	return media_device_enum_links(mdev, &links);
++	ret = media_device_enum_links(mdev, &links);
++	if (ret)
++		return ret;
 +
-+		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
- 	}
++	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
++
++	return 0;
+ }
  
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+ #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
 -- 
 2.20.1
 
