@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874C3C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE9FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530E0206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A02E2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200058;
-	bh=z+In7pCRM8mVJWPFp96lBYNSiwXR7hvgC2Mh0XMy0I8=;
+	s=default; t=1563200063;
+	bh=FHM3ABfh/RUD+fZcA9PBQ27KnHYDHp3MQWzw8dG8eb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9xGDWxctL/fBVhLRIumsu8p32VYOJV+6h1g+BQ3XxB6hDhq4YXhZ3XTDlWSFuovr
-	 z7wcMY078brDh/MirfrmBgFtqLjJJHBbZroP5g6nrs0uNxCNlCIZZEF+FNpMacg3gY
-	 DT053hcez1FAzrJ6QzKaG+txX8UH7k47E4T1u1hQ=
+	b=yWcjW180GBZxpD+hdLVoQmqUrlGJSRzbhnWf/Rk9RGRCwQfXvaQfGCB9J0EPdA5Nw
+	 FK1hW6Tvw/+8B87BTqqIjms/N0vc5X5MTGdu4cNSnkNiMEIwrf2SoWD6mvOajAGdFN
+	 XDI3h6toWC1Sp/41WlPUsLhwW2mgVH3EXS6HrnMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389320AbfGOOOR (ORCPT
+        id S2389332AbfGOOOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55560 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389307AbfGOOOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:14:12 -0400
+        id S2389307AbfGOOOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:14:18 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3798D2081C;
-        Mon, 15 Jul 2019 14:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7253212F5;
+        Mon, 15 Jul 2019 14:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200051;
-        bh=z+In7pCRM8mVJWPFp96lBYNSiwXR7hvgC2Mh0XMy0I8=;
+        s=default; t=1563200057;
+        bh=FHM3ABfh/RUD+fZcA9PBQ27KnHYDHp3MQWzw8dG8eb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/QMaUYf/M8CPPk+/Sjk3y1CQo8yWdnubwxU/gpPkKwVDWzy2yHbUC4cb9lhIw1S1
-         xeau49mr224MqW16hSx6lDmlzMtlUK3CZUMVx8edaJYFegjjz9bpsOph6o7hWbmnJT
-         d3CvBC2K00tP39ZGbaqRCDOiJh3o0KRuXIStp11I=
+        b=k3YBtfeBumUBaRTTgHOGxOzF4Gg6WmLRJvCqOzzykEbsUikpmooYofnYzIy18HyCN
+         4/FmI0JrgGcQdGHebnZgaluzte00417Ygpq6F1cvnD0ZNBixfUL/r2N1UBXBmxQ45e
+         stWYOEYTm5XeGGYcI4Ra4cJPe6uEBV2/OQzc+LXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 172/219] bcache: fix potential deadlock in cached_def_free()
-Date:   Mon, 15 Jul 2019 10:02:53 -0400
-Message-Id: <20190715140341.6443-172-sashal@kernel.org>
+Cc:     Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 173/219] net: hns3: fix a -Wformat-nonliteral compile warning
+Date:   Mon, 15 Jul 2019 10:02:54 -0400
+Message-Id: <20190715140341.6443-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -58,171 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 7e865eba00a3df2dc8c4746173a8ca1c1c7f042e ]
+[ Upstream commit 18d219b783da61a6cc77581f55fc4af2fa16bc36 ]
 
-When enable lockdep and reboot system with a writeback mode bcache
-device, the following potential deadlock warning is reported by lockdep
-engine.
+When setting -Wformat=2, there is a compiler warning like this:
 
-[  101.536569][  T401] kworker/2:2/401 is trying to acquire lock:
-[  101.538575][  T401] 00000000bbf6e6c7 ((wq_completion)bcache_writeback_wq){+.+.}, at: flush_workqueue+0x87/0x4c0
-[  101.542054][  T401]
-[  101.542054][  T401] but task is already holding lock:
-[  101.544587][  T401] 00000000f5f305b3 ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
-[  101.548386][  T401]
-[  101.548386][  T401] which lock already depends on the new lock.
-[  101.548386][  T401]
-[  101.551874][  T401]
-[  101.551874][  T401] the existing dependency chain (in reverse order) is:
-[  101.555000][  T401]
-[  101.555000][  T401] -> #1 ((work_completion)(&cl->work)#2){+.+.}:
-[  101.557860][  T401]        process_one_work+0x277/0x640
-[  101.559661][  T401]        worker_thread+0x39/0x3f0
-[  101.561340][  T401]        kthread+0x125/0x140
-[  101.562963][  T401]        ret_from_fork+0x3a/0x50
-[  101.564718][  T401]
-[  101.564718][  T401] -> #0 ((wq_completion)bcache_writeback_wq){+.+.}:
-[  101.567701][  T401]        lock_acquire+0xb4/0x1c0
-[  101.569651][  T401]        flush_workqueue+0xae/0x4c0
-[  101.571494][  T401]        drain_workqueue+0xa9/0x180
-[  101.573234][  T401]        destroy_workqueue+0x17/0x250
-[  101.575109][  T401]        cached_dev_free+0x44/0x120 [bcache]
-[  101.577304][  T401]        process_one_work+0x2a4/0x640
-[  101.579357][  T401]        worker_thread+0x39/0x3f0
-[  101.581055][  T401]        kthread+0x125/0x140
-[  101.582709][  T401]        ret_from_fork+0x3a/0x50
-[  101.584592][  T401]
-[  101.584592][  T401] other info that might help us debug this:
-[  101.584592][  T401]
-[  101.588355][  T401]  Possible unsafe locking scenario:
-[  101.588355][  T401]
-[  101.590974][  T401]        CPU0                    CPU1
-[  101.592889][  T401]        ----                    ----
-[  101.594743][  T401]   lock((work_completion)(&cl->work)#2);
-[  101.596785][  T401]                                lock((wq_completion)bcache_writeback_wq);
-[  101.600072][  T401]                                lock((work_completion)(&cl->work)#2);
-[  101.602971][  T401]   lock((wq_completion)bcache_writeback_wq);
-[  101.605255][  T401]
-[  101.605255][  T401]  *** DEADLOCK ***
-[  101.605255][  T401]
-[  101.608310][  T401] 2 locks held by kworker/2:2/401:
-[  101.610208][  T401]  #0: 00000000cf2c7d17 ((wq_completion)events){+.+.}, at: process_one_work+0x21e/0x640
-[  101.613709][  T401]  #1: 00000000f5f305b3 ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
-[  101.617480][  T401]
-[  101.617480][  T401] stack backtrace:
-[  101.619539][  T401] CPU: 2 PID: 401 Comm: kworker/2:2 Tainted: G        W         5.2.0-rc4-lp151.20-default+ #1
-[  101.623225][  T401] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
-[  101.627210][  T401] Workqueue: events cached_dev_free [bcache]
-[  101.629239][  T401] Call Trace:
-[  101.630360][  T401]  dump_stack+0x85/0xcb
-[  101.631777][  T401]  print_circular_bug+0x19a/0x1f0
-[  101.633485][  T401]  __lock_acquire+0x16cd/0x1850
-[  101.635184][  T401]  ? __lock_acquire+0x6a8/0x1850
-[  101.636863][  T401]  ? lock_acquire+0xb4/0x1c0
-[  101.638421][  T401]  ? find_held_lock+0x34/0xa0
-[  101.640015][  T401]  lock_acquire+0xb4/0x1c0
-[  101.641513][  T401]  ? flush_workqueue+0x87/0x4c0
-[  101.643248][  T401]  flush_workqueue+0xae/0x4c0
-[  101.644832][  T401]  ? flush_workqueue+0x87/0x4c0
-[  101.646476][  T401]  ? drain_workqueue+0xa9/0x180
-[  101.648303][  T401]  drain_workqueue+0xa9/0x180
-[  101.649867][  T401]  destroy_workqueue+0x17/0x250
-[  101.651503][  T401]  cached_dev_free+0x44/0x120 [bcache]
-[  101.653328][  T401]  process_one_work+0x2a4/0x640
-[  101.655029][  T401]  worker_thread+0x39/0x3f0
-[  101.656693][  T401]  ? process_one_work+0x640/0x640
-[  101.658501][  T401]  kthread+0x125/0x140
-[  101.660012][  T401]  ? kthread_create_worker_on_cpu+0x70/0x70
-[  101.661985][  T401]  ret_from_fork+0x3a/0x50
-[  101.691318][  T401] bcache: bcache_device_free() bcache0 stopped
+hclge_main.c:xxx:x: warning: format not a string literal and no
+format arguments [-Wformat-nonliteral]
+strs[i].desc);
+^~~~
 
-Here is how the above potential deadlock may happen in reboot/shutdown
-code path,
-1) bcache_reboot() is called firstly in the reboot/shutdown code path,
-   then in bcache_reboot(), bcache_device_stop() is called.
-2) bcache_device_stop() sets BCACHE_DEV_CLOSING on d->falgs, then call
-   closure_queue(&d->cl) to invoke cached_dev_flush(). And in turn
-   cached_dev_flush() calls cached_dev_free() via closure_at()
-3) In cached_dev_free(), after stopped writebach kthread
-   dc->writeback_thread, the kwork dc->writeback_write_wq is stopping by
-   destroy_workqueue().
-4) Inside destroy_workqueue(), drain_workqueue() is called. Inside
-   drain_workqueue(), flush_workqueue() is called. Then wq->lockdep_map
-   is acquired by lock_map_acquire() in flush_workqueue(). After the
-   lock acquired the rest part of flush_workqueue() just wait for the
-   workqueue to complete.
-5) Now we look back at writeback thread routine bch_writeback_thread(),
-   in the main while-loop, write_dirty() is called via continue_at() in
-   read_dirty_submit(), which is called via continue_at() in while-loop
-   level called function read_dirty(). Inside write_dirty() it may be
-   re-called on workqueeu dc->writeback_write_wq via continue_at().
-   It means when the writeback kthread is stopped in cached_dev_free()
-   there might be still one kworker queued on dc->writeback_write_wq
-   to execute write_dirty() again.
-6) Now this kworker is scheduled on dc->writeback_write_wq to run by
-   process_one_work() (which is called by worker_thread()). Before
-   calling the kwork routine, wq->lockdep_map is acquired.
-7) But wq->lockdep_map is acquired already in step 4), so a A-A lock
-   (lockdep terminology) scenario happens.
+This patch adds missing format parameter "%s" to snprintf() to
+fix it.
 
-Indeed on multiple cores syatem, the above deadlock is very rare to
-happen, just as the code comments in process_one_work() says,
-2263     * AFAICT there is no possible deadlock scenario between the
-2264     * flush_work() and complete() primitives (except for
-	   single-threaded
-2265     * workqueues), so hiding them isn't a problem.
-
-But it is still good to fix such lockdep warning, even no one running
-bcache on single core system.
-
-The fix is simple. This patch solves the above potential deadlock by,
-- Do not destroy workqueue dc->writeback_write_wq in cached_dev_free().
-- Flush and destroy dc->writeback_write_wq in writebach kthread routine
-  bch_writeback_thread(), where after quit the thread main while-loop
-  and before cached_dev_put() is called.
-
-By this fix, dc->writeback_write_wq will be stopped and destroy before
-the writeback kthread stopped, so the chance for a A-A locking on
-wq->lockdep_map is disappeared, such A-A deadlock won't happen
-any more.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 46a3df9f9718 ("Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c     | 2 --
- drivers/md/bcache/writeback.c | 4 ++++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index dd36e3dfd00f..91252107b10c 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1191,8 +1191,6 @@ static void cached_dev_free(struct closure *cl)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 6d4d5a470163..563eefa20003 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -550,8 +550,7 @@ static u8 *hclge_comm_get_strings(u32 stringset,
+ 		return buff;
  
- 	if (!IS_ERR_OR_NULL(dc->writeback_thread))
- 		kthread_stop(dc->writeback_thread);
--	if (dc->writeback_write_wq)
--		destroy_workqueue(dc->writeback_write_wq);
- 	if (!IS_ERR_OR_NULL(dc->status_update_thread))
- 		kthread_stop(dc->status_update_thread);
- 
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index 73f0efac2b9f..df0f4e5a051a 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -735,6 +735,10 @@ static int bch_writeback_thread(void *arg)
- 		}
+ 	for (i = 0; i < size; i++) {
+-		snprintf(buff, ETH_GSTRING_LEN,
+-			 strs[i].desc);
++		snprintf(buff, ETH_GSTRING_LEN, "%s", strs[i].desc);
+ 		buff = buff + ETH_GSTRING_LEN;
  	}
- 
-+	if (dc->writeback_write_wq) {
-+		flush_workqueue(dc->writeback_write_wq);
-+		destroy_workqueue(dc->writeback_write_wq);
-+	}
- 	cached_dev_put(dc);
- 	wait_for_kthread_stop();
  
 -- 
 2.20.1
