@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754EC73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C66CC742D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13636214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A099214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 00:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfGOAhj (ORCPT
+        id S1729136AbfGOAhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 20:37:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46632 "EHLO mx1.redhat.com"
+        Sun, 14 Jul 2019 20:37:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50680 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbfGOAhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 20:37:33 -0400
+        id S1729019AbfGOAhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jul 2019 20:37:34 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 254B73083363;
-        Mon, 15 Jul 2019 00:37:33 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5CD843688B;
+        Mon, 15 Jul 2019 00:37:34 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 17C015D9D2;
-        Mon, 15 Jul 2019 00:37:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 501475D9D2;
+        Mon, 15 Jul 2019 00:37:33 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -35,54 +35,51 @@ Cc:     linux-kernel@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
         Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH 05/22] x86/entry: Fix thunk function ELF sizes
-Date:   Sun, 14 Jul 2019 19:37:00 -0500
-Message-Id: <dfe5367f27038785ca3fcc59ba037be42c263385.1563150885.git.jpoimboe@redhat.com>
+Subject: [PATCH 06/22] x86/head/64: Annotate start_cpu0() as non-callable
+Date:   Sun, 14 Jul 2019 19:37:01 -0500
+Message-Id: <b6568e859d8af1d2b5c9efed40cfb45f0b3ebb90.1563150885.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1563150885.git.jpoimboe@redhat.com>
 References: <cover.1563150885.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 15 Jul 2019 00:37:33 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 15 Jul 2019 00:37:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warnings:
+After an objtool improvement, it complains about the fact that
+start_cpu0() jumps to code which has an LRET instruction.
 
-  arch/x86/entry/thunk_64.o: warning: objtool: trace_hardirqs_on_thunk() is missing an ELF size annotation
-  arch/x86/entry/thunk_64.o: warning: objtool: trace_hardirqs_off_thunk() is missing an ELF size annotation
-  arch/x86/entry/thunk_64.o: warning: objtool: lockdep_sys_exit_thunk() is missing an ELF size annotation
+  arch/x86/kernel/head_64.o: warning: objtool: .head.text+0xe4: unsupported instruction in callable function
+
+Technically, start_cpu0() is callable, but it acts nothing like a
+callable function.  Prevent objtool from treating it like one by
+removing its ELF function annotation.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/entry/thunk_64.S | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kernel/head_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-index cfdca8b42c70..cc20465b2867 100644
---- a/arch/x86/entry/thunk_64.S
-+++ b/arch/x86/entry/thunk_64.S
-@@ -12,9 +12,7 @@
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index bcd206c8ac90..66b4a7757397 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -253,10 +253,10 @@ END(secondary_startup_64)
+  * start_secondary() via .Ljump_to_C_code.
+  */
+ ENTRY(start_cpu0)
+-	movq	initial_stack(%rip), %rsp
+ 	UNWIND_HINT_EMPTY
++	movq	initial_stack(%rip), %rsp
+ 	jmp	.Ljump_to_C_code
+-ENDPROC(start_cpu0)
++END(start_cpu0)
+ #endif
  
- 	/* rdi:	arg1 ... normal C conventions. rax is saved/restored. */
- 	.macro THUNK name, func, put_ret_addr_in_rdi=0
--	.globl \name
--	.type \name, @function
--\name:
-+	ENTRY(\name)
- 	pushq %rbp
- 	movq %rsp, %rbp
- 
-@@ -35,6 +33,7 @@
- 
- 	call \func
- 	jmp  .L_restore
-+	ENDPROC(\name)
- 	_ASM_NOKPROBE(\name)
- 	.endm
- 
+ 	/* Both SMP bootup and ACPI suspend change these variables */
 -- 
 2.20.1
 
