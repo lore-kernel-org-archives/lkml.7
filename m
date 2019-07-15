@@ -2,103 +2,125 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931A2C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB2E2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB0A2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203816;
-	bh=4EzUqz8VEanhcqiMXOvPEr7zr+gp3i1tR7nSD7Be9rQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d896Mo/OQN9SYlwq9x9u0uJvJuC9j9FosFBrSXdf7EMH6mVay9nwfdHI7x0WSvsdG
-	 rlrdKZPXlRark4jYUMZMHmqJKJ0Wuy8Z39QfKr+mxiIv6rh2mt00atCjNNz5EtKlAU
-	 +N8azfzexDZ3fzeJ0fm05+J4CHGQMgORUQK0ayyo=
+	s=default; t=1563203832;
+	bh=E/egqeiPmeR+wTmeoTlfpr/9l78nB77vFY1VUyDOmQo=;
+	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
+	b=cVS+ujTdRP+0xUsqeIgF/tetskkhlG/lbQu0JFJyOzl3VMCwnSC7jnkX1p60EcDTI
+	 s4rgTmSH4yBIqN8lp5aUUeYqmxfHXjpYnJEc0lxEhptuIQ/oZNnDtPRrPxlMMnUJiu
+	 WKXmvf8P9T9RX+iFfn1qlLATYgaSHDFavLVM+/SU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731965AbfGOPO4 (ORCPT
+        id S1731439AbfGOPRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731151AbfGONrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:47:42 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 241A220C01;
-        Mon, 15 Jul 2019 13:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198461;
-        bh=4EzUqz8VEanhcqiMXOvPEr7zr+gp3i1tR7nSD7Be9rQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSerV4htn4fY7Cqv4wWUPrdXdl2abgpXyM3pG4Ve94JpsWXrVhf0X//BEZGVz2lmz
-         wR6Ra5dRI36wRPAcytT5AR1pactCE6wo8JWKn+8G77GsjICEq44j06rNR/dPIZQ5xi
-         yn9+N+e/DwhlSee0LhM5A7CI/zignOWCeRE6vSIM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
-        Tamizh chelvam <tamizhr@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 015/249] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
-Date:   Mon, 15 Jul 2019 09:43:00 -0400
-Message-Id: <20190715134655.4076-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+        Mon, 15 Jul 2019 11:17:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45706 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730221AbfGOPRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 11:17:10 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x22so11091350qtp.12;
+        Mon, 15 Jul 2019 08:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:subject:to:cc:references:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E/egqeiPmeR+wTmeoTlfpr/9l78nB77vFY1VUyDOmQo=;
+        b=fdAmHhIIQ5M5U7SJWntEaFH5x/7ZSNGV/zJLzvCc6oy4ze5UqIr+ewk8gIlu3LdeuD
+         bSVEyGeFqfynptNWDeMxR39rY9enAHf0Fv1HLodHpi15tfBmQUEXzcug2siLXm7QiiV+
+         nvoFtKO/+CJy9ikan9o/6tAq9hW4sFK4dBkAI48pIMeG2iYFU+HZnSor5brUWCEWjDSW
+         IqydetLko55QSdg+D97dxHsmuqyEdIZtiX2rG9LU3EpWaMWJpfmlcAWAVyFkW3BRMDCt
+         wYMyell5jTZlhr0A5x34LrJqIB+pLUrHN9vlFu3BF4RmKpB8O9BH0bblbyQTl1+semWS
+         Q6Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:subject:to:cc:references:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E/egqeiPmeR+wTmeoTlfpr/9l78nB77vFY1VUyDOmQo=;
+        b=dFa5nhVHprauNC67XuYkZUsyv9Ot6zcU6BVsiegyz5AdyfXpmzvlQ2qdxwC+Xdl0t+
+         YVTYganwwziYJXgkeyMD18oxbLY8F0PNYl31awfoeMwHIN8Xoh8cbZXPpRv3vWa0R/xC
+         gLUHTYB4Q1OjxunkahfLQn3qDFkk2In4FqU3tputEAw6aLE9gYM9vmsbTO6LcTiPfiA/
+         XFrznnUnVJDEOC38TsNlkQ40951XeIKzPPgRGlU0kN7sObaCI/DF++1rdTRrb7LWDKiO
+         lHLw9GaX/EJPCHHqJTqJppblRFHw0DrGwm/GI0kgdDPKWNneBSL0D1GirIxUdFIY3E6U
+         2SyA==
+X-Gm-Message-State: APjAAAXECgRkddBdwz2IIKCVeCntbN8nZILDRhs8/Nva+Hl4DvHaQB3Z
+        l2Rg3tuT83M4FHfYHCStclc=
+X-Google-Smtp-Source: APXvYqw+Jj/zJuzoP/WabIMtvOAfiFGap4BYM3yfG3iS6kDjoZ16oLEcwXvluS9Yi+h/DsFIMYTcnQ==
+X-Received: by 2002:ac8:1106:: with SMTP id c6mr17077663qtj.332.1563203829090;
+        Mon, 15 Jul 2019 08:17:09 -0700 (PDT)
+Received: from [10.84.150.27] ([167.220.148.27])
+        by smtp.gmail.com with ESMTPSA id q17sm3683624qtl.13.2019.07.15.08.17.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 08:17:08 -0700 (PDT)
+From:   Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH v3 04/24] dmaengine: qcom_hidma: Remove call to memset
+ after dmam_alloc_coherent
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20190715031723.6375-1-huangfq.daxian@gmail.com>
+ <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
+ <CABXRUiQXweOLRTpdyhx9xT_B1VBmoSoNm=_+Qr4prmz7u1QRFA@mail.gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <245ffd79-316c-e985-d1da-2ccea6d29636@kernel.org>
+Date:   Mon, 15 Jul 2019 11:17:07 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABXRUiQXweOLRTpdyhx9xT_B1VBmoSoNm=_+Qr4prmz7u1QRFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anilkumar Kolli <akolli@codeaurora.org>
+On 7/15/2019 1:43 AM, Fuqian Huang wrote:
+> Should I rewrite the commit log? Just mention that dma_alloc_coherent
+> has already
+> zeroed the memory and not to reference the commit?
 
-[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
-
-Increase pulse width range from 1-2usec to 0-4usec.
-During data traffic HW occasionally fails detecting radar pulses,
-so that SW cannot get enough radar reports to achieve the success rate.
-
-Tested ath10k hw and fw:
-	* QCA9888(10.4-3.5.1-00052)
-	* QCA4019(10.4-3.2.1.1-00017)
-	* QCA9984(10.4-3.6-00104)
-	* QCA988X(10.2.4-1.0-00041)
-
-Tested ath9k hw: AR9300
-
-Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
-index d52b31b45df7..a274eb0d1968 100644
---- a/drivers/net/wireless/ath/dfs_pattern_detector.c
-+++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
-@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
- 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
- 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
- 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
--	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
-+	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
- 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
- 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
- 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
--- 
-2.20.1
-
+I'd like to hear from Robin Murphy that arm smmu driver follows this as
+well.
