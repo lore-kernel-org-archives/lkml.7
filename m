@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B5AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7476CC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA352067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4F92081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198535;
-	bh=uhnvAancAVMkA3TSTecQZgPoV74ngOr7T0pi4tizkbk=;
+	s=default; t=1563198539;
+	bh=cGsdekt96et4AUPN/AWkNFUPLK2sqWen/8RnBRh1ibs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvNNofSfOwNNv0MA7XkBQwO5ws19xCFdlYvxuabBwMBqXZyi7yIZJ+qV0Nku3kBqG
-	 /GcZwsOSaHK4WviaQ4yUXWXWwdkD+1jwuzqU3mepWMBL6sYN7CXFtG2tqZb/KnCpP4
-	 jFvQYSdBPQZkVpFKq98BA+indARycpNyhz6bnuf0=
+	b=kz2hro+fI1akcC/pn3CpDLGjtUCO7XAd8t9lHWdoCHQ9hQzvAMs/6hm+5jW1Qu7/g
+	 t9QKQnzUW+FLcR6mj98UgZjwg25pofOwAgFAmzXbnPw7VJaIRwBb+6wzbsYpW+ZxqV
+	 oe9M7Dlwpkz3U8YbEnWxRHseAJ6QbHjYRdcTbQaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbfGONsy (ORCPT
+        id S1731629AbfGONs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59958 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730691AbfGONsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:48:53 -0400
+        id S1731610AbfGONsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:48:55 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5253B2067C;
-        Mon, 15 Jul 2019 13:48:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A0182081C;
+        Mon, 15 Jul 2019 13:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198531;
-        bh=uhnvAancAVMkA3TSTecQZgPoV74ngOr7T0pi4tizkbk=;
+        s=default; t=1563198534;
+        bh=cGsdekt96et4AUPN/AWkNFUPLK2sqWen/8RnBRh1ibs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0KqdjIYulVeDvhdEBWuRh0LoZcELnz1h9a8yscmowZAvAVFT4IxVMZxhAL9fy22Um
-         uztbBBzD6qSLzzCqFdX4bALTIHGVTq/ZCYe+x8B7TJ+Lws3lwBOd2JjsIuwqYKVrH2
-         X6co+4bI+BP5VgSUXwSPFLt29i9wFX4GeprEeLZU=
+        b=IgQRFBww/3MYAHaEBQtnWpjiLkD7OD35EzUynrxirRteE9MsKft/HzgVIY4fxwO9G
+         f3Lnnx0hQ/2Ru/ABnK7z/hMPaAk9D0I7PN+/o8NRMTvmOV9PO1NqnttLQlUKu1Jybl
+         FMkKTRYtWSeZabDTtdOzl6XaocAx5fIMXiAXGzPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 036/249] net: hns3: fix for FEC configuration
-Date:   Mon, 15 Jul 2019 09:43:21 -0400
-Message-Id: <20190715134655.4076-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 037/249] qed: Set the doorbell address correctly
+Date:   Mon, 15 Jul 2019 09:43:22 -0400
+Message-Id: <20190715134655.4076-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,48 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit f438bfe9d4fe2e491505abfbf04d7c506e00d146 ]
+[ Upstream commit 8366d520019f366fabd6c7a13032bdcd837e18d4 ]
 
-The FEC capbility may be changed with port speed changes. Driver
-needs to read the active FEC mode, and update FEC capability
-when port speed changes.
+In 100g mode the doorbell bar is united for both engines. Set
+the correct offset in the hwfn so that the doorbell returned
+for RoCE is in the affined hwfn.
 
-Fixes: 7e6ec9148a1d ("net: hns3: add support for FEC encoding control")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Denis Bolotin <denis.bolotin@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c  | 29 ++++++++++++++--------
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c |  2 +-
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index d3b1f8cb1155..4d9bcad26f06 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2508,6 +2508,9 @@ static void hclge_update_link_status(struct hclge_dev *hdev)
- 
- static void hclge_update_port_capability(struct hclge_mac *mac)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index fccdb06fc5c5..8c40739e0d1b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -3443,6 +3443,7 @@ static void qed_nvm_info_free(struct qed_hwfn *p_hwfn)
+ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 				 void __iomem *p_regview,
+ 				 void __iomem *p_doorbells,
++				 u64 db_phys_addr,
+ 				 enum qed_pci_personality personality)
  {
-+	/* update fec ability by speed */
-+	hclge_convert_setting_fec(mac);
+ 	struct qed_dev *cdev = p_hwfn->cdev;
+@@ -3451,6 +3452,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 	/* Split PCI bars evenly between hwfns */
+ 	p_hwfn->regview = p_regview;
+ 	p_hwfn->doorbells = p_doorbells;
++	p_hwfn->db_phys_addr = db_phys_addr;
+ 
+ 	if (IS_VF(p_hwfn->cdev))
+ 		return qed_vf_hw_prepare(p_hwfn);
+@@ -3546,7 +3548,9 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the first hwfn - will learn number of hwfns */
+ 	rc = qed_hw_prepare_single(p_hwfn,
+ 				   cdev->regview,
+-				   cdev->doorbells, personality);
++				   cdev->doorbells,
++				   cdev->db_phys_addr,
++				   personality);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -3555,22 +3559,25 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the rest of the hwfns */
+ 	if (cdev->num_hwfns > 1) {
+ 		void __iomem *p_regview, *p_doorbell;
+-		u8 __iomem *addr;
++		u64 db_phys_addr;
++		u32 offset;
+ 
+ 		/* adjust bar offset for second engine */
+-		addr = cdev->regview +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_0) / 2;
+-		p_regview = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_0) / 2;
++		p_regview = cdev->regview + offset;
+ 
+-		addr = cdev->doorbells +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_1) / 2;
+-		p_doorbell = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_1) / 2;
 +
- 	/* firmware can not identify back plane type, the media type
- 	 * read from configuration can help deal it
- 	 */
-@@ -2580,6 +2583,10 @@ static int hclge_get_sfp_info(struct hclge_dev *hdev, struct hclge_mac *mac)
- 		mac->speed_ability = le32_to_cpu(resp->speed_ability);
- 		mac->autoneg = resp->autoneg;
- 		mac->support_autoneg = resp->autoneg_ability;
-+		if (!resp->active_fec)
-+			mac->fec_mode = 0;
-+		else
-+			mac->fec_mode = BIT(resp->active_fec);
- 	} else {
- 		mac->speed_type = QUERY_SFP_SPEED;
- 	}
++		p_doorbell = cdev->doorbells + offset;
++
++		db_phys_addr = cdev->db_phys_addr + offset;
+ 
+ 		/* prepare second hw function */
+ 		rc = qed_hw_prepare_single(&cdev->hwfns[1], p_regview,
+-					   p_doorbell, personality);
++					   p_doorbell, db_phys_addr,
++					   personality);
+ 
+ 		/* in case of error, need to free the previously
+ 		 * initiliazed hwfn 0.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 7873d6dfd91f..13802b825d65 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -803,7 +803,7 @@ static int qed_rdma_add_user(void *rdma_cxt,
+ 				     dpi_start_offset +
+ 				     ((out_params->dpi) * p_hwfn->dpi_size));
+ 
+-	out_params->dpi_phys_addr = p_hwfn->cdev->db_phys_addr +
++	out_params->dpi_phys_addr = p_hwfn->db_phys_addr +
+ 				    dpi_start_offset +
+ 				    ((out_params->dpi) * p_hwfn->dpi_size);
+ 
 -- 
 2.20.1
 
