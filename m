@@ -2,83 +2,87 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCA9C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91454C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC4B2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644522081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xaq697mI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Xaq697mI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eZN7c45p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfGOJdp (ORCPT
+        id S1729522AbfGOJiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:33:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38046 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729451AbfGOJdo (ORCPT
+        Mon, 15 Jul 2019 05:38:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35620 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbfGOJiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:33:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8321060E3F; Mon, 15 Jul 2019 09:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563183223;
-        bh=bKDRQ5Q1xApBte+/v0rOlSUIL+4/NKgeP0jwHbZy5oY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Xaq697mIyOTC12VC970aNYaW3KStrFo/6aw3qo0J950Tau6XU1keg5fSpnLZ5R3KB
-         bJj/mZuigh859RyqLBD54bFECA+iAyiR0FEdNuRg+le8lxx9Hj63m0qyFmGzGyGKdC
-         GQHSQOaRIjyiKr6NQFjz1VVS5yo7Kgd23QPmciII=
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87B4860A50;
-        Mon, 15 Jul 2019 09:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563183223;
-        bh=bKDRQ5Q1xApBte+/v0rOlSUIL+4/NKgeP0jwHbZy5oY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Xaq697mIyOTC12VC970aNYaW3KStrFo/6aw3qo0J950Tau6XU1keg5fSpnLZ5R3KB
-         bJj/mZuigh859RyqLBD54bFECA+iAyiR0FEdNuRg+le8lxx9Hj63m0qyFmGzGyGKdC
-         GQHSQOaRIjyiKr6NQFjz1VVS5yo7Kgd23QPmciII=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87B4860A50
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Solomon Peachy <pizza@shaftnet.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 17/35] net/wireless: Use kmemdup rather than duplicating its implementation
-References: <20190703162934.32645-1-huangfq.daxian@gmail.com>
-Date:   Mon, 15 Jul 2019 12:33:39 +0300
-In-Reply-To: <20190703162934.32645-1-huangfq.daxian@gmail.com> (Fuqian Huang's
-        message of "Thu, 4 Jul 2019 00:29:34 +0800")
-Message-ID: <874l3nr6a4.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 15 Jul 2019 05:38:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CaCJ3BP9sWiklXE7o4fAAusvuuS7iaTXDeBKOpK31ZM=; b=eZN7c45pM+dwp3/PuatRJPz8W
+        ibT8EKGHYxtJwBtxuxgiWX6aNp1KvxIO95/ysl6XGIzcN1TwECB9GNMNxJjcBDrEqi82BFbJcl//Q
+        d7xM2G085JC0+5CzCE8uMuttpWTkOVpG8wWVTAPzO/M1VD8zr3LEKmD9loYxZtV+SbSXM5EKWYkhz
+        ILoE8Ju9qJz9FLbIMGBAzT8JwDgVECqzFPjhjeo5dNKOTg4Ds1uaDbhC/3jvW5Q8zlTW0IU1TXRoq
+        12vaoXH6JZl/3RjtGz8bgehQpJYSKYR3S3vUOFcKI0qKCV4neuZMCBeEdL/ARbvnpQgGl2x0btKrE
+        wGRbnBvHA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hmxRT-0001nA-Hc; Mon, 15 Jul 2019 09:38:43 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4C5ED20B29100; Mon, 15 Jul 2019 11:38:40 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 11:38:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 18/22] objtool: Refactor jump table code
+Message-ID: <20190715093840.GY3419@hirez.programming.kicks-ass.net>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
+ <6735a6cb9c18c3af5a65ee5078b9b754358935f6.1563150885.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6735a6cb9c18c3af5a65ee5078b9b754358935f6.1563150885.git.jpoimboe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fuqian Huang <huangfq.daxian@gmail.com> writes:
+On Sun, Jul 14, 2019 at 07:37:13PM -0500, Josh Poimboeuf wrote:
+> Now that C jump tables are supported, call them "jump tables" instead of
+> "switch tables".  Also rename some other variables, add comments, and
+> simplify the code flow a bit.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  tools/objtool/check.c | 82 +++++++++++++++++++++++--------------------
+>  tools/objtool/elf.c   |  2 +-
+>  tools/objtool/elf.h   |  2 +-
+>  3 files changed, 46 insertions(+), 40 deletions(-)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index a190a6e79a91..b21e9f7768d0 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -627,7 +627,7 @@ static int add_jump_destinations(struct objtool_file *file)
+>  			 * However this code can't completely replace the
+>  			 * read_symbols() code because this doesn't detect the
+>  			 * case where the parent function's only reference to a
+> -			 * subfunction is through a switch table.
+> +			 * subfunction is through a switch jump table.
 
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
->
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-
-I'm planning to take this.
-
--- 
-Kalle Valo
+s/switch// ?
