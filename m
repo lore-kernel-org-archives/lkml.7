@@ -2,125 +2,94 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72E5C73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43088C742D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A53920868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 01:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8NhfdRW"
+	by mail.kernel.org (Postfix) with ESMTP id 2004620868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 02:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfGOB2z (ORCPT
+        id S1729051AbfGOCKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 21:28:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39735 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfGOB2y (ORCPT
+        Sun, 14 Jul 2019 22:10:02 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:36474 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727006AbfGOCKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 21:28:54 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so6899652pgi.6;
-        Sun, 14 Jul 2019 18:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J0uuieNJWIEqFucVVL6HHob/1V+xJ9X3pNwzM9VDJZ0=;
-        b=i8NhfdRWTkmqEfZfCzU6oPHv7PGnVKfRg+X/b4xOt2S5SqMQ29UUIxVI2TlfpZu76f
-         vOMoGM8eRo5AZgdPp1J8r7HMj+Ge6VoyzIGyVqiLtccwhIPCJtjH3W22rdKgjWO05S1I
-         6T4XK6CF/169lYtJ41je6yOzqDUa7h/d2x5ZXm5s3J1Cimo6rI0gqMUFMdQ4A4CjH9PH
-         fD3f404sOpFSlsFAw8Zy16LwPNz0YiT6YEDkvLqggQWB4gV5G7imDyKMkEqArivlODTP
-         myfYxTKqPpkNZJPpbxYBKSW7rj7EZwTGw3oA0F6AzUBMzL6XYWKsEwYEDYUjlom36WEz
-         Ic0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J0uuieNJWIEqFucVVL6HHob/1V+xJ9X3pNwzM9VDJZ0=;
-        b=epmZ7ifMZkqDnVEAACgqjajXxSJ+o7nI8qSui8svCaP3xutXRVJ6dSgSI+Lar85YP7
-         wFsIHnzyVpNXFV7Xxf34t9GrWF8dEo4ydj7PvQnqQrZgN22mfIT5Udi4u1AjB1STcB0d
-         OYyZ7/IVoksMFjDCREeirYrKy/PO3kgfYBxVZ1QilQKQ44+7DtTCF4+5fA6nJhYfCvWA
-         nyrfkozFzxSEriClLflkoCh/Zht6XhAX/SLo5TMsZPgPnIMCP1LBerCfkPAmguA32ch7
-         +8eoIhzon7Ltl6XQYajjcuPNExS1rga8PYVslQNLcgRxZ5JGM1KeuJ0g7IoE1g4E8eqh
-         V/Vw==
-X-Gm-Message-State: APjAAAVZH6NnUGC6uttueW5m0Qv1YbNt6cJMzhrlmgwdoVKxDOk1qGzi
-        aWuDuarRosbJJjxyzDQB734pBB2Za98=
-X-Google-Smtp-Source: APXvYqxs3OG0BKcfq0rH3+05QtGWcstr5HpP1eAAxWdX97TW47eRmkiqekNJ2fdh2UAMVwsZROCxIw==
-X-Received: by 2002:a17:90a:2247:: with SMTP id c65mr25371401pje.24.1563154133835;
-        Sun, 14 Jul 2019 18:28:53 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id o14sm15386915pjp.29.2019.07.14.18.28.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 14 Jul 2019 18:28:53 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH RESEND] i386/kvm: support guest access CORE cstate
-Date:   Mon, 15 Jul 2019 09:28:44 +0800
-Message-Id: <1563154124-18579-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 14 Jul 2019 22:10:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TWte0iC_1563156576;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TWte0iC_1563156576)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 15 Jul 2019 10:09:37 +0800
+Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
+ statistic
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        Mel Gorman <mgorman@suse.de>, riel@surriel.com
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
+ <20190711134754.GD3402@hirez.programming.kicks-ass.net>
+ <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
+ <20190712075815.GN3402@hirez.programming.kicks-ass.net>
+ <37474414-1a54-8e3a-60df-eb7e5e1cc1ed@linux.alibaba.com>
+ <20190712094214.GR3402@hirez.programming.kicks-ass.net>
+ <f8020f92-045e-d515-360b-faf9a149ab80@linux.alibaba.com>
+Message-ID: <673993cf-c5cc-475d-1396-991edcf367ea@linux.alibaba.com>
+Date:   Mon, 15 Jul 2019 10:09:36 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <f8020f92-045e-d515-360b-faf9a149ab80@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
 
-Allow guest reads CORE cstate when exposing host CPU power management capabilities 
-to the guest. PKG cstate is restricted to avoid a guest to get the whole package 
-information in multi-tenant scenario.
 
-Cc: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- linux-headers/linux/kvm.h | 4 +++-
- target/i386/kvm.c         | 3 ++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+On 2019/7/12 下午6:10, 王贇 wrote:
+[snip]
+>>
+>> Documentation/cgroup-v1/cpusets.txt
+>>
+>> Look for mems_allowed.
+> 
+> This is the attribute belong to cpuset cgroup isn't it?
+> 
+> Forgive me but I have no idea on how to combined this
+> with memory cgroup's locality hierarchical update...
+> parent memory cgroup do not have influence on mems_allowed
+> to it's children, correct?
+> 
+> What about we just account the locality status of child
+> memory group into it's ancestors?
 
-diff --git a/linux-headers/linux/kvm.h b/linux-headers/linux/kvm.h
-index b53ee59..d648fde 100644
---- a/linux-headers/linux/kvm.h
-+++ b/linux-headers/linux/kvm.h
-@@ -696,9 +696,11 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_MWAIT          (1 << 0)
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
-+#define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
- #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
-                                               KVM_X86_DISABLE_EXITS_HLT | \
--                                              KVM_X86_DISABLE_EXITS_PAUSE)
-+                                              KVM_X86_DISABLE_EXITS_PAUSE | \
-+                                              KVM_X86_DISABLE_EXITS_CSTATE)
- 
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
-diff --git a/target/i386/kvm.c b/target/i386/kvm.c
-index 3b29ce5..49a0cc1 100644
---- a/target/i386/kvm.c
-+++ b/target/i386/kvm.c
-@@ -1645,7 +1645,8 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
-         if (disable_exits) {
-             disable_exits &= (KVM_X86_DISABLE_EXITS_MWAIT |
-                               KVM_X86_DISABLE_EXITS_HLT |
--                              KVM_X86_DISABLE_EXITS_PAUSE);
-+                              KVM_X86_DISABLE_EXITS_PAUSE |
-+                              KVM_X86_DISABLE_EXITS_CSTATE);
-         }
- 
-         ret = kvm_vm_enable_cap(s, KVM_CAP_X86_DISABLE_EXITS, 0,
--- 
-2.7.4
+We have rethink about this, and found no strong reason to stay
+with memory cgroup anymore.
 
+We used to acquire pages number, exectime and locality together
+from memory cgroup, to make thing easier for our numa balancer
+module, as now we use the numa group approach, maybe we can just
+move these accounting into cpu cgroups, so all these features
+stay in one subsys and could be hierarchical :-)
+
+Regards,
+Michael Wang
+
+> 
+> Regards,
+> Michael Wang
+> 
+>>
