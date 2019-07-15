@@ -2,314 +2,440 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECE1C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4656DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A24F20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:47:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="soc+XYqr"
+	by mail.kernel.org (Postfix) with ESMTP id 0D71E214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbfGOJrW (ORCPT
+        id S1729669AbfGOJud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:47:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36518 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbfGOJrW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:47:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6F9lBqe048982;
-        Mon, 15 Jul 2019 04:47:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563184031;
-        bh=nsCbN9LXGkKl6cl+W3My4orVJKZBkvB5Iek+7zc89LA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=soc+XYqrX6ZDIKzfnSbvExtZOfcT288ctZa2p4cB52aKsyU1yyucH/13+h7UcHZe8
-         H+UKU6hm+R1aG7rmRfxojjpC3ehzxg33cu6PRUU8EUz2LsfE6SXLnG9+euIPhISfws
-         hDmswrrwMsitV6kCa6H0C9UDrzsWcLE+U1LVFwzU=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6F9lBnw105365
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jul 2019 04:47:11 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
- Jul 2019 04:47:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 15 Jul 2019 04:47:10 -0500
-Received: from [10.250.97.31] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6F9l8Uc080072;
-        Mon, 15 Jul 2019 04:47:09 -0500
-Subject: Re: [PATCH 1/2] leds: Add control of the voltage/current regulator to
- the LED core
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-CC:     Dan Murphy <dmurphy@ti.com>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-2-jjhiblot@ti.com>
- <56d16260-ff82-3439-4c1f-2a3a1552bc7d@ti.com>
- <ab4818c0-bc7a-13e1-c6ce-e977b0234de0@ti.com>
- <20190715092400.sedjumqkecglheyu@holly.lan>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <9c53f54f-d0d4-50d4-09da-34389085269a@ti.com>
-Date:   Mon, 15 Jul 2019 11:47:08 +0200
+        Mon, 15 Jul 2019 05:50:33 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:32838 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729257AbfGOJud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 05:50:33 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id BD5CE2070A;
+        Mon, 15 Jul 2019 11:50:29 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 9E5B320631;
+        Mon, 15 Jul 2019 11:50:29 +0200 (CEST)
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v4] media: si2168: Refactor command setup code
+To:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sean Young <sean@mess.org>, Brad Love <brad@nextdimension.cc>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Matthias Schwarzott <zzam@gentoo.org>
+Message-ID: <06171488-7530-d4e4-1b94-f82905ed383d@free.fr>
+Date:   Mon, 15 Jul 2019 11:50:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190715092400.sedjumqkecglheyu@holly.lan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Jul 15 11:50:29 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use cmd_init() to fill a struct si2168_cmd command.
 
-On 15/07/2019 11:24, Daniel Thompson wrote:
-> On Mon, Jul 15, 2019 at 11:01:29AM +0200, Jean-Jacques Hiblot wrote:
->> Hi Dan,
->>
->> On 12/07/2019 20:49, Dan Murphy wrote:
->>> JJ
->>>
->>> On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
->>>> A LED is usually powered by a voltage/current regulator. Let the LED
->>>> core
->>> Let the LED core know
->>>> about it. This allows the LED core to turn on or off the power supply
->>>> as needed.
->>>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->>>> ---
->>>>    drivers/leds/led-class.c | 10 ++++++++
->>>>    drivers/leds/led-core.c  | 53 +++++++++++++++++++++++++++++++++++++---
->>>>    include/linux/leds.h     |  4 +++
->>>>    3 files changed, 64 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->>>> index 4793e77808e2..e01b2d982564 100644
->>>> --- a/drivers/leds/led-class.c
->>>> +++ b/drivers/leds/led-class.c
->>>> @@ -17,6 +17,7 @@
->>>>    #include <linux/slab.h>
->>>>    #include <linux/spinlock.h>
->>>>    #include <linux/timer.h>
->>>> +#include <linux/regulator/consumer.h>
->>> What if you move this to leds.h so core and class can both include it.
->>>
->>>
->>>>    #include <uapi/linux/uleds.h>
->>>>    #include "leds.h"
->>>>    @@ -272,6 +273,15 @@ int of_led_classdev_register(struct device
->>>> *parent, struct device_node *np,
->>>>            dev_warn(parent, "Led %s renamed to %s due to name collision",
->>>>                    led_cdev->name, dev_name(led_cdev->dev));
->>>>    +    led_cdev->regulator = devm_regulator_get(led_cdev->dev, "power");
->>> Is the regulator always going to be called power?
->> Actually in the dts, that will be "power-supply". I lacked the imagination
->> to come up with a better name.
->>
->>
->>
->>>> +    if (IS_ERR(led_cdev->regulator)) {
->>>> +        dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
->>>> +            led_cdev->name);
->>>> +        device_unregister(led_cdev->dev);
->>>> +        mutex_unlock(&led_cdev->led_access);
->>>> +        return PTR_ERR(led_cdev->regulator);
->>> This is listed as optional in the DT doc.  This appears to be required.
->> The regulator core will provide a dummy regulator if none is given in the
->> device tree. I would rather have an error in that case, but that is not how
->> it works.
-> If you actively wanted to get -ENODEV back when there is no regulator
-> then you can use devm_regulator_get_optional() for that.
->
-> However perhaps be careful what you wish for. If you use get_optional()
-> then you will have to sprinkle NULL or IS_ERR() checks everywhere. I'd
-> favour using the current approach!
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+Changes from v1:
+- Use a real function to populate struct si2168_cmd *cmd, and a trivial
+macro wrapping it (macro because sizeof).
+Changes from v2:
+- Fix header mess
+- Add Jonathan's tag
+Changes from v3:
+- Drop Jonathan's tag after rewrite
+- Completely drop macro, and explicitly provide 'wlen' argument
+---
+ drivers/media/dvb-frontends/si2168.c | 152 ++++++++-------------------
+ 1 file changed, 44 insertions(+), 108 deletions(-)
 
-Thanks for the info. I think I'll use the get_optionnal(). That will add 
-a bit of complexity, but it will avoid deferring some work in 
-led_set_brightness_nopm() when it is not needed.
-
-JJ
-
->
->
-> Daniel.
->
->>
->>> I prefer to keep it optional.  Many LED drivers are connected to fixed
->>> non-managed supplies.
->>>
->>>> +    }
->>>> +
->>>>        if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
->>>>            ret = led_add_brightness_hw_changed(led_cdev);
->>>>            if (ret) {
->>>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->>>> index 7107cd7e87cf..139de6b08cad 100644
->>>> --- a/drivers/leds/led-core.c
->>>> +++ b/drivers/leds/led-core.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/rwsem.h>
->>>>    #include <linux/slab.h>
->>>>    #include "leds.h"
->>>> +#include <linux/regulator/consumer.h>
->>>>      DECLARE_RWSEM(leds_list_lock);
->>>>    EXPORT_SYMBOL_GPL(leds_list_lock);
->>>> @@ -23,6 +24,31 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
->>>>    LIST_HEAD(leds_list);
->>>>    EXPORT_SYMBOL_GPL(leds_list);
->>>>    +static bool __led_need_regulator_update(struct led_classdev
->>>> *led_cdev,
->>>> +                    int brightness)
->>>> +{
->>>> +    bool new_regulator_state = (brightness != LED_OFF);
->>>> +
->>>> +    return led_cdev->regulator_state != new_regulator_state;
->>>> +}
->>>> +
->>>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
->>>> +                int brightness)
->>>> +{
->>>> +    if (__led_need_regulator_update(led_cdev, brightness)) {
->>>> +        int ret;
->>> Prefer to this to be moved up.
->> ok
->>>> +
->>>> +        if (brightness != LED_OFF)
->>>> +            ret = regulator_enable(led_cdev->regulator);
->>>> +        else
->>>> +            ret = regulator_disable(led_cdev->regulator);
->>>> +        if (ret)
->>>> +            return ret;
->>> new line
->>>> +        led_cdev->regulator_state = (brightness != LED_OFF);
->>>> +    }
->>>> +    return 0;
->>>> +}
->>>> +
->>>>    static int __led_set_brightness(struct led_classdev *led_cdev,
->>>>                    enum led_brightness value)
->>>>    {
->>>> @@ -80,6 +106,7 @@ static void led_timer_function(struct timer_list *t)
->>>>        }
->>>>          led_set_brightness_nosleep(led_cdev, brightness);
->>>> +    __led_handle_regulator(led_cdev, brightness);
->>> Again this seems to indicate that the regulator is a required property
->>> for the LEDs
->>>
->>> This needs to be made optional.  And the same comment through out for
->>> every call.
->>>
->>>
->>>>          /* Return in next iteration if led is in one-shot mode and
->>>> we are in
->>>>         * the final blink state so that the led is toggled each
->>>> delay_on +
->>>> @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
->>>> work_struct *ws)
->>>>        if (ret == -ENOTSUPP)
->>>>            ret = __led_set_brightness_blocking(led_cdev,
->>>>                        led_cdev->delayed_set_value);
->>>> +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
->>>> +
->>>>        if (ret < 0 &&
->>>>            /* LED HW might have been unplugged, therefore don't warn */
->>>>            !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
->>>> @@ -141,6 +170,7 @@ static void led_set_software_blink(struct
->>>> led_classdev *led_cdev,
->>>>        /* never on - just set to off */
->>>>        if (!delay_on) {
->>>>            led_set_brightness_nosleep(led_cdev, LED_OFF);
->>>> +        __led_handle_regulator(led_cdev, LED_OFF);
->>>>            return;
->>>>        }
->>>>    @@ -148,6 +178,7 @@ static void led_set_software_blink(struct
->>>> led_classdev *led_cdev,
->>>>        if (!delay_off) {
->>>>            led_set_brightness_nosleep(led_cdev,
->>>>                           led_cdev->blink_brightness);
->>>> +        __led_handle_regulator(led_cdev, led_cdev->blink_brightness);
->>>>            return;
->>>>        }
->>>>    @@ -256,8 +287,14 @@ void led_set_brightness_nopm(struct
->>>> led_classdev *led_cdev,
->>>>                      enum led_brightness value)
->>>>    {
->>>>        /* Use brightness_set op if available, it is guaranteed not to
->>>> sleep */
->>>> -    if (!__led_set_brightness(led_cdev, value))
->>>> -        return;
->>>> +    if (!__led_set_brightness(led_cdev, value)) {
->>>> +        /*
->>>> +         * if regulator state doesn't need to be changed, that is all/
->>>> +         * Otherwise delegate the change to a work queue
->>>> +         */
->>>> +        if (!__led_need_regulator_update(led_cdev, value))
->>>> +            return;
->>>> +    }
->>>>          /* If brightness setting can sleep, delegate it to a work
->>>> queue task */
->>>>        led_cdev->delayed_set_value = value;
->>>> @@ -280,6 +317,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
->>>>    int led_set_brightness_sync(struct led_classdev *led_cdev,
->>>>                    enum led_brightness value)
->>>>    {
->>>> +    int ret;
->>>> +
->>>>        if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
->>>>            return -EBUSY;
->>>>    @@ -288,7 +327,15 @@ int led_set_brightness_sync(struct
->>>> led_classdev *led_cdev,
->>>>        if (led_cdev->flags & LED_SUSPENDED)
->>>>            return 0;
->>>>    -    return __led_set_brightness_blocking(led_cdev,
->>>> led_cdev->brightness);
->>>> +    ret = __led_set_brightness_blocking(led_cdev,
->>>> led_cdev->brightness);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    ret = __led_handle_regulator(led_cdev, led_cdev->brightness);
->>> Can't you just return here?
->> ok
->>
->>
->> thanks for the review
->>
->> JJ
->>
->>> Dan
->>>
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    return 0;
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(led_set_brightness_sync);
->>>>    diff --git a/include/linux/leds.h b/include/linux/leds.h
->>>> index 9b2bf574a17a..bee8e3f8dddd 100644
->>>> --- a/include/linux/leds.h
->>>> +++ b/include/linux/leds.h
->>>> @@ -123,6 +123,10 @@ struct led_classdev {
->>>>          /* Ensures consistent access to the LED Flash Class device */
->>>>        struct mutex        led_access;
->>>> +
->>>> +    /* regulator */
->>>> +    struct regulator    *regulator;
->>>> +    bool            regulator_state;
->>>>    };
->>>>      extern int of_led_classdev_register(struct device *parent,
+diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
+index 168c503e9154..550382847229 100644
+--- a/drivers/media/dvb-frontends/si2168.c
++++ b/drivers/media/dvb-frontends/si2168.c
+@@ -11,6 +11,13 @@
+ 
+ static const struct dvb_frontend_ops si2168_ops;
+ 
++static void cmd_init(struct si2168_cmd *cmd, const u8 *buf, int wlen, int rlen)
++{
++	memcpy(cmd->args, buf, wlen);
++	cmd->wlen = wlen;
++	cmd->rlen = rlen;
++}
++
+ /* execute firmware command */
+ static int si2168_cmd_execute(struct i2c_client *client, struct si2168_cmd *cmd)
+ {
+@@ -83,15 +90,13 @@ static int si2168_ts_bus_ctrl(struct dvb_frontend *fe, int acquire)
+ 	dev_dbg(&client->dev, "%s acquire: %d\n", __func__, acquire);
+ 
+ 	/* set TS_MODE property */
+-	memcpy(cmd.args, "\x14\x00\x01\x10\x10\x00", 6);
++	cmd_init(&cmd, "\x14\x00\x01\x10\x10\x00", 6, 4);
+ 	if (acquire)
+ 		cmd.args[4] |= dev->ts_mode;
+ 	else
+ 		cmd.args[4] |= SI2168_TS_TRISTATE;
+ 	if (dev->ts_clock_gapped)
+ 		cmd.args[4] |= 0x40;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 
+ 	return ret;
+@@ -115,19 +120,13 @@ static int si2168_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 
+ 	switch (c->delivery_system) {
+ 	case SYS_DVBT:
+-		memcpy(cmd.args, "\xa0\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 13;
++		cmd_init(&cmd, "\xa0\x01", 2, 13);
+ 		break;
+ 	case SYS_DVBC_ANNEX_A:
+-		memcpy(cmd.args, "\x90\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 9;
++		cmd_init(&cmd, "\x90\x01", 2, 9);
+ 		break;
+ 	case SYS_DVBT2:
+-		memcpy(cmd.args, "\x50\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 14;
++		cmd_init(&cmd, "\x50\x01", 2, 14);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -164,9 +163,7 @@ static int si2168_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 
+ 	/* BER */
+ 	if (*status & FE_HAS_VITERBI) {
+-		memcpy(cmd.args, "\x82\x00", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 3;
++		cmd_init(&cmd, "\x82\x00", 2, 3);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+@@ -197,9 +194,7 @@ static int si2168_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 
+ 	/* UCB */
+ 	if (*status & FE_HAS_SYNC) {
+-		memcpy(cmd.args, "\x84\x01", 2);
+-		cmd.wlen = 2;
+-		cmd.rlen = 3;
++		cmd_init(&cmd, "\x84\x01", 2, 3);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+@@ -285,22 +280,18 @@ static int si2168_set_frontend(struct dvb_frontend *fe)
+ 			goto err;
+ 	}
+ 
+-	memcpy(cmd.args, "\x88\x02\x02\x02\x02", 5);
+-	cmd.wlen = 5;
+-	cmd.rlen = 5;
++	cmd_init(&cmd, "\x88\x02\x02\x02\x02", 5, 5);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	/* that has no big effect */
+ 	if (c->delivery_system == SYS_DVBT)
+-		memcpy(cmd.args, "\x89\x21\x06\x11\xff\x98", 6);
++		cmd_init(&cmd, "\x89\x21\x06\x11\xff\x98", 6, 3);
+ 	else if (c->delivery_system == SYS_DVBC_ANNEX_A)
+-		memcpy(cmd.args, "\x89\x21\x06\x11\x89\xf0", 6);
++		cmd_init(&cmd, "\x89\x21\x06\x11\x89\xf0", 6, 3);
+ 	else if (c->delivery_system == SYS_DVBT2)
+-		memcpy(cmd.args, "\x89\x21\x06\x11\x89\x20", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 3;
++		cmd_init(&cmd, "\x89\x21\x06\x11\x89\x20", 6, 3);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -317,103 +308,77 @@ static int si2168_set_frontend(struct dvb_frontend *fe)
+ 			goto err;
+ 	}
+ 
+-	memcpy(cmd.args, "\x51\x03", 2);
+-	cmd.wlen = 2;
+-	cmd.rlen = 12;
++	cmd_init(&cmd, "\x51\x03", 2, 12);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x12\x08\x04", 3);
+-	cmd.wlen = 3;
+-	cmd.rlen = 3;
++	cmd_init(&cmd, "\x12\x08\x04", 3, 3);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x0c\x10\x12\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	cmd_init(&cmd, "\x14\x00\x0c\x10\x12\x00", 6, 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x06\x10\x24\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	cmd_init(&cmd, "\x14\x00\x06\x10\x24\x00", 6, 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x07\x10\x00\x24", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	cmd_init(&cmd, "\x14\x00\x07\x10\x00\x24", 6, 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x0a\x10\x00\x00", 6);
++	cmd_init(&cmd, "\x14\x00\x0a\x10\x00\x00", 6, 4);
+ 	cmd.args[4] = delivery_system | bandwidth;
+ 	if (dev->spectral_inversion)
+ 		cmd.args[5] |= 1;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	/* set DVB-C symbol rate */
+ 	if (c->delivery_system == SYS_DVBC_ANNEX_A) {
+-		memcpy(cmd.args, "\x14\x00\x02\x11", 4);
++		cmd_init(&cmd, "\x14\x00\x02\x11\x00\x00", 6, 4);
+ 		cmd.args[4] = ((c->symbol_rate / 1000) >> 0) & 0xff;
+ 		cmd.args[5] = ((c->symbol_rate / 1000) >> 8) & 0xff;
+-		cmd.wlen = 6;
+-		cmd.rlen = 4;
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+ 	}
+ 
+-	memcpy(cmd.args, "\x14\x00\x0f\x10\x10\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	cmd_init(&cmd, "\x14\x00\x0f\x10\x10\x00", 6, 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x09\x10\xe3\x08", 6);
++	cmd_init(&cmd, "\x14\x00\x09\x10\xe3\x08", 6, 4);
+ 	cmd.args[5] |= dev->ts_clock_inv ? 0x00 : 0x10;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x08\x10\xd7\x05", 6);
++	cmd_init(&cmd, "\x14\x00\x08\x10\xd7\x05", 6, 4);
+ 	cmd.args[5] |= dev->ts_clock_inv ? 0x00 : 0x10;
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x01\x12\x00\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	cmd_init(&cmd, "\x14\x00\x01\x12\x00\x00", 6, 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x14\x00\x01\x03\x0c\x00", 6);
+-	cmd.wlen = 6;
+-	cmd.rlen = 4;
++	cmd_init(&cmd, "\x14\x00\x01\x03\x0c\x00", 6, 4);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+-	memcpy(cmd.args, "\x85", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 1;
++	cmd_init(&cmd, "\x85", 1, 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -443,26 +408,20 @@ static int si2168_init(struct dvb_frontend *fe)
+ 	dev_dbg(&client->dev, "\n");
+ 
+ 	/* initialize */
+-	memcpy(cmd.args, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 13);
+-	cmd.wlen = 13;
+-	cmd.rlen = 0;
++	cmd_init(&cmd, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 13, 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	if (dev->warm) {
+ 		/* resume */
+-		memcpy(cmd.args, "\xc0\x06\x08\x0f\x00\x20\x21\x01", 8);
+-		cmd.wlen = 8;
+-		cmd.rlen = 1;
++		cmd_init(&cmd, "\xc0\x06\x08\x0f\x00\x20\x21\x01", 8, 1);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+ 
+ 		udelay(100);
+-		memcpy(cmd.args, "\x85", 1);
+-		cmd.wlen = 1;
+-		cmd.rlen = 1;
++		cmd_init(&cmd, "\x85", 1, 1);
+ 		ret = si2168_cmd_execute(client, &cmd);
+ 		if (ret)
+ 			goto err;
+@@ -471,9 +430,7 @@ static int si2168_init(struct dvb_frontend *fe)
+ 	}
+ 
+ 	/* power up */
+-	memcpy(cmd.args, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8);
+-	cmd.wlen = 8;
+-	cmd.rlen = 1;
++	cmd_init(&cmd, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8, 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -511,9 +468,7 @@ static int si2168_init(struct dvb_frontend *fe)
+ 				ret = -EINVAL;
+ 				break;
+ 			}
+-			memcpy(cmd.args, &fw->data[(fw->size - remaining) + 1], len);
+-			cmd.wlen = len;
+-			cmd.rlen = 1;
++			cmd_init(&cmd, &fw->data[(fw->size - remaining) + 1], len, 1);
+ 			ret = si2168_cmd_execute(client, &cmd);
+ 			if (ret)
+ 				break;
+@@ -521,10 +476,7 @@ static int si2168_init(struct dvb_frontend *fe)
+ 	} else if (fw->size % 8 == 0) {
+ 		/* firmware is in the old format */
+ 		for (remaining = fw->size; remaining > 0; remaining -= 8) {
+-			len = 8;
+-			memcpy(cmd.args, &fw->data[fw->size - remaining], len);
+-			cmd.wlen = len;
+-			cmd.rlen = 1;
++			cmd_init(&cmd, &fw->data[fw->size - remaining], 8, 1);
+ 			ret = si2168_cmd_execute(client, &cmd);
+ 			if (ret)
+ 				break;
+@@ -541,17 +493,13 @@ static int si2168_init(struct dvb_frontend *fe)
+ 
+ 	release_firmware(fw);
+ 
+-	memcpy(cmd.args, "\x01\x01", 2);
+-	cmd.wlen = 2;
+-	cmd.rlen = 1;
++	cmd_init(&cmd, "\x01\x01", 2, 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+ 
+ 	/* query firmware version */
+-	memcpy(cmd.args, "\x11", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 10;
++	cmd_init(&cmd, "\x11", 1, 10);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -609,9 +557,7 @@ static int si2168_sleep(struct dvb_frontend *fe)
+ 	if (dev->version > ('B' << 24 | 4 << 16 | 0 << 8 | 11 << 0))
+ 		dev->warm = false;
+ 
+-	memcpy(cmd.args, "\x13", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 0;
++	cmd_init(&cmd, "\x13", 1, 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -637,9 +583,7 @@ static int si2168_select(struct i2c_mux_core *muxc, u32 chan)
+ 	struct si2168_cmd cmd;
+ 
+ 	/* open I2C gate */
+-	memcpy(cmd.args, "\xc0\x0d\x01", 3);
+-	cmd.wlen = 3;
+-	cmd.rlen = 0;
++	cmd_init(&cmd, "\xc0\x0d\x01", 3, 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -657,9 +601,7 @@ static int si2168_deselect(struct i2c_mux_core *muxc, u32 chan)
+ 	struct si2168_cmd cmd;
+ 
+ 	/* close I2C gate */
+-	memcpy(cmd.args, "\xc0\x0d\x00", 3);
+-	cmd.wlen = 3;
+-	cmd.rlen = 0;
++	cmd_init(&cmd, "\xc0\x0d\x00", 3, 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err;
+@@ -730,25 +672,19 @@ static int si2168_probe(struct i2c_client *client,
+ 	mutex_init(&dev->i2c_mutex);
+ 
+ 	/* Initialize */
+-	memcpy(cmd.args, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 13);
+-	cmd.wlen = 13;
+-	cmd.rlen = 0;
++	cmd_init(&cmd, "\xc0\x12\x00\x0c\x00\x0d\x16\x00\x00\x00\x00\x00\x00", 13, 0);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err_kfree;
+ 
+ 	/* Power up */
+-	memcpy(cmd.args, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8);
+-	cmd.wlen = 8;
+-	cmd.rlen = 1;
++	cmd_init(&cmd, "\xc0\x06\x01\x0f\x00\x20\x20\x01", 8, 1);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err_kfree;
+ 
+ 	/* Query chip revision */
+-	memcpy(cmd.args, "\x02", 1);
+-	cmd.wlen = 1;
+-	cmd.rlen = 13;
++	cmd_init(&cmd, "\x02", 1, 13);
+ 	ret = si2168_cmd_execute(client, &cmd);
+ 	if (ret)
+ 		goto err_kfree;
+-- 
+2.17.1
