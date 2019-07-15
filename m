@@ -2,121 +2,85 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD10C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D046FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84723206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201049;
-	bh=0+PQRiZLou/PTTsRJye5Vj2ZNtj+NHCjwZreg6i4Lrs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXiRyhxd3H1NS6/54CTn6Kf9tFH6ySykojtuEy+Nhh7LPA+UfdbaCU6I41dSurKJR
-	 oq/snO+vKMNg6MW6maKBr3WK43/W263GdVlTn4/IYbzJMpCxbcl2CU/oRgQEyVyWLy
-	 RjuFjLmABkn7ys8QLRGg4qUNRe1pMH7wibG7pCE0=
+	by mail.kernel.org (Postfix) with ESMTP id AF60F20868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391738AbfGOOas (ORCPT
+        id S2391746AbfGOOav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43812 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:30:51 -0400
+Received: from verein.lst.de ([213.95.11.211]:33049 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391715AbfGOOaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391714AbfGOOaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jul 2019 10:30:46 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 690ED206B8;
-        Mon, 15 Jul 2019 14:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201045;
-        bh=0+PQRiZLou/PTTsRJye5Vj2ZNtj+NHCjwZreg6i4Lrs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xkI7PzfKI4twoD0u0QwPlEWa4GCJXFT6lZY9nRHbeHhtUB+c6ExRrsepbdG8cx5VR
-         hA0srV2mP5rcO1ZjsRsjWZaNW6C0nIrCf/rUbfq4IPX73Zbayat4EC1lcPU3uQz0/K
-         6AA913bceeKbnaty9GewXw3XRlLtqcYUyS+GB/vU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Hancock <hancock@sedsystems.ca>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 035/105] net: axienet: Fix race condition causing TX hang
-Date:   Mon, 15 Jul 2019 10:27:29 -0400
-Message-Id: <20190715142839.9896-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
-References: <20190715142839.9896-1-sashal@kernel.org>
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C945368B05; Mon, 15 Jul 2019 16:30:39 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 16:30:39 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, x86@kernel.org,
+        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        "Lendacky, Thomas" <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
+ arch code
+Message-ID: <20190715143039.GA6892@lst.de>
+References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com> <87tvbqgboc.fsf@morokweng.localdomain> <20190715160317.7e3dfb33.pasic@linux.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715160317.7e3dfb33.pasic@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancock@sedsystems.ca>
+On Mon, Jul 15, 2019 at 04:03:17PM +0200, Halil Pasic wrote:
+> > I thought about that but couldn't put my finger on a general concept.
+> > Is it "guest with memory inaccessible to the host"?
+> > 
+> 
+> Well, force_dma_unencrypted() is a much better name thatn sev_active():
+> s390 has no AMD SEV, that is sure, but for virtio to work we do need to
+> make our dma accessible to the hypervisor. Yes, your "guest with memory
+> inaccessible to the host" shows into the right direction IMHO.
+> Unfortunately I don't have too many cycles to spend on this right now.
 
-[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
+In x86 it means that we need to remove dma encryption using
+set_memory_decrypted before using it for DMA purposes.  In the SEV
+case that seems to be so that the hypervisor can access it, in the SME
+case that Tom just fixes it is because there is an encrypted bit set
+in the physical address, and if the device doesn't support a large
+enough DMA address the direct mapping code has to encrypt the pages
+used for the contigous allocation.
 
-It is possible that the interrupt handler fires and frees up space in
-the TX ring in between checking for sufficient TX ring space and
-stopping the TX queue in axienet_start_xmit. If this happens, the
-queue wake from the interrupt handler will occur before the queue is
-stopped, causing a lost wakeup and the adapter's transmit hanging.
+> Being on cc for your patch made me realize that things got broken on
+> s390. Thanks! I've sent out a patch that fixes protvirt, but we are going
+> to benefit from your cleanups. I think with your cleanups and that patch
+> of mine both sev_active() and sme_active() can be removed. Feel free to
+> do so. If not, I can attend to it as well.
 
-To avoid this, after stopping the queue, check again whether there is
-sufficient space in the TX ring. If so, wake up the queue again.
+Yes, I think with the dma-mapping fix and this series sme_active and
+sev_active should be gone from common code.  We should also be able
+to remove the exports x86 has for them.
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index d46dc8cd1670..b481cb174b23 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -614,6 +614,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
- 
- 	ndev->stats.tx_packets += packets;
- 	ndev->stats.tx_bytes += size;
-+
-+	/* Matches barrier in axienet_start_xmit */
-+	smp_mb();
-+
- 	netif_wake_queue(ndev);
- }
- 
-@@ -668,9 +672,19 @@ static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
- 
- 	if (axienet_check_tx_bd_space(lp, num_frag)) {
--		if (!netif_queue_stopped(ndev))
--			netif_stop_queue(ndev);
--		return NETDEV_TX_BUSY;
-+		if (netif_queue_stopped(ndev))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_stop_queue(ndev);
-+
-+		/* Matches barrier in axienet_start_xmit_done */
-+		smp_mb();
-+
-+		/* Space might have just been freed - check again */
-+		if (axienet_check_tx_bd_space(lp, num_frag))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_wake_queue(ndev);
- 	}
- 
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
--- 
-2.20.1
-
+I'll wait a few days and will then feed the dma-mapping fix to Linus,
+it might make sense to either rebase Thiagos series on top of the
+dma-mapping for-next branch, or wait a few days before reposting.
