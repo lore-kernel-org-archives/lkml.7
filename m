@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92C5C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFBB205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7485F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201741;
-	bh=asAiYr2CYWOqMAWm0D67icb5YqzuE7xvN5a2k2xkOUs=;
+	s=default; t=1563201759;
+	bh=pTTi883ZAqvM41jkb31DsGWSQw8kAjR76b/bIzAVJno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cE0DCD3Hj4De5lUSN6uJXmKSngSqJUAl6Tuu0udiJ0yV9ytZM76o9OiDoAvWfbF+J
-	 VMj3p97Wb3LxnF+QQ2XkUUm8BS7eKSCqw7plRKYY3P9zobOPrlK6uZYaR+b+8Ta5KS
-	 p2R1Cf7hkUjWdzxXV4l63CAUNHogQojlQYVBiLuc=
+	b=KLuKR2yurfArlkjj5u1OHc4umwWt5JLSK+gqMHW0TdogFBF8v7tbG8N0wdhQndmg3
+	 hod+YoATd/aaAjtzQ8jSWK37r4/Sb2NwJc6eITzZxm76a4SIiwaLq3QBDgmb9iUlXO
+	 LAYTWC2saZoJSqrl7eshwcf6RYviyBaNxShk4pbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404653AbfGOOkO (ORCPT
+        id S2404311AbfGOOjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404395AbfGOOkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:40:01 -0400
+        id S2404243AbfGOOjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:39:24 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD2B20868;
-        Mon, 15 Jul 2019 14:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB222184E;
+        Mon, 15 Jul 2019 14:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201600;
-        bh=asAiYr2CYWOqMAWm0D67icb5YqzuE7xvN5a2k2xkOUs=;
+        s=default; t=1563201563;
+        bh=pTTi883ZAqvM41jkb31DsGWSQw8kAjR76b/bIzAVJno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ijgz9AaZ3BpeE5P46l0JRkwJcFEipXTqT8LABdUmK4WyExoHICHIvQhChrp80WYAT
-         veTrV4Z6mMlEfOQSFSe1Vjnc2xyDoB96pv+KLq1qobAPJfkET4Pj7ZqnQyQ2dDqZ/2
-         8G0RxwVyE0sEPD/ZrSPTBELNCvpe8H4XzLcNlZ5Q=
+        b=TDrTRcvs8+NmNUcw5ec6FH0L3qWvbhQG0UaQ6FNxdFMtmJIkr/Q/mYa0VZNpWUUMg
+         xNpc+HnjE9sIr7NvmryNek7cZ4TKJkwlwgGVPQ/sxEyh8NdExZvr+XlaMOfTkSyxRP
+         NpHTiHYzlVREYIP0e+07H9zyFwNYX8Akia6zu5Pg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+Cc:     Pan Bian <bianpan2016@163.com>, Borislav Petkov <bp@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 52/73] x86/build: Add 'set -e' to mkcapflags.sh to delete broken capflags.c
-Date:   Mon, 15 Jul 2019 10:36:08 -0400
-Message-Id: <20190715143629.10893-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 43/73] EDAC/sysfs: Fix memory leak when creating a csrow object
+Date:   Mon, 15 Jul 2019 10:35:59 -0400
+Message-Id: <20190715143629.10893-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -60,52 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit bc53d3d777f81385c1bb08b07bd1c06450ecc2c1 ]
+[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
 
-Without 'set -e', shell scripts continue running even after any
-error occurs. The missed 'set -e' is a typical bug in shell scripting.
+In edac_create_csrow_object(), the reference to the object is not
+released when adding the device to the device hierarchy fails
+(device_add()). This may result in a memory leak.
 
-For example, when a disk space shortage occurs while this script is
-running, it actually ends up with generating a truncated capflags.c.
-
-Yet, mkcapflags.sh continues running and exits with 0. So, the build
-system assumes it has succeeded.
-
-It will not be re-generated in the next invocation of Make since its
-timestamp is newer than that of any of the source files.
-
-Add 'set -e' so that any error in this script is caught and propagated
-to the build system.
-
-Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
-make automatically deletes the target on any failure. So, the broken
-capflags.c will be deleted automatically.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lkml.kernel.org/r/20190625072622.17679-1-yamada.masahiro@socionext.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/edac/edac_mc_sysfs.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
-index 6988c74409a8..711b74e0e623 100644
---- a/arch/x86/kernel/cpu/mkcapflags.sh
-+++ b/arch/x86/kernel/cpu/mkcapflags.sh
-@@ -3,6 +3,8 @@
- # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
- #
- 
-+set -e
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 40d792e96b75..203ebe348b77 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -426,6 +426,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
+ static int edac_create_csrow_object(struct mem_ctl_info *mci,
+ 				    struct csrow_info *csrow, int index)
+ {
++	int err;
 +
- IN=$1
- OUT=$2
+ 	csrow->dev.type = &csrow_attr_type;
+ 	csrow->dev.bus = mci->bus;
+ 	csrow->dev.groups = csrow_dev_groups;
+@@ -438,7 +440,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
+ 	edac_dbg(0, "creating (virtual) csrow node %s\n",
+ 		 dev_name(&csrow->dev));
  
+-	return device_add(&csrow->dev);
++	err = device_add(&csrow->dev);
++	if (err)
++		put_device(&csrow->dev);
++
++	return err;
+ }
+ 
+ /* Create a CSROW object under specifed edac_mc_device */
 -- 
 2.20.1
 
