@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DABC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998F1C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3556C205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E49205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201766;
-	bh=C4gDV7JcvbE1lcsK7RLAWwtGVBTVpBpoHL1yio2rPVw=;
+	s=default; t=1563201779;
+	bh=dWoLosDNIg5sdKZ9+ybWvRAOyFngUrfDTgHKbGOtVdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0ITcZZdH24GdNRGZlDeIOgo8X/XKTVJfmE88awYQZ0rHq+aY9LO1BAA2ED6jM0/W
-	 8cXbo1xjRnVvpQQl4Oiht0/vs8z5U9IVTX1wsXVysOoyPQf/k7m7+wILMP7UWKf+eL
-	 YnzlftvW71yGp1WrtwCsVfxGi1QGIhAfhUo6Itqg=
+	b=W+EHjtLuvOWxhLaxxaexEK1eAgrhcs4lWsJz4baMXSuhjnuhbzwjAcoKhGws3SELW
+	 xjBLL73KeYaVkAgkj1Uz4BH+Ajcam7rf7Jmk8vEDg6KpQZu2Rwic2n7743gOO+RDj1
+	 8yOn6OpwFyZPFy4T/KubiMvPjes26MRrxkB1WKmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391563AbfGOOmn (ORCPT
+        id S2404214AbfGOOjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39606 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404307AbfGOOjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:39:35 -0400
+        id S2403788AbfGOOjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:39:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7E28205ED;
-        Mon, 15 Jul 2019 14:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6604120896;
+        Mon, 15 Jul 2019 14:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201574;
-        bh=C4gDV7JcvbE1lcsK7RLAWwtGVBTVpBpoHL1yio2rPVw=;
+        s=default; t=1563201540;
+        bh=dWoLosDNIg5sdKZ9+ybWvRAOyFngUrfDTgHKbGOtVdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9mL+stvueIoG+IlbT5bT1rqlhAjrpoJeJFeuAeJPx7VkKTSSY0noVj4Qz0FinDXW
-         uOYPRCizHfsRfv+w843st3nZM53LaloEqS/4jMaH9E0gAwBaZ86oBeOcrSHai9kbUv
-         mW8i7wo3vc/zFf86efXXlhC5OkUQGWAdC3G/L6DA=
+        b=ZTpGA9EjmLvvC7OCt+1AtsSaQILfea+LCVO6y4qiATBv74QSnU5BEOW6827n/rtVU
+         t23hCaXighezhjWtCERCa+VKrw/XY9fJ0k6NK6eizQOygHmqrIpWLJ0IEDHlQe4jhs
+         FyvQiCMQAhZ/F+/hgAowT3ld/EtQqC5A2WRbuUvU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Weikang shi <swkhack@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 46/73] ntp: Limit TAI-UTC offset
-Date:   Mon, 15 Jul 2019 10:36:02 -0400
-Message-Id: <20190715143629.10893-46-sashal@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 38/73] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
+Date:   Mon, 15 Jul 2019 10:35:54 -0400
+Message-Id: <20190715143629.10893-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -64,55 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit d897a4ab11dc8a9fda50d2eccc081a96a6385998 ]
+[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
 
-Don't allow the TAI-UTC offset of the system clock to be set by adjtimex()
-to a value larger than 100000 seconds.
+wbc_account_io() collects information on cgroup ownership of writeback
+pages to determine which cgroup should own the inode.  Pages can stay
+associated with dead memcgs but we want to avoid attributing IOs to
+dead blkcgs as much as possible as the association is likely to be
+stale.  However, currently, pages associated with dead memcgs
+contribute to the accounting delaying and/or confusing the
+arbitration.
 
-This prevents an overflow in the conversion to int, prevents the CLOCK_TAI
-clock from getting too far ahead of the CLOCK_REALTIME clock, and it is
-still large enough to allow leap seconds to be inserted at the maximum rate
-currently supported by the kernel (once per day) for the next ~270 years,
-however unlikely it is that someone can survive a catastrophic event which
-slowed down the rotation of the Earth so much.
+Fix it by ignoring pages associated with dead memcgs.
 
-Reported-by: Weikang shi <swkhack@gmail.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190618154713.20929-1-mlichvar@redhat.com
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/ntp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/fs-writeback.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 0a16419006f3..4bdb59604526 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -42,6 +42,7 @@ static u64			tick_length_base;
- #define MAX_TICKADJ		500LL		/* usecs */
- #define MAX_TICKADJ_SCALED \
- 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
-+#define MAX_TAI_OFFSET		100000
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index 8b93d4b98428..baaed9369ab4 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -721,6 +721,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 		    size_t bytes)
+ {
++	struct cgroup_subsys_state *css;
+ 	int id;
  
- /*
-  * phase-lock loop variables
-@@ -639,7 +640,8 @@ static inline void process_adjtimex_modes(struct timex *txc,
- 		time_constant = max(time_constant, 0l);
- 	}
+ 	/*
+@@ -732,7 +733,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 	if (!wbc->wb)
+ 		return;
  
--	if (txc->modes & ADJ_TAI && txc->constant >= 0)
-+	if (txc->modes & ADJ_TAI &&
-+			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
- 		*time_tai = txc->constant;
+-	id = mem_cgroup_css_from_page(page)->id;
++	css = mem_cgroup_css_from_page(page);
++	/* dead cgroups shouldn't contribute to inode ownership arbitration */
++	if (!(css->flags & CSS_ONLINE))
++		return;
++
++	id = css->id;
  
- 	if (txc->modes & ADJ_OFFSET)
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
 -- 
 2.20.1
 
