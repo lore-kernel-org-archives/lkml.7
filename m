@@ -2,101 +2,163 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8A2C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B723C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E082206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4FC206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:29:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="epIJpluQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbfGOM0K (ORCPT
+        id S1730032AbfGOM3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 08:26:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46840 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728933AbfGOM0J (ORCPT
+        Mon, 15 Jul 2019 08:29:25 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:30835 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728933AbfGOM3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 08:26:09 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hn03R-0004qz-1F; Mon, 15 Jul 2019 12:26:05 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jeffrey.t.kirsher@intel.com
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2] e1000e: Make speed detection on hotplugging cable more reliable
-Date:   Mon, 15 Jul 2019 20:25:55 +0800
-Message-Id: <20190715122555.11922-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190715084355.9962-1-kai.heng.feng@canonical.com>
-References: <20190715084355.9962-1-kai.heng.feng@canonical.com>
+        Mon, 15 Jul 2019 08:29:24 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x6FCT6cf021447;
+        Mon, 15 Jul 2019 21:29:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6FCT6cf021447
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563193747;
+        bh=yAufAdrjbVZeLo2XKE8YwT7x8b4qwlGxGHKZaKC8OiE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=epIJpluQMn/A5uXoItj+a9fCiitzzHgVapQnSQ6gXwMCNTUr6gLM4wYLAi6UDqz9v
+         DBqoYqnORzcTAvzrctniOj+rX4rK5gAs5njV3NOPo7xEBbJo9IwdolOvZF62FG1xH7
+         ocS8lNTxYbiZOPrcX0hL7SfezLKSHfU+1qQg1RQXhIkGDzTXI9T06SI7xYciSOfUlr
+         TE0YU7P4guaBMWWsOV7jUzQF83dfpXHQkLcEjVJ+UnhhUKoisHb7suMi8WyW3iD9D9
+         QQP7Lljui+D5R68E6Gusped9NvK8ObE72zgHjetsP40KfJKm81x0Pigc7hOtJU1pJc
+         T18TBJKP7taLg==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id v20so6660096uao.3;
+        Mon, 15 Jul 2019 05:29:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAX5Vjnf5k6rX4rKG1QSNUa6l3fwqx5JLddRZppuhoEc8IJVqAtJ
+        3tONuoNrmqZF1l5lMP2p7jhxng+YvI6d8GwWpEc=
+X-Google-Smtp-Source: APXvYqxzkyUT0iZjK1QVWY25ZVaKJaxxn64RERk2SmEwo7a1tSGZWRyJCpcrJqjGgLDWFGhIeN/hfzmCIPLb2QQGnI4=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr400188ual.109.1563193746045;
+ Mon, 15 Jul 2019 05:29:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <1562664759-16009-1-git-send-email-info@metux.net> <1562664759-16009-4-git-send-email-info@metux.net>
+In-Reply-To: <1562664759-16009-4-git-send-email-info@metux.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 15 Jul 2019 21:28:30 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR1N-bwVWm0LXky2-d2GfvRuRrEWeo5CGm3Z2Lp_s0WEw@mail.gmail.com>
+Message-ID: <CAK7LNAR1N-bwVWm0LXky2-d2GfvRuRrEWeo5CGm3Z2Lp_s0WEw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] debian: add generic rule file
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After hotplugging an 1Gbps ethernet cable with 1Gbps link partner, the
-MII_BMSR may report 10Mbps, renders the network rather slow.
+On Tue, Jul 9, 2019 at 6:33 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> Adding a generic debian rule file, so we can build the directly
+> via usual Debian package build tools (eg. git-buildpackage,
+> dck-buildpackage, etc). It expects the .config file already
+> placed in the source tree.
+>
+> The rule file contains a rule for creating debian/control and
+> other metadata - this is done similar to the 'deb-pkg' make rule,
+> scripts/packaging/mkdebian.
 
-The issue has much lower fail rate after commit 59653e6497d1 ("e1000e:
-Make watchdog use delayed work"), which essentially introduces some
-delay before running the watchdog task.
+I saw a similar patch submission before, and negative feedback about it.
 
-But there's still a chance that the hotplugging event and the queued
-watchdog task gets run at the same time, then the original issue can be
-observed once again.
+Debian maintains its own debian/rules, and it is fine.
+I do not like to check-in the one in the kernel tree.
 
-So let's use mod_delayed_work() to add a deterministic 1 second delay
-before running watchdog task, after an interrupt.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/net/ethernet/intel/e1000e/netdev.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index e4baa13b3cda..c83bf5349d53 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -1780,8 +1780,8 @@ static irqreturn_t e1000_intr_msi(int __always_unused irq, void *data)
- 		}
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			queue_delayed_work(adapter->e1000_workqueue,
--					   &adapter->watchdog_task, 1);
-+			mod_delayed_work(adapter->e1000_workqueue,
-+					 &adapter->watchdog_task, HZ);
- 	}
- 
- 	/* Reset on uncorrectable ECC error */
-@@ -1861,8 +1861,8 @@ static irqreturn_t e1000_intr(int __always_unused irq, void *data)
- 		}
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			queue_delayed_work(adapter->e1000_workqueue,
--					   &adapter->watchdog_task, 1);
-+			mod_delayed_work(adapter->e1000_workqueue,
-+					 &adapter->watchdog_task, HZ);
- 	}
- 
- 	/* Reset on uncorrectable ECC error */
-@@ -1907,8 +1907,8 @@ static irqreturn_t e1000_msix_other(int __always_unused irq, void *data)
- 		hw->mac.get_link_status = true;
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			queue_delayed_work(adapter->e1000_workqueue,
--					   &adapter->watchdog_task, 1);
-+			mod_delayed_work(adapter->e1000_workqueue,
-+					 &adapter->watchdog_task, HZ);
- 	}
- 
- 	if (!test_bit(__E1000_DOWN, &adapter->state))
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  .gitignore   |  1 +
+>  MAINTAINERS  |  6 ++++++
+>  debian/rules | 27 +++++++++++++++++++++++++++
+>  3 files changed, 34 insertions(+)
+>  create mode 100755 debian/rules
+>
+> diff --git a/.gitignore b/.gitignore
+> index 7587ef56..01d742c 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -69,6 +69,7 @@ modules.builtin
+>  # Debian directory (make deb-pkg)
+>  #
+>  /debian/
+> +!/debian/rules
+>
+>  #
+>  # Snap directory (make snap-pkg)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 558acf2..56e034c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4516,6 +4516,12 @@ F:       include/uapi/linux/dccp.h
+>  F:     include/linux/tfrc.h
+>  F:     net/dccp/
+>
+> +DEBIAN PACKAGING FILES
+> +M:     Enrico Weigelt <info@metux.net>
+> +L:     linux-kbuild@vger.kernel.org
+> +S:     Maintained
+> +F:     debian/
+> +
+>  DECnet NETWORK LAYER
+>  W:     http://linux-decnet.sourceforge.net
+>  L:     linux-decnet-user@lists.sourceforge.net
+> diff --git a/debian/rules b/debian/rules
+> new file mode 100755
+> index 0000000..c2f0319
+> --- /dev/null
+> +++ b/debian/rules
+> @@ -0,0 +1,27 @@
+> +#!/usr/bin/make -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +export MAKE
+> +export KERNELARCH           = $(shell $(MAKE) kernelarch)
+> +export KERNELRELEASE        = $(shell $(MAKE) kernelrelease)
+> +export KBUILD_DEBARCH       = $(shell dpkg-architecture -qDEB_HOST_ARCH)
+> +export KBUILD_BUILD_VERSION = $(shell $(MAKE) kernellocalversion)
+> +export KDEB_RULES           = debian/rules.auto
+> +export KDEB_SOURCENAME      = linux-source
+> +export ARCH                 = $(KERNELARCH)
+> +
+> +debian/control debian/changelong debian/arch debian/copyright:
+> +debian/control:
+> +       ./scripts/package/mkdebian
+> +
+> +build: debian/control
+> +       $(MAKE) KERNELRELEASE=$(KERNELRELEASE) ARCH=$(KERNELARCH) KBUILD_BUILD_VERSION=$(KBUILD_BUILD_VERSION) KBUILD_SRC=
+> +
+> +binary-arch:   debian/control
+> +       $(MAKE) KERNELRELEASE=$(KERNELRELEASE) ARCH=$(KERNELARCH) KBUILD_BUILD_VERSION=$(KBUILD_BUILD_VERSION) KBUILD_SRC= intdeb-pkg
+> +
+> +clean:
+> +       rm -rf debian/*tmp debian/files debian/changelog debian/control debian/copyright debian/rules.auto debian/arch
+> +       $(MAKE) clean
+> +
+> +binary: binary-arch
+> --
+> 1.9.1
+>
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
