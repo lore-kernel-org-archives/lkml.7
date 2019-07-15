@@ -2,217 +2,74 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FB5C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57535C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A06206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0B9206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 12:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbfGOMfl (ORCPT
+        id S1730062AbfGOMgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 08:35:41 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:60161 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728933AbfGOMfl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 08:35:41 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mw8gc-1iclyK33WG-00s2DM; Mon, 15 Jul 2019 14:35:24 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catherine Sullivan <catherine.sullivan@intel.com>,
-        Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-        Doug Dziggel <douglas.a.dziggel@intel.com>,
-        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Piotr Azarewicz <piotr.azarewicz@intel.com>,
-        Piotr Marczak <piotr.marczak@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] i40e: reduce stack usage in i40e_set_fc
-Date:   Mon, 15 Jul 2019 14:35:07 +0200
-Message-Id: <20190715123518.3510791-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 15 Jul 2019 08:36:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38022 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728933AbfGOMgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 08:36:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7B99DAD14;
+        Mon, 15 Jul 2019 12:36:38 +0000 (UTC)
+Subject: Re: [PATCH 0/2] Remove 32-bit Xen PV guest support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Alok Kataria <akataria@vmware.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20190715113739.17694-1-jgross@suse.com>
+ <20190715123207.GE3419@hirez.programming.kicks-ass.net>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <83fd65e0-9b6f-39a0-4f10-4f535d523ac8@suse.com>
+Date:   Mon, 15 Jul 2019 14:36:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:51h6XA6Bl7Ot/Uvt6DUGZkDIrFXg806s4a58fRPDph6XbOA1o/L
- WbrLnPSeHtrhEkUKGOVrm5zUllrmDXlbf9sY1i7UrNwWXggoPcaEA5UD4UGKnUoTTFo4dpm
- 0TRgYhqp7cK6Ie2JTDQgnYJaHFmkPGATyMsIU6zlwwf+XYBlKpTln4rDUhPPfmMznJ5h5ld
- c4g9OyyEza1nG+nfJfpDg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w3445uxjZ9Q=:IVjWnMlU8v6q1ppXkoEDOr
- TcwYXO5MhadeyYS0gcqKDbQzsIE7gvrpPKyLCD/n7BdFt1BF/1gJJeX55JuLAZFzqLCx14P4S
- KyME68RN9pQFkXfD20FJ8UdFfcd4BHXwAXpoqEsBuZlVOzCFLmy+Vp842jwKVKFYvjBrOg/Xa
- sMlCPyZBlMEgVVO6egSgygkv1fwdKXOJARUAT8Ry1ejRBzPQbvpjuev73yHSzESmEjlYT9mwU
- qCmmawfcrTGFGKUuCrDxDe37+9KJmClLRO1TOeh8L5wsUkmid/ot2n3hArbTuyk914HUJvwbf
- +ealJyZMF57ToycZtuxBwt+KlDoEFM/i9M2yXInOiBbx5qHnUeuu9A7V9kb3SfiO2ogD83C0y
- vo+GXtQxGzVXRRRxF0+89+goT5Vl2oaMVygnBZAhr4JH5q2N40Fxn9XBNymFt3lwdP0vHVVXn
- DndWovInEB2xr7t9Pt1qu4pu/pNli0KVkzRQWIJUjuxYIuMNdTU9Su1kkmpast8RPUbQOh+75
- sXpvevqf7VFXOQX9z2cE1sJVoS8i3RMCAxTGV2Z27eoI9bVIarF8KciTm+ugaZWHCaot8JjAI
- Gdwo6uf0ZUOe6tLfIK1dQ74gjtNywzvLW2Py1tmx6TrgazEA3ZxxfPGClKihSv9qgbgODVY8J
- wfg+piibOONRRTt1OqC4aVuj/lGoUZYBWPucGB+kB06SgwL+HQDShpWn6p6BsiRxisRHw8He+
- UH2n4lg37ZTxT7uNUIe7hFtppe2/G7B+q8lCjw==
+In-Reply-To: <20190715123207.GE3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions i40e_aq_get_phy_abilities_resp() and i40e_set_fc() both
-have giant structure on the stack, which makes each one use stack frames
-larger than 500 bytes.
+On 15.07.19 14:32, Peter Zijlstra wrote:
+> On Mon, Jul 15, 2019 at 01:37:37PM +0200, Juergen Gross wrote:
+>> The long term plan has been to replace Xen PV guests by PVH. The first
+>> victim of that plan are now 32-bit PV guests, as those are used only
+>> rather seldom these days. Xen on x86 requires 64-bit support and with
+>> Grub2 now supporting PVH officially since version 2.04 there is no
+>> need to keep 32-bit PV guest support alive in the Linux kernel.
+>> Additionally Meltdown mitigation is not available in the kernel running
+>> as 32-bit PV guest, so dropping this mode makes sense from security
+>> point of view, too.
+>>
+>> Juergen Gross (2):
+>>    x86/xen: remove 32-bit Xen PV guest support
+>>    x86/paravirt: remove 32-bit support from PARAVIRT_XXL
+> 
+> Hooray!
+> 
 
-As clang decides one function into the other, we get a warning for
-exceeding the frame size limit on 32-bit architectures:
+Always a pleasure to cheer the community up by sending Xen patches. :-D
 
-drivers/net/ethernet/intel/i40e/i40e_common.c:1654:23: error: stack frame size of 1116 bytes in function 'i40e_set_fc' [-Werror,-Wframe-larger-than=]
 
-When building with gcc, the inlining does not happen, but i40e_set_fc()
-calls i40e_aq_get_phy_abilities_resp() anyway, so they add up on the
-kernel stack just as much.
-
-The parts that actually use large stacks don't overlap, so make sure
-each one is a separate function, and mark them as noinline_for_stack to
-prevent the compilers from combining them again.
-
-Fixes: 0a862b43acc6 ("i40e/i40evf: Add module_types and update_link_info")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/intel/i40e/i40e_common.c | 91 +++++++++++--------
- 1 file changed, 51 insertions(+), 40 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_common.c b/drivers/net/ethernet/intel/i40e/i40e_common.c
-index 906cf68d3453..7af1b7477140 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_common.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_common.c
-@@ -1643,25 +1643,15 @@ enum i40e_status_code i40e_aq_set_phy_config(struct i40e_hw *hw,
- 	return status;
- }
- 
--/**
-- * i40e_set_fc
-- * @hw: pointer to the hw struct
-- * @aq_failures: buffer to return AdminQ failure information
-- * @atomic_restart: whether to enable atomic link restart
-- *
-- * Set the requested flow control mode using set_phy_config.
-- **/
--enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
--				  bool atomic_restart)
-+static noinline_for_stack enum i40e_status_code
-+i40e_set_fc_status(struct i40e_hw *hw,
-+		   struct i40e_aq_get_phy_abilities_resp *abilities,
-+		   bool atomic_restart)
- {
--	enum i40e_fc_mode fc_mode = hw->fc.requested_mode;
--	struct i40e_aq_get_phy_abilities_resp abilities;
- 	struct i40e_aq_set_phy_config config;
--	enum i40e_status_code status;
-+	enum i40e_fc_mode fc_mode = hw->fc.requested_mode;
- 	u8 pause_mask = 0x0;
- 
--	*aq_failures = 0x0;
--
- 	switch (fc_mode) {
- 	case I40E_FC_FULL:
- 		pause_mask |= I40E_AQ_PHY_FLAG_PAUSE_TX;
-@@ -1677,6 +1667,48 @@ enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
- 		break;
- 	}
- 
-+	memset(&config, 0, sizeof(struct i40e_aq_set_phy_config));
-+	/* clear the old pause settings */
-+	config.abilities = abilities->abilities & ~(I40E_AQ_PHY_FLAG_PAUSE_TX) &
-+			   ~(I40E_AQ_PHY_FLAG_PAUSE_RX);
-+	/* set the new abilities */
-+	config.abilities |= pause_mask;
-+	/* If the abilities have changed, then set the new config */
-+	if (config.abilities == abilities->abilities)
-+		return 0;
-+
-+	/* Auto restart link so settings take effect */
-+	if (atomic_restart)
-+		config.abilities |= I40E_AQ_PHY_ENABLE_ATOMIC_LINK;
-+	/* Copy over all the old settings */
-+	config.phy_type = abilities->phy_type;
-+	config.phy_type_ext = abilities->phy_type_ext;
-+	config.link_speed = abilities->link_speed;
-+	config.eee_capability = abilities->eee_capability;
-+	config.eeer = abilities->eeer_val;
-+	config.low_power_ctrl = abilities->d3_lpan;
-+	config.fec_config = abilities->fec_cfg_curr_mod_ext_info &
-+			    I40E_AQ_PHY_FEC_CONFIG_MASK;
-+
-+	return i40e_aq_set_phy_config(hw, &config, NULL);
-+}
-+
-+/**
-+ * i40e_set_fc
-+ * @hw: pointer to the hw struct
-+ * @aq_failures: buffer to return AdminQ failure information
-+ * @atomic_restart: whether to enable atomic link restart
-+ *
-+ * Set the requested flow control mode using set_phy_config.
-+ **/
-+enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
-+				  bool atomic_restart)
-+{
-+	struct i40e_aq_get_phy_abilities_resp abilities;
-+	enum i40e_status_code status;
-+
-+	*aq_failures = 0x0;
-+
- 	/* Get the current phy config */
- 	status = i40e_aq_get_phy_capabilities(hw, false, false, &abilities,
- 					      NULL);
-@@ -1685,31 +1717,10 @@ enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
- 		return status;
- 	}
- 
--	memset(&config, 0, sizeof(struct i40e_aq_set_phy_config));
--	/* clear the old pause settings */
--	config.abilities = abilities.abilities & ~(I40E_AQ_PHY_FLAG_PAUSE_TX) &
--			   ~(I40E_AQ_PHY_FLAG_PAUSE_RX);
--	/* set the new abilities */
--	config.abilities |= pause_mask;
--	/* If the abilities have changed, then set the new config */
--	if (config.abilities != abilities.abilities) {
--		/* Auto restart link so settings take effect */
--		if (atomic_restart)
--			config.abilities |= I40E_AQ_PHY_ENABLE_ATOMIC_LINK;
--		/* Copy over all the old settings */
--		config.phy_type = abilities.phy_type;
--		config.phy_type_ext = abilities.phy_type_ext;
--		config.link_speed = abilities.link_speed;
--		config.eee_capability = abilities.eee_capability;
--		config.eeer = abilities.eeer_val;
--		config.low_power_ctrl = abilities.d3_lpan;
--		config.fec_config = abilities.fec_cfg_curr_mod_ext_info &
--				    I40E_AQ_PHY_FEC_CONFIG_MASK;
--		status = i40e_aq_set_phy_config(hw, &config, NULL);
-+	status = i40e_set_fc_status(hw, &abilities, atomic_restart);
-+	if (status)
-+		*aq_failures |= I40E_SET_FC_AQ_FAIL_SET;
- 
--		if (status)
--			*aq_failures |= I40E_SET_FC_AQ_FAIL_SET;
--	}
- 	/* Update the link info */
- 	status = i40e_update_link_info(hw);
- 	if (status) {
-@@ -2537,7 +2548,7 @@ i40e_status i40e_get_link_status(struct i40e_hw *hw, bool *link_up)
-  * i40e_updatelink_status - update status of the HW network link
-  * @hw: pointer to the hw struct
-  **/
--i40e_status i40e_update_link_info(struct i40e_hw *hw)
-+noinline_for_stack i40e_status i40e_update_link_info(struct i40e_hw *hw)
- {
- 	struct i40e_aq_get_phy_abilities_resp abilities;
- 	i40e_status status = 0;
--- 
-2.20.0
-
+Juergen
