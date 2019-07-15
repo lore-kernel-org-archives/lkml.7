@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C414C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61807C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74427206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E428206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199615;
-	bh=H+ElxfPHyaoacJN2PXpM0i0OXemAxNR2XboIlhoea1E=;
+	s=default; t=1563199621;
+	bh=KEEMPSmzZBqvuzF0rBhmpLHTsuU/WTchaLqYwHks5Ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bi0amypSA8jdWRq9F8W8KhJqSyWFbRjdroN6Kmx0OX55XHKGvsY7fT5VPLeLl1N/O
-	 59GvwI3+sU1pZ8aPr2CAo7Kjzbb/D4ccQfsGV1AkZ3YfCgNhqYA6eae25NdcoM0Njk
-	 zybeOQCTUaW0phklVY8ogpnLrZh2Y+QOAVpQY4B8=
+	b=r51dk+aYzIPJj4EqnzOdnRThAZwjiY5weCjflpGqZYtj92Ix+cbdqNn9MOHk7yqz8
+	 Hcqliu/NXJ9v7rxdzlEHvyBcpg3ZEolBxtOwQ2OsYNRgP9a1mv4BVjBHbGobIjwZuH
+	 IlivefEzmLp1f2ePd3IiMUDZ+RMdnRoJc1Qj3Fvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388330AbfGOOGy (ORCPT
+        id S1733287AbfGOOHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54708 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388320AbfGOOGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:06:50 -0400
+        id S2388337AbfGOOG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:06:56 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD45D206B8;
-        Mon, 15 Jul 2019 14:06:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0326217D9;
+        Mon, 15 Jul 2019 14:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199609;
-        bh=H+ElxfPHyaoacJN2PXpM0i0OXemAxNR2XboIlhoea1E=;
+        s=default; t=1563199615;
+        bh=KEEMPSmzZBqvuzF0rBhmpLHTsuU/WTchaLqYwHks5Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WO+nFHdP4G1aQpUsGdLZ6R5+CYwkeH/SNqKBR4vTzUTQo0KWTSDdoLG49IQJhobdc
-         Iy4JMVTuHHnDWd5w/t+aEtgcpzIMWk/VCijaLNk5HXOOq2iE4nZIhIf35HQdIKRCWh
-         kM/ap0+UBA/jD7RsnQkwST+X87b3/VWThBx5BlEU=
+        b=uPdz6ub0aGkzSQJKmJ/e5yjeKRHdOHVxNa0fQsSqQnZAJ18wXD4aT9O9AQv17iodh
+         /OWmCdmFaoZEWmzvMLZggH4zS80xFW6zOzobSJGz3E310RavSkXpk/0G4LY0RuQOSk
+         Q/vR46QnbyWJZstAEsrS03+VMA2tEbIVEah0K5M0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 054/219] media: wl128x: Fix some error handling in fm_v4l2_init_video_device()
-Date:   Mon, 15 Jul 2019 10:00:55 -0400
-Message-Id: <20190715140341.6443-54-sashal@kernel.org>
+Cc:     Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 056/219] net: hns3: set ops to null when unregister ad_dev
+Date:   Mon, 15 Jul 2019 10:00:57 -0400
+Message-Id: <20190715140341.6443-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,100 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Weihang Li <liweihang@hisilicon.com>
 
-[ Upstream commit 69fbb3f47327d959830c94bf31893972b8c8f700 ]
+[ Upstream commit 594a81b39525f0a17e92c2e0b167ae1400650380 ]
 
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
-The fm_v4l2_init_video_device() forget to unregister v4l2/video device
-in the error path, it could lead to UAF issue, eg,
+The hclge/hclgevf and hns3 module can be unloaded independently,
+when hclge/hclgevf unloaded firstly, the ops of ae_dev should
+be set to NULL, otherwise it will cause an use-after-free problem.
 
-  BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-  BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-  BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
-  Read of size 8 at addr ffff8881e84a7c70 by task v4l_id/3659
-
-  CPU: 1 PID: 3659 Comm: v4l_id Not tainted 5.1.0 #8
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  Call Trace:
-   __dump_stack lib/dump_stack.c:77 [inline]
-   dump_stack+0xa9/0x10e lib/dump_stack.c:113
-   print_address_description+0x65/0x270 mm/kasan/report.c:187
-   kasan_report+0x149/0x18d mm/kasan/report.c:317
-   atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-   atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-   __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
-   fm_v4l2_fops_open+0xac/0x120 [fm_drv]
-   v4l2_open+0x191/0x390 [videodev]
-   chrdev_open+0x20d/0x570 fs/char_dev.c:417
-   do_dentry_open+0x700/0xf30 fs/open.c:777
-   do_last fs/namei.c:3416 [inline]
-   path_openat+0x7c4/0x2a90 fs/namei.c:3532
-   do_filp_open+0x1a5/0x2b0 fs/namei.c:3563
-   do_sys_open+0x302/0x490 fs/open.c:1069
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f8180c17c8e
-  ...
-  Allocated by task 3642:
-   set_track mm/kasan/common.c:87 [inline]
-   __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
-   fm_drv_init+0x13/0x1000 [fm_drv]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  Freed by task 3642:
-   set_track mm/kasan/common.c:87 [inline]
-   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
-   slab_free_hook mm/slub.c:1429 [inline]
-   slab_free_freelist_hook mm/slub.c:1456 [inline]
-   slab_free mm/slub.c:3003 [inline]
-   kfree+0xe1/0x270 mm/slub.c:3958
-   fm_drv_init+0x1e6/0x1000 [fm_drv]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Add relevant unregister functions to fix it.
-
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/wl128x/fmdrv_v4l2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_v4l2.c b/drivers/media/radio/wl128x/fmdrv_v4l2.c
-index e25fd4d4d280..a1eaea19a81c 100644
---- a/drivers/media/radio/wl128x/fmdrv_v4l2.c
-+++ b/drivers/media/radio/wl128x/fmdrv_v4l2.c
-@@ -550,6 +550,7 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index 17ab4f4af6ad..0da814618565 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -247,6 +247,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
  
- 	/* Register with V4L2 subsystem as RADIO device */
- 	if (video_register_device(&gradio_dev, VFL_TYPE_RADIO, radio_nr)) {
-+		v4l2_device_unregister(&fmdev->v4l2_dev);
- 		fmerr("Could not register video device\n");
- 		return -ENOMEM;
- 	}
-@@ -563,6 +564,8 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
- 	if (ret < 0) {
- 		fmerr("(fmdev): Can't init ctrl handler\n");
- 		v4l2_ctrl_handler_free(&fmdev->ctrl_handler);
-+		video_unregister_device(fmdev->radio_dev);
-+		v4l2_device_unregister(&fmdev->v4l2_dev);
- 		return -EBUSY;
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
  	}
  
+ 	list_del(&ae_algo->node);
+@@ -347,6 +348,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
+ 	}
+ 
+ 	list_del(&ae_dev->node);
 -- 
 2.20.1
 
