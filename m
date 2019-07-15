@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16064C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E82C7618B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA20214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7925D214DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563167614;
-	bh=BBnueE/U29m6p1IALEJOU3fzZPOV+KZGT85BBOX9OVE=;
+	s=default; t=1563167626;
+	bh=aW2i/PMsu1zMZsd3sK5Tcsd3UlqlRHAKKbDGz7j/x1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SS9O9Ns8iXrFsPHc7mzjVMzdG5GCp0tqBnQQfyUHZKlEf24wGFTdz43lnPJCDRpfV
-	 GzuyT1SYy9QnArpLBC/iZjPqq0OaEd38OAnn6eFEBGcUozPKENmQK9sQHooy/BbzoQ
-	 R9g+vuur+GmGXfl80moGF7ck/d5kLbmD2e40Zp6o=
+	b=ADwqI3p+ZGxV4HQ+GJrOoUBC2O5MiLAXC4zhVijz16LXB/wRb22Lo0WSY03rN4mQv
+	 UKvH9P11clc3D5hPepfeyG2tIwlntICGDej344aw2Cq9ZF34/soBiSSPQJMnMA2+qU
+	 c/DjEp09V01c1TTCBFN2DnH+gvjyC3+4DRIdU7xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfGOFNd (ORCPT
+        id S1729333AbfGOFNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 01:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 01:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729302AbfGOFNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 01:13:33 -0400
+        id S1725954AbfGOFNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 01:13:44 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 853B320C01;
-        Mon, 15 Jul 2019 05:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 266BB20868;
+        Mon, 15 Jul 2019 05:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563167612;
-        bh=BBnueE/U29m6p1IALEJOU3fzZPOV+KZGT85BBOX9OVE=;
+        s=default; t=1563167622;
+        bh=aW2i/PMsu1zMZsd3sK5Tcsd3UlqlRHAKKbDGz7j/x1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Jl9oy6FRjltpx0aaSuUMJXEMQecEwLjcL/GiAxI8lInp4+DuY0VTePdm3HipGsh+
-         0eKr7ZZq79gNRHzuVDkRGj4W9ixfvbAy4zM5GbksUO0W89GWH4Ga1qyYSCkWx6/lqt
-         nL6yW9y0D2lLXEr2dBvaKEB0qxdO9KuBaeUI7Zlc=
+        b=0KA2pDsc9wLeijExz5pj9YhLJ81thpbG8VttUT9EBn6L4mZrrbxRrt0v7tF5Op5p6
+         oX5+yNDT79lA8eB6EDg2ARNtulRqRGZKAp49Dm+QZkmkjia3mMZ5f2AC26TLfR+Fm3
+         Zwettd3PoEhzKePdC0+PVgyCfLfEwMB1yKm2HBNA=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -49,9 +49,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH v2 13/15] tracing: of: Add cpumask property support
-Date:   Mon, 15 Jul 2019 14:13:27 +0900
-Message-Id: <156316760712.23477.13986980388044489506.stgit@devnote2>
+Subject: [RFC PATCH v2 14/15] tracing: of: Add function tracer filter properties
+Date:   Mon, 15 Jul 2019 14:13:37 +0900
+Message-Id: <156316761767.23477.13784128240295644594.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
 References: <156316746861.23477.5815110570539190650.stgit@devnote2>
@@ -64,110 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cpumask property for tracing. Note that this property accepts
-a string cpumask, not a digit number.
+Add function tracer filter properties which includes
+ - ftrace-filters : string array of filter rules
+ - ftrace-notraces : string array of notrace rules
+These properties are available on ftrace root node and
+instance node.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace.c    |   41 ++++++++++++++++++++++++++++-------------
- kernel/trace/trace_of.c |   14 ++++++++++++++
- 2 files changed, 42 insertions(+), 13 deletions(-)
+ kernel/trace/trace_of.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6f50c58a3ad4..251d9de14b12 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4437,20 +4437,12 @@ tracing_cpumask_read(struct file *filp, char __user *ubuf,
- 	return count;
- }
- 
--static ssize_t
--tracing_cpumask_write(struct file *filp, const char __user *ubuf,
--		      size_t count, loff_t *ppos)
-+int tracing_set_cpumask(struct trace_array *tr, cpumask_var_t tracing_cpumask_new)
- {
--	struct trace_array *tr = file_inode(filp)->i_private;
--	cpumask_var_t tracing_cpumask_new;
--	int err, cpu;
--
--	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
--		return -ENOMEM;
-+	int cpu;
- 
--	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
--	if (err)
--		goto err_unlock;
-+	if (!tr)
-+		return -EINVAL;
- 
- 	local_irq_disable();
- 	arch_spin_lock(&tr->max_lock);
-@@ -4474,11 +4466,34 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
- 	local_irq_enable();
- 
- 	cpumask_copy(tr->tracing_cpumask, tracing_cpumask_new);
-+
-+	return 0;
-+}
-+
-+static ssize_t
-+tracing_cpumask_write(struct file *filp, const char __user *ubuf,
-+		      size_t count, loff_t *ppos)
-+{
-+	struct trace_array *tr = file_inode(filp)->i_private;
-+	cpumask_var_t tracing_cpumask_new;
-+	int err;
-+
-+	if (!alloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	err = cpumask_parse_user(ubuf, count, tracing_cpumask_new);
-+	if (err)
-+		goto err_free;
-+
-+	err = tracing_set_cpumask(tr, tracing_cpumask_new);
-+	if (err)
-+		goto err_free;
-+
- 	free_cpumask_var(tracing_cpumask_new);
- 
- 	return count;
- 
--err_unlock:
-+err_free:
- 	free_cpumask_var(tracing_cpumask_new);
- 
- 	return err;
 diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 7fe81c25dc59..14d6c9a8fd81 100644
+index 14d6c9a8fd81..1ee6fab918f5 100644
 --- a/kernel/trace/trace_of.c
 +++ b/kernel/trace/trace_of.c
-@@ -22,6 +22,8 @@ extern void __init trace_init_tracepoint_printk(void);
- extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 					  unsigned long size, int cpu_id);
- extern struct trace_array *trace_array_create(const char *name);
-+extern int tracing_set_cpumask(struct trace_array *tr,
-+			       cpumask_var_t tracing_cpumask_new);
+@@ -322,11 +322,47 @@ trace_of_init_events(struct trace_array *tr, struct device_node *node)
+ #define trace_of_init_events(tr, node) do {} while (0)
+ #endif
  
- static void __init
- trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
-@@ -59,6 +61,18 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
- 			pr_err("Failed to resize trace buffer to %d KB\n",
- 				v >> 10);
- 	}
++#ifdef CONFIG_FUNCTION_TRACER
++extern bool ftrace_filter_param __initdata;
++extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
++			     int len, int reset);
++extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
++			     int len, int reset);
 +
-+	err = of_property_read_string(node, "cpumask", &p);
-+	if (!err) {
-+		cpumask_var_t new_mask;
++static void __init
++trace_of_set_ftrace_filter(struct ftrace_ops *ops, const char *property,
++			   struct device_node *node)
++{
++	struct property *prop;
++	const char *p;
++	char buf[MAX_BUF_LEN];
++	int err;
 +
-+		if (alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
-+			if (cpumask_parse(p, new_mask) < 0 ||
-+			    tracing_set_cpumask(tr, new_mask) < 0)
-+				pr_err("Failed to set new CPU mask %s\n", p);
-+			free_cpumask_var(new_mask);
++	of_property_for_each_string(node, property, prop, p) {
++		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++			pr_err("filter string is too long: %s\n", p);
++			return;
 +		}
++		err = ftrace_set_filter(ops, buf, strlen(buf), 0);
++		if (err) {
++			pr_err("Failed to add %s: %s\n", property, buf);
++			return;
++		}
++		ftrace_filter_param = true;
 +	}
- }
- 
++}
++#else
++#define trace_of_set_ftrace_filter(ops, prop, node) do {} while (0)
++#endif
++
  static void __init
+ trace_of_enable_tracer(struct trace_array *tr, struct device_node *node)
+ {
+ 	const char *p;
+ 
++	trace_of_set_ftrace_filter(tr->ops, "ftrace-filters", node);
++	trace_of_set_ftrace_filter(tr->ops, "ftrace-notraces", node);
++
+ 	if (!of_property_read_string(node, "tracer", &p)) {
+ 		if (tracing_set_tracer(tr, p) < 0)
+ 			pr_err("Failed to set given tracer: %s\n", p);
 
