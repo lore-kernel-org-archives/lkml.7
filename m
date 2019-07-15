@@ -2,116 +2,115 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C09AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6650C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5792054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203303;
-	bh=oiFz2NTIZMbWcBgnnWQwMU4e1+RSkgJOnzytLtRJPzo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdoXjSo7MIQMKDWuJibhj1dEIcdnep6EfUZS24qV+m9wx8my3ncvPyzXkzLPf5reI
-	 /nAOfJwwYX6b1XTV/uhpM0JanW2jHFmvBx/GKql1BvC8v54iYsCcK78nenatt+7IWE
-	 IxEMQJz6VNj/OYPWOELip+95AKobuYdS+71qcH/U=
+	by mail.kernel.org (Postfix) with ESMTP id 986322054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNM/YzFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733093AbfGON6K (ORCPT
+        id S2388149AbfGOPIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:58:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732131AbfGON6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:58:06 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10C5A20651;
-        Mon, 15 Jul 2019 13:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199085;
-        bh=oiFz2NTIZMbWcBgnnWQwMU4e1+RSkgJOnzytLtRJPzo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUPYduky1gIJ6EYhtmr0z9MfLm1Z6rYEnDwKIUQAFoLp/cM4JDrJWvzwa+yQ0FNiK
-         +O6t5CuAFS+S2Ju423n8fc/pDORgNoyHSMR30EauUcETNCsk+N2BPyXGHPD6F8iEq9
-         P+1Askpewg8NcoOK9c9QtFHXrQZcadI5BmEYST+M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zefir Kurtisi <zefir.kurtisi@neratec.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 186/249] ath9k: correctly handle short radar pulses
-Date:   Mon, 15 Jul 2019 09:45:51 -0400
-Message-Id: <20190715134655.4076-186-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 15 Jul 2019 11:08:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34044 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733203AbfGOPIb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 11:08:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so7559529pfo.1;
+        Mon, 15 Jul 2019 08:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=HvGFiXKIMoJHRgRPv+CNGx82/V4N9NKuA2a2k2xvyEI=;
+        b=SNM/YzFIofldJvXGWAsN2gKzBBedbJuHXOK2bg8FuKyDmVMINV9tWuGaOU6IWVavL2
+         1UVVsFWjaS+FxTXEI/r2C81HaGqZApODK2QkrBTs2GFeADPqMO6XVJ390ilEF9fX9OwR
+         g0x6GT4nvvt5AQiiaFvEBDFSYIPQi2VWOVILJ6Irpc1NnuADpqMyO3tnYBIDwd4FIYon
+         WCE9046IBxjH3Uj+vy3olu6Zn66GP6E7Q26p1i7shDmBhnh9MoVoCcoXZgTVhqdgwcG5
+         fjqviZbtLeGPaQ/XbWVLvnQKR2S3qdg+Z2/X87fhnwaua/2+6k2ATsW09NjIV7guMQxh
+         GtGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=HvGFiXKIMoJHRgRPv+CNGx82/V4N9NKuA2a2k2xvyEI=;
+        b=FDemJw+be0Kg65wU67pPs0ql0DbU44QqbGwJA+Zd5dMgMsSdvLMfEM2dCU8gmjo6dj
+         Y7oFyb4jxdNIyRZZJZLqFbdNtJWpmr29zBptDxwQ6dyb+xEegUOSYUkLMc1jSU3I8HVx
+         91LAg0+fJwI8ML5L8j/D2xxrzLKccfklqLIh/1HhrzNKA7+PiafJ1jP+AxvI+pD+Ad6c
+         0yby2OCKiGWNpxclOmGMh51EXzl1mV40x4tIZChnXljUTtCzQZusDggO6otOERIosASj
+         w/jfA73k1ae0CpKWKk7WznONN0TrRy3Q4+xZ8uO5npqZhp9TyErNaVcC8HILtnDL8d7E
+         Va0w==
+X-Gm-Message-State: APjAAAVwvc/LFbSbeH4gijGEeMah6EB0tnzP8Pb19fyJ1jXd9dg46w3E
+        wx9PFEaQMVs+YeUlYE9SN/c=
+X-Google-Smtp-Source: APXvYqwhh1jY/TQpZyLTr7OKyrCoZOc6rJCUkSPPoEOkGW73rwzgzUaZc6OeiL+iMEX9bVsQi8AIeA==
+X-Received: by 2002:a63:10a:: with SMTP id 10mr27855904pgb.281.1563203310244;
+        Mon, 15 Jul 2019 08:08:30 -0700 (PDT)
+Received: from debian.net.fpt ([2405:4800:58c7:392e:98e4:a492:ad40:d86e])
+        by smtp.gmail.com with ESMTPSA id b37sm33284969pjc.15.2019.07.15.08.08.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 08:08:29 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
+Cc:     isdn@linux-pingi.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, andreyknvl@google.com,
+        bigeasy@linutronix.de, gustavo@embeddedor.com, pakki001@umn.edu,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH] ISDN: hfcsusb: checking idx of ep configuration
+Date:   Mon, 15 Jul 2019 22:08:14 +0700
+Message-Id: <20190715150814.20022-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <000000000000f2b23d05868310f9@google.com>
+References: <000000000000f2b23d05868310f9@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zefir Kurtisi <zefir.kurtisi@neratec.com>
+The syzbot test with random endpoint address which made the idx is
+overflow in the table of endpoint configuations.
 
-[ Upstream commit df5c4150501ee7e86383be88f6490d970adcf157 ]
+this adds the checking for fixing the error report from
+syzbot
 
-In commit 3c0efb745a17 ("ath9k: discard undersized packets")
-the lower bound of RX packets was set to 10 (min ACK size) to
-filter those that would otherwise be treated as invalid at
-mac80211.
+KASAN: stack-out-of-bounds Read in hfcsusb_probe [1]
+The patch tested by syzbot [2]
 
-Alas, short radar pulses are reported as PHY_ERROR frames
-with length set to 3. Therefore their detection stopped
-working after that commit.
+Reported-by: syzbot+8750abbc3a46ef47d509@syzkaller.appspotmail.com
 
-NOTE: ath9k drivers built thereafter will not pass DFS
-certification.
+[1]:
+https://syzkaller.appspot.com/bug?id=30a04378dac680c5d521304a00a86156bb913522
+[2]:
+https://groups.google.com/d/msg/syzkaller-bugs/_6HBdge8F3E/OJn7wVNpBAAJ
 
-This extends the criteria for short packets to explicitly
-handle PHY_ERROR frames.
-
-Fixes: 3c0efb745a17 ("ath9k: discard undersized packets")
-Signed-off-by: Zefir Kurtisi <zefir.kurtisi@neratec.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 ---
- drivers/net/wireless/ath/ath9k/recv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/recv.c b/drivers/net/wireless/ath/ath9k/recv.c
-index 4e97f7f3b2a3..06e660858766 100644
---- a/drivers/net/wireless/ath/ath9k/recv.c
-+++ b/drivers/net/wireless/ath/ath9k/recv.c
-@@ -815,6 +815,7 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
- 	struct ath_common *common = ath9k_hw_common(ah);
- 	struct ieee80211_hdr *hdr;
- 	bool discard_current = sc->rx.discard_next;
-+	bool is_phyerr;
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 4c99739b937e..0e224232f746 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -1955,6 +1955,9 @@ hfcsusb_probe(struct usb_interface *intf, const struct usb_device_id *id)
  
- 	/*
- 	 * Discard corrupt descriptors which are marked in
-@@ -827,8 +828,11 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
- 
- 	/*
- 	 * Discard zero-length packets and packets smaller than an ACK
-+	 * which are not PHY_ERROR (short radar pulses have a length of 3)
- 	 */
--	if (rx_stats->rs_datalen < 10) {
-+	is_phyerr = rx_stats->rs_status & ATH9K_RXERR_PHY;
-+	if (!rx_stats->rs_datalen ||
-+	    (rx_stats->rs_datalen < 10 && !is_phyerr)) {
- 		RX_STAT_INC(sc, rx_len_err);
- 		goto corrupt;
- 	}
+ 				/* get endpoint base */
+ 				idx = ((ep_addr & 0x7f) - 1) * 2;
++				if (idx > 15)
++					return -EIO;
++
+ 				if (ep_addr & 0x80)
+ 					idx++;
+ 				attr = ep->desc.bmAttributes;
 -- 
-2.20.1
+2.11.0
 
