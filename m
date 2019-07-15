@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9514AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AEEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BCB206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33772081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199654;
-	bh=oYKsj8jNuFHz2L+yoDgxwgDjUnQosC79bOL9HB5ullk=;
+	s=default; t=1563199659;
+	bh=dMS4IlMtitQta4w5eymfq+mTgMKszYDZ+A8Kxy3G5DA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gm6F5oNTo6nIlPPLnCkCr3KyWJ46I5Zpni6f/X5asEZBKjMXwbzwksw+KFVMkoiDQ
-	 5k2YfXGJJr0mGI5MZZ3Yk1KrJkPdkcTcxY/8PPvOfSVniyQyVOxOaHPePArjhuFabx
-	 tRi7EIceSWwMfF0h3sus53J2VrGPY4P92rqVcv1Q=
+	b=o07lOyGr3OZSAXuIMTmb5pear07Hx1rFNOeFluHkn1Xh2sJ2SCyS3MEPT13pcd65p
+	 /Pi310tXZev0D2WBHQ8OGmmcnoLwJLXOQBM9g0btrmbsvfjKvK5FxM8+wAxF9WM/vk
+	 CjKE2fROjsiXjf78Gt4cnHoJjk6Pfh/sNVHAHFWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbfGOOHd (ORCPT
+        id S2388376AbfGOOHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:07:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733004AbfGOOHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:07:30 -0400
+        id S2388364AbfGOOHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:07:36 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A65492081C;
-        Mon, 15 Jul 2019 14:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533F121873;
+        Mon, 15 Jul 2019 14:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199649;
-        bh=oYKsj8jNuFHz2L+yoDgxwgDjUnQosC79bOL9HB5ullk=;
+        s=default; t=1563199654;
+        bh=dMS4IlMtitQta4w5eymfq+mTgMKszYDZ+A8Kxy3G5DA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gMWdmyLq886T0v3z4Lr8l5Q1P5MnUTpZq/dA9xgKbftFE+doBbige74VpBxXei9M2
-         0jiw8+GyFjkfoytJYEV23EvHfHnxZTXYF7s9homWLc5bgXqXOBU3St9YnkduIdVeTC
-         rhXKldiKhs5Z0DskOREhw3f6OlzW4LeFMKBV8DoU=
+        b=fPKABndB5XQUsXEQtdaeI4TemBYsXhJfoziaitVS8B8JfTuMvLVK89Oj7rzFNhmr9
+         wXLJLpRFnmwSgfVT+E21+ImAyGvDnB/Jd2cCo6Xe7BEGM8cAi74jSVa453Rcx5WmvY
+         C9BqYn1pFJIIJkrhnQc7/0IAUjKv3KxLysT9jc6A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 061/219] media: aspeed: change irq to threaded irq
-Date:   Mon, 15 Jul 2019 10:01:02 -0400
-Message-Id: <20190715140341.6443-61-sashal@kernel.org>
+Cc:     Biao Huang <biao.huang@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 062/219] net: stmmac: dwmac4: fix flow control issue
+Date:   Mon, 15 Jul 2019 10:01:03 -0400
+Message-Id: <20190715140341.6443-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,43 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit 12ae1c1bf5db2f33fcd9092a96f630291c4b181a ]
+[ Upstream commit ee326fd01e79dfa42014d55931260b68b9fa3273 ]
 
-Differently from other Aspeed drivers, this driver calls clock
-control APIs in interrupt context. Since ECLK is coupled with a
-reset bit in clk-aspeed module, aspeed_clk_enable will make 10ms of
-busy waiting delay for triggering the reset and it will eventually
-disturb other drivers' interrupt handling. To fix this issue, this
-commit changes this driver's irq to threaded irq so that the delay
-can be happened in a thread context.
+Current dwmac4_flow_ctrl will not clear
+GMAC_RX_FLOW_CTRL_RFE/GMAC_RX_FLOW_CTRL_RFE bits,
+so MAC hw will keep flow control on although expecting
+flow control off by ethtool. Add codes to fix it.
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/aspeed-video.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index 692e08ef38c0..668d8827e281 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -1600,8 +1600,9 @@ static int aspeed_video_init(struct aspeed_video *video)
- 		return -ENODEV;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index a2f3db39221e..d0e6e1503581 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -475,8 +475,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 	if (fc & FLOW_RX) {
+ 		pr_debug("\tReceive Flow-Control ON\n");
+ 		flow |= GMAC_RX_FLOW_CTRL_RFE;
+-		writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
  	}
++	writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
++
+ 	if (fc & FLOW_TX) {
+ 		pr_debug("\tTransmit Flow-Control ON\n");
  
--	rc = devm_request_irq(dev, irq, aspeed_video_irq, IRQF_SHARED,
--			      DEVICE_NAME, video);
-+	rc = devm_request_threaded_irq(dev, irq, NULL, aspeed_video_irq,
-+				       IRQF_ONESHOT | IRQF_SHARED, DEVICE_NAME,
-+				       video);
- 	if (rc < 0) {
- 		dev_err(dev, "Unable to request IRQ %d\n", irq);
- 		return rc;
+@@ -484,7 +485,7 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 			pr_debug("\tduplex mode: PAUSE %d\n", pause_time);
+ 
+ 		for (queue = 0; queue < tx_cnt; queue++) {
+-			flow |= GMAC_TX_FLOW_CTRL_TFE;
++			flow = GMAC_TX_FLOW_CTRL_TFE;
+ 
+ 			if (duplex)
+ 				flow |=
+@@ -492,6 +493,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 
+ 			writel(flow, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
+ 		}
++	} else {
++		for (queue = 0; queue < tx_cnt; queue++)
++			writel(0, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
+ 	}
+ }
+ 
 -- 
 2.20.1
 
