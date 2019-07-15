@@ -2,147 +2,150 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0699C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997DBC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9823212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199419;
-	bh=5JECM+bQrfQSnRJfsBlhnSySrb+gBPijBGjwUgLvW68=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYA5OYj0Y5eJg0pGaMS3CDl+VIcT2AX24uaTpadUoNJHqlf2/pg02SMfNcY0GHW4f
-	 rYh9HDNMM5JeO9skz3hL3SIBUXRm747MZChOhYI2bPUzjp0iqfrPxv2f1y92+uPvbG
-	 O4Z1F2MHngObqq3UbzYBTwJU3MPJSm3KFIkLbs/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 78318212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbfGOOC1 (ORCPT
+        id S2387453AbfGOOD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733012AbfGOOCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:02:23 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF23721530;
-        Mon, 15 Jul 2019 14:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199342;
-        bh=5JECM+bQrfQSnRJfsBlhnSySrb+gBPijBGjwUgLvW68=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yZxo3I/YOsXiSVf2U5VyeZiAgxeqRSH0DE6MpzzCaejyO8VbaTsJeJW0kKkVAxhbp
-         F8LRiHT/v8df3HuvsIQdEdvmniFfYP+D253vzzRSRneCZA6lmauekOBAl1oqH/66GJ
-         uz67rscsFZCePTdQo40OYaI/pn1xdRBFR/e24cEU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 239/249] perf tests: Fix record+probe_libc_inet_pton.sh for powerpc64
-Date:   Mon, 15 Jul 2019 09:46:44 -0400
-Message-Id: <20190715134655.4076-239-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+        Mon, 15 Jul 2019 10:03:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54796 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732949AbfGOOD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:03:28 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FDvYOL133994
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:03:25 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2trt84b0j5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:03:24 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 15 Jul 2019 15:03:23 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Jul 2019 15:03:18 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FE3HgH24969604
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 14:03:17 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15BAAB2068;
+        Mon, 15 Jul 2019 14:03:17 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1686B2067;
+        Mon, 15 Jul 2019 14:03:16 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.164.210])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jul 2019 14:03:16 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 988F216C3641; Mon, 15 Jul 2019 07:03:16 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 07:03:16 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Reply-To: paulmck@linux.ibm.com
+References: <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714190522.GA24049@mit.edu>
+ <20190714192951.GM26519@linux.ibm.com>
+ <20190715031027.GA3336@linux.ibm.com>
+ <20190715130101.GA5527@linux.ibm.com>
+ <20190715133938.GH3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715133938.GH3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19071514-2213-0000-0000-000003AF0900
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011432; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01232545; UDB=6.00649377; IPR=6.01013847;
+ MB=3.00027724; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-15 14:03:21
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071514-2214-0000-0000-00005F3E4521
+Message-Id: <20190715140316.GR26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+On Mon, Jul 15, 2019 at 03:39:38PM +0200, Peter Zijlstra wrote:
+> On Mon, Jul 15, 2019 at 06:01:01AM -0700, Paul E. McKenney wrote:
+> > Title: Making SCHED_DEADLINE safe for kernel kthreads
+> > 
+> > Abstract:
+> > 
+> > Dmitry Vyukov's testing work identified some (ab)uses of sched_setattr()
+> > that can result in SCHED_DEADLINE tasks starving RCU's kthreads for
+> > extended time periods, not millisecond, not seconds, not minutes, not even
+> > hours, but days. Given that RCU CPU stall warnings are issued whenever
+> > an RCU grace period fails to complete within a few tens of seconds,
+> > the system did not suffer silently. Although one could argue that people
+> > should avoid abusing sched_setattr(), people are human and humans make
+> > mistakes. Responding to simple mistakes with RCU CPU stall warnings is
+> > all well and good, but a more severe case could OOM the system, which
+> > is a particularly unhelpful error message.
+> > 
+> > It would be better if the system were capable of operating reasonably
+> > despite such abuse. Several approaches have been suggested.
+> > 
+> > First, sched_setattr() could recognize parameter settings that put
+> > kthreads at risk and refuse to honor those settings. This approach
+> > of course requires that we identify precisely what combinations of
+> > sched_setattr() parameters settings are risky, especially given that there
+> > are likely to be parameter settings that are both risky and highly useful.
+> 
+> So we (the people poking at the DEADLINE code) are all aware of this,
+> and on the TODO list for making DEADLINE available for !priv users is
+> the item:
+> 
+>   - put limits on deadline/period
+> 
+> And note that that is both an upper and lower limit. The upper limit
+> you've just found why we need it, the lower limit is required because
+> you can DoS the hardware by causing deadlines/periods that are equal (or
+> shorter) than the time it takes to program the hardware.
+> 
+> There might have even been some patches that do some of this, but I've
+> held off because we have bigger problems and they would've established
+> an ABI while it wasn't clear it was sufficient or the right form.
 
-[ Upstream commit bff5a556c149804de29347a88a884d25e4e4e3a2 ]
+So I should withdraw the proposal?
 
-'probe libc's inet_pton & backtrace it with ping' testcase sometimes
-fails on powerpc because distro ping binary does not have symbol
-information and thus it prints "[unknown]" function name in the
-backtrace.
-
-Accept "[unknown]" as valid function name for powerpc as well.
-
- # perf test -v "probe libc's inet_pton & backtrace it with ping"
-
-Before:
-
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79695
-  ping 79718 [077] 96483.787025: probe_libc:inet_pton: (7fff83a754c8)
-  7fff83a754c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  1171830f4 [unknown] (/usr/bin/ping)
-  FAIL: expected backtrace entry
-  ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
-  got "1171830f4 [unknown] (/usr/bin/ping)"
-  test child finished with -1
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: FAILED!
-
-After:
-
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79085
-  ping 79108 [045] 96400.214177: probe_libc:inet_pton: (7fffbb9654c8)
-  7fffbb9654c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  132e830f4 [unknown] (/usr/bin/ping)
-  test child finished with 0
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: Ok
-
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Reviewed-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sandipan Das <sandipan@linux.ibm.com>
-Fixes: 1632936480a5 ("perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo")
-Link: http://lkml.kernel.org/r/1561630614-3216-1-git-send-email-s1seetee@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 61c9f8fc6fa1..58a99a292930 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -44,7 +44,7 @@ trace_libc_inet_pton_backtrace() {
- 		eventattr='max-stack=4'
- 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
- 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	*)
- 		eventattr='max-stack=3'
--- 
-2.20.1
+							Thanx, Paul
 
