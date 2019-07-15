@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E62C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EEDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B2C20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229F820C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 06:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfGOG5e (ORCPT
+        id S1729228AbfGOG5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 02:57:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33700 "EHLO mx1.suse.de"
+        Mon, 15 Jul 2019 02:57:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33734 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729180AbfGOG5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 02:57:34 -0400
+        id S1725787AbfGOG5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 02:57:44 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0174DAF8C;
-        Mon, 15 Jul 2019 06:57:32 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 08:57:32 +0200
-Message-ID: <s5h36j7g4yr.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 3A8C1AF8E;
+        Mon, 15 Jul 2019 06:57:43 +0000 (UTC)
+Date:   Mon, 15 Jul 2019 08:57:43 +0200
+Message-ID: <s5h1ryrg4yg.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     "Hariprasad Kelam" <hariprasad.kelam@gmail.com>
 Cc:     <alsa-devel@alsa-project.org>,
@@ -32,11 +32,11 @@ Cc:     <alsa-devel@alsa-project.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Allison Randal" <allison@lohutok.net>,
         "Jaroslav Kysela" <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        "Armijn Hemel" <armijn@tjaldur.nl>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sound: pci: au88x0: Remove unneeded variable: "changed"
-In-Reply-To: <20190711171302.GA3445@hari-Inspiron-1545>
-References: <20190711171302.GA3445@hari-Inspiron-1545>
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sound: pci: emu10k1: Remove unneeded variable "change"
+In-Reply-To: <20190711171726.GA4356@hari-Inspiron-1545>
+References: <20190711171726.GA4356@hari-Inspiron-1545>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -47,19 +47,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jul 2019 19:13:02 +0200,
+On Thu, 11 Jul 2019 19:17:26 +0200,
 Hariprasad Kelam wrote:
 > 
-> Fix below issues reported by coccicheck
-> 
-> sound/pci/au88x0/au88x0_a3d.c:821:8-15: Unneeded variable: "changed".
-> Return "1" on line 834
-> sound/pci/au88x0/au88x0_a3d.c:768:5-12: Unneeded variable: "changed".
-> Return "1" on line 777
-> sound/pci/au88x0/au88x0_a3d.c:804:5-12: Unneeded variable: "changed".
-> Return "1" on line 813
-> sound/pci/au88x0/au88x0_a3d.c:786:8-15: Unneeded variable: "changed".
-> Return "1" on line 796
+> fix below issue reported by coccicheck
+> sound/pci/emu10k1/emu10k1x.c:1077:5-11: Unneeded variable: "change".
+> Return "0" on line 1092
 > 
 > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
