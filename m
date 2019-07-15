@@ -2,96 +2,81 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F2C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F17C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71722083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HR4T2wGm"
+	by mail.kernel.org (Postfix) with ESMTP id 36D102083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbfGOJWk (ORCPT
+        id S1729639AbfGOJYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:22:40 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42887 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729428AbfGOJWk (ORCPT
+        Mon, 15 Jul 2019 05:24:07 -0400
+Received: from smtp180.sjtu.edu.cn ([202.120.2.180]:49552 "EHLO
+        smtp180.sjtu.edu.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729519AbfGOJYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:22:40 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s184so12089539oie.9;
-        Mon, 15 Jul 2019 02:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HGv0/Y6Q5CSW+TZXfS+KyRIDJhAZnzyXylJ4U0lSago=;
-        b=HR4T2wGmTxjwrjCuPorRbzw/ZPhpKnX/xnnZQC4pGlnpqhlFohBdpQ54QQJ1Fen2s4
-         lztzFKUEA3FGyG6RwR178O5YUnVC9+aMIguQBV9wO1MWDEiVz1bOAd505niFavjGF3Fd
-         9jBD4OEUZNKSHAL6kFBmkx1/2garlpWxH1Uv2oNqKyh+nNRR31f3gPOMb0D8blg4Rse5
-         0xP1aKF5BTamURAVWQKyo9Fh/mIUHTjyYsXV85H8W6Pgc9vogtF3XDHNw/lWN6kJq09M
-         F7BUv+e9Vyacg5LcMxVVX6rw+otdZyZYLGV5uCkeQ7hjC9XJ3bwkyf4ENGhj0yHOvrXz
-         L69g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HGv0/Y6Q5CSW+TZXfS+KyRIDJhAZnzyXylJ4U0lSago=;
-        b=VBLw1a7ZPlQRuV8AYndOljTQUskvYQNl0IOj9sG42MAGjFIiJKPNEKHYjp1Db3ZYBy
-         XHfcETbMD+I6A3VWjAkKTnLlw6U+8BKBBikas1o+1OLk4Fax5vacQH6VXKsVVaC6wSyZ
-         9P4iwoSrJD4DpNRt1fGza2VxAaayKZHIxF0f8cOe3v7itu4lWv5eurLCIVCafhC+Y9zR
-         DVYV/PUcgmofzWva/MFaZiiwJwJ2T5CnSK2kQGceYKcLFBjdMXm+ZSHUYPoDxAc7zQRX
-         EFigV7Km7bdYNW4BJblDbbJTwPyd61/oiEsGrFSG2mYniMZf1BlrJuv34BdwRewe8Rye
-         menA==
-X-Gm-Message-State: APjAAAWXpXEQNgKpeD9vNZTi/FkxMPGBPtrtlgtH0y3C0t15KbSoVypY
-        j/yoDmh1yF5x4734lXBr1Hz+mySEVcNKAswyMFk=
-X-Google-Smtp-Source: APXvYqx1cIOihWaijqt2/tEXzIt846Zv+/y3YtZ34qXZd0yq6TQMvItvUP6Z/a8OlQtd2+l9pCPpvE/4zp3LqWpWGo4=
-X-Received: by 2002:aca:544b:: with SMTP id i72mr13225758oib.174.1563182559186;
- Mon, 15 Jul 2019 02:22:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <1563154124-18579-1-git-send-email-wanpengli@tencent.com> <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
-In-Reply-To: <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 15 Jul 2019 17:22:30 +0800
-Message-ID: <CANRm+Cyo9A5VsRRhgjzO9wkRRbTfc1xdzd=74f_bxGcu8+5hww@mail.gmail.com>
-Subject: Re: [PATCH RESEND] i386/kvm: support guest access CORE cstate
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 15 Jul 2019 05:24:06 -0400
+Received: from proxy01.sjtu.edu.cn (unknown [202.112.26.54])
+        by smtp180.sjtu.edu.cn (Postfix) with ESMTPS id C132D1009AC14;
+        Mon, 15 Jul 2019 17:14:34 +0800 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by proxy01.sjtu.edu.cn (Postfix) with ESMTP id B8A0E201B4B7F;
+        Mon, 15 Jul 2019 16:59:07 +0800 (CST)
+X-Virus-Scanned: amavisd-new at proxy01.sjtu.edu.cn
+Received: from proxy01.sjtu.edu.cn ([127.0.0.1])
+        by localhost (proxy01.sjtu.edu.cn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id JT3smSJvExNG; Mon, 15 Jul 2019 16:59:07 +0800 (CST)
+Received: from xywang-pc.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+        (Authenticated sender: xywang.sjtu@sjtu.edu.cn)
+        by proxy01.sjtu.edu.cn (Postfix) with ESMTPA id 9165820424204;
+        Mon, 15 Jul 2019 16:59:07 +0800 (CST)
+From:   xywang.sjtu@sjtu.edu.cn
+To:     rostedt@goodmis.org, mingo@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Subject: [PATCH 1/2] tracing: replace simple_strtol() by kstrtoint()
+Date:   Mon, 15 Jul 2019 16:58:55 +0800
+Message-Id: <20190715085856.5664-1-xywang.sjtu@sjtu.edu.cn>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jul 2019 at 17:16, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 15/07/19 03:28, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Allow guest reads CORE cstate when exposing host CPU power management c=
-apabilities
-> > to the guest. PKG cstate is restricted to avoid a guest to get the whol=
-e package
-> > information in multi-tenant scenario.
-> >
-> > Cc: Eduardo Habkost <ehabkost@redhat.com>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->
-> Hi,
->
-> QEMU is in hard freeze now.  This will be applied after the release.
+From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 
-Thanks for the information. :)
+The simple_strtol() function is deprecated. kstrto[l,int]() are
+the correct replacements as they can properly handle overflows.
 
-Regards,
-Wanpeng Li
+This patch replaces the deprecated simple_strtol() use introduced recently.
+As skip_entries is actually int-typed, we are safe to use kstrtoint() here.
+
+Same as before, set 0 to skip_entries on string parsing error.
+
+Fixes: dbfe67334a17 ("tracing: kdb: The skip_lines parameter should have been skip_entries")
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+---
+ kernel/trace/trace_kdb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index cca65044c14c..5d9dd4c3f23f 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -104,8 +104,7 @@ static int kdb_ftdump(int argc, const char **argv)
+ 		return KDB_ARGCOUNT;
+ 
+ 	if (argc) {
+-		skip_entries = simple_strtol(argv[1], &cp, 0);
+-		if (*cp)
++		if (kstrtoint(argv[1], 0, &skip_entries))
+ 			skip_entries = 0;
+ 	}
+ 
+-- 
+2.11.0
+
