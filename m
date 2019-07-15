@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40105C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF35C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D1C21530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6726F217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197918;
-	bh=+TbeRleRiYI/iZNhsm+Vdwe8yO9jdTKqHKF8Pgo0Zgc=;
+	s=default; t=1563197921;
+	bh=tAtuICIV1U+7yLjSH6QQHcFpIEFMJc06cGhrtThDr/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=btBcl3j0nOIcwyBT1Eqzy+UVFy+wSVdy9VEtFj5dZp0UqL/7WeH1R4EN6DsvP8bUI
-	 IL9BbdSb9EyfqH4pzGgTd0Mvzca50RSSRpivJYdyfpKQBveHqr1uI0yFjHrMXNASVC
-	 4BM5BC+LBEBZppM8OmNZJa82NscQzcz0+oxaPIZs=
+	b=TwiVHK73+jcY2PQYVuQVLz+JxUWYNw450bM2rLXIQe3/RopVmkJH20H+AxsKyY70Z
+	 0jp1BJ3lpdPrFNL3hWJ/Y8ZZXxvxUoqsyCmXy8DwDRjHCnjW2Cvvb15hLlF4v18f2g
+	 gmPBIcnHWtjoSZjxrqj54WzCM9Yr4nzVpMaYy2zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfGONih (ORCPT
+        id S1731019AbfGONik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbfGONid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:38:33 -0400
+        id S1730966AbfGONii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:38:38 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D010217D8;
-        Mon, 15 Jul 2019 13:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19BE9212F5;
+        Mon, 15 Jul 2019 13:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197912;
-        bh=+TbeRleRiYI/iZNhsm+Vdwe8yO9jdTKqHKF8Pgo0Zgc=;
+        s=default; t=1563197917;
+        bh=tAtuICIV1U+7yLjSH6QQHcFpIEFMJc06cGhrtThDr/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CELpMF+B226Ak3H8zCQuDRUTFuagbL7REH7K2+cWBO2cFYaJECpxJom2WQxjujuFH
-         wzlvnl7FKBwRglvb8ZrHSEFaGzjpC5UpEI8HXxJNT9/uaJw6UMx/1s3pWN2qQW3mpL
-         1bNL+14GRSNsomMyIfoTRdUMAdWXt4euIa27Qw7s=
+        b=rffg+43Sw5IcgIS0wrEbnf9/ju8mnZ0LbEWMVRBkAS09wiupH6I6hM267pfNlcNmX
+         ODe60wsODr62xnJeNM6Jx1SCD4TQusSr34NlDYkckD0xp7VvW6CJEYyI2jccSxj9Qz
+         pAPfdqKlnm2j2TvQ0Wg5s+oY474bYe40TBq4L9qw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tim Schumacher <timschumi@gmx.de>,
+Cc:     Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 008/219] ath9k: Check for errors when reading SREV register
-Date:   Mon, 15 Jul 2019 09:34:40 -0400
-Message-Id: <20190715133811.2441-8-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 010/219] wil6210: fix missed MISC mbox interrupt
+Date:   Mon, 15 Jul 2019 09:34:42 -0400
+Message-Id: <20190715133811.2441-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133811.2441-1-sashal@kernel.org>
 References: <20190715133811.2441-1-sashal@kernel.org>
@@ -60,121 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Schumacher <timschumi@gmx.de>
+From: Maya Erez <merez@codeaurora.org>
 
-[ Upstream commit 2f90c7e5d09437a4d8d5546feaae9f1cf48cfbe1 ]
+[ Upstream commit 7441be71ba7e07791fd4fa2b07c932dff14ff4d9 ]
 
-Right now, if an error is encountered during the SREV register
-read (i.e. an EIO in ath9k_regread()), that error code gets
-passed all the way to __ath9k_hw_init(), where it is visible
-during the "Chip rev not supported" message.
+When MISC interrupt is triggered due to HALP bit, in parallel
+to mbox events handling by the MISC threaded IRQ, new mbox
+interrupt can be missed in the following scenario:
+1. MISC ICR is read in the IRQ handler
+2. Threaded IRQ is completed and all MISC interrupts are unmasked
+3. mbox interrupt is set by FW
+4. HALP is masked
+The mbox interrupt in step 3 can be missed due to constant high level
+of ICM.
+Masking all MISC IRQs instead of masking only HALP bit in step 4
+will guarantee that ICM will drop to 0 and interrupt will be triggered
+once MISC interrupts will be unmasked.
 
-    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
-    ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath9k_htc: Failed to initialize the device
-
-Check for -EIO explicitly in ath9k_hw_read_revisions() and return
-a boolean based on the success of the operation. Check for that in
-__ath9k_hw_init() and abort with a more debugging-friendly message
-if reading the revisions wasn't successful.
-
-    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
-    ath: phy2: Failed to read SREV register
-    ath: phy2: Could not read hardware revision
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath9k_htc: Failed to initialize the device
-
-This helps when debugging by directly showing the first point of
-failure and it could prevent possible errors if a 0x0f.3 revision
-is ever supported.
-
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hw.c | 32 +++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ drivers/net/wireless/ath/wil6210/interrupt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
-index 8581d917635a..b6773d613f0c 100644
---- a/drivers/net/wireless/ath/ath9k/hw.c
-+++ b/drivers/net/wireless/ath/ath9k/hw.c
-@@ -252,8 +252,9 @@ void ath9k_hw_get_channel_centers(struct ath_hw *ah,
- /* Chip Revisions */
- /******************/
- 
--static void ath9k_hw_read_revisions(struct ath_hw *ah)
-+static bool ath9k_hw_read_revisions(struct ath_hw *ah)
- {
-+	u32 srev;
- 	u32 val;
- 
- 	if (ah->get_mac_revision)
-@@ -269,25 +270,33 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
- 			val = REG_READ(ah, AR_SREV);
- 			ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
+diff --git a/drivers/net/wireless/ath/wil6210/interrupt.c b/drivers/net/wireless/ath/wil6210/interrupt.c
+index 3f5bd177d55f..e41ba24011d8 100644
+--- a/drivers/net/wireless/ath/wil6210/interrupt.c
++++ b/drivers/net/wireless/ath/wil6210/interrupt.c
+@@ -580,7 +580,7 @@ static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
+ 			/* no need to handle HALP ICRs until next vote */
+ 			wil->halp.handle_icr = false;
+ 			wil_dbg_irq(wil, "irq_misc: HALP IRQ invoked\n");
+-			wil6210_mask_halp(wil);
++			wil6210_mask_irq_misc(wil, true);
+ 			complete(&wil->halp.comp);
  		}
--		return;
-+		return true;
- 	case AR9300_DEVID_AR9340:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9340;
--		return;
-+		return true;
- 	case AR9300_DEVID_QCA955X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9550;
--		return;
-+		return true;
- 	case AR9300_DEVID_AR953X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9531;
--		return;
-+		return true;
- 	case AR9300_DEVID_QCA956X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9561;
--		return;
-+		return true;
  	}
- 
--	val = REG_READ(ah, AR_SREV) & AR_SREV_ID;
-+	srev = REG_READ(ah, AR_SREV);
-+
-+	if (srev == -EIO) {
-+		ath_err(ath9k_hw_common(ah),
-+			"Failed to read SREV register");
-+		return false;
-+	}
-+
-+	val = srev & AR_SREV_ID;
- 
- 	if (val == 0xFF) {
--		val = REG_READ(ah, AR_SREV);
-+		val = srev;
- 		ah->hw_version.macVersion =
- 			(val & AR_SREV_VERSION2) >> AR_SREV_TYPE2_S;
- 		ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
-@@ -306,6 +315,8 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
- 		if (ah->hw_version.macVersion == AR_SREV_VERSION_5416_PCIE)
- 			ah->is_pciexpress = true;
- 	}
-+
-+	return true;
- }
- 
- /************************************/
-@@ -559,7 +570,10 @@ static int __ath9k_hw_init(struct ath_hw *ah)
- 	struct ath_common *common = ath9k_hw_common(ah);
- 	int r = 0;
- 
--	ath9k_hw_read_revisions(ah);
-+	if (!ath9k_hw_read_revisions(ah)) {
-+		ath_err(common, "Could not read hardware revisions");
-+		return -EOPNOTSUPP;
-+	}
- 
- 	switch (ah->hw_version.macVersion) {
- 	case AR_SREV_VERSION_5416_PCI:
 -- 
 2.20.1
 
