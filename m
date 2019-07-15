@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0E0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D041C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB87820896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D87120896
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200656;
-	bh=mZa0/8cys8yBuLAYb3Kj91kgEQmeH9t6J0giZzAzzO4=;
+	s=default; t=1563200661;
+	bh=Kt7BcCS8y0HPbDKyGiyQBD+74w3LqOFCaaM41qDhzp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2trPBepVSEUkblY4tCzA6rGz56DtBKQFfhyFgIYFhGIVMJyxCjDaUF1CDMvtYodWo
-	 x+jBRALzDwgCP0+WxLQK1s4T8awOapJpoES1T11FoshJrcbnruMpIN4EMpDtI24anB
-	 Jt9NMOs+MQm6AKtUzF+u73WyNPcmmrUjpTBUURUQ=
+	b=Rmef1YnSSAOhrOKcdRoyHCvp79gE72qQIxSJSnM4uyndB4Ao2PpEcbXIVDnv3eQg5
+	 qxrWGtQe70CxFmAHIhyFt+XEqFu0LqqYseOvXG/GXoWa7gcyfYyFN+Y8zVh7ywCi9x
+	 XZmSI4oyPGwtPupoK//UTN5UEnHYLOGvJE3U0E8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390876AbfGOOYP (ORCPT
+        id S2390886AbfGOOYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57190 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390860AbfGOOYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:24:08 -0400
+        id S2389997AbfGOOYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:24:16 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3239020896;
-        Mon, 15 Jul 2019 14:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317C5206B8;
+        Mon, 15 Jul 2019 14:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200647;
-        bh=mZa0/8cys8yBuLAYb3Kj91kgEQmeH9t6J0giZzAzzO4=;
+        s=default; t=1563200656;
+        bh=Kt7BcCS8y0HPbDKyGiyQBD+74w3LqOFCaaM41qDhzp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StmpFjNOx2f+5qctOXaxQjiXB2u23QfaAs9NJ1fsAM7mTlYKEIXE7QXtbB3KeCD92
-         N/KmXkIGP5r2AJGRqV2PpN2Z3xqWwUP5FRnmTNTcmZWgNLRIMAgWJrwqvtA8tQiGMJ
-         oO3lO1bdxb3rONF7a7Kp43ofZS+klbDKYg0X4wmM=
+        b=GXO9BWR26+cFFZgDF8Lik9p2D49HUxmaPtxD/909wiR8zMvF+QmhXT28jc5k+EMd7
+         eXk8/QX6pvk/xnWAwnITHyqOUgxG098S3JLRZg8OVmeH938ThiTPEmdkDRnaVXj1gl
+         /CYjvylmOCDS0mqS9Ru+hIEYVIuByyzdJG3qjm5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Icenowy Zheng <icenowy@aosc.io>, Ondrej Jirman <megous@megous.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 102/158] net: stmmac: sun8i: force select external PHY when no internal one
-Date:   Mon, 15 Jul 2019 10:17:13 -0400
-Message-Id: <20190715141809.8445-102-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 105/158] x86/build: Add 'set -e' to mkcapflags.sh to delete broken capflags.c
+Date:   Mon, 15 Jul 2019 10:17:16 -0400
+Message-Id: <20190715141809.8445-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,45 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 0fec7e72ae1391bb2d7527efb54fe6ae88acabce ]
+[ Upstream commit bc53d3d777f81385c1bb08b07bd1c06450ecc2c1 ]
 
-The PHY selection bit also exists on SoCs without an internal PHY; if it's
-set to 1 (internal PHY, default value) then the MAC will not make use of
-any PHY on such SoCs.
+Without 'set -e', shell scripts continue running even after any
+error occurs. The missed 'set -e' is a typical bug in shell scripting.
 
-This problem appears when adapting for H6, which has no real internal PHY
-(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
-connected via RMII interface at GPIO bank A).
+For example, when a disk space shortage occurs while this script is
+running, it actually ends up with generating a truncated capflags.c.
 
-Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
-to address the problem of a wrong default value.
+Yet, mkcapflags.sh continues running and exits with 0. So, the build
+system assumes it has succeeded.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It will not be re-generated in the next invocation of Make since its
+timestamp is newer than that of any of the source files.
+
+Add 'set -e' so that any error in this script is caught and propagated
+to the build system.
+
+Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
+make automatically deletes the target on any failure. So, the broken
+capflags.c will be deleted automatically.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Link: https://lkml.kernel.org/r/20190625072622.17679-1-yamada.masahiro@socionext.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 49a896a16391..79c91526f3ec 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -893,6 +893,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 		 * address. No need to mask it again.
- 		 */
- 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
-+	} else {
-+		/* For SoCs without internal PHY the PHY selection bit should be
-+		 * set to 0 (external PHY).
-+		 */
-+		reg &= ~H3_EPHY_SELECT;
- 	}
+diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
+index d0dfb892c72f..aed45b8895d5 100644
+--- a/arch/x86/kernel/cpu/mkcapflags.sh
++++ b/arch/x86/kernel/cpu/mkcapflags.sh
+@@ -4,6 +4,8 @@
+ # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
+ #
  
- 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
++set -e
++
+ IN=$1
+ OUT=$2
+ 
 -- 
 2.20.1
 
