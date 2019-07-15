@@ -2,111 +2,139 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86C5C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F7DC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D2820659
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B386E20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tt3NTf3A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JL9pwKdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfGOTk5 (ORCPT
+        id S1731084AbfGOTm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:40:57 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43472 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729598AbfGOTk4 (ORCPT
+        Mon, 15 Jul 2019 15:42:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43493 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729598AbfGOTm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:40:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id k20so36014677ios.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:40:56 -0700 (PDT)
+        Mon, 15 Jul 2019 15:42:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so18338735wru.10;
+        Mon, 15 Jul 2019 12:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o8RepNcMBA34lIipd4aTy/F+kZlm41FUuqckkYbpx70=;
-        b=Tt3NTf3AABd1b8nrlASZqZEkaCYO9iSkuwDUefXej4OQzSnylihsL4UZi0wG5PC1iA
-         8PVYrNjv5nNFLKaafOELrJ55qrpvArBrE9wukxZ88piEJbA7bNs3hsIfAQjvTRRfdVL8
-         Mw75yZ35V1mg1HI2Tpt3kM/gMf8ElRNkM4lRk=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ivvcy3jSvKNh7AY9v8j4FaWyMteFu4efIhrDaMrTgs0=;
+        b=JL9pwKdRfzEgQuz6M6l0NwkbxKsmHvoTFiGXAoBw5hEY/u/A2CWfoFq4gSYEBLld9g
+         q3soQgGUYTyf1DraKl/IE5xRYQDP1TM4ILvxl/QLYJlsqshYqTPe4LwIYeK/zOUoPf3T
+         brFPEi/dN9AwVD16cam4NX6uSaA+amRANhulK4YLsyrl3Nfi72K/MAWB9QLpcG6/5BdV
+         C8MdsU7YlJRANavLjtdxRK1P6SSoylaq3Pn2ta6g04BIlUQLXHEWNVTUYpV5jch7FXqP
+         dvJzPPAqH/CL1THPIXbAstmhpppc4BhBtb68CwOpD5Iw1dqccwKrREre8FnPNMgxEerw
+         jyHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o8RepNcMBA34lIipd4aTy/F+kZlm41FUuqckkYbpx70=;
-        b=lOB0V5lkDAk5zD1wXs655HQtwGLPrGktcIGM4p79e5KW1ghUbGCAP+1D9fLL6v94Z6
-         8WFhx5fy7jciv8HVv89aowrCBESvCgceU29J7S6e1swPwLx2T1OegPpUf8fP3yG8XXiC
-         DpRO+jlQ/Tpx4v2f0XN8pCaspqb02n9X3uNncEDBHNt+ME78+lGjK0zJwlMTe/wob/bS
-         Ln4t54c8mjPQgNL7+jYMM0QuLRRfGkox83fC3P61pLKgjLNMLigbGlCRqjT4tchzGLo5
-         UxjLfqS7Ct/Pf7/lBKM2GZ5TjmNHjviNB4wByCYOaMQsYrwYnvcuuB9UjFr/7MLCVcyx
-         /MYw==
-X-Gm-Message-State: APjAAAUiQLS+am8RH3kGVQMOZiaZSd49WTYrJx9ftue8NpkR83a9RL3s
-        iZiWI1iNgymhPej4NNkJftZazLROhio=
-X-Google-Smtp-Source: APXvYqztcGmK/AwVTClgCvMJ8Wex+CeyLAlZA83A8OP/exWAq5DqCqWmwc/JdmYAWFHheboyEdghVw==
-X-Received: by 2002:a5d:8a06:: with SMTP id w6mr8203058iod.267.1563219655961;
-        Mon, 15 Jul 2019 12:40:55 -0700 (PDT)
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com. [209.85.166.51])
-        by smtp.gmail.com with ESMTPSA id v13sm16214196ioq.13.2019.07.15.12.40.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 12:40:55 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id q22so36052472iog.4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 12:40:55 -0700 (PDT)
-X-Received: by 2002:a02:ac03:: with SMTP id a3mr30679998jao.132.1563219654968;
- Mon, 15 Jul 2019 12:40:54 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ivvcy3jSvKNh7AY9v8j4FaWyMteFu4efIhrDaMrTgs0=;
+        b=QdxgFJU56+JMymZd9PFSIFNUNS+wVH9qCoA3VYGPo6s7vpeo7BxVGFGTiSObLG+Do7
+         sj7mgTc+wrA9nIYExO2jDGVUTD6XkqJMa98tlMl9X677cMsgZWq32ncOrxQLwMCzuDrC
+         tZezbHYYcR2GSrE84K+7ru0JgOWIU2+bU2ikh5SZ4LOL6EX8f0546HbYfWcoSKdd+raL
+         9oZqAwfI8NlZbpGXs2m4n24nAoj3clwDNELwEgC09yzarigEUjCVed6vA/H8D2wovO0+
+         k9e/Nj8ZafZWMYybXDyBTZ7v3lKaeybTGNgXk7ALtDWaWKhNFqPnBbL3xCHrCtTbOVrF
+         RpPQ==
+X-Gm-Message-State: APjAAAUUDMzWmfwA1HbtW+rF0tPUQbfzCMYV34mTuE0Gt1J/0AQQNS4U
+        GhffK7D80A2LAN25NK6rgWI=
+X-Google-Smtp-Source: APXvYqyEqpA1gOpTfq3syYAte0jdi7inc52XAxENBCxOvBZo2HSaroz6fSIklIcvS96/1smIuGr9tw==
+X-Received: by 2002:adf:efc8:: with SMTP id i8mr721555wrp.220.1563219776662;
+        Mon, 15 Jul 2019 12:42:56 -0700 (PDT)
+Received: from felia ([2001:16b8:2dc5:2000:cd36:d602:4f2d:7917])
+        by smtp.gmail.com with ESMTPSA id y1sm15121414wma.32.2019.07.15.12.42.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 12:42:55 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Mon, 15 Jul 2019 21:42:47 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
+ called in include/linux/pci.h
+In-Reply-To: <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+Message-ID: <alpine.DEB.2.21.1907152138120.2564@felia>
+References: <20190715175658.29605-1-skunberg.kelsey@gmail.com> <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190715191017.98488-1-mka@chromium.org>
-In-Reply-To: <20190715191017.98488-1-mka@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 15 Jul 2019 12:40:42 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WT6TT+iyGVNUhNcmAsVJip6X4mytuNJPGwMkk4F4i75g@mail.gmail.com>
-Message-ID: <CAD=FV=WT6TT+iyGVNUhNcmAsVJip6X4mytuNJPGwMkk4F4i75g@mail.gmail.com>
-Subject: Re: [PATCH] iio: cros_ec_accel_legacy: Always release lock when
- returning from _read()
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Mon, Jul 15, 2019 at 12:10 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> Before doing any actual work cros_ec_accel_legacy_read() acquires
-> a mutex, which is released at the end of the function. However for
-> 'calibbias' channels the function returns directly, without releasing
-> the lock. The next attempt to acquire the lock blocks forever. Instead
-> of an explicit return statement use the common return path, which
-> releases the lock.
->
-> Fixes: 11b86c7004ef1 ("platform/chrome: Add cros_ec_accel_legacy driver")
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+
+On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
+
+> Remove the following uncalled functions from include/linux/pci.h:
+> 
+>         pci_block_cfg_access()
+>         pci_block_cfg_access_in_atomic()
+>         pci_unblock_cfg_access()
+> 
+> Functions were added in patch fb51ccbf217c "PCI: Rework config space
+> blocking services", though no callers were added. Code continues to be
+> unused and should be removed.
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 > ---
->  drivers/iio/accel/cros_ec_accel_legacy.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-See also <https://lkml.kernel.org/r/39403a4c-bf7f-6a98-890c-57397fa66493@collabora.com>
+Nice finding. How did you discover this issue? Did you use a tool to find 
+this ununsed code or stumble over it during your code review?
 
-Actually, the "Fixes" tag is wrong here, though.  The problem only
-exists because we have <https://crrev.com/c/1632659> in our tree, AKA
-("FROMLIST: iio: cros_ec : Extend legacy support to ARM device").
-Before that there was no mutex.  For upstream purposes this could
-probably be squashed into the original patch.
+Also note that commits are referred to with this format:
 
--Doug
+commit <12-character sha prefix> ("<commit message>")
+
+So, you need to change patch to commit and include brackets around your
+quoted commit message.
+
+Lukas
+
+> Changes since v1:
+>   - Fixed Signed-off-by line to show full name
+> 
+>  include/linux/pci.h | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cf380544c700..3c9ba6133bea 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
+>  
+>  static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+>  
+> -static inline void pci_block_cfg_access(struct pci_dev *dev) { }
+> -static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
+> -{ return 0; }
+> -static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
+> -
+>  static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
+>  { return NULL; }
+>  static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-kernel-mentees mailing list
+> Linux-kernel-mentees@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+> 
