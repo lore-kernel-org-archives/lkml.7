@@ -2,189 +2,136 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32A0C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A7C76196
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB89120659
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WAapHeWX"
+	by mail.kernel.org (Postfix) with ESMTP id 3F33820665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732480AbfGOUOQ (ORCPT
+        id S1732486AbfGOUOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:14:16 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3041 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730937AbfGOUOQ (ORCPT
+        Mon, 15 Jul 2019 16:14:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62772 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730937AbfGOUOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:14:16 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2cde9c0000>; Mon, 15 Jul 2019 13:14:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 15 Jul 2019 13:14:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 15 Jul 2019 13:14:14 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 15 Jul
- 2019 20:14:13 +0000
-Subject: Re: [PATCH] staging: kpc2000: Convert put_page() to put_user_page*()
-To:     Bharath Vedartham <linux.bhar@gmail.com>, <ira.weiny@intel.com>,
-        <gregkh@linuxfoundation.org>, <Matt.Sickler@daktronics.com>,
-        <jglisse@redhat.com>
-CC:     <devel@driverdev.osuosl.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190715195248.GA22495@bharath12345-Inspiron-5559>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <2604fcd1-4829-d77e-9f7c-d4b731782ff9@nvidia.com>
-Date:   Mon, 15 Jul 2019 13:14:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 16:14:36 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FKBsqF002141
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:14:34 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2try7qtvet-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:14:33 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Mon, 15 Jul 2019 21:14:32 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Jul 2019 21:14:26 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FKEPpM48955724
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 20:14:25 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 658A7AC065;
+        Mon, 15 Jul 2019 20:14:25 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BA00AC05B;
+        Mon, 15 Jul 2019 20:14:13 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.238.93])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 15 Jul 2019 20:14:13 +0000 (GMT)
+References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com> <87tvbqgboc.fsf@morokweng.localdomain> <20190715160317.7e3dfb33.pasic@linux.ibm.com> <20190715143039.GA6892@lst.de>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, x86@kernel.org,
+        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        "Lendacky\, Thomas" <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86 arch code
+In-reply-to: <20190715143039.GA6892@lst.de>
+Date:   Mon, 15 Jul 2019 17:14:04 -0300
 MIME-Version: 1.0
-In-Reply-To: <20190715195248.GA22495@bharath12345-Inspiron-5559>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563221660; bh=BMxYmaxLZP+7xtagiq4XdrfPFrAjpdxkuCAPEb6M/YE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WAapHeWXmLTyRYz3wNyClC6+13efTzwE10OPt/TU6UzVEhQ95SBC2gyGzhQSq8HzY
-         jif7L106RMFBSUgWWTTOtKHY++BEoNDNqfzgiSakBgXQz7mrzurCeo5LnBL3cdHTdW
-         9UQh4CqliZkdYkplEcYXuJba0rR+7so4j/xBe+8jAIUwoYBK4II+W8f3W9W3kmLAMs
-         r7cbHtFee6QReJJdSABcP7vtaZ2aA/L9fceZ+vtVh/8yr0Q/NujtUzQQnfJB33iZWA
-         VUOTM6zOa03ibnytuPQvgFn80smv0LT15Q3+mUhiPpZjESiU6lD7H4cdBJJjkE2sEO
-         ovaCokkakfJiQ==
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19071520-0072-0000-0000-00000449377D
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011434; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01232669; UDB=6.00649450; IPR=6.01013970;
+ MB=3.00027729; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-15 20:14:30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071520-0073-0000-0000-00004CB9812D
+Message-Id: <875zo3njhv.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150231
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 12:52 PM, Bharath Vedartham wrote:
-> There have been issues with get_user_pages and filesystem writeback.
-> The issues are better described in [1].
->=20
-> The solution being proposed wants to keep track of gup_pinned pages which=
- will allow to take furthur steps to coordinate between subsystems using gu=
-p.
->=20
-> put_user_page() simply calls put_page inside for now. But the implementat=
-ion will change once all call sites of put_page() are converted.
->=20
-> I currently do not have the driver to test. Could I have some suggestions=
- to test this code? The solution is currently implemented in [2] and
-> it would be great if we could apply the patch on top of [2] and run some =
-tests to check if any regressions occur.
 
-Hi Bharath,
+Christoph Hellwig <hch@lst.de> writes:
 
-Process point: the above paragraph, and other meta-questions (about the pat=
-ch, rather than part of the patch) should be placed either after the "---",=
- or in a cover letter (git-send-email --cover-letter). That way, the patch =
-itself is in a commit-able state.
+> On Mon, Jul 15, 2019 at 04:03:17PM +0200, Halil Pasic wrote:
+>> > I thought about that but couldn't put my finger on a general concept.
+>> > Is it "guest with memory inaccessible to the host"?
+>> >
+>>
+>> Well, force_dma_unencrypted() is a much better name thatn sev_active():
+>> s390 has no AMD SEV, that is sure, but for virtio to work we do need to
+>> make our dma accessible to the hypervisor. Yes, your "guest with memory
+>> inaccessible to the host" shows into the right direction IMHO.
+>> Unfortunately I don't have too many cycles to spend on this right now.
+>
+> In x86 it means that we need to remove dma encryption using
+> set_memory_decrypted before using it for DMA purposes.  In the SEV
+> case that seems to be so that the hypervisor can access it, in the SME
+> case that Tom just fixes it is because there is an encrypted bit set
+> in the physical address, and if the device doesn't support a large
+> enough DMA address the direct mapping code has to encrypt the pages
+> used for the contigous allocation.
+>
+>> Being on cc for your patch made me realize that things got broken on
+>> s390. Thanks! I've sent out a patch that fixes protvirt, but we are going
+>> to benefit from your cleanups. I think with your cleanups and that patch
+>> of mine both sev_active() and sme_active() can be removed. Feel free to
+>> do so. If not, I can attend to it as well.
+>
+> Yes, I think with the dma-mapping fix and this series sme_active and
+> sev_active should be gone from common code.  We should also be able
+> to remove the exports x86 has for them.
+>
+> I'll wait a few days and will then feed the dma-mapping fix to Linus,
+> it might make sense to either rebase Thiagos series on top of the
+> dma-mapping for-next branch, or wait a few days before reposting.
 
-One more below:
+I'll rebase on top of dma-mapping/for-next and do the break up of patch
+2 that you mentioned as well.
 
->=20
-> [1] https://lwn.net/Articles/753027/
-> [2] https://github.com/johnhubbard/linux/tree/gup_dma_core
->=20
-> Cc: Matt Sickler <Matt.Sickler@daktronics.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: linux-mm@kvack.org
-> Cc: devel@driverdev.osuosl.org
->=20
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> ---
->  drivers/staging/kpc2000/kpc_dma/fileops.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/=
-kpc2000/kpc_dma/fileops.c
-> index 6166587..82c70e6 100644
-> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> @@ -198,9 +198,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, =
-struct kiocb *kcb, unsigned
->  	sg_free_table(&acd->sgt);
->   err_dma_map_sg:
->   err_alloc_sg_table:
-> -	for (i =3D 0 ; i < acd->page_count ; i++){
-> -		put_page(acd->user_pages[i]);
-> -	}
-> +	put_user_pages(acd->user_pages, acd->page_count);
->   err_get_user_pages:
->  	kfree(acd->user_pages);
->   err_alloc_userpages:
-> @@ -229,9 +227,7 @@ void  transfer_complete_cb(struct aio_cb_data *acd, s=
-ize_t xfr_count, u32 flags)
->  =09
->  	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd-=
->ldev->dir);
->  =09
-> -	for (i =3D 0 ; i < acd->page_count ; i++){
-> -		put_page(acd->user_pages[i]);
-> -	}
-> +	put_user_pages(acd->user_pages, acd->page_count);
->  =09
->  	sg_free_table(&acd->sgt);
->  =09
->=20
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-Because this is a common pattern, and because the code here doesn't likely =
-need to set page dirty before the dma_unmap_sg call, I think the following =
-would be better (it's untested), instead of the above diff hunk:
-
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kp=
-c2000/kpc_dma/fileops.c
-index 48ca88bc6b0b..d486f9866449 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -211,16 +211,13 @@ void  transfer_complete_cb(struct aio_cb_data *acd, s=
-ize_t xfr_count, u32 flags)
-        BUG_ON(acd->ldev =3D=3D NULL);
-        BUG_ON(acd->ldev->pldev =3D=3D NULL);
-=20
--       for (i =3D 0 ; i < acd->page_count ; i++) {
--               if (!PageReserved(acd->user_pages[i])) {
--                       set_page_dirty(acd->user_pages[i]);
--               }
--       }
--
-        dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, =
-acd->ldev->dir);
-=20
-        for (i =3D 0 ; i < acd->page_count ; i++) {
--               put_page(acd->user_pages[i]);
-+               if (!PageReserved(acd->user_pages[i])) {
-+                       put_user_pages_dirty(&acd->user_pages[i], 1);
-+               else
-+                       put_user_page(acd->user_pages[i]);
-        }
-=20
-        sg_free_table(&acd->sgt);
-
-Assuming that you make those two changes, you can add:
-
-    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
