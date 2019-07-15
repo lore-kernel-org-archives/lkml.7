@@ -2,99 +2,108 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F78C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED4CC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65FE62086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B382080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563230130;
-	bh=Dhp2+rAmaJRqgQ4W9zWGRLoTJ1hk6O5nwAes/tP0jXQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oJrcowBNM/v5fqkLVbGa1ylcUj1A9mTwGsmVEfXHLUnHxQMXsyB1HDVrXF2E3IUxW
-	 A0nqsdbytv3l+zKisLy8eA0FnygylrQWpT8kh4KWJOo0MRZ+aKjkhpTh51drGABOoN
-	 xLMV2O6TA7+xCuMh3wisbC9qxzhikExuh3ci8sAg=
+	s=default; t=1563230281;
+	bh=3mihQJssiBQsRi+/h49qZI0+gfJGu81pd2ZGIZk08L0=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=2o++6i3yM0W2ASDx+0ado+ea/xmEkJDNYQ4jCkGsBR2kVy/0eLgUPGFSEIhRxaC40
+	 6SRw1U0I4rXgGCUX7hfEEd6FyQtjLmMwZjp4q9sG0jsXiB9Qqsq6gKQIa0R+aNYpkM
+	 uiHBKU56SvCW1vjitxUQ4EElsSjb28nvTEiuwjo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732830AbfGOWf3 (ORCPT
+        id S1732883AbfGOWiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 18:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33242 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 18:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730912AbfGOWf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 18:35:29 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        id S1730881AbfGOWiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 18:38:00 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B77DC2086C;
-        Mon, 15 Jul 2019 22:35:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA46D2080A;
+        Mon, 15 Jul 2019 22:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563230128;
-        bh=Dhp2+rAmaJRqgQ4W9zWGRLoTJ1hk6O5nwAes/tP0jXQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OYNxeNqlSp4DM+68xBXNHVmmuaMCEc7vAD+ioCjOMRuJnlCWj5Z4QFMkH+09l0tju
-         vVg15F6qj1fwZhkSrafpF5PiJWeixRExiJuHx8RGfkobzmc90Tff/7ld+JpcFve56S
-         li8bTQVcIwkIthO4FJwMEpLAxdLXovL3EGbCQ+3w=
-Date:   Mon, 15 Jul 2019 15:35:27 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH] mm: Proportional memory.{low,min} reclaim
-Message-Id: <20190715153527.86a3f6e65ecf5d501252dbf1@linux-foundation.org>
-In-Reply-To: <20190128215230.GA32069@castle.DHCP.thefacebook.com>
-References: <20190124014455.GA6396@chrisdown.name>
-        <20190128210031.GA31446@castle.DHCP.thefacebook.com>
-        <20190128214213.GB15349@chrisdown.name>
-        <20190128215230.GA32069@castle.DHCP.thefacebook.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1563230278;
+        bh=3mihQJssiBQsRi+/h49qZI0+gfJGu81pd2ZGIZk08L0=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=OnYpLDgEXNafjLpbYG4kz21Yu6kzUeU5BNyAbba6S4Yl7mmeD8+9QQ4WM7xKc6YQy
+         zirMWEFldIA9yCuAGjNE1SPz5tRmh6QOX9+lNlPsvMvUb5tnEgQjV1eeVZ7Q6K6h7w
+         w8jedVH501jWmfyipyMcMOOT9BS+kSnMmItCdl7s=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1557894039-31835-3-git-send-email-tdas@codeaurora.org>
+References: <1557894039-31835-1-git-send-email-tdas@codeaurora.org> <1557894039-31835-3-git-send-email-tdas@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] clk: qcom : dispcc: Add support for display port clocks
+User-Agent: alot/0.8.1
+Date:   Mon, 15 Jul 2019 15:37:57 -0700
+Message-Id: <20190715223758.BA46D2080A@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Jan 2019 21:52:40 +0000 Roman Gushchin <guro@fb.com> wrote:
+Quoting Taniya Das (2019-05-14 21:20:39)
+> @@ -128,6 +144,82 @@ enum {
+>         },
+>  };
+>=20
+> +static const struct freq_tbl ftbl_disp_cc_mdss_dp_aux_clk_src[] =3D {
+> +       F(19200000, P_BI_TCXO, 1, 0, 0),
+> +       { }
+> +};
+> +
+> +static struct clk_rcg2 disp_cc_mdss_dp_aux_clk_src =3D {
+> +       .cmd_rcgr =3D 0x219c,
+> +       .mnd_width =3D 0,
+> +       .hid_width =3D 5,
+> +       .parent_map =3D disp_cc_parent_map_2,
+> +       .freq_tbl =3D ftbl_disp_cc_mdss_dp_aux_clk_src,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "disp_cc_mdss_dp_aux_clk_src",
+> +               .parent_names =3D disp_cc_parent_names_2,
+> +               .num_parents =3D 2,
+> +               .flags =3D CLK_SET_RATE_PARENT,
+> +               .ops =3D &clk_rcg2_ops,
+> +       },
+> +};
+> +
+> +static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src =3D {
+> +       .cmd_rcgr =3D 0x2154,
+> +       .mnd_width =3D 0,
+> +       .hid_width =3D 5,
+> +       .parent_map =3D disp_cc_parent_map_1,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "disp_cc_mdss_dp_crypto_clk_src",
+> +               .parent_names =3D disp_cc_parent_names_1,
+> +               .num_parents =3D 4,
+> +               .flags =3D CLK_GET_RATE_NOCACHE,
 
-> > Hmm, this isn't really a common situation that I'd thought about, but it
-> > seems reasonable to make the boundaries when in low reclaim to be between
-> > min and low, rather than 0 and low. I'll add another patch with that. Thanks
->
-> It's not a stopper, so I'm perfectly fine with a follow-up patch.
+Why do we need this flag on various clks here? I'd prefer this is
+removed. If it can't be removed, we need to describe in a code comment
+why this must be set.
 
-Did this happen?
+If it's some sort of problem where the upstream PLL goes into bypass
+across a reset, then we probably need to change the display code to
+restore that rate across a reset by calling clk_set_rate() on the PLL
+directly. And we might need to think about how to inform the framework
+that this has happened, so that downstream clks can be notified of the
+change in frequency.
 
-
-I'm still trying to get this five month old patchset unstuck :(.  The
-review status is: 
-
-[1/3] mm, memcg: proportional memory.{low,min} reclaim
-Acked-by: Johannes
-Reviewed-by: Roman
-
-[2/3] mm, memcg: make memory.emin the baseline for utilisation determination
-Acked-by: Johannes
-
-[3/3] mm, memcg: make scan aggression always exclude protection
-Reviewed-by: Roman
-
-
-I do have a note here that mhocko intended to take a closer look but I
-don't recall whether that happened.
-
-I could
-
-a) say what the hell and merge them or
-b) sit on them for another cycle or
-c) drop them and ask Chris for a resend so we can start again.
