@@ -2,177 +2,117 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C44C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE8DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F4A2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5265A20659
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 20:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qUGNTWHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbfGOUAg (ORCPT
+        id S1732538AbfGOUAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 16:00:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23222 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732446AbfGOUAc (ORCPT
+        Mon, 15 Jul 2019 16:00:40 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:43904 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732474AbfGOUAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 16:00:32 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FJwik5138055
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:00:31 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2trw8kfuk9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 16:00:31 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Mon, 15 Jul 2019 21:00:30 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Jul 2019 21:00:24 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FK0N5m46334460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 20:00:24 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC61C112065;
-        Mon, 15 Jul 2019 20:00:23 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DBEF112069;
-        Mon, 15 Jul 2019 20:00:14 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.238.93])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Mon, 15 Jul 2019 20:00:13 +0000 (GMT)
-References: <20190713044554.28719-1-bauerman@linux.ibm.com> <20190713044554.28719-2-bauerman@linux.ibm.com> <3dc137a99c73b1b6582fc854844a417e@linux.vnet.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     janani@linux.ibm.com
-Cc:     x86@kernel.org, linux-s390@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Halil Pasic" <pasic@linux.ibm.com>,
-        iommu@lists.linux-foundation.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-fsdevel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
-        "Marek Szyprowski" <m.szyprowski@samsung.com>,
-        Linuxppc-dev 
-        <linuxppc-dev-bounces+janani=linux.ibm.com@lists.ozlabs.org>
-Subject: Re: [PATCH 1/3] x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig
-In-reply-to: <3dc137a99c73b1b6582fc854844a417e@linux.vnet.ibm.com>
-Date:   Mon, 15 Jul 2019 17:00:01 -0300
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071520-0060-0000-0000-0000035EAD79
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011434; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01232664; UDB=6.00649448; IPR=6.01013966;
- MB=3.00027729; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-15 20:00:29
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071520-0061-0000-0000-00004A26C337
-Message-Id: <877e8jnk5a.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907150227
+        Mon, 15 Jul 2019 16:00:34 -0400
+Received: by mail-pf1-f201.google.com with SMTP id 6so10857929pfz.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 13:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=ltEwpddVsPtTuDLtrlTH79lQ0wtxe6Ku3Ez2JGRWXl8=;
+        b=qUGNTWHd8cZUGEV/MrQ6Rzs0Q6B03B3+qYdukUxrV7I471dM21/tJLvicY0ImNJ5We
+         qA9WMrnUGec3rGwDICVFEFPT/u9uaAxn6SQ9vmcvY9BUP2imWeStbHygN1Aro1OCdzo1
+         yNJua5MFZK/5Ai8sct0Rj4jAzW8ESYSK5h502yHPVOZ2Ne76w6p43gV39FGdMo/su427
+         rOq9MGgHlOc1a4pGIkuVXo/0Gq4fCpC7VI3CTydOCwcj0cvLD7OsiVFHz7J2hDLMOchv
+         yqesyv/lbO1tLXprCbEMBrutWPFgm5ZraO09zU8e1dGWTa1FpkM7DzvME5t06lxkfmSh
+         eY5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=ltEwpddVsPtTuDLtrlTH79lQ0wtxe6Ku3Ez2JGRWXl8=;
+        b=qwJ3FVx+Q3wChAYV/yEKmeIXpAzTa7QAxsE/oKtetbzMw5tlpOukLynIU3GTgvoK9M
+         plnKv4kj03DtKt3xOMgk3sczspPRNk394OgX9o/Qb8EGLMQZRFlptVm0jb1CIWfOOZz9
+         JTPd/vmOHtF1w7IIhC9uF4GEGniIK/fvUE/PsY9BwKNGu2yHW+iRXh0nxPnhUilrUj4P
+         s+qvLxAyyU4Hu+s364DYrOLwTfUi6G+Vo0xNaFeRiltkBhbU/j6AQHVg+aNLPEVCvWxk
+         /SzuHcHkWfbg27vLWLLuQwIwJnxr6L2+ncwSiaPGxeiZmRxhMh6llN1vhXv0Hp38DkKe
+         CQzA==
+X-Gm-Message-State: APjAAAXdHUSapbxWWOQf8rXmjgusSZAeAEMuLR+oqSaHybC3dRkPxOuA
+        SW0hdYM4z2tVsXP9w45PDZctXf5lnkPn3mZp5Oz1wQ==
+X-Google-Smtp-Source: APXvYqzaZwXWU1ppSmCsSN1we8DZ21N1eqAeSFesPXn+z4flX/4Su/naENifMnq+dmC88rLw/yveo0+fpL5mxSXNg+hiMA==
+X-Received: by 2002:a63:774c:: with SMTP id s73mr27072981pgc.238.1563220833268;
+ Mon, 15 Jul 2019 13:00:33 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 12:59:32 -0700
+In-Reply-To: <20190715195946.223443-1-matthewgarrett@google.com>
+Message-Id: <20190715195946.223443-16-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190715195946.223443-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH V35 15/29] acpi: Ignore acpi_rsdp kernel param when the kernel
+ has been locked down
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Josh Boyer <jwboyer@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Young <dyoung@redhat.com>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Josh Boyer <jwboyer@redhat.com>
 
-Hello Janani,
+This option allows userspace to pass the RSDP address to the kernel, which
+makes it possible for a user to modify the workings of hardware .  Reject
+the option when the kernel is locked down.
 
-Thanks for reviewing the patch.
+Signed-off-by: Josh Boyer <jwboyer@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+cc: Dave Young <dyoung@redhat.com>
+cc: linux-acpi@vger.kernel.org
+---
+ drivers/acpi/osl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-janani <janani@linux.ibm.com> writes:
-
-> On 2019-07-12 23:45, Thiago Jung Bauermann wrote:
->> powerpc is also going to use this feature, so put it in a generic location.
->>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->>  arch/Kconfig      | 3 +++
->>  arch/s390/Kconfig | 3 ---
->>  arch/x86/Kconfig  | 4 +---
->>  3 files changed, 4 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/Kconfig b/arch/Kconfig
->> index c47b328eada0..4ef3499d4480 100644
->> --- a/arch/Kconfig
->> +++ b/arch/Kconfig
->> @@ -927,6 +927,9 @@ config LOCK_EVENT_COUNTS
->>  	  the chance of application behavior change because of timing
->>  	  differences. The counts are reported via debugfs.
->>
->> +config ARCH_HAS_MEM_ENCRYPT
->> +	bool
->> +
->>  source "kernel/gcov/Kconfig"
->>
->>  source "scripts/gcc-plugins/Kconfig"
->> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
->> index 5d8570ed6cab..f820e631bf89 100644
->> --- a/arch/s390/Kconfig
->> +++ b/arch/s390/Kconfig
->> @@ -1,7 +1,4 @@
->>  # SPDX-License-Identifier: GPL-2.0
->> -config ARCH_HAS_MEM_ENCRYPT
->> -        def_bool y
->> -
->
->  Since you are removing the "def_bool y" when ARCH_HAS_MEM_ENCRYPT is moved to
-> arch/Kconfig, does the s390/Kconfig need "select ARCH_HAS_MEM_ENCRYPT" added
-> like you do for x86/Kconfig?
-
-Indeed, I missed that. Thanks for spotting it!
-
->
->  - Janani
->
->>  config MMU
->>  	def_bool y
->>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index c9f331bb538b..5d3295f2df94 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -68,6 +68,7 @@ config X86
->>  	select ARCH_HAS_FORTIFY_SOURCE
->>  	select ARCH_HAS_GCOV_PROFILE_ALL
->>  	select ARCH_HAS_KCOV			if X86_64
->> +	select ARCH_HAS_MEM_ENCRYPT
->>  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
->>  	select ARCH_HAS_PMEM_API		if X86_64
->>  	select ARCH_HAS_PTE_SPECIAL
->> @@ -1520,9 +1521,6 @@ config X86_CPA_STATISTICS
->>  	  helps to determine the effectiveness of preserving large and huge
->>  	  page mappings when mapping protections are changed.
->>
->> -config ARCH_HAS_MEM_ENCRYPT
->> -	def_bool y
->> -
->>  config AMD_MEM_ENCRYPT
->>  	bool "AMD Secure Memory Encryption (SME) support"
->>  	depends on X86_64 && CPU_SUP_AMD
-
-
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 9c0edf2fc0dd..06e7cffc4386 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -26,6 +26,7 @@
+ #include <linux/list.h>
+ #include <linux/jiffies.h>
+ #include <linux/semaphore.h>
++#include <linux/security.h>
+ 
+ #include <asm/io.h>
+ #include <linux/uaccess.h>
+@@ -180,7 +181,7 @@ acpi_physical_address __init acpi_os_get_root_pointer(void)
+ 	acpi_physical_address pa;
+ 
+ #ifdef CONFIG_KEXEC
+-	if (acpi_rsdp)
++	if (acpi_rsdp && !security_locked_down(LOCKDOWN_ACPI_TABLES))
+ 		return acpi_rsdp;
+ #endif
+ 	pa = acpi_arch_get_root_pointer();
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.22.0.510.g264f2c817a-goog
 
