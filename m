@@ -2,142 +2,85 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AA9C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA48BC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD79206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XFtS7SqP"
+	by mail.kernel.org (Postfix) with ESMTP id 8318A206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731549AbfGOQnn (ORCPT
+        id S1731477AbfGOQo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:43:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39776 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730874AbfGOQnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:43:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RSkHGbyKshnf7brwgRog4FDJoLltbAeNAqTZqLgrOwY=; b=XFtS7SqPr0O7CD4ceZo/N+zxa
-        Hp78Ke84ABnLHxgSSlz/cF6IDlSJ+dVng6vqz0iHJN2WXypfdOfQATpnB2Qngv2wROo6A9xTfv73y
-        MJmxV6xSY7elM3bt0d+cBRu1NU0Ej6musiTFiT2wIy/q9yuQIfXayyN1Fd/M8qVxNRxk/LCfkXXan
-        qookMFgHS40TQrNxj+eJ1k7jJNSzqOS2SU+ySJbRnBC2PLsio09Fgco20A17UENfISYGeK+LeQM2b
-        3gzqN2zhvwdewf8JZadvhnZqEDXkIYBIe69pdDn5dBZa4jO8e32l5FdLbl1nRPNmyMB059dVdF13L
-        AXNvXk2Jg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hn44f-0006wc-9g; Mon, 15 Jul 2019 16:43:41 +0000
-Subject: Re: linux-next: Tree for Jul 15 (HEADERS_TEST w/ netfilter tables
- offload)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20190715144848.4cc41e07@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ccb5b818-c191-2d9e-311f-b2c79b7f6823@infradead.org>
-Date:   Mon, 15 Jul 2019 09:43:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 12:44:29 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33085 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730071AbfGOQo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 12:44:29 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id CBD685973DB97AE590A7;
+        Mon, 15 Jul 2019 17:44:26 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 15 Jul
+ 2019 17:44:19 +0100
+Subject: Re: [PATCH] KEYS: trusted: allow module init if TPM is inactive or
+ deactivated
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC:     <jejb@linux.ibm.com>, <zohar@linux.ibm.com>, <jgg@ziepe.ca>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <crazyt2019+lml@gmail.com>, <tyhicks@canonical.com>,
+        <nayna@linux.vnet.ibm.com>, <silviu.vlasceanu@huawei.com>
+References: <20190705163735.11539-1-roberto.sassu@huawei.com>
+ <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <b4454a78-1f1b-cc75-114a-99926e097b05@huawei.com>
+Date:   Mon, 15 Jul 2019 18:44:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190715144848.4cc41e07@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20190711194811.rfsohbfc3a7carpa@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/19 9:48 PM, Stephen Rothwell wrote:
-> Hi all,
+On 7/11/2019 9:48 PM, Jarkko Sakkinen wrote:
+> On Fri, Jul 05, 2019 at 06:37:35PM +0200, Roberto Sassu wrote:
+>> Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+>> TPM") allows the trusted module to be loaded even a TPM is not found to
+>> avoid module dependency problems.
+>>
+>> Unfortunately, this does not completely solve the issue, as there could be
+>> a case where a TPM is found but is not functional (the TPM commands return
+>> an error). Specifically, after the tpm_chip structure is returned by
+>> tpm_default_chip() in init_trusted(), the execution terminates after
+>> init_digests() returns -EFAULT (due to the fact that tpm_get_random()
+>> returns a positive value, but less than TPM_MAX_DIGEST_SIZE).
+>>
+>> This patch fixes the issue by ignoring the TPM_ERR_DEACTIVATED and
+>> TPM_ERR_DISABLED errors.
 > 
-> Please do not add v5.4 material to your linux-next included branches
-> until after v5.3-rc1 has been released.
-> 
-> Changes since 20190712:
-> 
+> Why allow trusted module to initialize if TPM is not functional?
 
-Hi,
+According to the bug report at https://bugs.archlinux.org/task/62678,
+the trusted module is a dependency of the ecryptfs module. We should
+load the trusted module even if the TPM is inactive or deactivated.
 
-I am seeing these build errors from HEADERS_TEST (or KERNEL_HEADERS_TEST)
-for include/net/netfilter/nf_tables_offload.h.s:
+Given that commit 782779b60faa ("tpm: Actually fail on TPM errors during
+"get random"") changes the return code of tpm_get_random(), the patch
+should be modified to ignore the -EIO error. I will send a new version.
 
-  CC      include/net/netfilter/nf_tables_offload.h.s
-In file included from ./../include/net/netfilter/nf_tables_offload.h:5:0,
-                 from <command-line>:0:
-../include/net/netfilter/nf_tables.h: In function ‘nft_gencursor_next’:
-../include/net/netfilter/nf_tables.h:1223:14: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
-  return net->nft.gencursor + 1 == 1 ? 1 : 0;
-              ^~~
-              nf
-In file included from ../include/linux/kernel.h:11:0,
-                 from ../include/net/flow_offload.h:4,
-                 from ./../include/net/netfilter/nf_tables_offload.h:4,
-                 from <command-line>:0:
-../include/net/netfilter/nf_tables.h: In function ‘nft_genmask_cur’:
-../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
-  return 1 << READ_ONCE(net->nft.gencursor);
-                             ^
-../include/linux/compiler.h:261:17: note: in definition of macro ‘__READ_ONCE’
-  union { typeof(x) __val; char __c[1]; } __u;   \
-                 ^
-../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
-  return 1 << READ_ONCE(net->nft.gencursor);
-              ^~~~~~~~~
-../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
-  return 1 << READ_ONCE(net->nft.gencursor);
-                             ^
-../include/linux/compiler.h:263:22: note: in definition of macro ‘__READ_ONCE’
-   __read_once_size(&(x), __u.__c, sizeof(x));  \
-                      ^
-../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
-  return 1 << READ_ONCE(net->nft.gencursor);
-              ^~~~~~~~~
-../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
-  return 1 << READ_ONCE(net->nft.gencursor);
-                             ^
-../include/linux/compiler.h:263:42: note: in definition of macro ‘__READ_ONCE’
-   __read_once_size(&(x), __u.__c, sizeof(x));  \
-                                          ^
-../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
-  return 1 << READ_ONCE(net->nft.gencursor);
-              ^~~~~~~~~
-../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
-  return 1 << READ_ONCE(net->nft.gencursor);
-                             ^
-../include/linux/compiler.h:265:30: note: in definition of macro ‘__READ_ONCE’
-   __read_once_size_nocheck(&(x), __u.__c, sizeof(x)); \
-                              ^
-../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
-  return 1 << READ_ONCE(net->nft.gencursor);
-              ^~~~~~~~~
-../include/net/netfilter/nf_tables.h:1234:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
-  return 1 << READ_ONCE(net->nft.gencursor);
-                             ^
-../include/linux/compiler.h:265:50: note: in definition of macro ‘__READ_ONCE’
-   __read_once_size_nocheck(&(x), __u.__c, sizeof(x)); \
-                                                  ^
-../include/net/netfilter/nf_tables.h:1234:14: note: in expansion of macro ‘READ_ONCE’
-  return 1 << READ_ONCE(net->nft.gencursor);
-              ^~~~~~~~~
-make[2]: *** [../scripts/Makefile.build:304: include/net/netfilter/nf_tables_offload.h.s] Error 1
+Roberto
 
-
-Should this header file not be tested?
-
-thanks.
 -- 
-~Randy
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
