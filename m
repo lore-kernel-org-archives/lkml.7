@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B204C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D174C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B182054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607F52054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203601;
-	bh=cjpjSj3AzXuiVMQMLaBnrsknvjiXP7O8xE/5/piMkb4=;
+	s=default; t=1563203610;
+	bh=hcMl2YPfauI6ZMmDQXFz1o+UHw+RIaonRYschVyOPec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvXYZPK64+/J19aRBlZBiur962j7ma4BgdT/cBMuDss1GSunZ8gk5aPHHvZhZc+Py
-	 hLDUqLQ4iokSCzqtmy5Yrarb0G3TCLFWPp+hanwj1ZTcU+cIYSacMtR3lg84UDTg4h
-	 7XfGqhzyvYzgFWWay7gtKsBld6eQTXHjOuUtFgH0=
+	b=VMI0Xd5qRsrV74Vtz2MUKoA10ETQq9QfJ8//p9ZCHhoKZ4pnJRD6kYUXMKAjSXCIp
+	 7JBZFeRpU1Ttv9YSscpvbiQD5yHnMIDrMxYOIdD61hhFC4t8dQWxUEzUUrpCn2F7j3
+	 ngCs2tQ1gEphgZCBawzk4UlCOW/A78YSr1ezWBTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfGONu0 (ORCPT
+        id S1732479AbfGOPN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731499AbfGONuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:50:15 -0400
+        id S1730194AbfGONuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:50:10 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2180F20651;
-        Mon, 15 Jul 2019 13:50:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9215B20651;
+        Mon, 15 Jul 2019 13:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198615;
-        bh=cjpjSj3AzXuiVMQMLaBnrsknvjiXP7O8xE/5/piMkb4=;
+        s=default; t=1563198609;
+        bh=hcMl2YPfauI6ZMmDQXFz1o+UHw+RIaonRYschVyOPec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcjEKe6qWdHDEveonRouRlsAiHT6sW/8rUDCSoubzfqwZMeNANOdfCOn2eo6z1AGB
-         FaQ8DALNE4UMiuQM3bVqsLor9LFW22f4AfUTH7f6bGJpaUwRjWzXfmxLj2l4EoltGs
-         lqoB8rVmJaaSjMOSONci73qr2Wsdt9mSyMlITzR0=
+        b=0v3H0FS4thFK0AANa3WoTWMhjpX/i9Klu/xLvXkUx/wBdjDTxOHErfWi0nDo9d68N
+         wi5uQ8msuCv2zd1U8KdnTmZNLeaj/vMJc38I/34dEH6eRkAtcEo9SqQtxwR+DyiIBa
+         G39deF0En+V1l+Nh2QdCscaz6dBd4BlvsoqKZUa0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Imre Deak <imre.deak@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        ville.syrjala@linux.intel.com, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 060/249] locking/lockdep: Fix OOO unlock when hlocks need merging
-Date:   Mon, 15 Jul 2019 09:43:45 -0400
-Message-Id: <20190715134655.4076-60-sashal@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 058/249] tua6100: Avoid build warnings.
+Date:   Mon, 15 Jul 2019 09:43:43 -0400
+Message-Id: <20190715134655.4076-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,234 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: "David S. Miller" <davem@davemloft.net>
 
-[ Upstream commit 8c8889d8eaf4501ae4aaf870b6f8f55db5d5109a ]
+[ Upstream commit 621ccc6cc5f8d6730b740d31d4818227866c93c9 ]
 
-The sequence
+Rename _P to _P_VAL and _R to _R_VAL to avoid global
+namespace conflicts:
 
-	static DEFINE_WW_CLASS(test_ww_class);
+drivers/media/dvb-frontends/tua6100.c: In function ‘tua6100_set_params’:
+drivers/media/dvb-frontends/tua6100.c:79: warning: "_P" redefined
+ #define _P 32
 
-	struct ww_acquire_ctx ww_ctx;
-	struct ww_mutex ww_lock_a;
-	struct ww_mutex ww_lock_b;
-	struct mutex lock_c;
-	struct mutex lock_d;
+In file included from ./include/acpi/platform/aclinux.h:54,
+                 from ./include/acpi/platform/acenv.h:152,
+                 from ./include/acpi/acpi.h:22,
+                 from ./include/linux/acpi.h:34,
+                 from ./include/linux/i2c.h:17,
+                 from drivers/media/dvb-frontends/tua6100.h:30,
+                 from drivers/media/dvb-frontends/tua6100.c:32:
+./include/linux/ctype.h:14: note: this is the location of the previous definition
+ #define _P 0x10 /* punct */
 
-	ww_acquire_init(&ww_ctx, &test_ww_class);
-
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
-
-	mutex_init(&lock_c);
-
-	ww_mutex_lock(&ww_lock_a, &ww_ctx);
-
-	mutex_lock(&lock_c);
-
-	ww_mutex_lock(&ww_lock_b, &ww_ctx);
-
-	mutex_unlock(&lock_c);		(*)
-
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
-
-	ww_acquire_fini(&ww_ctx);
-
-triggers the following WARN in __lock_release() when doing the unlock at *:
-
-	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - 1);
-
-The problem is that the WARN check doesn't take into account the merging
-of ww_lock_a and ww_lock_b which results in decreasing curr->lockdep_depth
-by 2 not only 1.
-
-Note that the following sequence doesn't trigger the WARN, since there
-won't be any hlock merging.
-
-	ww_acquire_init(&ww_ctx, &test_ww_class);
-
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
-
-	mutex_init(&lock_c);
-	mutex_init(&lock_d);
-
-	ww_mutex_lock(&ww_lock_a, &ww_ctx);
-
-	mutex_lock(&lock_c);
-	mutex_lock(&lock_d);
-
-	ww_mutex_lock(&ww_lock_b, &ww_ctx);
-
-	mutex_unlock(&lock_d);
-
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
-
-	mutex_unlock(&lock_c);
-
-	ww_acquire_fini(&ww_ctx);
-
-In general both of the above two sequences are valid and shouldn't
-trigger any lockdep warning.
-
-Fix this by taking the decrement due to the hlock merging into account
-during lock release and hlock class re-setting. Merging can't happen
-during lock downgrading since there won't be a new possibility to merge
-hlocks in that case, so add a WARN if merging still happens then.
-
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: ville.syrjala@linux.intel.com
-Link: https://lkml.kernel.org/r/20190524201509.9199-1-imre.deak@intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 41 ++++++++++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 12 deletions(-)
+ drivers/media/dvb-frontends/tua6100.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index c47788fa85f9..82361e1bce0f 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3715,7 +3715,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 				hlock->references = 2;
- 			}
+diff --git a/drivers/media/dvb-frontends/tua6100.c b/drivers/media/dvb-frontends/tua6100.c
+index f7c3e6be8e4d..2483f614d0e7 100644
+--- a/drivers/media/dvb-frontends/tua6100.c
++++ b/drivers/media/dvb-frontends/tua6100.c
+@@ -67,8 +67,8 @@ static int tua6100_set_params(struct dvb_frontend *fe)
+ 	struct i2c_msg msg1 = { .addr = priv->i2c_address, .flags = 0, .buf = reg1, .len = 4 };
+ 	struct i2c_msg msg2 = { .addr = priv->i2c_address, .flags = 0, .buf = reg2, .len = 3 };
  
--			return 1;
-+			return 2;
- 		}
- 	}
+-#define _R 4
+-#define _P 32
++#define _R_VAL 4
++#define _P_VAL 32
+ #define _ri 4000000
  
-@@ -3921,22 +3921,33 @@ static struct held_lock *find_held_lock(struct task_struct *curr,
- }
+ 	// setup register 0
+@@ -83,14 +83,14 @@ static int tua6100_set_params(struct dvb_frontend *fe)
+ 	else
+ 		reg1[1] = 0x0c;
  
- static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
--			      int idx)
-+				int idx, unsigned int *merged)
- {
- 	struct held_lock *hlock;
-+	int first_idx = idx;
+-	if (_P == 64)
++	if (_P_VAL == 64)
+ 		reg1[1] |= 0x40;
+ 	if (c->frequency >= 1525000)
+ 		reg1[1] |= 0x80;
  
- 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
- 		return 0;
- 
- 	for (hlock = curr->held_locks + idx; idx < depth; idx++, hlock++) {
--		if (!__lock_acquire(hlock->instance,
-+		switch (__lock_acquire(hlock->instance,
- 				    hlock_class(hlock)->subclass,
- 				    hlock->trylock,
- 				    hlock->read, hlock->check,
- 				    hlock->hardirqs_off,
- 				    hlock->nest_lock, hlock->acquire_ip,
--				    hlock->references, hlock->pin_count))
-+				    hlock->references, hlock->pin_count)) {
-+		case 0:
- 			return 1;
-+		case 1:
-+			break;
-+		case 2:
-+			*merged += (idx == first_idx);
-+			break;
-+		default:
-+			WARN_ON(1);
-+			return 0;
-+		}
- 	}
- 	return 0;
- }
-@@ -3947,9 +3958,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 		 unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 0;
- 	struct held_lock *hlock;
- 	struct lock_class *class;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -3974,14 +3985,14 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 	curr->lockdep_depth = i;
- 	curr->curr_chain_key = hlock->prev_chain_key;
- 
--	if (reacquire_held_locks(curr, depth, i))
-+	if (reacquire_held_locks(curr, depth, i, &merged))
- 		return 0;
- 
- 	/*
- 	 * I took it apart and put it back together again, except now I have
- 	 * these 'spare' parts.. where shall I put them.
+ 	// register 2
+-	reg2[1] = (_R >> 8) & 0x03;
+-	reg2[2] = _R;
++	reg2[1] = (_R_VAL >> 8) & 0x03;
++	reg2[2] = _R_VAL;
+ 	if (c->frequency < 1455000)
+ 		reg2[1] |= 0x1c;
+ 	else if (c->frequency < 1630000)
+@@ -102,18 +102,18 @@ static int tua6100_set_params(struct dvb_frontend *fe)
+ 	 * The N divisor ratio (note: c->frequency is in kHz, but we
+ 	 * need it in Hz)
  	 */
--	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
-+	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged))
- 		return 0;
- 	return 1;
- }
-@@ -3989,8 +4000,8 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 0;
- 	struct held_lock *hlock;
--	unsigned int depth;
- 	int i;
+-	prediv = (c->frequency * _R) / (_ri / 1000);
+-	div = prediv / _P;
++	prediv = (c->frequency * _R_VAL) / (_ri / 1000);
++	div = prediv / _P_VAL;
+ 	reg1[1] |= (div >> 9) & 0x03;
+ 	reg1[2] = div >> 1;
+ 	reg1[3] = (div << 7);
+-	priv->frequency = ((div * _P) * (_ri / 1000)) / _R;
++	priv->frequency = ((div * _P_VAL) * (_ri / 1000)) / _R_VAL;
  
- 	if (unlikely(!debug_locks))
-@@ -4015,7 +4026,11 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	hlock->read = 1;
- 	hlock->acquire_ip = ip;
+ 	// Finally, calculate and store the value for A
+-	reg1[3] |= (prediv - (div*_P)) & 0x7f;
++	reg1[3] |= (prediv - (div*_P_VAL)) & 0x7f;
  
--	if (reacquire_held_locks(curr, depth, i))
-+	if (reacquire_held_locks(curr, depth, i, &merged))
-+		return 0;
-+
-+	/* Merging can't happen with unchanged classes.. */
-+	if (DEBUG_LOCKS_WARN_ON(merged))
- 		return 0;
+-#undef _R
+-#undef _P
++#undef _R_VAL
++#undef _P_VAL
+ #undef _ri
  
- 	/*
-@@ -4024,6 +4039,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	 */
- 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth))
- 		return 0;
-+
- 	return 1;
- }
- 
-@@ -4038,8 +4054,8 @@ static int
- __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
- {
- 	struct task_struct *curr = current;
-+	unsigned int depth, merged = 1;
- 	struct held_lock *hlock;
--	unsigned int depth;
- 	int i;
- 
- 	if (unlikely(!debug_locks))
-@@ -4094,14 +4110,15 @@ __lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
- 	if (i == depth-1)
- 		return 1;
- 
--	if (reacquire_held_locks(curr, depth, i + 1))
-+	if (reacquire_held_locks(curr, depth, i + 1, &merged))
- 		return 0;
- 
- 	/*
- 	 * We had N bottles of beer on the wall, we drank one, but now
- 	 * there's not N-1 bottles of beer left on the wall...
-+	 * Pouring two of the bottles together is acceptable.
- 	 */
--	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth-1);
-+	DEBUG_LOCKS_WARN_ON(curr->lockdep_depth != depth - merged);
- 
- 	/*
- 	 * Since reacquire_held_locks() would have called check_chain_key()
+ 	if (fe->ops.i2c_gate_ctrl)
 -- 
 2.20.1
 
