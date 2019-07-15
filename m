@@ -2,216 +2,114 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A11EC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADF5C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2AF2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C832054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563203149;
+	bh=a38p4zhkTkWbyv49GuuwcUCfXc8SLvwSsrch9QqF9TA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ezl2jMLnF3OziL/8ssAdCeIRzXpkRpMyj6Omhp1FePzyHr+BkmjsAPkeRGrcMVBkB
+	 t6lt+Z8+PZyJrCSB/Ohg7I5A/Zs6DEEs1Fy4fdqVE15YT7/pvKwFtcPdPuiVgdZCJN
+	 t314zhxBX0564R77GxsbKxBwuXvsMrFEBdWL9jaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388865AbfGOPFp (ORCPT
+        id S2388116AbfGOOFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:05:45 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:49465 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732946AbfGOPFn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:05:43 -0400
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9E46124000F;
-        Mon, 15 Jul 2019 15:03:00 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Auger Eric <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Subject: Re: [PATCH] vfio: platform: reset: add support for XHCI reset hook
-In-Reply-To: <c152f211-0757-521e-64ea-543f6c89d9b2@redhat.com>
-References: <20190711143159.21961-1-gregory.clement@bootlin.com> <c152f211-0757-521e-64ea-543f6c89d9b2@redhat.com>
-Date:   Mon, 15 Jul 2019 17:03:00 +0200
-Message-ID: <87d0ib732z.fsf@FE-laptop>
+        Mon, 15 Jul 2019 10:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388008AbfGOOFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:16 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88DAD212F5;
+        Mon, 15 Jul 2019 14:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563199515;
+        bh=a38p4zhkTkWbyv49GuuwcUCfXc8SLvwSsrch9QqF9TA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hNCLTITbvQVXhCtMIsBz6Htc+xGpEBcgOtfWVs9/RzP5DYd2pef7NrZEyn3z38WFV
+         wv3eTNVQB8IVQK21LbfPf6Ixyhi32+2Befty7xDxhPmYIP/eGbMOh1uqfxZs0WoLaK
+         Jq08mIao4sk/43+1gs5RqYlT3mS0lR1/jsiYeAM4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 029/219] net: stmmac: dwmac4/5: Clear unused address entries
+Date:   Mon, 15 Jul 2019 10:00:30 -0400
+Message-Id: <20190715140341.6443-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
+References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-> Hi Gregory,
->
-> On 7/11/19 4:31 PM, Gregory CLEMENT wrote:
->> The VFIO reset hook is called every time a platform device is passed
->> to a guest or removed from a guest.
->> 
->> When the XHCI device is unbound from the host, the host driver
->> disables the XHCI clocks/phys/regulators so when the device is passed
->> to the guest it becomes dis-functional.
->> 
->> This initial implementation uses the VFIO reset hook to enable the
->> XHCI clocks/phys on behalf of the guest.
->
-> the platform reset module must also make sure there are no more DMA
-> requests and interrupts that can be sent by the device anymore.
+[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
 
-OK I will take care of it too.
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
 
+Found out while running stmmac selftests.
 
->> 
->> Ported from Marvell LSP code originally written by Yehuda Yitschak
->> 
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
->>  drivers/vfio/platform/reset/Kconfig           |  8 +++
->>  drivers/vfio/platform/reset/Makefile          |  2 +
->>  .../vfio/platform/reset/vfio_platform_xhci.c  | 60 +++++++++++++++++++
->>  3 files changed, 70 insertions(+)
->>  create mode 100644 drivers/vfio/platform/reset/vfio_platform_xhci.c
->> 
->> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
->> index 392e3c09def0..14f620fd250d 100644
->> --- a/drivers/vfio/platform/reset/Kconfig
->> +++ b/drivers/vfio/platform/reset/Kconfig
->> @@ -22,3 +22,11 @@ config VFIO_PLATFORM_BCMFLEXRM_RESET
->>  	  Enables the VFIO platform driver to handle reset for Broadcom FlexRM
->>  
->>  	  If you don't know what to do here, say N.
->> +
->> +config VFIO_PLATFORM_XHCI_RESET
->> +	tristate "VFIO support for USB XHCI reset"
->> +	depends on VFIO_PLATFORM
->> +	help
->> +	  Enables the VFIO platform driver to handle reset for USB XHCI
->> +
->> +	  If you don't know what to do here, say N.
->> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
->> index 7294c5ea122e..d84c4d3dc041 100644
->> --- a/drivers/vfio/platform/reset/Makefile
->> +++ b/drivers/vfio/platform/reset/Makefile
->> @@ -1,7 +1,9 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
->>  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
->> +vfio-platform-xhci-y := vfio_platform_xhci.o
->>  
->>  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
->>  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
->>  obj-$(CONFIG_VFIO_PLATFORM_BCMFLEXRM_RESET) += vfio_platform_bcmflexrm.o
->> +obj-$(CONFIG_VFIO_PLATFORM_XHCI_RESET) += vfio-platform-xhci.o
->> diff --git a/drivers/vfio/platform/reset/vfio_platform_xhci.c b/drivers/vfio/platform/reset/vfio_platform_xhci.c
->> new file mode 100644
->> index 000000000000..7b75a04402ee
->> --- /dev/null
->> +++ b/drivers/vfio/platform/reset/vfio_platform_xhci.c
->> @@ -0,0 +1,60 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * VFIO platform driver specialized for XHCI reset
->> + *
->> + * Copyright 2016 Marvell Semiconductors, Inc.
->> + *
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/device.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
-> io, init, kernel should be removable (noticed init and kernel.h also are
-> in other reset modules though)
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-OK
-
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/usb/phy.h>
->> +
->> +#include "../vfio_platform_private.h"
->> +
->> +#define MAX_XHCI_CLOCKS		4
-> Where does this number come from?
->
-> From Documentation/devicetree/bindings/usb/usb-xhci.txt I understand
-> there are max 2 clocks, "core" and "reg" (I don't have any specific
-> knowledge on the device though).
-
-Right, I guess the intent was to be future proof if there is more clocks
-needed, but as we don't know, it's better to use the number of clokck we
-know.
-
->
->> +#define MAX_XHCI_PHYS		2
-> not used
-
-Right!
-
->> +
->> +int vfio_platform_xhci_reset(struct vfio_platform_device *vdev)
->> +{
->> +	struct device *dev = vdev->device;
->> +	struct device_node *np = dev->of_node;
->> +	struct usb_phy *usb_phy;
->> +	struct clk *clk;
->> +	int ret, i;
->> +
->> +	/*
->> +	 * Compared to the native driver, no need to handle the
->> +	 * deferred case, because the resources are already
->> +	 * there
->> +	 */
->> +	for (i = 0; i < MAX_XHCI_CLOCKS; i++) {
->> +		clk = of_clk_get(np, i);
->> +		if (!IS_ERR(clk)) {
->> +			ret = clk_prepare_enable(clk);
->> +			if (ret)
->> +				return -ENODEV;
-> return ret?
-
-OK
-
->> +		}
->> +	}
->> +
->> +	usb_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
->> +	if (!IS_ERR(usb_phy)) {
->> +		ret = usb_phy_init(usb_phy);
->> +		if (ret)
->> +			return -ENODEV;
-> return ret?
-
-OK
-
-Thanks,
-
-Gregory
-
->> +	}
->
->> +
->> +	return 0;
->> +}
->> +
->> +module_vfio_reset_handler("generic-xhci", vfio_platform_xhci_reset);
->> +
->> +MODULE_AUTHOR("Yehuda Yitschak");
->> +MODULE_DESCRIPTION("Reset support for XHCI vfio platform device");
->> +MODULE_LICENSE("GPL");
->> 
-> Thanks
->
-> Eric
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 7e5d5db0d516..a2f3db39221e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -444,14 +444,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		 * are required
+ 		 */
+ 		value |= GMAC_PACKET_FILTER_PR;
+-	} else if (!netdev_uc_empty(dev)) {
+-		int reg = 1;
++	} else {
+ 		struct netdev_hw_addr *ha;
++		int reg = 1;
+ 
+ 		netdev_for_each_uc_addr(ha, dev) {
+ 			dwmac4_set_umac_addr(hw, ha->addr, reg);
+ 			reg++;
+ 		}
++
++		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
++		}
+ 	}
+ 
+ 	writel(value, ioaddr + GMAC_PACKET_FILTER);
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.20.1
+
