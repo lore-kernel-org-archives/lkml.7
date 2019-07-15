@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF159C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E01C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE27221537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB29221530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198004;
-	bh=Bg+cqoWejA1fWQ9Ar9FIsD6lcgwYLo+gEkIVfCTdBIc=;
+	s=default; t=1563198008;
+	bh=FTKJOaDBqWWGx5K6l7a3GQeiN9iEecrkXmoJNkID+74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZNB9Bpn5o3yktwSDuJlos96rIKCPgHyrw9yuICLWo9u+yIYbu4txIH20MzNgvGs/4
-	 aHGO2jwwm5dy/XJYoDwkHvlZgW+Jy1Fjvr1tL2YJC+bhuEruCA7CqiyCxe0Ix17xga
-	 XZ/XB9918VL7Nc4FpfQkq1yjq6x5RczaJOGn/oZM=
+	b=KFnBBRwDk59oqd/zHf2GfTlL2cyrMA/Plz496RMWK30/h6R9pT7lYCJMQC8iezSbv
+	 da3ZCxz3v+45/yStvtxtU3PAuHVsHzzxI67Q/H55k9Etwc1XAu150mq7eSQUUadL5T
+	 xQYZnjh0WLdAtoX7tCkwdSVZtKxOHEDI0rvsPXfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfGONkD (ORCPT
+        id S1731376AbfGONkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41480 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731335AbfGONjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:39:55 -0400
+        id S1731354AbfGONkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:40:02 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B38D2080A;
-        Mon, 15 Jul 2019 13:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6532321530;
+        Mon, 15 Jul 2019 13:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197995;
-        bh=Bg+cqoWejA1fWQ9Ar9FIsD6lcgwYLo+gEkIVfCTdBIc=;
+        s=default; t=1563198001;
+        bh=FTKJOaDBqWWGx5K6l7a3GQeiN9iEecrkXmoJNkID+74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GG7H1+fSx4iTxwUfzvqtlsd+rLQnOdN8v7Z6Fwl26SP++8mmHfWSqQRBqvgm2IVs9
-         4srYp0sBs/e0QH6BDfFRv/ZPZTquxL3yUa/67ykH8yXq+p9YZQecc9Ysz0dVDnrMz/
-         xuDyaim0GJ+5zUlaojjNumkq0InlA/e985CxgPjU=
+        b=RGgGeG+lZSFdupfdn2tznN7C2qv+oYdY7DRpz/n1VzBEGfQ14CKHgJnrcclPNQ4LG
+         He+dnoDkznCpNKRc4g1NxcypeEBpRmS6nnFghLeVBv7hH1DjVayt9UiHUszXhxaMdt
+         4VKOsfqkrfFYZ3G7qgOMg6r45lJqcpkUQ3JwVtp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 011/158] media: dvb: usb: fix use after free in dvb_usb_device_exit
-Date:   Mon, 15 Jul 2019 09:36:56 -0400
-Message-Id: <20190715133923.2890-11-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 013/158] crypto: talitos - fix skcipher failure due to wrong output IV
+Date:   Mon, 15 Jul 2019 09:36:58 -0400
+Message-Id: <20190715133923.2890-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133923.2890-1-sashal@kernel.org>
 References: <20190715133923.2890-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,43 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit 6cf97230cd5f36b7665099083272595c55d72be7 ]
+[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
 
-dvb_usb_device_exit() frees and uses the device name in that order.
-Fix by storing the name in a buffer before freeing it.
+Selftests report the following:
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
+[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.043185] 00000000: fe dc ba 98 76 54 32 10
+[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+
+This above dumps show that the actual output IV is indeed the input IV.
+This is due to the IV not being copied back into the request.
+
+This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/crypto/talitos.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-index 40ca4eafb137..39ac22486bcd 100644
---- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
-+++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-@@ -287,12 +287,15 @@ EXPORT_SYMBOL(dvb_usb_device_init);
- void dvb_usb_device_exit(struct usb_interface *intf)
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index c5859d3cb825..9cc5309a3fbf 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1571,11 +1571,15 @@ static void ablkcipher_done(struct device *dev,
+ 			    int err)
  {
- 	struct dvb_usb_device *d = usb_get_intfdata(intf);
--	const char *name = "generic DVB-USB module";
-+	const char *default_name = "generic DVB-USB module";
-+	char name[40];
+ 	struct ablkcipher_request *areq = context;
++	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
++	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
++	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
+ 	struct talitos_edesc *edesc;
  
- 	usb_set_intfdata(intf, NULL);
- 	if (d != NULL && d->desc != NULL) {
--		name = d->desc->name;
-+		strscpy(name, d->desc->name, sizeof(name));
- 		dvb_usb_exit(d);
-+	} else {
-+		strscpy(name, default_name, sizeof(name));
- 	}
- 	info("%s successfully deinitialized and disconnected.", name);
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+ 
+ 	common_nonsnoop_unmap(dev, edesc, areq);
++	memcpy(areq->info, ctx->iv, ivsize);
+ 
+ 	kfree(edesc);
  
 -- 
 2.20.1
