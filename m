@@ -2,144 +2,137 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E13C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCB9C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BA42080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930CB2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEOxNlok"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R4wRB/lV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfGOQKB (ORCPT
+        id S1729811AbfGOQLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:10:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52303 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729533AbfGOQKB (ORCPT
+        Mon, 15 Jul 2019 12:11:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50876 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfGOQLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:10:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so15776234wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 09:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6fQPkaUZ+jePctAUjhVKB6gKSHt2QRsUl6ltTQzAvk4=;
-        b=uEOxNlokRMoceBmAqR5uFDO0QSBwIupTiHkT9Fz+VFxSksiyFFwSvd6cHOuNfFVcQ0
-         eGJ8d5U4Sa1xS+gYEhzp5aM3Kg0jpp4BkPzcKyr3IY/+nB2YJ9oDHaurstQZrmsGYrgW
-         ZmGm53Dta+vbqQY3wRZayyEhaPY3vfd4+CUcJ238kiPSEhprYJv1HCItJFKzOkHzZmMp
-         UkaKixk16rwg+FAVT0E/KTzKOTdiKhL7YjR679c7zEo6UjekfO1oq1ceg0FUC1dm9bSQ
-         TjlecO4bU+cXUBAMV8Ts7X25jGOTOWWBx3r4+6cv/NuVvamGKpzGqbLe5kgNblW/MvMZ
-         Aglw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6fQPkaUZ+jePctAUjhVKB6gKSHt2QRsUl6ltTQzAvk4=;
-        b=iZCNmJDbYtW7P0UncJkRoauCPA89xPvGPhUwxy3km3tJjKBZapQbraj+qlIPOx+Kru
-         jZbovl1PSFLsK2S/XuENtY2cHqSDZ+m0MZZVWOjt4YlM5bEUdxKNCX+RFbQk7U8NYa76
-         xFdoIL9YMpaDh3v8dcDrobdbgQ7SQAvWaiQkGGUju404q4/5BEgE+hTtUP5ewyrGZeeS
-         pIR1AMpXUMVpYi72nPAdWBCsxQz6WQ3tPXKDiq7HTkvnTqsqdUPOJI4MZa5DYNhMLu/9
-         xsxjuqLXUt8RPrWUCSYLawHLRZ0Ckv6bYntA0rYaKT70/Mf9w71GbXgOjNEe2rGLjLee
-         KyNw==
-X-Gm-Message-State: APjAAAWYy+73krnBtJ8t5+sSKuXi+bTSYre3+NJQnoiVgN7EVjlDohnp
-        9D5bGbqhQVlaS/5DnxqF6E7qvxcshCGLbUY1sI+VFg==
-X-Google-Smtp-Source: APXvYqxs8hoWL7cmGqBiTkXz0ym5JhcT5zStF3uo6vpPbmfu9/xOFQMs+ujD5jvvM8aSCLT0Yp/V7Qwb6pVEzNIjEMg=
-X-Received: by 2002:a05:600c:20d:: with SMTP id 13mr25449956wmi.141.1563206998088;
- Mon, 15 Jul 2019 09:09:58 -0700 (PDT)
+        Mon, 15 Jul 2019 12:11:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FG9K7g046431;
+        Mon, 15 Jul 2019 16:11:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=FHNs/VLuaqZ6nZAgJqcIiUHrYF7VNMT5n+FgGHZ8rBc=;
+ b=R4wRB/lVnB1ltWkn/GMHIPbIECr3MzMvRuYL91sqD33inkHwuq+Szs0wGXTlwCC6z0j5
+ 7apQxbjsKIBBBrhCePlKJcEWM6pS48zSoAnF49EBkuf40UAZotacRDXx1lEkqzkf0r/6
+ u0BSecvo6MhRdZJMcNj3r53xdgxQtSgx2MSBYw1g+k7PMClmOrkqXs4lVVDa1+93zOyB
+ G5uIKr+d2OHcUtdqjTIyJV11TQRRN7EqlCDesVWZbrPM5LGjz10FHUqyyCPOglHuK22s
+ BJQOEIw5w1zxHzmvXj5tEJPINnAHUZEV/0iiPAXUINZTEuwvRp3HKhgLi7EHqcfHFtbi aQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2tq6qtfjbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 16:11:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FG7xVU011256;
+        Mon, 15 Jul 2019 16:10:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tq6mmc445-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 16:10:59 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6FGApLd006898;
+        Mon, 15 Jul 2019 16:10:56 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jul 2019 09:10:51 -0700
+Date:   Mon, 15 Jul 2019 12:10:46 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
+ padata jobs
+Message-ID: <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
 MIME-Version: 1.0
-References: <20190712094118.1559434-1-arnd@arndb.de>
-In-Reply-To: <20190712094118.1559434-1-arnd@arndb.de>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 15 Jul 2019 12:09:45 -0400
-Message-ID: <CADnq5_NX+eGdsK20_Cn_+5WDbJpyPukqhyXhgEoce4UagAncrA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/amdgpu: hide #warning for missing DC config
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Jack Xiao <Jack.Xiao@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Huang Rui <ray.huang@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=876
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907150188
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=921 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907150188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 5:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> It is annoying to have #warnings that trigger in randconfig
-> builds like
->
-> drivers/gpu/drm/amd/amdgpu/soc15.c:653:3: error: "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
-> drivers/gpu/drm/amd/amdgpu/nv.c:400:3: error: "Enable CONFIG_DRM_AMD_DC for display support on navi."
->
-> Remove these and rely on the users to turn these on.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Sat, Jul 13, 2019 at 01:03:21PM +0800, Herbert Xu wrote:
+> On Fri, Jul 12, 2019 at 12:07:37PM -0400, Daniel Jordan wrote:
+> >
+> > modprobe (CPU2)               kworker/21:1-293 (CPU21)                              kworker/5:2-276 (CPU5)
+> > --------------------------    ------------------------                              ----------------------
+> > <submit job, seq_nr=16581>
+> > ...
+> >   padata_do_parallel
+> >     queue_work_on(21, ...)
+> > <sleeps>
+> >                               padata_parallel_worker
+> >                                 pcrypt_aead_dec
+> >                                   padata_do_serial
+> >                                     padata_reorder
+> 
+> This can't happen because if the job started on CPU2 then it must
+> go back to CPU2 for completion.  IOW padata_do_serial should be
+> punting this to a work queue for CPU2 rather than calling
+> padata_reorder on CPU21.
 
-Applied.  thanks!
+I've been wrong before plenty of times, and there's nothing preventing this
+from being one of those times :) , but in this case I believe what I'm showing
+is correct.
 
-Alex
+The padata_do_serial call for a given job ensures padata_reorder runs on the
+CPU that the job hashed to in padata_do_parallel, which is not necessarily the
+same CPU as the one that padata_do_parallel itself ran on.
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/nv.c    | 2 --
->  drivers/gpu/drm/amd/amdgpu/soc15.c | 4 ----
->  2 files changed, 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-> index 9253c03d387a..10ec0e81ee58 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/nv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/nv.c
-> @@ -396,8 +396,6 @@ int nv_set_ip_blocks(struct amdgpu_device *adev)
->  #if defined(CONFIG_DRM_AMD_DC)
->                 else if (amdgpu_device_has_dc_support(adev))
->                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
-> -#else
-> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on navi."
->  #endif
->                 amdgpu_device_ip_block_add(adev, &gfx_v10_0_ip_block);
->                 amdgpu_device_ip_block_add(adev, &sdma_v5_0_ip_block);
-> diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-> index 87152d8ef0df..90fb0149fbea 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-> @@ -649,8 +649,6 @@ int soc15_set_ip_blocks(struct amdgpu_device *adev)
->  #if defined(CONFIG_DRM_AMD_DC)
->                 else if (amdgpu_device_has_dc_support(adev))
->                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
-> -#else
-> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
->  #endif
->                 if (!(adev->asic_type == CHIP_VEGA20 && amdgpu_sriov_vf(adev))) {
->                         amdgpu_device_ip_block_add(adev, &uvd_v7_0_ip_block);
-> @@ -671,8 +669,6 @@ int soc15_set_ip_blocks(struct amdgpu_device *adev)
->  #if defined(CONFIG_DRM_AMD_DC)
->                 else if (amdgpu_device_has_dc_support(adev))
->                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
-> -#else
-> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
->  #endif
->                 amdgpu_device_ip_block_add(adev, &vcn_v1_0_ip_block);
->                 break;
-> --
-> 2.20.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+In this case, the padata job in question started via padata_do_parallel, where
+it hashed to CPU 21:
+
+  padata_do_parallel                    // ran on CPU 2
+    ...
+    target_cpu = padata_cpu_hash(pd);   // target_cpu == 21
+    padata->cpu = target_cpu;
+    ...
+    queue_work_on(21, ...)
+
+The corresponding kworker then started:
+
+  padata_parallel_worker                // bound to CPU 21
+    pcrypt_aead_dec
+      padata_do_serial
+        padata_reorder
+
+Daniel
