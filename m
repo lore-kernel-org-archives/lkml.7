@@ -2,105 +2,85 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80075C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50C7C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599D920868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872C120C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfGOJCy (ORCPT
+        id S1729495AbfGOJDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:02:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44199 "EHLO mga07.intel.com"
+        Mon, 15 Jul 2019 05:03:47 -0400
+Received: from gate.crashing.org ([63.228.1.57]:44347 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbfGOJCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:02:53 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 02:02:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
-   d="scan'208";a="365809173"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Jul 2019 02:02:48 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id DF2ED14B; Mon, 15 Jul 2019 12:02:47 +0300 (EEST)
-Date:   Mon, 15 Jul 2019 12:02:47 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Alison Schofield <alison.schofield@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 57/62] x86/mktme: Overview of Multi-Key Total Memory
- Encryption
-Message-ID: <20190715090247.lclzdru5gqowweis@black.fi.intel.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-58-kirill.shutemov@linux.intel.com>
- <a2d2ac19-1dfe-6f85-df83-d72de4d5fcbf@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a2d2ac19-1dfe-6f85-df83-d72de4d5fcbf@infradead.org>
-User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
+        id S1729394AbfGOJDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 05:03:47 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6F93WuZ025986;
+        Mon, 15 Jul 2019 04:03:33 -0500
+Message-ID: <25c3813ab1c2943658d7e79756803801b14a34db.camel@kernel.crashing.org>
+Subject: Re: [PATCH] nvme: Add support for Apple 2018+ models
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Paul Pawlowski <paul@mrarm.io>
+Date:   Mon, 15 Jul 2019 19:03:31 +1000
+In-Reply-To: <c088cb27f99adbcc1f8faf8e86167903f11593b8.camel@kernel.crashing.org>
+References: <71b009057582cd9c82cff2b45bc1af846408bcf7.camel@kernel.crashing.org>
+         <20190715081041.GB31791@lst.de>
+         <c088cb27f99adbcc1f8faf8e86167903f11593b8.camel@kernel.crashing.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 06:16:49PM +0000, Randy Dunlap wrote:
-> On 5/8/19 7:44 AM, Kirill A. Shutemov wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
+On Mon, 2019-07-15 at 18:43 +1000, Benjamin Herrenschmidt wrote:
+> On Mon, 2019-07-15 at 10:10 +0200, Christoph Hellwig wrote:
+> > > +	/*
+> > > +	 * Apple 2018 and latter variant has a few issues
+> > > +	 */
+> > > +	NVME_QUIRK_APPLE_2018			= (1 << 10),
 > > 
-> > Provide an overview of MKTME on Intel Platforms.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  Documentation/x86/mktme/index.rst          |  8 +++
-> >  Documentation/x86/mktme/mktme_overview.rst | 57 ++++++++++++++++++++++
-> >  2 files changed, 65 insertions(+)
-> >  create mode 100644 Documentation/x86/mktme/index.rst
-> >  create mode 100644 Documentation/x86/mktme/mktme_overview.rst
+> > We try to have quirks for the actual issue, so this should be one quirk
+> > for the irq vectors issues, and another for the sq entry size.  Note that
+> > NVMe actually has the concept of an I/O queue entry size (IOSQES in the
+> > Cc register based on values reported in the SQES field in Identify
+> > Controller.  Do these controllers report anything interesting there?
 > 
-> 
-> > diff --git a/Documentation/x86/mktme/mktme_overview.rst b/Documentation/x86/mktme/mktme_overview.rst
-> > new file mode 100644
-> > index 000000000000..59c023965554
-> > --- /dev/null
-> > +++ b/Documentation/x86/mktme/mktme_overview.rst
-> > @@ -0,0 +1,57 @@
-> > +Overview
-> > +=========
-> ...
-> > +--
-> > +1. https://software.intel.com/sites/default/files/managed/a5/16/Multi-Key-Total-Memory-Encryption-Spec.pdf
-> > +2. The MKTME architecture supports up to 16 bits of KeyIDs, so a
-> > +   maximum of 65535 keys on top of the “TME key” at KeyID-0.  The
-> > +   first implementation is expected to support 5 bits, making 63
-> 
-> Hi,
-> How do 5 bits make 63 keys available?
+> Ah good to know, I'll dig.
 
-Yep, typo. It has to be 6 bits.
+Interesting... so SQES is 0x76, indicating that it supports the larger
+entry size but not that it mandates it.
 
-Alison, please correct this.
+However, we configure CC:IOSQES with 6 and the HW fails unless we have
+the 128 bytes entry size.
 
--- 
- Kirill A. Shutemov
+So the HW is bogus, but we can probably sort that by doing a better job
+at fixing up SQES in the identify on the Apple HW, and then actually
+using it for the SQ.
+
+I checked and CC is 0x00460001 so it takes our write of "6" fine. I
+think they just ignore the value.
+
+How do you want to proceed here ? Should I go all the way at attempting
+to honor sqes "mandatory" size field (and quirk *that*) or just I go
+the simpler way and stick to shift 6 unless Apple ?
+
+If I go the complicated path, should I do the same with cq size
+(knowing that no known HW has a non-4 mandatory size there and we don't
+know of a HW bug... yet).
+
+Cheers,
+Ben.
+
+
