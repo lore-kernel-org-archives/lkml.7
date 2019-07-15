@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C932C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE164C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADC92067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E922067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202229;
-	bh=394QZhcBDh/8/E31jIj293uxy+K5rhXIyIdJ1VMo2n8=;
+	s=default; t=1563202240;
+	bh=JtoJsZuclAftWZhOWO9t7/AiuGR8oEKq9jRQeyxM9/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oTOGTG+P68v2dHIMPE/Ixh+AeyFkSDJn8vIlSsVSmWPrjGtsQ1qOsWwq+Sb/2Yw/U
-	 woorfGCxgeb5kVhBmGLs/8oUOfB16Z8x+pbXvCK1BMGrvcfEXRfDGNs8QgvxNrvNZM
-	 ZkT/IO2KLfTEemdcurCgkS/xw8ZJOtm/DDoOpeSI=
+	b=SfD33W0ZGfP6mBMGsR8fvgdibEBbaUfpp+QqIUFQ3/1yZTB6R5zq4VvX3s+wizBgq
+	 51f/zxVXtOAVAUBHyT+lVvRmmWHnbXUlsGnYBc0ciZAXplIgy13nJ/PDuSGBG8qEhs
+	 x7+Pr5vkm6Kq1dNVN7Q/F9F8q3EpbH7CX/7k6784=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404935AbfGOOqM (ORCPT
+        id S2404804AbfGOOuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404813AbfGOOqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:46:07 -0400
+        id S2391947AbfGOOqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:46:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42062067C;
-        Mon, 15 Jul 2019 14:46:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCA2120C01;
+        Mon, 15 Jul 2019 14:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201966;
-        bh=394QZhcBDh/8/E31jIj293uxy+K5rhXIyIdJ1VMo2n8=;
+        s=default; t=1563201960;
+        bh=JtoJsZuclAftWZhOWO9t7/AiuGR8oEKq9jRQeyxM9/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NtP0JdQ87iGGqvD3r6evM4XGEu4WKThq5PuezIy2NyqvLjcJ2KjBy3Jj5WSfQS7vh
-         uMoJGZVPx6XiB6PMrMBRk0fqC58JGV7EVoL/Ig+52qYTz6SMmZC5AMjsrkQQ6kwQfF
-         XyAlOnX1tb9I8tL61yolfbqV0BK8n3/papxYFWmk=
+        b=tJrU9pZ2dVW/k1ZQ1rj/cT+YJwAeDON/D94IZEGHBVCRh+fRPeCrEoRgzJKkLpGfB
+         MemHGMqI92MUods1KZna+YPF42e+a1jpvYzrybRzv9KyrgfM1e66lpfhIPdn6wRQv2
+         r8nsjNSXHELgfpd/sGMBBSRnnP/EdbF8VNlRqOkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Mukesh Ojha <mojha@codeaurora.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/53] media: vpss: fix a potential NULL pointer dereference
-Date:   Mon, 15 Jul 2019 10:44:51 -0400
-Message-Id: <20190715144535.11636-9-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/53] crypto: talitos - fix skcipher failure due to wrong output IV
+Date:   Mon, 15 Jul 2019 10:44:49 -0400
+Message-Id: <20190715144535.11636-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,36 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit e08f0761234def47961d3252eac09ccedfe4c6a0 ]
+[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
 
-In case ioremap fails, the fix returns -ENOMEM to avoid NULL
-pointer dereference.
+Selftests report the following:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
+[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.043185] 00000000: fe dc ba 98 76 54 32 10
+[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+
+This above dumps show that the actual output IV is indeed the input IV.
+This is due to the IV not being copied back into the request.
+
+This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpss.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/crypto/talitos.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
-index fce86f17dffc..c2c68988e38a 100644
---- a/drivers/media/platform/davinci/vpss.c
-+++ b/drivers/media/platform/davinci/vpss.c
-@@ -523,6 +523,11 @@ static int __init vpss_init(void)
- 		return -EBUSY;
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 62ce93568e11..a000c2667392 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1446,11 +1446,15 @@ static void ablkcipher_done(struct device *dev,
+ 			    int err)
+ {
+ 	struct ablkcipher_request *areq = context;
++	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
++	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
++	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
+ 	struct talitos_edesc *edesc;
  
- 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
-+	if (unlikely(!oper_cfg.vpss_regs_base2)) {
-+		release_mem_region(VPSS_CLK_CTRL, 4);
-+		return -ENOMEM;
-+	}
-+
- 	writel(VPSS_CLK_CTRL_VENCCLKEN |
- 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+ 
+ 	common_nonsnoop_unmap(dev, edesc, areq);
++	memcpy(areq->info, ctx->iv, ivsize);
+ 
+ 	kfree(edesc);
  
 -- 
 2.20.1
