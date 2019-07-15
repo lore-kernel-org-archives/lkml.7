@@ -2,131 +2,96 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120DDC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5A3C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62FF2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A08B2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563198423;
+	bh=NZraKEDuaB6vwvz8xVUkIR+7IQqLDfLfw8tb08+gex4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=St0FqipBMFiZylktPIthNTRcUd0TMDsXenPkxHZjyguM0HXgllQj244Hp1oH/l6g6
+	 4hTiqaOjgvhmmRjJEWp6X92CxK5mzH2YvbzzAlWaoBVq/cFIBlejit6hpeIF6urmZZ
+	 reYQdPLKYi0iuaSD4m65UCxvoQCQgeBdYkRQiudM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfGONnV (ORCPT
+        id S1730512AbfGONrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:43:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:49374 "EHLO foss.arm.com"
+        Mon, 15 Jul 2019 09:47:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbfGONnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:43:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 720C228;
-        Mon, 15 Jul 2019 06:43:20 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77153F71F;
-        Mon, 15 Jul 2019 06:43:17 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/3] Support CPU hotplug for ARM64
-To:     Maran Wilson <maran.wilson@oracle.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        guohanjun@huawei.com, john.garry@huawei.com, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        huawei.libin@huawei.com, jonathan.cameron@huawei.com,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
- <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
- <51cc9a5c-9968-c4b1-0bc7-870f44a3a761@oracle.com>
- <06ef13e1-fffe-d4a2-721e-f666f331fb3c@arm.com>
- <d65c2aca-470f-177d-57cf-6375c989054c@oracle.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <5f1cba3d-d9aa-b17c-8e10-721ac69b921f@arm.com>
-Date:   Mon, 15 Jul 2019 14:43:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1730012AbfGONrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:47:01 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CB52067C;
+        Mon, 15 Jul 2019 13:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563198420;
+        bh=NZraKEDuaB6vwvz8xVUkIR+7IQqLDfLfw8tb08+gex4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nL8WyFnDkqcBZFpe2k5Of7A6taGE/vwj4VfzIt+rhtRQvptujAcLblNmnzoBJav3a
+         lo5LPp5NDzNn6IcugPWhPHzgrI3BqwkodOm3ak/qp/zy/wxnAN3Cgfm17ovwXwOKy/
+         MWTKgcVdv3jw5GNsik7XS7tZ5GdYWHS6nLaweH/0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yingying Tang <yintang@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 001/249] ath10k: Check tx_stats before use it
+Date:   Mon, 15 Jul 2019 09:42:46 -0400
+Message-Id: <20190715134655.4076-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <d65c2aca-470f-177d-57cf-6375c989054c@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maran,
+From: Yingying Tang <yintang@codeaurora.org>
 
-On 10/07/2019 17:05, Maran Wilson wrote:
-> On 7/10/2019 2:15 AM, Marc Zyngier wrote:
->> On 09/07/2019 20:06, Maran Wilson wrote:
->>> On 7/5/2019 3:12 AM, James Morse wrote:
->>>> On 29/06/2019 03:42, Xiongfeng Wang wrote:
->>>>> This patchset mark all the GICC node in MADT as possible CPUs even though it
->>>>> is disabled. But only those enabled GICC node are marked as present CPUs.
->>>>> So that kernel will initialize some CPU related data structure in advance before
->>>>> the CPU is actually hot added into the system. This patchset also implement
->>>>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
->>>>> needed to enable CPU hotplug.
->>>>>
->>>>> To support CPU hotplug, we need to add all the possible GICC node in MADT
->>>>> including those CPUs that are not present but may be hot added later. Those
->>>>> CPUs are marked as disabled in GICC nodes.
->>>> ... what do you need this for?
->>>>
->>>> (The term cpu-hotplug in the arm world almost never means hot-adding a new package/die to
->>>> the platform, we usually mean taking CPUs online/offline for power management. e.g.
->>>> cpuhp_offline_cpu_device())
->>>>
->>>> It looks like you're adding support for hot-adding a new package/die to the platform ...
->>>> but only for virtualisation.
->>>>
->>>> I don't see why this is needed for virtualisation. The in-kernel irqchip needs to know
->>>> these vcpu exist before you can enter the guest for the first time. You can't create them
->>>> late. At best you're saving the host scheduling a vcpu that is offline. Is this really a
->>>> problem?
->>>>
->>>> If we moved PSCI support to user-space, you could avoid creating host vcpu threads until
->>>> the guest brings the vcpu online, which would solve that problem, and save the host
->>>> resources for the thread too. (and its acpi/dt agnostic)
->>>>
->>>> I don't see the difference here between booting the guest with 'maxcpus=1', and bringing
->>>> the vcpu online later. The only real difference seems to be moving the can-be-online
->>>> policy into the hypervisor/VMM...
+[ Upstream commit 9e7251fa38978b85108c44743e1436d48e8d0d76 ]
 
->>> Isn't that an important distinction from a cloud service provider's
->>> perspective?
+tx_stats will be freed and set to NULL before debugfs_sta node is
+removed in station disconnetion process. So if read the debugfs_sta
+node there may be NULL pointer error. Add check for tx_stats before
+use it to resove this issue.
 
-Host cpu-time is. Describing this as guest vcpu's is a bit weird.
+Signed-off-by: Yingying Tang <yintang@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath10k/debugfs_sta.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I'd expect the statement be something like "you're paying for 50% of one Xeon v-whatever".
-It shouldn't make a difference if I run 8 vcpus or 2, the amount of cpu-time would still
-be constrained by the cloud provider.
+diff --git a/drivers/net/wireless/ath/ath10k/debugfs_sta.c b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
+index c704ae371c4d..42931a669b02 100644
+--- a/drivers/net/wireless/ath/ath10k/debugfs_sta.c
++++ b/drivers/net/wireless/ath/ath10k/debugfs_sta.c
+@@ -663,6 +663,13 @@ static ssize_t ath10k_dbg_sta_dump_tx_stats(struct file *file,
+ 
+ 	mutex_lock(&ar->conf_mutex);
+ 
++	if (!arsta->tx_stats) {
++		ath10k_warn(ar, "failed to get tx stats");
++		mutex_unlock(&ar->conf_mutex);
++		kfree(buf);
++		return 0;
++	}
++
+ 	spin_lock_bh(&ar->data_lock);
+ 	for (k = 0; k < ATH10K_STATS_TYPE_MAX; k++) {
+ 		for (j = 0; j < ATH10K_COUNTER_TYPE_MAX; j++) {
+-- 
+2.20.1
 
-
->>> As far as I understand it, you also need CPU hotplug capabilities to
->>> support things like Kata runtime under Kubernetes. i.e. when
->>> implementing your containers in the form of light weight VMs for the
->>> additional security ... and the orchestration layer cannot determine
->>> ahead of time how much CPU/memory resources are going to be needed to
->>> run the pod(s).
-
->> Why would it be any different? You can pre-allocate your vcpus, leave
->> them parked until some external agent decides to signal the container
->> that it it can use another bunch of CPUs. At that point, the container
->> must actively boot these vcpus (they aren't going to come up by magic).
->>
->> Given that you must have sized your virtual platform to deal with the
->> maximum set of resources you anticipate (think of the GIC
->> redistributors, for example), I really wonder what you gain here.
-
-> Maybe I'm not following the alternative proposal completely, but wouldn't a guest VM (who
-> happens to be in control of its OS) be able to add/online vCPU resources without approval
-> from the VMM this way?
-
-The in-kernel PSCI implementation will allow all CPUs to be online/offline. If we moved
-that support to the VMM, it could apply some policy as to whether a cpu-online call
-succeeds or fails.
-
-
-Thanks,
-
-James
