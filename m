@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BEEC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C1EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB867205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F338205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202640;
-	bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
+	s=default; t=1563202647;
+	bh=tG4a5Lvu8njscnRNe/cyWM4ApT0qh+9aLYSG6J7l6fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RC9xaSEAz+uY3SmaKR5r6u69LMRQsoeYFKI1X4BR6HBd3VW/dmQAx7BYXv1ScKqTQ
-	 UOm5ygWHM8INYsXMNOrZ7Pf6WYYfreHaHyU9V5435nkj5psNGA0CEjgGc/z9YPrH7U
-	 b+EwCq8MiViI1AJSXusnrhmmskJsZmLhw4RAVeTw=
+	b=Yt54wmdGyCA05iM20mytvKrrIQj9FP8WEgCbV0FJlMjhZZeFt8wMg3ewKTrmgHoC0
+	 b061BQlcf2R0l/ObNhKXvXhoHq1Nrar63TTTrVI4qDq++D5SNcJih+zTVSGVHOQuCt
+	 g9VL3gOlWRynEci6dcKl9MAxcTo4wqx760dyeeLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390373AbfGOOUl (ORCPT
+        id S2390284AbfGOOUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390270AbfGOOUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:20:35 -0400
+        id S2389797AbfGOOUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:33 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80EB6206B8;
-        Mon, 15 Jul 2019 14:20:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E0E20651;
+        Mon, 15 Jul 2019 14:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200434;
-        bh=oPD6bOUlXEdTcnSJVgy5DPQWInMIKIvhk3WyIgRbzfs=;
+        s=default; t=1563200433;
+        bh=tG4a5Lvu8njscnRNe/cyWM4ApT0qh+9aLYSG6J7l6fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a4d834uNMEexN0EPLNlV+D2e9PPp/LcJwGvzVhZR9lNiiBSoClHSnvy9x3kpzV2VG
-         rbmOvJT1P4kWroe9TWG8AIxnSOOTNLybXhWWh8KCnOjBIOsf3AdQ6ivBsuTzr7Ipbg
-         hpHZxJWY8DBSn0tKq9u09sV0YJ8rEiIZh8pNBYaQ=
+        b=2pEr7rs4Waurl0JiKMSO4Vf0CqSvavzVQemU8Xv62nBVl13CgjpYaSX63DvcGu1+F
+         DB0yuSfz56Hm96uFwnoA8DovYKvKNYwrs/zJGVk2dj66D+t0zq/KbdAOhcErOOYd3H
+         Vj10RtfY6DCkQoy5nOg9e7VbuFqqmO+I1SnwO1L8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 049/158] RAS/CEC: Fix pfn insertion
-Date:   Mon, 15 Jul 2019 10:16:20 -0400
-Message-Id: <20190715141809.8445-49-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 048/158] s390/qdio: handle PENDING state for QEBSM devices
+Date:   Mon, 15 Jul 2019 10:16:19 -0400
+Message-Id: <20190715141809.8445-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,56 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
+[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
 
-When inserting random PFNs for debugging the CEC through
-(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
-multiple values get inserted per a single write.
+When a CQ-enabled device uses QEBSM for SBAL state inspection,
+get_buf_states() can return the PENDING state for an Output Queue.
+get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
+buffer will permanently stall all further completion processing on this
+Queue.
 
-That is because simple_attr_write() interprets a retval of 0 as
-success and claims the whole input. However, pfn_set() returns the
-cec_add_elem() value, which, if > 0 and smaller than the whole input
-length, makes glibc continue issuing the write syscall until there's
-input left:
+This isn't a concern for non-QEBSM devices, as get_buf_states() for such
+devices will manually turn PENDING buffers into EMPTY ones.
 
-  pfn_set
-  simple_attr_write
-  debugfs_attr_write
-  full_proxy_write
-  vfs_write
-  ksys_write
-  do_syscall_64
-  entry_SYSCALL_64_after_hwframe
-
-leading to those repeated calls.
-
-Return 0 to fix that.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
+Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index f85d6b7a1984..5d2b2c02cbbe 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -369,7 +369,9 @@ static int pfn_set(void *data, u64 val)
- {
- 	*(u64 *)data = val;
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 9c7d9da42ba0..4ac4a73037f5 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -749,6 +749,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
  
--	return cec_add_elem(val);
-+	cec_add_elem(val);
-+
-+	return 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
+ 	switch (state) {
+ 	case SLSB_P_OUTPUT_EMPTY:
++	case SLSB_P_OUTPUT_PENDING:
+ 		/* the adapter got it */
+ 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
+ 			"out empty:%1d %02x", q->nr, count);
 -- 
 2.20.1
 
