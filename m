@@ -2,115 +2,90 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6862CC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED735C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A92C2081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E432081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfGOJow (ORCPT
+        id S1729697AbfGOJpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:44:52 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41121 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbfGOJov (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:44:51 -0400
-Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 82efc516f3121cff; Mon, 15 Jul 2019 11:44:48 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-Subject: Re: linux-next: build failure after merge of the pm tree
-Date:   Mon, 15 Jul 2019 11:44:48 +0200
-Message-ID: <34005749.9vH1ANRJSZ@kreacher>
-In-Reply-To: <20190715100236.1e019f2c@canb.auug.org.au>
-References: <20190715100236.1e019f2c@canb.auug.org.au>
+        Mon, 15 Jul 2019 05:45:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12295 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729487AbfGOJpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 05:45:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 02:45:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
+   d="scan'208";a="190510098"
+Received: from pertsuli-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.224])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Jul 2019 02:45:42 -0700
+Date:   Mon, 15 Jul 2019 12:45:41 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        AP MS30 Linux Kernel community 
+        <linux-kernel@vger.kernel.org>, linux-integrity@vger.kernel.org,
+        gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com,
+        IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        eyal.cohen@nuvoton.com
+Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+Message-ID: <20190715094541.zjqxainggjuvjxd2@linux.intel.com>
+References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+ <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
+ <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
+ <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
+ <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
+ <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com>
+ <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Mon, Jul 15, 2019 at 11:08:47AM +0300, Tomer Maimon wrote:
+>    Thanks for your feedback and sorry for the late response.
+>
+>    Due to the amount of work required to handle this technical feedback and
+>    project constraints we need to put this task on hold for the near future.
+>
+>    In the meantime, anyone from the community is welcome to take over this
+>    code and handle the re-design for the benefit of the entire TPM community.
 
-On Monday, July 15, 2019 2:02:36 AM CEST Stephen Rothwell wrote:
-> 
-> --Sig_/JvAwh/r3+t+V+F.+O2706e.
-> Content-Type: text/plain; charset=US-ASCII
-> Content-Transfer-Encoding: quoted-printable
-> 
-> Hi all,
-> 
-> After merging the pm tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
-> 
-> In file included from <command-line>:
-> include/linux/intel_rapl.h:116:19: error: field 'pcap_rapl_online' has inco=
-> mplete type
->   enum cpuhp_state pcap_rapl_online;
->                    ^~~~~~~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   7ebf8eff63b4 ("intel_rapl: introduce struct rapl_if_private")
-> 
-> This was detected by the new test that attempts to build each include
-> file standalone.
-> 
-> I have added the following fix patch for today:
+Ok, so there is already driver for this called tpm_tis_core.
 
-I've applied this patch on top of the RAPL series and added it to my linux-next branch.
+So you go and create a new module, whose name given the framework of
+things that we already have deployed, is destined to be tpm_tis_i2c.
 
-Thanks!
+Then you roughly implement a new physical layer by using  a callback
+interface provided to you by tpm_tis_core.
 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Mon, 15 Jul 2019 09:56:30 +1000
-> Subject: [PATCH] intel_rapl: need linux/cpuhotplug.h for enum cpuhp_state
-> 
-> Fixes: 7ebf8eff63b4 ("intel_rapl: introduce struct rapl_if_private")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/linux/intel_rapl.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/intel_rapl.h b/include/linux/intel_rapl.h
-> index 0c179d92d110..efb3ce892c20 100644
-> --- a/include/linux/intel_rapl.h
-> +++ b/include/linux/intel_rapl.h
-> @@ -12,6 +12,7 @@
-> =20
->  #include <linux/types.h>
->  #include <linux/powercap.h>
-> +#include <linux/cpuhotplug.h>
-> =20
->  enum rapl_domain_type {
->  	RAPL_DOMAIN_PACKAGE,	/* entire package/socket */
-> --=20
-> 2.20.1
-> 
-> --=20
-> Cheers,
-> Stephen Rothwell
-> 
-> --Sig_/JvAwh/r3+t+V+F.+O2706e.
-> Content-Type: application/pgp-signature
-> Content-Description: OpenPGP digital signature
-> 
-> 
-> --Sig_/JvAwh/r3+t+V+F.+O2706e.--
-> 
+The so called re-design was already addressed by Alexander [1].
 
+How hard can it be seriously?
 
+[1] https://lkml.org/lkml/2019/7/4/331
 
-
+/Jarkko
