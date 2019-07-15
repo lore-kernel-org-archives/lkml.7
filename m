@@ -2,136 +2,169 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C0BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F057C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21141205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:20:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4DV6iqs"
+	by mail.kernel.org (Postfix) with ESMTP id F153F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfGOPUn (ORCPT
+        id S1731245AbfGOPVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:20:43 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34402 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730548AbfGOPUl (ORCPT
+        Mon, 15 Jul 2019 11:21:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730548AbfGOPVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:20:41 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so34762011iot.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 08:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jDhyWC5m7v6jwYwWBJCZO8vmmCQJIMiVT+1lgsXb/hQ=;
-        b=A4DV6iqs0VowpYFUQPzk7PIRlj/q0buwiqqVo5Tnn2W1bYwZH3LZjdymyVpEyNHb58
-         ANeMlc1dL7qmCH+KPGrrtDM3c4VaZ3v98djrhl92Tr3wXo9b3nheYpu/PTxXo7M1IIGS
-         BttFTY/OlGhHbhqsh3A5BUs/9QBZa0xTD5rhO355ySRzpmzoU6sn9bBF+E4Dr+uSKbt2
-         lH/sq1QunSO29z5EuknVg6nZx7sqzSiIUeXHiDm+wFNqB01HXxLqzDs3YZ2gOR0rkBi4
-         c/dpw0kqhkkwDH7emRIRSNvrD1YNfFAcsy5QjXERSpI/2Vvc3276b+ud4LPtojDdWAO1
-         4UBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jDhyWC5m7v6jwYwWBJCZO8vmmCQJIMiVT+1lgsXb/hQ=;
-        b=WF8cICYJypdQZ6ZBXI26klahogch2ZwwgDmMV0Q0lc9JprFxrCPHkyCLbI5/PeSKg7
-         0vqbzrbllPjIMkzSY/XxbdqL/cj96x1AuP4OnWIwuVwJNveeDjULf5BV1ZZK61H5QANu
-         m1Qm6v8yem8qx0oIlVv36pzELKksjzukeyoVtu4QNINmrS39Ol0GhqEt+Pd79h3YuhFW
-         sXGOBLMrTxD35hzk/ziGY1m9enxbsXUu/tqAHbxYbmUnaH987dyKDaKeok36vCihYGdZ
-         NH9rpnsXgdQHEcEAGwV6qgSJAkXsaKxWw/uwEeoHH8fuBRUKLp3K11WnX9pHNNywu+cn
-         uM/Q==
-X-Gm-Message-State: APjAAAX55ElshSuGsP8LyFyEHWNfV3qqiiTQqHmHa/2rNGwbUOx4yRQq
-        EzCjib4KOto7jaqAxUVsqLMoh/oZOPY86KCO7A==
-X-Google-Smtp-Source: APXvYqzC8yGnKfFvwdN89UqQ62Tki+6ejCY+Deplht8t5Vgn2sTMJOv2JhaN1FzfdK/Soa13Xo1cL5BZNCYT1PloOH0=
-X-Received: by 2002:a02:cd83:: with SMTP id l3mr28157334jap.66.1563204041005;
- Mon, 15 Jul 2019 08:20:41 -0700 (PDT)
+        Mon, 15 Jul 2019 11:21:05 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FF7jnC004608;
+        Mon, 15 Jul 2019 11:20:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2truujgjy7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 11:20:30 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6FFDhmj021083;
+        Mon, 15 Jul 2019 11:20:29 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2truujgjwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 11:20:29 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6FF9ogF022024;
+        Mon, 15 Jul 2019 15:20:27 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 2tq6x6g9ay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 15:20:27 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FFKQv165470810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 15:20:26 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0EEBC6055;
+        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 647F0C605B;
+        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
 MIME-Version: 1.0
-References: <CAKKbWA6S7KotAFtLO=ow=XYnLL2Ny5Mz2kcgM1cs+j=5mHQNmw@mail.gmail.com>
-In-Reply-To: <CAKKbWA6S7KotAFtLO=ow=XYnLL2Ny5Mz2kcgM1cs+j=5mHQNmw@mail.gmail.com>
-From:   Avi Fishman <avifishman70@gmail.com>
-Date:   Mon, 15 Jul 2019 18:19:54 +0300
-Message-ID: <CAKKbWA5nwsa5kcZ8GCuC3WKJptb6RtZ65izFphd=KaALqeg+BA@mail.gmail.com>
-Subject: [PATCH] [v2] clocksource/drivers/npcm: fix GENMASK and timer operation
-To:     Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 15 Jul 2019 10:23:08 -0500
+From:   janani <janani@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     x86@kernel.org, linux-s390@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-fsdevel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Avi Fishman <avifishman70@gmail.com>
-Cc:     OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linuxppc-dev@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Linuxppc-dev 
+        <linuxppc-dev-bounces+janani=linux.ibm.com@lists.ozlabs.org>
+Subject: Re: [PATCH 1/3] x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to
+ arch/Kconfig
+Organization: IBM
+Reply-To: janani@linux.ibm.com
+Mail-Reply-To: janani@linux.ibm.com
+In-Reply-To: <20190713044554.28719-2-bauerman@linux.ibm.com>
+References: <20190713044554.28719-1-bauerman@linux.ibm.com>
+ <20190713044554.28719-2-bauerman@linux.ibm.com>
+Message-ID: <3dc137a99c73b1b6582fc854844a417e@linux.vnet.ibm.com>
+X-Sender: janani@linux.ibm.com
+User-Agent: Roundcube Webmail/1.0.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clocksource/drivers/npcm: fix GENMASK and timer operation
+On 2019-07-12 23:45, Thiago Jung Bauermann wrote:
+> powerpc is also going to use this feature, so put it in a generic 
+> location.
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/Kconfig      | 3 +++
+>  arch/s390/Kconfig | 3 ---
+>  arch/x86/Kconfig  | 4 +---
+>  3 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c47b328eada0..4ef3499d4480 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -927,6 +927,9 @@ config LOCK_EVENT_COUNTS
+>  	  the chance of application behavior change because of timing
+>  	  differences. The counts are reported via debugfs.
+> 
+> +config ARCH_HAS_MEM_ENCRYPT
+> +	bool
+> +
+>  source "kernel/gcov/Kconfig"
+> 
+>  source "scripts/gcc-plugins/Kconfig"
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 5d8570ed6cab..f820e631bf89 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -1,7 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -config ARCH_HAS_MEM_ENCRYPT
+> -        def_bool y
+> -
 
-NPCM7XX_Tx_OPER GENMASK() changed from (27, 3) to (28, 27)
+  Since you are removing the "def_bool y" when ARCH_HAS_MEM_ENCRYPT is 
+moved to arch/Kconfig, does the s390/Kconfig need "select 
+ARCH_HAS_MEM_ENCRYPT" added like you do for x86/Kconfig?
 
-in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
-read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
-take effect.
+  - Janani
 
-npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR0
-in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
-confusing.
-
-Signed-off-by: Avi Fishman <avifishman70@gmail.com>
----
- drivers/clocksource/timer-npcm7xx.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clocksource/timer-npcm7xx.c
-b/drivers/clocksource/timer-npcm7xx.c
-index 8a30da7f083b..9780ffd8010e 100644
---- a/drivers/clocksource/timer-npcm7xx.c
-+++ b/drivers/clocksource/timer-npcm7xx.c
-@@ -32,7 +32,7 @@
- #define NPCM7XX_Tx_INTEN               BIT(29)
- #define NPCM7XX_Tx_COUNTEN             BIT(30)
- #define NPCM7XX_Tx_ONESHOT             0x0
--#define NPCM7XX_Tx_OPER                        GENMASK(27, 3)
-+#define NPCM7XX_Tx_OPER                        GENMASK(28, 27)
- #define NPCM7XX_Tx_MIN_PRESCALE                0x1
- #define NPCM7XX_Tx_TDR_MASK_BITS       24
- #define NPCM7XX_Tx_MAX_CNT             0xFFFFFF
-@@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct
-clock_event_device *evt)
-
-        val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-        val &= ~NPCM7XX_Tx_OPER;
--
--       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-        val |= NPCM7XX_START_ONESHOT_Tx;
-        writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-
-@@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct
-clock_event_device *evt)
-        struct timer_of *to = to_timer_of(evt);
-        u32 val;
-
-+       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
-+
-        val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-        val &= ~NPCM7XX_Tx_OPER;
--
--       writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
-        val |= NPCM7XX_START_PERIODIC_Tx;
--
-        writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-
-        return 0;
-
--- 
-2.18.0
+>  config MMU
+>  	def_bool y
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index c9f331bb538b..5d3295f2df94 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -68,6 +68,7 @@ config X86
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+>  	select ARCH_HAS_KCOV			if X86_64
+> +	select ARCH_HAS_MEM_ENCRYPT
+>  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+>  	select ARCH_HAS_PMEM_API		if X86_64
+>  	select ARCH_HAS_PTE_SPECIAL
+> @@ -1520,9 +1521,6 @@ config X86_CPA_STATISTICS
+>  	  helps to determine the effectiveness of preserving large and huge
+>  	  page mappings when mapping protections are changed.
+> 
+> -config ARCH_HAS_MEM_ENCRYPT
+> -	def_bool y
+> -
+>  config AMD_MEM_ENCRYPT
+>  	bool "AMD Secure Memory Encryption (SME) support"
+>  	depends on X86_64 && CPU_SUP_AMD
