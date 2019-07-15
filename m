@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75B9C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E8C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2F5205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFBB205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201737;
-	bh=DJbrE1O1zB+v1rzzUPlHxWpLKZaxQ9ZdCmFlxx9QI3o=;
+	s=default; t=1563201741;
+	bh=asAiYr2CYWOqMAWm0D67icb5YqzuE7xvN5a2k2xkOUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uerYBnJAiL+7B/6S938NrtPN+K5H5iruAeYeMHhTMdo+dAeoQAaqq+4RBYjZnifoR
-	 bOOOzE8JgnDtG5nyEK2ZtDFE47iMEsgBXqL1CFU038ZCoHR8bDweO+JjxeBg6ll2c0
-	 BR2bSslvsrR2CkCJYlAni9J15fip7fkV8TAt6bTY=
+	b=cE0DCD3Hj4De5lUSN6uJXmKSngSqJUAl6Tuu0udiJ0yV9ytZM76o9OiDoAvWfbF+J
+	 VMj3p97Wb3LxnF+QQ2XkUUm8BS7eKSCqw7plRKYY3P9zobOPrlK6uZYaR+b+8Ta5KS
+	 p2R1Cf7hkUjWdzxXV4l63CAUNHogQojlQYVBiLuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404183AbfGOOmQ (ORCPT
+        id S2404653AbfGOOkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42310 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404476AbfGOOkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:40:41 -0400
+        id S2404395AbfGOOkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:40:01 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CC49204FD;
-        Mon, 15 Jul 2019 14:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BD2B20868;
+        Mon, 15 Jul 2019 14:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201641;
-        bh=DJbrE1O1zB+v1rzzUPlHxWpLKZaxQ9ZdCmFlxx9QI3o=;
+        s=default; t=1563201600;
+        bh=asAiYr2CYWOqMAWm0D67icb5YqzuE7xvN5a2k2xkOUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CixLkruRhwliLXH+tZnEIhQ6n31IYL6ltm11ieREtN4Tta0EcTmT0eObpt1DvTQCC
-         YY6ws267QuIt6BtdY8/TwWnCzS15Q3ppSSZYfD4EexeFYfg8KsaeXCtZ/TolucozI7
-         gPqRgVM0ghF6h1tqEVyzqqk3gZhnD8zQ9AqU9cmo=
+        b=Ijgz9AaZ3BpeE5P46l0JRkwJcFEipXTqT8LABdUmK4WyExoHICHIvQhChrp80WYAT
+         veTrV4Z6mMlEfOQSFSe1Vjnc2xyDoB96pv+KLq1qobAPJfkET4Pj7ZqnQyQ2dDqZ/2
+         8G0RxwVyE0sEPD/ZrSPTBELNCvpe8H4XzLcNlZ5Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 61/73] crypto: asymmetric_keys - select CRYPTO_HASH where needed
-Date:   Mon, 15 Jul 2019 10:36:17 -0400
-Message-Id: <20190715143629.10893-61-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 52/73] x86/build: Add 'set -e' to mkcapflags.sh to delete broken capflags.c
+Date:   Mon, 15 Jul 2019 10:36:08 -0400
+Message-Id: <20190715143629.10893-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -60,60 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 90acc0653d2bee203174e66d519fbaaa513502de ]
+[ Upstream commit bc53d3d777f81385c1bb08b07bd1c06450ecc2c1 ]
 
-Build testing with some core crypto options disabled revealed
-a few modules that are missing CRYPTO_HASH:
+Without 'set -e', shell scripts continue running even after any
+error occurs. The missed 'set -e' is a typical bug in shell scripting.
 
-crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
-x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
-x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
-crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
-pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
-pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
-pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
-pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
+For example, when a disk space shortage occurs while this script is
+running, it actually ends up with generating a truncated capflags.c.
 
-This normally doesn't show up in randconfig tests because there is
-a large number of other options that select CRYPTO_HASH.
+Yet, mkcapflags.sh continues running and exits with 0. So, the build
+system assumes it has succeeded.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+It will not be re-generated in the next invocation of Make since its
+timestamp is newer than that of any of the source files.
+
+Add 'set -e' so that any error in this script is caught and propagated
+to the build system.
+
+Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
+make automatically deletes the target on any failure. So, the broken
+capflags.c will be deleted automatically.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Link: https://lkml.kernel.org/r/20190625072622.17679-1-yamada.masahiro@socionext.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/asymmetric_keys/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
-index 331f6baf2df8..13f3de68b479 100644
---- a/crypto/asymmetric_keys/Kconfig
-+++ b/crypto/asymmetric_keys/Kconfig
-@@ -14,6 +14,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
- 	select MPILIB
- 	select CRYPTO_HASH_INFO
- 	select CRYPTO_AKCIPHER
-+	select CRYPTO_HASH
- 	help
- 	  This option provides support for asymmetric public key type handling.
- 	  If signature generation and/or verification are to be used,
-@@ -33,6 +34,7 @@ config X509_CERTIFICATE_PARSER
- config PKCS7_MESSAGE_PARSER
- 	tristate "PKCS#7 message parser"
- 	depends on X509_CERTIFICATE_PARSER
-+	select CRYPTO_HASH
- 	select ASN1
- 	select OID_REGISTRY
- 	help
-@@ -55,6 +57,7 @@ config SIGNED_PE_FILE_VERIFICATION
- 	bool "Support for PE file signature verification"
- 	depends on PKCS7_MESSAGE_PARSER=y
- 	depends on SYSTEM_DATA_VERIFICATION
-+	select CRYPTO_HASH
- 	select ASN1
- 	select OID_REGISTRY
- 	help
+diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
+index 6988c74409a8..711b74e0e623 100644
+--- a/arch/x86/kernel/cpu/mkcapflags.sh
++++ b/arch/x86/kernel/cpu/mkcapflags.sh
+@@ -3,6 +3,8 @@
+ # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
+ #
+ 
++set -e
++
+ IN=$1
+ OUT=$2
+ 
 -- 
 2.20.1
 
