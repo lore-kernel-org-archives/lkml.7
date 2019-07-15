@@ -2,98 +2,115 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70418C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A928C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4AF20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7CB20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="F8NFVhck"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Heged3cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbfGOSLG (ORCPT
+        id S1730123AbfGOSOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 14:11:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46314 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731762AbfGOSLF (ORCPT
+        Mon, 15 Jul 2019 14:14:23 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34387 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729277AbfGOSOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 14:11:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r4so12320256qkm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:11:05 -0700 (PDT)
+        Mon, 15 Jul 2019 14:14:23 -0400
+Received: by mail-io1-f68.google.com with SMTP id k8so35701114iot.1;
+        Mon, 15 Jul 2019 11:14:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jYZYKAc4cXMboCx/2peydkmI+hhxw+p2e+4iD/ro77c=;
-        b=F8NFVhckIungTHtsKgQe+pQO0Vu3TG5O8v6TLBNPm2LSKZVomFfdlxVi7302e4YzWW
-         p58VTnJFCE8qGTKD3U8G7uCwOHI/Cxu5QVw7JcIdWxqaS2lghAGxWj+cyE/9bRSrslPz
-         gx/AtOPYgKNwcI3Ulq+Lt+0aFfLUFkSsDEB84Z6K4jpzQUzrDhcCukP32APpDsViackC
-         kx9MLL4M4RQc0UTIdaNXbUhPPNnMyrfbIn67E6H1JfKoXHPgxBoa0KbqYeKk4R1ZbMcc
-         EtGJVaRDM3sFfgNn1rAhpe3vriDI8ut4GguGgAk4s0ycWhZY4kbSwnHRXAyx1xamMsVm
-         whog==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+CgFpi/G6FRfEhg2ENE40pkx1SrTXZfEq01yGYbU6XA=;
+        b=Heged3crnrk04O0adpX6AEYcXlV2LPpm0oztxz5/RU1+M0u6cUp0AkRUtROlNXss1R
+         FL074FdhRA/FTqiFvbT7WQf+zEd5KGornhzMhvri7+MUvXk5F6SBUS2x74A2xzpFp/W4
+         y/wtmmzpNbFi1yBSiM6+hYAu+d0z9hC2rXJkORpEa22J0SnVmiEN9M1kvemWEwwYvuE9
+         J8Rg+wjoVCOzN40XNXiDJXLCLOuKBLD3EpETDJccXmiVbKAyq7YvP/XOg+6WenPya+tu
+         tvooCtN+fJiNVwv6RKqu4Yp514WNiX0JI/eWSa2T82n5SsbpR6c5/3QdE8EQYXic4Q1g
+         NWxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jYZYKAc4cXMboCx/2peydkmI+hhxw+p2e+4iD/ro77c=;
-        b=larXsCK7HZwAlvMq8KRw/YQATtBVv9XbGq+N7zZ22Oiq7Mg/DMONdF3qOP1+wUCuD7
-         BDNlxGKH7gL8Cc5O+Ydv2MGopzAs048maiMVUr0yj7U4w/w/PIKy4JKDE7GlA2L1wpnM
-         YXD1T/aN8Trl1JWA9AqlX0zNgoigtg8UKSKr9Z3HUvAmbZOwlRSm4GN8F80yrMVTs1Zs
-         SzzFr6IIrp1iWnD2VJjFz93JrTJ+aStUHo4cGFju12ArcBYKz0hkb03J71Sa63pBeB06
-         fSXiku6uADHfy6yKjJcYBfQ8nIIaB/rGo0L72ch1TEujZSrreTrglwMq+UNWBcNdoCkK
-         XUMg==
-X-Gm-Message-State: APjAAAVA+GEsq7TLGOWSUZZoI+meJv0+JhLWnbZ98Ysd5bGhgXTiUS+c
-        k5ZcWJE3GVpA3tdImQVDhM9f4hHIaRJ0aw==
-X-Google-Smtp-Source: APXvYqype9M44/+Osix16H39k34Y9HMTaUWvg9TbauPunTaltUu36Qa/d/0sfE+znqX75JjKsBNP8g==
-X-Received: by 2002:ae9:e10e:: with SMTP id g14mr17227313qkm.486.1563214264805;
-        Mon, 15 Jul 2019 11:11:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 39sm8940896qts.41.2019.07.15.11.11.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jul 2019 11:11:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hn5RH-000248-T6; Mon, 15 Jul 2019 15:11:03 -0300
-Date:   Mon, 15 Jul 2019 15:11:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+CgFpi/G6FRfEhg2ENE40pkx1SrTXZfEq01yGYbU6XA=;
+        b=sa8/Duakfih33eYJxdMF7xp/aAwgmi/2JhUSa6knJiYSSV1SstMdLTSqRDqYuMsqfY
+         kQo/LxjJJpYq8kdhXhgcqYb7oedI5BWJUNrZ59R0ZU2qdv+vtUvz/YbLUAD5zssJxO9k
+         n4o/692SrQkSS/yvPAFLYqGpRjivCF4Up4xbbtbtr+1F+yckEmIKAn+y3rP8kMF9PeTU
+         usuXUpFdT+C3Uai2Y5NrOowr+TmyBPf91uGB64VJdmOqgGPyYBs2uMZRT82UV6kfMHpD
+         uKoh3zr7fuKgpmguTIpaOUpslM+o26dZZLg7E15qd5R46qqCha65rCeu4GttG2XO/TP5
+         5Ptw==
+X-Gm-Message-State: APjAAAXnHNAdRpcmUiBz97O4R6j02TWPrCovRJZVIfrs1kTbEi6PDUcB
+        2JrB4ZXDHi7b2TiDBrFOfdE=
+X-Google-Smtp-Source: APXvYqxdvaO67R4gUBB8DXUMFyjw5/z1SSNdlMZgavt374G+NRPBD0fagJHZNv975I7fbBzuuXWa0A==
+X-Received: by 2002:a5e:9304:: with SMTP id k4mr26971156iom.206.1563214462397;
+        Mon, 15 Jul 2019 11:14:22 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id i4sm26766336iog.31.2019.07.15.11.14.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 11:14:21 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/24] rdma/cxgb3: Remove call to memset after
- dma_alloc_coherent
-Message-ID: <20190715181103.GD4970@ziepe.ca>
-References: <20190715031746.6514-1-huangfq.daxian@gmail.com>
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skunberg.kelsey@gmail.com
+Subject: [PATCH v2] PCI: Remove functions not called in include/linux/pci.h
+Date:   Mon, 15 Jul 2019 12:13:13 -0600
+Message-Id: <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
+References: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715031746.6514-1-huangfq.daxian@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:17:46AM +0800, Fuqian Huang wrote:
-> In commit 518a2f1925c3
-> ("dma-mapping: zero memory returned from dma_alloc_*"),
-> dma_alloc_coherent has already zeroed the memory.
-> So memset is not needed.
-> 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-> ---
-> Changes in v3:
->   - Use actual commit rather than the merge commit in the commit message
-> 
->  drivers/infiniband/hw/cxgb3/cxio_hal.c | 3 ---
->  1 file changed, 3 deletions(-)
+Remove the following uncalled functions from include/linux/pci.h:
 
-Why are you resending this? I already applied the v2 version for
-RDMA's tree.
+        pci_block_cfg_access()
+        pci_block_cfg_access_in_atomic()
+        pci_unblock_cfg_access()
 
-Jason
+Functions were added in patch fb51ccbf217c "PCI: Rework config space
+blocking services", though no callers were added. Code continues to be
+unused and should be removed.
+
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+---
+
+Changes since v1:
+  - Fixed Signed-off-by line to show full name
+
+ include/linux/pci.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index cf380544c700..3c9ba6133bea 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
+ 
+ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ 
+-static inline void pci_block_cfg_access(struct pci_dev *dev) { }
+-static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
+-{ return 0; }
+-static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
+-
+ static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
+ { return NULL; }
+ static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
+-- 
+2.20.1
+
