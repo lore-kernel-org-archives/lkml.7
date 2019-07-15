@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BBCC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A02C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB4A2086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C52F2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202268;
-	bh=ZoGEH9X+APLf9OWvojfR6YP6nUG0lS+KD3f/kIoQKZU=;
+	s=default; t=1563202272;
+	bh=R9IQotUNSd1X6CcxrLvGrZ5C4ntUSalxDLt2GehSLF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNK5W410XWzwsXA9S+K3k2zQenkKQJMV2/2DDb2dPffudIoYnhkUdijOX4zzDeKW2
-	 lxo8dyjKx2XhK7oqAlkte61eX86PDRR94hXsOH8dOrwMHUelYOhhwmaUGBvd7TFGC/
-	 5rsyahQOrAQUHNG9DveEKPmhs8mIUXLHn5+eeytA=
+	b=VY1xdeHyQ8FsUvfRS5ia5IiZtx4cyqLN30IBtn8HhBBcqPGS8OCy0+VNmpjSJJtsp
+	 auzaO9FFPXi0D3WrIqVAnUnZsB4ZNbatiUqwBDKoq1ZkIGJuFGyn37MZLwtdFcq+8I
+	 DLgmYhQV7Zd7yC/VrYrfuNiZm4VK7pbpXkzO2yGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404266AbfGOOhH (ORCPT
+        id S2404219AbfGOOhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:37:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404162AbfGOOe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:34:59 -0400
+        id S2404100AbfGOOg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:36:58 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7573204FD;
-        Mon, 15 Jul 2019 14:34:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F1532184C;
+        Mon, 15 Jul 2019 14:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201298;
-        bh=ZoGEH9X+APLf9OWvojfR6YP6nUG0lS+KD3f/kIoQKZU=;
+        s=default; t=1563201417;
+        bh=R9IQotUNSd1X6CcxrLvGrZ5C4ntUSalxDLt2GehSLF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mYNYYg8lZCZIRkRz+Rv0C8qMrEkIss4hL363xiUI5raLhihvbiCe/rH69vU6+uYJn
-         Ku2Kvp76yU3gbQtL6g1BToAlBHLbTnPrT/efxRwEdcv9lyyJEdqsLg7E5z/kh2rbwo
-         e1LLVqHOwNxOI+A6Ym41tujhVVuHOoCu12ig0ghM=
+        b=OXSzdCp0CJw9Sfe2L474vdseucdBxcl3lxGylowjLw/ZDDrz7QfpxQAuTUTYCn49+
+         BPzJqPUpBTKfFmyUW1HpkZ3gy5qr/UAQVBroqqRolZk1LG9njOLyxQHsitxNmJMTv8
+         vBAqeqtmiCH0gmLyPPe61XuQ1Ll0lQig4P9lJ448=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 101/105] gtp: fix suspicious RCU usage
-Date:   Mon, 15 Jul 2019 10:28:35 -0400
-Message-Id: <20190715142839.9896-101-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/73] crypto: talitos - fix skcipher failure due to wrong output IV
+Date:   Mon, 15 Jul 2019 10:35:23 -0400
+Message-Id: <20190715143629.10893-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
-References: <20190715142839.9896-1-sashal@kernel.org>
+In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
+References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,92 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
+[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
 
-gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
-by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
-This patch make these functions to use lock_sock() instead of
-rcu_dereference_sk_user_data().
+Selftests report the following:
 
-Test commands:
-    gtp-link add gtp1
+[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
+[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.043185] 00000000: fe dc ba 98 76 54 32 10
+[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
 
-Splat looks like:
-[   83.238315] =============================
-[   83.239127] WARNING: suspicious RCU usage
-[   83.239702] 5.2.0-rc6+ #49 Not tainted
-[   83.240268] -----------------------------
-[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
-[   83.243828]
-[   83.243828] other info that might help us debug this:
-[   83.243828]
-[   83.246325]
-[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
-[   83.247314] 1 lock held by gtp-link/1008:
-[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
-[   83.251503]
-[   83.251503] stack backtrace:
-[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
-[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   83.254562] Call Trace:
-[   83.254995]  dump_stack+0x7c/0xbb
-[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
-[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
-[   83.257161]  ? memset+0x1f/0x40
-[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
-[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
-[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
-[   83.260022]  ? rtnl_link_unregister+0x230/0x230
-[ ... ]
+This above dumps show that the actual output IV is indeed the input IV.
+This is due to the IV not being copied back into the request.
 
-Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch fixes that.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/crypto/talitos.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index dba3869b61be..2756edd84abc 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 463033b4db1d..166e216b02b2 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1544,11 +1544,15 @@ static void ablkcipher_done(struct device *dev,
+ 			    int err)
  {
- 	struct gtp_dev *gtp;
+ 	struct ablkcipher_request *areq = context;
++	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
++	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
++	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
+ 	struct talitos_edesc *edesc;
  
--	gtp = rcu_dereference_sk_user_data(sk);
-+	lock_sock(sk);
-+	gtp = sk->sk_user_data;
- 	if (gtp) {
- 		udp_sk(sk)->encap_type = 0;
- 		rcu_assign_sk_user_data(sk, NULL);
- 		sock_put(sk);
- 	}
-+	release_sock(sk);
- }
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
  
- static void gtp_encap_disable_sock(struct sock *sk)
-@@ -798,7 +800,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 		goto out_sock;
- 	}
+ 	common_nonsnoop_unmap(dev, edesc, areq);
++	memcpy(areq->info, ctx->iv, ivsize);
  
--	if (rcu_dereference_sk_user_data(sock->sk)) {
-+	lock_sock(sock->sk);
-+	if (sock->sk->sk_user_data) {
- 		sk = ERR_PTR(-EBUSY);
- 		goto out_sock;
- 	}
-@@ -814,6 +817,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
+ 	kfree(edesc);
  
- out_sock:
-+	release_sock(sock->sk);
- 	sockfd_put(sock);
- 	return sk;
- }
 -- 
 2.20.1
 
