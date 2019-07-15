@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26B3C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A04C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAF020896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8BE21841
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200528;
-	bh=raCm2z9IR6RzYY5VMxy8o2cFZlPyoTrU7xWbKHrzAn8=;
+	s=default; t=1563200535;
+	bh=BJeyaP//3SkN5oyxfoXL1HB2f/Bu0hRNMrZo6Gifmi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBqvfnwUlitperFCSVgyWsVSr+K98iye48NmRpCihug+JPXjtgY5B3+pKXtL6fM74
-	 tTqF+N9StAwyNSFbqbQ+jPwlKp+NWVD4y9ikh1TlDpjUL74LY3C7EFS4B1x3jzSO/S
-	 4TWogo4fZuRGg8KmaaqS6n2d6EzyXAbapvT6ZUsA=
+	b=JJCWZf1SiJcJZVxbCg8ACaPOhbRJ3oYPNbDapcCsUSG878iEv99eIYruAkfwjojIR
+	 gCChSAhZL9IAK8Z26SUrvF+JCQvFWBvHM6cbTGhjqWvs3Adz7Nlq1JAxtMUx+YcikX
+	 TsNBA5crlnInyD8G0kTPYgnRjFZW6nXg0Dp+63WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390564AbfGOOWH (ORCPT
+        id S2390568AbfGOOWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48668 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390545AbfGOOVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:21:54 -0400
+        id S1731930AbfGOOWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:22:13 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 978AA2184C;
-        Mon, 15 Jul 2019 14:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42B8E20868;
+        Mon, 15 Jul 2019 14:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200514;
-        bh=raCm2z9IR6RzYY5VMxy8o2cFZlPyoTrU7xWbKHrzAn8=;
+        s=default; t=1563200532;
+        bh=BJeyaP//3SkN5oyxfoXL1HB2f/Bu0hRNMrZo6Gifmi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gi+oZm8JA8IhKUZ8U6lO2JoPBqduAld6zpOrd1zcda/AjwNNV9zYdzOL/JeGHmnaM
-         BtFDNhi/Q8YQbiRW83KQZjFOF+n+QsZhwm1doQlEp7Z68WaWoO4hdp+qHjNRT3BA74
-         JG6Pshwd6AmB0o6SbIiwC2CteRUG7ZDbMYb6K/gk=
+        b=wAp96MW4O/Z0J5yDgwCs0/Ma9Dsku9EplRPJagU+6kOcDnY0pYmJuoEWNgKSAtsHM
+         Wyv9S5kqj2pKYWk9EZe/9bBY2X7oo7dV6fo6zxpMEcIEHUtdTP7aQga5aT2LxvWFBw
+         hr8uemEwzZn3RjfEeXetvh2hXSt0gCUHIMPGpPCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/158] rcu: Force inlining of rcu_read_lock()
-Date:   Mon, 15 Jul 2019 10:16:38 -0400
-Message-Id: <20190715141809.8445-67-sashal@kernel.org>
+Cc:     Aaron Lewis <aaronlewis@google.com>, Borislav Petkov <bp@suse.de>,
+        Jim Mattson <jmattson@google.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        marcorr@google.com, Peter Feiner <pfeiner@google.com>,
+        pshier@google.com, Robert Hoo <robert.hu@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 068/158] x86/cpufeatures: Add FDP_EXCPTN_ONLY and ZERO_FCS_FDS
+Date:   Mon, 15 Jul 2019 10:16:39 -0400
+Message-Id: <20190715141809.8445-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,55 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Aaron Lewis <aaronlewis@google.com>
 
-[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
+[ Upstream commit cbb99c0f588737ec98c333558922ce47e9a95827 ]
 
-When debugging options are turned on, the rcu_read_lock() function
-might not be inlined. This results in lockdep's print_lock() function
-printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
-For example:
+Add the CPUID enumeration for Intel's de-feature bits to accommodate
+passing these de-features through to kvm guests.
 
-[   10.579995] =============================
-[   10.584033] WARNING: suspicious RCU usage
-[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
-[   10.593162] -----------------------------
-[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
-RCU read-side critical section!
-[   10.606220]
-[   10.606220] other info that might help us debug this:
-[   10.606220]
-[   10.614280]
-[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
-[   10.620853] 3 locks held by systemd/1:
-[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
-[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+These de-features are (from SDM vol 1, section 8.1.8):
+ - X86_FEATURE_FDP_EXCPTN_ONLY: If CPUID.(EAX=07H,ECX=0H):EBX[bit 6] = 1, the
+   data pointer (FDP) is updated only for the x87 non-control instructions that
+   incur unmasked x87 exceptions.
+ - X86_FEATURE_ZERO_FCS_FDS: If CPUID.(EAX=07H,ECX=0H):EBX[bit 13] = 1, the
+   processor deprecates FCS and FDS; it saves each as 0000H.
 
-These "rcu_read_lock+0x0/0x70" strings are not providing any useful
-information.  This commit therefore forces inlining of the rcu_read_lock()
-function so that rcu_read_lock()'s caller is instead shown.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Aaron Lewis <aaronlewis@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: marcorr@google.com
+Cc: Peter Feiner <pfeiner@google.com>
+Cc: pshier@google.com
+Cc: Robert Hoo <robert.hu@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190605220252.103406-1-aaronlewis@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/cpufeatures.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index e102c5bccbb9..68cbe111420b 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -620,7 +620,7 @@ static inline void rcu_preempt_sleep_check(void) { }
-  * read-side critical sections may be preempted and they may also block, but
-  * only when acquiring spinlocks that are subject to priority inheritance.
-  */
--static inline void rcu_read_lock(void)
-+static __always_inline void rcu_read_lock(void)
- {
- 	__rcu_read_lock();
- 	__acquire(RCU);
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 69037da75ea0..0cf704933f23 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -239,12 +239,14 @@
+ #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
++#define X86_FEATURE_FDP_EXCPTN_ONLY	( 9*32+ 6) /* "" FPU data pointer updated only on x87 exceptions */
+ #define X86_FEATURE_SMEP		( 9*32+ 7) /* Supervisor Mode Execution Protection */
+ #define X86_FEATURE_BMI2		( 9*32+ 8) /* 2nd group bit manipulation extensions */
+ #define X86_FEATURE_ERMS		( 9*32+ 9) /* Enhanced REP MOVSB/STOSB instructions */
+ #define X86_FEATURE_INVPCID		( 9*32+10) /* Invalidate Processor Context ID */
+ #define X86_FEATURE_RTM			( 9*32+11) /* Restricted Transactional Memory */
+ #define X86_FEATURE_CQM			( 9*32+12) /* Cache QoS Monitoring */
++#define X86_FEATURE_ZERO_FCS_FDS	( 9*32+13) /* "" Zero out FPU CS and FPU DS */
+ #define X86_FEATURE_MPX			( 9*32+14) /* Memory Protection Extension */
+ #define X86_FEATURE_RDT_A		( 9*32+15) /* Resource Director Technology Allocation */
+ #define X86_FEATURE_AVX512F		( 9*32+16) /* AVX-512 Foundation */
 -- 
 2.20.1
 
