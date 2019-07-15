@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01BCC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0245C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE5A21530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FDA2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202060;
-	bh=i0PFZkIJ9nL0kFh10gLhFccdUQZCEye8EhDIlvNLGXw=;
+	s=default; t=1563202062;
+	bh=rU3Ez2wWMrrE/iar+jy6anGCgLmCwgHT+Bint4y05vo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ObktqKWbcEz91f2ajHP7fg8Z0cDDdq+/sySz3BpF2m1E9wKwDO3r9cnSKWXbORhkd
-	 jlbfUzbwcP6fILz36YUC+M7boNfHK+2/lTw3F0UF8v+S2UZ/BAGu+UL9EnIhc9oRyf
-	 s9oOJ/c7SdmjApmvHTqwJNiJkCKmINxINBDnCsU8=
+	b=FWj9q2ho4Aje6w9NB06Sje7q1c/vVj17pR6EQjSmHdM7r4n/IDt+h0Sm0vrWluj57
+	 vzt2k7AMX/kYa1dMyodmFTJjTQxbMPDb0eBzjDUWZrm9zCbMJcGNrzMh0CxX9YT+Kc
+	 PFOveIQDHRjIkvpDPv3gvxJRE+GRgbOw8ABo2iSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405215AbfGOOrj (ORCPT
+        id S2405207AbfGOOrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42686 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:47:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405203AbfGOOrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:47:36 -0400
+        id S2405195AbfGOOre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:47:34 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA0442067C;
-        Mon, 15 Jul 2019 14:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8D621530;
+        Mon, 15 Jul 2019 14:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563202055;
-        bh=i0PFZkIJ9nL0kFh10gLhFccdUQZCEye8EhDIlvNLGXw=;
+        s=default; t=1563202053;
+        bh=rU3Ez2wWMrrE/iar+jy6anGCgLmCwgHT+Bint4y05vo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qLfA9Y4vNoXMtp/8zVuGa1XRbctmD7di+g+EgiFO+8OF0kKg3QZHJHFkyVKtfbGZJ
-         jC2z7zauY2hUso/rkR5Enhs2G/wLXlmcmoLCqDEMpwvMZo989wDko+AZB+Wlh8dilX
-         /+ogs29b9ASKg9fmyWHTbvTUzkL6x3c2AbSZfGJo=
+        b=OVyJ3iXksY9MVgxHgc0hcVaBiwsCjF5g0imSXYrjQubrpe79iNi2OV5WJxf6RBBrn
+         PVch88OIUWEnKOssvz57aiaCWzAMv8Dql3R5EnLPlbDsx22yVyZeYW1Hu44+JtEz3p
+         iQIUdcvXoNg/ubbq3ehj2SLY29A9AkTU8gJzEowo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>, Borislav Petkov <bp@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 34/53] EDAC/sysfs: Fix memory leak when creating a csrow object
-Date:   Mon, 15 Jul 2019 10:45:16 -0400
-Message-Id: <20190715144535.11636-34-sashal@kernel.org>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 33/53] vhost_net: disable zerocopy by default
+Date:   Mon, 15 Jul 2019 10:45:15 -0400
+Message-Id: <20190715144535.11636-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
 References: <20190715144535.11636-1-sashal@kernel.org>
@@ -62,52 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Jason Wang <jasowang@redhat.com>
 
-[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
+[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
 
-In edac_create_csrow_object(), the reference to the object is not
-released when adding the device to the device hierarchy fails
-(device_add()). This may result in a memory leak.
+Vhost_net was known to suffer from HOL[1] issues which is not easy to
+fix. Several downstream disable the feature by default. What's more,
+the datapath was split and datacopy path got the support of batching
+and XDP support recently which makes it faster than zerocopy part for
+small packets transmission.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
+It looks to me that disable zerocopy by default is more
+appropriate. It cold be enabled by default again in the future if we
+fix the above issues.
+
+[1] https://patchwork.kernel.org/patch/3787671/
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/vhost/net.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 3c8f19f5ac81..0c53f2d54765 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -426,6 +426,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
- static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 				    struct csrow_info *csrow, int index)
- {
-+	int err;
-+
- 	csrow->dev.type = &csrow_attr_type;
- 	csrow->dev.bus = mci->bus;
- 	csrow->dev.groups = csrow_dev_groups;
-@@ -438,7 +440,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 	edac_dbg(0, "creating (virtual) csrow node %s\n",
- 		 dev_name(&csrow->dev));
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 645b2197930e..f46317135224 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -30,7 +30,7 @@
  
--	return device_add(&csrow->dev);
-+	err = device_add(&csrow->dev);
-+	if (err)
-+		put_device(&csrow->dev);
-+
-+	return err;
- }
+ #include "vhost.h"
  
- /* Create a CSROW object under specifed edac_mc_device */
+-static int experimental_zcopytx = 1;
++static int experimental_zcopytx = 0;
+ module_param(experimental_zcopytx, int, 0444);
+ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
+ 		                       " 1 -Enable; 0 - Disable");
 -- 
 2.20.1
 
