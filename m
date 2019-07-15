@@ -2,98 +2,132 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5633AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD725C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A42206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F328206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 11:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNA2kjGC"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O0Vb5zf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfGOLns (ORCPT
+        id S1729935AbfGOLoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 07:43:48 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40987 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729725AbfGOLnr (ORCPT
+        Mon, 15 Jul 2019 07:44:23 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:38355 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729725AbfGOLoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 07:43:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so8126440pls.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 04:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C0fjdopnLQ/4XRxvrGWgg1WnG5V3U1P1HH2GQHIbWCw=;
-        b=JNA2kjGCPtUcqzmfIYLCGAnyt6Fw8N62mZU6OHEB1L1Ctq8yKC42XkJ35VW6Z2hbUW
-         mKPFd1dhG9VueCUY+YyH2C/7IX/zI2n9bY/kimX4zmAjbsTj/C7w42TwMbNyv+cMUyTb
-         M6aQxhiUSyoagsGG9jHaD0KzNZJcFgS0pDbvuhBdXBLMsmj9YR//voSp7S4aDP/NTxOr
-         vQlH5Qs4DZPFa9SDHVwFkAGjLU0/e3+BtCflurhKnH0RqeOu+FHlhA3gPfSW+62hf+y/
-         I3aLm0JvPkwYd/EjM51PGhHiD/JrdDE/IQsrA/60RgYzeDaXM1mvTgJLshoFAFrukseM
-         ivXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C0fjdopnLQ/4XRxvrGWgg1WnG5V3U1P1HH2GQHIbWCw=;
-        b=NSyQ8+wDbzKXFCsEO4VjDYV1LbO7vqcBSfCLPrbeCZcgmr9ZmaasK+NxKuNGK3csNW
-         U29McoQO7Km2cLympIkgkEuv5nEtFar3riQIibyW9ZgJHCo8pT9e8aYhoDzD5ZTfQ0wQ
-         9sYUt8khv9BKt/2XrA102dJm5bVpuHWPss/wy9lzpEQ1eHgRrXnGPyGftnHzsv6E/bbj
-         WJbeuavhiFu18pDuok1mGCW6vH98tX4wk4R7oHH+xo6P6krS+h7ZfXQ3IPcb6AlGarSE
-         6O1v3qPi9AuDi557Ep81S7uSXaOn2xdq2NeU1dl2o7YMS3WcfBeBrXzyGxtX0FqucSlT
-         0elA==
-X-Gm-Message-State: APjAAAXIGHJ325/7PYWL/p8hPTB2bNHzXWdNcZUXKmJ8nvBENWRRZiIx
-        Kqb98iYGG20wg5bmAkwpPek=
-X-Google-Smtp-Source: APXvYqyuJna6D05VcCwk1rUi2rLdU30VgksXKoiFT/0HseqFHhm+JExT0uKnEZ444uE3xcPM4/aNJA==
-X-Received: by 2002:a17:902:28c9:: with SMTP id f67mr28299180plb.19.1563191026650;
-        Mon, 15 Jul 2019 04:43:46 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id u97sm16400840pjb.26.2019.07.15.04.43.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 04:43:46 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH] drm/amd/powerplay: remove redundant memset
-Date:   Mon, 15 Jul 2019 19:43:32 +0800
-Message-Id: <20190715114332.24634-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 15 Jul 2019 07:44:23 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190715114421euoutp013b5f7690b29c4b96f0b89caea3bf888e~xkf0SurJZ0549005490euoutp01N
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:44:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190715114421euoutp013b5f7690b29c4b96f0b89caea3bf888e~xkf0SurJZ0549005490euoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563191061;
+        bh=AwKQQepnCnmb88Wi6ptLbfbyKlASrHTT4QV8bbPXfpI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=O0Vb5zf5wLDPDGFSBrUSu+KdIp6EYTOjjt2Q/s3PeP/nrfvHY59mr7dciwoht0go/
+         Xyn8UH+40eP/jGFy/orUeg57TWaeFB4JStlZa/Sp8eiM0c4fItB7bguEidxewCmiwb
+         vBFBO7pLrn+eCvrwilI9UpggCQ5Ahp70kkprEr8Q=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190715114421eucas1p213669de44f9e9b06b2c2b8f811ec8f91~xkfzqES9Y0781407814eucas1p2P;
+        Mon, 15 Jul 2019 11:44:21 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 19.0D.04298.4176C2D5; Mon, 15
+        Jul 2019 12:44:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190715114420eucas1p28a118f4655551e1030df35799f911ba9~xkfy6Cy9X1570915709eucas1p2x;
+        Mon, 15 Jul 2019 11:44:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190715114420eusmtrp2ddfbc3b00f16264a6859da595d45c4f1~xkfyr9GIZ2170321703eusmtrp2d;
+        Mon, 15 Jul 2019 11:44:20 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-5e-5d2c67149f4e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id A0.88.04146.3176C2D5; Mon, 15
+        Jul 2019 12:44:20 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190715114419eusmtip1f0fbf70115617422cab814a310162408~xkfySZ4Hw0464504645eusmtip15;
+        Mon, 15 Jul 2019 11:44:19 +0000 (GMT)
+Subject: Re: [PATCH v3 15/24] media: exynos4-is: Remove call to memset after
+ dma_alloc_coherent
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <189ad2a0-c8ba-54f5-af34-5a0e8efee8fe@samsung.com>
+Date:   Mon, 15 Jul 2019 13:44:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CABXRUiQ_N=N=weMnRea4d6PXjfghta=U1xhdv-tZpSvaGBnXGg@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djP87oi6TqxBkvWGFssO3WS1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWfRs2MpqMeP8PiaLZZv+MDlweuycdZfdY9OqTjaPzUvq
+        Pfq2rGL0+LxJLoA1issmJTUnsyy1SN8ugStj+fZzrAXtzBVN96axNjDuYupi5OCQEDCRuPbW
+        rYuRi0NIYAWjRPP2/8wQzhdGiclzt7F3MXICOZ8ZJe5/FYdpOLfMG6JmOaPE8c2f2CGct4wS
+        Z9oOMYM0CAskSvRM+8IEYosIaEt8PN0CNpVZ4AGTxIwPx9hAEmwChhK9R/sYQWxeATuJ6xv2
+        gNksAqoSL86vA7NFBSIkTh2ZxwJRIyhxcuYTMJtTIFDiX+dzsOuYBcQlmr6sZIWw5SW2v50D
+        doSEwCF2ick3eSBsF4lTz34yQdjCEq+Ob2GHsGUk/u+czwRynIRAM6NEz+7b7BDOBKCXjy9g
+        hKiyljh8/CIryP/MApoS63fpQ4LCUeLKLRMIk0/ixltBiBP4JCZtm84MEeaV6GgTgpihIvF7
+        1XSoC6Qkup/8Z5nAqDQLyWOzkDwzC8kzsxDWLmBkWcUonlpanJueWmyYl1quV5yYW1yal66X
+        nJ+7iRGYkE7/O/5pB+PXS0mHGAU4GJV4eB1StGOFWBPLiitzDzFKcDArifDafgUK8aYkVlal
+        FuXHF5XmpBYfYpTmYFES561meBAtJJCeWJKanZpakFoEk2Xi4JRqYFwetnhH8oqT5c8fqO9e
+        OV2e+bKq3LFVEY7cerLT5hQdvxdxlk+qV/VD/Qn5jLVTJ/kHvY9Lr0pov1hoejjtWnDjt7Xe
+        Easv7p35+1tpvsh0nhOTtY953udMSVPd3MjiuJJfaKnDdRm74Cv5HWEr3jvYqIfcqpiZeP3/
+        Do4HYuePaao3TrsVn67EUpyRaKjFXFScCABuwyNCRAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7oi6TqxBk9OMlksO3WS1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWfRs2MpqMeP8PqC6TX+YHDg9ds66y+6xaVUnm8fmJfUe
+        fVtWMXp83iQXwBqlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZ
+        llqkb5egl7F8+znWgnbmiqZ701gbGHcxdTFycEgImEicW+bdxcjFISSwlFFiz+FOdoi4lMT8
+        FqUuRk4gU1jiz7UuNoia14wSq06/YwdJCAskSvRM+8IEYosIaEt8PN3CDFLELPCISeJfz3d2
+        iI4eJom7F54zg1SxCRhK9B7tYwSxeQXsJK5v2ANmswioSrw4vw7MFhWIkJh0bScLRI2gxMmZ
+        T8BsToFAiX+dz8E2MwuoS/yZd4kZwhaXaPqykhXClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYF
+        jCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAuNw27Gfm3cwXtoYfIhRgINRiYfXIUU7Vog1
+        say4MvcQowQHs5IIr+1XoBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA1NEXkm8oamhuYWl
+        obmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxhmXq1g439pfk2dV2FtdNOnFr+9e
+        IomnZn87uXDWiolzvn4+f3bNyyuTzlpvsnz2R/zRrlUfNybumKm4c/rbo0oBrh6akVrfshoc
+        b7V6T1kiocb/tSRi0wrJaU/lmaUP1pRFaa1M9njotu8/96/OffGbv26TyTqoEhx3eQ+bVQWj
+        mnt4TMN+zu1KLMUZiYZazEXFiQAo7uLT2QIAAA==
+X-CMS-MailID: 20190715114420eucas1p28a118f4655551e1030df35799f911ba9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd
+References: <CGME20190715090023eucas1p2ab541c5d4b4debe766295d3c6efbd1cd@eucas1p2.samsung.com>
+        <20190715031851.6890-1-huangfq.daxian@gmail.com>
+        <37046e7b-fdde-c10f-4850-0b3efd4a00cd@samsung.com>
+        <CABXRUiQ_N=N=weMnRea4d6PXjfghta=U1xhdv-tZpSvaGBnXGg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kzalloc has already zeroed the memory.
-So the memset is unneeded.
+On 7/15/19 11:43, Fuqian Huang wrote:
+> Should I rewrite the commit log? Just mention that dma_alloc_coherent
+> has already zeroed the memory and not to reference the commit?
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 1 -
- 1 file changed, 1 deletion(-)
+I don't think it is really needed, since at hash 518a2f1925c3 dma_alloc_coherent() 
+already zeroes the memory, so in fact all statements in your current commit 
+message are true. 
 
-diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-index 8fafcbdb1dfd..0fb6066997b2 100644
---- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
-@@ -1295,7 +1295,6 @@ static int vega20_set_default_od8_setttings(struct smu_context *smu)
- 	if (!table_context->od8_settings)
- 		return -ENOMEM;
- 
--	memset(table_context->od8_settings, 0, sizeof(struct vega20_od8_settings));
- 	od8_settings = (struct vega20_od8_settings *)table_context->od8_settings;
- 
- 	if (smu_feature_is_enabled(smu, FEATURE_DPM_SOCCLK_BIT)) {
 -- 
-2.11.0
-
+Regards,
+Sylwester
