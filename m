@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFA8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F71C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2FF2206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F0420868
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199997;
-	bh=ZAfC2BdUPmM5ghEIJn/MUgbjJZjPlBS0RDiZJpaogD4=;
+	s=default; t=1563200004;
+	bh=XlGMvA78OvGLHAOA4r8DdAmpK8qtDo6lj0Fg1/lV9zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWvNAFFbQb6rdIx4GSoohmSIYfCw2ir3FaSp24nIr0Q2ShF42scQGPVorlLd00TX1
-	 bECpFeU9pJSsmL/q20Rr9IbT2v8jU9dss7IEg5pKz9EszQJJvhR5bIQZoV1qmPxuoJ
-	 69+9sXqGBDWgwPIswfCMToSVUWSRfcgpeXPHEvi8=
+	b=F4p3dXRnC/o4pYzh6uG1/gFrttWa35KPt2Q/EI/S+KLAMWLBSvLFO+1dFFYqc3cC/
+	 uwI3aqh/wFnXgfMfuaNQoAV3Slbk6ee0ixdsKWX/ijSwMB5BUqCq7+NkQqv0/M1Wg/
+	 QP5e2/Vy6wjNPasrJkYJfwSAlBFxMDEPrptrMHcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389181AbfGOONQ (ORCPT
+        id S2389188AbfGOONX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53482 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389172AbfGOONP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:13:15 -0400
+        id S1731050AbfGOONV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:13:21 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 190E420868;
-        Mon, 15 Jul 2019 14:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F2721530;
+        Mon, 15 Jul 2019 14:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199994;
-        bh=ZAfC2BdUPmM5ghEIJn/MUgbjJZjPlBS0RDiZJpaogD4=;
+        s=default; t=1563200000;
+        bh=XlGMvA78OvGLHAOA4r8DdAmpK8qtDo6lj0Fg1/lV9zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YdI5YUZy9ovon1Bc2AH0UKUielKB79+pBsekz3ZKiJkPVghboQiyIUs6okfbMdXiH
-         0NNuD+2Xby+6kLjFAoLvl6cybdbuU7QbCI7bA+4be1996MKoCutiIjBaXAhM7tJZn1
-         ZUfCYiojKNvMU6g/n/pSq3KpaUTQwO47sJDSTPbc=
+        b=cQ7Wx9tW5pJBGiqgUCPWrbgVQORlJhhUXoR8FMGHvCf/xh03MsGqwraXesNp9IDI2
+         2TcYrKjobmWgdIC3/SYxXA1BTdomN5vgb4p8nKPDQ2UxheSmyTMeXqQ9XkW40QXCn5
+         kF/l5ZJ/VqhpawmGD2b59LVZ+ikg13SqQ0YRZYPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 155/219] rslib: Fix decoding of shortened codes
-Date:   Mon, 15 Jul 2019 10:02:36 -0400
-Message-Id: <20190715140341.6443-155-sashal@kernel.org>
+Cc:     Jiong Wang <jiong.wang@netronome.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 156/219] bpf: fix BPF_ALU32 | BPF_ARSH on BE arches
+Date:   Mon, 15 Jul 2019 10:02:37 -0400
+Message-Id: <20190715140341.6443-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,44 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+From: Jiong Wang <jiong.wang@netronome.com>
 
-[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
+[ Upstream commit 75672dda27bd00109a84cd975c17949ad9c45663 ]
 
-The decoding of shortenend codes is broken. It only works as expected if
-there are no erasures.
+Yauheni reported the following code do not work correctly on BE arches:
 
-When decoding with erasures, Lambda (the error and erasure locator
-polynomial) is initialized from the given erasure positions. The pad
-parameter is not accounted for by the initialisation code, and hence
-Lambda is initialized from incorrect erasure positions.
+       ALU_ARSH_X:
+               DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
+               CONT;
+       ALU_ARSH_K:
+               DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
+               CONT;
 
-The fix is to adjust the erasure positions by the supplied pad.
+and are causing failure of test_verifier test 'arsh32 on imm 2' on BE
+arches.
 
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
+The code is taking address and interpreting memory directly, so is not
+endianness neutral. We should instead perform standard C type casting on
+the variable. A u64 to s32 conversion will drop the high 32-bit and reserve
+the low 32-bit as signed integer, this is all we want.
+
+Fixes: 2dc6b100f928 ("bpf: interpreter support BPF_ALU | BPF_ARSH")
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/reed_solomon/decode_rs.c | 4 ++--
+ kernel/bpf/core.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 1db74eb098d0..3313bf944ff1 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -99,9 +99,9 @@
- 	if (no_eras > 0) {
- 		/* Init lambda to be the erasure locator polynomial */
- 		lambda[1] = alpha_to[rs_modnn(rs,
--					      prim * (nn - 1 - eras_pos[0]))];
-+					prim * (nn - 1 - (eras_pos[0] + pad)))];
- 		for (i = 1; i < no_eras; i++) {
--			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
-+			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
- 			for (j = i + 1; j > 0; j--) {
- 				tmp = index_of[lambda[j - 1]];
- 				if (tmp != nn) {
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 06ba9c5f156b..932fd3fa5a5a 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1367,10 +1367,10 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ 		insn++;
+ 		CONT;
+ 	ALU_ARSH_X:
+-		DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
++		DST = (u64) (u32) (((s32) DST) >> SRC);
+ 		CONT;
+ 	ALU_ARSH_K:
+-		DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
++		DST = (u64) (u32) (((s32) DST) >> IMM);
+ 		CONT;
+ 	ALU64_ARSH_X:
+ 		(*(s64 *) &DST) >>= SRC;
 -- 
 2.20.1
 
