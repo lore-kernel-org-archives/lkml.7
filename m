@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B92C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A026C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBAA2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7033A206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200908;
-	bh=jHBoahBIMCEqzHHAdyXBu+NzeIwefRJZKUWcMn7yxDc=;
+	s=default; t=1563200917;
+	bh=cilpEM+oIu6ciWUb6oAflNd53yVteezGM7UI++mDFjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpyLR0Gacdg84q72pZ/cgiveFYOvyEDeziCghSAg7GqpRCJEjLZPCSliMsxL3kiQe
-	 oedozESSGaQ4lQ/Gcl29VdUafUeLxDo3RFpOe0l0Eos5kUYwMThYzXsmDnx4KKMl6q
-	 ML/pMy96c1F5OYX2ldjzyxF3DOlUsQ1nXfHiDBr8=
+	b=zWbaEloLcOa/cnIVxRpJ//hTOHe/1qDt6zIC5Bf2CIdTr7xis/41wqpAeZkbLEwhJ
+	 4WU/vpL2guhnLIvn3oin8+Q6nTBGEPvmAfY2iAc0EeFwjARrcXTocTrz4PSiampd+6
+	 uTsdSrbU9Gg/XS+eJc30REQ2bwEIWPdwx5nIIlfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390599AbfGOO20 (ORCPT
+        id S2391179AbfGOO2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391253AbfGOO2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:28:21 -0400
+        id S2403774AbfGOO2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:28:04 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FA0C2064B;
-        Mon, 15 Jul 2019 14:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EBAA217F4;
+        Mon, 15 Jul 2019 14:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200899;
-        bh=jHBoahBIMCEqzHHAdyXBu+NzeIwefRJZKUWcMn7yxDc=;
+        s=default; t=1563200883;
+        bh=cilpEM+oIu6ciWUb6oAflNd53yVteezGM7UI++mDFjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvmbMMEEDYgRhckBkEw3qscTWV7lYWLUsjGAHsh8LxqCmlftZXSUVFJyowk6u9EoO
-         PYBIzH3a33W5jBAsA5BERLdLijmtPNesG2MFpkygvrTHbN7grXgSIrhSlfH8RPeDXM
-         fvWJ0y0HHAQAw6vqsFY2Ze8bw/TE/zhivMpG1gcQ=
+        b=akWdYvRc+PqF/nU4nGG+hQ0UncDx013Sl1Uo6L7WQsxbEh1Sa1aHIMq+TA2/lLa3X
+         Gi+WeGVM2PNwezNei04Ia0mEBwz26BNqGBlFA5yIXhGWYfIolInj+8RiQxt0R5l/Tb
+         nAdLY8EFLEjzH3NX5gSEnO7H/G8Bhb27I5lyVEOQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josua Mayer <josua@solid-run.com>, Andrew Lunn <andrew@lunn.ch>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 158/158] net: mvmdio: defer probe of orion-mdio if a clock is not ready
-Date:   Mon, 15 Jul 2019 10:18:09 -0400
-Message-Id: <20190715141809.8445-158-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 154/158] gtp: fix suspicious RCU usage
+Date:   Mon, 15 Jul 2019 10:18:05 -0400
+Message-Id: <20190715141809.8445-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,45 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josua Mayer <josua@solid-run.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 433a06d7d74e677c40b1148c70c48677ff62fb6b ]
+[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
 
-Defer probing of the orion-mdio interface when getting a clock returns
-EPROBE_DEFER. This avoids locking up the Armada 8k SoC when mdio is used
-before all clocks have been enabled.
+gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
+by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
+This patch make these functions to use lock_sock() instead of
+rcu_dereference_sk_user_data().
 
-Signed-off-by: Josua Mayer <josua@solid-run.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Test commands:
+    gtp-link add gtp1
+
+Splat looks like:
+[   83.238315] =============================
+[   83.239127] WARNING: suspicious RCU usage
+[   83.239702] 5.2.0-rc6+ #49 Not tainted
+[   83.240268] -----------------------------
+[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
+[   83.243828]
+[   83.243828] other info that might help us debug this:
+[   83.243828]
+[   83.246325]
+[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
+[   83.247314] 1 lock held by gtp-link/1008:
+[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
+[   83.251503]
+[   83.251503] stack backtrace:
+[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
+[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   83.254562] Call Trace:
+[   83.254995]  dump_stack+0x7c/0xbb
+[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
+[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
+[   83.257161]  ? memset+0x1f/0x40
+[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
+[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
+[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
+[   83.260022]  ? rtnl_link_unregister+0x230/0x230
+[ ... ]
+
+Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvmdio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/gtp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
-index c5dac6bd2be4..903836e334d8 100644
---- a/drivers/net/ethernet/marvell/mvmdio.c
-+++ b/drivers/net/ethernet/marvell/mvmdio.c
-@@ -321,6 +321,10 @@ static int orion_mdio_probe(struct platform_device *pdev)
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 83488f2bf7a0..f45a806b6c06 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
+ {
+ 	struct gtp_dev *gtp;
  
- 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
- 		dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
-+		if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
-+			ret = -EPROBE_DEFER;
-+			goto out_clk;
-+		}
- 		if (IS_ERR(dev->clk[i]))
- 			break;
- 		clk_prepare_enable(dev->clk[i]);
-@@ -362,6 +366,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
- 	if (dev->err_interrupt > 0)
- 		writel(0, dev->regs + MVMDIO_ERR_INT_MASK);
+-	gtp = rcu_dereference_sk_user_data(sk);
++	lock_sock(sk);
++	gtp = sk->sk_user_data;
+ 	if (gtp) {
+ 		udp_sk(sk)->encap_type = 0;
+ 		rcu_assign_sk_user_data(sk, NULL);
+ 		sock_put(sk);
+ 	}
++	release_sock(sk);
+ }
  
-+out_clk:
- 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
- 		if (IS_ERR(dev->clk[i]))
- 			break;
+ static void gtp_encap_disable_sock(struct sock *sk)
+@@ -800,7 +802,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 		goto out_sock;
+ 	}
+ 
+-	if (rcu_dereference_sk_user_data(sock->sk)) {
++	lock_sock(sock->sk);
++	if (sock->sk->sk_user_data) {
+ 		sk = ERR_PTR(-EBUSY);
+ 		goto out_sock;
+ 	}
+@@ -816,6 +819,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
+ 
+ out_sock:
++	release_sock(sock->sk);
+ 	sockfd_put(sock);
+ 	return sk;
+ }
 -- 
 2.20.1
 
