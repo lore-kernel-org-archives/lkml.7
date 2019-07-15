@@ -2,163 +2,255 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9360C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23CAC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5762081C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197891;
-	bh=iZvB6N1TYcEga3h3leOTeZdDimayVtYAMRUH2QVd3Y8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CFIQuxjDh6X9FKUNg2RT7gnftzm/8NHHQpuNJe9+mjbAmPC0RcF7LRKgI57kqBH+z
-	 yxxihPN0nIjOSdeKxSfuP+zoRNv7GsV0sbRz0SXsshiBN0mMfLJUeRdGdaFaNwviHC
-	 4PwGxYBLusFibuSUVjQzfBaEIL02gdMn4ZVhCaBs=
+	by mail.kernel.org (Postfix) with ESMTP id 9AA3E2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730880AbfGONiJ (ORCPT
+        id S1730889AbfGONiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:38:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:38:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:49202 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730412AbfGONiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:38:03 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2981D212F5;
-        Mon, 15 Jul 2019 13:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197882;
-        bh=iZvB6N1TYcEga3h3leOTeZdDimayVtYAMRUH2QVd3Y8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPiwbUhuUPv/bLAPAKo1VGTU5ASolJ+Rnh3WvdkZ8ZZDkBNxz7jbhBgLfiTA0mXza
-         8NCFxOEacNgUOa6RNuUQzRGgrzn6gYaQ88vaoGpENHV9StFXKQSd0OeAC7E7OekDDb
-         YF0SeGHZRQREE/6ksuocRHgpgbCbhKkF/rNMlcRk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 024/249] selftests/bpf: adjust verifier scale test
-Date:   Mon, 15 Jul 2019 09:32:05 -0400
-Message-Id: <20190715133550.1772-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715133550.1772-1-sashal@kernel.org>
-References: <20190715133550.1772-1-sashal@kernel.org>
+        id S1730879AbfGONiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:38:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28ED228;
+        Mon, 15 Jul 2019 06:38:09 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC13F3F71F;
+        Mon, 15 Jul 2019 06:38:06 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 14:38:01 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Quentin Perret <quentin.perret@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v11 1/5] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190715133801.yohhd2hywzsv3uyf@e110439-lin>
+References: <20190708084357.12944-1-patrick.bellasi@arm.com>
+ <20190708084357.12944-2-patrick.bellasi@arm.com>
+ <20190708110838.4ohd7pqx5ngkzcsu@queper01-lin>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708110838.4ohd7pqx5ngkzcsu@queper01-lin>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+On 08-Jul 12:08, Quentin Perret wrote:
+> Hi Patrick,
 
-[ Upstream commit 7c0c6095d48dcd0e67c917aa73cdbb2715aafc36 ]
+Hi Quentin!
 
-Adjust scale tests to check for new jmp sequence limit.
+> On Monday 08 Jul 2019 at 09:43:53 (+0100), Patrick Bellasi wrote:
+> > +static inline int uclamp_scale_from_percent(char *buf, u64 *value)
+> > +{
+> > +	*value = SCHED_CAPACITY_SCALE;
+> > +
+> > +	buf = strim(buf);
+> > +	if (strncmp("max", buf, 4)) {
+> > +		s64 percent;
+> > +		int ret;
+> > +
+> > +		ret = cgroup_parse_float(buf, 2, &percent);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		percent <<= SCHED_CAPACITY_SHIFT;
+> > +		*value = DIV_ROUND_CLOSEST_ULL(percent, 10000);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static inline u64 uclamp_percent_from_scale(u64 value)
+> > +{
+> > +	return DIV_ROUND_CLOSEST_ULL(value * 10000, SCHED_CAPACITY_SCALE);
+> > +}
+> 
+> FWIW, I tried the patches and realized these conversions result in a
+> 'funny' behaviour from a user's perspective. Things like this happen:
+> 
+>    $ echo 20 > cpu.uclamp.min
+>    $ cat cpu.uclamp.min
+>    20.2
+>    $ echo 20.2 > cpu.uclamp.min
+>    $ cat cpu.uclamp.min
+>    20.21
+> 
+> Having looked at the code, I get why this is happening, but I'm not sure
+> if a random user will. It's not an issue per se, but it's just a bit
+> weird.
 
-BPF_JGT had to be changed to BPF_JEQ because the verifier was
-too smart. It tracked the known safe range of R0 values
-and pruned the search earlier before hitting exact 8192 limit.
-bpf_semi_rand_get() was too (un)?lucky.
+Yes, that's what we get if we need to use a "two decimal digit
+precision percentage" to represent a 1024 range in kernel space.
 
-k = 0; was missing in bpf_fill_scale2.
-It was testing a bit shorter sequence of jumps than intended.
+I don't think the "percent <=> utilization" conversion code can be
+made more robust. The only possible alternative I see to get back
+exactly what we write in, is to store the actual request in kernel
+space, alongside its conversion to the SCHED_CAPACITY_SCALE required by the
+actual scheduler code.
 
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/bpf/test_verifier.c | 31 +++++++++++----------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+Something along these lines (on top of what we have in this series):
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 288cb740e005..6438d4dc8ae1 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -207,33 +207,35 @@ static void bpf_fill_rand_ld_dw(struct bpf_test *self)
- 	self->retval = (uint32_t)res;
+---8<---
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ddc5fcd4b9cf..82b28cfa5c3f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7148,40 +7148,35 @@ static void cpu_util_update_eff(struct cgroup_subsys_state *css)
+ 	}
  }
- 
--/* test the sequence of 1k jumps */
-+#define MAX_JMP_SEQ 8192
+
+-static inline int uclamp_scale_from_percent(char *buf, u64 *value)
++static inline int uclamp_scale_from_percent(char *buf, s64 *percent, u64 *scale)
+ {
+-	*value = SCHED_CAPACITY_SCALE;
++	*scale = SCHED_CAPACITY_SCALE;
+
+ 	buf = strim(buf);
+ 	if (strncmp("max", buf, 4)) {
+-		s64 percent;
+ 		int ret;
+
+-		ret = cgroup_parse_float(buf, 2, &percent);
++		ret = cgroup_parse_float(buf, 2, percent);
+ 		if (ret)
+ 			return ret;
+
+-		percent <<= SCHED_CAPACITY_SHIFT;
+-		*value = DIV_ROUND_CLOSEST_ULL(percent, 10000);
++		*scale = *percent << SCHED_CAPACITY_SHIFT;
++		*scale = DIV_ROUND_CLOSEST_ULL(*scale, 10000);
+ 	}
+
+ 	return 0;
+ }
+
+-static inline u64 uclamp_percent_from_scale(u64 value)
+-{
+-	return DIV_ROUND_CLOSEST_ULL(value * 10000, SCHED_CAPACITY_SCALE);
+-}
+-
+ static ssize_t cpu_uclamp_min_write(struct kernfs_open_file *of,
+ 				    char *buf, size_t nbytes,
+ 				    loff_t off)
+ {
+ 	struct task_group *tg;
+ 	u64 min_value;
++	s64 percent;
+ 	int ret;
+
+-	ret = uclamp_scale_from_percent(buf, &min_value);
++	ret = uclamp_scale_from_percent(buf, &percent, &min_value);
+ 	if (ret)
+ 		return ret;
+ 	if (min_value > SCHED_CAPACITY_SCALE)
+@@ -7197,6 +7192,9 @@ static ssize_t cpu_uclamp_min_write(struct kernfs_open_file *of,
+ 	/* Update effective clamps to track the most restrictive value */
+ 	cpu_util_update_eff(of_css(of));
+
++	/* Keep track of the actual requested value */
++	tg->uclamp_pct[UCLAMP_MIN] = percent;
 +
-+/* test the sequence of 8k jumps */
- static void bpf_fill_scale1(struct bpf_test *self)
- {
- 	struct bpf_insn *insn = self->fill_insns;
- 	int i = 0, k = 0;
- 
- 	insn[i++] = BPF_MOV64_REG(BPF_REG_6, BPF_REG_1);
--	/* test to check that the sequence of 1024 jumps is acceptable */
--	while (k++ < 1024) {
-+	/* test to check that the long sequence of jumps is acceptable */
-+	while (k++ < MAX_JMP_SEQ) {
- 		insn[i++] = BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
- 					 BPF_FUNC_get_prandom_u32);
--		insn[i++] = BPF_JMP_IMM(BPF_JGT, BPF_REG_0, bpf_semi_rand_get(), 2);
-+		insn[i++] = BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, bpf_semi_rand_get(), 2);
- 		insn[i++] = BPF_MOV64_REG(BPF_REG_1, BPF_REG_10);
- 		insn[i++] = BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
- 					-8 * (k % 64 + 1));
- 	}
--	/* every jump adds 1024 steps to insn_processed, so to stay exactly
--	 * within 1m limit add MAX_TEST_INSNS - 1025 MOVs and 1 EXIT
-+	/* every jump adds 1 step to insn_processed, so to stay exactly
-+	 * within 1m limit add MAX_TEST_INSNS - MAX_JMP_SEQ - 1 MOVs and 1 EXIT
- 	 */
--	while (i < MAX_TEST_INSNS - 1025)
-+	while (i < MAX_TEST_INSNS - MAX_JMP_SEQ - 1)
- 		insn[i++] = BPF_ALU32_IMM(BPF_MOV, BPF_REG_0, 42);
- 	insn[i] = BPF_EXIT_INSN();
- 	self->prog_len = i + 1;
- 	self->retval = 42;
- }
- 
--/* test the sequence of 1k jumps in inner most function (function depth 8)*/
-+/* test the sequence of 8k jumps in inner most function (function depth 8)*/
- static void bpf_fill_scale2(struct bpf_test *self)
- {
- 	struct bpf_insn *insn = self->fill_insns;
-@@ -245,19 +247,20 @@ static void bpf_fill_scale2(struct bpf_test *self)
- 		insn[i++] = BPF_EXIT_INSN();
- 	}
- 	insn[i++] = BPF_MOV64_REG(BPF_REG_6, BPF_REG_1);
--	/* test to check that the sequence of 1024 jumps is acceptable */
--	while (k++ < 1024) {
-+	/* test to check that the long sequence of jumps is acceptable */
-+	k = 0;
-+	while (k++ < MAX_JMP_SEQ) {
- 		insn[i++] = BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
- 					 BPF_FUNC_get_prandom_u32);
--		insn[i++] = BPF_JMP_IMM(BPF_JGT, BPF_REG_0, bpf_semi_rand_get(), 2);
-+		insn[i++] = BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, bpf_semi_rand_get(), 2);
- 		insn[i++] = BPF_MOV64_REG(BPF_REG_1, BPF_REG_10);
- 		insn[i++] = BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
- 					-8 * (k % (64 - 4 * FUNC_NEST) + 1));
- 	}
--	/* every jump adds 1024 steps to insn_processed, so to stay exactly
--	 * within 1m limit add MAX_TEST_INSNS - 1025 MOVs and 1 EXIT
-+	/* every jump adds 1 step to insn_processed, so to stay exactly
-+	 * within 1m limit add MAX_TEST_INSNS - MAX_JMP_SEQ - 1 MOVs and 1 EXIT
- 	 */
--	while (i < MAX_TEST_INSNS - 1025)
-+	while (i < MAX_TEST_INSNS - MAX_JMP_SEQ - 1)
- 		insn[i++] = BPF_ALU32_IMM(BPF_MOV, BPF_REG_0, 42);
- 	insn[i] = BPF_EXIT_INSN();
- 	self->prog_len = i + 1;
--- 
-2.20.1
+ 	rcu_read_unlock();
+ 	mutex_unlock(&uclamp_mutex);
 
+@@ -7209,9 +7207,10 @@ static ssize_t cpu_uclamp_max_write(struct kernfs_open_file *of,
+ {
+ 	struct task_group *tg;
+ 	u64 max_value;
++	s64 percent;
+ 	int ret;
+
+-	ret = uclamp_scale_from_percent(buf, &max_value);
++	ret = uclamp_scale_from_percent(buf, &percent, &max_value);
+ 	if (ret)
+ 		return ret;
+ 	if (max_value > SCHED_CAPACITY_SCALE)
+@@ -7227,6 +7226,9 @@ static ssize_t cpu_uclamp_max_write(struct kernfs_open_file *of,
+ 	/* Update effective clamps to track the most restrictive value */
+ 	cpu_util_update_eff(of_css(of));
+
++	/* Keep track of the actual requested value */
++	tg->uclamp_pct[UCLAMP_MAX] = percent;
++
+ 	rcu_read_unlock();
+ 	mutex_unlock(&uclamp_mutex);
+
+@@ -7251,7 +7253,7 @@ static inline void cpu_uclamp_print(struct seq_file *sf,
+ 		return;
+ 	}
+
+-	percent = uclamp_percent_from_scale(util_clamp);
++	percent = tg->uclamp_pct[clamp_id];
+ 	percent = div_u64_rem(percent, 100, &rem);
+ 	seq_printf(sf, "%llu.%u\n", percent, rem);
+ }
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 0e37f4a4e536..4f9b0c660310 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -395,6 +395,8 @@ struct task_group {
+ 	struct cfs_bandwidth	cfs_bandwidth;
+
+ #ifdef CONFIG_UCLAMP_TASK_GROUP
++	/* The two decimal precision [%] value requested from user-space */
++	unsigned int		uclamp_pct[UCLAMP_CNT];
+ 	/* Clamp values requested for a task group */
+ 	struct uclamp_se	uclamp_req[UCLAMP_CNT];
+ 	/* Effective clamp values used for a task group */
+---8<---
+
+> I guess one way to fix this would be to revert back to having a
+> 1024-scale for the cgroup interface too ... Though I understand Tejun
+> wanted % for consistency with other things.
+
+Yes that would be another option, which will also keep aligned the per-task
+and system-wide APIs with the CGroups one. Although, AFAIU, having two
+different APIs is not considered a major issue.
+
+> So, I'm not sure if this is still up for discussion, but in any case I
+> wanted to say I support your original idea of using a 1024-scale for the
+> cgroups interface, since that would solve the 'issue' above and keeps
+> things consistent with the per-task API too.
+
+
+Right, I'm personally more leaning toward either going back to use
+SCHED_CAPACITY_SCALE or the add the small change I suggested above.
+
+Tejun, Peter: any preference? Alternative suggestions?
+
+> Thanks,
+> Quentin
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
