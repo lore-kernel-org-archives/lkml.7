@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03D2C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB3C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36BA21537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC7F206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200720;
-	bh=ZAfC2BdUPmM5ghEIJn/MUgbjJZjPlBS0RDiZJpaogD4=;
+	s=default; t=1563200731;
+	bh=l3nzYXjz6e+MWj3R6nm1ldl2mmsYaeewaoBUMbpC9/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UO8mGpLz2cWFmGazO25VYWSiuqXsFSFacw/ZpAe6OE9vLDJUzDPJDl6U6xBLXOg8b
-	 Cup8p8VBymEjtCDnPXhbSptmFRbpxtB8/pqTCrokZwfWimuuxYtj8zRywlCnbp7f2K
-	 AYoM+bccGvEo1j20XzaIQkT6B7DJan+X9NBG0iZM=
+	b=umS8zS9PGGHMZmnqALxRsrl1h5My9ekTEicxbHa8rk1MylN5TBg+jxSDG4z6u4jUU
+	 JcXAiaqpamVVPuKKdTnVyrpWpN3ZGmcyAzCaf3O49g5T2sEEiZRd6q9YAadNAa20lw
+	 e17WF0oupUivnSyaRsVPMDJ9BxkefbqGw0rq9/9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390538AbfGOOZT (ORCPT
+        id S2391324AbfGOOZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60040 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391214AbfGOOZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:25:12 -0400
+        id S2390616AbfGOOZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:25:21 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A342053B;
-        Mon, 15 Jul 2019 14:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2D97217F4;
+        Mon, 15 Jul 2019 14:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200711;
-        bh=ZAfC2BdUPmM5ghEIJn/MUgbjJZjPlBS0RDiZJpaogD4=;
+        s=default; t=1563200720;
+        bh=l3nzYXjz6e+MWj3R6nm1ldl2mmsYaeewaoBUMbpC9/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K/J+dFh+A6XshTUkoWkvQqTOSQpAScGUoh+N851dirkERZF2kGAWQ/y/UPwQhp7+S
-         BWF02nE33KZtE8dvTyZvqbBtNJciov1iPUTnahKDWJA5Ep60KEXyOomZCwsh9ej8Wi
-         lMRnI4/f9FqdYu3HC+JAjQ/Bqqt1Btn2eXcxT6mE=
+        b=Rs5VF++36uejlreS73zM28RmEkgIInQjZRPgTdsqKWZfDuhtMaMTeWTd8emN/bPUW
+         s33XyorZUHZZAuTPmYW4XrLN9xRy0YukApfSbxi2AYP7pkFIzKDtrNLxavciq9jQLI
+         Q7ZxXa/oro2KQG11xQeYg/HOvTNIsLCbmM4SmnDQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 115/158] rslib: Fix decoding of shortened codes
-Date:   Mon, 15 Jul 2019 10:17:26 -0400
-Message-Id: <20190715141809.8445-115-sashal@kernel.org>
+Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 117/158] ixgbe: Check DDM existence in transceiver before access
+Date:   Mon, 15 Jul 2019 10:17:28 -0400
+Message-Id: <20190715141809.8445-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,44 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
 
-[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
+[ Upstream commit 655c91414579d7bb115a4f7898ee726fc18e0984 ]
 
-The decoding of shortenend codes is broken. It only works as expected if
-there are no erasures.
+Some transceivers may comply with SFF-8472 but not implement the Digital
+Diagnostic Monitoring (DDM) interface described in it. The existence of
+such area is specified by bit 6 of byte 92, set to 1 if implemented.
 
-When decoding with erasures, Lambda (the error and erasure locator
-polynomial) is initialized from the given erasure positions. The pad
-parameter is not accounted for by the initialisation code, and hence
-Lambda is initialized from incorrect erasure positions.
+Currently, due to not checking this bit ixgbe fails trying to read SFP
+module's eeprom with the follow message:
 
-The fix is to adjust the erasure positions by the supplied pad.
+ethtool -m enP51p1s0f0
+Cannot get Module EEPROM data: Input/output error
 
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
+Because it fails to read the additional 256 bytes in which it was assumed
+to exist the DDM data.
+
+This issue was noticed using a Mellanox Passive DAC PN 01FT738. The eeprom
+data was confirmed by Mellanox as correct and present in other Passive
+DACs in from other manufacturers.
+
+Signed-off-by: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
+Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/reed_solomon/decode_rs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c | 3 ++-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h     | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 1db74eb098d0..3313bf944ff1 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -99,9 +99,9 @@
- 	if (no_eras > 0) {
- 		/* Init lambda to be the erasure locator polynomial */
- 		lambda[1] = alpha_to[rs_modnn(rs,
--					      prim * (nn - 1 - eras_pos[0]))];
-+					prim * (nn - 1 - (eras_pos[0] + pad)))];
- 		for (i = 1; i < no_eras; i++) {
--			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
-+			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
- 			for (j = i + 1; j > 0; j--) {
- 				tmp = index_of[lambda[j - 1]];
- 				if (tmp != nn) {
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+index e5a8461fe6a9..8829bd95d0d3 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c
+@@ -3223,7 +3223,8 @@ static int ixgbe_get_module_info(struct net_device *dev,
+ 		page_swap = true;
+ 	}
+ 
+-	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap) {
++	if (sff8472_rev == IXGBE_SFF_SFF_8472_UNSUP || page_swap ||
++	    !(addr_mode & IXGBE_SFF_DDM_IMPLEMENTED)) {
+ 		/* We have a SFP, but it does not support SFF-8472 */
+ 		modinfo->type = ETH_MODULE_SFF_8079;
+ 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
+index 64e44e01c973..c56baad04ee6 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.h
+@@ -45,6 +45,7 @@
+ #define IXGBE_SFF_SOFT_RS_SELECT_10G		0x8
+ #define IXGBE_SFF_SOFT_RS_SELECT_1G		0x0
+ #define IXGBE_SFF_ADDRESSING_MODE		0x4
++#define IXGBE_SFF_DDM_IMPLEMENTED		0x40
+ #define IXGBE_SFF_QSFP_DA_ACTIVE_CABLE		0x1
+ #define IXGBE_SFF_QSFP_DA_PASSIVE_CABLE		0x8
+ #define IXGBE_SFF_QSFP_CONNECTOR_NOT_SEPARABLE	0x23
 -- 
 2.20.1
 
