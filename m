@@ -2,166 +2,93 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB3DC76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77364C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68F421738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OgRxe+A5"
+	by mail.kernel.org (Postfix) with ESMTP id 452D72171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 23:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563233841;
+	bh=rG3h1CCwAFZcD67QhSxNdHQ/Kh5vcwoW6i8O8rEvLxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VDRVfUFEtVhUpwMmV4QF0xgq6BxM+53FX8+oo7uMMNwh5gFhu6vc0JNcL43NnEQy6
+	 7UmJx9F45af1fkeQ0tDwZZePAURqQx06X1ntFKVAnrHRAA7fjN1hgcDjHhHRAzsHrt
+	 gp1n3pnpfGpJ3cF3JjJX96kSA4R945iYRhXfOu44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732655AbfGOXea (ORCPT
+        id S1732713AbfGOXhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 19:34:30 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11791 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727379AbfGOXe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 19:34:29 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2d0d8a0000>; Mon, 15 Jul 2019 16:34:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 15 Jul 2019 16:34:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 15 Jul 2019 16:34:28 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 15 Jul
- 2019 23:34:22 +0000
-Subject: Re: [PATCH] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-References: <20190709223556.28908-1-rcampbell@nvidia.com>
- <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
- <05fffcad-cf5e-8f0c-f0c7-6ffbd2b10c2e@nvidia.com>
- <20190715150031.49c2846f4617f30bca5f043f@linux-foundation.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <0ee5166a-26cd-a504-b9db-cffd082ecd38@nvidia.com>
-Date:   Mon, 15 Jul 2019 16:34:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 19:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731412AbfGOXhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 19:37:19 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33D9220693;
+        Mon, 15 Jul 2019 23:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563233839;
+        bh=rG3h1CCwAFZcD67QhSxNdHQ/Kh5vcwoW6i8O8rEvLxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y4A+RIVv9w6aNcb2AVOqzfA76/Z/mJYm9CUvm+FOJSElGvHz5RJIEE6B0+P/krc93
+         uZUO6RD1vpx5dmlRAX67rdUug14E06LKigjQuU9byBl1w+Ohs1pxLGLDgMgycI2GZb
+         EQKXNxH2fL2zXPa2aMicYFftOFt2VVJbXV9xVX0k=
+Date:   Mon, 15 Jul 2019 18:37:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
+ called in include/linux/pci.h
+Message-ID: <20190715233717.GA79424@google.com>
+References: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
+ <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+ <alpine.DEB.2.21.1907152138120.2564@felia>
 MIME-Version: 1.0
-In-Reply-To: <20190715150031.49c2846f4617f30bca5f043f@linux-foundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563233674; bh=h+BRneuTpawGqNjEBZFefMsMDl5kO4JZEpBOUwB1zsI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OgRxe+A50xtVuH+HsQIV6/bprmeVGbsbaB9lBSbyHuzVUuWGvBTurzo+o5F6zORfN
-         N/3R1l9mp4EACbf8HPX+47skIoVrJDcI2f30c9obXLSGBxMmch4ZlQ/RkpNmGq1uHq
-         yd5NXiTOUdDT50Y2cxZQItGpRtiMe4zSUBt8EpplppDt7ZNEztv0cgDHU8YSludWXJ
-         3oHds8mnWZb7IDJCV7pvnbquGQcWz/xxH8GZUVa0tLGarj4n8r/vjY4EoIjCUwVDhC
-         JCTAhWe1S8S9/da9QISXzHS4rr+wJFRUhZ6iuuPD/J5SFnrQxE6TWtKYYX/EaP5S4H
-         ZFOYnotJa/3zg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907152138120.2564@felia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 3:00 PM, Andrew Morton wrote:
-> On Tue, 9 Jul 2019 18:24:57 -0700 Ralph Campbell <rcampbell@nvidia.com> w=
-rote:
->=20
->>
->> On 7/9/19 5:28 PM, Andrew Morton wrote:
->>> On Tue, 9 Jul 2019 15:35:56 -0700 Ralph Campbell <rcampbell@nvidia.com>=
- wrote:
->>>
->>>> When migrating a ZONE device private page from device memory to system
->>>> memory, the subpage pointer is initialized from a swap pte which compu=
-tes
->>>> an invalid page pointer. A kernel panic results such as:
->>>>
->>>> BUG: unable to handle page fault for address: ffffea1fffffffc8
->>>>
->>>> Initialize subpage correctly before calling page_remove_rmap().
->>>
->>> I think this is
->>>
->>> Fixes:  a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE=
- page in migration")
->>> Cc: stable
->>>
->>> yes?
->>>
->>
->> Yes. Can you add this or should I send a v2?
->=20
-> I updated the patch.  Could we please have some review input?
->=20
->=20
-> From: Ralph Campbell <rcampbell@nvidia.com>
-> Subject: mm/hmm: fix bad subpage pointer in try_to_unmap_one
->=20
-> When migrating a ZONE device private page from device memory to system
-> memory, the subpage pointer is initialized from a swap pte which computes
-> an invalid page pointer. A kernel panic results such as:
->=20
-> BUG: unable to handle page fault for address: ffffea1fffffffc8
->=20
-> Initialize subpage correctly before calling page_remove_rmap().
->=20
-> Link: http://lkml.kernel.org/r/20190709223556.28908-1-rcampbell@nvidia.co=
-m
-> Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE pa=
-ge in migration")
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
->=20
->  mm/rmap.c |    1 +
->  1 file changed, 1 insertion(+)
->=20
-> --- a/mm/rmap.c~mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one
-> +++ a/mm/rmap.c
-> @@ -1476,6 +1476,7 @@ static bool try_to_unmap_one(struct page
->  			 * No need to invalidate here it will synchronize on
->  			 * against the special swap migration pte.
->  			 */
-> +			subpage =3D page;
->  			goto discard;
->  		}
-> =20
+On Mon, Jul 15, 2019 at 09:42:47PM +0200, Lukas Bulwahn wrote:
+> On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
+> 
+> > Remove the following uncalled functions from include/linux/pci.h:
+> > 
+> >         pci_block_cfg_access()
+> >         pci_block_cfg_access_in_atomic()
+> >         pci_unblock_cfg_access()
+> > 
+> > Functions were added in patch fb51ccbf217c "PCI: Rework config space
+> > blocking services", ...
 
-Hi Ralph and everyone,
+> Also note that commits are referred to with this format:
+> 
+> commit <12-character sha prefix> ("<commit message>")
 
-While the above prevents a crash, I'm concerned that it is still not
-an accurate fix. This fix leads to repeatedly removing the rmap, against th=
-e
-same struct page, which is odd, and also doesn't directly address the
-root cause, which I understand to be: this routine can't handle migrating
-the zero page properly--over and back, anyway. (We should also mention more=
-=20
-about how this is triggered, in the commit description.)
+FWIW, I use this shell alias to generate these references:
 
-I'll take a closer look at possible fixes (I have to step out for a bit) so=
-on,=20
-but any more experienced help is also appreciated here.
+  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+  $ gsr fb51ccb
+  fb51ccbf217c ("PCI: Rework config space blocking services")
+
+Documentation/process/submitting-patches.rst mentions a 12-char (at
+least) SHA-1 but the e21d2170f36 example shows a *20*-char SHA-1,
+which seems excessive to me.
+
+I personally skip the word "commit" because I figure it's pretty
+obvious what it is, but it's fine either way.
+
+Bjorn
