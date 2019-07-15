@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA76C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCFDC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083D92086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D6A2086C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202354;
-	bh=2suqqsT+2Pk6XpVp+/aktRg0n3elcVkBB4wbALp421Y=;
+	s=default; t=1563202357;
+	bh=iEm+teuS33iZnnbykkyHG72+fGcBQ6+kaoeVAH4pEKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzPx+LuxyL8AokLq8erxHuP+MO5xMiGVpBGlWLlb9wvZv5PCVsibQcfLS1m9/P3tm
-	 q5deh3btFjksR1QKjXqLimJj4kW4RND9nRGfYZWbskW5EUL2JOLZzmNvXvkeuXlZ5k
-	 nzNxaca2HQ5L4OQeBdW9zotyynCKPrUklnSmFkY4=
+	b=cbMr5HMhlPQ5pEDnjsw6tmAbiCH6OJX2vHfAZUgT+K/wQ/Wc8HxvCIuHTpjzWHLDk
+	 MLQg5gJvbNk/uxAC2Ykh3JwCEUOUjpxsAuO5biT/5xi5wql4jqfRG+RgUdcd0vOFan
+	 P6+WtKVh7zvPa0DAly9xkDXbq9I+UlG8HAABv9gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391209AbfGOOaq (ORCPT
+        id S2391213AbfGOOao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403902AbfGOOan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:30:43 -0400
+        id S1732596AbfGOOal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:30:41 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC036205ED;
-        Mon, 15 Jul 2019 14:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C58521537;
+        Mon, 15 Jul 2019 14:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201042;
-        bh=2suqqsT+2Pk6XpVp+/aktRg0n3elcVkBB4wbALp421Y=;
+        s=default; t=1563201040;
+        bh=iEm+teuS33iZnnbykkyHG72+fGcBQ6+kaoeVAH4pEKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=illTm88/9dyEoChpyzyvm9IaMkG3XqAleGpfAkuBTuSSKDEypqUluOxnGteJu+gou
-         6yDi5dwYdmZOdzVx8nJ3ciQIV2rdYE7xDE8jA4U24KNogKzb7QsN7WjK01/9RhOQ+c
-         IlMoI0xhwW0irnN5GSliGzw1OyD1AwpK576JRBuQ=
+        b=bRg6HBMWIQWiZ79/Mkh4xZBbM0q/z0A+kJCPkdGebQ0ayxZZd9Lw7q8TQSRYKk4ui
+         BMsGaKxMydMfSIru+8NPLAWOnKvCDk/9EG6a0n4zw27AVcytxlnlZUMPe1NzUpVH/m
+         Etwn6UVhbFZXMo9oiyDBEi8bWOhaYy6Zv6apfOcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
+Cc:     Biao Huang <biao.huang@mediatek.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 034/105] net: fec: Do not use netdev messages too early
-Date:   Mon, 15 Jul 2019 10:27:28 -0400
-Message-Id: <20190715142839.9896-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 033/105] net: stmmac: dwmac4: fix flow control issue
+Date:   Mon, 15 Jul 2019 10:27:27 -0400
+Message-Id: <20190715142839.9896-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -59,49 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
+[ Upstream commit ee326fd01e79dfa42014d55931260b68b9fa3273 ]
 
-When a valid MAC address is not found the current messages
-are shown:
+Current dwmac4_flow_ctrl will not clear
+GMAC_RX_FLOW_CTRL_RFE/GMAC_RX_FLOW_CTRL_RFE bits,
+so MAC hw will keep flow control on although expecting
+flow control off by ethtool. Add codes to fix it.
 
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
-
-Since the network device has not been registered at this point, it is better
-to use dev_err()/dev_info() instead, which will provide cleaner log
-messages like these:
-
-fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
-
-Tested on a imx6dl-pico-pi board.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 98cd53d380f7..0ae6532b02e0 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1690,10 +1690,10 @@ static void fec_get_mac(struct net_device *ndev)
- 	 */
- 	if (!is_valid_ether_addr(iap)) {
- 		/* Report it and use a random ethernet address instead */
--		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
-+		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
- 		eth_hw_addr_random(ndev);
--		netdev_info(ndev, "Using random MAC address: %pM\n",
--			    ndev->dev_addr);
-+		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
-+			 ndev->dev_addr);
- 		return;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index ed5fcd4994f2..8445af580cb6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -474,8 +474,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 	if (fc & FLOW_RX) {
+ 		pr_debug("\tReceive Flow-Control ON\n");
+ 		flow |= GMAC_RX_FLOW_CTRL_RFE;
+-		writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
  	}
++	writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
++
+ 	if (fc & FLOW_TX) {
+ 		pr_debug("\tTransmit Flow-Control ON\n");
+ 
+@@ -483,7 +484,7 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 			pr_debug("\tduplex mode: PAUSE %d\n", pause_time);
+ 
+ 		for (queue = 0; queue < tx_cnt; queue++) {
+-			flow |= GMAC_TX_FLOW_CTRL_TFE;
++			flow = GMAC_TX_FLOW_CTRL_TFE;
+ 
+ 			if (duplex)
+ 				flow |=
+@@ -491,6 +492,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
+ 
+ 			writel(flow, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
+ 		}
++	} else {
++		for (queue = 0; queue < tx_cnt; queue++)
++			writel(0, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
+ 	}
+ }
  
 -- 
 2.20.1
