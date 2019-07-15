@@ -2,198 +2,109 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF57C76198
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66B8C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5970E21852
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LBDEVHZw"
+	by mail.kernel.org (Postfix) with ESMTP id 84EFA20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563201911;
+	bh=0M1AXxRjjfxaMQFoRK/xPFp4R+B3OCyCcpSb+7D2T8M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Evjcs6ptEbKrS5cVG3Fmu0cs1ScIQ1Lzp+tN2pm293uc9RAOysN0r88SSG+sxCsEB
+	 8b3lPYuNPn4ZlZsAnnugon+fvis9caU7p0t8NJ/MQCMk6hprAEhcMpDqZ+DRDKZRP5
+	 /8+O6wvkuh++ifiAK0K/IPF90MupzZoOB/b5tRPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391795AbfGOOhZ (ORCPT
+        id S2404862AbfGOOpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:37:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41497 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404367AbfGOOhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:37:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q4so7807461pgj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 07:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E7QZZq5pfHTgMJ3vH2UDhoOJrQnPKGkzOZ3GHEEUhcU=;
-        b=LBDEVHZwxQfvLHpYfqXUjHIC7+eaXCEg0P4lmbNzqfUZVyptAL1NxCuL5fnTBDOT3t
-         fSgDaEOqCi+Lof2MfQoZFSAG0K7rTeXzv99iBcCCWlK1BmnRADMoZ+hYjTSdSHxXGbhJ
-         pa4NywCtevulj0BPrbxEkfRYgFesbgb1OL/Ig=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E7QZZq5pfHTgMJ3vH2UDhoOJrQnPKGkzOZ3GHEEUhcU=;
-        b=GqXXH71hiqy+nj/nyIWdsCWQ3abCEsBOyNKoapIAYwenxvqWHcfbi7VyIPNw5IGX8L
-         ihSkdxXOpS9P3gTZAi5GZ9mjSgBa04bTqXuyH/F7M4gBhuPKKYQevYwXAIlVDueSIFBl
-         dXGromzOuQE5oHdSaj2W4jjaNRj38mFybiV+xbn2SyuznxhWHe5ao0qUm8Y7VqMrir5D
-         0QAf4Wl8LjMhnsFXy3tj6PwF0912/dg4fUlR7pCGoDRiDjM0J31pl9gNqlpxPyFHvgjr
-         d+pv4p9HS1SSACFoR6cozr+aEPAEbFNNyJWkPj60ryDjbVszYY1J7FiOp9MLYRUmnMp7
-         n0Aw==
-X-Gm-Message-State: APjAAAXn294W/B2JPoWSSLDoFqCT8mY2ZD1iLfumSljRaSe3XGt/i/qZ
-        oThjYsaY5AXbsnT4TCUrA47KV562
-X-Google-Smtp-Source: APXvYqwAlvkHRb1Bt1ZxYce12JrE+evqy+VNsHjMa37inD7oSkAilDXywijCgWzsSyfjuIz+vnfRGg==
-X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr29432734pjp.47.1563201433872;
-        Mon, 15 Jul 2019 07:37:13 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s66sm18381852pfs.8.2019.07.15.07.37.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 07:37:13 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
+        Mon, 15 Jul 2019 10:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404425AbfGOOhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:37:20 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 402F3217D8;
+        Mon, 15 Jul 2019 14:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563201439;
+        bh=0M1AXxRjjfxaMQFoRK/xPFp4R+B3OCyCcpSb+7D2T8M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ulpKuSr7ETrk9xy8hWwe8OLt5zIEKBYPCCyfkbEOBagey2T6yXzFO0OI7RNTuTacn
+         ir5IHPs1XzjfTWYH1kIc+URqOnM1+CacXezvhb7PP6NUAaDqZXwb9+Q5GzyeHMLWdf
+         CUaG8/aBEkHnKc7vSqoYcBjrm1sbgkOOu5GX907o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Daniel Lezcano <daniel.lezcano@free.fr>,
+        Serge Hallyn <serge@hallyn.com>,
         Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH 0/9] Harden list_for_each_entry_rcu() and family
-Date:   Mon, 15 Jul 2019 10:36:56 -0400
-Message-Id: <20190715143705.117908-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 13/73] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+Date:   Mon, 15 Jul 2019 10:35:29 -0400
+Message-Id: <20190715143629.10893-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
+References: <20190715143629.10893-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-This series aims to provide lockdep checking to RCU list macros for additional
-kernel hardening.
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-RCU has a number of primitives for "consumption" of an RCU protected pointer.
-Most of the time, these consumers make sure that such accesses are under a RCU
-reader-section (such as rcu_dereference{,sched,bh} or under a lock, such as
-with rcu_dereference_protected()).
+[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
 
-However, there are other ways to consume RCU pointers, such as by
-list_for_each_entry_rcu or hlist_for_each_enry_rcu. Unlike the rcu_dereference
-family, these consumers do no lockdep checking at all. And with the growing
-number of RCU list uses (1000+), it is possible for bugs to creep in and go
-unnoticed which lockdep checks can catch.
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-Since RCU consolidation efforts last year, the different traditional RCU
-flavors (preempt, bh, sched) are all consolidated. In other words, any of these
-flavors can cause a reader section to occur and all of them must cease before
-the reader section is considered to be unlocked. Thanks to this, we can
-generically check if we are in an RCU reader. This is what patch 1 does. Note
-that the list_for_each_entry_rcu and family are different from the
-rcu_dereference family in that, there is no _bh or _sched version of this
-macro. They are used under many different RCU reader flavors, and also SRCU.
-Patch 1 adds a new internal function rcu_read_lock_any_held() which checks
-if any reader section is active at all, when these macros are called. If no
-reader section exists, then the optional fourth argument to
-list_for_each_entry_rcu() can be a lockdep expression which is evaluated
-(similar to how rcu_dereference_check() works). If no lockdep expression is
-passed, and we are not in a reader, then a splat occurs. Just take off the
-lockdep expression after applying the patches, by using the following diff and
-see what happens:
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
 
-+++ b/arch/x86/pci/mmconfig-shared.c
-@@ -55,7 +55,7 @@ static void list_add_sorted(struct pci_mmcfg_region *new)
-        struct pci_mmcfg_region *cfg;
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
 
-        /* keep list sorted by segment and starting bus number */
--       list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list, pci_mmcfg_lock_held()) {
-+       list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list) {
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
 
+Cc: Daniel Lezcano <daniel.lezcano@free.fr>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/pid_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The optional argument trick to list_for_each_entry_rcu() can also be used in
-the future to possibly remove rcu_dereference_{,bh,sched}_protected() API and
-we can pass an optional lockdep expression to rcu_dereference() itself. Thus
-eliminating 3 more RCU APIs.
-
-Note that some list macro wrappers already do their own lockdep checking in the
-caller side. These can be eliminated in favor of the built-in lockdep checking
-in the list macro that this series adds. For example, workqueue code has a
-assert_rcu_or_wq_mutex() function which is called in for_each_wq().  This
-series replaces that in favor of the built-in check.
-
-Also in the future, we can extend these checks to list_entry_rcu() and other
-list macros as well, if needed.
-
-Please note that I have kept this option default-disabled under a new config:
-CONFIG_PROVE_RCU_LIST. This is so that until all users are converted to pass
-the optional argument, we should keep the check disabled. There are about a
-1000 or so users and it is not possible to pass in the optional lockdep
-expression in a single series since it is done on a case-by-case basis. I did
-convert a few users in this series itself.
-
-v2->v3: Simplified rcu-sync logic after rebase (Paul)
-	Added check for bh_map (Paul)
-	Refactored out more of the common code (Joel)
-	Added Oleg ack to rcu-sync patch.
-
-v1->v2: Have assert_rcu_or_wq_mutex deleted (Daniel Jordan)
-	Simplify rcu_read_lock_any_held()   (Peter Zijlstra)
-	Simplified rcu-sync logic	    (Oleg Nesterov)
-	Updated documentation and rculist comments.
-	Added GregKH ack.
-
-RFC->v1: 
-	Simplify list checking macro (Rasmus Villemoes)
-
-Joel Fernandes (Google) (9):
-rcu/update: Remove useless check for debug_locks (v1)
-rcu: Add support for consolidated-RCU reader checking (v3)
-rcu/sync: Remove custom check for reader-section (v2)
-ipv4: add lockdep condition to fix for_each_entry (v1)
-driver/core: Convert to use built-in RCU list checking (v1)
-workqueue: Convert for_each_wq to use built-in list check (v2)
-x86/pci: Pass lockdep condition to pcm_mmcfg_list iterator (v1)
-acpi: Use built-in RCU list checking for acpi_ioremaps list (v1)
-doc: Update documentation about list_for_each_entry_rcu (v1)
-
-Documentation/RCU/lockdep.txt   | 15 ++++++++---
-Documentation/RCU/whatisRCU.txt |  9 ++++++-
-arch/x86/pci/mmconfig-shared.c  |  5 ++--
-drivers/acpi/osl.c              |  6 +++--
-drivers/base/base.h             |  1 +
-drivers/base/core.c             | 10 +++++++
-drivers/base/power/runtime.c    | 15 +++++++----
-include/linux/rcu_sync.h        |  4 +--
-include/linux/rculist.h         | 28 +++++++++++++++----
-include/linux/rcupdate.h        |  7 +++++
-kernel/rcu/Kconfig.debug        | 11 ++++++++
-kernel/rcu/update.c             | 48 ++++++++++++++++++---------------
-kernel/workqueue.c              | 10 ++-----
-net/ipv4/fib_frontend.c         |  3 ++-
-14 files changed, 119 insertions(+), 53 deletions(-)
-
---
-2.22.0.510.g264f2c817a-goog
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index 3976dd57db78..0eab538841fd 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -344,7 +344,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
+ 	}
+ 
+ 	read_lock(&tasklist_lock);
+-	force_sig(SIGKILL, pid_ns->child_reaper);
++	send_sig(SIGKILL, pid_ns->child_reaper, 1);
+ 	read_unlock(&tasklist_lock);
+ 
+ 	do_exit(0);
+-- 
+2.20.1
 
