@@ -2,301 +2,190 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A903C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05517C76190
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB13820838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA3120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfGOJHY (ORCPT
+        id S1729600AbfGOJHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:07:24 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:60903 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729394AbfGOJHX (ORCPT
+        Mon, 15 Jul 2019 05:07:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36051 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729394AbfGOJHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:07:23 -0400
-X-UUID: 6ffbccff376f450eadcfd93ba8974f76-20190715
-X-UUID: 6ffbccff376f450eadcfd93ba8974f76-20190715
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1099073220; Mon, 15 Jul 2019 17:07:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 15 Jul 2019 17:07:17 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 15 Jul 2019 17:07:17 +0800
-Message-ID: <1563181637.6212.1.camel@mtksdaap41>
-Subject: Re: [PATCH v6 14/14] arm64: dts: Add power controller device node
- of MT8183
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Yong Wu <yong.wu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 15 Jul 2019 17:07:17 +0800
-In-Reply-To: <1563178045.17756.5.camel@mtksdaap41>
-References: <1560998286-9189-1-git-send-email-weiyi.lu@mediatek.com>
-         <1560998286-9189-15-git-send-email-weiyi.lu@mediatek.com>
-         <1561971461.12937.8.camel@mtksdaap41> <1563178045.17756.5.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 15 Jul 2019 05:07:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so16233455wrs.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 02:07:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iIpNhGzg6P5/kknOVL3At51YBOM3pwLE0ZzAOv+ZuqM=;
+        b=hUEG2sYiNOdw0k+VVRJS1sxtxUzdYY4b+GXaSgmVyWgFUGiaNxtSWxUj8ASkPdITq+
+         NeAPh7v61A5sQBhUTWbC/v7RcNBHtth/Qyh7rVvzOkubbxpZQYLD9YosYwh5qn14vuZR
+         HOWgPEnXsW/v+PYUAllYN64Xic9K6rCrnh98KTHyodGArIxxHV2nAIgCAuDj3IFsGLZa
+         tl0DKvx+WO2BXTOGPX6AsBeK/my8peliv8DGKRc+Jqt7ZFpPA1vgycqxJyBWL+6Oe2Ya
+         E3eAT1rJ3zKm76WQKsnCRFtbSnxDqmNQh+ap6vrhUFZnHFr8TELo7UHTpShDdxwM0rbU
+         IPZg==
+X-Gm-Message-State: APjAAAXSci9lgBRoZKIVnSmFEgYyqb4nd5TPmOuSpj4pqgtk7awYsX3D
+        niHc5XOs2kBY3e4zDzYYY1wiAg==
+X-Google-Smtp-Source: APXvYqyaZd+NyYvWPkdjEU1+MpmkHgjx4zJEDQ81Tovwqc2sbwpA8fHg9HbrB24JFIfbbprCMrzmQg==
+X-Received: by 2002:adf:ea88:: with SMTP id s8mr23565961wrm.68.1563181650201;
+        Mon, 15 Jul 2019 02:07:30 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e983:8394:d6:a612? ([2001:b07:6468:f312:e983:8394:d6:a612])
+        by smtp.gmail.com with ESMTPSA id x185sm8422412wmg.46.2019.07.15.02.07.29
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 02:07:29 -0700 (PDT)
+Subject: Re: [PATCH 04/22] x86/kvm: Don't call kvm_spurious_fault() from
+ .fixup
+To:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
+ <1f37a9e42732c224bc5299dbc827b4101c9deb22.1563150885.git.jpoimboe@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <07b8513a-d8f7-f8cf-daf6-83a80ade987a@redhat.com>
+Date:   Mon, 15 Jul 2019 11:07:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: E85F5C133B8ECC2E8D1DE3A88F2319535B6D2C018EE2364BE17426B7BBCAD5252000:8
-X-MTK:  N
+In-Reply-To: <1f37a9e42732c224bc5299dbc827b4101c9deb22.1563150885.git.jpoimboe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-07-15 at 16:07 +0800, CK Hu wrote:
-> Hi, Weiyi:
+On 15/07/19 02:36, Josh Poimboeuf wrote:
+> After making a change to improve objtool's sibling call detection, it
+> started showing the following warning:
 > 
-> On Mon, 2019-07-01 at 16:57 +0800, CK Hu wrote:
-> > Hi, Weiyi:
-> > 
-> > On Thu, 2019-06-20 at 10:38 +0800, Weiyi Lu wrote:
-> > > Add power controller node and smi-common node for MT8183
-> > > In scpsys node, it contains clocks and regmapping of
-> > > infracfg and smi-common for bus protection.
-> > > 
-> > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > > ---
-> > >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 62 ++++++++++++++++++++++++++++++++
-> > >  1 file changed, 62 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > index 08274bf..75c4881 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > @@ -8,6 +8,7 @@
-> > >  #include <dt-bindings/clock/mt8183-clk.h>
-> > >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > >  #include <dt-bindings/interrupt-controller/irq.h>
-> > > +#include <dt-bindings/power/mt8183-power.h>
-> > >  
-> > >  / {
-> > >  	compatible = "mediatek,mt8183";
-> > > @@ -196,6 +197,62 @@
-> > >  			#clock-cells = <1>;
-> > >  		};
-> > >  
-> > > +		scpsys: syscon@10006000 {
-> > > +			compatible = "mediatek,mt8183-scpsys", "syscon";
-> > > +			#power-domain-cells = <1>;
-> > > +			reg = <0 0x10006000 0 0x1000>;
-> > > +			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
-> > > +				 <&infracfg CLK_INFRA_AUDIO>,
-> > > +				 <&infracfg CLK_INFRA_AUDIO_26M_BCLK>,
-> > > +				 <&topckgen CLK_TOP_MUX_MFG>,
-> > > +				 <&topckgen CLK_TOP_MUX_MM>,
-> > > +				 <&topckgen CLK_TOP_MUX_CAM>,
-> > > +				 <&topckgen CLK_TOP_MUX_IMG>,
-> > > +				 <&topckgen CLK_TOP_MUX_IPU_IF>,
-> > > +				 <&topckgen CLK_TOP_MUX_DSP>,
-> > > +				 <&topckgen CLK_TOP_MUX_DSP1>,
-> > > +				 <&topckgen CLK_TOP_MUX_DSP2>,
-> > > +				 <&mmsys CLK_MM_SMI_COMMON>,
-> > > +				 <&mmsys CLK_MM_SMI_LARB0>,
-> > > +				 <&mmsys CLK_MM_SMI_LARB1>,
-> > > +				 <&mmsys CLK_MM_GALS_COMM0>,
-> > > +				 <&mmsys CLK_MM_GALS_COMM1>,
-> > > +				 <&mmsys CLK_MM_GALS_CCU2MM>,
-> > > +				 <&mmsys CLK_MM_GALS_IPU12MM>,
-> > > +				 <&mmsys CLK_MM_GALS_IMG2MM>,
-> > > +				 <&mmsys CLK_MM_GALS_CAM2MM>,
-> > > +				 <&mmsys CLK_MM_GALS_IPU2MM>,
+>   arch/x86/kvm/vmx/nested.o: warning: objtool: .fixup+0x15: sibling call from callable instruction with modified stack frame
 > 
-> I've removed all mmsys clock in scpsys node and display still works, so
-> I think these subsys clock could be removed from scpsys node. It's
-> reasonable that subsys clock is controlled by subsys device or the
-> device use it. In MT2712 [1], the scpsys does not control subsys clock
-> and it works, so I think you should remove subsys clock in scpsys device
-> node.
+> The problem is the ____kvm_handle_fault_on_reboot() macro.  It does a
+> fake call by pushing a fake RIP and doing a jump.  That tricks the
+> unwinder into printing the function which triggered the exception,
+> rather than the .fixup code.
 > 
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/mediatek/mt2712e.dtsi?h=v5.2
+> Instead of the hack to make it look like the original function made the
+> call, just change the macro so that the original function actually does
+> make the call.  This allows removal of the hack, and also makes objtool
+> happy.
 > 
-> Regards,
-> CK
+> I triggered a vmx instruction exception and verified that the stack
+> trace is still sane:
 > 
+>   kernel BUG at arch/x86/kvm/x86.c:358!
+>   invalid opcode: 0000 [#1] SMP PTI
+>   CPU: 28 PID: 4096 Comm: qemu-kvm Not tainted 5.2.0+ #16
+>   Hardware name: Lenovo THINKSYSTEM SD530 -[7X2106Z000]-/-[7X2106Z000]-, BIOS -[TEE113Z-1.00]- 07/17/2017
+>   RIP: 0010:kvm_spurious_fault+0x5/0x10
+>   Code: 00 00 00 00 00 8b 44 24 10 89 d2 45 89 c9 48 89 44 24 10 8b 44 24 08 48 89 44 24 08 e9 d4 40 22 00 0f 1f 40 00 0f 1f 44 00 00 <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
+>   RSP: 0018:ffffbf91c683bd00 EFLAGS: 00010246
+>   RAX: 000061f040000000 RBX: ffff9e159c77bba0 RCX: ffff9e15a5c87000
+>   RDX: 0000000665c87000 RSI: ffff9e15a5c87000 RDI: ffff9e159c77bba0
+>   RBP: 0000000000000000 R08: 0000000000000000 R09: ffff9e15a5c87000
+>   R10: 0000000000000000 R11: fffff8f2d99721c0 R12: ffff9e159c77bba0
+>   R13: ffffbf91c671d960 R14: ffff9e159c778000 R15: 0000000000000000
+>   FS:  00007fa341cbe700(0000) GS:ffff9e15b7400000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 00007fdd38356804 CR3: 00000006759de003 CR4: 00000000007606e0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   PKRU: 55555554
+>   Call Trace:
+>    loaded_vmcs_init+0x4f/0xe0
+>    alloc_loaded_vmcs+0x38/0xd0
+>    vmx_create_vcpu+0xf7/0x600
+>    kvm_vm_ioctl+0x5e9/0x980
+>    ? __switch_to_asm+0x40/0x70
+>    ? __switch_to_asm+0x34/0x70
+>    ? __switch_to_asm+0x40/0x70
+>    ? __switch_to_asm+0x34/0x70
+>    ? free_one_page+0x13f/0x4e0
+>    do_vfs_ioctl+0xa4/0x630
+>    ksys_ioctl+0x60/0x90
+>    __x64_sys_ioctl+0x16/0x20
+>    do_syscall_64+0x55/0x1c0
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>   RIP: 0033:0x7fa349b1ee5b
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 33 ++++++++++++++++++---------------
+>  1 file changed, 18 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 0cc5b611a113..af7e18c05f98 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1499,22 +1499,25 @@ enum {
+>  /*
+>   * Hardware virtualization extension instructions may fault if a
+>   * reboot turns off virtualization while processes are running.
+> - * Trap the fault and ignore the instruction if that happens.
+> + * If that happens, trap the fault and panic (unless we're rebooting).
 
-Hello CK,
+Not sure the comment is better than before, but apar from that
 
-Sorry, I can't agree with you at all.
-I thought you just created an environment where the MM (DISP) power
-domain could not be turned on and off properly.
-If you delete those mmsys clocks listed, bus protection will not work.
-These clocks are used for bus protection that I mentioned in patch [2].
-I guess you are now trying to solve the problem that mmsys blocks are
-used for probing two drivers. One for the display and another for the
-clock. Right?
-In the previous test you mentioned, you have affected the registration
-of mmsys clock first. This is why you saw the boot failure. I think boot
-failure is the real problem I should avoid if mmsys clock cannot probe.
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-[2] https://patchwork.kernel.org/patch/11005747/
+Thanks for the cleanups!
 
+Paolo
+
+>   */
+> -asmlinkage void kvm_spurious_fault(void);
+> -
+> -#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)	\
+> -	"666: " insn "\n\t" \
+> -	"668: \n\t"                           \
+> -	".pushsection .fixup, \"ax\" \n" \
+> -	"667: \n\t" \
+> -	cleanup_insn "\n\t"		      \
+> -	"cmpb $0, kvm_rebooting \n\t"	      \
+> -	"jne 668b \n\t"      		      \
+> -	__ASM_SIZE(push) " $666b \n\t"	      \
+> -	"jmp kvm_spurious_fault \n\t"	      \
+> -	".popsection \n\t" \
+> -	_ASM_EXTABLE(666b, 667b)
+> +asmlinkage void __noreturn kvm_spurious_fault(void);
+> +
+> +#define ____kvm_handle_fault_on_reboot(insn, cleanup_insn)		\
+> +	"666: \n\t"							\
+> +	insn "\n\t"							\
+> +	"jmp	668f \n\t"						\
+> +	"667: \n\t"							\
+> +	"call	kvm_spurious_fault \n\t"				\
+> +	"668: \n\t"							\
+> +	".pushsection .fixup, \"ax\" \n\t"				\
+> +	"700: \n\t"							\
+> +	cleanup_insn "\n\t"						\
+> +	"cmpb	$0, kvm_rebooting\n\t"					\
+> +	"je	667b \n\t"						\
+> +	"jmp	668b \n\t"						\
+> +	".popsection \n\t"						\
+> +	_ASM_EXTABLE(666b, 700b)
+>  
+>  #define __kvm_handle_fault_on_reboot(insn)		\
+>  	____kvm_handle_fault_on_reboot(insn, "")
 > 
-> > 
-> > Up to now, MT8183 mmsys has the same resource with another device node:
-> > 
-> > 		mmsys: syscon@14000000 {
-> > 			compatible = "mediatek,mt8183-mmsys", "syscon";
-> > 			reg = <0 0x14000000 0 0x1000>;
-> > 			#clock-cells = <1>;
-> > 		};
-> > 
-> > 		display_components: dispsys@14000000 {
-> > 			compatible = "mediatek,mt8183-display";
-> > 			reg = <0 0x14000000 0 0x1000>;
-> > 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> > 		};
-> > 
-> > I think this two node should be merge into one node, so I've try to
-> > merge them:
-> > 
-> > 		mmsys: syscon@14000000 {
-> > 			compatible = "mediatek,mt8183-mmsys", "syscon";
-> > 			reg = <0 0x14000000 0 0x1000>;
-> > 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> > 			#clock-cells = <1>;
-> > 		};
-> > 
-> > But I got a kernel panic when boot,
-> > 
-> > [    3.458523] Unable to handle kernel paging request at virtual address
-> > fffffffffffffdfb
-> > [    3.466999] Mem abort info:
-> > [    3.470116]   ESR = 0x96000005
-> > [    3.473268]   Exception class = DABT (current EL), IL = 32 bits
-> > [    3.479375]   SET = 0, FnV = 0
-> > [    3.482530]   EA = 0, S1PTW = 0
-> > [    3.485785] Data abort info:
-> > [    3.488831]   ISV = 0, ISS = 0x00000005
-> > [    3.493067]   CM = 0, WnR = 0
-> > [    3.496229] swapper pgtable: 4k pages, 39-bit VAs, pgdp =
-> > 000000004f8fa26d
-> > [    3.503214] [fffffffffffffdfb] pgd=0000000000000000,
-> > pud=0000000000000000
-> > [    3.510408] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> > [    3.515974] Modules linked in:
-> > [    3.519023] Process kworker/0:3 (pid: 106, stack limit =
-> > 0x00000000281d0651)
-> > [    3.526066] CPU: 0 PID: 106 Comm: kworker/0:3 Tainted: G        W
-> > 4.19.43 #208
-> > [    3.533974] Hardware name: MediaTek kukui rev1 board (DT)
-> > [    3.539374] Workqueue: events deferred_probe_work_func
-> > [    3.544507] pstate: 20000005 (nzCv daif -PAN -UAO)
-> > [    3.549294] pc : clk_prepare+0x18/0x40
-> > [    3.553038] lr : scpsys_clk_enable+0x40/0xb4
-> > [    3.557299] sp : ffffff800855b9e0
-> > [    3.560606] x29: ffffff800855b9f0 x28: ffffff93e1e5f594
-> > [    3.565911] x27: 000000000000000f x26: ffffff93e1e5e9b8
-> > [    3.571217] x25: 000000003b9aca00 x24: ffffff800858530c
-> > [    3.576522] x23: ffffffffffffffff x22: fffffffffffffdfb
-> > [    3.581827] x21: 000000000000000a x20: ffffffccb89aafc8
-> > [    3.587132] x19: fffffffffffffdfb x18: 00005a5c77082016
-> > [    3.592438] x17: 0000000000000400 x16: 0000000000000001
-> > [    3.597743] x15: 0000000000000009 x14: ffffff93e271c908
-> > [    3.603048] x13: 0000000000000b22 x12: 0000000000000008
-> > [    3.608353] x11: 0000000001d063de x10: 0000000000000008
-> > [    3.613659] x9 : 00000000ffffffed x8 : 0000000000000000
-> > [    3.618964] x7 : 736d6c2dff7224fe x6 : 0000008000000000
-> > [    3.624269] x5 : 0000000000000000 x4 : 0000000080000000
-> > [    3.629575] x3 : 002f6d6e74000000 x2 : 0000000000000000
-> > [    3.634880] x1 : 000000000000000a x0 : fffffffffffffdfb
-> > [    3.640185] Call trace:
-> > [    3.642625]  clk_prepare+0x18/0x40
-> > [    3.646019]  scpsys_clk_enable+0x40/0xb4
-> > [    3.649935]  scpsys_power_on+0x13c/0x304
-> > [    3.653850]  scpsys_probe+0xe0/0x5fc
-> > [    3.657419]  platform_drv_probe+0x80/0xb0
-> > [    3.661420]  really_probe+0x114/0x28c
-> > [    3.665075]  driver_probe_device+0x64/0xfc
-> > [    3.669164]  __device_attach_driver+0xb8/0xd0
-> > [    3.673513]  bus_for_each_drv+0x88/0xd0
-> > [    3.677341]  __device_attach+0xac/0x130
-> > [    3.681169]  device_initial_probe+0x20/0x2c
-> > [    3.685344]  bus_probe_device+0x34/0x90
-> > [    3.689172]  deferred_probe_work_func+0x74/0xac
-> > [    3.693698]  process_one_work+0x210/0x420
-> > [    3.697700]  worker_thread+0x278/0x3e4
-> > [    3.701443]  kthread+0x11c/0x12c
-> > [    3.704665]  ret_from_fork+0x10/0x18
-> > 
-> > I'm not really understand what happen, but scpsys and mmsys point to
-> > each other in MT8183. Why these two node point to each other in MT8183?
-> > If this is really hardware limitation, we need to solve this in driver.
-> > If this is not a hardware limitation, I would like to re-organize device
-> > tree to prevent this problem.
-> > 
-> > Regards,
-> > CK
-> > 
-> > 
-> > > +				 <&imgsys CLK_IMG_LARB5>,
-> > > +				 <&imgsys CLK_IMG_LARB2>,
-> > > +				 <&camsys CLK_CAM_LARB6>,
-> > > +				 <&camsys CLK_CAM_LARB3>,
-> > > +				 <&camsys CLK_CAM_SENINF>,
-> > > +				 <&camsys CLK_CAM_CAMSV0>,
-> > > +				 <&camsys CLK_CAM_CAMSV1>,
-> > > +				 <&camsys CLK_CAM_CAMSV2>,
-> > > +				 <&camsys CLK_CAM_CCU>,
-> > > +				 <&ipu_conn CLK_IPU_CONN_IPU>,
-> > > +				 <&ipu_conn CLK_IPU_CONN_AHB>,
-> > > +				 <&ipu_conn CLK_IPU_CONN_AXI>,
-> > > +				 <&ipu_conn CLK_IPU_CONN_ISP>,
-> > > +				 <&ipu_conn CLK_IPU_CONN_CAM_ADL>,
-> > > +				 <&ipu_conn CLK_IPU_CONN_IMG_ADL>;
-> > > +			clock-names = "audio", "audio1", "audio2",
-> > > +				      "mfg", "mm", "cam",
-> > > +				      "isp", "vpu", "vpu1",
-> > > +				      "vpu2", "vpu3", "mm-0",
-> > > +				      "mm-1", "mm-2", "mm-3",
-> > > +				      "mm-4", "mm-5", "mm-6",
-> > > +				      "mm-7", "mm-8", "mm-9",
-> > > +				      "isp-0", "isp-1", "cam-0",
-> > > +				      "cam-1", "cam-2", "cam-3",
-> > > +				      "cam-4", "cam-5", "cam-6",
-> > > +				      "vpu-0", "vpu-1", "vpu-2",
-> > > +				      "vpu-3", "vpu-4", "vpu-5";
-> > > +			infracfg = <&infracfg>;
-> > > +			smi_comm = <&smi_common>;
-> > > +		};
-> > > +
-> > >  		apmixedsys: syscon@1000c000 {
-> > >  			compatible = "mediatek,mt8183-apmixedsys", "syscon";
-> > >  			reg = <0 0x1000c000 0 0x1000>;
-> > > @@ -260,6 +317,11 @@
-> > >  			#clock-cells = <1>;
-> > >  		};
-> > >  
-> > > +		smi_common: smi@14019000 {
-> > > +			compatible = "mediatek,mt8183-smi-common", "syscon";
-> > > +			reg = <0 0x14019000 0 0x1000>;
-> > > +		};
-> > > +
-> > >  		imgsys: syscon@15020000 {
-> > >  			compatible = "mediatek,mt8183-imgsys", "syscon";
-> > >  			reg = <0 0x15020000 0 0x1000>;
-> > 
-> 
-> 
-
 
