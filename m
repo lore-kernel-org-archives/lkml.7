@@ -2,97 +2,101 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59082C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971EDC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332A42067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76626204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391516AbfGOO57 (ORCPT
+        id S2391557AbfGOO6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:57:59 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:41055 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731999AbfGOO5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:57:45 -0400
-Received: from orion.localdomain ([95.118.111.244]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MORMu-1i6LQj1dJm-00Ptjz; Mon, 15 Jul 2019 16:57:39 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        linux-leds@vger.kernel.org
-Subject: [PATCH 3/6] leds: apu: drop iosize field from priv data
-Date:   Mon, 15 Jul 2019 16:57:30 +0200
-Message-Id: <1563202653-20994-4-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1563202653-20994-1-git-send-email-info@metux.net>
-References: <1563202653-20994-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:a5QlfqxNC9mpegKPx69YYUS50jOTAmpdWip2oO48rzaIjJV2h2S
- ezEsCleYu/YVNDUNa4gd3kvtV51aY6cTcfpMyQwSpnsdpgM06cmVGkCqUmIixVKNwyPC4Dq
- 4uT6FkngN6KxmK6d0r30dnhNv2yRkzfD6F+cas5n3PiiWOEUrQfKXBywctS7PxD81ClM+Zi
- lE4aJ5WDxszwPuqo7Kvmg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Wi8vDpyQHW0=:Ua/lHXOZHXEWA6yd1eF2W3
- QcTNnSB+7XS733YrY7OKMMauNdEo4FVBtSSnjrMICHYuy4c2kBqEHX5quA+GokDrMooPz3vR2
- tALchpe4SW5z1bjWx/RXsUIy5ZtzLywGVI71xkYwOuDlr6dsCceU/i0AeOUbT4kKMEQqalt3G
- 8GULgmKxnOejftllXxLIYkuRF7llKgyX57XI4AxhaatxAsFaYf4Mi6Y9tOgiC1/r/n2ulYgoA
- rl0wnFEcJkaQMy/EN1QlxV/tyh7nQAl7W/e7e65MvPPMkOuMeX5RGs/jyJ/svQH9vutCFXGZ3
- TbyCOGXZjK/Ek++Rz5jmwBNlFYbIjmRc0j0ej3yzX03ofMbM/sUM0zzCTX+d1nAetAl4tK3ij
- fezZZiCyvWbCu18RL1E9KjpqtAP6qmMjHVKXli5VFGq91vR1OeuwZBuyWF+E5EKHyK+E3KuqO
- Dn1dc/q7C5eiBfeAXySErwWM5sM40iJ8GOYZmsoQhXb7hDTNnyfWnPLf8b/fNTBJKABIT7LHl
- LivcceYSfAx/UMAKZgTl2pWydwzUBJmGFRlxiGcXMlVeShWzv2ik5243yEUG0NnroJYtJnrkl
- FMwz9pu+cAvkYTseBjCd+1mlc1lvHpHbaxrYeosvbqi4Iakw0c9/7ZE9iR9pXO7R8fZdPSkRM
- 80hqSnHhsrBkgR13cqM2KGMiRHHlHJY5KDnLs33ZXeMXrryIfBwCj5LgndrBOpnqpSG3sb2tK
- PVvs7EwxFMbZamr5bPR/Vpq7DigLnGe7fPWmIQ==
+        Mon, 15 Jul 2019 10:58:03 -0400
+Received: from mga05.intel.com ([192.55.52.43]:65131 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391468AbfGOO55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:57:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 07:57:56 -0700
+X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
+   d="scan'208";a="342406193"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 07:57:56 -0700
+Message-ID: <5efe30658033c1b22a36438758236d4f4aa8c345.camel@linux.intel.com>
+Subject: Re: [PATCH v1 0/6] mm / virtio: Provide support for paravirtual
+ waste page treatment
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, wei.w.wang@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com
+Date:   Mon, 15 Jul 2019 07:57:56 -0700
+In-Reply-To: <91a0d964-7fb7-f25e-bf2b-6a7531b96afd@redhat.com>
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+         <ff133df4-6291-bece-3d8d-dc3f12f398cf@redhat.com>
+         <8fea71ba-2464-ead8-3802-2241805283cc@intel.com>
+         <CAKgT0UdAj4Kq8qHKkaiB3z08gCQh-jovNpos45VcGHa_v5aFGg@mail.gmail.com>
+         <bc4bb663-585b-bee0-1310-b149382047d0@intel.com>
+         <91a0d964-7fb7-f25e-bf2b-6a7531b96afd@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On Mon, 2019-07-15 at 11:41 +0200, David Hildenbrand wrote:
+> On 25.06.19 20:22, Dave Hansen wrote:
+> > On 6/25/19 10:00 AM, Alexander Duyck wrote:
+> > > Basically what we are doing is inflating the memory size we can report
+> > > by inserting voids into the free memory areas. In my mind that matches
+> > > up very well with what "aeration" is. It is similar to balloon in
+> > > functionality, however instead of inflating the balloon we are
+> > > inflating the free_list for higher order free areas by creating voids
+> > > where the madvised pages were.
+> > 
+> > OK, then call it "free page auto ballooning" or "auto ballooning" or
+> > "allocator ballooning".  s390 calls them "unused pages".
+> > 
+> > Any of those things are clearer and more meaningful than "page aeration"
+> > to me.
+> > 
+> 
+> Alex, if you want to generalize the approach, and not call it "hinting",
+> what about something similar to "page recycling".
+> 
+> Would also fit the "waste" example and would be clearer - at least to
+> me. Well, "bubble" does not apply anymore ...
+> 
 
-As this driver now only supports the APU1 boards, we don't need
-to handle different io sizes anymore.
+I am fine with "page hinting". I have already gone through and started the
+rename. The problem with "page recycling" is that is actually pretty
+similar to the name we had in the networking space for how the NICs will
+recycle the Rx buffers.
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/leds/leds-apu.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+For now I am going through and replacing instances of Aerated with Hinted,
+and aeration with page_hinting. I should have a new patch set ready in a
+couple days assuming no unforeseen issues.
 
-diff --git a/drivers/leds/leds-apu.c b/drivers/leds/leds-apu.c
-index 37b054f..f79146c 100644
---- a/drivers/leds/leds-apu.c
-+++ b/drivers/leds/leds-apu.c
-@@ -71,7 +71,6 @@ struct apu_led_pdata {
- 	struct apu_led_priv *pled;
- 	const struct apu_led_profile *profile;
- 	int num_led_instances;
--	int iosize; /* for devm_ioremap() */
- 	spinlock_t lock;
- };
- 
-@@ -127,7 +126,7 @@ static int apu_led_config(struct device *dev, struct apu_led_pdata *apuld)
- 		led_cdev->brightness_set = apu1_led_brightness_set;
- 
- 		pled->param.addr = devm_ioremap(dev,
--				apu_led->profile[i].offset, apu_led->iosize);
-+				apu_led->profile[i].offset, APU1_IOSIZE);
- 		if (!pled->param.addr) {
- 			err = -ENOMEM;
- 			goto error;
-@@ -160,7 +159,6 @@ static int __init apu_led_probe(struct platform_device *pdev)
- 
- 	apu_led->profile = apu1_led_profile;
- 	apu_led->num_led_instances = ARRAY_SIZE(apu1_led_profile);
--	apu_led->iosize = APU1_IOSIZE;
- 
- 	spin_lock_init(&apu_led->lock);
- 	return apu_led_config(&pdev->dev, apu_led);
--- 
-1.9.1
+Thanks.
+
+- Alex
 
