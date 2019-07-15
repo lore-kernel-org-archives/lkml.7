@@ -2,329 +2,75 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F437C76190
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AEEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F47E2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nUxlRHFE"
+	by mail.kernel.org (Postfix) with ESMTP id 28D98214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 09:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfGOJYN (ORCPT
+        id S1729602AbfGOJZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 05:24:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45239 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729426AbfGOJYG (ORCPT
+        Mon, 15 Jul 2019 05:25:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47136 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbfGOJZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 05:24:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f9so16206421wre.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 02:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=nfm6Ua4RrGb4WspYU/6CGmVhaLbOHYoHSE5D469nkM4=;
-        b=nUxlRHFEmdE//fmjfkSwYbzIynIsAnyHZUwgu6k0FB6rJdmYLn1JuaKI7GL+Or08qm
-         /HGIxW0JUuNh1P87D362eX4UINwyRltQtIAdPWZ5jzdhOvPEoYsdbm19qyy9LSa4BYMj
-         19mBueDluvMxyxuhKPDWjd5WxBAPDUSCsWMXuJDuuVK6xPYOEshMZsyOq6oIQEagQ5Bx
-         Xz74JAvKgmaa9W2rGpL8v3ORmqBOLPrK9+yQdLuKN9ziL/7AUbq5GKY5bZ4enS+ztBW1
-         VjjE3L5Rj/aaNY8X9f3BiuYpolJhC9Nn+pRwVw3CzhorEC/HiPOlfVNUgETAa0t4Xk6V
-         x3Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nfm6Ua4RrGb4WspYU/6CGmVhaLbOHYoHSE5D469nkM4=;
-        b=atQ9R9DJAxcId6HqzCKycCPwMDuB7plwes6tiBeXUULNBkkv59YOJc4tPHEUw20ZvT
-         eD4Bz4BSJ7QDCVx4P2MdA/KFXnXQK6XUIGVl0DlBFwSuT+qtgBqGdA2emYja4FS0/kJt
-         MtnrKr/6fDB9MJv97IH6jAty0GIHTuP1mvFK+DNPThAsBDctMSwhlASdAEpiZCLMv9AQ
-         REaQ+QDQGP+/uue99X2dV3sZW8y2F6z4F0uN9/wfFfJgXmANZbmivxHbvo5gXNs3WxDv
-         66meuNPcBvnHp6/S9ZMDA0uj5bZQF8iNJdbmeap3wSRiSO9qjVer68duBPaKagpfc3VF
-         9OYA==
-X-Gm-Message-State: APjAAAU5z+IrVhZUsnbjf9EzVkcTHws4H9H7PYNnFjbmnxzRlZJCLr8t
-        lGmwtk/ACJMF/6g8T2y7xxbr9A==
-X-Google-Smtp-Source: APXvYqy/+ExO8IuTAiFAaExvyr1yLeuxu4zrL0AJ5A1eSvxhI4KUOZVS3tFbBntpsYO2vgJahfMW8w==
-X-Received: by 2002:a5d:518c:: with SMTP id k12mr26872647wrv.116.1563182643036;
-        Mon, 15 Jul 2019 02:24:03 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id n1sm13156524wrx.39.2019.07.15.02.24.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 02:24:02 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 10:24:00 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] leds: Add control of the voltage/current regulator
- to the LED core
-Message-ID: <20190715092400.sedjumqkecglheyu@holly.lan>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-2-jjhiblot@ti.com>
- <56d16260-ff82-3439-4c1f-2a3a1552bc7d@ti.com>
- <ab4818c0-bc7a-13e1-c6ce-e977b0234de0@ti.com>
+        Mon, 15 Jul 2019 05:25:33 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hmxEd-0007ea-Ri; Mon, 15 Jul 2019 11:25:27 +0200
+Date:   Mon, 15 Jul 2019 11:25:26 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mike Lothian <mike@fireburn.co.uk>
+cc:     thomas.lendacky@amd.com, bhe@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        luto@kernel.org, mingo@redhat.com,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
+ be reserved
+In-Reply-To: <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de>
+References: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com> <20190713145909.30749-1-mike@fireburn.co.uk> <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de> <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
+ <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de> <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ab4818c0-bc7a-13e1-c6ce-e977b0234de0@ti.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:01:29AM +0200, Jean-Jacques Hiblot wrote:
-> Hi Dan,
-> 
-> On 12/07/2019 20:49, Dan Murphy wrote:
-> > JJ
-> > 
-> > On 7/8/19 5:35 AM, Jean-Jacques Hiblot wrote:
-> > > A LED is usually powered by a voltage/current regulator. Let the LED
-> > > core
-> > Let the LED core know
-> > > about it. This allows the LED core to turn on or off the power supply
-> > > as needed.
-> > 
-> > > 
-> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > > ---
-> > >   drivers/leds/led-class.c | 10 ++++++++
-> > >   drivers/leds/led-core.c  | 53 +++++++++++++++++++++++++++++++++++++---
-> > >   include/linux/leds.h     |  4 +++
-> > >   3 files changed, 64 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> > > index 4793e77808e2..e01b2d982564 100644
-> > > --- a/drivers/leds/led-class.c
-> > > +++ b/drivers/leds/led-class.c
-> > > @@ -17,6 +17,7 @@
-> > >   #include <linux/slab.h>
-> > >   #include <linux/spinlock.h>
-> > >   #include <linux/timer.h>
-> > > +#include <linux/regulator/consumer.h>
-> > 
-> > What if you move this to leds.h so core and class can both include it.
-> > 
-> > 
-> > >   #include <uapi/linux/uleds.h>
-> > >   #include "leds.h"
-> > >   @@ -272,6 +273,15 @@ int of_led_classdev_register(struct device
-> > > *parent, struct device_node *np,
-> > >           dev_warn(parent, "Led %s renamed to %s due to name collision",
-> > >                   led_cdev->name, dev_name(led_cdev->dev));
-> > >   +    led_cdev->regulator = devm_regulator_get(led_cdev->dev, "power");
-> > 
-> > Is the regulator always going to be called power?
-> 
-> Actually in the dts, that will be "power-supply". I lacked the imagination
-> to come up with a better name.
-> 
-> 
-> 
-> > 
-> > > +    if (IS_ERR(led_cdev->regulator)) {
-> > > +        dev_err(led_cdev->dev, "Cannot get the power supply for %s\n",
-> > > +            led_cdev->name);
-> > > +        device_unregister(led_cdev->dev);
-> > > +        mutex_unlock(&led_cdev->led_access);
-> > > +        return PTR_ERR(led_cdev->regulator);
-> > 
-> > This is listed as optional in the DT doc.  This appears to be required.
-> 
-> The regulator core will provide a dummy regulator if none is given in the
-> device tree. I would rather have an error in that case, but that is not how
-> it works.
+On Mon, 15 Jul 2019, Mike Lothian wrote:
 
-If you actively wanted to get -ENODEV back when there is no regulator
-then you can use devm_regulator_get_optional() for that.
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-However perhaps be careful what you wish for. If you use get_optional()
-then you will have to sprinkle NULL or IS_ERR() checks everywhere. I'd
-favour using the current approach!
+A: No.
+Q: Should I include quotations after my reply?
 
+> That build failure is from the current tip of Linus's tree
+> 
+> If the fix is in, then it hasn't fixed the issue
 
-Daniel.
+Sorry, my bad. There was a very similar issue and I confused the two:
 
-> 
-> 
-> > 
-> > I prefer to keep it optional.  Many LED drivers are connected to fixed
-> > non-managed supplies.
-> > 
-> > > +    }
-> > > +
-> > >       if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
-> > >           ret = led_add_brightness_hw_changed(led_cdev);
-> > >           if (ret) {
-> > > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> > > index 7107cd7e87cf..139de6b08cad 100644
-> > > --- a/drivers/leds/led-core.c
-> > > +++ b/drivers/leds/led-core.c
-> > > @@ -16,6 +16,7 @@
-> > >   #include <linux/rwsem.h>
-> > >   #include <linux/slab.h>
-> > >   #include "leds.h"
-> > > +#include <linux/regulator/consumer.h>
-> > >     DECLARE_RWSEM(leds_list_lock);
-> > >   EXPORT_SYMBOL_GPL(leds_list_lock);
-> > > @@ -23,6 +24,31 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
-> > >   LIST_HEAD(leds_list);
-> > >   EXPORT_SYMBOL_GPL(leds_list);
-> > >   +static bool __led_need_regulator_update(struct led_classdev
-> > > *led_cdev,
-> > > +                    int brightness)
-> > > +{
-> > > +    bool new_regulator_state = (brightness != LED_OFF);
-> > > +
-> > > +    return led_cdev->regulator_state != new_regulator_state;
-> > > +}
-> > > +
-> > > +static int __led_handle_regulator(struct led_classdev *led_cdev,
-> > > +                int brightness)
-> > > +{
-> > > +    if (__led_need_regulator_update(led_cdev, brightness)) {
-> > > +        int ret;
-> > 
-> > Prefer to this to be moved up.
-> ok
-> > 
-> > > +
-> > > +        if (brightness != LED_OFF)
-> > > +            ret = regulator_enable(led_cdev->regulator);
-> > > +        else
-> > > +            ret = regulator_disable(led_cdev->regulator);
-> > > +        if (ret)
-> > > +            return ret;
-> > new line
-> > > +        led_cdev->regulator_state = (brightness != LED_OFF);
-> > > +    }
-> > > +    return 0;
-> > > +}
-> > > +
-> > >   static int __led_set_brightness(struct led_classdev *led_cdev,
-> > >                   enum led_brightness value)
-> > >   {
-> > > @@ -80,6 +106,7 @@ static void led_timer_function(struct timer_list *t)
-> > >       }
-> > >         led_set_brightness_nosleep(led_cdev, brightness);
-> > > +    __led_handle_regulator(led_cdev, brightness);
-> > 
-> > Again this seems to indicate that the regulator is a required property
-> > for the LEDs
-> > 
-> > This needs to be made optional.  And the same comment through out for
-> > every call.
-> > 
-> > 
-> > >         /* Return in next iteration if led is in one-shot mode and
-> > > we are in
-> > >        * the final blink state so that the led is toggled each
-> > > delay_on +
-> > > @@ -115,6 +142,8 @@ static void set_brightness_delayed(struct
-> > > work_struct *ws)
-> > >       if (ret == -ENOTSUPP)
-> > >           ret = __led_set_brightness_blocking(led_cdev,
-> > >                       led_cdev->delayed_set_value);
-> > > +    __led_handle_regulator(led_cdev, led_cdev->delayed_set_value);
-> > > +
-> > >       if (ret < 0 &&
-> > >           /* LED HW might have been unplugged, therefore don't warn */
-> > >           !(ret == -ENODEV && (led_cdev->flags & LED_UNREGISTERING) &&
-> > > @@ -141,6 +170,7 @@ static void led_set_software_blink(struct
-> > > led_classdev *led_cdev,
-> > >       /* never on - just set to off */
-> > >       if (!delay_on) {
-> > >           led_set_brightness_nosleep(led_cdev, LED_OFF);
-> > > +        __led_handle_regulator(led_cdev, LED_OFF);
-> > >           return;
-> > >       }
-> > >   @@ -148,6 +178,7 @@ static void led_set_software_blink(struct
-> > > led_classdev *led_cdev,
-> > >       if (!delay_off) {
-> > >           led_set_brightness_nosleep(led_cdev,
-> > >                          led_cdev->blink_brightness);
-> > > +        __led_handle_regulator(led_cdev, led_cdev->blink_brightness);
-> > >           return;
-> > >       }
-> > >   @@ -256,8 +287,14 @@ void led_set_brightness_nopm(struct
-> > > led_classdev *led_cdev,
-> > >                     enum led_brightness value)
-> > >   {
-> > >       /* Use brightness_set op if available, it is guaranteed not to
-> > > sleep */
-> > > -    if (!__led_set_brightness(led_cdev, value))
-> > > -        return;
-> > > +    if (!__led_set_brightness(led_cdev, value)) {
-> > > +        /*
-> > > +         * if regulator state doesn't need to be changed, that is all/
-> > > +         * Otherwise delegate the change to a work queue
-> > > +         */
-> > > +        if (!__led_need_regulator_update(led_cdev, value))
-> > > +            return;
-> > > +    }
-> > >         /* If brightness setting can sleep, delegate it to a work
-> > > queue task */
-> > >       led_cdev->delayed_set_value = value;
-> > > @@ -280,6 +317,8 @@ EXPORT_SYMBOL_GPL(led_set_brightness_nosleep);
-> > >   int led_set_brightness_sync(struct led_classdev *led_cdev,
-> > >                   enum led_brightness value)
-> > >   {
-> > > +    int ret;
-> > > +
-> > >       if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
-> > >           return -EBUSY;
-> > >   @@ -288,7 +327,15 @@ int led_set_brightness_sync(struct
-> > > led_classdev *led_cdev,
-> > >       if (led_cdev->flags & LED_SUSPENDED)
-> > >           return 0;
-> > >   -    return __led_set_brightness_blocking(led_cdev,
-> > > led_cdev->brightness);
-> > > +    ret = __led_set_brightness_blocking(led_cdev,
-> > > led_cdev->brightness);
-> > > +    if (ret)
-> > > +        return ret;
-> > > +
-> > > +    ret = __led_handle_regulator(led_cdev, led_cdev->brightness);
-> > 
-> > Can't you just return here?
-> 
-> ok
-> 
-> 
-> thanks for the review
-> 
-> JJ
-> 
-> > 
-> > Dan
-> > 
-> > > +    if (ret)
-> > > +        return ret;
-> > > +
-> > > +    return 0;
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(led_set_brightness_sync);
-> > >   diff --git a/include/linux/leds.h b/include/linux/leds.h
-> > > index 9b2bf574a17a..bee8e3f8dddd 100644
-> > > --- a/include/linux/leds.h
-> > > +++ b/include/linux/leds.h
-> > > @@ -123,6 +123,10 @@ struct led_classdev {
-> > >         /* Ensures consistent access to the LED Flash Class device */
-> > >       struct mutex        led_access;
-> > > +
-> > > +    /* regulator */
-> > > +    struct regulator    *regulator;
-> > > +    bool            regulator_state;
-> > >   };
-> > >     extern int of_led_classdev_register(struct device *parent,
+  013c66edf207 ("Revert "x86/build: Move _etext to actual end of .text"")
+
+The reverted commit caused a build fail with gold as well. Let me stare at
+your issue.
+
+Thanks,
+
+	tglx
