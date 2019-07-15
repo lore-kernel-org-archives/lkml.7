@@ -2,52 +2,53 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E82C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3AEC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB77720896
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1A5205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201581;
-	bh=tuJB84rXC7Q+h6ENUYeb97y8lmA49fuyzqulqcxENxM=;
+	s=default; t=1563201585;
+	bh=fhk1AqK9l+APWLAaCo5n67DFyP3HrQwnAnb4MpfaEh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dzHuGH2I35RpnfMR/y6JNgvQuYQoXBD72ICGCpq90izWGIeR4BIWCdR6l/f9ZizW8
-	 fktnyTHJQEkQ9UKWzNZp5qee0YY06K9UKPRxCUF/FHArMINsVFxLYsycez9n5B0JBL
-	 dno71I7GydBDx7rQ8rusmzPihaWtgnGEGhfzdD6I=
+	b=RaLw0OGjD/XS3k9E3fi4pxOpZCSn9G3sEkZp+TF6IPJJa0XRY718MJrxr+2Wm9Y07
+	 2ZaFhCJYDo7R/uHq/MSfZzdjYNb0JwU2HuC8T1cs2wOLuzwsf5Tjm5+Hkcnbjw3Fwy
+	 qbhlUnaSaYXMorBSzSXjAMFZohZ9EmjLeOq/DXr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391250AbfGOOjj (ORCPT
+        id S2392247AbfGOOjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38688 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:39:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404237AbfGOOjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:39:21 -0400
+        id S2404333AbfGOOjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:39:40 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E16F7205ED;
-        Mon, 15 Jul 2019 14:39:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78F1020651;
+        Mon, 15 Jul 2019 14:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201560;
-        bh=tuJB84rXC7Q+h6ENUYeb97y8lmA49fuyzqulqcxENxM=;
+        s=default; t=1563201579;
+        bh=fhk1AqK9l+APWLAaCo5n67DFyP3HrQwnAnb4MpfaEh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFyGl6hHG0BeESUX9rjghPU8kMP8F9tWaAogNllRiwqc3NmTUcWhHPPjfc6SEIhxm
-         Q1e42nVscLx+upX8O3eppmhbLDAH+pu0qaYDaivgGJ0t25qRJFsp0q7Hg6BzK+W1f+
-         tuXCTbuHXeA7Is7o+jZpHa84rPF5k5C5AqUMWkFQ=
+        b=sBYSutICD3xVclG4OVuz2jqw8wDpw3Y2my60G1XZR2G55GAP97DojL/R8xLG2tjnL
+         3lAf02CtyCHybBN+YSBv5qDwNh1GCJaEXMtCjZ5Pa/r/W+BhQDkVNZuT+dIvq2RvFW
+         TW5PtkeoDoS5KatKcufj1hEKXwHXCcu/XBfJc/Rk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 42/73] ipoib: correcly show a VF hardware address
-Date:   Mon, 15 Jul 2019 10:35:58 -0400
-Message-Id: <20190715143629.10893-42-sashal@kernel.org>
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        john.stultz@linaro.org, sboyd@kernel.org,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 47/73] timer_list: Guard procfs specific code
+Date:   Mon, 15 Jul 2019 10:36:03 -0400
+Message-Id: <20190715143629.10893-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -60,57 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Kirjanov <kda@linux-powerpc.org>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
+[ Upstream commit a9314773a91a1d3b36270085246a6715a326ff00 ]
 
-in the case of IPoIB with SRIOV enabled hardware
-ip link show command incorrecly prints
-0 instead of a VF hardware address.
+With CONFIG_PROC_FS=n the following warning is emitted:
 
-Before:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
-trust off, query_rss off
-...
-After:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0     link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
-checking off, link-state disable, trust off, query_rss off
+kernel/time/timer_list.c:361:36: warning: unused variable
+'timer_list_sops' [-Wunused-const-variable]
+   static const struct seq_operations timer_list_sops = {
 
-v1->v2: just copy an address without modifing ifla_vf_mac
-v2->v3: update the changelog
+Add #ifdef guard around procfs specific code.
 
-Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
-Acked-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: john.stultz@linaro.org
+Cc: sboyd@kernel.org
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/534
+Link: https://lkml.kernel.org/r/20190614181604.112297-1-nhuck@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 17c5bc7e8957..45504febbc2a 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1751,6 +1751,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
- 		return err;
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index 1407ed20ea93..b7c5d230b4b2 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -299,23 +299,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
+ 	SEQ_printf(m, "\n");
+ }
  
- 	ivf->vf = vf;
-+	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
+-static int timer_list_show(struct seq_file *m, void *v)
+-{
+-	struct timer_list_iter *iter = v;
+-
+-	if (iter->cpu == -1 && !iter->second_pass)
+-		timer_list_header(m, iter->now);
+-	else if (!iter->second_pass)
+-		print_cpu(m, iter->cpu, iter->now);
+-#ifdef CONFIG_GENERIC_CLOCKEVENTS
+-	else if (iter->cpu == -1 && iter->second_pass)
+-		timer_list_show_tickdevices_header(m);
+-	else
+-		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
+-#endif
+-	return 0;
+-}
+-
+ void sysrq_timer_list_show(void)
+ {
+ 	u64 now = ktime_to_ns(ktime_get());
+@@ -334,6 +317,24 @@ void sysrq_timer_list_show(void)
+ 	return;
+ }
  
++#ifdef CONFIG_PROC_FS
++static int timer_list_show(struct seq_file *m, void *v)
++{
++	struct timer_list_iter *iter = v;
++
++	if (iter->cpu == -1 && !iter->second_pass)
++		timer_list_header(m, iter->now);
++	else if (!iter->second_pass)
++		print_cpu(m, iter->cpu, iter->now);
++#ifdef CONFIG_GENERIC_CLOCKEVENTS
++	else if (iter->cpu == -1 && iter->second_pass)
++		timer_list_show_tickdevices_header(m);
++	else
++		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
++#endif
++	return 0;
++}
++
+ static void *move_iter(struct timer_list_iter *iter, loff_t offset)
+ {
+ 	for (; offset; offset--) {
+@@ -405,3 +406,4 @@ static int __init init_timer_list_procfs(void)
  	return 0;
  }
+ __initcall(init_timer_list_procfs);
++#endif
 -- 
 2.20.1
 
