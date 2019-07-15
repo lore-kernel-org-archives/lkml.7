@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC7BC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BCAC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B17432083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DA920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200346;
-	bh=JmtLKe7vVb35mKGQ6VuPDSLMsF5zftUw/1wV05fRQuk=;
+	s=default; t=1563200355;
+	bh=ycwk6oC+x61BQ/IrIG0u0Xkz817gkuX+WzSCZEZXK54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VkZH+kAtf6A+kS7pSsjBMBsi3nbKr539erA4xAXaJitLSlrzaFOcK9haN+jGLPx1v
-	 iZ3vluiBHoY9WmuzEL3ARTIjjaMKrWH6FEMDlT3c1oEp4Yicjsgx8U6EKLpLRiHn4e
-	 fCCB8s5/zjR7jvQNVxjOt2B3HP6Ve0i93n8X9dck=
+	b=NVct1CWkoFWsKer/5tmthTyBCZkIFy3iWQexjkQjeX56nWKI3J62eC2c1TSaWg64x
+	 ts1xPPPCzokxUJ1p3vXJ38e02lMHZWFxwfcNKAjr0r4RbBKr7x06Poo3ZsgjjpAA1D
+	 PILnKqDiH0qw9dJsc7lt0Omr12e4ivhZ0eRIqzAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390017AbfGOOTF (ORCPT
+        id S2390051AbfGOOTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39884 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:19:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389230AbfGOOTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:19:01 -0400
+        id S2389666AbfGOOSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:18:55 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 919BF20651;
-        Mon, 15 Jul 2019 14:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B2D206B8;
+        Mon, 15 Jul 2019 14:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200340;
-        bh=JmtLKe7vVb35mKGQ6VuPDSLMsF5zftUw/1wV05fRQuk=;
+        s=default; t=1563200334;
+        bh=ycwk6oC+x61BQ/IrIG0u0Xkz817gkuX+WzSCZEZXK54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W32NrAfziJ7Di/bOrIaZQrJTyRrVX+LaeLDrdzIKo2Jx7r11kSeg12Zr6LquYFti9
-         r9y2UKseTecW4h0GPFepR19SCFqRcIG5DZ7bh0t588i/k/FLX6mHh+Ng1wSfQXVfQh
-         B9pCO6RcnryM4MB9uDWxY6Ekk61LS3iQnRvxukJI=
+        b=pw6iD5MdjeJo6A0W6gzx3LsBg3hguBLrUGpVN71cvDMN8rxDmBdOXmpWJgUgM0j4F
+         vdlUWs5v4VoXjgYZw6GUrpCSqlrjhXZfqVXcMepe0xmkPzkxeiYtIvlvol7CV7bT+F
+         0d5ZFiPSxGcHA4Xh/5IbAH3hcB4Eecjeu8peakhc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jungo Lin <jungo.lin@mediatek.com>,
+Cc:     Kangjie Lu <kjlu@umn.edu>, Mukesh Ojha <mojha@codeaurora.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 017/158] media: media_device_enum_links32: clean a reserved field
-Date:   Mon, 15 Jul 2019 10:15:48 -0400
-Message-Id: <20190715141809.8445-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 016/158] media: vpss: fix a potential NULL pointer dereference
+Date:   Mon, 15 Jul 2019 10:15:47 -0400
+Message-Id: <20190715141809.8445-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,55 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jungo Lin <jungo.lin@mediatek.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
+[ Upstream commit e08f0761234def47961d3252eac09ccedfe4c6a0 ]
 
-In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
-will check whether reserved field of media_links_enum filled
-with zero.
+In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+pointer dereference.
 
-However, for 32 bit program, the reserved field is missing
-copy from kernel space to user space in media_device_enum_links32
-function.
-
-This patch adds the cleaning a reserved field logic in
-media_device_enum_links32 function.
-
-Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/media-device.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpss.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index 3bae24b15eaa..ba344e6f0139 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -487,6 +487,7 @@ static long media_device_enum_links32(struct media_device *mdev,
- {
- 	struct media_links_enum links;
- 	compat_uptr_t pads_ptr, links_ptr;
-+	int ret;
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index 19cf6853411e..89a86c19579b 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -518,6 +518,11 @@ static int __init vpss_init(void)
+ 		return -EBUSY;
  
- 	memset(&links, 0, sizeof(links));
- 
-@@ -498,7 +499,13 @@ static long media_device_enum_links32(struct media_device *mdev,
- 	links.pads = compat_ptr(pads_ptr);
- 	links.links = compat_ptr(links_ptr);
- 
--	return media_device_enum_links(mdev, &links);
-+	ret = media_device_enum_links(mdev, &links);
-+	if (ret)
-+		return ret;
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
++	if (unlikely(!oper_cfg.vpss_regs_base2)) {
++		release_mem_region(VPSS_CLK_CTRL, 4);
++		return -ENOMEM;
++	}
 +
-+	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
-+
-+	return 0;
- }
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+ 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
  
- #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
 -- 
 2.20.1
 
