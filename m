@@ -2,164 +2,144 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20397C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B0C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE242086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AB721738
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDeZNMto"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M2BUBHzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbfGOVpb (ORCPT
+        id S1732865AbfGOVpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:45:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36405 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730984AbfGOVpb (ORCPT
+        Mon, 15 Jul 2019 17:45:52 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46884 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732820AbfGOVpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:45:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k8so8974938plt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:45:30 -0700 (PDT)
+        Mon, 15 Jul 2019 17:45:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so8939925plz.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 14:45:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hOM2v5hU56mID9YuYmmucDqwTVT51b3w3HZDsPVe9j4=;
-        b=aDeZNMtooxl695Jq44V8IEomR07n7GCItQuCyk51sAt4aNCq3TYnWF4Xh3UG6ODhdp
-         jtMBYRlMSxN9nyMw4rCHobIDaomN9XCC/6UPxEwHVxs+6ZrtelWkKu6kuExJb1bjm0JI
-         DjwmoL0ILn4xq0PFZ3h5zIjDQySyOJh9n5kY020tFPSq2Nbug5FxawMlgX/WQlTOLv3K
-         ijeQgwobaTr9/539aQaWP1u4idf2IoHiAWqN0qCE1Qo5uYCItCHK+2G2pBEdJx7rmeyz
-         OTUitPvnWzoQ45NJHCVpzC3PHDKzj5ZHPRxq/zlT35MqbPfjy417btF9rf8b0Q+LxCgL
-         rGbA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hqueIpy9HKyEPPNOnbRMjYrxKpy7dIPibRkspPVD1Rk=;
+        b=M2BUBHzkDMP+Fy0+hAqanjqz5peT9rQY0H9qyM3J2LD51m7Bpo/2ZpzIwYdkvHeuQs
+         o6WkGGlypNVXtnfgchnLzMiinYbp56C6ft1FyrillW63+TdkQ6uGKiJpfILS8Yivy9AA
+         iTYbSo2RISTDu4EWRziBkqro4i5Bf+/aVf8ijSAhzTe/M72rWB83jL1DSS8OkUeMTRoA
+         sdXLfXDYTjBkOC3OD9ZaPM5Ezju0iAH7aVsVy9bUgfCj6sg7J++Y7JwyL8ZAU5FDkMsx
+         G5AwWrwj9tknul1EfiWQYPWB8ie70eHNgvoSqCT4oGhATRbPdNEURhGhwiLXuBgKC7A9
+         paqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hOM2v5hU56mID9YuYmmucDqwTVT51b3w3HZDsPVe9j4=;
-        b=kQxbbfpaAX3NVeN7rXEQjTong5Jevem9k6YZY/PJAD/H6amJRzGoEoqntaOC1gLaaz
-         82GBLKMFbSxCHjegre7kq6i3r49hKOVW0wFKYb3AI8Xjaw+XgfFrVFSk+ihBVK5i+WhX
-         jxfQWBwud23M4m1Xmw08Lhv3dCDV63pxtkSPTj4NYVf0pYwOrFH2S2N/e6MgRVbtuEwS
-         iHBjvVLiArfQgCZiH6LjAoi/AbXiIDlbayCsMDiFFDUkia+KIY12MvtiaALA6z9RLC/a
-         vEgGq6VSqZMgQ2KG+rn+uj0vjoVRIv/Vgw/0/gDQ4ztTYuL1bMrw03cRvAzFbYt59KTC
-         jKHw==
-X-Gm-Message-State: APjAAAVF/Gm5MPDqBkjtx8n2Xf9RKpWsrWf/3IvncDGfKCsFPhPUAz3j
-        jufomBnsNInRNjuydm6KiL9NZA==
-X-Google-Smtp-Source: APXvYqygmIThR7CWZd2S/zUr5WJnIk/hHSphgbemuWJ1x8uUYo3hBc6a/yRRRFF2AOHr67pE+h8zfQ==
-X-Received: by 2002:a17:902:86:: with SMTP id a6mr31188398pla.244.1563227130294;
-        Mon, 15 Jul 2019 14:45:30 -0700 (PDT)
-Received: from tuxbook-pro (pat_11.qualcomm.com. [192.35.156.11])
-        by smtp.gmail.com with ESMTPSA id b24sm17017167pfd.98.2019.07.15.14.45.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 14:45:29 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 14:46:47 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Neusch?fer <j.neuschaefer@gmx.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v1] clk: Add devm_clk_{prepare,enable,prepare_enable}
-Message-ID: <20190715214647.GY7234@tuxbook-pro>
-References: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hqueIpy9HKyEPPNOnbRMjYrxKpy7dIPibRkspPVD1Rk=;
+        b=lPEz0mLsFJvGoef3aAy+Kf3EFzNcymdb0ws7ddCFk83n5T6rnlidGhTlFc43OOPnGT
+         YSJDCH8tZAozFz/RzCei5C7yPygmcEw4jd0DTs7zZrwdeW1CsvidOtqbi7ZQUj7FbM1C
+         Mtosxq6h3cKknmxDp4SUAXUZ2zFP7KAFlqCe0dDHVoxpPSM6wKahODvuW7qUtcmPary0
+         DL6kJjF4/Rzz7ryPBn31MMIDxmUGzfs3sQfQI1sOM/VS7jkkOsM+gX1T57BTjNLggYuv
+         +LQWUHqzFqpgjW8REDuMgd8F4iq8jgn5jkuJPVnCd9Fw33hk9ays+6aDJ18Bi/9KTNfE
+         66xw==
+X-Gm-Message-State: APjAAAXT8K4Ujmd0gv3nA3oHsou8uDjHptu7bRlMyZC1FSiqXJyW3DHw
+        9ieNPpNF7rLgvxgcnKKTOa8Xb2MYEjKnosq7+iC6/g==
+X-Google-Smtp-Source: APXvYqx3+5tO30WhO0nchpxkml29BpDJYkg5+1AHx+oFnyVETCA/qhmD8kPKKgIFqPFtjwzExPGYOtJkbl5s58En02Y=
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr29488310pld.119.1563227150812;
+ Mon, 15 Jul 2019 14:45:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d7a1b3b-e9bf-1d80-609d-a9c0c932b15a@free.fr>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <cover.1563150885.git.jpoimboe@redhat.com> <20190715193834.5tvzukcwq735ufgb@treble>
+In-Reply-To: <20190715193834.5tvzukcwq735ufgb@treble>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 15 Jul 2019 14:45:39 -0700
+Message-ID: <CAKwvOdnXt=_NVjK7+RjuxeyESytO6ra769i4qjSwt1Gd1G22dA@mail.gmail.com>
+Subject: Re: [PATCH 00/22] x86, objtool: several fixes/improvements
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 15 Jul 08:34 PDT 2019, Marc Gonzalez wrote:
+On Mon, Jul 15, 2019 at 12:38 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Sun, Jul 14, 2019 at 07:36:55PM -0500, Josh Poimboeuf wrote:
+> > There have been a lot of objtool bug reports lately, mainly related to
+> > Clang and BPF.  As part of fixing those bugs, I added some improvements
+> > to objtool which uncovered yet more bugs (some kernel, some objtool).
+> >
+> > I've given these patches a lot of testing with both GCC and Clang.  More
+> > compile testing of objtool would be appreciated, as the kbuild test
+> > robot doesn't seem to be paying much attention to my branches lately.
+> >
+> > There are still at least three outstanding issues:
+> >
+> > 1) With clang I see:
+> >
+> >      drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x88: redundant UACCESS disable
 
-[..]
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c0990703ce54..5e85548357c0 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -914,6 +914,18 @@ int clk_prepare(struct clk *clk)
->  }
->  EXPORT_SYMBOL_GPL(clk_prepare);
->  
-> +static void unprepare(void *clk)
+For a defconfig, that's the only issue I see.
+(Note that I just landed https://reviews.llvm.org/rL366130 for fixing
+up bugs from loop unrolling loops containing asm goto with Clang, so
+anyone else testing w/ clang will see fewer objtool warnings with that
+patch applied.  A follow up is being worked on in
+https://reviews.llvm.org/D64101).
 
-This deserves a less generic name.
+For allmodconfig:
+arch/x86/ia32/ia32_signal.o: warning: objtool:
+ia32_setup_rt_frame()+0x247: call to memset() with UACCESS enabled
+mm/kasan/common.o: warning: objtool: kasan_report()+0x52: call to
+__stack_chk_fail() with UACCESS enabled
+arch/x86/kernel/signal.o: warning: objtool:
+x32_setup_rt_frame()+0x255: call to memset() with UACCESS enabled
+arch/x86/kernel/signal.o: warning: objtool: __setup_rt_frame()+0x254:
+call to memset() with UACCESS enabled
+drivers/ata/sata_dwc_460ex.o: warning: objtool:
+sata_dwc_bmdma_start_by_tag()+0x3a0: can't find switch jump table
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x88:
+call to memset() with UACCESS enabled
+lib/ubsan.o: warning: objtool: ubsan_type_mismatch_common()+0x610:
+call to __stack_chk_fail() with UACCESS enabled
+lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x88:
+call to memset() with UACCESS enabled
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:
+.altinstr_replacement+0x56: redundant UACCESS disable
 
-> +{
-> +	clk_unprepare(clk);
-> +}
-> +
-> +int devm_clk_prepare(struct device *dev, struct clk *clk)
-> +{
-> +	int rc = clk_prepare(clk);
-> +	return rc ? : devm_add_action_or_reset(dev, unprepare, clk);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_clk_prepare);
-> +
->  static void clk_core_disable(struct clk_core *core)
->  {
->  	lockdep_assert_held(&enable_lock);
-> @@ -1136,6 +1148,18 @@ int clk_enable(struct clk *clk)
->  }
->  EXPORT_SYMBOL_GPL(clk_enable);
->  
-> +static void disable(void *clk)
-> +{
-> +	clk_disable(clk);
-> +}
-> +
-> +int devm_clk_enable(struct device *dev, struct clk *clk)
+Without your series, I see them anyways, so I don't consider them
+regressions added by this series.  Let's follow up on these maybe in a
+new thread?  (Shall I send you these object files?)
 
-clk_enable() is used in code that can't sleep, in what scenario do you
-envision it being useful to enable a clock from such region until devres
-cleans up the associated device?
+So for the series:
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> +{
-> +	int rc = clk_enable(clk);
-> +	return rc ? : devm_add_action_or_reset(dev, disable, clk);
+> >
+> >    I haven't dug into it yet.
+> >
+> > 2) There's also an issue in clang where a large switch table had a bunch
+> >    of unused (bad) entries.  It's not a code correctness issue, but
+> >    hopefully it can get fixed in clang anyway.  See patch 20/22 for more
+> >    details.
 
-devm_add_action_or_reset() allocates the devres object with GFP_KERNEL,
-so this won't work.
+Thanks for the report, let's follow up on steps for me to reproduce.
 
-> +}
-> +EXPORT_SYMBOL_GPL(devm_clk_enable);
-> +
->  static int clk_core_prepare_enable(struct clk_core *core)
->  {
->  	int ret;
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index 3c096c7a51dc..d09b5207e3f1 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -895,6 +895,14 @@ static inline void clk_restore_context(void) {}
->  
->  #endif
->  
-> +int devm_clk_prepare(struct device *dev, struct clk *clk);
-> +int devm_clk_enable(struct device *dev, struct clk *clk);
-> +static inline int devm_clk_prepare_enable(struct device *dev, struct clk *clk)
+> > These patches are also at:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git objtool-many-fixes
 
-devm_clk_prepare_enable() sounds very useful, devm_clk_prepare() might
-be useful, so keep those and drop devm_clk_enable().
+Are these the same patches? Some of the commit messages look different, like:
+https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=objtool-many-fixes&id=3e39561c52c4f0062207d604c972148b7b60c341
 
-Regards,
-Bjorn
 
-> +{
-> +	int rc = devm_clk_prepare(dev, clk);
-> +	return rc ? : devm_clk_enable(dev, clk);
-> +}
-> +
->  /* clk_prepare_enable helps cases using clk_enable in non-atomic context. */
->  static inline int clk_prepare_enable(struct clk *clk)
->  {
-> -- 
-> 2.17.1
+--
+Thanks,
+~Nick Desaulniers
