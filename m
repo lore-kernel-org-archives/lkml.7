@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E82C7618B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F18CC7618A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7925D214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC25F214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 05:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563167626;
-	bh=aW2i/PMsu1zMZsd3sK5Tcsd3UlqlRHAKKbDGz7j/x1Y=;
+	s=default; t=1563167636;
+	bh=ocyiAOK0maQsf4fwTu8SJPmes1IFrUNDDImmcOcRzgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ADwqI3p+ZGxV4HQ+GJrOoUBC2O5MiLAXC4zhVijz16LXB/wRb22Lo0WSY03rN4mQv
-	 UKvH9P11clc3D5hPepfeyG2tIwlntICGDej344aw2Cq9ZF34/soBiSSPQJMnMA2+qU
-	 c/DjEp09V01c1TTCBFN2DnH+gvjyC3+4DRIdU7xo=
+	b=zg1GrY3VCKogIeguVasaduznC9IOORBklFoMthKNnMrzFYW2szKXTPO6Xi1hkVsLI
+	 IylKxYUivmQf/74kRrjLGgVV4yuG4X7khtGEpiiXFUwASFYyKA/l9xMLnYhcZuVzki
+	 q1T0uA3tL65PrXkOIB9w69a7zfg/SRZJ89DxKSn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfGOFNo (ORCPT
+        id S1729341AbfGOFNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 01:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47872 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 01:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfGOFNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 01:13:44 -0400
+        id S1725954AbfGOFNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 01:13:54 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 266BB20868;
-        Mon, 15 Jul 2019 05:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B49320C01;
+        Mon, 15 Jul 2019 05:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563167622;
-        bh=aW2i/PMsu1zMZsd3sK5Tcsd3UlqlRHAKKbDGz7j/x1Y=;
+        s=default; t=1563167633;
+        bh=ocyiAOK0maQsf4fwTu8SJPmes1IFrUNDDImmcOcRzgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0KA2pDsc9wLeijExz5pj9YhLJ81thpbG8VttUT9EBn6L4mZrrbxRrt0v7tF5Op5p6
-         oX5+yNDT79lA8eB6EDg2ARNtulRqRGZKAp49Dm+QZkmkjia3mMZ5f2AC26TLfR+Fm3
-         Zwettd3PoEhzKePdC0+PVgyCfLfEwMB1yKm2HBNA=
+        b=0x4zRBJlyB4qhsMWQFX5X9YGqw/D4bFrU2lVuxZ18vOI870Ns8x+Cy7SA6r9IL8hj
+         E9sW4Jk3T4+JpuYRB/ZAXjk1CYHDFC7HOc6lZOjtu1sMS9OMS/gSEDQpiCTI/2Nm5G
+         ZRSURX++24TWnkTD1COM1xgO4jaCq2vngbJu/jbI=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -49,9 +49,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RFC PATCH v2 14/15] tracing: of: Add function tracer filter properties
-Date:   Mon, 15 Jul 2019 14:13:37 +0900
-Message-Id: <156316761767.23477.13784128240295644594.stgit@devnote2>
+Subject: [RFC PATCH v2 15/15] tracing: of: Add function-graph tracer option properties
+Date:   Mon, 15 Jul 2019 14:13:48 +0900
+Message-Id: <156316762864.23477.2115123246398911458.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <156316746861.23477.5815110570539190650.stgit@devnote2>
 References: <156316746861.23477.5815110570539190650.stgit@devnote2>
@@ -64,67 +64,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add function tracer filter properties which includes
- - ftrace-filters : string array of filter rules
- - ftrace-notraces : string array of notrace rules
-These properties are available on ftrace root node and
-instance node.
+Add following function-graph tracer related options
+ - fgraph-filters : string array of filter
+ - fgraph-notraces : string array of notrace-filter
+ - fgraph-max-depth : u32 value of max depth
+
+Note that these properties are available on ftrace root node
+only, because these filters are globally applied.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_of.c |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ kernel/trace/ftrace.c   |   85 ++++++++++++++++++++++++++++++-----------------
+ kernel/trace/trace_of.c |   68 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+), 30 deletions(-)
 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 5c3eadb143ed..7bc60ac4583e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1241,7 +1241,7 @@ static void clear_ftrace_mod_list(struct list_head *head)
+ 	mutex_unlock(&ftrace_lock);
+ }
+ 
+-static void free_ftrace_hash(struct ftrace_hash *hash)
++void free_ftrace_hash(struct ftrace_hash *hash)
+ {
+ 	if (!hash || hash == EMPTY_HASH)
+ 		return;
+@@ -4895,7 +4895,7 @@ __setup("ftrace_filter=", set_ftrace_filter);
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ static char ftrace_graph_buf[FTRACE_FILTER_SIZE] __initdata;
+ static char ftrace_graph_notrace_buf[FTRACE_FILTER_SIZE] __initdata;
+-static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
++int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
+ 
+ static int __init set_graph_function(char *str)
+ {
+@@ -5224,6 +5224,26 @@ __ftrace_graph_open(struct inode *inode, struct file *file,
+ 	return ret;
+ }
+ 
++struct ftrace_hash *ftrace_graph_copy_hash(bool enable)
++{
++	struct ftrace_hash *hash;
++
++	mutex_lock(&graph_lock);
++
++	if (enable)
++		hash = rcu_dereference_protected(ftrace_graph_hash,
++					lockdep_is_held(&graph_lock));
++	else
++		hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++					lockdep_is_held(&graph_lock));
++
++	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, hash);
++
++	mutex_unlock(&graph_lock);
++
++	return hash;
++}
++
+ static int
+ ftrace_graph_open(struct inode *inode, struct file *file)
+ {
+@@ -5280,11 +5300,40 @@ ftrace_graph_notrace_open(struct inode *inode, struct file *file)
+ 	return ret;
+ }
+ 
++int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable)
++{
++	struct ftrace_hash *old_hash, *new_hash;
++
++	new_hash = __ftrace_hash_move(hash);
++	if (!new_hash)
++		return -ENOMEM;
++
++	mutex_lock(&graph_lock);
++
++	if (enable) {
++		old_hash = rcu_dereference_protected(ftrace_graph_hash,
++				lockdep_is_held(&graph_lock));
++		rcu_assign_pointer(ftrace_graph_hash, new_hash);
++	} else {
++		old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++				lockdep_is_held(&graph_lock));
++		rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
++	}
++
++	mutex_unlock(&graph_lock);
++
++	/* Wait till all users are no longer using the old hash */
++	synchronize_rcu();
++
++	free_ftrace_hash(old_hash);
++
++	return 0;
++}
++
+ static int
+ ftrace_graph_release(struct inode *inode, struct file *file)
+ {
+ 	struct ftrace_graph_data *fgd;
+-	struct ftrace_hash *old_hash, *new_hash;
+ 	struct trace_parser *parser;
+ 	int ret = 0;
+ 
+@@ -5309,41 +5358,17 @@ ftrace_graph_release(struct inode *inode, struct file *file)
+ 
+ 		trace_parser_put(parser);
+ 
+-		new_hash = __ftrace_hash_move(fgd->new_hash);
+-		if (!new_hash) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
+-
+-		mutex_lock(&graph_lock);
+-
+-		if (fgd->type == GRAPH_FILTER_FUNCTION) {
+-			old_hash = rcu_dereference_protected(ftrace_graph_hash,
+-					lockdep_is_held(&graph_lock));
+-			rcu_assign_pointer(ftrace_graph_hash, new_hash);
+-		} else {
+-			old_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+-					lockdep_is_held(&graph_lock));
+-			rcu_assign_pointer(ftrace_graph_notrace_hash, new_hash);
+-		}
+-
+-		mutex_unlock(&graph_lock);
+-
+-		/* Wait till all users are no longer using the old hash */
+-		synchronize_rcu();
+-
+-		free_ftrace_hash(old_hash);
++		ret = ftrace_graph_apply_hash(fgd->new_hash,
++					fgd->type == GRAPH_FILTER_FUNCTION);
+ 	}
+ 
+- out:
+ 	free_ftrace_hash(fgd->new_hash);
+ 	kfree(fgd);
+ 
+ 	return ret;
+ }
+ 
+-static int
+-ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
++int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
+ {
+ 	struct ftrace_glob func_g;
+ 	struct dyn_ftrace *rec;
 diff --git a/kernel/trace/trace_of.c b/kernel/trace/trace_of.c
-index 14d6c9a8fd81..1ee6fab918f5 100644
+index 1ee6fab918f5..d78a082b1752 100644
 --- a/kernel/trace/trace_of.c
 +++ b/kernel/trace/trace_of.c
-@@ -322,11 +322,47 @@ trace_of_init_events(struct trace_array *tr, struct device_node *node)
- #define trace_of_init_events(tr, node) do {} while (0)
- #endif
+@@ -75,6 +75,71 @@ trace_of_set_instance_options(struct trace_array *tr, struct device_node *node)
+ 	}
+ }
  
-+#ifdef CONFIG_FUNCTION_TRACER
-+extern bool ftrace_filter_param __initdata;
-+extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
-+			     int len, int reset);
-+extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
-+			     int len, int reset);
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++extern unsigned int fgraph_max_depth;
++extern struct ftrace_hash *ftrace_graph_copy_hash(bool enable);
++extern int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
++extern int ftrace_graph_apply_hash(struct ftrace_hash *hash, bool enable);
++extern void free_ftrace_hash(struct ftrace_hash *hash);
 +
 +static void __init
-+trace_of_set_ftrace_filter(struct ftrace_ops *ops, const char *property,
-+			   struct device_node *node)
++trace_of_set_fgraph_filter(struct device_node *node, const char *property,
++			   bool enable)
 +{
++	struct ftrace_hash *hash;
 +	struct property *prop;
 +	const char *p;
 +	char buf[MAX_BUF_LEN];
 +	int err;
 +
++	if (!of_find_property(node, property, NULL))
++		return;
++
++	/* Get current filter hash */
++	hash = ftrace_graph_copy_hash(enable);
++	if (!hash) {
++		pr_err("Failed to copy hash\n");
++		return;
++	}
++
 +	of_property_for_each_string(node, property, prop, p) {
 +		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
 +			pr_err("filter string is too long: %s\n", p);
-+			return;
++			goto free_hash;
 +		}
-+		err = ftrace_set_filter(ops, buf, strlen(buf), 0);
++		err = ftrace_graph_set_hash(hash, buf);
 +		if (err) {
 +			pr_err("Failed to add %s: %s\n", property, buf);
-+			return;
++			goto free_hash;
 +		}
-+		ftrace_filter_param = true;
 +	}
++
++	if (ftrace_graph_apply_hash(hash, enable) < 0) {
++		pr_err("Failed to apply new hash\n");
++		goto free_hash;
++	}
++
++	return;
++
++free_hash:
++	free_ftrace_hash(hash);
++}
++
++static void __init
++trace_of_set_fgraph_options(struct device_node *node)
++{
++	u32 v = 0;
++
++	trace_of_set_fgraph_filter(node, "fgraph-filters", true);
++	trace_of_set_fgraph_filter(node, "fgraph-notraces", false);
++
++	if (!of_property_read_u32_index(node, "fgraph-max-depth", 0, &v))
++		fgraph_max_depth = (unsigned int)v;
 +}
 +#else
-+#define trace_of_set_ftrace_filter(ops, prop, node) do {} while (0)
++#define trace_of_set_fgraph_options(node) do {} while (0)
 +#endif
 +
  static void __init
- trace_of_enable_tracer(struct trace_array *tr, struct device_node *node)
+ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
  {
- 	const char *p;
+@@ -100,6 +165,9 @@ trace_of_set_ftrace_options(struct trace_array *tr, struct device_node *node)
+ 		if (tracing_alloc_snapshot() < 0)
+ 			pr_err("Failed to allocate snapshot buffer\n");
  
-+	trace_of_set_ftrace_filter(tr->ops, "ftrace-filters", node);
-+	trace_of_set_ftrace_filter(tr->ops, "ftrace-notraces", node);
++	/* function graph filters are global settings. */
++	trace_of_set_fgraph_options(node);
 +
- 	if (!of_property_read_string(node, "tracer", &p)) {
- 		if (tracing_set_tracer(tr, p) < 0)
- 			pr_err("Failed to set given tracer: %s\n", p);
+ 	trace_of_set_instance_options(tr, node);
+ }
+ 
 
