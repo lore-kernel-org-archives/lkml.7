@@ -2,120 +2,144 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA937C76195
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E13C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93133205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BA42080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 16:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vx5UHmP4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEOxNlok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbfGOQFA (ORCPT
+        id S1729840AbfGOQKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 12:05:00 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42961 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729603AbfGOQFA (ORCPT
+        Mon, 15 Jul 2019 12:10:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52303 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfGOQKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 12:05:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id e20so4603164iob.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 09:04:59 -0700 (PDT)
+        Mon, 15 Jul 2019 12:10:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s3so15776234wms.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 09:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=abd3MzgGdND+mibf+9QP7+SAzCXmIg9aBJBUAlhxoSE=;
-        b=Vx5UHmP4FSl+2sW2xSMATHmt/TstgDDB2D2BYOmRytxQn8jrzjv9CHvBN6ziokACKV
-         yzABsXIgYMdyMShtxK0HrEeZ6yqmlt1ErRBouLjdWGCgNDX8nI3gIQGZ6TbZfGsRZAHQ
-         G91t8osAi33e15JefGOz/Q8Tfy03uYvccBxHc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6fQPkaUZ+jePctAUjhVKB6gKSHt2QRsUl6ltTQzAvk4=;
+        b=uEOxNlokRMoceBmAqR5uFDO0QSBwIupTiHkT9Fz+VFxSksiyFFwSvd6cHOuNfFVcQ0
+         eGJ8d5U4Sa1xS+gYEhzp5aM3Kg0jpp4BkPzcKyr3IY/+nB2YJ9oDHaurstQZrmsGYrgW
+         ZmGm53Dta+vbqQY3wRZayyEhaPY3vfd4+CUcJ238kiPSEhprYJv1HCItJFKzOkHzZmMp
+         UkaKixk16rwg+FAVT0E/KTzKOTdiKhL7YjR679c7zEo6UjekfO1oq1ceg0FUC1dm9bSQ
+         TjlecO4bU+cXUBAMV8Ts7X25jGOTOWWBx3r4+6cv/NuVvamGKpzGqbLe5kgNblW/MvMZ
+         Aglw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=abd3MzgGdND+mibf+9QP7+SAzCXmIg9aBJBUAlhxoSE=;
-        b=bdTGJlfNNCcdr1SHPNc96CVXfROyD+H+uln81kNP6OXqlEC9xY8LlVHVKwvez5Xqng
-         LMeF89tpaMUyj8qOR6HMPr6ueANWnW6axSxyrqrumvHkSngdYSsCSxovRN5Av4yp2b4X
-         AjuTXDQkI5Go9uso9h85jkomchxcPC7Il8OC1NftHsF2qB6z+kt+P3vmJeJVhSju9F5d
-         UrVrzy5yK00gmx7rRYiY9XQOvKK0IF2nMni8Ta2iq0cTeqGSiG0RW4aLnk1wCKWlxlKy
-         uL18GgEnYeFnrNI5RPXPKgbks1ysedTm2dOSqZMoCApLfwSEYcXQmiWNdro28QX0omU/
-         /8hQ==
-X-Gm-Message-State: APjAAAUw7hc2IwVWepZIGe+phulf0dNNfzEKWpH4x1gHXp+g7crMJuN4
-        cFmNpGSCmPvD6LjqccjbXgmV56csf8znXR7YV9oHKA==
-X-Google-Smtp-Source: APXvYqxIWrDZQA5aJHb2ZwP6MlOqQQByu0F7zWYD236UlUTqOmdsc6Xfpir6+WTeVaRUAFknNlgvqiYC7RyKKDGoS4g=
-X-Received: by 2002:a05:6638:81:: with SMTP id v1mr27332807jao.72.1563206699374;
- Mon, 15 Jul 2019 09:04:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6fQPkaUZ+jePctAUjhVKB6gKSHt2QRsUl6ltTQzAvk4=;
+        b=iZCNmJDbYtW7P0UncJkRoauCPA89xPvGPhUwxy3km3tJjKBZapQbraj+qlIPOx+Kru
+         jZbovl1PSFLsK2S/XuENtY2cHqSDZ+m0MZZVWOjt4YlM5bEUdxKNCX+RFbQk7U8NYa76
+         xFdoIL9YMpaDh3v8dcDrobdbgQ7SQAvWaiQkGGUju404q4/5BEgE+hTtUP5ewyrGZeeS
+         pIR1AMpXUMVpYi72nPAdWBCsxQz6WQ3tPXKDiq7HTkvnTqsqdUPOJI4MZa5DYNhMLu/9
+         xsxjuqLXUt8RPrWUCSYLawHLRZ0Ckv6bYntA0rYaKT70/Mf9w71GbXgOjNEe2rGLjLee
+         KyNw==
+X-Gm-Message-State: APjAAAWYy+73krnBtJ8t5+sSKuXi+bTSYre3+NJQnoiVgN7EVjlDohnp
+        9D5bGbqhQVlaS/5DnxqF6E7qvxcshCGLbUY1sI+VFg==
+X-Google-Smtp-Source: APXvYqxs8hoWL7cmGqBiTkXz0ym5JhcT5zStF3uo6vpPbmfu9/xOFQMs+ujD5jvvM8aSCLT0Yp/V7Qwb6pVEzNIjEMg=
+X-Received: by 2002:a05:600c:20d:: with SMTP id 13mr25449956wmi.141.1563206998088;
+ Mon, 15 Jul 2019 09:09:58 -0700 (PDT)
 MIME-Version: 1.0
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Mon, 15 Jul 2019 09:04:48 -0700
-Message-ID: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
-Subject: [GIT PULL] SafeSetID LSM changes for 5.3
-To:     torvalds@linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
+References: <20190712094118.1559434-1-arnd@arndb.de>
+In-Reply-To: <20190712094118.1559434-1-arnd@arndb.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 15 Jul 2019 12:09:45 -0400
+Message-ID: <CADnq5_NX+eGdsK20_Cn_+5WDbJpyPukqhyXhgEoce4UagAncrA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/amdgpu: hide #warning for missing DC config
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Jack Xiao <Jack.Xiao@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Huang Rui <ray.huang@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Xiaojie Yuan <xiaojie.yuan@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Jul 12, 2019 at 5:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> It is annoying to have #warnings that trigger in randconfig
+> builds like
+>
+> drivers/gpu/drm/amd/amdgpu/soc15.c:653:3: error: "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
+> drivers/gpu/drm/amd/amdgpu/nv.c:400:3: error: "Enable CONFIG_DRM_AMD_DC for display support on navi."
+>
+> Remove these and rely on the users to turn these on.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I'm maintaining the new SafeSetID LSM and was told to set up my own
-tree for sending pull requests rather than sending my changes through
-James Morris and the security subsystem tree.
+Applied.  thanks!
 
-This is my first time doing one of these pull requests so hopefully I
-didn't screw something up.
+Alex
 
-Thanks,
-Micah
----
-The following changes since commit fec88ab0af9706b2201e5daf377c5031c62d11f7:
-Merge tag 'for-linus-hmm' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-07-14
-19:42:11 -0700)
-are available in the Git repository at:
-https://github.com/micah-morton/linux.git tags/safesetid-5.3
-for you to fetch changes up to e10337daefecb47209fd2af5f4fab0d1a370737f:
-LSM: SafeSetID: fix use of literal -1 in capable hook (2019-07-15
-08:08:03 -0700)
-----------------------------------------------------------------
-SafeSetID patches for 5.3
-These changes from Jann Horn fix a couple issues in the recently added
-SafeSetID LSM:
-
-(1) There was a simple logic bug in one of the hooks for the LSM where
-the code was incorrectly returning early in some cases before all
-security checks had been passed.
-(2) There was a more high level issue with how this LSM gets configured
-that could allow for a program to bypass the security restrictions
-by switching to an allowed UID and then again to any other UID on
-the system if the target UID of the first transition is
-unconstrained on the system. Luckily this is an easy fix that we now
-enforce at the time the LSM gets configured.
-
-There are also some changes from Jann that make policy updates for this
-LSM atomic. Kees Cook, Jann and myself have reviewed these changes and they
-look good from our point of view.
-Signed-off-by: Micah Morton <mortonm@chromium.org>
-----------------------------------------------------------------
-Jann Horn (10):
-LSM: SafeSetID: fix pr_warn() to include newline
-LSM: SafeSetID: fix check for setresuid(new1, new2, new3)
-LSM: SafeSetID: refactor policy hash table
-LSM: SafeSetID: refactor safesetid_security_capable()
-LSM: SafeSetID: refactor policy parsing
-LSM: SafeSetID: fix userns handling in securityfs
-LSM: SafeSetID: rewrite userspace API to atomic updates
-LSM: SafeSetID: add read handler
-LSM: SafeSetID: verify transitive constrainedness
-LSM: SafeSetID: fix use of literal -1 in capable hook
-security/safesetid/lsm.c | 276 +++++++++++++-----------------------------
-security/safesetid/lsm.h | 34 ++++--
-security/safesetid/securityfs.c | 307
-+++++++++++++++++++++++++++++------------------
-tools/testing/selftests/safesetid/safesetid-test.c | 18 ++-
-4 files changed, 306 insertions(+), 329 deletions(-)
+> ---
+>  drivers/gpu/drm/amd/amdgpu/nv.c    | 2 --
+>  drivers/gpu/drm/amd/amdgpu/soc15.c | 4 ----
+>  2 files changed, 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
+> index 9253c03d387a..10ec0e81ee58 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/nv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/nv.c
+> @@ -396,8 +396,6 @@ int nv_set_ip_blocks(struct amdgpu_device *adev)
+>  #if defined(CONFIG_DRM_AMD_DC)
+>                 else if (amdgpu_device_has_dc_support(adev))
+>                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
+> -#else
+> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on navi."
+>  #endif
+>                 amdgpu_device_ip_block_add(adev, &gfx_v10_0_ip_block);
+>                 amdgpu_device_ip_block_add(adev, &sdma_v5_0_ip_block);
+> diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> index 87152d8ef0df..90fb0149fbea 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> @@ -649,8 +649,6 @@ int soc15_set_ip_blocks(struct amdgpu_device *adev)
+>  #if defined(CONFIG_DRM_AMD_DC)
+>                 else if (amdgpu_device_has_dc_support(adev))
+>                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
+> -#else
+> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
+>  #endif
+>                 if (!(adev->asic_type == CHIP_VEGA20 && amdgpu_sriov_vf(adev))) {
+>                         amdgpu_device_ip_block_add(adev, &uvd_v7_0_ip_block);
+> @@ -671,8 +669,6 @@ int soc15_set_ip_blocks(struct amdgpu_device *adev)
+>  #if defined(CONFIG_DRM_AMD_DC)
+>                 else if (amdgpu_device_has_dc_support(adev))
+>                         amdgpu_device_ip_block_add(adev, &dm_ip_block);
+> -#else
+> -#      warning "Enable CONFIG_DRM_AMD_DC for display support on SOC15."
+>  #endif
+>                 amdgpu_device_ip_block_add(adev, &vcn_v1_0_ip_block);
+>                 break;
+> --
+> 2.20.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
