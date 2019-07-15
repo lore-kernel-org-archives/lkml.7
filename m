@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0591C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA46C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EBB20868
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD70020651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199772;
-	bh=hA1BGIYycUI7Cx54KZzbIMC+IwY3xhFaUuVmGlLmviE=;
+	s=default; t=1563199774;
+	bh=xlxfzyPhI5vqM5ivAdtriyedX7X75KfABksDlvQ9qKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8l8vvsFa9jmdGWIN1cC/hfl0yQ1qnBsiY/ewKR/T6mqm+QQlelmDF0bVa0XlPWfb
-	 tpKZC4lCn0uCn2tlncuiGxYWvfmkUtGqfEWb+xKwiyCKL3J8dtK2JvJWEO4Gpbvj1J
-	 1JMRdaTTWyPDjvnyGKt4B3FZK5KTd0CzwmVdrW10=
+	b=BZpQUEmW56mJXdS02lUVCPB35nMcJ/Sh/xzezOK6S02lslSfU8XPIjJoHl/QmBsPw
+	 YusV3KemtLyLaC3rn/hmst89GkfgOoaEXQNJXvXlwheJTVtOZgKYeOs9PzPWzWZyPZ
+	 FQSlN5OPBgWi/ew3jNLRZsDYzQYED+Zb6cU7dS40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388318AbfGOOJb (ORCPT
+        id S2388708AbfGOOJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:09:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388697AbfGOOJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:27 -0400
+        id S2388278AbfGOOJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:24 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE4E321537;
-        Mon, 15 Jul 2019 14:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C730212F5;
+        Mon, 15 Jul 2019 14:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199766;
-        bh=hA1BGIYycUI7Cx54KZzbIMC+IwY3xhFaUuVmGlLmviE=;
+        s=default; t=1563199763;
+        bh=xlxfzyPhI5vqM5ivAdtriyedX7X75KfABksDlvQ9qKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z17ZLVej+91SKpbWXkfFK11VE/lP5eyau6Tp+7GH2YIFUiKrE9gBRquaHDnk5qx2I
-         QdyUa+4jq1ZJT+D/VR3tCYJGLkgaJinC6v+Cv+pyuu2bD3460PQUwPFOjdvlgdLEY0
-         JabgMZtOJhCHzwF952fI2H9FjqYGWENqIkoKZpzY=
+        b=m3sTML043+bNCtkehg1UI7uLPX0CW2qs1tL6bALPgywxEBIGUuUkxA4ud9us1Hp0e
+         fzy1YrdHG7ZvYSIy35Xzdsdi/3GhN6i3goQSFe/Epm6EoawYeEj5x131KBIpGFfhsg
+         ZYkafHcCyIkLwoLUi08LE7fxGdhFl6FhxLHbrecs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@redhat.com>, Tom Vaden <tom.vaden@hpe.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Liang Kan <kan.liang@linux.intel.com>,
+Cc:     Qian Cai <cai@lca.pw>, Peter Zijlstra <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 100/219] perf/x86/intel: Disable check_msr for real HW
-Date:   Mon, 15 Jul 2019 10:01:41 -0400
-Message-Id: <20190715140341.6443-100-sashal@kernel.org>
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 099/219] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
+Date:   Mon, 15 Jul 2019 10:01:40 -0400
+Message-Id: <20190715140341.6443-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -66,62 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit d0e1a507bdc761a14906f03399d933ea639a1756 ]
+[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
 
-Tom Vaden reported false failure of the check_msr() function, because
-some servers can do POST tracing and enable LBR tracing during
-bootup.
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places because they need other macros all
+came from kernel/sched/sched-pelt.h which was generated by
+Documentation/scheduler/sched-pelt. As the result, it causes compilation
+a lot of warnings,
 
-Kan confirmed that check_msr patch was to fix a bug report in
-guest, so it's ok to disable it for real HW.
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  ...
 
-Reported-by: Tom Vaden <tom.vaden@hpe.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Silence it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tom Vaden <tom.vaden@hpe.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Liang Kan <kan.liang@linux.intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190616141313.GD2500@krava
-[ Readability edits. ]
+Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/scheduler/sched-pelt.c | 3 ++-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 82dad001d1ea..a50e182c38b6 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -19,6 +19,7 @@
- #include <asm/intel-family.h>
- #include <asm/apic.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/hypervisor.h>
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..7238b355919c 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
  
- #include "../perf_event.h"
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	/* To silence -Wunused-but-set-variable warnings. */
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
  
-@@ -3927,6 +3928,13 @@ static bool check_msr(unsigned long msr, u64 mask)
- {
- 	u64 val_old, val_new, val_tmp;
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
  
-+	/*
-+	 * Disable the check for real HW, so we don't
-+	 * mess with potentionaly enabled registers:
-+	 */
-+	if (hypervisor_is_type(X86_HYPER_NATIVE))
-+		return true;
-+
- 	/*
- 	 * Read the current value, change it and read it back to see if it
- 	 * matches, this is needed to detect certain hardware emulators
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
 -- 
 2.20.1
 
