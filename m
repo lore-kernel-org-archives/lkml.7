@@ -2,143 +2,112 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757BFC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7BBC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3EA21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 07:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C56214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 08:00:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dBi+QnfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbfGOH7R (ORCPT
+        id S1729368AbfGOIAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 03:59:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfGOH7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 03:59:17 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8893D3DD47;
-        Mon, 15 Jul 2019 07:59:16 +0000 (UTC)
-Received: from krava (unknown [10.40.205.8])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D441E6090E;
-        Mon, 15 Jul 2019 07:59:13 +0000 (UTC)
-Date:   Mon, 15 Jul 2019 09:59:12 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] Fix perf stat repeat segfault
-Message-ID: <20190715075912.GA2821@krava>
-References: <20190710204540.176495-1-nums@google.com>
- <20190714204432.GA8120@krava>
- <20190714205505.GB8120@krava>
- <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
+        Mon, 15 Jul 2019 04:00:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39697 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfGOIAN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 04:00:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so15951114wrt.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 01:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=tRiygra6hSab9PFk7Z9l6xuTrrsQkkS59G9VqyWlvsE=;
+        b=dBi+QnfIcUoydfxe/b9uChM0bWF1MH/g7YU3dK7ZPo33+WHMTkTstbA05nrHHROLUZ
+         HREkBSKnMdTIjiO6AvOCbrnqjmEI/ylmmYUW1A91+QoeoTvMQv58UWgg2Wc0P7ohY2yo
+         +8qa20aCc3FE7ii1++w2KBn851VxQrlJ/fEej5ww9SmJDjEzCPjCD9EOmpfKMFAFhl1/
+         RkZqCsnabA/rt3uHq46eYmhYMnawKTdb56VkCOv1doi5ciN4Ft9Uqc5hnbI72xL99U2C
+         4T+tsc8GOE/mZIZD14zpfnISxNbmC1pOIj/8fDbxit7b8/sMwm+TQJZeGpujG4KVMYp4
+         9lng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=tRiygra6hSab9PFk7Z9l6xuTrrsQkkS59G9VqyWlvsE=;
+        b=AYJy/8cZlLPTx0TWzxKAz/+yQJ9dvwO03Y/tGKm+2D9BP+jgk5zmw+rqLHDNknrTjd
+         DrhVs34QoGxtOO8peC2xb1DhmqNYhbo/g1wlTfuOcgBDOucBm/eY7QSd7zGKCVP/kmZ8
+         w/cfPSljIio/TT37ApAmqx+CVSQtD5iZCNEkg5XS6OaZ8g5bSTPp8Ez9N2S8pgEpoQf7
+         8tpwnD+S7CAchtB54tIWirusD8k5aVP/rrZU49p9YkmA/gyWSP4pHDH5/iP/wlRmeupP
+         DPvPbWRn6QT3DQtgSrETU9vWMvGINkBIrQzm/3oV3sVHg5IPa0e/S/8mqKw8mCmFRaIs
+         vXvA==
+X-Gm-Message-State: APjAAAVbf7TELNxiRWKmkCKijg8K6kJAZmFECV8ilpN2YhkRkBEG3EI0
+        DViFXcBfN9kQ2KbB5pjrdtS3sNxx4C4=
+X-Google-Smtp-Source: APXvYqygs+Zsureb7Rdj9ooOAYh0zlgrKeh6Imi7zAWE9+6+ZFdavwB6KT3ZFonhfGNpYio1VO39vg==
+X-Received: by 2002:a5d:6408:: with SMTP id z8mr12695818wru.246.1563177611708;
+        Mon, 15 Jul 2019 01:00:11 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id a2sm15850877wmj.9.2019.07.15.01.00.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jul 2019 01:00:10 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 09:00:09 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Backlight for v5.3
+Message-ID: <20190715080009.GD4401@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 15 Jul 2019 07:59:16 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 02:36:42PM -0700, Stephane Eranian wrote:
-> On Sun, Jul 14, 2019 at 1:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Sun, Jul 14, 2019 at 10:44:36PM +0200, Jiri Olsa wrote:
-> > > On Wed, Jul 10, 2019 at 01:45:40PM -0700, Numfor Mbiziwo-Tiapo wrote:
-> > > > When perf stat is called with event groups and the repeat option,
-> > > > a segfault occurs because the cpu ids are stored on each iteration
-> > > > of the repeat, when they should only be stored on the first iteration,
-> > > > which causes a buffer overflow.
-> > > >
-> > > > This can be replicated by running (from the tip directory):
-> > > >
-> > > > make -C tools/perf
-> > > >
-> > > > then running:
-> > > >
-> > > > tools/perf/perf stat -e '{cycles,instructions}' -r 10 ls
-> > > >
-> > > > Since run_idx keeps track of the current iteration of the repeat,
-> > > > only storing the cpu ids on the first iteration (when run_idx < 1)
-> > > > fixes this issue.
-> > > >
-> > > > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> > > > ---
-> > > >  tools/perf/builtin-stat.c | 7 ++++---
-> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > > index 63a3afc7f32b..92d6694367e4 100644
-> > > > --- a/tools/perf/builtin-stat.c
-> > > > +++ b/tools/perf/builtin-stat.c
-> > > > @@ -378,9 +378,10 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
-> > > >     workload_exec_errno = info->si_value.sival_int;
-> > > >  }
-> > > >
-> > > > -static bool perf_evsel__should_store_id(struct perf_evsel *counter)
-> > > > +static bool perf_evsel__should_store_id(struct perf_evsel *counter, int run_idx)
-> > > >  {
-> > > > -   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID;
-> > > > +   return STAT_RECORD || counter->attr.read_format & PERF_FORMAT_ID
-> > > > +           && run_idx < 1;
-> > >
-> > > we create counters for every iteration, so this can't be
-> > > based on iteration
-> > >
-> > > I think that's just a workaround for memory corruption,
-> > > that's happening for repeating groupped events stats,
-> > > I'll check on this
-> >
-> > how about something like this? we did not cleanup
-> > ids on evlist close, so it kept on raising and
-> > causing corruption in next iterations
-> >
-> not sure, that would realloc on each iteration of the repeats.
+Good morning Linus,
 
-well, we need new ids, because we create new events every iteration
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-jirka
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-> 
-> >
-> > jirka
-> >
-> >
-> > ---
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index ebb46da4dfe5..52459dd5ad0c 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
-> >         xyarray__delete(evsel->sample_id);
-> >         evsel->sample_id = NULL;
-> >         zfree(&evsel->id);
-> > +       evsel->ids = 0;
-> >  }
-> >
-> >  static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
-> > @@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
-> >
-> >         perf_evsel__close_fd(evsel);
-> >         perf_evsel__free_fd(evsel);
-> > +       perf_evsel__free_id(evsel);
-> >  }
-> >
-> >  int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-5.3
+
+for you to fetch changes up to 73fbfc499448455f1e1c77717040e09e25f1d976:
+
+  backlight: pwm_bl: Fix heuristic to determine number of brightness levels (2019-06-27 07:09:05 +0100)
+
+----------------------------------------------------------------
+ - New Functionality
+   - Provide support for ACPI enumeration; gpio_backlight
+
+ - Fix-ups
+   - SPDX fixups; pwm_bl
+   - Fix linear	brightness levels to include number available; pwm_bl
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      backlight: pwm_bl: Convert to use SPDX identifier
+      backlight: gpio_backlight: Enable ACPI enumeration
+
+Matthias Kaehlcke (1):
+      backlight: pwm_bl: Fix heuristic to determine number of brightness levels
+
+ drivers/video/backlight/gpio_backlight.c | 23 ++++++++-------------
+ drivers/video/backlight/pwm_bl.c         | 35 ++++++++------------------------
+ 2 files changed, 18 insertions(+), 40 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
