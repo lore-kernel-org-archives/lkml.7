@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64099C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41F5C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4E321842
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2D721842
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563200852;
-	bh=vQchrjEMQsmWJx/HONoUfde2+hN/g83S5iGj7XJsXPQ=;
+	s=default; t=1563200858;
+	bh=XBq78g8jmN+Da3vgAN/HM+QTKF806VoyDkgM1mv4sPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2IphRnEZEwurYSSH21rdvAEMx550z1PDIBWINtqN+DnKEazKkyU/ocMYLTI3vjs8f
-	 /Wm/FdWIefIAVSXKPW7OIUx+d1kI3KqtfIub+NiEh5EPBmMj6mtenGSKw5aUbXJmJE
-	 B74dEBhSxJyzsLaeIoob39cV2kDBKmeKeYBW0mN0=
+	b=F1N6e8NLJN+3yMJx6wCUx4hEx7pxjsTfKzUUkXFDZ1plilM6omJHeS/6C2IlGZQTg
+	 d6LKomVXPL57SgxYDKecP339U0wrKBlNJkMUYZ8EfUwnH3VieEyekMWxggcwyZ7huQ
+	 Qs/24jhUgJs/FTklcs6xYuAHiHAgP4tbFA1WPZDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391094AbfGOO1b (ORCPT
+        id S2391145AbfGOO1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:27:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36734 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390351AbfGOO13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:27:29 -0400
+        id S2390431AbfGOO1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:27:35 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C88B21842;
-        Mon, 15 Jul 2019 14:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 672FA21850;
+        Mon, 15 Jul 2019 14:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200848;
-        bh=vQchrjEMQsmWJx/HONoUfde2+hN/g83S5iGj7XJsXPQ=;
+        s=default; t=1563200854;
+        bh=XBq78g8jmN+Da3vgAN/HM+QTKF806VoyDkgM1mv4sPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8zHQ4kWSFXGKKXHaWdXEprlf4VU3ZpQXpD9RXdKvKYrJ1VIu6WvotQnKjyYxNcZA
-         0Mi4cHnKVG5mv+GpJWwjBljO5TFxzebe90oZ2Hx8phyGGqK7gNhhyk0g2SPqN4fEOR
-         S+vIdAFRXuyKqWi1d1BeMw+VvralY1RFwl5/n5V8=
+        b=Xm2OP+kpXVE2ECSevrb+PnJYHB3hP0tjJ9MjS1rlwNiun8q9qs0YhCNBgyHhkICaO
+         f8CNKPf/bJ+CC/Dgr3r4GR9tt1MNGjYK+mj/TsUFRJn7QvIq/xAdJXzT1Upp7vRTsy
+         tFUhZgWfEwgp3VPSCSaiRkK+Zwi+hra+n9HMatGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 144/158] gpiolib: Fix references to gpiod_[gs]et_*value_cansleep() variants
-Date:   Mon, 15 Jul 2019 10:17:55 -0400
-Message-Id: <20190715141809.8445-144-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 145/158] tools: bpftool: Fix json dump crash on powerpc
+Date:   Mon, 15 Jul 2019 10:17:56 -0400
+Message-Id: <20190715141809.8445-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -59,66 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jiri Olsa <jolsa@redhat.com>
 
-[ Upstream commit 3285170f28a850638794cdfe712eb6d93e51e706 ]
+[ Upstream commit aa52bcbe0e72fac36b1862db08b9c09c4caefae3 ]
 
-Commit 372e722ea4dd4ca1 ("gpiolib: use descriptors internally") renamed
-the functions to use a "gpiod" prefix, and commit 79a9becda8940deb
-("gpiolib: export descriptor-based GPIO interface") introduced the "raw"
-variants, but both changes forgot to update the comments.
+Michael reported crash with by bpf program in json mode on powerpc:
 
-Readd a similar reference to gpiod_set_value(), which was accidentally
-removed by commit 1e77fc82110ac36f ("gpio: Add missing open drain/source
-handling to gpiod_set_value_cansleep()").
+  # bpftool prog -p dump jited id 14
+  [{
+        "name": "0xd00000000a9aa760",
+        "insns": [{
+                "pc": "0x0",
+                "operation": "nop",
+                "operands": [null
+                ]
+            },{
+                "pc": "0x4",
+                "operation": "nop",
+                "operands": [null
+                ]
+            },{
+                "pc": "0x8",
+                "operation": "mflr",
+  Segmentation fault (core dumped)
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20190701142738.25219-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+The code is assuming char pointers in format, which is not always
+true at least for powerpc. Fixing this by dumping the whole string
+into buffer based on its format.
+
+Please note that libopcodes code does not check return values from
+fprintf callback, but as per Jakub suggestion returning -1 on allocation
+failure so we do the best effort to propagate the error.
+
+Fixes: 107f041212c1 ("tools: bpftool: add JSON output for `bpftool prog dump jited *` command")
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/bpf/bpftool/jit_disasm.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index fd713326dcfc..4a48c7c47709 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2877,7 +2877,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- int gpiod_get_raw_value(const struct gpio_desc *desc)
- {
- 	VALIDATE_DESC(desc);
--	/* Should be using gpio_get_value_cansleep() */
-+	/* Should be using gpiod_get_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	return gpiod_get_raw_value_commit(desc);
- }
-@@ -2898,7 +2898,7 @@ int gpiod_get_value(const struct gpio_desc *desc)
- 	int value;
+diff --git a/tools/bpf/bpftool/jit_disasm.c b/tools/bpf/bpftool/jit_disasm.c
+index 87439320ef70..73d7252729fa 100644
+--- a/tools/bpf/bpftool/jit_disasm.c
++++ b/tools/bpf/bpftool/jit_disasm.c
+@@ -10,6 +10,8 @@
+  * Licensed under the GNU General Public License, version 2.0 (GPLv2)
+  */
  
- 	VALIDATE_DESC(desc);
--	/* Should be using gpio_get_value_cansleep() */
-+	/* Should be using gpiod_get_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
++#define _GNU_SOURCE
++#include <stdio.h>
+ #include <stdarg.h>
+ #include <stdint.h>
+ #include <stdio.h>
+@@ -51,11 +53,13 @@ static int fprintf_json(void *out, const char *fmt, ...)
+ 	char *s;
  
- 	value = gpiod_get_raw_value_commit(desc);
-@@ -3123,7 +3123,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- void gpiod_set_raw_value(struct gpio_desc *desc, int value)
- {
- 	VALIDATE_DESC_VOID(desc);
--	/* Should be using gpiod_set_value_cansleep() */
-+	/* Should be using gpiod_set_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	gpiod_set_raw_value_commit(desc, value);
+ 	va_start(ap, fmt);
++	if (vasprintf(&s, fmt, ap) < 0)
++		return -1;
++	va_end(ap);
++
+ 	if (!oper_count) {
+ 		int i;
+ 
+-		s = va_arg(ap, char *);
+-
+ 		/* Strip trailing spaces */
+ 		i = strlen(s) - 1;
+ 		while (s[i] == ' ')
+@@ -68,11 +72,10 @@ static int fprintf_json(void *out, const char *fmt, ...)
+ 	} else if (!strcmp(fmt, ",")) {
+ 		   /* Skip */
+ 	} else {
+-		s = va_arg(ap, char *);
+ 		jsonw_string(json_wtr, s);
+ 		oper_count++;
+ 	}
+-	va_end(ap);
++	free(s);
+ 	return 0;
  }
-@@ -3164,6 +3164,7 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
- void gpiod_set_value(struct gpio_desc *desc, int value)
- {
- 	VALIDATE_DESC_VOID(desc);
-+	/* Should be using gpiod_set_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	gpiod_set_value_nocheck(desc, value);
- }
+ 
 -- 
 2.20.1
 
