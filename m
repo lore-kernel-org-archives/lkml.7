@@ -2,55 +2,50 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE6AC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73103C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FFC205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475F72067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202512;
-	bh=ipCcHjIhlJAKSpf0KtDgEtW1PuWtCoxSDhCf9IAkvUM=;
+	s=default; t=1563202534;
+	bh=7/icOxTar5uvMBHZE0ybxyJ8vjeQyJJxiZGutw00W4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUDwxLUIfUCHQ3r9S6q7mOqNbaNVfJxt6Ll7NgJcrL/XBhKkShWKoggN9uEeRlV5g
-	 hGiaQOjXGmEBsGcuBDTUTyTu8Fk2jUJ49aGc2cv4TR4ZsaQWeXLmZB5Kcz1vtK04Uq
-	 Gn9rb1bmd8gLY6+QiaSa411IFUUDYdhCYnS+bF+Y=
+	b=sBMijU1subzL8kB45k99qd7Qz9j0zN9oIcnsqZcRnp0gEl7q1JU+6T1sikzlVS0w6
+	 KKZZYgyRNkuhBEjFXm4w3gOG2IKV/D6IigyDDD9oi5iDf4icHN3uuvzjTJKkxAdGEl
+	 XmPGGDtFuvBvMn+ikYvEJlQM477kRJmcq1PBy3WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391414AbfGOO07 (ORCPT
+        id S2390633AbfGOO0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35518 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391393AbfGOO0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:26:52 -0400
+        id S2391102AbfGOO0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:26:06 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C311A206B8;
-        Mon, 15 Jul 2019 14:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB91E2184C;
+        Mon, 15 Jul 2019 14:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200811;
-        bh=ipCcHjIhlJAKSpf0KtDgEtW1PuWtCoxSDhCf9IAkvUM=;
+        s=default; t=1563200765;
+        bh=7/icOxTar5uvMBHZE0ybxyJ8vjeQyJJxiZGutw00W4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K83LbY+cJCSDQ1+4tWvcLsYHpvRNsA3HaT32mjfdNutJ+qSwA2V5/1FAC5P9ZGl9A
-         GvpASQttmmjMNKx3zTjJHISCAcJxycni1IiLK3MRmrPhw5z+fuLY70kIeNbOduSYWU
-         gcIh5huOCItGSqD70+qJ2iyzkSLdDvwWyMSLM/wM=
+        b=ZdUzXW5ucbeSXbCvK52MqI6c4WX8igHoslGZYASB6IYzbYpSJdb+Qxf11zWcDOIO9
+         7GLetf5GpWvrOt93U1zBgcg+A+5ROwYGt+yVtxagnEarUqoyeW4fyEFmnZzJNVM+nd
+         1las3lAAdp6A1QLHTddxitMLj10RNx0AoJahKqYQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baruch Siach <baruch@tkos.co.il>, Song Liu <songliubraving@fb.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 135/158] bpf: fix uapi bpf_prog_info fields alignment
-Date:   Mon, 15 Jul 2019 10:17:46 -0400
-Message-Id: <20190715141809.8445-135-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 125/158] bcache: check CACHE_SET_IO_DISABLE bit in bch_journal()
+Date:   Mon, 15 Jul 2019 10:17:36 -0400
+Message-Id: <20190715141809.8445-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
@@ -63,58 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 0472301a28f6cf53a6bc5783e48a2d0bbff4682f ]
+[ Upstream commit 383ff2183ad16a8842d1fbd9dd3e1cbd66813e64 ]
 
-Merge commit 1c8c5a9d38f60 ("Merge
-git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next") undid the
-fix from commit 36f9814a494 ("bpf: fix uapi hole for 32 bit compat
-applications") by taking the gpl_compatible 1-bit field definition from
-commit b85fab0e67b162 ("bpf: Add gpl_compatible flag to struct
-bpf_prog_info") as is. That breaks architectures with 16-bit alignment
-like m68k. Add 31-bit pad after gpl_compatible to restore alignment of
-following fields.
+When too many I/O errors happen on cache set and CACHE_SET_IO_DISABLE
+bit is set, bch_journal() may continue to work because the journaling
+bkey might be still in write set yet. The caller of bch_journal() may
+believe the journal still work but the truth is in-memory journal write
+set won't be written into cache device any more. This behavior may
+introduce potential inconsistent metadata status.
 
-Thanks to Dmitry V. Levin his analysis of this bug history.
+This patch checks CACHE_SET_IO_DISABLE bit at the head of bch_journal(),
+if the bit is set, bch_journal() returns NULL immediately to notice
+caller to know journal does not work.
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/bpf.h       | 1 +
- tools/include/uapi/linux/bpf.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/md/bcache/journal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 2932600ce271..d143e277cdaf 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -2486,6 +2486,7 @@ struct bpf_prog_info {
- 	char name[BPF_OBJ_NAME_LEN];
- 	__u32 ifindex;
- 	__u32 gpl_compatible:1;
-+	__u32 :31; /* alignment pad */
- 	__u64 netns_dev;
- 	__u64 netns_ino;
- 	__u32 nr_jited_ksyms;
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 66917a4eba27..bf4cd924aed5 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -2484,6 +2484,7 @@ struct bpf_prog_info {
- 	char name[BPF_OBJ_NAME_LEN];
- 	__u32 ifindex;
- 	__u32 gpl_compatible:1;
-+	__u32 :31; /* alignment pad */
- 	__u64 netns_dev;
- 	__u64 netns_ino;
- 	__u32 nr_jited_ksyms;
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index f880e5eba8dd..8d4d63b51553 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -810,6 +810,10 @@ atomic_t *bch_journal(struct cache_set *c,
+ 	struct journal_write *w;
+ 	atomic_t *ret;
+ 
++	/* No journaling if CACHE_SET_IO_DISABLE set already */
++	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &c->flags)))
++		return NULL;
++
+ 	if (!CACHE_SYNC(&c->sb))
+ 		return NULL;
+ 
 -- 
 2.20.1
 
