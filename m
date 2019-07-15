@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79CAC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC091C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68DE2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EE62054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202972;
-	bh=N2O9oM/A7UqhhFm9gfJXS9/D20ABDg79x3bi4xecaog=;
+	s=default; t=1563202981;
+	bh=5/M9/vcs/yaJ+rSk97Wt73wlP2NREFP4DiFcpbDHYkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmhGlc7R3sJPW+2W8X96cBjltQCAGWpphEqte354GKA61Bi4pEZ9hRBcQfUhUm112
-	 nLcrdjMhspmh+uyDr/5bjrAwjGTacFtNtT32/iVvJeE7VVPHHoi/2PlfTUz89sSf6b
-	 AOUDKQiX9qNrs6I7jSr8W1fE569Ci4Dy0XiEBSwM=
+	b=oLlC3dpCJZK3syt70z2k+cp8Q1I80neGJPEg3gllJ5CQGnOr5oeEx+6KJ2iP46EhP
+	 aaWskzoSa4je8ot/LDao8BREdGYnomd0oUxmyF9cHnQTY6hWWOPfQLDt5eh+pF92HY
+	 zWkpr2ZUTkUQd9El2/Z3otPo6d9p9b+VveTXbxEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388325AbfGOOLl (ORCPT
+        id S2388853AbfGOOK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:11:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730611AbfGOOLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:11:39 -0400
+        id S1731744AbfGOOKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:10:18 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFF62083D;
-        Mon, 15 Jul 2019 14:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DC572081C;
+        Mon, 15 Jul 2019 14:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199898;
-        bh=N2O9oM/A7UqhhFm9gfJXS9/D20ABDg79x3bi4xecaog=;
+        s=default; t=1563199817;
+        bh=5/M9/vcs/yaJ+rSk97Wt73wlP2NREFP4DiFcpbDHYkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJOrRaSvP66oQrQfSmauGtm1IK35tW9tO6OlPKeseHRCInT394AGEU/avotLT37uZ
-         3h9vn6ht0jU6G6+reo7zMMH7hpkih6d66c4OzIWL3Y6bsGkxtmxgpGfRhI00+GCS0X
-         3XrJITSX36UjxJL/gsPXDN39vxO3kJwevZQDZhT8=
+        b=uoUQOCOOMdvS1zZD/UftOGkVUDtSn8W5ZM4r59iw83mCI4NUS7C2QDiJcyG5vFX8T
+         /jihCm5vDsBwZcReK1ZmSenDz76atGVwSRcU/K5I0PdHeBsaWaFQELNEWewv8f2D5H
+         ClXd130EpAjGOv7bzJhQipTB5J7XvIBZLyz+LfNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 130/219] media: mt9m111: fix fw-node refactoring
-Date:   Mon, 15 Jul 2019 10:02:11 -0400
-Message-Id: <20190715140341.6443-130-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Subject: [PATCH AUTOSEL 5.1 114/219] ACPICA: Clear status of GPEs on first direct enable
+Date:   Mon, 15 Jul 2019 10:01:55 -0400
+Message-Id: <20190715140341.6443-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,48 +61,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Jarzmik <robert.jarzmik@free.fr>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 8d4e29a51a954b43e06d916772fa4f50b7e5bbd6 ]
+[ Upstream commit 44758bafa53602f2581a6857bb20b55d4d8ad5b2 ]
 
-In the patch refactoring the fw-node, the mt9m111 was broken for all
-platform_data based platforms, which were the first aim of this
-driver. Only the devicetree platform are still functional, probably
-because the testing was done on these.
+ACPI GPEs (other than the EC one) can be enabled in two situations.
+First, the GPEs with existing _Lxx and _Exx methods are enabled
+implicitly by ACPICA during system initialization.  Second, the
+GPEs without these methods (like GPEs listed by _PRW objects for
+wakeup devices) need to be enabled directly by the code that is
+going to use them (e.g. ACPI power management or device drivers).
 
-The result is that -EINVAL is systematically return for such platforms,
-what this patch fixes.
+In the former case, if the status of a given GPE is set to start
+with, its handler method (either _Lxx or _Exx) needs to be invoked
+to take care of the events (possibly) signaled before the GPE was
+enabled.  In the latter case, however, the first caller of
+acpi_enable_gpe() for a given GPE should not be expected to care
+about any events that might be signaled through it earlier.  In
+that case, it is better to clear the status of the GPE before
+enabling it, to prevent stale events from triggering unwanted
+actions (like spurious system resume, for example).
 
-[Sakari Ailus: Rework this to resolve a merge conflict and use dev_fwnode]
+For this reason, modify acpi_ev_add_gpe_reference() to take an
+additional boolean argument indicating whether or not the GPE
+status needs to be cleared when its reference counter changes from
+zero to one and make acpi_enable_gpe() pass TRUE to it through
+that new argument.
 
-Fixes: 98480d65c48c ("media: mt9m111: allow to setup pixclk polarity")
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
+Reported-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9m111.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/acpi/acpica/acevents.h | 3 ++-
+ drivers/acpi/acpica/evgpe.c    | 8 +++++++-
+ drivers/acpi/acpica/evgpeblk.c | 2 +-
+ drivers/acpi/acpica/evxface.c  | 2 +-
+ drivers/acpi/acpica/evxfgpe.c  | 2 +-
+ 5 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index 5168bb5880c4..3a543e435e61 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -1248,9 +1248,11 @@ static int mt9m111_probe(struct i2c_client *client,
- 	if (!mt9m111)
- 		return -ENOMEM;
+diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
+index 831660179662..c8652f91054e 100644
+--- a/drivers/acpi/acpica/acevents.h
++++ b/drivers/acpi/acpica/acevents.h
+@@ -69,7 +69,8 @@ acpi_status
+ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
  
--	ret = mt9m111_probe_fw(client, mt9m111);
--	if (ret)
--		return ret;
-+	if (dev_fwnode(&client->dev)) {
-+		ret = mt9m111_probe_fw(client, mt9m111);
-+		if (ret)
-+			return ret;
-+	}
+ acpi_status
+-acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
++acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
++			  u8 clear_on_enable);
  
- 	mt9m111->clk = v4l2_clk_get(&client->dev, "mclk");
- 	if (IS_ERR(mt9m111->clk))
+ acpi_status
+ acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
+diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
+index 62d3aa74277b..344feba29063 100644
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
+  * FUNCTION:    acpi_ev_add_gpe_reference
+  *
+  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
++ *              clear_on_enable         - Clear GPE status before enabling it
+  *
+  * RETURN:      Status
+  *
+@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
+  ******************************************************************************/
+ 
+ acpi_status
+-acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
++acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
++			  u8 clear_on_enable)
+ {
+ 	acpi_status status = AE_OK;
+ 
+@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
+ 
+ 		/* Enable on first reference */
+ 
++		if (clear_on_enable) {
++			(void)acpi_hw_clear_gpe(gpe_event_info);
++		}
++
+ 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
+ 		if (ACPI_SUCCESS(status)) {
+ 			status = acpi_ev_enable_gpe(gpe_event_info);
+diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
+index 328d1d6123ad..fb15e9e2373b 100644
+--- a/drivers/acpi/acpica/evgpeblk.c
++++ b/drivers/acpi/acpica/evgpeblk.c
+@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
+ 				continue;
+ 			}
+ 
+-			status = acpi_ev_add_gpe_reference(gpe_event_info);
++			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
+ 			if (ACPI_FAILURE(status)) {
+ 				ACPI_EXCEPTION((AE_INFO, status,
+ 					"Could not enable GPE 0x%02X",
+diff --git a/drivers/acpi/acpica/evxface.c b/drivers/acpi/acpica/evxface.c
+index 3df00eb6621b..279ef0557aa3 100644
+--- a/drivers/acpi/acpica/evxface.c
++++ b/drivers/acpi/acpica/evxface.c
+@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_device,
+ 	      ACPI_GPE_DISPATCH_METHOD) ||
+ 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
+ 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
+-		(void)acpi_ev_add_gpe_reference(gpe_event_info);
++		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
+ 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
+ 
+ 			/* Poll edge triggered GPEs to handle existing events */
+diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
+index 30a083902f52..710488ec59e9 100644
+--- a/drivers/acpi/acpica/evxfgpe.c
++++ b/drivers/acpi/acpica/evxfgpe.c
+@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
+ 	if (gpe_event_info) {
+ 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
+ 		    ACPI_GPE_DISPATCH_NONE) {
+-			status = acpi_ev_add_gpe_reference(gpe_event_info);
++			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
+ 			if (ACPI_SUCCESS(status) &&
+ 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
+ 
 -- 
 2.20.1
 
