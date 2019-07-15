@@ -2,117 +2,80 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44835C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24382C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D7421537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199886;
-	bh=E49P1tGMwxj5CzXpTkDGMSdV4QWZizIUJTLM8oyWWbI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPDwBsKlGKiDK8nWANPuzIfM8oQh6jD37mrC3Rk4ZMS4uP9e5D/4w1Ka5u8n0Js3X
-	 P+klWXoCie0fIMwUg3b1DQtXF3JMOCBvsJucPlb4Nqyu/UNpV3Xipoocqm5MRXf+UX
-	 j4ZAJElGSbgVjLpDpobVdxBAd4mX3VUxhO9GJMMY=
+	by mail.kernel.org (Postfix) with ESMTP id F12732083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vGTwxi5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388835AbfGOOLZ (ORCPT
+        id S2388842AbfGOOL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:11:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388570AbfGOOLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:11:22 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92BD52083D;
-        Mon, 15 Jul 2019 14:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199881;
-        bh=E49P1tGMwxj5CzXpTkDGMSdV4QWZizIUJTLM8oyWWbI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIXH5rXuS3aXOGvLtkjVbNCmT0ouNCoTLwV3d4R9mpSBTBaYQuerNbfoclsoNMt0e
-         WA6kM+MbIIbr6CnpvBpbGrmE5n3xiQcEjR0B0BQ8k/GQZXFkdQIZaeLnBIR9YHyRwR
-         8D9y7nFJQKKOxetRSuNzdsUF89RnWt/j8EF4hIvw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        Weikang shi <swkhack@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 128/219] ntp: Limit TAI-UTC offset
-Date:   Mon, 15 Jul 2019 10:02:09 -0400
-Message-Id: <20190715140341.6443-128-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
-References: <20190715140341.6443-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 15 Jul 2019 10:11:27 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:62962 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388773AbfGOOLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:11:23 -0400
+Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x6FEB56R023840;
+        Mon, 15 Jul 2019 23:11:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x6FEB56R023840
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563199866;
+        bh=6ahhx3PJmA/BwoDm6PuFYIOPIG5ur1Y4DX5ZBBhGcl8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vGTwxi5yDwmMpe3N3VaawBXJoFH1huFqGXTg5YFvHNDG+Ppr5uqjyDbCGqyJHQQV/
+         osB2EqOXty7jCfprPUe56VPxI6Z52oUV/zLZpR7b9VpwG2exNUvnmHVC4/tTvdUZKW
+         LJ5+J9nj9FikYy3e+p0BPOGx1HC4S2j3hNMeZKaRggJUnqh69afYxxXebQVrKJw4wT
+         i6HO21PRK2PsBrE7KWtZMD1qnsOO89Klam0LdU+7aHTDl/ltBIU0Fl+9cB1MtpZOJj
+         rBNv9U/4Z8R8eBIgzLUQ42+usSGnHlq9dh6bTZ74VDN1konx7S/1t5A6jPOVNPvdRi
+         J5XX5l0nPUSeA==
+X-Nifty-SrcIP: [126.26.94.249]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: remove unused hostcc-option
+Date:   Mon, 15 Jul 2019 23:11:03 +0900
+Message-Id: <20190715141103.22278-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Lichvar <mlichvar@redhat.com>
+We can re-add this whenever it is needed. At this moment, it is unused.
 
-[ Upstream commit d897a4ab11dc8a9fda50d2eccc081a96a6385998 ]
-
-Don't allow the TAI-UTC offset of the system clock to be set by adjtimex()
-to a value larger than 100000 seconds.
-
-This prevents an overflow in the conversion to int, prevents the CLOCK_TAI
-clock from getting too far ahead of the CLOCK_REALTIME clock, and it is
-still large enough to allow leap seconds to be inserted at the maximum rate
-currently supported by the kernel (once per day) for the next ~270 years,
-however unlikely it is that someone can survive a catastrophic event which
-slowed down the rotation of the Earth so much.
-
-Reported-by: Weikang shi <swkhack@gmail.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190618154713.20929-1-mlichvar@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- kernel/time/ntp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index f43d47c8c3b6..98b3678fd48e 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -42,6 +42,7 @@ static u64			tick_length_base;
- #define MAX_TICKADJ		500LL		/* usecs */
- #define MAX_TICKADJ_SCALED \
- 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
-+#define MAX_TAI_OFFSET		100000
+ scripts/Kbuild.include | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 73e80b917f12..77c742fa4fb1 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -125,11 +125,6 @@ CC_OPTION_CFLAGS = $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS))
+ cc-option = $(call __cc-option, $(CC),\
+ 	$(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS),$(1),$(2))
  
- /*
-  * phase-lock loop variables
-@@ -690,7 +691,8 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
- 		time_constant = max(time_constant, 0l);
- 	}
- 
--	if (txc->modes & ADJ_TAI && txc->constant >= 0)
-+	if (txc->modes & ADJ_TAI &&
-+			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
+-# hostcc-option
+-# Usage: cflags-y += $(call hostcc-option,-march=winchip-c6,-march=i586)
+-hostcc-option = $(call __cc-option, $(HOSTCC),\
+-	$(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS),$(1),$(2))
+-
+ # cc-option-yn
+ # Usage: flag := $(call cc-option-yn,-march=winchip-c6)
+ cc-option-yn = $(call try-run,\
 -- 
-2.20.1
+2.17.1
 
