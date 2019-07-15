@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCEAC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DDAC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A371C204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80533204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201358;
-	bh=rVnbu98XFHmTsDb3iwZ59vX+WiLREQBHvK3D1hCvXqY=;
+	s=default; t=1563201376;
+	bh=VXkbgD2jyBKHydxvZ96jdAVoihbkNIj8betqnk9IiPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uoSCJ5w5buDIv6Xdj6IZXcw0Al2H5LEqaqsI9mEQPgn6sI/ky+izwLjMAiXPlOB2w
-	 oPK1imukfGmcYCmKSmS02CKyLsjceY6WdKjIi8Ee/Jjdt8/pBEbBUq8RuT6TcbyzxB
-	 E+Ex3wiwfyV6X4Phy3yxIto1Ck1tlVWnFYnMMMh0=
+	b=NsoexqStBZ6nLo1kuf2K7B/aXQPGAxq69UKnFqIerwKnFUXeko3MhFZ5k4ESCR9kh
+	 ww4SZ2BF+ETlJTId5UaB3aLL3ruCQMldqZA2KquPb7GvMK9ConqB2SS4rzlCUrOcvl
+	 s2n7gYrPNmRp6DiMr5hIQooWHXgAAobiof+qyYGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392134AbfGOOf5 (ORCPT
+        id S2391942AbfGOOdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403829AbfGOOd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:33:57 -0400
+        id S2389557AbfGOOdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:33:10 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A021204FD;
-        Mon, 15 Jul 2019 14:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C75EF2067C;
+        Mon, 15 Jul 2019 14:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201236;
-        bh=rVnbu98XFHmTsDb3iwZ59vX+WiLREQBHvK3D1hCvXqY=;
+        s=default; t=1563201189;
+        bh=VXkbgD2jyBKHydxvZ96jdAVoihbkNIj8betqnk9IiPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrioT61QTLhbIRFhVAbHQVmvLz+tUqXVai+5Xomtcf6tv8oqmbUsyNk6Oaq3B+sE2
-         OKYbApXpmgagKX1GLWdzpyONwTkaZ1kVHf9lyU6vjk25h+rG/NuyjRr3YCai0tvIQU
-         ROTCzyMJx/InDuW3oCW3fDLMzPVbUegB1J+yw8TQ=
+        b=I5GDXUCB0osmw5R/pgdtXYTAp043eU1juEUsBqS9VPcBc/8o2aLonaGojgRJZwWaf
+         e8+9Trwu8CEuYY85xvJKg9EBHTwczbi98n99T1arKqgT0NtiqURz7JBny51MMc+C9c
+         xkxs3wfxa8fmaxGZ7Kd3pTOgd/XLtLvQu+AdQ6SY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 086/105] PCI / ACPI: Use cached ACPI device state to get PCI device power state
-Date:   Mon, 15 Jul 2019 10:28:20 -0400
-Message-Id: <20190715142839.9896-86-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Jakub Kicinski <kubakici@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 074/105] mt7601u: fix possible memory leak when the device is disconnected
+Date:   Mon, 15 Jul 2019 10:28:08 -0400
+Message-Id: <20190715142839.9896-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,89 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 83a16e3f6d70da99896c7a2639c0b60fff13afb8 ]
+[ Upstream commit 23377c200b2eb48a60d0f228b2a2e75ed6ee6060 ]
 
-The ACPI power state returned by acpi_device_get_power() may depend on
-the configuration of ACPI power resources in the system which may change
-any time after acpi_device_get_power() has returned, unless the
-reference counters of the ACPI power resources in question are set to
-prevent that from happening. Thus it is invalid to use acpi_device_get_power()
-in acpi_pci_get_power_state() the way it is done now and the value of
-the ->power.state field in the corresponding struct acpi_device objects
-(which reflects the ACPI power resources reference counting, among other
-things) should be used instead.
+When the device is disconnected while passing traffic it is possible
+to receive out of order urbs causing a memory leak since the skb linked
+to the current tx urb is not removed. Fix the issue deallocating the skb
+cleaning up the tx ring. Moreover this patch fixes the following kernel
+warning
 
-As an example where this becomes an issue is Intel Ice Lake where the
-Thunderbolt controller (NHI), two PCIe root ports (RP0 and RP1) and xHCI
-all share the same power resources. The following picture with power
-resources marked with [] shows the topology:
+[   57.480771] usb 1-1: USB disconnect, device number 2
+[   57.483451] ------------[ cut here ]------------
+[   57.483462] TX urb mismatch
+[   57.483481] WARNING: CPU: 1 PID: 32 at drivers/net/wireless/mediatek/mt7601u/dma.c:245 mt7601u_complete_tx+0x165/00
+[   57.483483] Modules linked in:
+[   57.483496] CPU: 1 PID: 32 Comm: kworker/1:1 Not tainted 5.2.0-rc1+ #72
+[   57.483498] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-2.fc30 04/01/2014
+[   57.483502] Workqueue: usb_hub_wq hub_event
+[   57.483507] RIP: 0010:mt7601u_complete_tx+0x165/0x1e0
+[   57.483510] Code: 8b b5 10 04 00 00 8b 8d 14 04 00 00 eb 8b 80 3d b1 cb e1 00 00 75 9e 48 c7 c7 a4 ea 05 82 c6 05 f
+[   57.483513] RSP: 0000:ffffc900000a0d28 EFLAGS: 00010092
+[   57.483516] RAX: 000000000000000f RBX: ffff88802c0a62c0 RCX: ffffc900000a0c2c
+[   57.483518] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff810a8371
+[   57.483520] RBP: ffff88803ced6858 R08: 0000000000000000 R09: 0000000000000001
+[   57.483540] R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000046
+[   57.483542] R13: ffff88802c0a6c88 R14: ffff88803baab540 R15: ffff88803a0cc078
+[   57.483548] FS:  0000000000000000(0000) GS:ffff88803eb00000(0000) knlGS:0000000000000000
+[   57.483550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   57.483552] CR2: 000055e7f6780100 CR3: 0000000028c86000 CR4: 00000000000006a0
+[   57.483554] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   57.483556] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   57.483559] Call Trace:
+[   57.483561]  <IRQ>
+[   57.483565]  __usb_hcd_giveback_urb+0x77/0xe0
+[   57.483570]  xhci_giveback_urb_in_irq.isra.0+0x8b/0x140
+[   57.483574]  handle_cmd_completion+0xf5b/0x12c0
+[   57.483577]  xhci_irq+0x1f6/0x1810
+[   57.483581]  ? lockdep_hardirqs_on+0x9e/0x180
+[   57.483584]  ? _raw_spin_unlock_irq+0x24/0x30
+[   57.483588]  __handle_irq_event_percpu+0x3a/0x260
+[   57.483592]  handle_irq_event_percpu+0x1c/0x60
+[   57.483595]  handle_irq_event+0x2f/0x4c
+[   57.483599]  handle_edge_irq+0x7e/0x1a0
+[   57.483603]  handle_irq+0x17/0x20
+[   57.483607]  do_IRQ+0x54/0x110
+[   57.483610]  common_interrupt+0xf/0xf
+[   57.483612]  </IRQ>
 
-  Host bridge
-    |
-    +- RP0 ---\
-    +- RP1 ---|--+--> [TBT]
-    +- NHI --/   |
-    |            |
-    |            v
-    +- xHCI --> [D3C]
-
-Here TBT and D3C are the shared ACPI power resources. ACPI _PR3() method
-of the devices in question returns either TBT or D3C or both.
-
-Say we runtime suspend first the root ports RP0 and RP1, then NHI. Now
-since the TBT power resource is still on when the root ports are runtime
-suspended their dev->current_state is set to D3hot. When NHI is runtime
-suspended TBT is finally turned off but state of the root ports remain
-to be D3hot. Now when the xHCI is runtime suspended D3C gets also turned
-off. PCI core thus has power states of these devices cached in their
-dev->current_state as follows:
-
-  RP0 -> D3hot
-  RP1 -> D3hot
-  NHI -> D3cold
-  xHCI -> D3cold
-
-If the user now runs lspci for instance, the result is all 1's like in
-the below output (00:07.0 is the first root port, RP0):
-
-00:07.0 PCI bridge: Intel Corporation Device 8a1d (rev ff) (prog-if ff)
-    !!! Unknown header type 7f
-    Kernel driver in use: pcieport
-
-In short the hardware state is not in sync with the software state
-anymore. The exact same thing happens with the PME polling thread which
-ends up bringing the root ports back into D0 after they are runtime
-suspended.
-
-For this reason, modify acpi_pci_get_power_state() so that it uses the
-ACPI device power state that was cached by the ACPI core. This makes the
-PCI device power state match the ACPI device power state regardless of
-state of the shared power resources which may still be on at this point.
-
-Link: https://lore.kernel.org/r/20190618161858.77834-2-mika.westerberg@linux.intel.com
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-acpi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt7601u/dma.c | 21 ++++++++++++++++-----
+ drivers/net/wireless/mediatek/mt7601u/tx.c  |  4 ++--
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index a3cedf8de863..688e195e85b4 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -563,7 +563,8 @@ static pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
- 	if (!adev || !acpi_device_power_manageable(adev))
- 		return PCI_UNKNOWN;
+diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
+index bc36712cfffc..47cebb2ec05c 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/dma.c
++++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
+@@ -241,14 +241,25 @@ static void mt7601u_complete_tx(struct urb *urb)
+ 	struct sk_buff *skb;
+ 	unsigned long flags;
  
--	if (acpi_device_get_power(adev, &state) || state == ACPI_STATE_UNKNOWN)
-+	state = adev->power.state;
-+	if (state == ACPI_STATE_UNKNOWN)
- 		return PCI_UNKNOWN;
+-	spin_lock_irqsave(&dev->tx_lock, flags);
++	switch (urb->status) {
++	case -ECONNRESET:
++	case -ESHUTDOWN:
++	case -ENOENT:
++		return;
++	default:
++		dev_err_ratelimited(dev->dev, "tx urb failed: %d\n",
++				    urb->status);
++		/* fall through */
++	case 0:
++		break;
++	}
  
- 	return state_conv[state];
+-	if (mt7601u_urb_has_error(urb))
+-		dev_err(dev->dev, "Error: TX urb failed:%d\n", urb->status);
++	spin_lock_irqsave(&dev->tx_lock, flags);
+ 	if (WARN_ONCE(q->e[q->start].urb != urb, "TX urb mismatch"))
+ 		goto out;
+ 
+ 	skb = q->e[q->start].skb;
++	q->e[q->start].skb = NULL;
+ 	trace_mt_tx_dma_done(dev, skb);
+ 
+ 	__skb_queue_tail(&dev->tx_skb_done, skb);
+@@ -448,10 +459,10 @@ static void mt7601u_free_tx_queue(struct mt7601u_tx_queue *q)
+ {
+ 	int i;
+ 
+-	WARN_ON(q->used);
+-
+ 	for (i = 0; i < q->entries; i++)  {
+ 		usb_poison_urb(q->e[i].urb);
++		if (q->e[i].skb)
++			mt7601u_tx_status(q->dev, q->e[i].skb);
+ 		usb_free_urb(q->e[i].urb);
+ 	}
+ }
+diff --git a/drivers/net/wireless/mediatek/mt7601u/tx.c b/drivers/net/wireless/mediatek/mt7601u/tx.c
+index 3600e911a63e..4d81c45722fb 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/tx.c
++++ b/drivers/net/wireless/mediatek/mt7601u/tx.c
+@@ -117,9 +117,9 @@ void mt7601u_tx_status(struct mt7601u_dev *dev, struct sk_buff *skb)
+ 	info->status.rates[0].idx = -1;
+ 	info->flags |= IEEE80211_TX_STAT_ACK;
+ 
+-	spin_lock(&dev->mac_lock);
++	spin_lock_bh(&dev->mac_lock);
+ 	ieee80211_tx_status(dev->hw, skb);
+-	spin_unlock(&dev->mac_lock);
++	spin_unlock_bh(&dev->mac_lock);
+ }
+ 
+ static int mt7601u_skb_rooms(struct mt7601u_dev *dev, struct sk_buff *skb)
 -- 
 2.20.1
 
