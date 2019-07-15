@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E38C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D46C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BDB2083D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1BF212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198604;
-	bh=ygqkvmXYeSMjc+q+7NgWYLUCBRvjvtpH4rdO+WLrD1M=;
+	s=default; t=1563198610;
+	bh=JAnLtsV+A+ImHI4VW2GLzMDKqOtvxsK3+J+mNbFY1wE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bAh1GqqvHcwXrwaf3uzyye4KrtHoHKnWHucITtB3PbirEuHOxx9gYa8yG4EiwnIYN
-	 tkgOfqGPtIXHh3uQ5/nWrtZ8hwj6cWkO2KVVCpxbTAsop5DGggIWSb6zLV8MYlZfSl
-	 tIt0koko/3S01NIebXvQCO2Ibr/J5YjeS4TxOAZI=
+	b=fPz52oHeFgpobypYvDudfUsmCfovGq9+cTSx1ok5iINbJ2FKYwEr333+5h5HTjHJU
+	 38a8gmgtxxpzTmVz2aXnmGyDFMhsH800ZGGx8l8F28lfR/XomXepybylAKneU0/N0O
+	 EVTHlLWGUfi+/cMeYQEJLYCwLUzkTN8uKJmKTepI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731942AbfGONuD (ORCPT
+        id S1731618AbfGONuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37986 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731302AbfGONuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:50:00 -0400
+        id S1731831AbfGONuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:50:05 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C122217F4;
-        Mon, 15 Jul 2019 13:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 364F82086C;
+        Mon, 15 Jul 2019 13:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198599;
-        bh=ygqkvmXYeSMjc+q+7NgWYLUCBRvjvtpH4rdO+WLrD1M=;
+        s=default; t=1563198604;
+        bh=JAnLtsV+A+ImHI4VW2GLzMDKqOtvxsK3+J+mNbFY1wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t2FJjK+sOaVTEsMFnEddgFYwjxX7pst4j1Pxk5FTW05Jl5AoknITZUtGFcja53d8J
-         d4580vz7VFiCSADbMjdtgMds7SzKUElIsmZuzzS8ZMvHK1zEuCQv0/fMz49kw1mWn9
-         gshUmNlEIbYWVHEW5xRXs3BVc9J6eTQRgWUASlL0=
+        b=meoQ41taQaswH3RRJL6bGSxM4Gtk9eC2pxDXY4NGFoHW4SeGSGvWqdSLN+P51Ij5+
+         aRQlfcJFm6X2/s9Q/msQQeKwq1VXB28MfpBGxpzOqHw4NB40rF8qgtxgKJ8upn+0m7
+         72X3VTwTCuxKpQF8XT3X2eyndGcvJr5ed7DdJnxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 055/249] net: dsa: sja1105: Fix broken fixed-link interfaces on user ports
-Date:   Mon, 15 Jul 2019 09:43:40 -0400
-Message-Id: <20190715134655.4076-55-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 057/249] crypto: talitos - Align SEC1 accesses to 32 bits boundaries.
+Date:   Mon, 15 Jul 2019 09:43:42 -0400
+Message-Id: <20190715134655.4076-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -61,87 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit af7cd0366ee994e8b35985d407261dc0ed9dfb4d ]
+[ Upstream commit c9cca7034b34a2d82e9a03b757de2485c294851c ]
 
-PHYLIB and PHYLINK handle fixed-link interfaces differently. PHYLIB
-wraps them in a software PHY ("pseudo fixed link") phydev construct such
-that .adjust_link driver callbacks see an unified API. Whereas PHYLINK
-simply creates a phylink_link_state structure and passes it to
-.mac_config.
+The MPC885 reference manual states:
 
-At the time the driver was introduced, DSA was using PHYLIB for the
-CPU/cascade ports (the ones with no net devices) and PHYLINK for
-everything else.
+SEC Lite-initiated 8xx writes can occur only on 32-bit-word boundaries, but
+reads can occur on any byte boundary. Writing back a header read from a
+non-32-bit-word boundary will yield unpredictable results.
 
-As explained below:
+In order to ensure that, cra_alignmask is set to 3 for SEC1.
 
-commit aab9c4067d2389d0adfc9c53806437df7b0fe3d5
-Author: Florian Fainelli <f.fainelli@gmail.com>
-Date:   Thu May 10 13:17:36 2018 -0700
-
-  net: dsa: Plug in PHYLINK support
-
-  Drivers that utilize fixed links for user-facing ports (e.g: bcm_sf2)
-  will need to implement phylink_mac_ops from now on to preserve
-  functionality, since PHYLINK *does not* create a phy_device instance
-  for fixed links.
-
-In the above patch, DSA guards the .phylink_mac_config callback against
-a NULL phydev pointer.  Therefore, .adjust_link is not called in case of
-a fixed-link user port.
-
-This patch fixes the situation by converting the driver from using
-.adjust_link to .phylink_mac_config.  This can be done now in a unified
-fashion for both slave and CPU/cascade ports because DSA now uses
-PHYLINK for all ports.
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/crypto/talitos.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 1c3959efebc4..844e038f3dc6 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -734,15 +734,16 @@ static int sja1105_adjust_port_config(struct sja1105_private *priv, int port,
- 	return sja1105_clocking_setup_port(priv, port);
- }
- 
--static void sja1105_adjust_link(struct dsa_switch *ds, int port,
--				struct phy_device *phydev)
-+static void sja1105_mac_config(struct dsa_switch *ds, int port,
-+			       unsigned int link_an_mode,
-+			       const struct phylink_link_state *state)
- {
- 	struct sja1105_private *priv = ds->priv;
- 
--	if (!phydev->link)
-+	if (!state->link)
- 		sja1105_adjust_port_config(priv, port, 0, false);
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index eec880909fdf..b6433d58df41 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -3278,7 +3278,10 @@ static struct talitos_crypto_alg *talitos_alg_alloc(struct device *dev,
+ 		alg->cra_priority = t_alg->algt.priority;
  	else
--		sja1105_adjust_port_config(priv, port, phydev->speed, true);
-+		sja1105_adjust_port_config(priv, port, state->speed, true);
- }
+ 		alg->cra_priority = TALITOS_CRA_PRIORITY;
+-	alg->cra_alignmask = 0;
++	if (has_ftr_sec1(priv))
++		alg->cra_alignmask = 3;
++	else
++		alg->cra_alignmask = 0;
+ 	alg->cra_ctxsize = sizeof(struct talitos_ctx);
+ 	alg->cra_flags |= CRYPTO_ALG_KERN_DRIVER_ONLY;
  
- static void sja1105_phylink_validate(struct dsa_switch *ds, int port,
-@@ -1515,9 +1516,9 @@ static int sja1105_set_ageing_time(struct dsa_switch *ds,
- static const struct dsa_switch_ops sja1105_switch_ops = {
- 	.get_tag_protocol	= sja1105_get_tag_protocol,
- 	.setup			= sja1105_setup,
--	.adjust_link		= sja1105_adjust_link,
- 	.set_ageing_time	= sja1105_set_ageing_time,
- 	.phylink_validate	= sja1105_phylink_validate,
-+	.phylink_mac_config	= sja1105_mac_config,
- 	.get_strings		= sja1105_get_strings,
- 	.get_ethtool_stats	= sja1105_get_ethtool_stats,
- 	.get_sset_count		= sja1105_get_sset_count,
 -- 
 2.20.1
 
