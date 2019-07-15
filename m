@@ -2,95 +2,136 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB4DC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF26C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7FD20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2DDF21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:44:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLrQKjaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfGORmi (ORCPT
+        id S1731831AbfGORou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:42:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36724 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730235AbfGORmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:42:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 31FDDAF0D;
-        Mon, 15 Jul 2019 17:42:36 +0000 (UTC)
-Subject: Re: [PATCH 0/2] Remove 32-bit Xen PV guest support
-To:     Andy Lutomirski <luto@kernel.org>, Andi Kleen <ak@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alok Kataria <akataria@vmware.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20190715113739.17694-1-jgross@suse.com>
- <87y30zfe9z.fsf@linux.intel.com>
- <CALCETrUn=gho5Oug-yYvF2d1WYCe7gvtx+bXuhJ8LTjb9guvuA@mail.gmail.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <35d93381-7517-5741-0b81-0839dd46a1fa@suse.com>
-Date:   Mon, 15 Jul 2019 19:42:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <CALCETrUn=gho5Oug-yYvF2d1WYCe7gvtx+bXuhJ8LTjb9guvuA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Jul 2019 13:44:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45270 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730235AbfGORot (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 13:44:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so17098856lje.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 10:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lN7NolkvgcEAi2xoTGIqWk3kYzQk+ol6Awu1yLItqUA=;
+        b=ZLrQKjaj7huMHrfrkDQqhRaPPeLbmbgXI5QvCRdJEPV7lBgNacx2aDqK1gtjTkLxpk
+         8fxivqeUkGQTFlcVEnjw6Jvvgn5XNfKXhp7AinsJ9jLrYfKckS8WLiMb9vV1M6C84ifq
+         u3mGPGGpr+Q0p3o1i7yfLr692BFeIvadk/FvCC6Je53GAgh+K8uB3HndKud08fHIBLFc
+         4AkCGIgjz5LsDc5nMxvrP07VO/9rgz/6d9zbcprP7YPAOy1D/2Syjm09lJAIsjLPmrsl
+         2vLyGpvRnBzd+y5zrU59d55vM2pwVDmwbFB4aSLtXgDoNaVVtmIyMa7CsnkcnrKLR8ec
+         npkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lN7NolkvgcEAi2xoTGIqWk3kYzQk+ol6Awu1yLItqUA=;
+        b=F4AzshWqNpnoS0ItnDCgtFTvJFzpTdv75FphQqBZ/jVjJirLww07ysLmpwZ9cq1SuD
+         qYrk6a2hrSG/VsKAJWanBLvMCW1kidIx7HzuNcdbxTIr6uqMIKozmABgfqq5/aVmb1vN
+         sWsgMhWtHMjZe+PB4P/HPbwRGSeKdin6aEyGrX52uVB6ocuzkDguJhi0PaSEs1OBm3tn
+         C+zW6BXEtgDKb5LRFrXJRBzp/h/LNqKOFkDRDUef+fsmdhTz5ht/Tq78P6UU/9RqukSQ
+         jQMqUza8omI907cKlg21vgygTXBCIv2lmFs4HGb2keRIB4Xuop/Fhl4oC9qo2W9LGQJX
+         7aMw==
+X-Gm-Message-State: APjAAAWLbtq0BV3HuSRtkKlMuOSPGsTqiB3ds/ljY18PWH02wPHguYCF
+        lWruKxh/QdYw1bKOrspd/fQFsgj5
+X-Google-Smtp-Source: APXvYqwl5QVR0MSi4chrtMnfImvMNFt4ODmIHWF8jWRqUtLjAVwkhUFOFPeRIEX+8kqysR6t4Tvbww==
+X-Received: by 2002:a2e:298a:: with SMTP id p10mr14429150ljp.74.1563212687922;
+        Mon, 15 Jul 2019 10:44:47 -0700 (PDT)
+Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id t21sm2431287lfl.17.2019.07.15.10.44.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 10:44:47 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PULL 0/7] xtensa updates for v5.3
+Date:   Mon, 15 Jul 2019 10:44:27 -0700
+Message-Id: <20190715174427.6144-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.19 19:28, Andy Lutomirski wrote:
-> On Mon, Jul 15, 2019 at 9:34 AM Andi Kleen <ak@linux.intel.com> wrote:
->>
->> Juergen Gross <jgross@suse.com> writes:
->>
->>> The long term plan has been to replace Xen PV guests by PVH. The first
->>> victim of that plan are now 32-bit PV guests, as those are used only
->>> rather seldom these days. Xen on x86 requires 64-bit support and with
->>> Grub2 now supporting PVH officially since version 2.04 there is no
->>> need to keep 32-bit PV guest support alive in the Linux kernel.
->>> Additionally Meltdown mitigation is not available in the kernel running
->>> as 32-bit PV guest, so dropping this mode makes sense from security
->>> point of view, too.
->>
->> Normally we have a deprecation period for feature removals like this.
->> You would make the kernel print a warning for some releases, and when
->> no user complains you can then remove. If a user complains you can't.
->>
-> 
-> As I understand it, the kernel rules do allow changes like this even
-> if there's a complaint: this is a patch that removes what is
-> effectively hardware support.  If the maintenance cost exceeds the
-> value, then removal is fair game.  (Obviously we weight the value to
-> preserving compatibility quite highly, but in this case, Xen dropped
-> 32-bit hardware support a long time ago.  If the Xen hypervisor says
-> that 32-bit PV guest support is deprecated, it's deprecated.)
-> 
-> That being said, a warning might not be a bad idea.  What's the
-> current status of this in upstream Xen?
+Hi Linus,
 
-Xen still supports that.
+please pull the following batch of updates for the Xtensa architecture:
 
-We have asked downstream for their opinion about dropping 32-bit PV
-guest support in the kernel about 1 year ago and the common answer was:
-no problem, but for users still wanting 32 bit guests we should wait
-until PVH support is available in all related products. Grub2 was the
-last one missing and as grub2 has released a version with PVH support
-I posted this small series now.
+The following changes since commit 9e0babf2c06c73cda2c0cd37a1653d823adb40ec:
 
+  Linux 5.2-rc5 (2019-06-16 08:49:45 -1000)
 
-Juergen
+are available in the git repository at:
+
+  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190715
+
+for you to fetch changes up to 775f1f7eacede583ec25ed56e58c4483f2b29265:
+
+  xtensa: virt: add defconfig and DTS (2019-07-08 14:32:06 -0700)
+
+----------------------------------------------------------------
+Xtensa updates for v5.3:
+
+- clean up PCI support code;
+- add defconfig and DTS for the 'virt' board;
+- abstract 'entry' and 'retw' uses in xtensa assembly in preparation for
+  XEA3/NX pipeline support;
+- random small cleanups.
+
+----------------------------------------------------------------
+Guenter Roeck (1):
+      xtensa/PCI: Remove unused variable
+
+Markus Elfring (1):
+      xtensa: One function call less in bootmem_init()
+
+Max Filippov (5):
+      xtensa: drop dead PCI support code
+      xtensa: use generic pcibios_set_master and pcibios_enable_device
+      xtensa: remove arch/xtensa/include/asm/types.h
+      xtensa: abstract 'entry' and 'retw' in assembly code
+      xtensa: virt: add defconfig and DTS
+
+ arch/xtensa/boot/dts/virt.dts      |  72 +++++++++++++++++++++
+ arch/xtensa/configs/virt_defconfig | 113 +++++++++++++++++++++++++++++++++
+ arch/xtensa/include/asm/asmmacro.h |  46 ++++++++++++++
+ arch/xtensa/include/asm/platform.h |  10 ---
+ arch/xtensa/include/asm/types.h    |  23 -------
+ arch/xtensa/kernel/coprocessor.S   |   7 ++-
+ arch/xtensa/kernel/entry.S         |  11 ++--
+ arch/xtensa/kernel/mcount.S        |  11 ++--
+ arch/xtensa/kernel/pci.c           | 124 -------------------------------------
+ arch/xtensa/kernel/platform.c      |   2 -
+ arch/xtensa/kernel/setup.c         |   4 --
+ arch/xtensa/lib/checksum.S         |  12 ++--
+ arch/xtensa/lib/memcopy.S          |  38 ++++++------
+ arch/xtensa/lib/memset.S           |  10 +--
+ arch/xtensa/lib/strncpy_user.S     |  16 ++---
+ arch/xtensa/lib/strnlen_user.S     |  14 ++---
+ arch/xtensa/lib/usercopy.S         |  12 ++--
+ arch/xtensa/mm/init.c              |   5 +-
+ arch/xtensa/mm/misc.S              |  78 +++++++++++------------
+ 19 files changed, 339 insertions(+), 269 deletions(-)
+ create mode 100644 arch/xtensa/boot/dts/virt.dts
+ create mode 100644 arch/xtensa/configs/virt_defconfig
+ delete mode 100644 arch/xtensa/include/asm/types.h
+
+-- 
+Thanks.
+-- Max
