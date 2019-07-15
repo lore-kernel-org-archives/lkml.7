@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F6FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDB521537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0C921530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199763;
-	bh=OsmllIUhoLQNOItyfMZ2ehXTWTGIy33B12PxKd3rA7o=;
+	s=default; t=1563199768;
+	bh=xi/noBMkSrMPFD7U27sGGXsfHDXH9x0DMQC/i3sJnoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uW7HkrzdmuZYmt4DLafa63T35ngNj1L41SH0Kz4pU2cKxfiVWxGx2FTeFxfh8NRLG
-	 up7Fjrmyb4NHyjLao5LmfB8E0U2rJEVsjtTb+F903xnwbf2p4GrzwE2i+LyQzswXZ5
-	 HUr6pcU3oCg9WpQF4JIumdP/FPB8AEt1MwDiw898=
+	b=JPChwwsvqIFMNoUPYjsp1X23kbXhBuIxLqtnyXUpNrabHafcWl+v5jyEEcJ4E3J9k
+	 6L4ieF263NCqnBV4m5ZbfbOafM3AfSH4u+n+Em3LuLlB5vsGoz9oE7wSavDvbnGSKs
+	 GYfsC4zlkx3t7mOjSOv0+dB1plttzPJKoAcRHpeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbfGOOJW (ORCPT
+        id S2388699AbfGOOJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388673AbfGOOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:16 -0400
+        id S2388686AbfGOOJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:19 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D696D217D9;
-        Mon, 15 Jul 2019 14:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE11206B8;
+        Mon, 15 Jul 2019 14:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199755;
-        bh=OsmllIUhoLQNOItyfMZ2ehXTWTGIy33B12PxKd3rA7o=;
+        s=default; t=1563199758;
+        bh=xi/noBMkSrMPFD7U27sGGXsfHDXH9x0DMQC/i3sJnoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RoODCw94WxE+7QDjNN/L/zxES/cBWiy+nYOCg6CO7TlRKG4SE7PfyIhvWKH5HQGkO
-         3Wn4ZsfNQREOVF4fLU4VKAkKoG+PC7C1+XF5UeayD4mvOsSTYCbubrkuaU0m9VKykr
-         a2o4yuo2ooPjaMjHHdaMVF1fCEzuS7YOYb0c9mlE=
+        b=yGOBmFQAD5iSNFdJx7hAFVRggyQqf67TjB8xJHs/VS++2LqasgN85z5Mznw+WJt3h
+         GMyEwcMaInSUWzhfdjI5OlQFeddHrTugSEVKMXrh3b2uLLTl5knvxo4QrQynEndazP
+         NLu8Ci61OUMMpPALA8CoZeVoMJSA1yw42rKgn/ak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 097/219] xfrm: fix sa selector validation
-Date:   Mon, 15 Jul 2019 10:01:38 -0400
-Message-Id: <20190715140341.6443-97-sashal@kernel.org>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        Jilong Kou <koujilong@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 098/219] sched/core: Add __sched tag for io_schedule()
+Date:   Mon, 15 Jul 2019 10:01:39 -0400
+Message-Id: <20190715140341.6443-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -61,42 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
+[ Upstream commit e3b929b0a184edb35531153c5afcaebb09014f9d ]
 
-After commit b38ff4075a80, the following command does not work anymore:
-$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
-  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
-  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
+Non-inline io_schedule() was introduced in:
 
-In fact, the selector is not mandatory, allow the user to provide an empty
-selector.
+  commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
 
-Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
-CC: Anirudh Gupta <anirudh.gupta@sophos.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Keep in line with io_schedule_timeout(), otherwise "/proc/<pid>/wchan" will
+report io_schedule() rather than its callers when waiting for IO.
+
+Reported-by: Jilong Kou <koujilong@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+Link: https://lkml.kernel.org/r/20190603091338.2695-1-gaoxiang25@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index ee91f939903e..6abf9625a401 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -166,6 +166,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 	}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a75ad50b5e2f..242233490a49 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5175,7 +5175,7 @@ long __sched io_schedule_timeout(long timeout)
+ }
+ EXPORT_SYMBOL(io_schedule_timeout);
  
- 	switch (p->sel.family) {
-+	case AF_UNSPEC:
-+		break;
-+
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+-void io_schedule(void)
++void __sched io_schedule(void)
+ {
+ 	int token;
+ 
 -- 
 2.20.1
 
