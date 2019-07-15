@@ -2,127 +2,135 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50052C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA04C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E5A206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 17:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bVuLe4Ma"
+	by mail.kernel.org (Postfix) with ESMTP id 036B1206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 18:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563213634;
+	bh=IqH4lbm8RDQxVT1NcYM6JBXGNOyAGtB3m7tdJOSg2g8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xv0nhbpr3tRpQAjJLyn6qwAPt7uW65AnrEIgI2Nu4BTVaFkt67YQMrDre4qYvhOKH
+	 7LCkYT9CZ3LmHwyMWPnlEiTB6Knucdgxw1ff32/iZGE37nsD/3P0qb+a7dmVHIUlDH
+	 /H189ym7WRhufJpj3L6KOejAJoMYwrMcLAXR4V3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732115AbfGOR5f (ORCPT
+        id S1732004AbfGOSAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 13:57:35 -0400
-Received: from mail-eopbgr150054.outbound.protection.outlook.com ([40.107.15.54]:56199
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731078AbfGOR5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 13:57:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n4mjOkEjlICXRTf3wkyPTv+w23EO/N2pdzDSfIbHMJenMjg8CJqOZ8aIHlT5UuO8pTrBYX42pjJQpMuSGRog6z04O9fpwLhXRUkFYedUFSlA8LK0ocRkxhXPWIh4Ju0C18SyM/SPS+MiycS+096GAQ36l1y5JKA7Qk+ZGoIuo7zhFPMXUVoe5F+f+wxLdy31Hu/IQy0Le9QWKzgzPC1cceIlUnPyRz0Uijy3cJgsiOTpjI2y+EcUy5fz01p2nVMtqVX6WFeHyta+fZtFNLaHm5WRbzWzOgF/mncXnV+nwmynt5bXf6TL/gIfkx9D8oKduEXqSMtYAytEZxBumic8rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vgx8blmTv5Q18LZPhRE1s0Xfk45hsAc1ACT/zyzYjQU=;
- b=Y3QrFP0vLifXzzEYwQRCEVnbPuq42ICGzZLuIqbBEbaN6xQsdcE7jw676GuRdxw5dx5Uoi8uxRaAswqHM5dH2kpGlySTRCMXzCn8wBEBiooBgWaOJ/jQdatgi6/bhulrsMaEkQWW0mX/6tXF7H2I567WaPkF12QNWwkoRBWNF2URTOyk2C1naUPGelGgr6E/MLk01iPE60gWTW7Z8jPWMveUwiKYS/RZWaDE4mbPBrwzgFZ7CRh7ATGBS+ybuW67vOmsYSeJkQHovTNqr0qXCoFUzm+W+OSCpfvQ9xaCrpPQudL56tpo9uRwOMpZ032eqW0qNJkKZE3wHEB+jab8MA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vgx8blmTv5Q18LZPhRE1s0Xfk45hsAc1ACT/zyzYjQU=;
- b=bVuLe4MabnoqzorxJpIYMEZEk00uG756ytq/IPYJRrsVsOmj1ppM3B/WRNiSvrfFaOXNRFMdysLi9NhfF4lC7KNK/J201kjzjghcVf+8vB1dfKymhxyJyEeyGF+3DL5efTzbBnQxPJBith2BfV+FZP3Xq6Nv+9VPvUHASaeDRbY=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6480.eurprd05.prod.outlook.com (20.179.27.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Mon, 15 Jul 2019 17:57:30 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
- 17:57:30 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-CC:     Dave Airlie <airlied@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mon, 15 Jul 2019 14:00:32 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:37149 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfGOSAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 14:00:32 -0400
+Received: by mail-lf1-f51.google.com with SMTP id c9so11641316lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:00:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nO5O+YvT7yDDwaOrG6FBszo4i//OnQ067kGK33ZDVmM=;
+        b=Ljprv0R0eic6HXzVS6gGqcdFzlGrHqGYh6k6OB97GCmdfmdhLVrBCs9Un6FdrcVa0i
+         O9IjGbq520L8/BcFC8NSOMIeu5mjyLm2K8K95eccEhBRuXPdvPX2VnOOtry2mMJf084F
+         T/TlaTAimYnlETp3HtOetlLmvrSLFF8LPoLEg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nO5O+YvT7yDDwaOrG6FBszo4i//OnQ067kGK33ZDVmM=;
+        b=i3HoMwmlViL+1Z9+4nB/YcMOxNlUDNm2DuDXJPZ8fJazt1Cg6vnsaarAOlj8FPm104
+         CJsVAfPGA7CZcY2iW/I8Gg0eIRCLgfKRxOZdmMWA3htpqq8bVc+FJLdkHMLaAh+YF2/d
+         niBEnsj4u/QJ3y7C780pxPjBgjvs6ZZiC4e3Bqk1Lb7kF+8Dx1kJ5tmQegVpJXFRMS9W
+         F+V7ABluU1BL9d/zaIjvtlgoPQ2LswDKcWFYdptEWx+R3zLV1cC3dWi5gnQG7ewFY2ec
+         9sMBIVpXYIc/SNisdwKL9SgBTR2tAnNtTSquqoL59FH+813VrB9/pbTRwI4z40DanuZT
+         PtgQ==
+X-Gm-Message-State: APjAAAV3F03qj4gDKera2AucWH4YzXp7XtJRsRaQuSPvCwTIKdF/uj+v
+        BkZZrDHuRsypW30ZxaQaFmEThWBVVZg=
+X-Google-Smtp-Source: APXvYqygyiNCoz5lmQU8puHZQ+Hvp0UHtKQoGTiHJS9PyYVVOs/yoVYVyp+86yS+2BCd+lbnvlhoqw==
+X-Received: by 2002:a19:ed07:: with SMTP id y7mr12747727lfy.56.1563213629980;
+        Mon, 15 Jul 2019 11:00:29 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id f16sm2667871lfc.81.2019.07.15.11.00.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 11:00:29 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id t28so17176758lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 11:00:28 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr14263413lji.84.1563213628470;
+ Mon, 15 Jul 2019 11:00:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
+ <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com> <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 15 Jul 2019 11:00:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
+Message-ID: <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
+Subject: Re: drm pull for v5.3-rc1
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Jerome Glisse <jglisse@redhat.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: DRM pull for v5.3-rc1
-Thread-Topic: DRM pull for v5.3-rc1
-Thread-Index: AQHVOwjxvOBTsCZDkEWbf47t9QeYFabLuosAgAAMdgCAAC88AIAAATYA
-Date:   Mon, 15 Jul 2019 17:57:30 +0000
-Message-ID: <20190715175726.GC5043@mellanox.com>
-References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
- <CAPM=9tx+CEkzmLZ-93GZmde9xzJ_rw3PJZxFu_pjZJc7KM5f-w@mail.gmail.com>
- <20190715122924.GA15202@mellanox.com>
- <CAKMK7uHvjuQ5Dqm0LPrtQxdHh5Z6Pt2mg4AnpRRR0gWb1Wp05g@mail.gmail.com>
- <20190715150402.GD15202@mellanox.com>
- <CAKMK7uGbNuA_pN=r9XKGz2MTVVJWm6q8tKBT3WJPa93nKEe4iA@mail.gmail.com>
-In-Reply-To: <CAKMK7uGbNuA_pN=r9XKGz2MTVVJWm6q8tKBT3WJPa93nKEe4iA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR16CA0011.namprd16.prod.outlook.com
- (2603:10b6:208:134::24) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1108a0d8-7a62-456a-9f19-08d7094de7bd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6480;
-x-ms-traffictypediagnostic: VI1PR05MB6480:
-x-microsoft-antispam-prvs: <VI1PR05MB6480627D1FB67F0CE6932A5DCFCF0@VI1PR05MB6480.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00997889E7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(102836004)(486006)(3846002)(1076003)(6116002)(4744005)(53936002)(76176011)(6506007)(386003)(11346002)(52116002)(81166006)(81156014)(6246003)(66066001)(86362001)(6436002)(6486002)(6512007)(99286004)(68736007)(5660300002)(8936002)(316002)(256004)(33656002)(8676002)(4326008)(66476007)(36756003)(66446008)(66946007)(25786009)(64756008)(66556008)(6916009)(2906002)(2616005)(229853002)(478600001)(476003)(14454004)(186003)(446003)(71190400001)(7736002)(305945005)(71200400001)(26005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6480;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: F9x6bK1ZmjjVpB27Y1wHQQ8sSe/p7NqxpLxlJJHwIB+Rb/7oWfZCvU0zq9Ecc6ent6vnnRzRN77Ezt4xqiEdEnuxttf/Kk9wfJzvG6iyXWt2nVLbJuXq7lD+rghQPWvtSOSvGwC3UzODEXOYWT6iJvBZkhmo9LnGxrL6qD+m1HP9EWKmnY/LfU2TAJWdGYAjpyDxiMboShy7oNZg6NPimRmlwNZDuf3TfnPVQ4O8h5IdaJbUjgFOlfe5oLcdauJM8fhTdZk5aPNpqfEaZhyPVQJ9We9qDPQ5RVB3MYssbxGO4AoSyLINeLqI6WuMd7F/FOhb0mmErbiJWOYgZ+XdcGXt5qJ3w23m+JBQBNBCFytJe15lfv7dnmx08l29+nAwgLPywqmYy8z0CeDKqOUpGkD8FW0cp55z+AsSMNZfzsI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <235CAD9B97456C44AD6D8293CD6612A1@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1108a0d8-7a62-456a-9f19-08d7094de7bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 17:57:30.2859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6480
+        Thomas Hellstrom <thellstrom@vmware.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 07:53:06PM +0200, Daniel Vetter wrote:
+On Mon, Jul 15, 2019 at 10:37 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I'm not pulling this. Why did you merge it into your tree, when
+> apparently you were aware of how questionable it is judging by the drm
+> pull request.
 
-> > So, I'll put it on a topic and send you two a note next week to decide
-> > if you want to merge it or not. I'm really unclear how nouveau's and
-> > AMD's patchflow works..
->=20
-> DRM is 2-level for pretty much everything. First it lands in a driver
-> tree (or a collectiv of drivers, like in drm-misc). Then those send
-> pull requests to drm.git for integration. Busy trees do that every 1-2
-> weeks (e.g. amdgpu), slower trees once per merge window (e.g. nouveau)
-> for drm-next, similar for drm-fixes.
+Looking at some of the fallout, I also see that you then added that
+"adjust apply_to_pfn_range interface for dropped token" patch that
+seems to be for easier merging of this all.
 
-The DRM part seems logical - it is how the AMD GPU and nouveau git
-trees trees work that I don't know. I heard that neither could take in
-a stable topic branch?
+But you remove the 'token' entirely in one place, and in another you
+keep it and just say "whatever, it's unused, pass in NULL". WHAA?
 
-Jason
+As part of looking at this all, I also note that some of this is also
+very non-kernely.
+
+The whole thing with trying to implement a "closure" in C is simply
+not how we do things in the kernel (although I've admittedly seen
+signs of it in some drivers).
+
+If this should be done at all (and that's questionable), at least do
+it in the canonical kernel way: pass in a separate "actor" function
+pointer and an argument block, don't try to mix function pointers and
+argument data and call it a "closure".
+
+We try to keep data and functions separate. It's not even for security
+concerns (although those have caused some splits in the past - avoid
+putting function pointers in structures that you then can't mark
+read-only!), it's a more generic issue of just keeping arguments as
+arguments - even if you then make a structure of them in order to not
+make the calling convention very complicated.
+
+(Yes, we do have the pattern of sometimes mixing function pointers
+with "describing data", ie the "struct file_operations" structure
+isn't _just_ actual function pointers, it also contains the module
+owner, for example. But those aren't about mixing function pointers
+with their arguments, it's about basically "describing" an object
+interface with more than just the operation pointers).
+
+So some of this code is stuff that I would have let go if it was in
+some individual driver ("Closures? C doesn't have closures! But
+whatever - that driver writer came from some place that taught lamda
+calculus before techning C").
+
+But in the core mm code, I want reviews. And I want the code to follow
+normal kernel conventions.
+
+                   Linus
