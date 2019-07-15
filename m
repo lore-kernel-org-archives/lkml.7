@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C80C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A03EC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0E22086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6158206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201178;
-	bh=L5Db5kmtTkQ8U4ksSU9CHoeriaNKedcjX5JrIa39jyo=;
+	s=default; t=1563201187;
+	bh=EN1VGAmwQYb36LQxnniDnKoT6mmzJlnr1MpSLKTcmyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ub3yCV8S3yr02OAgixBZFDIckKfYhbw1yJn23oe2kHX927AwvfBPbEN1ktKcUGY//
-	 Zhd9f9cqyuuNhwo1D5JEVYPWQjvXVuLguAP4hCNwvs4/exsWM7wQbNmG9RDs5Q2ztq
-	 vcdRrZb5r5Kn7KUc1dEaDZZHhdVmuorCUH5UuBek=
+	b=LVI5E4EGUskfvqJecEtDq2dnyIG4YaQbaPQUnbEbDHeKhKeiTyAc1DEI57QZntcuV
+	 f4cFlDdJ5G5z96/O80DdIxSF1t4HUjXm2iarPsciYNBqsAQGmKGOkShzc2pLtR/BMl
+	 6vgdqtJ0pMe2d0QuQXNMYV4q6HQ9TVoktM6qkIeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403837AbfGOOcw (ORCPT
+        id S2404042AbfGOOdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48220 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391904AbfGOOcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:32:48 -0400
+        id S2404014AbfGOOdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:33:03 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F03B206B8;
-        Mon, 15 Jul 2019 14:32:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FE4820C01;
+        Mon, 15 Jul 2019 14:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201167;
-        bh=L5Db5kmtTkQ8U4ksSU9CHoeriaNKedcjX5JrIa39jyo=;
+        s=default; t=1563201181;
+        bh=EN1VGAmwQYb36LQxnniDnKoT6mmzJlnr1MpSLKTcmyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bE1TkBEZ+dfpxBZDBmAqOqysp7kusAj5cH23QOk+KOPjYiFAQPVweqw2/eLlPb3Y4
-         gMlnfCfad9BYx9HHmnqCKj+ToCv2tDUtOYDcrdfrf3WWJXMg2PDv+YGS7+ABWTxKbS
-         /FXWqN2g0MpUYWnpfvArA/lUIh0iJ5qEWSO7Kw4M=
+        b=mXpvxwq84DpFXa9zmaZeQKr45NGu5ElfAW4lAWSOXaj6SC3ux5LPKKnM/nKpqgUfX
+         l9JpzDpS7FfCfFPoJRiWKvxiepZP56ib2IL88/3OlLQ0nYyGQecijPwUiMge2g9BQb
+         SWSHxW1BpIr74MeKVNOoSdeiYAYttaqyq1WcwN3c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 068/105] media: coda: increment sequence offset for the last returned frame
-Date:   Mon, 15 Jul 2019 10:28:02 -0400
-Message-Id: <20190715142839.9896-68-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 072/105] mt7601u: do not schedule rx_tasklet when the device has been disconnected
+Date:   Mon, 15 Jul 2019 10:28:06 -0400
+Message-Id: <20190715142839.9896-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -60,37 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit b3b7d96817cdb8b6fc353867705275dce8f41ccc ]
+[ Upstream commit 4079e8ccabc3b6d1b503f2376123cb515d14921f ]
 
-If no more frames are decoded in bitstream end mode, and a previously
-decoded frame has been returned, the firmware still increments the frame
-number. To avoid a sequence number mismatch after decoder restart,
-increment the sequence_offset correction parameter.
+Do not schedule rx_tasklet when the usb dongle is disconnected.
+Moreover do not grub rx_lock in mt7601u_kill_rx since usb_poison_urb
+can run concurrently with urb completion and we can unlink urbs from rx
+ring in any order.
+This patch fixes the common kernel warning reported when
+the device is removed.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[   24.921354] usb 3-14: USB disconnect, device number 7
+[   24.921593] ------------[ cut here ]------------
+[   24.921594] RX urb mismatch
+[   24.921675] WARNING: CPU: 4 PID: 163 at drivers/net/wireless/mediatek/mt7601u/dma.c:200 mt7601u_complete_rx+0xcb/0xd0 [mt7601u]
+[   24.921769] CPU: 4 PID: 163 Comm: kworker/4:2 Tainted: G           OE     4.19.31-041931-generic #201903231635
+[   24.921770] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./Z97 Extreme4, BIOS P1.30 05/23/2014
+[   24.921782] Workqueue: usb_hub_wq hub_event
+[   24.921797] RIP: 0010:mt7601u_complete_rx+0xcb/0xd0 [mt7601u]
+[   24.921800] RSP: 0018:ffff9bd9cfd03d08 EFLAGS: 00010086
+[   24.921802] RAX: 0000000000000000 RBX: ffff9bd9bf043540 RCX: 0000000000000006
+[   24.921803] RDX: 0000000000000007 RSI: 0000000000000096 RDI: ffff9bd9cfd16420
+[   24.921804] RBP: ffff9bd9cfd03d28 R08: 0000000000000002 R09: 00000000000003a8
+[   24.921805] R10: 0000002f485fca34 R11: 0000000000000000 R12: ffff9bd9bf043c1c
+[   24.921806] R13: ffff9bd9c62fa3c0 R14: 0000000000000082 R15: 0000000000000000
+[   24.921807] FS:  0000000000000000(0000) GS:ffff9bd9cfd00000(0000) knlGS:0000000000000000
+[   24.921808] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.921808] CR2: 00007fb2648b0000 CR3: 0000000142c0a004 CR4: 00000000001606e0
+[   24.921809] Call Trace:
+[   24.921812]  <IRQ>
+[   24.921819]  __usb_hcd_giveback_urb+0x8b/0x140
+[   24.921821]  usb_hcd_giveback_urb+0xca/0xe0
+[   24.921828]  xhci_giveback_urb_in_irq.isra.42+0x82/0xf0
+[   24.921834]  handle_cmd_completion+0xe02/0x10d0
+[   24.921837]  xhci_irq+0x274/0x4a0
+[   24.921838]  xhci_msi_irq+0x11/0x20
+[   24.921851]  __handle_irq_event_percpu+0x44/0x190
+[   24.921856]  handle_irq_event_percpu+0x32/0x80
+[   24.921861]  handle_irq_event+0x3b/0x5a
+[   24.921867]  handle_edge_irq+0x80/0x190
+[   24.921874]  handle_irq+0x20/0x30
+[   24.921889]  do_IRQ+0x4e/0xe0
+[   24.921891]  common_interrupt+0xf/0xf
+[   24.921892]  </IRQ>
+[   24.921900] RIP: 0010:usb_hcd_flush_endpoint+0x78/0x180
+[   24.921354] usb 3-14: USB disconnect, device number 7
+
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/coda/coda-bit.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/mediatek/mt7601u/dma.c | 33 +++++++++++----------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index 43eb5d51cf23..f0f2175265a9 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -2091,6 +2091,9 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		else if (ctx->display_idx < 0)
- 			ctx->hold = true;
- 	} else if (decoded_idx == -2) {
-+		if (ctx->display_idx >= 0 &&
-+		    ctx->display_idx < ctx->num_internal_frames)
-+			ctx->sequence_offset++;
- 		/* no frame was decoded, we still return remaining buffers */
- 	} else if (decoded_idx < 0 || decoded_idx >= ctx->num_internal_frames) {
- 		v4l2_err(&dev->v4l2_dev,
+diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
+index 7f3e3983b781..bc36712cfffc 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/dma.c
++++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
+@@ -193,10 +193,23 @@ static void mt7601u_complete_rx(struct urb *urb)
+ 	struct mt7601u_rx_queue *q = &dev->rx_q;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dev->rx_lock, flags);
++	/* do no schedule rx tasklet if urb has been unlinked
++	 * or the device has been removed
++	 */
++	switch (urb->status) {
++	case -ECONNRESET:
++	case -ESHUTDOWN:
++	case -ENOENT:
++		return;
++	default:
++		dev_err_ratelimited(dev->dev, "rx urb failed: %d\n",
++				    urb->status);
++		/* fall through */
++	case 0:
++		break;
++	}
+ 
+-	if (mt7601u_urb_has_error(urb))
+-		dev_err(dev->dev, "Error: RX urb failed:%d\n", urb->status);
++	spin_lock_irqsave(&dev->rx_lock, flags);
+ 	if (WARN_ONCE(q->e[q->end].urb != urb, "RX urb mismatch"))
+ 		goto out;
+ 
+@@ -363,19 +376,9 @@ int mt7601u_dma_enqueue_tx(struct mt7601u_dev *dev, struct sk_buff *skb,
+ static void mt7601u_kill_rx(struct mt7601u_dev *dev)
+ {
+ 	int i;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dev->rx_lock, flags);
+-
+-	for (i = 0; i < dev->rx_q.entries; i++) {
+-		int next = dev->rx_q.end;
+-
+-		spin_unlock_irqrestore(&dev->rx_lock, flags);
+-		usb_poison_urb(dev->rx_q.e[next].urb);
+-		spin_lock_irqsave(&dev->rx_lock, flags);
+-	}
+-
+-	spin_unlock_irqrestore(&dev->rx_lock, flags);
++	for (i = 0; i < dev->rx_q.entries; i++)
++		usb_poison_urb(dev->rx_q.e[i].urb);
+ }
+ 
+ static int mt7601u_submit_rx_buf(struct mt7601u_dev *dev,
 -- 
 2.20.1
 
