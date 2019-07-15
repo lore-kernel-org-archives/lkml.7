@@ -2,331 +2,92 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AF0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7315C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4CF2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9182145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 21:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731763AbfGOVaG (ORCPT
+        id S1731862AbfGOVfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 17:30:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40596 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbfGOVaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 17:30:06 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4F60E4E93D;
-        Mon, 15 Jul 2019 21:30:05 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4242319C59;
-        Mon, 15 Jul 2019 21:30:02 +0000 (UTC)
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <77bba626-f3e6-45a8-aae8-43b945d0fab9@redhat.com>
-Date:   Mon, 15 Jul 2019 17:30:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 15 Jul 2019 17:35:11 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:59365 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730156AbfGOVfL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 17:35:11 -0400
+Received: from xps13 ([83.160.161.190])
+        by smtp-cloud9.xs4all.net with ESMTPSA
+        id n8cdhhG1kuEBxn8cghMp2U; Mon, 15 Jul 2019 23:35:08 +0200
+Message-ID: <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+From:   Paul Bolle <pebolle@tiscali.nl>
+To:     "Souza, Jose" <jose.souza@intel.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Mon, 15 Jul 2019 23:34:59 +0200
+In-Reply-To: <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
+         <1562941185.3398.1.camel@HansenPartnership.com>
+         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
+         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20190715192536.104548-4-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 15 Jul 2019 21:30:05 +0000 (UTC)
+X-CMAE-Envelope: MS4wfH6I1vuIhhM+oakc5dwVYTm3I/Gg+CbbYwfjkax0Kna5ekLjxFrG0nbLTCBLvqmk8OQI6i15Dn5y6XOuuoxMcJfqnCXICRSmfCGLQCnrwR30VbKzZ9QB
+ 8N+lHPKORktdnAsANPfx3qsJaWItk9IeAy84ugJfL9Ix6b3GkjpMP9t/CyXX0AG4Q/0jW3IDnlvuSDkriIL1BSH5D5spyWCs11Af+F/OivP58lMk9sb3X3EV
+ 1IkvWL3f+6zsekrQPCs0F62nnDImRNPD0dXm2aevHZ1ZZ8RyWfxJW0ePkO48QaNQw0LVYrybuYah4R4KeKio2KNKWUc+vqNro254SK3fS+4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 3:25 PM, Alex Kogan wrote:
-> In CNA, spinning threads are organized in two queues, a main queue for
-> threads running on the same node as the current lock holder, and a
-> secondary queue for threads running on other nodes. At the unlock time,
-> the lock holder scans the main queue looking for a thread running on
-> the same node. If found (call it thread T), all threads in the main queue
-> between the current lock holder and T are moved to the end of the
-> secondary queue, and the lock is passed to T. If such T is not found, the
-> lock is passed to the first node in the secondary queue. Finally, if the
-> secondary queue is empty, the lock is passed to the next thread in the
-> main queue. For more details, see https://arxiv.org/abs/1810.05600.
->
-> Note that this variant of CNA may introduce starvation by continuously
-> passing the lock to threads running on the same node. This issue
-> will be addressed later in the series.
->
-> Enabling CNA is controlled via a new configuration option
-> (NUMA_AWARE_SPINLOCKS). The CNA variant is patched in
-> at the boot time only if we run a multi-node machine, and the new
-> config is enabled. For the time being, the patching requires
-> CONFIG_PARAVIRT_SPINLOCKS to be enabled as well.
-> However, this should be resolved once static_call() is available.
->
-> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
-> ---
->  arch/x86/Kconfig                 |  18 +++++
->  arch/x86/include/asm/qspinlock.h |   4 +
->  arch/x86/kernel/alternative.c    |  12 +++
->  kernel/locking/mcs_spinlock.h    |   2 +-
->  kernel/locking/qspinlock.c       |  41 +++++++---
->  kernel/locking/qspinlock_cna.h   | 164 +++++++++++++++++++++++++++++++++++++++
->  6 files changed, 229 insertions(+), 12 deletions(-)
->  create mode 100644 kernel/locking/qspinlock_cna.h
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 2bbbd4d1ba31..1d8f80c47687 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1548,6 +1548,24 @@ config NUMA
->  
->  	  Otherwise, you should say N.
->  
-> +config NUMA_AWARE_SPINLOCKS
-> +	bool "Numa-aware spinlocks"
-> +	depends on NUMA
-> +	# For now, we depend on PARAVIRT_SPINLOCKS to make the patching work.
-> +	# This is awkward, but hopefully would be resolved once static_call()
-> +	# is available.
-> +	depends on PARAVIRT_SPINLOCKS
-> +	default y
-> +	help
-> +	  Introduce NUMA (Non Uniform Memory Access) awareness into
-> +	  the slow path of spinlocks.
-> +
-> +	  The kernel will try to keep the lock on the same node,
-> +	  thus reducing the number of remote cache misses, while
-> +	  trading some of the short term fairness for better performance.
-> +
-> +	  Say N if you want absolute first come first serve fairness.
+Hi Jose,
 
-You should also add a dependency on QUEUED_SPINLOCKS to highlight the
-fact that it is a variant of qspinlock. You should also mention that in
-the help text.
+Souza, Jose schreef op ma 15-07-2019 om 21:03 [+0000]:
+> So the issue did not happened again with the patch applied?
+
+Not in the three days that I've been running 5.2 kernels with the hack applied
+(so that should be about twelve hours of proper uptime).
+
+> If you still have the kernel 5.1 installed could you share your
+> /sys/kernel/debug/dri/0/i915_edp_psr_status with the older kernel?
+> We want to check if training values changed between kernel versions.
+
+Sure. On 5.1.17 I get:
+    Sink support: yes [0x01]
+    PSR mode: PSR1 enabled
+    Source PSR ctl: enabled [0x81f00626]
+    Source PSR status: IDLE [0x040b0001]
+    Busy frontbuffer bits: 0x00000000
+
+And, in case you need it, on 5.2.1+hack I get:
+    Sink support: yes [0x01]
+    PSR mode: PSR1 enabled
+    Source PSR ctl: enabled [0x81f00626]
+    Source PSR status: IDLE [0x04030006]
+    Busy frontbuffer bits: 0x00000000
+
+Hope this helps,
 
 
-> +
->  config AMD_NUMA
->  	def_bool y
->  	prompt "Old style AMD Opteron NUMA detection"
-> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-> index bd5ac6cc37db..d9b6c34d5eb4 100644
-> --- a/arch/x86/include/asm/qspinlock.h
-> +++ b/arch/x86/include/asm/qspinlock.h
-> @@ -27,6 +27,10 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
->  	return val;
->  }
->  
-> +#ifdef CONFIG_NUMA_AWARE_SPINLOCKS
-> +extern void __cna_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
-> +#endif
-> +
->  #ifdef CONFIG_PARAVIRT_SPINLOCKS
->  extern void native_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
->  extern void __pv_init_lock_hash(void);
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 0d57015114e7..1c25f0505ec0 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -649,6 +649,18 @@ void __init alternative_instructions(void)
->  				(unsigned long)__smp_locks_end);
->  #endif
->  
-> +#if defined(CONFIG_NUMA_AWARE_SPINLOCKS)
-> +	/*
-> +	 * If we have multiple NUMA nodes, switch from native
-> +	 * to the NUMA-friendly slow path for spin locks.
-> +	 */
-> +	if (nr_node_ids > 1 && pv_ops.lock.queued_spin_lock_slowpath ==
-> +			native_queued_spin_lock_slowpath) {
-> +		pv_ops.lock.queued_spin_lock_slowpath =
-> +			__cna_queued_spin_lock_slowpath;
-> +	}
-> +#endif
-> +
->  	apply_paravirt(__parainstructions, __parainstructions_end);
->  
->  	restart_nmi();
-> diff --git a/kernel/locking/mcs_spinlock.h b/kernel/locking/mcs_spinlock.h
-> index bc6d3244e1af..36b802babc88 100644
-> --- a/kernel/locking/mcs_spinlock.h
-> +++ b/kernel/locking/mcs_spinlock.h
-> @@ -17,7 +17,7 @@
->  
->  struct mcs_spinlock {
->  	struct mcs_spinlock *next;
-> -	int locked; /* 1 if lock acquired */
-> +	u64 locked; /* 1 if lock acquired */
->  	int count;  /* nesting count, see qspinlock.c */
->  };
->  
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index 5668466b3006..1ba38f85d0ae 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -20,7 +20,7 @@
->   *          Peter Zijlstra <peterz@infradead.org>
->   */
->  
-> -#ifndef _GEN_PV_LOCK_SLOWPATH
-> +#if !defined(_GEN_PV_LOCK_SLOWPATH) && !defined(_GEN_CNA_LOCK_SLOWPATH)
->  
->  #include <linux/smp.h>
->  #include <linux/bug.h>
-> @@ -77,18 +77,14 @@
->  #define MAX_NODES	4
->  
->  /*
-> - * On 64-bit architectures, the mcs_spinlock structure will be 16 bytes in
-> - * size and four of them will fit nicely in one 64-byte cacheline. For
-> - * pvqspinlock, however, we need more space for extra data. To accommodate
-> - * that, we insert two more long words to pad it up to 32 bytes. IOW, only
-> - * two of them can fit in a cacheline in this case. That is OK as it is rare
-> - * to have more than 2 levels of slowpath nesting in actual use. We don't
-> - * want to penalize pvqspinlocks to optimize for a rare case in native
-> - * qspinlocks.
-> + * On 64-bit architectures, the mcs_spinlock structure will be 20 bytes in
-> + * size. For pvqspinlock or the NUMA-aware variant, however, we need more
-> + * space for extra data. To accommodate that, we insert two more long words
-> + * to pad it up to 36 bytes.
->   */
-The 20 bytes figure is wrong. It is actually 24 bytes for 64-bit as the
-mcs_spinlock structure is 8-byte aligned. For better cacheline
-alignment, I will like to keep mcs_spinlock to 16 bytes as before.
-Instead, you can use encode_tail() to store the CNA node pointer in
-"locked". For instance, use (encode_tail() << 1) in locked to
-distinguish it from the regular locked=1 value.
->  struct qnode {
->  	struct mcs_spinlock mcs;
-> -#ifdef CONFIG_PARAVIRT_SPINLOCKS
-> +#if defined(CONFIG_PARAVIRT_SPINLOCKS) || defined(CONFIG_NUMA_AWARE_SPINLOCKS)
->  	long reserved[2];
->  #endif
->  };
-> @@ -327,7 +323,7 @@ static __always_inline void __pass_mcs_lock(struct mcs_spinlock *node,
->  #define set_locked_empty_mcs	__set_locked_empty_mcs
->  #define pass_mcs_lock		__pass_mcs_lock
->  
-> -#endif /* _GEN_PV_LOCK_SLOWPATH */
-> +#endif /* _GEN_PV_LOCK_SLOWPATH && _GEN_CNA_LOCK_SLOWPATH */
->  
->  /**
->   * queued_spin_lock_slowpath - acquire the queued spinlock
-> @@ -600,6 +596,29 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->  EXPORT_SYMBOL(queued_spin_lock_slowpath);
->  
->  /*
-> + * Generate the code for NUMA-aware spin locks
-> + */
-> +#if !defined(_GEN_CNA_LOCK_SLOWPATH) && defined(CONFIG_NUMA_AWARE_SPINLOCKS)
-> +#define _GEN_CNA_LOCK_SLOWPATH
-> +
-> +#undef pv_init_node
-> +#define pv_init_node cna_init_node
-> +
-> +#undef set_locked_empty_mcs
-> +#define set_locked_empty_mcs		cna_set_locked_empty_mcs
-> +
-> +#undef pass_mcs_lock
-> +#define pass_mcs_lock			cna_pass_mcs_lock
-> +
-> +#undef  queued_spin_lock_slowpath
-> +#define queued_spin_lock_slowpath	__cna_queued_spin_lock_slowpath
-> +
-> +#include "qspinlock_cna.h"
-> +#include "qspinlock.c"
-> +
-> +#endif
-> +
-> +/*
->   * Generate the paravirt code for queued_spin_unlock_slowpath().
->   */
->  #if !defined(_GEN_PV_LOCK_SLOWPATH) && defined(CONFIG_PARAVIRT_SPINLOCKS)
-> diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
-> new file mode 100644
-> index 000000000000..efb9b12b2f9b
-> --- /dev/null
-> +++ b/kernel/locking/qspinlock_cna.h
-> @@ -0,0 +1,164 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _GEN_CNA_LOCK_SLOWPATH
-> +#error "do not include this file"
-> +#endif
-> +
-> +#include <linux/topology.h>
-> +
-> +/*
-> + * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
-> + *
-> + * In CNA, spinning threads are organized in two queues, a main queue for
-> + * threads running on the same node as the current lock holder, and a
-> + * secondary queue for threads running on other nodes. At the unlock time,
-> + * the lock holder scans the main queue looking for a thread running on
-> + * the same node. If found (call it thread T), all threads in the main queue
-> + * between the current lock holder and T are moved to the end of the
-> + * secondary queue, and the lock is passed to T. If such T is not found, the
-> + * lock is passed to the first node in the secondary queue. Finally, if the
-> + * secondary queue is empty, the lock is passed to the next thread in the
-> + * main queue. To avoid starvation of threads in the secondary queue,
-> + * those threads are moved back to the head of the main queue
-> + * after a certain expected number of intra-node lock hand-offs.
-> + *
-> + * For more details, see https://arxiv.org/abs/1810.05600.
-> + *
-> + * Authors: Alex Kogan <alex.kogan@oracle.com>
-> + *          Dave Dice <dave.dice@oracle.com>
-> + */
-> +
-> +struct cna_node {
-> +	struct	mcs_spinlock mcs;
-> +	u32	numa_node;
-> +	u32	encoded_tail;
-> +	struct	cna_node *tail;    /* points to the secondary queue tail */
-> +};
-> +
-> +#define CNA_NODE(ptr) ((struct cna_node *)(ptr))
-> +
-> +static void cna_init_node(struct mcs_spinlock *node)
-> +{
-> +	struct cna_node *cn = CNA_NODE(node);
-> +	struct mcs_spinlock *base_node;
-> +	int cpuid;
-> +
-> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
-> +	/* we store a pointer in the node's @locked field */
-> +	BUILD_BUG_ON(sizeof(uintptr_t) > sizeof_field(struct mcs_spinlock, locked));
-> +
-> +	cpuid = smp_processor_id();
-> +	cn->numa_node = cpu_to_node(cpuid);
-> +
-> +	base_node = this_cpu_ptr(&qnodes[0].mcs);
-> +	cn->encoded_tail = encode_tail(cpuid, base_node->count - 1);
-> +}
-
-
-I think you can use an early_init call to initialize the numa_node and
-encoded_tail values for all the per-cpu CNA nodes instead of doing it
-every time a node is used. If it turns out that pv_qspinlock is used,
-the pv_node_init() will properly re-initialize it. The only thing left
-to do here is perhaps setting tail to NULL.
-
--Longman
+Paul
 
