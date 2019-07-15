@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED95C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D4C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14279217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EE2212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199500;
-	bh=E2IlxDnxRzpURG/a4YOJ+pc1wc8mQLpQJwE8n6zaDw0=;
+	s=default; t=1563199511;
+	bh=ycwk6oC+x61BQ/IrIG0u0Xkz817gkuX+WzSCZEZXK54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vc6iHcrWZFKGRz7ABoZUd5vvkmjqGdDdO+wgPw3vRYLUpevPeUDnU073Si3vHSt0E
-	 YMhG/0AkyP3QSqn6x96Zt8PRxei2PdSpgM5OQFIbH6oN3ezJUVkqQJVx+36NxIeFQO
-	 oVaaBt7MaD/SBQrTfJDhxlPrgnIrKB79AvylhXts=
+	b=yk05+DeWfVYyDoNT62w8EEKpWO4Xf0sUPLd82MYMKEmGIATTrQpkA1rE4WCgcjfCw
+	 gIYqRcMknrudpZ2r7Cvckc76zplj04OWZov8VNc1BuTIqq+AS0kwdd/bUbQjpEFELu
+	 zhSzpeuNlLK7FSsl7F8gwWEsinoiR2NvvlSKGU+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387735AbfGOOEt (ORCPT
+        id S2388100AbfGOOFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50594 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:05:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387963AbfGOOEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:04:42 -0400
+        id S2387474AbfGOOFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:03 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FDD62086C;
-        Mon, 15 Jul 2019 14:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FB72184B;
+        Mon, 15 Jul 2019 14:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199482;
-        bh=E2IlxDnxRzpURG/a4YOJ+pc1wc8mQLpQJwE8n6zaDw0=;
+        s=default; t=1563199503;
+        bh=ycwk6oC+x61BQ/IrIG0u0Xkz817gkuX+WzSCZEZXK54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yCzUyM29FZIrlNVu08IBV9qk9HGKFVyD9E+Hy5kyAtuoGK2YB6YrHaLHEzE+lPRut
-         PAX8JLQihZ/g41FrQhVdtt4TAmNojv6eHqSSKIeah6x4t/lfQNAKn41G34SUoPb3u5
-         ulRfPzX5fqt7Ze+tIgiyk9GlY1syMQy2Zd+cm2yg=
+        b=HCO/etppHI4Ud2WqeXo8GF2UBqKvlFbtJzfNdY95imvvlaiA/kg5bNgJ8kQEXkQhr
+         SbaehkQ8r3kL32aKVkwHx5x1KdFhpMGt8Uq63i1RMJVlUjBWi08phcq6Z6sUytzaKR
+         3pbo5QoYhifzix1iPiTVQDpWC6OkGf8hQNASEV44=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 017/219] regmap: debugfs: Fix memory leak in regmap_debugfs_init
-Date:   Mon, 15 Jul 2019 10:00:18 -0400
-Message-Id: <20190715140341.6443-17-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Mukesh Ojha <mojha@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 024/219] media: vpss: fix a potential NULL pointer dereference
+Date:   Mon, 15 Jul 2019 10:00:25 -0400
+Message-Id: <20190715140341.6443-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,55 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 2899872b627e99b7586fe3b6c9f861da1b4d5072 ]
+[ Upstream commit e08f0761234def47961d3252eac09ccedfe4c6a0 ]
 
-As detected by kmemleak running on i.MX6ULL board:
+In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+pointer dereference.
 
-nreferenced object 0xd8366600 (size 64):
-  comm "swapper/0", pid 1, jiffies 4294937370 (age 933.220s)
-  hex dump (first 32 bytes):
-    64 75 6d 6d 79 2d 69 6f 6d 75 78 63 2d 67 70 72  dummy-iomuxc-gpr
-    40 32 30 65 34 30 30 30 00 e3 f3 ab fe d1 1b dd  @20e4000........
-  backtrace:
-    [<b0402aec>] kasprintf+0x2c/0x54
-    [<a6fbad2c>] regmap_debugfs_init+0x7c/0x31c
-    [<9c8d91fa>] __regmap_init+0xb5c/0xcf4
-    [<5b1c3d2a>] of_syscon_register+0x164/0x2c4
-    [<596a5d80>] syscon_node_to_regmap+0x64/0x90
-    [<49bd597b>] imx6ul_init_machine+0x34/0xa0
-    [<250a4dac>] customize_machine+0x1c/0x30
-    [<2d19fdaf>] do_one_initcall+0x7c/0x398
-    [<e6084469>] kernel_init_freeable+0x328/0x448
-    [<168c9101>] kernel_init+0x8/0x114
-    [<913268aa>] ret_from_fork+0x14/0x20
-    [<ce7b131a>] 0x0
-
-Root cause is that map->debugfs_name is allocated using kasprintf
-and then the pointer is lost by assigning it other memory address.
-
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap-debugfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/davinci/vpss.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index 19eb454f26c3..df2893d4626b 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -565,6 +565,8 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
- 	}
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index 19cf6853411e..89a86c19579b 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -518,6 +518,11 @@ static int __init vpss_init(void)
+ 		return -EBUSY;
  
- 	if (!strcmp(name, "dummy")) {
-+		kfree(map->debugfs_name);
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
++	if (unlikely(!oper_cfg.vpss_regs_base2)) {
++		release_mem_region(VPSS_CLK_CTRL, 4);
++		return -ENOMEM;
++	}
 +
- 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
- 						dummy_index);
- 		name = map->debugfs_name;
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+ 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
+ 
 -- 
 2.20.1
 
