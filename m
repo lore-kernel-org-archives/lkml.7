@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC2AC76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79141C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70BAD21537
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445C42067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198446;
-	bh=ItdIf+SpfcLyABhkX8V/kialrW2/Lw/Qt/bX3sAzwgo=;
+	s=default; t=1563198452;
+	bh=1G7KjC91RtjcBKsDM3By3WOUgi19PQ09IvvPLlwt2kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cH0wbar++FCJLIojnNtVUbh2RwkahmVmrdOlInX/DddF+VUeGZExG9H3NVQe+GZTc
-	 78cTCjmJiTGSUgRBMu+DnvNSxZRg8QamLitv1Fc2NGcl0Cn1qZjlUl7KwPtFtUaVee
-	 Xa8Rwx9TDuwV9N40i8vERHHK+/qw8X9JMcp4s6ig=
+	b=ao00nhtfKXq3o1o723WA+3G5OqDqx56agBr3LEf0X+VB07PTR0D3o9wec8uY7STUg
+	 cc4j6Y3VtqVPejYDh76sLdKOr8tOyEjQvrMRPMo6Pu6GRQ8mERm3fHqCBS3WgLgTCG
+	 ndjci/1vJLH7kyf8h3RU53FVbAuJDud4TamiMdcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbfGONrZ (ORCPT
+        id S1731053AbfGONrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730890AbfGONrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:47:20 -0400
+        id S1730965AbfGONrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:47:25 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B7E212F5;
-        Mon, 15 Jul 2019 13:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69D22086C;
+        Mon, 15 Jul 2019 13:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198440;
-        bh=ItdIf+SpfcLyABhkX8V/kialrW2/Lw/Qt/bX3sAzwgo=;
+        s=default; t=1563198444;
+        bh=1G7KjC91RtjcBKsDM3By3WOUgi19PQ09IvvPLlwt2kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SPdNAavHZmVnGB2kbi48xxdSi+NJ6wAAp2dyzLALteWhBj+cwl+KRn2I68crcRJLn
-         KnY7lRLzLIwaumG2amuJ6oBqa2DT1N5rtd4CuU2WoOF0rk5QbGtyvnLAO27oaPsFRK
-         ydAx1ZJI7LkhAA+6zczf+5WPCkDWUaiOxBvuTiv4=
+        b=RpsH7RTPH8FbiqVpJV9nlAjSIntdnlLJm7/m5atxTtNFsdsFWYPXv9FL3ko0ianpc
+         aMPGgoWXoexOHlFZGdFER4cWtUZYELzzB1V7hBk2u5d9GTNn3P+xqWgQJeiI2z8z3C
+         FpAsfW/zUadH8qPZysCOEerX537zgilBA+cx+hSs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 007/249] spi: rockchip: turn down tx dma bursts
-Date:   Mon, 15 Jul 2019 09:42:52 -0400
-Message-Id: <20190715134655.4076-7-sashal@kernel.org>
+Cc:     Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 009/249] ath10k: Fix the wrong value of enums for wmi tlv stats id
+Date:   Mon, 15 Jul 2019 09:42:54 -0400
+Message-Id: <20190715134655.4076-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,57 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Renner Berthing <kernel@esmil.dk>
+From: Surabhi Vishnoi <svishnoi@codeaurora.org>
 
-[ Upstream commit 47300728fb213486a830565d2af49da967c9d16a ]
+[ Upstream commit 9280f4fc06f44d0b4dc9e831f72d97b3d7cd35d3 ]
 
-This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
+The enum value for WMI_TLV_STAT_PDEV, WMI_TLV_STAT_VDEV
+and WMI_TLV_STAT_PEER is wrong, due to which the vdev stats
+are not received from firmware in wmi_update_stats event.
 
-It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
-signal is generated or it might skip some words. This in turn makes
-the rx dma channel never complete for bi-directional transfers.
+Fix the enum values for above stats to receive all stats
+from firmware in WMI_TLV_UPDATE_STATS_EVENTID.
 
-Fix it by setting tx burst length to fifo_len / 4 and the dma
-watermark to fifo_len / 2.
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
 
-However the rk3399 TRM says (sic):
-"DMAC support incrementing-address burst and fixed-address burst. But in
-the case of access SPI and UART at byte or halfword size, DMAC only
-support fixed-address burst and the address must be aligned to word."
-
-So this relies on fifo_len being a multiple of 16 such that the
-burst length (= fifo_len / 4) is a multiple of 4 and the addresses
-will be word-aligned.
-
-Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f40a307eb92c ("ath10k: Fill rx duration for each peer in fw_stats for WCN3990)
+Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rockchip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 9b91188a85f9..2cc6d9951b52 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -417,7 +417,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
- 			.direction = DMA_MEM_TO_DEV,
- 			.dst_addr = rs->dma_addr_tx,
- 			.dst_addr_width = rs->n_bytes,
--			.dst_maxburst = rs->fifo_len / 2,
-+			.dst_maxburst = rs->fifo_len / 4,
- 		};
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
+index e1c40bb69932..12f57f9adbba 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.h
++++ b/drivers/net/wireless/ath/ath10k/wmi.h
+@@ -4535,9 +4535,10 @@ enum wmi_10_4_stats_id {
+ };
  
- 		dmaengine_slave_config(master->dma_tx, &txconf);
-@@ -518,7 +518,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
- 	else
- 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
- 
--	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
-+	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
- 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
- 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
+ enum wmi_tlv_stats_id {
+-	WMI_TLV_STAT_PDEV	= BIT(0),
+-	WMI_TLV_STAT_VDEV	= BIT(1),
+-	WMI_TLV_STAT_PEER	= BIT(2),
++	WMI_TLV_STAT_PEER	= BIT(0),
++	WMI_TLV_STAT_AP		= BIT(1),
++	WMI_TLV_STAT_PDEV	= BIT(2),
++	WMI_TLV_STAT_VDEV	= BIT(3),
+ 	WMI_TLV_STAT_PEER_EXTD  = BIT(10),
+ };
  
 -- 
 2.20.1
