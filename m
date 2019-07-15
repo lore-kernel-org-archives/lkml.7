@@ -2,160 +2,169 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28C8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423B7C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B480A20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFD02083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 19:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNARhfF9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NGGwCIz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfGOTVO (ORCPT
+        id S1730432AbfGOT1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 15:21:14 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:42132 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729432AbfGOTVN (ORCPT
+        Mon, 15 Jul 2019 15:27:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38464 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730002AbfGOT1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 15:21:13 -0400
-Received: by mail-yw1-f67.google.com with SMTP id z63so7734929ywz.9;
-        Mon, 15 Jul 2019 12:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=T6L/T//A/hr8zs4n7h5mkmSwRWcgvC/d4JNrZUI4Hm8=;
-        b=WNARhfF9FItohnvszMOVl4tf67FTBW8z6mVMLcqSbMbljIgUy+cX0Jp0YfAAn6kvUV
-         6B6qTRPgZBjVJy0+wx5Cj2BakLpiAiVZthmkB8RwCAJT4lZqVISu/fGLTrTZrrYiHF+U
-         yzM4+eKufO1eXC5AsamPg9bdbjtTI2uJcJPJsDIzAzR1eYQH2/3+DY2OOPuUGErHf+cH
-         6s29jnfo/oPHtq5a/H0Sy1cvGpnTzS1ni4CRff8wbQQa+ysZ+sXz3lWCtiOED27rdf1t
-         tkQL8IOHrjNfyHRrYx0QL8ftLKDHp1uf1JDapE1bQHyZKsu3iShgGsknBrH0rgd3UHOE
-         ETDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=T6L/T//A/hr8zs4n7h5mkmSwRWcgvC/d4JNrZUI4Hm8=;
-        b=K4cSgTRJF26NeBuXwZ3+dfTANZMysO11wMBjvyBJWVkmWxqQF5jh7WsqD4co5BNOQw
-         oOsp861a4HAI/G5Rt2vAD8H4aMt61/BfDoFCveFbFpPhinLw92c0uoO1j6rpskdAMyS8
-         jYi3UOzjVVfLL+i0/o0zcX1vW/wP/0c3hrM7vJ9Qj9X7BOZXRCRbpEc5Vk/cz9xwyjlb
-         b2iSROxJ3bdx7O1Zf9u+XNnfROSO76LajvD7Rw7I+rlzMQOWFSZwMPXwtzhcizSecOgb
-         bcqaIh1X0u4QetQBDJLMyujkgyJdOIIeXlONQyEx+u/CLWOwtj58XT2u1YGYmXrdKNN6
-         3FUA==
-X-Gm-Message-State: APjAAAVhxSmJfckZUbEdw+Wv9rwvRbg6JlSLjRXe9NhGg2wAbg7hm9Za
-        fDVQAnSV5XSFyD+mz9L+pVBMIk050ilJW+0jhu0=
-X-Google-Smtp-Source: APXvYqxcM/GTLLwXLJ0XLGxzMQuEi34XclLyeCNzAgq1oLJCQsl7q05aszfWDHWZs0j8skZrYjD5o0W5JZ3MI1abTjQ=
-X-Received: by 2002:a0d:d884:: with SMTP id a126mr16542399ywe.349.1563218472776;
- Mon, 15 Jul 2019 12:21:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190527200627.8635-1-peron.clem@gmail.com> <CAJiuCcfUhBxEr=o7VVpPROQZadQh7z1QC0SkWSYt-53Sj3H2qw@mail.gmail.com>
-In-Reply-To: <CAJiuCcfUhBxEr=o7VVpPROQZadQh7z1QC0SkWSYt-53Sj3H2qw@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 15 Jul 2019 21:21:01 +0200
-Message-ID: <CAJiuCcc3_1jZWV7G3+fFQYRZ8b6qcAbnH+K6pkRvww6_D=OMAw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] Allwinner H6 SPDIF support
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 15 Jul 2019 15:27:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJOdHx018491;
+        Mon, 15 Jul 2019 19:26:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=wRf1OAZyxbFwGPam2s6jhgORpRyKZydMuCtiU+UituY=;
+ b=NGGwCIz0YycmENfUgJpt7Vz/BXNTXpEIuK8+y8A5vU+yrp83xL2kwk35cnfQRDYJ3U6Q
+ qZgiYIDJCcUSey+G6FRSY/i1AZmcqDiWYC2GWf2ecYQT/Tgupobfgm7WZbyxQDZSspwa
+ vi1QjBoBsRHnAjKVsLtZ297mQKv44sI1JARrlzYD+V6XLzmwY831JJTRU9vbZ96j5L12
+ kAfPMMgJ5ZQWSmZoN/gUdkFMvc1dPksXLJpIrDNiQbaCdfXekY05Sv+5k/yaNtyaO0PX
+ zi7/7FVhEGmOoGLCJ+JAcMhW49J4z4V3l9p0Og2tIBnD3pdvT8VqRJ2uXvnfNVxHAbnb nA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtghyj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 19:26:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6FJMeim185347;
+        Mon, 15 Jul 2019 19:26:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2tq4dtg9hv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 19:26:00 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6FJPsdA007776;
+        Mon, 15 Jul 2019 19:25:54 GMT
+Received: from ol-bur-x5-4.us.oracle.com (/10.152.128.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jul 2019 12:25:54 -0700
+From:   Alex Kogan <alex.kogan@oracle.com>
+To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        alex.kogan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Subject: [PATCH v3 2/5] locking/qspinlock: Refactor the qspinlock slow path
+Date:   Mon, 15 Jul 2019 15:25:33 -0400
+Message-Id: <20190715192536.104548-3-alex.kogan@oracle.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190715192536.104548-1-alex.kogan@oracle.com>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907150221
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9319 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907150222
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Move some of the code manipulating the spin lock into separate functions.
+This would allow easier integration of alternative ways to manipulate
+that lock.
 
-I'm missing ACK from ASoC Maintainers patch 2-3-4.
+Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+---
+ kernel/locking/qspinlock.c | 40 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-It's really small paches, if you could have a look at it.
-Many thanks,
-Cl=C3=A9ment
+diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+index 961781624638..5668466b3006 100644
+--- a/kernel/locking/qspinlock.c
++++ b/kernel/locking/qspinlock.c
+@@ -297,6 +297,36 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
+ #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
+ #endif
+ 
++/*
++ * set_locked_empty_mcs - Try to set the spinlock value to _Q_LOCKED_VAL,
++ * and by doing that unlock the MCS lock when its waiting queue is empty
++ * @lock: Pointer to queued spinlock structure
++ * @val: Current value of the lock
++ * @node: Pointer to the MCS node of the lock holder
++ *
++ * *,*,* -> 0,0,1
++ */
++static __always_inline bool __set_locked_empty_mcs(struct qspinlock *lock,
++						   u32 val,
++						   struct mcs_spinlock *node)
++{
++	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
++}
++
++/*
++ * pass_mcs_lock - pass the MCS lock to the next waiter
++ * @node: Pointer to the MCS node of the lock holder
++ * @next: Pointer to the MCS node of the first waiter in the MCS queue
++ */
++static __always_inline void __pass_mcs_lock(struct mcs_spinlock *node,
++					    struct mcs_spinlock *next)
++{
++	arch_mcs_spin_unlock_contended(&next->locked, 1);
++}
++
++#define set_locked_empty_mcs	__set_locked_empty_mcs
++#define pass_mcs_lock		__pass_mcs_lock
++
+ #endif /* _GEN_PV_LOCK_SLOWPATH */
+ 
+ /**
+@@ -541,7 +571,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	 *       PENDING will make the uncontended transition fail.
+ 	 */
+ 	if ((val & _Q_TAIL_MASK) == tail) {
+-		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL))
++		if (set_locked_empty_mcs(lock, val, node))
+ 			goto release; /* No contention */
+ 	}
+ 
+@@ -558,7 +588,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	if (!next)
+ 		next = smp_cond_load_relaxed(&node->next, (VAL));
+ 
+-	arch_mcs_spin_unlock_contended(&next->locked, 1);
++	pass_mcs_lock(node, next);
+ 	pv_kick_node(lock, next);
+ 
+ release:
+@@ -583,6 +613,12 @@ EXPORT_SYMBOL(queued_spin_lock_slowpath);
+ #undef pv_kick_node
+ #undef pv_wait_head_or_lock
+ 
++#undef set_locked_empty_mcs
++#define set_locked_empty_mcs		__set_locked_empty_mcs
++
++#undef pass_mcs_lock
++#define pass_mcs_lock			__pass_mcs_lock
++
+ #undef  queued_spin_lock_slowpath
+ #define queued_spin_lock_slowpath	__pv_queued_spin_lock_slowpath
+ 
+-- 
+2.11.0 (Apple Git-81)
 
-
-
-On Fri, 14 Jun 2019 at 10:29, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> Hi,
->
-> On Mon, 27 May 2019 at 22:10, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
-om> wrote:
-> >
-> > *H6 DMA support IS REQUIRED*
->
-> DMA has been merged, so this series can be merge when ASoC maintainers
-> have reviewed it.
->
-> Regards,
-> Cl=C3=A9ment
->
-> >
-> > Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) whi=
-ch
-> > is different from the previous H3 generation and not compatible.
-> >
-> > Difference are an increase of fifo sizes, some memory mapping are diffe=
-rent
-> > and there is now the possibility to output the master clock on a pin.
-> >
-> > Actually all these features are unused and only a bit for flushing the =
-TX
-> > fifo is required.
-> >
-> > Also this series requires the DMA working on H6, a first version has be=
-en
-> > submitted by Jernej =C5=A0krabec[1] but has not been accepted yet.
-> >
-> > [1] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=
-=3D89011
-> >
-> > Changes since v3:
-> >  - rename reg_fctl_ftx to val_fctl_ftx
-> >  - rebase this series on sound-next
-> >  - fix dt-bindings due to change in sound-next
-> >  - change node name sound_spdif to sound-spdif
-> >
-> > Changes since v2:
-> >  - Split quirks and H6 support patch
-> >  - Add specific section for quirks comment
-> >
-> > Changes since v1:
-> >  - Remove H3 compatible
-> >  - Add TX fifo bit flush quirks
-> >  - Add H6 bindings in SPDIF driver
-> >
-> > Cl=C3=A9ment P=C3=A9ron (7):
-> >   dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
-> >   ASoC: sun4i-spdif: Move quirks to the top
-> >   ASoC: sun4i-spdif: Add TX fifo bit flush quirks
-> >   ASoC: sun4i-spdif: Add support for H6 SoC
-> >   arm64: dts: allwinner: Add SPDIF node for Allwinner H6
-> >   arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
-> >   arm64: defconfig: Enable Sun4i SPDIF module
-> >
-> >  .../sound/allwinner,sun4i-a10-spdif.yaml      |  1 +
-> >  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 38 ++++++++++++++
-> >  arch/arm64/configs/defconfig                  |  1 +
-> >  sound/soc/sunxi/sun4i-spdif.c                 | 49 ++++++++++++++++---
-> >  5 files changed, 87 insertions(+), 6 deletions(-)
-> >
-> > --
-> > 2.20.1
-> >
