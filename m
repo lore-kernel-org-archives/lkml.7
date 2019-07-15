@@ -2,54 +2,54 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20464C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B711C76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97FB217F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11938217D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199557;
-	bh=/fNXGfW6l26M++rBtxKXdycB0jSkuZbTYwwrHNgQUnw=;
+	s=default; t=1563199561;
+	bh=SDZnlxReGbUHEbh3F9XiUbaTFPuTAyuqLbFVyaw5hbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzbqQMFRi2kyqsMOXEXRiu8JBsz9d+kIJdSPNHW68UJGZoftb2qeL0bVajkFq7Zl7
-	 XWjZg4o1gipep0hDPWYiM3WZSHYcpVN3gRBCWoZZ9BzzZxTdDXzE4U3JSX5WorohTQ
-	 vcD3o0wyiCVbEOQD8SGPkXQ6MvUmktmsHYXmexaM=
+	b=dLPsbOoC0J4Nk0tYPQaNvvFMUPJTKdm3EyThXnCN2BZn8/SFfmzK614u+UD76av66
+	 Ev9lrNooxRrvG1yR3mY2j6eA9H5ZHV3o/yIyvztKfAHiiFXDgw4O5RPBpDaW7tQiS5
+	 tg2vyZ4KiTs7lqE5mARGQeFYt42XhwskDN45XwkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388216AbfGOOF4 (ORCPT
+        id S2387682AbfGOOF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388201AbfGOOFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:05:51 -0400
+        id S1731480AbfGOOFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:05:55 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC72A2184C;
-        Mon, 15 Jul 2019 14:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E18E621842;
+        Mon, 15 Jul 2019 14:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199550;
-        bh=/fNXGfW6l26M++rBtxKXdycB0jSkuZbTYwwrHNgQUnw=;
+        s=default; t=1563199554;
+        bh=SDZnlxReGbUHEbh3F9XiUbaTFPuTAyuqLbFVyaw5hbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fhs5LqKr1w/Lo+/Ks3u+8X+6+N5OIvU1Szp/H0IcDRx+RSxu0LaYplm7TU1kLLNoE
-         a6sIeCJxFgBGp3OXhcL+4A8ww5c9t4WahsHz5Z/wn3ugPg/elFXxZFcNSHQtpORxAa
-         kA5m8Be9bCKAg3Rj/VwuXY1Yvmc/rs1JtY4TrnUg=
+        b=j0BxwRcvdEpKp0RFIenirUk5EU/e1bmn/3ql12KXey4OY81cJwpwAO7pSq6TM5iai
+         CfMdt4xjbxiwwW4sF0cmTuDbDVkLdT1+7fWzr3s8PcYdPuCi+8K4KnmUjcZM/Ex6Yr
+         iJYcK0jTrEeXO4P92Fnffib83MtQkq8eq3zrMyCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vandana BN <bnvandana@gmail.com>,
-        syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 040/219] media: usb:zr364xx:Fix KASAN:null-ptr-deref Read in zr364xx_vidioc_querycap
-Date:   Mon, 15 Jul 2019 10:00:41 -0400
-Message-Id: <20190715140341.6443-40-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.1 041/219] perf annotate TUI browser: Do not use member from variable within its own initialization
+Date:   Mon, 15 Jul 2019 10:00:42 -0400
+Message-Id: <20190715140341.6443-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -62,81 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 5d2e73a5f80a5b5aff3caf1ec6d39b5b3f54b26e ]
+[ Upstream commit da2019633f0b5c105ce658aada333422d8cb28fe ]
 
-SyzKaller hit the null pointer deref while reading from uninitialized
-udev->product in zr364xx_vidioc_querycap().
+Some compilers will complain when using a member of a struct to
+initialize another member, in the same struct initialization.
 
-==================================================================
-BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
-include/linux/compiler.h:274
-Read of size 1 at addr 0000000000000000 by task v4l_id/5287
+For instance:
 
-CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
-  read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
-  strscpy+0x8a/0x280 lib/string.c:207
-  zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
-  v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
-  __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
-  video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
-  v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
-  ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f3b56d8b347
-Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
-ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
-ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
-RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
-R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
+  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
 
-For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
+Produce:
 
-The fix is to check for NULL before strscpy() and copy empty string, if
-product is NULL
+  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+                                              (!ops.current_entry ||
+                                                ^~~
+  1 error generated.
 
-Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+So use an extra variable, initialized just before that struct, to have
+the value used in the expressions used to init two of the struct
+members.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
+Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/zr364xx/zr364xx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/annotate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/zr364xx/zr364xx.c b/drivers/media/usb/zr364xx/zr364xx.c
-index 96fee8d5b865..cd2bc9ed0cd9 100644
---- a/drivers/media/usb/zr364xx/zr364xx.c
-+++ b/drivers/media/usb/zr364xx/zr364xx.c
-@@ -703,7 +703,8 @@ static int zr364xx_vidioc_querycap(struct file *file, void *priv,
- 	struct zr364xx_camera *cam = video_drvdata(file);
- 
- 	strscpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
--	strscpy(cap->card, cam->udev->product, sizeof(cap->card));
-+	if (cam->udev->product)
-+		strscpy(cap->card, cam->udev->product, sizeof(cap->card));
- 	strscpy(cap->bus_info, dev_name(&cam->udev->dev),
- 		sizeof(cap->bus_info));
- 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 98d934a36d86..b0d089a95dac 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
+ 	struct annotation *notes = browser__annotation(browser);
+ 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
++	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
+ 	struct annotation_write_ops ops = {
+ 		.first_line		 = row == 0,
+-		.current_entry		 = ui_browser__is_current_entry(browser, row),
++		.current_entry		 = is_current_entry,
+ 		.change_color		 = (!notes->options->hide_src_code &&
+-					    (!ops.current_entry ||
++					    (!is_current_entry ||
+ 					     (browser->use_navkeypressed &&
+ 					      !browser->navkeypressed))),
+ 		.width			 = browser->width,
 -- 
 2.20.1
 
