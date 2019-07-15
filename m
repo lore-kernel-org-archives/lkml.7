@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AC9C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F200DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9FC20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF292083D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198588;
-	bh=NRx8gP3l0RVi3bvlqSYp0NE0wjbX2I0T38T6T8rvjpQ=;
+	s=default; t=1563198600;
+	bh=QNlNfI7HJfRJ2GFFGK0M0B4kWDWDBlmNbXPZ8pNGDyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJOgA7BDL9dluiIsT0VV6tHdnRsfZ7clcPn8KOFy6CUG+Qt+AEdy6oG5evQR3RjJZ
-	 ausWhHXR20cagV/sZEZWEmrVdE/E7JkCAxCyM28IPMTP/5s7muNI0/dshuyuj4m4IX
-	 FPrzBvhwdl5xz7/Oh/+feVMAC9yPkTdK5am5kMW0=
+	b=j8U2m0qy6LmBGLa585SnqOoXEmG/zb7ZxZaeBuBlfwXtR9TaCRF2IQwZMDiC/Fvdm
+	 azoZ8X1ra2fODVNW/0uSBOB84M+MAdBIQP9ekJ6CPRDxgaDkfBT1CaZhHK/IfXYeL8
+	 jJ6zVfOwvBIKjkBGgJCIGh3oB/YD1Blw/XKLbuL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731793AbfGONtr (ORCPT
+        id S1731929AbfGONt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:49:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731768AbfGONto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:49:44 -0400
+        id S1731386AbfGONt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:49:57 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B3721848;
-        Mon, 15 Jul 2019 13:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85CF120C01;
+        Mon, 15 Jul 2019 13:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198583;
-        bh=NRx8gP3l0RVi3bvlqSYp0NE0wjbX2I0T38T6T8rvjpQ=;
+        s=default; t=1563198596;
+        bh=QNlNfI7HJfRJ2GFFGK0M0B4kWDWDBlmNbXPZ8pNGDyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLmKeg+w4uRyajoi3bFj/AAYip9LYeFVOQ+X8My7hkuM0L8tqBU7jTxmwHC78+Zaz
-         0yy4TeMyTfzXghZarRZyE9cN+6DO1FOqoHG1sC3KPcQ0V+sIjvtw2vNhymnMk9eaym
-         C5/RbLituCPzW3wm1djqdgcHzFT3Awg1A4tEi8IQ=
+        b=sFZ8q/HVU3bl/G1DsSBfHANeRiSoGb+z36uLZj811Y33MNHN9YBpOmXggvtxTq+M6
+         EVab8rRMe2wYDxzWaN1peptm9g+2f57U1R/imV9jam3Pt8B84/EjW9kQ/TkYTKOEK/
+         JygZinZ3m1/3cl6yl0/CccntWDIGWe9qY9cEopOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 051/249] media: saa7164: fix remove_proc_entry warning
-Date:   Mon, 15 Jul 2019 09:43:36 -0400
-Message-Id: <20190715134655.4076-51-sashal@kernel.org>
+Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 054/249] net: phy: Check against net_device being NULL
+Date:   Mon, 15 Jul 2019 09:43:39 -0400
+Message-Id: <20190715134655.4076-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,104 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-[ Upstream commit 50710eeefbc1ed25375942aad0c4d1eb4af0f330 ]
+[ Upstream commit 82c76aca81187b3d28a6fb3062f6916450ce955e ]
 
-if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
+In general, we don't want MAC drivers calling phy_attach_direct with the
+net_device being NULL. Add checks against this in all the functions
+calling it: phy_attach() and phy_connect_direct().
 
-name 'saa7164'
-WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
-  ? remove_proc_entry+0x1e8/0x3a0
-  ? try_stop_module+0x7b/0x240
-  ? proc_readdir+0x70/0x70
-  ? rcu_read_lock_sched_held+0xd7/0x100
-  saa7164_fini+0x13/0x1f [saa7164]
-  __x64_sys_delete_module+0x30c/0x480
-  ? __ia32_sys_delete_module+0x480/0x480
-  ? __x64_sys_clock_gettime+0x11e/0x1c0
-  ? __x64_sys_timer_create+0x1a0/0x1a0
-  ? trace_hardirqs_off_caller+0x40/0x180
-  ? do_syscall_64+0x18/0x450
-  do_syscall_64+0x9f/0x450
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix it by checking the return of proc_create_single() before
-calling remove_proc_entry().
-
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: use 0444 instead of S_IRUGO]
-[hverkuil-cisco@xs4all.nl: use pr_info instead of KERN_INFO]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ drivers/net/phy/phy_device.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
-index c594aff92e70..9ae04e18e6c6 100644
---- a/drivers/media/pci/saa7164/saa7164-core.c
-+++ b/drivers/media/pci/saa7164/saa7164-core.c
-@@ -1112,16 +1112,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
- 	return 0;
- }
- 
-+static struct proc_dir_entry *saa7164_pe;
-+
- static int saa7164_proc_create(void)
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index dcc93a873174..a3f8740c6163 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -948,6 +948,9 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
  {
--	struct proc_dir_entry *pe;
--
--	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
--	if (!pe)
-+	saa7164_pe = proc_create_single("saa7164", 0444, NULL, saa7164_proc_show);
-+	if (!saa7164_pe)
- 		return -ENOMEM;
+ 	int rc;
  
- 	return 0;
- }
++	if (!dev)
++		return -EINVAL;
 +
-+static void saa7164_proc_destroy(void)
-+{
-+	if (saa7164_pe)
-+		remove_proc_entry("saa7164", NULL);
-+}
-+#else
-+static int saa7164_proc_create(void) { return 0; }
-+static void saa7164_proc_destroy(void) {}
- #endif
+ 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
+ 	if (rc)
+ 		return rc;
+@@ -1290,6 +1293,9 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
+ 	struct device *d;
+ 	int rc;
  
- static int saa7164_thread_function(void *data)
-@@ -1493,19 +1502,21 @@ static struct pci_driver saa7164_pci_driver = {
- 
- static int __init saa7164_init(void)
- {
--	printk(KERN_INFO "saa7164 driver loaded\n");
-+	int ret = pci_register_driver(&saa7164_pci_driver);
++	if (!dev)
++		return ERR_PTR(-EINVAL);
 +
-+	if (ret)
-+		return ret;
- 
--#ifdef CONFIG_PROC_FS
- 	saa7164_proc_create();
--#endif
--	return pci_register_driver(&saa7164_pci_driver);
-+
-+	pr_info("saa7164 driver loaded\n");
-+
-+	return 0;
- }
- 
- static void __exit saa7164_fini(void)
- {
--#ifdef CONFIG_PROC_FS
--	remove_proc_entry("saa7164", NULL);
--#endif
-+	saa7164_proc_destroy();
- 	pci_unregister_driver(&saa7164_pci_driver);
- }
- 
+ 	/* Search the list of PHY devices on the mdio bus for the
+ 	 * PHY with the requested name
+ 	 */
 -- 
 2.20.1
 
