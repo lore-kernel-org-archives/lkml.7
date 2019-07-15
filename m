@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B0C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5214BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5891217D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274A9212F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199036;
-	bh=3jtqXFsdy9+nN0Tz9J17po0Nvk+gwLyZ0NOhRPT6fiY=;
+	s=default; t=1563199044;
+	bh=EvFcO/rzO9xfa64Gyrk/idXLQuQAM8q73KDNVZupXzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvJqDjT+5UDnUiMvkQKu05etErHy2jYqf3dg1dgU+emnwkikgTKndubR5uKAvG6BR
-	 goWe0RVVnVNO8U4evobUQ3egq0vWRU+kEHE1xN7IQYYPAdsAqK21ZCginpi/alxGhL
-	 36jOP0wZ9WL5UdGJ24gf/DBZc2zbWOxXlhILWbEQ=
+	b=qcZy0Zg5/DeOxcGsnZM6AHLKrxjUGrLvdwkvpQtJDBchhclUW4V6Olcj3wL98J1bB
+	 0ec3SrWeCiKpBMalfQY013uNScwFc05pcEUhlzWuv7NT6u8B5922cmbDZSN5ItrgfS
+	 QJMl+85nrpNyQckPJH+VYutwMcCx3hKpIXPIlqvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfGON5O (ORCPT
+        id S1732467AbfGON5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34882 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732378AbfGON5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:11 -0400
+        id S1732304AbfGON5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:17 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D5B420C01;
-        Mon, 15 Jul 2019 13:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5451D21530;
+        Mon, 15 Jul 2019 13:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199030;
-        bh=3jtqXFsdy9+nN0Tz9J17po0Nvk+gwLyZ0NOhRPT6fiY=;
+        s=default; t=1563199036;
+        bh=EvFcO/rzO9xfa64Gyrk/idXLQuQAM8q73KDNVZupXzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfR32nCtKz8xD9WS4lRGJ7KWIV4gmH8X34QtasGm+iXgRy41+Qz4x2AlTLP52Nv9I
-         nrDyMmxGFIpBq9oSPZ4VsMgGRBKb3jmKxP6aW51bXeUhwXoB6ThCKQj/QGDT3Dzqok
-         upMLmaGOsJnvxMjnUiKNWretx3DnJk1dRPhufpWw=
+        b=vmXHgHvD5JYXFIMgTV4ga/GJW4IWJc6wBxfSIluLx3XxbUJ+wR0ieLt4NgTIlaOZz
+         bKwTI+4/5sGsUTXvsNREjOBzzBZTAu1eTasjcrFac/sMwAjj0J+pL7xNd3soWECZoh
+         6swV6oZsme9WaRghPFCvf2mU8163f29FQwve9fAc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S . Bhat" <srivatsa@csail.mit.edu>,
+Cc:     Tejun Heo <tj@kernel.org>, Hannes Reinecke <hare@suse.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 169/249] block, bfq: fix rq_in_driver check in bfq_update_inject_limit
-Date:   Mon, 15 Jul 2019 09:45:34 -0400
-Message-Id: <20190715134655.4076-169-sashal@kernel.org>
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 171/249] libata: don't request sense data on !ZAC ATA devices
+Date:   Mon, 15 Jul 2019 09:45:36 -0400
+Message-Id: <20190715134655.4076-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -60,53 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit db599f9ed9bd31b018b6c48ad7c6b21d5b790ecf ]
+[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
 
-One of the cases where the parameters for injection may be updated is
-when there are no more in-flight I/O requests. The number of in-flight
-requests is stored in the field bfqd->rq_in_driver of the descriptor
-bfqd of the device. So, the controlled condition is
-bfqd->rq_in_driver == 0.
+ZAC support added sense data requesting on error for both ZAC and ATA
+devices. This seems to cause erratic error handling behaviors on some
+SSDs where the device reports sense data availability and then
+delivers the wrong content making EH take the wrong actions.  The
+failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
+reproduced.
 
-Unfortunately, this is wrong because, the instruction that checks this
-condition is in the code path that handles the completion of a
-request, and, in particular, the instruction is executed before
-bfqd->rq_in_driver is decremented in such a code path.
+There is no value in requesting sense data from non-ZAC ATA devices
+while there's a significant risk of introducing EH misbehaviors which
+are difficult to reproduce and fix.  Let's do the sense data dancing
+only for ZAC devices.
 
-This commit fixes this issue by just replacing 0 with 1 in the
-comparison.
-
-Reported-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-Tested-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/ata/libata-eh.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index e5db3856b194..404e776aa36d 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5398,8 +5398,14 @@ static void bfq_update_inject_limit(struct bfq_data *bfqd,
- 	 * total service time, and there seem to be the right
- 	 * conditions to do it, or we can lower the last base value
- 	 * computed.
-+	 *
-+	 * NOTE: (bfqd->rq_in_driver == 1) means that there is no I/O
-+	 * request in flight, because this function is in the code
-+	 * path that handles the completion of a request of bfqq, and,
-+	 * in particular, this function is executed before
-+	 * bfqd->rq_in_driver is decremented in such a code path.
- 	 */
--	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 0) ||
-+	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 1) ||
- 	    tot_time_ns < bfqq->last_serv_time_ns) {
- 		bfqq->last_serv_time_ns = tot_time_ns;
- 		/*
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 9d687e1d4325..3bfd9da58473 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1469,7 +1469,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
+ 	tf->hob_lbah = buf[10];
+ 	tf->nsect = buf[12];
+ 	tf->hob_nsect = buf[13];
+-	if (ata_id_has_ncq_autosense(dev->id))
++	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
+ 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
+ 
+ 	return 0;
+@@ -1716,7 +1716,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 	memcpy(&qc->result_tf, &tf, sizeof(tf));
+ 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
+ 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
+-	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
++	if (dev->class == ATA_DEV_ZAC &&
++	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
+ 		char sense_key, asc, ascq;
+ 
+ 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
+@@ -1770,10 +1771,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
+ 	}
+ 
+ 	switch (qc->dev->class) {
+-	case ATA_DEV_ATA:
+ 	case ATA_DEV_ZAC:
+ 		if (stat & ATA_SENSE)
+ 			ata_eh_request_sense(qc, qc->scsicmd);
++		/* fall through */
++	case ATA_DEV_ATA:
+ 		if (err & ATA_ICRC)
+ 			qc->err_mask |= AC_ERR_ATA_BUS;
+ 		if (err & (ATA_UNC | ATA_AMNF))
 -- 
 2.20.1
 
