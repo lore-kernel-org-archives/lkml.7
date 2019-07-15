@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A242C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D7CC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03ADC20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01C520C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563197944;
-	bh=E2IlxDnxRzpURG/a4YOJ+pc1wc8mQLpQJwE8n6zaDw0=;
+	s=default; t=1563197946;
+	bh=sdE4boDjVaUMIjTlvIuSSQG68cEy/8u4cYX8/mB3o7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xoi8ABIJrrpZaix29FGBUh+FR4k1n61WPSX+xopq6xvA849Jj8DytzFnCtNg6Dedn
-	 x0tZyGTvZoPmqWRUP5Z6z7KI0HlvAqdsV4wckckWx6vV4q+/gzwI7sCHPzuSTBAxNH
-	 uFe9H4jArVoFJEYp7wFcMsD/k3YVH9yfzxeEzIqw=
+	b=q+O9d/SexhLgxjA/AS1p9Bk468QXdrE289eOTSSn21UfiKJu+KbMGtFY8T6SqwA9B
+	 eiMs/O8si4yANMzOomFFUokAqHUTXU/z8V4qevuYZstzRyRGVdcxYqsMw32hiiTRgr
+	 rliqxmPpvULSH+eq6JS2HnZxMM8ibChCqZPGIwsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbfGONi7 (ORCPT
+        id S1731147AbfGONjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbfGONi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:38:56 -0400
+        id S1731113AbfGONi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:38:58 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2AC21530;
-        Mon, 15 Jul 2019 13:38:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5996620C01;
+        Mon, 15 Jul 2019 13:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197935;
-        bh=E2IlxDnxRzpURG/a4YOJ+pc1wc8mQLpQJwE8n6zaDw0=;
+        s=default; t=1563197937;
+        bh=sdE4boDjVaUMIjTlvIuSSQG68cEy/8u4cYX8/mB3o7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frF4NjkVKHa0+cxsnLVWQgHee0Bns1UxcQ/XYw7RNwI/Wgtf6RVi3OBlxqVtBLUfO
-         UCSytzNCpsIrYkdKHZIT5XceEksj1AOgRInHTDCMhjq8N2XO6AXpWTJ2KKoQU6LXFh
-         LjCcbBy7fexO4D8yuCyodGgv/XhEGvVqt14/8gxA=
+        b=LdWwl3iu6MbQpEod9UfZ/BJBP7tL5OB31Tg2FxHK55d3aIbUqgI1MNtKEwIr7KDZj
+         BiIYOrC566IYdv1RSUicqGZDDBZ733nLChzobAYIkm/0NUHsF2wSlJD76WPx6qSF+s
+         vDn3tDdwNkjNLbolddi1wiK7Bpgch9uV9UnNNv9g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 017/219] regmap: debugfs: Fix memory leak in regmap_debugfs_init
-Date:   Mon, 15 Jul 2019 09:34:49 -0400
-Message-Id: <20190715133811.2441-17-sashal@kernel.org>
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 018/219] batman-adv: fix for leaked TVLV handler.
+Date:   Mon, 15 Jul 2019 09:34:50 -0400
+Message-Id: <20190715133811.2441-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715133811.2441-1-sashal@kernel.org>
 References: <20190715133811.2441-1-sashal@kernel.org>
@@ -60,55 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 2899872b627e99b7586fe3b6c9f861da1b4d5072 ]
+[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
 
-As detected by kmemleak running on i.MX6ULL board:
+A handler for BATADV_TVLV_ROAM was being registered when the
+translation-table was initialized, but not unregistered when the
+translation-table was freed.  Unregister it.
 
-nreferenced object 0xd8366600 (size 64):
-  comm "swapper/0", pid 1, jiffies 4294937370 (age 933.220s)
-  hex dump (first 32 bytes):
-    64 75 6d 6d 79 2d 69 6f 6d 75 78 63 2d 67 70 72  dummy-iomuxc-gpr
-    40 32 30 65 34 30 30 30 00 e3 f3 ab fe d1 1b dd  @20e4000........
-  backtrace:
-    [<b0402aec>] kasprintf+0x2c/0x54
-    [<a6fbad2c>] regmap_debugfs_init+0x7c/0x31c
-    [<9c8d91fa>] __regmap_init+0xb5c/0xcf4
-    [<5b1c3d2a>] of_syscon_register+0x164/0x2c4
-    [<596a5d80>] syscon_node_to_regmap+0x64/0x90
-    [<49bd597b>] imx6ul_init_machine+0x34/0xa0
-    [<250a4dac>] customize_machine+0x1c/0x30
-    [<2d19fdaf>] do_one_initcall+0x7c/0x398
-    [<e6084469>] kernel_init_freeable+0x328/0x448
-    [<168c9101>] kernel_init+0x8/0x114
-    [<913268aa>] ret_from_fork+0x14/0x20
-    [<ce7b131a>] 0x0
-
-Root cause is that map->debugfs_name is allocated using kasprintf
-and then the pointer is lost by assigning it other memory address.
-
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
+Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Sven Eckelmann <sven@narfation.org
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap-debugfs.c | 2 ++
+ net/batman-adv/translation-table.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index 19eb454f26c3..df2893d4626b 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -565,6 +565,8 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
- 	}
- 
- 	if (!strcmp(name, "dummy")) {
-+		kfree(map->debugfs_name);
+diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+index 26c4e2493ddf..abad64eb7dc4 100644
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -3826,6 +3826,8 @@ static void batadv_tt_purge(struct work_struct *work)
+  */
+ void batadv_tt_free(struct batadv_priv *bat_priv)
+ {
++	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
 +
- 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
- 						dummy_index);
- 		name = map->debugfs_name;
+ 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 
 -- 
 2.20.1
 
