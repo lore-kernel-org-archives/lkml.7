@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB286C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C97C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94030217D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51AB2081C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563199863;
-	bh=e6jWqEeEv1aQrTQ5oESajo6naB0+APSVXMatpHaJegg=;
+	s=default; t=1563199864;
+	bh=1Nu6axRrZiyeBMadUwVDUPnSA5lAz5ihLh+rhA/OQMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qErKZKyuH53qoIXt1t5ajMOvPgse4n3hnAh8wIDJaDNb3Ms73D+aGD9y00CcfPRDV
-	 6l1McYdU1DPA/dJGzNL3A6iIEGUEdb2CfO3S7oFO2n9iVBU/rWvGqqvvV3jq4RNlqv
-	 7xAfsxHmGYYYSP/Udar981IY9+qOR3CqiK5CuwPs=
+	b=2q8qUepA8v5CujVlJkqL+9tbADWl0WtQgFftLKgsHbQ7e37YiZwR9eTOBJ8N2YS0d
+	 g2lkaDhdYno/EmV/iU+Cp3KEtzDg1O3O3BMKjPgxQ+d4Pc5c5m9m+fdC/uv8vSUw0o
+	 PT82QUthHWJcso9SSBs3KhZc0qR60ljG7pNQAmYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388949AbfGOOLB (ORCPT
+        id S2388959AbfGOOLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388774AbfGOOJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:53 -0400
+        id S2388831AbfGOOKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:10:00 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6054A20868;
-        Mon, 15 Jul 2019 14:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0412C2083D;
+        Mon, 15 Jul 2019 14:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199793;
-        bh=e6jWqEeEv1aQrTQ5oESajo6naB0+APSVXMatpHaJegg=;
+        s=default; t=1563199799;
+        bh=1Nu6axRrZiyeBMadUwVDUPnSA5lAz5ihLh+rhA/OQMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDwliex7Ga8dmGpGzIqCkmH/hu/VFkKzvKz3ua19lcO/MexSBY/cGsiy7ZC15LtNa
-         PG1Nd6/cBOeSi/mn9wyiGL9kSBInsCAWsk8XVOSxPPRdsl6Cy8ErVoR2nKlPNYmmCL
-         XWB6LHt1sSGifZ4JiYPkCCZvMZ1qNeZo7s+0CF60=
+        b=XnX1lGSBWA6M+2ej7YwHggWTvbXf/q198cVmK9z+9zWMgK1O45YorHfVkTwCMSlN6
+         8YJhc88pRQ35NwolZtbKqLTS21gj8YxdCQpPkAeU7dWgvvkM1zV8VrqYoBmUaM9UiZ
+         m8W5pHp4nCd6VAFqD9UASDOOSNV+rvvviDfk/2gE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 107/219] ipoib: correcly show a VF hardware address
-Date:   Mon, 15 Jul 2019 10:01:48 -0400
-Message-Id: <20190715140341.6443-107-sashal@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 109/219] bpf: fix callees pruning callers
+Date:   Mon, 15 Jul 2019 10:01:50 -0400
+Message-Id: <20190715140341.6443-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -60,57 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Kirjanov <kda@linux-powerpc.org>
+From: Alexei Starovoitov <ast@kernel.org>
 
-[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
+[ Upstream commit eea1c227b9e9bad295e8ef984004a9acf12bb68c ]
 
-in the case of IPoIB with SRIOV enabled hardware
-ip link show command incorrecly prints
-0 instead of a VF hardware address.
+The commit 7640ead93924 partially resolved the issue of callees
+incorrectly pruning the callers.
+With introduction of bounded loops and jmps_processed heuristic
+single verifier state may contain multiple branches and calls.
+It's possible that new verifier state (for future pruning) will be
+allocated inside callee. Then callee will exit (still within the same
+verifier state). It will go back to the caller and there R6-R9 registers
+will be read and will trigger mark_reg_read. But the reg->live for all frames
+but the top frame is not set to LIVE_NONE. Hence mark_reg_read will fail
+to propagate liveness into parent and future walking will incorrectly
+conclude that the states are equivalent because LIVE_READ is not set.
+In other words the rule for parent/live should be:
+whenever register parentage chain is set the reg->live should be set to LIVE_NONE.
+is_state_visited logic already follows this rule for spilled registers.
 
-Before:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
-trust off, query_rss off
-...
-After:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0     link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
-checking off, link-state disable, trust off, query_rss off
-
-v1->v2: just copy an address without modifing ifla_vf_mac
-v2->v3: update the changelog
-
-Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
-Acked-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7640ead93924 ("bpf: verifier: make sure callees don't prune with caller differences")
+Fixes: f4d7e40a5b71 ("bpf: introduce function calls (verification)")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/bpf/verifier.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 9b5e11d3fb85..04ea7db08e87 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1998,6 +1998,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
- 		return err;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 4ff130ddfbf6..cbc03f051598 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -6197,17 +6197,18 @@ static int is_state_visited(struct bpf_verifier_env *env, int insn_idx)
+ 	 * the state of the call instruction (with WRITTEN set), and r0 comes
+ 	 * from callee with its full parentage chain, anyway.
+ 	 */
+-	for (j = 0; j <= cur->curframe; j++)
+-		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
+-			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
+ 	/* clear write marks in current state: the writes we did are not writes
+ 	 * our child did, so they don't screen off its reads from us.
+ 	 * (There are no read marks in current state, because reads always mark
+ 	 * their parent and current state never has children yet.  Only
+ 	 * explored_states can get read marks.)
+ 	 */
+-	for (i = 0; i < BPF_REG_FP; i++)
+-		cur->frame[cur->curframe]->regs[i].live = REG_LIVE_NONE;
++	for (j = 0; j <= cur->curframe; j++) {
++		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
++			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
++		for (i = 0; i < BPF_REG_FP; i++)
++			cur->frame[j]->regs[i].live = REG_LIVE_NONE;
++	}
  
- 	ivf->vf = vf;
-+	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
- 
- 	return 0;
- }
+ 	/* all stack frames are accessible from callee, clear them all */
+ 	for (j = 0; j <= cur->curframe; j++) {
 -- 
 2.20.1
 
