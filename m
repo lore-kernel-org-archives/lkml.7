@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6FFC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7C0C76192
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7E92086C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFEF2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198078;
-	bh=RCERVD4EomtNaF+pux6n2NXGbPprNAKJkf7ml5FnTmk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=agJya1Ew3q45uN5xuUbn+/LBbJGjN9iO8Ix2DLP0EIs/Ukmb+q6NJs+Z8Ilyfrymq
-	 gtrm5n6YYn666vFN2gN1Ndh1459+597i5PnaV4khLiTtSsZp1keQl0Nx30PYwdJIbw
-	 /oNliBzAo0fbceQR11ezgqyLql27P/CbvTRmebQg=
+	s=default; t=1563198091;
+	bh=4EzUqz8VEanhcqiMXOvPEr7zr+gp3i1tR7nSD7Be9rQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VQ0WojA6w9mfgocSlz+JfQM69tn3MaAlOLlAFloh+b5Ar3QM93Pt55rJ8u1uCVbt4
+	 TObERW2j1lnkCotzAfGvRnlg/nhTOfpLxdpAHuxtjIT0I4ZRHN8rLUJ3rt49obSB7X
+	 BKucKfUSxAaYWl0NEC9+UOQj/JHJUxCbHvpJsEB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfGONja (ORCPT
+        id S1731093AbfGONi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40872 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbfGONj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:39:28 -0400
+        id S1731064AbfGONiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:38:52 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9B12080A;
-        Mon, 15 Jul 2019 13:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B933D21530;
+        Mon, 15 Jul 2019 13:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563197967;
-        bh=RCERVD4EomtNaF+pux6n2NXGbPprNAKJkf7ml5FnTmk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=orkQxiit5phDMhqO1XCkNJnK1+ptjz/MIv7j3wDclFJryDg1T5z25dv6EIMTfMk1g
-         OfZAwsMgnON3IqgvwkHk6TTgxJwwM++myX3WYTKINnYdaj4G7YP6ozSjcRApAbLuai
-         m0ymRbJYihO3j4EFE8/gZLD1ZAt9bYra65W5VPvA=
+        s=default; t=1563197931;
+        bh=4EzUqz8VEanhcqiMXOvPEr7zr+gp3i1tR7nSD7Be9rQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PIkbGKus6CGw1+pfPooSUZVhq84k7IL6JPxi8qwDbb+N1/F0ztlCK8wFifzlY55nS
+         bM3C8EsmXRHrLTVqrEcti9p8VEQOl5CG9YkLsMYByHO9pg/5uc8DVSrnifJA4PPT9u
+         l1pF90c8sqLhykWicdJqN68B44ityIU+KyNI6Pzw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Maya Erez <merez@codeaurora.org>,
+Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
+        Tamizh chelvam <tamizhr@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 001/158] wil6210: fix potential out-of-bounds read
-Date:   Mon, 15 Jul 2019 09:36:46 -0400
-Message-Id: <20190715133923.2890-1-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 015/219] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
+Date:   Mon, 15 Jul 2019 09:34:47 -0400
+Message-Id: <20190715133811.2441-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715133811.2441-1-sashal@kernel.org>
+References: <20190715133811.2441-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,52 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Anilkumar Kolli <akolli@codeaurora.org>
 
-[ Upstream commit bfabdd6997323adbedccb13a3fed1967fb8cf8f5 ]
+[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
 
-Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
+Increase pulse width range from 1-2usec to 0-4usec.
+During data traffic HW occasionally fails detecting radar pulses,
+so that SW cannot get enough radar reports to achieve the success rate.
 
-enum gro_result {
-        GRO_MERGED,
-        GRO_MERGED_FREE,
-        GRO_HELD,
-        GRO_NORMAL,
-        GRO_DROP,
-        GRO_CONSUMED,
-};
-typedef enum gro_result gro_result_t;
+Tested ath10k hw and fw:
+	* QCA9888(10.4-3.5.1-00052)
+	* QCA4019(10.4-3.2.1.1-00017)
+	* QCA9984(10.4-3.6-00104)
+	* QCA988X(10.2.4-1.0-00041)
 
-In case *rc* evaluates to 5, we end up having an out-of-bounds read
-at drivers/net/wireless/ath/wil6210/txrx.c:821:
+Tested ath9k hw: AR9300
 
-	wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
-		     len, gro_res_str[rc]);
-
-Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
-
-Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
-Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Maya Erez <merez@codeaurora.org>
+Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
-index 75c8aa297107..1b1b58e0129a 100644
---- a/drivers/net/wireless/ath/wil6210/txrx.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx.c
-@@ -736,6 +736,7 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
- 		[GRO_HELD]		= "GRO_HELD",
- 		[GRO_NORMAL]		= "GRO_NORMAL",
- 		[GRO_DROP]		= "GRO_DROP",
-+		[GRO_CONSUMED]		= "GRO_CONSUMED",
- 	};
- 
- 	wil->txrx_ops.get_netif_rx_params(skb, &cid, &security);
+diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
+index d52b31b45df7..a274eb0d1968 100644
+--- a/drivers/net/wireless/ath/dfs_pattern_detector.c
++++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
+@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
+ 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
+ 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
+ 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
+-	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
++	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
+ 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
+ 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
+ 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
 -- 
 2.20.1
 
