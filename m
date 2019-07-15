@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FDC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC8EC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB84C204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A492B217D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201384;
-	bh=IQ7RPN7+t3nFxxPCkYpOIib6KCDRBhwWX793jYCiN/Y=;
+	s=default; t=1563201394;
+	bh=zBOV75eXuCouknI/+goA12nzOEQULs3BcNP59PJPHV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbz0iZCsBhSQANqDBd8Lx0qpKnJ5+rP1B1x0k/KuyQUZMnWTJWr9axoxGh8VHQvuy
-	 nc9VlYg9itp1KuhtNX7Hy4C2PajZG55BXMvlcOJ71Y4zO8EWm1z6Vfit31ZpgvG2ZV
-	 JLziYV7L3BLSYr3mG2tUUSQc19hp3HdVZpB+MxSo=
+	b=oLIUW+0/wjqtnOHpRwiylyHqhwfqPSRHj9CX7XyLClb+zK8oFr56IWb9fMpB39BAR
+	 GMnPgeUlxWujb4WANemqcV1NGWiO7bsigGkIM7QBebZSjg3dBWBhAJm5RZgjSSLCZW
+	 kTT2+EAJaPCsyNGap9wV787/IYGv9ayu6KuahXa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390885AbfGOOdB (ORCPT
+        id S2391591AbfGOOcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:33:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391912AbfGOOc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:32:57 -0400
+        id S2391819AbfGOOcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:32:12 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1207E20868;
-        Mon, 15 Jul 2019 14:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DCFF2086C;
+        Mon, 15 Jul 2019 14:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201176;
-        bh=IQ7RPN7+t3nFxxPCkYpOIib6KCDRBhwWX793jYCiN/Y=;
+        s=default; t=1563201131;
+        bh=zBOV75eXuCouknI/+goA12nzOEQULs3BcNP59PJPHV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSMeh6poRMpITinzw19OHTP8pwbk7j0NMupY/9ShpFEQDnVO1+3u+dsh28L55FGb+
-         JM8lO8RFGYakzxd5ZXoaadEzPnVmDDTHK+1fv9Lde6FTrfmb5Jh8b8CzUFbR3P5HqM
-         2pDulBhbq2hBzpGOz0PsNSN+/CQl5yhUk9paIMd4=
+        b=e4AukbRmPUbv3VcRwo1aUiR2UrMcR0DM7BgsSovHESYbuMSBkHo76QN/gdRsyct7J
+         Tf1brYkC85DI6L+EEIfXd0VWtIojBG8d28oHdgpPm3ru/gSiXlB7QapUBpOaqHoiZZ
+         FC9zAqUsolD7j+xGJRsji7S5IaBRf6y49RjgtPPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Keith Pyle <kpyle@austin.rr.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 070/105] media: hdpvr: fix locking and a missing msleep
-Date:   Mon, 15 Jul 2019 10:28:04 -0400
-Message-Id: <20190715142839.9896-70-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 059/105] ipsec: select crypto ciphers for xfrm_algo
+Date:   Mon, 15 Jul 2019 10:27:53 -0400
+Message-Id: <20190715142839.9896-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -61,81 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 6bc5a4a1927556ff9adce1aa95ea408c95453225 ]
+[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
 
-This driver has three locking issues:
+kernelci.org reports failed builds on arc because of what looks
+like an old missed 'select' statement:
 
-- The wait_event_interruptible() condition calls hdpvr_get_next_buffer(dev)
-  which uses a mutex, which is not allowed. Rewrite with list_empty_careful()
-  that doesn't need locking.
+net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
+xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
 
-- In hdpvr_read() the call to hdpvr_stop_streaming() didn't lock io_mutex,
-  but it should have since stop_streaming expects that.
+I don't see this in randconfig builds on other architectures, but
+it's fairly clear we want to select the hash code for it, like we
+do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
+is also required even though it has not popped up in build tests.
 
-- In hdpvr_device_release() io_mutex was locked when calling flush_work(),
-  but there it shouldn't take that mutex since the work done by flush_work()
-  also wants to lock that mutex.
-
-There are also two other changes (suggested by Keith):
-
-- msecs_to_jiffies(4000); (a NOP) should have been msleep(4000).
-- Change v4l2_dbg to v4l2_info to always log if streaming had to be restarted.
-
-Reported-by: Keith Pyle <kpyle@austin.rr.com>
-Suggested-by: Keith Pyle <kpyle@austin.rr.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/hdpvr/hdpvr-video.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ net/xfrm/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/usb/hdpvr/hdpvr-video.c b/drivers/media/usb/hdpvr/hdpvr-video.c
-index 7fb036d6a86e..991f820a4530 100644
---- a/drivers/media/usb/hdpvr/hdpvr-video.c
-+++ b/drivers/media/usb/hdpvr/hdpvr-video.c
-@@ -439,7 +439,7 @@ static ssize_t hdpvr_read(struct file *file, char __user *buffer, size_t count,
- 	/* wait for the first buffer */
- 	if (!(file->f_flags & O_NONBLOCK)) {
- 		if (wait_event_interruptible(dev->wait_data,
--					     hdpvr_get_next_buffer(dev)))
-+					     !list_empty_careful(&dev->rec_buff_list)))
- 			return -ERESTARTSYS;
- 	}
+diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
+index 286ed25c1a69..2e747ae7dc89 100644
+--- a/net/xfrm/Kconfig
++++ b/net/xfrm/Kconfig
+@@ -14,6 +14,8 @@ config XFRM_ALGO
+ 	tristate
+ 	select XFRM
+ 	select CRYPTO
++	select CRYPTO_HASH
++	select CRYPTO_BLKCIPHER
  
-@@ -465,10 +465,17 @@ static ssize_t hdpvr_read(struct file *file, char __user *buffer, size_t count,
- 				goto err;
- 			}
- 			if (!err) {
--				v4l2_dbg(MSG_INFO, hdpvr_debug, &dev->v4l2_dev,
--					"timeout: restart streaming\n");
-+				v4l2_info(&dev->v4l2_dev,
-+					  "timeout: restart streaming\n");
-+				mutex_lock(&dev->io_mutex);
- 				hdpvr_stop_streaming(dev);
--				msecs_to_jiffies(4000);
-+				mutex_unlock(&dev->io_mutex);
-+				/*
-+				 * The FW needs about 4 seconds after streaming
-+				 * stopped before it is ready to restart
-+				 * streaming.
-+				 */
-+				msleep(4000);
- 				err = hdpvr_start_streaming(dev);
- 				if (err) {
- 					ret = err;
-@@ -1133,9 +1140,7 @@ static void hdpvr_device_release(struct video_device *vdev)
- 	struct hdpvr_device *dev = video_get_drvdata(vdev);
- 
- 	hdpvr_delete(dev);
--	mutex_lock(&dev->io_mutex);
- 	flush_work(&dev->worker);
--	mutex_unlock(&dev->io_mutex);
- 
- 	v4l2_device_unregister(&dev->v4l2_dev);
- 	v4l2_ctrl_handler_free(&dev->hdl);
+ config XFRM_USER
+ 	tristate "Transformation user configuration interface"
 -- 
 2.20.1
 
