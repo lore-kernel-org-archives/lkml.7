@@ -2,111 +2,151 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE27C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155ACC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9467421721
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:04:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="THHxjtsg"
+	by mail.kernel.org (Postfix) with ESMTP id DB6BF21842
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 22:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732974AbfGOWEP (ORCPT
+        id S1733019AbfGOWEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 18:04:15 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4949 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730647AbfGOWEN (ORCPT
+        Mon, 15 Jul 2019 18:04:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44258 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730647AbfGOWEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 18:04:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2cf85a0000>; Mon, 15 Jul 2019 15:04:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 15 Jul 2019 15:04:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 15 Jul 2019 15:04:12 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 15 Jul
- 2019 22:04:11 +0000
-Subject: Re: [PATCH] staging: kpc2000: Convert put_page() to put_user_page*()
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Matt Sickler <Matt.Sickler@daktronics.com>,
-        Bharath Vedartham <linux.bhar@gmail.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190715195248.GA22495@bharath12345-Inspiron-5559>
- <2604fcd1-4829-d77e-9f7c-d4b731782ff9@nvidia.com>
- <SN6PR02MB4016687B605E3D97D699956EEECF0@SN6PR02MB4016.namprd02.prod.outlook.com>
- <82441723-f30e-5811-ab1c-dd9a4993d7df@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <2278975b-6ea5-5417-eb0c-9d7debdf68ce@nvidia.com>
-Date:   Mon, 15 Jul 2019 15:04:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 18:04:42 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FLvQSU103955;
+        Mon, 15 Jul 2019 18:04:18 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ts0x82d26-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 18:04:18 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6FLssOH005937;
+        Mon, 15 Jul 2019 22:04:17 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03dal.us.ibm.com with ESMTP id 2tq6x72cu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 22:04:17 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FM4GoI50331918
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 22:04:16 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE387AE2F0;
+        Mon, 15 Jul 2019 22:04:16 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E60EDAE2C4;
+        Mon, 15 Jul 2019 22:04:06 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.238.93])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 15 Jul 2019 22:04:06 +0000 (GMT)
+References: <20190323165456-mutt-send-email-mst@kernel.org> <87a7go71hz.fsf@morokweng.localdomain> <20190520090939-mutt-send-email-mst@kernel.org> <877ea26tk8.fsf@morokweng.localdomain> <20190603211528-mutt-send-email-mst@kernel.org> <877e96qxm7.fsf@morokweng.localdomain> <20190701092212-mutt-send-email-mst@kernel.org> <87d0id9nah.fsf@morokweng.localdomain> <20190715103411-mutt-send-email-mst@kernel.org> <874l3nnist.fsf@morokweng.localdomain> <20190715163453-mutt-send-email-mst@kernel.org>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+In-reply-to: <20190715163453-mutt-send-email-mst@kernel.org>
+Date:   Mon, 15 Jul 2019 19:03:03 -0300
+Message-ID: <8736j7neg8.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <82441723-f30e-5811-ab1c-dd9a4993d7df@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563228250; bh=7F+lrioE5/qbngjXwfnCWvzn3KWHU4WQV3R2Uk1MWm8=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=THHxjtsgf8LosY3HKog1RQ/BDV+9F/bTT64YX2I6T2AHWxoBAi0RLmklmhwM3ewuk
-         OX2zlNOoGNrmox7hKvIBOIFmnJslo5CUp7RmxvNgFJCavNuCywtZwx9qel9OqBItAE
-         P+rc1zZKXVbY8PZlPHkgV6xctZUI4ye2lqS+p5KgZRSDRw5AD1lZR4UfhS+ZKvl/jS
-         hMQKOx3zzmXt5XuNUXh7mBFZcc4Z8kxcr7xPK49Hx+ate4QIV3mr/eky3l1SzDrtKS
-         KSOMqk9cAXNlVUBhj/Q6LAOAOQVrgKk0xs5pROzdtxNCjzIBEvMLG7MeGOuyRaGQVd
-         RMPff+4MqyInQ==
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150246
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 3:01 PM, John Hubbard wrote:
-> On 7/15/19 2:47 PM, Matt Sickler wrote:
-...
-> I agree: the PageReserved check looks unnecessary here, from my outside-the-kpc_2000-team
-> perspective, anyway. Assuming that your analysis above is correct, you could collapse that
-> whole think into just:
-> 
-> @@ -211,17 +209,8 @@ void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
->         BUG_ON(acd->ldev == NULL);
->         BUG_ON(acd->ldev->pldev == NULL);
->  
-> -       for (i = 0 ; i < acd->page_count ; i++) {
-> -               if (!PageReserved(acd->user_pages[i])) {
-> -                       set_page_dirty(acd->user_pages[i]);
-> -               }
-> -       }
-> -
->         dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
-> -
-> -       for (i = 0 ; i < acd->page_count ; i++) {
-> -               put_page(acd->user_pages[i]);
-> -       }
-> +       put_user_pages_dirty(&acd->user_pages[i], acd->page_count);
 
-Ahem, I typed too quickly. :) Please make that:
+Michael S. Tsirkin <mst@redhat.com> writes:
 
-    put_user_pages_dirty(acd->user_pages, acd->page_count);
+> On Mon, Jul 15, 2019 at 05:29:06PM -0300, Thiago Jung Bauermann wrote:
+>>
+>> Michael S. Tsirkin <mst@redhat.com> writes:
+>>
+>> > On Sun, Jul 14, 2019 at 02:51:18AM -0300, Thiago Jung Bauermann wrote:
+>> >>
+>> >>
+>> >> Michael S. Tsirkin <mst@redhat.com> writes:
+>> >>
+>> >> > So this is what I would call this option:
+>> >> >
+>> >> > VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS
+>> >> >
+>> >> > and the explanation should state that all device
+>> >> > addresses are translated by the platform to identical
+>> >> > addresses.
+>> >> >
+>> >> > In fact this option then becomes more, not less restrictive
+>> >> > than VIRTIO_F_ACCESS_PLATFORM - it's a promise
+>> >> > by guest to only create identity mappings,
+>> >> > and only before driver_ok is set.
+>> >> > This option then would always be negotiated together with
+>> >> > VIRTIO_F_ACCESS_PLATFORM.
+>> >> >
+>> >> > Host then must verify that
+>> >> > 1. full 1:1 mappings are created before driver_ok
+>> >> >     or can we make sure this happens before features_ok?
+>> >> >     that would be ideal as we could require that features_ok fails
+>> >> > 2. mappings are not modified between driver_ok and reset
+>> >> >     i guess attempts to change them will fail -
+>> >> >     possibly by causing a guest crash
+>> >> >     or some other kind of platform-specific error
+>> >>
+>> >> I think VIRTIO_F_ACCESS_PLATFORM_IDENTITY_ADDRESS is good, but requiring
+>> >> it to be accompanied by ACCESS_PLATFORM can be a problem. One reason is
+>> >> SLOF as I mentioned above, another is that we would be requiring all
+>> >> guests running on the machine (secure guests or not, since we would use
+>> >> the same configuration for all guests) to support it. But
+>> >> ACCESS_PLATFORM is relatively recent so it's a bit early for that. For
+>> >> instance, Ubuntu 16.04 LTS (which is still supported) doesn't know about
+>> >> it and wouldn't be able to use the device.
+>> >
+>> > OK and your target is to enable use with kernel drivers within
+>> > guests, right?
+>>
+>> Right.
+>>
+>> > My question is, we are defining a new flag here, I guess old guests
+>> > then do not set it. How does it help old guests? Or maybe it's
+>> > not designed to ...
+>>
+>> Indeed. The idea is that QEMU can offer the flag, old guests can reject
+>> it (or even new guests can reject it, if they decide not to convert into
+>> secure VMs) and the feature negotiation will succeed with the flag
+>> unset.
+>
+> OK. And then what does QEMU do? Assume guest is not encrypted I guess?
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+There's nothing different that QEMU needs to do, with or without the
+flag. the perspective of the host, a secure guest and a regular guest
+work the same way with respect to virtio.
 
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
