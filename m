@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5840C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F77C76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C262054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB392054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203012;
-	bh=hpTUL1n6ca/sLrxuDcdi0iMWrpYvhUX7CzDXpyVWs9U=;
+	s=default; t=1563203023;
+	bh=CFGl4+O3ZTYIhz4Kf84ckCwmTrKaCP86jowfIG1yew8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COrkDrdBroQZppTZNgx2M9Kfe/GmgIlx6EoJzaD6XXrJIIx1vjfIjkzTmWRRo6hlH
-	 3cQ5iTeZ68aygijCzJ2HJpTsmDoIcYk6EFUz8wsc7xqB76rsGzYmUHKXJzm+t3hNwk
-	 JhprLc/s8aMYZ/Fd0wXz0HurhI34Tb25epTtarGE=
+	b=oWT1COoc3djtk2xqJ+KDvU5M79XTsrmDD/ELSy5hlZaVg5Du29IiuzMlUcqi2+c5d
+	 AAjlu2rZGZPGs7vf8TKHdplL8AfwpZuT9WyEkFHTpiwrQEh6DVfsurXG53rDBWVbrb
+	 H3UVAJVW0aDz0tRFXS4cNCT/2iT7gkINsh/T79FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389163AbfGOPDa (ORCPT
+        id S2389584AbfGOPDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 11:03:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388226AbfGOOJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:09:14 -0400
+        id S1731342AbfGOOJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:09:06 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1541206B8;
-        Mon, 15 Jul 2019 14:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87E1221537;
+        Mon, 15 Jul 2019 14:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199753;
-        bh=hpTUL1n6ca/sLrxuDcdi0iMWrpYvhUX7CzDXpyVWs9U=;
+        s=default; t=1563199745;
+        bh=CFGl4+O3ZTYIhz4Kf84ckCwmTrKaCP86jowfIG1yew8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdSSI9N3Rjp00M2i3BCwoDqiE5V/eSzOh0i6w4aDf9WoEZAm+3W8KFIi/fMoCEA+p
-         eaLLhY2DoAB2BqgLdXxRMw7DwSiCbyibraXD5HOKtdZI/DDBYGEAYnV2CyS3th9K41
-         8TA9mYXZas9K/0oJHXF+K3U5kgX1CefFVEncarJY=
+        b=f6j20K+BmowJWQ/lGPGsKQsntcsRHfkZCrIh8m49pikCq5QTSrD26RrK5I5esGgI2
+         E8M/hyANxcFKrcMaw7Sfge1G0h3YkrXXvDp3wG9jPrEcTa2Ae6KCfdqdFz9oZeVVWb
+         oHrXD3MhiM8X5+N5GB8vA0C+CZYoxeI7ELfu7tnI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 096/219] blkcg, writeback: dead memcgs shouldn't contribute to writeback ownership arbitration
-Date:   Mon, 15 Jul 2019 10:01:37 -0400
-Message-Id: <20190715140341.6443-96-sashal@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 092/219] net: hns3: fix for dereferencing before null checking
+Date:   Mon, 15 Jul 2019 10:01:33 -0400
+Message-Id: <20190715140341.6443-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
 References: <20190715140341.6443-1-sashal@kernel.org>
@@ -59,54 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
+[ Upstream commit 757188005f905664b0186b88cf26a7e844190a63 ]
 
-wbc_account_io() collects information on cgroup ownership of writeback
-pages to determine which cgroup should own the inode.  Pages can stay
-associated with dead memcgs but we want to avoid attributing IOs to
-dead blkcgs as much as possible as the association is likely to be
-stale.  However, currently, pages associated with dead memcgs
-contribute to the accounting delaying and/or confusing the
-arbitration.
+The netdev is dereferenced before null checking in the function
+hns3_setup_tc.
 
-Fix it by ignoring pages associated with dead memcgs.
+This patch moves the dereferencing after the null checking.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index b16645b417d9..bd9474e82f38 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -714,6 +714,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
- void wbc_account_io(struct writeback_control *wbc, struct page *page,
- 		    size_t bytes)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index cac17152157d..6afdd376bc03 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1497,12 +1497,12 @@ static void hns3_nic_get_stats64(struct net_device *netdev,
+ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
  {
-+	struct cgroup_subsys_state *css;
- 	int id;
+ 	struct tc_mqprio_qopt_offload *mqprio_qopt = type_data;
+-	struct hnae3_handle *h = hns3_get_handle(netdev);
+-	struct hnae3_knic_private_info *kinfo = &h->kinfo;
+ 	u8 *prio_tc = mqprio_qopt->qopt.prio_tc_map;
++	struct hnae3_knic_private_info *kinfo;
+ 	u8 tc = mqprio_qopt->qopt.num_tc;
+ 	u16 mode = mqprio_qopt->mode;
+ 	u8 hw = mqprio_qopt->qopt.hw;
++	struct hnae3_handle *h;
  
- 	/*
-@@ -725,7 +726,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
- 	if (!wbc->wb)
- 		return;
+ 	if (!((hw == TC_MQPRIO_HW_OFFLOAD_TCS &&
+ 	       mode == TC_MQPRIO_MODE_CHANNEL) || (!hw && tc == 0)))
+@@ -1514,6 +1514,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
+ 	if (!netdev)
+ 		return -EINVAL;
  
--	id = mem_cgroup_css_from_page(page)->id;
-+	css = mem_cgroup_css_from_page(page);
-+	/* dead cgroups shouldn't contribute to inode ownership arbitration */
-+	if (!(css->flags & CSS_ONLINE))
-+		return;
++	h = hns3_get_handle(netdev);
++	kinfo = &h->kinfo;
 +
-+	id = css->id;
- 
- 	if (id == wbc->wb_id) {
- 		wbc->wb_bytes += bytes;
+ 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
+ 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
+ }
 -- 
 2.20.1
 
