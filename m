@@ -2,111 +2,118 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E01C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C93EC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB29221530
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198008;
-	bh=FTKJOaDBqWWGx5K6l7a3GQeiN9iEecrkXmoJNkID+74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KFnBBRwDk59oqd/zHf2GfTlL2cyrMA/Plz496RMWK30/h6R9pT7lYCJMQC8iezSbv
-	 da3ZCxz3v+45/yStvtxtU3PAuHVsHzzxI67Q/H55k9Etwc1XAu150mq7eSQUUadL5T
-	 xQYZnjh0WLdAtoX7tCkwdSVZtKxOHEDI0rvsPXfY=
+	by mail.kernel.org (Postfix) with ESMTP id 5164D2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:40:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wdPz0nFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731376AbfGONkH (ORCPT
+        id S1731384AbfGONkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731354AbfGONkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:40:02 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6532321530;
-        Mon, 15 Jul 2019 13:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198001;
-        bh=FTKJOaDBqWWGx5K6l7a3GQeiN9iEecrkXmoJNkID+74=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGgGeG+lZSFdupfdn2tznN7C2qv+oYdY7DRpz/n1VzBEGfQ14CKHgJnrcclPNQ4LG
-         He+dnoDkznCpNKRc4g1NxcypeEBpRmS6nnFghLeVBv7hH1DjVayt9UiHUszXhxaMdt
-         4VKOsfqkrfFYZ3G7qgOMg6r45lJqcpkUQ3JwVtp8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/158] crypto: talitos - fix skcipher failure due to wrong output IV
-Date:   Mon, 15 Jul 2019 09:36:58 -0400
-Message-Id: <20190715133923.2890-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715133923.2890-1-sashal@kernel.org>
-References: <20190715133923.2890-1-sashal@kernel.org>
+        Mon, 15 Jul 2019 09:40:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46682 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731357AbfGONkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:40:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ytg6+i9e5dgoe6MR6Oj4fa2L/XJB0F+/mAmTtnaWIkM=; b=wdPz0nFWIu3gfQDcxJ1flt2cp
+        Wn9EY0AsoO+Mhr4gfSyrIsO5aCd1zAktfoLbKwIt045y9e6UverXIHkQNTAO6BKlYhmnih1gtCyC+
+        JLVSiuIAIP4GReedDVtgun+I0UIkZqGqbfJ7wUWr4rz9eDsnSnZF2RQan8SaxAl4EZmpHjgyZTlw+
+        rRYPNYw+KQQ4GiCt7jsNmfdYdD/TJwd42xSNLp+OQC/dk52V9L/lZG/73A3YrmPQ9YZRhcPE9gy/H
+        V3+HvSstjFGLjre3GSqY5FbQtbr0IL5Ff6oIzob/U0oToHK+59TbkzWQ9MZ4mwbBapu5SC4sl2/o2
+        We/xY4X3w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hn1Cg-0002wX-5K; Mon, 15 Jul 2019 13:39:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DEB4C2013A7F3; Mon, 15 Jul 2019 15:39:38 +0200 (CEST)
+Date:   Mon, 15 Jul 2019 15:39:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190715133938.GH3419@hirez.programming.kicks-ass.net>
+References: <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714190522.GA24049@mit.edu>
+ <20190714192951.GM26519@linux.ibm.com>
+ <20190715031027.GA3336@linux.ibm.com>
+ <20190715130101.GA5527@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715130101.GA5527@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+On Mon, Jul 15, 2019 at 06:01:01AM -0700, Paul E. McKenney wrote:
+> Title: Making SCHED_DEADLINE safe for kernel kthreads
+> 
+> Abstract:
+> 
+> Dmitry Vyukov's testing work identified some (ab)uses of sched_setattr()
+> that can result in SCHED_DEADLINE tasks starving RCU's kthreads for
+> extended time periods, not millisecond, not seconds, not minutes, not even
+> hours, but days. Given that RCU CPU stall warnings are issued whenever
+> an RCU grace period fails to complete within a few tens of seconds,
+> the system did not suffer silently. Although one could argue that people
+> should avoid abusing sched_setattr(), people are human and humans make
+> mistakes. Responding to simple mistakes with RCU CPU stall warnings is
+> all well and good, but a more severe case could OOM the system, which
+> is a particularly unhelpful error message.
+> 
+> It would be better if the system were capable of operating reasonably
+> despite such abuse. Several approaches have been suggested.
+> 
+> First, sched_setattr() could recognize parameter settings that put
+> kthreads at risk and refuse to honor those settings. This approach
+> of course requires that we identify precisely what combinations of
+> sched_setattr() parameters settings are risky, especially given that there
+> are likely to be parameter settings that are both risky and highly useful.
 
-[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
+So we (the people poking at the DEADLINE code) are all aware of this,
+and on the TODO list for making DEADLINE available for !priv users is
+the item:
 
-Selftests report the following:
+  - put limits on deadline/period
 
-[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
-[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.043185] 00000000: fe dc ba 98 76 54 32 10
-[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+And note that that is both an upper and lower limit. The upper limit
+you've just found why we need it, the lower limit is required because
+you can DoS the hardware by causing deadlines/periods that are equal (or
+shorter) than the time it takes to program the hardware.
 
-This above dumps show that the actual output IV is indeed the input IV.
-This is due to the IV not being copied back into the request.
+There might have even been some patches that do some of this, but I've
+held off because we have bigger problems and they would've established
+an ABI while it wasn't clear it was sufficient or the right form.
 
-This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/talitos.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index c5859d3cb825..9cc5309a3fbf 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1571,11 +1571,15 @@ static void ablkcipher_done(struct device *dev,
- 			    int err)
- {
- 	struct ablkcipher_request *areq = context;
-+	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
-+	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
-+	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
- 	struct talitos_edesc *edesc;
- 
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
- 	common_nonsnoop_unmap(dev, edesc, areq);
-+	memcpy(areq->info, ctx->iv, ivsize);
- 
- 	kfree(edesc);
- 
--- 
-2.20.1
 
