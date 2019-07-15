@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BF6C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D5DC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B57420651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7D6205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563201509;
-	bh=pOh74XmprEXzahv3tjYYNZazeCAex4Qx0g/nsj1RoA4=;
+	s=default; t=1563201513;
+	bh=8vn1pkw3AVTOn8LyB2XGiWV2KQZtXc4YimentJQZtrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FS+Ii+NsXZybUfT4eNfbpsxCTh0jHbGtO5fritA2AludWcpzPektVmrKSHczh4S7E
-	 qWHSi9kHaDy2JXE8F+rN84CzLndcNir0wIDknQ8mzpYdH0ezIkLylE9vtWWT3WnmDj
-	 YapBeLAdLs3puyaJ0l6iSUMyhFdcUeXx5KImbOm8=
+	b=qcwHtWvXzHZtVdJZz+grB63p6nQ9xKys7pK0ErDgO1qqEIoHPAYKgnz/bbj+YbUO/
+	 Wcr7tq4//+HfAv2LWxH4RW6IRQeeEEEOEZUjdH+QfJlJfHQhVnKy3MoiGlWvsIgpzV
+	 Z3y/oVnRhmo7EA0aMVh+h/49EqBhnb3usQ24H5Ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404774AbfGOOi1 (ORCPT
+        id S2404782AbfGOOib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35162 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:38:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403846AbfGOOiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:23 -0400
+        id S2404766AbfGOOi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:38:26 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ABF120651;
-        Mon, 15 Jul 2019 14:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6848A205ED;
+        Mon, 15 Jul 2019 14:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201502;
-        bh=pOh74XmprEXzahv3tjYYNZazeCAex4Qx0g/nsj1RoA4=;
+        s=default; t=1563201506;
+        bh=8vn1pkw3AVTOn8LyB2XGiWV2KQZtXc4YimentJQZtrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ookLiO+r5sypbgAQFDFeGMtioNS8zUIpaK5/SVlrRGjTH4KJ0r1qS/TCs67A6XX/P
-         kI0D6ExOpzaFlBbaGtfvuCQ+eX+fAo6p+Ca/DM5x+zkze64Cwn0APk9VqLnNRcXDuE
-         lGk2dyx7IH2jzlOuDOsInaGflioBy9P9MAM1JYb0=
+        b=WqgxnQ3qeqSUD58MKNHfzFn7Ab4hYrSi1RgK/u+2+bKLJYzaYiRNPKc0gYY9jzceh
+         lFt99nq2N5rYmpnuaxnITEth9pjZThrKecMFwCLwgKXvmxan7Btllz3h7Y5U5LOZ1g
+         XqDATXzg+KrIu29PfjUtNDsoBsNkLo/lc+zbvZlE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Hancock <hancock@sedsystems.ca>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 29/73] net: axienet: Fix race condition causing TX hang
-Date:   Mon, 15 Jul 2019 10:35:45 -0400
-Message-Id: <20190715143629.10893-29-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 30/73] s390/qdio: handle PENDING state for QEBSM devices
+Date:   Mon, 15 Jul 2019 10:35:46 -0400
+Message-Id: <20190715143629.10893-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
 References: <20190715143629.10893-1-sashal@kernel.org>
@@ -59,64 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancock@sedsystems.ca>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
+[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
 
-It is possible that the interrupt handler fires and frees up space in
-the TX ring in between checking for sufficient TX ring space and
-stopping the TX queue in axienet_start_xmit. If this happens, the
-queue wake from the interrupt handler will occur before the queue is
-stopped, causing a lost wakeup and the adapter's transmit hanging.
+When a CQ-enabled device uses QEBSM for SBAL state inspection,
+get_buf_states() can return the PENDING state for an Output Queue.
+get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
+buffer will permanently stall all further completion processing on this
+Queue.
 
-To avoid this, after stopping the queue, check again whether there is
-sufficient space in the TX ring. If so, wake up the queue again.
+This isn't a concern for non-QEBSM devices, as get_buf_states() for such
+devices will manually turn PENDING buffers into EMPTY ones.
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index a8afc92cbfca..5f21ddff9e0f 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -612,6 +612,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 18ab84e9c6b2..58cd0e0c9680 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -758,6 +758,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
  
- 	ndev->stats.tx_packets += packets;
- 	ndev->stats.tx_bytes += size;
-+
-+	/* Matches barrier in axienet_start_xmit */
-+	smp_mb();
-+
- 	netif_wake_queue(ndev);
- }
- 
-@@ -666,9 +670,19 @@ static int axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
- 
- 	if (axienet_check_tx_bd_space(lp, num_frag)) {
--		if (!netif_queue_stopped(ndev))
--			netif_stop_queue(ndev);
--		return NETDEV_TX_BUSY;
-+		if (netif_queue_stopped(ndev))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_stop_queue(ndev);
-+
-+		/* Matches barrier in axienet_start_xmit_done */
-+		smp_mb();
-+
-+		/* Space might have just been freed - check again */
-+		if (axienet_check_tx_bd_space(lp, num_frag))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_wake_queue(ndev);
- 	}
- 
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
+ 	switch (state) {
+ 	case SLSB_P_OUTPUT_EMPTY:
++	case SLSB_P_OUTPUT_PENDING:
+ 		/* the adapter got it */
+ 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
+ 			"out empty:%1d %02x", q->nr, count);
 -- 
 2.20.1
 
