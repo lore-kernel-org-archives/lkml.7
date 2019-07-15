@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659D8C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA37FC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325AE2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBED2054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 15:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563203373;
-	bh=ULjxUzx+++yfz9jlrK8gl/SRLm6WxtHyr+F6CLcmbpo=;
+	s=default; t=1563203392;
+	bh=XjWXZhO01zT/rlf4XT5hYz1JGLk/R5HgAI6sRkUAsbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pFgUWtuZ0NvLMTThveZzyMuWPOUv2mgDxLntBDh7Xs5AF19bjS3jGzaRWsz8KFUej
-	 wkwKDtVWwjFc2Mb+GLfca8QaekPbDXNqBBL8kuf/+P0CNhqaYs+XUv32Dyf6gd6ewo
-	 13sywV5rJ2WR/I16h1Y1dlM7cSgVnBrNlBGTu3hQ=
+	b=05qwlDWdZhaY2ae9mQ3y/pKujZukI88TAeIKJh/czqNcMURS3SnwnX16xko1hUKer
+	 0pVngPIVELloMHqs+bzeRkNvse2nvs0O/n4HVXuhR5FjgHJIA+uUjkM+xTzJwFWdZh
+	 T22F9hux1bW7NYerOuVdyHfyoSitY6a1D6pg41/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbfGOPJb (ORCPT
+        id S1732792AbfGON4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 11:09:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:56:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731856AbfGON4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:56:50 -0400
+        id S1732774AbfGON4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:56:02 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6EC42083D;
-        Mon, 15 Jul 2019 13:56:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9925F20C01;
+        Mon, 15 Jul 2019 13:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199009;
-        bh=ULjxUzx+++yfz9jlrK8gl/SRLm6WxtHyr+F6CLcmbpo=;
+        s=default; t=1563198961;
+        bh=XjWXZhO01zT/rlf4XT5hYz1JGLk/R5HgAI6sRkUAsbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZ/+LHbuSthDT55Adc5lB3xxLG0rYMR5LD91mMAbPDI/5TK2JHepf62kWBWpwoigj
-         gYeij+hlAJYMGxsR1tSi6ECU4+TBPk0Co4CfidGaXm9LXuMlsh7SwmMqxACcd+fUZB
-         81XjfCbBDKtBgG3gKHxqWnR+eoE0sfNDoF+O1zRk=
+        b=wok7ENwHgAhuOMsOr9DIz4g3rHy0ToTgxqRcIzTDIxK+qddlZSOp6Y1uDA504lh1u
+         k2Roa/Mx3PvbcYtKScbwLg/Pbiu9YZhm/ZLmmboXf71vkfYSdUtJdNSWAJetC4v4tx
+         gEhu/Tv+emPc1JwnyO0K7xOSgHdC0PsofyO76Rpg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 164/249] ath10k: fix fw crash by moving chip reset after napi disabled
-Date:   Mon, 15 Jul 2019 09:45:29 -0400
-Message-Id: <20190715134655.4076-164-sashal@kernel.org>
+Cc:     =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 154/249] media: vimc: cap: check v4l2_fill_pixfmt return value
+Date:   Mon, 15 Jul 2019 09:45:19 -0400
+Message-Id: <20190715134655.4076-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,72 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: André Almeida <andrealmeid@collabora.com>
 
-[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
+[ Upstream commit 77ae46e11df5c96bb4582633851f838f5d954df4 ]
 
-On SMP platform, when continuously running wifi up/down, the napi
-poll can be scheduled during chip reset, which will call
-ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
-period, the value from FW_INDICATOR_ADDRESS register will return
-0xdeadbeef, which also be treated as fw crash. Fix the issue by
-moving chip reset after napi disabled.
+v4l2_fill_pixfmt() returns -EINVAL if the pixelformat used as parameter is
+invalid or if the user is trying to use a multiplanar format with the
+singleplanar API. Currently, the vimc_cap_try_fmt_vid_cap() returns such
+value, but vimc_cap_s_fmt_vid_cap() is ignoring it. Fix that and returns
+an error value if vimc_cap_try_fmt_vid_cap() has failed.
 
-ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
-ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
-ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
-ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
-ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
-ath10k_pci 0000:01:00.0: Copy Engine register dump:
-ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
-ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
-ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
-ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
-ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
-ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
-ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
-ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
-ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
-ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
-ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
-ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
-
-Tested HW: QCA9984,QCA9887,WCN3990
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Suggested-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/vimc/vimc-capture.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 2c27f407a851..6e5f7ae00253 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -2059,6 +2059,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+index 946dc0908566..664855708fdf 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -142,12 +142,15 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
+ 				  struct v4l2_format *f)
+ {
+ 	struct vimc_cap_device *vcap = video_drvdata(file);
++	int ret;
  
- 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
+ 	/* Do not change the format while stream is on */
+ 	if (vb2_is_busy(&vcap->queue))
+ 		return -EBUSY;
  
-+	ath10k_pci_irq_disable(ar);
-+	ath10k_pci_irq_sync(ar);
-+	napi_synchronize(&ar->napi);
-+	napi_disable(&ar->napi);
-+
- 	/* Most likely the device has HTT Rx ring configured. The only way to
- 	 * prevent the device from accessing (and possible corrupting) host
- 	 * memory is to reset the chip now.
-@@ -2072,10 +2077,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 	 */
- 	ath10k_pci_safe_chip_reset(ar);
+-	vimc_cap_try_fmt_vid_cap(file, priv, f);
++	ret = vimc_cap_try_fmt_vid_cap(file, priv, f);
++	if (ret)
++		return ret;
  
--	ath10k_pci_irq_disable(ar);
--	ath10k_pci_irq_sync(ar);
--	napi_synchronize(&ar->napi);
--	napi_disable(&ar->napi);
- 	ath10k_pci_flush(ar);
- 
- 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
+ 	dev_dbg(vcap->dev, "%s: format update: "
+ 		"old:%dx%d (0x%x, %d, %d, %d, %d) "
 -- 
 2.20.1
 
