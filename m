@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99699C7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D1FC76191
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D2E206B8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B873F206B8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 10:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DwpRcf9a"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g9Njpf/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfGOKKR (ORCPT
+        id S1729743AbfGOKKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 06:10:17 -0400
+        Mon, 15 Jul 2019 06:10:21 -0400
 Received: from mail-eopbgr140049.outbound.protection.outlook.com ([40.107.14.49]:38006
         "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729541AbfGOKKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:10:16 -0400
+        id S1729428AbfGOKKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:10:20 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kyv78UNZmuvfPqnRCXd2HJNQqQqYjD8uz5wvbvYbyJj084j9UmmX6gOshPagf2y+JxXdhAoKOeaSiCXojZQz8R3+l1XEAbk+co7Y30vVpHB05I0eq0W5Ec403o2QcDMmiUVX+1cq9V6EeH/537GZx+PW123FjDteBtKIG8ygLDACvOLI0n+vK1562SPi/HvzqRwqto/GSCPIVOqkTbaF07Qk1MaJQjiaNvorT8O54NS/YjoEifIha0AypOiSEnearCBjGypeZlf64WJ2+tMgfH0w9+cHEJcBFhdOkZ6N2QWzj85tG4dmJOT5ryuBUgbUbTJE9CcJzoh4ULnIjFwAug==
+ b=OKsTYlUD/jMUQJlcBRGSxiWCbvPjG2AB40TyKxri3rY6R8/DFmVm/5hR0OYO3qCfDiQr34IR4VuUJpQgvh8Il6QepyPYExvOEm8R9PhMbSAUPA0aaSG6EJnSc0QaHYpm78eYrgAaTw7CASE3Ebkh2/nFmvqSHkY/0dnvAN4xG/pFm6esU3+VsCesbvCwZLAecOQ7Fj8dIoO2MuNOXtNX3NBIvDYI16a++TFD1RIyzt/wDGA5VnVJG7Jov8BSfQRzCtVKAjcC789LI+sHLREqmnbri0reCZjA0LM2j359KPNDg3yvf4pjfF8xBC7D4AcLyR4MCyWxsCI8/nLjv1njyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pMPKKSIRspN5ganPLxr2YKdh0EHmbfjvslctydqFXys=;
- b=k5axLIOm0dBGUUiuiUZX9CCEfpZsWoSFULSdWcIGsanHU5u9hSFqdihYuuEdclgkhjYLiIO28OP4JPA+X9l2Zw5zIeGBUhoWby6y9CRMk7YrRQso/9J70naAYChhZMAVYvsHz/+mfg26V1ZA7yvdxLSi+90eQchyFOqBgRMxsDBU3ciPQ1GVdse8KpBJYBfkL3EJAel3M3lM2yXQpFkJoRBrxX3y8R+fg2HTAmg5MgmatOaMvlyCdOp6lu02peVy+6bhboJtBLJ5W40o+xoXQ+LMWkk58vD9g7kAMDwOf8pwuk6aRilAOuDxPzfb9UKn/slBGnFASTC5NWurOkiQkA==
+ bh=sNyypENePuBjV/O4jyyrGF+tssMr8DKFXDO4zYtduL0=;
+ b=CcopFPbxeWCGJNo6ogLrOk+SwjcBiei9S4+LVAWJo+PfxlVkgy3dPSmHh+usPR9U6EhxPuU1f8hPZLgBIXHhV2E0w7j1ch6Y4sJeYBRsyKVHJ/W3Btyr9L0nVO2oYmypE8HBNcx/Kif1UvlOGag/uYdzc3u+Sm2XfmDLdRTiaEq5jyhVm+arL77F6HtGpsrAU1y1RcLgiNcYSgaGcnDnGqszNUUcd/ucxbkZVA+mWdY34Dl0Lqgv/H3aS89wWFe6iD56Vj2ObKZHLfilwODjsiR5IxXBrsZgK0A+wWFxSjBbF48550jb/HcIN4VXPriBD3mVsnXk+PcW28Uw4IIQnw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
  smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
  header.d=nxp.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pMPKKSIRspN5ganPLxr2YKdh0EHmbfjvslctydqFXys=;
- b=DwpRcf9atL7oEo+AJlbc5VvbRsDIdL8tDcKEpJxj7kF10a5i+06NqRfQszExHBvO9BhhZa8jCrdc9ho7Sc1j2kLXSnm9HUQeri+Syhi32OJV52ZshorrixPUy/jRTbg3qIZNlgYp83VhGOVYog24U/cQi5Ywj3D6DwGsCKhBlrI=
+ bh=sNyypENePuBjV/O4jyyrGF+tssMr8DKFXDO4zYtduL0=;
+ b=g9Njpf/PfUnEVtgOZw0PVpoRuZ0gXKU9FTyz0HPu/4glgeyTorgRHGUGntCyz6Mr9aWHhaiw6cxOVRpWNxYdXMQ3xqR1z2/xleAHKZVE9WmEPER0g4VbdStlmTOWIS5iERSR0jOAet6I5yzeQJ5uafz9od1rtG+lykQe7KKdPm4=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
  AM0PR04MB4356.eurprd04.prod.outlook.com (52.134.93.11) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Mon, 15 Jul 2019 10:10:11 +0000
+ 15.20.2073.14; Mon, 15 Jul 2019 10:10:14 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::2023:c0e5:8a63:2e47]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::2023:c0e5:8a63:2e47%5]) with mapi id 15.20.2052.020; Mon, 15 Jul 2019
- 10:10:11 +0000
+ 10:10:14 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
@@ -57,13 +57,11 @@ CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v3 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Thread-Topic: [PATCH v3 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Thread-Index: AQHVOvV8miufREPgWk29kTcXKZEuBQ==
-Date:   Mon, 15 Jul 2019 10:10:10 +0000
-Message-ID: <1563184103-8493-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH v3 2/2] mailbox: introduce ARM SMC based mailbox
+Thread-Topic: [PATCH v3 2/2] mailbox: introduce ARM SMC based mailbox
+Thread-Index: AQHVOvV+noaG+fijQkS+Volhv7SWkw==
+Date:   Mon, 15 Jul 2019 10:10:14 +0000
+Message-ID: <1563184103-8493-3-git-send-email-peng.fan@nxp.com>
 References: <1563184103-8493-1-git-send-email-peng.fan@nxp.com>
 In-Reply-To: <1563184103-8493-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
@@ -79,25 +77,25 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 075c2886-9846-4998-d6be-08d7090c9ecc
+x-ms-office365-filtering-correlation-id: cc9e7fb9-d82b-4123-cf43-08d7090ca117
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4356;
 x-ms-traffictypediagnostic: AM0PR04MB4356:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <AM0PR04MB4356C7933144024FC78B4FC488CF0@AM0PR04MB4356.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB43561518BF7E5953EB49050C88CF0@AM0PR04MB4356.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:425;
 x-forefront-prvs: 00997889E7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(199004)(189003)(66066001)(68736007)(2501003)(7736002)(305945005)(110136005)(316002)(7110500001)(99286004)(54906003)(50226002)(8936002)(52116002)(386003)(44832011)(8676002)(186003)(102836004)(446003)(2616005)(11346002)(26005)(14454004)(486006)(66446008)(64756008)(66556008)(66476007)(66946007)(81156014)(81166006)(6306002)(25786009)(2906002)(3846002)(6116002)(2201001)(15650500001)(2420400007)(6486002)(478600001)(86362001)(6436002)(14444005)(966005)(256004)(76176011)(6506007)(5660300002)(71190400001)(476003)(71200400001)(36756003)(6512007)(53936002)(4326008)(53376002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4356;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(199004)(189003)(66066001)(68736007)(2501003)(7736002)(305945005)(110136005)(316002)(99286004)(54906003)(50226002)(8936002)(52116002)(386003)(44832011)(8676002)(186003)(102836004)(446003)(2616005)(11346002)(26005)(14454004)(486006)(66446008)(64756008)(66556008)(66476007)(66946007)(81156014)(81166006)(6306002)(25786009)(2906002)(3846002)(6116002)(2201001)(15650500001)(6486002)(478600001)(86362001)(6436002)(14444005)(966005)(256004)(76176011)(6506007)(5660300002)(71190400001)(476003)(71200400001)(36756003)(6512007)(53936002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4356;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AtzLDsRvqKTXNVTLt/FmlK5BH5wNFAutUrF7UpeiSwI4o2wlHXFh30G1CKoPeuZEhEpEExiELlF5gd2FsUAja5nufRfT+Szxd3bnBPwNZXz/MDNXf6l7Nwx4KZ6p906VSamBviJ8H4xyTz6/XQI0gm/5LSRog/7l0EHkVB5tayjbCWgxXyOdX2uKgDe7038IC/kjAgBUCs4wUOVquB4kZe3UANdy2Xj26ZWYZzO+WIqDhF3dg7QSDuhQunStlRha6BZDajmYeq6ciSM+m4aAoah6izoFnosYoB4zR0omCMvcXZasKjQ3pOl9K81iHrOUJP+Xqqs56e3rFWOp982A4R8ke/wMwiUOFKwyAtfeTWmmGKHVqOb+s5O9DoYsMBGn44mesxGNHHl7hTsaBkVn/p+v7gUCqKWeu8vsYp7LULc=
+x-microsoft-antispam-message-info: WnxRCi7HKfjgsjNMsgnWSLx0wapE8ru1SsOF2cd2lOmG7MZIte8rDIKoK5tXsUlEWkQA3EiokDxs5AL8X0xcFJUYvp07IA8D5ZGNgoWFO7gyVUhXCcQxKLyX4aS4Vi6C+kfMwK4eAqHhbiK8OIPDPyh3tPIXFd+XKfQNrdV62RhfYE4L6+/o8iCW5+4JLB2pEzhjE+/M/skvPWuTnxDeUElAgxQiNThH0T1PGvcZcClrzL5rt2SghmhGSJbASqwuSF6DQAcY/Fh/wl8vuQt0IC59ObU7VTJK0Rb4N/locZBZCfWesPZov2e2d71e0UMLy7R84ejeCqirbKg/Z6zWb2ArYDr4vpBXsrlRtcoolC86s+rZ6jKYZtO9UX08xwMyIF+46DO+CpDoaf7ZsVnSH3zZA4ilKIgqyNhcJITStmA=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 075c2886-9846-4998-d6be-08d7090c9ecc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 10:10:10.8164
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc9e7fb9-d82b-4123-cf43-08d7090ca117
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 10:10:14.5223
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -111,168 +109,291 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-actions in software layers running in the EL2 or EL3 exception levels.
-The term "ARM" here relates to the SMC instruction as part of the ARM
-instruction set, not as a standard endorsed by ARM Ltd.
+This mailbox driver implements a mailbox which signals transmitted data
+via an ARM smc (secure monitor call) instruction. The mailbox receiver
+is implemented in firmware and can synchronously return data when it
+returns execution to the non-secure world again.
+An asynchronous receive path is not implemented.
+This allows the usage of a mailbox to trigger firmware actions on SoCs
+which either don't have a separate management processor or on which such
+a core is not available. A user of this mailbox could be the SCP
+interface.
 
+Modified from Andre Przywara's v2 patch
+https://lore.kernel.org/patchwork/patch/812999/
+
+Cc: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
 
 V3:
- Convert to yaml
- Drop interrupt
- Introudce transports to indicate mem/reg
- The func id is still kept as optional, because like SCMI it only
- cares about message.
+ Drop interrupt.
+ Introduce transports for mem/reg usage.
+ Add chan-id for mem usage.
 
 V2:
- Introduce interrupts as a property.
+ Add interrupts notification support.
 
- .../devicetree/bindings/mailbox/arm-smc.yaml       | 124 +++++++++++++++++=
+ drivers/mailbox/Kconfig           |   7 ++
+ drivers/mailbox/Makefile          |   2 +
+ drivers/mailbox/arm-smc-mailbox.c | 215 ++++++++++++++++++++++++++++++++++=
 ++++
- 1 file changed, 124 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ 3 files changed, 224 insertions(+)
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
 
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Docum=
-entation/devicetree/bindings/mailbox/arm-smc.yaml
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index 595542bfae85..c3bd0f1ddcd8 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -15,6 +15,13 @@ config ARM_MHU
+ 	  The controller has 3 mailbox channels, the last of which can be
+ 	  used in Secure mode only.
+=20
++config ARM_SMC_MBOX
++	tristate "Generic ARM smc mailbox"
++	depends on OF && HAVE_ARM_SMCCC
++	help
++	  Generic mailbox driver which uses ARM smc calls to call into
++	  firmware for triggering mailboxes.
++
+ config IMX_MBOX
+ 	tristate "i.MX Mailbox"
+ 	depends on ARCH_MXC || COMPILE_TEST
+diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+index c22fad6f696b..93918a84c91b 100644
+--- a/drivers/mailbox/Makefile
++++ b/drivers/mailbox/Makefile
+@@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+=3D mailbox-test.o
+=20
+ obj-$(CONFIG_ARM_MHU)	+=3D arm_mhu.o
+=20
++obj-$(CONFIG_ARM_SMC_MBOX)	+=3D arm-smc-mailbox.o
++
+ obj-$(CONFIG_IMX_MBOX)	+=3D imx-mailbox.o
+=20
+ obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=3D armada-37xx-rwtm-mailbox.o
+diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-ma=
+ilbox.c
 new file mode 100644
-index 000000000000..da9b1a03bc4e
+index 000000000000..76a2ae11ee4d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-@@ -0,0 +1,124 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/mailbox/arm-smc-mailbox.c
+@@ -0,0 +1,215 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2016,2017 ARM Ltd.
++ * Copyright 2019 NXP
++ */
 +
-+title: ARM SMC Mailbox Interface
++#include <linux/arm-smccc.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/interrupt.h>
++#include <linux/mailbox_controller.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +
-+maintainers:
-+  - Peng Fan <peng.fan@nxp.com>
++#define ARM_SMC_MBOX_MEM_TRANS	BIT(0)
 +
-+description: |
-+  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
-+  call) instruction to trigger a mailbox-connected activity in firmware,
-+  executing on the very same core as the caller. By nature this operation
-+  is synchronous and this mailbox provides no way for asynchronous message=
-s
-+  to be delivered the other way round, from firmware to the OS, but
-+  asynchronous notification could also be supported. However the value of
-+  r0/w0/x0 the firmware returns after the smc call is delivered as a recei=
-ved
-+  message to the mailbox framework, so a synchronous communication can be
-+  established, for a asynchronous notification, no value will be returned.
-+  The exact meaning of both the action the mailbox triggers as well as the
-+  return value is defined by their users and is not subject to this bindin=
-g.
++struct arm_smc_chan_data {
++	u32 function_id;
++	u32 chan_id;
++	u32 flags;
++};
 +
-+  One use case of this mailbox is the SCMI interface, which uses shared me=
-mory
-+  to transfer commands and parameters, and a mailbox to trigger a function
-+  call. This allows SoCs without a separate management processor (or when
-+  such a processor is not available or used) to use this standardized
-+  interface anyway.
++struct arm_smccc_mbox_cmd {
++	unsigned long a0, a1, a2, a3, a4, a5, a6, a7;
++};
 +
-+  This binding describes no hardware, but establishes a firmware interface=
-.
-+  Upon receiving an SMC using one of the described SMC function identifier=
-s,
-+  the firmware is expected to trigger some mailbox connected functionality=
-.
-+  The communication follows the ARM SMC calling convention.
-+  Firmware expects an SMC function identifier in r0 or w0. The supported
-+  identifiers are passed from consumers, or listed in the the arm,func-ids
-+  properties as described below. The firmware can return one value in
-+  the first SMC result register, it is expected to be an error value,
-+  which shall be propagated to the mailbox client.
++typedef unsigned long (smc_mbox_fn)(unsigned long, unsigned long,
++				    unsigned long, unsigned long,
++				    unsigned long, unsigned long,
++				    unsigned long, unsigned long);
++static smc_mbox_fn *invoke_smc_mbox_fn;
 +
-+  Any core which supports the SMC or HVC instruction can be used, as long =
-as
-+  a firmware component running in EL3 or EL2 is handling these calls.
++static int arm_smc_send_data(struct mbox_chan *link, void *data)
++{
++	struct arm_smc_chan_data *chan_data =3D link->con_priv;
++	struct arm_smccc_mbox_cmd *cmd =3D data;
++	unsigned long ret;
++	u32 function_id;
++	u32 chan_id;
 +
-+properties:
-+  compatible:
-+    const: arm,smc-mbox
++	if (chan_data->flags & ARM_SMC_MBOX_MEM_TRANS) {
++		if (chan_data->function_id !=3D UINT_MAX)
++			function_id =3D chan_data->function_id;
++		else
++			function_id =3D cmd->a0;
++		chan_id =3D chan_data->chan_id;
++		ret =3D invoke_smc_mbox_fn(function_id, chan_id, 0, 0, 0, 0,
++					 0, 0);
++	} else {
++		ret =3D invoke_smc_mbox_fn(cmd->a0, cmd->a1, cmd->a2, cmd->a3,
++					 cmd->a4, cmd->a5, cmd->a6, cmd->a7);
++	}
 +
-+  "#mbox-cells":
-+    const: 1
++	mbox_chan_received_data(link, (void *)ret);
 +
-+  arm,num-chans:
-+    description: The number of channels supported.
-+    $ref: /schemas/types.yaml#/definitions/uint32
++	return 0;
++}
 +
-+  method:
-+    items:
-+      - enum:
-+          - smc
-+          - hvc
++static unsigned long __invoke_fn_hvc(unsigned long function_id,
++				     unsigned long arg0, unsigned long arg1,
++				     unsigned long arg2, unsigned long arg3,
++				     unsigned long arg4, unsigned long arg5,
++				     unsigned long arg6)
++{
++	struct arm_smccc_res res;
 +
-+  transports:
-+    items:
-+      - enum:
-+          - mem
-+          - reg
++	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
++		      arg5, arg6, &res);
++	return res.a0;
++}
 +
-+  arm,func-ids:
-+    description: |
-+      An array of 32-bit values specifying the function IDs used by each
-+      mailbox channel. Those function IDs follow the ARM SMC calling
-+      convention standard [1].
++static unsigned long __invoke_fn_smc(unsigned long function_id,
++				     unsigned long arg0, unsigned long arg1,
++				     unsigned long arg2, unsigned long arg3,
++				     unsigned long arg4, unsigned long arg5,
++				     unsigned long arg6)
++{
++	struct arm_smccc_res res;
 +
-+      There is one identifier per channel and the number of supported
-+      channels is determined by the length of this array.
-+    minItems: 0
-+    maxItems: 4096   # Should be enough?
++	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
++		      arg5, arg6, &res);
++	return res.a0;
++}
 +
-+required:
-+  - compatible
-+  - "#mbox-cells"
-+  - arm,num-chans
-+  - transports
-+  - method
++static const struct mbox_chan_ops arm_smc_mbox_chan_ops =3D {
++	.send_data	=3D arm_smc_send_data,
++};
 +
-+examples:
-+  - |
-+    sram@910000 {
-+      compatible =3D "mmio-sram";
-+      reg =3D <0x0 0x93f000 0x0 0x1000>;
-+      #address-cells =3D <1>;
-+      #size-cells =3D <1>;
-+      ranges =3D <0 0x0 0x93f000 0x1000>;
++static int arm_smc_mbox_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct mbox_controller *mbox;
++	struct arm_smc_chan_data *chan_data;
++	const char *method;
++	bool mem_trans =3D false;
++	int ret, i;
++	u32 val;
 +
-+        cpu_scp_lpri: scp-shmem@0 {
-+          compatible =3D "arm,scmi-shmem";
-+          reg =3D <0x0 0x200>;
-+        };
++	if (!of_property_read_u32(dev->of_node, "arm,num-chans", &val)) {
++		if (!val) {
++			dev_err(dev, "invalid arm,num-chans value %u\n", val);
++			return -EINVAL;
++		}
++	} else {
++		return -EINVAL;
++	}
 +
-+        cpu_scp_hpri: scp-shmem@200 {
-+          compatible =3D "arm,scmi-shmem";
-+          reg =3D <0x200 0x200>;
-+        };
-+    };
++	if (!of_property_read_string(dev->of_node, "transports", &method)) {
++		if (!strcmp("mem", method)) {
++			mem_trans =3D true;
++		} else if (!strcmp("reg", method)) {
++			mem_trans =3D false;
++		} else {
++			dev_warn(dev, "invalid \"transports\" property: %s\n",
++				 method);
 +
-+    firmware {
-+      smc_mbox: mailbox {
-+        #mbox-cells =3D <1>;
-+        compatible =3D "arm,smc-mbox";
-+        method =3D "smc";
-+        arm,num-chans =3D <0x2>;
-+        transports =3D "mem";
-+        /* Optional */
-+        arm,func-ids =3D <0xc20000fe>, <0xc20000ff>;
-+      };
++			return -EINVAL;
++		}
++	} else {
++		return -EINVAL;
++	}
 +
-+      scmi {
-+        compatible =3D "arm,scmi";
-+        mboxes =3D <&mailbox 0 &mailbox 1>;
-+        mbox-names =3D "tx", "rx";
-+        shmem =3D <&cpu_scp_lpri &cpu_scp_hpri>;
-+      };
-+    };
++	if (!of_property_read_string(dev->of_node, "method", &method)) {
++		if (!strcmp("hvc", method)) {
++			invoke_smc_mbox_fn =3D __invoke_fn_hvc;
++		} else if (!strcmp("smc", method)) {
++			invoke_smc_mbox_fn =3D __invoke_fn_smc;
++		} else {
++			dev_warn(dev, "invalid \"method\" property: %s\n",
++				 method);
 +
-+...
++			return -EINVAL;
++		}
++	} else {
++		return -EINVAL;
++	}
++
++	mbox =3D devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
++	if (!mbox)
++		return -ENOMEM;
++
++	mbox->num_chans =3D val;
++	mbox->chans =3D devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
++				   GFP_KERNEL);
++	if (!mbox->chans)
++		return -ENOMEM;
++
++	chan_data =3D devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
++				 GFP_KERNEL);
++	if (!chan_data)
++		return -ENOMEM;
++
++	for (i =3D 0; i < mbox->num_chans; i++) {
++		u32 function_id;
++
++		ret =3D of_property_read_u32_index(dev->of_node,
++						 "arm,func-ids", i,
++						 &function_id);
++		if (ret)
++			chan_data[i].function_id =3D UINT_MAX;
++
++		else
++			chan_data[i].function_id =3D function_id;
++
++		chan_data[i].chan_id =3D i;
++
++		if (mem_trans)
++			chan_data[i].flags |=3D ARM_SMC_MBOX_MEM_TRANS;
++		mbox->chans[i].con_priv =3D &chan_data[i];
++	}
++
++	mbox->txdone_poll =3D false;
++	mbox->txdone_irq =3D false;
++	mbox->ops =3D &arm_smc_mbox_chan_ops;
++	mbox->dev =3D dev;
++
++	platform_set_drvdata(pdev, mbox);
++
++	ret =3D devm_mbox_controller_register(dev, mbox);
++	if (ret)
++		return ret;
++
++	dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
++		 mbox->num_chans, mbox->num_chans =3D=3D 1 ? "" : "s");
++
++	return ret;
++}
++
++static int arm_smc_mbox_remove(struct platform_device *pdev)
++{
++	struct mbox_controller *mbox =3D platform_get_drvdata(pdev);
++
++	mbox_controller_unregister(mbox);
++	return 0;
++}
++
++static const struct of_device_id arm_smc_mbox_of_match[] =3D {
++	{ .compatible =3D "arm,smc-mbox", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
++
++static struct platform_driver arm_smc_mbox_driver =3D {
++	.driver =3D {
++		.name =3D "arm-smc-mbox",
++		.of_match_table =3D arm_smc_mbox_of_match,
++	},
++	.probe		=3D arm_smc_mbox_probe,
++	.remove		=3D arm_smc_mbox_remove,
++};
++module_platform_driver(arm_smc_mbox_driver);
++
++MODULE_AUTHOR("Andre Przywara <andre.przywara@arm.com>");
++MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
++MODULE_LICENSE("GPL v2");
 --=20
 2.16.4
 
