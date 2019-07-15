@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC9AC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E74EC76195
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DADE2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1B5205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202541;
-	bh=9oPmWzZADG9KBbFCDoRtLvhV03Hq67ZJeep/W6VUocU=;
+	s=default; t=1563202545;
+	bh=GDWlb0iaTA6dl1TidLEP2nJJYe+KUFxZF38qJmpJ2fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYQRpTGS2UlW9MuJWGE6XZERQfYfv1aY/X2m56UXet9npcnHhcUMt5q2gu0NhObnj
-	 oC+EufKhRix4Ejg2Vj4FtCoLqKHXorMgcRmhwchjw1vRuUbVC/M+Ipbvp0rSuge75F
-	 xV21Dt8krbUit5laUcfafnABZu3sekYkk0oALs4E=
+	b=OVhY5UperMzy75sAlD9a716d2JbG4odD7Rnm9F5xXRrNigx2D7/58ahB6rCUCDtHs
+	 HQWdEXutsPvcajnXK7YnVq2irsFO+ICW0tUkwColTfuW4r+mptHVE2QwX2qfO4c8lN
+	 Gd07wQB65CORTz+Gj+NqOJ6oyMaJfg8ZtYt12VCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390677AbfGOOZZ (ORCPT
+        id S2390861AbfGOOYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60256 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389685AbfGOOZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:25:16 -0400
+        id S2390828AbfGOOYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:24:00 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 869F020896;
-        Mon, 15 Jul 2019 14:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF07621537;
+        Mon, 15 Jul 2019 14:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200716;
-        bh=9oPmWzZADG9KBbFCDoRtLvhV03Hq67ZJeep/W6VUocU=;
+        s=default; t=1563200639;
+        bh=GDWlb0iaTA6dl1TidLEP2nJJYe+KUFxZF38qJmpJ2fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V74mhfoxCGbr6aygqxmDJg0WL2OOcsOLymudRLavZyESACLsJ3ybv/cZQ964BqVYU
-         J97wSeX8eiqXnkf3i/8JEPrXkpt3MW2jMhw1guGScahnh0mIyQQ474fLxZD6k2cFHu
-         MbI2mg/CkuVo/aUioK+nxtm/UZ5VQDhOmSIz1DOg=
+        b=qaNhaXW7RlX6/k/VNGq9h5nAzA78uDPBI42/nTcEFy5cFlTJwarK7A+9jSE93ghsn
+         W/NcchgC7KO365+bUJTpDGs9W99tBXGGYI7qCjMZavlKc7yidnxAA82LEoTdNGFPwg
+         sqCXr5JjSO/FWJuW0ubKZeO1Sdxs+PPG+bRydTbA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 116/158] rslib: Fix handling of of caller provided syndrome
-Date:   Mon, 15 Jul 2019 10:17:27 -0400
-Message-Id: <20190715141809.8445-116-sashal@kernel.org>
+Cc:     =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 100/158] media: vimc: cap: check v4l2_fill_pixfmt return value
+Date:   Mon, 15 Jul 2019 10:17:11 -0400
+Message-Id: <20190715141809.8445-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
 References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,46 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+From: André Almeida <andrealmeid@collabora.com>
 
-[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
+[ Upstream commit 77ae46e11df5c96bb4582633851f838f5d954df4 ]
 
-Check if the syndrome provided by the caller is zero, and act
-accordingly.
+v4l2_fill_pixfmt() returns -EINVAL if the pixelformat used as parameter is
+invalid or if the user is trying to use a multiplanar format with the
+singleplanar API. Currently, the vimc_cap_try_fmt_vid_cap() returns such
+value, but vimc_cap_s_fmt_vid_cap() is ignoring it. Fix that and returns
+an error value if vimc_cap_try_fmt_vid_cap() has failed.
 
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Suggested-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/media/platform/vimc/vimc-capture.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 3313bf944ff1..121beb2f0930 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -42,8 +42,18 @@
- 	BUG_ON(pad < 0 || pad >= nn);
+diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+index 65d657daf66f..8e014cc485f0 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -132,12 +132,15 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
+ 				  struct v4l2_format *f)
+ {
+ 	struct vimc_cap_device *vcap = video_drvdata(file);
++	int ret;
  
- 	/* Does the caller provide the syndrome ? */
--	if (s != NULL)
--		goto decode;
-+	if (s != NULL) {
-+		for (i = 0; i < nroots; i++) {
-+			/* The syndrome is in index form,
-+			 * so nn represents zero
-+			 */
-+			if (s[i] != nn)
-+				goto decode;
-+		}
-+
-+		/* syndrome is zero, no errors to correct  */
-+		return 0;
-+	}
+ 	/* Do not change the format while stream is on */
+ 	if (vb2_is_busy(&vcap->queue))
+ 		return -EBUSY;
  
- 	/* form the syndromes; i.e., evaluate data(x) at roots of
- 	 * g(x) */
+-	vimc_cap_try_fmt_vid_cap(file, priv, f);
++	ret = vimc_cap_try_fmt_vid_cap(file, priv, f);
++	if (ret)
++		return ret;
+ 
+ 	dev_dbg(vcap->dev, "%s: format update: "
+ 		"old:%dx%d (0x%x, %d, %d, %d, %d) "
 -- 
 2.20.1
 
