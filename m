@@ -2,81 +2,119 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AC9C7618F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6910AC76195
 	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF79212F5
+	by mail.kernel.org (Postfix) with ESMTP id 4181A212F5
 	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563200217;
+	bh=MqQ7+6uO3U1MJ9rEw4/ihtpnAkJ3hCypH8t/tLfmNLI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IPop7tYTTxtJCcuH/adNhUUTLf60jU//Ong36IUuUASi233pojgzktwQeKNpraNOT
+	 SFTZZShP1//IPgof3NO7ClDZFx8mK+RXO8S3j/o1/pDqoJkoN4Xr5EFIagzfrrlJVp
+	 Eyh7gd3Np57H9L2+nH4dNzVNWQ5xsSjs8TAv+5nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389738AbfGOOQk (ORCPT
+        id S2389457AbfGOOO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:16:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1226 "EHLO mga07.intel.com"
+        Mon, 15 Jul 2019 10:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731676AbfGOOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:16:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 07:16:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,493,1557212400"; 
-   d="scan'208";a="167347987"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jul 2019 07:16:36 -0700
-Date:   Mon, 15 Jul 2019 07:16:36 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
-        jingqi.liu@intel.com
-Subject: Re: [PATCH v7 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-Message-ID: <20190715141636.GB442@linux.intel.com>
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-3-tao3.xu@intel.com>
- <20190712155202.GC29659@linux.intel.com>
- <8ed3cec5-8ba9-b2ed-f0e4-eefb0a988bc8@intel.com>
+        id S2389438AbfGOOOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:14:54 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3184B20651;
+        Mon, 15 Jul 2019 14:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563200093;
+        bh=MqQ7+6uO3U1MJ9rEw4/ihtpnAkJ3hCypH8t/tLfmNLI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=azcGRny1fqpnUuYUCwAVH8Kj85/+KIPAQgWtme9BolnHaCDhVxh18c5Ii8Dx1urGk
+         MUx3nz0CFzgOB8QE0bopmIxARTMeFpnqo01rWPBSAzC38ik1i9wpkqxwrLdoaif5oA
+         5IJ8fv74YWqmF8izGXFkIV+GzM1UFpclZOUcc2Cc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Baruch Siach <baruch@tkos.co.il>, Song Liu <songliubraving@fb.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 182/219] bpf: fix uapi bpf_prog_info fields alignment
+Date:   Mon, 15 Jul 2019 10:03:03 -0400
+Message-Id: <20190715140341.6443-182-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
+References: <20190715140341.6443-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ed3cec5-8ba9-b2ed-f0e4-eefb0a988bc8@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 09:22:14AM +0800, Tao Xu wrote:
-> On 7/12/2019 11:52 PM, Sean Christopherson wrote:
-> >The SDM only defines bits 31:0, and the kernel uses a u32 to cache its
-> >value.  I assume bits 63:32 are reserved?  I'm guessing we also need an
-> >SDM update...
-> >
-> 
-> The SDM define IA32_UMWAIT_CONTROL is a 32bit MSR. So need me to set 63:32
-> reserved?
+From: Baruch Siach <baruch@tkos.co.il>
 
-Huh, I didn't realize the SDM allows 32 bit MSRs, I assumed all bits
-needed to be explicitly defined even if the underlying implementation only
-tracked 32 bits.
+[ Upstream commit 0472301a28f6cf53a6bc5783e48a2d0bbff4682f ]
 
-RDMSR:
+Merge commit 1c8c5a9d38f60 ("Merge
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next") undid the
+fix from commit 36f9814a494 ("bpf: fix uapi hole for 32 bit compat
+applications") by taking the gpl_compatible 1-bit field definition from
+commit b85fab0e67b162 ("bpf: Add gpl_compatible flag to struct
+bpf_prog_info") as is. That breaks architectures with 16-bit alignment
+like m68k. Add 31-bit pad after gpl_compatible to restore alignment of
+following fields.
 
-  If fewer than 64 bits are implemented in the MSR being read, the values
-  return in EDX:EAX in unimplemented bit locations are undefined.
+Thanks to Dmitry V. Levin his analysis of this bug history.
 
-WRMSR:
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/uapi/linux/bpf.h       | 1 +
+ tools/include/uapi/linux/bpf.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-  Undefined or reserved bits in an MSR should be set to values previously
-  read.
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 9d01f4788d3e..9ae3f28ca469 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -2871,6 +2871,7 @@ struct bpf_prog_info {
+ 	char name[BPF_OBJ_NAME_LEN];
+ 	__u32 ifindex;
+ 	__u32 gpl_compatible:1;
++	__u32 :31; /* alignment pad */
+ 	__u64 netns_dev;
+ 	__u64 netns_ino;
+ 	__u32 nr_jited_ksyms;
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 929c8e537a14..f6ce794c0f36 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -2869,6 +2869,7 @@ struct bpf_prog_info {
+ 	char name[BPF_OBJ_NAME_LEN];
+ 	__u32 ifindex;
+ 	__u32 gpl_compatible:1;
++	__u32 :31; /* alignment pad */
+ 	__u64 netns_dev;
+ 	__u64 netns_ino;
+ 	__u32 nr_jited_ksyms;
+-- 
+2.20.1
 
-From KVM's perspective, bits 63:32 should be treated as reserved-to-zero.
-This also means that struct vcpu_vmx can track a u32 instead of a u64
-for msr_ia32_umwait_control.
