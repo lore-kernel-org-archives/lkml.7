@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0661EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF5BC7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DA42067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477B3205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 14:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563202406;
-	bh=drgLR4zB1/qQLoUjERC8AKlBaH9Az/5UxfkYH1IcjG4=;
+	s=default; t=1563202412;
+	bh=6Fp3pNfiYGjsf+z9kZJlTa73q6XBBoC14w3XL3B6JOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V/2bze/1/9x3tIi1YZfzzUzXVW8Aoa4FyCuIDOxm+7s8RgwiVNgNzsJvf9W1UfFl/
-	 umf3rnCF2jIbKDS1Q02IbaBQPs7CGC8mPiEUdGP5oHGIodHM4nD2j3ihjUDwJyh3nF
-	 R2yE9K/4ehZ6IDHpwaCyQuSXSrVSo6x/2PG7fg68=
+	b=WUluAvgJDdcYB+e2qLUQHG/f/8UPjddNb72ev+aHnHABT4rfdfgZdOLsiJ2mIbYCS
+	 BDA4Tc0cyypoFJQv1WLIMpjpq3fViaaFx+xbkiFRrji8hBoh4yNsg7dLUOQosyPh2N
+	 UlolX2VH8zu/j1d2egRaXjoMq9GmDmJQZgbcFG1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733213AbfGOOxZ (ORCPT
+        id S1732097AbfGOOxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 10:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 10:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731218AbfGOO3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:29:41 -0400
+        id S2391475AbfGOO3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:29:34 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487CF20868;
-        Mon, 15 Jul 2019 14:29:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF671206B8;
+        Mon, 15 Jul 2019 14:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200980;
-        bh=drgLR4zB1/qQLoUjERC8AKlBaH9Az/5UxfkYH1IcjG4=;
+        s=default; t=1563200973;
+        bh=6Fp3pNfiYGjsf+z9kZJlTa73q6XBBoC14w3XL3B6JOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uj4PPTpPoFQs7ZL32dbMLrcTlUUOVKq4DnsVTrpia+j6cumH2q4DftrDriQOpKZDp
-         lunMmtTAd0AXEuX/sgNcNra31IjzybyO2pfqdnZWFfC4r5GiqINiNNgRYaVbu98a18
-         MuJXWldXGge9KQGU1HE3r/b0fzUSC1pk33a4+JB4=
+        b=vm8Aa9E+WdCiZ/26gc9CdZSj2cW6TLhca5SD8eoYmYv0Ps3zOZbyMeW15+3pD1RGP
+         rEzYx8BPkXARXQB0hij1lAUH1fu+XA7dRBxT2MU40bQDL8lsO6/k8WeKUyfPyFUXQr
+         xf0knIZ1GtzAKPIrH8erAWcBLTCMlgOsdu1VuJQM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Daniel Lezcano <daniel.lezcano@free.fr>,
-        Serge Hallyn <serge@hallyn.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 017/105] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
-Date:   Mon, 15 Jul 2019 10:27:11 -0400
-Message-Id: <20190715142839.9896-17-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 015/105] net: stmmac: dwmac4/5: Clear unused address entries
+Date:   Mon, 15 Jul 2019 10:27:09 -0400
+Message-Id: <20190715142839.9896-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715142839.9896-1-sashal@kernel.org>
 References: <20190715142839.9896-1-sashal@kernel.org>
@@ -61,50 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
+[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
+Found out while running stmmac selftests.
 
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
-
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Daniel Lezcano <daniel.lezcano@free.fr>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/pid_namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 4918314893bc..22091c88b3bb 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -351,7 +351,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 55ae14a6bb8c..ed5fcd4994f2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -443,14 +443,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		 * are required
+ 		 */
+ 		value |= GMAC_PACKET_FILTER_PR;
+-	} else if (!netdev_uc_empty(dev)) {
+-		int reg = 1;
++	} else {
+ 		struct netdev_hw_addr *ha;
++		int reg = 1;
+ 
+ 		netdev_for_each_uc_addr(ha, dev) {
+ 			dwmac4_set_umac_addr(hw, ha->addr, reg);
+ 			reg++;
+ 		}
++
++		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
++		}
  	}
  
- 	read_lock(&tasklist_lock);
--	force_sig(SIGKILL, pid_ns->child_reaper);
-+	send_sig(SIGKILL, pid_ns->child_reaper, 1);
- 	read_unlock(&tasklist_lock);
- 
- 	do_exit(0);
+ 	writel(value, ioaddr + GMAC_PACKET_FILTER);
 -- 
 2.20.1
 
