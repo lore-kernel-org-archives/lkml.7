@@ -2,156 +2,217 @@ Return-Path: <SRS0=zSVa=VM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50BBC73C66
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6372BC73C66
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39F3214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2579F20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 03:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfGODGt (ORCPT
+        id S1729014AbfGODKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jul 2019 23:06:49 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59706 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726916AbfGODGt (ORCPT
+        Sun, 14 Jul 2019 23:10:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34760 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726074AbfGODKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jul 2019 23:06:49 -0400
-X-UUID: d5814ede6d58453e95a0b6c0fcd31521-20190715
-X-UUID: d5814ede6d58453e95a0b6c0fcd31521-20190715
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1205297470; Mon, 15 Jul 2019 11:06:42 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 15 Jul 2019 11:06:41 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 15 Jul 2019 11:06:40 +0800
-Message-ID: <1563160001.4793.4.camel@mtksdccf07>
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Mon, 15 Jul 2019 11:06:41 +0800
-In-Reply-To: <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
-         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-         <1560447999.15814.15.camel@mtksdccf07>
-         <1560479520.15814.34.camel@mtksdccf07>
-         <1560744017.15814.49.camel@mtksdccf07>
-         <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
-         <1560774735.15814.54.camel@mtksdccf07>
-         <1561974995.18866.1.camel@mtksdccf07>
-         <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
-         <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
-         <1562640832.9077.32.camel@mtksdccf07>
-         <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
-         <1562839579.5846.12.camel@mtksdccf07>
-         <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 8bit
+        Sun, 14 Jul 2019 23:10:54 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6F37UCd087037;
+        Sun, 14 Jul 2019 23:10:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tradytypd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 Jul 2019 23:10:29 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6F386AO088799;
+        Sun, 14 Jul 2019 23:10:29 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tradytynp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 Jul 2019 23:10:29 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6F34Nr3011789;
+        Mon, 15 Jul 2019 03:10:27 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x5mng1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 03:10:27 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6F3ARWb34669020
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 03:10:27 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E978B2065;
+        Mon, 15 Jul 2019 03:10:27 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7773B205F;
+        Mon, 15 Jul 2019 03:10:26 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.203.247])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jul 2019 03:10:26 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 3781416C8F3E; Sun, 14 Jul 2019 20:10:27 -0700 (PDT)
+Date:   Sun, 14 Jul 2019 20:10:27 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        David Miller <davem@davemloft.net>, eladr@mellanox.com,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190715031027.GA3336@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <CACT4Y+aNLHrYj1pYbkXO7CKESLeB-5enkSDK7ksgkMA3KtwJ+w@mail.gmail.com>
+ <20190705191055.GT26519@linux.ibm.com>
+ <20190706042801.GD11665@mit.edu>
+ <20190706061631.GV26519@linux.ibm.com>
+ <20190706150226.GG11665@mit.edu>
+ <20190706180311.GW26519@linux.ibm.com>
+ <20190707011655.GA22081@linux.ibm.com>
+ <CACT4Y+asYe-uH9OV5R0Nkb-JKP4erYUZ68S9gYNnGg6v+fD20w@mail.gmail.com>
+ <20190714190522.GA24049@mit.edu>
+ <20190714192951.GM26519@linux.ibm.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190714192951.GM26519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-14_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-07-12 at 13:52 +0300, Andrey Ryabinin wrote:
-> 
-> On 7/11/19 1:06 PM, Walter Wu wrote:
-> > On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
-> >>
-> >> On 7/9/19 5:53 AM, Walter Wu wrote:
-> >>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
-> >>>>
-> >>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
-> >>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >>
-> >>>>>
-> >>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
-> >>>>> promise any dates because the next week I am on a conference, then
-> >>>>> again a backlog and an intern starting...
-> >>>>>
-> >>>>> Andrey, do you still have concerns re this patch? This change allows
-> >>>>> to print the free stack.
-> >>>>
-> >>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
-> >>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
-> >>>> Same for previously used tags for better use-after-free identification.
-> >>>>
-> >>>
-> >>> Hi Andrey,
-> >>>
-> >>> We ever tried to use object itself to determine use-after-free
-> >>> identification, but tag-based KASAN immediately released the pointer
-> >>> after call kfree(), the original object will be used by another
-> >>> pointer, if we use object itself to determine use-after-free issue, then
-> >>> it has many false negative cases. so we create a lite quarantine(ring
-> >>> buffers) to record recent free stacks in order to avoid those false
-> >>> negative situations.
-> >>
-> >> I'm telling that *more* than one free stack and also tags per object can be stored.
-> >> If object reused we would still have information about n-last usages of the object.
-> >> It seems like much easier and more efficient solution than patch you proposing.
-> >>
-> > To make the object reused, we must ensure that no other pointers uses it
-> > after kfree() release the pointer.
-> > Scenario:
-> > 1). The object reused information is valid when no another pointer uses
-> > it.
-> > 2). The object reused information is invalid when another pointer uses
-> > it.
-> > Do you mean that the object reused is scenario 1) ?
-> > If yes, maybe we can change the calling quarantine_put() location. It
-> > will be fully use that quarantine, but at scenario 2) it looks like to
-> > need this patch.
-> > If no, maybe i miss your meaning, would you tell me how to use invalid
-> > object information? or?
+On Sun, Jul 14, 2019 at 12:29:51PM -0700, Paul E. McKenney wrote:
+> On Sun, Jul 14, 2019 at 03:05:22PM -0400, Theodore Ts'o wrote:
+> > On Sun, Jul 14, 2019 at 05:48:00PM +0300, Dmitry Vyukov wrote:
+> > > But short term I don't see any other solution than stop testing
+> > > sched_setattr because it does not check arguments enough to prevent
+> > > system misbehavior. Which is a pity because syzkaller has found some
+> > > bad misconfigurations that were oversight on checking side.
+> > > Any other suggestions?
 > > 
+> > Or maybe syzkaller can put its own limitations on what parameters are
+> > sent to sched_setattr?  In practice, there are any number of ways a
+> > root user can shoot themselves in the foot when using sched_setattr or
+> > sched_setaffinity, for that matter.  I imagine there must be some such
+> > constraints already --- or else syzkaller might have set a kernel
+> > thread to run with priority SCHED_BATCH, with similar catastrophic
+> > effects --- or do similar configurations to make system threads
+> > completely unschedulable.
+> > 
+> > Real time administrators who know what they are doing --- and who know
+> > that their real-time threads are well behaved --- will always want to
+> > be able to do things that will be catastrophic if the real-time thread
+> > is *not* well behaved.  I don't it is possible to add safety checks
+> > which would allow the kernel to automatically detect and reject unsafe
+> > configurations.
+> > 
+> > An apt analogy might be civilian versus military aircraft.  Most
+> > airplanes are designed to be "inherently stable"; that way, modulo
+> > buggy/insane control systems like on the 737 Max, the airplane will
+> > automatically return to straight and level flight.  On the other hand,
+> > some military planes (for example, the F-16, F-22, F-36, the
+> > Eurofighter, etc.) are sometimes designed to be unstable, since that
+> > way they can be more maneuverable.
+> > 
+> > There are use cases for real-time Linux where this flexibility/power
+> > vs. stability tradeoff is going to argue for giving root the
+> > flexibility to crash the system.  Some of these systems might
+> > literally involve using real-time Linux in military applications,
+> > something for which Paul and I have had some experience.  :-)
+> > 
+> > Speaking of sched_setaffinity, one thing which we can do is have
+> > syzkaller move all of the system threads to they run on the "system
+> > CPU's", and then move the syzkaller processes which are testing the
+> > kernel to be on the "system under test CPU's".  Then regardless of
+> > what priority the syzkaller test programs try to run themselves at,
+> > they can't crash the system.
+> > 
+> > Some real-time systems do actually run this way, and it's a
+> > recommended configuration which is much safer than letting the
+> > real-time threads take over the whole system:
+> > 
+> > http://linuxrealtime.org/index.php/Improving_the_Real-Time_Properties#Isolating_the_Application
 > 
-> 
-> KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
-> This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
-> It could be extended to record more free stacktraces and also record previously used tags which will allow you
-> to identify use-after-free and extract right free stacktrace.
+> Good point!  We might still have issues with some per-CPU kthreads,
+> but perhaps use of nohz_full would help at least reduce these sorts
+> of problems.  (There could still be issues on CPUs with more than
+> one runnable threads.)
 
-Thanks for your explanation.
+I looked at testing limitations in a bit more detail from an RCU
+viewpoint, and came up with the following rough rule of thumb (which of
+course might or might not survive actual testing experience, but should at
+least be a good place to start).  I believe that the sched_setaffinity()
+testing rule should be that the SCHED_DEADLINE cycle be no more than
+two-thirds of the RCU CPU stall warning timeout, which defaults to 21
+seconds in mainline and 60 seconds in many distro kernels.
 
-For extend slub object, if one record is 9B (sizeof(u8)+ sizeof(struct
-kasan_track)) and add five records into slub object, every slub object
-may add 45B usage after the system runs longer. 
-Slub object number is easy more than 1,000,000(maybe it may be more
-bigger), then the extending object memory usage should be 45MB, and
-unfortunately it is no limit. The memory usage is more bigger than our
-patch.
+That is, the SCHED_DEADLINE cycle should never exceed 14 seconds when
+testing mainline on the one hand or 40 seconds when testing enterprise
+distros on the other.
 
-We hope tag-based KASAN advantage is smaller memory usage. If it’s
-possible, we should spend less memory in order to identify
-use-after-free. Would you accept our patch after fine tune it?
+This assumes quite a bit, though:
 
+o	The system has ample memory to spare, and isn't running a
+	callback-hungry workload.  For example, if you "only" have 100MB
+	of spare memory and you are also repeatedly and concurrently
+	expanding (say) large source trees from tarballs and then deleting
+	those source trees, the system might OOM.  The reason OOM might
+	happen is that each close() of a file generates an RCU callback,
+	and 40 seconds worth of waiting-for-a-grace-period structures
+	takes up a surprisingly large amount of memory.
+
+	So please be careful when combining tests.  ;-)
+
+o	There are no aggressive real-time workloads on the system.
+	The reason for this is that RCU is going to start sending IPIs
+	halfway to the RCU CPU stall timeout, and, in certain situations
+	on CONFIG_NO_HZ_FULL kernels, much earlier.  (These situations
+	constitute abuse of CONFIG_NO_HZ_FULL, but then again carefully
+	calibrated abuse is what stress testing is all about.)
+
+o	The various RCU kthreads will get a chance to run at least once
+	during the SCHED_DEADLINE cycle.  If in real life, they only
+	get a chance to run once per two SCHED_DEADLINE cycles, then of
+	course the 14 seconds becomes 7 and the 40 seconds becomes 20.
+
+o	The current RCU CPU stall warning defaults remain in
+	place.	These are set by the CONFIG_RCU_CPU_STALL_TIMEOUT
+	Kconfig parameter, which may in turn be overridden by the
+	rcupdate.rcu_cpu_stall_timeout kernel boot parameter.
+
+o	The current SCHED_DEADLINE default for providing spare cycles
+	for other uses remains in place.
+
+o	Other kthreads might have other constraints, but given that you
+	were seeing RCU CPU stall warnings instead of other failures,
+	the needs of RCU's kthreads seem to be a good place to start.
+
+Again, the candidate rough rule of thumb is that the the SCHED_DEADLINE
+cycle be no more than 14 seconds when testing mainline kernels on the one
+hand and 40 seconds when testing enterprise distro kernels on the other.
+
+Dmitry, does that help?
+
+							Thanx, Paul
