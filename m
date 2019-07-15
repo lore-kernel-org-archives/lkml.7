@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F68C76191
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19741C7618F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B7E217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67B721530
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jul 2019 13:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563198955;
-	bh=YpG3AhvVLglUl7U+IE6syFVZYiEqt9btFZ34/cE+A20=;
+	s=default; t=1563198965;
+	bh=iTBybjedNVs+5UTSuRxkPNP4PREO4wYKOsu2hwQ6ULI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WmVEKiN231GqXAbQJtqInRLTFp2OFLiK403cLjUJ82XZqhqG+38pUmyGdG6/+AMPD
-	 sp/GbQ/Se0zx8BeL1K3bl8U3nvWEL7teQ06ZpvyDXAufjoaT53TQ9PmjqRGJLdCgnS
-	 pBvh6HZjnmipgITjo3bJQiYDlDm6QkpEBX9v0Sbw=
+	b=QUmY76/C9O/v+r3aTjMc8akX27D5XzgLghFNs9V3cREf6qXa7Gzju0g4UvpU00Rr1
+	 geIhCOEg7N/3nzxnT7PBjylD96w+9Bb2TXMmjvYAS8cWPcCLjqd5OMdgHpLDlnq4hI
+	 enL3SaYVCvn2eaUEv0gGNLx+rmfN8qfop9thk7QU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732694AbfGONzy (ORCPT
+        id S1732778AbfGON4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 09:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60088 "EHLO mail.kernel.org"
+        Mon, 15 Jul 2019 09:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732652AbfGONzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:55:51 -0400
+        id S1732765AbfGONz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:55:59 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295F22083D;
-        Mon, 15 Jul 2019 13:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDD772086C;
+        Mon, 15 Jul 2019 13:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198950;
-        bh=YpG3AhvVLglUl7U+IE6syFVZYiEqt9btFZ34/cE+A20=;
+        s=default; t=1563198958;
+        bh=iTBybjedNVs+5UTSuRxkPNP4PREO4wYKOsu2hwQ6ULI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zU/lpYsguW4T4o30AkRj3i0BWaVblIPg7DBXOK0W3hQqE/JD4tuOivCbNiXv86iBJ
-         w8KQ4QWGx4A7SoFllvDQyEkp0Y/legIAaP6Mg2+vw2tKyWCl8nEyw0/DH09PmUJpKx
-         Wccoc30pgwIj8j2AJ/7vLeTopvHWIkfCgFTpt6jA=
+        b=kd1oQQuwPUIBoJmBNTDy9ghaGM3wjkQddvfczKSe3lx1bzyKjXQ0GuDTaRU/5Rhmg
+         tYMdfZQ71EwcLilnFNztCvWgxqySy3Y7b/y1J4nIQaLoSBniT3keHx6tkqIikxFNl7
+         gTU430Pcp0mu32wPqmmx+thmPuWUCwEI9bYcKe3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Graeme Gregory <graeme.gregory@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 150/249] acpi/arm64: ignore 5.1 FADTs that are reported as 5.0
-Date:   Mon, 15 Jul 2019 09:45:15 -0400
-Message-Id: <20190715134655.4076-150-sashal@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 153/249] media: coda: increment sequence offset for the last returned frame
+Date:   Mon, 15 Jul 2019 09:45:18 -0400
+Message-Id: <20190715134655.4076-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
@@ -64,52 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit 2af22f3ec3ca452f1e79b967f634708ff01ced8a ]
+[ Upstream commit b3b7d96817cdb8b6fc353867705275dce8f41ccc ]
 
-Some Qualcomm Snapdragon based laptops built to run Microsoft Windows
-are clearly ACPI 5.1 based, given that that is the first ACPI revision
-that supports ARM, and introduced the FADT 'arm_boot_flags' field,
-which has a non-zero field on those systems.
+If no more frames are decoded in bitstream end mode, and a previously
+decoded frame has been returned, the firmware still increments the frame
+number. To avoid a sequence number mismatch after decoder restart,
+increment the sequence_offset correction parameter.
 
-So in these cases, infer from the ARM boot flags that the FADT must be
-5.1 or later, and treat it as 5.1.
-
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/acpi.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/media/platform/coda/coda-bit.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index 2804330c95dc..3a58e9db5cfe 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -152,10 +152,14 @@ static int __init acpi_fadt_sanity_check(void)
- 	 */
- 	if (table->revision < 5 ||
- 	   (table->revision == 5 && fadt->minor_revision < 1)) {
--		pr_err("Unsupported FADT revision %d.%d, should be 5.1+\n",
-+		pr_err(FW_BUG "Unsupported FADT revision %d.%d, should be 5.1+\n",
- 		       table->revision, fadt->minor_revision);
--		ret = -EINVAL;
--		goto out;
-+
-+		if (!fadt->arm_boot_flags) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+		pr_err("FADT has ARM boot flags set, assuming 5.1\n");
- 	}
- 
- 	if (!(fadt->flags & ACPI_FADT_HW_REDUCED)) {
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index 1eeed34f300d..8c9743e067cf 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -2147,6 +2147,9 @@ static void coda_finish_decode(struct coda_ctx *ctx)
+ 		else if (ctx->display_idx < 0)
+ 			ctx->hold = true;
+ 	} else if (decoded_idx == -2) {
++		if (ctx->display_idx >= 0 &&
++		    ctx->display_idx < ctx->num_internal_frames)
++			ctx->sequence_offset++;
+ 		/* no frame was decoded, we still return remaining buffers */
+ 	} else if (decoded_idx < 0 || decoded_idx >= ctx->num_internal_frames) {
+ 		v4l2_err(&dev->v4l2_dev,
 -- 
 2.20.1
 
