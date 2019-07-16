@@ -6,62 +6,65 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D62C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3195C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9152145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8E72145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563306022;
-	bh=bN+oPIpyG5yQRc1UOp9OsN9wQ+tN14n6Tz0myt6bt4Q=;
+	s=default; t=1563306025;
+	bh=LnphcGj+XDdWqFhpZythH4qtCoyKQNlrP3cFlv6jdtk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=BeG2/v0MncTcfzmR99bAKnmzv2eaKcAPJcNrmze5MShQtff0IrxD6WY+a/I2uVUox
-	 S032swhaaN0AtnKQrtyx+sRy29OW8lywtYlLZbz9QQ6Xb4973mQlNk464aGeLpK+di
-	 u280KS3Gizb/JP4PjZJUnh9N8jeHJVdjK1D6aB1Y=
+	b=CZxLUxeWWNQEJK8nHeqsK/qK6lDiLUp/MXJewbJ4NpHFme+TkWaA36DLoV/CqlKq+
+	 NQgjIKGIkK6uyukczss8h4b2K4atYjbGohD8aNiQf1n451L7JWgNUwDVkHS8lSlhzL
+	 yiT/qxzKMsaOxzjKexmxcc5A6j+W4eKzQdA7oOEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388913AbfGPTkV (ORCPT
+        id S2388933AbfGPTkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35884 "EHLO mail.kernel.org"
+        Tue, 16 Jul 2019 15:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388878AbfGPTkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:40:19 -0400
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.3
+        id S2388901AbfGPTkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 15:40:20 -0400
+Subject: Re: [GIT PULL for v5.3-rc1] docs: addition of a large set of files to
+ the documentation body
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563306018;
-        bh=bN+oPIpyG5yQRc1UOp9OsN9wQ+tN14n6Tz0myt6bt4Q=;
+        s=default; t=1563306020;
+        bh=LnphcGj+XDdWqFhpZythH4qtCoyKQNlrP3cFlv6jdtk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=znNFF6ILmeJCJCMeqP3N+3aNxIwuCYtneYAhO0BYIY5hcw+Q6yrLl5Pkc7NClIxm4
-         CEJOPk40twh5aqH6561PBFvMC5XsPyvAfpe6bXwMqAZPqZjpNyl1Ie9tARpM7KvJbq
-         qsIf+UZlmH0zM8hnARZL4TeCSXXt/TBAiJXoftzs=
+        b=cWzojXD4MbadwjebxlskJocU4iq2EX9URFJ0t/oA4OE2lN1jRq/51VwXtNZxhlQg7
+         DepSA7o/e9IlvlmKiva9ecq54cmJJC2AJQ5WNgHlhNOgGLGzj16c7N2Atqy0AYfDLU
+         hcD9A8rWlgw4tvGavL7RC6D55UOUNDghqYVUw4vQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
-References: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
+In-Reply-To: <20190716080122.28a17014@coco.lan>
+References: <20190716080122.28a17014@coco.lan>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
-X-PR-Tracked-Remote: https://github.com/micah-morton/linux.git
- tags/safesetid-5.3
-X-PR-Tracked-Commit-Id: e10337daefecb47209fd2af5f4fab0d1a370737f
+X-PR-Tracked-Message-Id: <20190716080122.28a17014@coco.lan>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git
+ tags/docs/v5.3-1
+X-PR-Tracked-Commit-Id: 168869492e7009b6861b615f1d030c99bc805e83
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1ec4013bab89058dcc594dfe7b5a20f5d46bbc5f
-Message-Id: <156330601855.24987.15351466493711255800.pr-tracker-bot@kernel.org>
-Date:   Tue, 16 Jul 2019 19:40:18 +0000
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     torvalds@linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
+X-PR-Merge-Commit-Id: c309b6f24222246c18a8b65d3950e6e755440865
+Message-Id: <156330602041.24987.8495566131446582190.pr-tracker-bot@kernel.org>
+Date:   Tue, 16 Jul 2019 19:40:20 +0000
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Documentation Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 15 Jul 2019 09:04:48 -0700:
+The pull request you sent on Tue, 16 Jul 2019 08:01:22 -0300:
 
-> https://github.com/micah-morton/linux.git tags/safesetid-5.3
+> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git tags/docs/v5.3-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1ec4013bab89058dcc594dfe7b5a20f5d46bbc5f
+https://git.kernel.org/torvalds/c/c309b6f24222246c18a8b65d3950e6e755440865
 
 Thank you!
 
