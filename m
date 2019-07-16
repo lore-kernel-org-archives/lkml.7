@@ -2,105 +2,136 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9788CC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECC3C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C2C2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7CA21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="IjIS2Qfw";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="IpKq61KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388770AbfGPUjm (ORCPT
+        id S2388787AbfGPUkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:39:42 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:42336 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728535AbfGPUjm (ORCPT
+        Tue, 16 Jul 2019 16:40:07 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49604 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728535AbfGPUkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:39:42 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hnUEb-00043d-LC; Tue, 16 Jul 2019 16:39:39 -0400
-Date:   Tue, 16 Jul 2019 16:39:06 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, djuran@redhat.com,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [PATCH] x86: Add irq spillover warning
-Message-ID: <20190716203906.GC1498@hmswarspite.think-freely.org>
-References: <20190716135917.15525-1-nhorman@tuxdriver.com>
- <alpine.DEB.2.21.1907161735090.1767@nanos.tec.linutronix.de>
- <20190716160745.GB1498@hmswarspite.think-freely.org>
- <alpine.DEB.2.21.1907162100190.1767@nanos.tec.linutronix.de>
+        Tue, 16 Jul 2019 16:40:07 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A3C21C2510;
+        Tue, 16 Jul 2019 20:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563309606; bh=uJPRBJxggYs33I+/ZcgNHmE1IKEOjOEO4hSN1Tcc3u8=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=IjIS2QfwkNc2fdfVqGCLVxdi6SjqtdZFawliezM9PXkO8D2UJ2LnGpscxnJDTws7W
+         sRAHXNnIL+bucoCv9trpQqk/E8WVr922vRCbYSPMSO+dJOeNe+EswTSzNwN4PzYAqw
+         na8gvCf8Qvz3b8IhIv+tTBABRvcA10GPyx/6kM1Ck+PGL/n6pF7Jh9ckEsF/iMHEoJ
+         h9Ou3tbo3/7qfJMAB9hVs8CfUxmc+DvAEV6wAEd5TR0k0aBmzIRNTZQ0SkcGQLbPH5
+         paCE4m7zhTZFDkEtYwXGFafblbIGbRmjkL29FzkrbVgSevcUMF6bCcgxIz6ji/c32e
+         YX4osmFh5ofOQ==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5ABC7A023B;
+        Tue, 16 Jul 2019 20:40:03 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 16 Jul 2019 13:39:46 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 16 Jul 2019 13:39:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gm1hGCvTbdhXBCyKVDJwwIBmjctIgWlmjHXtIPZGXniJG0GJ3LD+guFyTXLLYVqHUJB7UV+KHfyfJo1d+AnqDEbqvKolQ8w7C754Baznu7Ayz/rz2NPlqhHvPjgkSz6xD45wYvE0W5SPLd8eqWHX3mTIP6lhIJFRrHifHjM3iJGAuFsqnR5a6OgryQhRwRP5adxoexHcZOFWFIdjvZLp7rQZC8T/3OGUiu25dLhkU1dT8OcI8ulfOobY7RmfHCosQMfzSBOPZiqeQuuRWkqkNul1Ie3UmWR8CThO7uVRGgQiVl8129TpDAE7kvPc4dwW+u7izUD0bTqNdG5ev+pC7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uJPRBJxggYs33I+/ZcgNHmE1IKEOjOEO4hSN1Tcc3u8=;
+ b=nhTraMxgixS407YodU77VyW/af+whYPPH25WpDvucKUeaWUlE4HjZEIpnHxu0DLguWWuPxHpElkat7g3xPcXPL5pw5VkzE2f5uSe3fb/jepxiibg+23TmNvEDPd5/bREH8Xwsi8kTOBIC2GjwxOgFXbpU9ZoYhSoBMyWphF1gdOEoB0SpViGKsFSgcylWlS5ZTFzeydO5+8Rg3xi/rpz9o+GJURULaPYdOqYeAIS5+n+achdkumzkYvgRh16E9xs4cD9v+wxNN/O9/sBFcwQnv2RTCzq7DHUIWTXA4QJSGP/u/3AaljFpUjCFJ1u7kKYw2TP/6wK0CpJ+MFBZ7GjiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=synopsys.com;dmarc=pass action=none
+ header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uJPRBJxggYs33I+/ZcgNHmE1IKEOjOEO4hSN1Tcc3u8=;
+ b=IpKq61KZlXmw7sNfwPG3rfXs8XhKuPYyMp1++pE/+7i3V5h/XR/EO3vEcRdiyZzIdlJ065bX5Z7xU6eSEq3NDwDLvpC5Y9P4rWif4J8J32muYmO8rErYwBlLGo4wsaLgLm7f2+SN6tQWMIm1o0w+u8fdjP58lJDQfGXTY/euNiY=
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
+ BN6PR1201MB0227.namprd12.prod.outlook.com (10.174.239.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Tue, 16 Jul 2019 20:39:43 +0000
+Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::24a0:9726:b1f7:fb3c]) by BN6PR1201MB0035.namprd12.prod.outlook.com
+ ([fe80::24a0:9726:b1f7:fb3c%11]) with mapi id 15.20.2073.012; Tue, 16 Jul
+ 2019 20:39:43 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        lkml <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>
+Subject: Re: [GIT PULL] ARC updates for 5.3-rc1
+Thread-Topic: [GIT PULL] ARC updates for 5.3-rc1
+Thread-Index: AQHVPBRCHpBudYy3jUKEd/4lOklWzqbNtQaA
+Date:   Tue, 16 Jul 2019 20:39:43 +0000
+Message-ID: <c370f648-b9f6-a845-d3cd-170fc3ae8c2f@synopsys.com>
+References: <99fc2ead-d7d8-1c54-b493-02e79e2fc24e@synopsys.com>
+In-Reply-To: <99fc2ead-d7d8-1c54-b493-02e79e2fc24e@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+x-originating-ip: [198.182.56.5]
+x-clientproxiedby: BYAPR01CA0042.prod.exchangelabs.com (2603:10b6:a03:94::19)
+ To BN6PR1201MB0035.namprd12.prod.outlook.com (2603:10b6:405:4d::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f68dc419-1807-47af-cc9b-08d70a2dbb4a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1201MB0227;
+x-ms-traffictypediagnostic: BN6PR1201MB0227:
+x-microsoft-antispam-prvs: <BN6PR1201MB02274557095A7E4B963E5380B6CE0@BN6PR1201MB0227.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(366004)(396003)(346002)(39860400002)(189003)(199004)(6486002)(6436002)(7736002)(31696002)(229853002)(305945005)(3846002)(4326008)(65826007)(478600001)(6116002)(64756008)(25786009)(2906002)(76176011)(66946007)(6506007)(446003)(53936002)(6246003)(64126003)(65806001)(65956001)(81166006)(81156014)(8676002)(66066001)(8936002)(186003)(476003)(486006)(26005)(256004)(31686004)(102836004)(68736007)(4744005)(2616005)(66556008)(5660300002)(71200400001)(66476007)(6916009)(11346002)(52116002)(316002)(36756003)(14454004)(66446008)(58126008)(86362001)(54906003)(71190400001)(99286004)(386003)(53546011)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0227;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CX3p5MLgre0+Gv2IGZdTvvzIzHyy0sh/qSVHsuZa2knuT54iJIYuSXflzj1Zar+WXa948iyN9enhKQUsbNlf2jHgSjEkYkT14p4EB5lLeleMT5R4bXkUliVV8hvp21AjmxISAwOanwj08FfnVwcnIGXwNv8s9hUPM8a5/qgzicdufP7F6WZG/AVb5xVbOeq76AveZ9t1yBbSU0xTKZsJX/osaZJB83fp6fwnIo/Wg72ixTcodzx88Wcwk5Qna1lEkL8ILHdpSqPWT4C8Rzjpvxqm0ObudtxArnjxHVWECA9mbZh2t+FessCYIL9unAzAJDzSJ3K9JuCCsnIGeXI94cXcAktxrMtRXJ9IVouz2YQQIARzZvRtpESzRpiGdArR3+xcznDnSSQvf3RSjEWHYqC88UWFiNWxQw2gaKOOghM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <488DE52987D7694EA6B1E44D4ADDC859@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907162100190.1767@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f68dc419-1807-47af-cc9b-08d70a2dbb4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 20:39:43.0690
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0227
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 09:05:30PM +0200, Thomas Gleixner wrote:
-> Neil,
-> 
-> On Tue, 16 Jul 2019, Neil Horman wrote:
-> > On Tue, Jul 16, 2019 at 05:57:31PM +0200, Thomas Gleixner wrote:
-> > > On Tue, 16 Jul 2019, Neil Horman wrote:
-> > > > If a cpu has more than this number of interrupts affined to it, they
-> > > > will spill over to other cpus, which potentially may be outside of their
-> > > > affinity mask.
-> > > 
-> > > Spill over?
-> > > 
-> > > The kernel decides to pick a vector on a CPU outside of the affinity when
-> > > it runs out of vectors on the CPUs in the affinity mask.
-> > > 
-> > Yes.
-> > 
-> > > Please explain issues technically correct.
-> > > 
-> > I don't know what you mean by this.  I explained it above, and you clearly
-> > understood it.
-> 
-> It took me a while to grok it. Simply because I first thought it's some
-> hardware issue. And of course after confusion settled I knew what it is,
-> but just because I know that code like the back of my hand.
-> 
-> > > > Given that this might cause unexpected behavior on
-> > > > performance sensitive systems, warn the user should this condition occur
-> > > > so that corrective action can be taken
-> > > 
-> > > > @@ -244,6 +244,14 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
-> > > 
-> > > Why on earth warn in the interrupt delivery hotpath? Just because it's the
-> > > place which really needs extra instructions and extra cache lines on
-> > > performance sensitive systems, right?
-> > > 
-> > Because theres already a check of the same variety in do_IRQ, but if the
-> > information is available outside the hotpath, I was unaware, and am happy to
-> > update this patch to refelct that.
-> 
-> Which check are you referring to?
-> 
-This one:
-if (desc != VECTOR_RETRIGGERED) {
-                        pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
-                                             __func__, smp_processor_id(),
-                                             vector);
-I figured it was already checking one condition, another wouldn't hurt too much,
-but no worries, I'm redoing this in activate_reserved now.
-
-Best
-Neil
-
-> Thanks,
-> 
-> 	tglx
-> 
+T24gNy8xNi8xOSAxOjIyIFBNLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+IEhpIExpbnVzLA0KPiAN
+Cj4gQnVuY2ggb2YgY2hhbmdlcyBmb3IgQVJDLCBzb21lIGxvbmcgZHVlLCBmb3IgdGhlIG5ldyBy
+ZWxlYXNlLiBQbGVhc2UgcHVsbC4NCj4gDQo+IFRoeCwNCj4gLVZpbmVldA0KDQpTb3JyeSBhbG1v
+c3QgZm9yZ290LCB5b3Ugd291bGQgcnVuIGludG8gc29tZSBtZXJnZSBjb25mbGljdCBkdWUgdG8g
+Y29sbGlzaW9ucw0KYmV0d2VlbiBkb19wYWdlX2ZhdWx0KCkgcmV3b3JrIGFuZCBmb3JjZV9zaWdf
+ZmF1bHQoKSBhcmd1bWVudCBjaGFuZ2UsIGJ1dCBzaG91bGQNCmJlIGVhc3kgdG8gcmVzb2x2ZS4g
+SSdsbCBnaXZlIGl0IGFsbCBhIHNwaW4gb25jZSB1IG1lcmdlIGl0Lg0KDQpUaHgsDQotVmluZWV0
+DQo=
