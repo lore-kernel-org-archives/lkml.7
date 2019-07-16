@@ -2,102 +2,95 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D6C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31E1C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6814220693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rTafQ1i3"
+	by mail.kernel.org (Postfix) with ESMTP id A13A22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388443AbfGPS7j (ORCPT
+        id S2388561AbfGPS7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:59:39 -0400
-Received: from mail-pl1-f177.google.com ([209.85.214.177]:46851 "EHLO
-        mail-pl1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfGPS7j (ORCPT
+        Tue, 16 Jul 2019 14:59:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50978 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbfGPS7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:59:39 -0400
-Received: by mail-pl1-f177.google.com with SMTP id c2so10556070plz.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hBJsfG+kxvEykqFUPJPZgqlmTa9miwWtUSC2L+vLfP0=;
-        b=rTafQ1i3JELdrOWJ5WSPdSQQwWR9tojAgsl4geqBK2ZdDVwUPVO5YBRRdmHlAMJj8h
-         T3cIKg3ivUvNYeW+SQt5fcjPlhM6xsK84xL1NqIhkBoSy2h6a2RNvC4KTsY5ruB+TJPh
-         a6fSWDYUwWmjaJI+265DFaBcq14FLWh3XyX7CzhJ8qsiTs4K2qNpwP9B4/CX+HDSNua2
-         t+cuf4OmTC6gFXaAnM/QAwdfKPK8ire8G6YjF3jHdzA9TUSIrU3A/AcXiM9voIVS78Hn
-         t81Odf6StdnitZCOEhpJsq24DvZVwpJ99em5+JTs748nSoL1O4trtGWXzdZHhmi8nmkl
-         NE2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hBJsfG+kxvEykqFUPJPZgqlmTa9miwWtUSC2L+vLfP0=;
-        b=gMJYKn0ceacw8zw5uABi1fsAP68oNCv/lUT/acjSM3TPrjVd8v29AxwRyhho+zza9Y
-         OghOef3WmcWlZI/uVgI7aAM+AG8zNCIf2xVoZ71PUQsJMaazO04RJQEt9maoOrGa4u6K
-         c6ovpYdlo4SSyZYF6lzCpvICvpLXRdJhNY8lJkwWKBg6GdOKhcLymhy9mpxSAU8zEx9z
-         bbVMElyu0RdDlo+aziPOUchLSn/oG9Ij9hIdSmrQIOw1Ull5Ju7/4hLdSidLau6mzVJu
-         1F8xAIJNGiokoirfN6Jcbz1zTdNgX/XTsLC/ZR0D+mbFi4M5TICGT7As2WTbCvcbkrF+
-         z+tQ==
-X-Gm-Message-State: APjAAAV7xL1uCtCKhV45a4MpRV/g3pT2o04xPwMy7wlvi456btwRnADZ
-        30CMYkfEpv5fw2uNzejC6PPKWg==
-X-Google-Smtp-Source: APXvYqxJBz67JnnuTcUz76s83oxJjhlbQ27GD9dFu8zmDsc8MA6X4i+IL4StramzuJafjdqHNn3w2Q==
-X-Received: by 2002:a17:902:2862:: with SMTP id e89mr38000072plb.258.1563303578543;
-        Tue, 16 Jul 2019 11:59:38 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i124sm42317997pfe.61.2019.07.16.11.59.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 11:59:37 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 12:00:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [GIT PULL] rpmsg updates for v5.3
-Message-ID: <20190716190057.GA8572@tuxbook-pro>
+        Tue, 16 Jul 2019 14:59:51 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnSfy-0008Cc-3y; Tue, 16 Jul 2019 20:59:46 +0200
+Date:   Tue, 16 Jul 2019 20:59:45 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Subject: Re: kbuild: Fail if gold linker is detected
+In-Reply-To: <20190716170606.GA38406@archlinux-threadripper>
+Message-ID: <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+On Tue, 16 Jul 2019, Nathan Chancellor wrote:
+> On Tue, Jul 16, 2019 at 02:47:56PM +0200, Thomas Gleixner wrote:
+> > The gold linker has known issues of failing the build in random and
+> > predictible ways. H.J. stated:
+> > 
+> >   "Since building a workable kernel for different kernel configurations
+> >    isn't a requirement for gold, I don't recommend gold for kernel."
+> > 
+> > So instead of dealing with attempts to duct tape gold support without
+> > understanding the root cause, fail the build when gold is detected.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
+> > ---
+> >  scripts/Kconfig.include |    3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > --- a/scripts/Kconfig.include
+> > +++ b/scripts/Kconfig.include
+> > @@ -35,5 +35,8 @@ ld-option = $(success,$(LD) -v $(1))
+> >  $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
+> >  $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
+> >  
+> > +# Fail if the linker is gold as it's not capable of linking the kernel proper
+> > +$(error-if,$(success, command -v $(LD) -v | grep -q gold), gold linker '$(LD)' not supported)
+> 
+> Why are there two '-v' flags here? The second one is ignored since
+> command -v just prints out the path of the binary that is being used,
+> which would work in most cases but not if gold is the default system
+> linker.
+> 
+> $ command -v ld.gold -v
+> /usr/bin/ld.gold
+> 
+> $ command -v ld.gold
+> /usr/bin/ld.gold
+> 
+> $ command ld.gold -v
+> GNU gold (GNU Binutils 2.32) 1.16
+> 
+> Thus, wouldn't it be better to just call $(LD) directly, like
+> CC_IS_GCC and CC_IS_CLANG in init/Kconfig?
+> 
+> $(success, $(LD) -v | grep -q gold)
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://github.com/andersson/remoteproc tags/rpmsg-v5.3
-
-for you to fetch changes up to 54119bc1110dab2fa389f45c73a0787b8e037e8b:
-
-  rpmsg: core: Make remove handler for rpmsg driver optional. (2019-05-21 23:54:06 -0700)
-
-----------------------------------------------------------------
-rpmsg updates for v5.3
-
-This contains a DT binding update and a change to make the remote
-function of rpmsg_devices optional.
-
-----------------------------------------------------------------
-Pi-Hsun Shih (1):
-      rpmsg: core: Make remove handler for rpmsg driver optional.
-
-Sibi Sankar (1):
-      dt-bindings: soc: qcom: Add remote-pid binding for GLINK SMEM
-
- Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
- drivers/rpmsg/rpmsg_core.c                                | 3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Right you are. Copy and paste without brain ....
