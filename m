@@ -2,125 +2,107 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1964DC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D05C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B0220651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFC721743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxUPg0Bo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UWTC4U1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388205AbfGPRGL (ORCPT
+        id S2388117AbfGPRIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:06:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35335 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730384AbfGPRGL (ORCPT
+        Tue, 16 Jul 2019 13:08:13 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:42408 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPRIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:06:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so19434663wmg.0;
-        Tue, 16 Jul 2019 10:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N3XEJF+2nXhkm8EAAXO29BXSh2L26ahqWhB0e9A+/jA=;
-        b=AxUPg0BoL/e2i7eiDYyIGJhfEJM6OOT42exGAtcMqU3OdKABcyLo64Ie5soORZaEGm
-         EyqdDfV1o6eLeI+DSZBxypxMAc6EzqT6Iygya1H89kCn95Shg9M+vKJGxVnoc3X1vF6B
-         v21u3Z4VtrYvWvAV0gigz6A9xQJ2enTk94cGyatuUc7RrKQaNRJmePYrhyMkPC/YaMY2
-         MHBWjyX87XCePw1BFRu7GstJtrcN8FFyCELnga3w2Z7N4Z+dxkVJ8cTI5RXk3CeM7367
-         e1CAe9O+0J782ueirhg7Kn9jiuVU8Ga9SlpW/SRuOvohJAiYCrO6Thi9z4Zb//qhKGvi
-         4Uvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N3XEJF+2nXhkm8EAAXO29BXSh2L26ahqWhB0e9A+/jA=;
-        b=TOLqCAq1lMqu5QW1QaVkrTBycPmqgcubPzM22XaXhb3fpYugwPb38as29nGrk8lhYp
-         FCDkVGilH3yGe8FTlWyz2iIFfcinYQW4hOADvNl3dtvAdQajySvveti+GEizP7iSHxhs
-         1MWjNIZunk6LzZ8MJT8iQrOydmyjZTeaqxW6DceazOY9WYHb2tGXER8fSlA5Gg9ox2aP
-         ZSJiojahpA2GHbf6P3vage9R+lng84yLd+g0CkLDqm0atPQHMqVlXYrxj4K2KIH5Q7z2
-         G7m3kwLDKGNlVZJa5rzusF1G0xyiUbJPlP3eAE03NnvOMscDM0U4K+6zaFWJTqC0MkP9
-         KPQg==
-X-Gm-Message-State: APjAAAVVq5zLdMKhHz0esrhBt3i7sl6yhUKLnDyCGbIFmWxf4fKdECkW
-        Jpe2NWW57m9FTjHqfePfXD1k71HLKok=
-X-Google-Smtp-Source: APXvYqxP9JsxTCwwtP6lTHLvxIHlswxwxGUngQajFr5QeEQlkAT0Q/Z7tf6Qp6BZppXQAXg+7szcGg==
-X-Received: by 2002:a1c:343:: with SMTP id 64mr26637912wmd.116.1563296768763;
-        Tue, 16 Jul 2019 10:06:08 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id a81sm20287796wmh.3.2019.07.16.10.06.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 10:06:08 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 10:06:06 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: kbuild: Fail if gold linker is detected
-Message-ID: <20190716170606.GA38406@archlinux-threadripper>
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
+        Tue, 16 Jul 2019 13:08:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563296891; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=Au5wD0iSXHqvvfoteUAXzESR9OKNxOhCxGZ4sRNOnkY=;
+        b=UWTC4U1VfEsF9GJwvrnGMlLYM0sJaluIWWrpGtuS5pAl/9S1xFlFBPfh0yjoJpj5CF8O3D
+        wDG62y6HTr7Yr3P1gG2ob3zjyTX+kd2OWXMcyB/JcFU2M7wEeLCVPzKaj80+buwVCmsF7W
+        rs8GlqvGEsTmLslondiX+0Fe/gwih/g=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     od@zcrc.me, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] clk: ingenic: Use CLK_OF_DECLARE_DRIVER macro
+Date:   Tue, 16 Jul 2019 13:08:00 -0400
+Message-Id: <20190716170800.23668-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 02:47:56PM +0200, Thomas Gleixner wrote:
-> The gold linker has known issues of failing the build in random and
-> predictible ways. H.J. stated:
-> 
->   "Since building a workable kernel for different kernel configurations
->    isn't a requirement for gold, I don't recommend gold for kernel."
-> 
-> So instead of dealing with attempts to duct tape gold support without
-> understanding the root cause, fail the build when gold is detected.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
-> ---
->  scripts/Kconfig.include |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> --- a/scripts/Kconfig.include
-> +++ b/scripts/Kconfig.include
-> @@ -35,5 +35,8 @@ ld-option = $(success,$(LD) -v $(1))
->  $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
->  $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
->  
-> +# Fail if the linker is gold as it's not capable of linking the kernel proper
-> +$(error-if,$(success, command -v $(LD) -v | grep -q gold), gold linker '$(LD)' not supported)
+By using CLK_OF_DECLARE_DRIVER instead of the CLK_OF_DECLARE macro, we
+allow the driver to probe also as a platform driver.
 
-Why are there two '-v' flags here? The second one is ignored since
-command -v just prints out the path of the binary that is being used,
-which would work in most cases but not if gold is the default system
-linker.
+While this driver does not have code to probe as a platform driver, this
+is still useful for probing children devices in the case where the
+device node is compatible with "simple-mfd".
 
-$ command -v ld.gold -v
-/usr/bin/ld.gold
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/clk/ingenic/jz4725b-cgu.c | 2 +-
+ drivers/clk/ingenic/jz4740-cgu.c  | 2 +-
+ drivers/clk/ingenic/jz4770-cgu.c  | 2 +-
+ drivers/clk/ingenic/jz4780-cgu.c  | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-$ command -v ld.gold
-/usr/bin/ld.gold
+diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
+index 47287956824b..5fd2e4e6da2d 100644
+--- a/drivers/clk/ingenic/jz4725b-cgu.c
++++ b/drivers/clk/ingenic/jz4725b-cgu.c
+@@ -254,4 +254,4 @@ static void __init jz4725b_cgu_init(struct device_node *np)
+ 	if (retval)
+ 		pr_err("%s: failed to register CGU Clocks\n", __func__);
+ }
+-CLK_OF_DECLARE(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 0957ba4a40a5..a002a2d8db6f 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -246,7 +246,7 @@ static void __init jz4740_cgu_init(struct device_node *np)
+ 	if (retval)
+ 		pr_err("%s: failed to register CGU Clocks\n", __func__);
+ }
+-CLK_OF_DECLARE(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
+ 
+ void jz4740_clock_set_wait_mode(enum jz4740_wait_mode mode)
+ {
+diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
+index 2a29da442a8e..e00d22b175ec 100644
+--- a/drivers/clk/ingenic/jz4770-cgu.c
++++ b/drivers/clk/ingenic/jz4770-cgu.c
+@@ -472,4 +472,4 @@ static void __init jz4770_cgu_init(struct device_node *np)
+ }
+ 
+ /* We only probe via devicetree, no need for a platform driver */
+-CLK_OF_DECLARE(jz4770_cgu, "ingenic,jz4770-cgu", jz4770_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4770_cgu, "ingenic,jz4770-cgu", jz4770_cgu_init);
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index 2464fc4032af..f964c4aa6cac 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -722,4 +722,4 @@ static void __init jz4780_cgu_init(struct device_node *np)
+ 		return;
+ 	}
+ }
+-CLK_OF_DECLARE(jz4780_cgu, "ingenic,jz4780-cgu", jz4780_cgu_init);
++CLK_OF_DECLARE_DRIVER(jz4780_cgu, "ingenic,jz4780-cgu", jz4780_cgu_init);
+-- 
+2.21.0.593.g511ec345e18
 
-$ command ld.gold -v
-GNU gold (GNU Binutils 2.32) 1.16
-
-Thus, wouldn't it be better to just call $(LD) directly, like
-CC_IS_GCC and CC_IS_CLANG in init/Kconfig?
-
-$(success, $(LD) -v | grep -q gold)
-
-Cheers,
-Nathan
