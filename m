@@ -2,122 +2,145 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D6C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F329C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97807206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rgtqp4ID"
+	by mail.kernel.org (Postfix) with ESMTP id 583D520880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563318736;
+	bh=ZrMVMjZfiyo7aCNZthaYAClwMGeLU4tWWQ3/FztZONQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZnYiyrdq4qnQABco0m3CH2kz12c3ka+32V7hkjdMIuYNPWVB5IGdaO50YOnymo3ta
+	 QRexBuOycHP8vz6dqvhLJrDM8OvrjE9W7dn4225DsjIr+hNd8HIl6Gq0y6fxinwS1m
+	 oGXA+BRd/ub1nEI6nvuhIf1LEdGKeNUL0fIadKR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388536AbfGPXHT (ORCPT
+        id S2388098AbfGPXMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:07:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44814 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfGPXHS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:07:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so10159901pgl.11;
-        Tue, 16 Jul 2019 16:07:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=YF5uWvW0lLwROvyPf53Wapwm3mzwcjBd4TlGJz7uSQc=;
-        b=Rgtqp4IDVXbKUFwCa8iBTAmLZ3icHtHxZ0xxcPrO34ppbQnUbbi4wGbJ8Y3Hs1LJaj
-         IrXL2sIU6q0QMst9f5/CtKr1eXCd2I5pUylvKHhErt5+buRBS/8nxqklBlIbKIqQzKXp
-         KZUbwdumcqMBoO47sqDNZ+7zfDRq4/0in70LDstQEsC8lof1FeQ6BHqXDzCRAjcdl/re
-         ups9T2L11lLTRQfrQj7Iglktz7n41R5ywDI3qu3fRS80qVNjJhV5Dam8hKUk46lU5OIt
-         h7rFnLUcqNhbjl8uAJwzmaeEJjBPl71yU8h1Ualjnp+D/5tWP6WS7v0Qh0wqDV0h+Ryi
-         8SXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=YF5uWvW0lLwROvyPf53Wapwm3mzwcjBd4TlGJz7uSQc=;
-        b=DR47nMHqwoF9ZXKTD4ta30+cax5vnk0giKBPsJ4EbyURYcTYVHxPCKy4uJhDoRuV4O
-         ohtQqq7ZEnQ3DJrREs9KCzsrbVivbiFD1RekOafCR3kWtEpdlDIIW77Mp3yWnICBvrde
-         1LbFsv8zuxyDcuXONrJzq9y9rNTVHMtLCi1Hje7ppNAJUq9vHyMuhLG3eLn0GM1BWqJe
-         cOnHGiKSDkKXiX4XLsSf2cgZ3auCNXtaOOFLqHJOGTq3jzTWU1hS19uWq6FDEh7JE55Y
-         8ZgySFiWEB+4Mug6a3V/sUcMxeiE12q5QyzHHnT8h4tzpXrixjcNq5ClLCVuGPsAIFju
-         +XUw==
-X-Gm-Message-State: APjAAAWZZMZcGSeZSKsfeoBzW9StZoj+VoBq8lquKQX8NWrqLACLWqtD
-        fTRzB8y4ri0BQl1G++4Bbnk=
-X-Google-Smtp-Source: APXvYqxbSot0tXbWZTT8zOiFvyxu3Z1k54Da4RuRhE16yCPnDE+TL5XF8kjTOt8H3YqXHJTMsqtj+g==
-X-Received: by 2002:a17:90a:3086:: with SMTP id h6mr40520027pjb.14.1563318437747;
-        Tue, 16 Jul 2019 16:07:17 -0700 (PDT)
-Received: from localhost ([203.220.8.141])
-        by smtp.gmail.com with ESMTPSA id s12sm19683707pgr.79.2019.07.16.16.07.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 16:07:16 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 09:07:09 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 0/5] Add NUMA-awareness to qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, bp@alien8.de,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        guohanjun@huawei.com, hpa@zytor.com, jglauber@marvell.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        longman@redhat.com, mingo@redhat.com, peterz@infradead.org,
-        rahul.x.yadav@oracle.com, steven.sistare@oracle.com,
-        tglx@linutronix.de, will.deacon@arm.com, x86@kernel.org
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
-        <1563277166.m9swqogbqb.astroid@bobo.none>
-        <7D29555E-8F72-4EDD-8A87-B1A59C3945A6@oracle.com>
-In-Reply-To: <7D29555E-8F72-4EDD-8A87-B1A59C3945A6@oracle.com>
+        Tue, 16 Jul 2019 19:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfGPXMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:12:15 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911CB20880;
+        Tue, 16 Jul 2019 23:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563318733;
+        bh=ZrMVMjZfiyo7aCNZthaYAClwMGeLU4tWWQ3/FztZONQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L2wK49fqvZrOCA2UmMLJVRunNbS9bYwSsZWU7KO7RSPW/HF9FQoBgLuXl0sqbhV+p
+         /DPg+rCflLYYK+nUaItC88VE574wDb5bf/Q9qVyJY9TUtmajBwtHM8I+NmiCknHUUe
+         2IfOWacl96/EsvMd9z6LAKHSgOv6n0Oi032NWtjs=
+Received: by mail-qt1-f181.google.com with SMTP id 44so21356696qtg.11;
+        Tue, 16 Jul 2019 16:12:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAUBDJU8wsH6G4bMr7ITSb3VvEPDryuRgdQjEHWmBngV30c0IP6P
+        PjkoHqtHrhcT9w2iqMKKjAr0345Wi4YcwOlVtQ==
+X-Google-Smtp-Source: APXvYqwuS/Dg8B+UFbtaAI3HpuroiCW8Ay+TBupg3TpQ4YyL58i2wfKjd7YT1BdI2CBnIuzGMm9qYpo0lGu4l9NncY0=
+X-Received: by 2002:a0c:b627:: with SMTP id f39mr26683553qve.72.1563318732830;
+ Tue, 16 Jul 2019 16:12:12 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1563317552.qsi08y8lyr.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190703050827.173284-1-drinkcat@chromium.org> <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
+In-Reply-To: <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 16 Jul 2019 17:12:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
+Message-ID: <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
+Subject: Re: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        KarimAllah Ahmed <karahmed@amazon.de>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ian Campbell <ian.campbell@citrix.com>,
+        Grant Likely <grant.likely@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex Kogan's on July 17, 2019 12:45 am:
->=20
->> On Jul 16, 2019, at 7:47 AM, Nicholas Piggin <npiggin@gmail.com> wrote:
->>=20
->> Alex Kogan's on July 16, 2019 5:25 am:
->>> Our evaluation shows that CNA also improves performance of user=20
->>> applications that have hot pthread mutexes. Those mutexes are=20
->>> blocking, and waiting threads park and unpark via the futex=20
->>> mechanism in the kernel. Given that kernel futex chains, which
->>> are hashed by the mutex address, are each protected by a=20
->>> chain-specific spin lock, the contention on a user-mode mutex=20
->>> translates into contention on a kernel level spinlock.=20
->>=20
->> What applications are those, what performance numbers? Arguably that's
->> much more interesting than microbenchmarks (which are mainly useful to
->> help ensure the fast paths are not impacted IMO).
->=20
-> Those are applications that use locks in which waiting threads can park (=
-block),
-> e.g., pthread mutexes. Under (user-level) contention, the park-unpark mec=
-hanism
-> in the kernel creates contention on (kernel) spin locks protecting futex =
-chains.
-> As an example, we experimented with LevelDB (key-value store), and includ=
-ed
-> performance numbers in the patch. Or you are looking for something else?
+On Tue, Jul 16, 2019 at 4:46 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 7/2/19 10:08 PM, Nicolas Boichat wrote:
+> > If the device tree is incorrectly configured, and attempts to
+> > define a "no-map" reserved memory that overlaps with the kernel
+> > data/code, the kernel would crash quickly after boot, with no
+> > obvious clue about the nature of the issue.
+> >
+> > For example, this would happen if we have the kernel mapped at
+> > these addresses (from /proc/iomem):
+> > 40000000-41ffffff : System RAM
+> >   40080000-40dfffff : Kernel code
+> >   40e00000-411fffff : reserved
+> >   41200000-413e0fff : Kernel data
+> >
+> > And we declare a no-map shared-dma-pool region at a fixed address
+> > within that range:
+> > mem_reserved: mem_region {
+> >       compatible = "shared-dma-pool";
+> >       reg = <0 0x40000000 0 0x01A00000>;
+> >       no-map;
+> > };
+> >
+> > To fix this, when removing memory regions at early boot (which is
+> > what "no-map" regions do), we need to make sure that the memory
+> > is not already reserved. If we do, __reserved_mem_reserve_reg
+> > will throw an error:
+> > [    0.000000] OF: fdt: Reserved memory: failed to reserve memory
+> >    for node 'mem_region': base 0x0000000040000000, size 26 MiB
+> > and the code that will try to use the region should also fail,
+> > later on.
+> >
+> > We do not do anything for non-"no-map" regions, as memblock
+> > explicitly allows reserved regions to overlap, and the commit
+> > that this fixes removed the check for that precise reason.
+> >
+> > Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > ---
+> >  drivers/of/fdt.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index cd17dc62a71980a..a1ded43fc332d0c 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
+> >  int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> >                                       phys_addr_t size, bool nomap)
+> >  {
+> > -     if (nomap)
+> > +     if (nomap) {
+> > +             /*
+> > +              * If the memory is already reserved (by another region), we
+> > +              * should not allow it to be removed altogether.
+> > +              */
+> > +             if (memblock_is_region_reserved(base, size))
+> > +                     return -EBUSY;
+> > +
+> >               return memblock_remove(base, size);
+>
+> While you are it, the nomap argument (introduced with
+> e8d9d1f5485b52ec3c4d7af839e6914438f6c285) predates the introduction of
+> memblock_is_nomap() (bf3d3cc580f9960883ebf9ea05868f336d9491c2), so
+> should just remove memblock_remove() and use memblock_mark_nomap()
+> instead here.
 
-Oh, no that's good. I confused myself thinking that was another will it
-scale benchmark. The speedup becomes significant on readrandom, I wonder
-if of it might be that you're gating which threads get to complete the=20
-futex operation and so the effect is amplified beyond just the critical
-section of the spin lock?
+Perhaps like this patch[1]? Though the reasoning is different and the
+commit message here is more thorough, so can I get a combined patch.
+However, I don't under how handling a misconfigured DT and aligned
+with EFI are the same patch. What's considered valid for EFI is not
+for DT regions?
 
-Am I reading the table correctly, this test gets about 2.1x speedup when
-scaling from 1 to 142 threads in the patch-CNA case?
+Rob
 
-Thanks,
-Nick
-=
+[1] https://patchwork.ozlabs.org/patch/1131232/
