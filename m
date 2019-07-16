@@ -2,94 +2,116 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140E5C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84720C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD39B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE9720693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:57:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GamSHQ8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfGPDzW (ORCPT
+        id S1731485AbfGPD5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 23:55:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49506 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730275AbfGPDzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 23:55:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3C1C7AB9D;
-        Tue, 16 Jul 2019 03:55:21 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH 0/2] Remove 32-bit Xen PV guest support
-To:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        LinuxVirtualization <virtualization@lists.linux-foundation.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alok Kataria <akataria@vmware.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20190715113739.17694-1-jgross@suse.com>
- <87y30zfe9z.fsf@linux.intel.com>
- <CALCETrUn=gho5Oug-yYvF2d1WYCe7gvtx+bXuhJ8LTjb9guvuA@mail.gmail.com>
- <bbf1ea2d-1206-eb54-3611-4c9b9fad4aa4@citrix.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <b466e2eb-2d9c-46cb-c239-a93967ccf74c@suse.com>
-Date:   Tue, 16 Jul 2019 05:55:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 15 Jul 2019 23:57:04 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46718 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730768AbfGPD5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 23:57:04 -0400
+Received: by mail-io1-f68.google.com with SMTP id i10so37633817iol.13;
+        Mon, 15 Jul 2019 20:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KfHcdPCgcEDLfMOsc7KFNQOiRRZxPYLWWE+31IqsWlU=;
+        b=GamSHQ8faAdJqVlUbMk2L9gAsB9lZNBqn+5PH32Tpds8Inkz3EQUCUiM7EkHOICseb
+         CuwrwNdmNn/XOClYmmWMLWTHVMLN6UURZlzSunyZLp21yBcGSWd/wYhvpsoDrjbZR6xe
+         C+cz36TucSlpDyKAGWYYekLkikHXK7O3NEwRpSkQxKHNcZL3W3RABLo6c/UR1dB2+3Va
+         8jbqo9aJMATHNnDIxq5UxAAx7HSsYZ1YWpD5/LEnFBOxs7Q0C59FwcR3hzfJrrg/2UZ2
+         nQVgcnSUK1d/Ln8lsi0m6FfivcaNzxM4M0hHOFHhBNw2CgCHXOJuJyuITRCu2xcE3HSD
+         yGmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KfHcdPCgcEDLfMOsc7KFNQOiRRZxPYLWWE+31IqsWlU=;
+        b=mli9Acj90Y1ximtL3ioAFgjU5Na1wwOoAqSIvvzw20QFQ/iW4jRSg3NL1RTceCCXGG
+         pRN6/agXdJzaIMWN/MFKduuZHmXYB3M7XeknlhyipA9U8VAaJ6/TyTltUOTsj10+vMau
+         C01qDmJb8T0yFin2/FsGLslaGmx3pPhd+bdTBkYDz439i53g8p9oe5Lo98EO0YgKjejh
+         k71guTgNfIm/GS6kAmMVFo+0ftLV6RlTaHWzZkwTtPa5DMAHJaDECACfMBUJoZ1BQCQ+
+         7E8q2TPcanT8IQYRNnqbXQ8Kv4xpikgPxrY2qZr8otljH1MdTgCiTsaR+B46QkteyZvb
+         n6NQ==
+X-Gm-Message-State: APjAAAXOib9tITen7OzLlXLz5wgpL9mlbhbrS5fxaXn+uRn/+20YnxPw
+        PqyNULWvBVkxCklsB9VNfPGpt8Q92OlEfQ==
+X-Google-Smtp-Source: APXvYqxmWSq+CgE32z1rA0icy9ZQgYc3idHmSlll/V2xDdKOh5rO34A4ZNPgFU2n0jfKuXodpdmjFQ==
+X-Received: by 2002:a02:ce52:: with SMTP id y18mr30792143jar.78.1563249423027;
+        Mon, 15 Jul 2019 20:57:03 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id z19sm23935469ioh.12.2019.07.15.20.57.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 20:57:02 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 21:57:01 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: Remove functions not
+ called in include/linux/pci.h
+Message-ID: <20190716035701.GA57724@JATN>
+References: <20190715175658.29605-1-skunberg.kelsey@gmail.com>
+ <20190715181312.31403-1-skunberg.kelsey@gmail.com>
+ <alpine.DEB.2.21.1907152138120.2564@felia>
+ <20190715233717.GA79424@google.com>
 MIME-Version: 1.0
-In-Reply-To: <bbf1ea2d-1206-eb54-3611-4c9b9fad4aa4@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715233717.GA79424@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.19 19:39, Andrew Cooper wrote:
-> On 15/07/2019 18:28, Andy Lutomirski wrote:
->> On Mon, Jul 15, 2019 at 9:34 AM Andi Kleen <ak@linux.intel.com> wrote:
->>> Juergen Gross <jgross@suse.com> writes:
->>>
->>>> The long term plan has been to replace Xen PV guests by PVH. The first
->>>> victim of that plan are now 32-bit PV guests, as those are used only
->>>> rather seldom these days. Xen on x86 requires 64-bit support and with
->>>> Grub2 now supporting PVH officially since version 2.04 there is no
->>>> need to keep 32-bit PV guest support alive in the Linux kernel.
->>>> Additionally Meltdown mitigation is not available in the kernel running
->>>> as 32-bit PV guest, so dropping this mode makes sense from security
->>>> point of view, too.
->>> Normally we have a deprecation period for feature removals like this.
->>> You would make the kernel print a warning for some releases, and when
->>> no user complains you can then remove. If a user complains you can't.
->>>
->> As I understand it, the kernel rules do allow changes like this even
->> if there's a complaint: this is a patch that removes what is
->> effectively hardware support.  If the maintenance cost exceeds the
->> value, then removal is fair game.  (Obviously we weight the value to
->> preserving compatibility quite highly, but in this case, Xen dropped
->> 32-bit hardware support a long time ago.  If the Xen hypervisor says
->> that 32-bit PV guest support is deprecated, it's deprecated.)
->>
->> That being said, a warning might not be a bad idea.  What's the
->> current status of this in upstream Xen?
+On Mon, Jul 15, 2019 at 06:37:17PM -0500, Bjorn Helgaas wrote:
+> On Mon, Jul 15, 2019 at 09:42:47PM +0200, Lukas Bulwahn wrote:
+> > On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
+> > 
+> > > Remove the following uncalled functions from include/linux/pci.h:
+> > > 
+> > >         pci_block_cfg_access()
+> > >         pci_block_cfg_access_in_atomic()
+> > >         pci_unblock_cfg_access()
+> > > 
+> > > Functions were added in patch fb51ccbf217c "PCI: Rework config space
+> > > blocking services", ...
 > 
-> So personally, I'd prefer to see support stay, but at the end of the day
-> it is Juergen's choice as the maintainer of the code.
+> > Also note that commits are referred to with this format:
+> > 
+> > commit <12-character sha prefix> ("<commit message>")
+> 
+> FWIW, I use this shell alias to generate these references:
+> 
+>   gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+> 
+>   $ gsr fb51ccb
+>   fb51ccbf217c ("PCI: Rework config space blocking services")
+> 
+> Documentation/process/submitting-patches.rst mentions a 12-char (at
+> least) SHA-1 but the e21d2170f36 example shows a *20*-char SHA-1,
+> which seems excessive to me.
+> 
+> I personally skip the word "commit" because I figure it's pretty
+> obvious what it is, but it's fine either way.
+> 
+> Bjorn
 
-Especially on the security front we are unsafe with 32-bit PV Linux.
-And making it safe will make it so slow that the needed effort is not
-spent very well.
+This is very useful! I definitely like the use of the alias. Thank you!
 
-
-Juergen
+-Kelsey
