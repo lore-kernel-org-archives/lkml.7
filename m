@@ -2,146 +2,106 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4823C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E2EC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796662054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Qwsq8LGc"
+	by mail.kernel.org (Postfix) with ESMTP id 45AFB205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:13:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbfGPQIc (ORCPT
+        id S1731711AbfGPQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:08:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41980 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387958AbfGPQIb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:08:31 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d24so20526922ljg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/PtK1riFgjOIHlhJQFDyC4q5ySxhAO8yRuQks2dZNfk=;
-        b=Qwsq8LGcu+4f6+GbfIyFs2u6MHmOVpuck5n/OWKzIuI5zY2IEMHVb2BlOPpRjweGnr
-         9i8WS3lTXJvrmNA3uKxRy/kBzYt9LaiqRshEtKmQEJUbp5IcyCsprGyn+/Hostoq0Akp
-         fBp77TXTneOqutrYEP4nt1/3Z35g24lfztChoxSwOTJHnvFJU0e4D6mkSR+WiqY5947O
-         nUfntsUfvTqtO5CBerTxsjINgBIZoRysGAHtdFIJX2J3zv5YHlQOcJYFs3td5L4fR8Lk
-         d0sWfz0Mu/72Rs/IxvY5zxIgaImboim9OQzpxpGSwCOla8rOm2uf6o8KvI1dmBTbh+OU
-         4jcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/PtK1riFgjOIHlhJQFDyC4q5ySxhAO8yRuQks2dZNfk=;
-        b=uOuWUcx5249ScGH0qCs/gHhqz4zGAtBw7M63kFY4DXInCqFjCO2xpy/skh+KruS4Fi
-         ww0pcyo2sHPAZkxUHE9DCZpTw6cb7oz/st+OY2QYKSsmLDlXznyVNtXbKgF+FICKDpVo
-         4Xvix833cNH+vzllZYS5aDNJYdN6Y2fOam5mLy/vQ+lWHMddTlOyymRP5LSj0Hlq/YW8
-         N1wCq9EkoyXmmmL0BwInldBoLc3FXn0INEV7HapzmbGThRm3oh4lXDIBmwFfRMyggkzu
-         Zkzj6D9HK5/rL4Z0l4dKKOOinR2B+i8E1cXHhquB0KiGLrEBuu2bxUrdZ1Y9fHAbPxZ2
-         5Vow==
-X-Gm-Message-State: APjAAAVOLsk2v4EvBYo6HMxvZuxNoJSAG43qJnj55bA+7CZEHnLh5eYS
-        9leKDsmhRnaOfhOhi8TwptWbQP5ofP49UzsSqw==
-X-Google-Smtp-Source: APXvYqyKryFIQegG0hjOTB9NgCpoMoahL1Zn87LGMl/BlFDzO2b4dUJIotzjf0uK56x3MSXiQ8vlXsbNOXtxYHU7vwc=
-X-Received: by 2002:a2e:9dc1:: with SMTP id x1mr18159218ljj.0.1563293308121;
- Tue, 16 Jul 2019 09:08:28 -0700 (PDT)
+        Tue, 16 Jul 2019 12:13:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45230 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728004AbfGPQNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 12:13:11 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 98E3481F31;
+        Tue, 16 Jul 2019 16:13:10 +0000 (UTC)
+Received: from redhat.com (ovpn-122-108.rdu2.redhat.com [10.10.122.108])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8E7D86012C;
+        Tue, 16 Jul 2019 16:12:57 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 12:12:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Wang, Wei W" <wei.w.wang@intel.com>
+Cc:     "Hansen, Dave" <dave.hansen@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        "nitesh@redhat.com" <nitesh@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "yang.zhang.wz@gmail.com" <yang.zhang.wz@gmail.com>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        "riel@surriel.com" <riel@surriel.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "lcapitulino@redhat.com" <lcapitulino@redhat.com>,
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "alexander.h.duyck@linux.intel.com" 
+        <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+Message-ID: <20190716120839-mutt-send-email-mst@kernel.org>
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+ <20190619223338.1231.52537.stgit@localhost.localdomain>
+ <20190716055017-mutt-send-email-mst@kernel.org>
+ <cad839c0-bbe6-b065-ac32-f32c117cf07e@intel.com>
+ <3f8b2a76-b2ce-fb73-13d4-22a33fc1eb17@redhat.com>
+ <bdb9564d-640d-138f-6695-3fa2c084fcc7@intel.com>
+ <286AC319A985734F985F78AFA26841F73E16AB21@shsmsx102.ccr.corp.intel.com>
 MIME-Version: 1.0
-References: <20190529153427.GB8959@cisco> <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
- <20190529222835.GD8959@cisco> <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
- <20190530170913.GA16722@mail.hallyn.com> <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
- <20190530212900.GC5739@cisco> <CAHC9VhT5HPt9rCJoDutdvA3r1Y1GOHfpXe2eJ54atNC1=Vd8LA@mail.gmail.com>
- <20190708181237.5poheliito7zpvmc@madcap2.tricolour.ca> <CAHC9VhT0V+xi_6nAR5TsM2vs34LbgMeO=-W+MS_kqiXRRzneZQ@mail.gmail.com>
- <20190716153705.xx7dwrhliny5amut@madcap2.tricolour.ca>
-In-Reply-To: <20190716153705.xx7dwrhliny5amut@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 16 Jul 2019 12:08:16 -0400
-Message-ID: <CAHC9VhTaLqCo8rmAaySJQB+Pf-580=3mvX1rPmtEeb9o5Uy9Qg@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <286AC319A985734F985F78AFA26841F73E16AB21@shsmsx102.ccr.corp.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 16 Jul 2019 16:13:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:37 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-07-15 17:09, Paul Moore wrote:
-> > On Mon, Jul 8, 2019 at 2:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2019-05-30 19:26, Paul Moore wrote:
-> >
-> > ...
-> >
-> > > > I like the creativity, but I worry that at some point these
-> > > > limitations are going to be raised (limits have a funny way of doing
-> > > > that over time) and we will be in trouble.  I say "trouble" because I
-> > > > want to be able to quickly do an audit container ID comparison and
-> > > > we're going to pay a penalty for these larger values (we'll need this
-> > > > when we add multiple auditd support and the requisite record routing).
-> > > >
-> > > > Thinking about this makes me also realize we probably need to think a
-> > > > bit longer about audit container ID conflicts between orchestrators.
-> > > > Right now we just take the value that is given to us by the
-> > > > orchestrator, but if we want to allow multiple container orchestrators
-> > > > to work without some form of cooperation in userspace (I think we have
-> > > > to assume the orchestrators will not talk to each other) we likely
-> > > > need to have some way to block reuse of an audit container ID.  We
-> > > > would either need to prevent the orchestrator from explicitly setting
-> > > > an audit container ID to a currently in use value, or instead generate
-> > > > the audit container ID in the kernel upon an event triggered by the
-> > > > orchestrator (e.g. a write to a /proc file).  I suspect we should
-> > > > start looking at the idr code, I think we will need to make use of it.
-> > >
-> > > To address this, I'd suggest that it is enforced to only allow the
-> > > setting of descendants and to maintain a master list of audit container
-> > > identifiers (with a hash table if necessary later) that includes the
-> > > container owner.
-> >
-> > We're discussing the audit container ID management policy elsewhere in
-> > this thread so I won't comment on that here, but I did want to say
-> > that we will likely need something better than a simple list of audit
-> > container IDs from the start.  It's common for systems to have
-> > thousands of containers now (or multiple thousands), which tells me
-> > that a list is a poor choice.  You mentioned a hash table, so I would
-> > suggest starting with that over the list for the initial patchset.
->
-> I saw that as an internal incremental improvement that did not affect
-> the API, so I wanted to keep things a bit simpler (as you've requested
-> in the past) to get this going, and add that enhancement later.
+On Tue, Jul 16, 2019 at 03:01:52PM +0000, Wang, Wei W wrote:
+> On Tuesday, July 16, 2019 10:41 PM, Hansen, Dave wrote:
+> > Where is the page allocator integration?  The set you linked to has 5 patches,
+> > but only 4 were merged.  This one is missing:
+> > 
+> > 	https://lore.kernel.org/patchwork/patch/961038/
+> 
+> For some reason, we used the regular page allocation to get pages
+> from the free list at that stage.
 
-In general a simple approach is a good way to start when the
-problem/use-case is not very well understood; in other words, don't
-spend a lot of time/effort optimizing something you don't yet
-understand.  In this case we know that people want to deploy a *lot*
-of containers on a single system so we should design the data
-structures appropriately.  A list is simply not a good fit here, I
-believe/hope you know that too.
 
-> I'll start working on it now.  The hash table would simply point to
-> lists anyways unless you can recommend a better approach.
+This is what Linus suggested, that is why:
 
-I assume when you say "point to lists" you are talking about using
-lists for the hash buckets?  If so, yes that should be fine at this
-point.  In general if the per-bucket lists become a bottleneck we can
-look at the size of the table (or make it tunable) or even use a
-different approach entirely.  Ultimately the data store is an
-implementation detail private to the audit subsystem in the kernel so
-we should be able to change it as necessary without breaking anything.
+https://lkml.org/lkml/2018/6/27/461
 
--- 
-paul moore
-www.paul-moore.com
+and
+
+https://lkml.org/lkml/2018/7/11/795
+
+
+See also
+
+https://lkml.org/lkml/2018/7/10/1157
+
+for some failed attempts to upstream mm core changes
+related to this.
+
+> This part could be improved by Alex
+> or Nitesh's approach.
+> 
+> The page address transmission from the balloon driver to the host
+> device could reuse what's upstreamed there. I think you could add a
+> new VIRTIO_BALLOON_CMD_xx for your usages.
+> 
+> Best,
+> Wei
