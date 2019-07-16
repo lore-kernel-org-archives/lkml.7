@@ -2,204 +2,549 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA42C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F06C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8053D20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDC12064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Og3iNMAN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pqwo22QO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388036AbfGPTVV (ORCPT
+        id S2388346AbfGPTYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:21:21 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38717 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfGPTVU (ORCPT
+        Tue, 16 Jul 2019 15:24:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35093 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfGPTYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:21:20 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n11so20798556qtl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:21:20 -0700 (PDT)
+        Tue, 16 Jul 2019 15:24:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j19so22363261otq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dazy32K9kj9n+ylitO8+oLTMrnW27hmM0+svC5zAqu4=;
-        b=Og3iNMAN/OReC0h8Zy6KNLnRIMxOBh25A2r1f4m6CTZKsj6XHDKSJ9mvbSnGWIPus6
-         ZG37/AN4brgULiLHg8PT0/Krbu3rFll1yqhc2WZKm3xRBE7I88zumhf0KqstM/WJbrFa
-         DywxLRN2pWPbDmiTflAWaXIgm1AR3pjnnkH4uIzpVWiD7yZApwXE8556U3n/l6bTfwlQ
-         NDiZOXz6ZRH348rpQvo/p+9pFFKNcDJE9XA92XlUng1DWlIaw2K34o4tBRtC7nhF47Ic
-         VdnDhRv+amjsS/mOOOeo2VG2dwDBdEO33kaWrYok7EHiL2Uqn9c5VxcZtCdSiEJzvckf
-         snkw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5QUEXPjJiUoAHgD1zVYI045ZsRGIDkfoIz5VJISJUyY=;
+        b=pqwo22QOB1CKZpiL0wPNi+7xw6S811SsAGXtzG8aLFGhxGsU7xakrq7dJkvltqlceG
+         7W/i2S01+G8TDiHajZzABkt81w6NzcJRs5AZkPWwCqf9kAbuPMAjkKvN5StGuLoQKpVD
+         VmRQoF/EY72Z5XclwaOiNNNbKysjmWCzuFLChfqIfLa/UJBxKsb0I6bWiRCcecEesEiD
+         4nf8ZemZtbIKyzAdZlGV5pavDOcYzBrZIh0ZsaXPOMUDA9EPx+H41Frq/5lzAOOTtqaI
+         Y0ccn1xUWIZzTz5yddgOHGM48LZY/IMf9WsH8kMHpfyqn22+21MO8u0Vb1+07jum1SPD
+         wwQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dazy32K9kj9n+ylitO8+oLTMrnW27hmM0+svC5zAqu4=;
-        b=rztZiYCb0tVpcfW4UPQINvupCNr68zyCatNTmGJdPDgeyWa3iogjprA3+1LX9bToG4
-         m6htoF4lAPDo0QQjVNl54+M/5y1wBxx7PSXpPgxFj6MbqeYtG0tcraFx+ePo5mmk73aH
-         nhn8SKJA8AWPXLXAQy31Nj8SX8r5enLpZQ2KL2MpSSMjPEuQMzEQISw8lCRP4w3rqgrM
-         eCsYM6LnqYyx2Poac0Re42L9ty3M7aN40CJI2KNo8jPqZeHECUBaQG32rl2YVHFw5vT9
-         HNscVvBFZ0WeQIszDZr7tPegPgp+peGBUt7L602sMV19YfKean4VoPoRUyjgeALdtEbR
-         aN8A==
-X-Gm-Message-State: APjAAAVwgr53/ufOITYTx1yBAzyb/5NZTmSi/VHvfxL8R4XZBFk4bJAs
-        pi0vYy1a7HHP1dXvUqY5PyuARw==
-X-Google-Smtp-Source: APXvYqwwjj1IWyEWlBQ5HrZSL7JNZQErZe7PN1ZOvQQVX2SRbXq5qo6gxY5lJ5R5eUUQfnTXyJuNPg==
-X-Received: by 2002:a0c:b88e:: with SMTP id y14mr24450214qvf.93.1563304879619;
-        Tue, 16 Jul 2019 12:21:19 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id k25sm7474452qta.78.2019.07.16.12.21.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 12:21:19 -0700 (PDT)
-Message-ID: <1563304877.4610.10.camel@lca.pw>
-Subject: Re: [PATCH] Revert "kmemleak: allow to coexist with fault injection"
-From:   Qian Cai <cai@lca.pw>
-To:     Yang Shi <yang.shi@linux.alibaba.com>, catalin.marinas@arm.com,
-        mhocko@suse.com, dvyukov@google.com, rientjes@google.com,
-        willy@infradead.org, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Tue, 16 Jul 2019 15:21:17 -0400
-In-Reply-To: <a198d00d-d1f4-0d73-8eb8-6667c0bdac04@linux.alibaba.com>
-References: <1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com>
-         <1563301410.4610.8.camel@lca.pw>
-         <a198d00d-d1f4-0d73-8eb8-6667c0bdac04@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5QUEXPjJiUoAHgD1zVYI045ZsRGIDkfoIz5VJISJUyY=;
+        b=S+7uRJxz32UdX9eZNCnfHbOYIhQJOFQ0j+UrZ5H471ohxuAkhmYTN+WC4XRM9bLwa1
+         N0uyxp8zA9O+fBZSZCMB42YDRZH4Dh6zY8y50blLvZ7j9+kpqorVS8RqyZijFueum5bR
+         sLOneeXOBKVJ+ZcdA9IEDJ+VJqT3ibEn8dE2oX3ZvdTWFI1ecswKZU1mNQQYGaRqHCeP
+         F0iAiwH9Z00VXIMcgXuKf4jGProFHGJSL7yz4U9M1ScFBlc/O2PZySKtsxdj7hpXd4m4
+         ajEJHjI2LeL6ygVAQtBpTptApDpxZal/sR8UvxiT+lpmTGXTNHLo5ZNgdlgsu9+Za5Sw
+         S4Rg==
+X-Gm-Message-State: APjAAAVdx9tU4nUn0A0MIEMbxh7swrOT6VHiWl/sQGaLqD6I2dlX2s5u
+        45rPsAd71mg7tqpHebmBssmPOgEr5Qf5T1C7g08BlA==
+X-Google-Smtp-Source: APXvYqwO2U4Bg0K9L4K+MvxDIEA22enu4pPlzz5gINqDg4ELw5Fun2GQK/5xknDKRMbqYIN/Gp0erMhX85PNk0CWGDY=
+X-Received: by 2002:a9d:6256:: with SMTP id i22mr4043671otk.139.1563305046509;
+ Tue, 16 Jul 2019 12:24:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190716133700.30024-1-sibis@codeaurora.org>
+In-Reply-To: <20190716133700.30024-1-sibis@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 16 Jul 2019 12:23:30 -0700
+Message-ID: <CAGETcx_CYqALezEWuO0m7+jcFp6UBChVBDLeB9GqUFmt7inAvQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] PM / devfreq: Add cpu based scaling support to passive_governor
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>, agross@kernel.org,
+        david.brown@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, hsinyi@chromium.org,
+        adharmap@codeaurora.org, Saravana Kannan <skannan@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-16 at 12:01 -0700, Yang Shi wrote:
-> 
-> On 7/16/19 11:23 AM, Qian Cai wrote:
-> > On Wed, 2019-07-17 at 01:50 +0800, Yang Shi wrote:
-> > > When running ltp's oom test with kmemleak enabled, the below warning was
-> > > triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
-> > > passed in:
-> > > 
-> > > WARNING: CPU: 105 PID: 2138 at mm/page_alloc.c:4608
-> > > __alloc_pages_nodemask+0x1c31/0x1d50
-> > > Modules linked in: loop dax_pmem dax_pmem_core ip_tables x_tables xfs
-> > > virtio_net net_failover virtio_blk failover ata_generic virtio_pci
-> > > virtio_ring
-> > > virtio libata
-> > > CPU: 105 PID: 2138 Comm: oom01 Not tainted 5.2.0-next-20190710+ #7
-> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-
-> > > g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
-> > > RIP: 0010:__alloc_pages_nodemask+0x1c31/0x1d50
-> > > ...
-> > >   kmemleak_alloc+0x4e/0xb0
-> > >   kmem_cache_alloc+0x2a7/0x3e0
-> > >   ? __kmalloc+0x1d6/0x470
-> > >   ? ___might_sleep+0x9c/0x170
-> > >   ? mempool_alloc+0x2b0/0x2b0
-> > >   mempool_alloc_slab+0x2d/0x40
-> > >   mempool_alloc+0x118/0x2b0
-> > >   ? __kasan_check_read+0x11/0x20
-> > >   ? mempool_resize+0x390/0x390
-> > >   ? lock_downgrade+0x3c0/0x3c0
-> > >   bio_alloc_bioset+0x19d/0x350
-> > >   ? __swap_duplicate+0x161/0x240
-> > >   ? bvec_alloc+0x1b0/0x1b0
-> > >   ? do_raw_spin_unlock+0xa8/0x140
-> > >   ? _raw_spin_unlock+0x27/0x40
-> > >   get_swap_bio+0x80/0x230
-> > >   ? __x64_sys_madvise+0x50/0x50
-> > >   ? end_swap_bio_read+0x310/0x310
-> > >   ? __kasan_check_read+0x11/0x20
-> > >   ? check_chain_key+0x24e/0x300
-> > >   ? bdev_write_page+0x55/0x130
-> > >   __swap_writepage+0x5ff/0xb20
-> > > 
-> > > The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, however kmemleak has
-> > > __GFP_NOFAIL set all the time due to commit
-> > > d9570ee3bd1d4f20ce63485f5ef05663866fe6c0 ("kmemleak: allow to coexist
-> > > with fault injection").  But, it doesn't make any sense to have
-> > > __GFP_NOFAIL and ~__GFP_DIRECT_RECLAIM specified at the same time.
-> > > 
-> > > According to the discussion on the mailing list, the commit should be
-> > > reverted for short term solution.  Catalin Marinas would follow up with a
-> > > better
-> > > solution for longer term.
-> > > 
-> > > The failure rate of kmemleak metadata allocation may increase in some
-> > > circumstances, but this should be expected side effect.
-> > 
-> > As mentioned in anther thread, the situation for kmemleak under memory
-> > pressure
-> > has already been unhealthy. I don't feel comfortable to make it even worse
-> > by
-> > reverting this commit alone. This could potentially make kmemleak kill
-> > itself
-> > easier and miss some more real memory leak later.
-> > 
-> > To make it really a short-term solution before the reverting, I think
-> > someone
-> > needs to follow up with the mempool solution with tunable pool size
-> > mentioned
-> > in,
-> > 
-> > https://lore.kernel.org/linux-mm/20190328145917.GC10283@arrakis.emea.arm.com
-> > /
-> > 
-> > I personally not very confident that Catalin will find some time soon to
-> > implement embedding kmemleak metadata into the slab. Even he or someone does
-> > eventually, it probably need quite some time to test and edge out many of
-> > corner
-> > cases that kmemleak could have by its natural.
-> 
-> Thanks for sharing some background. I didn't notice this topic had been 
-> discussed. I'm not sure if this revert would make things worse since I'm 
-> supposed real memory leak would be detected sooner before oom kicks in, 
-> and kmemleak is already broken with __GFP_NOFAIL.
+On Tue, Jul 16, 2019 at 6:37 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> From: Saravana Kannan <skannan@codeaurora.org>
+>
+> Many CPU architectures have caches that can scale independent of the
+> CPUs. Frequency scaling of the caches is necessary to make sure that the
+> cache is not a performance bottleneck that leads to poor performance and
+> power. The same idea applies for RAM/DDR.
+>
+> To achieve this, this patch adds support for cpu based scaling to the
+> passive governor. This is accomplished by taking the current frequency
+> of each CPU frequency domain and then adjust the frequency of the cache
+> (or any devfreq device) based on the frequency of the CPUs. It listens
+> to CPU frequency transition notifiers to keep itself up to date on the
+> current CPU frequency.
+>
+> To decide the frequency of the device, the governor does one of the
+> following:
+> * Derives the optimal devfreq device opp from required-opps property of
+>   the parent cpu opp_table.
+>
+> * Scales the device frequency in proportion to the CPU frequency. So, if
+>   the CPUs are running at their max frequency, the device runs at its
+>   max frequency. If the CPUs are running at their min frequency, the
+>   device runs at its min frequency. It is interpolated for frequencies
+>   in between.
+>
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> [Sibi: Integrated cpu-freqmap governor into passive_governor]
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+> v2:
+> * Address Chanwoo's review comments
+>
+> This patch is a re-work of:
+> https://patchwork.kernel.org/patch/10553171/
+>
+> This patch depends on Saravana's add required-opps support series:
+> https://patchwork.kernel.org/cover/11016423/
+>
+>  drivers/devfreq/Kconfig            |   2 +
+>  drivers/devfreq/governor_passive.c | 275 +++++++++++++++++++++++++++--
+>  include/linux/devfreq.h            |  40 ++++-
+>  3 files changed, 296 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index f3b242987fd91..5db8633f94d83 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -73,6 +73,8 @@ config DEVFREQ_GOV_PASSIVE
+>           device. This governor does not change the frequency by itself
+>           through sysfs entries. The passive governor recommends that
+>           devfreq device uses the OPP table to get the frequency/voltage.
+> +         Alternatively the governor can also be chosen to scale based on
+> +         the online CPUs current frequency.
+>
+>  comment "DEVFREQ Drivers"
+>
+> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+> index 24ce94c80f06e..743b6093cc732 100644
+> --- a/drivers/devfreq/governor_passive.c
+> +++ b/drivers/devfreq/governor_passive.c
+> @@ -8,11 +8,86 @@
+>   */
+>
+>  #include <linux/module.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/cpumask.h>
+>  #include <linux/device.h>
+>  #include <linux/devfreq.h>
+> +#include <linux/slab.h>
+>  #include "governor.h"
+>
+> -static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+> +static unsigned int xlate_cpufreq_to_devfreq(struct devfreq_passive_data *data,
+> +                                            unsigned int cpu)
+> +{
+> +       unsigned int cpu_min, cpu_max, dev_min, dev_max, cpu_percent, max_state;
+> +       struct devfreq_cpu_state *cpu_state = data->cpu_state[cpu];
+> +       struct devfreq *devfreq = (struct devfreq *)data->this;
+> +       unsigned long *freq_table = devfreq->profile->freq_table;
+> +       struct dev_pm_opp *opp = NULL, *cpu_opp = NULL;
+> +       unsigned long cpu_freq, freq;
+> +
+> +       if (!cpu_state || cpu_state->first_cpu != cpu ||
+> +           !cpu_state->opp_table || !devfreq->opp_table)
+> +               return 0;
+> +
+> +       cpu_freq = cpu_state->freq * 1000;
+> +       cpu_opp = devfreq_recommended_opp(cpu_state->dev, &cpu_freq, 0);
+> +       if (IS_ERR(cpu_opp))
+> +               return 0;
+> +
+> +       opp = dev_pm_opp_xlate_opp(cpu_state->opp_table,
+> +                                  devfreq->opp_table, cpu_opp);
+> +       dev_pm_opp_put(cpu_opp);
+> +
+> +       if (!IS_ERR(opp)) {
+> +               freq = dev_pm_opp_get_freq(opp);
+> +               dev_pm_opp_put(opp);
+> +       } else {
+> +               /* Use Interpolation if required opps is not available */
+> +               cpu_min = cpu_state->min_freq;
+> +               cpu_max = cpu_state->max_freq;
+> +               cpu_freq = cpu_state->freq;
+> +
+> +               if (freq_table) {
+> +                       /* Get minimum frequency according to sorting order */
+> +                       max_state = freq_table[devfreq->profile->max_state - 1];
+> +                       if (freq_table[0] < max_state) {
+> +                               dev_min = freq_table[0];
+> +                               dev_max = max_state;
+> +                       } else {
+> +                               dev_min = max_state;
+> +                               dev_max = freq_table[0];
+> +                       }
+> +               } else {
+> +                       if (devfreq->max_freq <= devfreq->min_freq)
+> +                               return 0;
+> +                       dev_min = devfreq->min_freq;
+> +                       dev_max = devfreq->max_freq;
+> +               }
+> +               cpu_percent = ((cpu_freq - cpu_min) * 100) / cpu_max - cpu_min;
+> +               freq = dev_min + mult_frac(dev_max - dev_min, cpu_percent, 100);
+> +       }
+> +
+> +       return freq;
+> +}
+> +
+> +static int get_target_freq_with_cpufreq(struct devfreq *devfreq,
+> +                                       unsigned long *freq)
+> +{
+> +       struct devfreq_passive_data *p_data =
+> +                               (struct devfreq_passive_data *)devfreq->data;
+> +       unsigned int cpu, target_freq = 0;
+> +
+> +       for_each_online_cpu(cpu)
+> +               target_freq = max(target_freq,
+> +                                 xlate_cpufreq_to_devfreq(p_data, cpu));
+> +
+> +       *freq = target_freq;
+> +
+> +       return 0;
+> +}
+> +
+> +static int get_target_freq_with_devfreq(struct devfreq *devfreq,
+>                                         unsigned long *freq)
+>  {
+>         struct devfreq_passive_data *p_data
+> @@ -22,16 +97,6 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>         struct dev_pm_opp *opp = NULL, *p_opp = NULL;
+>         int i, count, ret = 0;
+>
+> -       /*
+> -        * If the devfreq device with passive governor has the specific method
+> -        * to determine the next frequency, should use the get_target_freq()
+> -        * of struct devfreq_passive_data.
+> -        */
+> -       if (p_data->get_target_freq) {
+> -               ret = p_data->get_target_freq(devfreq, freq);
+> -               goto out;
+> -       }
+> -
+>         /*
+>          * If the parent and passive devfreq device uses the OPP table,
+>          * get the next frequency by using the OPP table.
+> @@ -102,6 +167,37 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+>         return ret;
+>  }
+>
+> +static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
+> +                                          unsigned long *freq)
+> +{
+> +       struct devfreq_passive_data *p_data =
+> +                               (struct devfreq_passive_data *)devfreq->data;
+> +       int ret;
+> +
+> +       /*
+> +        * If the devfreq device with passive governor has the specific method
+> +        * to determine the next frequency, should use the get_target_freq()
+> +        * of struct devfreq_passive_data.
+> +        */
+> +       if (p_data->get_target_freq)
+> +               return p_data->get_target_freq(devfreq, freq);
+> +
+> +       switch (p_data->parent_type) {
+> +       case DEVFREQ_PARENT_DEV:
+> +               ret = get_target_freq_with_devfreq(devfreq, freq);
+> +               break;
+> +       case CPUFREQ_PARENT_DEV:
+> +               ret = get_target_freq_with_cpufreq(devfreq, freq);
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               dev_err(&devfreq->dev, "Invalid parent type\n");
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>  {
+>         int ret;
+> @@ -156,6 +252,140 @@ static int devfreq_passive_notifier_call(struct notifier_block *nb,
+>         return NOTIFY_DONE;
+>  }
+>
+> +static int cpufreq_passive_notifier_call(struct notifier_block *nb,
+> +                                        unsigned long event, void *ptr)
+> +{
+> +       struct devfreq_passive_data *data =
+> +                       container_of(nb, struct devfreq_passive_data, nb);
+> +       struct devfreq *devfreq = (struct devfreq *)data->this;
+> +       struct devfreq_cpu_state *cpu_state;
+> +       struct cpufreq_freqs *freq = ptr;
+> +       unsigned int current_freq;
+> +       int ret;
+> +
+> +       if (event != CPUFREQ_POSTCHANGE || !freq ||
+> +           !data->cpu_state[freq->policy->cpu])
+> +               return 0;
+> +
+> +       cpu_state = data->cpu_state[freq->policy->cpu];
+> +       if (cpu_state->freq == freq->new)
+> +               return 0;
+> +
+> +       /* Backup current freq and pre-update cpu state freq*/
+> +       current_freq = cpu_state->freq;
+> +       cpu_state->freq = freq->new;
+> +
+> +       mutex_lock(&devfreq->lock);
+> +       ret = update_devfreq(devfreq);
+> +       mutex_unlock(&devfreq->lock);
+> +       if (ret) {
+> +               cpu_state->freq = current_freq;
+> +               dev_err(&devfreq->dev, "Couldn't update the frequency.\n");
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int cpufreq_passive_register(struct devfreq_passive_data **p_data)
+> +{
+> +       struct devfreq_passive_data *data = *p_data;
+> +       struct devfreq *devfreq = (struct devfreq *)data->this;
+> +       struct device *dev = devfreq->dev.parent;
+> +       struct opp_table *opp_table = NULL;
+> +       struct devfreq_cpu_state *state;
+> +       struct cpufreq_policy *policy;
+> +       struct device *cpu_dev;
+> +       unsigned int cpu;
+> +       int ret;
+> +
+> +       get_online_cpus();
+> +       data->nb.notifier_call = cpufreq_passive_notifier_call;
+> +       ret = cpufreq_register_notifier(&data->nb,
+> +                                       CPUFREQ_TRANSITION_NOTIFIER);
+> +       if (ret) {
+> +               dev_err(dev, "Couldn't register cpufreq notifier.\n");
+> +               data->nb.notifier_call = NULL;
+> +               goto out;
+> +       }
+> +
+> +       /* Populate devfreq_cpu_state */
+> +       for_each_online_cpu(cpu) {
+> +               if (data->cpu_state[cpu])
+> +                       continue;
+> +
+> +               policy = cpufreq_cpu_get(cpu);
+> +               if (policy) {
+> +                       state = kzalloc(sizeof(*state), GFP_KERNEL);
+> +                       if (!state) {
+> +                               ret = -ENOMEM;
+> +                               goto out;
+> +                       }
+> +
+> +                       cpu_dev = get_cpu_device(cpu);
+> +                       if (!cpu_dev) {
+> +                               dev_err(dev, "Couldn't get cpu device.\n");
+> +                               ret = -ENODEV;
+> +                               goto out;
+> +                       }
+> +
+> +                       opp_table = dev_pm_opp_get_opp_table(cpu_dev);
+> +                       if (IS_ERR(devfreq->opp_table)) {
+> +                               ret = PTR_ERR(opp_table);
+> +                               goto out;
+> +                       }
+> +
+> +                       state->dev = cpu_dev;
+> +                       state->opp_table = opp_table;
+> +                       state->first_cpu = cpumask_first(policy->related_cpus);
+> +                       state->freq = policy->cur;
+> +                       state->min_freq = policy->cpuinfo.min_freq;
+> +                       state->max_freq = policy->cpuinfo.max_freq;
+> +                       data->cpu_state[cpu] = state;
+> +                       cpufreq_cpu_put(policy);
+> +               } else {
+> +                       ret = -EPROBE_DEFER;
+> +                       goto out;
+> +               }
+> +       }
+> +out:
+> +       put_online_cpus();
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Update devfreq */
+> +       mutex_lock(&devfreq->lock);
+> +       ret = update_devfreq(devfreq);
+> +       mutex_unlock(&devfreq->lock);
+> +       if (ret)
+> +               dev_err(dev, "Couldn't update the frequency.\n");
+> +
+> +       return ret;
+> +}
+> +
+> +static int cpufreq_passive_unregister(struct devfreq_passive_data **p_data)
+> +{
+> +       struct devfreq_passive_data *data = *p_data;
+> +       struct devfreq_cpu_state *cpu_state;
+> +       int cpu;
+> +
+> +       if (data->nb.notifier_call)
+> +               cpufreq_unregister_notifier(&data->nb,
+> +                                           CPUFREQ_TRANSITION_NOTIFIER);
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               cpu_state = data->cpu_state[cpu];
+> +               if (cpu_state) {
+> +                       if (cpu_state->opp_table)
+> +                               dev_pm_opp_put_opp_table(cpu_state->opp_table);
+> +                       kfree(cpu_state);
+> +                       cpu_state = NULL;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>                                 unsigned int event, void *data)
+>  {
+> @@ -166,7 +396,7 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>         struct notifier_block *nb = &p_data->nb;
+>         int ret = 0;
+>
+> -       if (!parent)
+> +       if (p_data->parent_type == DEVFREQ_PARENT_DEV && !parent)
+>                 return -EPROBE_DEFER;
+>
+>         switch (event) {
+> @@ -174,13 +404,24 @@ static int devfreq_passive_event_handler(struct devfreq *devfreq,
+>                 if (!p_data->this)
+>                         p_data->this = devfreq;
+>
+> -               nb->notifier_call = devfreq_passive_notifier_call;
+> -               ret = devm_devfreq_register_notifier(dev, parent, nb,
+> -                                       DEVFREQ_TRANSITION_NOTIFIER);
+> +               if (p_data->parent_type == DEVFREQ_PARENT_DEV) {
+> +                       nb->notifier_call = devfreq_passive_notifier_call;
+> +                       ret = devm_devfreq_register_notifier(dev, parent, nb,
+> +                                               DEVFREQ_TRANSITION_NOTIFIER);
+> +               } else if (p_data->parent_type == CPUFREQ_PARENT_DEV) {
+> +                       ret = cpufreq_passive_register(&p_data);
+> +               } else {
+> +                       ret = -EINVAL;
+> +               }
+>                 break;
+>         case DEVFREQ_GOV_STOP:
+> -               devm_devfreq_unregister_notifier(dev, parent, nb,
+> -                                       DEVFREQ_TRANSITION_NOTIFIER);
+> +               if (p_data->parent_type == DEVFREQ_PARENT_DEV)
+> +                       devm_devfreq_unregister_notifier(dev, parent, nb,
+> +                                               DEVFREQ_TRANSITION_NOTIFIER);
+> +               else if (p_data->parent_type == CPUFREQ_PARENT_DEV)
+> +                       cpufreq_passive_unregister(&p_data);
+> +               else
+> +                       ret = -EINVAL;
+>                 break;
+>         default:
+>                 break;
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index 69d487329408e..f3f898dfd09b2 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -263,6 +263,32 @@ struct devfreq_simple_ondemand_data {
+>  #endif
+>
+>  #if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+> +/**
+> + * struct devfreq_cpu_state - holds the per-cpu state
+> + * @freq:      the current frequency of the cpu.
+> + * @min_freq:  the min frequency of the cpu.
+> + * @max_freq:  the max frequency of the cpu.
+> + * @first_cpu: the cpumask of the first cpu of a policy.
+> + * @dev:       reference to cpu device.
+> + * @opp_table: reference to cpu opp table.
+> + *
+> + * This structure stores the required cpu_state of a cpu.
+> + * This is auto-populated by the governor.
+> + */
+> +struct devfreq_cpu_state {
+> +       unsigned int freq;
+> +       unsigned int min_freq;
+> +       unsigned int max_freq;
+> +       unsigned int first_cpu;
+> +       struct device *dev;
+> +       struct opp_table *opp_table;
+> +};
+> +
+> +enum devfreq_parent_dev_type {
+> +       DEVFREQ_PARENT_DEV,
+> +       CPUFREQ_PARENT_DEV,
+> +};
+> +
+>  /**
+>   * struct devfreq_passive_data - void *data fed to struct devfreq
+>   *     and devfreq_add_device
+> @@ -274,13 +300,15 @@ struct devfreq_simple_ondemand_data {
+>   *                     using governors except for passive governor.
+>   *                     If the devfreq device has the specific method to decide
+>   *                     the next frequency, should use this callback.
+> - * @this:      the devfreq instance of own device.
+> - * @nb:                the notifier block for DEVFREQ_TRANSITION_NOTIFIER list
+> + * @parent_type                parent type of the device
+> + * @this:              the devfreq instance of own device.
+> + * @nb:                        the notifier block for DEVFREQ_TRANSITION_NOTIFIER list
+> + * @cpu_state:         the state min/max/current frequency of all online cpu's
+>   *
+>   * The devfreq_passive_data have to set the devfreq instance of parent
+>   * device with governors except for the passive governor. But, don't need to
+> - * initialize the 'this' and 'nb' field because the devfreq core will handle
+> - * them.
+> + * initialize the 'this', 'nb' and 'cpu_state' field because the devfreq core
+> + * will handle them.
+>   */
+>  struct devfreq_passive_data {
+>         /* Should set the devfreq instance of parent device */
+> @@ -289,9 +317,13 @@ struct devfreq_passive_data {
+>         /* Optional callback to decide the next frequency of passvice device */
+>         int (*get_target_freq)(struct devfreq *this, unsigned long *freq);
+>
+> +       /* Should set the type of parent device */
+> +       enum devfreq_parent_dev_type parent_type;
+> +
+>         /* For passive governor's internal use. Don't need to set them */
+>         struct devfreq *this;
+>         struct notifier_block nb;
+> +       struct devfreq_cpu_state *cpu_state[NR_CPUS];
+>  };
+>  #endif
 
-Well, people could inject some memory pressure at the middle of a test run. OOM
-does not necessarily mean kmemleak would always be disabled, as it sometimes
-could survive if the memory is recovering fast enough.
 
-Thanks to this commit, there are allocation with __GFP_DIRECT_RECLAIM that
-succeeded would keep trying with __GFP_NOFAIL for kmemleak tracking object
-allocations. Otherwise, one kmemleak object allocation failure would kill the
-whole kmemleak.
+Just as an FYI, I wrote this code a long time ago. I was planning on
+rewriting the integration of CPU freq inputs to devfreq anyway because
+notifiers are discouraged and I've had other ideas on how I could do
+it. But I haven't dug into that yet.
 
-> 
-> It seems everyone agree __GFP_NPFAIL should be removed? Anyway, I would 
-> like leave the decision to Catalin.
-> 
-> > 
-> > > Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > Cc: Michal Hocko <mhocko@suse.com>
-> > > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: David Rientjes <rientjes@google.com>
-> > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > Cc: Qian Cai <cai@lca.pw>
-> > > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> > > ---
-> > >   mm/kmemleak.c | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-> > > index 9dd581d..884a5e3 100644
-> > > --- a/mm/kmemleak.c
-> > > +++ b/mm/kmemleak.c
-> > > @@ -114,7 +114,7 @@
-> > >   /* GFP bitmask for kmemleak internal allocations */
-> > >   #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL |
-> > > GFP_ATOMIC)) |
-> > > \
-> > >   				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
-> > > -				 __GFP_NOWARN | __GFP_NOFAIL)
-> > > +				 __GFP_NOWARN)
-> > >   
-> > >   /* scanning area inside a memory block */
-> > >   struct kmemleak_scan_area {
-> 
-> 
+Honestly I'd prefer waiting till the required-opps support for passive
+governor patch is merged before digging too much into this. And I plan
+to take a stab at this after that.
+
+Thanks,
+Saravana
