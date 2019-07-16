@@ -2,134 +2,230 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93493C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4787C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594232187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCED2184E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EGbWKLlN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="shjR7DVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388972AbfGPXuQ (ORCPT
+        id S2388892AbfGPXyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:50:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39160 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728762AbfGPXuP (ORCPT
+        Tue, 16 Jul 2019 19:54:36 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42461 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbfGPXyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:50:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m202so17049246oig.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:50:15 -0700 (PDT)
+        Tue, 16 Jul 2019 19:54:36 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s184so17031180oie.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WrOQbwIEDkgvkVyECfpypyWkqBx3WCpbfMK+8xl2Gzk=;
-        b=EGbWKLlN+cMaSvBUa2bq8KWbW/C3fnMJjXLbuqaz9ESXyExLPWEGEaMjNmb8iJI7xp
-         TN9wggba2mplk8yhan28BPAPOD5UzOnu6/0u1YG/KS1PRpKdERM7cxnTs1y9c1AKa/rL
-         13QTzMEro2yqHCFPfZqNDG2g/Zy/4uWNzTW+tgAoOqPbSP+0x8CDcLKTo3r/F2yFxbnO
-         z1FA/n0ARp752ceEEZhTeMw6pb/zIQUC6GGjjf/KGuJQfOaMaUs8E6ieO7ZTwVy6o8f+
-         jxhfDViNT5t/7WxWdSbH6ILKTm0ieeXlgbNWN5dMcaRDsFc0ALZcbrNdukp9geMzmf2s
-         Ae0A==
+        bh=L63UCSLKJ4OMT5NqgGQ8B7uM36pMA1wEj62intmncP0=;
+        b=shjR7DVNL9/TqVYpbphhQN3r77abb9oKtSvfh0HHoJ/pKSm/z7zVTZm0k9OfHSrl6j
+         dFxQ/xsD6Kwl02n6C0ddFcBEM7+i7cPQO7Lwzm6nLOE6i/GLwFvijfmehGqUEFjHvEvh
+         KQn8BHmxp5/w+PGKVwlON87XjUAafOgoyxi2DNsW9srz0tCjRUmNzSnscT8G9YISn0Nx
+         cpYQyFrA/T5AH5jPpm7j88I0mx6woFml5xFbD9VcxfmySpiEejRcblfYSdSliWNSxrfQ
+         TL/4Hmrp7Jdw/DEDsTRce5iqOOWn343nT/0xzEn0Lb+SCH1tI0H3JR0vSCAmQ0BLJ7yL
+         QOtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WrOQbwIEDkgvkVyECfpypyWkqBx3WCpbfMK+8xl2Gzk=;
-        b=XprYtNHzeg3F3iiAizfajXsTy2fHHB9NFZs4mWeSBO1ie/e0/gkunxPupQcmAat5gn
-         HlgSNJ+yotoQehnFzszoZqImGRJZF6mbiNCa7bHxUqUScKHtRQKBZxv1omgVl3twQKQw
-         1KqVKygTOW69EEPT45ZYQ93p9r/vJPppbvkFAZ8FYwslYVqlayyR9wdQNjv9tzKG/row
-         jP5C6REjj6wvov3TA4jXEA8LE9sOaEZgOJjEHPp9981UewSLkwiDK2mDlOgsJCvX+w+v
-         yugQp/Q/gg1ZXF8E6Cshm4wcHyvsah9YI+XzGGbmAaSutvXotkBT0J+n4oSKiYRy9q2l
-         N2aQ==
-X-Gm-Message-State: APjAAAXXqTifZZQDzWjanONjv+Xlm9unD54ZKvu3MoL9TqplE7PrnNZb
-        H+0YD4Cp1eZdv6do0ZbqANTtvf+ybhbNy+YlTJeDuQ==
-X-Google-Smtp-Source: APXvYqwqSbihoAT7JgLCn1l4OQtvLlj1lXunKE9A+7+iAAW+BbCd+mmEMK6dQtBktcW6pbvU1KEMoi/1qwXg80cn90I=
-X-Received: by 2002:aca:5106:: with SMTP id f6mr18882723oib.69.1563321014577;
- Tue, 16 Jul 2019 16:50:14 -0700 (PDT)
+        bh=L63UCSLKJ4OMT5NqgGQ8B7uM36pMA1wEj62intmncP0=;
+        b=d20tjrrpPpKPFO2kriRFUKfyRK/7rrrAt6mtEapyoveWtWkwhi3DX6MGh6fJGwGWTZ
+         Y8Fl4USzo3VDskGoqumdYf6ucvijw6H+KVPYViuHfWTQec6KYjwBzwCnZkqYytsGxmzB
+         gvJENSE4uj3XEfUhctHCyrxHj+JvyuCJUWqmqqiaXEj2Cud/DhxxObil8CS39FE+YHwF
+         1Lo47ThWYFFasAhFBvKmgbgWDHTzBkFGpf9WrOLqY625IucdSSclh6vf89aXLL52BzTQ
+         IfdEfvJG6KiuHbBsfWlYLa6dbGpqmPEvHsUL894UJACWfpbVsV5aTtsEJpPeQuIlVV4I
+         7u0Q==
+X-Gm-Message-State: APjAAAVGnuTxqaejQyxJ0b5Rw/+KjAKubkjEMB3ow5URfsLKTNytduhb
+        fXI0YTPR0tsLGylHK4VhjuK/94sZIBbUT1P7GuC3lg==
+X-Google-Smtp-Source: APXvYqyVadR4/niowxrLmenSGn1UzqhGhoAgJTC/7kpKDcwlbQspwuNL2la4zhD9hoopEjvAfsnd5+3pO1VQt6iVbTQ=
+X-Received: by 2002:aca:6104:: with SMTP id v4mr18318119oib.172.1563321274778;
+ Tue, 16 Jul 2019 16:54:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
- <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
- <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
- <9e75b3dd-380b-c868-728f-46379e53bc11@gmail.com> <07812739-0e6b-6598-ac58-8e0ea74a3331@gmail.com>
- <CAGETcx8YCCGxgXnByenVUb+q8pHPPTjwAjK3L_+9mwoCe=9SbA@mail.gmail.com>
- <3e340ff1-e842-2521-4344-da62802d472f@gmail.com> <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
-In-Reply-To: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
+References: <20190712235245.202558-1-saravanak@google.com> <20190712235245.202558-3-saravanak@google.com>
+ <CAL_JsqJEmC5cttFavGH4iMh=3z2K4r4kjG44AFJCpxQZ9hPwQA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJEmC5cttFavGH4iMh=3z2K4r4kjG44AFJCpxQZ9hPwQA@mail.gmail.com>
 From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 16 Jul 2019 16:49:38 -0700
-Message-ID: <CAGETcx8FN6E3dgUrK6uk0W1g_FBk1wzohjf3W9eeVeRds0zrAg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
+Date:   Tue, 16 Jul 2019 16:53:58 -0700
+Message-ID: <CAGETcx-5ykD=9X1Lo2-G+T5uokFncbY2FmiJM8eZrgQ9JaBgxw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/11] of/platform: Add functional dependency link from
  DT bindings
 To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resending again due to HTML. Sorry about it, the darn thing keeps
-getting turned on for some reason!
-
-On Tue, Jul 16, 2019 at 3:57 PM Rob Herring <robh+dt@kernel.org> wrote:
+On Tue, Jul 16, 2019 at 4:43 PM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> On Mon, Jul 15, 2019 at 7:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> On Fri, Jul 12, 2019 at 5:52 PM Saravana Kannan <saravanak@google.com> wrote:
 > >
-> > On 7/15/19 11:40 AM, Saravana Kannan wrote:
-> > > Replying again because the previous email accidentally included HTML.
-> > >
-> > > Thanks for taking the time to reconsider the wording Frank. Your
-> > > intention was clear to me in the first email too.
-> > >
-> > > A kernel command line option can also completely disable this
-> > > functionality easily and cleanly. Can we pick that as an option? I've
-> > > an implementation of that in the v5 series I sent out last week.
+> > Add device-links after the devices are created (but before they are
+> > probed) by looking at common DT bindings like clocks and
+> > interconnects.
 > >
-> > Yes, Rob suggested a command line option for debugging, and I am fine with
-> > that.  But even with that, I would like a lot of testing so that we have a
-> > chance of finding systems that have trouble with the changes and could
-> > potentially be fixed before impacting a large number of users.
+> > Automatically adding device-links for functional dependencies at the
+> > framework level provides the following benefits:
+> >
+> > - Optimizes device probe order and avoids the useless work of
+> >   attempting probes of devices that will not probe successfully
+> >   (because their suppliers aren't present or haven't probed yet).
+> >
+> >   For example, in a commonly available mobile SoC, registering just
+> >   one consumer device's driver at an initcall level earlier than the
+> >   supplier device's driver causes 11 failed probe attempts before the
+> >   consumer device probes successfully. This was with a kernel with all
+> >   the drivers statically compiled in. This problem gets a lot worse if
+> >   all the drivers are loaded as modules without direct symbol
+> >   dependencies.
+> >
+> > - Supplier devices like clock providers, interconnect providers, etc
+> >   need to keep the resources they provide active and at a particular
+> >   state(s) during boot up even if their current set of consumers don't
+> >   request the resource to be active. This is because the rest of the
+> >   consumers might not have probed yet and turning off the resource
+> >   before all the consumers have probed could lead to a hang or
+> >   undesired user experience.
+> >
+> >   Some frameworks (Eg: regulator) handle this today by turning off
+> >   "unused" resources at late_initcall_sync and hoping all the devices
+> >   have probed by then. This is not a valid assumption for systems with
+> >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >   this due to the lack of a clear signal for when they can turn off
+> >   resources. This leads to downstream hacks to handle cases like this
+> >   that can easily be solved in the upstream kernel.
+> >
+> >   By linking devices before they are probed, we give suppliers a clear
+> >   count of the number of dependent consumers. Once all of the
+> >   consumers are active, the suppliers can turn off the unused
+> >   resources without making assumptions about the number of consumers.
+> >
+> > By default we just add device-links to track "driver presence" (probe
+> > succeeded) of the supplier device. If any other functionality provided
+> > by device-links are needed, it is left to the consumer/supplier
+> > devices to change the link when they probe.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |  5 ++
+> >  drivers/of/platform.c                         | 57 +++++++++++++++++++
+> >  2 files changed, 62 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 138f6664b2e2..109b4310844f 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -3141,6 +3141,11 @@
+> >                         This can be set from sysctl after boot.
+> >                         See Documentation/sysctl/vm.txt for details.
+> >
+> > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
+> > +                       for optimizing probe order and making sure resources
+> > +                       aren't turned off before the consumer devices have
+> > +                       probed.
+> > +
+> >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> >                         See Documentation/debugging-via-ohci1394.txt for more
+> >                         info.
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index 04ad312fd85b..0930f9f89571 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -509,6 +509,62 @@ int of_platform_default_populate(struct device_node *root,
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> >
+> > +static int of_link_binding(struct device *dev,
+> > +                          const char *binding, const char *cell)
+> > +{
+> > +       struct of_phandle_args sup_args;
+> > +       struct platform_device *sup_dev;
+> > +       unsigned int i = 0, links = 0;
+> > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> > +
+> > +       while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
+> > +                                          &sup_args)) {
+> > +               i++;
+> > +               sup_dev = of_find_device_by_node(sup_args.np);
+> > +               of_node_put(sup_args.np);
+> > +               if (!sup_dev)
+> > +                       continue;
+> > +               if (device_link_add(dev, &sup_dev->dev, dl_flags))
+> > +                       links++;
+> > +               put_device(&sup_dev->dev);
+> > +       }
+> > +       if (links < i)
+> > +               return -ENODEV;
+> > +       return 0;
+> > +}
+> > +
+> > +static bool of_devlink;
+> > +core_param(of_devlink, of_devlink, bool, 0);
+> > +
+> > +/*
+> > + * List of bindings and their cell names (use NULL if no cell names) from which
+> > + * device links need to be created.
+> > + */
+> > +static const char * const link_bindings[] = {
+> > +       "clocks", "#clock-cells",
+> > +       "interconnects", "#interconnect-cells",
+> > +};
+> > +
+> > +static int of_link_to_suppliers(struct device *dev)
+> > +{
+> > +       unsigned int i = 0;
+> > +       bool done = true;
+> > +
+> > +       if (!of_devlink)
+> > +               return 0;
+> > +       if (unlikely(!dev->of_node))
+> > +               return 0;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
+> > +               if (of_link_binding(dev, link_bindings[i * 2],
+> > +                                       link_bindings[i * 2 + 1]))
+> > +                       done = false;
 >
-> Leaving it in -next for more than a cycle will not help. There's some
-> number of users who test linux-next. Then there's more that test -rc
-> kernels. Then there's more that test final releases and/or stable
-> kernels. Probably, the more stable the h/w, the more it tends to be
-> latter groups. (I don't get reports of breaking PowerMacs with the
-> changes sitting in linux-next.)
->
-> My main worry about this being off by default is it won't get tested.
-> I'm not sure there's enough interest to drive folks to turn it on and
-> test. Maybe it needs to be on until we see breakage.
+> Given the pending addition of regulators I think this should be
+> structured a bit differently so that we abstract out the matching and
+> phandle look-up so there's a clean separation of binding specifics.
+> It's kind of messy with 2 patterns to parse already and if we added a
+> 3rd? I would iterate over the properties as you do for regulators in
+> both cases and for each property call a binding specific match
+> function. The common pattern can of course be a common function. Let
+> me know if that makes sense. If not I can try to flesh it out some
+> more.
 
-Android will start using this. So there's definitely going to be a lot
-of motivation for people to start using this and testing this.
+I've added regulator support in this series and I've refactored this
+code as I went along. I fully expect to squash some of the refactors
+once the final result of the series is acceptable.
 
-I'm also thinking we should start rejecting late_initcall_sync() level
-clean up code in device drivers in the future and start asking them to
-move to sync_state(). If this feature isn't turned on, the behavior
-will default to a late_initcall_sync() level execution. But when this
-is on, it'll actually work nicely with modules. So that's another way
-to drive folks to it and improve things over time.
+It's not clear to me if you got to the end of the series and still
+think the final result needs to be refactored. Let me know what you
+think about this towards the end of the series and I can clean it up
+if you still think it needs some clean up.
 
-Maybe we can have this on by default in linux-next and -rc. Fix any
-issues that show up and can be fixed without breaking the goal of this
-series (make things work with modules). And finally turn it off by
-default before it gets pulled into mainline? That way, we get the
-maximum test coverage we can get, but not accidentally break anything
-that wasn't tested?
-
-Thanks,
-Saravana
+-Saravana
