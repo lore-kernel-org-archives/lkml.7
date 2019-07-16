@@ -2,135 +2,159 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF390C76191
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED33FC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FD520880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:46:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Jjkh/Crc"
+	by mail.kernel.org (Postfix) with ESMTP id CA17620880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733032AbfGPAqe (ORCPT
+        id S1733095AbfGPArU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 20:46:34 -0400
-Received: from ozlabs.org ([203.11.71.1]:38985 "EHLO ozlabs.org"
+        Mon, 15 Jul 2019 20:47:20 -0400
+Received: from gate.crashing.org ([63.228.1.57]:36339 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbfGPAqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 20:46:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45nhY24fvQz9sBF;
-        Tue, 16 Jul 2019 10:46:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563237990;
-        bh=NYPbY3fuAcWI162LDv1eE5JulP/EGNYsx66AjCIB84g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Jjkh/CrcSp5ovD/SmkbRdG+itfCAVgoVFJs9TncswZkG69mxtiNJaYWf8GQNCfmQY
-         UyizlxwCMKm6diOwMZOSLmoxu5k5ha7nHt8P0Lo6qRwo5NvxQRan51k+xWUfcf/M5N
-         zjAI6I0gUbzUqFvVZrgxxkkdtOWXXHmD8/ZHqqks2y1ptuDvWh8h0r3WbtP0jIdhmo
-         xrsOq5+pvShDWLK/BK9OOBNlIsPBqyj6uibHx3BDwdYFPhgW0sDMzPL7mLhS/cSPcp
-         4u+BKpe789QMGmk2Kuao/xOj0lZ2DiS4g7WUXIveHGprlPw3SBLQGE70MmLYpIrQFo
-         8d5t3/zy0B7Mg==
-Date:   Tue, 16 Jul 2019 10:46:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the rdma tree with the v4l-dvb-next
- tree
-Message-ID: <20190716104614.2ec8b57c@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UCF0+_SusNV/iWmB5bDZx8m"; protocol="application/pgp-signature"
+        id S1730355AbfGPArU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 20:47:20 -0400
+Received: from ufdda393ec48b57.ant.amazon.com (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6G0l1P5001806;
+        Mon, 15 Jul 2019 19:47:02 -0500
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Paul Pawlowski <paul@mrarm.io>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH 1/3] nvme: Pass the queue to SQ_SIZE/CQ_SIZE macros
+Date:   Tue, 16 Jul 2019 10:46:47 +1000
+Message-Id: <20190716004649.17799-1-benh@kernel.crashing.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UCF0+_SusNV/iWmB5bDZx8m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This will make it easier to handle variable queue entry sizes
+later. No functional change.
 
-Hi all,
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Today's linux-next merge of the rdma tree got a conflict in:
+# Conflicts:
+#	drivers/nvme/host/pci.c
+---
+ drivers/nvme/host/pci.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-  Documentation/index.rst
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index dd10cf78f2d3..8f006638452b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -28,8 +28,8 @@
+ #include "trace.h"
+ #include "nvme.h"
+ 
+-#define SQ_SIZE(depth)		(depth * sizeof(struct nvme_command))
+-#define CQ_SIZE(depth)		(depth * sizeof(struct nvme_completion))
++#define SQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_command))
++#define CQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_completion))
+ 
+ #define SGES_PER_PAGE	(PAGE_SIZE / sizeof(struct nvme_sgl_desc))
+ 
+@@ -1344,16 +1344,16 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+ 
+ static void nvme_free_queue(struct nvme_queue *nvmeq)
+ {
+-	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq->q_depth),
++	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq),
+ 				(void *)nvmeq->cqes, nvmeq->cq_dma_addr);
+ 	if (!nvmeq->sq_cmds)
+ 		return;
+ 
+ 	if (test_and_clear_bit(NVMEQ_SQ_CMB, &nvmeq->flags)) {
+ 		pci_free_p2pmem(to_pci_dev(nvmeq->dev->dev),
+-				nvmeq->sq_cmds, SQ_SIZE(nvmeq->q_depth));
++				nvmeq->sq_cmds, SQ_SIZE(nvmeq));
+ 	} else {
+-		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq->q_depth),
++		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq),
+ 				nvmeq->sq_cmds, nvmeq->sq_dma_addr);
+ 	}
+ }
+@@ -1433,12 +1433,12 @@ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
+ }
+ 
+ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+-				int qid, int depth)
++				int qid)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 
+ 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+-		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
++		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(nvmeq));
+ 		if (nvmeq->sq_cmds) {
+ 			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+ 							nvmeq->sq_cmds);
+@@ -1447,11 +1447,11 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+ 				return 0;
+ 			}
+ 
+-			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
++			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(nvmeq));
+ 		}
+ 	}
+ 
+-	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(depth),
++	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(nvmeq),
+ 				&nvmeq->sq_dma_addr, GFP_KERNEL);
+ 	if (!nvmeq->sq_cmds)
+ 		return -ENOMEM;
+@@ -1465,12 +1465,13 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 	if (dev->ctrl.queue_count > qid)
+ 		return 0;
+ 
+-	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(depth),
++	nvmeq->q_depth = depth;
++	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(nvmeq),
+ 					 &nvmeq->cq_dma_addr, GFP_KERNEL);
+ 	if (!nvmeq->cqes)
+ 		goto free_nvmeq;
+ 
+-	if (nvme_alloc_sq_cmds(dev, nvmeq, qid, depth))
++	if (nvme_alloc_sq_cmds(dev, nvmeq, qid))
+ 		goto free_cqdma;
+ 
+ 	nvmeq->dev = dev;
+@@ -1479,15 +1480,14 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 	nvmeq->cq_head = 0;
+ 	nvmeq->cq_phase = 1;
+ 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
+-	nvmeq->q_depth = depth;
+ 	nvmeq->qid = qid;
+ 	dev->ctrl.queue_count++;
+ 
+ 	return 0;
+ 
+  free_cqdma:
+-	dma_free_coherent(dev->dev, CQ_SIZE(depth), (void *)nvmeq->cqes,
+-							nvmeq->cq_dma_addr);
++	dma_free_coherent(dev->dev, CQ_SIZE(nvmeq), (void *)nvmeq->cqes,
++			  nvmeq->cq_dma_addr);
+  free_nvmeq:
+ 	return -ENOMEM;
+ }
+@@ -1515,7 +1515,7 @@ static void nvme_init_queue(struct nvme_queue *nvmeq, u16 qid)
+ 	nvmeq->cq_head = 0;
+ 	nvmeq->cq_phase = 1;
+ 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
+-	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq->q_depth));
++	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq));
+ 	nvme_dbbuf_init(dev, nvmeq, qid);
+ 	dev->online_queues++;
+ 	wmb(); /* ensure the first interrupt sees the initialization */
+-- 
+2.17.1
 
-between commit:
-
-  09fdc957ad0d ("docs: leds: add it to the driver-api book")
-(and others following)
-
-from the v4l-dvb-next tree and commit:
-
-  a3a400da206b ("docs: infiniband: add it to the driver-api bookset")
-
-from the rdma tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/index.rst
-index f379e43fcda0,869616b57aa8..000000000000
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@@ -96,23 -90,9 +96,24 @@@ needed)
- =20
-     driver-api/index
-     core-api/index
- +   locking/index
- +   accounting/index
- +   block/index
- +   cdrom/index
- +   ide/index
- +   fb/index
- +   fpga/index
- +   hid/index
- +   iio/index
- +   leds/index
-+    infiniband/index
-     media/index
- +   netlabel/index
-     networking/index
- +   pcmcia/index
- +   target/index
- +   timers/index
- +   watchdog/index
-     input/index
-     hwmon/index
-     gpu/index
-
---Sig_/UCF0+_SusNV/iWmB5bDZx8m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0tHlYACgkQAVBC80lX
-0Gz/0AgAnh5PF5cFTlabGAwhQDCkqtClfxWieEu8pcv1ru0QiNKScJGPb8VuicrB
-y9bTB1RtJzuR9jaP/Fz6cb0LSCwZKlJs8TdyJOR1c+dHaulTYFq4HVOrZ1ls468t
-tAuYWIKkNxoOSSO87TTd+Y1XpG+Fu6nK1e7eyCax8s4Jyos5tmiT6umF3+HXoopW
-EJwi3KN9Kx0CDEApn7ydfa4sayVVDgG8YO4hPB79RB4pBy3bgI0uYwW2A60nnunt
-2gvF1gFnglG//LUPIJ4oC/jHsoLK94Lc9nrPJGEBwlURUwdh2zR1srBZjPpHQknQ
-xVPA24RSzuNdEZt73i3ZdAIkmcgmUw==
-=TjnG
------END PGP SIGNATURE-----
-
---Sig_/UCF0+_SusNV/iWmB5bDZx8m--
