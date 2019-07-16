@@ -2,229 +2,96 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F344DC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84737C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BDA206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0252173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TVDnEikn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387449AbfGPVsp (ORCPT
+        id S1730915AbfGPVwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 17:48:45 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:65255 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfGPVsp (ORCPT
+        Tue, 16 Jul 2019 17:52:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42134 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbfGPVwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 17:48:45 -0400
-X-AuditID: ac10606f-d11ff70000003324-70-5d2e463cf93b
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id 38.D3.13092.C364E2D5; Tue, 16 Jul 2019 17:48:44 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 16 Jul 2019 17:48:43 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <devicetree@vger.kernel.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: [PATCH 2/3 v3] dt-bindings: gpio: aspeed: Add SGPIO support
-Date:   Tue, 16 Jul 2019 17:48:31 -0400
-Message-ID: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 16 Jul 2019 17:52:33 -0400
+Received: by mail-lf1-f65.google.com with SMTP id s19so14840663lfb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:52:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sChX2tjZXXzFm/FF0+gISHJ8+I30zgl6h1ocaPpSr4w=;
+        b=TVDnEiknWAcRrVYjpkVEp+7UlZza/YL/doDnWkXLRwGqJ9YS6xQoSpx94TtYwkM0Zm
+         9JcQMIFbg+AGr5yblr8fIfyWGtAiWjIILXfM7IITLcHbJNA9fCyb6PLAg+BasgvkoPqY
+         mOu8Q8JEY5ecE/Co/dtC9Acv0384Ahf5uv5clQz+i59KnETYFC1wsz8UK5PiDYs/T9n1
+         cgi/EyRXEgBnePqIEVvybyK+Lmko4rVlZEkLGBTQU7Ct2fceE6jFBcW+cy4RZHOvyaT4
+         yK6DJECW1VMyuUV4EO4RpgP01Zcz3GnzbCKe0KHKjUI5P8ZOseBMqWLKAA5U3ku+AEek
+         v3mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sChX2tjZXXzFm/FF0+gISHJ8+I30zgl6h1ocaPpSr4w=;
+        b=HuN5qLG3j9Xe2FXp9tlYFaZCOTTIauzm7Cs2kACpAuwNQ85UJsjOjeRNX1kSu+DXl1
+         F3m+7sOuCx5PNR7eXh1Pz4fj/WrdDJSU83qnc1550SxbHpuLHK0K2B51ApY9EXcopQuH
+         aJ8sl9RdcE8gQPromdasnZ+mzTH8TMFDkEh87pUP1KBZ5JoffpcwsBa/L5AiQICF1rhn
+         Hqpg+M1p5/K8rE+BCTvaBLyMDbe1/pthINDK0punidWOY7BI/HYenejb4l9Nxvtg9xBn
+         Yipn429gwZqviZQ1fxfFZTB4Ldvkbkg3WkWQrYoxQMiYhmdOdYRZ/+1fdIB5QwraK9eL
+         bdKA==
+X-Gm-Message-State: APjAAAU5ISiEFtss/Btazx83COFUNQnWmIvDR0hifSq9WNvJV1fbWkI+
+        B5qfvyhrWwWE1GIdzGDp1n/9f4m2+hYDEUNl9QPgVw==
+X-Google-Smtp-Source: APXvYqxF5LGbIM5rW+0/RUz7xG/c4ekdZJIfr+EH8zBCsdrd9zerb9uo3Zsk8A9BlRzj6R313IgBGYMpeLNcjo9YvBk=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr15820032lfu.141.1563313950958;
+ Tue, 16 Jul 2019 14:52:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWyRiBhgq6Nm16swedDqha7LnNYfJl7isVi
-        /pFzrBa/z/9ltpjyZzmTxabH11gtmlefY7bYPP8Po8XlXXPYLJZev8hk0br3CLsDt8fV9l3s
-        HmvmrWH0eH+jld3j4sdjzB6bVnWyedy5tofNY/OSeo/zMxYyenzeJBfAGcVlk5Kak1mWWqRv
-        l8CVcWbCO6aCVWYVPRfaWRoYj2p3MXJySAiYSNy48pali5GLQ0hgF5PE75nNTBDOYUaJnh1b
-        GUGq2ATUJPZungOWEBHoZZRY+HUxmMMssJpJon3DcXaQKmEBF4kvbafYQGwWAVWJ/7OPMYPY
-        vAIOErMbX7BD7JOTuHmuEyouKHFy5hMWEJtZQELi4IsXYHEhAVmJW4ceM0HUK0g873vMMoGR
-        bxaSlllIWhYwMq1iFEosyclNzMxJLzfSS8zN1EvOz93ECAn0/B2MHz+aH2Jk4mA8xCjBwawk
-        wmv7VTtWiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+qNd9ihATSE0tSs1NTC1KLYLJMHJxSDYxR
-        Hr4sTptep+9/slP0i0fML4fZx3/FO2t6t8sZG9R8mvEtmfmXi4bFmolRT8sM1A0kfgd2Shu6
-        7jCuThO3udZmculNxF3OPa8jlSvX+b09eviN367wFbzbPyQvXFtxa/639zU7P/0/XpbnySE9
-        JXyGv5Ty4tyM97N9424c1ml7UFu5ZNpDnVAlluKMREMt5qLiRADOyDkEYgIAAA==
+References: <000000000000a55d7d058d51ad4f@google.com>
+In-Reply-To: <000000000000a55d7d058d51ad4f@google.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 Jul 2019 23:52:19 +0200
+Message-ID: <CACRpkdYbuJ_yJ+UKtvWrkmBCbQzfk-1mn1-A836dkNMrmTtZow@mail.gmail.com>
+Subject: Re: WARNING in gpio_to_desc
+To:     syzbot <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Vincent Cuissard <cuissard@marvell.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings to support SGPIO on AST2400 or AST2500.
+On Wed, Jul 10, 2019 at 1:07 PM syzbot
+<syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com> wrote:
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+(...)
+>   __gpio_set_value include/asm-generic/gpio.h:104 [inline]
+>   gpio_set_value include/linux/gpio.h:71 [inline]
+>   nfcmrvl_chip_halt+0x4e/0x70 drivers/nfc/nfcmrvl/main.c:259
+>   nfcmrvl_nci_register_dev+0x2d4/0x378 drivers/nfc/nfcmrvl/main.c:176
+>   nfcmrvl_probe+0x4e9/0x5e0 drivers/nfc/nfcmrvl/usb.c:344
 
-diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-new file mode 100644
-index 0000000..8c3a747
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-@@ -0,0 +1,55 @@
-+Aspeed SGPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full 
-+featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to 
-+support the following options:
-+- Support interrupt option for each input port and various interrupt 
-+  sensitivity option (level-high, level-low, edge-high, edge-low)
-+- Support reset tolerance option for each output port
-+- Directly connected to APB bus and its shift clock is from APB bus clock
-+  divided by a programmable value.
-+- Co-work with external signal-chained TTL components (74LV165/74LV595)
-+
-+
-+Required properties:
-+
-+- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-+
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+
-+- reg			: Address and length of the register set for the device
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+
-+- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
-+
-+- nr-gpios		: number of GPIO pins to serialise. 
-+			  (should be multiple of 8, up to 80 pins; 0 if not used)
-+
-+- clocks               : A phandle to the APB clock for SGPM clock division
-+
-+- bus-frequency	: SGPM CLK frequency, derived from APB bus clock by a programmable devisor
-+
-+
-+The sgpio and interrupt properties are further described in their respective bindings documentation:
-+
-+- Documentation/devicetree/bindings/sgpio/gpio.txt
-+- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+  Example:
-+	sgpio@1e780200 {
-+		#gpio-cells = <2>;
-+		compatible = "aspeed,ast2500-sgpio";
-+		gpio-controller;
-+		interrupts = <40>;
-+		reg = <0x1e780200 0x0100>;
-+		clocks = <&syscon ASPEED_CLK_APB>;
-+		interrupt-controller;
-+		nr-gpios = <8>;
-+		bus-frequency = <12000000>;
-+	};
--- 
-2.7.4
+This bug is somewhere in the drivers/nfc/nfcmrvl* code handling
+GPIOs.
 
+It should be converted to GPIO descriptors and fixed up, see
+drivers/gpio/TODO for details on how to do this.
 
-Thanks Andrew, please see above v3 and inline comments at below.
---Hongwei
+Johan/Vincent, tell me if you want me to forward the full fuzzing
+robot crash dump.
 
-> From:	Andrew Jeffery <andrew@aj.id.au>
-> Sent:	Sunday, July 14, 2019 10:25 PM
-> To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
-> Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
-> Subject:	Re: [PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
-> 
-> Hello Hongwei,
-> 
-> On Sat, 13 Jul 2019, at 05:44, Hongwei Zhang wrote:
-> > Add bindings to support SGPIO on AST2400 or AST2500.
-> > 
-> > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > ---
-> >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 43 ++++++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100755 
-> > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > new file mode 100755
-> > index 0000000..3ae2b79
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > @@ -0,0 +1,43 @@
-> > +Aspeed SGPIO controller Device Tree Bindings
-> > +-------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> > +
-> > +- #gpio-cells 		: Should be two
-> > +			  - First cell is the GPIO line number
-> > +			  - Second cell is used to specify optional
-> > +			    parameters (unused)
-> > +
-> > +- reg			: Address and length of the register set for the device
-> > +- gpio-controller	: Marks the device node as a GPIO controller.
-> > +- interrupts		: Interrupt specifier (see interrupt bindings for
-> > +			  details)
-> > +
-> > +- interrupt-controller	: Mark the GPIO controller as an 
-> > interrupt-controller
-> > +
-> > +- nr-gpios		: number of GPIO pins to serialise. (should be multiple of 
-> > 8, up to 80 pins)
-> > +			  if not specified, defaults to 80.
-> 
-> This appears to be a statement about the driver implementation, but bindings documents are about 
-> describing hardware. Reading the datasheet it actually appears the ASPEED SGPIO hardware comes up 
-> in what is "technically" a forbidden state (equivalent to `nr-gpios = <0>;`), though the device is also 
-> disabled at this point, so it's probably moot. The point is the true default value from a hardware 
-> perspective is 0, not 80, so if we're going to talk about default values, 0 would be more appropriate. 
-> However:
-> 
-> You've also listed nr-gpios under the "Required properties" header, but the description suggests it's 
-> optional. It's either one or the other, please lets be clear about it. On that front, lets make it nr-gpios 
-> *not* optional (i.e. make it
-> required) thus force the specification of how many SGPIOs we want to emit on the bus. This value is 
-> coupled to the platform design, so I don't think there's ever a scenario where we want nr-gpios to take a 
-> default value.
-> 
-
-Added some descriptions and updated nr-gpios, please see v3.
-
-> > +
-> > +- clocks               : A phandle to the APB clock for SGPM clock 
-> > division
-> > +
-> > +- bus-frequency	: SGPM CLK frequency, if not specified defaults to 1 
-> > MHz
-> 
-> Again here with the default value - SGPM CLK period is derived from PCLK by the expression `period = 
-> PCLK * 2 *(GPIO254[31:16] + 1)`, where GPIO254's initialisation state is `GPIO254[31:16] = 0`, which 
-> gives a default SGPM bus frequency of PCLK / 2. This is likely not going to be 1MHz (more like ~12MHz).
-> 
-> Lets just make the property required. That way we avoid any ambiguity about the bus frequency and 
-> thus don't need words about defaults that turn out to be about the driver, not about the hardware.
-> 
-
-updated, please see v3.
-
-> Finally, when updating patches in response to feedback, please send the full series again, and bump the 
-> series version number. That way people can review a coherent set of patches and not have to hunt 
-> around and (fail to) collate the correct combination. It makes it easier to say "Reviewed-by:" on your 
-> patches :)
-> 
-> Cheers,
-> 
-> Andrew
+Yours,
+Linus Walleij
