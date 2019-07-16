@@ -2,117 +2,342 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09035C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F07C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22EF20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5549217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPPQSb4p"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UjxV0YYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387920AbfGPREN (ORCPT
+        id S2388153AbfGPREk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:04:13 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34922 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGPREM (ORCPT
+        Tue, 16 Jul 2019 13:04:40 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42241 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730452AbfGPREk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:04:12 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w20so21024172edd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 10:04:11 -0700 (PDT)
+        Tue, 16 Jul 2019 13:04:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so9732872pgb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 10:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M5J1jCpDGLRMbPaFuVIDuJAsDJ3kZo81VHBUg/8gudo=;
-        b=oPPQSb4pew/H/AtnEeU9cvH+8yyLl7hIKuxjqBwPDdjpW2eAVrEw3390F/xtJMwRtJ
-         RpBYPM0v9wuUUXECyCsUkJSJq546FB8TgqsnCH6I+QuV4GYCQEtVN1egdPSiecJdyh7/
-         3Bs4ShQdGinhQuH1gbc2YPJtB5cL/BLOSnD09qFYByK1BWI3JEdz764l6+RE4Ru9kDKq
-         eh84SWBp1R50G4AJ9P2xi++KlnacTvz+JAjPxgHevjzjV3JzBlcOok7qEeDsB1MPA1Ql
-         LtrTIOAw0RjrSSEcFsp1dIneQ/EBst0GqDR/zXBV4TKOlK9t8g+/XUVkHevX9UCHIw0w
-         DnVA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=hhrIECaqFeMtSYPOSGB1ON2ZYOrlKWK9vod56pIpsLQ=;
+        b=UjxV0YYR7GZpUcI7FpxBoiVVzv6nox0oZFh2FKiMvJBxEGYW3nl008p3A1ACw3FdrB
+         N5R7jrgtG10cPeXNTDZLHsu4GoozNz+ZoKCZs8qF+cB/1E/vruS66Ze7v+hheI30K7TK
+         zsj7YwHYU8l5huvA6Qms0GLTjO61ew5bpGNhLk8bKXwO+M9oJkQgAwRabjis0SZekn2y
+         i7BMlsuij6cuoPCQOr0fs+8nIOR96zkUpLjMz22/Ne1CT6Lm8waxJrRhZYGj8J2iXV9+
+         CeBoItfQUnYfUm1q0Mnti0fCNy1Jwwj2VRqmCsjkQPaWxq9FzgrfeZ7rQ9UGklXHOrM+
+         Ev6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M5J1jCpDGLRMbPaFuVIDuJAsDJ3kZo81VHBUg/8gudo=;
-        b=qwdIzLTxmYYvDZqfJ+L/TAQlgRcBj1xQoME2Q19oam7b2bLA3YFi7ojeYTzNDBmZx/
-         7KdcoyCl8PhOxJVCSayaSEICFyJULC7kjr0Agqny8FRWlBT3EjMX6Mdyc9R5XJUPYnyU
-         04DX3qJHHYUeGQia7Xz8B+iA+8yzCPn9+WADm4lV3ugj4ZF5rgQrbOW7FFmKiv7be6zl
-         8SlLYUTYL1U9kp5dX2XixD1vYEjBxYOmOgp48S3YwMSnQAaqsyfl0Y0LcDskupaBKqM9
-         /DyrrxcY6SE0Q9Y9B4P1fK2RQPeVu6s+WV1fpX+sqFvl/m4Utvjb5lAaBY8v0ovZiZPL
-         zQBg==
-X-Gm-Message-State: APjAAAUiPaWNZJkSmBgZCQ81Jb4Wk7QkDAkKueNEt0c72nhmpSL8nI+L
-        K1Gqzn14PX+U5pY50HUVK2EEhKevNufv5ZdiUWc=
-X-Google-Smtp-Source: APXvYqyrg6Z9Dz8LN0IPtG+u1HW2UmEvDSu3FXiog8bhjVz65CftM4480Ww4v2dogAMfniwMK/jSJb0crn9Fe2KUXWU=
-X-Received: by 2002:a17:906:3f87:: with SMTP id b7mr26288651ejj.164.1563296651085;
- Tue, 16 Jul 2019 10:04:11 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=hhrIECaqFeMtSYPOSGB1ON2ZYOrlKWK9vod56pIpsLQ=;
+        b=rZN7D0VhzQpf2ii+LyoP+brIumNiLj1/jrqXfTY1XZYaSf3+LbGmAwmGIq6y/ceuWs
+         ZkS+z0XnT5uZ+oY0H9Kr5Deg8zDBYHcAV34vzNOdJ8ZDi8XIAp8J7cV1qwoQQV+tEgQA
+         duoMzUuIvFbNLLrhodr4wS0e6LyAMhywhFvU0E6ub864TtzS21xku2yxRo1K9rj10ZLy
+         iG7KVECUu2YNNNj5ZARsEdAU+uUa3/IsQpuDc890qb20DTdH+qmM1fXk9COtyJX64247
+         6xgm0vBEDKvBVvKapUMNG8fzWi/ZHnjvBS7S16QTcnEWtyhuQ/3NQDvms5hOipigA6wW
+         DxUA==
+X-Gm-Message-State: APjAAAX7kh4LuCMJbEk3rPBHhLFynkaM7tMwQq/1Gdl+s9NqprLDbPoS
+        9L4YqCyM8rR/w/xH1KNgT+g=
+X-Google-Smtp-Source: APXvYqwgnPW8NxAKQsvaMAoRjHrw093NxvhmklN+shDDBYQUK5QwYI6bnH97tegrIEAjszSsONqk5g==
+X-Received: by 2002:a17:90a:ad89:: with SMTP id s9mr38412611pjq.41.1563296679007;
+        Tue, 16 Jul 2019 10:04:39 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id a128sm18361689pfb.185.2019.07.16.10.04.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 10:04:37 -0700 (PDT)
+Subject: Re: io_uring question
+To:     Filipp Mikoian <Filipp.Mikoian@acronis.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>
+Cc:     "jmoyer@redhat.com" <jmoyer@redhat.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+References: <76524892f9c048ea88c7d87295ec85ae@acronis.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <92e17024-55ca-069d-3aae-56bd0b2e96f6@kernel.dk>
+Date:   Tue, 16 Jul 2019 11:04:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190716164221.15436-1-robdclark@gmail.com> <20190716164221.15436-2-robdclark@gmail.com>
- <156329635647.9436.7142001798245279241@skylake-alporthouse-com>
-In-Reply-To: <156329635647.9436.7142001798245279241@skylake-alporthouse-com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 16 Jul 2019 10:03:59 -0700
-Message-ID: <CAF6AEGuSZ9sRdBituUWbWNuzEav=ZCuMqan_sgP8JcaW_2aOOw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/vgem: use normal cached mmap'ings
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Eric Biggers <ebiggers@google.com>,
-        David Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Emil Velikov <emil.velikov@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <76524892f9c048ea88c7d87295ec85ae@acronis.com>
+Content-Type: multipart/mixed;
+ boundary="------------8BBD4C2D54EB7ED6320A967C"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:01 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
->
-> Quoting Rob Clark (2019-07-16 17:42:15)
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Since there is no real device associated with vgem, it is impossible to
-> > end up with appropriate dev->dma_ops, meaning that we have no way to
-> > invalidate the shmem pages allocated by vgem.  So, at least on platforms
-> > without drm_cflush_pages(), we end up with corruption when cache lines
-> > from previous usage of vgem bo pages get evicted to memory.
-> >
-> > The only sane option is to use cached mappings.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> > Possibly we could dma_sync_*_for_{device,cpu}() on dmabuf attach/detach,
-> > although the ->gem_prime_{pin,unpin}() API isn't quite ideal for that as
-> > it is.  And that doesn't really help for drivers that don't attach/
-> > detach for each use.
-> >
-> > But AFAICT vgem is mainly used for dmabuf testing, so maybe we don't
-> > need to care too much about use of cached mmap'ings.
->
-> Sadly this regresses with i915 interop.
->
-> Starting subtest: 4KiB-tiny-vgem-blt-early-read-child
-> (gem_concurrent_blit:8309) CRITICAL: Test assertion failure function dmabuf_cmp_bo, file ../tests/i915/gem_concurrent_all.c:408:
-> (gem_concurrent_blit:8309) CRITICAL: Failed assertion: v[((y)*(b->width) + (((y) + pass)%(b->width)))] == val
-> (gem_concurrent_blit:8309) CRITICAL: error: 0 != 0xdeadbeef
->
-> and igt/prime_vgem
->
-> Can you please cc intel-gfx so CI can pick up these changes?
-> -Chris
+This is a multi-part message in MIME format.
+--------------8BBD4C2D54EB7ED6320A967C
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I suppose CI is actually reading the imported VGEM bo from GPU?  I can
-try to wire up the attach/detach dma_sync, which might help..
+On 7/4/19 5:21 AM, Filipp Mikoian wrote:
+> Hi dear io_uring developers,
+> 
+> Recently I started playing with io_uring, and the main difference I expected
+> to see with old AIO(io_submit(), etc.) was submission syscall(io_uring_enter())
+> not blocking in case submission might take long time, e.g. if waiting for a slot
+> in block device request queue is required. AFAIU, 'workers' machinery is used
+> solely to be able to submit requests in async context, thus not forcing calling
+> thread to block for a significant time. At worst EAGAIN is expected.
+> 
+> However, when I installed fresh 5.2.0-rc7 kernel on the machine with HDD with
+> 64-requests-deep queue, I noticed significant increase in time spent in
+> io_uring_enter() once request queue became full. Below you can find output
+> of the program that submits random(in 1GB range) 4K read requests in batches
+> of 32. Though O_DIRECT is used, the same phenomenon is observed when using
+> page cache. Source code can be found here:
+> https://github.com/Phikimon/io_uring_question
+> 
+> While analyzing stack dump, I found out that IOCB_NOWAIT flag being set
+> does not prevent generic_file_read_iter() from calling blkdev_direct_IO(),
+> so thread gets stuck for hundreds of milliseconds. However, I am not a
+> Linux kernel expert, so I can not be sure this is actually related to the
+> mentioned issue.
+> 
+> Is it actually expected that io_uring would sleep in case there is no slot
+> in block device's request queue, or is this a bug of current implementation?
+> 
+> root@localhost:~/io_uring# uname -msr
+> Linux 5.2.0-rc7 x86_64
+> root@localhost:~/io_uring# hdparm -I /dev/sda | grep Model
+> Model Number:       Hitachi HTS541075A9E680
+> root@localhost:~/io_uring# cat /sys/block/sda/queue/nr_requests
+> 64
+> root@localhost:~/io_uring# ./io_uring_read_blkdev /dev/sda8
+> submitted_already =   0, submitted_now =  32, submit_time =     246 us
+> submitted_already =  32, submitted_now =  32, submit_time =     130 us
+> submitted_already =  64, submitted_now =  32, submit_time =  189548 us
+> submitted_already =  96, submitted_now =  32, submit_time =  121542 us
+> submitted_already = 128, submitted_now =  32, submit_time =  128314 us
+> submitted_already = 160, submitted_now =  32, submit_time =  136345 us
+> submitted_already = 192, submitted_now =  32, submit_time =  162320 us
+> root@localhost:~/io_uring# cat pstack_output # This is where process slept
+> [<0>] io_schedule+0x16/0x40
+> [<0>] blk_mq_get_tag+0x166/0x280
+> [<0>] blk_mq_get_request+0xde/0x380
+> [<0>] blk_mq_make_request+0x11e/0x5b0
+> [<0>] generic_make_request+0x191/0x3c0
+> [<0>] submit_bio+0x75/0x140
+> [<0>] blkdev_direct_IO+0x3f8/0x4a0
+> [<0>] generic_file_read_iter+0xbf/0xdc0
+> [<0>] blkdev_read_iter+0x37/0x40
+> [<0>] io_read+0xf6/0x180
+> [<0>] __io_submit_sqe+0x1cd/0x6a0
+> [<0>] io_submit_sqe+0xea/0x4b0
+> [<0>] io_ring_submit+0x86/0x120
+> [<0>] __x64_sys_io_uring_enter+0x241/0x2d0
+> [<0>] do_syscall_64+0x60/0x1a0
+> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [<0>] 0xffffffffffffffff
 
-BR,
--R
+Sorry for originally missing this one! For this particular issue, it
+looks like you are right, we don't honor NOWAIT for request allocation.
+That's a bug, pondering how best to fix this. Can you try the attached
+patch and see if it fixes it for you?
+
+> 1. Inaccurate handling of errors in liburing/__io_uring_submit().
+> Because liburing currently does not care about queue head that kernel
+> sets, it cannot know how many entries have been actually consumed. In
+> case e.g.  io_uring_enter() returns EAGAIN, and consumes none of the
+> sqes, sq->sqe_head still advances in __io_uring_submit(), this can
+> eventually cause both io_uring_submit() and io_uring_sqe() return 0
+> forever.
+
+I'll look into that one.
+
+> 2. There is also a related issue -- when using IORING_SETUP_SQPOLL, in
+> case polling kernel thread already went to sleep(IORING_SQ_NEED_WAKEUP
+> is set), io_uring_enter() just wakes it up and immediately reports all
+> @to_submit requests are consumed, while this is not true until awaken
+> thread will manage to handle them. At least this contradicts with man
+> page, which states:
+>     > When the system call returns that a certain amount of SQEs have
+>     > been consumed and submitted, it's safe to reuse SQE entries in
+>     > the ring.
+>     It is easy to reproduce this bug -- just change e.g. ->offset
+>     field in the SQE immediately after io_uring_enter() successfully
+>     returns and you will see that IO happened on new offset.
+
+Not sure how best to convery that bit of information. If you're using
+the sq thread for submission, then we cannot reliably tell the
+application when an sqe has been consumed. The application must look for
+completions (successful or errors) in the CQ ring.
+
+> 3. Again due to lack of synchronization between io_sq_thread() and
+> io_uring_enter(), in case the ring is full and IORING_SETUP_SQPOLL is
+> used, it seems there is no other way for application to wait for slots
+> in SQ to become available but busy waiting for *sq->khead to advance.
+> Thus from one busy waiting thread we get two. Is this the expected
+> behavior? Should the user of IORING_SETUP_SQPOLL busy wait for slots
+> in SQ?
+
+You could wait on cq ring completions, each sqe should trigger one.
+
+> 4. Minor one: in case sq_thread_idle is set to ridiculously big
+> value(e.g. 100 sec), kernel watchdog starts reporting this as a bug.
+>     > Message from syslogd@centos-linux at Jun 21 20:00:04 ...
+>     > kernel:watchdog: BUG: soft lockup - CPU#0 stuck for 21s!
+>     > [io_uring-sq:10691]
+
+Ah yes, cosmetic issue, I'll address that one as well.
+
+-- 
+Jens Axboe
+
+
+--------------8BBD4C2D54EB7ED6320A967C
+Content-Type: text/x-patch;
+ name="io_uring-direct-nowait.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="io_uring-direct-nowait.patch"
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index b038ec680e84..81409162e662 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1959,10 +1959,14 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
+ 	data.cmd_flags = bio->bi_opf;
+ 	rq = blk_mq_get_request(q, bio, &data);
+ 	if (unlikely(!rq)) {
++		blk_qc_t ret = BLK_QC_T_NONE;
++
+ 		rq_qos_cleanup(q, bio);
+-		if (bio->bi_opf & REQ_NOWAIT)
++		if (bio->bi_opf & REQ_NOWAIT_RET)
++			ret = BLK_QC_T_EAGAIN;
++		else if (bio->bi_opf & REQ_NOWAIT)
+ 			bio_wouldblock_error(bio);
+-		return BLK_QC_T_NONE;
++		return ret;
+ 	}
+ 
+ 	trace_block_getrq(q, bio, bio->bi_opf);
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index f00b569a9f89..6a09f483f15c 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -344,15 +344,24 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 	struct bio *bio;
+ 	bool is_poll = (iocb->ki_flags & IOCB_HIPRI) != 0;
+ 	bool is_read = (iov_iter_rw(iter) == READ), is_sync;
++	bool nowait = (iocb->ki_flags & IOCB_NOWAIT) != 0;
+ 	loff_t pos = iocb->ki_pos;
+ 	blk_qc_t qc = BLK_QC_T_NONE;
++	gfp_t gfp;
+ 	int ret = 0;
+ 
+ 	if ((pos | iov_iter_alignment(iter)) &
+ 	    (bdev_logical_block_size(bdev) - 1))
+ 		return -EINVAL;
+ 
+-	bio = bio_alloc_bioset(GFP_KERNEL, nr_pages, &blkdev_dio_pool);
++	if (nowait)
++		gfp = GFP_NOWAIT;
++	else
++		gfp = GFP_KERNEL;
++
++	bio = bio_alloc_bioset(gfp, nr_pages, &blkdev_dio_pool);
++	if (!bio)
++		return -EAGAIN;
+ 
+ 	dio = container_of(bio, struct blkdev_dio, bio);
+ 	dio->is_sync = is_sync = is_sync_kiocb(iocb);
+@@ -397,6 +406,8 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 			bio->bi_opf = dio_bio_write_op(iocb);
+ 			task_io_account_write(bio->bi_iter.bi_size);
+ 		}
++		if (nowait)
++			bio->bi_opf |= (REQ_NOWAIT | REQ_NOWAIT_RET);
+ 
+ 		dio->size += bio->bi_iter.bi_size;
+ 		pos += bio->bi_iter.bi_size;
+@@ -411,6 +422,10 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 			}
+ 
+ 			qc = submit_bio(bio);
++			if (qc == BLK_QC_T_EAGAIN) {
++				ret = -EAGAIN;
++				goto err;
++			}
+ 
+ 			if (polled)
+ 				WRITE_ONCE(iocb->ki_cookie, qc);
+@@ -431,7 +446,12 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 			atomic_inc(&dio->ref);
+ 		}
+ 
+-		submit_bio(bio);
++		qc = submit_bio(bio);
++		if (qc == BLK_QC_T_EAGAIN) {
++			ret = -EAGAIN;
++			goto err;
++		}
++
+ 		bio = bio_alloc(GFP_KERNEL, nr_pages);
+ 	}
+ 
+@@ -452,6 +472,7 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 	}
+ 	__set_current_state(TASK_RUNNING);
+ 
++out:
+ 	if (!ret)
+ 		ret = blk_status_to_errno(dio->bio.bi_status);
+ 	if (likely(!ret))
+@@ -459,6 +480,10 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 
+ 	bio_put(&dio->bio);
+ 	return ret;
++err:
++	if (!is_poll)
++		blk_finish_plug(&plug);
++	goto out;
+ }
+ 
+ static ssize_t
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index feff3fe4467e..3d89a3c04977 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -311,6 +311,7 @@ enum req_flag_bits {
+ 	__REQ_RAHEAD,		/* read ahead, can fail anytime */
+ 	__REQ_BACKGROUND,	/* background IO */
+ 	__REQ_NOWAIT,           /* Don't wait if request will block */
++	__REQ_NOWAIT_RET,	/* Return would-block error inline */
+ 	/*
+ 	 * When a shared kthread needs to issue a bio for a cgroup, doing
+ 	 * so synchronously can lead to priority inversions as the kthread
+@@ -345,6 +346,7 @@ enum req_flag_bits {
+ #define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
+ #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
+ #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
++#define REQ_NOWAIT_RET		(1ULL << __REQ_NOWAIT_RET)
+ #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
+ 
+ #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
+@@ -418,6 +420,7 @@ static inline int op_stat_group(unsigned int op)
+ 
+ typedef unsigned int blk_qc_t;
+ #define BLK_QC_T_NONE		-1U
++#define BLK_QC_T_EAGAIN		-2U
+ #define BLK_QC_T_SHIFT		16
+ #define BLK_QC_T_INTERNAL	(1U << 31)
+ 
+
+--------------8BBD4C2D54EB7ED6320A967C--
