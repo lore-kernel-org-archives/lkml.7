@@ -2,86 +2,120 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBB0C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34901C76196
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FD62173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE4F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563289695;
-	bh=KJhKHD7WlwSPz/YtNQ78gwhQw1tnMo7KNHFxIFPMNTA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q8rEwK1AkvzABrt6dqHnMf0+pLcf4qME87DgR2wV4gPlfgZmLapWYSreGsf12Myei
-	 BEpwo17KlDGm57ziaMnRlkhocY9OWkHBD5hDPPsJlRl93/n47qkQ+6O/9BCV6K38BN
-	 9MFikmq+pJwrhZTZq1ix2ZJPuydC+DYsWfpoYAm0=
+	s=default; t=1563289820;
+	bh=qsVYG/AAKfZqvM/AL48HHkboJVYj6AAMTA3FfuN1840=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2PQaT0arfOJhN+/xB14sPXrm+/NKxDHxBQeYmVR6lS9X6n1uoRL/6Ut2kRYqmfZID
+	 YmPr8nKa48e/2aPZAg+HJ/DiGOSrWRh/aERnjEZ9NVOAmp/GeGwt0bXV1lTnoDvaLA
+	 vYhfXM0bOrnr3DHcmhQqoyDIXikr0kutES36uvps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388005AbfGPPIO (ORCPT
+        id S2387922AbfGPPKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
+        Tue, 16 Jul 2019 11:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728384AbfGPPIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:08:14 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        id S1728384AbfGPPKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:10:18 -0400
+Received: from [10.84.150.84] (unknown [167.220.148.84])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B44E2173C;
-        Tue, 16 Jul 2019 15:08:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D79052173B;
+        Tue, 16 Jul 2019 15:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563289693;
-        bh=KJhKHD7WlwSPz/YtNQ78gwhQw1tnMo7KNHFxIFPMNTA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=v/wWP6CudN3LZ05a20mnKFBIGZbNnb/hXtgq8tq3n1lqPierjZLdSh1ugGYZMdlJo
-         iLmsI7+T9j86zGKMrvwfi40H63QdIYP7a9/1RK5xVRn+qBwJPz2p66C5s1gPmyYa6m
-         8vmQRNyzUohPEL6JvEv9V5sWOC/Zc+m4jNZg8hd0=
-Received: by mail-qk1-f181.google.com with SMTP id s145so14839171qke.7;
-        Tue, 16 Jul 2019 08:08:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAXB4XtnPlJYYcjOWjionjj05n/SlOJPK5KvayhMGpYlsCvpWqZ+
-        +KPa+2VXaWFzki8Nuw97dOUdtkpuboNDgh8A0A==
-X-Google-Smtp-Source: APXvYqz5UF22FVhjr/olMVpSYsnaA/jqkKHMZ9iw0D7NDtGbXTHVkBbrbyHhvjWrTB3VdHeCTevV2u7jlIBsa3zOAy8=
-X-Received: by 2002:a37:a010:: with SMTP id j16mr22559615qke.152.1563289692548;
- Tue, 16 Jul 2019 08:08:12 -0700 (PDT)
+        s=default; t=1563289817;
+        bh=qsVYG/AAKfZqvM/AL48HHkboJVYj6AAMTA3FfuN1840=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cA0qN5tFZBu+I0MkNLY1rdU6KqOdCmjmgBZqfB3AYRCy+6Cx+1bm4YhjQvkbyzmvD
+         HunhvZyLo8l2aLhfLvSgNC/rgeU95ST08kkJkAJB5nUfQk3aTdvW70dMweVgXFYDcf
+         TC4WiUmbxp4t1zcUxnICgEl+WIfag5taN+tPq2p8=
+Subject: Re: [PATCH v3 04/24] dmaengine: qcom_hidma: Remove call to memset
+ after dmam_alloc_coherent
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20190715031723.6375-1-huangfq.daxian@gmail.com>
+ <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
+ <CABXRUiQXweOLRTpdyhx9xT_B1VBmoSoNm=_+Qr4prmz7u1QRFA@mail.gmail.com>
+ <245ffd79-316c-e985-d1da-2ccea6d29636@kernel.org>
+ <9ea5f97f-5963-5836-6ab2-dc30628c6820@arm.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <ee011ef9-fe02-8fea-b34d-cb7628abac19@kernel.org>
+Date:   Tue, 16 Jul 2019 11:10:15 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190626235759.3615-1-robh@kernel.org>
-In-Reply-To: <20190626235759.3615-1-robh@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 16 Jul 2019 09:08:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKmovGLxZj5jOLgXLtYD1cRHjtrQZm27Nk8cRQR9tsidg@mail.gmail.com>
-Message-ID: <CAL_JsqKmovGLxZj5jOLgXLtYD1cRHjtrQZm27Nk8cRQR9tsidg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: riscv: Limit cpus schema to only check RiscV
- 'cpu' nodes
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9ea5f97f-5963-5836-6ab2-dc30628c6820@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 6:00 PM Rob Herring <robh@kernel.org> wrote:
->
-> Matching on the 'cpus' node was a bad choice because the schema is
-> incorrectly applied to non-RiscV cpus nodes. As we now have a common cpus
-> schema which checks the general structure, it is also redundant to do so
-> in the Risc-V CPU schema.
->
-> The downside is one could conceivably mix different architecture's cpu
-> nodes or have typos in the compatible string. The latter problem pretty
-> much exists for every schema.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/riscv/cpus.yaml       | 143 ++++++++----------
->  1 file changed, 61 insertions(+), 82 deletions(-)
+On 7/16/2019 7:35 AM, Robin Murphy wrote:
+> On 15/07/2019 16:17, Sinan Kaya wrote:
+>> On 7/15/2019 1:43 AM, Fuqian Huang wrote:
+>>> Should I rewrite the commit log? Just mention that dma_alloc_coherent
+>>> has already
+>>> zeroed the memory and not to reference the commit?
+>>
+>> I'd like to hear from Robin Murphy that arm smmu driver follows this as
+>> well.
+> 
+> I'd be lying if I said it did.
+> 
+> ...but only because that's never been part of the SMMU driver's
+> responsibility either way. The iommu-dma layer however, and thus the
+> respective arm64 iommu_dma_ops, has always zeroed allocations right from
+> its inception.
+> 
+> 518a2f1925c3 was just cleaning up the last of the stragglers which
+> *weren't* already clearing buffers anyway, such that we could formalise
+> that behaviour into the API.
 
-Paul, do you plan to apply this? I have several fixes to send to Linus
-if you want me to include this.
+Thanks for confirming the behavior for arm64 arch.
 
-Rob
+Acked-by: Sinan Kaya <okaya@kernel.org>
+
