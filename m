@@ -2,234 +2,129 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD91C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF41C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB02206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CA0206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yd5g/CAL"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="knBTmABI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388161AbfGPRJX (ORCPT
+        id S2388135AbfGPRLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:09:23 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44156 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGPRJX (ORCPT
+        Tue, 16 Jul 2019 13:11:00 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34599 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPRLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:09:23 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6GH7wGu022595;
-        Tue, 16 Jul 2019 12:07:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563296879;
-        bh=VQ/fp5ABUyt0fOaHGKlhXyBUzQD3cI800FDzOaTcw8o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yd5g/CALb31GGT87CeoGnogbhZ/u8y5VHXCC2ySvjip0C0JxwGiCfWx5k3o6XuSsq
-         nJ/1uakbglW4rgoUvz+E3GC2qf+LEKFIrzkBmVEiv8RD2yhCwHGLcsJwFGowMwGhXz
-         EC4HfAzbmWLuC5Nwe0BqmE0yyr2DA0Dglgg8Cjqg=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6GH7w4v032498
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Jul 2019 12:07:58 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 16
- Jul 2019 12:07:58 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 16 Jul 2019 12:07:58 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6GH7wZu122924;
-        Tue, 16 Jul 2019 12:07:58 -0500
-Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
- bindings
-To:     David Lechner <david@lechnology.com>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-CC:     Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-2-s-anna@ti.com>
- <b67e8ce6-a291-ce4c-9972-b7fc7cd08bb4@ti.com>
- <53868885-a78d-448a-1f2a-03a16251d028@ti.com>
- <c3f0061f-22b0-c281-b8ff-4a2cb7e91aba@lechnology.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <2eb76f94-3d01-2620-89a0-207a4084be1b@ti.com>
-Date:   Tue, 16 Jul 2019 12:07:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Jul 2019 13:11:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id i2so10451733plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 10:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kwpOpWT2eWiCeBhDjuSXvGXNhdNaH2c1UD5BkyTJoqs=;
+        b=knBTmABIgOoXo69WB++c8IiWB76RVPwIFTQLPCH60rHTf+UJ7FGF+ss1UJhIMPAq8x
+         0EwUItQ8ZgDKhh+54f7rBkRV7MSkUDhNen+cxQRpDwq4odvt0AmVDnfhd5gDsDsim6Oc
+         /NPzqJO1Ut/8JkDliDODiF4nieSIiOvRtiA2DDTkydoPrCpwaekiYCu4HxFCBNUMOdrv
+         Kh+4kgtRPjClbTdLMdYDm8rTNtWJmYgbqv8d+6z8dyl0uMeRa9N2RZCdxwR9l/flo6FS
+         TgIxRET8UFzLd1mskmgymFDDldbBvFBtSzi+kDwEtAaFdE8OH18mOJU1usfuTg9ZgWuu
+         4sBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kwpOpWT2eWiCeBhDjuSXvGXNhdNaH2c1UD5BkyTJoqs=;
+        b=hD04ry7TP8nhrQl9FkRfqiAhvbluYwb2CRzWP1jzW1WSf9l4bULAkE9QNlxzI70nKN
+         deoE3MRtr9ubkwFJXmmClaL7dvauOsXW32VxttkXZ5BagUHSobC7fePGsNANwB5MRyqA
+         ragVXoRM0wFasKcdwCxHamARLdyKtq329dMvTJKizk6QbvKINEDI+sfYM0reMrl+lBXz
+         LkuqF/mtL+QJ7vXd4+MVuKISNNHYsMqCDp7mBH978nmusFkxtsvHsrkE8EyN9ReNbnpP
+         2gG/SS8FR5SKXkJion3rwcJMp6vw696fcW3ESZrDZpGW3DrTXxegLa7tUz8JXfVqacBL
+         Ii9Q==
+X-Gm-Message-State: APjAAAU0fYvdFPLqfYbSHdqmEXoavXXRa6bTCR9j2xe8Q+qx0JR7lTU+
+        k9NLdsom+YPkY1g+UKVuIvk=
+X-Google-Smtp-Source: APXvYqzOUwUunYYbiDg94VvgRJzmfWkkNNf3nkG+b6uwrilA1j4IQ0R4BL7eXG7mU0JZW5y6MGQ9bg==
+X-Received: by 2002:a17:902:381:: with SMTP id d1mr36353848pld.331.1563297059292;
+        Tue, 16 Jul 2019 10:10:59 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::1:dd93])
+        by smtp.gmail.com with ESMTPSA id j13sm20092099pfh.13.2019.07.16.10.10.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 10:10:58 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 13:10:56 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Dennis Zhou <dennis@kernel.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com
+Subject: Re: [PATCH REBASED] mm, memcg: Make scan aggression always exclude
+ protection
+Message-ID: <20190716171056.GA16575@cmpxchg.org>
+References: <20190228213050.GA28211@chrisdown.name>
+ <20190322160307.GA3316@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <c3f0061f-22b0-c281-b8ff-4a2cb7e91aba@lechnology.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322160307.GA3316@chrisdown.name>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
-
-On 7/10/19 12:08 PM, David Lechner wrote:
+On Fri, Mar 22, 2019 at 04:03:07PM +0000, Chris Down wrote:
+> This patch is an incremental improvement on the existing
+> memory.{low,min} relative reclaim work to base its scan pressure
+> calculations on how much protection is available compared to the current
+> usage, rather than how much the current usage is over some protection
+> threshold.
 > 
->>>> +- interrupts           : all the interrupts generated towards the
->>>> main host
->>>> +                         processor in the SoC. The format depends
->>>> on the
->>>> +                         interrupt specifier for the particular
->>>> SoC's ARM GIC
->>>> +                         parent interrupt controller. A shared
->>>> interrupt can
->>>> +                         be skipped if the desired destination and
->>>> usage is by
->>>> +                         a different processor/device.
->>>> +- interrupt-names      : should use one of the following names for
->>>> each valid
->>>> +                         interrupt connected to ARM GIC, the name
->>>> should match
->>>> +                         the corresponding host interrupt number,
->>>> +                             "host0", "host1", "host2", "host3",
->>>> "host4",
->>>> +                             "host5", "host6" or "host7"
->>>> +- interrupt-controller : mark this node as an interrupt controller
->>>> +- #interrupt-cells     : should be 1. Client users shall use the
->>>> PRU System
->>>> +                         event number (the interrupt source that
->>>> the client
->>>> +                         is interested in) as the value of the
->>>> interrupts
->>>> +                         property in their node
->>>> +
->>>> +Optional Properties:
->>>> +--------------------
->>>> +The following properties are _required_ only for some SoCs. If none
->>>> of the below
->>>> +properties are defined, it implies that all the host interrupts 2
->>>> through 9 are
->>>> +connected exclusively to the ARM GIC.
->>>> +
->>>> +- ti,irqs-reserved     : an array of 8-bit elements of host
->>>> interrupts between
->>>> +                         0 and 7 (corresponding to PRUSS INTC
->>>> output interrupts
->>>> +                         2 through 9) that are not connected to the
->>>> ARM GIC.
->>>
->>> The reason for 0-7 mapping to 2-9 is not instantly clear to someone
->>> reading this. If you respin this could you note that reason is
->>> interrupts 0 and 1 are always routed back into the PRUSS.
->>
->> Yeah, this is always going to be somewhat confusing since the driver has
->> to deal with all hosts from channel-mapping perspective, but only the 8
->> interrupts at most that reach MPU for handling interrupts. TRM has
->>
->> Anyway, I have already mentioned the first 2 interrupt routing in the
->> first paragraph above.
->>
->> Thinking more
->>> on that, the same is true for interrupt 7 ("host5") on AM437x/66AK2G yet
->>> we don't skip that in the naming.. now that we have the reserved IRQ
->>> mechanism above, why not leave the one-to-one interrupt to name mapping,
->>> but always have at least the first two marked as reserved for all the
->>> current devices:
->>>
->>> ti,irqs-reserved = /bits/ 8 <0 1>;
->>>
->>> Then any "hostx" listed as reserved need not be present in the host
->>> interrupts property array. To me that would solve the "managing
->>> interrupts not targeting the Linux running core" problem and keep the
->>> names consistent, e.g.:
->>
->> I had actually used the interrupt-names always starting from "host2"
->> through "host9" (names from PRU perspective) previously, and I have
->> changed this to start indexing from 0 in this series to address an
->> internal review comment from Grygorii and to align with TRM. All the
->> TRMs (except for AM572x) actually use the names/signals "host_intr0",
->> "host_intr1".."host_intr7" etc for the interrupts going towards MPU.
->> Maybe I should actually rename the interrupt-names to be host_intrX
->> instead of hostX to avoid confusion and be exactly aligned with the TRM
->> names. I will file a bug against AM57xx TRM to align the names with all
->> other SoC TRMs.
->>
->> I am using "output interrupt lines" to imply names w.r.t PRU vs "host
->> interrupt" to imply ARM GIC names.
->>
->> regards
->> Suman
->>
+> Previously the way that memory.low protection works is that if you are
+> 50% over a certain baseline, you get 50% of your normal scan pressure.
+> This is certainly better than the previous cliff-edge behaviour, but it
+> can be improved even further by always considering memory under the
+> currently enforced protection threshold to be out of bounds. This means
+> that we can set relatively low memory.low thresholds for variable or
+> bursty workloads while still getting a reasonable level of protection,
+> whereas with the previous version we may still trivially hit the 100%
+> clamp. The previous 100% clamp is also somewhat arbitrary, whereas this
+> one is more concretely based on the currently enforced protection
+> threshold, which is likely easier to reason about.
 > 
-> FWIW, the AM1808 TRM only uses PRU_EVTOUT0 to PRU_EVTOUT7 and does not
-> mention "host" in relation to these interrupts. The AM3xxx and AM4xxx
-> also use similar names (PRU_ICSS_EVTOUT0, PRU_ICSS1_EVTOUT0) although
-> they do mention that the source is "pr1_host[0] output/events exported
-> from PRU_ICSS1". (Also, the older processors have AINTC instead of GIC).
-
-Indeed, EVTOUT was only used in the Interrupts chapter on AM1808, AM335x
-and AM437x. These TRMs are only getting very infrequent updates, so I
-doubt we will have these names synchronized to the other SoCs.
-
-The descriptions in PRUSS INTC sections themselves always use the term
-host interrupts for all host events, but the output signals get
-re-indexed to 0, which tends to be confusing.
-
+> There is also a subtle issue with the way that proportional reclaim
+> worked previously -- it promotes having no memory.low, since it makes
+> pressure higher during low reclaim. This happens because we base our
+> scan pressure modulation on how far memory.current is between memory.min
+> and memory.low, but if memory.low is unset, we only use the overage
+> method. In most cromulent configurations, this then means that we end up
+> with *more* pressure than with no memory.low at all when we're in low
+> reclaim, which is not really very usable or expected.
 > 
-> Maybe to help clarify here we could mention "event" in the docs:
+> With this patch, memory.low and memory.min affect reclaim pressure in a
+> more understandable and composable way. For example, from a user
+> standpoint, "protected" memory now remains untouchable from a reclaim
+> aggression standpoint, and users can also have more confidence that
+> bursty workloads will still receive some amount of guaranteed
+> protection.
 > 
-> 
-> +- interrupt-names      : should use one of the following names for each
-> valid
-> +                         host event interrupt connected to ARM interrupt
-> +                         controller,the name should match the
-> corresponding
-> +                         host event interrupt number,
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Reviewed-by: Roman Gushchin <guro@fb.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Dennis Zhou <dennis@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: kernel-team@fb.com
 
-Yeah, I like your rewording. Will update for the next version.
-
-> +                             "host0", "host1", "host2", "host3", "host4",
-> +                             "host5", "host6" or "host7"
-
-I will be updating these names as well to add either a int or intr suffix.
-
-> 
-> 
-> 
-> ...
-> 
->>>> +
->>>> +Example:
->>>> +--------
->>>> +
->>>> +1.    /* AM33xx PRU-ICSS */
->>>> +    pruss: pruss@0 {
-> 
-> I don't suppose there is a generic name that could be used here
-> instead of pruss? It seems like there should be one for remote
-> processors that aren't DSPs or other specialized processors.
-> 
-
-Yeah, there is none. It is the overall PRU subsystem, the individual
-cores are called PRU. The subsystems are usually referred to as PRUSS,
-PRU-ICSS and ICSSG (on the newer K3 SoCs), so I simply chose the shorter
-pruss.
-
-regards
-Suman
-
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
