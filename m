@@ -2,160 +2,91 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C45C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154FAC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BF9206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B73206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfGPH2i (ORCPT
+        id S1728130AbfGPHbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:28:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35054 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbfGPH2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:28:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79E83B123;
-        Tue, 16 Jul 2019 07:28:34 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Konstantin Khlebnikov <koct9i@gmail.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 2/2] printk/panic/x86: Allow to access printk log buffer after crash_smp_send_stop()
-Date:   Tue, 16 Jul 2019 09:28:05 +0200
-Message-Id: <20190716072805.22445-3-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190716072805.22445-1-pmladek@suse.com>
-References: <20190716072805.22445-1-pmladek@suse.com>
+        Tue, 16 Jul 2019 03:31:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57742 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfGPHbp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 03:31:45 -0400
+Received: from pc-375.home (2a01cb0c88d94a005820d607da339aae.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:88d9:4a00:5820:d607:da33:9aae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4329528B6A4;
+        Tue, 16 Jul 2019 08:31:43 +0100 (BST)
+Date:   Tue, 16 Jul 2019 09:31:37 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Cc:     miquel.raynal@bootlin.com, bbrezillon@kernel.org, richard@nod.at,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, vigneshr@ti.com,
+        yamada.masahiro@socionext.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
+        svemula@xilinx.com, nagasuresh12@gmail.com
+Subject: Re: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over
+ write driver's read_page()/write_page()
+Message-ID: <20190716093137.3d8e8c1f@pc-375.home>
+In-Reply-To: <20190716053051.11282-1-naga.sureshkumar.relli@xilinx.com>
+References: <20190716053051.11282-1-naga.sureshkumar.relli@xilinx.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-crash_smp_send_stop() is a special variant of smp_send_stop(). It is
-used when crash_kexec_post_notifiers are enabled. CPUs are stopped
-but cpu_online_mask is not updated so that the original information is
-visible in crashdump. See the commit 0ee59413c967c35a6dd ("x86/panic:
-replace smp_send_stop() with kdump friendly version in panic path")
-for more details.
+On Mon, 15 Jul 2019 23:30:51 -0600
+Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
 
-crash_smp_send_stop() uses NMI to stop the CPUs. Then logbuf_lock
-might stay locked but printk_bust_lock_safe() does not know that
-CPUs are stopped.
+> Add check before assigning chip->ecc.read_page() and chip->ecc.write_page()
+> 
+> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+> ---
+> Changes in v18
+>  - None
+> ---
+>  drivers/mtd/nand/raw/nand_micron.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
+> index cbd4f09ac178..565f2696c747 100644
+> --- a/drivers/mtd/nand/raw/nand_micron.c
+> +++ b/drivers/mtd/nand/raw/nand_micron.c
+> @@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_chip *chip)
+>  		chip->ecc.size = 512;
+>  		chip->ecc.strength = chip->base.eccreq.strength;
+>  		chip->ecc.algo = NAND_ECC_BCH;
+> -		chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> -		chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+> +		if (!chip->ecc.read_page)
+> +			chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> +
+> +		if (!chip->ecc.write_page)
+> +			chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+>  
 
-Solution is to force logbuf_lock re-initialization from
-crash_smp_send_stop().
+Seriously?! I told you this was inappropriate and you keep sending this
+patch. So let's make it clear:
 
-Note that x86 seems to be the only architecture that implements
-crash_smp_send_stop() and uses NMI at the same time. Other
-architectures could not guarantee that the CPUs were really stopped.
+Nacked-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- arch/x86/kernel/crash.c     | 6 +++++-
- include/linux/printk.h      | 4 ++--
- kernel/panic.c              | 2 +-
- kernel/printk/printk_safe.c | 8 +++++---
- 4 files changed, 13 insertions(+), 7 deletions(-)
+Fix your controller driver instead of adding hacks to the Micron logic!
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 2bf70a2fed90..9a497eb37bf7 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -99,7 +99,11 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
- void kdump_nmi_shootdown_cpus(void)
- {
- 	nmi_shootdown_cpus(kdump_nmi_callback);
--
-+	/*
-+	 * CPUs are stopped but it is not visible via cpus_online
-+	 * bitmap. Bust logbuf_lock to make kmsg_dump() working.
-+	 */
-+	printk_bust_lock_safe(true);
- 	disable_local_APIC();
- }
- 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 4d15a0eda9c6..c050f1dafc32 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -202,7 +202,7 @@ __printf(1, 2) void dump_stack_set_arch_desc(const char *fmt, ...);
- void dump_stack_print_info(const char *log_lvl);
- void show_regs_print_info(const char *log_lvl);
- extern asmlinkage void dump_stack(void) __cold;
--extern int printk_bust_lock_safe(void);
-+extern int printk_bust_lock_safe(bool kdump_smp_stop);
- extern void printk_safe_init(void);
- extern void printk_safe_flush(void);
- extern void printk_safe_flush_on_panic(void);
-@@ -270,7 +270,7 @@ static inline void dump_stack(void)
- {
- }
- 
--static inline int printk_bust_lock_safe(void)
-+static inline int printk_bust_lock_safe(bool kdump_smp_stop)
- {
- 	return 0;
- }
-diff --git a/kernel/panic.c b/kernel/panic.c
-index aa50cdb75022..54fae99e7a7e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -274,7 +274,7 @@ void panic(const char *fmt, ...)
- 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
- 
- 	/* Call flush even twice. It tries harder with a single online CPU */
--	printk_blocked = printk_bust_lock_safe();
-+	printk_blocked = printk_bust_lock_safe(false);
- 	if (!printk_blocked) {
- 		printk_safe_flush_on_panic();
- 		kmsg_dump(KMSG_DUMP_PANIC);
-diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-index 71d4b763f811..e26304277886 100644
---- a/kernel/printk/printk_safe.c
-+++ b/kernel/printk/printk_safe.c
-@@ -255,16 +255,18 @@ void printk_safe_flush(void)
- 
- /**
-  * printk_try_bust_lock - make printk log accessible when safe
-+ * @kdump_smp_stop: true when called after kdump stopped CPUs via NMI
-+ *	but did not update the number of online CPUs.
-  *
-  * Return 0 when the log is accessible. Return -EWOULDBLOCK when
-  * it is not safe and likely to cause a deadlock.
-  */
--int printk_bust_lock_safe(void)
-+int printk_bust_lock_safe(bool kdump_smp_stop)
- {
- 	if (!raw_spin_is_locked(&logbuf_lock))
- 		return 0;
- 
--	if (num_online_cpus() == 1) {
-+	if (num_online_cpus() == 1 || kdump_smp_stop)  {
- 		debug_locks_off();
- 		raw_spin_lock_init(&logbuf_lock);
- 		return 0;
-@@ -285,7 +287,7 @@ int printk_bust_lock_safe(void)
-  */
- void printk_safe_flush_on_panic(void)
- {
--	if (printk_bust_lock_safe() == 0)
-+	if (printk_bust_lock_safe(false) == 0)
- 		printk_safe_flush();
- }
- 
--- 
-2.16.4
+>  		if (ondie == MICRON_ON_DIE_MANDATORY) {
+>  			chip->ecc.read_page_raw = nand_read_page_raw_notsupp;
 
