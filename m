@@ -2,172 +2,110 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7589C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02313C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B6020880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D0820880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGhG0FJA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HaFxzYUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388458AbfGPS2l (ORCPT
+        id S2388483AbfGPS2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:28:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37703 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388345AbfGPS2l (ORCPT
+        Tue, 16 Jul 2019 14:28:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38867 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGPS2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:28:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so9515278pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:28:40 -0700 (PDT)
+        Tue, 16 Jul 2019 14:28:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so9520637pfn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:28:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WeYKS39OFMhl8zrxoxlQCu4IDPAmvCEoho+1+F9/K+M=;
-        b=nGhG0FJAUkp4b4zmPkND0sQYo5k36iIb/6RhVcYjX3bMXU/Xm3jDYlZsTIV1Ihv319
-         ugALQhOVJ5k/hzaqtvezNXhFkqRYRErw94PsyamEk9dd/qpLl1KoTCfcF82EUha893uT
-         u636i4Q3/aJ1/SWOxUQ+tNy7JfXEP6iL5b0uWoltNYMhvzyzes5NRU6Vq0pAtb/il0qi
-         4y3SZdLlg3kLMeLXSUrI/bGHXqh8Wk0zT8IqJoRLXjkTA8EGqbk9h/t+nkucJJiAE1oJ
-         ci4ne5wz/VZj1DIEAEJib17xhkkd9kR0agOhTTzh7vFPlu68bTP/XgkrTvOctBtES3eV
-         h2bA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:subject:cc:user-agent:date;
+        bh=zvGcK+VeZ8cxUQUUb/Ziua1dyjBrgzj1NF9vZ94FkTY=;
+        b=HaFxzYUquBICo8Qa2dhDAMayVb4+B8XnoZq6FveM6TFEZ4xttZwMrCmGGANC/QGVlw
+         u+Q8JPimlFkaChFUdUbnRKD6m1PJup0MyZsBkdRyVka7yI9ODuShs0+cBre686lEzvVj
+         jGQyqpkhbiFKGwnAmGCcyqaMlrf7d6Hd+QgwM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WeYKS39OFMhl8zrxoxlQCu4IDPAmvCEoho+1+F9/K+M=;
-        b=gQ3FRfr0JSeZyYfJLrMcZ6Hao7MKqSdsn1A01lu22n5R3/vLgciEsKMGFC8862dspL
-         d6Vui/+okgcJ/U5OByMW2tWnIXKu3nRK1Upu26dfMDHhvVUWOUyj2gbuVwv4Q3A+ou/A
-         9FlgHOvC4WIqaWa+mriLg5HrqXL0xwE5yBH86XUsNq1r+dvSPhbD2+mmE2m2H0epU3zd
-         zs0PiohZMIDLsGQj5yTQx3yMaZUKm5u27x57Xx0DsSlH0qIGFDdi4kStGmoBUG86xB8R
-         mLyGosJto4ZmlJSCgZtA/mA+zWvUTZc42dQSlgc68+9L/AEZ29s9gMtbc3+vXcYb2xR6
-         iHeA==
-X-Gm-Message-State: APjAAAUjAlgdmtsbRVzU8je9EfjG1+CfRPOH7MPf5zM1pL5qcmSoMP1q
-        Mi2M3CODhnb2/O4VoWhkDmfJ/0NFvZU/Yj5oUYmnZA==
-X-Google-Smtp-Source: APXvYqy+seZIjulCJjRu3TVG3OVAN7RKTOI4pjWv7540ZQ3fMp8SANHVHCLTXuwBIJOzJsZDGtmbnYqwuwo+R0idRfU=
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr38791644pjs.73.1563301720040;
- Tue, 16 Jul 2019 11:28:40 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
+         :user-agent:date;
+        bh=zvGcK+VeZ8cxUQUUb/Ziua1dyjBrgzj1NF9vZ94FkTY=;
+        b=JX/AjggZ5h6dZRo0JF9noDQNxKn6ggZ1wLEKgp7ezTU0CnynXP7ZO56ggS1dK/vlgs
+         9/kpmehPf7jRTmUOeIYH/o3bTURo7G8gwk/tHKFOT+HvtG0GsL4tBRq7feJFCP3vhekR
+         HmVCpblpgZzs/Z0fbQGPCbuwfsaw3x5MWWlvPd5KaxaxZsC29DRtSidZy1+8MtShx9xJ
+         ZPpaVyYSboNi0MqkeIKyGPmnZx2i5adWcZIMKpg+cuBHZMd/6j9Bpc3b8+CT9hJtXSLC
+         5EmM5aNdsPGQyrabQs4TBazI+18x2/ru6RXEqGDi94i2BbEWJWL5YrS1tRs/LB8btwDm
+         e+9A==
+X-Gm-Message-State: APjAAAVyEOcsW/kWEoDUE36sTXcgcLZ7keRjVXwOLY2LNUGzLDYjgeOg
+        F6eNtcSXNyl727x4BLTwKGLqoQ==
+X-Google-Smtp-Source: APXvYqz4qZBoRB6OmcdQOJn/RkfEoww9MxRhFBGtRytBBWzy2H7BHROzWqtrB66vhSitRPsWPlDCmg==
+X-Received: by 2002:a63:5550:: with SMTP id f16mr17160524pgm.426.1563301733618;
+        Tue, 16 Jul 2019 11:28:53 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x8sm18949101pfa.46.2019.07.16.11.28.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 11:28:52 -0700 (PDT)
+Message-ID: <5d2e1764.1c69fb81.448bb.65c0@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
-In-Reply-To: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 16 Jul 2019 11:28:29 -0700
-Message-ID: <CAKwvOdmg2b2PMzuzNmutacFArBNagjtwG=_VZvKhb4okzSkdiA@mail.gmail.com>
-Subject: Re: BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-To:     Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        tobin@kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190624142654.zprcpz42hivuyrjq@gondor.apana.org.au>
+References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190613232613.GH22901@ziepe.ca> <5d03e394.1c69fb81.f028c.bffb@mx.google.com> <20190617225134.GA30762@ziepe.ca> <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com> <20190624142654.zprcpz42hivuyrjq@gondor.apana.org.au>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Matt Mackall <mpm@selenic.com>, linux-crypto@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 16 Jul 2019 11:28:51 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:44 AM Jeffrin Thalakkottoor
-<jeffrin@rajagiritech.edu.in> wrote:
->
-> hello all ,
->
-> i encountered a KASAN bug related .    here are some related information...
->
->
-> -------------------x-----------------------------x------------------
-> [   30.037312] BUG: KASAN: global-out-of-bounds in
-> ata_exec_internal_sg+0x50f/0xc70
-> [   30.037447] Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
->
->
-> [   30.039935] The buggy address belongs to the variable:
-> [   30.040059]  cdb.48319+0x0/0x40
->
-> [   30.040241] Memory state around the buggy address:
-> [   30.040362]  ffffffff91f41e80: fa fa fa fa 00 00 fa fa fa fa fa fa
-> 00 00 07 fa
-> [   30.040498]  ffffffff91f41f00: fa fa fa fa 00 00 00 00 00 00 00 03
-> fa fa fa fa
-> [   30.040628] >ffffffff91f41f80: 00 04 fa fa fa fa fa fa 00 00 fa fa
-> fa fa fa fa
-> [   30.040755]                       ^
-> [   30.040868]  ffffffff91f42000: 00 00 00 04 fa fa fa fa 00 fa fa fa
-> fa fa fa fa
-> [   30.041003]  ffffffff91f42080: 04 fa fa fa fa fa fa fa 00 04 fa fa
-> fa fa fa fa
->
-> ---------------------------x--------------------------x----------------
-> $uname -a
-> Linux debian 5.2.0-rc7+ #4 SMP Tue Jul 9 02:54:07 IST 2019 x86_64 GNU/Linux
-> $
->
-> --------------------x----------------------------x---------------------------
-> (gdb) l *ata_exec_internal_sg+0x50f
-> 0xffffffff81c7b59f is in ata_exec_internal_sg (./include/linux/string.h:359).
+Quoting Herbert Xu (2019-06-24 07:26:54)
+> On Thu, Jun 20, 2019 at 06:03:17PM -0700, Stephen Boyd wrote:
+> >
+> > What do you think of the attached patch? I haven't tested it, but it
+> > would make sure that the kthread is frozen so that the hardware can be
+> > resumed before the kthread is thawed and tries to go touch the hardware.
+>=20
+> Looks good to me.
+>=20
 
-So looks like ata_exec_internal_sg() is panic'ing when...
+Thanks for checking. I haven't been able to reproduce the problem yet to
+confirm this is actually fixing anything, even after tweaking the sysctl
+values for khwrng to try and force the thread to run continuously.
 
-> 354 if (q_size < size)
-> 355 __read_overflow2();
-> 356 }
-> 357 if (p_size < size || q_size < size)
-> 358 fortify_panic(__func__);
-> 359 return __builtin_memcpy(p, q, size);
-> 360 }
-> 361
-> 362 __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
+From reading the bug report that caused this 'is_suspended' code to be
+added to the driver I'm fairly convinced this is the right solution. To
+give some more background, it looks like we use s2idle suspend (i.e.
+all CPUs are idle across suspend) and then we have the kthread running
+to ask the hardware for some more random numbers. The i2c transaction
+fails when asking the hwrng for data, and we see these messages printed
+on the resume path:
 
-...a call to memmove is made? Without having looked at the source of
-ata_exec_internal_sg(), it's possible that either through inlining, or
-the compiler generating a memmove, that one of the arguments was not
-quite right.  I suggest spending more time isolating where this is
-coming from, if you can reliably reproduce, or CC whoever wrote or
-maintains the code and ask them to take a look.
+	i2c_designware i2c_designware.2: i2c_dw_handle_tx_abort: lost arbitration
+	tpm tpm0: i2c transfer failed (attempt 3/3): -11
+	tpm0: tpm_transmit: tpm_send: error -11
+	hwrng: no data available
 
-The cited code looks like a check comparing that the pointer distance
-is greater than the size of bytes being passed in.  I'd wager
-someone's calling memmove with overlapping memory regions when they
-really wanted memcpy.  Maybe a better question, is why was memmove
-ever used; if there was some invariant that the memory regions
-overlapped, why is that invariant no longer holding.
+Userspace tasks are thawed after this failure so it looks like something
+in the kernel kicks khwrng to grab more data before the i2c bus can be
+resumed.
 
-Anyways, sorry I don't have more time to look into this.  Thank you
-for the report.
-
-> 363 {
-> (gdb)
-> --------------------------x--------------------------
-> GNU Make            4.2.1
-> Binutils            2.31.1
-> Util-linux          2.33.1
-> Mount                2.33.1
-> Linux C Library      2.28
-> Dynamic linker (ldd) 2.28
-> Procps              3.3.15
-> Kbd                  2.0.4
-> Console-tools        2.0.4
-> Sh-utils            8.30
-> Udev                241
-> ---------------------x--------------------------------x
-> Thread model: posix
-> gcc version 8.3.0 (Debian 8.3.0-7)
-> ---------------------x--------------------------------x
->
-> Please ask if more information is needed.
->
-> --
-> software engineer
-> rajagiri school of engineering and technology
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
