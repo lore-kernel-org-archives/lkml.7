@@ -2,118 +2,174 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBACDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8D6C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9671F20880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4912321743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTIrJmKd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ig4sFhs4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfGQNIS (ORCPT
+        id S1726424AbfGQNNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:08:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39430 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfGQNIS (ORCPT
+        Wed, 17 Jul 2019 09:13:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47484 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfGQNNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:08:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u25so11738836wmc.4;
-        Wed, 17 Jul 2019 06:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=h2yLsvzismF8aSznQ40gS7iVeJd2FnjlYb1X34YBrA8=;
-        b=hTIrJmKdb4eBexEx/Rfsp2Pg7LnciIrsWX1mLz99xre2zIlgoiZaRCMFERkDAw8DDI
-         5SSzeqshErtNi7bSc3tgUmHN3HPsgCWWlvGsy5P/jXXVo0NoNhymFSNuVUOA4bwJMwQq
-         MtK+PW3Kf6jxpRM6/m4vtBsrRPTyXrgx/CfumOVFW75rvSeMeoGDLotXbLZ4dZj9XvW8
-         zdFqWe7FC1i2CMy81xtbA8AfUzcU8z4KSd/Vr3Dpsm935/ni2Spayq5xnOomWsic77dq
-         G/PfZx5IhgH+2aj5ZUt9rXZNbq+d9eLIiBIHkaNMX3oLc2RTPfkQ84cO11KPR8XNTi+r
-         Hnlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h2yLsvzismF8aSznQ40gS7iVeJd2FnjlYb1X34YBrA8=;
-        b=O1e78+1J2f40rNBND+xZyUcC3m3V8AwikoMYItnpKQr22vdoVUePEX1gPcIsPzLDRF
-         quwPWEU9mEhkQ3C/t43TALj/yJfZ22rTmDc19+kZn352qwjtXJBzoYDPjVh0e8CWyuIB
-         VJ98Ue2AyFQpSVFMJ0nv9THVXR7DX/bCcdI8LCYXepO8+Ni5sLagLtvj124xPjoS8TYX
-         fJ8DHGsZG+M8nTu3o2mOl1mN8d1ChFC+YXOLmAwGuQam4mpNo4bF2z49p6Qn7fbU+Yfw
-         iz3CSAvQ7GqTKljuxw3jTVe6++1tIuy/sxNly4YjI4fCCG5m+gbLDHqF9+X/WP0FZ4qh
-         4fDA==
-X-Gm-Message-State: APjAAAXtsvPN2Iboe5msYUSDqHsIRdgStBMbDIp+OrqwVt85C7TSNwYJ
-        ZyEDyeo077APxs+3FFhiC+/nXYEUVIk=
-X-Google-Smtp-Source: APXvYqwizHNDm7V2q4Zl8PfRLV8uyVMUdooEDkuQU8R8qdODhQ4UauaxynjAA3/s6qsYZwd+jj1eJQ==
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr34774771wme.173.1563368895160;
-        Wed, 17 Jul 2019 06:08:15 -0700 (PDT)
-Received: from [10.43.17.52] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n12sm24739515wmc.24.2019.07.17.06.08.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 06:08:14 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 0/1] Add dm verity root hash pkcs7 sig validation.
-To:     Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-Cc:     ebiggers@google.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, jmorris@namei.org,
-        Scott Shell <SCOTTSH@microsoft.com>,
-        Nazmus Sakib <mdsakib@microsoft.com>, mpatocka@redhat.com
-References: <20190701181958.6493-1-jaskarankhurana@linux.microsoft.com>
- <MN2PR21MB12008A962D4DD8662B3614508AF20@MN2PR21MB1200.namprd21.prod.outlook.com>
- <alpine.LRH.2.21.1907121025510.66082@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
- <395efa90-65d8-d832-3e2b-2b8ee3794688@gmail.com>
- <alpine.LRH.2.21.1907161035490.121213@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-From:   Milan Broz <gmazyland@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <bdcd7d7c-92fc-11af-7924-9bd0e184b427@gmail.com>
-Date:   Wed, 17 Jul 2019 15:08:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.1907161035490.121213@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Jul 2019 09:13:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HD9J7t194675;
+        Wed, 17 Jul 2019 13:12:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=9R9vGnDDSVcIlOsrGA3wHv4ZyafWuZt2OPX/DOooBok=;
+ b=ig4sFhs4TYsolVmYMcb5UwuC+TvWHZGMiXFRzgRRiOurtxKkS3IgDLLOoc5h98Fnp2Wf
+ DuvyYMWe7nQdQA3LpTuXTN63iFfL0fvaCruaC+Uz7zRq0bfZgQ4ci/aESHVZSQdmTuYV
+ 1cGWByxGZjXO7jQzHsGIUyCIt+MvqjQSbniCp0RUmii7CS0N/zVTfrUQvIxIjXJ5dHKl
+ +G+E8aeWSjl4UwUpsAiOHMkUPGRFJc6uwqXEKJMN+ErOqDbrMo7nFUALlaaioHMbQMno
+ YssEewHcywELRcZYWk0swJG7Loqmop53rh7zblkMpoJbc8bDBQMNzXP30bNrTGI67xOx Ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2tq6qttnae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 13:12:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HD7b9S021756;
+        Wed, 17 Jul 2019 13:12:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tsmccd3w0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 13:12:31 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6HDCPZR001934;
+        Wed, 17 Jul 2019 13:12:30 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jul 2019 13:12:25 +0000
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] x86/efi: Remove unused variables
+Date:   Tue, 16 Jul 2019 21:15:57 +0800
+Message-Id: <1563282957-26898-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907170160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907170160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix gcc warnings:
 
-On 16/07/2019 20:08, Jaskaran Singh Khurana wrote:
->>> Could you please provide feedback on this v6 version.
->>
->> Hi,
->>
->> I am ok with the v6 patch; I think Mike will return to it in 5.4 reviews.
->>
-> 
-> Thanks for the help and also for reviewing this patch. Could you please 
-> add Reviewed-by/Tested-by tag to the patch.
+arch/x86/boot/compressed/eboot.c: In function 'make_boot_params':
+arch/x86/boot/compressed/eboot.c:394:6: warning: unused variable 'i' [-Wunused-variable]
+  int i;
+      ^
+arch/x86/boot/compressed/eboot.c:393:6: warning: unused variable 's1' [-Wunused-variable]
+  u8 *s1;
+      ^
+arch/x86/boot/compressed/eboot.c:392:7: warning: unused variable 's2' [-Wunused-variable]
+  u16 *s2;
+       ^
+arch/x86/boot/compressed/eboot.c:387:8: warning: unused variable 'options' [-Wunused-variable]
+  void *options, *handle;
+        ^
+arch/x86/boot/compressed/eboot.c: In function 'add_e820ext':
+arch/x86/boot/compressed/eboot.c:498:16: warning: unused variable 'size' [-Wunused-variable]
+  unsigned long size;
+                ^
+arch/x86/boot/compressed/eboot.c:497:15: warning: unused variable 'status' [-Wunused-variable]
+  efi_status_t status;
+               ^
+arch/x86/boot/compressed/eboot.c: In function 'exit_boot_func':
+arch/x86/boot/compressed/eboot.c:681:15: warning: unused variable 'status' [-Wunused-variable]
+  efi_status_t status;
+               ^
+arch/x86/boot/compressed/eboot.c:680:8: warning: unused variable 'nr_desc' [-Wunused-variable]
+  __u32 nr_desc;
+        ^
+arch/x86/boot/compressed/eboot.c: In function 'efi_main':
+arch/x86/boot/compressed/eboot.c:750:22: warning: unused variable 'image' [-Wunused-variable]
+  efi_loaded_image_t *image;
+                      ^
 
-ok, you can add
-Tested-and-Reviewed-by: Milan Broz <gmazyland@gmail.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ arch/x86/boot/compressed/eboot.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-or just use the version on my git, I already updated few lines because
-of recent kernel changes, mainly the revert of keyring changes, tested patch is here
+diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+index 220d127..d6662fd 100644
+--- a/arch/x86/boot/compressed/eboot.c
++++ b/arch/x86/boot/compressed/eboot.c
+@@ -384,14 +384,11 @@ struct boot_params *make_boot_params(struct efi_config *c)
+ 	struct apm_bios_info *bi;
+ 	struct setup_header *hdr;
+ 	efi_loaded_image_t *image;
+-	void *options, *handle;
++	void *handle;
+ 	efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
+ 	int options_size = 0;
+ 	efi_status_t status;
+ 	char *cmdline_ptr;
+-	u16 *s2;
+-	u8 *s1;
+-	int i;
+ 	unsigned long ramdisk_addr;
+ 	unsigned long ramdisk_size;
+ 
+@@ -494,8 +491,6 @@ static void add_e820ext(struct boot_params *params,
+ 			struct setup_data *e820ext, u32 nr_entries)
+ {
+ 	struct setup_data *data;
+-	efi_status_t status;
+-	unsigned long size;
+ 
+ 	e820ext->type = SETUP_E820_EXT;
+ 	e820ext->len  = nr_entries * sizeof(struct boot_e820_entry);
+@@ -677,8 +672,6 @@ static efi_status_t exit_boot_func(efi_system_table_t *sys_table_arg,
+ 				   void *priv)
+ {
+ 	const char *signature;
+-	__u32 nr_desc;
+-	efi_status_t status;
+ 	struct exit_boot_struct *p = priv;
+ 
+ 	signature = efi_is_64bit() ? EFI64_LOADER_SIGNATURE
+@@ -747,7 +740,6 @@ struct boot_params *
+ efi_main(struct efi_config *c, struct boot_params *boot_params)
+ {
+ 	struct desc_ptr *gdt = NULL;
+-	efi_loaded_image_t *image;
+ 	struct setup_header *hdr = &boot_params->hdr;
+ 	efi_status_t status;
+ 	struct desc_struct *desc;
+-- 
+1.8.3.1
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mbroz/linux.git/commit/?h=dm-cryptsetup&id=266f7c9c74b23e4cb2e67ceb813dd707061c1641
-...
-
-> The steps and workflow is correct. I will send the cryptsetup changes for 
-> review.
-
-ok, I'll probably try to use our existing userspace libcryptsetup API to avoid introducing new calls,
-but that is not important for now - the kernel bits must be in the mainline kernel first.
-
-Thanks,
-Milan
