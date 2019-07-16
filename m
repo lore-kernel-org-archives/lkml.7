@@ -2,104 +2,162 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9E8C76196
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF81C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAD720880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E2E20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KNCcMt0a"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MdnSzCKS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VuYlcP9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbfGPRPq (ORCPT
+        id S2388183AbfGPRSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:15:46 -0400
-Received: from mout.gmx.net ([212.227.17.22]:58993 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbfGPRPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:15:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1563297326;
-        bh=xNnIsDbgppK8wwBxMiTHNVXBTk1p7qOB7xrYiRrkhh8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=KNCcMt0aSPEnh4pHQd2d/g8bY1FjoStxyLmGXY4SvcHPr+hNjHJCtcLzXJdiLS8cF
-         XOaJZi94FLTj1UemEQpbVMZ+pi4mNg9Gb1AufLZT6wTX2zE6MxqOc5bD55uaBu9NbU
-         tQlBkzckz6VfCMfaSa9OqwijFCW0QNHwglsF13JQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([37.4.249.111]) by mail.gmx.com
- (mrgmx101 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 0LjeWC-1iKa0M2SHA-00beDU; Tue, 16 Jul 2019 19:15:26 +0200
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH] dmaengine: bcm2835: Print error in case setting DMA mask fails
-Date:   Tue, 16 Jul 2019 19:15:18 +0200
-Message-Id: <1563297318-4900-1-git-send-email-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:fL6HCOJkHLSo99rnhKGJNd1g6cKxvMfFqhtxr/p3c3HgN4FbiMX
- Wd+iGmFRA82C/GbBmGYre5PwcjOUmaKjXDc8ZWNsF/A7W1PH+FnsKoOmKXaRdjvdaMVmKI8
- QI4dygNsLqkUfJpAkNJxp1VGu2xA7D8cbsEUT606ucvC1itqkIXxUB35N4dXKNr769undih
- HhwgLvqsdizhvrzvUIkFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RYe9OtUzWrs=:bzoH7sjXqBy9ZGQ84yGcuZ
- rlvNEi25ozg7Cdp5Pl1LNI8c3BPeSyTRpx3sIbVHlQfHp3FCFoBecxlIW9ERUA0uzTC3AaRjj
- 4Dh2A1zxvQEtEK8snBnMZZLdMU5f8fWG+8Iptm4dxUG+P0uClP1dTjEop47R0AZ8ebvBJ7BWw
- l73NGF4qXJ1sgl/1CEzgnzMIxn4l1l3GXTveFRSqJoiHTdSKqAaXfWrKiqYV03505vK2yyBC1
- yb7gFVxCOSY+fT9CCTZ7frKBwwalCZ8a5X/RISJGOmkemObiewAF9aRpbwqbIeRUV/p7maJrh
- 7DXdI59dtL793Wlo1JbDcXiZGKgF02rdrc1nInJqaeb0zIWPclYyqMN9Hjnyncl6aDFHltMO1
- XjrULSwyzCd3y0SeqmuSk5rwYzWB3G17ginu0kxkc1oWIJUqwcPX/LR+XIYOSah6j4ZHeObdd
- hOrHG80gIjrPKyfFX2BwI69/rof0fbIuhHaclSG28rTtZ6WXDUfVmE7z5tZh/Pzrn16LfuY+M
- AMoKNg5/xQcYW8UCyUTdHpCWdSq0yoI1grQNCBXfcVF9iMs3TjC7F4LathXC7SKsWaWlpqksn
- fxmsQlu5OEStq0DoZnkyxCCdIS+URsKKlCtNRGGR/bQ3s2bMJFn9vgflHXzQ9RkciAk3Ucpcf
- Tds7TRdTodL6e/xp+EE4WzypnsKK5tqxj4XmWRcRVJsVJAxSnICeWtDEOzFAzVdrEicu51B+B
- /NDwQmlkW10icr7FsI5OlYC4H39QRUCgOcxzcgi8K9xtAAUKLGxGoxi8s9St5e5btECxM5e//
- ErVOwTiU0crHrFbxqqjK63IsXcrOS03nz9KiMs9jqxrYICiIKrqUOPUw0PH5DdjdUVpR+poMd
- LfCvGqNLhmkWUokEJ8PVLU/AKGy5wEL8CJ/FPXKcxZBSpA+rGwa3MtoZX51tU8r6kLbg4FTTJ
- QEmEfbbTFo+QTEBQmJ8dUP2U61QpoL/q7R09/9E0Ps3uvHlCdfWcYRlGb68JDF/ydyCbxepJP
- q+e2QIwBd6AUBhYJW75HTur0GuMR46lt3vApoJXoNlqn4LM4zITzHE53p/EESa/C0z3p9lzE7
- KrfHJusRvBwRWM=
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jul 2019 13:18:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40504 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728695AbfGPRSA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 13:18:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D12AC6182E; Tue, 16 Jul 2019 17:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563297478;
+        bh=2pOtf9PAXP9nJ+aXw11UJheCUnN8qsVoa6sjUXL/eY0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MdnSzCKSx+jCnmAeBGER9CfrVbybhdcNY+6w8+hbzhw//XFe9xMlLN5uTl4+R9ZV8
+         lsDH1D6eL5H0EhBEvvS1aJ+f3uIn6yQGaOrQNStCox8ZOEy8tbbiZwkY5toKKD9vhY
+         cPz8gL1chZVpO2wZhZC2LYf7iwHRHxGOIW9QUK+w=
+Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D351616DA;
+        Tue, 16 Jul 2019 17:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563297477;
+        bh=2pOtf9PAXP9nJ+aXw11UJheCUnN8qsVoa6sjUXL/eY0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VuYlcP9Y12kqT5/0k1rwiindCKNLQtZjs/QD+mxM1nKRJMfwFwroNYZOx48P+/03z
+         MDIR6L5RTOf2LPaWvewbQbODEJykRgLR3ZQr1NSQZkh6Uq82qYOazGhcz2ImOyIJSt
+         fi7LsP7cfbvP82lYCI/6DpOpoyORmoXJfGeGwYFU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D351616DA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v2 1/4] OPP: Allow required-opps even if the device
+ doesn't have power-domains
+To:     Saravana Kannan <saravanak@google.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     kernel-team@android.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190625213337.157525-1-saravanak@google.com>
+ <20190625213337.157525-2-saravanak@google.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <e7a5b387-fa85-15a8-8d79-fbc441c36293@codeaurora.org>
+Date:   Tue, 16 Jul 2019 22:47:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190625213337.157525-2-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During enabling of the RPi 4, we found out that the driver doesn't provide
-a helpful error message in case setting DMA mask fails. So add one.
+Hey Saravana,
+Thanks for taking time to post out this series.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/dma/bcm2835-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 6/26/19 3:03 AM, Saravana Kannan wrote:
+> A Device-A can have a (minimum) performance requirement on another
+> Device-B to be able to function correctly. This performance requirement
+> on Device-B can also change based on the current performance level of
+> Device-A.
+> 
+> The existing required-opps feature fits well to describe this need. So,
+> instead of limiting required-opps to point to only PM-domain devices,
+> allow it to point to any device.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>   drivers/opp/core.c |  2 +-
+>   drivers/opp/of.c   | 14 --------------
+>   2 files changed, 1 insertion(+), 15 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 0e7703fe733f..74c7bdc6f463 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -710,7 +710,7 @@ static int _set_required_opps(struct device *dev,
+>   		return 0;
+>   
+>   	/* Single genpd case */
+> -	if (!genpd_virt_devs) {
+> +	if (!genpd_virt_devs && required_opp_tables[0]->is_genpd) {
+https://patchwork.kernel.org/patch/10940671/
+This was already removed as a part of ^^ and is in linux-next.
 
-diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 8101ff2f..970f654 100644
-=2D-- a/drivers/dma/bcm2835-dma.c
-+++ b/drivers/dma/bcm2835-dma.c
-@@ -871,8 +871,10 @@ static int bcm2835_dma_probe(struct platform_device *=
-pdev)
- 		pdev->dev.dma_mask =3D &pdev->dev.coherent_dma_mask;
+>   		pstate = opp->required_opps[0]->pstate;
+>   		ret = dev_pm_genpd_set_performance_state(dev, pstate);
+>   		if (ret) {
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index c10c782d15aa..7c8336e94aff 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -195,9 +195,6 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+>   	 */
+>   	count_pd = of_count_phandle_with_args(dev->of_node, "power-domains",
+>   					      "#power-domain-cells");
+> -	if (!count_pd)
+> -		goto put_np;
+> -
+>   	if (count_pd > 1) {
+>   		genpd_virt_devs = kcalloc(count, sizeof(*genpd_virt_devs),
+>   					GFP_KERNEL);
+> @@ -226,17 +223,6 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+>   
+>   		if (IS_ERR(required_opp_tables[i]))
+>   			goto free_required_tables;
+> -
+> -		/*
+> -		 * We only support genpd's OPPs in the "required-opps" for now,
+> -		 * as we don't know how much about other cases. Error out if the
+> -		 * required OPP doesn't belong to a genpd.
+> -		 */
+> -		if (!required_opp_tables[i]->is_genpd) {
+> -			dev_err(dev, "required-opp doesn't belong to genpd: %pOF\n",
+> -				required_np);
+> -			goto free_required_tables;
+> -		}
 
- 	rc =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--	if (rc)
-+	if (rc) {
-+		dev_err(&pdev->dev, "Unable to set DMA mask\n");
- 		return rc;
-+	}
+I expect the series to not work as is in its current state since I
+see a circular dependency here. The required-opp tables of the parent
+devfreq won't be populated until we add the opp-table of the child
+devfreq node while the child devfreq using passive governor would
+return -EPROBE_DEFER until the parent devfreq probes.
 
- 	od =3D devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
- 	if (!od)
-=2D-
-2.7.4
+The same applies to this patch -> https://patchwork.kernel.org/patch
+/11046147/ I posted out based on your series. So we would probably have
+to address the dependency here.
 
+>   	}
+>   
+>   	goto put_np;
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
