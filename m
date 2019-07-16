@@ -2,235 +2,82 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DCDC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C097C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B7D2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3C420659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sln+luGg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi3N5ZXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732577AbfGPJqw (ORCPT
+        id S1732543AbfGPJsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:46:52 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:41647 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfGPJqv (ORCPT
+        Tue, 16 Jul 2019 05:48:02 -0400
+Received: from mail-ed1-f41.google.com ([209.85.208.41]:44537 "EHLO
+        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfGPJsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:46:51 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190716094648epoutp025166222dc174896311b5e6f66dc33027~x2idsNN2r1154011540epoutp02P
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:46:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190716094648epoutp025166222dc174896311b5e6f66dc33027~x2idsNN2r1154011540epoutp02P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563270408;
-        bh=4bfSgfYoCpxhiF8FXK5rSogZNO+K2iF9TeI2hAAgd80=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sln+luGgK+4yeGiHOrvaFfkvarEH2NYw8PG8OMNe1LtimLobdePJQ9wMdngD0vLta
-         uDk0Puvg0Xq0aODqdvmLvN7jZuZ5i1Ay9aVfIluAnkQ4BpOLma/6uGZFW+s9iMQTJc
-         Byl0+leQ1Qi9iXq4CBWqMQvLVWSFatLqd2yX7Ux8=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190716094647epcas1p386efce8c9b0b24d25009925624c13438~x2idC4con0776707767epcas1p3T;
-        Tue, 16 Jul 2019 09:46:47 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 45nwXP3PtTzMqYln; Tue, 16 Jul
-        2019 09:46:45 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A7.FA.04088.50D9D2D5; Tue, 16 Jul 2019 18:46:45 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716094644epcas1p2905f90d0067a302244b4cac39ca17cad~x2iaPB5AJ2000420004epcas1p27;
-        Tue, 16 Jul 2019 09:46:44 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190716094644epsmtrp23e07c5c0a50a4932ff52915493bd109d~x2iaOEvCc0052500525epsmtrp2T;
-        Tue, 16 Jul 2019 09:46:44 +0000 (GMT)
-X-AuditID: b6c32a35-85dff70000000ff8-10-5d2d9d051238
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        54.96.03706.40D9D2D5; Tue, 16 Jul 2019 18:46:44 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716094644epsmtip2758a371fe6a83b23d1b4692c4a1031ee~x2iZynVEa1526415264epsmtip2K;
-        Tue, 16 Jul 2019 09:46:44 +0000 (GMT)
-Subject: Re: [PATCH v1 01/50] clk: samsung: add new IDs for Exynos5420
- clocks
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        kyungmin.park@samsung.com, a.hajda@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <f8ff72f9-4a55-40c6-fdb9-bb4cddd00cf9@samsung.com>
-Date:   Tue, 16 Jul 2019 18:49:50 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Tue, 16 Jul 2019 05:48:02 -0400
+Received: by mail-ed1-f41.google.com with SMTP id k8so18998611edr.11;
+        Tue, 16 Jul 2019 02:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=0wfVyGH0X6+9UHLK++wYtzi5ucbNIhbZ7zOfGWzratw=;
+        b=bi3N5ZXj1FPte/06BKkeqSw9+RZe091YwqQGlvugSipO5mlC1wectyFCqjvk5GiDWj
+         50dU8UakVQOLMnbU1AzNzWbQ7PYs5gAUMTbXyI3IMGYXweOi//O42A+SndNrq4yRZncD
+         47cQVKxFnXBLRlaW+IaPYYohvR9LJHuqZH9mvDWzI/ekOCwludk0iAsZ5ndLP714NZRU
+         uRlN+EbLulhjsn2RCdD47tECtZd9KBmIShsQFDOIb/b2xV8Mprqv+fPAOK3msdWK85yF
+         z2Mud/zXdfNdojoq6gwVKIzkzPLDPr3xfeTGzieF5qRe7A2QZNM/2NrbNNATpbm9M+80
+         Mqxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=0wfVyGH0X6+9UHLK++wYtzi5ucbNIhbZ7zOfGWzratw=;
+        b=WdD5cbdMjry5gBBOmxGWnMSazsDlF/EYEa/5nHuTlXJ5kUnIeOQ8SqZdukVjtROa55
+         QDXXdxb+C9sJtpQ1M5VwSIeTd4AWviG+T+CzyubFDwqAlLtdfLfBKuhElIuswOaIfRUX
+         YTEZtnCyG1NOCFFlm/2uniLlxuYUshSUyuh7b+qbnF5SYXKLr6jwbVtK3h+FtOnl1ZKm
+         3H2ze9wa75yKOfi/Rcd+7h3MMzYPqZu3e78kh2xcHwGiuB4Bkcf66AAt0SNXgBXn6E07
+         SxVRWGDJgN0cq1/0Ay1w6LlFloQ1yt/BiNBNbqM4AaOa7q5xxu3ETMvONdSzRdgW41ZN
+         /XkQ==
+X-Gm-Message-State: APjAAAWX7W8366lw5WHxEEUU5HBc9ZbzMIwEem9vlumHaFboKEKZbhgb
+        ykKdd/wwOzojbtZrApk3fwxIZg+paVpE2Gc8/c+VP7CL
+X-Google-Smtp-Source: APXvYqyAwk0IAK4j0C2BPjFQrIvCPpSoKQl9ImnXQAsd/YoOtu7lNU9rL4MDjSjZcQpG9rXLsZ5MgabuQQdlt8BKeLo=
+X-Received: by 2002:a50:f410:: with SMTP id r16mr28400816edm.120.1563270480118;
+ Tue, 16 Jul 2019 02:48:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190715124417.4787-2-l.luba@partner.samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsWy7bCmni7rXN1Yg+krBC1urTvHarFxxnpW
-        i/lHgKz+x6+ZLc6f38BucbbpDbvFrQYZi02Pr7FafOy5x2pxedccNosZ5/cxWaw9cpfdYun1
-        i0wWF0+5WtxuXMFm0br3CLvF4TftrBb/rm1kcRDyWDNvDaPH+xut7B6bVnWyeWxeUu9x8N0e
-        Jo++LasYPT5vkgtgj8q2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVV
-        cvEJ0HXLzAF6QkmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFmgV5yYW1yal66X
-        nJ9rZWhgYGQKVJiQndG4tZe94Ltyxe8evQbGjeJdjJwcEgImEi0Lm9i7GLk4hAR2MEpcXv2X
-        CSQhJPCJUaJzkRxE4hujRMuER8wwHWdvPGKCSOxllDh7bD+U8x6ofcp3sCphAX+Jx6v/soHY
-        IgLnGCU6nkqD2MwC05gkZs0TBbHZBLQk9r+4AVbDL6AocfXHY0YQm1fATuLYkrWsIDaLgKrE
-        r3kv2UFsUYEIiVNH5rFA1AhKnJz5BMzmFLCXuNV9nw1ivrjErSfzmSBseYnmrbOZQY6TEDjF
-        LnFkxy0miBdcJL7NesMKYQtLvDq+hR3ClpL4/G4vG4RdLbHy5BE2iOYORokt+y9ANRhL7F86
-        GWgQB9AGTYn1u/QhwooSO3/PZYRYzCfx7msPK0iJhACvREebEESJssTlB3ehTpCUWNzeyTaB
-        UWkWkndmIXlhFpIXZiEsW8DIsopRLLWgODc9tdiwwBA5sjcxgtO3lukOxinnfA4xCnAwKvHw
-        KuzXiRViTSwrrsw9xCjBwawkwmv7VTtWiDclsbIqtSg/vqg0J7X4EKMpMLQnMkuJJucDc0te
-        SbyhqZGxsbGFiaGZqaGhkjjvvD+asUIC6YklqdmpqQWpRTB9TBycUg2Mght88wqynh3fmb5Y
-        +ufWLYn8L0pOzapRYfn/9ryr7aHvkkKL33HI/RAWMrlyTcSj0/85q/A5LrOtszbpRL/dW6e7
-        wG6FziwXNyXLSLYWx9SbLFGS4fmiv7SLmJz0Ju789XeVWe6i5/+Nnk45HGyw89F3PxX2imhZ
-        hb8OzWI5NtsEzJ5p661VYinOSDTUYi4qTgQAzu9yMvUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLIsWRmVeSWpSXmKPExsWy7bCSvC7LXN1Yg4d7NS1urTvHarFxxnpW
-        i/lHgKz+x6+ZLc6f38BucbbpDbvFrQYZi02Pr7FafOy5x2pxedccNosZ5/cxWaw9cpfdYun1
-        i0wWF0+5WtxuXMFm0br3CLvF4TftrBb/rm1kcRDyWDNvDaPH+xut7B6bVnWyeWxeUu9x8N0e
-        Jo++LasYPT5vkgtgj+KySUnNySxLLdK3S+DKaNzay17wXbnid49eA+NG8S5GTg4JAROJszce
-        MXUxcnEICexmlJh1bAojREJSYtrFo8xdjBxAtrDE4cPFEDVvGSU+bX3CAhIXFvCVeHXRHCQu
-        InCOUaLv71l2kF5mgWlMEifWM0M0HGeU+Lr1AthQNgEtif0vbrCB2PwCihJXfzwGi/MK2Ekc
-        W7KWFcRmEVCV+DXvJdggUYEIiUnXdrJA1AhKnJz5BMzmFLCXuNV9nw1imbrEn3mXmCFscYlb
-        T+YzQdjyEs1bZzNPYBSehaR9FpKWWUhaZiFpWcDIsopRMrWgODc9t9iwwDAvtVyvODG3uDQv
-        XS85P3cTIziStTR3MF5eEn+IUYCDUYmH98QenVgh1sSy4srcQ4wSHMxKIry2X7VjhXhTEiur
-        Uovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamAs3q0u9vXuht87Z8e7
-        Bbj+n1Qg80jKQ1iYdfKZjf0tNWuOFtj+ZhJYNnO25+a1rzabZN85bRbV9/Dqn616Riv1wh3q
-        M8Iqwxxv/qjcpGYx7buXRcepbzfmPilPv9117QBz7mr9jEiDw49WHJPzVgj4pfHbcNrBjyJd
-        prHz1siGyIim52vudHqsxFKckWioxVxUnAgAwMSwueACAAA=
-X-CMS-MailID: 20190716094644epcas1p2905f90d0067a302244b4cac39ca17cad
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190715124434eucas1p273e2efaad8bc3904c6f76cc1671aeb6c
-References: <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <CGME20190715124434eucas1p273e2efaad8bc3904c6f76cc1671aeb6c@eucas1p2.samsung.com>
-        <20190715124417.4787-2-l.luba@partner.samsung.com>
+Received: by 2002:a50:b3b9:0:0:0:0:0 with HTTP; Tue, 16 Jul 2019 02:47:59
+ -0700 (PDT)
+From:   Jari Ruusu <jari.ruusu@gmail.com>
+Date:   Tue, 16 Jul 2019 12:47:59 +0300
+Message-ID: <CACMCwJKJd8QzduZ3WKTqsHdftEaJH07iupKiWgSw7M0Xm7=gSA@mail.gmail.com>
+Subject: Announce loop-AES-v3.7o file/swap crypto package
+To:     linux-crypto@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Usually, when developing the clock controller driver,
-define the same sequence between the definition sequence in dt-bibing
-and clock driver. As I replied, if you squash patches, it is easy.
-
-For example,
-This series add clock id as following.
-                                                                             
- 569         MUX(CLK_MOUT_ACLK400_ISP, "mout_aclk400_isp", mout_group1_p,            
- 570                         SRC_TOP0, 0, 2),                                        
- 571         MUX(CLK_MOUT_ACLK400_MSCL, "mout_aclk400_mscl", mout_group1_p,          
- 572                         SRC_TOP0, 4, 2),                                        
- 573         MUX(CLK_MOUT_ACLK400_WCORE, "mout_aclk400_wcore", mout_group1_p,        
- 574                         SRC_TOP0, 16, 2),                                       
- 575         MUX(CLK_MOUT_ACLK100_NOC, "mout_aclk100_noc", mout_group1_p,            
- 576                         SRC_TOP0, 20, 2),          
-
-In case of this code, you can define the IDs as following sequentially:
-
-#define CLK_MOUT_ACLK400_ISP ...
-#define CLK_MOUT_ACLK400_MSCL ... 
-#define CLK_MOUT_ACLK400_WCORE ...
-#define CLK_MOUT_ACLK100_NOC ...
+loop-AES changes since previous release:
+- Set loop device queue ->nr_requests to better value than the default. This
+  may improve performance in some cases.
+- Worked around kernel interface changes on 5.1 kernels (multi page bio vecs
+  + busted bio segment limits) and 5.2 kernels.
 
 
-But, this series define the ID as following:
-	#define CLK_MOUT_ACLK400_WCORE          662                                     
-#define CLK_MOUT_SCLK_DPLL      663                                             
-	#define CLK_MOUT_ACLK100_NOC    664                                             
-#define CLK_MOUT_ACLK200_FSYS2  665                                             
-#define CLK_MOUT_PCLK200_FSYS   666                                             
-#define CLK_MOUT_ACLK200_FSYS   667                                             
-	#define CLK_MOUT_ACLK400_ISP    668                                             
-	#define CLK_MOUT_ACLK400_MSCL   669                                             
-#define CLK_MOUT_SCLK_MPLL      700                                             
-#define CLK_MOUT_ACLK266        701                                             
-#define CLK_MOUT_UART0          702                                             
-#define CLK_MOUT_UART1          703                                             
-#define CLK_MOUT_UART2          704                                             
-#define CLK_MOUT_UART3          7
+bzip2 compressed tarball is here:
 
-On 19. 7. 15. 오후 9:43, Lukasz Luba wrote:
-> There is a need of new IDs which will be used for modeling proper hierarchy
-> in the Exynos54xx SoCs. Previous implementation rely on bootloader
-> settings, which are not configuring properly some clocks.
-> These IDs provide interface to set proper parents.
-> 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  include/dt-bindings/clock/exynos5420.h | 27 +++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-> index 02d5ac469a3d..c37a28eeaf7e 100644
-> --- a/include/dt-bindings/clock/exynos5420.h
-> +++ b/include/dt-bindings/clock/exynos5420.h
-> @@ -230,6 +230,30 @@
->  #define CLK_MOUT_USER_MAU_EPLL	659
->  #define CLK_MOUT_SCLK_SPLL	660
->  #define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
-> +#define CLK_MOUT_ACLK400_WCORE		662
-> +#define CLK_MOUT_SCLK_DPLL	663
-> +#define CLK_MOUT_ACLK100_NOC	664
-> +#define CLK_MOUT_ACLK200_FSYS2	665
-> +#define CLK_MOUT_PCLK200_FSYS	666
-> +#define CLK_MOUT_ACLK200_FSYS	667
-> +#define CLK_MOUT_ACLK400_ISP	668
-> +#define CLK_MOUT_ACLK400_MSCL	669
-> +#define CLK_MOUT_SCLK_MPLL	700
-> +#define CLK_MOUT_ACLK266	701
-> +#define CLK_MOUT_UART0		702
-> +#define CLK_MOUT_UART1		703
-> +#define CLK_MOUT_UART2		704
-> +#define CLK_MOUT_UART3		705
-> +#define CLK_MOUT_SCLK_CPLL	706
-> +#define CLK_MOUT_PWM		707
-> +#define CLK_MOUT_ACLK266_G2D		708
-> +#define CLK_MOUT_SW_ACLK400_WCORE	709
-> +#define CLK_MOUT_SW_ACLK400_MSCL	710
-> +#define CLK_MOUT_SW_ACLK400_ISP		711
-> +#define CLK_MOUT_SW_ACLK266_ISP		712
-> +#define CLK_MOUT_USER_ACLK266_ISP	713
-> +#define CLK_MOUT_ACLK266_ISP	714
-> +#define CLK_MOUT_MMC0		715
->  
->  /* divider clocks */
->  #define CLK_DOUT_PIXEL		768
-> @@ -264,8 +288,9 @@
->  #define CLK_FF_DOUT_SPLL2	797
->  #define CLK_DOUT_PCLK_DREX0	798
->  #define CLK_DOUT_PCLK_DREX1	799
-> +#define CLK_DOUT_ACLK266_ISP	800
->  
->  /* must be greater than maximal clock id */
-> -#define CLK_NR_CLKS		800
-> +#define CLK_NR_CLKS		801
->  
->  #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5420_H */
-> 
+    http://loop-aes.sourceforge.net/loop-AES/loop-AES-v3.7o.tar.bz2
+    md5sum e43d6a1067c59ab38ff6fe5c372177fd
 
+    http://loop-aes.sourceforge.net/loop-AES/loop-AES-v3.7o.tar.bz2.sign
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
