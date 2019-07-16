@@ -2,143 +2,148 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6D3C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1737DC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AE020693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4CE2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OCB8W11M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388305AbfGPSIq (ORCPT
+        id S2388341AbfGPSIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:08:46 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40352 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbfGPSIq (ORCPT
+        Tue, 16 Jul 2019 14:08:53 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44406 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388310AbfGPSIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:08:46 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1029)
-        id EE9A620B7185; Tue, 16 Jul 2019 11:08:44 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id CFA0830114FD;
-        Tue, 16 Jul 2019 11:08:44 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:08:44 -0700 (PDT)
-From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
-X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     Milan Broz <gmazyland@gmail.com>
-cc:     ebiggers@google.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, jmorris@namei.org,
-        Scott Shell <SCOTTSH@microsoft.com>,
-        Nazmus Sakib <mdsakib@microsoft.com>, mpatocka@redhat.com
-Subject: Re: [RFC PATCH v6 0/1] Add dm verity root hash pkcs7 sig
- validation.
-In-Reply-To: <395efa90-65d8-d832-3e2b-2b8ee3794688@gmail.com>
-Message-ID: <alpine.LRH.2.21.1907161035490.121213@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <20190701181958.6493-1-jaskarankhurana@linux.microsoft.com> <MN2PR21MB12008A962D4DD8662B3614508AF20@MN2PR21MB1200.namprd21.prod.outlook.com> <alpine.LRH.2.21.1907121025510.66082@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
- <395efa90-65d8-d832-3e2b-2b8ee3794688@gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 16 Jul 2019 14:08:52 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6GI8nXO083448;
+        Tue, 16 Jul 2019 13:08:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563300529;
+        bh=B7gPU0oH6hxYy1ylLsR2AOejA70E1O6r06wLMSX9mBM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OCB8W11M+F7vpmYqAbmiA251t2aO7VFuaYqNamSiwIMd4fHYX3bg2gdTigZojZlOZ
+         /EX0Vw3/WbQn9RirQkEpqXw5pCUMWMFaRHpzDWB4l2V1Ex6FhVmeKy+gD+qITKZlss
+         HfIEzTAclCJKwLnUiQO2hbc1IfDH3y569IhpyBSg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6GI8nI6099075
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 16 Jul 2019 13:08:49 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 16
+ Jul 2019 13:08:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 16 Jul 2019 13:08:49 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6GI8nhY078141;
+        Tue, 16 Jul 2019 13:08:49 -0500
+Subject: Re: [RFT][PATCH 1/2] regulator: lm363x: Fix off-by-one n_voltages for
+ lm3632 ldo_vpos/ldo_vneg
+To:     Axel Lin <axel.lin@ingics.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190626132632.32629-1-axel.lin@ingics.com>
+ <a99b04a3-f079-3a43-9e19-d9501b76a96e@ti.com>
+ <CAFRkauAewFwcQNzpSfAfXMiCdHuENcg2NRzKECjPQ1RtUCuXEA@mail.gmail.com>
+ <CAFRkauAuvM5gjCDnJeVgKy48Qr6yRyX6L-B1f=bdhM3+rApTTQ@mail.gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e94bbf28-37b2-d51f-ec65-ed282bd77e81@ti.com>
+Date:   Tue, 16 Jul 2019 13:08:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <CAFRkauAuvM5gjCDnJeVgKy48Qr6yRyX6L-B1f=bdhM3+rApTTQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Axel
 
-Hello Milan,
-On Tue, 16 Jul 2019, Milan Broz wrote:
-
-> On 12/07/2019 19:33, Jaskaran Singh Khurana wrote:
+On 7/7/19 9:02 PM, Axel Lin wrote:
+> Axel Lin <axel.lin@ingics.com> 於 2019年6月26日 週三 下午11:12寫道：
+>> Dan Murphy <dmurphy@ti.com> 於 2019年6月26日 週三 下午11:07寫道：
+>>> Hello
+>>>
+>>> On 6/26/19 8:26 AM, Axel Lin wrote:
+>>>> According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
+>>>> Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
+>>>> Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
+>>>> 000000: 4 V
+>>>> 000001: 4.05 V
+>>>> 000010: 4.1 V
+>>>> ....................
+>>>> 011101: 5.45 V
+>>>> 011110: 5.5 V (Default)
+>>>> 011111: 5.55 V
+>>>> ....................
+>>>> 100111: 5.95 V
+>>>> 101000: 6 V
+>>>> Note: Codes 101001 to 111111 map to 6 V
+>>>>
+>>>> The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
+>>>> can match the datasheet.
+>>>>
+>>>> Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
+>>>> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+>>>> ---
+>>>>    drivers/regulator/lm363x-regulator.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+>>>> index 5647e2f97ff8..e4a27d63bf90 100644
+>>>> --- a/drivers/regulator/lm363x-regulator.c
+>>>> +++ b/drivers/regulator/lm363x-regulator.c
+>>>> @@ -30,7 +30,7 @@
+>>>>
+>>>>    /* LM3632 */
+>>>>    #define LM3632_BOOST_VSEL_MAX               0x26
+>>>> -#define LM3632_LDO_VSEL_MAX          0x29
+>>>> +#define LM3632_LDO_VSEL_MAX          0x28
+>>> Similar comment as I made on the LM36274
+>>>
+>>> These are 0 based registers so it is 28 + 1
+>> The code shows:  .n_voltages     = LM3632_LDO_VSEL_MAX + 1
+>> so LM3632_LDO_VSEL_MAX needs to be 0x28.
 >>
->> Hello Milan,
->>
->>> Changes in v6:
->>>
->>> Address comments from Milan Broz and Eric Biggers on v5.
->>>
->>> -Keep the verification code under config DM_VERITY_VERIFY_ROOTHASH_SIG.
->>>
->>> -Change the command line parameter to requires_signatures(bool) which will
->>> force root hash to be signed and trusted if specified.
->>>
->>> -Fix the signature not being present in verity_status. Merged the
->>> https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fmbroz%2Flinux.git%2Fcommit%2F%3Fh%3Ddm-cryptsetup%26id%3Da26c10806f5257e255b6a436713127e762935ad3&amp;data=02%7C01%7CJaskaran.Khurana%40microsoft.com%7C18f92445e46940aeebb008d6fe50c610%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C636976020210890638&amp;sdata=aY0V9%2FBz2RHryIvoftGKUGnyPp9Fsc1JY4FZbHfW4hg%3D&amp;reserved=0
->>> made by Milan Broz and tested it.
->>>
->>>
->>
->> Could you please provide feedback on this v6 version.
->
-> Hi,
->
-> I am ok with the v6 patch; I think Mike will return to it in 5.4 reviews.
->
+>>                  .name           = "ldo_vpos",
+>>                  .of_match       = "vpos",
+>>                  .id             = LM3632_LDO_POS,
+>>                  .ops            = &lm363x_regulator_voltage_table_ops,
+>>                  .n_voltages     = LM3632_LDO_VSEL_MAX + 1,
+> Hi Dan,
+> I'm wondering if you read my previous reply.
 
-Thanks for the help and also for reviewing this patch. Could you please 
-add Reviewed-by/Tested-by tag to the patch.
+Yes I just got to it I was buried with other work.  Thanks for the bump 
+on the list.
 
-> But the documentation is very brief. I spent quite a long time to configure the system properly.
-> I think you should add more description (at least to patch header) how to use this feature in combination with system keyring.
->
+I will have to try this on my board.
 
-I will add more documentation to the patch header describing the steps 
-required for setup.
+FYI this is not really my code Milo K was the original author.
 
-> Do I understand correctly that these steps need to be done?
->
-> - user configures a certificate and adds it in kernel builtin keyring (I used CONFIG_SYSTEM_TRUSTED_KEYS option).
-> - the dm-verity device root hash is signed directly by a key of this cert
-> - the signature is uploaded to the user keyring
-> - reference to signature in keyring is added as an optional dm-verity table parameter root_hash_sig_key_desc
-> - optionally, require_signatures dm-verity module is set to enforce signatures.
->
-> For reference, below is the bash script I used (with unpatched veritysetup to generate working DM table), is the expected workflow here?
+I just added another entry to the driver.  But since Milo is MIA I will
 
-The steps and workflow is correct. I will send the cryptsetup changes for 
-review.
+give it a look once I finish up my LED work next week
 
->
-> #!/bin/bash
->
-> NAME=test
-> DEV=/dev/sdc
-> DEV_HASH=/dev/sdd
-> ROOT_HASH=778fccab393842688c9af89cfd0c5cde69377cbe21ed439109ec856f2aa8a423
-> SIGN=sign.txt
-> SIGN_NAME=verity:$NAME
->
-> # get unsigned device-mapper table using unpatched veritysetup
-> veritysetup open $DEV $NAME $DEV_HASH $ROOT_HASH
-> TABLE=$(dmsetup table $NAME)
-> veritysetup close $NAME
->
-> # Generate self-signed CA key, must be in .config as CONFIG_SYSTEM_TRUSTED_KEYS="path/ca.pem"
-> #openssl req -x509 -newkey rsa:1024 -keyout ca_key.pem -out ca.pem -nodes -days 365 -set_serial 01 -subj /CN=example.com
->
-> # sign root hash directly by CA cert
-> echo -n $ROOT_HASH | openssl smime -sign -nocerts -noattr -binary -inkey ca_key.pem -signer ca.pem -outform der -out $SIGN
->
-> # load signature to keyring
-> keyctl padd user $SIGN_NAME @u <$SIGN
->
-> # add device-mapper table, now with sighed root hash optional argument
-> dmsetup create -r $NAME --table "$TABLE 2 root_hash_sig_key_desc $SIGN_NAME"
-> dmsetup table $NAME
->
-> # cleanup
-> dmsetup remove $NAME
-> keyctl clear @u
->
->
+Dan
 
-Thanks for testing the changes and all the guidance here.
+<snip>
 
-> Milan
->
-Regards,
-Jaskaran.
+> Regards,
+> Axel
