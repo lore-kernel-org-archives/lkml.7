@@ -2,116 +2,126 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B10C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648F3C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC70206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C8C21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:55:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="pik3kkc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfGPHwm (ORCPT
+        id S1730193AbfGPHzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:52:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36568 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbfGPHwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:52:41 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8D4F24C29AFC5FF4B6B7;
-        Tue, 16 Jul 2019 15:52:38 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
- 15:52:28 +0800
-Subject: Re: [RFC PATCH v2 0/3] Support CPU hotplug for ARM64
-To:     James Morse <james.morse@arm.com>
-CC:     <rjw@rjwysocki.net>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <guohanjun@huawei.com>,
-        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
-        <kvmarm@lists.cs.columbia.edu>
-References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
- <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <8a8cd9d2-684e-2246-c1f9-5cf21aa2defc@huawei.com>
-Date:   Tue, 16 Jul 2019 15:52:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Tue, 16 Jul 2019 03:55:19 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:55028 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726420AbfGPHzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 03:55:19 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id AA1842E09CF;
+        Tue, 16 Jul 2019 10:55:15 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id ZqZ8dH9oSo-tFimFMZq;
+        Tue, 16 Jul 2019 10:55:15 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1563263715; bh=gCDlZYrZ5fRoxvTXchUThC5WNWbnV5h3sRsaJ9Xhvjc=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=pik3kkc676yCfS/UUGMCuvgMLFwRIQEyCQuI+94e14cafDzMmhWkuMIh2IL2L2ito
+         9uO0y/rqsNZhirVoMfrTVeV24f9U17aJPVlErYb65mnrPBaylXZiLL29P6UEh7tNhA
+         QtTNOJb13fRR0jJMsHyGmmJnNpModDXDLSLuj7As=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38d2:81d0:9f31:221f])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id mQ63WBUkBR-tFwS1sST;
+        Tue, 16 Jul 2019 10:55:15 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v2] kernel/printk: prevent deadlock at unexpected call
+ kmsg_dump in NMI context
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+References: <156317789553.326.15952579019338825022.stgit@buzz>
+ <20190716074104.jeagfyr4k57lranz@pathway.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <5a101004-72b5-3699-b39d-e1acac996551@yandex-team.ru>
+Date:   Tue, 16 Jul 2019 10:55:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20190716074104.jeagfyr4k57lranz@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/5 18:12, James Morse wrote:
-> Hi guys,
-> 
-> (CC: +kvmarm list)
-> 
-> On 29/06/2019 03:42, Xiongfeng Wang wrote:
->> This patchset mark all the GICC node in MADT as possible CPUs even though it
->> is disabled. But only those enabled GICC node are marked as present CPUs.
->> So that kernel will initialize some CPU related data structure in advance before
->> the CPU is actually hot added into the system. This patchset also implement 
->> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
->> needed to enable CPU hotplug.
+On 16.07.2019 10:41, Petr Mladek wrote:
+> On Mon 2019-07-15 11:04:55, Konstantin Khlebnikov wrote:
+>> Kernel message dumper - function kmsg_dump() is called on various oops or
+>> panic paths which could happen in unpredictable context including NMI.
 >>
->> To support CPU hotplug, we need to add all the possible GICC node in MADT
->> including those CPUs that are not present but may be hot added later. Those
->> CPUs are marked as disabled in GICC nodes.
+>> Panic in NMI is handled especially by stopping all other cpus with
+>> smp_send_stop() and busting locks in printk_safe_flush_on_panic().
+>>
+>> Other less-fatal cases shouldn't happen in NMI and cannot be handled.
+>> But this might happen for example on oops in nmi context. In this case
+>> dumper could deadlock on lockbuf_lock or break internal structures.
 > 
-> ... what do you need this for?
+> If I get it correctly than this patch could really prevent a deadlock
+> in at least:
 > 
-> (The term cpu-hotplug in the arm world almost never means hot-adding a new package/die to
-> the platform, we usually mean taking CPUs online/offline for power management. e.g.
-> cpuhp_offline_cpu_device())
+>    + oops_end()
+>      + oops_exit()
+>        + kmsg_dump(KMSG_DUMP_OOPS)
 > 
-> It looks like you're adding support for hot-adding a new package/die to the platform ...
-> but only for virtualisation.
+> If it is called in NMI, it should end up with panic(). Then the dump
+> will be called later after stopping CPUs...
+> 
+> Or am I wrong?
 
-I read the GIC driver these days. It is a lot of work to configure the GIC at runtime,
-and this patchset doesn't support this.
-Actually, my original idea is hot-adding cores to the platform, and it is only for virtualisation.
-These cores need to be on the same physical package. The GIC is initialized when
-the kernel boots and GICR is initialized when the core is hot-added and brought up.
+Yep. Under 'oops in nmi context' I mean exactly that case.
 
 > 
-> I don't see why this is needed for virtualisation. The in-kernel irqchip needs to know
-> these vcpu exist before you can enter the guest for the first time. You can't create them
-> late. At best you're saving the host scheduling a vcpu that is offline. Is this really a
-> problem?
+> Otherwise, the patch looks good to me. I would just mention
+> the above scenario if it is correct.
 > 
-> If we moved PSCI support to user-space, you could avoid creating host vcpu threads until
-> the guest brings the vcpu online, which would solve that problem, and save the host
-> resources for the thread too. (and its acpi/dt agnostic)
+> Best Regards,
+> Petr
 > 
-> I don't see the difference here between booting the guest with 'maxcpus=1', and bringing
-> the vcpu online later. The only real difference seems to be moving the can-be-online
-> policy into the hypervisor/VMM...
-> 
-> 
-> I think physical package/die hotadd is a much bigger, uglier problem than doing the same
-> under virtualisation. Its best to do this on real hardware first so we don't miss
-> something. (cpu-topology, numa, memory, errata, timers?)
-> I'm worried that doing virtualisation first means the firmware-requirements for physical
-> hotadd stuff is "whatever Qemu does".
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-> .
-> 
-
+>> This patch catches kmsg_dump() called in NMI context except panic and
+>> prints warning once.
+>>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Link: https://lore.kernel.org/lkml/156294329676.1745.2620297516210526183.stgit@buzz/ (v1)
+>> ---
+>>   kernel/printk/printk.c |    7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+>> index 1888f6a3b694..e711f64a1843 100644
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -3104,6 +3104,13 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+>>   	struct kmsg_dumper *dumper;
+>>   	unsigned long flags;
+>>   
+>> +	/*
+>> +	 * In NMI context only panic could be handled safely:
+>> +	 * it stops other cpus and busts logbuf lock.
+>> +	 */
+>> +	if (WARN_ON_ONCE(reason != KMSG_DUMP_PANIC && in_nmi()))
+>> +		return;
+>> +
+>>   	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+>>   		return;
+>>   
+>>
