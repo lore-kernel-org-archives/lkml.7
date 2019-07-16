@@ -1,112 +1,191 @@
 Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A0C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46373C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C9420693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563300810;
-	bh=N8kosu0idMfnw8QjOH+lZ13PX733YQ59/k0XS0UkBoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=md2t8ZBoyY2PC/38fuNdJ/BAqlRuZkUiVTuSKidSBZQFuWPoDTjsIt0sXv599k7Mb
-	 UGwG2xDb3ZreaqcN3XktC069zzc3nj4YJqAnb9oY44opfuD7kqKJP7UFh8ViIavYRg
-	 4BwoqxAFtijXTbjNyXzlFLk4mv65HePAezVQg4Bo=
+	by mail.kernel.org (Postfix) with ESMTP id 1E1E720693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cM/NTp5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388364AbfGPSN3 (ORCPT
+        id S2388372AbfGPSQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:13:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55808 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388036AbfGPSN3 (ORCPT
+        Tue, 16 Jul 2019 14:16:08 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43890 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388107AbfGPSQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:13:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a15so19589647wmj.5;
-        Tue, 16 Jul 2019 11:13:27 -0700 (PDT)
+        Tue, 16 Jul 2019 14:16:07 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so3565399pld.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:16:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cO9ZL0i67Vukhw2LdJBrDmr+WYcSvzyDUA+M3BuQ40Y=;
-        b=RGrU02ZJmMduNCev725DAVHxTclHIDTyI84FFsXfSCSHWRqj7d+e5QS3dmYfmWKmJt
-         +DNl5W40yi4JLBp7OqRxt/Hc4nftNWMqaXWYfPp3hfDNKFkRx13Nnlu0EozkjpIVkkib
-         Vl4C8m9Gcit+4s9U7pAoYmxkM49OVdEv5uOPP65BB4yiPfS4z3AsioVjL2DciQ86fIPU
-         w808ewPimfN2Gp7+C5pjEvu0sbepzOe6PM6IOsT3cndmo2DA5I36TZKsI3C0JzXBUj8M
-         cuWNfO2wqAmBfSxGYwAviIY4Q2KJ+wBxejLWGmGp2Vxf+ZEMoDmWII5/FN98CpnWC9f0
-         mkfQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bSeAdagU7W3Xk/XctIsQGB1aBkM519mtSgLxURxSTvo=;
+        b=cM/NTp5LNfxfvRk8rUYTWF/W5fD1/ExKHYYQMlLje6L4CfkKVq/mbEduwad2kSNvPI
+         6OzAeK9VUkrlbfSoBJicw6b+0pP7YnGMXfZ6fivEOz0OsI6yLFkTA3g2JP9MdKvbkm59
+         aj/yPlctOKdmquCVbSYCT4R3RbcB8S5CC70nz6MknV0v+ZiG+xuro6ktIsyh1oMVMTgD
+         Y3iG9CSB1Zxyp4dhubAnad9GvCsNj/M5U3EYZvfLmNnPzwf+V1X6WzIrgnaWdPtcDXU+
+         wHQmA0545aMX9Dsvf2e5QCb9gr+on5wDYSAhxm9FhAd0CbGIAWIVKNMZTviChgxl2dic
+         uONQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cO9ZL0i67Vukhw2LdJBrDmr+WYcSvzyDUA+M3BuQ40Y=;
-        b=qiLTYsagb07Ij+sNOTZgf/SrZGgZhyq3KZvNW+3qa/cbtaJ0Vm0PX2Ya3muJBkYkT3
-         8NipT+l9beUEppwDK8bLoDo9QMlgAZyv8zFMkX3Jv8yQDtSc2KR9hVfywOobhoNuzxvx
-         lFA0hmrDXXjhzyPec71fhK1Es7WiFEDM7i0A9juGCmrBfXqxOO9oxFJA3PBRw7jJaMDy
-         D0l/mayxqAUJG4DWzoOyvRt1TjxyQM0Rj0LN6siDKTF3coowMmgAApb6xAfQJJv4RAt+
-         Z2Gd9nO30BeKRmKfcRxR8qqvXfoH19ZWJC70MO110QXcAqFAgLk35MyRxpNJgd63D39J
-         QD2Q==
-X-Gm-Message-State: APjAAAUjC3VKmi7bRzpuTsiEIFz450+9UuhCTu7MQ6RHENtf4YvoQ2Mg
-        mKELsCF6CeHssJKNoK4N5kc=
-X-Google-Smtp-Source: APXvYqyNrWzxnTRcAKS3SdgR5aVs8UouqJKVnSqqE1D5kZY1arihYpBoN1S9MD/hAXsNyLPmsKat7Q==
-X-Received: by 2002:a1c:544d:: with SMTP id p13mr33109434wmi.78.1563300807026;
-        Tue, 16 Jul 2019 11:13:27 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id g8sm19208079wmf.17.2019.07.16.11.13.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 11:13:26 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 20:13:24 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: kbuild: Fail if gold linker is detected
-Message-ID: <20190716181324.GA41555@gmail.com>
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
- <20190716144034.GA36330@gmail.com>
- <alpine.DEB.2.21.1907161757490.1767@nanos.tec.linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bSeAdagU7W3Xk/XctIsQGB1aBkM519mtSgLxURxSTvo=;
+        b=fK+SnjDYBffEkt7P79WPu/D2XjsDAPqLxZhCWPfI3DPCB9V3slOM7vCknFOqRY1Rdx
+         9fRUeFB+P3yD+crzNXSmyXTKg6yhLdaBsTH/dSFiWq565VrSUHidAEzAhywCak2zCwH/
+         t4DS70V47H97RA6Cl5PyfX1YgZdJEZfYF8Z/BdjeX27qJnSfpHD8/rJ85swAByKXWdPF
+         qkTbyC0AKKHK7glimuYxi0V7+HHoH2CQ38Lw/uBeDeppZcNELuzymkdxNllOsgnuJ9M1
+         BPHPI35b4Z3badoSksLqJhT8N07aZ7IHihjCjMDIFl2TROou6S0u1nJMzWThx7jiDeCU
+         qsAQ==
+X-Gm-Message-State: APjAAAVW6di1wbEDVutRIzaJLB/+DxgeJxlnoaZlgDuv+JZpb5fxJIjf
+        mTt0cZcbM3r0WgCKS5kjKkKU7Gd3TUzHzMo2Sm9VBw==
+X-Google-Smtp-Source: APXvYqxdDahY9o7Gz9BbN2FGiRjjIsxxIpSbCNWzGbt6agI+IBN12KYeOgsVdI4KysI5xhWEakEiUjYthAkPY1Z4KKE=
+X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr37135682plq.223.1563300965899;
+ Tue, 16 Jul 2019 11:16:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907161757490.1767@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1563150885.git.jpoimboe@redhat.com> <1044b4ced755cc3d1d32030cfcf2064f06a9e639.1563150885.git.jpoimboe@redhat.com>
+In-Reply-To: <1044b4ced755cc3d1d32030cfcf2064f06a9e639.1563150885.git.jpoimboe@redhat.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 16 Jul 2019 11:15:54 -0700
+Message-ID: <CAKwvOdmUfAg9cP4tHV7tXC8PtcumehZ99+wqdcmkTR5a6LORrw@mail.gmail.com>
+Subject: Re: [PATCH 10/22] bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 14, 2019 at 5:37 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On x86-64, with CONFIG_RETPOLINE=n, GCC's "global common subexpression
+> elimination" optimization results in ___bpf_prog_run()'s jumptable code
+> changing from this:
+>
+>         select_insn:
+>                 jmp *jumptable(, %rax, 8)
+>                 ...
+>         ALU64_ADD_X:
+>                 ...
+>                 jmp *jumptable(, %rax, 8)
+>         ALU_ADD_X:
+>                 ...
+>                 jmp *jumptable(, %rax, 8)
+>
+> to this:
+>
+>         select_insn:
+>                 mov jumptable, %r12
+>                 jmp *(%r12, %rax, 8)
+>                 ...
+>         ALU64_ADD_X:
+>                 ...
+>                 jmp *(%r12, %rax, 8)
+>         ALU_ADD_X:
+>                 ...
+>                 jmp *(%r12, %rax, 8)
+>
+> The jumptable address is placed in a register once, at the beginning of
+> the function.  The function execution can then go through multiple
+> indirect jumps which rely on that same register value.  This has a few
+> issues:
+>
+> 1) Objtool isn't smart enough to be able to track such a register value
+>    across multiple recursive indirect jumps through the jump table.
+>
+> 2) With CONFIG_RETPOLINE enabled, this optimization actually results in
+>    a small slowdown.  I measured a ~4.7% slowdown in the test_bpf
+>    "tcpdump port 22" selftest.
+>
+>    This slowdown is actually predicted by the GCC manual:
+>
+>      Note: When compiling a program using computed gotos, a GCC
+>      extension, you may get better run-time performance if you
+>      disable the global common subexpression elimination pass by
+>      adding -fno-gcse to the command line.
+>
+> So just disable the optimization for this function.
+>
+> Fixes: e55a73251da3 ("bpf: Fix ORC unwinding in non-JIT BPF code")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Acked-by: Alexei Starovoitov <ast@kernel.org>
+> ---
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> ---
+>  include/linux/compiler-gcc.h   | 2 ++
+>  include/linux/compiler_types.h | 4 ++++
+>  kernel/bpf/core.c              | 2 +-
+>  3 files changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> index e8579412ad21..d7ee4c6bad48 100644
+> --- a/include/linux/compiler-gcc.h
+> +++ b/include/linux/compiler-gcc.h
+> @@ -170,3 +170,5 @@
+>  #else
+>  #define __diag_GCC_8(s)
+>  #endif
+> +
+> +#define __no_fgcse __attribute__((optimize("-fno-gcse")))
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
++ Miguel, maintainer of compiler_attributes.h
+I wonder if the optimize attributes can be feature detected?
+Is -fno-gcse supported all the way back to GCC 4.6?
 
-> On Tue, 16 Jul 2019, Ingo Molnar wrote:
-> 
-> > 
-> > * Thomas Gleixner <tglx@linutronix.de> wrote:
-> > 
-> > > The gold linker has known issues of failing the build in random and
-> > > predictible ways. H.J. stated:
-> > 
-> > s/predictable/unpredictable?
-> 
-> No. It fails randomly, but also predictable. Enable X32 support on 64bit
-> and it fails the VDSO build. That's been the case for years.
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 095d55c3834d..599c27b56c29 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -189,6 +189,10 @@ struct ftrace_likely_data {
+>  #define asm_volatile_goto(x...) asm goto(x)
+>  #endif
+>
+> +#ifndef __no_fgcse
+> +# define __no_fgcse
+> +#endif
+> +
+>  /* Are two types/vars the same type (ignoring qualifiers)? */
+>  #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+>
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 7e98f36a14e2..8191a7db2777 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -1295,7 +1295,7 @@ bool bpf_opcode_in_insntable(u8 code)
+>   *
+>   * Decode and execute eBPF instructions.
+>   */
+> -static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> +static u64 __no_fgcse ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+>  {
+>  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+>  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+> --
+> 2.20.1
+>
 
-Then please make this a bit more apparent, such as:
 
- "The gold linker has known issues of failing the build in random
-  but also in more predictible ways."
-
-or so?
-
+-- 
 Thanks,
-
-	Ingo
+~Nick Desaulniers
