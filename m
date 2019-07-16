@@ -2,111 +2,127 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3DC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83626C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8B820693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qYBVXqle"
+	by mail.kernel.org (Postfix) with ESMTP id 5CF422173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387821AbfGPOQo (ORCPT
+        id S2387869AbfGPOR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:16:44 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45602 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfGPOQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:16:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x21so21191932otq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 07:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jVq/zyKNmBTqyWzD5MQLwwT+e3xMbKqpQWodHdoZ+Mk=;
-        b=qYBVXqle+7vCUqLEVGwc67lXP5F/twwhlFE5Z3mnLHfQaL3woXgBZgCVi92TBDhjeJ
-         2xYZtFtWIO5evm6dUtiAoTEGoDOsm7fC7AJucP0UX9gFrIopG668rPCYstFNF/deP0NO
-         Yow3WDYPuKUXWR6NI8bIKWpEgK5Io9YYvt0wF0VNxQOMp4A/Yvrc6EGJuKBoAyR7WEFk
-         BKTpMnxxGFDKUSaSEHeIdUeyft5UdLs/UKvUocHQGm9LDJsZL1rqSQe42AuAX+b4dBhv
-         mjMEEk6vcD90usHttnGty2wR67IuGbimfqxxuyyfVqldMtrUTdVGUz7HAU4v4CZXe41f
-         chrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jVq/zyKNmBTqyWzD5MQLwwT+e3xMbKqpQWodHdoZ+Mk=;
-        b=C3VBxYd1jhrv7WQnLWz9NNxKFoaK4lU+YPPnL7lm7FjVwv6qoZtYCd0EqZDFEspUvY
-         F4YyDymIdC2lkzl9ytyXulsPU24xX79wPs5Ljjef7GDs6BEHDjL2w4x7pI1d9d3CvRqz
-         BjzNY2H90LGH7l4t6hELl1HGftp+DZ1l5IuvFUNMNI4Bxtky86qCE5fGlW29OoYj2iPE
-         VZVRekdWVU7eBKeoqaQqqNTgm1uhPCBpiClCp5kl+bwaoGNY4sZ3zo9p4eDT/c0pLpn3
-         7G8vu5nsoVzxeBAnJdrLnC4Pf5fZIetbdxUDPpx5DLECgAEhEMhgcOGwAKd9temWMB6n
-         S/eg==
-X-Gm-Message-State: APjAAAU00bf7+82BBEO0Dm7gD4j/xDpE1QieSEl5QdQohFERYAUoR+9z
-        FoAv+l0xGfYlCZ0v6UAxyXuDxNpEoxUQq1SW6m4WgcGaVcuaozf9LVY=
-X-Google-Smtp-Source: APXvYqwN9uylP2hsCV6+LMaCJG6qvXFU449tm2O5OEbnNN4gNeP8+80YgzfQ+LB6vAKflWj5X25PTd+HkjgUEvFFruA=
-X-Received: by 2002:a05:6830:1cd:: with SMTP id r13mr12627965ota.99.1563286603085;
- Tue, 16 Jul 2019 07:16:43 -0700 (PDT)
+        Tue, 16 Jul 2019 10:17:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:8698 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727849AbfGPORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:17:25 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E9AE0882EA;
+        Tue, 16 Jul 2019 14:17:24 +0000 (UTC)
+Received: from [10.36.116.218] (ovpn-116-218.ams2.redhat.com [10.36.116.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3DB6611DE;
+        Tue, 16 Jul 2019 14:17:14 +0000 (UTC)
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+From:   David Hildenbrand <david@redhat.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+ <20190619223338.1231.52537.stgit@localhost.localdomain>
+ <20190716055017-mutt-send-email-mst@kernel.org>
+ <cad839c0-bbe6-b065-ac32-f32c117cf07e@intel.com>
+ <3f8b2a76-b2ce-fb73-13d4-22a33fc1eb17@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <e565859c-d41a-e3b8-fd50-4537b50b95fb@redhat.com>
+Date:   Tue, 16 Jul 2019 16:17:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190716115725.66558-1-cychiang@chromium.org> <20190716115725.66558-6-cychiang@chromium.org>
-In-Reply-To: <20190716115725.66558-6-cychiang@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Tue, 16 Jul 2019 22:16:32 +0800
-Message-ID: <CA+Px+wXK9gJKZwzsG8BXh1gmoEyscxtMzB_VCrHz-nenBEL9AQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] ASoC: rockchip_max98090: Add HDMI jack support
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>, dgreid@chromium.org,
-        tzungbi@chromium.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3f8b2a76-b2ce-fb73-13d4-22a33fc1eb17@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 16 Jul 2019 14:17:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 7:58 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
->
-> diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-> index c82948e383da..c81c4acda917 100644
-> --- a/sound/soc/rockchip/rockchip_max98090.c
-> +++ b/sound/soc/rockchip/rockchip_max98090.c
-> +static struct snd_soc_jack rk_hdmi_jack;
-> +
-> +static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
-> +{
-> +       struct snd_soc_card *card = runtime->card;
-> +       struct snd_soc_component *component = runtime->codec_dai->component;
-> +       int ret;
-> +
-> +       /* enable jack detection */
-> +       ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
-> +                                   &rk_hdmi_jack, NULL, 0);
-> +       if (ret) {
-> +               dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
-> +}
-In the patch, you should select SND_SOC_HDMI_CODEC, because the patch
-uses hdmi_codec_set_jack_detect which depends on hdmi-codec.c.
+On 16.07.19 16:12, David Hildenbrand wrote:
+> On 16.07.19 16:00, Dave Hansen wrote:
+>> On 7/16/19 2:55 AM, Michael S. Tsirkin wrote:
+>>> The approach here is very close to what on-demand hinting that is
+>>> already upstream does.
+>>
+>> Are you referring to the s390 (and powerpc) stuff that is hidden behind
+>> arch_free_page()?
+>>
+> 
+> I assume Michael meant "free page reporting".
+> 
+
+(https://lwn.net/Articles/759413/)
+
+-- 
+
+Thanks,
+
+David / dhildenb
