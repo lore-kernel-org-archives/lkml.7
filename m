@@ -2,98 +2,98 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82056C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC8FC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0E6217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dbvb6XCq"
+	by mail.kernel.org (Postfix) with ESMTP id 50B522173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388509AbfGPTpj (ORCPT
+        id S1728966AbfGPTrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:45:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46715 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfGPTph (ORCPT
+        Tue, 16 Jul 2019 15:47:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51032 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGPTre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:45:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c73so9594229pfb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3AgUbM0e5/92Cpo+sVKZd+RAcuqfF3u7zDN3lIzhJzQ=;
-        b=Dbvb6XCqTipqnHRs6g4Di/rpUpD0ZwaKrdunT90pIH/J/v/8eHGkSWCWBIVL9M8pUH
-         1HNlccZCrpxwvgw2uwBMO8yuz8B8ZKg4n1tKHnthtWL/OUmZ/t54+mhbn2I/UPjb/u2o
-         ajj/c72so+iOxoDOVMq97sa/RldaeLd5MFpezcmglVVXI0g8G5KbuDB48TQItpfdvQRa
-         d5JOB1mqnpUigRMITdFSWKLudZL0AJJEbLjrVsnfWfnlshTraD4BNQN61G95MeO3mGz3
-         +gHAfTxJyAZ9UW4v/pdPO9OzYftmqIRpjJH3Y2v1AF/pfVdiO1JPjLwPLZxBuj9AVAQ5
-         uQRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3AgUbM0e5/92Cpo+sVKZd+RAcuqfF3u7zDN3lIzhJzQ=;
-        b=fd7jyL4c1vKJYXhviUL6Spwe22DSQUIKbYM04HmdhKzGR1y29yx3hsbgKslxpj/5d5
-         9XWgVzVVLChzsapYV8JUZgP5MtX9iOydOdGgw+WFn0OxRj/RHLuAn1itkRx6Y8OcBJMw
-         l6/H1+Wkscmnbi2SFmGnO+wvqaY5kocCFGsFFn5cR8qTtS2BeCZcjae0QfjZI1K84Wi+
-         VXK0hTboqLzzqegpZiZHkKPJcO5SPHPhy3NVq7tGmbMSG9y4uV1PBmfU7CQmz0FJpG3n
-         coKGIzZ96uht7fr8Usi6x3qe1JO1ARMpq2uczmrS4rSsPnhnpPnEHvqUJzzOTWJBIcN0
-         wKXg==
-X-Gm-Message-State: APjAAAVgrECy7QwnauJkz7F7H5Lu11CVB6vvb7QLeqlQ8SSmSIWDhAwH
-        1IXaSdz4NYOhrqiiivNsFi6tcRsnr37cVN8DSr7YKQ==
-X-Google-Smtp-Source: APXvYqyQKTKN3LsCMk/VwuKF6YRJV3ojfFHsMtv6uUYsfbcNay4GyBwJMDnmsNxhh6+sFg8wjrhNvKwav8fgfbdT5Jc=
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr39169049pjs.73.1563306336472;
- Tue, 16 Jul 2019 12:45:36 -0700 (PDT)
+        Tue, 16 Jul 2019 15:47:34 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnTQ8-0001mu-Qj; Tue, 16 Jul 2019 21:47:28 +0200
+Date:   Tue, 16 Jul 2019 21:47:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Mike Lothian <mike@fireburn.co.uk>
+Subject: [PATCH v2] kbuild: Fail if gold linker is detected
+In-Reply-To: <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
- <CAKwvOdmg2b2PMzuzNmutacFArBNagjtwG=_VZvKhb4okzSkdiA@mail.gmail.com> <20190716145716.6b081bdc@gandalf.local.home>
-In-Reply-To: <20190716145716.6b081bdc@gandalf.local.home>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 16 Jul 2019 12:45:25 -0700
-Message-ID: <CAKwvOd=r3xh+yxCgFqQObwi=sMb9oqG0UcTvNJQ4KWKvN82g8A@mail.gmail.com>
-Subject: Re: BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        tobin@kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:57 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Tue, 16 Jul 2019 11:28:29 -0700
-> Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> > The cited code looks like a check comparing that the pointer distance
-> > is greater than the size of bytes being passed in.  I'd wager
-> > someone's calling memmove with overlapping memory regions when they
-> > really wanted memcpy.  Maybe a better question, is why was memmove
-> > ever used; if there was some invariant that the memory regions
-> > overlapped, why is that invariant no longer holding.
->
-> I'm confused by the above statement as memmove() allows overlapping of
-> src and dest, where as memcpy() does not.
+The gold linker has known issues of failing the build both in random and in
+predictible ways:
 
-Yes you're right; I confused the two.  From the snippet in the
-original email, it looks like the body of a fortified memcpy was
-provided, and a memmove declaration was below it.  So replace my
-assumption of a bad call to memmove with a bad call to memcpy (which
-should then make more sense, hopefully).
--- 
-Thanks,
-~Nick Desaulniers
+ - The x86/X32 VDSO build fails with:
+
+   arch/x86/entry/vdso/vclock_gettime-x32.o:vclock_gettime.c:function do_hres:
+   error: relocation overflow: reference to 'hvclock_page'
+
+   That's a known issue for years and the usual workaround is to disable
+   CONFIG_X86_32
+
+ - A recent build failure is caused by turning a relocation into an
+   absolute one for unknown reasons. See link below.
+
+ - There are a couple of gold workarounds applied already, but reports
+   about broken builds with ld.gold keep coming in on a regular base and in
+   most cases the root cause is unclear.
+
+In context of the most recent fail H.J. stated:
+
+  "Since building a workable kernel for different kernel configurations
+   isn't a requirement for gold, I don't recommend gold for kernel."
+
+So instead of dealing with attempts to duct tape gold support without
+understanding the root cause and without support from the gold folks, fail
+the build when gold is detected.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
+---
+V2: Better changelog
+    Use the proper check as pointed out by Nathan
+---
+ scripts/Kconfig.include |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -35,5 +35,8 @@ ld-option = $(success,$(LD) -v $(1))
+ $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
+ $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
+ 
++# Fail if the linker is gold as it's not capable of linking the kernel proper
++$(error-if,$(success, $(LD) -v | grep -q gold), gold linker '$(LD)' not supported)
++
+ # gcc version including patch level
+ gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
