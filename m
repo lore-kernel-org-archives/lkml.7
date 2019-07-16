@@ -2,146 +2,152 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD522C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E619FC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E8821841
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA69218A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ka16flw1"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="kfuVXg1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389065AbfGPX2U (ORCPT
+        id S2389156AbfGPXa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:28:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41511 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfGPX2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:28:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pGmJ2zpSz9s3l;
-        Wed, 17 Jul 2019 09:28:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563319696;
-        bh=rwxKbah4VfF7BG5Oj6ZkNXpTV6etHJFRWQvfPcRHh/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ka16flw1aRM5RL34BTfjnFB5oXVz0mnkGzNRqCRCPMOzgeF2cyHLOfAXOMcS4CAfT
-         SojmXzZJJzEAyi0BiUof3x+e2qvBxDjfNDJaWFkoctgs7tcT44PwLfg+0ARhQfLqgA
-         FXSRaHPDUhpBjTJ3YzChLzpyifdn83P8kal2RqI8DR8y3MfWb194oLxMvSRproA251
-         Fz79n6JSEe/JTOCFHyR0ZQzyOEgBRk6NG3vlpiKgaN0EDQRYJKJlgHNim1K4AxVwMM
-         YtMBIR+I1S61cYwwc681nTuRk31ZQYfRq5wapE8MprvFivMgt8ck+K+tARjkERHGrh
-         xf3fVxbVb0YMA==
-Date:   Wed, 17 Jul 2019 09:28:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Majd Dibbiny <majd@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rdma tree
-Message-ID: <20190717092801.77037015@canb.auug.org.au>
-In-Reply-To: <20190710143036.1582c79d@canb.auug.org.au>
-References: <20190709133019.25a8cd27@canb.auug.org.au>
-        <ba1dd3e2-3091-816c-c308-2f9dd4385596@mellanox.com>
-        <20190709071758.GI7034@mtr-leonro.mtl.com>
-        <20190709124631.GG3436@mellanox.com>
-        <20190710110443.002220c8@canb.auug.org.au>
-        <20190710143036.1582c79d@canb.auug.org.au>
+        Tue, 16 Jul 2019 19:30:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37138 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389115AbfGPXa3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:30:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c9so14952353lfh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:30:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YWcpEc5FvGUxMrkeRiB0cnwgYS5TPs4Urt5+gPVZDh8=;
+        b=kfuVXg1GBNwcOoznZPvryqh6/i2XrbBE6hkmVUMgSZi+LTGFCMeiia9P0u53fqR03S
+         Db8ww5cz17ZFCZKlTuva1FUSo3Y2oMZofZ8fP/h1fLivURlC81chU7PWbmPju7Admx1Z
+         0vNl1Znw/JxnQbaEB3qodZy91u3UJcA/kBkF3/fop+D+uNxeIU9ClEdXjFRvVywlejx8
+         DnAqQwuvXO4VpPWfxjCThhbeKljqILhPjFnODqbpRq1N11o4FSdml1BI7L1b7dz9y+YP
+         fYw1lfsvEQejaiRHp3kfd9vzzpXxhC6v4ipIrx4uMBDRiXoRA77MJ55m7j30qsm5olyc
+         8AKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YWcpEc5FvGUxMrkeRiB0cnwgYS5TPs4Urt5+gPVZDh8=;
+        b=Cob2kiRlxZG7mGteiVNjPtnS89WPiGbUJnmsVbPOP5oEeVWZvnyjjVWSov+2jaELA9
+         nb+CxcMc0Usx7ifEyVJ6CcII1htkcIZcOAZm5PxKio9MPaRGTG+KJ7X7aePuE1/9WqNp
+         nv6LRaGbvVmvKy+uM47BZsJ4yeihAp1cGjswj6D4LvBtNG47ar1He9gVMvJ3e5tjmcMI
+         7IwqaRKUXAJhovvtWfaMFu87v7JxdxDV9KjK/dvCkaxOBkU6/dk6FxbQ7UJrx/uGvcHs
+         ThKQWqkJpPt8WbHkeYfODaZe2x001jJEDWakQrSAIXnvol1H1plhR8Skl9S3FVRtVrfJ
+         0pUA==
+X-Gm-Message-State: APjAAAVkD33bUAFNQfNONi5Mv+VZkke7er61Y8qJc1ErsVIe6SFt6OpP
+        BnYEuiGBLPUEusNhAFez+v1f8qpxB7mtBfUp+g==
+X-Google-Smtp-Source: APXvYqxz39ngK72ytLQXqEXgHBnS7WXBpZpi6vOwRoyqlsR7YPmTcb6oeRneK/RtXK9BLw25UxnyGGXWi29uMJ0dI9o=
+X-Received: by 2002:ac2:4109:: with SMTP id b9mr14480083lfi.31.1563319826317;
+ Tue, 16 Jul 2019 16:30:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/KoH5lVAefuFawhjo7irS3qR"; protocol="application/pgp-signature"
+References: <20190529145742.GA8959@cisco> <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
+ <20190529153427.GB8959@cisco> <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
+ <20190529222835.GD8959@cisco> <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
+ <20190530170913.GA16722@mail.hallyn.com> <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
+ <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca> <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
+ <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
+In-Reply-To: <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 16 Jul 2019 19:30:15 -0400
+Message-ID: <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        ebiederm@xmission.com, nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KoH5lVAefuFawhjo7irS3qR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 16, 2019 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-07-15 17:04, Paul Moore wrote:
+> > On Mon, Jul 8, 2019 at 2:06 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 
-Hi,
+...
 
-On Wed, 10 Jul 2019 14:30:36 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Wed, 10 Jul 2019 11:04:43 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
+> > > If we can't trust ns_capable() then why are we passing on
+> > > CAP_AUDIT_CONTROL?  It is being passed down and not stripped purposely
+> > > by the orchestrator/engine.  If ns_capable() isn't inherited how is it
+> > > gained otherwise?  Can it be inserted by cotainer image?  I think the
+> > > answer is "no".  Either we trust ns_capable() or we have audit
+> > > namespaces (recommend based on user namespace) (or both).
 > >
-> > On Tue, 9 Jul 2019 12:46:34 +0000 Jason Gunthorpe <jgg@mellanox.com> wr=
-ote: =20
-> > >
-> > > It isn't quite enough to make the header compile stand alone, I'm
-> > > adding this instead.
-> > >=20
-> > > From 37c1e072276b03b080eb24ff24c39080aeaf49ef Mon Sep 17 00:00:00 2001
-> > > From: Jason Gunthorpe <jgg@mellanox.com>
-> > > Date: Tue, 9 Jul 2019 09:44:47 -0300
-> > > Subject: [PATCH] RDMA/counters: Make rdma_counter.h compile stand alo=
-ne   =20
-> >=20
-> > I will apply this to linux-next today and reenable the stand alone
-> > building for rdma_counter.h =20
->=20
-> That worked for me ...
+> > My thinking is that since ns_capable() checks the credentials with
+> > respect to the current user namespace we can't rely on it to control
+> > access since it would be possible for a privileged process running
+> > inside an unprivileged container to manipulate the audit container ID
+> > (containerized process has CAP_AUDIT_CONTROL, e.g. running as root in
+> > the container, while the container itself does not).
+>
+> What makes an unprivileged container unprivileged?  "root", or "CAP_*"?
 
-rdma_counter.h should be able to be removed from the exceptions list now.
+My understanding is that when most people refer to an unprivileged
+container they are referring to a container run without capabilities
+or a container run by a user other than root.  I'm sure there are
+better definitions out there, by folks much smarter than me on these
+things, but that's my working definition.
 
-I have been building linux-next with this patch for a while, so maybe
-it could be applied to the kbuild tree?
+> If CAP_AUDIT_CONTROL is granted, does "root" matter?
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 10 Jul 2019 13:03:16 +1000
-Subject: [PATCH] rdma: attempt to build rdma_counter.h stand alone again
+Our discussions here have been about capabilities, not UIDs.  The only
+reason root might matter is that it generally has the full capability
+set.
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/Kbuild | 1 -
- 1 file changed, 1 deletion(-)
+> Does it matter what user namespace it is in?
 
-diff --git a/include/Kbuild b/include/Kbuild
-index 7e9f1acb9dd5..765ff864130d 100644
---- a/include/Kbuild
-+++ b/include/Kbuild
-@@ -949,7 +949,6 @@ header-test-			+=3D pcmcia/ds.h
- header-test-			+=3D rdma/ib.h
- header-test-			+=3D rdma/iw_portmap.h
- header-test-			+=3D rdma/opa_port_info.h
--header-test-			+=3D rdma/rdma_counter.h
- header-test-			+=3D rdma/rdmavt_cq.h
- header-test-			+=3D rdma/restrack.h
- header-test-			+=3D rdma/signature.h
---=20
-2.20.1
+What likely matters is what check is called: capable() or
+ns_capable().  Those can yield very different results.
 
---=20
-Cheers,
-Stephen Rothwell
+> I understand that root is *gained* in an
+> unprivileged user namespace, but capabilities are inherited or permitted
+> and that process either has it or it doesn't and an unprivileged user
+> namespace can't gain a capability that has been rescinded.  Different
+> subsystems use the userid or capabilities or both to determine
+> privileges.
 
---Sig_/KoH5lVAefuFawhjo7irS3qR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Once again, I believe the important thing to focus on here is
+capable() vs ns_capable().  We can't safely rely on ns_capable() for
+the audit container ID policy since that is easily met inside the
+container regardless of the process' creds which started the
+container.
 
------BEGIN PGP SIGNATURE-----
+> In this case, is the userid relevant?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0uXYEACgkQAVBC80lX
-0GzDtAf/XyHO+dBLQ6dMUwGRO8Nb0lKbujqapttpU/NtqcBv5FrD6kOrlVJplXDB
-UL+DCm8LEp33pb2FRchB2pPzDSWrJSR1YIW0MeJ9+0u+rPjqlq/duncNDm2eQKCZ
-YhdmcoTpkbCO8YVt6EMddoZzBJq+cWVFf0f4JNpj5ZjiZdjIyV2EqQ0EyvSzsHkI
-M1SN7p5H86XM3+1bKoHB5wIcsQODFJYAbGdTrXO4ySQmfz3hqmpnZOGcdnClsN27
-VUjkIm4hDzbfhfT0QV+kVfShz3EtpUdNtO5sUDWMQ+Mm89F87W56nZC2gPiz9cII
-RWLPpIIFYIxxp6rpGSlIYY3Xa2NtbA==
-=9q44
------END PGP SIGNATURE-----
+We don't do UID checks, we do capability checks, so yes, the UID is irrelevant.
 
---Sig_/KoH5lVAefuFawhjo7irS3qR--
+> > > At this point I would say we are at an impasse unless we trust
+> > > ns_capable() or we implement audit namespaces.
+> >
+> > I'm not sure how we can trust ns_capable(), but if you can think of a
+> > way I would love to hear it.  I'm also not sure how namespacing audit
+> > is helpful (see my above comments), but if you think it is please
+> > explain.
+>
+> So if we are not namespacing, why do we not trust capabilities?
+
+We can trust capable(CAP_AUDIT_CONTROL) for enforcing audit container
+ID policy, we can not trust ns_capable(CAP_AUDIT_CONTROL).
+
+-- 
+paul moore
+www.paul-moore.com
