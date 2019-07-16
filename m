@@ -6,135 +6,188 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA04C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CD4C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA0E2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1102173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387656AbfGPOHM (ORCPT
+        id S2387809AbfGPOHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:07:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:35434 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfGPOHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:07:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 343A6344;
-        Tue, 16 Jul 2019 07:07:11 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D33A63F59C;
-        Tue, 16 Jul 2019 07:07:08 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 15:07:06 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v11 2/5] sched/core: uclamp: Propagate parent clamps
-Message-ID: <20190716140706.vuggfigjlys44lkp@e110439-lin>
-References: <20190708084357.12944-1-patrick.bellasi@arm.com>
- <20190708084357.12944-3-patrick.bellasi@arm.com>
- <20190715164200.GA30862@blackbody.suse.cz>
+        Tue, 16 Jul 2019 10:07:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2233 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726039AbfGPOHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:07:46 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DCCD31401546E9464CDD;
+        Tue, 16 Jul 2019 22:07:42 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
+ 22:07:32 +0800
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     Vasily Averin <vvs@virtuozzo.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+ <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+ <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+ <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
+ <20190712140729.GA11583@kroah.com>
+ <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
+ <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
+ <3bbc16ba-953c-a6b6-c5f3-4deaeaa25d10@huawei.com>
+ <e4753c70-de7c-063a-dc49-0edc7520ccd2@virtuozzo.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <d418e8ed-de54-53af-a0db-3535ae50e540@huawei.com>
+Date:   Tue, 16 Jul 2019 22:07:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <e4753c70-de7c-063a-dc49-0edc7520ccd2@virtuozzo.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190715164200.GA30862@blackbody.suse.cz>
-User-Agent: NeoMutt/20180716
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
-
-On 15-Jul 18:42, Michal Koutný wrote:
-> On Mon, Jul 08, 2019 at 09:43:54AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> > Since it's possible for a cpu.uclamp.min value to be bigger than the
-> > cpu.uclamp.max value, ensure local consistency by restricting each
-> > "protection"
-> > (i.e. min utilization) with the corresponding "limit" (i.e. max
-> > utilization).
-> I think this constraint should be mentioned in the Documentation/....
-
-That note comes from the previous review cycle and it's based on a
-request from Tejun to align uclamp behaviors with the way the
-delegation model is supposed to work.
-
-I guess this part of the documentation:
-   https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html?highlight=protections#resource-distribution-models
-should already cover the expected uclamp min/max behaviors.
-
-However, I guess "repetita iuvant" in this case. I'll call this out
-explicitly in the description of cpu.uclamp.min.
-
-> > +static void cpu_util_update_eff(struct cgroup_subsys_state *css)
-> > +{
-> > +	struct cgroup_subsys_state *top_css = css;
-> > +	struct uclamp_se *uc_se = NULL;
-> > +	unsigned int eff[UCLAMP_CNT];
-> > +	unsigned int clamp_id;
-> > +	unsigned int clamps;
-> > +
-> > +	css_for_each_descendant_pre(css, top_css) {
-> > +		uc_se = css_tg(css)->parent
-> > +			? css_tg(css)->parent->uclamp : NULL;
-> > +
-> > +		for_each_clamp_id(clamp_id) {
-> > +			/* Assume effective clamps matches requested clamps */
-> > +			eff[clamp_id] = css_tg(css)->uclamp_req[clamp_id].value;
-> > +			/* Cap effective clamps with parent's effective clamps */
-> > +			if (uc_se &&
-> > +			    eff[clamp_id] > uc_se[clamp_id].value) {
-> > +				eff[clamp_id] = uc_se[clamp_id].value;
-> > +			}
-> > +		}
-> > +		/* Ensure protection is always capped by limit */
-> > +		eff[UCLAMP_MIN] = min(eff[UCLAMP_MIN], eff[UCLAMP_MAX]);
-> > +
-> > +		/* Propagate most restrictive effective clamps */
-> > +		clamps = 0x0;
-> > +		uc_se = css_tg(css)->uclamp;
-> (Nitpick only, reassigning child where was parent before decreases
-> readibility. IMO)
-
-Did not checked but I think the compiler will figure out it can still
-use a single pointer for both assignments.
-I'll let's the compiler to its job and add in a dedicated stack var
-for the parent pointer.
 
 
-> > +		for_each_clamp_id(clamp_id) {
-> > +			if (eff[clamp_id] == uc_se[clamp_id].value)
-> > +				continue;
-> > +			uc_se[clamp_id].value = eff[clamp_id];
-> > +			uc_se[clamp_id].bucket_id = uclamp_bucket_id(eff[clamp_id]);
-> Shouldn't these writes be synchronized with writes from
-> __setscheduler_uclamp()?
+On 2019/7/16 18:20, Vasily Averin wrote:
+> On 7/16/19 5:00 AM, Xiaoming Ni wrote:
+>> On 2019/7/15 13:38, Vasily Averin wrote:
+>>> On 7/14/19 5:45 AM, Xiaoming Ni wrote:
+>>>> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
+>>>>> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
+>>>>>> On 2019/7/11 21:57, Vasily Averin wrote:
+>>>>>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
+>>>>>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
+>>>>>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+>>>>>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
+>>>>>>>>>> list to form a ring or lose other members of the list.
+>>>>>>>>>
+>>>>>>>>> I think is not enough to _prevent_ 2nd register attempt,
+>>>>>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
+>>>>>>>>
+>>>>>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
+>>>>>>>>
+>>>>>>>> Duplicate registration was checked in notifier_chain_register() but only 
+>>>>>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
+>>>>>>>> ("kernel/notifier.c: double register detection")
+>>>>>>>>
+>>>>>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
+>>>>>>>>  which triggers an alarm and exits when a duplicate registration is detected.
+>>>>>>>>
+>>>>>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+>>>>>>>>> and it can lead to host crash in any time: 
+>>>>>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
+>>>>>>>>> on the other hand you can never call 2nd unregister at all.
+>>>>>>>>
+>>>>>>>> Since the member was not added to the linked list at the time of the second registration, 
+>>>>>>>> no linked list ring was formed. 
+>>>>>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
+>>>>>>>> After patching, the fault has been alleviated
+>>>>>>>
+>>>>>>> You are wrong here.
+>>>>>>> 2nd notifier's registration is a pure bug, this should never happen.
+>>>>>>> If you know the way to reproduce this situation -- you need to fix it. 
+>>>>>>>
+>>>>>>> 2nd registration can happen in 2 cases:
+>>>>>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
+>>>>>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
+>>>>>>> 2) some subsystem is registered twice, for example from  different namespaces.
+>>>>>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
+>>>>>>> in second namespace, it also can lead to unexpacted behaviour.
+>>>>>>>
+>>>>>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
+>>>>>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
+>>>>>> notifier_chain_cond_register() direct exit without triggering WARN() ?
+>>>>>
+>>>>> It should recover from this, if it can be detected.  The main point is
+>>>>> that not all apis have to be this "robust" when used within the kernel
+>>>>> as we do allow for the callers to know what they are doing :)
+>>>>>
+>>>> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
+>>>>  We can intercept this situation and avoid forming a linked list ring to make the API more rob
+>>>
+>>> Once again -- yes, you CAN prevent list corruption, but you CANNOT recover the host and return it back to safe state.
+>>> If double register event was detected -- it means you have bug in kernel.
+>>>
+>>> Yes, you can add BUG here and crash the host immediately, but I prefer to use warning in such situations.
+>>>
+>>>>> If this does not cause any additional problems or slow downs, it's
+>>>>> probably fine to add.
+>>>>>
+>>>> Notifier_chain_register() is not a system hotspot function.
+>>>> At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
+>>>> It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
+>>>> At the same time, avoiding the formation of a link ring can make the system more robust.
+>>>
+>>> I disagree, 
+>>> yes, node will have correct list, but anyway node will work wrong and can crash the host in any time.
+>>
+>> Sorry, my description is not accurate.
+>>
+>> My patch feature does not prevent users from repeatedly registering hooks.
+>> But avoiding the chain ring caused by the user repeatedly registering the hook
+>>
+>> There are no modules for duplicate registration hooks in the current system.
+>> But considering that not all modules are in the kernel source tree,
+>> In order to improve the robustness of the kernel API, we should avoid the linked list ring caused by repeated registration.
+>> Or in order to improve the efficiency of problem location, when the duplicate registration is checked, the system crashes directly.
+> 
+> Detect of duplicate registration means an unrecoverable error,
+> from this point of view it makes sense to replace WARN_ONCE by BUG_ON.
+>  
+>> On the other hand, the difference between notifier_chain_register() and notifier_chain_cond_register() for duplicate registrations is confusing:
+>> Blocking the formation of the linked list ring in notifier_chain_cond_register()
+>> There is no interception of the linked list ring in notifier_chain_register(), just an alarm.
+>> Give me the illusion: Isn't notifier_chain_register() allowed to create a linked list ring?
+> 
+> I'm not sure that I understood your question correctly but will try to answer.
+> As far as I see all callers of notifier_chain_cond_register checks return value, expect possible failure and handle it somehow.
+> On the other hand callers of notifier_chain_register() in many cases do not check return value and always expect success.
+> The goal of original WARN_ONCE -- to detect possible misuse of notifiers and it seems for me it correctly handles this task.
+>
+Notifier_chain_cond_register() has only one return value: 0
+At the same time, it is only called by blocking_notifier_chain_cond_register().
+In the function comment of blocking_notifier_chain_cond_register there is " Currently always returns zero."
+Therefore, the user cannot check whether the hook has duplicate registration or other errors by checking the return value.
 
-You right, the synchronization is introduced by a later patch:
+If the interceptor list ring is added to notifier_chain_register(), notifier_chain_register()
+Â And notifier_chain_cond_register() becomes redundant code, we can delete one of them
 
-   sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+> 
+> .
+> 
 
-Cheers,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
