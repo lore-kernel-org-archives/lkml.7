@@ -2,256 +2,146 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0956BC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ABAC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C382721721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E712145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gzfof5Pi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gzfof5Pi"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rh105JbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733280AbfGPFJs (ORCPT
+        id S1726773AbfGPFbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 01:09:48 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58636 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfGPFJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 01:09:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D306A618E1; Tue, 16 Jul 2019 05:09:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563253784;
-        bh=vCDfLBQi0vOEE29uCHWzBtitQ7FOpbXrCftD/mU+WEY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzfof5Pi4FdmI4VHWsn9WOZU6tmkNq9FJuRbs3NqaepTdVOl90LAAoGzDkQKVPVpS
-         lBCHWO+NAN36hZa5dgvgrnPBfhYCyfQKekHK93VTA6TiuwM2Lz27kDVFCAdRT6Burx
-         V3Uejek6bITyoUSUFVsQI2ssAd9BvpqtmTR6TB1U=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 58306618DA;
-        Tue, 16 Jul 2019 05:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563253784;
-        bh=vCDfLBQi0vOEE29uCHWzBtitQ7FOpbXrCftD/mU+WEY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzfof5Pi4FdmI4VHWsn9WOZU6tmkNq9FJuRbs3NqaepTdVOl90LAAoGzDkQKVPVpS
-         lBCHWO+NAN36hZa5dgvgrnPBfhYCyfQKekHK93VTA6TiuwM2Lz27kDVFCAdRT6Burx
-         V3Uejek6bITyoUSUFVsQI2ssAd9BvpqtmTR6TB1U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 58306618DA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH v5 4/4] media: venus: Update core selection
-Date:   Tue, 16 Jul 2019 10:39:14 +0530
-Message-Id: <1563253754-12003-5-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1563253754-12003-1-git-send-email-amasule@codeaurora.org>
-References: <1563253754-12003-1-git-send-email-amasule@codeaurora.org>
+        Tue, 16 Jul 2019 01:31:10 -0400
+Received: from mail-eopbgr770045.outbound.protection.outlook.com ([40.107.77.45]:10216
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726408AbfGPFbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 01:31:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T668A3saXhEt2vACYEMmJyzQ9Qk7ZzyhLpU4Wf+rs3a2PFXp2ssHGpUGV2YjU/2uPsiHf60qIAyHF7PMtx/u85/TgHqLyZlg3DQqOteI2mMrADthZZ6xO6+7KRdohgHXWj8q7Rt+fj1nChsyJRu2rvUPe/JsndhZxpIcdKb0OpI/s4Y820Ww5ROkXjeLRVT9Tp41qoMcQIfxXdGVEi0LAnQ9kEK+dTIPSlqyn73+TX7WmRuZ3xtcL78jqspw2QxP2hPuywSDKQcOyj3sY6oyF5Q5RXSoZIOJQwbq6mcqWF4je+yclUumXVe6aIaAL7ySbXVwWI90Z7S6tGp1ieZmKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwnEIc2SBNiosSdSpLbQs2BPFVWjDZKvuODms67/918=;
+ b=Q9cdoCvlcCt1evXJc0utU/+mMdU5Iivh6WYapSgw6HS/MOeDE+psxgFq50kjmqD3c/OOYIkVTW9xUElcNKi0Ntz3RpDPZu13TIR/uJT/Sv9TEZ3PJaDeO93ul1CKln7K1WHN5AViDJ1dD/QYE2hqMX6TL92NIb5micL/bI4yoBQxquLf/qveY8DewvA28LjHvavv5bYK/fyqO/as/Z12vW0kMQL6RifTRHKb2uUAb2SFwhC2WU6SVDzOCNLw+vUuEOh82ckqMeZ/pIlzK+GJojV+W5iFwvliU4TZyGCzQmxQGWLXivff08pzhkMTD+8YVblbf4JAAau/v44L5uDCpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=bootlin.com
+ smtp.mailfrom=xilinx.com;dmarc=bestguesspass action=none
+ header.from=xilinx.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwnEIc2SBNiosSdSpLbQs2BPFVWjDZKvuODms67/918=;
+ b=rh105JbMoUxC3mx4dQGdRx6qTrBDvggo8v0ld/qa4UUhIHMz4nu7Wys7OSUH7PNMkkhrDwZu/RFWwEfIFh8R7bEGgxYC2RAb5c3YMVsUTrClTGD47QbSVI0+8uP7CMnM659lObWShQYS9N6gHEujIBMtjIkBiBoarJkOGZYSL+I=
+Received: from DM6PR02CA0068.namprd02.prod.outlook.com (2603:10b6:5:177::45)
+ by BYAPR02MB4376.namprd02.prod.outlook.com (2603:10b6:a03:58::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2073.10; Tue, 16 Jul
+ 2019 05:31:07 +0000
+Received: from SN1NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::203) by DM6PR02CA0068.outlook.office365.com
+ (2603:10b6:5:177::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2073.14 via Frontend
+ Transport; Tue, 16 Jul 2019 05:31:06 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT061.mail.protection.outlook.com (10.152.72.196) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2032.15
+ via Frontend Transport; Tue, 16 Jul 2019 05:31:06 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <naga.sureshkumar.relli@xilinx.com>)
+        id 1hnG3N-0004wI-JE; Mon, 15 Jul 2019 22:31:05 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <naga.sureshkumar.relli@xilinx.com>)
+        id 1hnG3I-0004wJ-Fs; Mon, 15 Jul 2019 22:31:00 -0700
+Received: from [172.23.37.108] (helo=xhdnagasure40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <naga.sureshkumar.relli@xilinx.com>)
+        id 1hnG3E-0004qS-HC; Mon, 15 Jul 2019 22:30:57 -0700
+From:   Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+To:     miquel.raynal@bootlin.com, bbrezillon@kernel.org
+Cc:     richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, vigneshr@ti.com,
+        yamada.masahiro@socionext.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
+        svemula@xilinx.com, nagasuresh12@gmail.com,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Subject: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over write driver's read_page()/write_page()
+Date:   Mon, 15 Jul 2019 23:30:51 -0600
+Message-Id: <20190716053051.11282-1-naga.sureshkumar.relli@xilinx.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39850400004)(396003)(346002)(2980300002)(189003)(199004)(107886003)(48376002)(316002)(16586007)(305945005)(186003)(50466002)(47776003)(426003)(7416002)(2616005)(126002)(2906002)(26005)(106002)(336012)(476003)(51416003)(70206006)(81166006)(356004)(36386004)(4326008)(8936002)(7696005)(6666004)(70586007)(5660300002)(50226002)(1076003)(478600001)(103116003)(81156014)(63266004)(9786002)(8676002)(36756003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4376;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 98001829-8175-48d3-5b95-08d709aeccf8
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BYAPR02MB4376;
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4376:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB4376AAB9559FD52DCAC76E0EAFCE0@BYAPR02MB4376.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:494;
+X-Forefront-PRVS: 0100732B76
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: TmW+swNN7iL3wPxo9saCwWDisD/R0L+oyOtGikdlR1TtQsNqCooMuFfgb9MklO2SQetSLveRvYXfWlIQnkjxsTvYLZzERGsjjxqv9ypdSoQQyYfz0cimc3fJKMiisVMCRvz5ORF+yLcDi+qsIKbOs69UoWHrV1RFYdwyPhvo6xG0jiCrEx5uqVPTIpfh6xRRcW/1urVbiwAsUVsDTDExxhaYIcCzKnQlXtrMVNsVxrCFuMnSHvbTTqQdrRfPAnJdWqABXZBYfyxMd4qFlCiqY9sOfgBpgPlnm8LsWo3prOMY7PD4dmV7qwDGV6C1xfCKh7VkpRo59pl3Q5/bLnagPOoQ0JCqMIV+LvZ32HqcWTgsUoDsTW/Bx9kyhdVAmXxLalW5R6fVneRHSi5fjmXgRQMgTlradmk1WcRHN/Efyz4=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2019 05:31:06.0079
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98001829-8175-48d3-5b95-08d709aeccf8
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4376
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Present core assignment is static. Introduced load balancing
-across the cores. Load on earch core is calculated and core
-with minimum load is assigned to given instance.
+Add check before assigning chip->ecc.read_page() and chip->ecc.write_page()
 
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
 ---
- drivers/media/platform/qcom/venus/helpers.c    | 69 +++++++++++++++++++++++---
- drivers/media/platform/qcom/venus/helpers.h    |  2 +-
- drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
- drivers/media/platform/qcom/venus/hfi_parser.h |  5 ++
- drivers/media/platform/qcom/venus/vdec.c       |  2 +-
- drivers/media/platform/qcom/venus/venc.c       |  2 +-
- 6 files changed, 72 insertions(+), 9 deletions(-)
+Changes in v18
+ - None
+---
+ drivers/mtd/nand/raw/nand_micron.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index edf403d..d479793 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -26,6 +26,7 @@
- #include "helpers.h"
- #include "hfi_helper.h"
- #include "hfi_venus_io.h"
-+#include "hfi_parser.h"
- 
- struct intbuf {
- 	struct list_head list;
-@@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst *inst)
- 	return mbs * inst->fps;
- }
- 
-+static u32 load_per_core(struct venus_core *core, u32 core_id)
-+{
-+	struct venus_inst *inst = NULL;
-+	u32 mbs_per_sec = 0, load = 0;
+diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
+index cbd4f09ac178..565f2696c747 100644
+--- a/drivers/mtd/nand/raw/nand_micron.c
++++ b/drivers/mtd/nand/raw/nand_micron.c
+@@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_chip *chip)
+ 		chip->ecc.size = 512;
+ 		chip->ecc.strength = chip->base.eccreq.strength;
+ 		chip->ecc.algo = NAND_ECC_BCH;
+-		chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+-		chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
++		if (!chip->ecc.read_page)
++			chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
 +
-+	mutex_lock(&core->lock);
-+	list_for_each_entry(inst, &core->instances, list) {
-+		if (inst->clk_data.core_id != core_id)
-+			continue;
-+
-+		mbs_per_sec = load_per_instance(inst);
-+		load = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
-+	}
-+	mutex_unlock(&core->lock);
-+
-+	return load;
-+}
-+
- static u32 load_per_type(struct venus_core *core, u32 session_type)
- {
- 	struct venus_inst *inst = NULL;
-@@ -505,6 +524,16 @@ static int load_scale_clocks(struct venus_inst *inst)
- 	return scale_clocks(inst);
- }
++		if (!chip->ecc.write_page)
++			chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
  
-+int set_core_usage(struct venus_inst *inst, u32 usage)
-+{
-+	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-+	struct hfi_videocores_usage_type cu;
-+
-+	cu.video_core_enable_mask = usage;
-+
-+	return hfi_session_set_property(inst, ptype, &cu);
-+}
-+
- static void fill_buffer_desc(const struct venus_buffer *buf,
- 			     struct hfi_buffer_desc *bd, bool response)
- {
-@@ -808,19 +837,47 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
- }
- EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
- 
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
-+int venus_helper_set_core(struct venus_inst *inst)
- {
--	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
--	struct hfi_videocores_usage_type cu;
-+	struct venus_core *core = inst->core;
-+	u32 min_core_id = 0, core1_load = 0, core2_load = 0;
-+	unsigned long min_load, max_freq, cur_inst_load;
-+	u32 cores_max;
-+	int ret;
- 
- 	if (!IS_V4(inst->core))
- 		return 0;
- 
--	cu.video_core_enable_mask = usage;
-+	core1_load = load_per_core(core, VIDC_CORE_ID_1);
-+	core2_load = load_per_core(core, VIDC_CORE_ID_2);
-+	min_core_id = core1_load < core2_load ? VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
-+	min_load = min(core1_load, core2_load);
-+	cores_max = core_num_max(inst);
- 
--	return hfi_session_set_property(inst, ptype, &cu);
-+	if (cores_max < VIDC_CORE_ID_2) {
-+		min_core_id = VIDC_CORE_ID_1;
-+		min_load = core1_load;
-+	}
-+
-+	cur_inst_load = load_per_instance(inst) *
-+		inst->clk_data.codec_freq_data->vpp_freq;
-+	max_freq = core->res->freq_tbl[0].freq;
-+
-+	if ((cur_inst_load + min_load)	> max_freq) {
-+		dev_warn(core->dev, "HW is overloaded, needed: %lu max: %lu\n",
-+			 cur_inst_load, max_freq);
-+		return -EINVAL;
-+	}
-+
-+	ret = set_core_usage(inst, min_core_id);
-+	if (ret)
-+		return ret;
-+
-+	inst->clk_data.core_id = min_core_id;
-+
-+	return 0;
- }
--EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
-+EXPORT_SYMBOL_GPL(venus_helper_set_core);
- 
- int venus_helper_init_codec_freq_data(struct venus_inst *inst)
- {
-diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
-index 2c13245..1034111 100644
---- a/drivers/media/platform/qcom/venus/helpers.h
-+++ b/drivers/media/platform/qcom/venus/helpers.h
-@@ -42,7 +42,7 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
- 				       u32 buftype);
- int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
- int venus_helper_init_codec_freq_data(struct venus_inst *inst);
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage);
-+int venus_helper_set_core(struct venus_inst *inst);
- int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
- 			      unsigned int output_bufs,
- 			      unsigned int output2_bufs);
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index 34ea503..f3d1018 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -559,6 +559,7 @@ struct hfi_bitrate {
- #define HFI_CAPABILITY_LCU_SIZE				0x14
- #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
- #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
-+#define HFI_CAPABILITY_MAX_VIDEOCORES		0x2B
- 
- struct hfi_capability {
- 	u32 capability_type;
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.h b/drivers/media/platform/qcom/venus/hfi_parser.h
-index 3e931c7..264e6dd 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.h
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.h
-@@ -107,4 +107,9 @@ static inline u32 frate_step(struct venus_inst *inst)
- 	return cap_step(inst, HFI_CAPABILITY_FRAMERATE);
- }
- 
-+static inline u32 core_num_max(struct venus_inst *inst)
-+{
-+	return cap_max(inst, HFI_CAPABILITY_MAX_VIDEOCORES);
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index d037f80..620e060 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -551,7 +551,7 @@ static int vdec_output_conf(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_1);
-+	ret = venus_helper_set_core(inst);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index cdddc82..28e76cc 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -660,7 +660,7 @@ static int venc_set_properties(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_2);
-+	ret = venus_helper_set_core(inst);
- 	if (ret)
- 		return ret;
- 
+ 		if (ondie == MICRON_ON_DIE_MANDATORY) {
+ 			chip->ecc.read_page_raw = nand_read_page_raw_notsupp;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
 
