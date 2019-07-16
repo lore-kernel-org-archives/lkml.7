@@ -2,72 +2,141 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5316C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B3FC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804BB20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9A4206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DKQ581ht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732752AbfGPMsD (ORCPT
+        id S1731589AbfGPMxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:48:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50175 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPMsC (ORCPT
+        Tue, 16 Jul 2019 08:53:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42725 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGPMxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:48:02 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hnMs9-0006w2-6c; Tue, 16 Jul 2019 14:47:57 +0200
-Date:   Tue, 16 Jul 2019 14:47:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Subject: kbuild: Fail if gold linker is detected
-Message-ID: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 16 Jul 2019 08:53:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x1so5825547wrr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 05:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yazVOO3iTYBRMQULwRwZVDyE2scRH2IKVdUe1u2gmOw=;
+        b=DKQ581htLJQ56ZOJaT5FgLh1LXLSBNdlTYqeheUkeMjc0nH2OLkvxz4tdiHDCDKgze
+         eJKayH+uFhNeXMgVb23QKEuiY5sMvAeR6EP/gBhPTwP1yeBarxHlTDQC+j9Qaha/BS1L
+         Fss3rIyzd3CNurC1oxSZTu/+PKtXVSEJtuAWs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yazVOO3iTYBRMQULwRwZVDyE2scRH2IKVdUe1u2gmOw=;
+        b=mtj0u5pRXjrgEMtfYWFhfb8n8vv9DEnD7jj04e/onOeXQ0iMkxElx86IOnuH2BeFW/
+         Aargp/2l5d8WqlZRT2ZGNUZQe/t4l917VJgkfGAPn5kxx5hLpp/EWX0EPtDK0x7VcbHm
+         QkX8DK0y9D1pBRjXBO/6BEtc6DJHRejNjNrppWfjMb2Ch4wQX0vya/r2+kkgd6hIiYCO
+         5HHPEUuVZSL/KNglbjxJE+TbVczxrhqxnTFUPHMPhI4u9yace0IUJ7EGn/lFB6YojnfT
+         G97QmVSoFK5BLmC3QZPVyYMUmjFSLQjEVfxyF7FJlsSmukEVNcHJyZ4BuxS7XdqW0Dge
+         HrEA==
+X-Gm-Message-State: APjAAAUoh+gU4CkKqIo9qhVLn1AtTInIFzEkE2XAOh/RhqR2go3OMtqO
+        reHoshRQjLTydB6zsSwlLnl/5w==
+X-Google-Smtp-Source: APXvYqzu1vTspyk2jf/HErrlXlwzxNRRcNX5JAEUAK+QB6I8ayhtDWL/42dn6RVIMQJgt1t4XxOXtA==
+X-Received: by 2002:adf:db0b:: with SMTP id s11mr35975157wri.7.1563281598676;
+        Tue, 16 Jul 2019 05:53:18 -0700 (PDT)
+Received: from andrea (host234-214-static.12-87-b.business.telecomitalia.it. [87.12.214.234])
+        by smtp.gmail.com with ESMTPSA id n5sm16809733wmi.21.2019.07.16.05.53.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 05:53:17 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 14:53:09 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>, boqun.feng@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
+ padata jobs
+Message-ID: <20190716125309.GA10672@andrea>
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gold linker has known issues of failing the build in random and
-predictible ways. H.J. stated:
+Hi Daniel,
 
-  "Since building a workable kernel for different kernel configurations
-   isn't a requirement for gold, I don't recommend gold for kernel."
+My two cents (summarizing some findings we discussed privately):
 
-So instead of dealing with attempts to duct tape gold support without
-understanding the root cause, fail the build when gold is detected.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
----
- scripts/Kconfig.include |    3 +++
- 1 file changed, 3 insertions(+)
+> I think adding the full barrier guarantees the following ordering, and the
+> memory model people can correct me if I'm wrong:
+> 
+> CPU21                      CPU22
+> ------------------------   --------------------------
+> UNLOCK pd->lock
+> smp_mb()
+> LOAD reorder_objects
+>                            INC reorder_objects
+>                            spin_unlock(&pqueue->reorder.lock) // release barrier
+>                            TRYLOCK pd->lock
+> 
+> So if CPU22 has incremented reorder_objects but CPU21 reads 0 for it, CPU21
+> should also have unlocked pd->lock so CPU22 can get it and serialize any
+> remaining jobs.
 
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -35,5 +35,8 @@ ld-option = $(success,$(LD) -v $(1))
- $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
- $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
- 
-+# Fail if the linker is gold as it's not capable of linking the kernel proper
-+$(error-if,$(success, command -v $(LD) -v | grep -q gold), gold linker '$(LD)' not supported)
-+
- # gcc version including patch level
- gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
+This information inspired me to write down the following litmus test:
+(AFAICT, you independently wrote a very similar test, which is indeed
+quite reassuring! ;D)
+
+C daniel-padata
+
+{ }
+
+P0(atomic_t *reorder_objects, spinlock_t *pd_lock)
+{
+	int r0;
+
+	spin_lock(pd_lock);
+	spin_unlock(pd_lock);
+	smp_mb();
+	r0 = atomic_read(reorder_objects);
+}
+
+P1(atomic_t *reorder_objects, spinlock_t *pd_lock, spinlock_t *reorder_lock)
+{
+	int r1;
+
+	spin_lock(reorder_lock);
+	atomic_inc(reorder_objects);
+	spin_unlock(reorder_lock);
+	//smp_mb();
+	r1 = spin_trylock(pd_lock);
+}
+
+exists (0:r0=0 /\ 1:r1=0)
+
+It seems worth noticing that this test's "exists" clause is satisfiable
+according to the (current) memory consistency model.  (Informally, this
+can be explained by noticing that the RELEASE from the spin_unlock() in
+P1 does not provide any order between the atomic increment and the read
+part of the spin_trylock() operation.)  FWIW, uncommenting the smp_mb()
+in P1 would suffice to prevent this clause from being satisfiable; I am
+not sure, however, whether this approach is feasible or ideal... (sorry,
+I'm definitely not too familiar with this code... ;/)
+
+Thanks,
+  Andrea
