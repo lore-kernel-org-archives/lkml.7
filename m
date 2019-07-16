@@ -2,138 +2,116 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E08C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B267EC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44E820880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KmyZb7on"
+	by mail.kernel.org (Postfix) with ESMTP id 8CE5120880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfGPMeZ (ORCPT
+        id S1732743AbfGPMfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:34:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57572 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPMeY (ORCPT
+        Tue, 16 Jul 2019 08:35:01 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43220 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726997AbfGPMfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:34:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ukkgoKS/Ipjg1tt9wgdm0MDAYloHyeh53UXnSxDig0Q=; b=KmyZb7onIweWOf3RyIzEVil/Q
-        myYCflBVTCrdtavRkHGCbqzzuiuglnTlG3l81jjtMmfsUvTc48HVcSF9jj8qSMHMFvHVV/I+I3Krw
-        kwA8C080ZHokTqUM/TlczT38BZ4sh+alI9CEH8dNZqGDRX4VC2y7JWsuHfU/n7isE0GZbu5tj0+oU
-        8V+rZA5G3QKv/dDCEsQCH0P0EbCiennQhWRmJza5vLZDwjtopkA1oJgafap5FS1vbRWRjJ2DbVM6g
-        Xd5MzU4dwU6t2py2z07ftXdZolhk/yPFYujDzk4Wbo6aB9NoL1+V/dVbFPljG4RJjlYcRtr1iPQhO
-        Q/YqMlhQQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnMer-0008Ln-A3; Tue, 16 Jul 2019 12:34:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 39A332013A7FB; Tue, 16 Jul 2019 14:34:11 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 14:34:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>, mingo@redhat.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com,
-        linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com
-Subject: Re: [PATCH] Fix perf test data race for tsan build
-Message-ID: <20190716123411.GY3402@hirez.programming.kicks-ass.net>
-References: <20190710221620.211059-1-nums@google.com>
- <20190716091039.GE22317@krava>
+        Tue, 16 Jul 2019 08:35:00 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x6GCYWYd026006
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 08:34:33 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id EBB74420054; Tue, 16 Jul 2019 08:34:31 -0400 (EDT)
+Date:   Tue, 16 Jul 2019 08:34:31 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 4/4] debian: add generic rule file
+Message-ID: <20190716123431.GB2999@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <1562664759-16009-1-git-send-email-info@metux.net>
+ <1562664759-16009-4-git-send-email-info@metux.net>
+ <CAK7LNAR1N-bwVWm0LXky2-d2GfvRuRrEWeo5CGm3Z2Lp_s0WEw@mail.gmail.com>
+ <5af9db32-2cf5-10ba-261c-e08852d0814f@metux.net>
+ <20190715191245.GD3068@mit.edu>
+ <CAK7LNASps6JBAvtJshjMbqMk8QaSrMaH8pm-wHsEySTRJzu0Kw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716091039.GE22317@krava>
+In-Reply-To: <CAK7LNASps6JBAvtJshjMbqMk8QaSrMaH8pm-wHsEySTRJzu0Kw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:10:39AM +0200, Jiri Olsa wrote:
-> On Wed, Jul 10, 2019 at 03:16:20PM -0700, Numfor Mbiziwo-Tiapo wrote:
-> > The tsan build of perf gives a data race warning in
+On Tue, Jul 16, 2019 at 05:58:49PM +0900, Masahiro Yamada wrote:
+> I want debian/ to be kept as a drop-in directory
+> for packagers, without replacing the upstream debian/rules.
 > 
-> hi,
-> what's 'tsan build of perf' ?
+> If a check-in source file is modified in anyway,
+> scripts/setlocalversion would set -dirty flag,
+> which I want to avoid.
 
-Thread Sanitizer, from the group that brought us KASAN and UBSAN.
+In practice, that's not going to be a problem for most distributions.
+The traditional way Debian-derived systems have done builds is
+completely outside of git.  So there will be a linux_5.2.orig.tar.gz
+and a linux_5.2-1.debian.tar.xz.  dpkg_source -x will first unpackage
+the orig.tar.gz, and then the debian.tar.xz, and if the second
+overwrites the first, it's no big deal.
 
-I'd much rather see the below use READ_ONCE() and WRITE_ONCE(). Using
-atomic_t without RmW ops is confusing.
+More modern Debian package maintainer workflows may be using git, but
+in that case, all of the "Debianizations" are reflected in a separate
+branch.  So it's not going to set the -dirty flag.
 
-> > mmap-thread-lookup.c when perf test is run on our local machines.
-> > This is because there is no lock around the "go_away" variable in
-> > "mmap-thread-lookup.c".
-> > 
-> > The warning is difficult to reproduce from the tip branch and we
-> > suspect it has something to do with tsan working differently
-> > depending on the clang version.
-> > 
-> > The warning can be silenced by adding locks around the variable
-> > but it is better practice to make the variable atomic and use
-> > the atomic_set and atomic_read functions. This does not actually
-> > silence the warning because tsan doesn't recognize the atomic
-> > functions as thread safe, but in actuality it should prevent a
-> > data race.
-> > 
-> > Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-> > ---
-> >  tools/perf/tests/mmap-thread-lookup.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-> > index 5ede9b561d32..f4cbb3d92a46 100644
-> > --- a/tools/perf/tests/mmap-thread-lookup.c
-> > +++ b/tools/perf/tests/mmap-thread-lookup.c
-> > @@ -17,7 +17,7 @@
-> >  
-> >  #define THREADS 4
-> >  
-> > -static int go_away;
-> > +static atomic_t go_away;
-> >  
-> >  struct thread_data {
-> >  	pthread_t	pt;
-> > @@ -64,7 +64,7 @@ static void *thread_fn(void *arg)
-> >  		return NULL;
-> >  	}
-> >  
-> > -	while (!go_away) {
-> > +	while (!atomic_read(&go_away)) {
-> >  		/* Waiting for main thread to kill us. */
-> >  		usleep(100);
-> >  	}
-> > @@ -98,7 +98,7 @@ static int threads_create(void)
-> >  	struct thread_data *td0 = &threads[0];
-> >  	int i, err = 0;
-> >  
-> > -	go_away = 0;
-> > +	atomic_set(&go_away, 0);
-> >  
-> >  	/* 0 is main thread */
-> >  	if (thread_init(td0))
-> > @@ -118,7 +118,7 @@ static int threads_destroy(void)
-> >  	/* cleanup the main thread */
-> >  	munmap(td0->map, page_size);
-> >  
-> > -	go_away = 1;
-> > +	atomic_set(&go_away, 1);
-> >  
-> >  	for (i = 1; !err && i < THREADS; i++)
-> >  		err = pthread_join(threads[i].pt, NULL);
-> > -- 
-> > 2.22.0.410.gd8fdbe21b5-goog
-> > 
+There will be potential merge conflicts between Enrico's proposed
+"upstream default debian/rules" file and the Debian/Ubuntu
+debian/rules file on their distro branch.  However, I don't think
+that's a big issue, for two reasons.
+
+First, once it's checked in, I expect changes to the default
+debian/rules file will be relatively rare.  Secondly, it's easy enough
+to use gitattributes and defining a custom merge driver so that a
+distribution can configure things so that they always use the version
+of debian/rules from their branch, so the merge conflict resolution
+can be set up to always do the right thing.
+
+There are certainly other upstreams which ship their own debian/
+directories.  E2fsprogs is one such example, but in that case I'm
+cheating because I'm both the Debian package maintainer as well as the
+upstream maintainer.  :-)   However, it's never been an issue for Ubuntu
+when they choose to ship their own customized debian/rules file.
+
+> debian/rules is a hook for packagers to do their jobs in downstream.
+> "We kindly committed a generic one for you" sounds weird to me.
+
+It is weird, and it's not common for upstream packages (which are not
+native Debian packages) to ship their own debian directory.  But it
+certainly does happen, and it won't cause any problems in actual
+practice.
+
+Regards,
+
+					- Ted
