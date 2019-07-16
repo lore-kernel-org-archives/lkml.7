@@ -2,163 +2,133 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B26C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAD8C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C6720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="p755n/nX"
+	by mail.kernel.org (Postfix) with ESMTP id 48AE020693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387930AbfGPOy0 (ORCPT
+        id S2387948AbfGPOy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:54:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35977 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfGPOyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:54:25 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g18so14803647qkl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 07:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=efDi+xP5INucJ72Ory5WSWKAWY28AH8aBSxZ1vzGwHc=;
-        b=p755n/nX6bwjJSrkylNF7fxrv7W5hZtw60PSVXeEzFLHxFrCisrMxGiEhVcH3gcTw7
-         D9Wp5C6bJCEpR7BikI2qJRDyevOQhEHxMYcUc3K6+L0cQC2ItC8kd3Hvv3Hq+ljT5XZZ
-         fcRqbPLBZTW1fBCWoT+tsoJ/oggL/hODGz194O1f/5Ww/DwSflLKIjPOA35by1UsTLEL
-         CHPlkXAlPZMhJ47v4xCBp60T6JMkX4wZGEvHJ0OmoXlh9NPOjOzDx3DAHTA3Kps4z+P9
-         MohtuefQXjnTNkyJ+5vqfMh9+EMzA6tzPpek1Y3IEk2rfTDB5GVHRN6FcLm/vnc87Um7
-         V7YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=efDi+xP5INucJ72Ory5WSWKAWY28AH8aBSxZ1vzGwHc=;
-        b=f1m+GQkEEOCehFQKqbDKaCLMB+JA7N0NRefGLlyMwPEky+627misEOWbghScE42Zqx
-         PoucHvF98d2yIUZX1bkC1FuSr36s6xpnWItiztxcGVDoZL33x9UoxPkB7jfFaKE8V8HT
-         MO9Hc1kQc49AIeaKIfdlDXDKT+Sy/O5gkZaYUdMLgfiPFybXFaqu/5NpkQjsBJArZkex
-         LyrGaEUglEK9pCPQirPYblS8dvJ6JuW+bQws56riE87Iqk+9LvQshHBm2ibdOO8CrZdU
-         3B94anLcvLyo7UYnhcKTisnrVb33/2P4E3H1O1j18+c6p8UBg6XDbonkV6htjxxLwsmp
-         W3Ew==
-X-Gm-Message-State: APjAAAV1O6d7C4siSoV8Y8WsI67tnH7xyaWGdZjYcE3xTPWDw/Y3BNfI
-        9C1XjdBu2AEHTpQd9kUbSbAJBg==
-X-Google-Smtp-Source: APXvYqxZ2/YvnzkZrvDp1LDwL2lt/6YOXxw8yEnn6sCMwbhbfEHB6Z4LVFHdxZwD2Fb46MvBFSpUBg==
-X-Received: by 2002:a37:dc42:: with SMTP id v63mr8083647qki.488.1563288864804;
-        Tue, 16 Jul 2019 07:54:24 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id p13sm8008218qkj.4.2019.07.16.07.54.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 07:54:24 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     willemb@google.com, clang-built-linux@googlegroups.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] skbuff: fix compilation warnings in skb_dump()
-Date:   Tue, 16 Jul 2019 10:54:00 -0400
-Message-Id: <1563288840-1913-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 16 Jul 2019 10:54:56 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:47456 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727849AbfGPOyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:54:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id AE3A1FB03;
+        Tue, 16 Jul 2019 16:54:52 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Rc1dG7eD4j4M; Tue, 16 Jul 2019 16:54:51 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 08B5141140; Tue, 16 Jul 2019 16:54:50 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 16:54:50 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     "marex@denx.de" <marex@denx.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
+ driver
+Message-ID: <20190716145450.GA609@bogon.m.sigxcpu.org>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+ <20190711150403.GB23195@bogon.m.sigxcpu.org>
+ <1562919331.3209.11.camel@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1562919331.3209.11.camel@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 6413139dfc64 ("skbuff: increase verbosity when dumping skb
-data") introduced a few compilation warnings.
+Hi Robert,
+On Fri, Jul 12, 2019 at 08:15:32AM +0000, Robert Chiras wrote:
+> Hi Guido,
+> 
+> On Jo, 2019-07-11 at 17:04 +0200, Guido Günther wrote:
+> > Hi Robert,
+> > On Wed, Jun 26, 2019 at 04:32:08PM +0300, Robert Chiras wrote:
+> > > 
+> > > This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like
+> > > 8MQ, 8MM
+> > > and 8QXP). Following, are the new features added and fixes from
+> > > this
+> > > patch-set:
+> > > 
+> > > 1. Add support for drm_bridge
+> > > On 8MQ and 8MM, the LCDIF block is not directly connected to a
+> > > parallel
+> > > display connector, where an LCD panel can be attached, but instead
+> > > it is
+> > > connected to DSI controller. Since this DSI stands between the
+> > > display
+> > > controller (eLCDIF) and the physical connector, the DSI can be
+> > > implemented
+> > > as a DRM bridge. So, in order to be able to connect the mxsfb
+> > > driver to
+> > > the DSI driver, the support for a drm_bridge was needed in mxsfb
+> > > DRM
+> > > driver (the actual driver for the eLCDIF block).
+> > So I wanted to test this but with both my somewhat cleaned up nwl
+> > driver¹ and the nwl driver forward ported from the nxp vendor tree
+> > I'm
+> > looking at a black screen with current mainline - while my dcss
+> > forward
+> > port gives me nice output on mipi dsi. Do you have a tree that uses
+> > mipi
+> > dsi on imx8mq where I could look at to check for differences?
+> Somewhere on the pixel path (between the display controller and the
+> DSI) there is a block that inverts the polarity. I can't remember
+> exactly what was the role of this block, but the polarity is inverted
+> when eLCDIF is used in combination with the DSI.
+> If you take a look at my DSI driver from NXP releases (I guess you have
+> them), you will see there is a hack in mode_fixup:
+> 
+> unsigned int *flags = &mode->flags;
+> if (dsi->sync_pol {
+> 	*flags |= DRM_MODE_FLAG_PHSYNC;
+> 	*flags |= DRM_MODE_FLAG_PVSYNC;
+> 	*flags &= ~DRM_MODE_FLAG_NHSYNC;
+> 	*flags &= ~DRM_MODE_FLAG_NVSYNC;
+> } else {
+> 	*flags &= ~DRM_MODE_FLAG_PHSYNC;
+> 	*flags &= ~DRM_MODE_FLAG_PVSYNC;
+> 	*flags |= DRM_MODE_FLAG_NHSYNC;
+> 	*flags |= DRM_MODE_FLAG_NVSYNC;
+> }
 
-net/core/skbuff.c:766:32: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                       level, sk->sk_family, sk->sk_type,
-sk->sk_protocol);
-                                             ^~~~~~~~~~~
-net/core/skbuff.c:766:45: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                       level, sk->sk_family, sk->sk_type,
-sk->sk_protocol);
-^~~~~~~~~~~~~~~
+Thanks for the suggestion! I'll try that.
 
-Fix them by using the proper types, and also fix some checkpatch
-warnings by using pr_info().
+> 
+> I know it's not clean, but it works for now. You can try this in your
+> driver and see if it helps.
+> These days I will also take your nwl-dsi driver and test it, and also
+> add support for bridge and eLCDIF to see if I can make it work.
 
-WARNING: printk() should include KERN_<LEVEL> facility level
-+		printk("%ssk family=%hu type=%u proto=%u\n",
-
-Fixes: 6413139dfc64 ("skbuff: increase verbosity when dumping skb data")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- net/core/skbuff.c | 44 ++++++++++++++++++++++----------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
-
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 6f1e31f674a3..fa1e78f7bb96 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -740,30 +740,30 @@ void skb_dump(const char *level, const struct sk_buff *skb, bool full_pkt)
- 	has_mac = skb_mac_header_was_set(skb);
- 	has_trans = skb_transport_header_was_set(skb);
- 
--	printk("%sskb len=%u headroom=%u headlen=%u tailroom=%u\n"
--	       "mac=(%d,%d) net=(%d,%d) trans=%d\n"
--	       "shinfo(txflags=%u nr_frags=%u gso(size=%hu type=%u segs=%hu))\n"
--	       "csum(0x%x ip_summed=%u complete_sw=%u valid=%u level=%u)\n"
--	       "hash(0x%x sw=%u l4=%u) proto=0x%04x pkttype=%u iif=%d\n",
--	       level, skb->len, headroom, skb_headlen(skb), tailroom,
--	       has_mac ? skb->mac_header : -1,
--	       has_mac ? skb_mac_header_len(skb) : -1,
--	       skb->network_header,
--	       has_trans ? skb_network_header_len(skb) : -1,
--	       has_trans ? skb->transport_header : -1,
--	       sh->tx_flags, sh->nr_frags,
--	       sh->gso_size, sh->gso_type, sh->gso_segs,
--	       skb->csum, skb->ip_summed, skb->csum_complete_sw,
--	       skb->csum_valid, skb->csum_level,
--	       skb->hash, skb->sw_hash, skb->l4_hash,
--	       ntohs(skb->protocol), skb->pkt_type, skb->skb_iif);
-+	pr_info("%sskb len=%u headroom=%u headlen=%u tailroom=%u\n"
-+		"mac=(%d,%d) net=(%d,%d) trans=%d\n"
-+		"shinfo(txflags=%u nr_frags=%u gso(size=%hu type=%u segs=%hu))\n"
-+		"csum(0x%x ip_summed=%u complete_sw=%u valid=%u level=%u)\n"
-+		"hash(0x%x sw=%u l4=%u) proto=0x%04x pkttype=%u iif=%d\n",
-+		level, skb->len, headroom, skb_headlen(skb), tailroom,
-+		has_mac ? skb->mac_header : -1,
-+		has_mac ? skb_mac_header_len(skb) : -1,
-+		skb->network_header,
-+		has_trans ? skb_network_header_len(skb) : -1,
-+		has_trans ? skb->transport_header : -1,
-+		sh->tx_flags, sh->nr_frags,
-+		sh->gso_size, sh->gso_type, sh->gso_segs,
-+		skb->csum, skb->ip_summed, skb->csum_complete_sw,
-+		skb->csum_valid, skb->csum_level,
-+		skb->hash, skb->sw_hash, skb->l4_hash,
-+		ntohs(skb->protocol), skb->pkt_type, skb->skb_iif);
- 
- 	if (dev)
--		printk("%sdev name=%s feat=0x%pNF\n",
--		       level, dev->name, &dev->features);
-+		pr_info("%sdev name=%s feat=0x%pNF\n",
-+			level, dev->name, &dev->features);
- 	if (sk)
--		printk("%ssk family=%hu type=%hu proto=%hu\n",
--		       level, sk->sk_family, sk->sk_type, sk->sk_protocol);
-+		pr_info("%ssk family=%hu type=%u proto=%u\n",
-+			level, sk->sk_family, sk->sk_type, sk->sk_protocol);
- 
- 	if (full_pkt && headroom)
- 		print_hex_dump(level, "skb headroom: ", DUMP_PREFIX_OFFSET,
-@@ -801,7 +801,7 @@ void skb_dump(const char *level, const struct sk_buff *skb, bool full_pkt)
- 	}
- 
- 	if (full_pkt && skb_has_frag_list(skb)) {
--		printk("skb fraglist:\n");
-+		pr_info("skb fraglist:\n");
- 		skb_walk_frags(skb, list_skb)
- 			skb_dump(level, list_skb, true);
- 	}
--- 
-1.8.3.1
-
+I have hacky bridge support over here already. Give me some days to
+clean it up and it might safe you some work.
+Cheers,
+ -- Guido
