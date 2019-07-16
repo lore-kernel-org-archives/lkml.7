@@ -2,164 +2,95 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5E3C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7D9C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F3C2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035E72064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeXDSDzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388497AbfGPSo4 (ORCPT
+        id S2388553AbfGPSpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:44:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1294 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728366AbfGPSo4 (ORCPT
+        Tue, 16 Jul 2019 14:45:01 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]:33043 "EHLO
+        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfGPSpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:44:56 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GIfcrQ098988;
-        Tue, 16 Jul 2019 14:43:35 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tsj824pyq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 14:43:34 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6GIfguM099589;
-        Tue, 16 Jul 2019 14:43:34 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tsj824pxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 14:43:34 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6GIdjUq031073;
-        Tue, 16 Jul 2019 18:43:33 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 2tq6x79948-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 18:43:33 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIhWqR45875528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 18:43:32 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06C7DB2067;
-        Tue, 16 Jul 2019 18:43:32 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8068B2065;
-        Tue, 16 Jul 2019 18:43:31 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jul 2019 18:43:31 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C9CDC16C8E9B; Tue, 16 Jul 2019 11:43:31 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:43:31 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        peterz@infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 8/9] acpi: Use built-in RCU list checking for
- acpi_ioremaps list (v1)
-Message-ID: <20190716184331.GJ14271@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190715143705.117908-1-joel@joelfernandes.org>
- <20190715143705.117908-9-joel@joelfernandes.org>
+        Tue, 16 Jul 2019 14:45:00 -0400
+Received: by mail-qt1-f172.google.com with SMTP id r6so16481952qtt.0;
+        Tue, 16 Jul 2019 11:44:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5bZd4SqG2qJ0Rk5uOR53+z/e8nJZoVPsaGfu8z4+z5E=;
+        b=aeXDSDzNwe8tXHoal4dwOGH8fayp5W7qhJFcd1lrEkkAlbEdEymP2lBkQINQIGZZi+
+         LsqYMxjb1GZBAFFWedkTqtSZJwGsJL0zYRuJdcGXVzh/tsrs6/WhyxUvfv+s3yRSjdCz
+         TFZSt1hZMESsTxv/QRe23V6nVH+PjPqm97a2Jf1N8mvsK8vYrduOO3xIKjqnnFhIWI4h
+         caWoPzhRJLBN0MhG5UtBJYzJbnS399LhwNnpr3PoEn4ZZ6gvtIwq1iTRXawJjSfqej65
+         XmFkS2Tz/Omy19ograyIXq+1uFVX4AHIy7xur1QYtdmGWOWM/ymmjKv0vFpRdN9FRaQK
+         VPvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5bZd4SqG2qJ0Rk5uOR53+z/e8nJZoVPsaGfu8z4+z5E=;
+        b=f/M/BHvL/HAW7F9roDam3/wTlrWb6n+CnkeoU68hvljonu2BXD43CoFGFW8q37fFQx
+         yoYmcmnjrdX1OSmia52D9pfR55w/5kFUZNZegrzVuanzsXPTlRpDFkfRHsEspTCs+sUF
+         zyD1xm5pqfcwKpJGmuSOYW34l1gljm7ktv90OzcQHkkkCTFSEd9WjN9bGkl/TnG0/i1A
+         faWmmCbxNM5OKi9E4tI6h4CfZDE93I9fNA8hOya7SanG6sffblrRlc31XHBDGcZLtPkN
+         0GmU7MufzJ0kmbKmpaTsrbU5IbOBm9R4gGBHQTP7nhxH+vLI3ExSjREpn/di2kae/odR
+         pt6A==
+X-Gm-Message-State: APjAAAWasCQCo4bQWD6IfV5usSpbHFbEuF0R1Srg1Xl9mBJQFr82gXnE
+        ZlJQtBTcPb7XiYnKFOijRXP5RALw
+X-Google-Smtp-Source: APXvYqw8RL2Qgn73RMkNomWBLRJ8mgnHLyqX1ogMkOYuFPoAK9pJJWOJaNVzrivAIPgCuPPzWlm1FA==
+X-Received: by 2002:ac8:2e59:: with SMTP id s25mr23880520qta.94.1563302699090;
+        Tue, 16 Jul 2019 11:44:59 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id u71sm10514345qka.21.2019.07.16.11.44.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 11:44:58 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 025B040340; Tue, 16 Jul 2019 15:44:53 -0300 (-03)
+Date:   Tue, 16 Jul 2019 15:44:53 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Denis Bakhvalov <denis.bakhvalov@intel.com>
+Subject: Re: [PATCH 2/3] perf script: Fix off by one in brstackinsn IPC
+ computation
+Message-ID: <20190716184453.GC3624@kernel.org>
+References: <20190711181922.18765-1-andi@firstfloor.org>
+ <20190711181922.18765-2-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190715143705.117908-9-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907160229
+In-Reply-To: <20190711181922.18765-2-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 10:37:04AM -0400, Joel Fernandes (Google) wrote:
-> list_for_each_entry_rcu has built-in RCU and lock checking. Make use of
-> it for acpi_ioremaps list traversal.
+Em Thu, Jul 11, 2019 at 11:19:21AM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-Given that Rafael acked it, this one looks ready.
-
-							Thanx, Paul
-
-> ---
->  drivers/acpi/osl.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> When we hit the end of a program block, need to count the last instruction
+> too for the IPC computation. This caused large errors for small blocks.
 > 
-> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-> index 9c0edf2fc0dd..2f9d0d20b836 100644
-> --- a/drivers/acpi/osl.c
-> +++ b/drivers/acpi/osl.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/mm.h>
->  #include <linux/highmem.h>
-> +#include <linux/lockdep.h>
->  #include <linux/pci.h>
->  #include <linux/interrupt.h>
->  #include <linux/kmod.h>
-> @@ -80,6 +81,7 @@ struct acpi_ioremap {
->  
->  static LIST_HEAD(acpi_ioremaps);
->  static DEFINE_MUTEX(acpi_ioremap_lock);
-> +#define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
->  
->  static void __init acpi_request_region (struct acpi_generic_address *gas,
->  	unsigned int length, char *desc)
-> @@ -206,7 +208,7 @@ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
->  {
->  	struct acpi_ioremap *map;
->  
-> -	list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-> +	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
->  		if (map->phys <= phys &&
->  		    phys + size <= map->phys + map->size)
->  			return map;
-> @@ -249,7 +251,7 @@ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
->  {
->  	struct acpi_ioremap *map;
->  
-> -	list_for_each_entry_rcu(map, &acpi_ioremaps, list)
-> +	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
->  		if (map->virt <= virt &&
->  		    virt + size <= map->virt + map->size)
->  			return map;
-> -- 
-> 2.22.0.510.g264f2c817a-goog
+> % perf script -b ls / > /dev/null
 > 
+> Before:
+
+Thanks, applied.
+
+- Arnaldo
