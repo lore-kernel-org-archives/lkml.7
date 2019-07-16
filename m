@@ -2,231 +2,76 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017A8C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F7BC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F0220651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gZFaHQng"
+	by mail.kernel.org (Postfix) with ESMTP id 2756620651
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732460AbfGPMIp (ORCPT
+        id S1732081AbfGPMK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:08:45 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:57888 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfGPMIp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:08:45 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190716120841epoutp0141e7c0803fc62ae5d40037b0ea15076c~x4eVsiV0c1168211682epoutp01o
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:08:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190716120841epoutp0141e7c0803fc62ae5d40037b0ea15076c~x4eVsiV0c1168211682epoutp01o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563278921;
-        bh=1gjXB11SDdzOElaLaCz38VXtg7I27G/M6KDnNos2QfI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=gZFaHQng8SgG1J1YSJ5Up6WwPGkhr9tlv+SEhn3Ntcej+iOUIR1z8DSvcmkxTL6vY
-         U6FRKfm8kQVqUoseiZBCOWKsIHQH4kAkiwXpsMWUw5lzxntptG9VBmc0yQyGzwuBnu
-         O9IWk+bC6IxwJ8BtQJYVnqhs/vNrl6LKSTdkHoFU=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190716120840epcas1p251182e6c03bc82bfbd678de8a1adbeac~x4eU5YSVg0828408284epcas1p2Z;
-        Tue, 16 Jul 2019 12:08:40 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 45nzh60nmCzMqYkW; Tue, 16 Jul
-        2019 12:08:38 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DB.4C.04088.64EBD2D5; Tue, 16 Jul 2019 21:08:38 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716120837epcas1p1df37dfb34f48fd69328ebe3ceaaafeb4~x4eSh9-c52801628016epcas1p18;
-        Tue, 16 Jul 2019 12:08:37 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190716120837epsmtrp1ca8ae72e5e6213d6dc92d74dd605e3c8~x4eShJMym2933029330epsmtrp1L;
-        Tue, 16 Jul 2019 12:08:37 +0000 (GMT)
-X-AuditID: b6c32a35-845ff70000000ff8-da-5d2dbe46339c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1E.CD.03706.54EBD2D5; Tue, 16 Jul 2019 21:08:37 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716120837epsmtip2f4928d45723529661d3e7503081e6f8f~x4eSVOTvS3108531085epsmtip2V;
-        Tue, 16 Jul 2019 12:08:37 +0000 (GMT)
-Subject: Re: [PATCH v4 08/24] PM / devfreq: tegra30: Move clk-notifier's
- registration to governor's start
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <17d965c5-4114-4143-30c9-54cd88f9eff3@samsung.com>
-Date:   Tue, 16 Jul 2019 21:11:43 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Tue, 16 Jul 2019 08:10:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:41209 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728137AbfGPMK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:10:29 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9A83F227A81; Tue, 16 Jul 2019 14:10:26 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 14:10:26 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        pankaj.suryawanshi@einfochips.com, minchan@kernel.org,
+        minchan.kim@gmail.com, Christoph Hellwig <hch@lst.de>
+Subject: Re: cma_remap when using dma_alloc_attr :-
+ DMA_ATTR_NO_KERNEL_MAPPING
+Message-ID: <20190716121026.GB2388@lst.de>
+References: <CACDBo56EoKca9FJCnbztWZAARdUQs+B=dmCs+UxW27yHNu5pzQ@mail.gmail.com> <57f8aa35-d460-9933-a547-fbf578ea42d3@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-9-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3c528LVaWY9Sdg6UaQ186izU2wiKDJIQwiiJLGTHjZxN3Zm
-        98KysomamYXNa1dLicJmbSsd6ugmaWiRlKJQH1LKSrMSy9p2jPz2e27v//2/7yPmy+5goeIc
-        o5WxGGk9gc0X3OsMVyiS2xQZUcNVQqrp6ztEnbBfFlDPj38UUX3uaoyaKPEiyvbNjlFvj93A
-        qCl3rYAqvdWLJUg0zsGrSOOyD4o0JQVjmKbU0Yg0E81hacL0XJWOobMZi5wxZpmyc4xaNbFl
-        W2ZipjIuilSQm6iNhNxIGxg1kZSSpkjO0fsuRMj30vo8XyqNZlliQ7zKYsqzMnKdibWqCcac
-        rTdvMkeytIHNM2ojs0yGzWRUVLTS17g7V+e+1c43N4Ttry8bFeWj8mVFSCIGPBa66rv4fpbh
-        TgQXvBuL0HwfjyOorGzhc8F3BCeLx9G/icLztSKu0Irg4cRVjAs+I+i3XQqcFYznQmVbmdBf
-        WIzPILBNFWD+Ah/fCZ2uJp6fMTwCPB/6A/mF+Ep49fNdQEKKx4Pr06NAXoCvhvvTr4V+DsF3
-        wDNvrYDrWQRPL74PsARXQsP0LyF3/lJ4876Ox/EKKGipCngA/A8GD4a8sx6S4MndUSHHwTD6
-        2CHiOBRGzpya5UNw86kX44ZPI3B4XswOxIDn2jmfgtinEA633Ru49EpwTdcgTngBjE0WC/0t
-        gEvh9CkZ17IK+oYHeRwvgyuFNqwMEfY5duxzLNjnWLD/F6tHgka0hDGzBi3DkmZy7nc3o8C2
-        RiidqKI7pQPhYkQESeWe9RkyIb2XPWDoQCDmE4ul6sl1GTJpNn3gIGMxZVry9AzbgZS+1z7L
-        Dw3JMvl232jNJJXRMTExVCwZpyRJYqm09ld4hgzX0lYml2HMjOXfHE8sCc1HsvbWGveS1ds9
-        Azd4I9d74oZ0KrHq5aPfU82M83b/SDkM/KzXT+75+OUPqUzvVPWqHerP3Y2Hqz5UmBNi67bG
-        e9esszsdux4mvqbuHO7a13YoJ/zog7EfM3skffu/H+me19O7vDTSJlob1q0tnbR5eOMNR1Or
-        g1wlE6lXGp7MS1lPCFgdTUbwLSz9F5sSGFLDAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvK7rPt1Yg1+/NSxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgydq09yFywXK5iwYRX7A2MkyS7GDk5JARMJNqn
-        zmMHsYUEdjNKvLjtBhGXlJh28ShzFyMHkC0scfhwcRcjF1DJW0aJG92tbCA1wgLZEjP2TWAF
-        SYgINDFJbOq9ADaIWSBSomfuFjaIjs2MEpuuNIAl2AS0JPa/uAHWzS+gKHH1x2NGEJtXwE5i
-        59tjYHEWAVWJ7b+vs4LYogIREpOu7WSBqBGUODnzCZjNKWAqsfz3H1aIZeoSf+ZdYoawxSVu
-        PZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC4tz03GLDAsO81HK94sTc4tK8
-        dL3k/NxNjOAY09LcwXh5SfwhRgEORiUe3hN7dGKFWBPLiitzDzFKcDArifDaftWOFeJNSays
-        Si3Kjy8qzUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyWiYNTqoEx/ufRSgH1YB4/q69x
-        LFf/2u2U+an1lHPeW6d7L9dZXBJyfa980SVAPKc1tJwr813S4wJ/dtmIOl7Z/tpZj7Re+DM9
-        rViz97Ve5olqP0s7do4fVkflFydJJKy8LMCWvSGPe/2TWckTWabM/MX+zcdlZ17l6mAlPSb1
-        dlfrr+eunrB5G3mbgVOJpTgj0VCLuag4EQBvFxiarQIAAA==
-X-CMS-MailID: 20190716120837epcas1p1df37dfb34f48fd69328ebe3ceaaafeb4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223642epcas4p4f2ab67ac52b79ed8c64dd68f89792bcd
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223642epcas4p4f2ab67ac52b79ed8c64dd68f89792bcd@epcas4p4.samsung.com>
-        <20190707223303.6755-9-digetx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57f8aa35-d460-9933-a547-fbf578ea42d3@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitiry,
+On Tue, Jul 16, 2019 at 01:02:19PM +0100, Robin Murphy wrote:
+>> Lets say 4k video allocation required 300MB cma memory but not required
+>> virtual mapping for all the 300MB, its require only 20MB virtually mapped
+>> at some specific use case/point of video, and unmap virtual mapping after
+>> uses, at that time this functions will be useful, it works like ioremap()
+>> for cma_alloc() using dma apis.
+>
+> Hmm, is there any significant reason that this case couldn't be handled 
+> with just get_vm_area() plus dma_mmap_attrs(). I know it's only *intended* 
+> for userspace mappings, but since the basic machinery is there...
 
-On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> There is no point in receiving of the notifications while governor is
-> stopped, let's keep them disabled like we do for the CPU freq-change
-> notifications. This also fixes a potential use-after-free bug if
-> notification happens after device's removal.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 33 ++++++++++++++++++-------------
->  1 file changed, 19 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 48a799fa5f63..d5d04c25023b 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -576,6 +576,19 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
->  	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
->  		      ACTMON_GLB_PERIOD_CTRL);
->  
-> +	/*
-> +	 * CLK notifications are needed in order to reconfigure the upper
-> +	 * consecutive watermark in accordance to the actual clock rate
-> +	 * to avoid unnecessary upper interrupts.
-> +	 */
-> +	err = clk_notifier_register(tegra->emc_clock,
-> +				    &tegra->clk_rate_change_nb);
-> +	if (err) {
-> +		dev_err(tegra->devfreq->dev.parent,
-> +			"Failed to register rate change notifier\n");
-> +		return err;
-> +	}
-> +
->  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
->  		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
->  
-> @@ -602,6 +615,8 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
->  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
->  		tegra_actmon_stop_device(&tegra->devices[i]);
->  
-> +	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
-> +
->  	return err;
->  }
->  
-> @@ -618,6 +633,8 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->  
->  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
->  		tegra_actmon_stop_device(&tegra->devices[i]);
-> +
-> +	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
->  }
->  
->  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-> @@ -862,22 +879,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, tegra);
->  
-> +	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
->  	tegra->cpu_rate_change_nb.notifier_call = tegra_actmon_cpu_notify_cb;
->  	INIT_WORK(&tegra->update_work, tegra_actmon_delayed_update);
->  
-> -	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
-> -	err = clk_notifier_register(tegra->emc_clock,
-> -				    &tegra->clk_rate_change_nb);
-> -	if (err) {
-> -		dev_err(&pdev->dev,
-> -			"Failed to register rate change notifier\n");
-> -		goto remove_opps;
-> -	}
-> -
->  	err = devfreq_add_governor(&tegra_devfreq_governor);
->  	if (err) {
->  		dev_err(&pdev->dev, "Failed to add governor: %d\n", err);
-> -		goto unreg_notifier;
-> +		goto remove_opps;
->  	}
->  
->  	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
-> @@ -893,9 +902,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  remove_governor:
->  	devfreq_remove_governor(&tegra_devfreq_governor);
->  
-> -unreg_notifier:
-> -	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
-> -
->  remove_opps:
->  	dev_pm_opp_remove_all_dynamic(&pdev->dev);
->  
-> @@ -912,7 +918,6 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
->  	devfreq_remove_device(tegra->devfreq);
->  	devfreq_remove_governor(&tegra_devfreq_governor);
->  
-> -	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
->  	dev_pm_opp_remove_all_dynamic(&pdev->dev);
->  
->  	reset_control_reset(tegra->reset);
-> 
+Because the dma helper really are a black box abstraction.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+That being said DMA_ATTR_NO_KERNEL_MAPPING and DMA_ATTR_NON_CONSISTENT
+have been a constant pain in the b**t.  I've been toying with replacing
+them with a dma_alloc_pages or similar abstraction that just returns
+a struct page that is guaranteed to be dma addressable by the passed
+in device.  Then the driver can call dma_map_page / dma_unmap_page /
+dma_sync_* on it at well.  This would replace DMA_ATTR_NON_CONSISTENT
+with a sensible API, and also DMA_ATTR_NO_KERNEL_MAPPING when called
+with PageHighmem, while providing an easy to understand API and
+something that can easily be fed into the various page based APIs
+in the kernel.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+That being said until we get arm moved over the common dma direct
+and dma-iommu code, and x86 fully moved over to dma-iommu it just
+seems way too much work to even get it into the various architectures
+that matter, never mind all the fringe IOMMUs.  So for now I've just
+been trying to contain the DMA_ATTR_NON_CONSISTENT and
+DMA_ATTR_NO_KERNEL_MAPPING in fewer places while also killing bogus
+or pointless users of these APIs.
