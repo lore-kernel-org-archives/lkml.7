@@ -2,197 +2,135 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA91C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF390C76191
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D22C20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FD520880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LUCe3kDU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Jjkh/Crc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbfGPAiL (ORCPT
+        id S1733032AbfGPAqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 20:38:11 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11459 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730383AbfGPAiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 20:38:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2d1c6e0000>; Mon, 15 Jul 2019 17:38:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 15 Jul 2019 17:38:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 15 Jul 2019 17:38:08 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jul
- 2019 00:38:04 +0000
-Subject: Re: [PATCH] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-References: <20190709223556.28908-1-rcampbell@nvidia.com>
- <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
- <05fffcad-cf5e-8f0c-f0c7-6ffbd2b10c2e@nvidia.com>
- <20190715150031.49c2846f4617f30bca5f043f@linux-foundation.org>
- <0ee5166a-26cd-a504-b9db-cffd082ecd38@nvidia.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <8dd86951-f8b0-75c2-d738-5080343e5dc5@nvidia.com>
-Date:   Mon, 15 Jul 2019 17:38:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 15 Jul 2019 20:46:34 -0400
+Received: from ozlabs.org ([203.11.71.1]:38985 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730355AbfGPAqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 20:46:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45nhY24fvQz9sBF;
+        Tue, 16 Jul 2019 10:46:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563237990;
+        bh=NYPbY3fuAcWI162LDv1eE5JulP/EGNYsx66AjCIB84g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Jjkh/CrcSp5ovD/SmkbRdG+itfCAVgoVFJs9TncswZkG69mxtiNJaYWf8GQNCfmQY
+         UyizlxwCMKm6diOwMZOSLmoxu5k5ha7nHt8P0Lo6qRwo5NvxQRan51k+xWUfcf/M5N
+         zjAI6I0gUbzUqFvVZrgxxkkdtOWXXHmD8/ZHqqks2y1ptuDvWh8h0r3WbtP0jIdhmo
+         xrsOq5+pvShDWLK/BK9OOBNlIsPBqyj6uibHx3BDwdYFPhgW0sDMzPL7mLhS/cSPcp
+         4u+BKpe789QMGmk2Kuao/xOj0lZ2DiS4g7WUXIveHGprlPw3SBLQGE70MmLYpIrQFo
+         8d5t3/zy0B7Mg==
+Date:   Tue, 16 Jul 2019 10:46:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the rdma tree with the v4l-dvb-next
+ tree
+Message-ID: <20190716104614.2ec8b57c@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <0ee5166a-26cd-a504-b9db-cffd082ecd38@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563237486; bh=ofrUZPeHN8eLZ9OqaICadscElKqWN6p7kWys0JZTuhA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=LUCe3kDURX1xDPj2CwtN0jMKxVWQAyodV2+L1dwfQqHya3HI/sRDK9smEEbPHb0Ff
-         2mWdkD7daq3TlbcP/jPe/QgeLnCmv9MR87AAkK0rYBBLcIdpFz4CVSHPw8Pj6GRf6Z
-         IsVXfYeACcGxnhFyFKkMkmeyzkxVhsMH50pb9rd/qVbK1HzDYSmTjAkqk1jBUST8+s
-         2AA/JJqG6pnvYbOD/effu13h7Q1Yki3WPB2j7nXgiRUYRwqMM6Q2wIoo0HKj7bbmw+
-         lUEQZzcW3IcuLSZC5BOnC8Zm7Y3LCNf520ktUCMVxdFiPfHnYvX4upKEIQxU1HFATa
-         ar0051SC/Q4nA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/UCF0+_SusNV/iWmB5bDZx8m"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/UCF0+_SusNV/iWmB5bDZx8m
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/15/19 4:34 PM, John Hubbard wrote:
-> On 7/15/19 3:00 PM, Andrew Morton wrote:
->> On Tue, 9 Jul 2019 18:24:57 -0700 Ralph Campbell <rcampbell@nvidia.com> =
-wrote:
->>
->>>
->>> On 7/9/19 5:28 PM, Andrew Morton wrote:
->>>> On Tue, 9 Jul 2019 15:35:56 -0700 Ralph Campbell <rcampbell@nvidia.com=
-> wrote:
->>>>
->>>>> When migrating a ZONE device private page from device memory to syste=
-m
->>>>> memory, the subpage pointer is initialized from a swap pte which comp=
-utes
->>>>> an invalid page pointer. A kernel panic results such as:
->>>>>
->>>>> BUG: unable to handle page fault for address: ffffea1fffffffc8
->>>>>
->>>>> Initialize subpage correctly before calling page_remove_rmap().
->>>>
->>>> I think this is
->>>>
->>>> Fixes:  a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVIC=
-E page in migration")
->>>> Cc: stable
->>>>
->>>> yes?
->>>>
->>>
->>> Yes. Can you add this or should I send a v2?
->>
->> I updated the patch.  Could we please have some review input?
->>
->>
->> From: Ralph Campbell <rcampbell@nvidia.com>
->> Subject: mm/hmm: fix bad subpage pointer in try_to_unmap_one
->>
->> When migrating a ZONE device private page from device memory to system
->> memory, the subpage pointer is initialized from a swap pte which compute=
-s
->> an invalid page pointer. A kernel panic results such as:
->>
->> BUG: unable to handle page fault for address: ffffea1fffffffc8
->>
->> Initialize subpage correctly before calling page_remove_rmap().
->>
->> Link: http://lkml.kernel.org/r/20190709223556.28908-1-rcampbell@nvidia.c=
-om
->> Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE p=
-age in migration")
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
->> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Jason Gunthorpe <jgg@mellanox.com>
->> Cc: <stable@vger.kernel.org>
->> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>
->>   mm/rmap.c |    1 +
->>   1 file changed, 1 insertion(+)
->>
->> --- a/mm/rmap.c~mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one
->> +++ a/mm/rmap.c
->> @@ -1476,6 +1476,7 @@ static bool try_to_unmap_one(struct page
->>   			 * No need to invalidate here it will synchronize on
->>   			 * against the special swap migration pte.
->>   			 */
->> +			subpage =3D page;
->>   			goto discard;
->>   		}
->>  =20
->=20
-> Hi Ralph and everyone,
->=20
-> While the above prevents a crash, I'm concerned that it is still not
-> an accurate fix. This fix leads to repeatedly removing the rmap, against =
-the
-> same struct page, which is odd, and also doesn't directly address the
-> root cause, which I understand to be: this routine can't handle migrating
-> the zero page properly--over and back, anyway. (We should also mention mo=
-re
-> about how this is triggered, in the commit description.)
->=20
-> I'll take a closer look at possible fixes (I have to step out for a bit) =
-soon,
-> but any more experienced help is also appreciated here.
->=20
-> thanks,
+Hi all,
 
-I'm not surprised at the confusion. It took me quite awhile to=20
-understand how migrate_vma() works with ZONE_DEVICE private memory.
-The big point to be aware of is that when migrating a page to
-device private memory, the source page's page->mapping pointer
-is copied to the ZONE_DEVICE struct page and the page_mapcount()
-is increased. So, the kernel sees the page as being "mapped"
-but the page table entry as being is_swap_pte() so the CPU will fault
-if it tries to access the mapped address.
-So yes, the source anon page is unmapped, DMA'ed to the device,
-and then mapped again. Then on a CPU fault, the zone device page
-is unmapped, DMA'ed to system memory, and mapped again.
-The rmap_walk() is used to clear the temporary migration pte so
-that is another important detail of how migrate_vma() works.
-At the moment, only single anon private pages can migrate to
-device private memory so there are no subpages and setting it to "page"
-should be correct for now. I'm looking at supporting migration of
-transparent huge pages but that is a work in progress.
-Let me know how much of all that you think should be in the change log.
-Getting an Acked-by from Jerome would be nice too.
+Today's linux-next merge of the rdma tree got a conflict in:
 
-I see Christoph Hellwig got confused by this too [1].
-I have a patch to clear page->mapping when freeing ZONE_DEVICE private
-struct pages which I'll send out soon.
-I'll probably also add some comments to struct page to include the
-above info and maybe remove the _zd_pad_1 field.
+  Documentation/index.rst
 
-[1] 740d6310ed4cd5c78e63 ("mm: don't clear ->mapping in hmm_devmem_free")
+between commit:
 
+  09fdc957ad0d ("docs: leds: add it to the driver-api book")
+(and others following)
+
+from the v4l-dvb-next tree and commit:
+
+  a3a400da206b ("docs: infiniband: add it to the driver-api bookset")
+
+from the rdma tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/index.rst
+index f379e43fcda0,869616b57aa8..000000000000
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@@ -96,23 -90,9 +96,24 @@@ needed)
+ =20
+     driver-api/index
+     core-api/index
+ +   locking/index
+ +   accounting/index
+ +   block/index
+ +   cdrom/index
+ +   ide/index
+ +   fb/index
+ +   fpga/index
+ +   hid/index
+ +   iio/index
+ +   leds/index
++    infiniband/index
+     media/index
+ +   netlabel/index
+     networking/index
+ +   pcmcia/index
+ +   target/index
+ +   timers/index
+ +   watchdog/index
+     input/index
+     hwmon/index
+     gpu/index
+
+--Sig_/UCF0+_SusNV/iWmB5bDZx8m
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0tHlYACgkQAVBC80lX
+0Gz/0AgAnh5PF5cFTlabGAwhQDCkqtClfxWieEu8pcv1ru0QiNKScJGPb8VuicrB
+y9bTB1RtJzuR9jaP/Fz6cb0LSCwZKlJs8TdyJOR1c+dHaulTYFq4HVOrZ1ls468t
+tAuYWIKkNxoOSSO87TTd+Y1XpG+Fu6nK1e7eyCax8s4Jyos5tmiT6umF3+HXoopW
+EJwi3KN9Kx0CDEApn7ydfa4sayVVDgG8YO4hPB79RB4pBy3bgI0uYwW2A60nnunt
+2gvF1gFnglG//LUPIJ4oC/jHsoLK94Lc9nrPJGEBwlURUwdh2zR1srBZjPpHQknQ
+xVPA24RSzuNdEZt73i3ZdAIkmcgmUw==
+=TjnG
+-----END PGP SIGNATURE-----
+
+--Sig_/UCF0+_SusNV/iWmB5bDZx8m--
