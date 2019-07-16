@@ -2,193 +2,76 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D8BC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D215C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B7320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gecOJZVM"
+	by mail.kernel.org (Postfix) with ESMTP id 0A8AB20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387916AbfGPPAz (ORCPT
+        id S2387957AbfGPPCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:00:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37847 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbfGPPAy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:00:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z28so20344394ljn.4;
-        Tue, 16 Jul 2019 08:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fDXHXukmqVU81soTlNeE/Qat/McVs867H+Cn2IJoFDs=;
-        b=gecOJZVM4OcQiUpOqailnBHkjfBooumMjKmB78rHVsli1K/IWvzEKnY50M41bR+SXX
-         BCvzNBbThA94NL0bmD7VS1YZcDSNR7F4eR6EwO5Ytm+/PaHipOYH9bhGnUNO20xEf09P
-         gbCpeGoNHnfxjsyUqSVQuQn8ZE+gAaBtnNEScCcfJXx24GWI7do2c1jeqso8aszTrEgS
-         y33b0lPbS/m13EXbER7EKj6SR0Qwa4OMKOdeMXllhiZ5NJ7iQbU1FK5xxh0vUBqxy+gm
-         rSaDHoRLZhyPwYBMm/UcaUZPoQfyt69jkOUYK1E5U4dw+6jdqrC6tYAb0CiAa9yegg4C
-         SEJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fDXHXukmqVU81soTlNeE/Qat/McVs867H+Cn2IJoFDs=;
-        b=EB/GDdpD3Q0WjiSmmYIvALyHRB/60qk0JM8cjoAxtLk3r7cmWI0S4T5MKO5hKuLyDK
-         NUBzwy1nJli+2wXjqRyYvquxg8h7c5/hAHo6H2HxsPVUDnLlLM5ZSorFgHw5OdWZmPDy
-         ROAr/I7KPz4AsVDX/dvsC8i1NwKselM9FF1onbYzdHRHYhpjNzi75grPebAnx9Eh0s6r
-         NSxnc8Uew07Oa3OFjK3Zd5uBdLK3/riJibyZGNJGiW97jas5n8Y+rkFw4naBZsdiiDue
-         xw068xiNrI+e664zwzIHkuWWtdd9gTRiGZ4hMqLUA+XN1MPOaf2WIBOGbtNFlewl9PUJ
-         qHDw==
-X-Gm-Message-State: APjAAAUyEBmp7jk9p5nt+jVxwa4f8N7j9t2yu9gufYS8GQ9IbM5q2Qv+
-        6asU4zOGfHigZpA3zkk7aBibA0qe
-X-Google-Smtp-Source: APXvYqybnR2SPB8V1NG5Xyi+7sFdN4IOM0FsCmdXSXTqxyloVOhDBpmLe2S2l84NFhB//Gx4I7vK0w==
-X-Received: by 2002:a2e:b1c1:: with SMTP id e1mr17732360lja.228.1563289250440;
-        Tue, 16 Jul 2019 08:00:50 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id q4sm4210952lje.99.2019.07.16.08.00.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 08:00:49 -0700 (PDT)
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
- <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
- <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
-Date:   Tue, 16 Jul 2019 18:00:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 11:02:00 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34330 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387924AbfGPPB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:01:59 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnOxg-0007MZ-Ra; Tue, 16 Jul 2019 23:01:48 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnOxa-00018j-64; Tue, 16 Jul 2019 23:01:42 +0800
+Date:   Tue, 16 Jul 2019 23:01:42 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        boqun.feng@gmail.com, paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
+ padata jobs
+Message-ID: <20190716150142.rebjmpjjiesaiwyt@gondor.apana.org.au>
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190716125309.GA10672@andrea>
 MIME-Version: 1.0
-In-Reply-To: <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716125309.GA10672@andrea>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2019 11:06, Peter De Schrijver пишет:
-> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
->>> OK, Will add to CPUFreq driver...
->>>>
->>>> The other thing that also need attention is that T124 CPUFreq driver
->>>> implicitly relies on DFLL driver to be probed first, which is icky.
->>>>
->>> Should I add check for successful dfll clk register explicitly in
->>> CPUFreq driver probe and defer till dfll clk registers?
-
-Probably you should use the "device links". See [1][2] for the example.
-
-[1]
-https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c#L2383
-
-[2] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
-
-Return EPROBE_DEFER instead of EINVAL if device_link_add() fails. And
-use of_find_device_by_node() to get the DFLL's device, see [3].
-
-[3]
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
-
->> Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
->>
->> As you know it, the DFLL clock is one of the CPU clock sources and
->> integrated with DVFS control logic with the regulator. We will not switch
->> CPU to other clock sources once we switched to DFLL. Because the CPU has
->> been regulated by the DFLL HW with the DVFS table (CVB or OPP table you see
->> in the driver.). We shouldn't reparent it to other sources with unknew
->> freq/volt pair. That's not guaranteed to work. We allow switching to
->> open-loop mode but different sources.
-
-Okay, then the CPUFreq driver will have to enforce DFLL freq to PLLP's
-rate before switching to PLLP in order to have a proper CPU voltage.
-
->> And I don't exactly understand why we need to switch to PLLP in CPU idle
->> driver. Just keep it on CL-DVFS mode all the time.
->>
->> In SC7 entry, the dfll suspend function moves it the open-loop mode. That's
->> all. The sc7-entryfirmware will handle the rest of the sequence to turn off
->> the CPU power.
->>
->> In SC7 resume, the warmboot code will handle the sequence to turn on
->> regulator and power up the CPU cluster. And leave it on PLL_P. After
->> resuming to the kernel, we re-init DFLL, restore the CPU clock policy (CPU
->> runs on DFLL open-loop mode) and then moving to close-loop mode.
-
-The DFLL is re-inited after switching CCLK to DFLL parent during of the
-early clocks-state restoring by CaR driver. Hence instead of having odd
-hacks in the CaR driver, it is much nicer to have a proper
-suspend-resume sequencing of the device drivers. In this case CPUFreq
-driver is the driver that enables DFLL and switches CPU to that clock
-source, which means that this driver is also should be responsible for
-management of the DFLL's state during of suspend/resume process. If
-CPUFreq driver disables DFLL during suspend and re-enables it during
-resume, then looks like the CaR driver hacks around DFLL are not needed.
-
->> The DFLL part looks good to me. BTW, change the patch subject to "Add
->> suspend-resume support" seems more appropriate to me.
->>
+On Tue, Jul 16, 2019 at 02:53:09PM +0200, Andrea Parri wrote:
+>
+> P1(atomic_t *reorder_objects, spinlock_t *pd_lock, spinlock_t *reorder_lock)
+> {
+> 	int r1;
 > 
-> To clarify this, the sequences for DFLL use are as follows (assuming all
-> required DFLL hw configuration has been done)
-> 
-> Switch to DFLL:
-> 0) Save current parent and frequency
-> 1) Program DFLL to open loop mode
-> 2) Enable DFLL
-> 3) Change cclk_g parent to DFLL
-> For OVR regulator:
-> 4) Change PWM output pin from tristate to output
-> 5) Enable DFLL PWM output
-> For I2C regulator:
-> 4) Enable DFLL I2C output
-> 6) Program DFLL to closed loop mode
-> 
-> Switch away from DFLL:
-> 0) Change cclk_g parent to PLLP so the CPU frequency is ok for any vdd_cpu voltage
-> 1) Program DFLL to open loop mode
-> 
-> For OVR regulator:
-> 2) Change PWM output pin from output to tristate: vdd_cpu will go back
->    to hardwired boot voltage.
-> 3) Disable DFLL PWM output
-> 
-> For I2C regulator:
-> 2) Program vdd_cpu regulator voltage to the boot voltage
-> 3) Disable DFLL I2C output
-> 
-> 4) Reprogram parent saved in step 0 of 'Switch to DFLL' to the saved
->    frequency
-> 5) Change cclk_g parent to saved parent
-> 6) Disable DFLL
+> 	spin_lock(reorder_lock);
+> 	atomic_inc(reorder_objects);
+> 	spin_unlock(reorder_lock);
+> 	//smp_mb();
+> 	r1 = spin_trylock(pd_lock);
+> }
 
-Thanks!
+Yes we need a matching mb on the other side.  However, we can
+get away with using smp_mb__after_atomic thanks to the atomic_inc
+above.
+
+Daniel, can you please respin the patch with the matching smp_mb?
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
