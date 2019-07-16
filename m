@@ -2,342 +2,144 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202EDC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAC7C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D1321743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E12921743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZI1yhSOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389123AbfGPWqN (ORCPT
+        id S2389142AbfGPWqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:46:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57961 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389065AbfGPWqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:46:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 15:46:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,271,1559545200"; 
-   d="scan'208";a="158276146"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2019 15:46:07 -0700
-From:   thor.thayer@linux.intel.com
-To:     mdf@kernel.org, richard.gong@linux.intel.com, agust@denx.de
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCHv2 1/3] fpga: altera-cvp: Discover Vendor Specific offset
-Date:   Tue, 16 Jul 2019 17:48:05 -0500
-Message-Id: <1563317287-18834-2-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563317287-18834-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1563317287-18834-1-git-send-email-thor.thayer@linux.intel.com>
+        Tue, 16 Jul 2019 18:46:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33739 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389083AbfGPWqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:46:10 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so10840768plo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZSafqs3dk1A2a56ZSTzxAgkROhKDh2sVg3+f4ANr2sM=;
+        b=ZI1yhSOdixGSXYRM8nMQJMpxZPSxUBBqzzBaw5lkJo+7fde9KlpWC1LQ+fhLtq7daw
+         HbJErpZtJFQJXqsBg50w3Vo2QMjtDAoaDiO2ph/vkhiE0yfB7y9COm360VK5tiWw4+8b
+         0JhZeVsAGRo4FXaSTlItAM+r4mOxe19m1R3iY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZSafqs3dk1A2a56ZSTzxAgkROhKDh2sVg3+f4ANr2sM=;
+        b=PZA1AO2oSVQwYh3stLtFKySEdJWykbGBtAyrYmmBXkW7m4TRJzihpCefTRYE3G8TTl
+         TdpTUjlaFxwp9m/Tk6W87ZUZkOxlGSMyOjUCgkp3hjAyMHfMehi+HP8U3RGGKbIVs6aU
+         k4JKDTDpn+NhuRAY0E+eTU12o1JxsRzvgOapAwo63m2CthBK0UZem2IkTNJ+UkyYtsP2
+         8qt2AJi3PSY8x3PXXCg8AkG6VO5HVSYyr0PSJcMV7UlQ3hvMXMjU/KWTB9eNlqCRMJfg
+         lS3aSIMNcsyHqXT0FhkzGX27uCZElllnZ7hmfuRkLOM5XASb98eC254EYdWECCNd7lPX
+         Yvgg==
+X-Gm-Message-State: APjAAAWjx20GejeOMM+CDNuenhUU70sSyPXrefHTIm3TjAkAOf82OGsE
+        0NH3RIDgVMlkkcrar0w13bE=
+X-Google-Smtp-Source: APXvYqxij2sUThKpOtvWAWoIKdsG3JOc5TE+Ahn71mXU5vgaa8CsZm7ykBAnbyP8GihU+4dX5jCRMA==
+X-Received: by 2002:a17:902:a409:: with SMTP id p9mr39200676plq.218.1563317169245;
+        Tue, 16 Jul 2019 15:46:09 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id bo20sm16582204pjb.23.2019.07.16.15.46.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 15:46:08 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 18:46:06 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        Manali Shukla <manalishukla14@gmail.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matt Mullins <mmullins@fb.com>,
+        Michal Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
+        namhyung@kernel.org, netdev@vger.kernel.org,
+        paul.chaignon@gmail.com, primiano@google.com,
+        Qais Yousef <qais.yousef@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190716224606.GD172157@google.com>
+References: <20190710141548.132193-1-joel@joelfernandes.org>
+ <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+ <20190716213050.GA161922@google.com>
+ <20190716183117.77b3ed49@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716183117.77b3ed49@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Tue, Jul 16, 2019 at 06:31:17PM -0400, Steven Rostedt wrote:
+> On Tue, 16 Jul 2019 17:30:50 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > I don't see why a new bpf node for a trace event is a bad idea, really.
+> > tracefs is how we deal with trace events on Android. We do it in production
+> > systems. This is a natural extension to that and fits with the security model
+> > well.
+> 
+> What I would like to see is a way to have BPF inject data into the
+> ftrace ring buffer directly. There's a bpf_trace_printk() that I find a
+> bit of a hack (especially since it hooks into trace_printk() which is
+> only for debugging purposes). Have a dedicated bpf ftrace ring
+> buffer event that can be triggered is what I am looking for. Then comes
+> the issue of what ring buffer to place it in, as ftrace can have
+> multiple ring buffer instances. But these instances are defined by the
+> tracefs instances directory. Having a way to associate a bpf program to
+> a specific event in a specific tracefs directory could allow for ways to
+> trigger writing into the correct ftrace buffer.
 
-Newer Intel FPGAs have different Vendor Specific offsets than
-legacy parts. Use PCI discovery to find the CvP registers.
-Since the register positions remain the same, change the hard
-coded address to a more flexible way of indexing registers
-from the offset.
-Adding new PCI read and write abstraction functions to
-handle the offset (altera_read_config_dword() and
-altera_write_config_dword()).
+But his problem is with doing the association of a BPF program with tracefs
+itself. How would you attach a BPF program with tracefs without doing a text
+based approach? His problem is with the text based approach per his last
+email.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
-v2 Remove inline designator from abstraction functions.
-   Reverse Christmas Tree format for local variables
----
- drivers/fpga/altera-cvp.c | 94 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 57 insertions(+), 37 deletions(-)
+> But looking over the patches, I see what Alexei means that there's no
+> overlap with ftrace and these patches except for the tracefs directory
+> itself (which is part of the ftrace infrastructure). And the trace
+> events are technically part of the ftrace infrastructure too. I see the
+> tracefs interface being used, but I don't see how the bpf programs
+> being added affect the ftrace ring buffer or other parts of ftrace. And
+> I'm guessing that's what is confusing Alexei.
 
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 770915fb97f9..b78c90580071 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -22,10 +22,10 @@
- #define TIMEOUT_US	2000	/* CVP STATUS timeout for USERMODE polling */
- 
- /* Vendor Specific Extended Capability Registers */
--#define VSE_PCIE_EXT_CAP_ID		0x200
-+#define VSE_PCIE_EXT_CAP_ID		0x0
- #define VSE_PCIE_EXT_CAP_ID_VAL		0x000b	/* 16bit */
- 
--#define VSE_CVP_STATUS			0x21c	/* 32bit */
-+#define VSE_CVP_STATUS			0x1c	/* 32bit */
- #define VSE_CVP_STATUS_CFG_RDY		BIT(18)	/* CVP_CONFIG_READY */
- #define VSE_CVP_STATUS_CFG_ERR		BIT(19)	/* CVP_CONFIG_ERROR */
- #define VSE_CVP_STATUS_CVP_EN		BIT(20)	/* ctrl block is enabling CVP */
-@@ -33,18 +33,18 @@
- #define VSE_CVP_STATUS_CFG_DONE		BIT(23)	/* CVP_CONFIG_DONE */
- #define VSE_CVP_STATUS_PLD_CLK_IN_USE	BIT(24)	/* PLD_CLK_IN_USE */
- 
--#define VSE_CVP_MODE_CTRL		0x220	/* 32bit */
-+#define VSE_CVP_MODE_CTRL		0x20	/* 32bit */
- #define VSE_CVP_MODE_CTRL_CVP_MODE	BIT(0)	/* CVP (1) or normal mode (0) */
- #define VSE_CVP_MODE_CTRL_HIP_CLK_SEL	BIT(1) /* PMA (1) or fabric clock (0) */
- #define VSE_CVP_MODE_CTRL_NUMCLKS_OFF	8	/* NUMCLKS bits offset */
- #define VSE_CVP_MODE_CTRL_NUMCLKS_MASK	GENMASK(15, 8)
- 
--#define VSE_CVP_DATA			0x228	/* 32bit */
--#define VSE_CVP_PROG_CTRL		0x22c	/* 32bit */
-+#define VSE_CVP_DATA			0x28	/* 32bit */
-+#define VSE_CVP_PROG_CTRL		0x2c	/* 32bit */
- #define VSE_CVP_PROG_CTRL_CONFIG	BIT(0)
- #define VSE_CVP_PROG_CTRL_START_XFER	BIT(1)
- 
--#define VSE_UNCOR_ERR_STATUS		0x234	/* 32bit */
-+#define VSE_UNCOR_ERR_STATUS		0x34	/* 32bit */
- #define VSE_UNCOR_ERR_CVP_CFG_ERR	BIT(5)	/* CVP_CONFIG_ERROR_LATCHED */
- 
- #define DRV_NAME		"altera-cvp"
-@@ -60,14 +60,27 @@ struct altera_cvp_conf {
- 	void			(*write_data)(struct altera_cvp_conf *, u32);
- 	char			mgr_name[64];
- 	u8			numclks;
-+	u32			vsec_offset;
- };
- 
-+static void altera_read_config_dword(struct altera_cvp_conf *conf,
-+				     int where, u32 *val)
-+{
-+	pci_read_config_dword(conf->pci_dev, conf->vsec_offset + where, val);
-+}
-+
-+static void altera_write_config_dword(struct altera_cvp_conf *conf,
-+				      int where, u32 val)
-+{
-+	pci_write_config_dword(conf->pci_dev, conf->vsec_offset + where, val);
-+}
-+
- static enum fpga_mgr_states altera_cvp_state(struct fpga_manager *mgr)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
- 	u32 status;
- 
--	pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &status);
-+	altera_read_config_dword(conf, VSE_CVP_STATUS, &status);
- 
- 	if (status & VSE_CVP_STATUS_CFG_DONE)
- 		return FPGA_MGR_STATE_OPERATING;
-@@ -85,7 +98,8 @@ static void altera_cvp_write_data_iomem(struct altera_cvp_conf *conf, u32 val)
- 
- static void altera_cvp_write_data_config(struct altera_cvp_conf *conf, u32 val)
- {
--	pci_write_config_dword(conf->pci_dev, VSE_CVP_DATA, val);
-+	pci_write_config_dword(conf->pci_dev, conf->vsec_offset + VSE_CVP_DATA,
-+			       val);
- }
- 
- /* switches between CvP clock and internal clock */
-@@ -95,10 +109,10 @@ static void altera_cvp_dummy_write(struct altera_cvp_conf *conf)
- 	u32 val;
- 
- 	/* set 1 CVP clock cycle for every CVP Data Register Write */
--	pci_read_config_dword(conf->pci_dev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val &= ~VSE_CVP_MODE_CTRL_NUMCLKS_MASK;
- 	val |= 1 << VSE_CVP_MODE_CTRL_NUMCLKS_OFF;
--	pci_write_config_dword(conf->pci_dev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	for (i = 0; i < CVP_DUMMY_WR; i++)
- 		conf->write_data(conf, 0); /* dummy data, could be any value */
-@@ -115,7 +129,7 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
- 		retries++;
- 
- 	do {
--		pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &val);
-+		altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
- 		if ((val & status_mask) == status_val)
- 			return 0;
- 
-@@ -130,18 +144,17 @@ static int altera_cvp_teardown(struct fpga_manager *mgr,
- 			       struct fpga_image_info *info)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
--	struct pci_dev *pdev = conf->pci_dev;
- 	int ret;
- 	u32 val;
- 
- 	/* STEP 12 - reset START_XFER bit */
--	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
- 	val &= ~VSE_CVP_PROG_CTRL_START_XFER;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/* STEP 13 - reset CVP_CONFIG bit */
- 	val &= ~VSE_CVP_PROG_CTRL_CONFIG;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/*
- 	 * STEP 14
-@@ -163,7 +176,6 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 				 const char *buf, size_t count)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
--	struct pci_dev *pdev = conf->pci_dev;
- 	u32 iflags, val;
- 	int ret;
- 
-@@ -183,7 +195,7 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 		conf->numclks = 1; /* for uncompressed and unencrypted images */
- 
- 	/* STEP 1 - read CVP status and check CVP_EN flag */
--	pci_read_config_dword(pdev, VSE_CVP_STATUS, &val);
-+	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
- 	if (!(val & VSE_CVP_STATUS_CVP_EN)) {
- 		dev_err(&mgr->dev, "CVP mode off: 0x%04x\n", val);
- 		return -ENODEV;
-@@ -201,14 +213,14 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 	 * - set HIP_CLK_SEL and CVP_MODE (must be set in the order mentioned)
- 	 */
- 	/* switch from fabric to PMA clock */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val |= VSE_CVP_MODE_CTRL_HIP_CLK_SEL;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	/* set CVP mode */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val |= VSE_CVP_MODE_CTRL_CVP_MODE;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	/*
- 	 * STEP 3
-@@ -217,10 +229,10 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 	altera_cvp_dummy_write(conf);
- 
- 	/* STEP 4 - set CVP_CONFIG bit */
--	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
- 	/* request control block to begin transfer using CVP */
- 	val |= VSE_CVP_PROG_CTRL_CONFIG;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/* STEP 5 - poll CVP_CONFIG READY for 1 with 10us timeout */
- 	ret = altera_cvp_wait_status(conf, VSE_CVP_STATUS_CFG_RDY,
-@@ -237,15 +249,15 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
- 	altera_cvp_dummy_write(conf);
- 
- 	/* STEP 7 - set START_XFER */
--	pci_read_config_dword(pdev, VSE_CVP_PROG_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_PROG_CTRL, &val);
- 	val |= VSE_CVP_PROG_CTRL_START_XFER;
--	pci_write_config_dword(pdev, VSE_CVP_PROG_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_PROG_CTRL, val);
- 
- 	/* STEP 8 - start transfer (set CVP_NUMCLKS for bitstream) */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val &= ~VSE_CVP_MODE_CTRL_NUMCLKS_MASK;
- 	val |= conf->numclks << VSE_CVP_MODE_CTRL_NUMCLKS_OFF;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	return 0;
- }
-@@ -256,7 +268,7 @@ static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
- 	u32 val;
- 
- 	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
--	pci_read_config_dword(conf->pci_dev, VSE_CVP_STATUS, &val);
-+	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
- 	if (val & VSE_CVP_STATUS_CFG_ERR) {
- 		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
- 			bytes);
-@@ -315,27 +327,25 @@ static int altera_cvp_write_complete(struct fpga_manager *mgr,
- 				     struct fpga_image_info *info)
- {
- 	struct altera_cvp_conf *conf = mgr->priv;
--	struct pci_dev *pdev = conf->pci_dev;
-+	u32 mask, val;
- 	int ret;
--	u32 mask;
--	u32 val;
- 
- 	ret = altera_cvp_teardown(mgr, info);
- 	if (ret)
- 		return ret;
- 
- 	/* STEP 16 - check CVP_CONFIG_ERROR_LATCHED bit */
--	pci_read_config_dword(pdev, VSE_UNCOR_ERR_STATUS, &val);
-+	altera_read_config_dword(conf, VSE_UNCOR_ERR_STATUS, &val);
- 	if (val & VSE_UNCOR_ERR_CVP_CFG_ERR) {
- 		dev_err(&mgr->dev, "detected CVP_CONFIG_ERROR_LATCHED!\n");
- 		return -EPROTO;
- 	}
- 
- 	/* STEP 17 - reset CVP_MODE and HIP_CLK_SEL bit */
--	pci_read_config_dword(pdev, VSE_CVP_MODE_CTRL, &val);
-+	altera_read_config_dword(conf, VSE_CVP_MODE_CTRL, &val);
- 	val &= ~VSE_CVP_MODE_CTRL_HIP_CLK_SEL;
- 	val &= ~VSE_CVP_MODE_CTRL_CVP_MODE;
--	pci_write_config_dword(pdev, VSE_CVP_MODE_CTRL, val);
-+	altera_write_config_dword(conf, VSE_CVP_MODE_CTRL, val);
- 
- 	/* STEP 18 - poll PLD_CLK_IN_USE and USER_MODE bits */
- 	mask = VSE_CVP_STATUS_PLD_CLK_IN_USE | VSE_CVP_STATUS_USERMODE;
-@@ -394,22 +404,29 @@ static int altera_cvp_probe(struct pci_dev *pdev,
- {
- 	struct altera_cvp_conf *conf;
- 	struct fpga_manager *mgr;
-+	int ret, offset;
- 	u16 cmd, val;
- 	u32 regval;
--	int ret;
-+
-+	/* Discover the Vendor Specific Offset for this device */
-+	offset = pci_find_next_ext_capability(pdev, 0, PCI_EXT_CAP_ID_VNDR);
-+	if (!offset) {
-+		dev_err(&pdev->dev, "No Vendor Specific Offset.\n");
-+		return -ENODEV;
-+	}
- 
- 	/*
- 	 * First check if this is the expected FPGA device. PCI config
- 	 * space access works without enabling the PCI device, memory
- 	 * space access is enabled further down.
- 	 */
--	pci_read_config_word(pdev, VSE_PCIE_EXT_CAP_ID, &val);
-+	pci_read_config_word(pdev, offset + VSE_PCIE_EXT_CAP_ID, &val);
- 	if (val != VSE_PCIE_EXT_CAP_ID_VAL) {
- 		dev_err(&pdev->dev, "Wrong EXT_CAP_ID value 0x%x\n", val);
- 		return -ENODEV;
- 	}
- 
--	pci_read_config_dword(pdev, VSE_CVP_STATUS, &regval);
-+	pci_read_config_dword(pdev, offset + VSE_CVP_STATUS, &regval);
- 	if (!(regval & VSE_CVP_STATUS_CVP_EN)) {
- 		dev_err(&pdev->dev,
- 			"CVP is disabled for this device: CVP_STATUS Reg 0x%x\n",
-@@ -421,6 +438,9 @@ static int altera_cvp_probe(struct pci_dev *pdev,
- 	if (!conf)
- 		return -ENOMEM;
- 
-+	conf->vsec_offset = offset;
-+	dev_dbg(&pdev->dev, "Vendor Specific Data Offset at 0x%x\n", offset);
-+
- 	/*
- 	 * Enable memory BAR access. We cannot use pci_enable_device() here
- 	 * because it will make the driver unusable with FPGA devices that
--- 
-2.7.4
+In a follow-up patch which I am still writing, I am using the trace ring
+buffer as temporary storage since I am formatting the trace event into it.
+This patch you are replying to is just for raw tracepoint and yes, I agree
+this one does not use the ring buffer, but a future addition to it does. So
+I don't think the association of this patch series with ftrace is going to be
+an issue IMO.
+
+thanks,
+
+ - Joel
+
 
