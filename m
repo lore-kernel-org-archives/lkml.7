@@ -2,176 +2,77 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F57C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A03BC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E2320651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XaYuuYGa"
+	by mail.kernel.org (Postfix) with ESMTP id 1416520651
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387648AbfGPLcn (ORCPT
+        id S2387702AbfGPLfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:32:43 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:48536 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387472AbfGPLcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:32:42 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190716113240epoutp01a5574e62d07225b3fb5b9898d30d1537~x3_5GUUBs1375613756epoutp010
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:32:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190716113240epoutp01a5574e62d07225b3fb5b9898d30d1537~x3_5GUUBs1375613756epoutp010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563276760;
-        bh=Czm2jUEgwWPbrgS6DDeuw3qD4aYubyUUsTQoEq/4aGk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=XaYuuYGahBvWnn2NVgOZmeJ1oA7BqWq8MlQlUgNBKg8w3mRNYNyWfZcSJsif+jKjg
-         keh2aADXsgCnqzksxujrR5Ox1dffIzx+vVXiuPthDy14SDqAJ2dm5CD6jkJAX6cUkt
-         3qcaBZLgBeYkZbQl6FkmhWZUTBBfSfNkwZh2K1NE=
-Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190716113239epcas1p257772ee641552084cb5c08d8a8eb6190~x3_4ZZ5g40758307583epcas1p2m;
-        Tue, 16 Jul 2019 11:32:39 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp5.localdomain (Postfix) with ESMTP id 45nytY1jCTzMqYkb; Tue, 16 Jul
-        2019 11:32:37 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        28.09.04088.5D5BD2D5; Tue, 16 Jul 2019 20:32:37 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190716113236epcas1p3bbc89147b610146d5c8d327533bc11aa~x3_17DYxl1708317083epcas1p3k;
-        Tue, 16 Jul 2019 11:32:36 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190716113236epsmtrp12b3e11b8d2a13b81e905741433f25e89~x3_16VF151088810888epsmtrp1a;
-        Tue, 16 Jul 2019 11:32:36 +0000 (GMT)
-X-AuditID: b6c32a35-85dff70000000ff8-9d-5d2db5d5dfb1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        80.BC.03638.4D5BD2D5; Tue, 16 Jul 2019 20:32:36 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716113236epsmtip2a8c0241aaa241566bfe38bdcba432870~x3_1vd1t50967509675epsmtip2j;
-        Tue, 16 Jul 2019 11:32:36 +0000 (GMT)
-Subject: Re: [PATCH v4 01/24] PM / devfreq: tegra30: Change irq type to
- unsigned int
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <628e2752-61fb-f070-94fe-dad4c83ea97a@samsung.com>
-Date:   Tue, 16 Jul 2019 20:35:42 +0900
+        Tue, 16 Jul 2019 07:35:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:33286 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733067AbfGPLfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 07:35:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC6AC2B;
+        Tue, 16 Jul 2019 04:35:07 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD30B3F71A;
+        Tue, 16 Jul 2019 04:35:06 -0700 (PDT)
+Subject: Re: [PATCH v3 04/24] dmaengine: qcom_hidma: Remove call to memset
+ after dmam_alloc_coherent
+To:     Sinan Kaya <Okaya@kernel.org>,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20190715031723.6375-1-huangfq.daxian@gmail.com>
+ <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
+ <CABXRUiQXweOLRTpdyhx9xT_B1VBmoSoNm=_+Qr4prmz7u1QRFA@mail.gmail.com>
+ <245ffd79-316c-e985-d1da-2ccea6d29636@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9ea5f97f-5963-5836-6ab2-dc30628c6820@arm.com>
+Date:   Tue, 16 Jul 2019 12:35:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-2-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfe+ee3oOx9dJfWTjeowpSk/n8oQwzM40hc3P3fKoZ9eP+7Xn
-        uZDfnFJRGGaOLqv8nl8Vu26srcJCkdb8aMmWDWl+puT33T2Z/nt9fn/fn++HkquvkiFUmsXO
-        CxbORJODiRu1YZERLdcjDFG5PRR78VMHYvc4Swi2YXdXANvsOUmyXwrqEJvX7STZ1l3nSLbP
-        4yLYwkuPyblKvbutDOmrnG0B+gLHe1JfWHkB6b+Uj01UrMmYlcpzKbyg4S3J1pQ0izGOXrw8
-        aX6SLiaKiWBi2em0xsKZ+Th6QXxixMI0k/dBtGYDZ8r0uhI5UaSnzp4lWDPtvCbVKtrjaN6W
-        YrLF2iJFzixmWoyRyVbzDCYqKlrnTVyXkfq9M1tm+zhkU8OZJ4qd6L4yHykpwNPg2q4WRT4a
-        TKmxG8H3y8dIyfiMoKD1rFwyehA8/HaU+FeS48pHUuAWgjftd2SS8QGB51ivtxlFjcQr4G7e
-        RJ8/EP9GkNfnIH3VcrwaaqsuynxM4nCofvPU7x+OQ6HlWwfysQrPht4HtwN8TOAJ4K4oUvh4
-        FF4F9+pchJQzAuqPv/KzEuug61cTIfUPhuevimUSjwPH9RN+CYD/kNDb8U4mSVgATUUv+nkk
-        dN6tDJA4BN4eyOnnLXC+vo6UinMRVFY/UkgBLVSfPizzqZTjMLjimSq5Q6HqRxGSBg+D91/3
-        +xcBWAW5OWopZTw0v2zrHzsaSvfmkQcR7RwgxzlAgnOABOf/YacQcQEF8TbRbORFxsYM/O5y
-        5L/WcJ0bHWmMr0GYQvRQlaZ6ikGt4DaIWeYaBJScDlTFfZ1sUKtSuKzNvGBNEjJNvFiDdN5t
-        H5KHjEq2em/fYk9idNFarZadxsToGIYOVrl+hhnU2MjZ+Qyet/HCvzoZpQzZibaEGp4zRSX1
-        R/cd+NDc+ptdZY9OHj+socl45rw7YaWr0+Det3ZPeXfNnKsjGrvmWBzqvrL4JbF9jsBS9+vs
-        nu3zhEX29DFLtnH3MmRLl+1gt65esVHrONlITRqOb8Q0J65fo69PZ7o9YtbM1y9jgsa2CyXd
-        vwZZN2fXPquoWJdws5gmxFSOCZcLIvcXjMvgE8MDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvO6VrbqxBkf/aVis/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
-        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBl/HrVylTwgbvi7LLrrA2Mpzm7GDk5JARMJNrm
-        dTF2MXJxCAnsZpQ4/fU+E0RCUmLaxaPMXYwcQLawxOHDxRA1bxklphxbygYSFxYIkzjeqQYS
-        FxFoYpLY1HuBHaSXWSBSomfuFjaIhs2MEr+Pr2cGSbAJaEnsf3GDDcTmF1CUuPrjMSOIzStg
-        J/H9zFGwZhYBVYkdm+eygtiiAhESk67tZIGoEZQ4OfMJmM0pYCrx5u9FFohl6hJ/5l1ihrDF
-        JW49mc8EYctLNG+dzTyBUXgWkvZZSFpmIWmZhaRlASPLKkbJ1ILi3PTcYsMCo7zUcr3ixNzi
-        0rx0veT83E2M4BjT0trBeOJE/CFGAQ5GJR7eE3t0YoVYE8uKK3MPMUpwMCuJ8Np+1Y4V4k1J
-        rKxKLcqPLyrNSS0+xCjNwaIkziuffyxSSCA9sSQ1OzW1ILUIJsvEwSnVwGg9LWyS93fHKKmC
-        ntuMlSxhm95e1El1OqGWtKBiUqLtvKiOcF+D9QJm4ne/B9o8eVS6+1RKpeN6VqdPVaIHfjGX
-        du9e1BUQVPJwlk6vVkvwXFNzdV0hW6NZD6ccStnmenv/4YaaEifLqOTnNg8kJt2KWhwm17bs
-        pdnSsyX7Gxx/zF6wX6JFT4mlOCPRUIu5qDgRANJoZletAgAA
-X-CMS-MailID: 20190716113236epcas1p3bbc89147b610146d5c8d327533bc11aa
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223724epcas4p2a636661375e5147dfa5109967b441496
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223724epcas4p2a636661375e5147dfa5109967b441496@epcas4p2.samsung.com>
-        <20190707223303.6755-2-digetx@gmail.com>
+In-Reply-To: <245ffd79-316c-e985-d1da-2ccea6d29636@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> IRQ numbers are always positive, hence the corresponding variable should
-> be unsigned to keep types consistent. This is a minor change that cleans
-> up code a tad more.
+On 15/07/2019 16:17, Sinan Kaya wrote:
+> On 7/15/2019 1:43 AM, Fuqian Huang wrote:
+>> Should I rewrite the commit log? Just mention that dma_alloc_coherent
+>> has already
+>> zeroed the memory and not to reference the commit?
 > 
-> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index a6ba75f4106d..a27300f40b0b 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -160,7 +160,7 @@ struct tegra_devfreq {
->  
->  	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
->  
-> -	int irq;
-> +	unsigned int		irq;
->  };
->  
->  struct tegra_actmon_emc_ratio {
-> @@ -618,12 +618,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  		return PTR_ERR(tegra->emc_clock);
->  	}
->  
-> -	tegra->irq = platform_get_irq(pdev, 0);
-> -	if (tegra->irq < 0) {
-> -		err = tegra->irq;
-> +	err = platform_get_irq(pdev, 0);
-> +	if (err < 0) {
->  		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
->  		return err;
->  	}
-> +	tegra->irq = err;
->  
->  	reset_control_assert(tegra->reset);
->  
-> 
+> I'd like to hear from Robin Murphy that arm smmu driver follows this as
+> well.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+I'd be lying if I said it did.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+...but only because that's never been part of the SMMU driver's 
+responsibility either way. The iommu-dma layer however, and thus the 
+respective arm64 iommu_dma_ops, has always zeroed allocations right from 
+its inception.
+
+518a2f1925c3 was just cleaning up the last of the stragglers which 
+*weren't* already clearing buffers anyway, such that we could formalise 
+that behaviour into the API.
+
+Robin.
