@@ -2,103 +2,116 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57EEC76191
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53D0C76191
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8535920880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+SG913I"
+	by mail.kernel.org (Postfix) with ESMTP id B83BF2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbfGPDdq (ORCPT
+        id S1730916AbfGPDiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 23:33:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39917 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729574AbfGPDdq (ORCPT
+        Mon, 15 Jul 2019 23:38:54 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:53981 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729574AbfGPDiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 23:33:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so9351272pls.6
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 20:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=xC/c1W4LGyKMoN2FeMmzo9Wrzexm3+voeGFpDLnQsAA=;
-        b=G+SG913ItNx85eheFC9l6D9a8JAJFEd9OAgJ+iMmqgxUuV8S7Pb1LUYFJAp7egAK+7
-         7VhAAwde+MzMaZvibd4/K+WcWAxijwQlm+YNOY44p8xwtlbmn3+iGIQeDlCrnAVqgRgY
-         smNSBRcEg01w6o+8jxYbNW9jrWZu/sQ8CHoEe7Wvs38bFrnKezrDDiSCOvKNHbIE2wQE
-         jkqVQwi0Luc6NRVHqH0AzQiUANsYzb2vcdwnl6GJA9o2dwv9o/1aND7dZpW5BoJM+Ndh
-         GkWOLKBkzI8LscEwn77cNn5yCE+wfQcSEztvIC0Zxjqi3TvrBGINJg7xOBtekW/SkK0E
-         agPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=xC/c1W4LGyKMoN2FeMmzo9Wrzexm3+voeGFpDLnQsAA=;
-        b=DNNhMJdEIr18cSldFMmdBWQzxgvayG1P07OtQzuhCSS8QxZ07i5qi7K4uNukGDKIc6
-         aGgt85zQtHY9LJejfS4SGYFSDa6YXgphKSsDUpfFms5esJdmExuWGheogJLYog3LjGKe
-         6Gj3nDI/IlZk49TTNhjJ1S7EYoZ/30wJtt7iIu9OJAFKPLqBt8zOu/5mweMz3TZ8lXoj
-         shGZtUh47fKVN311Mu4UGucEMCgNNhTx1a3Aoo7J3NbqShNJ4MWkNIfu6ld8i656/JhJ
-         wl/MXLPMXrkzusx6r3eLIclNm9LdYHPtD6E55ZsByVa/q2IdsovCY95CyzisISQRd8e0
-         TDBA==
-X-Gm-Message-State: APjAAAWuK7VTTMqeSuUitjPmAjxV8V/v+VlOv/7UpmXuSUSrXPvJnjlD
-        48UkorkkDX68aR3ivQn6tqRGR9rizo80Pw==
-X-Google-Smtp-Source: APXvYqx+vPghW7WnZShhf6Pl+o8TudLFE3Yrm6YYrO72n9jXNkMQ0EEOOjPt5dw4crlSt03OsbBLUQ==
-X-Received: by 2002:a17:902:4501:: with SMTP id m1mr32570267pld.111.1563248025728;
-        Mon, 15 Jul 2019 20:33:45 -0700 (PDT)
-Received: from ubuntu ([104.192.108.10])
-        by smtp.gmail.com with ESMTPSA id f12sm17311065pgo.85.2019.07.15.20.33.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 20:33:45 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 20:33:42 -0700
-From:   JingYi Hou <houjingyi647@gmail.com>
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/core: fix double fetch in sched_copy_attr()
-Message-ID: <20190716033342.GA32294@ubuntu>
+        Mon, 15 Jul 2019 23:38:54 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TX1ZLm-_1563248327;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TX1ZLm-_1563248327)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Jul 2019 11:38:47 +0800
+Subject: [PATCH v2 0/4] per-cgroup numa suite
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mcgrof@kernel.org, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+Message-ID: <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
+Date:   Tue, 16 Jul 2019 11:38:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sched_copy_attr(), attr->size was fetched twice in get_user()
-and copy_from_user().
+During our torturing on numa stuff, we found problems like:
 
-If change it between two fetches may cause security problems
-or unexpected behaivor.
+  * missing per-cgroup information about the per-node execution status
+  * missing per-cgroup information about the numa locality
 
-We can apply the same pattern used in perf_copy_attr(). That
-is, use value fetched first time to overwrite it after second fetch.
+That is when we have a cpu cgroup running with bunch of tasks, no good
+way to tell how it's tasks are dealing with numa.
 
-Signed-off-by: JingYi Hou <houjingyi647@gmail.com>
----
- kernel/sched/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+The first two patches are trying to complete the missing pieces, but
+more problems appeared after monitoring these status:
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f195473..60088b907ef4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4945,6 +4945,8 @@ static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *a
- 	ret = copy_from_user(attr, uattr, size);
- 	if (ret)
- 		return -EFAULT;
-+
-+	attr->size = size;
+  * tasks not always running on the preferred numa node
+  * tasks from same cgroup running on different nodes
 
- 	if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
- 	    size < SCHED_ATTR_SIZE_VER1)
---
-2.20.1
+The task numa group handler will always check if tasks are sharing pages
+and try to pack them into a single numa group, so they will have chance to
+settle down on the same node, but this failed in some cases:
+
+  * workloads share page caches rather than share mappings
+  * workloads got too many wakeup across nodes
+
+Since page caches are not traced by numa balancing, there are no way to
+realize such kind of relationship, and when there are too many wakeup,
+task will be drag from the preferred node and then migrate back by numa
+balancing, repeatedly.
+
+Here the third patch try to address the first issue, we could now give hint
+to kernel about the relationship of tasks, and pack them into single numa
+group.
+
+And the forth patch introduced numa cling, which try to address the wakup
+issue, now we try to make task stay on the preferred node on wakeup in fast
+path, in order to address the unbalancing risk, we monitoring the numa
+migration failure ratio, and pause numa cling when it reach the specified
+degree.
+
+Since v1:
+  * move statistics from memory cgroup into cpu group
+  * statistics now accounting in hierarchical way
+  * locality now accounted into 8 regions equally
+  * numa cling no longer override select_idle_sibling, instead we
+    prevent numa swap migration with tasks cling to dst-node, also
+    prevent wake affine to drag tasks away which already cling to
+    prev-cpu
+  * other refine on comments and names
+
+Michael Wang (4):
+  v2 numa: introduce per-cgroup numa balancing locality statistic
+  v2 numa: append per-node execution time in cpu.numa_stat
+  v2 numa: introduce numa group per task group
+  v4 numa: introduce numa cling feature
+
+ include/linux/sched.h        |   8 +-
+ include/linux/sched/sysctl.h |   3 +
+ kernel/sched/core.c          |  85 ++++++++
+ kernel/sched/debug.c         |   7 +
+ kernel/sched/fair.c          | 510 ++++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/sched.h         |  41 ++++
+ kernel/sysctl.c              |   9 +
+ 7 files changed, 651 insertions(+), 12 deletions(-)
+
+-- 
+2.14.4.44.g2045bb6
 
