@@ -2,86 +2,78 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9136CC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A42C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4D32064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCFXNf5J"
+	by mail.kernel.org (Postfix) with ESMTP id E32FA2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388511AbfGPTYx (ORCPT
+        id S2388587AbfGPTZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:24:53 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:40514 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfGPTYw (ORCPT
+        Tue, 16 Jul 2019 15:25:43 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47269 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGPTZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:24:52 -0400
-Received: by mail-pl1-f170.google.com with SMTP id a93so10603524pla.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bU1/CVF/ZWtJJhgU959pS7VfovwURoEItAnWPdtOSts=;
-        b=oCFXNf5JX+/4eeBdZQKCCO/JQDetWltLy3dTw617Qm/vZ1HChXg+PtrrydydFpaB5/
-         sdmTE9FNdSteLEc5TKtxMPHwmcBs4oY/XYuq7+hd2F62ozCcQKNxw+7rL91Tir7Fq9x1
-         7iKJkJQkJ88EdyuohYECAvuAf8VaHoTS0JK8VbTQBGLErp/lMn9aYxUmL26zA7VN/U5+
-         sJog0zbYuR/21TlduGydTJtTNEBNOIuQZbTn+aLMAf5MZc4xXk1sQe70WvIcgxFdf646
-         rvNRFUo0C3to57R60BLDyeiUDxo6xr7unWQb+oQo5Hj0uw/AuIMTOI3KspPRm6DMaWFa
-         Dx2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bU1/CVF/ZWtJJhgU959pS7VfovwURoEItAnWPdtOSts=;
-        b=DN1SwHJEosE1BCJpEgJiyKlP7EMSi5tdpyWEgVvWo0aiLaW0LzzwcVy5zay8SOg5O7
-         dJilG+mshL/4uWVVMPmi1x0mi6E8PVT/QijNIrSRXxtTmuuJjRrkaiROy7H2iElyo9Pr
-         H7bKbePm1zLJfMuoC2BafPV/8XZwHihCRXSVCErW8d1W7qeH/m5V/6mV4Ltu4VDPAH2D
-         yqAlQ9RwEsI014G4y+qnqFltI4mxgjbkYICZqIpohywEP+5X5Ze4CrvNAbLhIyOfyWOn
-         nHhWS9d5Io2UjV91NUj6rnyq46ksHaGoBqcoUBZ//YXOwiPGv0nuKwhg5a04ea3FP95S
-         6DDA==
-X-Gm-Message-State: APjAAAXiI5FWq4U6VNB8kmI+AJg3J+YCVQzThSHDKWum+B7mX/Wok5BX
-        tfNdo+3mrqq8SVOTo5zPtqDLMVcs3ZZ4s4xJ2xY=
-X-Google-Smtp-Source: APXvYqwoULbW6I3/j6jqUYqjRam15nTQYm+zSYTYfp7uzk0akd/O6vFwERYHBtmiebhw+uYwA71+a+3RsGMb7ErJbmY=
-X-Received: by 2002:a17:902:2aa8:: with SMTP id j37mr36176148plb.316.1563305092158;
- Tue, 16 Jul 2019 12:24:52 -0700 (PDT)
+        Tue, 16 Jul 2019 15:25:43 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 39AD780596; Tue, 16 Jul 2019 21:25:30 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 21:25:40 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, jacek.anaszewski@gmail.com,
+        dmurphy@ti.com, linux-leds@vger.kernel.org
+Subject: Re: [PATCH 2/6] leds: apu: drop enum_apu_led_platform_types
+Message-ID: <20190716192540.GB10400@amd>
+References: <1563202653-20994-1-git-send-email-info@metux.net>
+ <1563202653-20994-3-git-send-email-info@metux.net>
 MIME-Version: 1.0
-References: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
- <20190520065906.GC8068@krava> <CAM_iQpXoD3YzkUzyLSF9qKLpbGxXVeOdFccLbv-mCTVfshx-2w@mail.gmail.com>
- <20190528191102.GD13830@kernel.org>
-In-Reply-To: <20190528191102.GD13830@kernel.org>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 16 Jul 2019 12:24:41 -0700
-Message-ID: <CAM_iQpWxAYqUsC8TEOfhp12d8gbLmJ+xpLmcE_DwTV7gKm6_ww@mail.gmail.com>
-Subject: Re: [Patch] perf stat: always separate stalled cycles per insn
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
+Content-Disposition: inline
+In-Reply-To: <1563202653-20994-3-git-send-email-info@metux.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Arnaldo
 
-On Tue, May 28, 2019 at 12:11 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Tue, May 28, 2019 at 11:21:38AM -0700, Cong Wang escreveu:
-> > Thanks for reviewing it. Is there anyone takes this patch?
->
-> Enough time, acked already, picking it.
+--DBIVS5p969aUjpLe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Where is this patch landed? I don't see it in Linus tree. I guess you
-are still holding it somewhere?
+On Mon 2019-07-15 16:57:29, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+>=20
+> As this driver now only supports the APU1 boards, we don't need
+> to differenciate between board types anymore. Therefore optimize
+> away the now obsolete code.
+>=20
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-Thanks.
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--DBIVS5p969aUjpLe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0uJLQACgkQMOfwapXb+vL4YACgiCMEIRxi6f/W/VvJcSkEyG+R
+w9UAoJ6WM3eL1Hdvz042Qxq3AsX8Ve3c
+=4fLX
+-----END PGP SIGNATURE-----
+
+--DBIVS5p969aUjpLe--
