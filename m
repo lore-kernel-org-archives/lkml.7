@@ -2,184 +2,170 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47400C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B914CC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DCE20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FEE2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IhLxXmaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388405AbfGPSVA (ORCPT
+        id S2388302AbfGPSXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:21:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58658 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388360AbfGPSVA (ORCPT
+        Tue, 16 Jul 2019 14:23:36 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33219 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGPSXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:21:00 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GIHRuK126663
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:20:58 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tshrsd9jb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:20:58 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 16 Jul 2019 19:20:57 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Jul 2019 19:20:52 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIKp1553281116
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 18:20:51 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C66AB2067;
-        Tue, 16 Jul 2019 18:20:51 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 285F9B205F;
-        Tue, 16 Jul 2019 18:20:51 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jul 2019 18:20:51 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 2E12116C8EBE; Tue, 16 Jul 2019 11:20:51 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:20:51 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <clark.williams@gmail.com>,
-        Julia Cartwright <julia@ni.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
-Reply-To: paulmck@linux.ibm.com
-References: <20190715150402.798499167@linutronix.de>
- <20190715150601.205143057@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715150601.205143057@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19071618-0052-0000-0000-000003DFC3F6
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011440; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01233101; UDB=6.00649715; IPR=6.01014413;
- MB=3.00027748; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-16 18:20:56
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071618-0053-0000-0000-000061B752D6
-Message-Id: <20190716182051.GC14271@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907160224
+        Tue, 16 Jul 2019 14:23:36 -0400
+Received: by mail-qt1-f193.google.com with SMTP id r6so16411330qtt.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9PXyjImG+E2TkTA05zWl+KvbpavQKqjXD6/g7c5TTGc=;
+        b=IhLxXmaA7lR5yGh01DUyd6sYT6E6n/2RktpucRSVoywo/da4UJzZVb+36q4q9LQiBA
+         nQl1A096NEc6LX/dIxZIyjWD/viMWA9keetJjhAfeSgudlVR3654CZqnAMrI3Ak53cti
+         1la2hb6mTk05I+FnisbYcZ0W9myAguoW3dCElTpW0rDs84LUZAE13bz0LdigEwOCKHvu
+         RyHcXhqu67ObXKD+rH6ivxLHutxFVFcv3S5V5poRAtqA0ye+SSH1DkNGj/wWAY7Z53cg
+         r1ogSUE4y7itkqz3hpwRgZaCjLxac5lr0NVU1//eO1X9i3NZ2RYQAOQgeFCLFNgcsv3y
+         XjdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9PXyjImG+E2TkTA05zWl+KvbpavQKqjXD6/g7c5TTGc=;
+        b=p381zEtmAZ1lE4neImxkPxn77p6fJo00NjhQQfif/WylmZYADYYa9uzw9Tu5f22WSX
+         9jO3VzwMAkiyardR7Kiuwnxtuq6haqErQ1o5rxrMDwIQeeFNcUtYGgTE9I7reqfdM7f+
+         9BbsBsiKSPAxT41EPuNo5Atj51RJ6pb1IP7cuGQNPlwreK0ruAJPy7hIkyyg+w6jR37K
+         l05908O89Yhhk5VP6Egcnu/lbcTuWEdlouUEHSqa/YQHP5bqRljs6DDl/jOOzXRj9bv3
+         pWO06zzL/zarTVpKTdfDTt2AD/pMGj8eFiQJDYEOe1z3eK9Hp/NAzGiYknxtYnBtu+gR
+         yL4w==
+X-Gm-Message-State: APjAAAVzLURXqeLdqmz1DGVSGh04kCcIsnvFn6kWAOnnPCaOXZsx2Hpk
+        NKr/4MmO25cp6EMAQgtdN+Aai6NU2NiLow==
+X-Google-Smtp-Source: APXvYqwDiPkO01x0v4gYkA8ROVKOZtnYbXXoSXCZbHBDGqMxSo60v4pBhZjuyNrG/7jica7ztAWnyg==
+X-Received: by 2002:ac8:877:: with SMTP id x52mr24045228qth.328.1563301414529;
+        Tue, 16 Jul 2019 11:23:34 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r40sm11907517qtr.57.2019.07.16.11.23.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 11:23:33 -0700 (PDT)
+Message-ID: <1563301410.4610.8.camel@lca.pw>
+Subject: Re: [PATCH] Revert "kmemleak: allow to coexist with fault injection"
+From:   Qian Cai <cai@lca.pw>
+To:     Yang Shi <yang.shi@linux.alibaba.com>, catalin.marinas@arm.com,
+        mhocko@suse.com, dvyukov@google.com, rientjes@google.com,
+        willy@infradead.org, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 16 Jul 2019 14:23:30 -0400
+In-Reply-To: <1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 05:04:03PM +0200, Thomas Gleixner wrote:
-> Add a new entry to the preemption menu which enables the real-time support
-> for the kernel. The choice is only enabled when an architecture supports
-> it.
+On Wed, 2019-07-17 at 01:50 +0800, Yang Shi wrote:
+> When running ltp's oom test with kmemleak enabled, the below warning was
+> triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
+> passed in:
 > 
-> It selects PREEMPT as the RT features depend on it. To achieve that the
-> existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
-> well.
+> WARNING: CPU: 105 PID: 2138 at mm/page_alloc.c:4608
+> __alloc_pages_nodemask+0x1c31/0x1d50
+> Modules linked in: loop dax_pmem dax_pmem_core ip_tables x_tables xfs
+> virtio_net net_failover virtio_blk failover ata_generic virtio_pci virtio_ring
+> virtio libata
+> CPU: 105 PID: 2138 Comm: oom01 Not tainted 5.2.0-next-20190710+ #7
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-
+> g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
+> RIP: 0010:__alloc_pages_nodemask+0x1c31/0x1d50
+> ...
+>  kmemleak_alloc+0x4e/0xb0
+>  kmem_cache_alloc+0x2a7/0x3e0
+>  ? __kmalloc+0x1d6/0x470
+>  ? ___might_sleep+0x9c/0x170
+>  ? mempool_alloc+0x2b0/0x2b0
+>  mempool_alloc_slab+0x2d/0x40
+>  mempool_alloc+0x118/0x2b0
+>  ? __kasan_check_read+0x11/0x20
+>  ? mempool_resize+0x390/0x390
+>  ? lock_downgrade+0x3c0/0x3c0
+>  bio_alloc_bioset+0x19d/0x350
+>  ? __swap_duplicate+0x161/0x240
+>  ? bvec_alloc+0x1b0/0x1b0
+>  ? do_raw_spin_unlock+0xa8/0x140
+>  ? _raw_spin_unlock+0x27/0x40
+>  get_swap_bio+0x80/0x230
+>  ? __x64_sys_madvise+0x50/0x50
+>  ? end_swap_bio_read+0x310/0x310
+>  ? __kasan_check_read+0x11/0x20
+>  ? check_chain_key+0x24e/0x300
+>  ? bdev_write_page+0x55/0x130
+>  __swap_writepage+0x5ff/0xb20
 > 
-> No functional change.
+> The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, however kmemleak has
+> __GFP_NOFAIL set all the time due to commit
+> d9570ee3bd1d4f20ce63485f5ef05663866fe6c0 ("kmemleak: allow to coexist
+> with fault injection").  But, it doesn't make any sense to have
+> __GFP_NOFAIL and ~__GFP_DIRECT_RECLAIM specified at the same time.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> According to the discussion on the mailing list, the commit should be
+> reverted for short term solution.  Catalin Marinas would follow up with a
+> better
+> solution for longer term.
+> 
+> The failure rate of kmemleak metadata allocation may increase in some
+> circumstances, but this should be expected side effect.
 
-This would make it easier to get some of the remaining RCU patches
-from -rt to mainline, for example, the rcutorture changes proposed
-recently.
+As mentioned in anther thread, the situation for kmemleak under memory pressure
+has already been unhealthy. I don't feel comfortable to make it even worse by
+reverting this commit alone. This could potentially make kmemleak kill itself
+easier and miss some more real memory leak later.
 
-Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+To make it really a short-term solution before the reverting, I think someone
+needs to follow up with the mempool solution with tunable pool size mentioned
+in,
 
+https://lore.kernel.org/linux-mm/20190328145917.GC10283@arrakis.emea.arm.com/
+
+I personally not very confident that Catalin will find some time soon to
+implement embedding kmemleak metadata into the slab. Even he or someone does
+eventually, it probably need quite some time to test and edge out many of corner
+cases that kmemleak could have by its natural.
+
+> 
+> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Qian Cai <cai@lca.pw>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 > ---
->  arch/Kconfig           |    3 +++
->  kernel/Kconfig.preempt |   25 +++++++++++++++++++++++--
->  2 files changed, 26 insertions(+), 2 deletions(-)
+>  mm/kmemleak.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -809,6 +809,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
->  config ARCH_NO_PREEMPT
->  	bool
-> 
-> +config ARCH_SUPPORTS_RT
-> +	bool
-> +
->  config CPU_NO_EFFICIENT_FFS
->  	def_bool n
-> 
-> --- a/kernel/Kconfig.preempt
-> +++ b/kernel/Kconfig.preempt
-> @@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
-> 
->  	  Select this if you are building a kernel for a desktop system.
-> 
-> -config PREEMPT
-> +config PREEMPT_LL
->  	bool "Preemptible Kernel (Low-Latency Desktop)"
->  	depends on !ARCH_NO_PREEMPT
-> -	select PREEMPT_COUNT
-> +	select PREEMPT
->  	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
->  	help
->  	  This option reduces the latency of the kernel by making
-> @@ -55,7 +55,28 @@ config PREEMPT
->  	  embedded system with latency requirements in the milliseconds
->  	  range.
-> 
-> +config PREEMPT_RT
-> +	bool "Fully Preemptible Kernel (Real-Time)"
-> +	depends on EXPERT && ARCH_SUPPORTS_RT
-> +	select PREEMPT
-> +	help
-> +	  This option turns the kernel into a real-time kernel by replacing
-> +	  various locking primitives (spinlocks, rwlocks, etc) with
-> +	  preemptible priority-inheritance aware variants, enforcing
-> +	  interrupt threading and introducing mechanisms to break up long
-> +	  non-preemtible sections. This makes the kernel, except for very
-> +	  low level and critical code pathes (entry code, scheduler, low
-> +	  level interrupt handling) fully preemtible and brings most
-> +	  execution contexts under scheduler control.
-> +
-> +	  Select this if you are building a kernel for systems which
-> +	  require real-time guarantees.
-> +
->  endchoice
-> 
->  config PREEMPT_COUNT
->         bool
-> +
-> +config PREEMPT
-> +       bool
-> +       select PREEMPT_COUNT
-> 
-> 
-
+> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+> index 9dd581d..884a5e3 100644
+> --- a/mm/kmemleak.c
+> +++ b/mm/kmemleak.c
+> @@ -114,7 +114,7 @@
+>  /* GFP bitmask for kmemleak internal allocations */
+>  #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) |
+> \
+>  				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
+> -				 __GFP_NOWARN | __GFP_NOFAIL)
+> +				 __GFP_NOWARN)
+>  
+>  /* scanning area inside a memory block */
+>  struct kmemleak_scan_area {
