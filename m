@@ -2,198 +2,117 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB349C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A01EC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC7C206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDD12064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ngcD639Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLtmR67X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388013AbfGPQdf (ORCPT
+        id S2387918AbfGPQjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:33:35 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40912 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGPQdf (ORCPT
+        Tue, 16 Jul 2019 12:39:31 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38249 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPQjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:33:35 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GGSrPT022215;
-        Tue, 16 Jul 2019 16:33:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=DjgqWqMR/0L7+yTOWg47+RG4y5Wc7SVUF1gML+2WuCE=;
- b=ngcD639Q89hovprhRfWyJ24KTIfCG58fXJKbXhci9SoWgMk/O/DjKMB3ieHqSVNDeHiU
- 7amod2NsYNIFasielCNsqRFnuXODQeKRf2Br0bBcj7C1DEHbGuONcU9sX3wiJV5IzzU7
- aChX04mIbrNwzkkcUHKJ0Ne0C8rPoidnWNm3yABogs7YIweHM9BJJ2hRpDoyJ8vqXKmI
- eWtwn6G3YFh6ExuT3G5kf7DILQ6OXLaVuZ7IDQaAjVeBAwtLkZ70QMQTuhHj8iFI4TC0
- cbuSLvionZEI2USsh+3tyJO6vfQMF3gi2NyVwMB445MXV5gwSRzXB0TQYEYWjIRpajr4 Ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2tq6qtnr7c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 16:33:09 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GGSSVx068352;
-        Tue, 16 Jul 2019 16:33:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tq6mn057m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 16:33:08 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6GGWxbD026732;
-        Tue, 16 Jul 2019 16:33:05 GMT
-Received: from localhost.localdomain (/73.60.114.248)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Jul 2019 16:32:59 +0000
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] padata: use smp_mb in padata_reorder to avoid orphaned padata jobs
-Date:   Tue, 16 Jul 2019 12:32:53 -0400
-Message-Id: <20190716163253.24377-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
+        Tue, 16 Jul 2019 12:39:31 -0400
+Received: by mail-pl1-f195.google.com with SMTP id az7so10389196plb.5;
+        Tue, 16 Jul 2019 09:39:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eh3K6XRA6WufDmkE5JaSlW3TwpIe3cmqxYTGyNYioEE=;
+        b=YLtmR67XmuYZj2OiXKDBRsAFqlIMaPbmOTs3SahTnDigrncU8/MtxPMn5+0Q5hlXRE
+         kxImrFZp/UnBQym84YtUc/ee/reaZ/0leUMfYPKowlzgHF7i7rgTPhob52y2+YZQj2ET
+         V1ov5BkonwjyZ42E/qCmZ77o6LJDT7A3mGdHvg7Ca7wvHbEaoZH51ECqyC+uDRXJUxUo
+         h0ATuO6zopu+7FJ0Cr4Vnkwe6UQqXK+F1fv+lSKXSD6FG+OoQiyx6bZIIhRuAxrZ+gZF
+         v9lip/pX0IYr7guDOPJPqcx0KXsFWtM9Nx5Pur6OmqsMrmFMLj1NLMsvU+JvTj4YtaQw
+         DzyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eh3K6XRA6WufDmkE5JaSlW3TwpIe3cmqxYTGyNYioEE=;
+        b=aAMBq8WuMWmsXXk1a4z6xvIzbqX2E2nAWsx+8pNF3/E0SnMnvhovVavi4N0Q9agyci
+         Ru3AgDXfYdG4G6htQL5tW16zVhA9xuvXl1V0vuEUS9jObiF1OGaKqih4l5nPtKqMZkwq
+         8vY5TDewG1t6KCSCT8L08qswd1lVoqyu0SzMe5GLZHtY3eVbU5GfzWP3He1Yos5gr3SE
+         A9D4GG7aqZf+kyAhmuUHd+kZ1HKc8ySyH7s1U1oT63AbRcoulY51+E3RbYB0uC8RAenM
+         /TQCxr0i4XeGl12NYLNgMSB0j6v0PJ0o3eqnOSoG7oi01UxIL5vJphE/gfpJ3dkEuYmS
+         0ahg==
+X-Gm-Message-State: APjAAAWZF/A3raQoBZZ/KmYxPQ/gNkxMklF01NyS4xyyNVu+etXqKwvG
+        5anpYhA4O95cl2Tr55ot54BTPhR/
+X-Google-Smtp-Source: APXvYqw7014vqzLIZT3xw5eCSHaFAh1/PAq9IDU3t8K7iVAGQuIo6zBkmC021Ffkd4b76fSVJ2Wbjg==
+X-Received: by 2002:a17:902:968d:: with SMTP id n13mr37325139plp.257.1563295170321;
+        Tue, 16 Jul 2019 09:39:30 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id f20sm6764584pgg.56.2019.07.16.09.39.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 09:39:29 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 09:39:27 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 4/5] PTP: Add flag for non-periodic output
+Message-ID: <20190716163927.GA2125@localhost>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com>
+ <20190716072038.8408-5-felipe.balbi@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907160203
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907160203
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716072038.8408-5-felipe.balbi@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Testing padata with the tcrypt module on a 5.2 kernel...
+On Tue, Jul 16, 2019 at 10:20:37AM +0300, Felipe Balbi wrote:
+> When this new flag is set, we can use single-shot output.
+> 
+> Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+> ---
+>  include/uapi/linux/ptp_clock.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+> index 674db7de64f3..439cbdfc3d9b 100644
+> --- a/include/uapi/linux/ptp_clock.h
+> +++ b/include/uapi/linux/ptp_clock.h
+> @@ -67,7 +67,9 @@ struct ptp_perout_request {
+>  	struct ptp_clock_time start;  /* Absolute start time. */
+>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
+>  	unsigned int index;           /* Which channel to configure. */
+> -	unsigned int flags;           /* Reserved for future use. */
+> +
+> +#define PTP_PEROUT_ONE_SHOT BIT(0)
+> +	unsigned int flags;           /* Bit 0 -> oneshot output. */
+>  	unsigned int rsv[4];          /* Reserved for future use. */
 
-    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
-    # modprobe tcrypt mode=211 sec=1
+Unfortunately, the code never checked that .flags and .rsv are zero,
+and so the de-facto ABI makes extending these fields impossible.  That
+was my mistake from the beginning.
 
-...produces this splat:
+In order to actually support extensions, you will first have to
+introduce a new ioctl.
 
-    INFO: task modprobe:10075 blocked for more than 120 seconds.
-          Not tainted 5.2.0-base+ #16
-    modprobe        D    0 10075  10064 0x80004080
-    Call Trace:
-     ? __schedule+0x4dd/0x610
-     ? ring_buffer_unlock_commit+0x23/0x100
-     schedule+0x6c/0x90
-     schedule_timeout+0x3b/0x320
-     ? trace_buffer_unlock_commit_regs+0x4f/0x1f0
-     wait_for_common+0x160/0x1a0
-     ? wake_up_q+0x80/0x80
-     { crypto_wait_req }             # entries in braces added by hand
-     { do_one_aead_op }
-     { test_aead_jiffies }
-     test_aead_speed.constprop.17+0x681/0xf30 [tcrypt]
-     do_test+0x4053/0x6a2b [tcrypt]
-     ? 0xffffffffa00f4000
-     tcrypt_mod_init+0x50/0x1000 [tcrypt]
-     ...
+Sorry,
+Richard
 
-The second modprobe command never finishes because in padata_reorder,
-CPU0's load of reorder_objects is executed before the unlocking store in
-spin_unlock_bh(pd->lock), causing CPU0 to miss CPU1's increment:
-
-CPU0                                 CPU1
-
-padata_reorder                       padata_do_serial
-  LOAD reorder_objects  // 0
-                                       INC reorder_objects  // 1
-                                       padata_reorder
-                                         TRYLOCK pd->lock   // failed
-  UNLOCK pd->lock
-
-CPU0 deletes the timer before returning from padata_reorder and since no
-other job is submitted to padata, modprobe waits indefinitely.
-
-Add a pair of full barriers to guarantee proper ordering:
-
-CPU0                                 CPU1
-
-padata_reorder                       padata_do_serial
-  UNLOCK pd->lock
-  smp_mb()
-  LOAD reorder_objects
-                                       INC reorder_objects
-                                       smp_mb__after_atomic()
-                                       padata_reorder
-                                         TRYLOCK pd->lock
-
-smp_mb__after_atomic is needed so the read part of the trylock operation
-comes after the INC, as Andrea points out.   Thanks also to Andrea for
-help with writing a litmus test.
-
-Fixes: 16295bec6398 ("padata: Generic parallelization/serialization interface")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/padata.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 2d2fddbb7a4c..15a8ad63f4ff 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -267,7 +267,12 @@ static void padata_reorder(struct parallel_data *pd)
- 	 * The next object that needs serialization might have arrived to
- 	 * the reorder queues in the meantime, we will be called again
- 	 * from the timer function if no one else cares for it.
-+	 *
-+	 * Ensure reorder_objects is read after pd->lock is dropped so we see
-+	 * an increment from another task in padata_do_serial.  Pairs with
-+	 * smp_mb__after_atomic in padata_do_serial.
- 	 */
-+	smp_mb();
- 	if (atomic_read(&pd->reorder_objects)
- 			&& !(pinst->flags & PADATA_RESET))
- 		mod_timer(&pd->timer, jiffies + HZ);
-@@ -387,6 +392,13 @@ void padata_do_serial(struct padata_priv *padata)
- 	list_add_tail(&padata->list, &pqueue->reorder.list);
- 	spin_unlock(&pqueue->reorder.lock);
- 
-+	/*
-+	 * Ensure the atomic_inc of reorder_objects above is ordered correctly
-+	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
-+	 * in padata_reorder.
-+	 */
-+	smp_mb__after_atomic();
-+
- 	put_cpu();
- 
- 	/* If we're running on the wrong CPU, call padata_reorder() via a
-
-base-commit: 0ecfebd2b52404ae0c54a878c872bb93363ada36
--- 
-2.22.0
-
+>  };
+>  
+> -- 
+> 2.22.0
+> 
