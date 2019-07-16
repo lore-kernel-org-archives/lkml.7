@@ -2,142 +2,195 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BB7C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D42CC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9DF206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A15B2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YMAO/Lzm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WH2V7EaI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h1+V62UQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbfGPRZL (ORCPT
+        id S2388209AbfGPR2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:25:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44036 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbfGPRZK (ORCPT
+        Tue, 16 Jul 2019 13:28:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34119 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730431AbfGPR2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:25:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6176F61795; Tue, 16 Jul 2019 17:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563297909;
-        bh=E5p7Z6jiwg8b3RG8QEidSAHm0UK6r/RsYJx8TtIg3d0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YMAO/Lzmpbh+W3W0jOwTwxQ/vBTA2C4osuIh5yDdtr7a5fIogBY0piCB1hBPhi36K
-         QShXDhzh4X7SdBUYpCILyQHlocIJFZ6KSB3mMp7tLhStCmwaAZ7J/Swlsrw8CvJ2JK
-         T134CtyvgbzjH7z13AE8W7S8RzBj4RDdgTDqeg+0=
-Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87FF4607DF;
-        Tue, 16 Jul 2019 17:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563297908;
-        bh=E5p7Z6jiwg8b3RG8QEidSAHm0UK6r/RsYJx8TtIg3d0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WH2V7EaISChprSpgmnENhb7djJr8oqh3IZfE2Zmnz1iSHV0zOS6odeq7pyHjSPOO/
-         +Ox8zggGM42hFlNU0Ckj2HNcwZf9MtB2CFSkZuWOGBn1tzlSw3e66DxN7+iYG7JgEi
-         CXapIlUYfiJQSVA+EpBJorC4ra9Q32obxqbhU76k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87FF4607DF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
- opp-avg-KBps bindings
-To:     Saravana Kannan <saravanak@google.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-2-saravanak@google.com>
-From:   Sibi Sankar <sibis@codeaurora.org>
-Message-ID: <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
-Date:   Tue, 16 Jul 2019 22:55:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Jul 2019 13:28:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so3552683pgc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 10:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FdipyjVpCY6f56Xd4OimbS+PX/++xiAeJwdsr6JXrj4=;
+        b=h1+V62UQ9GlP5V7C0IVqWNdDBKsnlQlECKOfmge8wZcQCKZdqLaxGAP+GFTdv6GM43
+         rsyjKA7SqGqU56sdSzRhGCyQ9fEcpRAkOuZoc/fykRCryb/mK1IJFA6rYJu74nY6zCXP
+         plvbFxEctwJ92ks0XB0cx3o3ptKwXdPR56Xp2M9jEdbyBmQvREnzRwijT5bcJQK8ciS0
+         CHmrSsEx2FL+yOvxYn8aj8xeJzpN/yDZlr/uPRH9K1OnIT57lKWkYZZLe5JLY+tHpxoF
+         vPlE1PtJIoTbnhydJ88RkCm1pYqsKye8E1Ee6wJUbVNzG7CCcGHdGc3tWJTq9mhurxUV
+         nPuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FdipyjVpCY6f56Xd4OimbS+PX/++xiAeJwdsr6JXrj4=;
+        b=WNrad5V0yJCB5GbWxz5up0HU1uog3XFpMgHXLGp7vpzkHPeqgi9RzOcHFNUJU9nQqj
+         h4nPQvB+OfJCqNO633DNuTs1DJOUow5WgkOg1+NsdVyTx1Btwf/vgjN5s3hIFPVYVSj4
+         3gC6cjpYbXW7BvYEFwq54bUxVgCP7o8HQtciMQtIcyKIcB0H/uBfRvWi2P7OrAKD0kqT
+         OBulXsqMhm4mbMIQKk2ZbNfy8GZqlJzHuosgKJ661nQQepktCcI4mwvhljBmOgJqk38e
+         BxvL2R5AAQu+Q30gQDqlMeKZ2afQLh4L3yB8m6WitEWHZndTM/bsNbl2sR3LX1wAdPQP
+         wQUg==
+X-Gm-Message-State: APjAAAVFV8gHBtLZB9mvZjyYHaixp6AU8CKIbRC0HsqA/lGjibnIbPg3
+        5ZZ+/rPCzn6y0QJOT6ck+YA748nX3tqj8zHQTdqQwQ==
+X-Google-Smtp-Source: APXvYqxRntwkNQJL/5FuY0S5lwsDvHNyTqDiq6hab1isYlxCWGc+m+UWftjkrghbfqa2HIoXg2UjyyrTCTM77O102is=
+X-Received: by 2002:a65:5687:: with SMTP id v7mr36183069pgs.263.1563298130577;
+ Tue, 16 Jul 2019 10:28:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190703011020.151615-2-saravanak@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190712001708.170259-1-ndesaulniers@google.com> <b219cf41933b2f965572af515cf9d3119293bfba.camel@perches.com>
+In-Reply-To: <b219cf41933b2f965572af515cf9d3119293bfba.camel@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 16 Jul 2019 10:28:39 -0700
+Message-ID: <CAKwvOdkD_r2YBqRDy-uTGMG1YeRF8KokxjikR0XLkXLsdJca0g@mail.gmail.com>
+Subject: Re: [PATCH -next] iwlwifi: dbg: work around clang bug by marking
+ debug strings static
+To:     Joe Perches <joe@perches.com>, Kalle Valo <kvalo@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Saravana,
+On Thu, Jul 11, 2019 at 7:15 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-07-11 at 17:17 -0700, Nick Desaulniers wrote:
+> > Commit r353569 in prerelease Clang-9 is producing a linkage failure:
+> >
+> > ld: drivers/net/wireless/intel/iwlwifi/fw/dbg.o:
+> > in function `_iwl_fw_dbg_apply_point':
+> > dbg.c:(.text+0x827a): undefined reference to `__compiletime_assert_2387'
+> >
+> > when the following configs are enabled:
+> > - CONFIG_IWLWIFI
+> > - CONFIG_IWLMVM
+> > - CONFIG_KASAN
+> >
+> > Work around the issue for now by marking the debug strings as `static`,
+> > which they probably should be any ways.
+> >
+> > Link: https://bugs.llvm.org/show_bug.cgi?id=42580
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/580
+> > Reported-by: Arnd Bergmann <arnd@arndb.de>
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> > index e411ac98290d..f8c90ea4e9b4 100644
+> > --- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> > +++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> > @@ -2438,7 +2438,7 @@ static void iwl_fw_dbg_info_apply(struct iwl_fw_runtime *fwrt,
+> >  {
+> >       u32 img_name_len = le32_to_cpu(dbg_info->img_name_len);
+> >       u32 dbg_cfg_name_len = le32_to_cpu(dbg_info->dbg_cfg_name_len);
+> > -     const char err_str[] =
+> > +     static const char err_str[] =
+> >               "WRT: ext=%d. Invalid %s name length %d, expected %d\n";
+>
+> Better still would be to use the format string directly
+> in both locations instead of trying to deduplicate it
+> via storing it into a separate pointer.
+>
+> Let the compiler/linker consolidate the format.
+> It's smaller object code, allows format/argument verification,
+> and is simpler for humans to understand.
 
-https://patchwork.kernel.org/patch/10850815/
-There was already a discussion ^^ on how bandwidth bindings were to be
-named.
+Whichever Kalle prefers, I just want my CI green again.
 
-On 7/3/19 6:40 AM, Saravana Kannan wrote:
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
-> 
-> opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
-> tables.
-> 
-> opp-avg-KBps is an optional property that can be used in Bandwidth OPP
-> tables.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>
 > ---
->   Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
->   1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 76b6c79604a5..c869e87caa2a 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -83,9 +83,14 @@ properties.
->   
->   Required properties:
->   - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
-> -  required property for all device nodes but devices like power domains. The
-> -  power domain nodes must have another (implementation dependent) property which
-> -  uniquely identifies the OPP nodes.
-> +  required property for all device nodes but for devices like power domains or
-> +  bandwidth opp tables. The power domain nodes must have another (implementation
-> +  dependent) property which uniquely identifies the OPP nodes. The interconnect
-> +  opps are required to have the opp-peak-bw property.
-> +
-> +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-> +  big-endian integer. This is a required property for all devices that don't
-> +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
->   
->   Optional properties:
->   - opp-microvolt: voltage in micro Volts.
-> @@ -132,6 +137,10 @@ Optional properties:
->   - opp-level: A value representing the performance level of the device,
->     expressed as a 32-bit integer.
->   
-> +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
-> +  32-bit big-endian integer. This property is only meaningful in OPP tables
-> +  where opp-peak-KBps is present.
-> +
->   - clock-latency-ns: Specifies the maximum possible transition latency (in
->     nanoseconds) for switching to this OPP from any other OPP.
->   
-> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> index e411ac98290d..25e6712932b8 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> @@ -2438,17 +2438,17 @@ static void iwl_fw_dbg_info_apply(struct iwl_fw_runtime *fwrt,
+>  {
+>         u32 img_name_len = le32_to_cpu(dbg_info->img_name_len);
+>         u32 dbg_cfg_name_len = le32_to_cpu(dbg_info->dbg_cfg_name_len);
+> -       const char err_str[] =
+> -               "WRT: ext=%d. Invalid %s name length %d, expected %d\n";
+>
+>         if (img_name_len != IWL_FW_INI_MAX_IMG_NAME_LEN) {
+> -               IWL_WARN(fwrt, err_str, ext, "image", img_name_len,
+> +               IWL_WARN(fwrt, "WRT: ext=%d. Invalid %s name length %d, expected %d\n",
+> +                        ext, "image", img_name_len,
+>                          IWL_FW_INI_MAX_IMG_NAME_LEN);
+>                 return;
+>         }
+>
+>         if (dbg_cfg_name_len != IWL_FW_INI_MAX_DBG_CFG_NAME_LEN) {
+> -               IWL_WARN(fwrt, err_str, ext, "debug cfg", dbg_cfg_name_len,
+> +               IWL_WARN(fwrt, "WRT: ext=%d. Invalid %s name length %d, expected %d\n",
+> +                        ext, "debug cfg", dbg_cfg_name_len,
+>                          IWL_FW_INI_MAX_DBG_CFG_NAME_LEN);
+>                 return;
+>         }
+> @@ -2775,8 +2775,6 @@ static void _iwl_fw_dbg_apply_point(struct iwl_fw_runtime *fwrt,
+>                 struct iwl_ucode_tlv *tlv = iter;
+>                 void *ini_tlv = (void *)tlv->data;
+>                 u32 type = le32_to_cpu(tlv->type);
+> -               const char invalid_ap_str[] =
+> -                       "WRT: ext=%d. Invalid apply point %d for %s\n";
+>
+>                 switch (type) {
+>                 case IWL_UCODE_TLV_TYPE_DEBUG_INFO:
+> @@ -2786,8 +2784,8 @@ static void _iwl_fw_dbg_apply_point(struct iwl_fw_runtime *fwrt,
+>                         struct iwl_fw_ini_allocation_data *buf_alloc = ini_tlv;
+>
+>                         if (pnt != IWL_FW_INI_APPLY_EARLY) {
+> -                               IWL_ERR(fwrt, invalid_ap_str, ext, pnt,
+> -                                       "buffer allocation");
+> +                               IWL_ERR(fwrt, "WRT: ext=%d. Invalid apply point %d for %s\n",
+> +                                       ext, pnt, "buffer allocation");
+>                                 goto next;
+>                         }
+>
+> @@ -2797,8 +2795,8 @@ static void _iwl_fw_dbg_apply_point(struct iwl_fw_runtime *fwrt,
+>                 }
+>                 case IWL_UCODE_TLV_TYPE_HCMD:
+>                         if (pnt < IWL_FW_INI_APPLY_AFTER_ALIVE) {
+> -                               IWL_ERR(fwrt, invalid_ap_str, ext, pnt,
+> -                                       "host command");
+> +                               IWL_ERR(fwrt, "WRT: ext=%d. Invalid apply point %d for %s\n",
+> +                                       ext, pnt, "host command");
+>                                 goto next;
+>                         }
+>                         iwl_fw_dbg_send_hcmd(fwrt, tlv, ext);
+>
+>
+
 
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+~Nick Desaulniers
