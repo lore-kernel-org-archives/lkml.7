@@ -7,165 +7,125 @@ X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E29C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D80C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8552173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9025D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSA1pWuh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kkXFYQ4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbfGPTLM (ORCPT
+        id S2388311AbfGPTM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:11:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:32861 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfGPTLL (ORCPT
+        Tue, 16 Jul 2019 15:12:57 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41025 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfGPTM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:11:11 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so22280741otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:11:11 -0700 (PDT)
+        Tue, 16 Jul 2019 15:12:57 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g7so16472409oia.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3H0cienAlZ+Zv0tFhkXjnmPbMEeRYyOryne9l976TMI=;
-        b=XSA1pWuhJTplykTcj9mU38IbFHPceiRxCZ+WTBXEDymwQlb9JFzlHwDnUcIRwawIS2
-         wH7ENYinK78KzmH4WXncBa0vPz3op3gMZ5Urp49G6PZQXtppUDNCsmLJfPRPF07IJHpU
-         xcdbjaqOmbsEImPcjGV1E2PMWj4FmJzFFvgrcg/PS8jMNwpvOuiJ7pE8WvL6qO3GESAk
-         JAqkQlI6RlcjO8h30vGF2DxLzr1lkXOYiSR5dAHYxCoVMPlkLpgirUpSb5uK7Tqvf0cq
-         h5Fsi8v9UAH8Rjo9ppO+2uE7z8c0N4vu0Ty4O5YdvsWygBOtacLw74jewcLXY7+EMHXn
-         BW4g==
+        bh=EokRdVtnqINNMeRei8g3SJejrlpwhuP/sBz4PdO769o=;
+        b=kkXFYQ4BGd2rPaOJss3nxEly+aTRCXPtLhXjo2jX0eHJ0gYk/NfDhYxZt2dbZDt7V/
+         Ht9777mnN/JK5uMBe+N50bVXOZEgNz70p1lOWFa86DgeLODas1wW/TEAgBZ+10rmXVg7
+         Wl/NA9vC9K+q6hvr5XobK72vptUqBgmytGGAd428TKu6DfFHTGZayCL78o9cxwCMcMZf
+         KlCGJ1JfJ09UmfweNDAr/6G8rs5OsBrYixKRVgQE6fURLsnUsOOcZ3iNAIAdA6EnsXeL
+         /QkLWj8uHiKK+O5D8RMtOmWM36Sm6GFsXhUA4HhPQWKV57lR6L3ki6Dt26//2+TGwB1i
+         g6ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3H0cienAlZ+Zv0tFhkXjnmPbMEeRYyOryne9l976TMI=;
-        b=p+ZShliSRHWTuD0T8ZPAvRCRlbFVagGmnXHcSMfq9mqh6lAzq6boXnwLqxFugHtEr/
-         eJAzOdmb9joN8wWNz5/kGbfhJ7bMlByDigvdbA+smQBeZBDUfOWIfZ1XuiVi3XmhcfyB
-         ruywlliuIXlYWlSVKy/BML6McpQFfbDdCYqnONphGlyVDbovenm9oJNYg3N2SulDU8Hv
-         L1YgwVfn6CwejxREbiH86K3Mh03mT+mVOjfZZRt8KCfbjWVs+1R6kA3HPMxhaZGWyZX0
-         HCCXYKabvK3n1mHcCSNMsJuJaQuyf2y/hUbwHFytGGaRo82/GSyRvKy0Y+r0pnjCgRPp
-         zjAw==
-X-Gm-Message-State: APjAAAU3gZZtXQadNbZR2sCdBqOzjuUHiflYmC/RXK89LdgCxPbt388I
-        yhZ0s8wmJjuLFP06My6DWG564budvcl8lTUYoAIoiA==
-X-Google-Smtp-Source: APXvYqzvfCt6sCR4T4XqzPAhOtvsYyVOWwVzg9O4IjGSyx0lFEbqjlUxvAZG44/eRFQK9LAUMu2c8h6yjV3U3zwUQ8U=
-X-Received: by 2002:a9d:6201:: with SMTP id g1mr26712811otj.195.1563304270351;
- Tue, 16 Jul 2019 12:11:10 -0700 (PDT)
+        bh=EokRdVtnqINNMeRei8g3SJejrlpwhuP/sBz4PdO769o=;
+        b=KOz5RxwWkvXIBuKylTLMgf5DYObG3sZ5trWrmz1iF1Ek1ze6cV1Jun8OUV9tjJQqzN
+         4Xev09ie2CJkyJVWXrkwi/LPcJngvM96q+s6et5SAjPyob9enlMZIRRyl7LZFgJV7ahH
+         9ZcShz+5+hhlUpl3hMm0nbmtYlJGvZQ674Bna8XZ/JlEe5qnZh1WgNYM6nMAFvLdae5C
+         UvXBt/XJDcXRKXxjQcj3TOfssCFiGi9WuVvk+MOt608z7ra8x1gN4N2Uk47++5WfL7GI
+         u+GebFGPIkhMpAiY8eitGqBnoXYyU4fHgmyNer7YInW6VuXRC/DbMBLkS7MkD2s4Pm5x
+         ySOw==
+X-Gm-Message-State: APjAAAWgooBpz0HcdnfFQ2Gro4tMZcGQ5F6VTU8cToP88PxQOAncVbVW
+        mhR8xz8iYLPPl51cCdtbOx3z+6LcKoTKbYd7VHyCfw==
+X-Google-Smtp-Source: APXvYqzvI0Zhyn3SPjXH+FWy4nFoerSYx7E3aeJUm3+PDLU+ilI3ejmzk8U7vgvbRvDquPXrT1qJZqgYVUwbzn5z0iI=
+X-Received: by 2002:aca:e641:: with SMTP id d62mr17288062oih.24.1563304376244;
+ Tue, 16 Jul 2019 12:12:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
- <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
-In-Reply-To: <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
+References: <20190625213337.157525-1-saravanak@google.com> <20190625213337.157525-4-saravanak@google.com>
+ <e9c9b150-43a6-dc6b-5d88-21608120e940@codeaurora.org>
+In-Reply-To: <e9c9b150-43a6-dc6b-5d88-21608120e940@codeaurora.org>
 From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 16 Jul 2019 12:10:34 -0700
-Message-ID: <CAGETcx9NpYY4OmXdjHHCjqN7eZ4=7H9TdGZvw2Qr0K9Aq==ENg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
+Date:   Tue, 16 Jul 2019 12:12:20 -0700
+Message-ID: <CAGETcx8K3Z65Ru6dytbaJUm3xfWT8RxjKy788BAmksxS50YZqw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] PM / devfreq: Cache OPP table reference in devfreq
 To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
         Stephen Boyd <sboyd@kernel.org>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
         Android Kernel Team <kernel-team@android.com>,
         Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        adharmap@codeaurora.org
+        LKML <linux-kernel@vger.kernel.org>, adharmap@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:33 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Tue, Jul 16, 2019 at 10:36 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
 > Hey Saravana,
 >
-> On 7/3/19 6:40 AM, Saravana Kannan wrote:
-> > Not all devices quantify their performance points in terms of frequency.
-> > Devices like interconnects quantify their performance points in terms of
-> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > add support for parsing bandwidth OPPs from DT.
+> On 6/26/19 3:03 AM, Saravana Kannan wrote:
+> > The OPP table can be used often in devfreq. Trying to get it each time can
+> > be expensive, so cache it in the devfreq struct.
 > >
 > > Signed-off-by: Saravana Kannan <saravanak@google.com>
 > > ---
-> >   drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
-> >   drivers/opp/opp.h |  4 +++-
-> >   2 files changed, 35 insertions(+), 3 deletions(-)
+> >   drivers/devfreq/devfreq.c | 6 ++++++
+> >   include/linux/devfreq.h   | 1 +
+> >   2 files changed, 7 insertions(+)
 > >
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index c10c782d15aa..54fa70ed2adc 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > index 6b6991f0e873..ac62b78dc035 100644
+> > --- a/drivers/devfreq/devfreq.c
+> > +++ b/drivers/devfreq/devfreq.c
+> > @@ -597,6 +597,8 @@ static void devfreq_dev_release(struct device *dev)
+> >       if (devfreq->profile->exit)
+> >               devfreq->profile->exit(devfreq->dev.parent);
+> >
+> > +     if (devfreq->opp_table)
+> > +             dev_pm_opp_put_opp_table(devfreq->opp_table);
+> >       mutex_destroy(&devfreq->lock);
+> >       kfree(devfreq);
 > >   }
-> >   EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> > @@ -677,6 +679,10 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> >       devfreq->max_freq = devfreq->scaling_max_freq;
 > >
-> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> > +{
-> > +     int ret;
-> > +     u64 rate;
-> > +     u32 bw;
+> >       devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+> > +     devfreq->opp_table = dev_pm_opp_get_opp_table(dev);
+> > +     if (IS_ERR(devfreq->opp_table))
+> > +             devfreq->opp_table = NULL;
 > > +
-> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     if (!ret) {
-> > +             /*
-> > +              * Rate is defined as an unsigned long in clk API, and so
-> > +              * casting explicitly to its type. Must be fixed once rate is 64
-> > +              * bit guaranteed in clk API.
-> > +              */
-> > +             new_opp->rate = (unsigned long)rate
-> now that the rate gets set here, please remove the rate assignment in
-> _opp_add_static_v2
->
-> > +             return 0;
-> > +     }
-> > +
-> > +     ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> > +     if (ret)
-> > +             return ret;
-> > +     new_opp->rate = (unsigned long) &bw;
->
-> should be bw instead
-
-Good catch. Thanks!
-
->
-> > +
-> > +     ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> > +     if (!ret)
-> > +             new_opp->avg_bw = (unsigned long) &bw;
->
-> ditto
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >   /**
-> >    * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> >    * @opp_table:      OPP table
-> > @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> >       if (!new_opp)
-> >               return ERR_PTR(-ENOMEM);
+> >       atomic_set(&devfreq->suspend_count, 0);
 > >
-> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     ret = _read_opp_key(new_opp, np);
-> >       if (ret < 0) {
-> >               /* "opp-hz" is optional for devices like power domains. */
-> >               if (!opp_table->is_genpd) {
-> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > +                     dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
-> > +                             __func__);
+> >       dev_set_name(&devfreq->dev, "devfreq%d",
+> > diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> > index fbffa74bfc1b..0d877c9513d7 100644
+> > --- a/include/linux/devfreq.h
+> > +++ b/include/linux/devfreq.h
+> > @@ -156,6 +156,7 @@ struct devfreq {
+> >       struct devfreq_dev_profile *profile;
+> >       const struct devfreq_governor *governor;
+> >       char governor_name[DEVFREQ_NAME_LEN];
+> > +     struct opp_table *opp_table;
 >
-> please remove the else part where rate value will be reset.
+> please add it to the function docs as well
 
-Ah! I flipped the meaning of the "if" check in my head. Thanks!
+Will do.
 
 -Saravana
