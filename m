@@ -2,106 +2,124 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1CEC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFD4C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7D720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563304461;
-	bh=aGlm0mNVvjuXHK6DLjdqP7J32fmUwUm4qVrm9/YuvV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nRmDLSfAIw0ZZROioFadV0kKOpF71P0/ztbLNan1xx8LOhDqO8+5zGnQtfCiciXLY
-	 MAD0KztGCC/iu2UUsoqJwRbCA+I1YfoR5xAiLb89rcGgPKGglopN/HTipS+bas0rMw
-	 NQXozPKF2B4li0r4qQJEt4nY1I9AOnBHRjPu5aPE=
+	by mail.kernel.org (Postfix) with ESMTP id 4E58320880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388533AbfGPTOU (ORCPT
+        id S2388584AbfGPTPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:14:20 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45773 "EHLO
+        Tue, 16 Jul 2019 15:15:00 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46918 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfGPTOT (ORCPT
+        with ESMTP id S1728137AbfGPTO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:14:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so21036057lje.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rzi+JrWYOGsut3jRglpj5XGk5dwbip2b5zr2IEOORsQ=;
-        b=NDP+AiRbqFoE4Bm5bbT/neoI5d4JAEi6PzptAWbUc53rXNNZVneAKqYHClpnBnf9HW
-         tLNwRGBOa4ywIBb+yKxs/Nq5Jvc/V3ekIE62VXA2NnPUnWJBJz1u5qBjSMBZ7AKObDZc
-         KEv2XwVHDbea6qyaoed63pZMua/dqh/CKoKTc=
+        Tue, 16 Jul 2019 15:14:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so21105356ljg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:14:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rzi+JrWYOGsut3jRglpj5XGk5dwbip2b5zr2IEOORsQ=;
-        b=fAcjY5V2QaCnEJJlWq6+gDPkuL36wkgjImETuxxM+BvUDXvQbX9j6+TJ0jJ4oUkjQg
-         +RZroWeV1PAqlZfKgh0EXXciQOJOVxK5lkt3aUqZDhl0TZFCBFN2C1VLziN9BpYhNRWi
-         0Kxv/AWY1vqAUNHXpn9v3PS3qNxSYQITx1vT7IcxSjNm+RX9P48Musw3D1UKutI6OR9r
-         GiLWcaqhyScH1PONj/LxoSOrucc3YjJWkkcnCBkHFFnRygB8vyELygRZ4ooMCmI28vgz
-         igUsCvHSNnv9sWQx36lY4Qpu4O+52JI+4VUtQ86xgaCRYRlUgrQfsNYXDwTDLYlAEibS
-         o6jg==
-X-Gm-Message-State: APjAAAWaKe9q+UFWxUOysE5fmaFVQns99+VkxB7DTOZDxVtHSQCZzGqA
-        3lKzmMeV6wDc8Mn9C1wg/w0vzcbvxNk=
-X-Google-Smtp-Source: APXvYqxo6whTS/ieaB6JTvsoc6uJKDMymqTF/duGXalDSxoE7SzJK2HmAwjPvEXU7YZM0+rdauOOyw==
-X-Received: by 2002:a2e:720b:: with SMTP id n11mr18919355ljc.213.1563304457173;
-        Tue, 16 Jul 2019 12:14:17 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id t1sm3928235lji.52.2019.07.16.12.14.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 12:14:16 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id b29so7305513lfq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:14:16 -0700 (PDT)
-X-Received: by 2002:ac2:4839:: with SMTP id 25mr15611221lft.79.1563304456035;
- Tue, 16 Jul 2019 12:14:16 -0700 (PDT)
+        bh=nSiJ7P7aree/QouHzJYNVvw8TbrZalu/D2PKc2JLvyE=;
+        b=EjtvowbuLPHepVlPDRyVKocXQiFaHWN9T9C94p3u/t5nSI671H4QUHtUH9z/G9L3nx
+         ysjaN+uUyGc5CjWhBCtzdzhB1WnHnLQFOnIHWnbHLqyY/bcihYZKHIVAlLN7Y4apQzxF
+         X00s2Ve++LOk1exX/SZKJiiK5MuvpeKRgfXgvZD1krEbeMrBlWopmTac/W4DvFlAXSO1
+         JxXTzXeYAb/cbSXcWvxW10g63lGw2Pb2zLNlAyuUpwmPRAQ2dkgzP6wjpCRNBED66Id5
+         kHm3gjOZcxyu9VZX+yz9rRJLbNeqD1EaohSTPqK4MkOU5ns8YaqPCqnb45FhtEO4M86d
+         e7+A==
+X-Gm-Message-State: APjAAAVrlp/28iU3icg1Dj0c4DPiun7DAA4YUH1GGshHBO9AdwjIDPMF
+        3XD1GSZ6NwVGUgWoXVD0oIGUyaAT4K6QtgBF538e6A==
+X-Google-Smtp-Source: APXvYqxEROc6iOj5lyf6ClNcARL3AIGUQmNApDc2V696Z1bJ00PUcJWPOlBHwgZIHSUwXD3dvtcpApTXvXdaE56AT2w=
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr18269442ljj.17.1563304497831;
+ Tue, 16 Jul 2019 12:14:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
- <CAHk-=whY1J-LFvTa8ihiPNRSv1dwxPk9ycPCEhdcjsk7c=tGAw@mail.gmail.com>
-In-Reply-To: <CAHk-=whY1J-LFvTa8ihiPNRSv1dwxPk9ycPCEhdcjsk7c=tGAw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 16 Jul 2019 12:13:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wip4gKuWrh-1Dj-B-t5V5uGLj4NRCgHtVGJ0A9DOaDCNw@mail.gmail.com>
-Message-ID: <CAHk-=wip4gKuWrh-1Dj-B-t5V5uGLj4NRCgHtVGJ0A9DOaDCNw@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.3
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
+References: <20190716165641.6990-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20190716165641.6990-1-pasha.tatashin@soleen.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Date:   Wed, 17 Jul 2019 00:44:45 +0530
+Message-ID: <CACi5LpOO+sF3o+5u4jHXzba+Ki8fZ5auekKLayxSwNOL6Lp=-w@mail.gmail.com>
+Subject: Re: [RFC v1 0/4] arm64: MMU enabled kexec kernel relocation
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     James Morris <jmorris@namei.org>, sashal@kernel.org,
+        Eric Biederman <ebiederm@xmission.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:06 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+Hi Pavel,
+
+On Tue, Jul 16, 2019 at 10:26 PM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
 >
->  - Please use the "git pull-request" format and then add any extra
-> notes you feel are necessary
+> Added identity mapped page table, and keep MMU enabled while
+> kernel is being relocated from sparse pages to the final
+> destination during kexec.
 >
->    Yes, your pull request is *almost* git pull-request, but you seem
-> to have actively removed whitespace making it almost illegible. It's
-> really hard to pick out the line that has the actual git repository
-> address, because it's basically hidden inside one big blob of text.
+> More description about the problem I am trying to solve here, can be
+> found here:
+> https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
+>
+> This patch series works in terms, that I can kexec-reboot both in QEMU
+> and on a physical machine. However, I do not see performance improvement
+> during relocation. The performance is just as slow as before with disabled
+> caches.
 
-Extra note on this: you seem to have done "git pull-request" in a wide
-window, and then copied-and-pasted it into your MUA.
+Thanks for the patchset, but if the changes still don't positively
+impact the kexec-reboot timings, I am not sure we if gain by adding
+these to the kernel.
 
-So the diffstat lines are also very long, and then they line-wrap and
-it all looks nasty.
+Like I mentioned in the previous threads, we have been carrying some
+relevant fixes for the same in Linux distros. I have been trying to
+find time to fix them and send them upstream, but I am caught up with
+some nasty kexec_file_load() issues on arm64 currently.
 
-Avoid this by either using a file for the output (that you then edit
-for your own added messages), or using a normal 80x25 terminal or
-something.
+So, I will find some time to work on them (may be next week) and will
+Cc you when I post them out after some checks on real physical
+hardware.
 
-I guess I should ask Junio to add a "--stat=80" to the upstream git
-request-pull script.
+Thanks,
+Bhupesh
 
-                   Linus
+> Am I missing something? Perhaps, there is some flag that I should also
+> enable in page table? Please provide me with any suggestions.
+>
+> Pavel Tatashin (4):
+>   arm64, mm: identity mapped page table
+>   arm64, kexec: interface preparation for mmu enabled kexec
+>   arm64, kexec: add kexec's own identity page table
+>   arm64: Keep MMU on while kernel is being relocated
+>
+>  arch/arm64/include/asm/ident_map.h  |  26 ++++++
+>  arch/arm64/include/asm/kexec.h      |   5 +-
+>  arch/arm64/kernel/cpu-reset.S       |   8 --
+>  arch/arm64/kernel/cpu-reset.h       |   7 +-
+>  arch/arm64/kernel/machine_kexec.c   | 128 +++++++++++++++++++++-------
+>  arch/arm64/kernel/relocate_kernel.S |  36 +++++---
+>  arch/arm64/mm/Makefile              |   1 +
+>  arch/arm64/mm/ident_map.c           |  99 +++++++++++++++++++++
+>  8 files changed, 255 insertions(+), 55 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/ident_map.h
+>  create mode 100644 arch/arm64/mm/ident_map.c
+>
+> --
+> 2.22.0
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
