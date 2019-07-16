@@ -2,112 +2,170 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACD1C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C5BC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA8720651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:53:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/U++A4q"
+	by mail.kernel.org (Postfix) with ESMTP id 4D4DC20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbfGPPxE (ORCPT
+        id S2388114AbfGPPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:53:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42671 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387977AbfGPPwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:52:51 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x1so6521723wrr.9;
-        Tue, 16 Jul 2019 08:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JGa70Quc4Z0AaxrkSEcWukKTNPw7McenYMvZ7Zt5G8w=;
-        b=D/U++A4qxgifbNPmfVJSPVdStFvp9ZU18JdCHpUB4DdrTH7sdwdpIGKhYvyKaBeu9x
-         01cfLCevMxzmf9suwDO5Q3dBokIo/LPQD54PrcJMv4FPY7/e/T8wqgyAkTs1I1KL4M2b
-         qzUjNRHaKDrr75nVIBdWN0OHURODgQKpExlEvZ22h8PC8JIsFEYuStp0CahMd0IU/0l/
-         bGNRUYlGbo4Zwwy6n/kA0wxJZZ1iUoHa1XtJwU6MmJ4cTiP8sZod1fq3e5WNkOufaF41
-         iR0VCe7wITMMSY+f8912BEQvDwB0vMGqzBOd8mjt2brnQ1nFABgs3m9WBvhyV2ntny22
-         olTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JGa70Quc4Z0AaxrkSEcWukKTNPw7McenYMvZ7Zt5G8w=;
-        b=Ef3S1qlPOmGd5INM3C6htNWnSmy5JzH+5awgbdSNzTN8kYL0h9vqIltOae9b3or/CK
-         5I5Ttm8oTFHVlVc405jQRZ9RAlcVcg/rIInniaPk0XmniVYAfBOUI4frg6qtNCyEwtnc
-         c9jHjQ6guJ5R/5R4x1ehRzTVgRJCasa8V42AjaOlgc3I+6xFHeOLDVQToqlu5FG5Bqx2
-         LXgX1ExUhl0xHEUY54m57ARg4WCftzAereBxceldp+HcaiFixbO6pTeaIT3Sp/5p1vwk
-         5wvBZcfIGj7ILctcbrOfdaGdUqFn+s2HGohbvrPe+THydSWCy0LYUCJNqbP+gB4LhLTS
-         JEKg==
-X-Gm-Message-State: APjAAAWogZ6QW/BAGaeBg4BG51ERSk9khxcfyxXHxtqf7z33RFfPK+OE
-        4HORar6zBexwU5kYOBfaoqo=
-X-Google-Smtp-Source: APXvYqwIpHD1mj+uv+1VCxPyVxqXCi20ZlED3q8lvK7XmorLtU/ScTf3OZA47jdsYSpuoVcrtJ299g==
-X-Received: by 2002:a5d:528d:: with SMTP id c13mr36208049wrv.247.1563292368676;
-        Tue, 16 Jul 2019 08:52:48 -0700 (PDT)
-Received: from localhost (smbhubinfra01.hotspot.hub-one.net. [213.174.99.146])
-        by smtp.gmail.com with ESMTPSA id i12sm12800327wrx.61.2019.07.16.08.52.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jul 2019 08:52:48 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 09:34:25 +0200
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, linux-imx@nxp.com,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Tue, 16 Jul 2019 11:53:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:37024 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbfGPPxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:53:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D041B337;
+        Tue, 16 Jul 2019 08:53:22 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 432013F71A;
+        Tue, 16 Jul 2019 08:53:20 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 16:53:17 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] Input: sun4i-ts: Use devm_platform_ioremap_resource()
-Message-ID: <20190716073425.GC1182@penguin>
-References: <1554362243-2888-1-git-send-email-mojha@codeaurora.org>
- <1554362243-2888-5-git-send-email-mojha@codeaurora.org>
+Subject: Re: [PATCH 14/18] drivers: firmware: psci: Manage runtime PM in the
+ idle path for CPUs
+Message-ID: <20190716155317.GB32490@e121166-lin.cambridge.arm.com>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-15-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554362243-2888-5-git-send-email-mojha@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190513192300.653-15-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:47:22PM +0530, Mukesh Ojha wrote:
-> devm_platform_ioremap_resource() internally have platform_get_resource()
-> and devm_ioremap_resource() in it. So instead of calling them separately
-> use devm_platform_ioremap_resource() directly.
+On Mon, May 13, 2019 at 09:22:56PM +0200, Ulf Hansson wrote:
+> When the hierarchical CPU topology layout is used in DT, let's allow the
+> CPU to be power managed through its PM domain, via deploying runtime PM
+> support.
 > 
-> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+> To know for which idle states runtime PM reference counting is needed,
+> let's store the index of deepest idle state for the CPU, in a per CPU
+> variable. This allows psci_cpu_suspend_enter() to compare this index with
+> the requested idle state index and then act accordingly.
 
-Applied, thank you.
+I do not see why a system with two CPU CPUidle states, say CPU retention
+and CPU shutdown, should not be calling runtime PM on CPU retention
+entry.
 
+The question then is what cluster/package/system states
+are allowed for a given CPU idle state, to understand
+what idle states can be actually entered at any hierarchy
+level given the choice made for the CPU idle state.
+
+In the case above, a CPU entering retention state should prevent
+runtime PM selecting a cluster shutdown state; most likely firmware
+would demote the request to cluster retention but still, we should
+find a way to describe these dependencies.
+
+Thanks,
+Lorenzo
+
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  drivers/input/touchscreen/sun4i-ts.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/input/touchscreen/sun4i-ts.c b/drivers/input/touchscreen/sun4i-ts.c
-> index d2e14d9..bbb0104 100644
-> --- a/drivers/input/touchscreen/sun4i-ts.c
-> +++ b/drivers/input/touchscreen/sun4i-ts.c
-> @@ -309,8 +309,7 @@ static int sun4i_ts_probe(struct platform_device *pdev)
->  		input_set_drvdata(ts->input, ts);
+> Changes:
+> 	- Simplify the code by using the new per CPU struct, that stores the
+> 	  needed struct device*.
+> 
+> ---
+>  drivers/firmware/psci/psci.c | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index 54e23d4ed0ea..2c4157d3a616 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/linkage.h>
+>  #include <linux/of.h>
+>  #include <linux/pm.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/printk.h>
+>  #include <linux/psci.h>
+>  #include <linux/reboot.h>
+> @@ -298,6 +299,7 @@ static int __init psci_features(u32 psci_func_id)
+>  
+>  struct psci_cpuidle_data {
+>  	u32 *psci_states;
+> +	u32 rpm_state_id;
+>  	struct device *dev;
+>  };
+>  
+> @@ -385,6 +387,7 @@ static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
+>  			goto free_mem;
+>  
+>  		data->dev = dev;
+> +		data->rpm_state_id = drv->state_count - 1;
 >  	}
 >  
-> -	ts->base = devm_ioremap_resource(dev,
-> -			      platform_get_resource(pdev, IORESOURCE_MEM, 0));
-> +	ts->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(ts->base))
->  		return PTR_ERR(ts->base);
+>  	/* Idle states parsed correctly, store them in the per-cpu struct. */
+> @@ -481,8 +484,11 @@ static int psci_suspend_finisher(unsigned long index)
+>  int psci_cpu_suspend_enter(unsigned long index)
+>  {
+>  	int ret;
+> -	u32 *state = __this_cpu_read(psci_cpuidle_data.psci_states);
+> -	u32 composite_state = state[index - 1] | psci_get_domain_state();
+> +	struct psci_cpuidle_data *data = this_cpu_ptr(&psci_cpuidle_data);
+> +	u32 *states = data->psci_states;
+> +	struct device *dev = data->dev;
+> +	bool runtime_pm = (dev && data->rpm_state_id == index);
+> +	u32 composite_state;
+>  
+>  	/*
+>  	 * idle state index 0 corresponds to wfi, should never be called
+> @@ -491,11 +497,23 @@ int psci_cpu_suspend_enter(unsigned long index)
+>  	if (WARN_ON_ONCE(!index))
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * Do runtime PM if we are using the hierarchical CPU toplogy, but only
+> +	 * when cpuidle have selected the deepest idle state for the CPU.
+> +	 */
+> +	if (runtime_pm)
+> +		pm_runtime_put_sync_suspend(dev);
+> +
+> +	composite_state = states[index - 1] | psci_get_domain_state();
+> +
+>  	if (!psci_power_state_loses_context(composite_state))
+>  		ret = psci_ops.cpu_suspend(composite_state, 0);
+>  	else
+>  		ret = cpu_suspend(index, psci_suspend_finisher);
+>  
+> +	if (runtime_pm)
+> +		pm_runtime_get_sync(dev);
+> +
+>  	/* Clear the domain state to start fresh when back from idle. */
+>  	psci_set_domain_state(0);
 >  
 > -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-> Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> 2.17.1
 > 
-
--- 
-Dmitry
