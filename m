@@ -2,109 +2,279 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC1AC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1074C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD0720880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIfFA/lE"
+	by mail.kernel.org (Postfix) with ESMTP id 916322064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388073AbfGPQog (ORCPT
+        id S2388123AbfGPQpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:44:36 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45920 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728563AbfGPQof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:44:35 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so10385291plr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rb6z0J3PnQNVPmOTs37Tflmgb6ZXxYF+gFUGTKgihdQ=;
-        b=KIfFA/lE08lYJlpZaOeKEpNHMdJmBcI/Rdit44CXjk9OkyMhhGLdG5UBq8epzlm8bj
-         ptjHK+IPA2iaF0Hr1jGnU6aMHQtkoZ1q15W6sTsheinHenMfRYr2W9LO5EoBUeVSd7pj
-         0Ug7z9PwL9TZQRvfXf2okOT4CBOvHsjgRKlV9byJ6PUBqKj/D4p2jkpmPquO2U1jh/IF
-         cxU9LZQ0pPRF7COOUriw86shNoalNtUJDqa0VICFYSF59B4XuaHdn2f24Dy9OjlUfV+L
-         byEfj4ULxRNvtLBtRz4r5VsPWHMV21S0nzNajZ+/kRX1pwECo3ZmIKfRpf6723slxf3F
-         f8LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rb6z0J3PnQNVPmOTs37Tflmgb6ZXxYF+gFUGTKgihdQ=;
-        b=Anvp4qGF2MRtU9x0ZzSKdz23Yvspvuh4XDTk0A1FfkL9PbQd8e09EuV7lbq+kR+N3q
-         ADUdl+Te5BRwAhrCBnJoFdAdt/v+UCQytfgAU00NoH4O+LfA/1ryRWe8VwHiONCCqG49
-         UYZjxVPuAflUL8GBcvicLLAcrHtMl2h2TmikkHibtHreC6eqa+pr+Bd5+Cs5I5eTFIKz
-         3QEpJg/cbHS1NbbobJfwnARA+Nfnxz2N7YQzjhwFpAC03yDcxtBarIS9VTGiLwT16pE5
-         h/D1nSNrkv3OfYbBAHlF3XWXFfw6lRC+1arnYJcDq8K3Y6TczzLj0NHuxBBa2BjXH6ub
-         qRxQ==
-X-Gm-Message-State: APjAAAV3Dz/mLhlpx9w0ox0PdN2S3TgRHAhkJ0fSx/tYvKbVDVf1VLpk
-        4JvE5qTFias/lZ0L/pIJhks=
-X-Google-Smtp-Source: APXvYqxTAsYzSCitipMj3Cnq0cvgAncM8UVtX6Ejrg+BX45WfDVl8GCsx0zL734z9ppZ7Wol6eewNA==
-X-Received: by 2002:a17:902:2865:: with SMTP id e92mr36404429plb.264.1563295475103;
-        Tue, 16 Jul 2019 09:44:35 -0700 (PDT)
-Received: from localhost ([100.118.89.203])
-        by smtp.gmail.com with ESMTPSA id s66sm22096485pfs.8.2019.07.16.09.44.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 09:44:34 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] drm/gem: don't force writecombine mmap'ing
-Date:   Tue, 16 Jul 2019 09:42:14 -0700
-Message-Id: <20190716164221.15436-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 16 Jul 2019 12:45:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59582 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728124AbfGPQpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 12:45:05 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 46C35300C724;
+        Tue, 16 Jul 2019 16:45:04 +0000 (UTC)
+Received: from [10.36.116.32] (ovpn-116-32.ams2.redhat.com [10.36.116.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E6881001B0D;
+        Tue, 16 Jul 2019 16:44:58 +0000 (UTC)
+From:   Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH v4 11/22] iommu: Introduce guest PASID bind function
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1560087862-57608-12-git-send-email-jacob.jun.pan@linux.intel.com>
+Message-ID: <706dacc1-18de-2a9a-23d9-3e10e9b14262@redhat.com>
+Date:   Tue, 16 Jul 2019 18:44:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560087862-57608-12-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 16 Jul 2019 16:45:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Hi Jacob,
 
-The driver should be in control of this.
+On 6/9/19 3:44 PM, Jacob Pan wrote:
+> Guest shared virtual address (SVA) may require host to shadow guest
+> PASID tables. Guest PASID can also be allocated from the host via
+> enlightened interfaces. In this case, guest needs to bind the guest
+> mm, i.e. cr3 in guest physical address to the actual PASID table in
+> the host IOMMU. Nesting will be turned on such that guest virtual
+> address can go through a two level translation:
+> - 1st level translates GVA to GPA
+> - 2nd level translates GPA to HPA
+> This patch introduces APIs to bind guest PASID data to the assigned
+> device entry in the physical IOMMU. See the diagram below for usage
+> explaination.
+> 
+>     .-------------.  .---------------------------.
+>     |   vIOMMU    |  | Guest process mm, FL only |
+>     |             |  '---------------------------'
+>     .----------------/
+>     | PASID Entry |--- PASID cache flush -
+>     '-------------'                       |
+>     |             |                       V
+>     |             |                      GP
+>     '-------------'
+> Guest
+> ------| Shadow |----------------------- GP->HP* ---------
+>       v        v                          |
+> Host                                      v
+>     .-------------.  .----------------------.
+>     |   pIOMMU    |  | Bind FL for GVA-GPA  |
+>     |             |  '----------------------'
+>     .----------------/  |
+>     | PASID Entry |     V (Nested xlate)
+>     '----------------\.---------------------.
+>     |             |   |Set SL to GPA-HPA    |
+>     |             |   '---------------------'
+>     '-------------'
+> 
+> Where:
+>  - FL = First level/stage one page tables
+>  - SL = Second level/stage two page tables
+>  - GP = Guest PASID
+>  - HP = Host PASID
+> * Conversion needed if non-identity GP-HP mapping option is chosen.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/iommu/iommu.c      | 20 ++++++++++++++++
+>  include/linux/iommu.h      | 21 +++++++++++++++++
+>  include/uapi/linux/iommu.h | 58 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 99 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 1758b57..d0416f60 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1648,6 +1648,26 @@ int iommu_cache_invalidate(struct iommu_domain *domain, struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_cache_invalidate);
+>  
+> +int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+> +			struct device *dev, struct gpasid_bind_data *data)
+> +{
+> +	if (unlikely(!domain->ops->sva_bind_gpasid))
+> +		return -ENODEV;
+> +
+> +	return domain->ops->sva_bind_gpasid(domain, dev, data);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_bind_gpasid);
+> +
+> +int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
+> +			ioasid_t pasid)
+> +{
+> +	if (unlikely(!domain->ops->sva_unbind_gpasid))
+> +		return -ENODEV;
+> +
+> +	return domain->ops->sva_unbind_gpasid(dev, pasid);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+> +
+>  static void __iommu_detach_device(struct iommu_domain *domain,
+>  				  struct device *dev)
+>  {
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 8d766a8..560c8c8 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> +#include <linux/ioasid.h>
+>  #include <uapi/linux/iommu.h>
+>  
+>  #define IOMMU_READ	(1 << 0)
+> @@ -267,6 +268,8 @@ struct page_response_msg {
+>   * @detach_pasid_table: detach the pasid table
+>   * @cache_invalidate: invalidate translation caches
+>   * @pgsize_bitmap: bitmap of all possible supported page sizes
+> + * @sva_bind_gpasid: bind guest pasid and mm
+> + * @sva_unbind_gpasid: unbind guest pasid and mm
+comment vs field ordering as pointed out by Jonathan on other patches
+>   */
+>  struct iommu_ops {
+>  	bool (*capable)(enum iommu_cap);
+> @@ -332,6 +335,10 @@ struct iommu_ops {
+>  	int (*page_response)(struct device *dev, struct page_response_msg *msg);
+>  	int (*cache_invalidate)(struct iommu_domain *domain, struct device *dev,
+>  				struct iommu_cache_invalidate_info *inv_info);
+> +	int (*sva_bind_gpasid)(struct iommu_domain *domain,
+> +			struct device *dev, struct gpasid_bind_data *data);
+> +
+> +	int (*sva_unbind_gpasid)(struct device *dev, int pasid);
+>  
+>  	unsigned long pgsize_bitmap;
+>  };
+> @@ -447,6 +454,10 @@ extern void iommu_detach_pasid_table(struct iommu_domain *domain);
+>  extern int iommu_cache_invalidate(struct iommu_domain *domain,
+>  				  struct device *dev,
+>  				  struct iommu_cache_invalidate_info *inv_info);
+> +extern int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+> +		struct device *dev, struct gpasid_bind_data *data);
+> +extern int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
+> +				struct device *dev, ioasid_t pasid);
+>  extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+>  extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+>  extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> @@ -998,6 +1009,16 @@ iommu_cache_invalidate(struct iommu_domain *domain,
+>  {
+>  	return -ENODEV;
+>  }
+> +static inline int iommu_sva_bind_gpasid(struct iommu_domain *domain,
+> +				struct device *dev, struct gpasid_bind_data *data)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int sva_unbind_gpasid(struct device *dev, int pasid)
+> +{
+> +	return -ENODEV;
+> +}
+>  
+>  #endif /* CONFIG_IOMMU_API */
+>  
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index ca4b753..a9cdc63 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -277,4 +277,62 @@ struct iommu_cache_invalidate_info {
+>  	};
+>  };
+>  
+> +/**
+> + * struct gpasid_bind_data_vtd - Intel VT-d specific data on device and guest
+> + * SVA binding.
+> + *
+> + * @flags:	VT-d PASID table entry attributes
+> + * @pat:	Page attribute table data to compute effective memory type
+> + * @emt:	Extended memory type
+> + *
+> + * Only guest vIOMMU selectable and effective options are passed down to
+> + * the host IOMMU.
+> + */
+> +struct gpasid_bind_data_vtd {
+> +#define IOMMU_SVA_VTD_GPASID_SRE	(1 << 0) /* supervisor request */
+> +#define IOMMU_SVA_VTD_GPASID_EAFE	(1 << 1) /* extended access enable */
+> +#define IOMMU_SVA_VTD_GPASID_PCD	(1 << 2) /* page-level cache disable */
+> +#define IOMMU_SVA_VTD_GPASID_PWT	(1 << 3) /* page-level write through */
+> +#define IOMMU_SVA_VTD_GPASID_EMTE	(1 << 4) /* extended mem type enable */
+> +#define IOMMU_SVA_VTD_GPASID_CD		(1 << 5) /* PASID-level cache disable */
+> +	__u64 flags;
+> +	__u32 pat;
+> +	__u32 emt;
+> +};
+> +
+> +/**
+> + * struct gpasid_bind_data - Information about device and guest PASID binding
+> + * @version:	Version of this data structure
+> + * @format:	PASID table entry format
+> + * @flags:	Additional information on guest bind request
+> + * @gpgd:	Guest page directory base of the guest mm to bind
+> + * @hpasid:	Process address space ID used for the guest mm in host IOMMU
+> + * @gpasid:	Process address space ID used for the guest mm in guest IOMMU
+> + * @addr_width:	Guest virtual address width> + * @vtd:	Intel VT-d specific data
+> + *
+> + * Guest to host PASID mapping can be an identity or non-identity, where guest
+> + * has its own PASID space. For non-identify mapping, guest to host PASID lookup
+> + * is needed when VM programs guest PASID into an assigned device. VMM may
+> + * trap such PASID programming then request host IOMMU driver to convert guest
+> + * PASID to host PASID based on this bind data.
+Sorry I don't get when you have separate PASID space as I understand you
+eventually allocate the guest PASID with the host allocator (though
+paravirt)
+> + */
+> +struct gpasid_bind_data {
+other structs in iommu.h are prefixed with iommu_?
+> +#define IOMMU_GPASID_BIND_VERSION_1	1
+> +	__u32 version;
+> +#define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> +	__u32 format;
+> +#define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
+> +	__u64 flags;
+> +	__u64 gpgd;
+> +	__u64 hpasid;> +	__u64 gpasid;
+> +	__u32 addr_width;
+> +	__u8  padding[4];
+> +	/* Vendor specific data */
+> +	union {
+> +		struct gpasid_bind_data_vtd vtd;
+> +	};
+vtd is not used in the series if I am not wrong
+> +};
+> +
+>  #endif /* _UAPI_IOMMU_H */
+> 
+Thanks
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-It is possible that this was masking bugs (ie. not setting appropriate
-pgprot) in drivers.  I don't have a particularly good idea for tracking
-those down (since I don't have the hw for most drivers).  Unless someone
-has a better idea, maybe land this and let driver maintainers fix any
-potential fallout in their drivers?
-
-This is necessary for the next patch to fix VGEM brokenness on arm.
-
- drivers/gpu/drm/drm_gem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 8a55f71325b1..7d6242cc69f2 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1110,7 +1110,7 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
- 
- 	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
- 	vma->vm_private_data = obj;
--	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-+	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
- 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
- 
- 	/* Take a ref for this mapping of the object, so that the fault
--- 
-2.21.0
-
+Eric
