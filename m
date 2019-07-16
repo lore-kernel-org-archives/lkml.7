@@ -2,401 +2,140 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D6C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EFCC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843632173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D4920665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paulo.ac header.i=@paulo.ac header.b="gQczIURM"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="dwxBssUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388858AbfGPWLe (ORCPT
+        id S2388712AbfGPWNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:11:34 -0400
-Received: from mx.paulo.ac ([212.47.230.6]:38836 "EHLO mx.paulo.ac"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbfGPWLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:11:30 -0400
-From:   "Paulo Alcantara (SUSE)" <paulo@paulo.ac>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=paulo.ac; s=dkim;
-        t=1563314701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=4w+8xqkk33dItflCbCDCNicoHPwi4U9yOC7tuXyPHfw=;
-        b=gQczIURMsqhf4D8wzaBC60Ch4bbvfwQGvcz6Zw2v4/5kuHGn5CWs8fvi0A0gbu2yD8A0Gx
-        CNcCegoXGCnXt58d+8u+gvke1Ju8a9MnLEsfOWgxzfiz7BHjMP1vhMnzMJiul56IhEyf1Z
-        llrxu8/6oGJE+a8FaBilCKTqa+tJN+o36p8jbZvqzontkmwWstmKjkztu+EpSTGE/ile7I
-        tDkq6zthL4cMXb25zjRQVwueE9niqpcTj5qOO+kuUEJqWBfWy2CLoyZa27GotC/u9TY5Ea
-        MWZHaVYmynUsY3pO4PPEp/2qgMxBLmsNwyaaJjWmOMIapVDbtUK4nDOlf/MBLA==
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Cc:     "Paulo Alcantara (SUSE)" <paulo@paulo.ac>,
-        Steve French <smfrench@gmail.com>
-Subject: [PATCH 1/3] cifs: Add support for root file systems
-Date:   Tue, 16 Jul 2019 19:04:50 -0300
-Message-Id: <20190716220452.3382-1-paulo@paulo.ac>
+        Tue, 16 Jul 2019 18:13:13 -0400
+Received: from mail-eopbgr780044.outbound.protection.outlook.com ([40.107.78.44]:9344
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387928AbfGPWNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:13:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cxIf1nCXSh5+NtfmRMiw0RqbqFOBp2+yL5M47nthoMsWknwPcGI4r0vnCaz8Q8GM3F1LlFIXP8XdDTNe7SISDfRUvJNendv7Gp8Cux0AdOppBMr/pp7tZJB3DTKkZSjFlVUDj7WsnV3izz5DnBYpglPUlbWzgSAfB/Dexpp+Oc72mpa6BFU9C/tWjS319V2S1HAhmDCEYyJcRx3xc8haMNRMSk2URamgMgRS5zXlfjWeOF266VixYYd2j4E4FG+rlIsw/2HtH6yIKdAMo/vC8Ril5yK8l18+JAP9duJ45SJ/Pv0Pw58jugj6kTq3NQlJkz/ExpmWLswcKrire0UQ0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=38srYE1M7YZC4gYGoF2tMYWtN7U5tg+NQa8d0HX4bRg=;
+ b=n+blZNcJbijl1IzA+7GQsjQJYVq1l93rz28ZMpICeFsHsNMhXOdiWrkmWyume8zMwgR7VshoTMVo9KvBvQEEnZ7qAwA09Lk+Si5i22IBcgcaMCOZ2/k/o+s1FFUhi2B5zMVXc8vX2zBT0nSoCyxSIxSKmcmskghVRhyw94VobtfExuhhsm0atOhkwYHhHOmWqoQrh7lZ8ThLlX+i6rGHpch5m4FkBRijp5cHew2uZ1Ay9YLVndTT3tSFiaBXj0WVQhgaSoXeOSGIoEIIGwn4iH8GbyOKVC01ZVq7yNZj8Ffr8SiPUiUlMOTkzri8h2/uHUBdGCJoErtPr6+plgrmNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=38srYE1M7YZC4gYGoF2tMYWtN7U5tg+NQa8d0HX4bRg=;
+ b=dwxBssUSF/0Gq3ZIYBXOjttJ/9QGyf7xVIctXEfzZiTfQKjGxe6AmMr2NEXeyJQzlAdTCTzr2d5qCVSAh5UtEoap50OCwQXFWb4HIl2pOkTbqXNN9VgU9fRk3dQf7wSzWuc4XEQzEAM5tM7Rvdd3prksTUZXLcS10mV7axwr2UI=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4088.namprd05.prod.outlook.com (52.135.199.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.8; Tue, 16 Jul 2019 22:13:09 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2094.009; Tue, 16 Jul 2019
+ 22:13:09 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 0/3] resource: find_next_iomem_res() improvements
+Thread-Topic: [PATCH 0/3] resource: find_next_iomem_res() improvements
+Thread-Index: AQHVIaTGJ7ym4R/nDEy6A26DLGCJOaag/0oAgAC3tYCAAA1/gIAAOaaAgCwCaoCAAAG+gIAAAbUA
+Date:   Tue, 16 Jul 2019 22:13:09 +0000
+Message-ID: <D463DD43-C09F-4B6E-B1BC-7E1CA5C8A9C4@vmware.com>
+References: <20190613045903.4922-1-namit@vmware.com>
+ <CAPcyv4hpWg5DWRhazS-ftyghiZP-J_M-7Vd5tiUd5UKONOib8g@mail.gmail.com>
+ <9387A285-B768-4B58-B91B-61B70D964E6E@vmware.com>
+ <CAPcyv4hstt+0teXPtAq2nwFQaNb9TujgetgWPVMOnYH8JwqGeA@mail.gmail.com>
+ <19C3DCA0-823E-46CB-A758-D5F82C5FA3C8@vmware.com>
+ <20190716150047.3c13945decc052c077e9ee1e@linux-foundation.org>
+ <CAPcyv4iqNHBy-_WbH9XBg5hSqxa=qnkc88EW5=g=-5845jNzsg@mail.gmail.com>
+In-Reply-To: <CAPcyv4iqNHBy-_WbH9XBg5hSqxa=qnkc88EW5=g=-5845jNzsg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: faafa783-859b-421f-a6a8-08d70a3ac91d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4088;
+x-ms-traffictypediagnostic: BYAPR05MB4088:
+x-microsoft-antispam-prvs: <BYAPR05MB4088AFC03F95879D009CF74AD0CE0@BYAPR05MB4088.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(189003)(199004)(51444003)(55674003)(51914003)(71190400001)(71200400001)(6512007)(478600001)(53936002)(6486002)(229853002)(6436002)(6116002)(3846002)(6246003)(86362001)(14454004)(305945005)(8936002)(7736002)(102836004)(186003)(2906002)(26005)(6916009)(36756003)(76176011)(53546011)(7416002)(99286004)(66066001)(4326008)(446003)(81166006)(68736007)(66946007)(76116006)(8676002)(66556008)(54906003)(66476007)(486006)(64756008)(66446008)(316002)(33656002)(6506007)(25786009)(2616005)(5660300002)(11346002)(476003)(81156014)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4088;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VQi3FjBGfk4dm5f7+V6Td8vzIr8jbVqm8vrWzgH8ImcTQ5BCNYq+AyfQxbIt6NG8P0J4XIeLoAjGIFHysMrhOfc9jNSgazyZmf1eKhM9P+v1EncS+HBGRhfSl3ypDXLurw8sYpE4kpflujSFYrGBtwH11vzuJwum+Ql15TGS77FTuiJomlPzC7jQskYQ7JueCmYnlgyu8SEsRS6yBYxcn3l/LDWKRIhFqpo5v6yYUAlWBxjfj7isHToC57FzXjsnna7R9jmIv+SYibtrQpf9Oz61KJFn8ulV1EhCPdRYOp21UEzGlEbxmXOg+KeMppv4tXiqhiPH5alIFB5ijpXqS41SN3XRkvyLkAVr9G56N/2qTfW/I6V7iqbB4SLM4J3JJj2vW6ggDyh5QE78efILBU8RvnBZTmejIdBJx+XlgvY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <80E0C06F0F995F4A8372296A4CD33191@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=paulo.ac;
-        s=dkim; t=1563314701;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=4w+8xqkk33dItflCbCDCNicoHPwi4U9yOC7tuXyPHfw=;
-        b=Ded0mKnu2UjsLMeo/bCL3mc+FCXnUoSrq4mw5gmWnpq/+EawHE3Cgsz5T9RCbDFygQ2+Q8
-        c/iUme1HppxqCOHOO6z+igXFhjeJ4MFPFwfSHkinP/m/CM7ijF7/pCtpn+oOpKWa1Y9tx8
-        QOJarUhfI/ssiRMOAgLrmTkR4fhMmfRyKe1XNFGUIzVSL4HgEelFSeCXAxSxhO7WdRD74S
-        jXMbc5WG0idDyeX3v1TNlEDgxzEox5SUG+/n1qi22rIyzdmD/r13/KVNYBKgjH7DurNn5o
-        uT284b2apQE9LCe37XtD+wlUm6L+/nGmhWirKolSMVxmBa3iZdgMGEr9RmnGwA==
-ARC-Seal: i=1; s=dkim; d=paulo.ac; t=1563314701; a=rsa-sha256; cv=none;
-        b=LFiE+45226kp2ZejThnmbsIMhekYTWIoxfwJOhdJyu9vLIfqDxcdrY6zdfrlqQ9n/8ZM45
-        VeqFPl49u0ZRSYvcMyh+/O6Db+ccYDMpUYzPqemSc42WMEqonXkbVBwupA1jZ0oa+m3Y0e
-        e383FVUVjOEVv7mQr4LpAmldKIQpyKKkZ1TJtdfLJrbuiCAbp6nCDSf7E6esOxqXDBge3v
-        U01G9InO08CwYS84gVTplpiXv5rYGZjsL7tZpGAGFCQTrq+W2xw1AaS8PDwM+gSr5GJON0
-        pgoqr8/Ur2yIdjo/+D/a8CU6RHQ9QcYGxnW7wRFpOQVZe9yLQF+/f+uGYCrekw==
-ARC-Authentication-Results: i=1;
-        mx.paulo.ac;
-        auth=pass smtp.auth=paulo smtp.mailfrom=paulo@paulo.ac
-Authentication-Results: mx.paulo.ac;
-        auth=pass smtp.auth=paulo smtp.mailfrom=paulo@paulo.ac
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: faafa783-859b-421f-a6a8-08d70a3ac91d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 22:13:09.3439
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new CONFIG_CIFS_ROOT option to handle root file systems
-over a SMB share.
-
-In order to mount the root file system during the init process, make
-cifs.ko perform non-blocking socket operations while mounting and
-accessing it.
-
-Cc: Steve French <smfrench@gmail.com>
-Signed-off-by: Paulo Alcantara (SUSE) <paulo@paulo.ac>
----
- Documentation/filesystems/cifs/cifsroot.txt | 97 +++++++++++++++++++++
- fs/cifs/Kconfig                             |  8 ++
- fs/cifs/Makefile                            |  2 +
- fs/cifs/cifsglob.h                          |  2 +
- fs/cifs/cifsroot.c                          | 83 ++++++++++++++++++
- fs/cifs/connect.c                           | 17 +++-
- include/linux/root_dev.h                    |  1 +
- 7 files changed, 207 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/filesystems/cifs/cifsroot.txt
- create mode 100644 fs/cifs/cifsroot.c
-
-diff --git a/Documentation/filesystems/cifs/cifsroot.txt b/Documentation/filesystems/cifs/cifsroot.txt
-new file mode 100644
-index 000000000000..0fa1a2c36a40
---- /dev/null
-+++ b/Documentation/filesystems/cifs/cifsroot.txt
-@@ -0,0 +1,97 @@
-+Mounting root file system via SMB (cifs.ko)
-+===========================================
-+
-+Written 2019 by Paulo Alcantara <palcantara@suse.de>
-+Written 2019 by Aurelien Aptel <aaptel@suse.com>
-+
-+The CONFIG_CIFS_ROOT option enables experimental root file system
-+support over the SMB protocol via cifs.ko.
-+
-+It introduces a new kernel command-line option called 'cifsroot='
-+which will tell the kernel to mount the root file system over the
-+network by utilizing SMB or CIFS protocol.
-+
-+In order to mount, the network stack will also need to be set up by
-+using 'ip=' config option. For more details, see
-+Documentation/filesystems/nfs/nfsroot.txt.
-+
-+A CIFS root mount currently requires the use of SMB1+UNIX Extensions
-+which is only supported by the Samba server. SMB1 is the older
-+deprecated version of the protocol but it has been extended to support
-+POSIX features (See [1]). The equivalent extensions for the newer
-+recommended version of the protocol (SMB3) have not been fully
-+implemented yet which means SMB3 doesn't support some required POSIX
-+file system objects (e.g. block devices, pipes, sockets).
-+
-+As a result, a CIFS root will default to SMB1 for now but the version
-+to use can nonetheless be changed via the 'vers=' mount option.  This
-+default will change once the SMB3 POSIX extensions are fully
-+implemented.
-+
-+Server configuration
-+====================
-+
-+To enable SMB1+UNIX extensions you will need to set these global
-+settings in Samba smb.conf:
-+
-+    [global]
-+    server min protocol = NT1
-+    unix extension = yes        # default
-+
-+Kernel command line
-+===================
-+
-+root=/dev/cifs
-+
-+This is just a virtual device that basically tells the kernel to mount
-+the root file system via SMB protocol.
-+
-+cifsroot=//<server-ip>/<share>[,options]
-+
-+Enables the kernel to mount the root file system via SMB that are
-+located in the <server-ip> and <share> specified in this option.
-+
-+The default mount options are set in fs/cifs/cifsroot.c.
-+
-+server-ip
-+	IPv4 address of the server.
-+
-+share
-+	Path to SMB share (rootfs).
-+
-+options
-+	Optional mount options. For more information, see mount.cifs(8).
-+
-+Examples
-+========
-+
-+Export root file system as a Samba share in smb.conf file.
-+
-+...
-+[linux]
-+	path = /path/to/rootfs
-+	read only = no
-+	guest ok = yes
-+	force user = root
-+	force group = root
-+	browseable = yes
-+	writeable = yes
-+	admin users = root
-+	public = yes
-+	create mask = 0777
-+	directory mask = 0777
-+...
-+
-+Restart smb service.
-+
-+# systemctl restart smb
-+
-+Test it under QEMU on a kernel built with CONFIG_CIFS_ROOT and
-+CONFIG_IP_PNP options enabled.
-+
-+# qemu-system-x86_64 -enable-kvm -cpu host -m 1024 \
-+  -kernel /path/to/linux/arch/x86/boot/bzImage -nographic \
-+  -append "root=/dev/cifs rw ip=dhcp cifsroot=//10.0.2.2/linux,username=foo,password=bar console=ttyS0 3"
-+
-+
-+1: https://wiki.samba.org/index.php/UNIX_Extensions
-diff --git a/fs/cifs/Kconfig b/fs/cifs/Kconfig
-index 523e9ea78a28..d28d62532318 100644
---- a/fs/cifs/Kconfig
-+++ b/fs/cifs/Kconfig
-@@ -217,3 +217,11 @@ config CIFS_FSCACHE
- 	  Makes CIFS FS-Cache capable. Say Y here if you want your CIFS data
- 	  to be cached locally on disk through the general filesystem cache
- 	  manager. If unsure, say N.
-+
-+config CIFS_ROOT
-+	bool "SMB root file system (Experimental)"
-+	depends on CIFS=y && IP_PNP
-+	help
-+	  Enables root file system support over SMB protocol.
-+
-+	  Most people say N here.
-diff --git a/fs/cifs/Makefile b/fs/cifs/Makefile
-index 51af69a1a328..45cf67f37487 100644
---- a/fs/cifs/Makefile
-+++ b/fs/cifs/Makefile
-@@ -22,3 +22,5 @@ cifs-$(CONFIG_CIFS_DFS_UPCALL) += dns_resolve.o cifs_dfs_ref.o dfs_cache.o
- cifs-$(CONFIG_CIFS_FSCACHE) += fscache.o cache.o
- 
- cifs-$(CONFIG_CIFS_SMB_DIRECT) += smbdirect.o
-+
-+cifs-$(CONFIG_CIFS_ROOT) += cifsroot.o
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 4777b3c4a92c..ac7e433a5b94 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -600,6 +600,7 @@ struct smb_vol {
- 	__u64 snapshot_time; /* needed for timewarp tokens */
- 	__u32 handle_timeout; /* persistent and durable handle timeout in ms */
- 	unsigned int max_credits; /* smb3 max_credits 10 < credits < 60000 */
-+	bool rootfs:1; /* if it's a SMB root file system */
- };
- 
- /**
-@@ -752,6 +753,7 @@ struct TCP_Server_Info {
- 	 * reconnect.
- 	 */
- 	int nr_targets;
-+	bool noblockcnt; /* use non-blocking connect() */
- };
- 
- struct cifs_credits {
-diff --git a/fs/cifs/cifsroot.c b/fs/cifs/cifsroot.c
-new file mode 100644
-index 000000000000..8760d9cbf25e
---- /dev/null
-+++ b/fs/cifs/cifsroot.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SMB root file system support
-+ *
-+ * Copyright (c) 2019 Paulo Alcantara <palcantara@suse.de>
-+ */
-+#include <linux/init.h>
-+#include <linux/fs.h>
-+#include <linux/types.h>
-+#include <linux/ctype.h>
-+#include <linux/string.h>
-+#include <linux/root_dev.h>
-+#include <linux/kernel.h>
-+#include <linux/in.h>
-+#include <linux/inet.h>
-+#include <net/ipconfig.h>
-+
-+#define DEFAULT_MNT_OPTS \
-+	"vers=1.0,cifsacl,mfsymlinks,rsize=1048576,wsize=65536,uid=0,gid=0," \
-+	"hard,rootfs"
-+
-+static char root_dev[2048] __initdata = "";
-+static char root_opts[1024] __initdata = DEFAULT_MNT_OPTS;
-+
-+static __be32 __init parse_srvaddr(char *start, char *end)
-+{
-+	char addr[sizeof("aaa.bbb.ccc.ddd")];
-+	int i = 0;
-+
-+	while (start < end && i < sizeof(addr) - 1) {
-+		if (isdigit(*start) || *start == '.')
-+			addr[i++] = *start;
-+		start++;
-+	}
-+	addr[i] = '\0';
-+	return in_aton(addr);
-+}
-+
-+/* cifsroot=//<server-ip>/<share>[,options] */
-+static int __init cifs_root_setup(char *line)
-+{
-+	char *s;
-+	int len;
-+	__be32 srvaddr = htonl(INADDR_NONE);
-+
-+	ROOT_DEV = Root_CIFS;
-+
-+	if (strlen(line) > 3 && line[0] == '/' && line[1] == '/') {
-+		s = strchr(&line[2], '/');
-+		if (!s || s[1] == '\0')
-+			return 1;
-+
-+		s = strchrnul(s, ',');
-+		len = s - line + 1;
-+		if (len <= sizeof(root_dev)) {
-+			strlcpy(root_dev, line, len);
-+			srvaddr = parse_srvaddr(&line[2], s);
-+			if (*s) {
-+				snprintf(root_opts, sizeof(root_opts), "%s,%s",
-+					 DEFAULT_MNT_OPTS, s + 1);
-+			}
-+		}
-+	}
-+
-+	root_server_addr = srvaddr;
-+
-+	return 1;
-+}
-+
-+__setup("cifsroot=", cifs_root_setup);
-+
-+int __init cifs_root_data(char **dev, char **opts)
-+{
-+	if (!root_dev[0] || root_server_addr == htonl(INADDR_NONE)) {
-+		printk(KERN_ERR "Root-CIFS: no SMB server address\n");
-+		return -1;
-+	}
-+
-+	*dev = root_dev;
-+	*opts = root_opts;
-+
-+	return 0;
-+}
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 714a359c7c8d..ca6b04af727f 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -96,7 +96,7 @@ enum {
- 	Opt_multiuser, Opt_sloppy, Opt_nosharesock,
- 	Opt_persistent, Opt_nopersistent,
- 	Opt_resilient, Opt_noresilient,
--	Opt_domainauto, Opt_rdma,
-+	Opt_domainauto, Opt_rdma, Opt_rootfs,
- 
- 	/* Mount options which take numeric value */
- 	Opt_backupuid, Opt_backupgid, Opt_uid,
-@@ -259,6 +259,7 @@ static const match_table_t cifs_mount_option_tokens = {
- 	{ Opt_ignore, "nomand" },
- 	{ Opt_ignore, "relatime" },
- 	{ Opt_ignore, "_netdev" },
-+	{ Opt_rootfs, "rootfs" },
- 
- 	{ Opt_err, NULL }
- };
-@@ -1744,6 +1745,11 @@ cifs_parse_mount_options(const char *mountdata, const char *devname,
- 		case Opt_nodfs:
- 			vol->nodfs = 1;
- 			break;
-+		case Opt_rootfs:
-+#ifdef CONFIG_CIFS_ROOT
-+			vol->rootfs = true;
-+#endif
-+			break;
- 		case Opt_posixpaths:
- 			vol->posix_paths = 1;
- 			break;
-@@ -2662,7 +2668,8 @@ cifs_get_tcp_session(struct smb_vol *volume_info)
- 		goto out_err_crypto_release;
- 	}
- 
--	tcp_ses->noblocksnd = volume_info->noblocksnd;
-+	tcp_ses->noblockcnt = volume_info->rootfs;
-+	tcp_ses->noblocksnd = volume_info->noblocksnd || volume_info->rootfs;
- 	tcp_ses->noautotune = volume_info->noautotune;
- 	tcp_ses->tcp_nodelay = volume_info->sockopt_tcp_nodelay;
- 	tcp_ses->rdma = volume_info->rdma;
-@@ -3768,7 +3775,11 @@ generic_ip_connect(struct TCP_Server_Info *server)
- 		 socket->sk->sk_sndbuf,
- 		 socket->sk->sk_rcvbuf, socket->sk->sk_rcvtimeo);
- 
--	rc = socket->ops->connect(socket, saddr, slen, 0);
-+	rc = socket->ops->connect(socket, saddr, slen,
-+				  server->noblockcnt ? O_NONBLOCK : 0);
-+
-+	if (rc == -EINPROGRESS)
-+		rc = 0;
- 	if (rc < 0) {
- 		cifs_dbg(FYI, "Error %d connecting to server\n", rc);
- 		sock_release(socket);
-diff --git a/include/linux/root_dev.h b/include/linux/root_dev.h
-index bab671b0782f..4e78651371ba 100644
---- a/include/linux/root_dev.h
-+++ b/include/linux/root_dev.h
-@@ -8,6 +8,7 @@
- 
- enum {
- 	Root_NFS = MKDEV(UNNAMED_MAJOR, 255),
-+	Root_CIFS = MKDEV(UNNAMED_MAJOR, 254),
- 	Root_RAM0 = MKDEV(RAMDISK_MAJOR, 0),
- 	Root_RAM1 = MKDEV(RAMDISK_MAJOR, 1),
- 	Root_FD0 = MKDEV(FLOPPY_MAJOR, 0),
--- 
-2.22.0
-
+PiBPbiBKdWwgMTYsIDIwMTksIGF0IDM6MDcgUE0sIERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlh
+bXNAaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9uIFR1ZSwgSnVsIDE2LCAyMDE5IGF0IDM6MDEg
+UE0gQW5kcmV3IE1vcnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4gd3JvdGU6DQo+PiBP
+biBUdWUsIDE4IEp1biAyMDE5IDIxOjU2OjQzICswMDAwIE5hZGF2IEFtaXQgPG5hbWl0QHZtd2Fy
+ZS5jb20+IHdyb3RlOg0KPj4gDQo+Pj4+IC4uLmFuZCBpcyBjb25zdGFudCBmb3IgdGhlIGxpZmUg
+b2YgdGhlIGRldmljZSBhbmQgYWxsIHN1YnNlcXVlbnQgbWFwcGluZ3MuDQo+Pj4+IA0KPj4+Pj4g
+UGVyaGFwcyB5b3Ugd2FudCB0byBjYWNoZSB0aGUgY2FjaGFiaWxpdHktbW9kZSBpbiB2bWEtPnZt
+X3BhZ2VfcHJvdCAod2hpY2ggSQ0KPj4+Pj4gc2VlIGJlaW5nIGRvbmUgaW4gcXVpdGUgYSBmZXcg
+Y2FzZXMpLCBidXQgSSBkb27igJl0IGtub3cgdGhlIGNvZGUgd2VsbCBlbm91Z2gNCj4+Pj4+IHRv
+IGJlIGNlcnRhaW4gdGhhdCBldmVyeSB2bWEgc2hvdWxkIGhhdmUgYSBzaW5nbGUgcHJvdGVjdGlv
+biBhbmQgdGhhdCBpdA0KPj4+Pj4gc2hvdWxkIG5vdCBjaGFuZ2UgYWZ0ZXJ3YXJkcy4NCj4+Pj4g
+DQo+Pj4+IE5vLCBJJ20gdGhpbmtpbmcgdGhpcyB3b3VsZCBuYXR1cmFsbHkgZml0IGFzIGEgcHJv
+cGVydHkgaGFuZ2luZyBvZmYgYQ0KPj4+PiAnc3RydWN0IGRheF9kZXZpY2UnLCBhbmQgdGhlbiBj
+cmVhdGUgYSB2ZXJzaW9uIG9mIHZtZl9pbnNlcnRfbWl4ZWQoKQ0KPj4+PiBhbmQgdm1mX2luc2Vy
+dF9wZm5fcG1kKCkgdGhhdCBieXBhc3MgdHJhY2tfcGZuX2luc2VydCgpIHRvIGluc2VydCB0aGF0
+DQo+Pj4+IHNhdmVkIHZhbHVlLg0KPj4+IA0KPj4+IFRoYW5rcyBmb3IgdGhlIGRldGFpbGVkIGV4
+cGxhbmF0aW9uLiBJ4oCZbGwgZ2l2ZSBpdCBhIHRyeSAodGhlIG1vbWVudCBJIGZpbmQNCj4+PiBz
+b21lIGZyZWUgdGltZSkuIEkgc3RpbGwgdGhpbmsgdGhhdCBwYXRjaCAyLzMgaXMgYmVuZWZpY2lh
+bCwgYnV0IGJhc2VkIG9uDQo+Pj4geW91ciBmZWVkYmFjaywgcGF0Y2ggMy8zIHNob3VsZCBiZSBk
+cm9wcGVkLg0KPj4gDQo+PiBJdCBoYXMgYmVlbiBhIHdoaWxlLiAgV2hhdCBzaG91bGQgd2UgZG8g
+d2l0aA0KPj4gDQo+PiByZXNvdXJjZS1maXgtbG9ja2luZy1pbi1maW5kX25leHRfaW9tZW1fcmVz
+LnBhdGNoDQo+IA0KPiBUaGlzIG9uZSBsb29rcyBvYnZpb3VzbHkgY29ycmVjdCB0byBtZSwgeW91
+IGNhbiBhZGQ6DQo+IA0KPiBSZXZpZXdlZC1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFt
+c0BpbnRlbC5jb20+DQo+IA0KPj4gcmVzb3VyY2UtYXZvaWQtdW5uZWNlc3NhcnktbG9va3Vwcy1p
+bi1maW5kX25leHRfaW9tZW1fcmVzLnBhdGNoDQo+IA0KPiBUaGlzIG9uZSBpcyBhIGdvb2QgYnVn
+IHJlcG9ydCB0aGF0IHdlIG5lZWQgdG8gZ28gZml4IHBncHJvdCBsb29rdXBzDQo+IGZvciBkYXgs
+IGJ1dCBJIGRvbid0IHRoaW5rIHdlIG5lZWQgdG8gaW5jcmVhc2UgdGhlIHRyaWNraW5lc3Mgb2Yg
+dGhlDQo+IGNvcmUgcmVzb3VyY2UgbG9va3VwIGNvZGUgaW4gdGhlIG1lYW50aW1lLg0KDQpJIHRo
+aW5rIHRoYXQgdHJhdmVyc2luZyBiaWcgcGFydHMgb2YgdGhlIHRyZWUgdGhhdCBhcmUga25vd24g
+dG8gYmUNCmlycmVsZXZhbnQgaXMgd2FzdGVmdWwgbm8gbWF0dGVyIHdoYXQsIGFuZCB0aGlzIGNv
+ZGUgaXMgdXNlZCBpbiBvdGhlciBjYXNlcy4NCg0KSSBkb27igJl0IHRoaW5rIHRoZSBuZXcgY29k
+ZSBpcyBzbyB0cmlja3kgLSBjYW4geW91IHBvaW50IHRvIHRoZSBwYXJ0IG9mIHRoZQ0KY29kZSB0
+aGF0IHlvdSBmaW5kIHRyaWNreT8NCg0KDQo=
