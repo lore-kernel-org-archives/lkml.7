@@ -2,150 +2,77 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABDBC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9284BC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6436120880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u78n1t2A"
+	by mail.kernel.org (Postfix) with ESMTP id 679D32173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732565AbfGPNJ0 (ORCPT
+        id S1733285AbfGPNJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:09:26 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46917 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfGPNJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:09:26 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so9383929lfh.13;
-        Tue, 16 Jul 2019 06:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Aro7keGuhkcq5L8X8QU6tiy3pifRBQgLd9LgfbCkFEk=;
-        b=u78n1t2AEOwncDi6eVNAylRaa5RC9vxyKN/OLrZMqQW8rzT7unYb7sMR+KQc7bgVEG
-         iSoSnKA+XMXXzWugYzWfNsT7y1ILHLxIK2b74WTuv/NRQNfO6vbeFF11w2CvVsHB8ksN
-         fIOmHfGECZchGjDE8kxAYu6yh6IgqKs4GRc5Te/tFTL6cccrn+Ne8SlDn9mXmIR/+F57
-         h+sbK0lieuJ8s+TJ31DPb4Sd4r0vak3CxD5Mr9Vq4ApP/no9CyG2lWNr/XRrhKVEOfOh
-         5h6/2G1/xw495q1kfdZJQwvk/1D11whNiMT1O3Wth4BgeA2rULMLksUtsVNggjJHvwVJ
-         jwmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Aro7keGuhkcq5L8X8QU6tiy3pifRBQgLd9LgfbCkFEk=;
-        b=DftOBhVnSuIpb3cFTBcfOwU4LyOz9ZrsohE/Ip8yRBpDTjhLqNivwPN1C4sSOF3re6
-         dVJwI0oTx5JFqwexUVaSthQj8lCvbqEO2hCz9WfU6yko2XhQhUJoYQ8D2TyKoeN9EtPW
-         8bXslriSBLG4sT9Qh0gua5FjO0OU5cXrcQrJuj+5b64N+QdJwFlGbX2XJHu4RwN2S+2V
-         nLBS3f0tpGmWnQQgbaeT/VV7C8dDPpl4t2A+aiKZkKdXHsFaQKySkB//jYuzodbqSe6d
-         ygrS2oVALaX5tuILmtIIYz9OZZpO3r8V4lNgirP3J7ZO0Fkgg3RrjCIF1jvTj2EVY0yE
-         fbYg==
-X-Gm-Message-State: APjAAAUQm8YMXpYWjI8I2NG3Scj8os6zrf64Oyr0OHh+sOVHyh/x5BFH
-        94xk6b85kktzxvx2geKWJUiDiyck
-X-Google-Smtp-Source: APXvYqx922/pQmKDf7f5m8sRlMn6H2+6fwa3vtgS3KF+9hqyw3/Mm9LAzAVe9fvK+4Ua8bArfBHOEg==
-X-Received: by 2002:a19:ca1e:: with SMTP id a30mr14407487lfg.163.1563282563642;
-        Tue, 16 Jul 2019 06:09:23 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id i9sm2830924lfl.10.2019.07.16.06.09.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 06:09:23 -0700 (PDT)
-Subject: Re: [PATCH v4 03/24] PM / devfreq: tegra30: Handle possible
- round-rate error
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 16 Jul 2019 09:09:47 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:59006 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfGPNJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:09:46 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnND3-0005Sp-AS; Tue, 16 Jul 2019 21:09:33 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnNCy-0001uZ-ES; Tue, 16 Jul 2019 21:09:28 +0800
+Date:   Tue, 16 Jul 2019 21:09:28 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223726epcas4p1790944443c61b34e6c8dd4d64200a2a2@epcas4p1.samsung.com>
- <20190707223303.6755-4-digetx@gmail.com>
- <f28470ca-93dc-cdf9-b008-54c7b50cfd83@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e9fd7f68-8ad1-058f-7c87-ccd280ba0b0e@gmail.com>
-Date:   Tue, 16 Jul 2019 16:09:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Subject: Re: [PATCH] padata: Use RCU when fetching pd from do_serial
+Message-ID: <20190716130928.ga4acvxipsdzyzlp@gondor.apana.org.au>
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
+ <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
+ <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
+ <20190716111410.GN17989@gauss3.secunet.de>
+ <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
 MIME-Version: 1.0
-In-Reply-To: <f28470ca-93dc-cdf9-b008-54c7b50cfd83@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2019 14:50, Chanwoo Choi пишет:
-> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
->> The EMC clock rate rounding technically could fail, hence let's handle
->> the error cases properly.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra30-devfreq.c | 17 +++++++++++++++--
->>  1 file changed, 15 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index 5e2b133babdd..5e606ae3f238 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -592,8 +592,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  	struct tegra_devfreq_device *dev;
->>  	struct tegra_devfreq *tegra;
->>  	struct devfreq *devfreq;
->> -	unsigned long rate;
->>  	unsigned int i;
->> +	long rate;
->>  	int err;
->>  
->>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->> @@ -650,8 +650,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  
->>  	reset_control_deassert(tegra->reset);
->>  
->> -	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
->> +	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
->> +	if (rate < 0) {
->> +		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
->> +		return rate;
->> +	}
->> +
->>  	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
->> +	tegra->max_freq = rate / KHZ;
->>  
->>  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
->>  		dev = tegra->devices + i;
->> @@ -662,6 +668,13 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
->>  		rate = clk_round_rate(tegra->emc_clock, rate);
->>  
+On Tue, Jul 16, 2019 at 08:57:04PM +0800, Herbert Xu wrote:
+>
+> How about using RCU?
 > 
-> Please remove unneeded blank line.
+> We still need to fix up the refcnt if it's supposed to limit the
+> overall number of outstanding requests.
 
-I can remove it, but it was added specifically to ease reading of the code.
+Hmm, it doesn't work because the refcnt is attached to the old
+pd.  That shouldn't be a problem though as we could simply ignore
+the refcnt in padata_flush_queue.
 
->> +		if (rate < 0) {
->> +			dev_err(&pdev->dev,
->> +				"Failed to round clock rate: %ld\n", rate);
->> +			err = rate;
->> +			goto remove_opps;
->> +		}
-> 
-> Also, this patch doesn't contain code which restore the previous
-> tegra->cur_freq/max_freq when error happen.
+However, I think this leads to another bug in that pcrypt doesn't
+support dm-crypt properly.  It never does the backlog stuff and
+therefore can't guarantee reliable processing which dm-crypt requires.
 
-The error here results in abortion of the driver's probing, hence
-nothing need to be restored in that case because nothing was changed at
-this point yet.
+Is it intentional to only allow pcrypt for IPsec?
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
