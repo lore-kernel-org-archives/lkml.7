@@ -2,126 +2,90 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82587C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8983DC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539582173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:17:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9jwKbpU"
+	by mail.kernel.org (Postfix) with ESMTP id 6309C2173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387857AbfGPPRX (ORCPT
+        id S2387893AbfGPPSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:17:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34061 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbfGPPRW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:17:22 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p17so20374742ljg.1;
-        Tue, 16 Jul 2019 08:17:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WJp++cLN27g/ca+Sa3xTKXF6djUalOvIpbg8bqgN3cI=;
-        b=T9jwKbpU1/jY0Y5BI8Dbu0hEoblHKGEoBH6OjGJmEtprsNF5GCn1GwD+Ob4RVDo7V4
-         M9v+IQzj2kO2Fv9VzQEB3itQ4b3Jij8MSMWiA/M6HZs8iMuvjMiajWkJZ90EmhV0G6wq
-         f+78bd+UV2tcR9dnM4w0dfYWSZn6pD8ODyw9mO+wFl1004O+wtqIkvgMBBRI+3NEv7YO
-         1S2/fAJQrRdKD/k1EV8XikS+0umorBu01ue1pLxGBkaZiprt7TNADi5jCRIWLA4kiWDd
-         CL2wNpqwFIQQmoagM2+neFBYe1Ptx3KMhn89epzn5GBPPrCodv1qDtZRdK+ZDLWVEOdo
-         kL4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WJp++cLN27g/ca+Sa3xTKXF6djUalOvIpbg8bqgN3cI=;
-        b=bIiR3Uyd/xgt9MQjiKGd1prL/Ho0pPX0UOAWvQO7Kb5I/i+8kP/B7h3adgmoeSWYIV
-         jYsrB2KNNlT9Y4/uxFokYObYGPGW/irtaytEOaZ0FGYfJxVVRUHI0N71f0NGgN22Lnwo
-         7av0ckUwmpMa7d90en6Pgq/tTwoMY2vluB6ZbTA2Z0NXU4qvEy6/DPAiE3WZeT4CGZre
-         K9SK0WIEygJkOUV1nsOudbzTq4dvs3JDFJumAPCX5IrjYsgdGW/bEY639EWf546+bgIP
-         /pcOFx0kRcfcV/tuPFHvW0GoH7i9est0SJYoNUt/6gBYWG52v2bWEIlHsHLIyIr25EzK
-         AIkQ==
-X-Gm-Message-State: APjAAAWYWmVHPYmVcsj782sO+EiEUoT0wOeCKeIOY9EU2OLqZj3LTbpx
-        wFA4P6PxQtL+0a3+YPXRaIPW9T1y
-X-Google-Smtp-Source: APXvYqxRp4/Wk6e/4UjTI64BrFWY/3Vyb2ZSjmmef+33NTKhQmfG28HbPFXmIky7rRkADdg3VvRv9w==
-X-Received: by 2002:a2e:1459:: with SMTP id 25mr17536548lju.153.1563290240180;
-        Tue, 16 Jul 2019 08:17:20 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id p15sm3864900lji.80.2019.07.16.08.17.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 08:17:19 -0700 (PDT)
-Subject: Re: [PATCH v4 10/24] PM / devfreq: tegra30: Don't enable
- consecutive-down interrupt on startup
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223642epcas4p1fbfbcf5181e9a25fbbaad9ef95c56f8f@epcas4p1.samsung.com>
- <20190707223303.6755-11-digetx@gmail.com>
- <933b99a1-ac45-25fb-e8d5-0641ec0cab18@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <54ad7bb8-1ffe-50bc-9003-acc02b1b6f9d@gmail.com>
-Date:   Tue, 16 Jul 2019 18:17:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 11:18:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41436 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728137AbfGPPSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:18:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 408F0C025014;
+        Tue, 16 Jul 2019 15:18:16 +0000 (UTC)
+Received: from x1.home (ovpn-116-35.phx2.redhat.com [10.3.116.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 11375617AA;
+        Tue, 16 Jul 2019 15:18:16 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 09:18:15 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: [GIT PULL] VFIO updates for v5.3-rc1
+Message-ID: <20190716091815.74662138@x1.home>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <933b99a1-ac45-25fb-e8d5-0641ec0cab18@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 16 Jul 2019 15:18:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2019 15:17, Chanwoo Choi пишет:
-> Hi Dmitry,
-> 
-> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
->> The consecutive-down event tells that we should perform frequency
->> de-boosting, but boosting is in a reset state on start and hence the
->> event won't do anything useful for us and it will be just a dummy
->> interrupt request.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra30-devfreq.c | 1 -
->>  1 file changed, 1 deletion(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index 32fe95458ee7..878c9396bb8c 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -558,7 +558,6 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->>  		<< ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
->>  	val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
->>  	val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
->> -	val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
->>  	val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
->>  	val |= ACTMON_DEV_CTRL_ENB;
->>  
->>
-> 
-> Maybe, I think that better to review it by Thierry.
-> I'm not sure it is right or not because it depend on h/w.
-> 
+Hi Linus,
 
-The CONSECUTIVE_LOWER interrupts are generated if
-ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN is enabled and ISR enables
-the BELOW_WMARK_EN bit once CONSECUTIVE_UPPER event is received. The
-CONSECUTIVE events are used in for the frequency boosting logic and
-there is no boosting on start, hence the CONSECUTIVE_LOWER event isn't
-needed on start as well. Hope this helps.
+The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
+
+  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
+
+are available in the Git repository at:
+
+  git://github.com/awilliam/linux-vfio.git tags/vfio-v5.3-rc1
+
+for you to fetch changes up to 1e4d09d2212d9e230b967f57bc8df463527dbd75:
+
+  mdev: Send uevents around parent device registration (2019-07-11 13:26:52 -0600)
+
+----------------------------------------------------------------
+VFIO updates for v5.3-rc1
+
+ - Static symbol cleanup in mdev samples (Kefeng Wang)
+
+ - Use vma help in nvlink code (Peng Hao)
+
+ - Remove unused code in mbochs sample (YueHaibing)
+
+ - Send uevents around mdev registration (Alex Williamson)
+
+----------------------------------------------------------------
+Alex Williamson (1):
+      mdev: Send uevents around parent device registration
+
+Kefeng Wang (1):
+      vfio-mdev/samples: make some symbols static
+
+Peng Hao (1):
+      vfio: vfio_pci_nvlink2: use a vma helper function
+
+YueHaibing (1):
+      sample/mdev/mbochs: remove set but not used variable 'mdev_state'
+
+ drivers/vfio/mdev/mdev_core.c       |  9 +++++++
+ drivers/vfio/pci/vfio_pci_nvlink2.c |  3 +--
+ samples/vfio-mdev/mbochs.c          |  3 ---
+ samples/vfio-mdev/mtty.c            | 47 +++++++++++++++++++------------------
+ 4 files changed, 34 insertions(+), 28 deletions(-)
