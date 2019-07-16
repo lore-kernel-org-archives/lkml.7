@@ -2,94 +2,94 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAECC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB81C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE192173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2EDF21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563275792;
+	bh=cN2YWLRC4s7HqVcjkwb1qbS93xC53QlrYyzApl46WQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MLsAMlR4xprzUTU5bqUJifsuN89mXcbWxOOEyLPTWui/RXrxG0FwWC6QlcejZ7Sq6
+	 NL4P1b2tXFpaKYT/svMTaaijA0nLemZ63ofs9mtwhoXrhgQ7pogz/NchqECHgISFYs
+	 /aM7Y10a1Xiu9GBZsioThkRSL6/enp6cMfPMSGxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387704AbfGPLON (ORCPT
+        id S2387597AbfGPLQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:14:13 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:60600 "EHLO a.mx.secunet.com"
+        Tue, 16 Jul 2019 07:16:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387553AbfGPLON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:14:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id F314C201E1;
-        Tue, 16 Jul 2019 13:14:11 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q2w7tSaGDtsl; Tue, 16 Jul 2019 13:14:10 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1733200AbfGPLQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 07:16:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id E0C74201D6;
-        Tue, 16 Jul 2019 13:14:10 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
- 13:14:11 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 82D9C318040C;
- Tue, 16 Jul 2019 13:14:10 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 13:14:10 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        <andrea.parri@amarulasolutions.com>, <boqun.feng@gmail.com>,
-        <paulmck@linux.ibm.com>, <peterz@infradead.org>,
-        <linux-arch@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
- padata jobs
-Message-ID: <20190716111410.GN17989@gauss3.secunet.de>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
- <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
- <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
- <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 914DA2173B;
+        Tue, 16 Jul 2019 11:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563275789;
+        bh=cN2YWLRC4s7HqVcjkwb1qbS93xC53QlrYyzApl46WQY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fN2ZJSMKqcmdmKc0QGJ3lMxe98jrFW3RcAvT1o8V3Zx6VySokBYxZyqlAJHyVHMTr
+         P4h8cQBkE2b7uR2KHP5b/MA7uto9Mm/CRyNivfEx+3f6kMERI8JSzOkGe3oU/SC7pE
+         6CA3s19YptajttSQaXKI1OvrCZj7xRo6mrsVrKTM=
+Date:   Tue, 16 Jul 2019 07:16:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sinan Kaya <Okaya@kernel.org>
+Cc:     marc.zyngier@arm.com, will.deacon@arm.com, julien.thierry@arm.com,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        linux-kernel@microsoft.com, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, stable@kernel.org
+Subject: Re: [PATCH] ARM64/irqchip: Make ACPI_IORT depend on PCI again
+Message-ID: <20190716111628.GB1943@sasha-vm>
+References: <20190716040441.12101-1-sashal@kernel.org>
+ <a688793b-f7e8-18a4-3eb2-877f1522d8f3@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+In-Reply-To: <a688793b-f7e8-18a4-3eb2-877f1522d8f3@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:04:47PM +0800, Herbert Xu wrote:
-> On Mon, Jul 15, 2019 at 12:10:46PM -0400, Daniel Jordan wrote:
-> >
-> > I've been wrong before plenty of times, and there's nothing preventing this
-> > from being one of those times :) , but in this case I believe what I'm showing
-> > is correct.
-> > 
-> > The padata_do_serial call for a given job ensures padata_reorder runs on the
-> > CPU that the job hashed to in padata_do_parallel, which is not necessarily the
-> > same CPU as the one that padata_do_parallel itself ran on.
-> 
-> You're right.  I was taking the comment in the code at face value,
-> never trust comments :)
-> 
-> While looking at the code in question, I think it is seriously
-> broken.  For instance, padata_replace does not deal with async
-> crypto at all.  It would fail miserably if the underlying async
-> crypto held onto references to the old pd.
+On Tue, Jul 16, 2019 at 12:13:23AM -0400, Sinan Kaya wrote:
+>On 7/16/2019 12:04 AM, Sasha Levin wrote:
+>> ACPI_IORT lost it's explicit dependency on PCI in c6bb8f89fa6df
+>> ("ARM64/irqchip: Update ACPI_IORT symbol selection logic") where the
+>> author has relied on the general dependency of ACPI on PCI.
+>>
+>> However, that dependency was finally removed in 5d32a66541c4 ("PCI/ACPI:
+>> Allow ACPI to be built without CONFIG_PCI set") and now ACPI_IORT breaks
+>> when we try and build it without PCI support.
+>>
+>> This patch brings back the explicit dependency of ACPI_IORT on PCI.
+>>
+>> Fixes: 5d32a66541c4 ("PCI/ACPI: Allow ACPI to be built without CONFIG_PCI set")
+>> Cc: stable@kernel.org
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>Do you have more detail on what really is broken without this patch?
+>
+>It should be possible to build IORT table without PCI.
 
-Hm, yes looks like that.
+For the record, the errors look like this:
 
-padata_replace should not call padata_free_pd() as long as the
-refcount is not zero. Currenlty padata_flush_queues() will
-BUG if there are references left.
+	drivers/acpi/arm64/iort.o: In function `acpi_iort_init':
+	iort.c:(.init.text+0x47c): undefined reference to `pci_request_acs'
 
-Maybe we can fix it if we call padata_free_pd() from
-padata_serial_worker() when it sent out the last object.
+Sinan pointed me to an earlier patch he wrote that would fix it
+(https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/acpi/arm64/iort.c?id=43554cebba50e709b9207c55ceca6bc281748586).
 
+Please disregard this patch.
+
+--
+Thanks,
+Sasha
