@@ -2,89 +2,85 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9026C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD76C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C6E2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3479E20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbfGPGVe (ORCPT
+        id S1731653AbfGPGWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 02:21:34 -0400
-Received: from gate.crashing.org ([63.228.1.57]:60171 "EHLO gate.crashing.org"
+        Tue, 16 Jul 2019 02:22:17 -0400
+Received: from relay.sw.ru ([185.231.240.75]:38014 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729533AbfGPGVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 02:21:34 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6G6LEHB010814;
-        Tue, 16 Jul 2019 01:21:16 -0500
-Message-ID: <ad18ff8d004225e102076f8e1fb617916617f337.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/3] nvme: Retrieve the required IO queue entry size
- from the controller
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
-        Paul Pawlowski <paul@mrarm.io>
-Date:   Tue, 16 Jul 2019 16:21:14 +1000
-In-Reply-To: <20190716060430.GB29414@lst.de>
-References: <20190716004649.17799-1-benh@kernel.crashing.org>
-         <20190716004649.17799-2-benh@kernel.crashing.org>
-         <20190716060430.GB29414@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        id S1729533AbfGPGWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 02:22:17 -0400
+Received: from [172.16.24.21]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1hnGqr-0006bf-Lg; Tue, 16 Jul 2019 09:22:13 +0300
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH v2] futex: generic arch_futex_atomic_op_inuser() cleanup
+To:     Thomas Gleixner <tglx@linutronix.de>, linux-arch@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.1907151513450.1722@nanos.tec.linutronix.de>
+Message-ID: <12bdaca8-99eb-e576-f842-5970ab1d6a92@virtuozzo.com>
+Date:   Tue, 16 Jul 2019 09:22:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1907151513450.1722@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-16 at 08:04 +0200, Christoph Hellwig wrote:
-> > 
-> > +		/*
-> > +		 * If our IO queue size isn't the default, update the setting
-> > +		 * in CC:IOSQES.
-> > +		 */
-> > +		if (ctrl->iosqes != NVME_NVM_IOSQES) {
-> > +			ctrl->ctrl_config &= ~(0xfu << NVME_CC_IOSQES_SHIFT);
-> > +			ctrl->ctrl_config |= ctrl->iosqes << NVME_CC_IOSQES_SHIFT;
-> > +			ret = ctrl->ops->reg_write32(ctrl, NVME_REG_CC,
-> > +						     ctrl->ctrl_config);
-> > +			if (ret) {
-> > +				dev_err(ctrl->device,
-> > +					"error updating CC register\n");
-> > +				goto out_free;
-> > +			}
-> > +		}
-> 
-> Actually, this doesn't work on a "real" nvme controller, to change CC
-> values the controller needs to be disabled.
+generic smp version of arch_futex_atomic_op_inuser() always returns -ENOSYS
 
-Not really. The specs says that MPS, AMD and CSS need to be set before
-enabling, but IOCQES and IOSQES can be modified later as long as there
-is no IO queue created yet.
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+---
+ include/asm-generic/futex.h | 21 +--------------------
+ 1 file changed, 1 insertion(+), 20 deletions(-)
 
-This is necessary otherwise there's a chicken and egg problem. You need
-the admin queue to do the controller id in order to get the sizes and
-for that you need the controller to be enabled.
-
-Note: This is not a huge issue anyway since I only update the register
-if the required size isn't 6 which is probably never going to be the
-case on non-Apple HW.
-
->   So back to the version
-> you circulated to me in private mail that just sets q->sqes and has a
-> comment that this is magic for The Apple controller.  If/when we get
-> standardized large SQE support we'll need to discover that earlier or
-> do a disable/enable dance.  Sorry for misleading you down this road and
-> creating the extra work.  
-
-I think it's still ok, let me know...
-
-Ben.
+diff --git a/include/asm-generic/futex.h b/include/asm-generic/futex.h
+index 8666fe7f35d7..02970b11f71f 100644
+--- a/include/asm-generic/futex.h
++++ b/include/asm-generic/futex.h
+@@ -118,26 +118,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ static inline int
+ arch_futex_atomic_op_inuser(int op, u32 oparg, int *oval, u32 __user *uaddr)
+ {
+-	int oldval = 0, ret;
+-
+-	pagefault_disable();
+-
+-	switch (op) {
+-	case FUTEX_OP_SET:
+-	case FUTEX_OP_ADD:
+-	case FUTEX_OP_OR:
+-	case FUTEX_OP_ANDN:
+-	case FUTEX_OP_XOR:
+-	default:
+-		ret = -ENOSYS;
+-	}
+-
+-	pagefault_enable();
+-
+-	if (!ret)
+-		*oval = oldval;
+-
+-	return ret;
++	return -ENOSYS;
+ }
+ 
+ static inline int
+-- 
+2.17.1
 
