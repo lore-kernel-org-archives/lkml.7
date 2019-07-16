@@ -2,245 +2,211 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B433C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03259C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C0F2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2CD1akN"
+	by mail.kernel.org (Postfix) with ESMTP id D2D5B2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbfGPSZu (ORCPT
+        id S2388445AbfGPS06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:25:50 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36490 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPSZt (ORCPT
+        Tue, 16 Jul 2019 14:26:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388036AbfGPS05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:25:49 -0400
-Received: by mail-lj1-f195.google.com with SMTP id i21so20958025ljj.3;
-        Tue, 16 Jul 2019 11:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dzpCNoG2ecZyjqfMDdyuZcENn8NrTEOFK08CpMGbvNk=;
-        b=f2CD1akNpWD4M95i5XFUstpraEgED6ua7PGVAKs7UR0lWfH/T5653gz/gUX29znlB7
-         rGDKbloSwq0s8CadV9xzfGAirF8n0X04P6vIFfq/WjQx7+w3p+xzGTA2ifknVzwY3h6j
-         oiKBBILmd6GkDHkKs2oG7nPibb/J+h5yJThjZijgxbF4Sw8VGL4JWupo7VW/xWGGgEv7
-         oL2TJtsCjSqQTM4t8V9LFzw7XecXcLyLvFGsPPUYFxsxUJehxTUWJTqto6IUEpbIHw+U
-         bkd6U8Xt2nDMC6yJ2o9QObmP+hVZ5UP+tQA5DqMmFNz/P/CT60CV2Ub8KNGApoEEmbKa
-         Wwpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dzpCNoG2ecZyjqfMDdyuZcENn8NrTEOFK08CpMGbvNk=;
-        b=Xwfbd+qXu5+tgOr50ytc6+THV3H4aatDvyZCssT0DvDqBXLYPMmPYk5n78/buNSuaO
-         KCXa11ZpTXiybbIc4cJA4MQY6PkZ+qEO86+ytwlVTNq7IXCJArsHXnNbQd06yBIjrKjZ
-         NJ/cBrF0bcoVhTrmOI+2XX2loak/Edq/mLeECFtzvJTVmwFbyARp/adUlL6Eh8l26xQq
-         d84CUiuXw2b+86OuPdL9sJn0/mz+n0awu0rYOfSV69vd+PHos2EQu4lnRxcMO2X4fG7d
-         cnCLPPZSFWJSapXst4VDlRcoDb7Lzyk/4i4esFth279SgkXUMqBs2nXN3dmIIdmNvzxk
-         MLCA==
-X-Gm-Message-State: APjAAAX6efjoDXK6e7CRmtW/lXufXxMCo9DQ14g0f1It6UumPzQy9dJI
-        lvSUMYoXqfvfp5/nTa3FpqpHipJF
-X-Google-Smtp-Source: APXvYqwOE1NBW5Zq1L9LiV/JN0r6gZRvQoR56JkIdauJQ78fpUGBQFQB1UFIHFMHjl0kB2J8ADadJA==
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr1359792ljs.54.1563301545821;
-        Tue, 16 Jul 2019 11:25:45 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id t3sm2943552lfk.59.2019.07.16.11.25.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 11:25:45 -0700 (PDT)
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
- <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
- <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
- <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
- <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
- <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
-Date:   Tue, 16 Jul 2019 21:25:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 14:26:57 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GILwVX084243
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:26:55 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tsk881q9h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:26:55 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 16 Jul 2019 19:26:54 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Jul 2019 19:26:44 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIQh3r15860536
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 18:26:43 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE3B7B2066;
+        Tue, 16 Jul 2019 18:26:42 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70B34B2068;
+        Tue, 16 Jul 2019 18:26:42 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jul 2019 18:26:42 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7609D16C8EBE; Tue, 16 Jul 2019 11:26:42 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 11:26:42 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
+Reply-To: paulmck@linux.ibm.com
+References: <20190712170024.111093-1-joel@joelfernandes.org>
+ <20190712170024.111093-4-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712170024.111093-4-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19071618-2213-0000-0000-000003AF9AB3
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011440; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01233103; UDB=6.00649716; IPR=6.01014414;
+ MB=3.00027748; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-16 18:26:52
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071618-2214-0000-0000-00005F427600
+Message-Id: <20190716182642.GB22819@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160225
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2019 21:19, Sowjanya Komatineni пишет:
+On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
+> The rcu/sync code was doing its own check whether we are in a reader
+> section. With RCU consolidating flavors and the generic helper added in
+> this series, this is no longer need. We can just use the generic helper
+> and it results in a nice cleanup.
 > 
-> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
->>
->> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
->>> 16.07.2019 11:06, Peter De Schrijver пишет:
->>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
->>>>>> OK, Will add to CPUFreq driver...
->>>>>>> The other thing that also need attention is that T124 CPUFreq driver
->>>>>>> implicitly relies on DFLL driver to be probed first, which is icky.
->>>>>>>
->>>>>> Should I add check for successful dfll clk register explicitly in
->>>>>> CPUFreq driver probe and defer till dfll clk registers?
->>> Probably you should use the "device links". See [1][2] for the example.
->>>
->>> [1]
->>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c#L2383
->>>
->>>
->>> [2] https://www.kernel.org/doc/html/latest/driver-api/device_link.html
->>>
->>> Return EPROBE_DEFER instead of EINVAL if device_link_add() fails. And
->>> use of_find_device_by_node() to get the DFLL's device, see [3].
->>>
->>> [3]
->>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
->>>
->> Will go thru and add...
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Looks like I initially confused this case with getting orphaned clock.
-I'm now seeing that the DFLL driver registers the clock and then
-clk_get(dfll) should be returning EPROBE_DEFER until DFLL driver is
-probed, hence everything should be fine as-is and there is no real need
-for the 'device link'. Sorry for the confusion!
+This needs to be forward-ported to current mainline.  (Or, I believe
+equivalently for this file, to branch "dev" of -rcu.)
 
->>>>> Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
->>>>>
->>>>> As you know it, the DFLL clock is one of the CPU clock sources and
->>>>> integrated with DVFS control logic with the regulator. We will not
->>>>> switch
->>>>> CPU to other clock sources once we switched to DFLL. Because the
->>>>> CPU has
->>>>> been regulated by the DFLL HW with the DVFS table (CVB or OPP table
->>>>> you see
->>>>> in the driver.). We shouldn't reparent it to other sources with unknew
->>>>> freq/volt pair. That's not guaranteed to work. We allow switching to
->>>>> open-loop mode but different sources.
->>> Okay, then the CPUFreq driver will have to enforce DFLL freq to PLLP's
->>> rate before switching to PLLP in order to have a proper CPU voltage.
->>
->> PLLP freq is safe to work for any CPU voltage. So no need to enforce
->> DFLL freq to PLLP rate before changing CCLK_G source to PLLP during
->> suspend
->>
-> Sorry, please ignore my above comment. During suspend, need to change
-> CCLK_G source to PLLP when dfll is in closed loop mode first and then
-> dfll need to be set to open loop.
+Especially given that you have Oleg's Ack, I would be happy to
+take the forward-ported version.
 
-Okay.
+							Thanx, Paul
 
->>>>> And I don't exactly understand why we need to switch to PLLP in CPU
->>>>> idle
->>>>> driver. Just keep it on CL-DVFS mode all the time.
->>>>>
->>>>> In SC7 entry, the dfll suspend function moves it the open-loop
->>>>> mode. That's
->>>>> all. The sc7-entryfirmware will handle the rest of the sequence to
->>>>> turn off
->>>>> the CPU power.
->>>>>
->>>>> In SC7 resume, the warmboot code will handle the sequence to turn on
->>>>> regulator and power up the CPU cluster. And leave it on PLL_P. After
->>>>> resuming to the kernel, we re-init DFLL, restore the CPU clock
->>>>> policy (CPU
->>>>> runs on DFLL open-loop mode) and then moving to close-loop mode.
->>> The DFLL is re-inited after switching CCLK to DFLL parent during of the
->>> early clocks-state restoring by CaR driver. Hence instead of having odd
->>> hacks in the CaR driver, it is much nicer to have a proper
->>> suspend-resume sequencing of the device drivers. In this case CPUFreq
->>> driver is the driver that enables DFLL and switches CPU to that clock
->>> source, which means that this driver is also should be responsible for
->>> management of the DFLL's state during of suspend/resume process. If
->>> CPUFreq driver disables DFLL during suspend and re-enables it during
->>> resume, then looks like the CaR driver hacks around DFLL are not needed.
->>>
->>>>> The DFLL part looks good to me. BTW, change the patch subject to "Add
->>>>> suspend-resume support" seems more appropriate to me.
->>>>>
->>>> To clarify this, the sequences for DFLL use are as follows (assuming
->>>> all
->>>> required DFLL hw configuration has been done)
->>>>
->>>> Switch to DFLL:
->>>> 0) Save current parent and frequency
->>>> 1) Program DFLL to open loop mode
->>>> 2) Enable DFLL
->>>> 3) Change cclk_g parent to DFLL
->>>> For OVR regulator:
->>>> 4) Change PWM output pin from tristate to output
->>>> 5) Enable DFLL PWM output
->>>> For I2C regulator:
->>>> 4) Enable DFLL I2C output
->>>> 6) Program DFLL to closed loop mode
->>>>
->>>> Switch away from DFLL:
->>>> 0) Change cclk_g parent to PLLP so the CPU frequency is ok for any
->>>> vdd_cpu voltage
->>>> 1) Program DFLL to open loop mode
->>>>
-> I see during switch away from DFLL (suspend), cclk_g parent is not
-> changed to PLLP before changing dfll to open loop mode.
+> ---
+> Please note: Only build and boot tested this particular patch so far.
 > 
-> Will add this ...
+>  include/linux/rcu_sync.h |  5 ++---
+>  kernel/rcu/sync.c        | 22 ----------------------
+>  2 files changed, 2 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> index 6fc53a1345b3..c954f1efc919 100644
+> --- a/include/linux/rcu_sync.h
+> +++ b/include/linux/rcu_sync.h
+> @@ -39,9 +39,8 @@ extern void rcu_sync_lockdep_assert(struct rcu_sync *);
+>   */
+>  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+>  {
+> -#ifdef CONFIG_PROVE_RCU
+> -	rcu_sync_lockdep_assert(rsp);
+> -#endif
+> +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+> +			 "suspicious rcu_sync_is_idle() usage");
+>  	return !rsp->gp_state; /* GP_IDLE */
+>  }
+>  
+> diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+> index a8304d90573f..535e02601f56 100644
+> --- a/kernel/rcu/sync.c
+> +++ b/kernel/rcu/sync.c
+> @@ -10,37 +10,25 @@
+>  #include <linux/rcu_sync.h>
+>  #include <linux/sched.h>
+>  
+> -#ifdef CONFIG_PROVE_RCU
+> -#define __INIT_HELD(func)	.held = func,
+> -#else
+> -#define __INIT_HELD(func)
+> -#endif
+> -
+>  static const struct {
+>  	void (*sync)(void);
+>  	void (*call)(struct rcu_head *, void (*)(struct rcu_head *));
+>  	void (*wait)(void);
+> -#ifdef CONFIG_PROVE_RCU
+> -	int  (*held)(void);
+> -#endif
+>  } gp_ops[] = {
+>  	[RCU_SYNC] = {
+>  		.sync = synchronize_rcu,
+>  		.call = call_rcu,
+>  		.wait = rcu_barrier,
+> -		__INIT_HELD(rcu_read_lock_held)
+>  	},
+>  	[RCU_SCHED_SYNC] = {
+>  		.sync = synchronize_rcu,
+>  		.call = call_rcu,
+>  		.wait = rcu_barrier,
+> -		__INIT_HELD(rcu_read_lock_sched_held)
+>  	},
+>  	[RCU_BH_SYNC] = {
+>  		.sync = synchronize_rcu,
+>  		.call = call_rcu,
+>  		.wait = rcu_barrier,
+> -		__INIT_HELD(rcu_read_lock_bh_held)
+>  	},
+>  };
+>  
+> @@ -49,16 +37,6 @@ enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
+>  
+>  #define	rss_lock	gp_wait.lock
+>  
+> -#ifdef CONFIG_PROVE_RCU
+> -void rcu_sync_lockdep_assert(struct rcu_sync *rsp)
+> -{
+> -	RCU_LOCKDEP_WARN(!gp_ops[rsp->gp_type].held(),
+> -			 "suspicious rcu_sync_is_idle() usage");
+> -}
+> -
+> -EXPORT_SYMBOL_GPL(rcu_sync_lockdep_assert);
+> -#endif
+> -
+>  /**
+>   * rcu_sync_init() - Initialize an rcu_sync structure
+>   * @rsp: Pointer to rcu_sync structure to be initialized
+> -- 
+> 2.22.0.510.g264f2c817a-goog
+> 
 
-The CPUFreq driver switches parent to PLLP during the probe, similar
-should be done on suspend.
-
-I'm also wondering if it's always safe to switch to PLLP in the probe.
-If CPU is running on a lower freq than PLLP, then some other more
-appropriate intermediate parent should be selected.
-
->>>> For OVR regulator:
->>>> 2) Change PWM output pin from output to tristate: vdd_cpu will go back
->>>>     to hardwired boot voltage.
->>>> 3) Disable DFLL PWM output
->>>>
->>>> For I2C regulator:
->>>> 2) Program vdd_cpu regulator voltage to the boot voltage
->>>> 3) Disable DFLL I2C output
->>>>
->>>> 4) Reprogram parent saved in step 0 of 'Switch to DFLL' to the saved
->>>>     frequency
->>>> 5) Change cclk_g parent to saved parent
->>>> 6) Disable DFLL
->>
->> This is the same sequence currently implemented. But dfll
->> suspend/resume calls are thru Tegra210 clock driver.
->>
->> Dmitry wants to have dfll suspend/resume along with CCLK_G restore to
->> happen from CPUFreq driver pm_ops rather than tegra210 clock driver or
->> tegra dfll driver.
->>
->> Will move it to CPUFreq driver...
->>
-> Thanks!
