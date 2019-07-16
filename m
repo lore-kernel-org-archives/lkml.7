@@ -2,116 +2,134 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C518C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93493C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43D421880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594232187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EeHwxihV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EGbWKLlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388990AbfGPXrL (ORCPT
+        id S2388972AbfGPXuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:47:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43057 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388896AbfGPXrJ (ORCPT
+        Tue, 16 Jul 2019 19:50:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39160 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728762AbfGPXuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:47:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so3965085pld.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:47:09 -0700 (PDT)
+        Tue, 16 Jul 2019 19:50:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m202so17049246oig.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=aC7GDup6sSVAKynCM4PPlfap2E8VieMEW0LKr0VhP4o=;
-        b=EeHwxihVsubbGohI4N+iMq6111QSfBR2+MzTCtvx264JSBHR16jAfPe4Hthrd4LTuh
-         D8+U+myItRxfGZ7WwSQQxavWEekV3l2YXjZNJ9HQmm48yYdV41XRuvhFdVFb5xUcXXJJ
-         G83vqB8eU8DIZIiXFrEFC/a7Qs3G0KV8I+QYE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WrOQbwIEDkgvkVyECfpypyWkqBx3WCpbfMK+8xl2Gzk=;
+        b=EGbWKLlN+cMaSvBUa2bq8KWbW/C3fnMJjXLbuqaz9ESXyExLPWEGEaMjNmb8iJI7xp
+         TN9wggba2mplk8yhan28BPAPOD5UzOnu6/0u1YG/KS1PRpKdERM7cxnTs1y9c1AKa/rL
+         13QTzMEro2yqHCFPfZqNDG2g/Zy/4uWNzTW+tgAoOqPbSP+0x8CDcLKTo3r/F2yFxbnO
+         z1FA/n0ARp752ceEEZhTeMw6pb/zIQUC6GGjjf/KGuJQfOaMaUs8E6ieO7ZTwVy6o8f+
+         jxhfDViNT5t/7WxWdSbH6ILKTm0ieeXlgbNWN5dMcaRDsFc0ALZcbrNdukp9geMzmf2s
+         Ae0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=aC7GDup6sSVAKynCM4PPlfap2E8VieMEW0LKr0VhP4o=;
-        b=mG/IntX7sioIsghnBePm5K8hYipPZtQkQ4ik8yIaVplX2cXriKBedgKHCxcqOP/Cx4
-         /hcJ+88/E0Td7QNzi9tCMJ8mS5uEx/89cRlZBVgtAdHqwsQJqz8bFg7iCM6bpbnUwcpc
-         r9Vszfg1zqdti9N80f+irxQDU3m/p7slQ75o0Mf0hK3W3gxjwuKwAXQ1uF8z+luCqxeR
-         Ufsm7KZutMXSR1c+QAggbRB/qEkpjmCXDp3roPoRZk73wf2TqckIkXXf6LC/JsvYRU6U
-         ZAmN4YDggyjUeTSmJGOTMPMnpWtS+tWECuiW8ESsr7y3ZSnVJd9gtUcTtLm6pdmCwyyu
-         CLDA==
-X-Gm-Message-State: APjAAAX42IwZ/0s6qva0v2CLVHldikb318pX3hRsnvWN0b4RMxPzKCa0
-        obvP5OmPnD+cCaPA+vWHHnx1ZQ==
-X-Google-Smtp-Source: APXvYqzhSwpvj8qbc+/+34wtpZMVGUuet29RcNzS5bdv1MfaCZ8Kr97xGSbJP/UcEHqXYP8QNdef3Q==
-X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr38965932pls.256.1563320828962;
-        Tue, 16 Jul 2019 16:47:08 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y8sm20547411pfn.52.2019.07.16.16.47.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 16:47:08 -0700 (PDT)
-Message-ID: <5d2e61fc.1c69fb81.afb7a.a64a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WrOQbwIEDkgvkVyECfpypyWkqBx3WCpbfMK+8xl2Gzk=;
+        b=XprYtNHzeg3F3iiAizfajXsTy2fHHB9NFZs4mWeSBO1ie/e0/gkunxPupQcmAat5gn
+         HlgSNJ+yotoQehnFzszoZqImGRJZF6mbiNCa7bHxUqUScKHtRQKBZxv1omgVl3twQKQw
+         1KqVKygTOW69EEPT45ZYQ93p9r/vJPppbvkFAZ8FYwslYVqlayyR9wdQNjv9tzKG/row
+         jP5C6REjj6wvov3TA4jXEA8LE9sOaEZgOJjEHPp9981UewSLkwiDK2mDlOgsJCvX+w+v
+         yugQp/Q/gg1ZXF8E6Cshm4wcHyvsah9YI+XzGGbmAaSutvXotkBT0J+n4oSKiYRy9q2l
+         N2aQ==
+X-Gm-Message-State: APjAAAXXqTifZZQDzWjanONjv+Xlm9unD54ZKvu3MoL9TqplE7PrnNZb
+        H+0YD4Cp1eZdv6do0ZbqANTtvf+ybhbNy+YlTJeDuQ==
+X-Google-Smtp-Source: APXvYqwqSbihoAT7JgLCn1l4OQtvLlj1lXunKE9A+7+iAAW+BbCd+mmEMK6dQtBktcW6pbvU1KEMoi/1qwXg80cn90I=
+X-Received: by 2002:aca:5106:: with SMTP id f6mr18882723oib.69.1563321014577;
+ Tue, 16 Jul 2019 16:50:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <7299c814-3d9f-c5d1-fe7b-44e05f8b4ec9@codeaurora.org>
-References: <20190604222939.195471-1-swboyd@chromium.org> <20190604223700.GE4814@minitux> <5cf6f4bb.1c69fb81.c39da.5496@mx.google.com> <CAFp+6iHZeawnz7Vfk3=Oox-GN_y6c-E9wMwc-qdp1bTOXgqjFQ@mail.gmail.com> <5cf82c6f.1c69fb81.9e342.dbda@mx.google.com> <CAFp+6iE8FUXxexKbYy=ak+se-pj1XXUZxTu5o=hJvg66V6+Rzw@mail.gmail.com> <5cfee60a.1c69fb81.584d9.cf12@mx.google.com> <7299c814-3d9f-c5d1-fe7b-44e05f8b4ec9@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add iommus property to qup1
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 16 Jul 2019 16:47:07 -0700
+References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
+ <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
+ <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
+ <9e75b3dd-380b-c868-728f-46379e53bc11@gmail.com> <07812739-0e6b-6598-ac58-8e0ea74a3331@gmail.com>
+ <CAGETcx8YCCGxgXnByenVUb+q8pHPPTjwAjK3L_+9mwoCe=9SbA@mail.gmail.com>
+ <3e340ff1-e842-2521-4344-da62802d472f@gmail.com> <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
+In-Reply-To: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 16 Jul 2019 16:49:38 -0700
+Message-ID: <CAGETcx8FN6E3dgUrK6uk0W1g_FBk1wzohjf3W9eeVeRds0zrAg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
+ DT bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vivek Gautam (2019-06-12 02:26:20)
->=20
->=20
-> On 6/11/2019 4:51 AM, Stephen Boyd wrote:
-> > hardware signal like the NS bit and/or the Execution Level. Hopefully
-> > it's a config and then our difference from MTP can be minimized.
->=20
-> I don't think SMMU limits any such programming of SIDs. It's a design=20
-> decision
-> to program few SIDs in TZ/Hyp and allocate the corresponding context banks
-> and create respective mappings. You should be able to see these SMR=20
-> configurations
-> before kernel boots up. I use a simple T32 command -
->=20
-> smmu.add "<name>" <smmu_type> <base_address>
-> smmu.streammaptable <name>
->=20
-> e.g. for sdm845 apps_smmu
->=20
-> smmu.add "apps" MMU500 a:0x15000000
-> smmu.StreamMapTable apps
->=20
-> This dumps all the information regarding the smmu.
+Resending again due to HTML. Sorry about it, the darn thing keeps
+getting turned on for some reason!
 
-Preferably I can see this by using devmem instead of jtag and T32. Do
-you know the address of the register? Otherwise I'll go dig into the
-documentation and try to figure it out.
-
->=20
+On Tue, Jul 16, 2019 at 3:57 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Jul 15, 2019 at 7:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
 > >
-> > As far as I can tell, HLOS on SDM845 has always used GPI (yet another
-> > DMA engine) to do the DMA transfers. And the GPI is the hardware block
-> > that uses the SID of 0x6d6 above, so putting that into iommus for the
-> > geniqup doesn't make any sense given that GPI is another node. Can you
-> > confirm this is the case? Furthermore, the SID of 0x6c3 sounds untested?
-> > Has it ever been generated on SDM845 MTP?
->=20
-> I will get back with this information.
->=20
+> > On 7/15/19 11:40 AM, Saravana Kannan wrote:
+> > > Replying again because the previous email accidentally included HTML.
+> > >
+> > > Thanks for taking the time to reconsider the wording Frank. Your
+> > > intention was clear to me in the first email too.
+> > >
+> > > A kernel command line option can also completely disable this
+> > > functionality easily and cleanly. Can we pick that as an option? I've
+> > > an implementation of that in the v5 series I sent out last week.
+> >
+> > Yes, Rob suggested a command line option for debugging, and I am fine with
+> > that.  But even with that, I would like a lot of testing so that we have a
+> > chance of finding systems that have trouble with the changes and could
+> > potentially be fixed before impacting a large number of users.
+>
+> Leaving it in -next for more than a cycle will not help. There's some
+> number of users who test linux-next. Then there's more that test -rc
+> kernels. Then there's more that test final releases and/or stable
+> kernels. Probably, the more stable the h/w, the more it tends to be
+> latter groups. (I don't get reports of breaking PowerMacs with the
+> changes sitting in linux-next.)
+>
+> My main worry about this being off by default is it won't get tested.
+> I'm not sure there's enough interest to drive folks to turn it on and
+> test. Maybe it needs to be on until we see breakage.
 
-Any update?
+Android will start using this. So there's definitely going to be a lot
+of motivation for people to start using this and testing this.
+
+I'm also thinking we should start rejecting late_initcall_sync() level
+clean up code in device drivers in the future and start asking them to
+move to sync_state(). If this feature isn't turned on, the behavior
+will default to a late_initcall_sync() level execution. But when this
+is on, it'll actually work nicely with modules. So that's another way
+to drive folks to it and improve things over time.
+
+Maybe we can have this on by default in linux-next and -rc. Fix any
+issues that show up and can be fixed without breaking the goal of this
+series (make things work with modules). And finally turn it off by
+default before it gets pulled into mainline? That way, we get the
+maximum test coverage we can get, but not accidentally break anything
+that wasn't tested?
+
+Thanks,
+Saravana
