@@ -2,160 +2,156 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35A2C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A779EC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EE420693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCEA20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ATRKUMGl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="nxJuMmsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387620AbfGPNas (ORCPT
+        id S2387632AbfGPNbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:30:48 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:45278 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbfGPNas (ORCPT
+        Tue, 16 Jul 2019 09:31:52 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:13717 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfGPNbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:30:48 -0400
-Received: from grover.flets-west.jp (softbank126026094249.bbtec.net [126.26.94.249]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x6GDTm1T024692;
-        Tue, 16 Jul 2019 22:29:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x6GDTm1T024692
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563283797;
-        bh=zHgV4u7LzggfP9NW2eZEPpjwg78NW8hpybrVmWWB2N4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATRKUMGl8fnjGL4qrSXkkXRV3FGRx/viUThasPrpFi7GywloEV6QuswGRt+aeQ3hN
-         dJXcbK6NFL0zSlNZmWRYe7Ap2FXPK/6it7SaLZ30aLIxqndWMO2PWXg0Liwn9QJq42
-         vyaHjO4ybYjJApzRtsNOAV5k/ZN9Q8ISVcNYsux8/4ewKYtqQl6AH+82lbmMtEfoBJ
-         zhw9qaskM1V6jSDA2x+pOT+FI5ORcE0ATFhbxRbqP1rVwK42ixPaGFNP+4qtnuOyFo
-         0X7nMUmHefmrK5shCcsd2OdGnqDgp+PXEjZmaDP+ugLpTCs/luwOIM9bquF6Q5LibM
-         pxxWmvmpT0cMQ==
-X-Nifty-SrcIP: [126.26.94.249]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kbuild: update header compile-test list for v5.3-rc1
-Date:   Tue, 16 Jul 2019 22:29:46 +0900
-Message-Id: <20190716132946.1057-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190716132946.1057-1-yamada.masahiro@socionext.com>
-References: <20190716132946.1057-1-yamada.masahiro@socionext.com>
+        Tue, 16 Jul 2019 09:31:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1563283909;
+        s=strato-dkim-0002; d=fpond.eu;
+        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=KdPMpB0y5dptUz67d+BuffnN6XjmeBJuRxebWH6cybA=;
+        b=nxJuMmsxe0bcToeevZltllqpYrR0xr14RmIxoY9vvMKLmviJ9dMUOKNC2g/fOAwhIF
+        Y6snyMLFf5tRL/uBbDKYy84muA7pg2K6P8V27bnJ8pp+9NrIf8MYX3hTBTcIipkiKUER
+        ZNVaqZpJPWPu12vwBEb2qsb4pe86EA/Dy8iAqCObp/lOlgk+FIwRKkTe9nmgtT8U+qUv
+        sJ9Cdz4Esz6PStJgUUjo79itxkPw7Z8lbOWEXXz3FhGF4SM8sEppd01oq6qqH+6w+bwm
+        KSFfcHklZ+HqXNa9Ig7R+/tm/zCc7VaHT0kckucTZrqajMFRgEEedB7HQkf8RcshOTkB
+        KBzA==
+X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
+X-RZG-CLASS-ID: mo00
+Received: from oxapp06-01.back.ox.d0m.de
+        by smtp-ox.front (RZmta 44.24 AUTH)
+        with ESMTPSA id h0a328v6GDVkcXc
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 16 Jul 2019 15:31:46 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 15:31:46 +0200 (CEST)
+From:   Ulrich Hecht <uli@fpond.eu>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <1146567928.62608.1563283906754@webmail.strato.com>
+In-Reply-To: <20190706140746.29132-18-jacopo+renesas@jmondi.org>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-18-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 17/19] drm: rcar-du: crtc: Enable and disable CMMs
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Medium
+X-Mailer: Open-Xchange Mailer v7.8.4-Rev59
+X-Originating-IP: 85.212.152.154
+X-Originating-Client: open-xchange-appsuite
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some headers graduated from the blacklist.
 
-Let hyperv_timer.h join the header-test when CONFIG_X86=y.
+> On July 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> 
+> 
+> Enable/disable the CMM associated with a CRTC at crtc start and stop
+> time and enable the CMM unit through the Display Extensional Functions
+> register at group setup time.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
+>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 23f1d6cc1719..3dac605c3a67 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -21,6 +21,7 @@
+>  #include <drm/drm_plane_helper.h>
+>  #include <drm/drm_vblank.h>
+>  
+> +#include "rcar_cmm.h"
+>  #include "rcar_du_crtc.h"
+>  #include "rcar_du_drv.h"
+>  #include "rcar_du_encoder.h"
+> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		rcar_du_vsp_disable(rcrtc);
+>  
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_disable(rcrtc->cmm);
+> +
+>  	/*
+>  	 * Select switch sync mode. This stops display operation and configures
+>  	 * the HSYNC and VSYNC signals as inputs.
+> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	}
+>  
+>  	rcar_du_crtc_start(rcrtc);
+> +
+> +	if (rcrtc->cmm)
+> +		rcar_cmm_enable(rcrtc->cmm);
+>  }
+>  
+>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9eee47969e77..d252c9bb9809 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  
+>  	rcar_du_group_setup_pins(rgrp);
+>  
+> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
+> +		u32 defr7 = DEFR7_CODE |
+> +			    (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0) |
+> +			    (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
+> +
+> +		rcar_du_group_write(rgrp, DEFR7, defr7);
+> +	}
+> +
+>  	if (rcdu->info->gen >= 2) {
+>  		rcar_du_group_setup_defr8(rgrp);
+>  		rcar_du_group_setup_didsr(rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> index bc87f080b170..fb9964949368 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
+> @@ -197,6 +197,11 @@
+>  #define DEFR6_MLOS1		(1 << 2)
+>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
+>  
+> +#define DEFR7			0x000ec
+> +#define DEFR7_CODE		(0x7779 << 16)
+> +#define DEFR7_CMME1		BIT(6)
+> +#define DEFR7_CMME0		BIT(4)
+> +
 
-Add CONFIG guards to nf_tables*.h because they can be compiled
-when CONFIG_NF_TABLES is enabled.
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
 
-Add a new entry for nf_tables_offload.h to fix the build error for the
-combination of CONFIG_NF_TABLES=n and CONFIG_KERNEL_HEADER_TEST=y.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/Kbuild       | 12 +++++-------
- usr/include/Makefile |  8 --------
- 2 files changed, 5 insertions(+), 15 deletions(-)
-
-diff --git a/include/Kbuild b/include/Kbuild
-index 7e9f1acb9dd5..4aa62237897c 100644
---- a/include/Kbuild
-+++ b/include/Kbuild
-@@ -31,7 +31,7 @@ header-test-			+= acpi/platform/acintel.h
- header-test-			+= acpi/platform/aclinux.h
- header-test-			+= acpi/platform/aclinuxex.h
- header-test-			+= acpi/processor.h
--header-test-			+= clocksource/hyperv_timer.h
-+header-test-$(CONFIG_X86)	+= clocksource/hyperv_timer.h
- header-test-			+= clocksource/timer-sp804.h
- header-test-			+= crypto/cast_common.h
- header-test-			+= crypto/internal/cryptouser.h
-@@ -454,9 +454,6 @@ header-test-			+= linux/phy/omap_control_phy.h
- header-test-			+= linux/phy/tegra/xusb.h
- header-test-			+= linux/phy/ulpi_phy.h
- header-test-			+= linux/phy_fixed.h
--header-test-			+= linux/pinctrl/pinconf-generic.h
--header-test-			+= linux/pinctrl/pinconf.h
--header-test-			+= linux/pinctrl/pinctrl.h
- header-test-			+= linux/pipe_fs_i.h
- header-test-			+= linux/pktcdvd.h
- header-test-			+= linux/pl320-ipc.h
-@@ -905,10 +902,11 @@ header-test-			+= net/netfilter/nf_nat_redirect.h
- header-test-			+= net/netfilter/nf_queue.h
- header-test-			+= net/netfilter/nf_reject.h
- header-test-			+= net/netfilter/nf_synproxy.h
--header-test-			+= net/netfilter/nf_tables.h
--header-test-			+= net/netfilter/nf_tables_core.h
--header-test-			+= net/netfilter/nf_tables_ipv4.h
-+header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables.h
-+header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables_core.h
-+header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables_ipv4.h
- header-test-			+= net/netfilter/nf_tables_ipv6.h
-+header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables_offload.h
- header-test-			+= net/netfilter/nft_fib.h
- header-test-			+= net/netfilter/nft_meta.h
- header-test-			+= net/netfilter/nft_reject.h
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index cd8daa20d487..aa316d99e035 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -30,8 +30,6 @@ header-test-$(CONFIG_CPU_BIG_ENDIAN) += linux/byteorder/big_endian.h
- header-test-$(CONFIG_CPU_LITTLE_ENDIAN) += linux/byteorder/little_endian.h
- header-test- += linux/coda.h
- header-test- += linux/coda_psdev.h
--header-test- += linux/dvb/audio.h
--header-test- += linux/dvb/osd.h
- header-test- += linux/elfcore.h
- header-test- += linux/errqueue.h
- header-test- += linux/fsmap.h
-@@ -44,7 +42,6 @@ header-test- += linux/netfilter_bridge/ebtables.h
- header-test- += linux/netfilter_ipv4/ipt_LOG.h
- header-test- += linux/netfilter_ipv6/ip6t_LOG.h
- header-test- += linux/nfc.h
--header-test- += linux/nilfs2_ondisk.h
- header-test- += linux/omap3isp.h
- header-test- += linux/omapfb.h
- header-test- += linux/patchkey.h
-@@ -59,9 +56,6 @@ header-test- += linux/v4l2-mediabus.h
- header-test- += linux/v4l2-subdev.h
- header-test- += linux/videodev2.h
- header-test- += linux/vm_sockets.h
--header-test- += misc/ocxl.h
--header-test- += mtd/mtd-abi.h
--header-test- += mtd/mtd-user.h
- header-test- += scsi/scsi_bsg_fc.h
- header-test- += scsi/scsi_netlink.h
- header-test- += scsi/scsi_netlink_fc.h
-@@ -108,7 +102,6 @@ header-test- += linux/bpf_perf_event.h
- endif
- 
- ifeq ($(SRCARCH),s390)
--header-test- += asm/runtime_instr.h
- header-test- += asm/zcrypt.h
- endif
- 
-@@ -116,7 +109,6 @@ ifeq ($(SRCARCH),sparc)
- header-test- += asm/stat.h
- header-test- += asm/uctx.h
- header-test- += asm/fbio.h
--header-test- += asm/openpromio.h
- endif
- 
- # asm-generic/*.h is used by asm/*.h, and should not be included directly
--- 
-2.17.1
-
+CU
+Uli
