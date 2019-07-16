@@ -2,136 +2,103 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECC3C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1680C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7CA21848
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C3D2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="IjIS2Qfw";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="IpKq61KZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb+pTSaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388787AbfGPUkH (ORCPT
+        id S2388609AbfGPUna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:40:07 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49604 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728535AbfGPUkH (ORCPT
+        Tue, 16 Jul 2019 16:43:30 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:39782 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPUna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:40:07 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A3C21C2510;
-        Tue, 16 Jul 2019 20:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563309606; bh=uJPRBJxggYs33I+/ZcgNHmE1IKEOjOEO4hSN1Tcc3u8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=IjIS2QfwkNc2fdfVqGCLVxdi6SjqtdZFawliezM9PXkO8D2UJ2LnGpscxnJDTws7W
-         sRAHXNnIL+bucoCv9trpQqk/E8WVr922vRCbYSPMSO+dJOeNe+EswTSzNwN4PzYAqw
-         na8gvCf8Qvz3b8IhIv+tTBABRvcA10GPyx/6kM1Ck+PGL/n6pF7Jh9ckEsF/iMHEoJ
-         h9Ou3tbo3/7qfJMAB9hVs8CfUxmc+DvAEV6wAEd5TR0k0aBmzIRNTZQ0SkcGQLbPH5
-         paCE4m7zhTZFDkEtYwXGFafblbIGbRmjkL29FzkrbVgSevcUMF6bCcgxIz6ji/c32e
-         YX4osmFh5ofOQ==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 5ABC7A023B;
-        Tue, 16 Jul 2019 20:40:03 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 16 Jul 2019 13:39:46 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 16 Jul 2019 13:39:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gm1hGCvTbdhXBCyKVDJwwIBmjctIgWlmjHXtIPZGXniJG0GJ3LD+guFyTXLLYVqHUJB7UV+KHfyfJo1d+AnqDEbqvKolQ8w7C754Baznu7Ayz/rz2NPlqhHvPjgkSz6xD45wYvE0W5SPLd8eqWHX3mTIP6lhIJFRrHifHjM3iJGAuFsqnR5a6OgryQhRwRP5adxoexHcZOFWFIdjvZLp7rQZC8T/3OGUiu25dLhkU1dT8OcI8ulfOobY7RmfHCosQMfzSBOPZiqeQuuRWkqkNul1Ie3UmWR8CThO7uVRGgQiVl8129TpDAE7kvPc4dwW+u7izUD0bTqNdG5ev+pC7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uJPRBJxggYs33I+/ZcgNHmE1IKEOjOEO4hSN1Tcc3u8=;
- b=nhTraMxgixS407YodU77VyW/af+whYPPH25WpDvucKUeaWUlE4HjZEIpnHxu0DLguWWuPxHpElkat7g3xPcXPL5pw5VkzE2f5uSe3fb/jepxiibg+23TmNvEDPd5/bREH8Xwsi8kTOBIC2GjwxOgFXbpU9ZoYhSoBMyWphF1gdOEoB0SpViGKsFSgcylWlS5ZTFzeydO5+8Rg3xi/rpz9o+GJURULaPYdOqYeAIS5+n+achdkumzkYvgRh16E9xs4cD9v+wxNN/O9/sBFcwQnv2RTCzq7DHUIWTXA4QJSGP/u/3AaljFpUjCFJ1u7kKYw2TP/6wK0CpJ+MFBZ7GjiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
+        Tue, 16 Jul 2019 16:43:30 -0400
+Received: by mail-qt1-f182.google.com with SMTP id l9so21049608qtu.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 13:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uJPRBJxggYs33I+/ZcgNHmE1IKEOjOEO4hSN1Tcc3u8=;
- b=IpKq61KZlXmw7sNfwPG3rfXs8XhKuPYyMp1++pE/+7i3V5h/XR/EO3vEcRdiyZzIdlJ065bX5Z7xU6eSEq3NDwDLvpC5Y9P4rWif4J8J32muYmO8rErYwBlLGo4wsaLgLm7f2+SN6tQWMIm1o0w+u8fdjP58lJDQfGXTY/euNiY=
-Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
- BN6PR1201MB0227.namprd12.prod.outlook.com (10.174.239.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Tue, 16 Jul 2019 20:39:43 +0000
-Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
- ([fe80::24a0:9726:b1f7:fb3c]) by BN6PR1201MB0035.namprd12.prod.outlook.com
- ([fe80::24a0:9726:b1f7:fb3c%11]) with mapi id 15.20.2073.012; Tue, 16 Jul
- 2019 20:39:43 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-Subject: Re: [GIT PULL] ARC updates for 5.3-rc1
-Thread-Topic: [GIT PULL] ARC updates for 5.3-rc1
-Thread-Index: AQHVPBRCHpBudYy3jUKEd/4lOklWzqbNtQaA
-Date:   Tue, 16 Jul 2019 20:39:43 +0000
-Message-ID: <c370f648-b9f6-a845-d3cd-170fc3ae8c2f@synopsys.com>
-References: <99fc2ead-d7d8-1c54-b493-02e79e2fc24e@synopsys.com>
-In-Reply-To: <99fc2ead-d7d8-1c54-b493-02e79e2fc24e@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-x-originating-ip: [198.182.56.5]
-x-clientproxiedby: BYAPR01CA0042.prod.exchangelabs.com (2603:10b6:a03:94::19)
- To BN6PR1201MB0035.namprd12.prod.outlook.com (2603:10b6:405:4d::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f68dc419-1807-47af-cc9b-08d70a2dbb4a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR1201MB0227;
-x-ms-traffictypediagnostic: BN6PR1201MB0227:
-x-microsoft-antispam-prvs: <BN6PR1201MB02274557095A7E4B963E5380B6CE0@BN6PR1201MB0227.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(366004)(396003)(346002)(39860400002)(189003)(199004)(6486002)(6436002)(7736002)(31696002)(229853002)(305945005)(3846002)(4326008)(65826007)(478600001)(6116002)(64756008)(25786009)(2906002)(76176011)(66946007)(6506007)(446003)(53936002)(6246003)(64126003)(65806001)(65956001)(81166006)(81156014)(8676002)(66066001)(8936002)(186003)(476003)(486006)(26005)(256004)(31686004)(102836004)(68736007)(4744005)(2616005)(66556008)(5660300002)(71200400001)(66476007)(6916009)(11346002)(52116002)(316002)(36756003)(14454004)(66446008)(58126008)(86362001)(54906003)(71190400001)(99286004)(386003)(53546011)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0227;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CX3p5MLgre0+Gv2IGZdTvvzIzHyy0sh/qSVHsuZa2knuT54iJIYuSXflzj1Zar+WXa948iyN9enhKQUsbNlf2jHgSjEkYkT14p4EB5lLeleMT5R4bXkUliVV8hvp21AjmxISAwOanwj08FfnVwcnIGXwNv8s9hUPM8a5/qgzicdufP7F6WZG/AVb5xVbOeq76AveZ9t1yBbSU0xTKZsJX/osaZJB83fp6fwnIo/Wg72ixTcodzx88Wcwk5Qna1lEkL8ILHdpSqPWT4C8Rzjpvxqm0ObudtxArnjxHVWECA9mbZh2t+FessCYIL9unAzAJDzSJ3K9JuCCsnIGeXI94cXcAktxrMtRXJ9IVouz2YQQIARzZvRtpESzRpiGdArR3+xcznDnSSQvf3RSjEWHYqC88UWFiNWxQw2gaKOOghM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <488DE52987D7694EA6B1E44D4ADDC859@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NsI9sHwk7SiGJWJO0rcF5KElYA0lXlmxFOmec+tKj2A=;
+        b=Rb+pTSaWWIU4FjIlSnAhpf/UtxZdw1GPJD1ZG2QrIlL5kPxoZQoYwgj4LH5h1wIGVO
+         O9lcQb32qbqfAW4fmwwaK1IpktbQTBBRtgkn+XfoUYR7oc5yubMRgNeCQ8Dagm1ZJH32
+         HMsfxc+w3pm+jyTEFdeWpBIPD5vud3TPbcSR9qI/Y7haITlswPmhuz+u5j52L+7p05AN
+         tPb/Saqz2lfqOVqTSMJ+PoRAz76CUehuEooq9oARlqpEmw4MrxHhc0xwVL4N4Uwvvdwo
+         UXAyOS1fdREBhiwrB3wcskvnbmhEkhGaVKF5ybz565JXfk5OIHBBrKC1sMf6P778bJau
+         ckEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NsI9sHwk7SiGJWJO0rcF5KElYA0lXlmxFOmec+tKj2A=;
+        b=ob7RqBcAq/hNXSO3BaM1f7x8ZkFvlClULc/IR7BGt2cIW1ZA2CnIA4N2PIp1FFFX2w
+         ifUFE7UQVC8bgfwwuodqVEsHvNsydKuqhFC55eetnK8BnmPLLfZ/JRWtT+yywvBFlqZ7
+         qR1bLO6eNbCBdgvoe9P5QX2l5AcWXWEdTbCFXQ0zbXG4lg+QX7bbVpAeSxzNnyjGCF/a
+         kFUEf7m8G6a7pJpSJujxgIO+BOSIZXZhc09h/Djrni9PrjV24/Yg4QHLhgQS8W7lti7n
+         yr4QCK3ZlFkefC0675yrwJdYt++UoThJbSOKGihtzWfeAbYa2ojrYhd9wvWCZeoIxDSI
+         QZHw==
+X-Gm-Message-State: APjAAAUacVhANiXS0N0Mc3PCmZiUvJaNgB3z/F83LpQuM5D9dBohxryF
+        rzSWDqzM8TFTOhB7KQOA+34=
+X-Google-Smtp-Source: APXvYqyPUmHTAYc6s4b/2Pj3qBOUc9jC4oPGzFcgndVL5zZAjQD41iCuQFa4ngu21cbm3+xsi2zvPg==
+X-Received: by 2002:ac8:3f81:: with SMTP id d1mr24787497qtk.5.1563309809427;
+        Tue, 16 Jul 2019 13:43:29 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-184-65.3g.claro.net.br. [179.240.184.65])
+        by smtp.gmail.com with ESMTPSA id r4sm7575167qtt.51.2019.07.16.13.43.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 13:43:28 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4036B40340; Tue, 16 Jul 2019 17:43:24 -0300 (-03)
+Date:   Tue, 16 Jul 2019 17:43:24 -0300
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [Patch] perf stat: always separate stalled cycles per insn
+Message-ID: <20190716204324.GH3624@kernel.org>
+References: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
+ <20190520065906.GC8068@krava>
+ <CAM_iQpXoD3YzkUzyLSF9qKLpbGxXVeOdFccLbv-mCTVfshx-2w@mail.gmail.com>
+ <20190528191102.GD13830@kernel.org>
+ <CAM_iQpWxAYqUsC8TEOfhp12d8gbLmJ+xpLmcE_DwTV7gKm6_ww@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f68dc419-1807-47af-cc9b-08d70a2dbb4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 20:39:43.0690
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0227
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpWxAYqUsC8TEOfhp12d8gbLmJ+xpLmcE_DwTV7gKm6_ww@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xNi8xOSAxOjIyIFBNLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+IEhpIExpbnVzLA0KPiAN
-Cj4gQnVuY2ggb2YgY2hhbmdlcyBmb3IgQVJDLCBzb21lIGxvbmcgZHVlLCBmb3IgdGhlIG5ldyBy
-ZWxlYXNlLiBQbGVhc2UgcHVsbC4NCj4gDQo+IFRoeCwNCj4gLVZpbmVldA0KDQpTb3JyeSBhbG1v
-c3QgZm9yZ290LCB5b3Ugd291bGQgcnVuIGludG8gc29tZSBtZXJnZSBjb25mbGljdCBkdWUgdG8g
-Y29sbGlzaW9ucw0KYmV0d2VlbiBkb19wYWdlX2ZhdWx0KCkgcmV3b3JrIGFuZCBmb3JjZV9zaWdf
-ZmF1bHQoKSBhcmd1bWVudCBjaGFuZ2UsIGJ1dCBzaG91bGQNCmJlIGVhc3kgdG8gcmVzb2x2ZS4g
-SSdsbCBnaXZlIGl0IGFsbCBhIHNwaW4gb25jZSB1IG1lcmdlIGl0Lg0KDQpUaHgsDQotVmluZWV0
-DQo=
+Em Tue, Jul 16, 2019 at 12:24:41PM -0700, Cong Wang escreveu:
+> Hi, Arnaldo
+> 
+> On Tue, May 28, 2019 at 12:11 PM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> > Em Tue, May 28, 2019 at 11:21:38AM -0700, Cong Wang escreveu:
+> > > Thanks for reviewing it. Is there anyone takes this patch?
+> >
+> > Enough time, acked already, picking it.
+> 
+> Where is this patch landed? I don't see it in Linus tree. I guess you
+> are still holding it somewhere?
+
+Got it now, will push upstream in the next batch, sorry for the delay.
+
+- Arnaldo
