@@ -4,64 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEC9C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81F1C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2CC20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50B320659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563301106;
-	bh=ibIzwDrMEg7O1tz0RohdZG9NDGmR8rHKZ4qhn4NsXww=;
+	s=default; t=1563301111;
+	bh=vRekJ511YQxzaA6GBXbmteyzC16Ok2DIQfXQpiykRwM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=MNO+YdZedqGxTbLSKXOymfQ3XBdcFooq7kuVLumJBdzcFlnBvV5pO32egszMUyR8k
-	 p8AwNs1cXcQ4f8MjMYkl7MueG7JAkC+h7M9AnXLAE7xQqu84BXDFfOcy66QZB/Sav0
-	 LkMnROBI5kNKwEPfLd8NCWO0/jADPCRBzmub8G48=
+	b=YIwE2Q3jxMaillJ+s4WUvDPQq7xqLAI6ia0sKyHIO6spXwhU54mONb2BlR7NQFCv9
+	 SCtHiLej16b2IzerwxAxWreTzlozQ6zp0jeGJJsNQzqFM+aqDRff1xpgn4sjeI21zv
+	 CT99a9AtQiKpDq+KIWgYVB/gmor0m9dzdvbOrTGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388470AbfGPSSZ (ORCPT
+        id S2388425AbfGPSSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:18:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58906 "EHLO
+        Tue, 16 Jul 2019 14:18:21 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58812 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388395AbfGPSSX (ORCPT
+        with ESMTP id S2387934AbfGPSSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:18:23 -0400
+        Tue, 16 Jul 2019 14:18:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=xOHLMbPHcvk/YRwlG+YY9Bb912WwVjs7eTKG7HprBsM=; b=doRmbBl4T5Vm
-        XJF2E97u+PTQktb2V5HfOnEhZe7WzthGej+bwRvTUpFsioo/DdDLS86rgGySUJN0XR69jKzrcnvO2
-        60DhCmz7e54fmD6pjx0TGgCWFcRWtVQTBUTcxrHG4SK5gEz5m75kdpKimTRGwwvCE5fq8VSsYoASQ
-        1f8qg=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=gl/ER3CAc9iTxDNrHUNt6+9/WROXYL+w+kSUpiBqivc=; b=axxkLtX5JNM8
+        mNI/ezOy25a8BZYGExyaoMCLNOkzdg7eYdde1UaAGnb/VhfictcWVj4LMbH5HL+DBslPLxn5eTbf2
+        JZmUvIG3p0Z8LruUGT53rTcx+C5LocKEHZst1TiVazGX3xLvCk/4LPC0E61ZYtmiB8TgjnSoc4Sc9
+        GqANQ=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hnS1i-0005yk-JC; Tue, 16 Jul 2019 18:18:10 +0000
+        id 1hnS1m-0005yw-Tf; Tue, 16 Jul 2019 18:18:15 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 324D02742BD4; Tue, 16 Jul 2019 19:18:08 +0100 (BST)
+        id B1E0E2742BD4; Tue, 16 Jul 2019 19:18:13 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        cheng.shengyu@zte.com.cn, Jaroslav Kysela <perex@perex.cz>,
-        krzk@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        lgirdwood@gmail.com, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        perex@perex.cz, Sangbeom Kim <sbkim73@samsung.com>,
-        sbkim73@samsung.com, s.nawrocki@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Takashi Iwai <tiwai@suse.com>, tiwai@suse.com,
-        wang.yi59@zte.com.cn, xue.zhihong@zte.com.cn
-Subject: Applied "ASoC: samsung: odroid: fix a double-free issue for cpu_dai" to the asoc tree
-In-Reply-To: <1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     broonie@kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Mark Brown <broonie@kernel.org>, wens@csie.org
+Subject: Applied "regulator: axp20x: fix DCDCA and DCDCD for AXP806" to the regulator tree
+In-Reply-To: <20190713090717.347-2-jernej.skrabec@siol.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190716181808.324D02742BD4@ypsilon.sirena.org.uk>
-Date:   Tue, 16 Jul 2019 19:18:08 +0100 (BST)
+Message-Id: <20190716181813.B1E0E2742BD4@ypsilon.sirena.org.uk>
+Date:   Tue, 16 Jul 2019 19:18:13 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: samsung: odroid: fix a double-free issue for cpu_dai
+   regulator: axp20x: fix DCDCA and DCDCD for AXP806
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,65 +87,53 @@ to this mail.
 Thanks,
 Mark
 
-From 2abee12c0ab1924a69993d2c063a39a952e7d836 Mon Sep 17 00:00:00 2001
-From: Wen Yang <wen.yang99@zte.com.cn>
-Date: Sat, 13 Jul 2019 11:46:15 +0800
-Subject: [PATCH] ASoC: samsung: odroid: fix a double-free issue for cpu_dai
+From 1ef55fed9219963359a7b3bc7edca8517c6e45ac Mon Sep 17 00:00:00 2001
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Date: Sat, 13 Jul 2019 11:07:16 +0200
+Subject: [PATCH] regulator: axp20x: fix DCDCA and DCDCD for AXP806
 
-The cpu_dai variable is still being used after the of_node_put() call,
-which may result in double-free:
+Refactoring of the driver introduced bugs in AXP806's DCDCA and DCDCD
+regulator definitions.
 
-        of_node_put(cpu_dai);            ---> released here
+In DCDCA case, AXP806_DCDCA_1120mV_STEPS was obtained by subtracting
+0x47 and 0x33. This should be 0x14 (hex) and not 14 (dec).
 
-        ret = devm_snd_soc_register_card(dev, card);
-        if (ret < 0) {
-...
-                goto err_put_clk_i2s;    --> jump to err_put_clk_i2s
-...
+In DCDCD case, axp806_dcdcd_ranges[] contains two ranges with same
+start and end macros, which is clearly wrong. Second range starts at
+1.6V so it should use AXP806_DCDCD_1600mV_[START|END] macros. They are
+already defined but unused.
 
-err_put_clk_i2s:
-        clk_put(priv->clk_i2s_bus);
-err_put_sclk:
-        clk_put(priv->sclk_i2s);
-err_put_cpu_dai:
-        of_node_put(cpu_dai);            --> double-free here
-
-Fixes: d832d2b246c5 ("ASoC: samsung: odroid: Fix of_node refcount unbalance")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn
+Fixes: db4a555f7c4c ("regulator: axp20x: use defines for masks")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://lore.kernel.org/r/20190713090717.347-2-jernej.skrabec@siol.net
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/samsung/odroid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/axp20x-regulator.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index 64ebe895cdd7..f0f5fa9c27d3 100644
---- a/sound/soc/samsung/odroid.c
-+++ b/sound/soc/samsung/odroid.c
-@@ -308,7 +308,6 @@ static int odroid_audio_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(priv->clk_i2s_bus);
- 		goto err_put_sclk;
- 	}
--	of_node_put(cpu_dai);
- 
- 	ret = devm_snd_soc_register_card(dev, card);
- 	if (ret < 0) {
-@@ -316,6 +315,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
- 		goto err_put_clk_i2s;
- 	}
- 
-+	of_node_put(cpu_dai);
- 	of_node_put(codec);
- 	return 0;
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 152053361862..c951568994a1 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -240,7 +240,7 @@
+ #define AXP806_DCDCA_600mV_END		\
+ 	(AXP806_DCDCA_600mV_START + AXP806_DCDCA_600mV_STEPS)
+ #define AXP806_DCDCA_1120mV_START	0x33
+-#define AXP806_DCDCA_1120mV_STEPS	14
++#define AXP806_DCDCA_1120mV_STEPS	20
+ #define AXP806_DCDCA_1120mV_END		\
+ 	(AXP806_DCDCA_1120mV_START + AXP806_DCDCA_1120mV_STEPS)
+ #define AXP806_DCDCA_NUM_VOLTAGES	72
+@@ -774,8 +774,8 @@ static const struct regulator_linear_range axp806_dcdcd_ranges[] = {
+ 			       AXP806_DCDCD_600mV_END,
+ 			       20000),
+ 	REGULATOR_LINEAR_RANGE(1600000,
+-			       AXP806_DCDCD_600mV_START,
+-			       AXP806_DCDCD_600mV_END,
++			       AXP806_DCDCD_1600mV_START,
++			       AXP806_DCDCD_1600mV_END,
+ 			       100000),
+ };
  
 -- 
 2.20.1
