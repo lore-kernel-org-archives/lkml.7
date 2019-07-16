@@ -2,104 +2,179 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985BDC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A303C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7101621743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5882064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563317830;
-	bh=3FziCkUhkic52Bz0GkIpF1K3lMHEHAHMOGGv+yHGAuw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HMamwFbA7HNw818hBBIoSpnCpRs31LDbxK6OhNZK+S6Qkl2P1UktFsuUpqslTDrNq
-	 7rsrN8wTqKOHpj8DaebS2oxaK9iet5ks4nK/A2xKvWp6OE5LVdLttoCgoO8oWOvLD+
-	 uKuPoFMD/8PPbIZp69T6TxHdm+AZliHkAV/RmCv8=
+	s=default; t=1563317896;
+	bh=d1OeQPUJdeASxkXJhbuVtavZaIFUc48bnqlVnewI5kg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yzfb67aXD8YdYau3hlMR2EWGX09VduKh9lDyqHZaXbjXbRypmwQR4b5+VuddOt9zr
+	 gsPSRp7LJGxdQPYBsfXl2K/JYUA4JW4lMsd/12PhCdKwbow6s03tYEtETtWPwLrVmm
+	 FopVt3rcedfGCegmNiMsqaUi7N4O2vbtuXtrz4iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbfGPW5J (ORCPT
+        id S2388925AbfGPW6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:57:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731273AbfGPW5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:57:09 -0400
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE99721842;
-        Tue, 16 Jul 2019 22:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563317828;
-        bh=3FziCkUhkic52Bz0GkIpF1K3lMHEHAHMOGGv+yHGAuw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tHIuxFwbQhJ6bqRks348x26fjUooue674tNCmsDNaF7YctEzbVuTeO4vbdxLe5cLE
-         wr2dq4jGaVUuCBnAoPYfd5xhW8mPFOUrjiBVZ3pH1dpKxA3QNaKy9G2tZvThaVsBDo
-         xaqSPELdUJF49m3HgBXf5Is5Oh9fRrCtyJt9U1co=
-Received: by mail-qk1-f180.google.com with SMTP id s22so15963969qkj.12;
-        Tue, 16 Jul 2019 15:57:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAV31bEK6SvV0nr0QjaAf4DZdvldR/3Ek1uDcLKhpktjRpTSjGbQ
-        Pv64Vx1F5EooBssnnA1EObH9bNPP7Zck9Qe1pA==
-X-Google-Smtp-Source: APXvYqwIhgBe3UyiAiUUqKGCswul0dCV5zLkXb+CtviKLJPbKPZ2Qp20piCgEBRULt10Vr9A8Ukl3eOF7cL98pjlPQY=
-X-Received: by 2002:a37:a44a:: with SMTP id n71mr22553428qke.393.1563317827063;
- Tue, 16 Jul 2019 15:57:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
- <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
- <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
- <9e75b3dd-380b-c868-728f-46379e53bc11@gmail.com> <07812739-0e6b-6598-ac58-8e0ea74a3331@gmail.com>
- <CAGETcx8YCCGxgXnByenVUb+q8pHPPTjwAjK3L_+9mwoCe=9SbA@mail.gmail.com> <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
-In-Reply-To: <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 16 Jul 2019 16:56:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
-Message-ID: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
- DT bindings
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Tue, 16 Jul 2019 18:58:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36412 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbfGPW6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:58:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so16092849wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DnTaPvcy0KH7cH1iTW8cw8f8cSszGtQ1CMxkqbquSDQ=;
+        b=JcTtUh3UyN0H1+1xtHih7oZdy0jeBMQDuwMRgHxAJ0Az+HckuhrGL+0KsBCQ8CBnrr
+         E2dLU7l3yhZAO02n/0osX8p29AWcdPqFfmjqgCg3QJj3Dw/57WSeveEmcJoZuuLzZvgb
+         r50XK9Pm64rZhbNkdYbT8JpnS1P5oJx/I7rSmy8CyfSS7XyTbczD0l96/XcTRAxHQZoV
+         03cE/AgRuOXE9AsASBh+Jx/aSYvH2dd5YI77PqL9ObTfaeVxfFAxg+sist6elsYWZkVC
+         l0fAvXkAfaDeWkOsIwleRw1VBrcIgjo10xzIlbSyOprghtLspVbZXQ1dzR+Z3png82oL
+         RcDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DnTaPvcy0KH7cH1iTW8cw8f8cSszGtQ1CMxkqbquSDQ=;
+        b=D+m/0LR9HSesoP3DWsRH89K0qdlOh+Cs1PpLAt8LI5VNXk6WsFg2QldOewvfhxJlFF
+         XOlKRpDZ1FlBQhHWTLYCFsxlmBq95ge8Yh4FgDhaiawware8oN/ssNoKvLPTFpUL0Zc1
+         fK3t1U3bKC/sdarwIbJRWCcHK8RVPXAIknD8r+hZQTwpoiB1LraxrUspNS54u31MQiJz
+         MGf3vYyi9H+BGG1kmVL9ZmmdroB3OwxmVXgo8zuEThIdTHMyQOtjhEttrotZWx7x1ORQ
+         B1RNcs17FDJR+Yx3pFIDV2jMggIEjWA1RBTL3gAt1E1941AjNKz8c/uEC8uhMrHeQmum
+         yISg==
+X-Gm-Message-State: APjAAAXAUxxrFNFWbcGXzEAHNGBfWPf57+2sR7EN5N3XFPy+VE8XQZNf
+        y5MPdceQti9p3/J0euqGbA7TJaCM
+X-Google-Smtp-Source: APXvYqyTAbi/PI1AfOMly+pE6fA0FLxhsNEKujDD8AbQa12uw+wAVxsDogo6v7LYRBl3VsdpNXqfWA==
+X-Received: by 2002:a7b:c215:: with SMTP id x21mr32543226wmi.38.1563317892239;
+        Tue, 16 Jul 2019 15:58:12 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id e19sm30406864wra.71.2019.07.16.15.58.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 15:58:11 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 00:58:09 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linuxfoundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <clark.williams@gmail.com>,
+        Julia Cartwright <julia@ni.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
+Message-ID: <20190716225809.GA50617@gmail.com>
+References: <20190715150402.798499167@linutronix.de>
+ <20190715150601.205143057@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715150601.205143057@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 7:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 7/15/19 11:40 AM, Saravana Kannan wrote:
-> > Replying again because the previous email accidentally included HTML.
-> >
-> > Thanks for taking the time to reconsider the wording Frank. Your
-> > intention was clear to me in the first email too.
-> >
-> > A kernel command line option can also completely disable this
-> > functionality easily and cleanly. Can we pick that as an option? I've
-> > an implementation of that in the v5 series I sent out last week.
->
-> Yes, Rob suggested a command line option for debugging, and I am fine with
-> that.  But even with that, I would like a lot of testing so that we have a
-> chance of finding systems that have trouble with the changes and could
-> potentially be fixed before impacting a large number of users.
 
-Leaving it in -next for more than a cycle will not help. There's some
-number of users who test linux-next. Then there's more that test -rc
-kernels. Then there's more that test final releases and/or stable
-kernels. Probably, the more stable the h/w, the more it tends to be
-latter groups. (I don't get reports of breaking PowerMacs with the
-changes sitting in linux-next.)
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-My main worry about this being off by default is it won't get tested.
-I'm not sure there's enough interest to drive folks to turn it on and
-test. Maybe it needs to be on until we see breakage.
+> Add a new entry to the preemption menu which enables the real-time support
+> for the kernel. The choice is only enabled when an architecture supports
+> it.
+> 
+> It selects PREEMPT as the RT features depend on it. To achieve that the
+> existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
+> well.
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/Kconfig           |    3 +++
+>  kernel/Kconfig.preempt |   25 +++++++++++++++++++++++--
+>  2 files changed, 26 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -809,6 +809,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
+>  config ARCH_NO_PREEMPT
+>  	bool
+>  
+> +config ARCH_SUPPORTS_RT
+> +	bool
+> +
+>  config CPU_NO_EFFICIENT_FFS
+>  	def_bool n
+>  
+> --- a/kernel/Kconfig.preempt
+> +++ b/kernel/Kconfig.preempt
+> @@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
+>  
+>  	  Select this if you are building a kernel for a desktop system.
+>  
+> -config PREEMPT
+> +config PREEMPT_LL
+>  	bool "Preemptible Kernel (Low-Latency Desktop)"
+>  	depends on !ARCH_NO_PREEMPT
+> -	select PREEMPT_COUNT
+> +	select PREEMPT
+>  	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
+>  	help
+>  	  This option reduces the latency of the kernel by making
+> @@ -55,7 +55,28 @@ config PREEMPT
+>  	  embedded system with latency requirements in the milliseconds
+>  	  range.
+>  
+> +config PREEMPT_RT
+> +	bool "Fully Preemptible Kernel (Real-Time)"
+> +	depends on EXPERT && ARCH_SUPPORTS_RT
+> +	select PREEMPT
+> +	help
+> +	  This option turns the kernel into a real-time kernel by replacing
+> +	  various locking primitives (spinlocks, rwlocks, etc) with
 
-Rob
+s/etc/etc.
+
+> +	  preemptible priority-inheritance aware variants, enforcing
+> +	  interrupt threading and introducing mechanisms to break up long
+> +	  non-preemtible sections. This makes the kernel, except for very
+
+s/preemtible/preemptible
+
+> +	  low level and critical code pathes (entry code, scheduler, low
+> +	  level interrupt handling) fully preemtible and brings most
+
+s/preemtible/preemptible
+
+> +	  execution contexts under scheduler control.
+> +
+> +	  Select this if you are building a kernel for systems which
+> +	  require real-time guarantees.
+
+Nice to see this getting started! :-)
+
+Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
