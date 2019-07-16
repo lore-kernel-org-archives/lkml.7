@@ -2,359 +2,89 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B5BC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB04EC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6522206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8829B206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w024gHcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbfGPVkc (ORCPT
+        id S2387594AbfGPVm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 17:40:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44926 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbfGPVk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 17:40:29 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C82DD3022462;
-        Tue, 16 Jul 2019 21:40:28 +0000 (UTC)
-Received: from redhat.com (dhcp-17-153.bos.redhat.com [10.18.17.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5B905DAAC;
-        Tue, 16 Jul 2019 21:40:24 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 17:40:23 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Pitre <nico@fluxnic.net>, linux-doc@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v2 08/11] kbuild: create *.mod with full directory path
- and remove MODVERDIR
-Message-ID: <20190716214023.GA15159@redhat.com>
-References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
- <20190711054434.1177-9-yamada.masahiro@socionext.com>
+        Tue, 16 Jul 2019 17:42:29 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42150 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbfGPVm3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 17:42:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t28so21457196lje.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qWj58+e/GjA5oMIqEIz1bPYBPJn9YmCmo/2qZtRrpEc=;
+        b=w024gHcn0gesOXAZgGhjMOSeHWAdbhYgBj5nJQy3TyzpuVcOUB0dpA/Rf+UZfQe+Us
+         uqcVDbPLMYbUQ2+IC4rDAMPid53e8k9hw46TcnYvmJsMsfwuPR4zZtE0wKslCRXWiUFo
+         eyGgE8NxI9ZDEjDa3FEgobW/1xAd2/6zVSEUhlKRFj0X0t4/y8oqu3t6JeZdywvWDXUB
+         dqwzq/TlOoNUg/8u8ngdBqU+p6P+ury1IzDezKULQRL83FnNEoTqvGnA+45ZMnZrygfu
+         U5me3APF1mYNJAIDdQIblqKtCYqI9xHeo9W/Onltp52RLoPO+0aXdYUCiImmanz0nOmK
+         tUTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qWj58+e/GjA5oMIqEIz1bPYBPJn9YmCmo/2qZtRrpEc=;
+        b=bFtvaRJEx3xYPyZ1N8mWeAUuQi2Yn7C/cMBleqBqhSzHTsqCZXMFeP+RfZm3WS6i3g
+         sN7wMIg/fGU7jRMCusnm6GBIAi0MMpY33c/IsyhWIF/HPbOm0EYCWhTnN220x5Yn/m/H
+         zge2DUrxcNtS9rG6jlhVA8PSHoR6Mm92DPocwErblbVaAwSzq25YWfTBXyoNMorjiVCG
+         cRErqtU/IFAk3cf6J83vn0SgB5Eomg/c3l9Svw46aP6Ym0notYCBe0GTwaRn7wQafQp/
+         Dyd6auJgwdmWxGbAuF+Yx4QBCUx/7RRV+CHQxO6YY0PD6AcuI50b4nkwhT0l9n1bTYJ3
+         UkQg==
+X-Gm-Message-State: APjAAAX0MiLHyFiTtTxrj8pJo/J9mI9M0DEq7P/vuxLY2+Xik/5NDJNE
+        /7hK6kLZn4dnIQl/VoJf1RiqsAIIurlhWdKXBPJWsw==
+X-Google-Smtp-Source: APXvYqzBU+OF8WyuGSMhycQxTCXJMVlzUxq526tx+EUSt2YvSRHnOvaDWvH6LAh9iDOjQgOm1Pk2VmywMwT+wLy2Fvk=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr18010935ljg.62.1563313347087;
+ Tue, 16 Jul 2019 14:42:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711054434.1177-9-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 16 Jul 2019 21:40:29 +0000 (UTC)
+References: <20190710121518.GR17490@shao2-debian>
+In-Reply-To: <20190710121518.GR17490@shao2-debian>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 Jul 2019 23:42:15 +0200
+Message-ID: <CACRpkdYmtgO_E-KKE8zjA04POawJ=4RN3xFUPY__7GF+gSNbNQ@mail.gmail.com>
+Subject: Re: [gpio] f69e00bd21: unixbench.score -24.2% regression
+To:     kernel test robot <rong.a.chen@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     David Woods <dwoods@mellanox.com>,
+        Shravan Kumar Ramani <sramani@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKP <lkp@01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 02:44:31PM +0900, Masahiro Yamada wrote:
-> While descending directories, Kbuild produces objects for modules,
-> but do not link final *.ko files; it is done in the modpost.
-> 
-> To keep track of modules, Kbuild creates a *.mod file in $(MODVERDIR)
-> for every module it is building. Some post-processing steps read the
-> necessary information from *.mod files. This avoids descending into
-> directories again. This mechanism was introduced in 2003 or so.
-> 
-> Later, commit 551559e13af1 ("kbuild: implement modules.order") added
-> modules.order. So, we can simply read it out to know all the modules
-> with directory paths. This is easier than parsing the first line of
-> *.mod files.
-> 
-> $(MODVERDIR) has a flat directory structure, that is, *.mod files
-> are named only with base names. This is based on the assumption that
-> the module name is unique across the tree. This assumption is really
-> fragile.
-> 
-> Stephen Rothwell reported a race condition caused by a module name
-> conflict:
-> 
->   https://lkml.org/lkml/2019/5/13/991
-> 
-> In parallel building, two different threads could write to the same
-> $(MODVERDIR)/*.mod simultaneously.
-> 
-> Non-unique module names are the source of all kind of troubles, hence
-> commit 3a48a91901c5 ("kbuild: check uniqueness of module names")
-> introduced a new checker script.
-> 
-> However, it is still fragile in the build system point of view because
-> this race happens before scripts/modules-check.sh is invoked. If it
-> happens again, the modpost will emit unclear error messages.
-> 
-> To fix this issue completely, create *.mod in the same directory as
-> *.ko so that two threads never attempt to write to the same file.
-> $(MODVERDIR) is no longer needed.
-> 
-> Since modules with directory paths are listed in modules.order, Kbuild
-> is still able to find *.mod files without additional descending.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Acked-by: Nicolas Pitre <nico@fluxnic.net>
-> ---
-> 
-> Changes in v2:
->  - Remove -r of xargs, which is a GNU extension
->  - Add '--' for extra safety
-> 
->  .gitignore                  |  1 +
->  Documentation/dontdiff      |  1 +
->  Makefile                    | 20 +++-----------------
->  scripts/Makefile.build      |  8 ++------
->  scripts/Makefile.modpost    |  4 ++--
->  scripts/adjust_autoksyms.sh | 11 ++++-------
->  scripts/mod/sumversion.c    | 16 +++-------------
->  scripts/package/mkspec      |  2 +-
->  8 files changed, 17 insertions(+), 46 deletions(-)
-> 
-> diff --git a/.gitignore b/.gitignore
-> index 7587ef56b92d..8f5422cba6e2 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -30,6 +30,7 @@
->  *.lz4
->  *.lzma
->  *.lzo
-> +*.mod
->  *.mod.c
->  *.o
->  *.o.*
-> diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-> index 5eba889ea84d..9f4392876099 100644
-> --- a/Documentation/dontdiff
-> +++ b/Documentation/dontdiff
-> @@ -30,6 +30,7 @@
->  *.lzo
->  *.mo
->  *.moc
-> +*.mod
->  *.mod.c
->  *.o
->  *.o.*
-> diff --git a/Makefile b/Makefile
-> index b5e21d676ee2..4243b6daffcf 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -488,11 +488,6 @@ export KBUILD_AFLAGS_MODULE KBUILD_CFLAGS_MODULE KBUILD_LDFLAGS_MODULE
->  export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
->  export KBUILD_ARFLAGS
->  
-> -# When compiling out-of-tree modules, put MODVERDIR in the module
-> -# tree rather than in the kernel tree. The kernel tree might
-> -# even be read-only.
-> -export MODVERDIR := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_versions
-> -
->  # Files to ignore in find ... statements
->  
->  export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
-> @@ -1033,7 +1028,7 @@ vmlinux-deps := $(KBUILD_LDS) $(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)
->  
->  # Recurse until adjust_autoksyms.sh is satisfied
->  PHONY += autoksyms_recursive
-> -autoksyms_recursive: $(vmlinux-deps)
-> +autoksyms_recursive: $(vmlinux-deps) modules.order
->  ifdef CONFIG_TRIM_UNUSED_KSYMS
->  	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/adjust_autoksyms.sh \
->  	  "$(MAKE) -f $(srctree)/Makefile vmlinux"
-> @@ -1117,7 +1112,6 @@ endif
->  
->  prepare1: prepare3 outputmakefile asm-generic $(version_h) $(autoksyms_h) \
->  						include/generated/utsrelease.h
-> -	$(cmd_crmodverdir)
->  
->  archprepare: archheaders archscripts prepare1 scripts
->  
-> @@ -1375,7 +1369,7 @@ endif # CONFIG_MODULES
->  # make distclean Remove editor backup files, patch leftover files and the like
->  
->  # Directories & files removed with 'make clean'
-> -CLEAN_DIRS  += $(MODVERDIR) include/ksym
-> +CLEAN_DIRS  += include/ksym
->  CLEAN_FILES += modules.builtin.modinfo
->  
->  # Directories & files removed with 'make mrproper'
-> @@ -1636,7 +1630,6 @@ PHONY += $(clean-dirs) clean
->  $(clean-dirs):
->  	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
->  
-> -clean:	rm-dirs := $(MODVERDIR)
->  clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers
->  
->  PHONY += help
-> @@ -1650,8 +1643,6 @@ help:
->  	@echo  ''
->  
->  PHONY += prepare
-> -prepare:
-> -	$(cmd_crmodverdir)
->  endif # KBUILD_EXTMOD
->  
->  clean: $(clean-dirs)
-> @@ -1662,7 +1653,7 @@ clean: $(clean-dirs)
->  		-o -name '*.ko.*' \
->  		-o -name '*.dtb' -o -name '*.dtb.S' -o -name '*.dt.yaml' \
->  		-o -name '*.dwo' -o -name '*.lst' \
-> -		-o -name '*.su'  \
-> +		-o -name '*.su' -o -name '*.mod' \
->  		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
->  		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
->  		-o -name '*.asn1.[ch]' \
-> @@ -1791,11 +1782,6 @@ quiet_cmd_depmod = DEPMOD  $(KERNELRELEASE)
->        cmd_depmod = $(CONFIG_SHELL) $(srctree)/scripts/depmod.sh $(DEPMOD) \
->                     $(KERNELRELEASE)
->  
-> -# Create temporary dir for module support files
-> -# clean it up only when building all modules
-> -cmd_crmodverdir = $(Q)mkdir -p $(MODVERDIR) \
-> -                  $(if $(KBUILD_MODULES),; rm -f $(MODVERDIR)/*)
-> -
->  # read saved command lines for existing targets
->  existing-targets := $(wildcard $(sort $(targets)))
->  
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 98dede0b2ca8..9fb30633acd2 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -67,8 +67,6 @@ ifeq ($(CONFIG_MODULES)$(need-modorder),y1)
->  modorder-target := $(obj)/modules.order
->  endif
->  
-> -# We keep a list of all modules in $(MODVERDIR)
-> -
->  __build: $(if $(KBUILD_BUILTIN),$(builtin-target) $(lib-target) $(extra-y)) \
->  	 $(if $(KBUILD_MODULES),$(obj-m) $(modorder-target)) \
->  	 $(subdir-ym) $(always)
-> @@ -278,13 +276,11 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
->  	$(call cmd,force_checksrc)
->  	$(call if_changed_rule,cc_o_c)
->  
-> -# Single-part modules are special since we need to mark them in $(MODVERDIR)
-> -
->  $(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
->  	$(call cmd,force_checksrc)
->  	$(call if_changed_rule,cc_o_c)
->  	@{ echo $(@:.o=.ko); echo $@; \
-> -	   $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
-> +	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
->  
->  quiet_cmd_cc_lst_c = MKLST   $@
->        cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
-> @@ -466,7 +462,7 @@ cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ $(filter %.o,$^) $(cmd_secanalysis
->  $(multi-used-m): FORCE
->  	$(call if_changed,link_multi-m)
->  	@{ echo $(@:.o=.ko); echo $(filter %.o,$^); \
-> -	   $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
-> +	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
->  $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
->  
->  targets += $(multi-used-m)
-> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-> index 2ab1694a7df3..3e229d4f4d72 100644
-> --- a/scripts/Makefile.modpost
-> +++ b/scripts/Makefile.modpost
-> @@ -6,8 +6,8 @@
->  # Stage one of module building created the following:
->  # a) The individual .o files used for the module
->  # b) A <module>.o file which is the .o files above linked together
-> -# c) A <module>.mod file in $(MODVERDIR)/, listing the name of the
-> -#    the preliminary <module>.o file, plus all .o files
-> +# c) A <module>.mod file, listing the name of the preliminary <module>.o file,
-> +#    plus all .o files
->  # d) modules.order, which lists all the modules
->  
->  # Stage 2 is handled by this file and does the following
-> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
-> index aab4e299d7a2..8b44bb80a451 100755
-> --- a/scripts/adjust_autoksyms.sh
-> +++ b/scripts/adjust_autoksyms.sh
-> @@ -47,13 +47,10 @@ cat > "$new_ksyms_file" << EOT
->   */
->  
->  EOT
-> -[ "$(ls -A "$MODVERDIR")" ] &&
-> -for mod in "$MODVERDIR"/*.mod; do
-> -	sed -n -e '3{s/ /\n/g;/^$/!p;}' "$mod"
-> -done | sort -u |
-> -while read sym; do
-> -	echo "#define __KSYM_${sym} 1"
-> -done >> "$new_ksyms_file"
-> +sed 's/ko$/mod/' modules.order |
-> +xargs -n1 sed -n -e '3{s/ /\n/g;/^$/!p;}' -- |
-> +sort -u |
-> +sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
->  
->  # Special case for modversions (see modpost.c)
->  if [ -n "$CONFIG_MODVERSIONS" ]; then
-> diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
-> index 0f6dcb4011a8..166f3fa247a9 100644
-> --- a/scripts/mod/sumversion.c
-> +++ b/scripts/mod/sumversion.c
-> @@ -396,21 +396,11 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen)
->  	unsigned long len;
->  	struct md4_ctx md;
->  	char *sources, *end, *fname;
-> -	const char *basename;
->  	char filelist[PATH_MAX + 1];
-> -	char *modverdir = getenv("MODVERDIR");
->  
-> -	if (!modverdir)
-> -		modverdir = ".";
-> -
-> -	/* Source files for module are in .tmp_versions/modname.mod,
-> -	   after the first line. */
-> -	if (strrchr(modname, '/'))
-> -		basename = strrchr(modname, '/') + 1;
-> -	else
-> -		basename = modname;
-> -	snprintf(filelist, sizeof(filelist), "%s/%.*s.mod", modverdir,
-> -		(int) strlen(basename) - 2, basename);
-> +	/* objects for a module are listed in the second line of *.mod file. */
-> +	snprintf(filelist, sizeof(filelist), "%.*smod",
-> +		 (int)strlen(modname) - 1, modname);
->  
->  	file = grab_file(filelist, &len);
->  	if (!file)
-> diff --git a/scripts/package/mkspec b/scripts/package/mkspec
-> index 2d29df4a0a53..8640c278f1aa 100755
-> --- a/scripts/package/mkspec
-> +++ b/scripts/package/mkspec
-> @@ -29,7 +29,7 @@ fi
->  
->  PROVIDES="$PROVIDES kernel-$KERNELRELEASE"
->  __KERNELRELEASE=$(echo $KERNELRELEASE | sed -e "s/-/_/g")
-> -EXCLUDES="$RCS_TAR_IGNORE --exclude=.tmp_versions --exclude=*vmlinux* \
-> +EXCLUDES="$RCS_TAR_IGNORE --exclude=*vmlinux* --exclude=*.mod \
->  --exclude=*.o --exclude=*.ko --exclude=*.cmd --exclude=Documentation \
->  --exclude=.config.old --exclude=.missing-syscalls.d --exclude=*.s"
->  
-> -- 
-> 2.17.1
-> 
+On Wed, Jul 10, 2019 at 2:15 PM kernel test robot <rong.a.chen@intel.com> wrote:
 
-Hi Masahiro,
+> FYI, we noticed a -24.2% regression of unixbench.score due to commit:
+> commit: f69e00bd21aa6a1961c521b6eb199137fcb8a76a ("gpio: mmio: Support two direction registers")
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-I'm following this patchset changes as they will affect the klp-convert
-series [1] that the livepatching folks have been working on...
+That's pretty bogus since the test doesn't even seem to be using GPIO.
+Further AFAIK Intel chips don't even use that driver.
 
-Just wondering if these other files should be checked for more MODVERDIR
-fallout:
+Can you provide some rootcausing?
 
-  % grep -R 'tmp_versions'
-  tools/power/cpupower/debug/kernel/Makefile:     - rm -rf .tmp_versions* Module.symvers modules.order
-  scripts/export_report.pl:    while (<.tmp_versions/*.mod>) {
-  scripts/adjust_autoksyms.sh:# .tmp_versions/*.mod files.
+If you are using GPIOs from userspace in the test somehow I am
+sure both me and Bartosz would be interested to hear how.
 
-export_report.pl is probably the only interesting one on this list.
-
-Also, can you cc me on subsequent patchset versions?
-
-Thanks,
-
--- Joe
-
-[1] https://lore.kernel.org/lkml/20190509143859.9050-1-joe.lawrence@redhat.com/
+Yours,
+Linus Walleij
