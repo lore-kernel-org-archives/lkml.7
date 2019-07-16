@@ -2,113 +2,117 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A36C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5722C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6149920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8794720693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="D/eG7DaM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j4PQFsgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387876AbfGPPnW (ORCPT
+        id S2388014AbfGPPok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:43:22 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38414 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfGPPnW (ORCPT
+        Tue, 16 Jul 2019 11:44:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39404 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728384AbfGPPok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:43:22 -0400
-Received: by mail-qt1-f196.google.com with SMTP id n11so20044360qtl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 08:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=HUkhdlpY8O9DhVB5JjD9+mrau6suzYr7ThtC/VAQnfg=;
-        b=D/eG7DaMz+K+X/j2e4WXXImKmoHdpLHwJgRufd9mo7TAVOPJir5pFKV7/huZQ3cD+l
-         69OhEbK0K9h+jPTi+FAY5PphnqNRL969QOyninB1HYW5o1FxKM1BqA7khjuErrFk7fRN
-         m8trnMFm/NTrZdjerq9StIgyik6D+SSxNCsPn5zOUoWIntQIvvad90mqBb6eaNKvRu1w
-         sEwNlyVQyOk0qUchyMmTQamM41O5rifeNjCeu6Um1o3PK/OTscBo8afbogJNIYR1dIQc
-         xB2ooykfuazI07UTNDjvMcF9iGJeJl+5trAy+RGQSR2KaubIMlwFGI/Co6RoLNKSxkFf
-         Kb3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HUkhdlpY8O9DhVB5JjD9+mrau6suzYr7ThtC/VAQnfg=;
-        b=JSsf0Tg6QCLO/qj82EE0Gpu6RvFOqivTLtBAs+DvcgzCLduRUVzLQD9ZmlcKKf/owl
-         4PnktJhlX08Er8OBWKFSH5xvMvhq2s8Xgh6gfGQ4Jv0CMnRqs3meo5dff2KrlmYzqr8X
-         VrkVk22YH6SG7pXZoy4br+pGwsOqZ5ZnlsOUJpcUcMtNRlml84ed/Dg7Agscs/saS8Jv
-         Rt+ijIEutsjAOLVtLJscVNGcVAT6du2S5fWa7yVmAuGtvWfpIOlQD9mrrE/kKs7wwRWW
-         IWDx3N2s79nlqzqgo1TX2T6Z0QtjEUvlp2SCsdxydwqdpC22pL7mS2yowil+30IQnUnA
-         xmYQ==
-X-Gm-Message-State: APjAAAXfNSDLWrKq3qFka08LTk4HH5yhJd99vfAKuCXG5MBHb4y1X879
-        yVmVbzRSjP+YbN6Ks9OA50Cluw==
-X-Google-Smtp-Source: APXvYqziF0Am/gJ6agFPVgTLL02H3QfeTA1r0+V1RqZ52+RBXRqHc+yXcYhiMN300jLtsiqUyiaX/w==
-X-Received: by 2002:ac8:275a:: with SMTP id h26mr23194639qth.345.1563291801305;
-        Tue, 16 Jul 2019 08:43:21 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id r5sm9623617qkc.42.2019.07.16.08.43.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 08:43:20 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     willemb@google.com, joe@perches.com,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH net v2] skbuff: fix compilation warnings in skb_dump()
-Date:   Tue, 16 Jul 2019 11:43:05 -0400
-Message-Id: <1563291785-6545-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 16 Jul 2019 11:44:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GFhSpo070864;
+        Tue, 16 Jul 2019 15:44:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=a4gDFTsB/LQFXl2IENlqSTWt+0C4weUdEbBefLOr+/Y=;
+ b=j4PQFsgGnRUarcjO4tIaRTYuSUWlXTvZg7j7e0jwp9FjvRFXf5Q4oUvWYiQJ90TUhMp9
+ vNPmQUTDmh3eVWcatV7w6brcmL5h2/1I7qh8WWjhmO0xYi5E7nBxucnZ4a/8aUDUClm8
+ wd+ULqhiyu7rVpCkYIHSIJj/6Hq0BuGG8Cz25fByQUAeTLUobdxZvgaOgb9sFaaGtuWl
+ p+3ikYSnls7A5U26sB+oUI1UdLcqLWuE0GEWSxknNHDoAzU+IoqPIakp/AQdUSy8TZDX
+ SUiqCTryb5Zwb+VV0P6VgC4s8QaVYxk5MrbRIDrPJSFDEl8fxQnWgjINjESljB0vUkxG bA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2tq78pnbfm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 15:44:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GFh537152637;
+        Tue, 16 Jul 2019 15:44:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tq6mmybsp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 15:44:17 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6GFiE2J001767;
+        Tue, 16 Jul 2019 15:44:14 GMT
+Received: from [192.168.1.218] (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 16 Jul 2019 15:44:13 +0000
+Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
+ padata jobs
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        boqun.feng@gmail.com, paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190716125309.GA10672@andrea>
+ <20190716150142.rebjmpjjiesaiwyt@gondor.apana.org.au>
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+Message-ID: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
+Date:   Tue, 16 Jul 2019 11:44:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190716150142.rebjmpjjiesaiwyt@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=617
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907160193
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=653 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907160193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 6413139dfc64 ("skbuff: increase verbosity when dumping skb
-data") introduced a few compilation warnings.
+On 7/16/19 11:01 AM, Herbert Xu wrote:
+> On Tue, Jul 16, 2019 at 02:53:09PM +0200, Andrea Parri wrote:
+>>
+>> P1(atomic_t *reorder_objects, spinlock_t *pd_lock, spinlock_t *reorder_lock)
+>> {
+>> 	int r1;
+>>
+>> 	spin_lock(reorder_lock);
+>> 	atomic_inc(reorder_objects);
+>> 	spin_unlock(reorder_lock);
+>> 	//smp_mb();
+>> 	r1 = spin_trylock(pd_lock);
+>> }
+> 
+> Yes we need a matching mb on the other side.  However, we can
+> get away with using smp_mb__after_atomic thanks to the atomic_inc
+> above.
+> 
+> Daniel, can you please respin the patch with the matching smp_mb?
 
-net/core/skbuff.c:766:32: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                       level, sk->sk_family, sk->sk_type,
-sk->sk_protocol);
-                                             ^~~~~~~~~~~
-net/core/skbuff.c:766:45: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                       level, sk->sk_family, sk->sk_type,
-sk->sk_protocol);
-^~~~~~~~~~~~~~~
+Sure, Herbert, will do.
 
-Fix them by using the proper types.
-
-Fixes: 6413139dfc64 ("skbuff: increase verbosity when dumping skb data")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: Drop the checkpatch fix as it seems a bit more involved that it does not
-    even like passing a variable to it, i.e., printk(level "msg"). Also,
-    print_hex_dump() seems need a fix to be complete which can probably be done
-    later.
-
- net/core/skbuff.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 6f1e31f674a3..0338820ee0ec 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -762,7 +762,7 @@ void skb_dump(const char *level, const struct sk_buff *skb, bool full_pkt)
- 		printk("%sdev name=%s feat=0x%pNF\n",
- 		       level, dev->name, &dev->features);
- 	if (sk)
--		printk("%ssk family=%hu type=%hu proto=%hu\n",
-+		printk("%ssk family=%hu type=%u proto=%u\n",
- 		       level, sk->sk_family, sk->sk_type, sk->sk_protocol);
- 
- 	if (full_pkt && headroom)
--- 
-1.8.3.1
-
+Thanks,
+Daniel
