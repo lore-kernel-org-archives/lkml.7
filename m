@@ -2,83 +2,72 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC90C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC1AC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDA12064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD0720880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J+QejSTq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIfFA/lE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388141AbfGPQms (ORCPT
+        id S2388073AbfGPQog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:42:48 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43441 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbfGPQmq (ORCPT
+        Tue, 16 Jul 2019 12:44:36 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45920 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbfGPQof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:42:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so9706231pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:42:45 -0700 (PDT)
+        Tue, 16 Jul 2019 12:44:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y8so10385291plr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:44:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eGqYmSRY0aX5Z2gwVb+ocjilcWY5xD+m3PbgEthSu3s=;
-        b=J+QejSTqpqmwqp1exIlt6u/JLWNu+5jOtwHjmNNPRjpvrQsfgqWuh28+D+4+nIPO5K
-         YbLtPl8q8y20WuIoPv6idr4xciiwgkEKUNejLjjYgeC/+nVUXRcivwy4+8u+9Py3LNvI
-         6EqYtSULVOTa8A/l5H0GZBx0X5J2q5b6gRk8g=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rb6z0J3PnQNVPmOTs37Tflmgb6ZXxYF+gFUGTKgihdQ=;
+        b=KIfFA/lE08lYJlpZaOeKEpNHMdJmBcI/Rdit44CXjk9OkyMhhGLdG5UBq8epzlm8bj
+         ptjHK+IPA2iaF0Hr1jGnU6aMHQtkoZ1q15W6sTsheinHenMfRYr2W9LO5EoBUeVSd7pj
+         0Ug7z9PwL9TZQRvfXf2okOT4CBOvHsjgRKlV9byJ6PUBqKj/D4p2jkpmPquO2U1jh/IF
+         cxU9LZQ0pPRF7COOUriw86shNoalNtUJDqa0VICFYSF59B4XuaHdn2f24Dy9OjlUfV+L
+         byEfj4ULxRNvtLBtRz4r5VsPWHMV21S0nzNajZ+/kRX1pwECo3ZmIKfRpf6723slxf3F
+         f8LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eGqYmSRY0aX5Z2gwVb+ocjilcWY5xD+m3PbgEthSu3s=;
-        b=G8tl7uektWzFaTsQ7Aesi1Cj8p8cyRd/720bHs3vo2y/vfTWjvZNjnA9NHMlWkmNN8
-         5DK2wlbTXyge5duHErvqTIk5lDO6JSV64cQE2sgQN2ZS5m00cO0NANuggbtYHcp65gCO
-         aMCJGzJCA6KpKeUkpIwJQO4pZVsQtdUtk1WzlUScVmiNh9WMQt3YFmoV06NF/Ac3iwWT
-         SpgseLPVv+oaqRDgFmBuDGfVJv51SYkRa7OxaQSvSVJFYXmXHhD1gKoLmXZRRttmTQ7b
-         R5VPVsW1MIotSzH/xg43TcN74AU499B9PRye8yXWoVbF/Y+B+w9LiBtRm3zvWJp01uZl
-         00Nw==
-X-Gm-Message-State: APjAAAV0CyACd2cy+ikks9p1iYNKnBeEwI8uPLv9XGg2C4HtCz/yqc3l
-        CRe2CFrSBHTNPyttkrDQcc+6OA==
-X-Google-Smtp-Source: APXvYqzTbFdUQvee1WuiqpQUi3ryRdKOs288mKrt4jpytT3apms/GB6jRwGHlDNmWOJfHARW1woJVg==
-X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr39843967pje.128.1563295365190;
-        Tue, 16 Jul 2019 09:42:45 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id r1sm25456468pfq.100.2019.07.16.09.42.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rb6z0J3PnQNVPmOTs37Tflmgb6ZXxYF+gFUGTKgihdQ=;
+        b=Anvp4qGF2MRtU9x0ZzSKdz23Yvspvuh4XDTk0A1FfkL9PbQd8e09EuV7lbq+kR+N3q
+         ADUdl+Te5BRwAhrCBnJoFdAdt/v+UCQytfgAU00NoH4O+LfA/1ryRWe8VwHiONCCqG49
+         UYZjxVPuAflUL8GBcvicLLAcrHtMl2h2TmikkHibtHreC6eqa+pr+Bd5+Cs5I5eTFIKz
+         3QEpJg/cbHS1NbbobJfwnARA+Nfnxz2N7YQzjhwFpAC03yDcxtBarIS9VTGiLwT16pE5
+         h/D1nSNrkv3OfYbBAHlF3XWXFfw6lRC+1arnYJcDq8K3Y6TczzLj0NHuxBBa2BjXH6ub
+         qRxQ==
+X-Gm-Message-State: APjAAAV3Dz/mLhlpx9w0ox0PdN2S3TgRHAhkJ0fSx/tYvKbVDVf1VLpk
+        4JvE5qTFias/lZ0L/pIJhks=
+X-Google-Smtp-Source: APXvYqxTAsYzSCitipMj3Cnq0cvgAncM8UVtX6Ejrg+BX45WfDVl8GCsx0zL734z9ppZ7Wol6eewNA==
+X-Received: by 2002:a17:902:2865:: with SMTP id e92mr36404429plb.264.1563295475103;
+        Tue, 16 Jul 2019 09:44:35 -0700 (PDT)
+Received: from localhost ([100.118.89.203])
+        by smtp.gmail.com with ESMTPSA id s66sm22096485pfs.8.2019.07.16.09.44.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 09:42:44 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ganapathi Bhat <gbhat@marvell.com>, linux-wireless@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        linux-rockchip@lists.infradead.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        netdev@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        linux-mmc@vger.kernel.org, davem@davemloft.net,
-        Xinming Hu <huxinming820@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 1/2] mmc: core: Add sdio_trigger_replug() API
-Date:   Tue, 16 Jul 2019 09:42:08 -0700
-Message-Id: <20190716164209.62320-2-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-In-Reply-To: <20190716164209.62320-1-dianders@chromium.org>
-References: <20190716164209.62320-1-dianders@chromium.org>
+        Tue, 16 Jul 2019 09:44:34 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drm/gem: don't force writecombine mmap'ing
+Date:   Tue, 16 Jul 2019 09:42:14 -0700
+Message-Id: <20190716164221.15436-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,174 +75,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using Marvell WiFi SDIO cards, it is not uncommon for Linux WiFi
-driver to fully lose the communication channel to the firmware running
-on the card.  Presumably the firmware on the card has a bug or two in
-it and occasionally crashes.
+From: Rob Clark <robdclark@chromium.org>
 
-The Marvell WiFi driver attempts to recover from this problem.
-Specifically the driver has the function mwifiex_sdio_card_reset()
-which is called when communcation problems are found.  That function
-attempts to reset the state of things by utilizing the mmc_hw_reset()
-function.
+The driver should be in control of this.
 
-The current solution is a bit complex because the Marvell WiFi driver
-needs to manually deinit and reinit the WiFi driver around the reset
-call.  This means it's going through a bunch of code paths that aren't
-normally tested.  However, complexity isn't our only problem.  The
-other (bigger) problem is that Marvell WiFi cards are often combo
-WiFi/Bluetooth cards and Bluetooth runs on a second SDIO func.  While
-the WiFi driver knows that it should re-init its own state around the
-mmc_hw_reset() call there is no good way to inform the Bluetooth
-driver.  That means that in Linux today when you reset the Marvell
-WiFi driver you lose all Bluetooth communication.  Doh!
-
-One way to fix the above problems is to leverage a more standard way
-to reset the Marvell WiFi card where we go through the same code paths
-as card unplug and the card plug.  In this patch we introduce a new
-API call for doing just that: sdio_trigger_replug().  This API call
-will trigger an unplug of the SDIO card followed by a plug of the
-card.  As part of this the card will be nicely reset.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
+It is possible that this was masking bugs (ie. not setting appropriate
+pgprot) in drivers.  I don't have a particularly good idea for tracking
+those down (since I don't have the hw for most drivers).  Unless someone
+has a better idea, maybe land this and let driver maintainers fix any
+potential fallout in their drivers?
 
- drivers/mmc/core/core.c       | 28 ++++++++++++++++++++++++++--
- drivers/mmc/core/sdio_io.c    | 20 ++++++++++++++++++++
- include/linux/mmc/host.h      | 15 ++++++++++++++-
- include/linux/mmc/sdio_func.h |  2 ++
- 4 files changed, 62 insertions(+), 3 deletions(-)
+This is necessary for the next patch to fix VGEM brokenness on arm.
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 9020cb2490f7..48a7d23aed26 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -2164,6 +2164,12 @@ int mmc_sw_reset(struct mmc_host *host)
- }
- EXPORT_SYMBOL(mmc_sw_reset);
+ drivers/gpu/drm/drm_gem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+index 8a55f71325b1..7d6242cc69f2 100644
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -1110,7 +1110,7 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
  
-+void mmc_trigger_replug(struct mmc_host *host)
-+{
-+	host->trigger_replug_state = MMC_REPLUG_STATE_UNPLUG;
-+	_mmc_detect_change(host, 0, false);
-+}
-+
- static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
- {
- 	host->f_init = freq;
-@@ -2217,6 +2223,11 @@ int _mmc_detect_card_removed(struct mmc_host *host)
- 	if (!host->card || mmc_card_removed(host->card))
- 		return 1;
+ 	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+ 	vma->vm_private_data = obj;
+-	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
++	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+ 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
  
-+	if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
-+		mmc_card_set_removed(host->card);
-+		return 1;
-+	}
-+
- 	ret = host->bus_ops->alive(host);
- 
- 	/*
-@@ -2329,8 +2340,21 @@ void mmc_rescan(struct work_struct *work)
- 	mmc_bus_put(host);
- 
- 	mmc_claim_host(host);
--	if (mmc_card_is_removable(host) && host->ops->get_cd &&
--			host->ops->get_cd(host) == 0) {
-+
-+	/*
-+	 * Move through the state machine if we're triggering an unplug
-+	 * followed by a re-plug.
-+	 */
-+	if (host->trigger_replug_state == MMC_REPLUG_STATE_UNPLUG) {
-+		host->trigger_replug_state = MMC_REPLUG_STATE_PLUG;
-+		_mmc_detect_change(host, 0, false);
-+	} else if (host->trigger_replug_state == MMC_REPLUG_STATE_PLUG) {
-+		host->trigger_replug_state = MMC_REPLUG_STATE_NONE;
-+	}
-+
-+	if (host->trigger_replug_state == MMC_REPLUG_STATE_PLUG ||
-+	    (mmc_card_is_removable(host) && host->ops->get_cd &&
-+			host->ops->get_cd(host) == 0)) {
- 		mmc_power_off(host);
- 		mmc_release_host(host);
- 		goto out;
-diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
-index 2ba00acf64e6..1c5c2a3ebe5e 100644
---- a/drivers/mmc/core/sdio_io.c
-+++ b/drivers/mmc/core/sdio_io.c
-@@ -811,3 +811,23 @@ void sdio_retune_release(struct sdio_func *func)
- 	mmc_retune_release(func->card->host);
- }
- EXPORT_SYMBOL_GPL(sdio_retune_release);
-+
-+/**
-+ *	sdio_trigger_replug - trigger an "unplug" + "plug" of the card
-+ *	@func: SDIO function attached to host
-+ *
-+ *	When you call this function we will schedule events that will
-+ *	make it look like the card contining the given SDIO func was
-+ *	unplugged and then re-plugged-in.  This is as close as possible
-+ *	to a full reset of the card that can be achieved.
-+ *
-+ *	NOTE: routnine will temporarily make the card look as if it is
-+ *	removable even if it is marked non-removable.
-+ *
-+ *	This function should be called while the host is claimed.
-+ */
-+void sdio_trigger_replug(struct sdio_func *func)
-+{
-+	mmc_trigger_replug(func->card->host);
-+}
-+EXPORT_SYMBOL(sdio_trigger_replug);
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index a9b12322c775..e0d41a1bcf17 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -410,6 +410,12 @@ struct mmc_host {
- 
- 	bool			trigger_card_event; /* card_event necessary */
- 
-+	/* state machine for triggering unplug/replug */
-+#define MMC_REPLUG_STATE_NONE	0		/* not doing unplug/replug */
-+#define MMC_REPLUG_STATE_UNPLUG	1		/* do unplug next */
-+#define MMC_REPLUG_STATE_PLUG	2		/* do plug next */
-+	u8			trigger_replug_state;
-+
- 	struct mmc_card		*card;		/* device attached to this host */
- 
- 	wait_queue_head_t	wq;
-@@ -530,7 +536,12 @@ int mmc_regulator_get_supply(struct mmc_host *mmc);
- 
- static inline int mmc_card_is_removable(struct mmc_host *host)
- {
--	return !(host->caps & MMC_CAP_NONREMOVABLE);
-+	/*
-+	 * A non-removable card briefly looks removable if code has forced
-+	 * a re-plug of the card.
-+	 */
-+	return host->trigger_replug_state != MMC_REPLUG_STATE_NONE ||
-+		!(host->caps & MMC_CAP_NONREMOVABLE);
- }
- 
- static inline int mmc_card_keep_power(struct mmc_host *host)
-@@ -583,4 +594,6 @@ static inline enum dma_data_direction mmc_get_dma_dir(struct mmc_data *data)
- int mmc_send_tuning(struct mmc_host *host, u32 opcode, int *cmd_error);
- int mmc_abort_tuning(struct mmc_host *host, u32 opcode);
- 
-+void mmc_trigger_replug(struct mmc_host *host);
-+
- #endif /* LINUX_MMC_HOST_H */
-diff --git a/include/linux/mmc/sdio_func.h b/include/linux/mmc/sdio_func.h
-index 5a177f7a83c3..0d6c73768ae3 100644
---- a/include/linux/mmc/sdio_func.h
-+++ b/include/linux/mmc/sdio_func.h
-@@ -173,4 +173,6 @@ extern void sdio_retune_crc_enable(struct sdio_func *func);
- extern void sdio_retune_hold_now(struct sdio_func *func);
- extern void sdio_retune_release(struct sdio_func *func);
- 
-+extern void sdio_trigger_replug(struct sdio_func *func);
-+
- #endif /* LINUX_MMC_SDIO_FUNC_H */
+ 	/* Take a ref for this mapping of the object, so that the fault
 -- 
-2.22.0.510.g264f2c817a-goog
+2.21.0
 
