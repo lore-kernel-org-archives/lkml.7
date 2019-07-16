@@ -2,97 +2,122 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF498C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B379FC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12922173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563310752;
-	bh=GzbC4HaYjTrPOLHdkN0rJ9H0cVhGLXq4suuub3KQuYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DBLOQ1LRJAIX4tRB4KXDrS/JgKVodkN6SDeSI9ptLtyZ9MbOMNb0dOaDywi5FXjj0
-	 fV7DZAE4sx98aZDynp/7YWswYHqPfyhqIOvyR3xoSWsXVu15dDJcKqW2GtfkH3mSUE
-	 HUnaILncoxsfT8uqYIJpXkiMWl90FVt91/90avIw=
+	by mail.kernel.org (Postfix) with ESMTP id 9109F2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388820AbfGPU7L (ORCPT
+        id S2388843AbfGPU7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
+        Tue, 16 Jul 2019 16:59:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42676 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728781AbfGPU7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:59:11 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728781AbfGPU7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 16:59:34 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D551220665;
-        Tue, 16 Jul 2019 20:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563310750;
-        bh=GzbC4HaYjTrPOLHdkN0rJ9H0cVhGLXq4suuub3KQuYQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ozXYFkp9k7i2LnsFB7XujdrrA0JWPsAE+Flg1q+9Cs+s5Hds/Dg2wWGpL64SrHBRX
-         7yJkxDO9hcGrBB4kU+IeZdrEzzfkb2gvSPBgtbmXD7q31JZthmISbXWUYzz5H7LL9I
-         1Hz+Z62JfFc2JicLtg6gJLmlT3/15/YoJ4Q3Z4QA=
-Date:   Tue, 16 Jul 2019 22:59:07 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     Clark Williams <williams@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 7BD16308424C;
+        Tue, 16 Jul 2019 20:59:34 +0000 (UTC)
+Received: from krava (ovpn-204-33.brq.redhat.com [10.40.204.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5E5D060A9F;
+        Tue, 16 Jul 2019 20:59:31 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 22:59:30 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <clark.williams@gmail.com>,
-        Julia Cartwright <julia@ni.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
-Message-ID: <20190716205907.GC4000@lenoir>
-References: <20190715150402.798499167@linutronix.de>
- <20190715150601.205143057@linutronix.de>
- <20190716151040.04ef9122@torg>
- <e245e8ac-d55d-89c8-424a-432e0481cd2a@redhat.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] perf session: fix loading of compressed data split
+ across adjacent records
+Message-ID: <20190716205930.GF28722@krava>
+References: <4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com>
+ <20190714154932.GC16802@krava>
+ <389a8b98-1d53-6fe3-ff56-0789c0841292@linux.intel.com>
+ <20190716184959.GG3624@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e245e8ac-d55d-89c8-424a-432e0481cd2a@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190716184959.GG3624@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 16 Jul 2019 20:59:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:18:00PM +0200, Daniel Bristot de Oliveira wrote:
-> On 16/07/2019 22:10, Clark Williams wrote:
-> > Excited to see this Thomas. Now I can start planning to build from a single tree
-> > rather than an RT tree off to the side of RHEL :)
+On Tue, Jul 16, 2019 at 03:49:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jul 15, 2019 at 03:30:24PM +0300, Alexey Budankov escreveu:
+> > On 14.07.2019 18:49, Jiri Olsa wrote:
+> > > On Tue, Jul 09, 2019 at 05:48:14PM +0300, Alexey Budankov wrote:
+> > > 
+> > > SNIP
+> > > 
+> > >>  	decomp->file_pos = file_offset;
+> > >> +	decomp->mmap_len = mmap_len;
+> > >>  	decomp->head = 0;
+> > >>  
+> > >> -	if (decomp_last) {
+> > >> -		decomp_last_rem = decomp_last->size - decomp_last->head;
+> > >> +	if (decomp_last_rem) {
+> > >>  		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
+> > >>  		decomp->size = decomp_last_rem;
+> > >>  	}
+> > >> @@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+> > >>  	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
+> > >>  				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
+> > >>  	if (!decomp_size) {
+> > >> -		munmap(decomp, sizeof(struct decomp) + decomp_len);
+> > >> +		munmap(decomp, mmap_len);
+> > >>  		pr_err("Couldn't decompress data\n");
+> > >>  		return -1;
+> > >>  	}
+> > >> @@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
+> > >>  static void perf_session__release_decomp_events(struct perf_session *session)
+> > >>  {
+> > >>  	struct decomp *next, *decomp;
+> > >> -	size_t decomp_len;
+> > >> +	size_t mmap_len;
+> > >>  	next = session->decomp;
+> > >> -	decomp_len = session->header.env.comp_mmap_len;
+> > >>  	do {
+> > >>  		decomp = next;
+> > >>  		if (decomp == NULL)
+> > >>  			break;
+> > >>  		next = decomp->next;
+> > >> -		munmap(decomp, decomp_len + sizeof(struct decomp));
+> > >> +		mmap_len = decomp->mmap_len;
+> > >> +		munmap(decomp, mmap_len);
+> > > 
+> > > what's the need for extra mmap_len variable in here?
+> > > could you just use decomp->mmap_len directly?
 > > 
-> > Acked-by: Clark Williams <williams@redhat.com>
-> > 
-> 
-> yeah! We (Red Hat) are committed with maintaining and testing the PREEMPT RT
-> mainstream in the long term. Including the development of more tests and formal
-> verification for it!
+> > To avoid reference to the object being deallocated.
+> > Plain munmap(), yes - :)
 
-AND MY AXE!!! (Suse)
-
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
+well it's passed as value, so should be ok,
+anyway I was just curious, if I'm not missing
+something else.. it's ok ;-)
 
 > 
-> Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+> So, Jiri, Acked-by?
+
+yep ;-)
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
 > 
-> Thanks!
-> -- Daniel
+> - Arnaldo
