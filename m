@@ -2,114 +2,143 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814BCC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED01C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1F520665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pks5xS8w"
+	by mail.kernel.org (Postfix) with ESMTP id 4B1D12173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbfGPTAf (ORCPT
+        id S2388689AbfGPTBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:00:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36328 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728484AbfGPTAe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:00:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so10596685plt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=1B56XSbDBuYHFMJ37XDtNgfqOsayMrPq/5G4MtUA+Fs=;
-        b=pks5xS8wfiqunFbSMoh0q7jPy+49A5ZW0LtcnZeO8ou5TRp0xQE5mYpd3JiZbYtMcD
-         3DnyQjLjnkohoRfMcZZ7ltkHfd/UaWdg5w/8uuBu3/m1AiWhqaBVnfmg3XiqMBo72vzF
-         AcHodwjoVOtPYdE8/gbcOy1UGoYKk9XC8/brRwt4YZRlHhnfjN0PaPHX+ZoEKodwhCPk
-         BUru/LlxbxZAd/zlN6PN5IY9VL4MUz5qaYhnu37Y++7nbGHpa8foR22vFOu6E0lHHiJt
-         NnQFXCRRYkhmbkqqZQTtC2ECOxw2OsXzDClA+PcY33Ne++7K/aAcmMg5dkRLXCWFnPhb
-         Zn0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=1B56XSbDBuYHFMJ37XDtNgfqOsayMrPq/5G4MtUA+Fs=;
-        b=qfA78HzVzVj1XiL+m6MnvaR4d4kiM2bK7hhq1c8PAbzs6OAQHgJnPDEtQqrTAUXooX
-         qdvWKcXT6/PrGXbY8c9DkQwA1OnWra6fr6FElVdLRvb9UdQEeogVx+4xKuGVPzydY/+X
-         aLEfoyecCZ0Sdvk4phNOzZ2q3n9sklcn+x34xrIvtvG5evBPiXIC2/ALEJfA8ddxVxlt
-         NP8huchQyAXrlM5y0L1THbqnUjUVL0OfH5jpizz7F9D1K6bL5i5Yzk/Iy2Qx1vry0gyU
-         iHgXS/jvw0PNQhY5knhnMwOcuuGITLO/g329r11YaLSDnp3dp5ESZXOwYHidPzAcO5zI
-         +QpA==
-X-Gm-Message-State: APjAAAViZYK4NT3HFcSZOUMnJSVLbWFrE8Nu8vGwAFTQdcoNi9K2sqhb
-        FUACY/WsFnm0VrK2BuJ79OUPNw==
-X-Google-Smtp-Source: APXvYqyNWSxVhdaYi3K1840JkoJ+6FR1DAdx6nUmLsiCpG+eMmldhNRu1xegnqvVA7MTDBcS4R2NpQ==
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr37054376plf.246.1563303634127;
-        Tue, 16 Jul 2019 12:00:34 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a3sm10120371pfc.70.2019.07.16.12.00.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 12:00:33 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 12:01:53 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Suman Anna <s-anna@ti.com>
-Subject: [GIT PULL] hwspinlock updates for v5.3
-Message-ID: <20190716190153.GC8572@tuxbook-pro>
+        Tue, 16 Jul 2019 15:01:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728575AbfGPTA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 15:00:59 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB61D21743;
+        Tue, 16 Jul 2019 19:00:57 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hnSh6-0006CQ-QA; Tue, 16 Jul 2019 15:00:56 -0400
+Message-Id: <20190716190056.701096978@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Tue, 16 Jul 2019 15:00:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Po-Hsu Lin <po-hsu.lin@canonical.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-next][PATCH 1/5] ftrace/selftests: Return the skip code when tracing directory not
+ configured in kernel
+References: <20190716190014.840939538@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+If the kernel is not configured with ftrace enabled, the ftracetest
+selftests should return the error code of "4" as that is the kselftests
+"skip" code, and not "1" which means an error.
 
-are available in the Git repository at:
+To determine if ftrace is enabled, first the newer "tracefs" is searched for
+in /proc/mounts. If it is not found, then "debugfs" is searched for (as old
+kernels do not have tracefs). If that is not found, an attempt to mount the
+tracefs or debugfs is performed. This is done by seeing first if the
+/sys/kernel/tracing directory exists. If it does than tracefs is configured
+in the kernel and an attempt to mount it is performed.
 
-  git://github.com/andersson/remoteproc tags/hwlock-v5.3
+If /sys/kernel/tracing does not exist, then /sys/kernel/debug is tested to
+see if that directory exists. If it does, then an attempt to mount debugfs
+on that directory is performed. If it does not exist, then debugfs is not
+configured in the running kernel and the test exits with the skip code.
 
-for you to fetch changes up to 360aa640a59f269b784848c0b2d6d462952750d9:
+If either mount fails, then a normal error is returned as they do exist in
+the kernel but something went wrong to mount them.
 
-  hwspinlock: add the 'in_atomic' API (2019-06-29 21:08:14 -0700)
+This changes the test to always try the tracefs file system first as it has
+been in the kernel for some time now and it is better to test it if it is
+available instead of always testing debugfs.
 
-----------------------------------------------------------------
-hwspinlock updates for v5.3
+Link: http://lkml.kernel.org/r/20190702062358.7330-1-po-hsu.lin@canonical.com
 
-This contains support for hardware spinlock TI K3 AM65x and J721E family
-of SoCs, support for using hwspinlocks from atomic context and better
-error reporting when dealing with hardware disabled in DeviceTree.
+Reported-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/testing/selftests/ftrace/ftracetest | 38 +++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 6 deletions(-)
 
-----------------------------------------------------------------
-Fabien Dessenne (4):
-      hwspinlock: ignore disabled device
-      hwspinlock: stm32: implement the relax() ops
-      hwspinlock: document the hwspinlock 'raw' API
-      hwspinlock: add the 'in_atomic' API
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 136387422b00..edf5ea35d2a7 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -23,9 +23,15 @@ echo "		            If <dir> is -, all logs output in console only"
+ exit $1
+ }
+ 
++# default error
++err_ret=1
++
++# kselftest skip code is 4
++err_skip=4
++
+ errexit() { # message
+   echo "Error: $1" 1>&2
+-  exit 1
++  exit $err_ret
+ }
+ 
+ # Ensuring user privilege
+@@ -116,11 +122,31 @@ parse_opts() { # opts
+ }
+ 
+ # Parameters
+-DEBUGFS_DIR=`grep debugfs /proc/mounts | cut -f2 -d' ' | head -1`
+-if [ -z "$DEBUGFS_DIR" ]; then
+-    TRACING_DIR=`grep tracefs /proc/mounts | cut -f2 -d' ' | head -1`
+-else
+-    TRACING_DIR=$DEBUGFS_DIR/tracing
++TRACING_DIR=`grep tracefs /proc/mounts | cut -f2 -d' ' | head -1`
++if [ -z "$TRACING_DIR" ]; then
++    DEBUGFS_DIR=`grep debugfs /proc/mounts | cut -f2 -d' ' | head -1`
++    if [ -z "$DEBUGFS_DIR" ]; then
++	# If tracefs exists, then so does /sys/kernel/tracing
++	if [ -d "/sys/kernel/tracing" ]; then
++	    mount -t tracefs nodev /sys/kernel/tracing ||
++	      errexit "Failed to mount /sys/kernel/tracing"
++	    TRACING_DIR="/sys/kernel/tracing"
++	# If debugfs exists, then so does /sys/kernel/debug
++	elif [ -d "/sys/kernel/debug" ]; then
++	    mount -t debugfs nodev /sys/kernel/debug ||
++	      errexit "Failed to mount /sys/kernel/debug"
++	    TRACING_DIR="/sys/kernel/debug/tracing"
++	else
++	    err_ret=$err_skip
++	    errexit "debugfs and tracefs are not configured in this kernel"
++	fi
++    else
++	TRACING_DIR="$DEBUGFS_DIR/tracing"
++    fi
++fi
++if [ ! -d "$TRACING_DIR" ]; then
++    err_ret=$err_skip
++    errexit "ftrace is not configured in this kernel"
+ fi
+ 
+ TOP_DIR=`absdir $0`
+-- 
+2.20.1
 
-Suman Anna (3):
-      dt-bindings: hwlock: Update OMAP binding for TI K3 SoCs
-      hwspinlock/omap: Add support for TI K3 SoCs
-      hwspinlock/omap: Add a trace during probe
 
- .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 25 +++++--
- Documentation/hwspinlock.txt                       | 81 ++++++++++++++++++++++
- drivers/hwspinlock/Kconfig                         |  2 +-
- drivers/hwspinlock/hwspinlock_core.c               | 48 +++++++++----
- drivers/hwspinlock/omap_hwspinlock.c               |  4 ++
- drivers/hwspinlock/stm32_hwspinlock.c              |  7 ++
- include/linux/hwspinlock.h                         | 61 +++++++++++++++-
- 7 files changed, 206 insertions(+), 22 deletions(-)
