@@ -2,168 +2,126 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F58C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5549C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D222145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0262173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="c+hxmP48"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ktGe9+lA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfGPL4n (ORCPT
+        id S1732199AbfGPL5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:56:43 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38976 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731015AbfGPL4m (ORCPT
+        Tue, 16 Jul 2019 07:57:37 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42785 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbfGPL5g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:56:42 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190716115640euoutp0245d1157ba69ccff88eb461a87d102c43~x4T2pT0vi2169021690euoutp02C
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:56:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190716115640euoutp0245d1157ba69ccff88eb461a87d102c43~x4T2pT0vi2169021690euoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563278200;
-        bh=Y3MANFjWTHlxjydAw2DLCdEv+GbkTiMm4tBgi0aarJY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=c+hxmP48Yp5LvkGJBHxTlauVG/ULPZDG+5g0qfFlDpTog82+5FFNfYuvR5+wsEe71
-         D3AU4FNbJfdvsWYMdUIJtFhk2ZTGXjmrhPkjm/tT8mYrl6iRffSfEo3Erb7OLlL7ZU
-         8S9+SE+tWHTei6ZMEINRjGDlDwk88b51UGjumZTk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190716115639eucas1p2252defebcb31c54f283170a0f744f54d~x4T15nIZZ1928219282eucas1p27;
-        Tue, 16 Jul 2019 11:56:39 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4A.76.04325.77BBD2D5; Tue, 16
-        Jul 2019 12:56:39 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716115639eucas1p1e0758b5a7cb975371e4ffaee7df37810~x4T1MvjBX2004420044eucas1p14;
-        Tue, 16 Jul 2019 11:56:39 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190716115638eusmtrp221979503b0434b170572313d87b5b1ec~x4T0_XZuD1854818548eusmtrp21;
-        Tue, 16 Jul 2019 11:56:38 +0000 (GMT)
-X-AuditID: cbfec7f5-fbbf09c0000010e5-f3-5d2dbb772fe1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8E.97.04140.67BBD2D5; Tue, 16
-        Jul 2019 12:56:38 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716115638eusmtip218f7812e10a373febd695656cb893464~x4T0UJkBj2456924569eusmtip2z;
-        Tue, 16 Jul 2019 11:56:38 +0000 (GMT)
-Subject: Re: [PATCH v2 2/4] devfreq: exynos-bus: convert to use
- dev_pm_opp_set_rate()
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Message-ID: <e5570b67-8326-c9ba-fb1a-488cb5673410@samsung.com>
-Date:   Tue, 16 Jul 2019 13:56:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 16 Jul 2019 07:57:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t132so9325509pgb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 04:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IeXE1WNIbLgZbuXjaQOxWA+uaePxQPbUYQ3+kYNaWMc=;
+        b=ktGe9+lAGPHwFi/wlz8lD76+AeIaTQtERkWK4VsGnh1JYg9WPux230jP1y7OvF1kD+
+         ZXbjD8fqqdXuMjOOoKBf0pLRsxEuM6VZC4+OvbNncs/GBXHHvW2rt6ldjj/ebR3ZDpu+
+         XNugwN2hk34e+scqI+o0eCXzJhj5hbsMCDaiw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IeXE1WNIbLgZbuXjaQOxWA+uaePxQPbUYQ3+kYNaWMc=;
+        b=uFpTS/RJ4WAPPS9vgffyRBX4h02zwIGq2oC1mp+Xgz0MFk7PwIIdQDzZBumbdDFq4U
+         CWqbZ7AaaTyZWxKgHmlcuRUsLLf+CGxRGHu+DtjY0kn+7hIri5rYEEhLnngufJdD81uC
+         iKPUkIduIQQxQAlQ0kYjs8vMjkoEapHVs5/wd/pIp9KFSjINAz0ykiGFwm8SkPXHlVML
+         waIVGFHOCqV7wa2Fznt+LyrsJDQCH2JGKU0K+YfmlrviyHUooIy2yDaKy4ad+uqigdyd
+         ZnWx+0I8fo1Nw7aqlsQkcwxDVChEoPvUMLWG49S4TLM4RlG2e46fYtF4JkKmPjoOC8xW
+         TlgA==
+X-Gm-Message-State: APjAAAUXiDvToLAmSAuWOcolPfUCn03qeSq5ZpMbx4qIx9/4neuBz/Qk
+        +1QmoR+fEAbDZ9XtWp2H+ZP/LhsXpR0=
+X-Google-Smtp-Source: APXvYqxZI85uD2GdvaU3cmn0bFXHmYYOfFV7BJ7eG6YxMTU8Do/1HOLml+Z27bIuOXPOuQu/8HZpFg==
+X-Received: by 2002:a63:1215:: with SMTP id h21mr33096297pgl.221.1563278255748;
+        Tue, 16 Jul 2019 04:57:35 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:b:e688:dfd2:a1a7:2956])
+        by smtp.gmail.com with ESMTPSA id e10sm21197516pfi.173.2019.07.16.04.57.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 04:57:34 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: [PATCH v4 0/5] Add HDMI jack support on RK3288
+Date:   Tue, 16 Jul 2019 19:57:20 +0800
+Message-Id: <20190716115725.66558-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
 MIME-Version: 1.0
-In-Reply-To: <1a9e5752-bc2b-3b08-a36b-fc02ca51764c@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOKsWRmVeSWpSXmKPExsWy7djP87rlu3VjDb49VbC4/uU5q8X8I+dY
-        Lfr2/We06H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
-        uN24gs3izY+zTBate4+wW/y7tpHFYvODY2wOgh5r5q1h9Ni0qpPNY/OSeo+D7/YwefRtWcXo
-        cfzGdiaPz5vkAtijuGxSUnMyy1KL9O0SuDI2t05mKpjBUfHn3nXGBsb7rF2MnBwSAiYSN6f1
-        MnUxcnEICaxglOj//Y0RwvnCKPGksYcFwvnMKNHc8oEJpqW5oxGqZTmjxMyej1BVbxklVjft
-        BBssLBAu8ev+LkYQm03ASmJi+yowW0RAQ2Lm3ytgO5gFLrBIHFt9G6yBV8BO4sWUs2A2i4Cq
-        xM9jR8FsUYEIifvHNkDVCEqcnPmEBcTmFLCXuLvoLjOIzSwgLnHryXwmCFteYvvbOcwgCyQE
-        Wjkkvp15yN7FyAHkuEi8uZQG8YKwxKvjW9ghbBmJ/zvnM0HUr2OU+NvxAqp5O6PE8sn/2CCq
-        rCUOH7/ICjKIWUBTYv0ufYiwo8Sj1l9MEPP5JG68FYS4gU9i0rbpzBBhXomONiGIajWJDcs2
-        sMGs7dq5knkCo9IsJJ/NQvLNLCTfzELYu4CRZRWjeGppcW56arFxXmq5XnFibnFpXrpecn7u
-        JkZg8jv97/jXHYz7/iQdYhTgYFTi4T2xRydWiDWxrLgy9xCjBAezkgiv7VftWCHelMTKqtSi
-        /Pii0pzU4kOM0hwsSuK81QwPooUE0hNLUrNTUwtSi2CyTBycUg2MrW+i/fb4FotYl7UdK7b5
-        9svEY9mTGI3j/xksNV/PFX8dtPf5zZuy/xIqPNMZJwqvTLU6oHbOTyggJHWi9roD1UwrIhdM
-        03xf9bx6khT7FNMJaez6X+bL760+cerP7QsK07+mV/2cVygXLa/zPN/kFbvCjpguib/Vt8SN
-        DkXxuXT3nt/XbHxOiaU4I9FQi7moOBEAgnYTV3oDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsVy+t/xe7plu3VjDe7NNrC4/uU5q8X8I+dY
-        Lfr2/We06H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
-        uN24gs3izY+zTBate4+wW/y7tpHFYvODY2wOgh5r5q1h9Ni0qpPNY/OSeo+D7/YwefRtWcXo
-        cfzGdiaPz5vkAtij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMy
-        y1KL9O0S9DI2t05mKpjBUfHn3nXGBsb7rF2MnBwSAiYSzR2NTF2MXBxCAksZJa7uWsPexcgB
-        lJCROL6+DKJGWOLPtS42iJrXjBJ7Hn8AaxYWCJf4dX8XI4jNJmAlMbF9FZgtIqAhMfPvFTCb
-        WeASi0Tz9FKI5n4WiZcLFoIleAXsJF5MOQs2iEVAVeLnsaNgtqhAhMSZ9ytYIGoEJU7OfAJm
-        cwrYS9xddJcZYqi6xJ95l6BscYlbT+YzQdjyEtvfzmGewCg0C0n7LCQts5C0zELSsoCRZRWj
-        SGppcW56brGRXnFibnFpXrpecn7uJkZgrG879nPLDsaud8GHGAU4GJV4eE/s0YkVYk0sK67M
-        PcQowcGsJMJr+1U7Vog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgWkoryTe0NTQ3MLS0NzY
-        3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QD48rdEVGRXx6GbspZEJM2Z6FjZZFB/T+F
-        iSaHtZm8rNj+6TTOSjTuOmfF8v+zwgvxWFvNH2/1zkpPVOfYpbO17u+9mrbuvyLm+XbTfh4r
-        U1ta/0UgtG3xeu6yoht3Ar/n7b/uN/2Zn9RtjT0qh7x03flqBZhqPIWrt61K2PpU06zL905x
-        0Y7NSizFGYmGWsxFxYkAtqaVtgsDAAA=
-X-CMS-MailID: 20190716115639eucas1p1e0758b5a7cb975371e4ffaee7df37810
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a
-References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
-        <CGME20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a@eucas1p2.samsung.com>
-        <20190715120416.3561-3-k.konieczny@partner.samsung.com>
-        <7f7cf551-005a-c647-d571-77eb5426478a@samsung.com>
-        <3d1687b7-4825-ad82-2706-a712c30e530b@samsung.com>
-        <5612547b-47c8-0dc4-cb3c-e972782d5a26@samsung.com>
-        <3ba736fa-832c-a72c-e60b-f4328e54c524@samsung.com>
-        <29cfafc4-ee22-6d38-4c67-776c48bfed8a@samsung.com>
-        <1a9e5752-bc2b-3b08-a36b-fc02ca51764c@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series supports HDMI jack reporting on RK3288, which uses
+DRM dw-hdmi driver and hdmi-codec codec driver.
 
-On 7/16/19 1:39 PM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> On 7/16/19 1:26 PM, Chanwoo Choi wrote:
+The previous discussion about reporting jack status using hdmi-notifier
+and drm_audio_component is at
 
-[...]
+https://lore.kernel.org/patchwork/patch/1083027/
 
->>> Doesn't seem to be needed, care to explain it more?
->>
->> In order to fix the sequence problem between clock and regulator
->> with dev_pm_opp_set_regualtor() and want to keep two functions
->> (exynos_bus_parent_parse_of() and exynos_bus_parse_of()),
->> have to change the call order as following and then modify
->> the exception handling code when error happen.
->>
->> 	node = of_parse_phandle(dev->of_node, "devfreq", 0);                    
->> 	if (node) {                                                             
->> 		of_node_put(node);                                              
->> 		passive = true
->> 	}
->>
->> 	if (!passive)	
->> 		exynos_bus_parent_parse_of()
->> 			dev_pm_opp_set_regulator
->>
->> 	exynos_bus_parse_of()
-> 
-> OK. This seems like a solution.
+The new approach is to use a callback mechanism that is
+specific to hdmi-codec.
 
-PS Thanks for explaining this in detail.
+Changes from v3 to v4:
+- hdmi-codec.h: Modify the hook_plugged_cb ops to take an additional argument,
+  that is, the pointer to struct device for codec device.
+- dw-hdmi-i2s-audio.c: Simplify the registration of callback so it uses
+  dw_hdmi_set_plugged_cb exported by dw-hdmi.c.
+- dw-hdmi.c: Simplify the flow to invoke callback since now dw_hdmi has a
+  pointer to codec device as callback argument. There is no need to rely
+  on driver data of other driver.
+- dw-hdmi.c: Minor change for readability.
+- synopsys/Kconfig: Fix the dependency of hdmi-codec in Kconfig.
+- Fixed the incorrect FROMLIST title of patch 5/5.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Cheng-Yi Chiang (5):
+  ASoC: hdmi-codec: Add an op to set callback function for plug event
+  drm: bridge: dw-hdmi: Report connector status using callback
+  drm: dw-hdmi-i2s: Use fixed id for codec device
+  ASoC: rockchip_max98090: Add dai_link for HDMI
+  ASoC: rockchip_max98090: Add HDMI jack support
+
+ drivers/gpu/drm/bridge/synopsys/Kconfig       |   2 +-
+ .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   |  13 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     |  41 ++++++-
+ include/drm/bridge/dw_hdmi.h                  |   4 +
+ include/sound/hdmi-codec.h                    |  17 +++
+ sound/soc/codecs/hdmi-codec.c                 |  46 +++++++
+ sound/soc/rockchip/Kconfig                    |   3 +-
+ sound/soc/rockchip/rk3288_hdmi_analog.c       |   3 +-
+ sound/soc/rockchip/rockchip_max98090.c        | 116 ++++++++++++++----
+ 9 files changed, 217 insertions(+), 28 deletions(-)
+
+-- 
+2.22.0.510.g264f2c817a-goog
+
