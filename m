@@ -2,145 +2,187 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F329C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AB4C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583D520880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563318736;
-	bh=ZrMVMjZfiyo7aCNZthaYAClwMGeLU4tWWQ3/FztZONQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZnYiyrdq4qnQABco0m3CH2kz12c3ka+32V7hkjdMIuYNPWVB5IGdaO50YOnymo3ta
-	 QRexBuOycHP8vz6dqvhLJrDM8OvrjE9W7dn4225DsjIr+hNd8HIl6Gq0y6fxinwS1m
-	 oGXA+BRd/ub1nEI6nvuhIf1LEdGKeNUL0fIadKR8=
+	by mail.kernel.org (Postfix) with ESMTP id 5E8932064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="npN4iCwR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388098AbfGPXMP (ORCPT
+        id S2388796AbfGPXNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfGPXMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:12:15 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 911CB20880;
-        Tue, 16 Jul 2019 23:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563318733;
-        bh=ZrMVMjZfiyo7aCNZthaYAClwMGeLU4tWWQ3/FztZONQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=L2wK49fqvZrOCA2UmMLJVRunNbS9bYwSsZWU7KO7RSPW/HF9FQoBgLuXl0sqbhV+p
-         /DPg+rCflLYYK+nUaItC88VE574wDb5bf/Q9qVyJY9TUtmajBwtHM8I+NmiCknHUUe
-         2IfOWacl96/EsvMd9z6LAKHSgOv6n0Oi032NWtjs=
-Received: by mail-qt1-f181.google.com with SMTP id 44so21356696qtg.11;
-        Tue, 16 Jul 2019 16:12:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAUBDJU8wsH6G4bMr7ITSb3VvEPDryuRgdQjEHWmBngV30c0IP6P
-        PjkoHqtHrhcT9w2iqMKKjAr0345Wi4YcwOlVtQ==
-X-Google-Smtp-Source: APXvYqwuS/Dg8B+UFbtaAI3HpuroiCW8Ay+TBupg3TpQ4YyL58i2wfKjd7YT1BdI2CBnIuzGMm9qYpo0lGu4l9NncY0=
-X-Received: by 2002:a0c:b627:: with SMTP id f39mr26683553qve.72.1563318732830;
- Tue, 16 Jul 2019 16:12:12 -0700 (PDT)
+        Tue, 16 Jul 2019 19:13:38 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45562 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728601AbfGPXNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:13:37 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x22so16512212qtp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:13:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0vVPokc5d+Sgj99HAa1k+ihxyyDw2qJJoHYr3swOfDY=;
+        b=npN4iCwRcHVsuF2BJh4ZW7sl77KF563UBDP+Vo40O+2gEmjxaU5/vnqNQtpiJs7yIn
+         M6qWcc2DxuzW1xTa6eLEHeb6YraOwjroaHToF+QD45Ahlhnux+nQDyh1EfX04kDiIaqv
+         EE3srqM8P/i591ms/4hle9MiaggUo4SRGLG5w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0vVPokc5d+Sgj99HAa1k+ihxyyDw2qJJoHYr3swOfDY=;
+        b=SiK+Y93R30qDRbaUKDolVVBpQ146Ox9PybBiz/2surngEooUJEXNN+Nr/DP7cQoQg/
+         7Zv8iQf3OrLAh8VvpSdeQ9Wcdoz65siVo49A0B+LSTHdqHKMqkT2lYMVXXKPyWmiep+Q
+         EuCxsAztCA5mhUc51hHTEQ4YXIpt5mZGw1Uw5OH29xHJb4PEJJlQ2a1sqA7KFEJyUb0K
+         RjvqXr8CNsIBtFXmVFXkp+S+ktDGzc+8FAH+Z3v5fPk0CF+V7tdTJafzTPCtS/DxaNmr
+         f6neUZi7RCk6Vej3mWjOgML8YoH3KzsJBsZFdyDSOsSBGTAvbFYs60GOLcQZ9LS+M2qT
+         XAOw==
+X-Gm-Message-State: APjAAAVBl+y3kftNtcuTm+EF98pUMhUg+oZr/juE6IeC1thQtYRdPfsA
+        GroEOatk/FgT8c3KxrPJulLafW5/8dKNbSKDoNeY5g==
+X-Google-Smtp-Source: APXvYqwqF+BfqG9NwAIGQhOUSg/ata3RZiX/cvuHswIPD1N9Cau1oN4JI06GzaDLk1MGquQ3R6rBvTWlK6d6ZqKbm+A=
+X-Received: by 2002:aed:3b1c:: with SMTP id p28mr23903043qte.312.1563318816713;
+ Tue, 16 Jul 2019 16:13:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190703050827.173284-1-drinkcat@chromium.org> <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
-In-Reply-To: <815a8414-bfbe-c693-3208-1580779815ec@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 16 Jul 2019 17:12:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
-Message-ID: <CAL_JsqLETdazfnz5EU0Qw4TVVBhWmzk12Z5zYMo5Hm2ACPXh1w@mail.gmail.com>
-Subject: Re: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ian Campbell <ian.campbell@citrix.com>,
-        Grant Likely <grant.likely@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com> <1562625253-29254-24-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1562625253-29254-24-git-send-email-yongqiang.niu@mediatek.com>
+From:   Ryan Case <ryandcase@chromium.org>
+Date:   Tue, 16 Jul 2019 16:13:26 -0700
+Message-ID: <CACjz--=Wn4BH_EwEm0DD-vUxB796wUy5Z3MLiOSeiOZXa92r_w@mail.gmail.com>
+Subject: Re: [PATCH v4, 23/33] drm/mediatek: add ovl0/ovl_2l0 usecase
+To:     yongqiang.niu@mediatek.com
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 4:46 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Mon, Jul 8, 2019 at 3:35 PM <yongqiang.niu@mediatek.com> wrote:
 >
-> On 7/2/19 10:08 PM, Nicolas Boichat wrote:
-> > If the device tree is incorrectly configured, and attempts to
-> > define a "no-map" reserved memory that overlaps with the kernel
-> > data/code, the kernel would crash quickly after boot, with no
-> > obvious clue about the nature of the issue.
-> >
-> > For example, this would happen if we have the kernel mapped at
-> > these addresses (from /proc/iomem):
-> > 40000000-41ffffff : System RAM
-> >   40080000-40dfffff : Kernel code
-> >   40e00000-411fffff : reserved
-> >   41200000-413e0fff : Kernel data
-> >
-> > And we declare a no-map shared-dma-pool region at a fixed address
-> > within that range:
-> > mem_reserved: mem_region {
-> >       compatible = "shared-dma-pool";
-> >       reg = <0 0x40000000 0 0x01A00000>;
-> >       no-map;
-> > };
-> >
-> > To fix this, when removing memory regions at early boot (which is
-> > what "no-map" regions do), we need to make sure that the memory
-> > is not already reserved. If we do, __reserved_mem_reserve_reg
-> > will throw an error:
-> > [    0.000000] OF: fdt: Reserved memory: failed to reserve memory
-> >    for node 'mem_region': base 0x0000000040000000, size 26 MiB
-> > and the code that will try to use the region should also fail,
-> > later on.
-> >
-> > We do not do anything for non-"no-map" regions, as memblock
-> > explicitly allows reserved regions to overlap, and the commit
-> > that this fixes removed the check for that precise reason.
-> >
-> > Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in the case of partial overlap")
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > ---
-> >  drivers/of/fdt.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index cd17dc62a71980a..a1ded43fc332d0c 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -1138,8 +1138,16 @@ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
-> >  int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
-> >                                       phys_addr_t size, bool nomap)
-> >  {
-> > -     if (nomap)
-> > +     if (nomap) {
-> > +             /*
-> > +              * If the memory is already reserved (by another region), we
-> > +              * should not allow it to be removed altogether.
-> > +              */
-> > +             if (memblock_is_region_reserved(base, size))
-> > +                     return -EBUSY;
-> > +
-> >               return memblock_remove(base, size);
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 >
-> While you are it, the nomap argument (introduced with
-> e8d9d1f5485b52ec3c4d7af839e6914438f6c285) predates the introduction of
-> memblock_is_nomap() (bf3d3cc580f9960883ebf9ea05868f336d9491c2), so
-> should just remove memblock_remove() and use memblock_mark_nomap()
-> instead here.
+> This patch add ovl0/ovl_2l0 usecase
+> in ovl->ovl_2l0 direct link usecase:
+> 1. the crtc support layer number will 4+2
+> 2. ovl_2l0 background color input select ovl0 when crtc init
+> and disable it when crtc finish
+> 3. config ovl_2l0 layer, if crtc config layer number is
+> bigger than ovl0 support layers(max is 4)
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index 5eac376..9ee9ce2 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -282,6 +282,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>
+>         for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>                 struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
+> +               enum mtk_ddp_comp_id prev;
+> +
+> +               if (i > 0)
+> +                       prev = mtk_crtc->ddp_comp[i - 1]->id;
+> +               else
+> +                       prev = DDP_COMPONENT_ID_MAX;
+> +
+> +               if (prev == DDP_COMPONENT_OVL0)
+> +                       mtk_ddp_comp_bgclr_in_on(comp);
+>
+>                 mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
+>                 mtk_ddp_comp_start(comp);
+> @@ -291,9 +300,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>         for (i = 0; i < mtk_crtc->layer_nr; i++) {
+>                 struct drm_plane *plane = &mtk_crtc->planes[i];
+>                 struct mtk_plane_state *plane_state;
+> +               struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+> +               unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +               unsigned int local_layer;
+>
+>                 plane_state = to_mtk_plane_state(plane->state);
+> -               mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
+> +
+> +               if (i >= comp_layer_nr) {
+> +                       comp = mtk_crtc->ddp_comp[1];
+> +                       local_layer = i - comp_layer_nr;
+> +               } else
+> +                       local_layer = i;
+> +               mtk_ddp_comp_layer_config(comp , local_layer,
+>                                           plane_state);
 
-Perhaps like this patch[1]? Though the reasoning is different and the
-commit message here is more thorough, so can I get a combined patch.
-However, I don't under how handling a misconfigured DT and aligned
-with EFI are the same patch. What's considered valid for EFI is not
-for DT regions?
+There is an extra space after comp.
 
-Rob
+This whole loop is essentially identical to the one found in
+mtk_crtc_ddp_config below. It would be nice to either move that loop
+to a dedicated function called from both spots or allow
+mtk_crtc_ddp_config to be called from here.
 
-[1] https://patchwork.ozlabs.org/patch/1131232/
+>         }
+>
+> @@ -319,6 +337,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>                                            mtk_crtc->ddp_comp[i]->id);
+>         mtk_disp_mutex_disable(mtk_crtc->mutex);
+>         for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+> +               mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
+>                 mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+>                                               mtk_crtc->mmsys_reg_data,
+>                                               mtk_crtc->ddp_comp[i]->id,
+> @@ -339,6 +358,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>         struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+>         struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+>         unsigned int i;
+> +       unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +       unsigned int local_layer;
+>
+>         /*
+>          * TODO: instead of updating the registers here, we should prepare
+> @@ -361,7 +382,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>                         plane_state = to_mtk_plane_state(plane->state);
+>
+>                         if (plane_state->pending.config) {
+> -                               mtk_ddp_comp_layer_config(comp, i, plane_state);
+> +                               if (i >= comp_layer_nr) {
+> +                                       comp = mtk_crtc->ddp_comp[1];
+> +                                       local_layer = i - comp_layer_nr;
+> +                               } else
+> +                                       local_layer = i;
+> +
+> +                               mtk_ddp_comp_layer_config(comp, local_layer,
+> +                                                         plane_state);
+>                                 plane_state->pending.config = false;
+>                         }
+>                 }
+> @@ -592,6 +620,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>         }
+>
+>         mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
+> +       if (mtk_crtc->ddp_comp_nr > 1) {
+> +               struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
+> +
+> +               if (comp->funcs->bgclr_in_on)
+> +                       mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
+> +       }
+>         mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
+>                                         sizeof(struct drm_plane),
+>                                         GFP_KERNEL);
+> --
+> 1.8.1.1.dirty
+>
