@@ -2,106 +2,101 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E2EC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3D9C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AFB205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1B6205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfGPQNM (ORCPT
+        id S1732614AbfGPQUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:13:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45230 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 12:20:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55570 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbfGPQNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:13:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1727796AbfGPQUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 12:20:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98E3481F31;
-        Tue, 16 Jul 2019 16:13:10 +0000 (UTC)
-Received: from redhat.com (ovpn-122-108.rdu2.redhat.com [10.10.122.108])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8E7D86012C;
-        Tue, 16 Jul 2019 16:12:57 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 12:12:56 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Wang, Wei W" <wei.w.wang@intel.com>
-Cc:     "Hansen, Dave" <dave.hansen@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "nitesh@redhat.com" <nitesh@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "yang.zhang.wz@gmail.com" <yang.zhang.wz@gmail.com>,
-        "pagupta@redhat.com" <pagupta@redhat.com>,
-        "riel@surriel.com" <riel@surriel.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "lcapitulino@redhat.com" <lcapitulino@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "alexander.h.duyck@linux.intel.com" 
-        <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
- via hinting
-Message-ID: <20190716120839-mutt-send-email-mst@kernel.org>
-References: <20190619222922.1231.27432.stgit@localhost.localdomain>
- <20190619223338.1231.52537.stgit@localhost.localdomain>
- <20190716055017-mutt-send-email-mst@kernel.org>
- <cad839c0-bbe6-b065-ac32-f32c117cf07e@intel.com>
- <3f8b2a76-b2ce-fb73-13d4-22a33fc1eb17@redhat.com>
- <bdb9564d-640d-138f-6695-3fa2c084fcc7@intel.com>
- <286AC319A985734F985F78AFA26841F73E16AB21@shsmsx102.ccr.corp.intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 328AB308FBAF;
+        Tue, 16 Jul 2019 16:20:17 +0000 (UTC)
+Received: from treble (ovpn-123-204.rdu2.redhat.com [10.10.123.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6181260A9F;
+        Tue, 16 Jul 2019 16:20:16 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 11:20:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Seth Forshee <seth.forshee@canonical.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>, kbuild-all@01.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [kbuild:kbuild 5/19] drivers/atm/eni.o: warning: objtool:
+ eni_init_one()+0xe42: indirect call found in RETPOLINE build
+Message-ID: <20190716162014.iu47g6o7ralxhcf5@treble>
+References: <201907160706.9xUSQ36X%lkp@intel.com>
+ <CAK7LNATqxQnen2Tzcici8GnJuc-qNeCYcCYisKM2OkNow1FDnQ@mail.gmail.com>
+ <20190716124249.GP5418@ubuntu-xps13>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <286AC319A985734F985F78AFA26841F73E16AB21@shsmsx102.ccr.corp.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 16 Jul 2019 16:13:11 +0000 (UTC)
+In-Reply-To: <20190716124249.GP5418@ubuntu-xps13>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 16 Jul 2019 16:20:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 03:01:52PM +0000, Wang, Wei W wrote:
-> On Tuesday, July 16, 2019 10:41 PM, Hansen, Dave wrote:
-> > Where is the page allocator integration?  The set you linked to has 5 patches,
-> > but only 4 were merged.  This one is missing:
+On Tue, Jul 16, 2019 at 07:42:49AM -0500, Seth Forshee wrote:
+> On Tue, Jul 16, 2019 at 03:57:24PM +0900, Masahiro Yamada wrote:
+> > (+ Josh Poimboeuf)
 > > 
-> > 	https://lore.kernel.org/patchwork/patch/961038/
+> > On Tue, Jul 16, 2019 at 8:44 AM kbuild test robot <lkp@intel.com> wrote:
+> > >
+> > > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git kbuild
+> > > head:   0ff0c3753e06c0420c80dac1b0187a442b372acb
+> > > commit: 2eaf4e87ba258cc3f27e486cdf32d5ba76303c6f [5/19] kbuild: add -fcf-protection=none to retpoline flags
+> > > config: x86_64-randconfig-s2-07160214 (attached as .config)
+> > > compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
+> > > reproduce:
+> > >         git checkout 2eaf4e87ba258cc3f27e486cdf32d5ba76303c6f
+> > >         # save the attached .config to linux build tree
+> > >         make ARCH=x86_64
+> > 
+> > 0-day bot reports objtool warnings with the following applied:
+> > https://patchwork.kernel.org/patch/11037379/
+> > 
+> > I have no idea about objtool.
+> > 
+> > Is it better to drop this patch for now?
 > 
-> For some reason, we used the regular page allocation to get pages
-> from the free list at that stage.
-
-
-This is what Linus suggested, that is why:
-
-https://lkml.org/lkml/2018/6/27/461
-
-and
-
-https://lkml.org/lkml/2018/7/11/795
-
-
-See also
-
-https://lkml.org/lkml/2018/7/10/1157
-
-for some failed attempts to upstream mm core changes
-related to this.
-
-> This part could be improved by Alex
-> or Nitesh's approach.
+> I'm surprised that the change would have any impact on a build with
+> gcc-4.9, since -fcf-protection seems to have been introduced in gcc-8. I
+> guess there's no full build log that would let us see the actual flags
+> passed to the compiler.
 > 
-> The page address transmission from the balloon driver to the host
-> device could reuse what's upstreamed there. I think you could add a
-> new VIRTIO_BALLOON_CMD_xx for your usages.
-> 
-> Best,
-> Wei
+> I'll try to reproduce this result. If you think the patch should be
+> dropped in the meantime, that's fine.
+
+The problem with this patch is that it's breaking the following check in
+arch/x86/Makefile.  GCC 4.9 doesn't support retpolines, so it's supposed
+to fail with the below error.
+
+ifdef CONFIG_RETPOLINE
+ifeq ($(RETPOLINE_CFLAGS),)
+	@echo "You are building kernel with non-retpoline compiler." >&2
+	@echo "Please update your compiler." >&2
+	@false
+endif
+endif
+
+Maybe the flags should be placed in another variable other than
+RETPOLINE_CFLAGS.
+
+-- 
+Josh
