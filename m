@@ -2,74 +2,128 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A66C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13191C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C002173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563285567;
-	bh=axm9oREaOJv1cVVP68RVtcE55RfxdvIVdg8ysfbSH3Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=qHzYyZNaZZ1JkTMv7yHqZrQLvMdzF60hJoknIBBuayIHY1bDJ0luqY97JDUW1sJRn
-	 YKL1yacZqNGQ+T4l7GaDVSV8vw13l1C4WWqBTWVtcqZfCn/fXhdnoULhwvfjglE3cN
-	 Fgt5wFrNMtQ1Z39aLMYBSur2yxPZ5mwhwMsQSCT8=
+	by mail.kernel.org (Postfix) with ESMTP id DBFC520880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MArk12hy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbfGPN70 (ORCPT
+        id S2387778AbfGPN7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfGPN7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:59:25 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5341020880;
-        Tue, 16 Jul 2019 13:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563285564;
-        bh=axm9oREaOJv1cVVP68RVtcE55RfxdvIVdg8ysfbSH3Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=k7xbINaffR/KPZSMMRTCcPaMdONAeBGql3Q1D9AmKlfzx2nzngqR5fRSZyQBTypu4
-         QJTMMOrnAwL6xTb9RWTrZdJcY4q6qPjfxGe6tGrGmd2b4ecEIGzgLaUNqHrmTo5aD5
-         Ab10fEFBa1/A5oF1pjGB3KBd9mqZhDuerxgfsNJg=
-Date:   Tue, 16 Jul 2019 08:59:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        Tue, 16 Jul 2019 09:59:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38448 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGPN7r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:59:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so20055681ljg.5;
+        Tue, 16 Jul 2019 06:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7H6i1LxDmB04ycY5ef1F3c/qYaMlYDDIBcVi4+5VGZs=;
+        b=MArk12hyaMeQaUedo0Zo3ngitcjN1CJN65igxLVq6n3lA6NpZVHcxE5KbtO3ipqBaU
+         uMl0q8Xw2v68Ha5HDdDRadjG0sJ/YvgCISRQEME+xeCFgMkfZBwNOrsOg1CTdQ463hOp
+         6w1Xr4LCn8iBjCustjV/j8mdtYdO15qVJOngV8yUkJt7Iv9zkeCRJA6QjtC7ni9HM+ru
+         lO94WMul5YG495bgeYL/rjCKxCxQAJZnxUBQzRZcPs5R5n0+xjrGh5s4h4DlvSjD1WsO
+         O/lDua85p4zwLhMVssZIttrcs2YEOKbYWr7WpRDaqXx4ABYbjRfZFZWm0uYIYh0Z4pVE
+         bmWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7H6i1LxDmB04ycY5ef1F3c/qYaMlYDDIBcVi4+5VGZs=;
+        b=A6VRIXR6eTgygpDpucFUjvj9vJClGu/R0x+zKL/Q+Qa6dN55CZv8cEqtSdnF/eQSUF
+         OPIgjSoc9U9XkEQkPKlylTtueoKcl5uHOj8EqVrBXfHNBdsCFvQoKsW0+Qc7RzAFvGLb
+         FlJ0NyqdYVnkAi7VgGglYpOgeDHW+hYHkOo7fpTvVxu2rviR2Ft0CIt+1ggD977/DlNb
+         SL5PJdxOdPpNhc5IWEUzfbn4lm6VeGYeDCPy+ASI0Bdf8ozTqLkYYzh45X9OcX/AU+Cc
+         j3wyDPzeawr8Ipi7FcDeXN4KkhuvY9U9eZBB7tLbxltdAnkymGSxj5nk+/fyiDYd387Y
+         dl2g==
+X-Gm-Message-State: APjAAAWypjzlY9ZVfurN0YHNmzu7Tv5snuleWIx+ADdva4iKb13EaufQ
+        DvPOcZkxir6rJsx6tAuUVdeND4TJ
+X-Google-Smtp-Source: APXvYqxQNH0L/ucC++0xm+Z0K2Lj8uPYP4FhAVzja+WgJC3TQm7601IQXRAm96Z0eFCAtgaG5+P1vw==
+X-Received: by 2002:a2e:2b01:: with SMTP id q1mr17270563lje.27.1563285584512;
+        Tue, 16 Jul 2019 06:59:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id r24sm4176544ljb.72.2019.07.16.06.59.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 06:59:43 -0700 (PDT)
+Subject: Re: [PATCH v4 14/24] PM / devfreq: tegra30: Ensure that target freq
+ won't overflow
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: PCI: dra7xx: PCI_EXP_LNKCTL2 usage
-Message-ID: <20190716135923.GA4470@google.com>
+References: <20190707223303.6755-1-digetx@gmail.com>
+ <CGME20190707223631epcas4p42012d0364a4c952d90f078fb45982722@epcas4p4.samsung.com>
+ <20190707223303.6755-15-digetx@gmail.com>
+ <e6b53ba0-ac98-bda6-b087-553088a43d9f@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <14115aa7-ed40-2775-9b0b-a2bf6ca9d47e@gmail.com>
+Date:   Tue, 16 Jul 2019 16:59:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e6b53ba0-ac98-bda6-b087-553088a43d9f@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ab5fe4f4d31e ("PCI: dra7xx: Add support to force RC to work in GEN1 mode")
-added this:
+16.07.2019 15:30, Chanwoo Choi пишет:
+> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+>> Potentially very high boosting could cause an integer overflow for a
+>> highly clocked memory after conversion to MHz.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index 2f59c78930bd..0de1efdaabf4 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -460,6 +460,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
+>>  	unsigned long target_freq;
+>>  
+>>  	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
+>> +	target_freq = min(target_freq, ULONG_MAX / KHZ);
+> 
+> Did you meet this corner case?
 
-  +       dw_pcie_cfg_read(pp->dbi_base + exp_cap_off + PCI_EXP_LNKCTL2,
-  +                        2, &reg);
-  +       if ((reg & PCI_EXP_LNKCAP_SLS) != PCI_EXP_LNKCAP_SLS_2_5GB) {
-  +               reg &= ~((u32)PCI_EXP_LNKCAP_SLS);
-  +               reg |= PCI_EXP_LNKCAP_SLS_2_5GB;
-  +               dw_pcie_cfg_write(pp->dbi_base + exp_cap_off +
-  +                                 PCI_EXP_LNKCTL2, 2, reg);
-  +       }
+I can't recall that, technically it could happen and I don't feel
+comfortable by having potential integer overflows anyway.
 
-This probably works as intended, but it *looks* wrong because it uses
-LNKCAP_* symbols on LNKCTL2 register values.  We do have
-PCI_EXP_LNKCTL2_* symbols, so I think it would be better if we used
-used those.
+> If have to change it, you better to use 'tegra->max_freq' as following:
+> 	min(target_freq, tegra->max_freq);
 
-Bjorn
+The 'tegra->max_freq' will work here, but 'ULONG_MAX / KHZ' is a
+constant value which is also correct and doesn't case any harm.
+
+Probably will be even more expressive to write this as:
+
+	target_freq = dev->avg_freq + dev->boost_freq;
+	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
+
+	return min(target_freq, tegra->max_freq);
+
+
+Thank you very much for the reviews!
