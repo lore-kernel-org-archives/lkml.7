@@ -4,75 +4,219 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A08C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681D9C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD05221849
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402A52173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387765AbfGPNjC (ORCPT
+        id S2387636AbfGPNkW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:39:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2271 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728137AbfGPNjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:39:02 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0E492C9C31D5B450C74A;
-        Tue, 16 Jul 2019 21:39:00 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
- 21:38:55 +0800
-Subject: Re: [PATCH] libertas_tf: Use correct channel range in lbtf_geo_init
-To:     <kvalo@codeaurora.org>, <davem@davemloft.net>, <lkundrak@v3.sk>,
-        <derosier@cal-sierra.com>
-References: <20190716132534.11256-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <8f63c6d6-26fd-1a00-ea22-43938e79f3d2@huawei.com>
-Date:   Tue, 16 Jul 2019 21:38:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 16 Jul 2019 09:40:22 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33094 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPNkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:40:22 -0400
+Received: from pc-375.home (2a01cb0c88d94a005820d607da339aae.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:88d9:4a00:5820:d607:da33:9aae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D2944260C98;
+        Tue, 16 Jul 2019 14:40:19 +0100 (BST)
+Date:   Tue, 16 Jul 2019 15:40:13 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v4 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
+ LSM6DSO and LSM6DSR
+Message-ID: <20190716154013.66fcaeb4@pc-375.home>
+In-Reply-To: <SN6PR12MB2655E375BBEC555BFFBA1B05AECE0@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1562931742.git.vitor.soares@synopsys.com>
+        <f239834a6b8bd179094cdc19a3ac5ecaf807cee3.1562931742.git.vitor.soares@synopsys.com>
+        <20190712181332.04f8b3da@linux.home>
+        <SN6PR12MB26553046898233A094DCC952AEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190712184323.28547c44@pc-381.home>
+        <SN6PR12MB2655C68059719693C7EFF05CAEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190712220320.50e7cfff@pc-381.home>
+        <SN6PR12MB2655E375BBEC555BFFBA1B05AECE0@SN6PR12MB2655.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190716132534.11256-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pls ignore this, sorry
+On Tue, 16 Jul 2019 13:22:25 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-On 2019/7/16 21:25, YueHaibing wrote:
-> It seems we should use 'range' instead of 'priv->range'
-> in lbtf_geo_init(), because 'range' is the corret one
-> related to current regioncode.
+> Hi Boris,
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/wireless/marvell/libertas_tf/cmd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Fri, Jul 12, 2019 at 21:03:20
 > 
-> diff --git a/drivers/net/wireless/marvell/libertas_tf/cmd.c b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-> index 1eacca0..a333172 100644
-> --- a/drivers/net/wireless/marvell/libertas_tf/cmd.c
-> +++ b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-> @@ -65,7 +65,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
->  			break;
->  		}
->  
-> -	for (ch = priv->range.start; ch < priv->range.end; ch++)
-> +	for (ch = range.start; ch < range.end; ch++)
->  		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
->  }
->  
+> > On Fri, 12 Jul 2019 18:40:14 +0000
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Date: Fri, Jul 12, 2019 at 17:43:23
+> > >   
+> > > > On Fri, 12 Jul 2019 16:28:02 +0000
+> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > >     
+> > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > > Date: Fri, Jul 12, 2019 at 17:14:29
+> > > > >     
+> > > > > > On Fri, 12 Jul 2019 13:53:30 +0200
+> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > > >       
+> > > > > > > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
+> > > > > > > spi and i2c mode.
+> > > > > > > 
+> > > > > > > The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
+> > > > > > > them.
+> > > > > > > 
+> > > > > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > > > > > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > > > > > ---
+> > > > > > > Changes in v4:
+> > > > > > >   Remove hw_id variable
+> > > > > > > 
+> > > > > > > Changes in v3:
+> > > > > > >   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
+> > > > > > >   Use st_lsm6dsx_probe new form
+> > > > > > > 
+> > > > > > > Changes in v2:
+> > > > > > >   Add support for LSM6DSR
+> > > > > > >   Set pm_ops to st_lsm6dsx_pm_ops
+> > > > > > > 
+> > > > > > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+> > > > > > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+> > > > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 58 +++++++++++++++++++++++++++++
+> > > > > > >  3 files changed, 66 insertions(+), 1 deletion(-)
+> > > > > > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > > > > > 
+> > > > > > > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> > > > > > > index 9e59297..6b5a73c 100644
+> > > > > > > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> > > > > > > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> > > > > > > @@ -1,11 +1,12 @@
+> > > > > > >  
+> > > > > > >  config IIO_ST_LSM6DSX
+> > > > > > >  	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
+> > > > > > > -	depends on (I2C || SPI)
+> > > > > > > +	depends on (I2C || SPI || I3C)
+> > > > > > >  	select IIO_BUFFER
+> > > > > > >  	select IIO_KFIFO_BUF
+> > > > > > >  	select IIO_ST_LSM6DSX_I2C if (I2C)
+> > > > > > >  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
+> > > > > > > +	select IIO_ST_LSM6DSX_I3C if (I3C)
+> > > > > > >  	help
+> > > > > > >  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+> > > > > > >  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+> > > > > > > @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
+> > > > > > >  	tristate
+> > > > > > >  	depends on IIO_ST_LSM6DSX
+> > > > > > >  	select REGMAP_SPI
+> > > > > > > +
+> > > > > > > +config IIO_ST_LSM6DSX_I3C
+> > > > > > > +	tristate
+> > > > > > > +	depends on IIO_ST_LSM6DSX
+> > > > > > > +	select REGMAP_I3C
+> > > > > > > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
+> > > > > > > index e5f733c..c676965 100644
+> > > > > > > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
+> > > > > > > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
+> > > > > > > @@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
+> > > > > > >  obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
+> > > > > > >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
+> > > > > > >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
+> > > > > > > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
+> > > > > > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > > > > > new file mode 100644
+> > > > > > > index 0000000..2e89524
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> > > > > > > @@ -0,0 +1,58 @@
+> > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > +/*
+> > > > > > > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
+> > > > > > > + *
+> > > > > > > + * Author: Vitor Soares <vitor.soares@synopsys.com>
+> > > > > > > + */
+> > > > > > > +
+> > > > > > > +#include <linux/kernel.h>
+> > > > > > > +#include <linux/module.h>
+> > > > > > > +#include <linux/i3c/device.h>
+> > > > > > > +#include <linux/i3c/master.h>
+> > > > > > > +#include <linux/slab.h>
+> > > > > > > +#include <linux/of.h>
+> > > > > > > +#include <linux/regmap.h>
+> > > > > > > +
+> > > > > > > +#include "st_lsm6dsx.h"
+> > > > > > > +
+> > > > > > > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
+> > > > > > > +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
+> > > > > > > +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),      
+> > > > > > 
+> > > > > > I think you need an uintptr_t cast here:
+> > > > > > 
+> > > > > > 	I3C_DEVICE(0x0104, 0x006C, (void *)(uintptr_t)ST_LSM6DSO_ID),
+> > > > > > 	I3C_DEVICE(0x0104, 0x006B, (void *)(uintptr_t)ST_LSM6DSR_ID),
+> > > > > > 
+> > > > > > otherwise gcc might complain that the integer and pointer do not have
+> > > > > > the same size (on 64-bit architectures).      
+> > > > > 
+> > > > > I don't understand this part. Can you provide or point some background?    
+> > > > 
+> > > > If you don't do that you'll get the following warning:
+> > > > 
+> > > > 	warning: cast to 'void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]    
+> > > 
+> > > I don't get the warning during compilation. Is there any flag to enable 
+> > > or so?  
+> > 
+> > Nope, nothing specific to enable, just enable this driver on an arm64
+> > config. Note that that gcc doesn't seem to complain about this
+> > int -> void * cast (there's probably some kind of auto-promotion to
+> > pointer size), but it does complains about the following void * -> int
+> > cast:
+> > 
+> > drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c: In function ‘st_lsm6dsx_i3c_probe’:
+> > drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c:43:43: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+> >    43 |  return st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
+> >       |       
 > 
+> I fixed the warning by changing:
+> 
+> st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
+> 
+> to
+> 
+> st_lsm6dsx_probe(&i3cdev->dev, 0, (int)(uintptr_t)id->data, regmap);
 
+The (int) cast is implicit, no need to add it here.
+
+> 
+> But I wonder if it isn't more save to change the following too:
+> 	I3C_DEVICE(0x0104, 0x006C, (void *)(uintptr_t)ST_LSM6DSO_ID),
+> 	I3C_DEVICE(0x0104, 0x006B, (void *)(uintptr_t)ST_LSM6DSR_ID),
+> 
+> What do you think?
+
+I think we're good, we would have a problem if you were defining
+ST_LSM6DSO_ID as an ULL (unsigned long long, AKA u64) and trying to
+cast that value to a void pointer on a 32-bit arch.
