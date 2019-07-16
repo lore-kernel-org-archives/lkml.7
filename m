@@ -2,219 +2,83 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFDAC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EA8C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3A42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:30:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ibh8wssZ"
+	by mail.kernel.org (Postfix) with ESMTP id A431021743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732857AbfGPVaz (ORCPT
+        id S1730281AbfGPVd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 17:30:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38972 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbfGPVaz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 17:30:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so5741374pfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6kokd9urqLvw9xwd+5O0M4O8FIkMVqne6oLchOnowAo=;
-        b=ibh8wssZe0klgvCEqtGL5SQYOhiDO0uXhSwtj8BIDydBS/3FWbCP2DMLOIemRLeltT
-         6QDu7NnPUf1dtPT4XHSPqhDA6hcF4aXFo11wvy1b8U6H/wvgF+hSctwPbOQhSv0jpsbp
-         fhcGESGlAlBkev0SBC+CEsGGSRfNnL1GJ8ZlQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6kokd9urqLvw9xwd+5O0M4O8FIkMVqne6oLchOnowAo=;
-        b=C0TfloTa8Ln5eAwOFGVHIXnYvnfGGukO4+P+jTZ5tRhhfxE5ad0IX3jL8RWWqt5OJ+
-         H0AU0HfCrjbRKYRU16ChqymS5t22de2VoMXn68+HKQs5eu8/PWaGkQE7nsvXaAesQg4w
-         UgknMAu1FzhLLXnYJ7DDU6C1DdAIW4L8TRwa64mk0+YIr5Wh2Z1CrfketjPTxdHr83pK
-         P3kbDtrHeZYVVOibHKo1yzCbgc2vNIUl1jMCS6ZBviXxJx8V27Tzxx38eQBeNdzpyIH7
-         RDyVd6jSu6p9WCMvmzTPLc3ZOX+MsI4V2KYhfE9qvP3JV0iICvvbd93Uptq1Wmog0FQQ
-         aVpA==
-X-Gm-Message-State: APjAAAVbyEdk3MyyAW2hk35uz6mZRBIuPKx6mBvmemKCj9cIRaxdzDdn
-        31Qh+RyqnFqD9x5MgKDdzvs=
-X-Google-Smtp-Source: APXvYqzP8aGlzyfvDVIxVivD9Z3lMgtTzbpkjETtCBTYCZiV8fxcj98GUhamPPzgUeCiezYOCwcypg==
-X-Received: by 2002:a63:4612:: with SMTP id t18mr27566053pga.85.1563312653706;
-        Tue, 16 Jul 2019 14:30:53 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 21sm10450343pfj.76.2019.07.16.14.30.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 14:30:52 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 17:30:50 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        Manali Shukla <manalishukla14@gmail.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matt Mullins <mmullins@fb.com>,
-        Michal Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
-        namhyung@kernel.org, netdev@vger.kernel.org,
-        paul.chaignon@gmail.com, primiano@google.com,
-        Qais Yousef <qais.yousef@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190716213050.GA161922@google.com>
-References: <20190710141548.132193-1-joel@joelfernandes.org>
- <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+        Tue, 16 Jul 2019 17:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726794AbfGPVd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 17:33:57 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAF7E2173E;
+        Tue, 16 Jul 2019 21:33:55 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 17:33:54 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     xywang.sjtu@sjtu.edu.cn
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: replace simple_strtol() by kstrtoint()
+Message-ID: <20190716173354.32575715@gandalf.local.home>
+In-Reply-To: <20190715085856.5664-1-xywang.sjtu@sjtu.edu.cn>
+References: <20190715085856.5664-1-xywang.sjtu@sjtu.edu.cn>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 01:54:57PM -0700, Alexei Starovoitov wrote:
-> On Wed, Jul 10, 2019 at 10:15:44AM -0400, Joel Fernandes (Google) wrote:
-> > Hi,
+On Mon, 15 Jul 2019 16:58:55 +0800
+xywang.sjtu@sjtu.edu.cn wrote:
+
+> From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 > 
-> why are you cc-ing the whole world for this patch set?
-
-Well, the whole world happens to be interested in BPF on Android.
-
-> I'll reply to all as well, but I suspect a bunch of folks consider it spam.
-> Please read Documentation/bpf/bpf_devel_QA.rst
-
-Ok, I'll read it.
-
-> Also, I think, netdev@vger rejects emails with 80+ characters in cc as spam,
-> so I'm not sure this set reached public mailing lists.
-
-Certainly the CC list here is not added to folks who consider it spam. All
-the folks added have been interested in BPF on Android at various points of
-time. Is this CC list really that large? It has around 24 email addresses or
-so. I can trim it a bit if needed. Also, you sound like as if people are
-screaming at me to stop emailing them, certainly that's not the case and no
-one has told me it is spam.
-
-And, it did reach the public archive btw:
-https://lore.kernel.org/netdev/20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com/T/#m1460ba463b78312e38b68b8c118f673d2ead9446
-
-> > These patches make it possible to attach BPF programs directly to tracepoints
-> > using ftrace (/sys/kernel/debug/tracing) without needing the process doing the
-> > attach to be alive. This has the following benefits:
-> > 
-> > 1. Simplified Security: In Android, we have finer-grained security controls to
-> > specific ftrace trace events using SELinux labels. We control precisely who is
-> > allowed to enable an ftrace event already. By adding a node to ftrace for
-> > attaching BPF programs, we can use the same mechanism to further control who is
-> > allowed to attach to a trace event.
-> > 
-> > 2. Process lifetime: In Android we are adding usecases where a tracing program
-> > needs to be attached all the time to a tracepoint, for the full life time of
-> > the system. Such as to gather statistics where there no need for a detach for
-> > the full system lifetime. With perf or bpf(2)'s BPF_RAW_TRACEPOINT_OPEN, this
-> > means keeping a process alive all the time.  However, in Android our BPF loader
-> > currently (for hardeneded security) involves just starting a process at boot
-> > time, doing the BPF program loading, and then pinning them to /sys/fs/bpf.  We
-> > don't keep this process alive all the time. It is more suitable to do a
-> > one-shot attach of the program using ftrace and not need to have a process
-> > alive all the time anymore for this. Such process also needs elevated
-> > privileges since tracepoint program loading currently requires CAP_SYS_ADMIN
-> > anyway so by design Android's bpfloader runs once at init and exits.
-> > 
-> > This series add a new bpf file to /sys/kernel/debug/tracing/events/X/Y/bpf
-> > The following commands can be written into it:
-> > attach:<fd>     Attaches BPF prog fd to tracepoint
-> > detach:<fd>     Detaches BPF prog fd to tracepoint
+> The simple_strtol() function is deprecated. kstrto[l,int]() are
+> the correct replacements as they can properly handle overflows.
 > 
-> Looks like, to detach a program the user needs to read a text file,
-> parse bpf prog id from text into binary. Then call fd_from_id bpf syscall,
-> get a binary FD, convert it back to text and write as a text back into this file.
-> I think this is just a single example why text based apis are not accepted
-> in bpf anymore.
+> This patch replaces the deprecated simple_strtol() use introduced recently.
+> As skip_entries is actually int-typed, we are safe to use kstrtoint() here.
+> 
+> Same as before, set 0 to skip_entries on string parsing error.
+> 
+> Fixes: dbfe67334a17 ("tracing: kdb: The skip_lines parameter should have been skip_entries")
 
-This can also be considered a tracefs API.
+This patch doesn't "fix" anything. It's more of a clean up.
 
-And we can certainly change the detach to accept program ids as well if
-that's easier. 'detach:prog:<prog_id>' and 'detach:fd:<fd>'.
+I'll look at it after the merge window. Same for the other patch.
 
-By the way, I can also list the set of cumbersome steps needed to attach a
-BPF program using perf and I bet it will be longer ;-)
+-- Steve
 
-> Through the patch set you call it ftrace. As far as I can see, this set
-> has zero overlap with ftrace. There is no ftrace-bpf connection here at all
-> that we discussed in the past Steven. It's all quite confusing.
-
-It depends on what you mean by ftrace, may be I can call it 'trace events' or
-something if it is less ambiguious. All of this has been collectively called
-ftrace before.
-
-I am not sure if you you are making sense actually, trace_events mechanism is
-a part of ftrace. See the documentation: Documentation/trace/ftrace.rst. Even
-the documentation file name has the word ftrace in it.
-
-I have also spoken to Steven before about this, I don't think he ever told me
-there is no connection so again I am a bit lost at your comments.
-
-> I suggest android to solve sticky raw_tracepoint problem with user space deamon.
-> The reasons, you point out why user daemon cannot be used, sound weak to me.
-
-I don't think it is weak. It seems overkill to have a daemon for a trace
-event that is say supposed to be attached to all the time for the lifetime of
-the system. Why should there be a daemon consuming resources if it is active
-all the time?
-
-In Android, we are very careful about spawning useless processes and leaving
-them alive for the lifetime of the system - for no good reason. Our security
-teams also don't like this, and they can comment more.
-
-> Another acceptable solution would be to introduce pinning of raw_tp objects.
-> bpf progs and maps can be pinned in bpffs already. Pinning raw_tp would
-> be natural extension.
-
-I don't think the pinning solves the security problem, it just solves the
-process lifetime problem. Currently, attaching trace events through perf
-requires CAP_SYS_ADMIN. However, with ftrace events, we already control
-security of events by labeling the nodes in tracefs and granting access to
-the labeled context through the selinux policies. Having a 'bpf' node in
-tracefs for events, and granting access to the labels is a natural extension.
-
-I also thought about the pinning idea before, but we also want to add support
-for not just raw tracepoints, but also regular tracepoints (events if you
-will). I am hesitant to add a new BPF API just for creating regular
-tracepoints and then pinning those as well.
-
-I don't see why a new bpf node for a trace event is a bad idea, really.
-tracefs is how we deal with trace events on Android. We do it in production
-systems. This is a natural extension to that and fits with the security model
-well.
-
-thanks,
-
- - Joel
-
-
-
+> Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+> ---
+>  kernel/trace/trace_kdb.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+> index cca65044c14c..5d9dd4c3f23f 100644
+> --- a/kernel/trace/trace_kdb.c
+> +++ b/kernel/trace/trace_kdb.c
+> @@ -104,8 +104,7 @@ static int kdb_ftdump(int argc, const char **argv)
+>  		return KDB_ARGCOUNT;
+>  
+>  	if (argc) {
+> -		skip_entries = simple_strtol(argv[1], &cp, 0);
+> -		if (*cp)
+> +		if (kstrtoint(argv[1], 0, &skip_entries))
+>  			skip_entries = 0;
+>  	}
+>  
 
