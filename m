@@ -2,132 +2,188 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042DBC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16785C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83B02145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A2LSovin";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U/8qGF2A"
+	by mail.kernel.org (Postfix) with ESMTP id D8CBF2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbfGPEsX (ORCPT
+        id S1730690AbfGPEv6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 00:48:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53084 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfGPEsX (ORCPT
+        Tue, 16 Jul 2019 00:51:58 -0400
+Received: from m4a0040g.houston.softwaregrp.com ([15.124.2.86]:41302 "EHLO
+        m4a0040g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726487AbfGPEv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 00:48:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 39D9861892; Tue, 16 Jul 2019 04:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563252502;
-        bh=GiCyZWigpDwDy+yS+t4Cvx/yw1g1hyCEP5LELwslBSk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A2LSovinbR42a+VHwFLtljAhj9KlNJCGKedTsdbqfAWn+Zfz6VQ2d19XMayGNtLT7
-         jgGTi/Jqi1LeT/DreoycSoGA0FxVes2LwdEcwpacQDnfpvzRkGrNPolIiBtG2JrUAa
-         MJg+lZxrP452Shhc4fxsI7jXA8YF8DPX2y0PyxNg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 95D2A61836;
-        Tue, 16 Jul 2019 04:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563252501;
-        bh=GiCyZWigpDwDy+yS+t4Cvx/yw1g1hyCEP5LELwslBSk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U/8qGF2AYFrlexm05QwQclFWBkYOyeb0D5hpepV+p+4hkj8xt3s3ILj6RaLNlWMGU
-         SQWBoChAyKTA1Ou4d07INorpyPZoUotuZfB/x8dYAVFYgKDrYw6380Lwzd5ST9Y7zI
-         PTBOY6ulro0rTg9weWVOxIlraZ/ocpcEu5HasBtE=
+        Tue, 16 Jul 2019 00:51:58 -0400
+Received: FROM m4a0040g.houston.softwaregrp.com (15.120.17.147) BY m4a0040g.houston.softwaregrp.com WITH ESMTP;
+ Tue, 16 Jul 2019 04:48:05 +0000
+Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 16 Jul 2019 04:51:05 +0000
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (15.124.72.13) by
+ M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Tue, 16 Jul 2019 04:51:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EzXltiqMMLoNzi4oo6FjCEV4dSACiB/Rxa7I7HdWL6PQ2x6rDicmydgHtOpCKv4u91eajAVIvPfhPoqLCwCUTIHonhTn9OjEkdF8/I7pjLTxYYIAxwXUSMjNDExgbjveEQQo9Qb6k2EP+m1i6a7X8x6H9gmarfqXnd4tai8Ydm/4gBdVD/F6mmU9ekKSr3Y0poBkx+wonYD3tEg0ne0QZsHRgxwJ2p1bekTANG33p6G+bRsFhmENKacHk8ij7atn7k9wtg6GAJU1/RZWzCH+XCDm9uI7Wq1M+KwBDlXB7YQwGIdtnP0YcPSqnJvSCzUcBExlLgFCPh9X4ogLZs3o/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M9kLBiKUoW2inHVPp1ZhgSoEnYplzEHjR0KLJDyLSQQ=;
+ b=FTQL6Oizd1o+/sTLNSslSRElneKZ1EhkjDv5iYVY9m1IlQYz8dN1+fm83CGtpBj9/VxKSEui69hagodgtMiDQeBG1Okk6L6lC5r3BQG0CdFOERTnQf00cnu+xpcc37Z1kUkQ8LyzX6Y7aFr+1QXhDvAAArvkJ4oJFaj83uuSzmaJANOG0fXi+dKKGqTkZypE+x9EwzHLwtYJsScPao5arvN/i0ugLcM7glpzpo2Nv3XrD9/aMPHeXAW2xhGcU6vmp1CiMMBLhwEOpkdUvRXTWQqdy5VtJHuo5HJ/4mdetWHZuUxqVK/OSkXWDm+S6xjA4PjWhcPiQN7IipQoFexJtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=suse.com;dmarc=pass action=none header.from=suse.com;dkim=pass
+ header.d=suse.com;arc=none
+Received: from BYAPR18MB2725.namprd18.prod.outlook.com (20.179.56.95) by
+ BYAPR18MB2486.namprd18.prod.outlook.com (20.179.92.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Tue, 16 Jul 2019 04:51:03 +0000
+Received: from BYAPR18MB2725.namprd18.prod.outlook.com
+ ([fe80::9c11:600:7b6b:6a32]) by BYAPR18MB2725.namprd18.prod.outlook.com
+ ([fe80::9c11:600:7b6b:6a32%7]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
+ 04:51:03 +0000
+From:   Joey Lee <JLee@suse.com>
+To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+CC:     David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Mimi Zohar" <zohar@linux.ibm.com>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] X.509: Add messages for obsolete OIDs
+Thread-Topic: [PATCH] X.509: Add messages for obsolete OIDs
+Thread-Index: AQHVO5ISsfBgDswl10u2AJhdqmT5Ug==
+Date:   Tue, 16 Jul 2019 04:51:03 +0000
+Message-ID: <20190716045056.GT28008@linux-l9pv.suse>
+References: <20190502041202.30753-1-jlee@suse.com>
+In-Reply-To: <20190502041202.30753-1-jlee@suse.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR17CA0029.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::42) To BYAPR18MB2725.namprd18.prod.outlook.com
+ (2603:10b6:a03:103::31)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=JLee@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [202.47.205.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ed8e547-f874-4096-ff0e-08d709a93466
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR18MB2486;
+x-ms-traffictypediagnostic: BYAPR18MB2486:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR18MB24868D2CCA5C57B477CE50D8A3CE0@BYAPR18MB2486.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(366004)(396003)(39860400002)(199004)(189003)(66066001)(305945005)(7736002)(68736007)(99286004)(102836004)(8936002)(54906003)(316002)(52116002)(8676002)(186003)(53936002)(446003)(11346002)(256004)(26005)(386003)(14454004)(486006)(64756008)(81166006)(66446008)(66556008)(66476007)(6512007)(66946007)(81156014)(9686003)(25786009)(3846002)(6116002)(966005)(19627235002)(15650500001)(2906002)(33656002)(6436002)(6486002)(478600001)(86362001)(6916009)(14444005)(476003)(229853002)(80792005)(76176011)(5660300002)(6506007)(71190400001)(71200400001)(6246003)(1076003)(36756003)(6306002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR18MB2486;H:BYAPR18MB2725.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: T1Oo/uoe8taNJWx7dhgPaXqysoaro4guYn45N5I0f8w86uHzMvjuJwtFqxH6Qzw4L9K9TtIz867Dm7gm5UzTbcYwUudkAio/YlT1tw/h7X3g9h/5hVO+Hff+a7Lnwj/xOHWtOo+9mj5sdI6O9ZdMg9cfvQUzMHgf3fuoJ/zdv2teWUq+ax2OiPFR7JQs360WQBeYo2GN2+5EvCorRT23h7LrQfTwVUXW9wyn3lpbx9bvTfg4TsN9LOyARWhgML+cdH3S0vcrO+cEzClGjTjAP/qry/t79caOBCCF+QM0Oip7lHgnzjSlufjWvAH+/pqnATVoicuTEJ9bQ0/Om+QPwdgHFJzkRoQ7MzhWmz886nevuEPySPW3A3gXLXI4y+r+rgOwEHhxcBVPKbuX4Mjd4mT5RKatCj3G7YBOEIQw/To=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <21D8B41B4637C34795985E26D8AA0396@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 16 Jul 2019 10:18:21 +0530
-From:   amasule@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH v4 4/4] media: venus: Update core selection
-In-Reply-To: <66c52577-fae8-9b3d-ec1d-886b97897729@linaro.org>
-References: <1562078787-516-1-git-send-email-amasule@codeaurora.org>
- <1562078787-516-5-git-send-email-amasule@codeaurora.org>
- <66c52577-fae8-9b3d-ec1d-886b97897729@linaro.org>
-Message-ID: <ca31e291b14a8c3494d0c49a097452ae@codeaurora.org>
-X-Sender: amasule@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ed8e547-f874-4096-ff0e-08d709a93466
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 04:51:03.3010
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JLee@suse.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2486
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-15 21:30, Stanimir Varbanov wrote:
-> Hi,
-> 
-> On 7/2/19 5:46 PM, Aniket Masule wrote:
->> Present core assignment is static. Introduced load balancing
->> across the cores. Load on earch core is calculated and core
->> with minimum load is assigned to given instance.
->> 
->> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/helpers.c    | 69 
->> +++++++++++++++++++++++---
->>  drivers/media/platform/qcom/venus/helpers.h    |  2 +-
->>  drivers/media/platform/qcom/venus/hfi_helper.h |  1 +
->>  drivers/media/platform/qcom/venus/hfi_parser.h |  5 ++
->>  drivers/media/platform/qcom/venus/vdec.c       |  2 +-
->>  drivers/media/platform/qcom/venus/venc.c       |  2 +-
->>  6 files changed, 72 insertions(+), 9 deletions(-)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
->> b/drivers/media/platform/qcom/venus/helpers.c
->> index 5726d86..321e9f7 100644
->> --- a/drivers/media/platform/qcom/venus/helpers.c
->> +++ b/drivers/media/platform/qcom/venus/helpers.c
->> @@ -26,6 +26,7 @@
->>  #include "helpers.h"
->>  #include "hfi_helper.h"
->>  #include "hfi_venus_io.h"
->> +#include "hfi_parser.h"
->> 
->>  struct intbuf {
->>  	struct list_head list;
->> @@ -331,6 +332,24 @@ static u32 load_per_instance(struct venus_inst 
->> *inst)
->>  	return mbs * inst->fps;
->>  }
->> 
->> +static u32 load_per_core(struct venus_core *core, u32 core_id)
->> +{
->> +	struct venus_inst *inst = NULL;
->> +	u32 mbs_per_sec = 0, load = 0;
->> +
->> +	mutex_lock(&core->lock);
->> +	list_for_each_entry(inst, &core->instances, list) {
->> +		if (!(inst->clk_data.core_id == core_id))
-> 
-> 		if (inst->clk_data.core_id != core_id)
-> 
-> I guess will be more readable?
-> 
-Yes, I will modify the check.
->> +			continue;
->> +
->> +		mbs_per_sec = load_per_instance(inst);
->> +		load = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
->> +	}
->> +	mutex_unlock(&core->lock);
->> +
->> +	return load;
->> +}
->> +
-> 
-> <cut>
+Hi experts, 
 
-Regards,
-Aniket
+On Thu, May 02, 2019 at 12:12:02PM +0800, Lee, Chun-Yi wrote:
+> We found that the db in Acer machine has self signed certificates
+> (CN=DisablePW or CN=ABO) that they used obsolete OID 1.3.14.3.2.29
+> sha1WithRSASignature and 2.5.29.1 subjectKeyIdentifier. Kernel
+> emits -65 error code when loading those certificates to platform
+> keyring:
+> 
+> [    1.484388] integrity: Loading X.509 certificate: UEFI:MokListRT
+> [    1.485557] integrity: Problem loading X.509 certificate -65
+> [    1.486100] Error adding keys to platform keyring UEFI:MokListRT
+> 
+> Because the -65 error code is not enough for appeasing user when
+> loading a outdated certificate. This patch add messages against
+> 1.3.14.3.2.29 and 2.5.29.1 OIDs.
+> 
+> Link: https://bugzilla.opensuse.org/show_bug.cgi?id=1129471
+> Cc: David Howells <dhowells@redhat.com> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+
+Have any update or comment for this patch? 
+
+Thanks
+Joey Lee
+
+> ---
+>  crypto/asymmetric_keys/x509_cert_parser.c | 7 +++++++
+>  include/linux/oid_registry.h              | 2 ++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/crypto/asymmetric_keys/x509_cert_parser.c b/crypto/asymmetric_keys/x509_cert_parser.c
+> index 991f4d735a4e..bbd22d5c5b5d 100644
+> --- a/crypto/asymmetric_keys/x509_cert_parser.c
+> +++ b/crypto/asymmetric_keys/x509_cert_parser.c
+> @@ -192,6 +192,8 @@ int x509_note_pkey_algo(void *context, size_t hdrlen,
+>  	pr_debug("PubKey Algo: %u\n", ctx->last_oid);
+>  
+>  	switch (ctx->last_oid) {
+> +	case OID_sha1WithRSASignature:
+> +		pr_info("1.3.14.3.2.29 sha1WithRSASignature is obsolete.\n");
+>  	case OID_md2WithRSAEncryption:
+>  	case OID_md3WithRSAEncryption:
+>  	default:
+> @@ -464,6 +466,11 @@ int x509_process_extension(void *context, size_t hdrlen,
+>  		return 0;
+>  	}
+>  
+> +	if (ctx->last_oid == OID_subjectKeyIdentifier_obsolete) {
+> +		pr_info("2.5.29.1 subjectKeyIdentifier OID is obsolete.\n");
+> +		return -ENOPKG;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
+> index d2fa9ca42e9a..0641d5aa2251 100644
+> --- a/include/linux/oid_registry.h
+> +++ b/include/linux/oid_registry.h
+> @@ -62,6 +62,7 @@ enum OID {
+>  
+>  	OID_certAuthInfoAccess,		/* 1.3.6.1.5.5.7.1.1 */
+>  	OID_sha1,			/* 1.3.14.3.2.26 */
+> +	OID_sha1WithRSASignature,	/* 1.3.14.3.2.29 */
+>  	OID_sha256,			/* 2.16.840.1.101.3.4.2.1 */
+>  	OID_sha384,			/* 2.16.840.1.101.3.4.2.2 */
+>  	OID_sha512,			/* 2.16.840.1.101.3.4.2.3 */
+> @@ -83,6 +84,7 @@ enum OID {
+>  	OID_generationalQualifier,	/* 2.5.4.44 */
+>  
+>  	/* Certificate extension IDs */
+> +	OID_subjectKeyIdentifier_obsolete,	/* 2.5.29.1 */
+>  	OID_subjectKeyIdentifier,	/* 2.5.29.14 */
+>  	OID_keyUsage,			/* 2.5.29.15 */
+>  	OID_subjectAltName,		/* 2.5.29.17 */
+> -- 
+> 2.16.4
+> 
