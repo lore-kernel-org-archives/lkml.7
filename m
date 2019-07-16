@@ -2,88 +2,120 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78486C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22A4C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414512173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563284544;
-	bh=Vw/idVh7Sc9FkQHJBYJh/radei2L3mJILwWiBzy0SpE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oc/pB4bMBSjIDyAnlTveT5vSDL2HNKDs00ekW/pbOTnmN6U45JlvR1XBFLFT7K3TW
-	 ScgYRZbOFDPqsZsTRYl+f6wA5WtGXtvgDtucQChnF5OO6fQH11VnyRKlymW8f9saS0
-	 03vbjQGGwVzO9JbekRJwqQAX7cdDhd/M7X07mc8g=
+	by mail.kernel.org (Postfix) with ESMTP id 830752173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rcqFLQJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbfGPNmX (ORCPT
+        id S2387746AbfGPNn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728004AbfGPNmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:42:22 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C63A22173B;
-        Tue, 16 Jul 2019 13:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563284542;
-        bh=Vw/idVh7Sc9FkQHJBYJh/radei2L3mJILwWiBzy0SpE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uQso73W//C9Bau/8iSPNI4x6+4yOKqR0Ea9YDIlI6KmtykvsLMa/dGZspYWLz3eA1
-         xpiVFHPNBzW3XaeiAm6O3G4vJ8GeNNC7slaTnw6sgm47SFbcGs6mnt4akBFgD7GpQz
-         GhsVrt1fxuhAPbN5KtwPuIIn7j2YJPycBomaPnVQ=
-Date:   Tue, 16 Jul 2019 15:42:20 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/2] perf/hw_breakpoint: Fix breakpoint overcommit issue
-Message-ID: <20190716134219.GB4000@lenoir>
-References: <20190709134821.8027-1-frederic@kernel.org>
- <20190710140421.GP3402@hirez.programming.kicks-ass.net>
- <20190710153406.GA18838@lenoir>
- <20190711105305.GY3402@hirez.programming.kicks-ass.net>
- <20190715124737.GN3463@hirez.programming.kicks-ass.net>
+        Tue, 16 Jul 2019 09:43:29 -0400
+Received: from mail-eopbgr80081.outbound.protection.outlook.com ([40.107.8.81]:54665
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728608AbfGPNn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:43:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cgL0a6Y0g9g1UqJelUEOysHZ6PLQPvlr4TztL96Qi2rv8GpXK0XFykaDoe6rJyDgqu+bQLahMGfE6l7otvFCZV0zxAB1E5HCnrtdsbSJNWbGyRhaJ1ZtwznXIqmgmCXVGb/eJ+3ILU5vZ1+nhNZfcGYL81QQh8hdS+5jdwyJ3joNDmXeCZzSGicqeSes4o7RBoZ//KuZfA1LC/VfLUf85jftkczVy6Wk0hL+gk6KFpXqVMvZT+YTTjcluKdhyDkCSqPffGn6nLy1umsEXYdMYTskYpd1t5+FosXyAKvp2fFB6FiLX/Etg5ytu7PhuoUUh2pmQ/y7nudO/iKJiIwRBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jqY8Js25oHv3o7brTQjn5AriI17XQeXjRxYJYZMS9HA=;
+ b=ID+aM0mp2X1jYRXtIv4emXPo1qi17VHr3Xd5O2y/hmXDVaezaowK6AJcam5R5MpeikowB4LhaFXz1/zrsz2ENni5K5FqtOjk3q348wWnopNPUg6Tf4FSJlt3k6hvbEtNbVX812wtME6dpgWbuqwBt0r7M4AAK0XvpFmYXCfyCz4bMxHKIYwh/qo5V9A68uBSsDht5ZyXA5cSz/iCmnNe187m4k01Opa7gBiMtx1y/8Xl7MRy+NuvkKrg2+WpZjv36bxzBH7WQNOVxXhUtM6KwoUIuI6YCUWX9LQ8XqcUCSw+VuKd2CTYf2+0iBGnqSIU4j6V+OlCr/CIstiumnYVkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jqY8Js25oHv3o7brTQjn5AriI17XQeXjRxYJYZMS9HA=;
+ b=rcqFLQJng9fnneDl84rH2owCvPqOB0epFTY0vynJZxIWPkpGWp281zDMAAVpVeL1y8XKXTzceZzpQDlda5pkYrSFyn1vqjPlgnVWOe41uogUvxQ1g7tfA4ep7Ckwaxj5xeptX9x6vtOKNwEkDVFZExEV99H56Fn2rK/9SfxXbDw=
+Received: from AM6PR04MB5032.eurprd04.prod.outlook.com (20.177.34.92) by
+ AM6PR04MB4503.eurprd04.prod.outlook.com (20.177.37.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Tue, 16 Jul 2019 13:43:24 +0000
+Received: from AM6PR04MB5032.eurprd04.prod.outlook.com
+ ([fe80::5563:4416:c0a2:f511]) by AM6PR04MB5032.eurprd04.prod.outlook.com
+ ([fe80::5563:4416:c0a2:f511%6]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
+ 13:43:24 +0000
+From:   Pramod Kumar <pramod.kumar_1@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pramod Kumar <pramod.kumar_1@nxp.com>
+Subject: [PATCH v4 0/2] arm64: dts: nxp: add ls1046a frwy board support
+Thread-Topic: [PATCH v4 0/2]    arm64: dts: nxp: add ls1046a frwy board support
+Thread-Index: AQHVO9xwquX3nK7pckOrEOPd6jFhfQ==
+Date:   Tue, 16 Jul 2019 13:43:23 +0000
+Message-ID: <1563284586-29928-1-git-send-email-pramod.kumar_1@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: SG2PR04CA0133.apcprd04.prod.outlook.com
+ (2603:1096:3:16::17) To AM6PR04MB5032.eurprd04.prod.outlook.com
+ (2603:10a6:20b:9::28)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pramod.kumar_1@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [14.142.151.118]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8448a090-c4fc-49f0-ce21-08d709f39259
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4503;
+x-ms-traffictypediagnostic: AM6PR04MB4503:
+x-microsoft-antispam-prvs: <AM6PR04MB4503514A582B06BCD1368EEEF6CE0@AM6PR04MB4503.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(136003)(366004)(199004)(189003)(2616005)(81156014)(66946007)(476003)(66476007)(64756008)(66556008)(86362001)(66446008)(2501003)(55236004)(71190400001)(102836004)(71200400001)(78486014)(26005)(316002)(50226002)(81166006)(54906003)(110136005)(8936002)(6506007)(386003)(5660300002)(186003)(14454004)(52116002)(256004)(6636002)(4744005)(99286004)(4326008)(25786009)(7736002)(478600001)(305945005)(6486002)(3846002)(6512007)(6116002)(53936002)(36756003)(2201001)(486006)(2906002)(68736007)(66066001)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4503;H:AM6PR04MB5032.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IM6p9VCka8Yrj6PmejRwFzjjiDpdmwqP7OOi07s+mRBxHhe0eX+0stS7aueEMopOYEe9B5ror8CJJOygE0/nvZNwd+IQKDImdBf56BS6uM+PYjPo2TsLqrgsToosELlsjw1pfZ706reb5Yg+d6gxyMIOUg8V9gPN4er7XOpr5fos8ah33zWt/hymtZCnZzIrZmgPx+lB26Iuw4omfiLZzeVicGJlobQlrE7wHrwAwnhtBXFPFsujWQr7c+rKjJxwzJCBW0lQ+tW1rJyfegWQZ3nbcJKnva5UMNGiydXq2aR/RCbbVcnZjBswIO1d2/KrkEo5U8NcM+yQvr3alou0LI4IiQP2h95t1zgrF89JFc9WXjgQMzsKUf6jKWpA1HSH9ue1xILWT0cHZkb3wwFM6OvRkHQYOrMDsT57UfgkS/o=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715124737.GN3463@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8448a090-c4fc-49f0-ce21-08d709f39259
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 13:43:24.1281
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pramod.kumar_1@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4503
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 02:47:37PM +0200, Peter Zijlstra wrote:
-> On Thu, Jul 11, 2019 at 12:53:05PM +0200, Peter Zijlstra wrote:
-> > > I wish we could use event->ctx->task instead but on pmu::init() there
-> > > is no ctx yet (we could pass the task in parameter though) 
-> > 
-> > Right, that should be fairly easy.
-> > 
-> > > and on event->destroy() it's TASK_TOMBSTONE and retrieving the task at
-> > > that time would be non trivial.
-> > 
-> > Well, right, we can maybe make TOMBSTONE be the LSB instead of the whole
-> > word, then we can recover the task pointer... *yuck* though.
-> 
-> Something like the attached, completely untested patches.
-> 
-> I didn't do the hw_breakpoint bit, because I got lost in that, but this
-> basically provides what you asked for I think.
-> 
+changes for v4:
+incorporated shawn review comment
 
-Thanks they look good! I can take them and work on top if you like.
+Pramod Kumar (2):
+  dt-bindings: arm: nxp: Add device tree binding for ls1046a-frwy board
+  arm64: dts: nxp: add ls1046a-frwy board support
+
+ Documentation/devicetree/bindings/arm/fsl.yaml     |   1 +
+ arch/arm64/boot/dts/freescale/Makefile             |   1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts | 156 +++++++++++++++++=
+++++
+ 3 files changed, 158 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+
+--=20
+2.7.4
+
