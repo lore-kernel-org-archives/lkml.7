@@ -2,248 +2,144 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8830C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BF5C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C3B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DFE2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ED7cS30s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IE3R3vaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfGPPur (ORCPT
+        id S2387907AbfGPPwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:50:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49326 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbfGPPur (ORCPT
+        Tue, 16 Jul 2019 11:52:46 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43241 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGPPwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:50:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3+YkI0FnsgmXiczrxAjXgi7U2TnIjSbvE8IfvgJlhPg=; b=ED7cS30sIVrEbi1Rwq0uchd+O
-        qy7xH/iD39WtaozjvVqAsvYb9/aD3mw+rljvNMErgrmYcSSwAzNEewkV0z9g3CXxIAfhsX1F/AvrX
-        8ZW5zWYmekf17Oyath2w15ox/7rfrOrohusEoQw6AbsqzAX7O2ShESoK3DkGXKA+S1be5/9hquOX8
-        oenAKGfd2UncPbemM8z2ZHvgdF9z8yHrPBSus1d7R7wwp/MopKlXsaRkDY0o862sn/VndGvD9/m2b
-        yuHpHBseRs7yY+4fJBxTl3Xfe77kotfouaYvcCSmsaLta7K4EW0kRCKvGvkCBSOuZ2hJ+QL5EqB3s
-        fIU3yKTLw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnPii-0005WM-VJ; Tue, 16 Jul 2019 15:50:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B879C20B15D63; Tue, 16 Jul 2019 17:50:22 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 17:50:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20190716155022.GR3419@hirez.programming.kicks-ass.net>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
+        Tue, 16 Jul 2019 11:52:45 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so21499754wru.10;
+        Tue, 16 Jul 2019 08:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CTuBz10dpzRMw27jIFDD0GAWYqxmo2+HWztpyEtT7Cs=;
+        b=IE3R3vaJgsC2kQ7mm/cWs5nW1v35kWOV4hUVTPQuXIE+d4R5Sf5WrORLqxvflpIBFn
+         mNwrHBBDTbNEwN6JHlCWfnoYR/6XIGeiFaQ5Tnradm0ED1R2+uzVYf9lrz28VXsx4QOl
+         56EL6P0C0h4bvC/AZ/J7lfqkcvct94pYaa4qChhAEIMkOdLEMp9KgndoHVCpg/MQrfh5
+         P0vm1ZSkOmLR+P/RCbDTkshtwkxp+/SiZKx+V9Gp5+hM+LQdngEiScjqVLog/RnLm2Va
+         vgoeR05abVUglf4g4GfQB/IgrpD8bumaaH15aJYroTe3dihe/9QZLcm26qLUav54DmxY
+         WA8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CTuBz10dpzRMw27jIFDD0GAWYqxmo2+HWztpyEtT7Cs=;
+        b=ItoP2UiEwydoYVzcT5nwHzDoLSbBJzkfyp7t690e+HIOLAFmrvFRP5O0UpAYPKp7dT
+         G1/pm+m7lcexJS9ivhvWgjG3Grq0Uq9pJfuccwq6gGvKjAW6wESyOL0EYiOrIEXYt/c5
+         r7gx6vNdzf3+oVzo4220iaNa6UUMX/09lAfkfb37c7pO1AicwU0GiJGqYYFBqPh7S4Z8
+         iQMcBl5o6p7YQSBzyvUwBZE3KSrY9cVBwGh5uHUCL2QkOIWXemcj7tV3uzl8+eauhKKK
+         9/gs03oKgex2Mm++o4VJ7mGnvKSoY5ncvRXOvC8lqEcAHQIJZbQhLmwucbqnmxm8mlpC
+         GX2g==
+X-Gm-Message-State: APjAAAVZYoPmctMRNeGQH9txFVsqfcjuV+Rro7YX2OL1SxyS4fWAB9Gq
+        uqoY9GaVpL+Z/+ocOCJc0RA=
+X-Google-Smtp-Source: APXvYqwOW/1KCVV68x0nxArTP1dMeAYuDwBqKnARPWDMyfmR+OUSyJXxI0kWG6Ige26KulgfzygtZA==
+X-Received: by 2002:adf:ea4c:: with SMTP id j12mr38408437wrn.75.1563292363565;
+        Tue, 16 Jul 2019 08:52:43 -0700 (PDT)
+Received: from localhost (smbhubinfra01.hotspot.hub-one.net. [213.174.99.146])
+        by smtp.gmail.com with ESMTPSA id e7sm19973280wmd.0.2019.07.16.08.52.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jul 2019 08:52:42 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 09:21:35 +0200
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
+Message-ID: <20190716072135.GA806@penguin>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-3-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190715192536.104548-4-alex.kogan@oracle.com>
+In-Reply-To: <20190702003740.75970-3-luzmaximilian@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:25:34PM -0400, Alex Kogan wrote:
-> +static struct cna_node *find_successor(struct mcs_spinlock *me)
+Hi Maximilian,
+
+On Tue, Jul 02, 2019 at 02:37:40AM +0200, Maximilian Luz wrote:
+> Power and volume button support for 5th and 6th genration Microsoft
+> Surface devices via soc_button_array.
+> 
+> Note that these devices use the same MSHW0040 device as on the Surface
+> Pro 4, however the implementation is different (GPIOs vs. ACPI
+> notifications). Thus some checking is required to ensure we only load
+> this driver on the correct devices.
+
+When you are saying that Pro 4 and later models use different
+notifications, does this mean that Pro 4 does not define any GPIOs? If
+so can we use their presence as indicator whether we should be using
+this driver or not. I would like to avoid repeating the ACPI parsing
+code that you have in the platform driver.
+
+> +static int soc_device_check_MSHW0040(struct device *dev)
 > +{
-> +	struct cna_node *me_cna = CNA_NODE(me);
-> +	struct cna_node *head_other, *tail_other, *cur;
-> +	struct cna_node *next = CNA_NODE(READ_ONCE(me->next));
-> +	int my_node;
+> +	acpi_handle handle = ACPI_HANDLE(dev);
+> +	union acpi_object *result;
+> +	u64 oem_platform_rev = 0;
+> +	int gpios;
 > +
-> +	/* @next should be set, else we would not be calling this function. */
-> +	WARN_ON_ONCE(next == NULL);
+> +	// get OEM platform revision
+> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+> +					 MSHW0040_DSM_REVISION,
+> +					 MSHW0040_DSM_GET_OMPR, NULL,
+> +					 ACPI_TYPE_INTEGER);
 > +
-> +	my_node = me_cna->numa_node;
-> +
-> +	/*
-> +	 * Fast path - check whether the immediate successor runs on
-> +	 * the same node.
-> +	 */
-> +	if (next->numa_node == my_node)
-> +		return next;
-> +
-> +	head_other = next;
-> +	tail_other = next;
-> +
-> +	/*
-> +	 * Traverse the main waiting queue starting from the successor of my
-> +	 * successor, and look for a thread running on the same node.
-> +	 */
-> +	cur = CNA_NODE(READ_ONCE(next->mcs.next));
-> +	while (cur) {
-> +		if (cur->numa_node == my_node) {
-> +			/*
-> +			 * Found a thread on the same node. Move threads
-> +			 * between me and that node into the secondary queue.
-> +			 */
-> +			if (me->locked > 1)
-> +				CNA_NODE(me->locked)->tail->mcs.next =
-> +					(struct mcs_spinlock *)head_other;
-> +			else
-> +				me->locked = (uintptr_t)head_other;
-> +			tail_other->mcs.next = NULL;
-> +			CNA_NODE(me->locked)->tail = tail_other;
-> +			return cur;
-> +		}
-> +		tail_other = cur;
-> +		cur = CNA_NODE(READ_ONCE(cur->mcs.next));
-> +	}
-> +	return NULL;
-> +}
-
-static void cna_move(struct cna_node *cn, struct cna_node *cni)
-{
-	struct cna_node *head, *tail;
-
-	/* remove @cni */
-	WRITE_ONCE(cn->mcs.next, cni->mcs.next);
-
-	/* stick @cni on the 'other' list tail */
-	cni->mcs.next = NULL;
-
-	if (cn->mcs.locked <= 1) {
-		/* head = tail = cni */
-		head = cni;
-		head->tail = cni;
-		cn->mcs.locked = head->encoded_tail;
-	} else {
-		/* add to tail */
-		head = (struct cna_node *)decode_tail(cn->mcs.locked);
-		tail = tail->tail;
-		tail->next = cni;
-	}
-}
-
-static struct cna_node *cna_find_next(struct mcs_spinlock *node)
-{
-	struct cna_node *cni, *cn = (struct cna_node *)node;
-
-	while ((cni = (struct cna_node *)READ_ONCE(cn->mcs.next))) {
-		if (likely(cni->node == cn->node))
-			break;
-
-		cna_move(cn, cni);
-	}
-
-	return cni;
-}
-
-> +static inline bool cna_set_locked_empty_mcs(struct qspinlock *lock, u32 val,
-> +					struct mcs_spinlock *node)
-> +{
-> +	/* Check whether the secondary queue is empty. */
-> +	if (node->locked <= 1) {
-> +		if (atomic_try_cmpxchg_relaxed(&lock->val, &val,
-> +				_Q_LOCKED_VAL))
-> +			return true; /* No contention */
-> +	} else {
-> +		/*
-> +		 * Pass the lock to the first thread in the secondary
-> +		 * queue, but first try to update the queue's tail to
-> +		 * point to the last node in the secondary queue.
-
-
-That comment doesn't make sense; there's at least one conditional
-missing.
-
-> +		 */
-> +		struct cna_node *succ = CNA_NODE(node->locked);
-> +		u32 new = succ->tail->encoded_tail + _Q_LOCKED_VAL;
-> +
-> +		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
-> +			arch_mcs_spin_unlock_contended(&succ->mcs.locked, 1);
-> +			return true;
-> +		}
+> +	if (result) {
+> +		oem_platform_rev = result->integer.value;
+> +		ACPI_FREE(result);
 > +	}
 > +
-> +	return false;
-> +}
-
-static cna_try_clear_tail(struct qspinlock *lock, u32 val, struct mcs_spinlock *node)
-{
-	if (node->locked <= 1)
-		return __try_clear_tail(lock, val, node);
-
-	/* the other case */
-}
-
-> +static inline void cna_pass_mcs_lock(struct mcs_spinlock *node,
-> +				     struct mcs_spinlock *next)
-> +{
-> +	struct cna_node *succ = NULL;
-> +	u64 *var = &next->locked;
-> +	u64 val = 1;
+> +	if (oem_platform_rev == 0)
+> +		return -ENODEV;
 > +
-> +	succ = find_successor(node);
-
-This makes unlock O(n), which is 'funneh' and undocumented.
-
+> +	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
 > +
-> +	if (succ) {
-> +		var = &succ->mcs.locked;
-> +		/*
-> +		 * We unlock a successor by passing a non-zero value,
-> +		 * so set @val to 1 iff @locked is 0, which will happen
-> +		 * if we acquired the MCS lock when its queue was empty
-> +		 */
-> +		val = node->locked + (node->locked == 0);
-> +	} else if (node->locked > 1) { /* if the secondary queue is not empty */
-> +		/* pass the lock to the first node in that queue */
-> +		succ = CNA_NODE(node->locked);
-> +		succ->tail->mcs.next = next;
-> +		var = &succ->mcs.locked;
+> +	/*
+> +	 * We are _really_ expecting GPIOs here. If we do not get any, this
+> +	 * means the GPIO driver has not been loaded yet (which can happen).
+> +	 * Try again later.
+> +	 */
+> +	gpios = gpiod_count(dev, NULL);
+> +	if (gpios < 0)
+> +		return -EAGAIN;
 
-> +	}	/*
-> +		 * Otherwise, pass the lock to the immediate successor
-> +		 * in the main queue.
-> +		 */
+I do not believe -EAGAIN has any special meaning in the driver core;
+also when the GPIO controller is not ready gpiod_get() will return
+-EPROBE_DEFER, which is the prober way if signalling that some resource
+is not yet available and probe should be retries at a later time.
 
-I don't think this mis-indented comment can happen. The call-site
-guarantees @next is non-null.
+Moreover, I do not believe that gpiod_count() needs GPIO controller to
+be ready, the count is taken from board firmware or static board file
+definition, so if gpiod_count() returns 0 it should be clear indication
+that the driver should not be used with the device.
 
-Therefore, cna_find_next() will either return it, or place it on the
-secondary list. If it (cna_find_next) returns NULL, we must have a
-non-empty secondary list.
+Thanks.
 
-In no case do I see this tertiary condition being possible.
-
-> +
-> +	arch_mcs_spin_unlock_contended(var, val);
-> +}
-
-This also renders this @next argument superfluous.
-
-static cna_mcs_pass_lock(struct mcs_spinlock *node, struct mcs_spinlock *next)
-{
-	next = cna_find_next(node);
-	if (!next) {
-		BUG_ON(node->locked <= 1);
-		next = (struct cna_node *)decode_tail(node->locked);
-		node->locked = 1;
-	}
-
-	arch_mcs_pass_lock(&next->mcs.locked, node->locked);
-}
-
+-- 
+Dmitry
