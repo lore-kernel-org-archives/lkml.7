@@ -2,158 +2,247 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FCC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A54C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65152173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043792173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvSGJoct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbfGPPFk (ORCPT
+        id S2387902AbfGPPHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:05:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:36282 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730754AbfGPPFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:05:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39EE6337;
-        Tue, 16 Jul 2019 08:05:39 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63B843F59C;
-        Tue, 16 Jul 2019 08:05:36 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 16:05:34 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM
- domains using genpd
-Message-ID: <20190716150533.GD7250@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-10-ulf.hansson@linaro.org>
+        Tue, 16 Jul 2019 11:07:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36613 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728384AbfGPPHX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:07:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r6so21436592oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 08:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lKfULo1eMZAGbQNEWUso+2R41ym1FcQst15z8kTgQ38=;
+        b=KvSGJocttM2XjFZf+K3n2VG2SKi6DPfEFmALEyNa1p3eeaWmxD+obERlIgbFxBvhdn
+         2xhBR3ulUUE5RDGGe4l02cAdBlwtTdnw5KqCUtsY+4azVe/uAKZ3aWZ89Y3tDyTQA/HT
+         oKBhDLRPdJMLY/szjejeTpH15eFwCns9xN/Yc/HFD3W29fbGg0kYcAKbgwNFzA9EzflI
+         RzzxDafPGRMAXbN45a+tXzvGRAVB4P0A3recsHy+mK2oUReXBA6ms/Yr5k1vnGPz5Ud7
+         YSP8U1Ud7AYdlBQJ0IsuirqRQCMIV2b7++Hs/NBzx4q5b+KZG25zXjqnyOkgucl5xHoV
+         ttfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lKfULo1eMZAGbQNEWUso+2R41ym1FcQst15z8kTgQ38=;
+        b=KX0M92dqJj/R68NQRqFTrU8D7c2Cwr7/ZBnoZUXGyu7vyTBqdLGIlvGEYs/7qJRWyi
+         YZuxYLUGyq3r+XVW05unHgfa+CKYvWLKeG+u6GUh4AIAaSFygetnEAfGt/HFIF2uuWcE
+         EfUxqR67ziDavAL4Y5zI0QIZcmOTap+PI8Eh/dKKr8PtBeEo31xkpFZtALhbLPaXSrSR
+         KsgPxWihe3RHBf1A25DqpoyaG5vCNY6f80up/nZE83ZXIZBatItpamG5hQ/Cos/m0EIE
+         zYN90mz4gd6SQc+wR0xoQ42jEpIFK5hmW+c9zc6YORWWvgb6wqAVEjym1YnvT5brOVH7
+         medw==
+X-Gm-Message-State: APjAAAXCtSilxIamx4myWYk/tLJEXiH7PWMqCrdebNvGlc9U5eU5OlyK
+        fv6DbovezvZOebWkp6A6M61USmPHMmCL8aGXp5E=
+X-Google-Smtp-Source: APXvYqw0FwtLVnzp5TRrqVwvKN6i7mM+KAWSmD2nT7AzHAJsR+L8LJdJaNNa4X6wTVZO2BLpeNNDRDvTmQf7JjeT3tk=
+X-Received: by 2002:a9d:73c4:: with SMTP id m4mr22945314otk.369.1563289642522;
+ Tue, 16 Jul 2019 08:07:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-10-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190716132604.28289-1-lpf.vector@gmail.com> <20190716132604.28289-3-lpf.vector@gmail.com>
+ <20190716143525.5vnnwh4m637dcb2f@pc636>
+In-Reply-To: <20190716143525.5vnnwh4m637dcb2f@pc636>
+From:   Pengfei Li <lpf.vector@gmail.com>
+Date:   Tue, 16 Jul 2019 23:07:11 +0800
+Message-ID: <CAD7_sbFNOOM-nmHRP9pJkfaXfZj6YO2rr0Q3zTM28-Xd70g_9w@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] mm/vmalloc: modify struct vmap_area to reduce its size
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>, rpenyaev@suse.de,
+        peterz@infradead.org, guro@fb.com, rick.p.edgecombe@intel.com,
+        rppt@linux.ibm.com, aryabinin@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
-> When the hierarchical CPU topology layout is used in DT, we need to setup
-> the corresponding PM domain data structures, as to allow a CPU and a group
-> of CPUs to be power managed accordingly. Let's enable this by deploying
-> support through the genpd interface.
+On Tue, Jul 16, 2019 at 10:35 PM Uladzislau Rezki <urezki@gmail.com> wrote:
 >
-> Additionally, when the OS initiated mode is supported by the PSCI FW, let's
-> also parse the domain idle states DT bindings as to make genpd responsible
-> for the state selection, when the states are compatible with
-> "domain-idle-state". Otherwise, when only Platform Coordinated mode is
-> supported, we rely solely on the state selection to be managed through the
-> regular cpuidle framework.
->
-> If the initialization of the PM domain data structures succeeds and the OS
-> initiated mode is supported, we try to switch to it. In case it fails,
-> let's fall back into a degraded mode, rather than bailing out and returning
-> an error code.
->
-> Due to that the OS initiated mode may become enabled, we need to adjust to
-> maintain backwards compatibility for a kernel started through a kexec call.
-> Do this by explicitly switch to Platform Coordinated mode during boot.
->
-> Finally, the actual initialization of the PM domain data structures, is
-> done via calling the new shared function, psci_dt_init_pm_domains().
-> However, this is implemented by subsequent changes.
->
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->
-> Changes:
-> 	- Simplify code setting domain_state at power off.
-> 	- Use the genpd ->free_state() callback to manage freeing of states.
-> 	- Fixup a bogus while loop.
->
-> ---
->  drivers/firmware/psci/Makefile         |   2 +-
->  drivers/firmware/psci/psci.c           |   7 +-
->  drivers/firmware/psci/psci.h           |   5 +
->  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
->  4 files changed, 280 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
+> On Tue, Jul 16, 2019 at 09:26:04PM +0800, Pengfei Li wrote:
+> > Objective
+> > ---------
+> > The current implementation of struct vmap_area wasted space.
+> >
+> > After applying this commit, sizeof(struct vmap_area) has been
+> > reduced from 11 words to 8 words.
+> >
+> > Description
+> > -----------
+> > 1) Pack "subtree_max_size", "vm" and "purge_list".
+> > This is no problem because
+> >     A) "subtree_max_size" is only used when vmap_area is in
+> >        "free" tree
+> >     B) "vm" is only used when vmap_area is in "busy" tree
+> >     C) "purge_list" is only used when vmap_area is in
+> >        vmap_purge_list
+> >
+> > 2) Eliminate "flags".
+> > Since only one flag VM_VM_AREA is being used, and the same
+> > thing can be done by judging whether "vm" is NULL, then the
+> > "flags" can be eliminated.
+> >
+> > Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+> > Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  include/linux/vmalloc.h | 20 +++++++++++++-------
+> >  mm/vmalloc.c            | 24 ++++++++++--------------
+> >  2 files changed, 23 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> > index 9b21d0047710..a1334bd18ef1 100644
+> > --- a/include/linux/vmalloc.h
+> > +++ b/include/linux/vmalloc.h
+> > @@ -51,15 +51,21 @@ struct vmap_area {
+> >       unsigned long va_start;
+> >       unsigned long va_end;
+> >
+> > -     /*
+> > -      * Largest available free size in subtree.
+> > -      */
+> > -     unsigned long subtree_max_size;
+> > -     unsigned long flags;
+> >       struct rb_node rb_node;         /* address sorted rbtree */
+> >       struct list_head list;          /* address sorted list */
+> > -     struct llist_node purge_list;    /* "lazy purge" list */
+> > -     struct vm_struct *vm;
+> > +
+> > +     /*
+> > +      * The following three variables can be packed, because
+> > +      * a vmap_area object is always one of the three states:
+> > +      *    1) in "free" tree (root is vmap_area_root)
+> > +      *    2) in "busy" tree (root is free_vmap_area_root)
+> > +      *    3) in purge list  (head is vmap_purge_list)
+> > +      */
+> > +     union {
+> > +             unsigned long subtree_max_size; /* in "free" tree */
+> > +             struct vm_struct *vm;           /* in "busy" tree */
+> > +             struct llist_node purge_list;   /* in purge list */
+> > +     };
+> >  };
+> >
+> >  /*
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 71d8040a8a0b..39bf9cf4175a 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -329,7 +329,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
+> >  #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
+> >  #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
+> >
+> > -#define VM_VM_AREA   0x04
+> >
+> >  static DEFINE_SPINLOCK(vmap_area_lock);
+> >  /* Export for kexec only */
+> > @@ -1115,7 +1114,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+> >
+> >       va->va_start = addr;
+> >       va->va_end = addr + size;
+> > -     va->flags = 0;
+> > +     va->vm = NULL;
+> >       insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
+> >
+> >       spin_unlock(&vmap_area_lock);
+> > @@ -1922,7 +1921,6 @@ void __init vmalloc_init(void)
+> >               if (WARN_ON_ONCE(!va))
+> >                       continue;
+> >
+> > -             va->flags = VM_VM_AREA;
+> >               va->va_start = (unsigned long)tmp->addr;
+> >               va->va_end = va->va_start + tmp->size;
+> >               va->vm = tmp;
+> > @@ -2020,7 +2018,6 @@ static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+> >       vm->size = va->va_end - va->va_start;
+> >       vm->caller = caller;
+> >       va->vm = vm;
+> > -     va->flags |= VM_VM_AREA;
+> >       spin_unlock(&vmap_area_lock);
+> >  }
+> >
+> > @@ -2125,10 +2122,10 @@ struct vm_struct *find_vm_area(const void *addr)
+> >       struct vmap_area *va;
+> >
+> >       va = find_vmap_area((unsigned long)addr);
+> > -     if (va && va->flags & VM_VM_AREA)
+> > -             return va->vm;
+> > +     if (!va)
+> > +             return NULL;
+> >
+> > -     return NULL;
+> > +     return va->vm;
+> >  }
+> >
+> >  /**
+> > @@ -2149,11 +2146,10 @@ struct vm_struct *remove_vm_area(const void *addr)
+> >
+> >       spin_lock(&vmap_area_lock);
+> >       va = __find_vmap_area((unsigned long)addr);
+> > -     if (va && va->flags & VM_VM_AREA) {
+> > +     if (va && va->vm) {
+> >               struct vm_struct *vm = va->vm;
+> >
+> >               va->vm = NULL;
+> > -             va->flags &= ~VM_VM_AREA;
+> >               spin_unlock(&vmap_area_lock);
+> >
+> >               kasan_free_shadow(vm);
+> > @@ -2856,7 +2852,7 @@ long vread(char *buf, char *addr, unsigned long count)
+> >               if (!count)
+> >                       break;
+> >
+> > -             if (!(va->flags & VM_VM_AREA))
+> > +             if (!va->vm)
+> >                       continue;
+> >
+> >               vm = va->vm;
+> > @@ -2936,7 +2932,7 @@ long vwrite(char *buf, char *addr, unsigned long count)
+> >               if (!count)
+> >                       break;
+> >
+> > -             if (!(va->flags & VM_VM_AREA))
+> > +             if (!va->vm)
+> >                       continue;
+> >
+> >               vm = va->vm;
+> > @@ -3466,10 +3462,10 @@ static int s_show(struct seq_file *m, void *p)
+> >       va = list_entry(p, struct vmap_area, list);
+> >
+> >       /*
+> > -      * s_show can encounter race with remove_vm_area, !VM_VM_AREA on
+> > -      * behalf of vmap area is being tear down or vm_map_ram allocation.
+> > +      * If !va->vm then this vmap_area object is allocated
+> > +      * by vm_map_ram.
+> >        */
+> This point is still valid. There is a race between remove_vm_area() vs
+> s_show() and va->vm = NULL. So, please keep that comment.
 >
 
-[...]
+Thank you.
+I will keep the comment in the next version.
 
->  #endif /* __PSCI_H */
-> diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
-> new file mode 100644
-> index 000000000000..3c6ca846caf4
-> --- /dev/null
-> +++ b/drivers/firmware/psci/psci_pm_domain.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PM domains for CPUs via genpd - managed by PSCI.
-> + *
-> + * Copyright (C) 2019 Linaro Ltd.
-> + * Author: Ulf Hansson <ulf.hansson@linaro.org>
-> + *
-> + */
-> +
-
-[...]
-
-> +static int psci_pd_power_off(struct generic_pm_domain *pd)
-> +{
-> +	struct genpd_power_state *state = &pd->states[pd->state_idx];
-> +	u32 *pd_state;
-> +
-> +	/* If we have failed to enable OSI mode, then abort power off. */
-> +	if (psci_has_osi_support() && !osi_mode_enabled)
-> +		return -EBUSY;
-> +
-> +	if (!state->data)
-> +		return 0;
-> +
-> +	/* When OSI mode is enabled, set the corresponding domain state. */
-> +	pd_state = state->data;
-> +	psci_set_domain_state(*pd_state);
-
-I trying to understand how would this scale to level 2(cluster of
-clusters or for simply system). The current code for psci_set_domain_state
-just stores the value @pd_state into per-cpu domain_state. E.g.: Now if
-the system level pd is getting called after cluster PD, it will set the
-domain state to system level PD state. It won't work with original
-format and it may work with extended format if it's carefully crafted.
-In short, the point is just over-writing domain_state is asking for
-troubles IMO.
-
---
-Regards,
-Sudeep
+> > -     if (!(va->flags & VM_VM_AREA)) {
+> > +     if (!va->vm) {
+> >               seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+> >                       (void *)va->va_start, (void *)va->va_end,
+> >                       va->va_end - va->va_start);
+> > --
+> > 2.21.0
+> >
+>
+> --
+> Vlad Rezki
