@@ -2,94 +2,105 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA17C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179B9C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531BC2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAA220880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iE9qoOLo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBBwDtpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731566AbfGPJAM (ORCPT
+        id S1731403AbfGPJCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:00:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42996 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfGPJAL (ORCPT
+        Tue, 16 Jul 2019 05:02:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37445 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfGPJCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:00:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t132so9098572pgb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:00:11 -0700 (PDT)
+        Tue, 16 Jul 2019 05:02:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f17so17827428wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lkUFnw3tfRAr3e/K9WKPjwIamFFWJ4GH53aBPdA3SN4=;
-        b=iE9qoOLowk11gGQyNUKy6hX3dzsZULEYSEE9OPgqI7mSLLicdUlU32aTXLzaosOv7o
-         Ps4O6zFWL2zCMd3qvOz+NPOOvxudpA4ZoNz1iW7Kfm742WMhzcJgBCItjvxhdXUFEpyJ
-         q1nV6IR/pVSafAW3UgifsGzWyaCK13P0JoqyXGZf1ENQ7sW90oBo9k5SJQtD9weyR/nM
-         F6NcPidmAxKSquh6UC12UiEPXBGITyV41xeCRd0q7nCLS66gdldBCos0dPIjm88xzghm
-         mu0cB9pSTFbkVmGX1VOZzW3LHyZtMnr/kUgpnQ82ctfG0dTDhC3nwPBAwZiAkRnO8wZh
-         OCig==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y8N+WQ8vFvhuK+iDw7SzengsJ8xM3eLZ1NcZ88yLqJE=;
+        b=lBBwDtpKYnwj5om08Ld9G7MzFqUi2XQUS3hoolE7MbvD+IP5pGy7hoaNmH0ZVjQQzX
+         lOe/Gd9oBymwrEy7NIds1XP9IfK5HxUWPa2AkuLbCYKFApHuEgYdxUGShc3GGdFjmEie
+         rDO4DkfzNTQKgVWcZaGfp6iy/5BQgaWkWExcqz05DeOBORTx/bLVki6D3adq7utg3l8Y
+         bgt+uUzQT05kvdAXacF1la9HxT2OFxPKXosPndZah8jV1Qq+Z2XK7XfhHfWTLAEjqT39
+         v9mNNRuGF8PWYL0sZmhacwxfDBvFMC5FG1TngmQorrNHUgvKpODE45n/ebOvSP410ZJZ
+         uvSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lkUFnw3tfRAr3e/K9WKPjwIamFFWJ4GH53aBPdA3SN4=;
-        b=YhMDt4DNmUV0htjLUWtql1FVy/H3jszBw07JKbeBLA4dmkpeHtd6zIXsUZ9JxMrgpV
-         emOKoFSWcYV0j45ErT8DeXE9m3pYi5+j9cmUhxLPLAXIqZfcjQsa9SvqYuxBvTohLRqi
-         zl9lnHM8YPXKqK2ALS9n4JuyOM3eNazCxq/TN0XDbGQeQJdcEwl3dvUSTjWGfNkKLtty
-         80TRNlBZR/Opb/1Cn3IAPjnRKyjBZP7ibwJb4RJjaB2ee98+kss2eOpbBhqmfG5e1YAR
-         S38yX+k8k3ICFlCVm4HEnfPS4RzSCipNEv1h2+D92UPUgbVph7qRHwVbj/nX9fFcaLwU
-         HN6w==
-X-Gm-Message-State: APjAAAVxR5apeLRuLuKtT8ktY0W5+SvjibSg9RG+kHP5DDEvJLBEE8oB
-        2q/qn0daqly2MHs7Z1jkvsMnyA==
-X-Google-Smtp-Source: APXvYqyRYVnjwsmXfuDGrvTUNw/8KnmANGhR7WhUa8xiZz7T5T2fm77xuJxrapWCLvklzQ79FgDmQw==
-X-Received: by 2002:a63:6c46:: with SMTP id h67mr22406939pgc.248.1563267611013;
-        Tue, 16 Jul 2019 02:00:11 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id r6sm12769971pgl.74.2019.07.16.02.00.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 02:00:10 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 14:30:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     wen.yang99@zte.com.cn
-Cc:     rjw@rjwysocki.net, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        cheng.shengyu@zte.com.cn, mpe@ellerman.id.au
-Subject: Re: [PATCH v6] cpufreq/pasemi: fix an use-after-free
- inpas_cpufreq_cpu_init()
-Message-ID: <20190716090008.pgddadjzribgbaxw@vireshk-i7>
-References: <20190712034409.zyl6sskrr6ra5nd3@vireshk-i7>
- <201907161626465333445@zte.com.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201907161626465333445@zte.com.cn>
-User-Agent: NeoMutt/20180716-391-311a52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y8N+WQ8vFvhuK+iDw7SzengsJ8xM3eLZ1NcZ88yLqJE=;
+        b=BUl1KcX37cAIyXsXClAC7yEXCwzS1S84mup63NTDmZoP0bh+7HpnFhvB62Md9E2IKV
+         h7OXHPizzxAzwHeSynAgnSEz0A+nIvU29sS61zFWcp3EHqpPoXRcsfi+AxZFhwPXn2Th
+         bxOetjBB8mHpCIYqb+nZqxLHCZ15WaQhbOCQvRmnf6LKhb6lGhXJi8Anp4IeTkdhfPJr
+         xwZP7c4zwYXB3LVGRaMJ90wZvjvHL1ZuQ5FptHu5ji0yKDNp4FIU4XUw8UJuJU1C7ZEX
+         r96gZAvUrsoOMssqG4tTfkLHGYvw0ezEzlPCH+ruFG/W55JZuUMJpuDZoS4G3RVYofmZ
+         t3iQ==
+X-Gm-Message-State: APjAAAXuuD2DnL9uoz6UvMZecwqiC0nduGqWZ8gDJLNsvJczbl7bPoLT
+        eFmoPmEzHeIE1O+BxeXp7jL8gTyb
+X-Google-Smtp-Source: APXvYqwHIc20ODAPb6mulMbAtNMWYn4LwUWctw2oHTq5NzXI9hJt77iTnNT2kS7l0SbH8w7LtYPzLQ==
+X-Received: by 2002:a1c:7d4e:: with SMTP id y75mr29719243wmc.169.1563267740927;
+        Tue, 16 Jul 2019 02:02:20 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id b15sm32361803wrt.77.2019.07.16.02.02.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 02:02:20 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: add comments on INFO IOCTL
+Date:   Tue, 16 Jul 2019 12:02:18 +0300
+Message-Id: <20190716090218.12379-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-07-19, 16:26, wen.yang99@zte.com.cn wrote:
-> Okay thank you.
-> Now this patch
-> (https://lore.kernel.org/lkml/ee8cf5fb4b4a01fdf9199037ff6d835b935cfd13.1562902877.git.viresh.kumar@linaro.org/) 
-> seems to have not been merged into the linux-next.
-> 
-> In order to avoid code conflicts, we will wait until this patch is merged in and then send v7.
+This patch adds some in-code documentation on the different opcodes of the
+INFO IOCTL.
 
-Please rebase on PM tree's linux-next branch instead and resend your
-patch.
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ include/uapi/misc/habanalabs.h | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
-
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index 3956c226ca35..a5a1d0e7ec82 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -75,7 +75,19 @@ enum hl_device_status {
+ 	HL_DEVICE_STATUS_MALFUNCTION
+ };
+ 
+-/* Opcode for management ioctl */
++/* Opcode for management ioctl
++ *
++ * HW_IP_INFO         - Receive information about different IP blocks in the
++ *                      device.
++ * HL_INFO_HW_EVENTS  - Receive an array describing how many times each event
++ *                      occurred since the last hard reset.
++ * HL_INFO_DRAM_USAGE - Retrieve the dram usage inside the device and of the
++ *                      specific context. This is relevant only for GOYA device.
++ * HL_INFO_HW_IDLE    - Retrieve information about the idle status of each
++ *                      internal engine.
++ * HL_INFO_DEVICE_STATUS - Retrieve the device's status. This opcode doesn't
++ *                         require an open context.
++ */
+ #define HL_INFO_HW_IP_INFO	0
+ #define HL_INFO_HW_EVENTS	1
+ #define HL_INFO_DRAM_USAGE	2
 -- 
-viresh
+2.17.1
+
