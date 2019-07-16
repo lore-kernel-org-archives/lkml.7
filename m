@@ -2,137 +2,312 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FBBC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8B8C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540FF2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6362145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mkw993/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfGPMCX (ORCPT
+        id S1732014AbfGPME5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:02:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:33892 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfGPMCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:02:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA1762B;
-        Tue, 16 Jul 2019 05:02:21 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80CF63F71A;
-        Tue, 16 Jul 2019 05:02:20 -0700 (PDT)
-Subject: Re: cma_remap when using dma_alloc_attr :- DMA_ATTR_NO_KERNEL_MAPPING
-To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
-References: <CACDBo56EoKca9FJCnbztWZAARdUQs+B=dmCs+UxW27yHNu5pzQ@mail.gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        pankaj.suryawanshi@einfochips.com, minchan@kernel.org,
-        minchan.kim@gmail.com, Christoph Hellwig <hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <57f8aa35-d460-9933-a547-fbf578ea42d3@arm.com>
-Date:   Tue, 16 Jul 2019 13:02:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Jul 2019 08:04:57 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:41750 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGPME4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:04:56 -0400
+Received: by mail-vk1-f193.google.com with SMTP id u64so4101975vku.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 05:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P7ULxAuKEaSYzWYdGTr4IlP25QOrvD8KBofH6zWNyzQ=;
+        b=mkw993/neQKAw2c2FfYVkxn+sOjDePcI0SFBqSo2uQ9XgxU7qFjPiY3YH5IUddHb1f
+         0Zi+0q7QkAQBUfFLrw7PZjyy/zDoBIwIax+0NNKvtUxDk8C+SkzNSpFCXzQ0EZg4L/nh
+         NgyhuIC9Ws15LrFjfBQKOKwslddMzuYtVkZiU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P7ULxAuKEaSYzWYdGTr4IlP25QOrvD8KBofH6zWNyzQ=;
+        b=l2IV6ZDV5uDHgbPZV/IiWH4pGkAMg28Ke8eXvWNAQessxkz+rVPJVr1Nt2AVy3mona
+         q9Ih2irgP3DgZvADgLXKhHmEd65OCntVlEo/HXvHJbT3VmbkxKxQ6r2YzT3vUJNYclGX
+         2prbWxOqTgkWO1KgpxMDrsqrBvCpkhEwamjMhRMGek2X4O6lCH5/dvMYIbGtQIwG5KkZ
+         S0/3sNxhOinReb7D+xPZzlI5w/rJE9qJcynLZ6jzvMzu0OZalfrm6fJVxlPLOHCoHeHK
+         yi7juEGUAWM5r1dh79DlNPwGL/siDyhKY3SwQNNdOd8jPDUZ+Uie/hOyTI2XdnlhVbfo
+         jYmw==
+X-Gm-Message-State: APjAAAVUa+ArHe6rZOQnrEIXUL4BCoDtnHSev3HKn0TsEobt99rHkfvT
+        5Et/1qQZC1VDQf6i51IK3IfV6aNJ/b7MFpDeJo2lfKDEvtU=
+X-Google-Smtp-Source: APXvYqyV5nIBgRiOBlht43v8TH2KL+F06jklrgKSVXF6ezSHVkI2KPhvG8Y407cVFJ0e5gFjSSA+0asgnIsC1+p+aiY=
+X-Received: by 2002:a1f:3692:: with SMTP id d140mr11929548vka.88.1563278694560;
+ Tue, 16 Jul 2019 05:04:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACDBo56EoKca9FJCnbztWZAARdUQs+B=dmCs+UxW27yHNu5pzQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190712100443.221322-1-cychiang@chromium.org>
+ <20190712100443.221322-3-cychiang@chromium.org> <20190712104748.zlgxgdjbtj2gw4yz@shell.armlinux.org.uk>
+In-Reply-To: <20190712104748.zlgxgdjbtj2gw4yz@shell.armlinux.org.uk>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Tue, 16 Jul 2019 20:04:28 +0800
+Message-ID: <CAFv8NwLBr+USzOJvSZzMt_EzxA=07-NTGzuKdusaMxbFyrBjFQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] drm: bridge: dw-hdmi: Report connector status
+ using callback
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, tzungbi@chromium.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dylan Reid <dgreid@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/07/2019 19:30, Pankaj Suryawanshi wrote:
-> Hello,
-> 
-> When we allocate cma memory using dma_alloc_attr using
-> DMA_ATTR_NO_KERNEL_MAPPING attribute. It will return physical address
-> without virtual mapping and thats the use case of this attribute. but lets
-> say some vpu/gpu drivers required virtual mapping of some part of the
-> allocation. then we dont have anything to remap that allocated memory to
-> virtual memory. and in 32-bit system it difficult for devices like android
-> to work all the time with virtual mapping, it degrade the performance.
-> 
-> For Example :
-> 
-> Lets say 4k video allocation required 300MB cma memory but not required
-> virtual mapping for all the 300MB, its require only 20MB virtually mapped
-> at some specific use case/point of video, and unmap virtual mapping after
-> uses, at that time this functions will be useful, it works like ioremap()
-> for cma_alloc() using dma apis.
+On Fri, Jul 12, 2019 at 6:48 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Fri, Jul 12, 2019 at 06:04:40PM +0800, Cheng-Yi Chiang wrote:
+> > Allow codec driver register callback function for plug event.
+> >
+> > The callback registration flow:
+> > dw-hdmi <--- hw-hdmi-i2s-audio <--- hdmi-codec
+> >
+> > dw-hdmi-i2s-audio implements hook_plugged_cb op
+> > so codec driver can register the callback.
+> >
+> > dw-hdmi implements set_plugged_cb op so platform device can register the
+> > callback.
+> >
+> > When connector plug/unplug event happens, report this event using the
+> > callback.
+> >
+> > Make sure that audio and drm are using the single source of truth for
+> > connector status.
+> >
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> > ---
+> >  .../gpu/drm/bridge/synopsys/dw-hdmi-audio.h   |  3 +
+> >  .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 10 ++++
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     | 55 ++++++++++++++++++-
+> >  3 files changed, 67 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+> > index 63b5756f463b..f523c590984e 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-audio.h
+> > @@ -2,6 +2,8 @@
+> >  #ifndef DW_HDMI_AUDIO_H
+> >  #define DW_HDMI_AUDIO_H
+> >
+> > +#include <sound/hdmi-codec.h>
+> > +
+> >  struct dw_hdmi;
+> >
+> >  struct dw_hdmi_audio_data {
+> > @@ -17,6 +19,7 @@ struct dw_hdmi_i2s_audio_data {
+> >
+> >       void (*write)(struct dw_hdmi *hdmi, u8 val, int offset);
+> >       u8 (*read)(struct dw_hdmi *hdmi, int offset);
+> > +     int (*set_plugged_cb)(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn);
+> >  };
+> >
+> >  #endif
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> > index 5cbb71a866d5..7b93cf05c985 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> > @@ -104,10 +104,20 @@ static int dw_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+> >       return -EINVAL;
+> >  }
+> >
+> > +static int dw_hdmi_i2s_hook_plugged_cb(struct device *dev, void *data,
+> > +                                    hdmi_codec_plugged_cb fn)
+> > +{
+> > +     struct dw_hdmi_i2s_audio_data *audio = data;
+> > +     struct dw_hdmi *hdmi = audio->hdmi;
+> > +
+> > +     return audio->set_plugged_cb(hdmi, fn);
+> > +}
+> > +
+> >  static struct hdmi_codec_ops dw_hdmi_i2s_ops = {
+> >       .hw_params      = dw_hdmi_i2s_hw_params,
+> >       .audio_shutdown = dw_hdmi_i2s_audio_shutdown,
+> >       .get_dai_id     = dw_hdmi_i2s_get_dai_id,
+> > +     .hook_plugged_cb = dw_hdmi_i2s_hook_plugged_cb,
+> >  };
+> >
+> >  static int snd_dw_hdmi_probe(struct platform_device *pdev)
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > index 045b1b13fd0e..ce6646067472 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -26,6 +26,8 @@
+> >  #include <drm/drm_probe_helper.h>
+> >  #include <drm/bridge/dw_hdmi.h>
+> >
+> > +#include <sound/hdmi-codec.h>
+> > +
+> >  #include <uapi/linux/media-bus-format.h>
+> >  #include <uapi/linux/videodev2.h>
+> >
+> > @@ -185,6 +187,9 @@ struct dw_hdmi {
+> >       void (*disable_audio)(struct dw_hdmi *hdmi);
+> >
+> >       struct cec_notifier *cec_notifier;
+> > +
+> > +     hdmi_codec_plugged_cb plugged_cb;
+> > +     enum drm_connector_status last_connector_result;
+> >  };
+> >
+> >  #define HDMI_IH_PHY_STAT0_RX_SENSE \
+> > @@ -209,6 +214,40 @@ static inline u8 hdmi_readb(struct dw_hdmi *hdmi, int offset)
+> >       return val;
+> >  }
+> >
+> > +static void handle_plugged_change(struct dw_hdmi *hdmi, bool plugged)
+> > +{
+> > +     struct platform_device *codec_pdev;
+> > +
+> > +     if (!hdmi->audio || IS_ERR(hdmi->audio))
+> > +             return;
+> > +     codec_pdev = platform_get_drvdata(hdmi->audio);
+> > +     if (!codec_pdev || IS_ERR(codec_pdev))
+> > +             return;
+>
+> This looks fragile to me, poking about in another device's driver data
+> from another driver is really not a good design decision.  I think this
+> can be simplified if the registration function took the function
+> pointer and the struct device pointer, and then you only need one test
+> below:
+>
+Hi Russell, Thank you for the detailed review.
+ACK to this suggestion.
+I have updated the registration function following your suggestion in v4.
+It looks much cleaner.
 
-Hmm, is there any significant reason that this case couldn't be handled 
-with just get_vm_area() plus dma_mmap_attrs(). I know it's only 
-*intended* for userspace mappings, but since the basic machinery is there...
+> > +     if (!hdmi->plugged_cb)
+> > +             return;
+> > +
+> > +     hdmi->plugged_cb(&codec_pdev->dev, plugged);
+> > +}
+> > +
+> > +static int hdmi_set_plugged_cb(struct dw_hdmi *hdmi, hdmi_codec_plugged_cb fn)
+> > +{
+> > +     bool plugged;
+> > +     struct platform_device *codec_pdev;
+> > +
+> > +     if (!hdmi->audio || IS_ERR(hdmi->audio))
+> > +             return -EINVAL;
+>
+> Given the current code structure, how can this ever be true when the
+> function is called?
+>
+ACK
+Removed in v4.
+> > +     codec_pdev = platform_get_drvdata(hdmi->audio);
+> > +     if (!codec_pdev || IS_ERR(codec_pdev))
+> > +             return -EINVAL;
+>
+> This doesn't seem like a good idea as I've pointed out above.
+>
+ACK
+Fixed in v4.
+> > +
+> > +     mutex_lock(&hdmi->mutex);
+> > +     hdmi->plugged_cb = fn;
+> > +     plugged = hdmi->last_connector_result == connector_status_connected;
+> > +     handle_plugged_change(hdmi, plugged);
+> > +     mutex_unlock(&hdmi->mutex);
+>
+> Should be a blank line here for readability.
+>
+ACK
+Fixed in v4.
+> > +     return 0;
+> > +}
+> > +
+> >  static void hdmi_modb(struct dw_hdmi *hdmi, u8 data, u8 mask, unsigned reg)
+> >  {
+> >       regmap_update_bits(hdmi->regm, reg << hdmi->reg_shift, mask, data);
+> > @@ -2044,6 +2083,7 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+> >  {
+> >       struct dw_hdmi *hdmi = container_of(connector, struct dw_hdmi,
+> >                                            connector);
+> > +     enum drm_connector_status result;
+> >
+> >       mutex_lock(&hdmi->mutex);
+> >       hdmi->force = DRM_FORCE_UNSPECIFIED;
+> > @@ -2051,7 +2091,18 @@ dw_hdmi_connector_detect(struct drm_connector *connector, bool force)
+> >       dw_hdmi_update_phy_mask(hdmi);
+> >       mutex_unlock(&hdmi->mutex);
+> >
+> > -     return hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+> > +     result = hdmi->phy.ops->read_hpd(hdmi, hdmi->phy.data);
+> > +
+> > +     mutex_lock(&hdmi->mutex);
+> > +     if (result != hdmi->last_connector_result) {
+> > +             dev_dbg(hdmi->dev, "read_hpd result: %d", result);
+> > +             handle_plugged_change(hdmi,
+> > +                                   result == connector_status_connected);
+> > +             hdmi->last_connector_result = result;
+> > +     }
+> > +     mutex_unlock(&hdmi->mutex);
+> > +
+> > +     return result;
+> >  }
+> >
+> >  static int dw_hdmi_connector_get_modes(struct drm_connector *connector)
+> > @@ -2460,6 +2511,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> >       hdmi->rxsense = true;
+> >       hdmi->phy_mask = (u8)~(HDMI_PHY_HPD | HDMI_PHY_RX_SENSE);
+> >       hdmi->mc_clkdis = 0x7f;
+> > +     hdmi->last_connector_result = connector_status_disconnected;
+> >
+> >       mutex_init(&hdmi->mutex);
+> >       mutex_init(&hdmi->audio_mutex);
+> > @@ -2653,6 +2705,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+> >               audio.hdmi      = hdmi;
+> >               audio.write     = hdmi_writeb;
+> >               audio.read      = hdmi_readb;
+> > +             audio.set_plugged_cb = hdmi_set_plugged_cb;
+>
+> Why is this necessary?
+>
+> The I2S audio driver already depends on the dw-hdmi module through its
+> use of functions already exported.  Indirecting this through the
+> platform data makes no sense.
+>
+> Just rename hdmi_set_plugged_cb to dw_hdmi_set_plugged_cb() and export
+> it for dw-hdmi-i2s-audio.c to use.
+ACK.
+Your suggestion makes sense.
+Removed in v4.
 
-Robin.
+>
+> Thanks.
+Thanks so much!
 
-> /*
->           * function call(s) to create virtual map of given physical memory
->           * range [base, base+size) of CMA memory.
-> */
-> void *cma_remap(__u32 base, __u32 size)
-> {
->          struct page *page = phys_to_page(base);
->          void *virt;
-> 
->          pr_debug("cma: request to map 0x%08x for size 0x%08x\n",
->                          base, size);
-> 
->          size = PAGE_ALIGN(size);
-> 
->          pgprot_t prot = get_dma_pgprot(DMA_ATTR, PAGE_KERNEL);
-> 
->          if (PageHighMem(page)){
->                  virt = dma_alloc_remap(page, size, GFP_KERNEL, prot,
-> __builtin_return_address(0));
->          }
->          else
->          {
->                  dma_remap(page, size, prot);
->                  virt = page_address(page);
->          }
-> 
->          if (!virt)
->                  pr_err("\x1b[31m" " cma: failed to map 0x%08x" "\x1b[0m\n",
->                                  base);
->          else
->                  pr_debug("cma: 0x%08x is virtually mapped to 0x%08x\n",
->                                  base, (__u32) virt);
-> 
->          return virt;
-> }
-> 
-> /*
->           * function call(s) to remove virtual map of given virtual memory
->           * range [virt, virt+size) of CMA memory.
-> */
-> 
-> void cma_unmap(void *virt, __u32 size)
-> {
->          size = PAGE_ALIGN(size);
->          unsigned long pfn = virt_to_pfn(virt);
->          struct page *page = pfn_to_page(pfn);
-> 
->                  if (PageHighMem(page))
->                          dma_free_remap(virt, size);
->                  else
->                          dma_remap(page, size, PAGE_KERNEL);
-> 
->          pr_debug(" cma: virtual address 0x%08x is unmapped\n",
->                          (__u32) virt);
-> }
-> 
-> This functions should be added in arch/arm/mm/dma-mapping.c file.
-> 
-> Please let me know if i am missing anything.
-> 
-> Regards,
-> Pankaj
-> 
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
