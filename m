@@ -2,48 +2,140 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31B0C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDC8C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8281720880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC8320880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="beB6fxJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732319AbfGPMZL (ORCPT
+        id S1733067AbfGPMZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:25:11 -0400
-Received: from verein.lst.de ([213.95.11.211]:41320 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfGPMZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:25:11 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 58470227A81; Tue, 16 Jul 2019 14:25:08 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 14:25:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, Paul Pawlowski <paul@mrarm.io>
-Subject: Re: [PATCH 2/3] nvme: Retrieve the required IO queue entry size
- from the controller
-Message-ID: <20190716122508.GA3304@lst.de>
-References: <20190716004649.17799-1-benh@kernel.crashing.org> <20190716004649.17799-2-benh@kernel.crashing.org> <20190716060430.GB29414@lst.de> <ad18ff8d004225e102076f8e1fb617916617f337.camel@kernel.crashing.org> <20190716093301.GA32562@lst.de> <bfbc7352951d1adc714f699acb49e298c24fe7e3.camel@kernel.crashing.org> <20190716120547.GA2388@lst.de> <cca6fd560aa1688ca94fc270310a91ccda9aed06.camel@kernel.crashing.org>
+        Tue, 16 Jul 2019 08:25:52 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:50337 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732469AbfGPMZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:25:52 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190716122550euoutp0255cf9f0e6fa047aceaf4c4360baec7e4~x4tUqHtg80642906429euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:25:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190716122550euoutp0255cf9f0e6fa047aceaf4c4360baec7e4~x4tUqHtg80642906429euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563279950;
+        bh=8dxkZGheuXcwqu+8751Obi1RgIchRJd6UNRg3xcUhVs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=beB6fxJGOZp7/6yovKJephHOmkUOJiv5AmsjvY/Y3fHObUFK+nqsvNWG1UCXcujRA
+         /1Nse0QddKyDCEaxDasugN6YEuuW1m3hRWIX7BL+aVyhJLhb4RzI1CXZpwM29uU4+7
+         xM7ZZOj8nxTpIwb1RyIi5+bQaWj7csgnS3xQLPvA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190716122550eucas1p21fd5c85a08af29b5815f294a48464b03~x4tUFrQ4I0472904729eucas1p2f;
+        Tue, 16 Jul 2019 12:25:50 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3B.CE.04298.D42CD2D5; Tue, 16
+        Jul 2019 13:25:49 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190716122549eucas1p2c757e92ae6b02f02123f2510415372d8~x4tTbuNjs0470704707eucas1p2Y;
+        Tue, 16 Jul 2019 12:25:49 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190716122549eusmtrp1c5e8222906bc800df7be15a267224311~x4tTNtNcz1452614526eusmtrp1J;
+        Tue, 16 Jul 2019 12:25:49 +0000 (GMT)
+X-AuditID: cbfec7f2-3615e9c0000010ca-f6-5d2dc24d841c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 21.64.04146.D42CD2D5; Tue, 16
+        Jul 2019 13:25:49 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190716122548eusmtip17c4b9af73f748791f459f12dc1abb5fe~x4tS2CZlL1043210432eusmtip1x;
+        Tue, 16 Jul 2019 12:25:48 +0000 (GMT)
+Subject: Re: [PATCH 02/10] video: sa1100fb: Remove cpufreq policy notifier
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <8b0f9adf-8462-eeba-afd1-52201f4e7f47@samsung.com>
+Date:   Tue, 16 Jul 2019 14:25:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cca6fd560aa1688ca94fc270310a91ccda9aed06.camel@kernel.crashing.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <7163e57cfa1780d42732fa6b5ec424c24d1d4dc8.1563270828.git.viresh.kumar@linaro.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djPc7q+h3RjDU68sbS48vU9m8WJvg+s
+        Fpd3zWGz+Nx7hNHizOlLrBYdR74xW2z86uHA7nHn2h42j/vdx5k8tlxtZ/H4vEkugCWKyyYl
+        NSezLLVI3y6BK2PxlnksBQtZK5ZtXMPUwLiCpYuRk0NCwETiUNMspi5GLg4hgRWMEkeutTJD
+        OF8YJV5tuscG4XxmlLi18ToTTMvsG4/ZIRLLGSWa75+D6n/LKDHp/RWwKmEBL4ne/0tZuxg5
+        OEQEtCRe3kwFCTMLnGOUOHvTF8RmE7CSmNi+ihHE5hWwk3h7Zy/YTSwCqhIrtjcxg9iiAhES
+        949tYIWoEZQ4OfMJWA2nQJzEpA2X2SFmikvcejKfCcKWl9j+dg7YCxICm9gl/s/bwwhxtYvE
+        24WroZ4Wlnh1fAs7hC0jcXpyDwtEwzpGib8dL6C6tzNKLJ/8jw2iylri8PGLYN8wC2hKrN+l
+        DxF2lNh34BcLSFhCgE/ixltBiCP4JCZtm84MEeaV6GgTgqhWk9iwbAMbzNqunSuZJzAqzULy
+        2iwk78xC8s4shL0LGFlWMYqnlhbnpqcWG+allusVJ+YWl+al6yXn525iBCae0/+Of9rB+PVS
+        0iFGAQ5GJR7eE3t0YoVYE8uKK3MPMUpwMCuJ8Np+1Y4V4k1JrKxKLcqPLyrNSS0+xCjNwaIk
+        zlvN8CBaSCA9sSQ1OzW1ILUIJsvEwSnVwBjsO7lt3Ru7+7qPG5ddXVPqlnK4sHbb5kvnnp5L
+        DlU9bVmxqMZC+Hey6s0N3/90T3gnwG9cvmS5KUcut0PaY5sDk+W/vk1sLTOVS0v5KCe91E1/
+        6wFH2x8Rydc6RLo6hVfvc9zrZV1wzFeN5dGpfW8L/JWK//drbD7wre6Eqrdym/9q6SuPKpRY
+        ijMSDbWYi4oTAR1DDzw4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xu7q+h3RjDW485bG48vU9m8WJvg+s
+        Fpd3zWGz+Nx7hNHizOlLrBYdR74xW2z86uHA7nHn2h42j/vdx5k8tlxtZ/H4vEkugCVKz6Yo
+        v7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2PxlnksBQtZ
+        K5ZtXMPUwLiCpYuRk0NCwERi9o3H7F2MXBxCAksZJa5fXcDWxcgBlJCROL6+DKJGWOLPtS42
+        iJrXjBJ/3rSwgySEBbwkev8vZQWpFxHQknh5MxWkhlngAqPErA9tjBANfYwSF1ZNYANpYBOw
+        kpjYvooRxOYVsJN4e2cv2BUsAqoSK7Y3MYPYogIREmfeQ1zHKyAocXLmEzCbUyBOYtKGy2CL
+        mQXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz03OL
+        DfWKE3OLS/PS9ZLzczcxAiNt27Gfm3cwXtoYfIhRgINRiYf3xB6dWCHWxLLiytxDjBIczEoi
+        vLZftWOFeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YBPJK4g1NDc0tLA3Njc2NzSyUxHk7
+        BA7GCAmkJ5akZqemFqQWwfQxcXBKNTCqzNz0hG+/lJbwg+wHh5Mq+/iEZ3HoF+Vu5+WsWPcj
+        cYXFbYeJBhz+LHkN63PymnyDKrnuahzTlL/4qT3HPkDrVm937e+qC6bp28/ZTomxabnyoad3
+        2q6fZ70dvKed2PRu6+sf1l/5a3492J3+SpB/SWim/UmLhVdOs7memmTJ/WoKp8XTLzpKLMUZ
+        iYZazEXFiQD3EvhWygIAAA==
+X-CMS-MailID: 20190716122549eucas1p2c757e92ae6b02f02123f2510415372d8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190716122549eucas1p2c757e92ae6b02f02123f2510415372d8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190716122549eucas1p2c757e92ae6b02f02123f2510415372d8
+References: <cover.1563270828.git.viresh.kumar@linaro.org>
+        <7163e57cfa1780d42732fa6b5ec424c24d1d4dc8.1563270828.git.viresh.kumar@linaro.org>
+        <CGME20190716122549eucas1p2c757e92ae6b02f02123f2510415372d8@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:17:56PM +1000, Benjamin Herrenschmidt wrote:
-> If we're going to do that, then I can move it back to pci.c and leave
-> core.c alone then I suppose. Up to you. I'm just doing that for fun, no
-> beef in that game :-) let me know how you want it.
 
-Sounds safest to me.
+Hi Viresh,
+
+Please always Cc: me on fbdev patches.
+
+On 7/16/19 11:54 AM, Viresh Kumar wrote:
+> The cpufreq policy notifier's CPUFREQ_ADJUST notification is going to
+> get removed soon.
+> 
+> The notifier callback sa1100fb_freq_policy() isn't doing anything apart
+> from printing a debug message on CPUFREQ_ADJUST notification. There is
+> no point in keeping an otherwise empty callback and registering the
+> notifier.
+> 
+> Remove it.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
