@@ -2,259 +2,183 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98925C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE136C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4338321721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD76B217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Z4GOSLSi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lD9Ldx/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbfGPJ00 (ORCPT
+        id S1731884AbfGPJ2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:26:26 -0400
-Received: from mout.web.de ([212.227.15.3]:35017 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfGPJ0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:26:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1563269162;
-        bh=ZuaXQvRTOC5ngjHr5YqwjZJIMDEoZHlEwgiQPlvoALE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Z4GOSLSiYuih1O+FCoo5v8zGB7aWkeUoAcFArhJVZp0ijEv6ZGgZpAiZo03Urb5+Y
-         sL8j8vQ/8WiH6uugqu44RfzGsPzprlGIl2APwswdHhykAmtSW1h42j/JawO+OtPwbO
-         aSpqPz9cTS2MUDeVbyBKovOBTlbQ97eGt1l+Wtlw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.184.87]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MIvFp-1hkpoR1b21-002W5N; Tue, 16
- Jul 2019 11:26:02 +0200
-Subject: Re: [PATCH v3] coccinelle: semantic code search for missing
- of_node_put
-To:     Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wen Yang <yellowriver2010@hotmail.com>
-References: <1563246347-7803-1-git-send-email-wen.yang99@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <663d8141-5740-a452-1f4a-8335203e65ba@web.de>
-Date:   Tue, 16 Jul 2019 11:25:48 +0200
+        Tue, 16 Jul 2019 05:28:05 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:31300 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbfGPJ2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:28:04 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190716092801epoutp03ef0de2fa612301c76c42e6d8ab352a4f~x2SDm6FkB1981419814epoutp03o
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:28:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190716092801epoutp03ef0de2fa612301c76c42e6d8ab352a4f~x2SDm6FkB1981419814epoutp03o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563269281;
+        bh=Q5UakLD205wShaSTG+f5fz7cKkprRmkmPhAwjsEjUTQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=lD9Ldx/Y/mMBR6ZW5ZHRuPU029wHqBo5B/Gl632i5MyX61PfexMubcmbwALkSoSXF
+         bMUaWrk6L5MI7X4zizajHkZaqJuc/lwWvz5AaitelfHSGjh3q9G18uBMSIboLgv8ri
+         AjvWAfk5SYzD9z6Ei09a+KshrpFR+GFr6o89xhPA=
+Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190716092800epcas1p10e3eab11167bd1f10ed9e92473413872~x2SDGgeD02702727027epcas1p1Q;
+        Tue, 16 Jul 2019 09:28:00 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp6.localdomain (Postfix) with ESMTP id 45nw6j5K5rzMqYkc; Tue, 16 Jul
+        2019 09:27:57 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7C.09.04160.D989D2D5; Tue, 16 Jul 2019 18:27:57 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190716092757epcas1p3f1040feadd8e767b7861cf8d6e95a9fe~x2SAMdMTR2981129811epcas1p3N;
+        Tue, 16 Jul 2019 09:27:57 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190716092757epsmtrp2d3d0ada13ab4e98b5376d63895727349~x2SALa3b22184421844epsmtrp2k;
+        Tue, 16 Jul 2019 09:27:57 +0000 (GMT)
+X-AuditID: b6c32a38-b33ff70000001040-a1-5d2d989dcd69
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C6.B5.03638.D989D2D5; Tue, 16 Jul 2019 18:27:57 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190716092756epsmtip14e25281fc922a010605e07c6c892694b~x2R-xBEP41188811888epsmtip1n;
+        Tue, 16 Jul 2019 09:27:56 +0000 (GMT)
+Subject: Re: [PATCH v1 13/50] clk: samsung: add DPLL rate table in
+ Exynos5420
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        kyungmin.park@samsung.com, a.hajda@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9095a5be-3002-93c6-9d08-92eb84f5c103@samsung.com>
+Date:   Tue, 16 Jul 2019 18:31:03 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1563246347-7803-1-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XK9D1PFNNMyl4nlD0+NxHKnMhOQeaBK8wKSQIwqo7a45ayY3MBv
- j5nRSu+2FWzA74daBtHepyB1XbMzrA8aM+BbqGrQ9ZUV1cSISTyN/MDUQfeqGrWa7C0/cDL
- xfA5to6PwTLiujSn80lxRgM4LXhf9Sy9+UHJklJv926YV6S/BaEfH9k7MNm92NI/SeQuN3j
- jHfGHw/gf+gpWSX9LkF2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5bFm/zMmyF0=:THKKaLLZuQ5vLb/pBare1g
- 5Qm4UI1Nq5Uyh3HrJt6mpq2DUMJtYy/DdEMfpTfb3SmX805xfjyc/9qLafQOWgHgX9hD93D/f
- 8Bg7nE9MZqdBPelDKvDDVGUUOfpKHZ4gT/f7Vifj/v4AW9kAHlBykXl6hq6GfsW9zgOsXVhRx
- QNLMm2EpjOCcDSNwQluqH0ZY100TbXSz6Kj+udeoo1SbMfOTC+ldAJiPUC2IKWxrC6W9yzZpP
- YFy+sAIBvoR9SznY/LILq0Qat8TBfX41ciT2W2erLkgwE+FZhkS98YvN51yMqy9dQ12pVwbd3
- TAk2RDDCvjdlnamcMD57K3zZv1qL6i+0nEGK2g9zfPiOjNVX7Es9cak354dzyBTkNqQBqVMPc
- GC8+Zv8geu3zOcLNJTd9i7U0O546uFehwTCR0tTNIa0CwaLPb1T9yb/M4HEg+AeBZQIgkTuRc
- N1syKm1FUFS9GTtnHmfOQaNWsv1Ylkb0Zb55f1W8dxcSF9u1bH2Qj8SUKNt6Z4M3ilMXchloz
- Dc2rjhWIPJ4fVTdidwdpVmQU5dck7zJTpHLyw7RuQxSaY6z5W6hji8IgEzW7Tax8tLdw/iegG
- s2LYqSTBgWOAQTlbx7C/eYui7yPNdvjoWY9NmvAImZdm6Xgt8PMmlL3d8CDeYYl6exJavB7Of
- UKfMy2W3ibIT+bJmUu5fCZPb+RN4LepbKqFwFCiHp5jH/7AftS4yJALIDSfG8vqzvqykNorNY
- O4ynFbOeLCln/tZG/t/O9x9CEdGw5LSx0C4kxMF+6DJN5o7S91Xt3vmeRio/iJtQL1vZGamwJ
- odbWbh502C77Xu2vQjwfAPE4uNeRRjveT6tRugBIgVaLqtOyOuIwG8iNHZPLeNUElZVrrsXA1
- ooTZS4PSpiexzWKCJY96+4RuTwQ+SydFjVD0aXRYkovbmn+dRnlY4kmjdGbLtdmIXXS5KKkCH
- itnrw/XPMv5ClElSRhq6wNKIxH91kiwNpqpexaYZf1ZGsPP/N2pY7HwQLFeM0aA68Uf+l9+Eh
- 6HqbjbKcd9XPG3QZnTs4G08a5+PeNa2eqjvlJU9G8On6krK2OW77EJfg2/vFIHKi1GOuQ0bQn
- z5DVTQINJt1KBmKxDnIWVICvbsYWEuRELCQ
+In-Reply-To: <20190715124417.4787-14-l.luba@partner.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsWy7bCmnu7cGbqxBs+vq1ncWneO1WLjjPWs
+        FvOPAFn9j18zW5w/v4Hd4mzTG3aLWw0yFpseX2O1+Nhzj9Xi8q45bBYzzu9jslh75C67xdLr
+        F5ksLp5ytbjduILNonXvEXaLw2/aWS3+XdvI4iDksWbeGkaP9zda2T02repk89i8pN7j4Ls9
+        TB59W1YxenzeJBfAHpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr
+        5OIToOuWmQP0hJJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0L10v
+        OT/XytDAwMgUqDAhO2PJit+sBcuFKg4uaGJtYJzI38XIySEhYCKx71ojYxcjF4eQwA5GiXXT
+        LrJCOJ8YJWZPWwOV+cYo8fXsS/YuRg6wlgOXrSHie4Hij3+wQzjvGSWmvTvJDDJXWMBfYsHl
+        fYwgtojAOUaJjqfSIDazwDQmiVnzREFsNgEtif0vbrCB2PwCihJXfzwGq+cVsJM4sPAh2BwW
+        AVWJC99awGpEBSIkTh2ZxwJRIyhxcuYTFpCDOAUcJN6eEoAYLy5x68l8JghbXqJ562xmkNsk
+        BE6xS7SsfsIG8bOLxK+V/1kgbGGJV8e3sEPYUhKf3+2FqqmWWHnyCBtEcwejxJb9F1ghEsYS
+        +5dOZgJZzCygKbF+lz5EWFFi5++5jBCL+STefe1hhQQWr0RHmxBEibLE5Qd3mSBsSYnF7Z1s
+        ExiVZiH5ZhaSF2YheWEWwrIFjCyrGMVSC4pz01OLDQtMkCN7EyM4fWtZ7GDcc87nEKMAB6MS
+        D++JPTqxQqyJZcWVuYcYJTiYlUR4bb9qxwrxpiRWVqUW5ccXleakFh9iNAUG9kRmKdHkfGBu
+        ySuJNzQ1MjY2tjAxNDM1NFQS5533RzNWSCA9sSQ1OzW1ILUIpo+Jg1OqgdH4s3D9tuJtB1qv
+        R93Sd3zMyu76VLQn1SP9acF20/BL+juXuH94vSjoj+Ph6q/VIVqTfpmt6/7CszA52+rgrvQF
+        1Ybcp29vPX9rWkWGc9MfufCn4j2lVrW5Lf26rwL4Aqo+JuopG62ubF0nKq3GZGvde0B2wbwd
+        m0zn+roWtRlFdJ47pNdbrcRSnJFoqMVcVJwIABIUyHT1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTUQDHOfexXafD22Z5fKC4iGLT5aIPJywRenAhgj5aMeySFzXdg101
+        jSKzNBJRM/AxSw2sRNS5aeJqpnMma+FjaiaTnpMIXxWyiB6S2wj27Qf/3++cA4fCJa+IWCpP
+        W8gZtGyBTCAiBh2yhJT7TSnq1KX+SOTpnSKRuclEorbxbar1ruJoerpPiCbL14TIUxaPLN4F
+        En2vfkeiuaf3BKhp+jmGesbfCtHDN24MuV3H0dL1TgGqGB4XIsfaLRJtLZiJDAnT3doNmK+L
+        FULG0nVbwPR3XGPsGzaMqRnoAsymJeG08KzocDZXkFfMGfannxfldnT+JvWPJSX29nKyDNyJ
+        rAIUBemDcHQurQqEURL6GYAt9n1+hnQMbHC/wIOKFDocfBUQbSvrALorTQK/I6VPwcHJ98A/
+        RNFTANb8nRT6B5xuwKDThAcPdQLY2XjIzwJaDke+LAbiSDoJvv7pBX4W0+lw9MHHgE/Qe+DM
+        j5sBZyedCesXrETQ2QFfNi8T/geF0Rlw3UUHr9oL/7TO4kGOhp7lNizIifDGkxa8DkiNIbUx
+        JDGGJMaQpB0QXSCG0/OaHA2v0h/QcpeUPKvhi7Q5ygs6jQUEvlguHwJOZ9YYoCkgixA7bclq
+        CckW86WaMQApXBYlPuJTqCXibLb0MmfQZRmKCjh+DMRRhCxanKibOCOhc9hCLp/j9Jzh/4pR
+        YbFlgBlumEnivFm9qQrz7jjTmqfomzJNcwK3dobXXe3ZtKrO/RqaT8ddZl1+ychK8tS8KyK8
+        /mj8AP6pBqu9i/s+9CtVmvoIpBY/Emdi1ZTONHtyKxe1snE2naLxmC/Rro3yWVfVldI+x/rE
+        Y5+CihY098pXFq/kf7Zd3LUhI/hcViXHDTz7D0D1eH7eAgAA
+X-CMS-MailID: 20190716092757epcas1p3f1040feadd8e767b7861cf8d6e95a9fe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190715124444eucas1p2683c9896e8be45d6a0cd4afeb681a2ea
+References: <20190715124417.4787-1-l.luba@partner.samsung.com>
+        <CGME20190715124444eucas1p2683c9896e8be45d6a0cd4afeb681a2ea@eucas1p2.samsung.com>
+        <20190715124417.4787-14-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> We find these functions by using the following script:
+Hi,
 
-Why would you like to keep this SmPL code in the commit description?
+Also, you better to merge patch13/patch15/patch16 to one patch
+in order to add the PLL table for DPLL/MPLL/SPLL.
 
-I would prefer software evolution in an other direction.
-https://lore.kernel.org/lkml/44be5924-26ca-5106-aa25-3cbc3343aa2c@web.de/
-https://lkml.org/lkml/2019/7/4/21
+And I have a question. Are there any use-case to change
+the PLL frequency for DPLL/MPLL/SPLL?
 
-
-> @initialize:ocaml@
-> @@
->
-> let relevant_str =3D "use of_node_put() on it when done"
-
-I see further possibilities to improve this data processing approach.
-https://lore.kernel.org/lkml/904b9362-cd01-ffc9-600b-0c48848617a0@web.de/
-https://lore.kernel.org/patchwork/patch/1095169/#1291378
-https://lkml.org/lkml/2019/6/28/326
-
-
-I am missing more constructive answers for mentioned development concerns.
-
-
-> And this patch also looks for places =E2=80=A6
-
-Does a SmPL script perform an action?
-
-
-> Finally, this patch finds use-after-free issues for a node.
-> (implemented by the r_use_after_put rule)
-
-This software extension is another interesting contribution.
-But I imagine that a separate SmPL script can be more helpful for
-this source code search pattern.
-
-
-> v3: delete the global set, =E2=80=A6
-
-To which previous implementation detail do you refer here?
-
-
-> +virtual report
-> +virtual org
-> +
-> +@initialize:python@
-> +@@
-> +
-> +report_miss_prefix =3D "ERROR: missing of_node_put; acquired a node poi=
-nter with refcount incremented on line "
-> +report_miss_suffix =3D ", but without a corresponding object release wi=
-thin this function."
-> +org_miss_main =3D "acquired a node pointer with refcount incremented"
-> +org_miss_sec =3D "needed of_node_put"
-> +report_use_after_put =3D "ERROR: use-after-free; reference preceded by =
-of_node_put on line "
-> +org_use_after_put_main =3D "of_node_put"
-> +org_use_after_put_sec =3D "reference"
-
-If you would insist on the usage of these variables, they should be applie=
-d
-only for the selected analysis operation mode.
-I would expect corresponding SmPL dependency specifications.
-https://github.com/coccinelle/coccinelle/blob/b4509f6e7fb06d5616bb19dd5a11=
-0b203fd0e566/docs/manual/cocci_syntax.tex#L559
+On 19. 7. 15. 오후 9:43, Lukasz Luba wrote:
+> The DPLL has fixed frequency left by the bootloader and it is not possible
+> to change it. With this patch the DPLL gets rate table the same for the
+> whole  PLL family (similar as APLL, KPLL according to RM) so the frequency
+> might be changed to one of the values defined there.
+> It is needed for further patches which change the DPLL frequency to feed
+> the clocks with proper base.
+> It also sets CLK_IS_CRITICAL for SCLK_DPLL due to some drivers which could
+> disable master clock, which is then populated higher and tries to disable
+> PLL, which casues system crash. The flag is needed for this kind of use
+> cases.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 7f8221527633..2395b02ce8c5 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -694,7 +694,8 @@ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
+>  	MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
+>  	MUX_F(CLK_MOUT_EPLL, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1,
+>  			CLK_SET_RATE_PARENT, 0),
+> -	MUX(0, "mout_sclk_dpll", mout_dpll_p, SRC_TOP6, 24, 1),
+> +	MUX_F(CLK_MOUT_SCLK_DPLL, "mout_sclk_dpll", mout_dpll_p,
+> +			SRC_TOP6, 24, 1, CLK_IS_CRITICAL, 0),
+>  	MUX(0, "mout_sclk_cpll", mout_cpll_p, SRC_TOP6, 28, 1),
+>  
+>  	MUX(CLK_MOUT_SW_ACLK400_ISP, "mout_sw_aclk400_isp",
+> @@ -1514,6 +1515,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
+>  
+>  	if (_get_rate("fin_pll") == 24 * MHZ) {
+>  		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+> +		exynos5x_plls[dpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>  		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
+>  		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>  	}
+> 
 
 
-> +@r_miss_put exists@
-> +local idexpression struct device_node *x;
-> +expression e, e1;
-> +position p1, p2;
-> +statement S;
-> +type T, T1;
-> +@@
-> +
-> +* x =3D @p1\(of_find_all_nodes\|
-
-The usage of the SmPL asterisk functionality can fit to the operation mode=
- =E2=80=9Ccontext=E2=80=9D.
-https://bottest.wiki.kernel.org/coccicheck#modes
-Would you like to add any corresponding SmPL details?
-
-Under which circumstances will remaining programming concerns be clarified
-for such SmPL disjunctions?
-
-
-> +... when !=3D e =3D (T)x
-> +    when !=3D true x =3D=3D NULL
-
-Will assignment exclusions get any more software development attention?
-https://lore.kernel.org/lkml/03cc4df5-ce7f-ba91-36b5-687fec8c7297@web.de/
-https://lore.kernel.org/patchwork/patch/1095169/#1291892
-https://lkml.org/lkml/2019/6/29/193
-
-
-> +    when !=3D of_node_put(x)
-=E2=80=A6
-> +)
-> +&
-> +x =3D f(...)
-> +...
-> +if (<+...x...+>) S
-> +...
-> +of_node_put(x);
-> +)
-
-You propose once more to use a SmPL conjunction in the rule =E2=80=9Cr_mis=
-s_put_ext=E2=80=9D.
-I am also still waiting for a definitive explanation on the applicability
-of this combination.
-
-
-> +@r_put@
-> +expression E;
-> +position p1;
-> +@@
-> +
-> +* of_node_put@p1(E)
-
-I guess that this SmPL code will need further adjustments.
-
-
-> +@r_use_after_put exists@
-> +expression r_put.E, subE<=3Dr_put.E;
-
-I have got an understanding difficulty around the interpretation
-of the shown SmPL constraint.
-How will the clarification be continued?
-
-Regards,
-Markus
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
