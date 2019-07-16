@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CE6C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA67C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8642064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6528206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rIj1ENw6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZ+52UE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388256AbfGPRcF (ORCPT
+        id S2388296AbfGPRcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:32:05 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42581 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPRcE (ORCPT
+        Tue, 16 Jul 2019 13:32:35 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45833 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGPRce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:32:04 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v15so21184851eds.9;
-        Tue, 16 Jul 2019 10:32:02 -0700 (PDT)
+        Tue, 16 Jul 2019 13:32:34 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x19so15253708eda.12;
+        Tue, 16 Jul 2019 10:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3D1HNQZnwOTNKK1krsSFd8w1kBkxByzwQaoWXaXeG9E=;
-        b=rIj1ENw6XqofAfDtk8vR/eDPR/4Cv7qRp88MKp+6Adiu9d7tZ3RQ/sgsMXiqzpMs/N
-         mmEG8ZaJUuTT4Bksxe82PtTrew1Ba0DM/Iawis+fJNfskKWTpfbRMJqMSBEUK38MnG+9
-         1QCrDyjmfyC8/fXme46E8QIAqWChX22ixohAtilW0p6r2rnjYRSsLEQQ4bARDjlkFZBA
-         50GanugfaWCCNqnTa69q0r/ru38hCx8MzJohmLgcqLB0x5sXB8qXjbEaHCtYdUpL/FQI
-         1De+QILvEoh6BP8/nQ/QiUYo90fOW8w4CCp/UVXMHpJztK0a0HrTo91D/ZTVbugJoWKj
-         jC3w==
+        bh=8FNIIzRoRexJHpsVv6bKxQ22/jjO7c7qqJ3gb6F1K7U=;
+        b=BZ+52UE+ZmIr8tDgkYR1TM8ReZn93JErt7Ra5HPHUbcyhnOX1EgL7ctSGtvCpAKFv/
+         u0/b1/FG8QWnnfgS4T2lCSP4mYo1JCCNSXkPSzBeKBofUaQlXiW/3BZWwU/H+drgNafG
+         cbAztgh4ysI6cboQa4ZYhnplzQXSV+bxNDqQCArJNZOrtjvUwSd50LAWiiB4LMGNVQSx
+         6ppgl+UHz2lppzsX1HipLC5Wz34papfMHgFCRUp0qInJqAcSjFiymEIKTSTI6nDbBZD1
+         uETcu91g8X5t22nEN8QRxBCTX9mZUXwLdjXxgfgWdowTbFjskoLJ4Gl+D1qvpSUy0K84
+         xlSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3D1HNQZnwOTNKK1krsSFd8w1kBkxByzwQaoWXaXeG9E=;
-        b=J0zKN0PS4HZuT+btgpvXTos67ZSyHsw2rQYW4+zcI4sgsyneGvDb7JQvfjYSsPJKw/
-         1yEv9HIPU4V2UStHj6RAKK/Pq7V9KFxR2nfWilS+1Fy+lUyRmhxZzZ8Ufpyj+48Pp7gc
-         29NggMuI/Z3uKn9DFcsvn7x1kXUT35ngQ4P0xC1dQ9muXKxvqEaSmIo8SkfaRxGhlv0r
-         0GqpegHw07Sgplra71F8XqLqb4QOvDq3ASV7VmBj3h1TjkNuBH7syOH3po6CDDuLB0zw
-         iPBCct/1y5h6QA79ESDHvYtUVJONtK3yqYgXniKJVk3ZUWJXYu++5NwXkv3/xr4PbpOi
-         tqHA==
-X-Gm-Message-State: APjAAAXK/jPEid4niZeFLusmxcsRw7H9/hkmQlL26xUDuQX8RvPkZ69L
-        chM/IfgIfz/JI4yuKsT4sI3dAMsqflbwcvB+TZw=
-X-Google-Smtp-Source: APXvYqyFD90pb/Cr9xmbGwSToc//XsyTuxBh0VQzNZIyiS2NQoMQ6yZTENnhuk7Lh7ExxCjSxM5W4K2f7qvBpSNhYk8=
-X-Received: by 2002:a17:906:e95:: with SMTP id p21mr26559018ejf.205.1563298321754;
- Tue, 16 Jul 2019 10:32:01 -0700 (PDT)
+        bh=8FNIIzRoRexJHpsVv6bKxQ22/jjO7c7qqJ3gb6F1K7U=;
+        b=uURSKh9LMCRtBAyW8Cd6jUQNgh26kd1oB+2y7CMvCHkcwxuuEHhEXHHjIApFRmLVR+
+         J7yyAcHgc/4+4BWEvQ8YKlgF4ErBd5PbwujBkR8lrE9hGdZmh1weskesQeh9xnOgwe06
+         N4vT60n56bAhOr59SfxZNPAigMs5oSlPgDEdndEDkAs8uXhV+OMVj+8p0xi4v8/xpaqL
+         dh9JNFw2JTElbrmVNNlCES1W1HHiXEEtLCqfzdpxezyEjKT9/VxvYhMnKJvp4zrU/v1O
+         SMomJuOup07sSgmYG8S0lOpe3ok1+W4e5fueP3fGQ/zO8HDPnI7PFrvJqP+b+PJuLm4j
+         yWgw==
+X-Gm-Message-State: APjAAAW9HZHUvX8CnNysCKRLK3KMwlFkU2L08QDyxT3LezXHAfn5VtOp
+        x3Hyjn580a0Ob6nUuGghEFADDeO+XEG+sDPE83E=
+X-Google-Smtp-Source: APXvYqyxjrnQO4a/OxNixJXbDfl/pNoUK6HbTVtI44UFy56T0eD3Xnx2vyiztzWsN2EqKgFRGpTXUNYxqHdy4CMlTuM=
+X-Received: by 2002:a05:6402:145a:: with SMTP id d26mr30423630edx.10.1563298351697;
+ Tue, 16 Jul 2019 10:32:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190627071744eucas1p164b065a96afa23f2f5534fbc73660dae@eucas1p1.samsung.com>
- <20190627071726.30467-1-m.szyprowski@samsung.com> <20190627071726.30467-2-m.szyprowski@samsung.com>
-In-Reply-To: <20190627071726.30467-2-m.szyprowski@samsung.com>
+References: <CGME20190627071745eucas1p1fa1b9d46e67b131522f49d73ac12d8ed@eucas1p1.samsung.com>
+ <20190627071726.30467-1-m.szyprowski@samsung.com> <20190627071726.30467-3-m.szyprowski@samsung.com>
+In-Reply-To: <20190627071726.30467-3-m.szyprowski@samsung.com>
 From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Tue, 16 Jul 2019 23:01:50 +0530
-Message-ID: <CANAwSgTFhFu6iwryiO8244-CbuKe=XgOArpEJcb9kMjBs=V_rQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] usb: host: xhci-plat: Add support for Exynos5/DWC3
- specific variant
+Date:   Tue, 16 Jul 2019 23:02:21 +0530
+Message-ID: <CANAwSgRR=_DQ5UOycXO=xwrwhxSDW+miNrwZsepq+vzk2rPzEw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] usb: dwc3: exynos: Use Exynos specific XHCI-plat
+ driver variant
 To:     Marek Szyprowski <m.szyprowski@samsung.com>
 Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
         linux-samsung-soc@vger.kernel.org,
@@ -81,23 +81,10 @@ Hi Marek,
 
 On Thu, 27 Jun 2019 at 12:47, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
 >
-> USB3.0 DRD PHY found in Exynos5 SoCs requires calibration to be done
-> after every HCD reset. This was initially handled by DWC3 core by commit
-> d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for
-> exynos5420/5800"), but it turned out that the mentioned patch worked only
-> by the pure luck and fixed only one use case.
->
-> PHY calibration was done in DWC3 driver, just before initializing XHCI
-> core. This approach was prone to a race. It worked for the fresh boot
-> case iff XHCI-plat driver was compiled into the kernel or it's module has
-> been loaded before DWC3 probe. In other cases (XHCI-plat module loaded on
-> demand after DWC3 probe or during suspend/resume cycle) - the
-> calibration was not performed at proper time and had no effect.
->
-> This patch creates Exynos5/DWC3 specific variant of XHCI-plat driver,
-> which takes care of proper PHY calibration after XHCI core reset, what
-> fixes all known use cases (XHCI driver compiled as module and loaded on
-> demand as well as during system suspend/resume cycle).
+> Exynos5 SoCs needs to calibrate USB3.0 DRD PHY after every XHCI HCD
+> reset. This patch adds support for instantiating Exynos5-specific variant
+> of XHCI-plat driver, which handles the required USB3.0 DRD PHY
+> calibration.
 >
 > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
@@ -108,241 +95,169 @@ Tested-by: Anand Moon <linux.amoon@gmail.com>
 Best Regards
 -Anand
 
->  drivers/usb/host/Kconfig       |  8 ++++++
->  drivers/usb/host/Makefile      |  3 ++
->  drivers/usb/host/xhci-exynos.c | 51 ++++++++++++++++++++++++++++++++++
->  drivers/usb/host/xhci-exynos.h | 26 +++++++++++++++++
->  drivers/usb/host/xhci-plat.c   | 38 ++++++++++++++++++++++++-
->  drivers/usb/host/xhci-plat.h   |  2 ++
->  6 files changed, 127 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/usb/host/xhci-exynos.c
->  create mode 100644 drivers/usb/host/xhci-exynos.h
+>  drivers/usb/dwc3/Kconfig       |  1 +
+>  drivers/usb/dwc3/core.c        |  1 +
+>  drivers/usb/dwc3/core.h        |  1 +
+>  drivers/usb/dwc3/dwc3-exynos.c | 64 +++++++++++++++++++++++-----------
+>  drivers/usb/dwc3/host.c        |  2 +-
+>  5 files changed, 47 insertions(+), 22 deletions(-)
 >
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index 40b5de597112..5a17a9b1fbff 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -53,6 +53,14 @@ config USB_XHCI_PLATFORM
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 89abc6078703..badf86dfb027 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -67,6 +67,7 @@ config USB_DWC3_OMAP
+>  config USB_DWC3_EXYNOS
+>         tristate "Samsung Exynos Platform"
+>         depends on (ARCH_EXYNOS || COMPILE_TEST) && OF
+> +       select USB_XHCI_EXYNOS if USB_XHCI_PLATFORM
+>         default USB_DWC3
+>         help
+>           Recent Exynos5 SoCs ship with one DesignWare Core USB3 IP inside,
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index c9bb93a2c81e..baa029ceede9 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -1303,6 +1303,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>                                     &dwc->hsphy_interface);
+>         device_property_read_u32(dev, "snps,quirk-frame-length-adjustment",
+>                                  &dwc->fladj);
+> +       device_property_read_string(dev, "snps,xhci_variant", &dwc->hcd_name);
 >
->           If unsure, say N.
+>         dwc->dis_metastability_quirk = device_property_read_bool(dev,
+>                                 "snps,dis_metastability_quirk");
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 3dd783b889cb..1b8f5f5814a4 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -1176,6 +1176,7 @@ struct dwc3 {
+>         u8                      tx_max_burst_prd;
 >
-> +config USB_XHCI_EXYNOS
-> +       tristate "xHCI support for Samsung Exynos SoCs"
-> +       depends on USB_XHCI_PLATFORM
-> +       depends on ARCH_EXYNOS || COMPILE_TEST
-> +       ---help---
-> +         Say 'Y' to enable the support for the xHCI host controller
-> +         found in Samsung Exynos ARM SoCs.
-> +
->  config USB_XHCI_HISTB
->         tristate "xHCI support for HiSilicon STB SoCs"
->         depends on USB_XHCI_PLATFORM && (ARCH_HISI || COMPILE_TEST)
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index 84514f71ae44..34afd6680751 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -30,6 +30,9 @@ endif
->  ifneq ($(CONFIG_USB_XHCI_RCAR), )
->         xhci-plat-hcd-y         += xhci-rcar.o
->  endif
-> +ifneq ($(CONFIG_USB_XHCI_EXYNOS), )
-> +       xhci-plat-hcd-y         += xhci-exynos.o
-> +endif
+>         const char              *hsphy_interface;
+> +       const char              *hcd_name;
 >
->  ifneq ($(CONFIG_DEBUG_FS),)
->         xhci-hcd-y              += xhci-debugfs.o
-> diff --git a/drivers/usb/host/xhci-exynos.c b/drivers/usb/host/xhci-exynos.c
-> new file mode 100644
-> index 000000000000..446d33998382
-> --- /dev/null
-> +++ b/drivers/usb/host/xhci-exynos.c
-> @@ -0,0 +1,51 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * xHCI host controller driver for Samsung Exynos5 SoCs
-> + *
-> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/phy/phy.h>
-> +
-> +#include "xhci.h"
-> +#include "xhci-plat.h"
-> +#include "xhci-exynos.h"
-> +
-> +int xhci_exynos_init_quirk(struct usb_hcd *hcd)
-> +{
-> +       struct xhci_hcd *xhci = hcd_to_xhci(hcd);
-> +       struct device *dev = hcd->self.controller;
-> +       struct xhci_plat_priv *xhci_priv = hcd_to_xhci_priv(hcd);
-> +       struct phy *usb2_generic_phy;
-> +       int ret;
-> +
-> +       usb2_generic_phy = devm_phy_get(dev->parent, "usb2-phy");
-> +       if (IS_ERR(usb2_generic_phy)) {
-> +               ret = PTR_ERR(usb2_generic_phy);
-> +               if (ret == -EPROBE_DEFER) {
-> +                       return ret;
-> +               } else {
-> +                       dev_err(dev, "no usb2 phy configured\n");
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       phy_calibrate(usb2_generic_phy);
-> +       xhci_priv->priv = usb2_generic_phy;
-> +
-> +       xhci->quirks |= XHCI_RESET_ON_RESUME;
-> +
-> +       return 0;
-> +}
-> +
-> +int xhci_exynos_post_resume_quirk(struct usb_hcd *hcd)
-> +{
-> +       struct xhci_plat_priv *xhci_priv = hcd_to_xhci_priv(hcd);
-> +       struct phy *usb2_generic_phy = xhci_priv->priv;
-> +
-> +       phy_calibrate(usb2_generic_phy);
-> +
-> +       return 0;
-> +}
-> diff --git a/drivers/usb/host/xhci-exynos.h b/drivers/usb/host/xhci-exynos.h
-> new file mode 100644
-> index 000000000000..58ea3e9aea8d
-> --- /dev/null
-> +++ b/drivers/usb/host/xhci-exynos.h
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * drivers/usb/host/xhci-exynos.h
-> + *
-> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
-> + */
-> +
-> +#ifndef _XHCI_EXYNOS_H
-> +#define _XHCI_EXYNOS_H
-> +
-> +
-> +#if IS_ENABLED(CONFIG_USB_XHCI_EXYNOS)
-> +int xhci_exynos_init_quirk(struct usb_hcd *hcd);
-> +int xhci_exynos_post_resume_quirk(struct usb_hcd *hcd);
-> +#else
-> +static inline int xhci_exynos_init_quirk(struct usb_hcd *hcd)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int xhci_exynos_post_resume_quirk(struct usb_hcd *hcd)
-> +{
-> +       return 0;
-> +}
-> +#endif
-> +#endif /* _XHCI_EXYNOS_H */
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 998241f5fce3..6bc03cdb2f21 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -24,6 +24,7 @@
->  #include "xhci-plat.h"
->  #include "xhci-mvebu.h"
->  #include "xhci-rcar.h"
-> +#include "xhci-exynos.h"
+>         unsigned                connected:1;
+>         unsigned                delayed_status:1;
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+> index c1e9ea621f41..4e847073e85e 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -35,22 +36,20 @@ struct dwc3_exynos {
 >
->  static struct hc_driver __read_mostly xhci_plat_hc_driver;
+>         struct regulator        *vdd33;
+>         struct regulator        *vdd10;
+> +       struct platform_device  *dwc3;
+>  };
 >
-> @@ -64,6 +65,16 @@ static int xhci_priv_resume_quirk(struct usb_hcd *hcd)
->         return priv->resume_quirk(hcd);
->  }
+> -static int dwc3_exynos_remove_child(struct device *dev, void *unused)
+> -{
+> -       struct platform_device *pdev = to_platform_device(dev);
+> -
+> -       platform_device_unregister(pdev);
+> -
+> -       return 0;
+> -}
+> +static const struct property_entry dwc3_exynos_properties[] = {
+> +       PROPERTY_ENTRY_STRING("snps,xhci_variant", "exynos5-dwc3-xhci"),
+> +       {}
+> +};
 >
-> +static int xhci_priv_post_resume_quirk(struct usb_hcd *hcd)
-> +{
-> +       struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
-> +
-> +       if (!priv->post_resume_quirk)
-> +               return 0;
-> +
-> +       return priv->post_resume_quirk(hcd);
-> +}
-> +
->  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  static int dwc3_exynos_probe(struct platform_device *pdev)
 >  {
->         /*
-> @@ -102,6 +113,11 @@ static const struct xhci_plat_priv xhci_plat_marvell_armada3700 = {
->         .init_quirk = xhci_mvebu_a3700_init_quirk,
->  };
+>         struct dwc3_exynos      *exynos;
+>         struct device           *dev = &pdev->dev;
+> -       struct device_node      *node = dev->of_node;
+> +       struct device_node      *node = dev->of_node, *child;
+> +       struct platform_device  *dwc3;
+>         const struct dwc3_exynos_driverdata *driver_data;
+>         int                     i, ret;
 >
-> +static const struct xhci_plat_priv xhci_plat_samsung_exynos5 = {
-> +       .init_quirk = xhci_exynos_init_quirk,
-> +       .post_resume_quirk = xhci_exynos_post_resume_quirk,
-> +};
-> +
->  static const struct xhci_plat_priv xhci_plat_renesas_rcar_gen2 = {
->         .firmware_name = XHCI_RCAR_FIRMWARE_NAME_V1,
->         .init_quirk = xhci_rcar_init_quirk,
-> @@ -260,6 +276,13 @@ static int xhci_plat_probe(struct platform_device *pdev)
->                 goto disable_reg_clk;
+> @@ -109,21 +108,43 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>                 goto vdd10_err;
+>         }
 >
->         priv_match = of_device_get_match_data(&pdev->dev);
-> +       if (!priv_match) {
-> +               const struct platform_device_id *id =
-> +                                                  platform_get_device_id(pdev);
-> +               if (id)
-> +                       priv_match = (const struct xhci_plat_priv *)
-> +                                                               id->driver_data;
+> -       if (node) {
+> -               ret = of_platform_populate(node, NULL, NULL, dev);
+> -               if (ret) {
+> -                       dev_err(dev, "failed to add dwc3 core\n");
+> -                       goto populate_err;
+> -               }
+> -       } else {
+> -               dev_err(dev, "no device node, failed to add dwc3 core\n");
+> -               ret = -ENODEV;
+> -               goto populate_err;
+> +       child = of_get_next_child(node, NULL);
+> +       if (!child) {
+> +               dev_err(dev, "Failed to find DWC3 core device node\n");
+> +               goto dwc3_child_err;
 > +       }
->         if (priv_match) {
->                 struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
->
-> @@ -413,7 +436,11 @@ static int __maybe_unused xhci_plat_resume(struct device *dev)
->         if (ret)
->                 return ret;
->
-> -       return xhci_resume(xhci, 0);
-> +       ret = xhci_resume(xhci, 0);
-> +       if (ret)
-> +               return ret;
 > +
-> +       return xhci_priv_post_resume_quirk(hcd);
->  }
->
->  static int __maybe_unused xhci_plat_runtime_suspend(struct device *dev)
-> @@ -447,9 +474,18 @@ static const struct acpi_device_id usb_xhci_acpi_match[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_match);
->
-> +static struct platform_device_id xhci_plat_driver_ids[] = {
-> +       {
-> +               .name           = "exynos5-dwc3-xhci",
-> +               .driver_data    = (long) &xhci_plat_samsung_exynos5,
-> +       }, { },
-> +};
-> +MODULE_DEVICE_TABLE(platform, xhci_plat_driver_ids);
+> +       dwc3 = of_device_alloc(child, NULL, dev);
+> +       if (!dwc3) {
+> +               dev_err(dev, "Failed to allocate DWC3 core device\n");
+> +               goto dwc3_alloc_err;
+> +       }
 > +
->  static struct platform_driver usb_xhci_driver = {
->         .probe  = xhci_plat_probe,
->         .remove = xhci_plat_remove,
-> +       .id_table = xhci_plat_driver_ids,
->         .driver = {
->                 .name = "xhci-hcd",
->                 .pm = &xhci_plat_pm_ops,
-> diff --git a/drivers/usb/host/xhci-plat.h b/drivers/usb/host/xhci-plat.h
-> index ae29f22ff5bd..f8a8e84b4ebe 100644
-> --- a/drivers/usb/host/xhci-plat.h
-> +++ b/drivers/usb/host/xhci-plat.h
-> @@ -12,9 +12,11 @@
+> +       dwc3->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> +       dwc3->dev.dma_mask = &dwc3->dev.coherent_dma_mask;
+> +       dwc3->dev.bus = &platform_bus_type;
+> +
+> +       ret = platform_device_add_properties(dwc3, dwc3_exynos_properties);
+> +       if (ret < 0) {
+> +               dev_err(dev, "Failed to add properties to DWC3 device\n");
+> +               goto dwc3_props_err;
+> +       }
+> +
+> +       ret = of_device_add(dwc3);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to register DWC3 core device\n");
+> +               goto dwc3_props_err;
+>         }
+> +       exynos->dwc3 = dwc3;
+> +       of_node_put(child);
 >
->  struct xhci_plat_priv {
->         const char *firmware_name;
-> +       void *priv;
->         void (*plat_start)(struct usb_hcd *);
->         int (*init_quirk)(struct usb_hcd *);
->         int (*resume_quirk)(struct usb_hcd *);
-> +       int (*post_resume_quirk)(struct usb_hcd *);
->  };
+>         return 0;
 >
->  #define hcd_to_xhci_priv(h) ((struct xhci_plat_priv *)hcd_to_xhci(h)->priv)
+> -populate_err:
+> +dwc3_props_err:
+> +       platform_device_put(dwc3);
+> +dwc3_alloc_err:
+> +       of_node_put(child);
+> +dwc3_child_err:
+>         regulator_disable(exynos->vdd10);
+>  vdd10_err:
+>         regulator_disable(exynos->vdd33);
+> @@ -142,7 +163,8 @@ static int dwc3_exynos_remove(struct platform_device *pdev)
+>         struct dwc3_exynos      *exynos = platform_get_drvdata(pdev);
+>         int i;
+>
+> -       device_for_each_child(&pdev->dev, NULL, dwc3_exynos_remove_child);
+> +       of_device_unregister(exynos->dwc3);
+> +       platform_device_put(exynos->dwc3);
+>
+>         for (i = exynos->num_clks - 1; i >= 0; i--)
+>                 clk_disable_unprepare(exynos->clks[i]);
+> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+> index f55947294f7c..b526d0c78c3b 100644
+> --- a/drivers/usb/dwc3/host.c
+> +++ b/drivers/usb/dwc3/host.c
+> @@ -71,7 +71,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+>         dwc->xhci_resources[1].flags = res->flags;
+>         dwc->xhci_resources[1].name = res->name;
+>
+> -       xhci = platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
+> +       xhci = platform_device_alloc(dwc->hcd_name, PLATFORM_DEVID_AUTO);
+>         if (!xhci) {
+>                 dev_err(dwc->dev, "couldn't allocate xHCI device\n");
+>                 return -ENOMEM;
 > --
 > 2.17.1
 >
