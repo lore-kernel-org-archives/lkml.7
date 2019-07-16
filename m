@@ -2,78 +2,81 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27749C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ECCC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0D32173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHLDI7qu"
+	by mail.kernel.org (Postfix) with ESMTP id 076AC20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387559AbfGPNTl (ORCPT
+        id S2387425AbfGPNVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:19:41 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45776 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPNTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:19:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x21so20978617otq.12;
-        Tue, 16 Jul 2019 06:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ft5bVu4GiOzMOquID2tug9HMlwO64i/k54DzeQayFVQ=;
-        b=nHLDI7quoPcaMtrmsotzJJ0RhZI4lMAAKzNdjVA1dW0tRsKNbS9jZMpaNr/R4QO9fM
-         QeNs5dxk8ed6yV+0A9NeusIEZCTmEugmItmX/KJ9ysUhwubCoFc1Yp0HfZTnSbk7QDLt
-         M+qQdkKjxNt9AjOydda2zTshLmnFr2j4KUGnd1G8iTiSl973P21KAhU6zEPB1yEwW897
-         GtvP3zMFVELpPYakN6p2NH++nwMyoZeldSTwZGTe5BNdEhZmnRaSPeUto0qlG3P6DbRQ
-         lYqAkNDcT43appzuNFPM5WNTbA+wPyumQebOKeIWrVqWaQXt62ynSx/lOgxNdxAca6Gm
-         BfXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ft5bVu4GiOzMOquID2tug9HMlwO64i/k54DzeQayFVQ=;
-        b=E/4Qn8Xtx3fvUs/otgZwNGa3ruLTi0cdXX7KT8jYotIiHzfEjHHZarktu0e4P++7V3
-         CcdZLrGS8kQfcDCX1wrAUPyETRUHo6VO4Fgi2+bO+ZcKcTVJvK8opwL73hiBuEdi1MMf
-         5BYMa1QIWCRAzX80z2fg9iZDx6iMDO53ZUseRgFTB30itX8Z44v3Tz7EVfQygxl9Xgkf
-         ESg1/mremBnIAPC9tt01AFb+MQcOtuSsL0NWIr9FgGopl/W1MJh1hZYU91KIr5TR4ILu
-         4FIa/ARQi98lEBGTuoxqijcAjncxZZ6vVn/SaqRGj+TdLrMASPGni0ecpVV4/4NITw9l
-         CQVA==
-X-Gm-Message-State: APjAAAVGQ8FlFv1tRA0cEpcR/4iy4FQu4PrJrKdnZW6Z1/Pc85qA2OM1
-        QKVp4OgjwPjZipzs+id4awsk3a1u4omDrv6+VAdgvw==
-X-Google-Smtp-Source: APXvYqzA6XiP/kuy0DMZBzETMQWyESn5f0PKeKhfmMMib8v9R3xOk+yf0LOZdoUZA+PDnLIAU/yLYAhJo1JSp2dBxAE=
-X-Received: by 2002:a05:6830:1319:: with SMTP id p25mr25455046otq.224.1563283180146;
- Tue, 16 Jul 2019 06:19:40 -0700 (PDT)
+        Tue, 16 Jul 2019 09:21:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2270 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726997AbfGPNVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:21:37 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A18796ABEF2862102AA7;
+        Tue, 16 Jul 2019 21:21:33 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
+ 21:21:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
+        <joseph.qi@linux.alibaba.com>, <akpm@linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <ocfs2-devel@oss.oracle.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] ocfs2: remove set but not used variable 'last_hash'
+Date:   Tue, 16 Jul 2019 21:21:10 +0800
+Message-ID: <20190716132110.34836-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190715210512.15823-1-TheSven73@gmail.com> <VI1PR0402MB36009E99D7361583702B84DDFFCE0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB36009E99D7361583702B84DDFFCE0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 16 Jul 2019 09:19:29 -0400
-Message-ID: <CAGngYiUb5==QSM1-oa4bSeqhGyoaTw_dWjygLo=0X60eX=wQhQ@mail.gmail.com>
-Subject: Re: [EXT] [PATCH v1] net: fec: optionally reset PHY via a reset-controller
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-On Mon, Jul 15, 2019 at 10:02 PM Andy Duan <fugang.duan@nxp.com> wrote:
->
-> the phylib already can handle mii bus reset and phy device reset
+fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
+fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
 
-That's a great suggestion, thank you !! I completely overlooked that code.
-What will happen to the legacy phy reset code in fec? Are there many users left?
+It's never used and can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/ocfs2/xattr.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 385f3aa..90c830e3 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -3825,7 +3825,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
+ 	int low_bucket = 0, bucket, high_bucket;
+ 	struct ocfs2_xattr_bucket *search;
+-	u32 last_hash;
+ 	u64 blkno, lower_blkno = 0;
+ 
+ 	search = ocfs2_xattr_bucket_new(inode);
+@@ -3869,8 +3868,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 		if (xh->xh_count)
+ 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
+ 
+-		last_hash = le32_to_cpu(xe->xe_name_hash);
+-
+ 		/* record lower_blkno which may be the insert place. */
+ 		lower_blkno = blkno;
+ 
+-- 
+2.7.4
+
+
