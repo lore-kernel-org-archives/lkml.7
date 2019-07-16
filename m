@@ -2,248 +2,165 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB92C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBFEC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7595206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A252A206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbfGPI4P (ORCPT
+        id S1731691AbfGPI4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:56:15 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:53414 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfGPI4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:56:15 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 236CC20455;
-        Tue, 16 Jul 2019 10:56:13 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id F332F20080;
-        Tue, 16 Jul 2019 10:56:12 +0200 (CEST)
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v2] media: dvb: Provide 4 devm variants
-To:     Sean Young <sean@mess.org>, Brad Love <brad@nextdimension.cc>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Message-ID: <568760ff-08d8-6e7f-df35-cf76d4fcf945@free.fr>
-Date:   Tue, 16 Jul 2019 10:56:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Jul 2019 04:56:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58582 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727042AbfGPI4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:56:44 -0400
+Received: from laptop (unknown [IPv6:2a01:cb19:8da1:9c00:f43f:8285:c795:bffa])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9CAE128B49B;
+        Tue, 16 Jul 2019 09:56:41 +0100 (BST)
+Message-ID: <2b0bc34a6cf504c468a5708709384c6b4af42e10.camel@collabora.com>
+Subject: Re: [PATCH v4 1/1] iio: common: cros_ec_sensors: determine protocol
+ version
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 16 Jul 2019 10:56:38 +0200
+In-Reply-To: <20190714171935.6a67cfb2@archlinux>
+References: <cover.1562056868.git.fabien.lahoudere@collabora.com>
+         <3fc3e1e606bc1e5478fca0888f9c005df6e52745.1562056868.git.fabien.lahoudere@collabora.com>
+         <20190714171935.6a67cfb2@archlinux>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jul 16 10:56:13 2019 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide devm variants for automatic resource release on device removal.
-Makes error-handling in probe() much simpler, thus less error-prone.
-And once all resources are devmanaged, remove() is no longer needed.
+Le dimanche 14 juillet 2019 à 17:19 +0100, Jonathan Cameron a écrit :
+> On Tue,  2 Jul 2019 10:49:38 +0200
+> Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+> 
+> > This patch adds a function to determine which version of the
+> > protocol is used to communicate with EC.
+> > 
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > Tested-by: Gwendal Grignou <gwendal@chromium.org>
+> > Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> There are so many different series flying around for this driver that
+> I have given up trying to figure out if I should be picking some of
+> them up.  I'll ack them on the assumption they'll all go together,
+> but feel free to ping me if you want me to pick some of them up
+> through IIO.
+> 
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
-Changes from v1:
-x Simplify devm_dvb_register_adapter() implementation
-x Add 3 more devm APIs
-x Document them in devres.rst
----
- Documentation/driver-model/devres.rst |  6 ++++++
- drivers/media/dvb-core/dmxdev.c       | 13 +++++++++++++
- drivers/media/dvb-core/dvb_demux.c    | 13 +++++++++++++
- drivers/media/dvb-core/dvb_frontend.c | 13 +++++++++++++
- drivers/media/dvb-core/dvbdev.c       | 12 ++++++++++++
- include/media/dmxdev.h                |  3 +++
- include/media/dvb_demux.h             |  2 ++
- include/media/dvb_frontend.h          |  3 +++
- include/media/dvbdev.h                |  3 +++
- 9 files changed, 68 insertions(+)
+Yes sorry for all that confusing series.
+Enric wanted this patch first and it is independant of others, so feel
+free to pick it. Others patcheshave been sent separately.
 
-diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
-index a100bef54952..1b6ced8e4294 100644
---- a/Documentation/driver-model/devres.rst
-+++ b/Documentation/driver-model/devres.rst
-@@ -265,6 +265,12 @@ DMA
- DRM
-   devm_drm_dev_init()
- 
-+DVB
-+  devm_dvb_register_adapter()
-+  devm_dvb_register_frontend()
-+  devm_dvb_dmx_init()
-+  devm_dvb_dmxdev_init()
-+
- GPIO
-   devm_gpiod_get()
-   devm_gpiod_get_index()
-diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
-index f14a872d1268..f38b65d1b430 100644
---- a/drivers/media/dvb-core/dmxdev.c
-+++ b/drivers/media/dvb-core/dmxdev.c
-@@ -1444,6 +1444,19 @@ int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *dvb_adapter)
- 
- EXPORT_SYMBOL(dvb_dmxdev_init);
- 
-+static void dmxdev_release(void *dmxdev)
-+{
-+	dvb_dmxdev_release(dmxdev);
-+}
-+
-+int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
-+		struct dvb_adapter *dvb_adapter)
-+{
-+	int rc = dvb_dmxdev_init(dmxdev, dvb_adapter);
-+	return rc ? : devm_add_action_or_reset(dev, dmxdev_release, dmxdev);
-+}
-+EXPORT_SYMBOL(devm_dvb_dmxdev_init);
-+
- void dvb_dmxdev_release(struct dmxdev *dmxdev)
- {
- 	dmxdev->exit = 1;
-diff --git a/drivers/media/dvb-core/dvb_demux.c b/drivers/media/dvb-core/dvb_demux.c
-index 39a2c6ccf31d..55b9675b99c5 100644
---- a/drivers/media/dvb-core/dvb_demux.c
-+++ b/drivers/media/dvb-core/dvb_demux.c
-@@ -28,6 +28,7 @@
- #include <linux/string.h>
- #include <linux/crc32.h>
- #include <linux/uaccess.h>
-+#include <linux/device.h>
- #include <asm/div64.h>
- 
- #include <media/dvb_demux.h>
-@@ -1317,6 +1318,18 @@ int dvb_dmx_init(struct dvb_demux *dvbdemux)
- 
- EXPORT_SYMBOL(dvb_dmx_init);
- 
-+static void dmx_release(void *dvbdemux)
-+{
-+	dvb_dmx_release(dvbdemux);
-+}
-+
-+int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *dvbdemux)
-+{
-+	int rc = dvb_dmx_init(dvbdemux);
-+	return rc ? : devm_add_action_or_reset(dev, dmx_release, dvbdemux);
-+}
-+EXPORT_SYMBOL(devm_dvb_dmx_init);
-+
- void dvb_dmx_release(struct dvb_demux *dvbdemux)
- {
- 	vfree(dvbdemux->cnt_storage);
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 209186c5cd9b..4a281cd8c064 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -3007,6 +3007,19 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
- }
- EXPORT_SYMBOL(dvb_register_frontend);
- 
-+static void unregister_frontend(void *fe)
-+{
-+	dvb_unregister_frontend(fe);
-+}
-+
-+int devm_dvb_register_frontend(struct device *dev,
-+		struct dvb_adapter *dvb, struct dvb_frontend *fe)
-+{
-+	int rc = dvb_register_frontend(dvb, fe);
-+	return rc ? : devm_add_action_or_reset(dev, unregister_frontend, fe);
-+}
-+EXPORT_SYMBOL(devm_dvb_register_frontend);
-+
- int dvb_unregister_frontend(struct dvb_frontend *fe)
- {
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
-diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
-index a3393cd4e584..7d007bcc2abb 100644
---- a/drivers/media/dvb-core/dvbdev.c
-+++ b/drivers/media/dvb-core/dvbdev.c
-@@ -885,6 +885,18 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
- }
- EXPORT_SYMBOL(dvb_register_adapter);
- 
-+static void unregister_adapter(void *adap)
-+{
-+	dvb_unregister_adapter(adap);
-+}
-+
-+int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
-+		const char *name, struct module *module, short *adapter_nums)
-+{
-+	int rc = dvb_register_adapter(adap, name, module, dev, adapter_nums);
-+	return rc ? : devm_add_action_or_reset(dev, unregister_adapter, adap);
-+}
-+EXPORT_SYMBOL(devm_dvb_register_adapter);
- 
- int dvb_unregister_adapter(struct dvb_adapter *adap)
- {
-diff --git a/include/media/dmxdev.h b/include/media/dmxdev.h
-index baafa3b8aca4..0300d829aeea 100644
---- a/include/media/dmxdev.h
-+++ b/include/media/dmxdev.h
-@@ -204,6 +204,9 @@ struct dmxdev {
-  */
- int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *adap);
- 
-+int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
-+		struct dvb_adapter *dvb_adapter);
-+
- /**
-  * dvb_dmxdev_release - releases a digital TV demux and unregisters it.
-  *
-diff --git a/include/media/dvb_demux.h b/include/media/dvb_demux.h
-index 3b6aeca7a49e..95fe901076d7 100644
---- a/include/media/dvb_demux.h
-+++ b/include/media/dvb_demux.h
-@@ -266,6 +266,8 @@ struct dvb_demux {
-  */
- int dvb_dmx_init(struct dvb_demux *demux);
- 
-+int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *demux);
-+
- /**
-  * dvb_dmx_release - releases a digital TV demux internal buffers.
-  *
-diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
-index f05cd7b94a2c..56dbaf3cc7a9 100644
---- a/include/media/dvb_frontend.h
-+++ b/include/media/dvb_frontend.h
-@@ -713,6 +713,9 @@ struct dvb_frontend {
- int dvb_register_frontend(struct dvb_adapter *dvb,
- 				 struct dvb_frontend *fe);
- 
-+int devm_dvb_register_frontend(struct device *dev,
-+		struct dvb_adapter *dvb, struct dvb_frontend *fe);
-+
- /**
-  * dvb_unregister_frontend() - Unregisters a DVB frontend
-  *
-diff --git a/include/media/dvbdev.h b/include/media/dvbdev.h
-index 551325858de3..32f8d1626319 100644
---- a/include/media/dvbdev.h
-+++ b/include/media/dvbdev.h
-@@ -202,6 +202,9 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
- 			 struct module *module, struct device *device,
- 			 short *adapter_nums);
- 
-+int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
-+		const char *name, struct module *module, short *adapter_nums);
-+
- /**
-  * dvb_unregister_adapter - Unregisters a DVB adapter
-  *
--- 
-2.17.1
+Thanks
+
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 36
+> > ++++++++++++++++++-
+> >  1 file changed, 35 insertions(+), 1 deletion(-)
+> > 
+> > diff --git
+> > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index 130362ca421b..81111af8a167 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -25,6 +25,31 @@ static char *cros_ec_loc[] = {
+> >  	[MOTIONSENSE_LOC_MAX] = "unknown",
+> >  };
+> >  
+> > +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device
+> > *ec_dev,
+> > +					     u16 cmd_offset, u16 cmd,
+> > u32 *mask)
+> > +{
+> > +	int ret;
+> > +	struct {
+> > +		struct cros_ec_command msg;
+> > +		union {
+> > +			struct ec_params_get_cmd_versions params;
+> > +			struct ec_response_get_cmd_versions resp;
+> > +		};
+> > +	} __packed buf = {
+> > +		.msg = {
+> > +			.command = EC_CMD_GET_CMD_VERSIONS +
+> > cmd_offset,
+> > +			.insize = sizeof(struct
+> > ec_response_get_cmd_versions),
+> > +			.outsize = sizeof(struct
+> > ec_params_get_cmd_versions)
+> > +			},
+> > +		.params = {.cmd = cmd}
+> > +	};
+> > +
+> > +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> > +	if (ret >= 0)
+> > +		*mask = buf.resp.version_mask;
+> > +	return ret;
+> > +}
+> > +
+> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  			      struct iio_dev *indio_dev,
+> >  			      bool physical_device)
+> > @@ -33,6 +58,8 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+> >  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
+> >  	struct cros_ec_sensor_platform *sensor_platform =
+> > dev_get_platdata(dev);
+> > +	u32 ver_mask;
+> > +	int ret;
+> >  
+> >  	platform_set_drvdata(pdev, indio_dev);
+> >  
+> > @@ -47,8 +74,15 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  
+> >  	mutex_init(&state->cmd_lock);
+> >  
+> > +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
+> > +						ec->cmd_offset,
+> > +						EC_CMD_MOTION_SENSE_CMD
+> > ,
+> > +						&ver_mask);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> >  	/* Set up the host command structure. */
+> > -	state->msg->version = 2;
+> > +	state->msg->version = fls(ver_mask) - 1;
+> >  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> >  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
+> >  
+
