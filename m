@@ -2,146 +2,100 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76912C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5E9C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF5F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA3520449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s+OFL3WX"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="KlbniZ/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387415AbfGPKmU (ORCPT
+        id S2387437AbfGPKn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:42:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33942 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732081AbfGPKmT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:42:19 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so3019727pgc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 03:42:19 -0700 (PDT)
+        Tue, 16 Jul 2019 06:43:28 -0400
+Received: from mail-eopbgr140129.outbound.protection.outlook.com ([40.107.14.129]:56900
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732081AbfGPKn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:43:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dJzI5KVM2sKekvtHFBmjlZh6S/C8Fji6yNWHBZrZt/JQ4L8xbNbTaONjkUfft2+klyIJomrdYgS9oeMIMr5Z+a2DSc8uOQp6vW+DKbMUaFPsejpupNJMiPTkCb+UuF6CANZGfceWun9qsu/yIMGknagMP87cQK1szVCEbiUhQoMyOXDCgbLDCD16V5vgF9NmC43/RO7YRJNO6/07mWZc4IhlcsoEV9+oksqDjdKxZtLsny376oU3Oi+tNBbOagz2zluqPCS577Cq7x3c/mX91ZRfyhVHh8xxtr6W5HvlPxBHVF4hG3QbNA7JasRNwwDXzvVK98NkHj7IIk0dRWce0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJWn23Q9cmSdZoNPNTv5fLV7w5UUXTsDCpqPLXxUePs=;
+ b=MBIGLeHrbAP5iZlvMvvbV5XxAa8FbofOHGmjZ3XFpPCRJX+MwLybh23DcRwdfrhLv0g3moO3wRyOHqCQI4OSKLMUW6xpgdvPF43R8rP0k2m06L9iTbg/tc68Z2K46++LxNStMnkY4TthFnDH50GTPEf+kzJUagkywjMTIFztECYxb/FJLsHB0lg/902IuvdlccJVLAYUQSiBpkDFNORny7lr6qo27SqTy/1y8Y1AF/yxCZ/BFvRyXLGnoyn8WTcCVRbkeVujDx1JfBZlxejI4d1g6gXCmXw95TW9ej4irW9KbfL3Dul3ZOEbfWObvIpIbkRfA0yPrzSmOHnKyatGbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=habana.ai;dmarc=pass action=none
+ header.from=habana.ai;dkim=pass header.d=habana.ai;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pcaSKUptakKKj3J2cwfnG8UjZ2PIKf/cDSDsIedAL2o=;
-        b=s+OFL3WXkvuRlzxrd5bE1Ngy+XgzRf65DCow2JPQVmoncUwZbVCqMBlaegEFH9OjoE
-         hGCT+agVZt6o7c1dpbisMO2uuxLS4ocd2/ZDN7N4RlgjJBFJVqurL7o3Ajgq9RawIe5i
-         iUUC4MErBeuJi9C5qq1rXWHueETWBI6Hzy/jstfQMgqGCotgu8bx7AIz25MV6uvB/uMd
-         AEZz6pOzM1SLevN2MhBCQnN+Ls0p0A8Ke9oO9L3/oytDbjyhFG4BNaIQGs6zmciV6uIC
-         B6Z1DPnQPaMXlwFS2CsRvlNBpOj4ZTVcwcFW3en9/NlOTRMUXcMVVd3220XqOCAD3ZI0
-         4G+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pcaSKUptakKKj3J2cwfnG8UjZ2PIKf/cDSDsIedAL2o=;
-        b=RzkHfz4wl1kQWpSduwyMgx9+bCzPmafzaSZISgvQsehu2BzUQD7O14RyLbcZ3K7GtK
-         ed4ZT98lF22KoeZWeXI49eFZNNFW6SH5vm/6M5yp9Cn3SKlXjc3zNluTZd5Sy4++tKlg
-         kGJTxVlHmo+8qY0sSfyMPtw+eUkPT29jFHN4QZOzMXeAS2kGOzjP0SY5C29JLBLxiPO5
-         39kAQAoTtWUDqk4injUbLRtrg77ZFCVVbCmqmzWwNWwT/jiZeqiw4hWtsPow57TZ+54R
-         UIp0Z6ur6/nJGf88nvs6y+yPrn4VzsMJTyZES+2KTBpEBWJz4Tsjv6Y8tolKZqb9Cpai
-         pE2w==
-X-Gm-Message-State: APjAAAWDxnu/BC+78tKPrtiQG7cMYq7KuzuP+0DAlmdtNBKrj8lo1yiY
-        adRgPsNAuLL2Kjv+N96MbIBnupdpxNmwyeAD6bu87A==
-X-Google-Smtp-Source: APXvYqxbAU3TJ3lRd6aOUwZ5wuALN9pC6/wjaLV/0rVHNmhI9zipeP18fROsGNN7fnnNJ7wIdpoSB0T+fWzH5C49P+M=
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr32488026pgq.130.1563273738850;
- Tue, 16 Jul 2019 03:42:18 -0700 (PDT)
+ d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pJWn23Q9cmSdZoNPNTv5fLV7w5UUXTsDCpqPLXxUePs=;
+ b=KlbniZ/72rn8iba694FXzQ54ORdPG0zA0NHBFkdUDORQwxa7Xx7s41UdY/FZFpIx3TNdfbLdYz/l335Yy3YBiO7Pydke/rSQFKaog8gFdB8ya/I1hoTK/uzBuUPC5j/C9jTvIb8j45BcacfDD5HZKFAbHRuohJhMXeEekMoOhzc=
+Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com (52.133.8.16) by
+ AM6PR0202MB3383.eurprd02.prod.outlook.com (52.133.10.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.10; Tue, 16 Jul 2019 10:43:25 +0000
+Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com
+ ([fe80::e15d:fa52:74f0:9e1d]) by AM6PR0202MB3382.eurprd02.prod.outlook.com
+ ([fe80::e15d:fa52:74f0:9e1d%3]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
+ 10:43:25 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomer Tayar <ttayar@habana.ai>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH] habanalabs: add comments on INFO IOCTL
+Thread-Topic: [PATCH] habanalabs: add comments on INFO IOCTL
+Thread-Index: AQHVO7Uut7QnutRiTEep8X2SDeMSeabNDfcQ
+Date:   Tue, 16 Jul 2019 10:43:25 +0000
+Message-ID: <AM6PR0202MB33826EC6FC45EDD9299165E9B8CE0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+References: <20190716090218.12379-1-oded.gabbay@gmail.com>
+In-Reply-To: <20190716090218.12379-1-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oshpigelman@habana.ai; 
+x-originating-ip: [31.154.181.186]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 52e27f9e-da1d-4799-101d-08d709da6e54
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR0202MB3383;
+x-ms-traffictypediagnostic: AM6PR0202MB3383:
+x-microsoft-antispam-prvs: <AM6PR0202MB338383727C2FF577BECC4F1DB8CE0@AM6PR0202MB3383.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(39840400004)(396003)(346002)(136003)(189003)(199004)(7736002)(66066001)(486006)(76176011)(25786009)(99286004)(3846002)(6116002)(7696005)(5660300002)(229853002)(33656002)(2501003)(2906002)(186003)(26005)(6636002)(11346002)(446003)(478600001)(102836004)(14454004)(476003)(8936002)(6506007)(316002)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(55016002)(558084003)(68736007)(6436002)(53936002)(74316002)(8676002)(110136005)(71190400001)(71200400001)(52536014)(256004)(86362001)(9686003)(305945005)(81166006)(4326008)(81156014)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3383;H:AM6PR0202MB3382.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HAXqcr7KYOzjXmjt4znU4jDeznUf0sbpbtz/vNoz1m3TGhEfwAFtnOxEsBijdGFZSmpAUTfUrJIUOX6SuVGNHAvjG3A3ZmnMA5wvcwkTHWiUrjp7wMR386lpK8MPZeGmNJ0SHKYlENsiUUOGjevD3RdOOW/dVH+xr3YG2HUkT5bdVeKaTwlrGkloCcKdBarwT5dtPsftGyNc45W2+Mov6xTPVOifNFfYvZhoYMGqMY2bzD0M1rY7IQp3u1Mc0i29cbMCTW1NZIWAAxSK0OmwaOhNBL8KM1RVhsNSU7z1uTkoB5feXc63dzEzSIVgivfslxezLjq0ng4M/o+M7OxCVnbbMai3yhqWisi77K9OSsvSbR3PPS4fHm04I8dtXKxpShU2LUlhhZH85WTlv6xJb7UfIG7jc4gykX+FE2vEvX4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1561386715.git.andreyknvl@google.com> <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
- <20190624174015.GL29120@arrakis.emea.arm.com> <CAAeHK+y8vE=G_odK6KH=H064nSQcVgkQkNwb2zQD9swXxKSyUQ@mail.gmail.com>
- <20190715180510.GC4970@ziepe.ca>
-In-Reply-To: <20190715180510.GC4970@ziepe.ca>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 16 Jul 2019 12:42:07 +0200
-Message-ID: <CAAeHK+xPQqJP7p_JFxc4jrx9k7N0TpBWEuB8Px7XHvrfDU1_gw@mail.gmail.com>
-Subject: Re: [PATCH v18 11/15] IB/mlx4: untag user pointers in mlx4_get_umem_mr
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52e27f9e-da1d-4799-101d-08d709da6e54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 10:43:25.3588
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oshpigelman@habana.ai
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3383
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 8:05 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Mon, Jul 15, 2019 at 06:01:29PM +0200, Andrey Konovalov wrote:
-> > On Mon, Jun 24, 2019 at 7:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > >
-> > > On Mon, Jun 24, 2019 at 04:32:56PM +0200, Andrey Konovalov wrote:
-> > > > This patch is a part of a series that extends kernel ABI to allow to pass
-> > > > tagged user pointers (with the top byte set to something else other than
-> > > > 0x00) as syscall arguments.
-> > > >
-> > > > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
-> > > > only by done with untagged pointers.
-> > > >
-> > > > Untag user pointers in this function.
-> > > >
-> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
-> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >
-> > > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> > >
-> > > This patch also needs an ack from the infiniband maintainers (Jason).
-> >
-> > Hi Jason,
-> >
-> > Could you take a look and give your acked-by?
->
-> Oh, I think I did this a long time ago. Still looks OK.
-
-Hm, maybe that was we who lost it. Thanks!
-
-> You will send it?
-
-I will resend the patchset once the merge window is closed, if that's
-what you mean.
-
->
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
->
-> Jason
+RnJvbTogT2RlZCBHYWJiYXkgPG9kZWQuZ2FiYmF5QGdtYWlsLmNvbT4NClNlbnQ6IFR1ZXNkYXks
+IDE2IEp1bHkgMjAxOSAxMjowMg0KDQo+IFRoaXMgcGF0Y2ggYWRkcyBzb21lIGluLWNvZGUgZG9j
+dW1lbnRhdGlvbiBvbiB0aGUgZGlmZmVyZW50IG9wY29kZXMgb2YNCj4gdGhlIElORk8gSU9DVEwu
+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBPZGVkIEdhYmJheSA8b2RlZC5nYWJiYXlAZ21haWwuY29t
+Pg0KDQpSZXZpZXdlZC1ieTogT21lciBTaHBpZ2VsbWFuIDxvc2hwaWdlbG1hbkBoYWJhbmEuYWk+
+DQo=
