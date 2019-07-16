@@ -2,156 +2,348 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0269BC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF06C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBF5206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r1Dux4Hb"
+	by mail.kernel.org (Postfix) with ESMTP id F1E282145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbfGPIGQ (ORCPT
+        id S1730260AbfGPIMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:06:16 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11845 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfGPIGQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:06:16 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2d85730000>; Tue, 16 Jul 2019 01:06:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 16 Jul 2019 01:06:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 16 Jul 2019 01:06:14 -0700
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jul
- 2019 08:06:12 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 856C842897; Tue, 16 Jul 2019 11:06:10 +0300 (EEST)
-Date:   Tue, 16 Jul 2019 11:06:10 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Joseph Lo <josephl@nvidia.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-Message-ID: <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
- <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
- <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
+        Tue, 16 Jul 2019 04:12:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726463AbfGPIMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:12:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A333CABED;
+        Tue, 16 Jul 2019 08:12:00 +0000 (UTC)
+Subject: Re: [v2 PATCH 1/2] mm: mempolicy: make the behavior consistent when
+ MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
+To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@kernel.org,
+        mgorman@techsingularity.net, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
+ /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
+ fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
+ 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
+ LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
+ usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
+ byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
+ 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
+ Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
+ 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
+ rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
+ KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
+ n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
+ AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
+ DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
+ ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
+ T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
+ k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
+ YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
+ 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
+ k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
+ Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
+ B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
+ 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
+ uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
+ 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
+ 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
+ +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
+ J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
+ rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
+ D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
+ ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
+ Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
+ NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
+ NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
+ F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
+ J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
+ PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
+ gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
+ rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
+ miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
+ hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
+ E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
+ 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
+ xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
+ 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
+ hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
+ Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
+Message-ID: <fb74d657-90cd-6667-f253-162c951f1b05@suse.cz>
+Date:   Tue, 16 Jul 2019 10:12:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563264372; bh=5j1xq37Ermp9huz0gnBXASgM80EPXOCfRVCxRisazx8=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=r1Dux4Hb74DdPXC8TK54LZSuLoI+I8R5cMuBnTbraZDC7YBJYZWpBrJALUNyXEcSI
-         MNKQEFfCqn6k3NHuFBZxui4ybcpWl1EQlrqILVDjj2Kg1GitWX3NOx63n4TKn82EOS
-         2uv+45pcoFqiS22UthSipP4PHgyxEarC87Nc1bgXuSBeEvgr4l/RDsrrmElXHlcvyy
-         P7ZVsQjDEdftPn9GriTJrzwKDlNnI4NwZyuYnYIU56E25hzetbf04+23pYp4oSYCsV
-         Nt8wdOCLqcddJ2yKoQoRP3bL4c7WlIwGU7w2Rw2c/DP9yGn8ryxJ8YT90FdMn1zKQE
-         QOJavxHgVmtkA==
+In-Reply-To: <1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
-> > OK, Will add to CPUFreq driver...
-> > > 
-> > > The other thing that also need attention is that T124 CPUFreq driver
-> > > implicitly relies on DFLL driver to be probed first, which is icky.
-> > > 
-> > Should I add check for successful dfll clk register explicitly in
-> > CPUFreq driver probe and defer till dfll clk registers?
+On 6/22/19 2:20 AM, Yang Shi wrote:
+> When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
+> try best to migrate misplaced pages, if some of the pages could not be
+> migrated, then return -EIO.
 > 
-> Sorry, I didn't follow the mail thread. Just regarding the DFLL part.
+> There are three different sub-cases:
+> 1. vma is not migratable
+> 2. vma is migratable, but there are unmovable pages
+> 3. vma is migratable, pages are movable, but migrate_pages() fails
 > 
-> As you know it, the DFLL clock is one of the CPU clock sources and
-> integrated with DVFS control logic with the regulator. We will not switch
-> CPU to other clock sources once we switched to DFLL. Because the CPU has
-> been regulated by the DFLL HW with the DVFS table (CVB or OPP table you see
-> in the driver.). We shouldn't reparent it to other sources with unknew
-> freq/volt pair. That's not guaranteed to work. We allow switching to
-> open-loop mode but different sources.
+> If #1 happens, kernel would just abort immediately, then return -EIO,
+> after the commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 ("mm:
+> mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified").
 > 
-> And I don't exactly understand why we need to switch to PLLP in CPU idle
-> driver. Just keep it on CL-DVFS mode all the time.
+> If #3 happens, kernel would set policy and migrate pages with best-effort,
+> but won't rollback the migrated pages and reset the policy back.
 > 
-> In SC7 entry, the dfll suspend function moves it the open-loop mode. That's
-> all. The sc7-entryfirmware will handle the rest of the sequence to turn off
-> the CPU power.
+> Before that commit, they behaves in the same way.  It'd better to keep
+> their behavior consistent.  But, rolling back the migrated pages and
+> resetting the policy back sounds not feasible, so just make #1 behave as
+> same as #3.
 > 
-> In SC7 resume, the warmboot code will handle the sequence to turn on
-> regulator and power up the CPU cluster. And leave it on PLL_P. After
-> resuming to the kernel, we re-init DFLL, restore the CPU clock policy (CPU
-> runs on DFLL open-loop mode) and then moving to close-loop mode.
+> Userspace will know that not everything was successfully migrated (via
+> -EIO), and can take whatever steps it deems necessary - attempt rollback,
+> determine which exact page(s) are violating the policy, etc.
 > 
-> The DFLL part looks good to me. BTW, change the patch subject to "Add
-> suspend-resume support" seems more appropriate to me.
+> Make queue_pages_range() return 1 to indicate there are unmovable pages
+> or vma is not migratable.
+> 
+> The #2 is not handled correctly in the current kernel, the following
+> patch will fix it.
+> 
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+
+Agreed with the goal, but I think there's a bug, and room for improvement.
+
+> ---
+>  mm/mempolicy.c | 86 +++++++++++++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 61 insertions(+), 25 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 01600d8..b50039c 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -429,11 +429,14 @@ static inline bool queue_pages_required(struct page *page,
+>  }
+>  
+>  /*
+> - * queue_pages_pmd() has three possible return values:
+> + * queue_pages_pmd() has four possible return values:
+> + * 2 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
+> + *     specified.
+>   * 1 - pages are placed on the right node or queued successfully.
+>   * 0 - THP was split.
+
+I think if you renumbered these, it would be more consistent with
+queue_pages_pte_range() and simplify the code there.
+0 - pages on right node/queued
+1 - unmovable page with right flags specified
+2 - THP split
+
+> - * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
+> - *        page was already on a node that does not follow the policy.
+> + * -EIO - is migration entry or only MPOL_MF_STRICT was specified and an
+> + *        existing page was already on a node that does not follow the
+> + *        policy.
+>   */
+>  static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+>  				unsigned long end, struct mm_walk *walk)
+> @@ -463,7 +466,7 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+>  	/* go to thp migration */
+>  	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+>  		if (!vma_migratable(walk->vma)) {
+> -			ret = -EIO;
+> +			ret = 2;
+>  			goto unlock;
+>  		}
+>  
+> @@ -488,16 +491,29 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+
+Perhaps this function now also deserves a list of possible return values.
+
+>  	struct queue_pages *qp = walk->private;
+>  	unsigned long flags = qp->flags;
+>  	int ret;
+> +	bool has_unmovable = false;
+>  	pte_t *pte;
+>  	spinlock_t *ptl;
+>  
+>  	ptl = pmd_trans_huge_lock(pmd, vma);
+>  	if (ptl) {
+>  		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
+> -		if (ret > 0)
+> +		switch (ret) {
+
+With renumbering suggested above, this could be:
+if (ret != 2)
+    return ret;
+
+> +		/* THP was split, fall through to pte walk */
+> +		case 0:
+> +			break;
+> +		/* Pages are placed on the right node or queued successfully */
+> +		case 1:
+>  			return 0;
+> -		else if (ret < 0)
+> +		/*
+> +		 * Met unmovable pages, MPOL_MF_MOVE* & MPOL_MF_STRICT
+> +		 * were specified.
+> +		 */
+> +		case 2:
+> +			return 1;
+> +		case -EIO:
+>  			return ret;
+> +		}
+>  	}
+>  
+>  	if (pmd_trans_unstable(pmd))
+> @@ -519,14 +535,21 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  		if (!queue_pages_required(page, qp))
+>  			continue;
+>  		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+> -			if (!vma_migratable(vma))
+> +			/* MPOL_MF_STRICT must be specified if we get here */
+> +			if (!vma_migratable(vma)) {
+> +				has_unmovable |= true;
+>  				break;
+> +			}
+>  			migrate_page_add(page, qp->pagelist, flags);
+>  		} else
+>  			break;
+>  	}
+>  	pte_unmap_unlock(pte - 1, ptl);
+>  	cond_resched();
+> +
+> +	if (has_unmovable)
+> +		return 1;
+> +
+>  	return addr != end ? -EIO : 0;
+>  }
+>  
+> @@ -639,7 +662,13 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+>   *
+>   * If pages found in a given range are on a set of nodes (determined by
+>   * @nodes and @flags,) it's isolated and queued to the pagelist which is
+> - * passed via @private.)
+> + * passed via @private.
+> + *
+> + * queue_pages_range() has three possible return values:
+> + * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
+> + *     specified.
+> + * 0 - queue pages successfully or no misplaced page.
+> + * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
+>   */
+>  static int
+>  queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
+> @@ -1182,6 +1211,7 @@ static long do_mbind(unsigned long start, unsigned long len,
+>  	struct mempolicy *new;
+>  	unsigned long end;
+>  	int err;
+> +	int ret;
+>  	LIST_HEAD(pagelist);
+>  
+>  	if (flags & ~(unsigned long)MPOL_MF_VALID)
+> @@ -1243,26 +1273,32 @@ static long do_mbind(unsigned long start, unsigned long len,
+>  	if (err)
+>  		goto mpol_out;
+>  
+> -	err = queue_pages_range(mm, start, end, nmask,
+> +	ret = queue_pages_range(mm, start, end, nmask,
+>  			  flags | MPOL_MF_INVERT, &pagelist);
+> -	if (!err)
+> -		err = mbind_range(mm, start, end, new);
+> -
+> -	if (!err) {
+> -		int nr_failed = 0;
+>  
+> -		if (!list_empty(&pagelist)) {
+> -			WARN_ON_ONCE(flags & MPOL_MF_LAZY);
+> -			nr_failed = migrate_pages(&pagelist, new_page, NULL,
+> -				start, MIGRATE_SYNC, MR_MEMPOLICY_MBIND);
+> -			if (nr_failed)
+> -				putback_movable_pages(&pagelist);
+> -		}
+> +	if (ret < 0)
+> +		err = -EIO;
+
+I think after your patch, you miss putback_movable_pages() in cases
+where some were queued, and later the walk returned -EIO. The previous
+code doesn't miss it, but it's also not obvious due to the multiple if
+(!err) checks. I would rewrite it some thing like this:
+
+if (ret < 0) {
+    putback_movable_pages(&pagelist);
+    err = ret;
+    goto mmap_out; // a new label above up_write()
+}
+
+The rest can have reduced identation now.
+
+> +	else {
+> +		err = mbind_range(mm, start, end, new);
+>  
+> -		if (nr_failed && (flags & MPOL_MF_STRICT))
+> -			err = -EIO;
+> -	} else
+> -		putback_movable_pages(&pagelist);
+> +		if (!err) {
+> +			int nr_failed = 0;
+> +
+> +			if (!list_empty(&pagelist)) {
+> +				WARN_ON_ONCE(flags & MPOL_MF_LAZY);
+> +				nr_failed = migrate_pages(&pagelist, new_page,
+> +					NULL, start, MIGRATE_SYNC,
+> +					MR_MEMPOLICY_MBIND);
+> +				if (nr_failed)
+> +					putback_movable_pages(&pagelist);
+> +			}
+> +
+> +			if ((ret > 0) ||
+> +			    (nr_failed && (flags & MPOL_MF_STRICT)))
+> +				err = -EIO;
+> +		} else
+> +			putback_movable_pages(&pagelist);
+
+While at it, IIRC the kernel style says that when the 'if' part uses
+'{ }' then the 'else' part should as well, and it shouldn't be mixed.
+
+Thanks,
+Vlastimil
+
+> +	}
+>  
+>  	up_write(&mm->mmap_sem);
+>   mpol_out:
 > 
 
-To clarify this, the sequences for DFLL use are as follows (assuming all
-required DFLL hw configuration has been done)
-
-Switch to DFLL:
-0) Save current parent and frequency
-1) Program DFLL to open loop mode
-2) Enable DFLL
-3) Change cclk_g parent to DFLL
-For OVR regulator:
-4) Change PWM output pin from tristate to output
-5) Enable DFLL PWM output
-For I2C regulator:
-4) Enable DFLL I2C output
-6) Program DFLL to closed loop mode
-
-Switch away from DFLL:
-0) Change cclk_g parent to PLLP so the CPU frequency is ok for any vdd_cpu voltage
-1) Program DFLL to open loop mode
-
-For OVR regulator:
-2) Change PWM output pin from output to tristate: vdd_cpu will go back
-   to hardwired boot voltage.
-3) Disable DFLL PWM output
-
-For I2C regulator:
-2) Program vdd_cpu regulator voltage to the boot voltage
-3) Disable DFLL I2C output
-
-4) Reprogram parent saved in step 0 of 'Switch to DFLL' to the saved
-   frequency
-5) Change cclk_g parent to saved parent
-6) Disable DFLL
-
-Peter.
