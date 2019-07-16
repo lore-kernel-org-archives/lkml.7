@@ -2,100 +2,91 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D72C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B179FC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57FB20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBVmOyHm"
+	by mail.kernel.org (Postfix) with ESMTP id 8D28F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388751AbfGPTBq (ORCPT
+        id S1731166AbfGPTFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:01:46 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41785 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfGPTBp (ORCPT
+        Tue, 16 Jul 2019 15:05:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50989 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbfGPTFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:01:45 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p15so21532849eds.8;
-        Tue, 16 Jul 2019 12:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Np3WkPZiSmEyIIL9cuGmzDJH3HAqVF26+WisTX76KYs=;
-        b=lBVmOyHmvagQ+7D10ct9/vFRLpBv+NupfsB3FodRqjO5Q4hVzwAa/36coN7H4bNPqw
-         hOfCiA4RmuF/M8JxTO0kgCoo3ViF9ppRHk7UPfM2boKjFXJ8kmVmM5F7fu+m0YVMlFZs
-         KYEbwbGClQFy4bhYAlguqrAZ142VAU+VcQ1ggBKHavfDwPN2IgKeXxVcfJCbkY/kuFM7
-         Fo94WooHWsmil/UbQUaIGrQYWAMKzBz4UOM8KSXcposO6ppMHjbrS37dMWigCxKiGrBY
-         37B9xoNQxREM+1ahocc4Z1DfXbGRDb/OFFi/yxocnQ2Fd5WRe5C4TJLUeaj12JYwOdKe
-         bzHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Np3WkPZiSmEyIIL9cuGmzDJH3HAqVF26+WisTX76KYs=;
-        b=tRqbrOPhszMwwUxtsvp6dD/XmDRh3lsIHNLfSF7fZB1QCMHnpPGlEmKd4SfH8jVS6b
-         NHSWVT4xQdjbvVMuWcV1lDwcxYgUtk4H3ng5ymzHvcmiRPsE384Vn27MfG6RVTftt09L
-         RbNXoD8SzFd4W04oe6LTHqmvTKlLEpxLEijreV2WUPUcdDtQF1rItpWXar97Av06wZIE
-         XLWfwttDGmSZN8WprQnu8WMIizd8AhbfkGa64IpHQZo9mGOacwIqXSBV0okHaXLeiVqt
-         ggnnd4GcckOFuQWO7yJSI3+rUiE17Yoh52Z/wBHH1bdwTpULc3GfaW975vJixNKYLI4Y
-         q0YQ==
-X-Gm-Message-State: APjAAAW1EbL5u15J44nu3WOYOCl8U6wLk3O7ZFoa0MpIdhKn+ucVzMgT
-        FR2FBqlV8X56x6vQOQGksvHx6ZHihgZ7cwTp9mE=
-X-Google-Smtp-Source: APXvYqy4SGxRA/RSeLqL+0hmvbLC0eQKEDvkry0t2d/SumMjlti+1WhV0V2RYxnci9fOvv57R97Z94J0XG2pBa4vkRo=
-X-Received: by 2002:a17:906:b301:: with SMTP id n1mr26467468ejz.246.1563303703733;
- Tue, 16 Jul 2019 12:01:43 -0700 (PDT)
+        Tue, 16 Jul 2019 15:05:35 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnSlX-0008WM-JY; Tue, 16 Jul 2019 21:05:31 +0200
+Date:   Tue, 16 Jul 2019 21:05:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Neil Horman <nhorman@tuxdriver.com>
+cc:     linux-kernel@vger.kernel.org, djuran@redhat.com,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH] x86: Add irq spillover warning
+In-Reply-To: <20190716160745.GB1498@hmswarspite.think-freely.org>
+Message-ID: <alpine.DEB.2.21.1907162100190.1767@nanos.tec.linutronix.de>
+References: <20190716135917.15525-1-nhorman@tuxdriver.com> <alpine.DEB.2.21.1907161735090.1767@nanos.tec.linutronix.de> <20190716160745.GB1498@hmswarspite.think-freely.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <1563291785-6545-1-git-send-email-cai@lca.pw> <20190716165136.GC37903@archlinux-threadripper>
-In-Reply-To: <20190716165136.GC37903@archlinux-threadripper>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 16 Jul 2019 21:01:06 +0200
-Message-ID: <CAF=yD-JixO-3HbxFn6BHa5aJY-dJTrNq4sWKneP4XA=xxU8Qnw@mail.gmail.com>
-Subject: Re: [PATCH net v2] skbuff: fix compilation warnings in skb_dump()
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Qian Cai <cai@lca.pw>, David Miller <davem@davemloft.net>,
-        Willem de Bruijn <willemb@google.com>, joe@perches.com,
-        clang-built-linux@googlegroups.com,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 6:53 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Tue, Jul 16, 2019 at 11:43:05AM -0400, Qian Cai wrote:
-> > The commit 6413139dfc64 ("skbuff: increase verbosity when dumping skb
-> > data") introduced a few compilation warnings.
-> >
-> > net/core/skbuff.c:766:32: warning: format specifies type 'unsigned
-> > short' but the argument has type 'unsigned int' [-Wformat]
-> >                        level, sk->sk_family, sk->sk_type,
-> > sk->sk_protocol);
-> >                                              ^~~~~~~~~~~
-> > net/core/skbuff.c:766:45: warning: format specifies type 'unsigned
-> > short' but the argument has type 'unsigned int' [-Wformat]
-> >                        level, sk->sk_family, sk->sk_type,
-> > sk->sk_protocol);
-> > ^~~~~~~~~~~~~~~
-> >
-> > Fix them by using the proper types.
-> >
-> > Fixes: 6413139dfc64 ("skbuff: increase verbosity when dumping skb data")
-> > Signed-off-by: Qian Cai <cai@lca.pw>
->
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Neil,
 
-Acked-by: Willem de Bruijn <willemb@google.com>
+On Tue, 16 Jul 2019, Neil Horman wrote:
+> On Tue, Jul 16, 2019 at 05:57:31PM +0200, Thomas Gleixner wrote:
+> > On Tue, 16 Jul 2019, Neil Horman wrote:
+> > > If a cpu has more than this number of interrupts affined to it, they
+> > > will spill over to other cpus, which potentially may be outside of their
+> > > affinity mask.
+> > 
+> > Spill over?
+> > 
+> > The kernel decides to pick a vector on a CPU outside of the affinity when
+> > it runs out of vectors on the CPUs in the affinity mask.
+> > 
+> Yes.
+> 
+> > Please explain issues technically correct.
+> > 
+> I don't know what you mean by this.  I explained it above, and you clearly
+> understood it.
 
-Thanks Qian.
+It took me a while to grok it. Simply because I first thought it's some
+hardware issue. And of course after confusion settled I knew what it is,
+but just because I know that code like the back of my hand.
+
+> > > Given that this might cause unexpected behavior on
+> > > performance sensitive systems, warn the user should this condition occur
+> > > so that corrective action can be taken
+> > 
+> > > @@ -244,6 +244,14 @@ __visible unsigned int __irq_entry do_IRQ(struct pt_regs *regs)
+> > 
+> > Why on earth warn in the interrupt delivery hotpath? Just because it's the
+> > place which really needs extra instructions and extra cache lines on
+> > performance sensitive systems, right?
+> > 
+> Because theres already a check of the same variety in do_IRQ, but if the
+> information is available outside the hotpath, I was unaware, and am happy to
+> update this patch to refelct that.
+
+Which check are you referring to?
+
+Thanks,
+
+	tglx
