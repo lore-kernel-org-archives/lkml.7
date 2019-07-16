@@ -2,164 +2,216 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD82C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42798C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B335F21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C7C206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZCLmPdS+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H3xiEqss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfGPIgN (ORCPT
+        id S1731250AbfGPIhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:36:13 -0400
-Received: from mail-eopbgr70077.outbound.protection.outlook.com ([40.107.7.77]:46506
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727042AbfGPIgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:36:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JiJbUWXTYk5R04nFDM2D0x/DRZYBgXcgZ0lLPtfu6NokheEga6jMsQ6JRfhm7yZTje6DWcy0JaPJmgCMtEbEKtDq/Si6ytJtwkNJSjRGa4Yn8mwD7NfMc96zxG9DgHBYEXjJXo+CJwIwyDf/2F7oU4QtifsGz+iMrAXRKK/zidk8MQF+GAXjF8YAMj8O984nF3bekSeJMZ8fY1McLdm7+qYELjAWLwqlhIPBFFgYyylqfT1BSNbeG4eTW47a8uLjLizl+T39uuCy6HYfEOvdQSdXm3spnJdtAfpKqaqMQb4gUPTh9cBo/EhzAeMeCGex257RLXqM3XkzfsGpEXReGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w83cFNKV+uozj3pi29g89oBPXrMbtsS5du5297YNKy8=;
- b=cCKkfnb85vDNFN5cMX0/P0FjbRpIkC94pMkIZIhWeYz7iFJamdIJkKvOqpJsoLsXZaxGWdpYm+6TO2RqiUAtB21n8tIU4UcZOxErskcYpJGa3JBHYEkOKGtUyIUEZ3O9BRCW7uauArlRUZYP8rjcmOUHiJOpXyDNpoanC0uClqwLh2THdO7DhZX6TGrDSZ49hDsxWo5senxl1PTUDZS+v/jsH1yF0qiPJA5LNU0niM8qQTByeDXFNo5TfdecFM8e1M/00QNk4ZIFn3tiL9sI2nlWgn3wR0p0kT57gDu+lzLNzUENQ+vbFeNbdSVUObBQ1Ta/8dPJCLf8BpixERlb0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w83cFNKV+uozj3pi29g89oBPXrMbtsS5du5297YNKy8=;
- b=ZCLmPdS+FeTD0CcqkvP3jGi9DVmRqfgFdtuAPMaWrX6GBhoYlxlnhlMMcO0X6Y4xADq7jVpZ+1lVCen0tLaq/nt77nzQXK//16SVxPYsGf6+7nfp6hMzLqdhjSirFZZ10/25OXZsVhtCP5MNkvy67TGvIpsvfbgMhAbna8Gpw5s=
-Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
- VI1PR0402MB3824.eurprd04.prod.outlook.com (52.134.16.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Tue, 16 Jul 2019 08:36:09 +0000
-Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
- ([fe80::a186:c119:606e:bdc4]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
- ([fe80::a186:c119:606e:bdc4%4]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 08:36:09 +0000
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
-Subject: RE: [PATCH v2 5/6] staging: fsl-dpaa2/ethsw: Add switch driver
- documentation
-Thread-Topic: [PATCH v2 5/6] staging: fsl-dpaa2/ethsw: Add switch driver
- documentation
-Thread-Index: AQHVMz3BTGBjH61q0EuXmPZPH88RYabMIiqAgADaFWA=
-Date:   Tue, 16 Jul 2019 08:36:08 +0000
-Message-ID: <VI1PR0402MB28008341F0B606DFEBE03713E0CE0@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-References: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
- <1562336836-17119-6-git-send-email-ioana.ciornei@nxp.com>
- <20190715193431.GA15581@kroah.com>
-In-Reply-To: <20190715193431.GA15581@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ioana.ciornei@nxp.com; 
-x-originating-ip: [82.144.34.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 99350ce0-6691-4a6a-00ec-08d709c8a6b4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3824;
-x-ms-traffictypediagnostic: VI1PR0402MB3824:
-x-microsoft-antispam-prvs: <VI1PR0402MB3824329824E2B9C658C5D6FDE0CE0@VI1PR0402MB3824.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(199004)(189003)(44832011)(186003)(102836004)(68736007)(256004)(81166006)(446003)(11346002)(476003)(81156014)(26005)(486006)(6116002)(3846002)(6916009)(74316002)(305945005)(7736002)(8936002)(2906002)(33656002)(86362001)(66066001)(71190400001)(14454004)(8676002)(478600001)(99286004)(9686003)(66946007)(66446008)(64756008)(66556008)(66476007)(76116006)(55016002)(316002)(25786009)(54906003)(229853002)(52536014)(71200400001)(4326008)(7696005)(76176011)(6506007)(53936002)(5660300002)(6436002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3824;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5YmS2b5EJl7p+obrDD7dNcN0fbEgiUhq4sai57/uRL+aSgUmfYDdL93LR619gdTvWocd73VXW58PWcJX8MsSdAsKawl4r3q3gEcMH7pdBcWvbn+kFawDDMbHLSLyoZ/hUiEqGundYNKDhEt2hVik8UdIT+eJdjRa2AOziL89Atq8ZV0nH0J5Cn13iZZE1FCHF01Wmyv87I1eiM5bo4TU3YzQlr8kZonrWMAyQKAzeJJslKLlGcsyrW6LY/TF+gRTo+VDVYCg17b/xwukv9KcaNSsTFojGR23aMxLg0PYo+3pBltCtjPUGxU7tSgx3orQ/vGi66j6NlREK0BYtqxSjekeFmY6R1w6CPBIyeoXGHuDkZDm1fJiZ0THtYEYex7r93cSJHt99TTAWjStcCIufWi5fB/qDKAkbgG4j6sJ8Lw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jul 2019 04:37:21 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40606 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfGPIhV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:37:21 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so18693584eds.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Lu9sRd1aI6UIpjDrZ2p4aWEktj3PaeleYO2nmBnUknY=;
+        b=H3xiEqssY10pUNcLjsNxN9Rm4cfC3DQa/eWlOx+z0RLGOkodG/TlgyFHhyh+243WbJ
+         K3YHlWKFg1ekYU1GAYI9rd/+yFgfLvc9CO3Pwb8aYVHxukJx61QkEPz2EL3ivkEqxj2S
+         YekSvQpVQ+F4sCLlYsDvgdEfHlSm9ww8S9q0Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Lu9sRd1aI6UIpjDrZ2p4aWEktj3PaeleYO2nmBnUknY=;
+        b=ZIgh24baSWEV8d/QqphS3+ThtH1VrGS0y6gW/FYDdy6UbL8Isikmu3EhWsp4TQ1f99
+         ivw+L6QU7qRwyUaVz8YUDOecpbSV9mLwJUP8AwyyvdfY8CN4tTLJAJ6g6kvt4fGfsh36
+         p0U+m/uO0iPfZgnZZn1FB7T8qicv/0y7r5x19u8aTdjZ9jj9L0ArmPWrUYNR5XSAWGZ2
+         nwLMARjgK+AQvTFqQYAMmB5wTNhUgOXfdJ1fysFSVJvBZ8N3a7fb3LUACN2MLeX0F8Dk
+         KV9r/2KXr+X9m9r+NHXFY3OVfIJTROTsDT3pxJVFLr4YHZzJnxAmRHeBENSQQBSU5JuN
+         OBLA==
+X-Gm-Message-State: APjAAAVpO6flh6x85WnoF+f2+mN7o4xSuym5iT+Yphsf5xrP8G30F01F
+        UKwpspZpK+3U1zVaF8ztM+c=
+X-Google-Smtp-Source: APXvYqyvJpRvDIT8BzwNR3Iq4s2IMaXRfjqLdxv4drE3X09YwMDQ8fieRUmatyVZSZ3+E01AJkaxtw==
+X-Received: by 2002:a17:906:edcb:: with SMTP id sb11mr24525752ejb.260.1563266239018;
+        Tue, 16 Jul 2019 01:37:19 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id m25sm4283382ejs.85.2019.07.16.01.37.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 01:37:17 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 10:37:15 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
+Message-ID: <20190716083715.GT15868@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <20190711082105.GI15868@phenom.ffwll.local>
+ <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99350ce0-6691-4a6a-00ec-08d709c8a6b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 08:36:08.9406
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ioana.ciornei@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3824
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH v2 5/6] staging: fsl-dpaa2/ethsw: Add switch driver
-> documentation
->=20
-> On Fri, Jul 05, 2019 at 05:27:15PM +0300, Ioana Ciornei wrote:
-> > From: Razvan Stefanescu <razvan.stefanescu@nxp.com>
-> >
-> > Add a switch driver entry in the dpaa2 overview documentation.
-> >
-> > Signed-off-by: Razvan Stefanescu <razvan.stefanescu@nxp.com>
-> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > ---
-> > Changes in v2:
-> >  - none
-> >
-> >  .../networking/device_drivers/freescale/dpaa2/overview.rst          | =
-6 ++++++
-> >  MAINTAINERS                                                         | =
-1 +
-> >  2 files changed, 7 insertions(+)
-> >
-> > diff --git
-> > a/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
-> > b/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
-> > index d638b5a8aadd..7b7f35908890 100644
-> > ---
-> > a/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
-> > +++ b/Documentation/networking/device_drivers/freescale/dpaa2/overview
-> > +++ .rst
-> > @@ -393,6 +393,12 @@ interfaces needed to connect the DPAA2 network
-> > interface to  the network stack.
-> >  Each DPNI corresponds to a Linux network interface.
-> >
-> > +Ethernet L2 Switch driver
-> > +-------------------------
-> > +The Ethernet L2 Switch driver is bound to a DPSW and makes use of the
-> > +switchdev support in kernel.
-> > +Each switch port has a corresponding Linux network interface.
-> > +
-> >  MAC driver
-> >  ----------
-> >  An Ethernet PHY is an off-chip, board specific component and is
-> > managed diff --git a/MAINTAINERS b/MAINTAINERS index
-> > c0a02dccc869..5c51be8e281c 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4938,6 +4938,7 @@ M:	Ioana Ciornei <ioana.ciornei@nxp.com>
-> >  L:	linux-kernel@vger.kernel.org
-> >  S:	Maintained
-> >  F:	drivers/staging/fsl-dpaa2/ethsw
-> > +F:
-> 	Documentation/networking/device_drivers/freescale/dpaa2/overview.r
-> st
-> >
-> >  DPAA2 PTP CLOCK DRIVER
-> >  M:	Yangbo Lu <yangbo.lu@nxp.com>
-> > --
-> > 1.9.1
-> >
->=20
-> This patch did not apply :(
+On Fri, Jul 12, 2019 at 12:14:49AM -0300, Rodrigo Siqueira wrote:
+> On 07/11, Daniel Vetter wrote:
+> > On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
+> > > The compute_crc() function is responsible for calculating the
+> > > framebuffer CRC value; due to the XRGB format, this function has to
+> > > ignore the alpha channel during the CRC computation. Therefore,
+> > > compute_crc() set zero to the alpha channel directly in the input
+> > > framebuffer, which is not a problem since this function receives a copy
+> > > of the original buffer. However, if we want to use this function in a
+> > > context without a buffer copy, it will change the initial value. This
+> > > patch makes compute_crc() calculate the CRC value without modifying the
+> > > input framebuffer.
+> > 
+> > Uh why? For writeback we're writing the output too, so we can write
+> > whatever we want to into the alpha channel. For writeback we should never
+> > accept a pixel format where alpha actually matters, that doesn't make
+> > sense. You can't see through a real screen either, they are all opaque :-)
+> > -Daniel
+> 
+> Hmmm,
+> 
+> I see your point and I agree, but even though we can write whatever we
+> want in the output, don’t you think that is weird to change the
+> framebuffer value in the compute_crc() function?
 
-Sorry for this. I'll take this chance to also add more information and send=
- it properly.
+Not sure what you mean here ... ? From a quick look the memset only sets
+our temporary buffer, so we're not changing the input framebuffer here.
+And we have to somehow get rid of the X bits, since there's no alpha
+value. For CRC computation, all we need is some value which is the same
+for every frame (so that the CRC stays constant for the same visible
+output). For writeback we could write whatever we want (which includes
+whatever is there already). But there's no guarantee and definitely no
+expectation that the X bits survive. Writing 0 is imo the most reasonable
+thing to do. I'm not even sure whether modern gpus can still do channel
+masking (i.e. only write out specific channels, instead of the entire
+color). That was a "feature" of bitop blitters of the 80s/90s :-)
+-Daniel
 
---
-Ioana
+> 
+> Thanks
+>  
+> > > 
+> > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-----------
+> > >  1 file changed, 19 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> > > index 51a270514219..8126aa0f968f 100644
+> > > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > > @@ -6,33 +6,40 @@
+> > >  #include <drm/drm_atomic_helper.h>
+> > >  #include <drm/drm_gem_framebuffer_helper.h>
+> > >  
+> > > +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
+> > > +				 const struct vkms_composer *composer)
+> > > +{
+> > > +	int src_offset = composer->offset + (y * composer->pitch)
+> > > +					  + (x * composer->cpp);
+> > > +
+> > > +	return *(u32 *)&buffer[src_offset];
+> > > +}
+> > > +
+> > >  /**
+> > >   * compute_crc - Compute CRC value on output frame
+> > >   *
+> > > - * @vaddr_out: address to final framebuffer
+> > > + * @vaddr: address to final framebuffer
+> > >   * @composer: framebuffer's metadata
+> > >   *
+> > >   * returns CRC value computed using crc32 on the visible portion of
+> > >   * the final framebuffer at vaddr_out
+> > >   */
+> > > -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
+> > > +static uint32_t compute_crc(const u8 *vaddr,
+> > > +			    const struct vkms_composer *composer)
+> > >  {
+> > > -	int i, j, src_offset;
+> > > +	int x, y;
+> > >  	int x_src = composer->src.x1 >> 16;
+> > >  	int y_src = composer->src.y1 >> 16;
+> > >  	int h_src = drm_rect_height(&composer->src) >> 16;
+> > >  	int w_src = drm_rect_width(&composer->src) >> 16;
+> > > -	u32 crc = 0;
+> > > +	u32 crc = 0, pixel = 0;
+> > >  
+> > > -	for (i = y_src; i < y_src + h_src; ++i) {
+> > > -		for (j = x_src; j < x_src + w_src; ++j) {
+> > > -			src_offset = composer->offset
+> > > -				     + (i * composer->pitch)
+> > > -				     + (j * composer->cpp);
+> > > +	for (y = y_src; y < y_src + h_src; ++y) {
+> > > +		for (x = x_src; x < x_src + w_src; ++x) {
+> > >  			/* XRGB format ignores Alpha channel */
+> > > -			memset(vaddr_out + src_offset + 24, 0,  8);
+> > > -			crc = crc32_le(crc, vaddr_out + src_offset,
+> > > -				       sizeof(u32));
+> > > +			pixel = get_pixel_from_buffer(x, y, vaddr, composer);
+> > > +			bitmap_clear((void *)&pixel, 0, 8);
+> > > +			crc = crc32_le(crc, (void *)&pixel, sizeof(u32));
+> > >  		}
+> > >  	}
+> > >  
+> > > -- 
+> > > 2.21.0
+> > 
+> > -- 
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> 
+> -- 
+> Rodrigo Siqueira
+> https://siqueira.tech
+
+
+
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
