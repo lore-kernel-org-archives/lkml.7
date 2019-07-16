@@ -2,341 +2,480 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15C2C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1341FC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCB720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E2420693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WSGxrEmF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="AvqWMlof"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fpond.eu header.i=@fpond.eu header.b="fu6r78ro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387571AbfGPNWt (ORCPT
+        id S2387588AbfGPNXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:22:49 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:48376 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726997AbfGPNWt (ORCPT
+        Tue, 16 Jul 2019 09:23:24 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:14853 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGPNXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:22:49 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D6D89C0A85;
-        Tue, 16 Jul 2019 13:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563283366; bh=oCX7Y4Z1skNaCLXzquwj1OsZ5C8sii4CNk7BdZoIleA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=WSGxrEmFpGLVlFpjn2RUGCt3a6nnJDayhhSd2CO3IfYRi3uCncmviDmleUlxV2paa
-         viufcdzYa1s15Di1TV190DRyw+gyZpIJBC2AWDOQs8z6xAB8giuHdbkDOq4P6fvmgz
-         ANgfhNSyqthF20aKy7ZOmjOb+3ngKuIX2T59AryeOsihAn0IE6WKumOlMeN4TajOIx
-         4EHgsA9JIomXNpOHByYxDHx5NA2Ki+QpksqiiexqA4q13WB+yTVPnTxNj38oXY0MOG
-         Iru+1bHxQwpVa6j6raVRBtx2wf0UevTV9VXW9RARrWoASi35b756dgq9fDyerPo16W
-         QL8d17wexvJgw==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id E97FCA0097;
-        Tue, 16 Jul 2019 13:22:38 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 16 Jul 2019 06:22:27 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 16 Jul 2019 06:22:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oCX7Y4Z1skNaCLXzquwj1OsZ5C8sii4CNk7BdZoIleA=;
- b=AvqWMlofZ2UN7I6XnepfZrSTPboU995wn8K1usZbl2SWrgMRDUPkSqbtzbP/laslTqdQfaaI9g3NraLavWODLjrKg88GToNk4w4Uz/xMKSS5TWYxs+9AkIk+i0IjWxAPrSyP5FFFag05pjbB9BYSJYQBfEI052Dp5gjbKudlDuY=
-Received: from SN6PR12MB2655.namprd12.prod.outlook.com (52.135.103.20) by
- SN6PR12MB2749.namprd12.prod.outlook.com (52.135.107.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.19; Tue, 16 Jul 2019 13:22:25 +0000
-Received: from SN6PR12MB2655.namprd12.prod.outlook.com
- ([fe80::1dbd:69dc:e782:92b6]) by SN6PR12MB2655.namprd12.prod.outlook.com
- ([fe80::1dbd:69dc:e782:92b6%6]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 13:22:25 +0000
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Vitor Soares <Vitor.Soares@synopsys.com>
-CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
-Subject: RE: [PATCH v4 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
- LSM6DSO and LSM6DSR
-Thread-Topic: [PATCH v4 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
- LSM6DSO and LSM6DSR
-Thread-Index: AQHVOKh+l9t5FEWliU2HloLoNlfSoabHKHKAgAACN7CAAAXcgIAAHrLQgAAZLACABdLQQA==
-Date:   Tue, 16 Jul 2019 13:22:25 +0000
-Message-ID: <SN6PR12MB2655E375BBEC555BFFBA1B05AECE0@SN6PR12MB2655.namprd12.prod.outlook.com>
-References: <cover.1562931742.git.vitor.soares@synopsys.com>
-        <f239834a6b8bd179094cdc19a3ac5ecaf807cee3.1562931742.git.vitor.soares@synopsys.com>
-        <20190712181332.04f8b3da@linux.home>
-        <SN6PR12MB26553046898233A094DCC952AEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190712184323.28547c44@pc-381.home>
-        <SN6PR12MB2655C68059719693C7EFF05CAEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
- <20190712220320.50e7cfff@pc-381.home>
-In-Reply-To: <20190712220320.50e7cfff@pc-381.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jYzI5aGNtVnpYR0Z3Y0dSaGRHRmNjbTloYldsdVoxd3dPV1E0TkRsaU5p?=
- =?utf-8?B?MHpNbVF6TFRSaE5EQXRPRFZsWlMwMllqZzBZbUV5T1dVek5XSmNiWE5uYzF4?=
- =?utf-8?B?dGMyY3RZbU5pTVRRM1pEa3RZVGRqWXkweE1XVTVMVGd5TkdJdFlqZ3dPR05t?=
- =?utf-8?B?TlRsa04yWmpYR0Z0WlMxMFpYTjBYR0pqWWpFME4yUmhMV0UzWTJNdE1URmxP?=
- =?utf-8?B?UzA0TWpSaUxXSTRNRGhqWmpVNVpEZG1ZMkp2WkhrdWRIaDBJaUJ6ZWowaU5q?=
- =?utf-8?B?WXlPU0lnZEQwaU1UTXlNRGMzTlRZNU5ERTVNRFEwTURZeUlpQm9QU0pGZG1o?=
- =?utf-8?B?eWNYSmpTakZoVmpoSFQxQlJWa1psVEdOU1JVOXNWa1U5SWlCcFpEMGlJaUJp?=
- =?utf-8?B?YkQwaU1DSWdZbTg5SWpFaUlHTnBQU0pqUVVGQlFVVlNTRlV4VWxOU1ZVWk9R?=
- =?utf-8?B?MmRWUVVGQ1VVcEJRVVJsTlVGVFFUSlVkbFpCVkhOVVdUWkZTR0kzYVRaUGVF?=
- =?utf-8?B?NXFiMUZrZG5WTWIwOUJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlNFRkJRVUZEYTBOQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UlVGQlVVRkNRVUZCUVZaNlpHaEhaMEZCUVVGQlFVRkJRVUZCUVVGQlFVbzBR?=
- =?utf-8?B?VUZCUW0xQlIydEJZbWRDYUVGSE5FRlpkMEpzUVVZNFFXTkJRbk5CUjBWQllt?=
- =?utf-8?B?ZENkVUZIYTBGaVowSnVRVVk0UVdSM1FtaEJTRkZCV2xGQ2VVRkhNRUZaVVVK?=
- =?utf-8?B?NVFVZHpRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdk?=
- =?utf-8?B?QlFVRkJRVUZ1WjBGQlFVZFpRV0ozUWpGQlJ6UkJXa0ZDZVVGSWEwRllkMEoz?=
- =?utf-8?B?UVVkRlFXTm5RakJCUnpSQldsRkNlVUZJVFVGWWQwSnVRVWRaUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVTkJRVUZCUVVGRFpVRkJRVUZhWjBKMlFVaFZRV0puUW10QlNF?=
- =?utf-8?B?bEJaVkZDWmtGSVFVRlpVVUo1UVVoUlFXSm5RbXhCU0VsQlkzZENaa0ZJVFVG?=
- =?utf-8?B?WlVVSjBRVWhOUVdSUlFuVkJSMk5CV0hkQ2FrRkhPRUZpWjBKdFFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRa0ZCUVVGQlFVRkJRVUZKUVVGQlFVRkJTalJCUVVGQ2JVRkhPRUZr?=
- =?utf-8?B?VVVKMVFVZFJRV05uUWpWQlJqaEJZMEZDYUVGSVNVRmtRVUoxUVVkVlFXTm5R?=
- =?utf-8?B?bnBCUmpoQlkzZENhRUZITUVGamQwSXhRVWMwUVZwM1FtWkJTRWxCV2xGQ2Vr?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVGQlowRkJRVUZCUVc1blFV?=
- =?utf-8?B?RkJSMWxCWW5kQ01VRkhORUZhUVVKNVFVaHJRVmgzUW5kQlIwVkJZMmRDTUVG?=
- =?utf-8?B?SE5FRmFVVUo1UVVoTlFWaDNRbnBCUnpCQllWRkNha0ZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRlJRVUZCUVVGQlFVRkJRMEZC?=
- =?utf-8?B?UVVGQlFVTmxRVUZCUVZwblFuWkJTRlZCWW1kQ2EwRklTVUZsVVVKbVFVaEJR?=
- =?utf-8?B?VmxSUW5sQlNGRkJZbWRDYkVGSVNVRmpkMEptUVVoTlFXUkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZDUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVsQlFVRkJRVUZLTkVGQlFVSnRRVWM0UVdSUlFuVkJSMUZCWTJk?=
- =?utf-8?B?Q05VRkdPRUZqUVVKb1FVaEpRV1JCUW5WQlIxVkJZMmRDZWtGR09FRmtRVUo2?=
- =?utf-8?B?UVVjd1FWbDNRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJRVUZCUVVGQlFVRm5RVUZCUVVGQmJtZEJRVUZIV1VGaWQwSXhR?=
- =?utf-8?B?VWMwUVZwQlFubEJTR3RCV0hkQ2QwRkhSVUZqWjBJd1FVYzBRVnBSUW5sQlNF?=
- =?utf-8?B?MUJXSGRDTVVGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZEUVVGQlFVRkJRMlZCUVVG?=
- =?utf-8?B?QlduZENNRUZJVFVGWWQwSjNRVWhKUVdKM1FtdEJTRlZCV1hkQ01FRkdPRUZr?=
- =?utf-8?B?UVVKNVFVZEZRV0ZSUW5WQlIydEJZbWRDYmtGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVKQlFVRkJRVUZCUVVGQlNVRkJR?=
- =?utf-8?B?VUZCUVVvMFFVRkJRbnBCUjBWQllrRkNiRUZJVFVGWWQwSm9RVWROUVZsM1Fu?=
- =?utf-8?B?WkJTRlZCWW1kQ01FRkdPRUZqUVVKelFVZEZRV0puUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkZRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRV2RCUVVGQlFVRnVaMEZCUVVoTlFWbFJRbk5CUjFWQlkzZENaa0ZJ?=
- =?utf-8?B?UlVGa1VVSjJRVWhSUVZwUlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCVVVGQlFVRkJRVUZCUVVOQlFVRkJRVUZEWlVGQlFVRmpkMEoxUVVoQlFX?=
- =?utf-8?B?TjNRbVpCUjNkQllWRkNha0ZIVlVGaVowSjZRVWRWUVZoM1FqQkJSMVZCWTJk?=
- =?utf-8?B?Q2RFRkdPRUZOVVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFrRkJRVUZCUVVGQlFVRkpRVUZCUVVGQlNqUkJRVUZD?=
- =?utf-8?B?ZWtGSE5FRmpRVUo2UVVZNFFXSkJRbkJCUjAxQldsRkNkVUZJVFVGYVVVSm1R?=
- =?utf-8?B?VWhSUVZwUlFubEJSekJCV0hkQ2VrRklVVUZrVVVKclFVZFZRV0puUWpCQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVVZCUVVGQlFVRkJRVUZCWjBGQlFV?=
- =?utf-8?B?RkJRVzVuUVVGQlNGbEJXbmRDWmtGSGMwRmFVVUkxUVVoalFXSjNRbmxCUjFG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGUlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlEwRkJRVUZCUVVFOUlpOCtQQzl0WlhSaFBnPT0=?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=soares@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ea0aff8b-9782-476e-6154-08d709f0a482
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2749;
-x-ms-traffictypediagnostic: SN6PR12MB2749:
-x-microsoft-antispam-prvs: <SN6PR12MB2749E7C3832D8C8048E0F249AECE0@SN6PR12MB2749.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39860400002)(366004)(136003)(54094003)(189003)(199004)(305945005)(4326008)(446003)(66066001)(6636002)(9686003)(186003)(55016002)(26005)(102836004)(7736002)(71200400001)(71190400001)(6506007)(14444005)(256004)(476003)(2906002)(86362001)(486006)(14454004)(11346002)(8936002)(478600001)(316002)(54906003)(74316002)(3846002)(6116002)(25786009)(52536014)(229853002)(5660300002)(99286004)(7696005)(66946007)(76176011)(76116006)(6436002)(66476007)(66556008)(64756008)(66446008)(68736007)(8676002)(81156014)(110136005)(81166006)(107886003)(33656002)(53936002)(6246003)(42413003)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR12MB2749;H:SN6PR12MB2655.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Xk6lCRvQIxmxjk9brotlpF6wkdBXQFs/T6ynip9espU2IwoZ1B/0DgxHRgMK0g2t0TtUxukjPZuCbdTl4i2E9bGoUBQnlW5QK0oWMtJ16bhPPPRNXjvxBM5TCX1PkZtVTvmi5MANFThlyDiGj4RIv45JgYP/3fiqW9+sjlx84hMZK5vV4DjZh1t45acce3nNtVEFZMwwEHjerQztF2eZFlbR/b8ueI3wryWfF7E11I15rQnRnI1PVQXHXowP4Af9wCDGVUAphq8atQxk7QoHaPiYZYSy8lWodjOK2HOYf7i5KSJZ4eS0rlP+NdkN1Vxc5DB7eR8fpTn2yOHJhQLL81wDlL2CiL2HWzGs85FKJnt7YQg6hoBD6HJGG/VouR1NRK+AUuHoCU3bxzc4T9o1tmvOJd4xMLpjwG4LmDNVBhs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 16 Jul 2019 09:23:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1563283399;
+        s=strato-dkim-0002; d=fpond.eu;
+        h=Subject:References:In-Reply-To:Message-ID:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=OS2v6I9JcXOokb1wPv5qJe7kCP2KgZTfl6ZryXOWzjM=;
+        b=fu6r78ro0Ul8jPPz/5fDvu5Ble4LRw/P4CoXQuhMDTxY8UQUDDdki+Encdg3qgUlJV
+        iQkgjC8SEej8Pyt3uogNukLV08tk9zTk9T08iH5HAK6iHMnBOw2HNBrCEvaX24USlzNy
+        doQYS7bGd/vWDTNXtk7A2EIyhZnFRJf8bPDT3/HX1Q1b2DzBdngvqqxSmprnFthy1WkL
+        EjKImILQEWUjs6+wIOsY2XLuzzPCwNYdXHSxae7UKwJodC5BVnjbFap67ttEoqCFuH19
+        ZhSdw0uRxHkms/xyd4M+91MmiC6Cf1PEvS/eOMyOtTQhuD7Xj2SwMwAysW1iWcM19Rz3
+        qTkA==
+X-RZG-AUTH: ":OWANVUa4dPFUgKR/3dpvnYP0Np73amq+g13rqGzmt2bYDnKIKaws6YXTsc4="
+X-RZG-CLASS-ID: mo00
+Received: from oxapp06-01.back.ox.d0m.de
+        by smtp-ox.front (RZmta 44.24 AUTH)
+        with ESMTPSA id h0a328v6GDH4cPK
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 16 Jul 2019 15:17:04 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 15:17:04 +0200 (CEST)
+From:   Ulrich Hecht <uli@fpond.eu>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <898081800.61387.1563283024145@webmail.strato.com>
+In-Reply-To: <20190706140746.29132-15-jacopo+renesas@jmondi.org>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-15-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v2 14/19] drm: rcar-du: Add support for CMM
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea0aff8b-9782-476e-6154-08d709f0a482
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 13:22:25.0554
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: soares@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2749
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Medium
+X-Mailer: Open-Xchange Mailer v7.8.4-Rev59
+X-Originating-IP: 85.212.152.154
+X-Originating-Client: open-xchange-appsuite
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCkZyb206IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGNvbGxh
-Ym9yYS5jb20+DQpEYXRlOiBGcmksIEp1bCAxMiwgMjAxOSBhdCAyMTowMzoyMA0KDQo+IE9uIEZy
-aSwgMTIgSnVsIDIwMTkgMTg6NDA6MTQgKzAwMDANCj4gVml0b3IgU29hcmVzIDxWaXRvci5Tb2Fy
-ZXNAc3lub3BzeXMuY29tPiB3cm90ZToNCj4gDQo+ID4gRnJvbTogQm9yaXMgQnJlemlsbG9uIDxi
-b3Jpcy5icmV6aWxsb25AY29sbGFib3JhLmNvbT4NCj4gPiBEYXRlOiBGcmksIEp1bCAxMiwgMjAx
-OSBhdCAxNzo0MzoyMw0KPiA+IA0KPiA+ID4gT24gRnJpLCAxMiBKdWwgMjAxOSAxNjoyODowMiAr
-MDAwMA0KPiA+ID4gVml0b3IgU29hcmVzIDxWaXRvci5Tb2FyZXNAc3lub3BzeXMuY29tPiB3cm90
-ZToNCj4gPiA+ICAgDQo+ID4gPiA+IEZyb206IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemls
-bG9uQGNvbGxhYm9yYS5jb20+DQo+ID4gPiA+IERhdGU6IEZyaSwgSnVsIDEyLCAyMDE5IGF0IDE3
-OjE0OjI5DQo+ID4gPiA+ICAgDQo+ID4gPiA+ID4gT24gRnJpLCAxMiBKdWwgMjAxOSAxMzo1Mzoz
-MCArMDIwMA0KPiA+ID4gPiA+IFZpdG9yIFNvYXJlcyA8Vml0b3IuU29hcmVzQHN5bm9wc3lzLmNv
-bT4gd3JvdGU6DQo+ID4gPiA+ID4gICAgIA0KPiA+ID4gPiA+ID4gRm9yIHRvZGF5IHRoZSBzdF9s
-c202ZHN4IGRyaXZlciBzdXBwb3J0IExTTTZEU08gYW5kIExTTTZEU1Igc2Vuc29yIG9ubHkgaW4N
-Cj4gPiA+ID4gPiA+IHNwaSBhbmQgaTJjIG1vZGUuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+
-IFRoZSBMU002RFNPIGFuZCBMU002RFNSIGFyZSBhbHNvIGkzYyBjYXBhYmxlIHNvIGxldHMgZ2l2
-ZSBpM2Mgc3VwcG9ydCB0bw0KPiA+ID4gPiA+ID4gdGhlbS4NCj4gPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ID4gU2lnbmVkLW9mZi1ieTogVml0b3IgU29hcmVzIDx2aXRvci5zb2FyZXNAc3lub3BzeXMu
-Y29tPg0KPiA+ID4gPiA+ID4gQWNrZWQtYnk6IExvcmVuem8gQmlhbmNvbmkgPGxvcmVuem9Aa2Vy
-bmVsLm9yZz4NCj4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gQ2hhbmdlcyBpbiB2NDoNCj4g
-PiA+ID4gPiA+ICAgUmVtb3ZlIGh3X2lkIHZhcmlhYmxlDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4g
-PiA+IENoYW5nZXMgaW4gdjM6DQo+ID4gPiA+ID4gPiAgIFJlbW92ZSB1bm5lY2Vzc2FyeSBzdF9s
-c202ZHN4X2kzY19kYXRhIHRhYmxlIHVzZWQgdG8gaG9sZCBkZXZpY2UgbmFtZQ0KPiA+ID4gPiA+
-ID4gICBVc2Ugc3RfbHNtNmRzeF9wcm9iZSBuZXcgZm9ybQ0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+ID4gPiA+ID4gICBBZGQgc3VwcG9ydCBmb3IgTFNNNkRT
-Ug0KPiA+ID4gPiA+ID4gICBTZXQgcG1fb3BzIHRvIHN0X2xzbTZkc3hfcG1fb3BzDQo+ID4gPiA+
-ID4gPiANCj4gPiA+ID4gPiA+ICBkcml2ZXJzL2lpby9pbXUvc3RfbHNtNmRzeC9LY29uZmlnICAg
-ICAgICAgIHwgIDggKysrLQ0KPiA+ID4gPiA+ID4gIGRyaXZlcnMvaWlvL2ltdS9zdF9sc202ZHN4
-L01ha2VmaWxlICAgICAgICAgfCAgMSArDQo+ID4gPiA+ID4gPiAgZHJpdmVycy9paW8vaW11L3N0
-X2xzbTZkc3gvc3RfbHNtNmRzeF9pM2MuYyB8IDU4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrDQo+ID4gPiA+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA2NiBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pDQo+ID4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaWlvL2lt
-dS9zdF9sc202ZHN4L3N0X2xzbTZkc3hfaTNjLmMNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2ltdS9zdF9sc202ZHN4L0tjb25maWcgYi9kcml2ZXJz
-L2lpby9pbXUvc3RfbHNtNmRzeC9LY29uZmlnDQo+ID4gPiA+ID4gPiBpbmRleCA5ZTU5Mjk3Li42
-YjVhNzNjIDEwMDY0NA0KPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9paW8vaW11L3N0X2xzbTZk
-c3gvS2NvbmZpZw0KPiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9paW8vaW11L3N0X2xzbTZkc3gv
-S2NvbmZpZw0KPiA+ID4gPiA+ID4gQEAgLTEsMTEgKzEsMTIgQEANCj4gPiA+ID4gPiA+ICANCj4g
-PiA+ID4gPiA+ICBjb25maWcgSUlPX1NUX0xTTTZEU1gNCj4gPiA+ID4gPiA+ICAJdHJpc3RhdGUg
-IlNUX0xTTTZEU3ggZHJpdmVyIGZvciBTVE0gNi1heGlzIElNVSBNRU1TIHNlbnNvcnMiDQo+ID4g
-PiA+ID4gPiAtCWRlcGVuZHMgb24gKEkyQyB8fCBTUEkpDQo+ID4gPiA+ID4gPiArCWRlcGVuZHMg
-b24gKEkyQyB8fCBTUEkgfHwgSTNDKQ0KPiA+ID4gPiA+ID4gIAlzZWxlY3QgSUlPX0JVRkZFUg0K
-PiA+ID4gPiA+ID4gIAlzZWxlY3QgSUlPX0tGSUZPX0JVRg0KPiA+ID4gPiA+ID4gIAlzZWxlY3Qg
-SUlPX1NUX0xTTTZEU1hfSTJDIGlmIChJMkMpDQo+ID4gPiA+ID4gPiAgCXNlbGVjdCBJSU9fU1Rf
-TFNNNkRTWF9TUEkgaWYgKFNQSV9NQVNURVIpDQo+ID4gPiA+ID4gPiArCXNlbGVjdCBJSU9fU1Rf
-TFNNNkRTWF9JM0MgaWYgKEkzQykNCj4gPiA+ID4gPiA+ICAJaGVscA0KPiA+ID4gPiA+ID4gIAkg
-IFNheSB5ZXMgaGVyZSB0byBidWlsZCBzdXBwb3J0IGZvciBTVE1pY3JvZWxlY3Ryb25pY3MgTFNN
-NkRTeCBpbXUNCj4gPiA+ID4gPiA+ICAJICBzZW5zb3IuIFN1cHBvcnRlZCBkZXZpY2VzOiBsc202
-ZHMzLCBsc202ZHMzaCwgbHNtNmRzbCwgbHNtNmRzbSwNCj4gPiA+ID4gPiA+IEBAIC0yMywzICsy
-NCw4IEBAIGNvbmZpZyBJSU9fU1RfTFNNNkRTWF9TUEkNCj4gPiA+ID4gPiA+ICAJdHJpc3RhdGUN
-Cj4gPiA+ID4gPiA+ICAJZGVwZW5kcyBvbiBJSU9fU1RfTFNNNkRTWA0KPiA+ID4gPiA+ID4gIAlz
-ZWxlY3QgUkVHTUFQX1NQSQ0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK2NvbmZpZyBJSU9f
-U1RfTFNNNkRTWF9JM0MNCj4gPiA+ID4gPiA+ICsJdHJpc3RhdGUNCj4gPiA+ID4gPiA+ICsJZGVw
-ZW5kcyBvbiBJSU9fU1RfTFNNNkRTWA0KPiA+ID4gPiA+ID4gKwlzZWxlY3QgUkVHTUFQX0kzQw0K
-PiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2ltdS9zdF9sc202ZHN4L01ha2Vm
-aWxlIGIvZHJpdmVycy9paW8vaW11L3N0X2xzbTZkc3gvTWFrZWZpbGUNCj4gPiA+ID4gPiA+IGlu
-ZGV4IGU1ZjczM2MuLmM2NzY5NjUgMTAwNjQ0DQo+ID4gPiA+ID4gPiAtLS0gYS9kcml2ZXJzL2lp
-by9pbXUvc3RfbHNtNmRzeC9NYWtlZmlsZQ0KPiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9paW8v
-aW11L3N0X2xzbTZkc3gvTWFrZWZpbGUNCj4gPiA+ID4gPiA+IEBAIC00LDMgKzQsNCBAQCBzdF9s
-c202ZHN4LXkgOj0gc3RfbHNtNmRzeF9jb3JlLm8gc3RfbHNtNmRzeF9idWZmZXIubyBcDQo+ID4g
-PiA+ID4gPiAgb2JqLSQoQ09ORklHX0lJT19TVF9MU002RFNYKSArPSBzdF9sc202ZHN4Lm8NCj4g
-PiA+ID4gPiA+ICBvYmotJChDT05GSUdfSUlPX1NUX0xTTTZEU1hfSTJDKSArPSBzdF9sc202ZHN4
-X2kyYy5vDQo+ID4gPiA+ID4gPiAgb2JqLSQoQ09ORklHX0lJT19TVF9MU002RFNYX1NQSSkgKz0g
-c3RfbHNtNmRzeF9zcGkubw0KPiA+ID4gPiA+ID4gK29iai0kKENPTkZJR19JSU9fU1RfTFNNNkRT
-WF9JM0MpICs9IHN0X2xzbTZkc3hfaTNjLm8NCj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2lpby9pbXUvc3RfbHNtNmRzeC9zdF9sc202ZHN4X2kzYy5jIGIvZHJpdmVycy9paW8vaW11
-L3N0X2xzbTZkc3gvc3RfbHNtNmRzeF9pM2MuYw0KPiA+ID4gPiA+ID4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4gPiA+ID4gPiA+IGluZGV4IDAwMDAwMDAuLjJlODk1MjQNCj4gPiA+ID4gPiA+IC0t
-LSAvZGV2L251bGwNCj4gPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvaWlvL2ltdS9zdF9sc202ZHN4
-L3N0X2xzbTZkc3hfaTNjLmMNCj4gPiA+ID4gPiA+IEBAIC0wLDAgKzEsNTggQEANCj4gPiA+ID4g
-PiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ID4gPiA+ID4gKy8q
-DQo+ID4gPiA+ID4gPiArICogQ29weXJpZ2h0IChjKSAyMDE4IFN5bm9wc3lzLCBJbmMuIGFuZC9v
-ciBpdHMgYWZmaWxpYXRlcy4NCj4gPiA+ID4gPiA+ICsgKg0KPiA+ID4gPiA+ID4gKyAqIEF1dGhv
-cjogVml0b3IgU29hcmVzIDx2aXRvci5zb2FyZXNAc3lub3BzeXMuY29tPg0KPiA+ID4gPiA+ID4g
-KyAqLw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwu
-aD4NCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gPiA+ID4gPiAr
-I2luY2x1ZGUgPGxpbnV4L2kzYy9kZXZpY2UuaD4NCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSA8bGlu
-dXgvaTNjL21hc3Rlci5oPg0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+
-ID4gPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+ID4gPiA+ID4gPiArI2luY2x1ZGUg
-PGxpbnV4L3JlZ21hcC5oPg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlICJz
-dF9sc202ZHN4LmgiDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArc3RhdGljIGNvbnN0IHN0
-cnVjdCBpM2NfZGV2aWNlX2lkIHN0X2xzbTZkc3hfaTNjX2lkc1tdID0gew0KPiA+ID4gPiA+ID4g
-KwlJM0NfREVWSUNFKDB4MDEwNCwgMHgwMDZDLCAodm9pZCAqKVNUX0xTTTZEU09fSUQpLA0KPiA+
-ID4gPiA+ID4gKwlJM0NfREVWSUNFKDB4MDEwNCwgMHgwMDZCLCAodm9pZCAqKVNUX0xTTTZEU1Jf
-SUQpLCAgICANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBJIHRoaW5rIHlvdSBuZWVkIGFuIHVpbnRw
-dHJfdCBjYXN0IGhlcmU6DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gCUkzQ19ERVZJQ0UoMHgwMTA0
-LCAweDAwNkMsICh2b2lkICopKHVpbnRwdHJfdClTVF9MU002RFNPX0lEKSwNCj4gPiA+ID4gPiAJ
-STNDX0RFVklDRSgweDAxMDQsIDB4MDA2QiwgKHZvaWQgKikodWludHB0cl90KVNUX0xTTTZEU1Jf
-SUQpLA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IG90aGVyd2lzZSBnY2MgbWlnaHQgY29tcGxhaW4g
-dGhhdCB0aGUgaW50ZWdlciBhbmQgcG9pbnRlciBkbyBub3QgaGF2ZQ0KPiA+ID4gPiA+IHRoZSBz
-YW1lIHNpemUgKG9uIDY0LWJpdCBhcmNoaXRlY3R1cmVzKS4gICAgDQo+ID4gPiA+IA0KPiA+ID4g
-PiBJIGRvbid0IHVuZGVyc3RhbmQgdGhpcyBwYXJ0LiBDYW4geW91IHByb3ZpZGUgb3IgcG9pbnQg
-c29tZSBiYWNrZ3JvdW5kPyAgDQo+ID4gPiANCj4gPiA+IElmIHlvdSBkb24ndCBkbyB0aGF0IHlv
-dSdsbCBnZXQgdGhlIGZvbGxvd2luZyB3YXJuaW5nOg0KPiA+ID4gDQo+ID4gPiAJd2FybmluZzog
-Y2FzdCB0byAndm9pZCAqJyBmcm9tIHNtYWxsZXIgaW50ZWdlciB0eXBlICdpbnQnIFstV2ludC10
-by12b2lkLXBvaW50ZXItY2FzdF0gIA0KPiA+IA0KPiA+IEkgZG9uJ3QgZ2V0IHRoZSB3YXJuaW5n
-IGR1cmluZyBjb21waWxhdGlvbi4gSXMgdGhlcmUgYW55IGZsYWcgdG8gZW5hYmxlIA0KPiA+IG9y
-IHNvPw0KPiANCj4gTm9wZSwgbm90aGluZyBzcGVjaWZpYyB0byBlbmFibGUsIGp1c3QgZW5hYmxl
-IHRoaXMgZHJpdmVyIG9uIGFuIGFybTY0DQo+IGNvbmZpZy4gTm90ZSB0aGF0IHRoYXQgZ2NjIGRv
-ZXNuJ3Qgc2VlbSB0byBjb21wbGFpbiBhYm91dCB0aGlzDQo+IGludCAtPiB2b2lkICogY2FzdCAo
-dGhlcmUncyBwcm9iYWJseSBzb21lIGtpbmQgb2YgYXV0by1wcm9tb3Rpb24gdG8NCj4gcG9pbnRl
-ciBzaXplKSwgYnV0IGl0IGRvZXMgY29tcGxhaW5zIGFib3V0IHRoZSBmb2xsb3dpbmcgdm9pZCAq
-IC0+IGludA0KPiBjYXN0Og0KPiANCj4gZHJpdmVycy9paW8vaW11L3N0X2xzbTZkc3gvc3RfbHNt
-NmRzeF9pM2MuYzogSW4gZnVuY3Rpb24g4oCYc3RfbHNtNmRzeF9pM2NfcHJvYmXigJk6DQo+IGRy
-aXZlcnMvaWlvL2ltdS9zdF9sc202ZHN4L3N0X2xzbTZkc3hfaTNjLmM6NDM6NDM6IHdhcm5pbmc6
-IGNhc3QgZnJvbSBwb2ludGVyIHRvIGludGVnZXIgb2YgZGlmZmVyZW50IHNpemUgWy1XcG9pbnRl
-ci10by1pbnQtY2FzdF0NCj4gICAgNDMgfCAgcmV0dXJuIHN0X2xzbTZkc3hfcHJvYmUoJmkzY2Rl
-di0+ZGV2LCAwLCAoaW50KWlkLT5kYXRhLCByZWdtYXApOw0KPiAgICAgICB8ICAgICANCg0KSSBm
-aXhlZCB0aGUgd2FybmluZyBieSBjaGFuZ2luZzoNCg0Kc3RfbHNtNmRzeF9wcm9iZSgmaTNjZGV2
-LT5kZXYsIDAsIChpbnQpaWQtPmRhdGEsIHJlZ21hcCk7DQoNCnRvDQoNCnN0X2xzbTZkc3hfcHJv
-YmUoJmkzY2Rldi0+ZGV2LCAwLCAoaW50KSh1aW50cHRyX3QpaWQtPmRhdGEsIHJlZ21hcCk7DQoN
-CkJ1dCBJIHdvbmRlciBpZiBpdCBpc24ndCBtb3JlIHNhdmUgdG8gY2hhbmdlIHRoZSBmb2xsb3dp
-bmcgdG9vOg0KCUkzQ19ERVZJQ0UoMHgwMTA0LCAweDAwNkMsICh2b2lkICopKHVpbnRwdHJfdClT
-VF9MU002RFNPX0lEKSwNCglJM0NfREVWSUNFKDB4MDEwNCwgMHgwMDZCLCAodm9pZCAqKSh1aW50
-cHRyX3QpU1RfTFNNNkRTUl9JRCksDQoNCldoYXQgZG8geW91IHRoaW5rPw0KDQpCZXN0IHJlZ2Fy
-ZHMsDQpWaXRvciBTb2FyZXMNCg==
+Thanks for your patch!
+
+> On July 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> 
+> 
+> Add a driver for the R-Car Display Unit Color Correction Module.
+> 
+> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> to perform image enhancement and color correction.
+> 
+> Add support for CMM through a driver that supports configuration of
+> the 1-dimensional LUT table. More advanced CMM feature will be
+> implemented on top of this basic one.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
+>  drivers/gpu/drm/rcar-du/Makefile   |   1 +
+>  drivers/gpu/drm/rcar-du/rcar_cmm.c | 292 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_cmm.h |  38 ++++
+>  4 files changed, 338 insertions(+)
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> index 1529849e217e..539d232790d1 100644
+> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
+>  	  Choose this option if you have an R-Car chipset.
+>  	  If M is selected the module will be called rcar-du-drm.
+>  
+> +config DRM_RCAR_CMM
+> +	bool "R-Car DU Color Management Module (CMM) Support"
+> +	depends on DRM && OF
+> +	depends on DRM_RCAR_DU
+> +	help
+> +	  Enable support for R-Car Color Management Module (CMM).
+> +
+>  config DRM_RCAR_DW_HDMI
+>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+>  	depends on DRM && OF
+> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
+> index 6c2ed9c46467..4d1187ccc3e5 100644
+> --- a/drivers/gpu/drm/rcar-du/Makefile
+> +++ b/drivers/gpu/drm/rcar-du/Makefile
+> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
+>  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
+>  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
+>  
+> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
+>  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
+>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
+>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> new file mode 100644
+> index 000000000000..76ed3fce2b33
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> @@ -0,0 +1,292 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
+> + *
+> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm.h>
+> +
+> +#include <drm/drm_atomic.h>
+> +
+> +#include "rcar_cmm.h"
+> +
+> +#define CM2_LUT_CTRL		0x0000
+> +#define CM2_LUT_CTRL_EN		BIT(0)
+> +#define CM2_LUT_TBLA_BASE	0x0600
+> +#define CM2_LUT_TBLA(__i)	(CM2_LUT_TBLA_BASE + (__i) * 4)
+> +
+> +struct rcar_cmm {
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	bool enabled;
+> +
+> +	/*
+> +	 * restore: LUT restore flag
+> +	 * running: LUT operating flag
+> +	 * size: Number of programmed entries in the LUT table
+> +	 * table: Scratch buffer where to store the LUT table entries to be
+> +	 *	  later restored.
+> +	 */
+> +	struct {
+> +		bool restore;
+> +		bool running;
+> +		unsigned int size;
+> +		struct drm_color_lut table[CMM_GAMMA_LUT_SIZE];
+> +	} lut;
+> +};
+> +
+> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
+> +{
+> +	return ioread32(rcmm->base + reg);
+> +}
+> +
+> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
+> +{
+> +	iowrite32(data, rcmm->base + reg);
+> +}
+> +
+> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm, unsigned int size,
+> +			       struct drm_color_lut *lut)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < size; ++i) {
+> +		struct drm_color_lut *entry = &lut[i];
+> +
+> +		u32 val = (entry->red & 0xff) << 16 |
+> +			  (entry->green & 0xff) << 8 |
+> +			  (entry->blue & 0xff);
+
+I don't think it's correct to cut off the high bits here. There is a function "drm_color_lut_extract()" for converting drm_color_lut values to hardware precision.
+
+> +		rcar_cmm_write(rcmm, CM2_LUT_TBLA(i), val);
+> +	}
+> +}
+> +
+> +/**
+> + * rcar_cmm_setup() - configure the CMM unit
+> + *
+> + * @pdev: The platform device associated with the CMM instance
+> + * @config: The CRTC provided configuration.
+> + *
+> + * Configure the CMM unit with the CRTC provided configuration.
+> + * Currently enabling, disabling and programming of the 1-D LUT unit is
+> + * supported.
+> + */
+> +int rcar_cmm_setup(struct platform_device *pdev,
+> +		   const struct rcar_cmm_config *config)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +	unsigned int i;
+> +
+> +	if (config->lut.size > CMM_GAMMA_LUT_SIZE)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * As cmm_setup is called by atomic commit tail helper, it might be
+> +	 * called before enabling the CRTC (which calls cmm_enable()).
+> +	 */
+> +	if (!rcmm->enabled) {
+> +		if (!config->lut.enable)
+> +			return 0;
+> +
+> +		/*
+> +		 * Store the LUT table entries in the scratch buffer to be later
+> +		 * programmed at enable time.
+> +		 */
+> +		for (i = 0; i < config->lut.size; ++i)
+> +			rcmm->lut.table[i] = config->lut.table[i];
+> +
+> +		rcmm->lut.size = config->lut.size;
+> +		rcmm->lut.restore = true;
+> +
+> +		return 0;
+> +	}
+> +
+> +	/* Stop LUT operations, if requested. */
+> +	if (rcmm->lut.running && !config->lut.enable) {
+> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +		rcmm->lut.running = 0;
+> +		rcmm->lut.size = 0;
+> +
+> +		return 0;
+> +	}
+> +
+> +	/* Enable LUT and program the new gamma table values. */
+> +	if (!rcmm->lut.running) {
+> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_EN);
+> +		rcmm->lut.running = true;
+> +	}
+> +
+> +	rcar_cmm_lut_write(rcmm, config->lut.size, config->lut.table);
+> +	rcmm->lut.size = config->lut.size;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
+> +
+> +/**
+> + * rcar_cmm_enable - enable the CMM unit
+> + *
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
+> + * components, such as 1-D LUT, if requested.
+> + */
+> +int rcar_cmm_enable(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	if (!rcmm)
+> +		return -EPROBE_DEFER;
+> +
+> +	ret = clk_prepare_enable(rcmm->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Apply the LUT table values saved at cmm_setup time. */
+> +	if (rcmm->lut.restore) {
+> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_EN);
+> +		rcar_cmm_lut_write(rcmm, rcmm->lut.size, rcmm->lut.table);
+> +
+> +		rcmm->lut.restore = false;
+> +		rcmm->lut.running = true;
+> +	}
+> +
+> +	rcmm->enabled = true;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
+> +
+> +/**
+> + * rcar_cmm_disable() - disable the CMM unit
+> + *
+> + * Disable the CMM unit by stopping the parent clock.
+> + *
+> + * @pdev: The platform device associated with the CMM instance
+> + */
+> +void rcar_cmm_disable(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +
+> +	clk_disable_unprepare(rcmm->clk);
+> +
+> +	rcmm->lut.restore = false;
+> +	rcmm->lut.running = false;
+> +	rcmm->lut.size = 0;
+> +
+> +	rcmm->enabled = false;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int rcar_cmm_pm_suspend(struct device *dev)
+> +{
+> +	struct rcar_cmm *rcmm = dev_get_drvdata(dev);
+> +	unsigned int i;
+> +
+> +	if (!(rcmm->lut.running || rcmm->lut.restore))
+> +		return 0;
+> +
+> +	/* Save the LUT table entries in the scratch buffer table. */
+> +	for (i = 0; i < rcmm->lut.size; ++i) {
+> +		int entry = rcar_cmm_read(rcmm, CM2_LUT_TBLA(i));
+> +		struct drm_color_lut *lut = &rcmm->lut.table[i];
+> +
+> +		lut->blue = entry & 0xff;
+> +		lut->green = (entry >> 8) & 0xff;
+> +		lut->red = (entry >> 16) & 0xff;
+
+Need to convert the values back to drm_color_lut scale here. I could not find a counterpart to drm_color_lut_extract(), though...
+
+> +	}
+> +
+> +	rcmm->lut.restore = true;
+> +	rcmm->lut.running = false;
+> +
+> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_cmm_pm_resume(struct device *dev)
+> +{
+> +	struct rcar_cmm *rcmm = dev_get_drvdata(dev);
+> +
+> +	if (!rcmm->lut.restore)
+> +		return 0;
+> +
+> +	/* Program the LUT entries saved at suspend time. */
+> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_EN);
+> +	rcar_cmm_lut_write(rcmm, rcmm->lut.size, rcmm->lut.table);
+> +	rcmm->lut.running = true;
+> +	rcmm->lut.restore = false;
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops rcar_cmm_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(rcar_cmm_pm_suspend, rcar_cmm_pm_resume)
+> +};
+> +
+> +static int rcar_cmm_probe(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm;
+> +	struct resource *res;
+> +	resource_size_t size;
+> +
+> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
+> +	if (!rcmm)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, rcmm);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	size = resource_size(res);
+> +	if (!devm_request_mem_region(&pdev->dev, res->start, size,
+> +				     dev_name(&pdev->dev))) {
+> +		dev_err(&pdev->dev,
+> +			"can't request region for resource %pR\n", res);
+> +		return -EBUSY;
+> +	}
+> +
+> +	rcmm->base = devm_ioremap_nocache(&pdev->dev, res->start, size);
+> +	if (IS_ERR(rcmm->base))
+> +		return PTR_ERR(rcmm->base);
+> +
+> +	rcmm->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(rcmm->clk)) {
+> +		dev_err(&pdev->dev, "Failed to get CMM clock");
+> +		return PTR_ERR(rcmm->clk);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id rcar_cmm_of_table[] = {
+> +	{ .compatible = "renesas,rcar-gen3-cmm", },
+> +	{ .compatible = "renesas,rcar-gen2-cmm", },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
+> +
+> +static struct platform_driver rcar_cmm_platform_driver = {
+> +	.probe		= rcar_cmm_probe,
+> +	.driver		= {
+> +		.name	= "rcar-cmm",
+> +		.pm	= &rcar_cmm_pm_ops,
+> +		.of_match_table = rcar_cmm_of_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(rcar_cmm_platform_driver);
+> +
+> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> new file mode 100644
+> index 000000000000..8744e72f32cd
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
+> + *
+> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#ifndef __RCAR_CMM_H__
+> +#define __RCAR_CMM_H__
+> +
+> +#define CMM_GAMMA_LUT_SIZE		256
+> +
+> +struct platform_device;
+> +struct drm_color_lut;
+> +
+> +/**
+> + * struct rcar_cmm_config - CMM configuration
+> + *
+> + * @lut:	1D-LUT configuration
+> + * @lut.enable:	1D-LUT enable flag
+> + * @lut.table:	1D-LUT table entries.
+> + * @lut.size	1D-LUT number of entries. Max is 256.
+> + */
+> +struct rcar_cmm_config {
+> +	struct {
+> +		bool enable;
+> +		struct drm_color_lut *table;
+> +		unsigned int size;
+> +	} lut;
+> +};
+> +
+> +int rcar_cmm_enable(struct platform_device *pdev);
+> +void rcar_cmm_disable(struct platform_device *pdev);
+> +
+> +int rcar_cmm_setup(struct platform_device *pdev,
+> +		   const struct rcar_cmm_config *config);
+> +
+> +#endif /* __RCAR_CMM_H__ */
+> -- 
+> 2.21.0
+>
+
+CU
+Uli
