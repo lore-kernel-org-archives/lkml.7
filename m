@@ -2,124 +2,142 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC9FC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BB7C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17FF206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9DF206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="phx1Mq5J"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YMAO/Lzm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WH2V7EaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388154AbfGPRZD (ORCPT
+        id S2388243AbfGPRZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:25:03 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33344 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbfGPRZD (ORCPT
+        Tue, 16 Jul 2019 13:25:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44036 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730499AbfGPRZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:25:03 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f20so536314pgj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 10:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jmmNrLz05OQxiUsEmtCkS8mBmrl8vj668vZ/xiMeIrY=;
-        b=phx1Mq5J6p2gfPq049fRU4kJqr233RVvBA6UMs66Fh5VPoHy5KsLA3yLW7b00Y3rb8
-         GTdFxxgsB1P4yFAdo2Qi0lgz4B0At2EUVu95fRfY8Bd7hU1ELdLrEB76Wv/eTo0O/IHK
-         cBHGKVh+C260gNquMCThFTjxvff5UR0XDGNu4y01LXooRqWSmV8nFoJlX5Ux8Oc0p4YR
-         Ffk+3gQEUfcv+lzY/PFoTBxKXktxFJtv2i/1ZrJEAx+OqMpmcJgHGEZrhE7dlAGzP7Ne
-         tVCLPB+rZn10vOY9YPlc33YLioHP5gwh7muhEqrhXj+c2blGXe3qtkyX7eg0lodMWVNf
-         3yiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jmmNrLz05OQxiUsEmtCkS8mBmrl8vj668vZ/xiMeIrY=;
-        b=UC3xLGOHlD6zaNafUhLtE3LNC5o6AwGG+yhd968fdvk1TGL670xbqKZyFwMUbN8MsB
-         fGCJLBGRGkYOZOXxbDV+Dmbg1+M0rBo/Me2/TuH36jezUdHhad2rBWwLYZWvKs13tktq
-         zKuRKntpd0yCaqckqSyn515PbaHzfiGyL+Ly8ZrYGhkDaHsQJ1QB/ZE3onge/tCyf+yq
-         8B/IDU8flQXoyVFUqNvTjlLi1riK7utfSvGcj3CuOEvyc4z0QOfJxBp7n+SDuwqSD9zz
-         /e0z4L1gH/GtiwAML2JHstWJFNmXdA4CL6t7QBmNZausV3Z9x4HZNFvgIoyGrSMr0AcQ
-         NtkA==
-X-Gm-Message-State: APjAAAVo4VQAkYzUNH6wIs8Fs0Chg70AWdYNCgNIZKTMVZNrRoMhM+m0
-        UsT8oR2/NNADn9gdFIZLv68=
-X-Google-Smtp-Source: APXvYqxNNQERGxivXJ3Js3Bxfn7FLjsI5wI5vL3fUqwqk1694sNNijt4himTh6hZUPRXthewU9p3Tw==
-X-Received: by 2002:a63:dd17:: with SMTP id t23mr8718560pgg.295.1563297902419;
-        Tue, 16 Jul 2019 10:25:02 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:180::1:dd93])
-        by smtp.gmail.com with ESMTPSA id e6sm25465734pfn.71.2019.07.16.10.25.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 10:25:01 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 13:24:59 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Roman Gushchin <guro@fb.com>, Chris Down <chris@chrisdown.name>,
-        Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH] mm: Proportional memory.{low,min} reclaim
-Message-ID: <20190716172459.GB16575@cmpxchg.org>
-References: <20190124014455.GA6396@chrisdown.name>
- <20190128210031.GA31446@castle.DHCP.thefacebook.com>
- <20190128214213.GB15349@chrisdown.name>
- <20190128215230.GA32069@castle.DHCP.thefacebook.com>
- <20190715153527.86a3f6e65ecf5d501252dbf1@linux-foundation.org>
+        Tue, 16 Jul 2019 13:25:10 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6176F61795; Tue, 16 Jul 2019 17:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563297909;
+        bh=E5p7Z6jiwg8b3RG8QEidSAHm0UK6r/RsYJx8TtIg3d0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YMAO/Lzmpbh+W3W0jOwTwxQ/vBTA2C4osuIh5yDdtr7a5fIogBY0piCB1hBPhi36K
+         QShXDhzh4X7SdBUYpCILyQHlocIJFZ6KSB3mMp7tLhStCmwaAZ7J/Swlsrw8CvJ2JK
+         T134CtyvgbzjH7z13AE8W7S8RzBj4RDdgTDqeg+0=
+Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87FF4607DF;
+        Tue, 16 Jul 2019 17:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563297908;
+        bh=E5p7Z6jiwg8b3RG8QEidSAHm0UK6r/RsYJx8TtIg3d0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WH2V7EaISChprSpgmnENhb7djJr8oqh3IZfE2Zmnz1iSHV0zOS6odeq7pyHjSPOO/
+         +Ox8zggGM42hFlNU0Ckj2HNcwZf9MtB2CFSkZuWOGBn1tzlSw3e66DxN7+iYG7JgEi
+         CXapIlUYfiJQSVA+EpBJorC4ra9Q32obxqbhU76k=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87FF4607DF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+To:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190703011020.151615-1-saravanak@google.com>
+ <20190703011020.151615-2-saravanak@google.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
+Date:   Tue, 16 Jul 2019 22:55:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715153527.86a3f6e65ecf5d501252dbf1@linux-foundation.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190703011020.151615-2-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:35:27PM -0700, Andrew Morton wrote:
-> On Mon, 28 Jan 2019 21:52:40 +0000 Roman Gushchin <guro@fb.com> wrote:
-> 
-> > > Hmm, this isn't really a common situation that I'd thought about, but it
-> > > seems reasonable to make the boundaries when in low reclaim to be between
-> > > min and low, rather than 0 and low. I'll add another patch with that. Thanks
-> >
-> > It's not a stopper, so I'm perfectly fine with a follow-up patch.
-> 
-> Did this happen?
-> 
-> I'm still trying to get this five month old patchset unstuck :(.  The
-> review status is: 
-> 
-> [1/3] mm, memcg: proportional memory.{low,min} reclaim
-> Acked-by: Johannes
-> Reviewed-by: Roman
-> 
-> [2/3] mm, memcg: make memory.emin the baseline for utilisation determination
-> Acked-by: Johannes
-> 
-> [3/3] mm, memcg: make scan aggression always exclude protection
-> Reviewed-by: Roman
+Hey Saravana,
 
-I forgot to send out the actual ack-tag on #, so I just did. I was
-involved in the discussions that led to that patch, the code looks
-good to me, and it's what we've been using internally for a while
-without any hiccups.
+https://patchwork.kernel.org/patch/10850815/
+There was already a discussion ^^ on how bandwidth bindings were to be
+named.
 
-> I do have a note here that mhocko intended to take a closer look but I
-> don't recall whether that happened.
+On 7/3/19 6:40 AM, Saravana Kannan wrote:
+> Interconnects often quantify their performance points in terms of
+> bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+> allow specifying Bandwidth OPP tables in DT.
+> 
+> opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+> tables.
+> 
+> opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+> tables.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>   Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
+>   1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 76b6c79604a5..c869e87caa2a 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -83,9 +83,14 @@ properties.
+>   
+>   Required properties:
+>   - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> -  required property for all device nodes but devices like power domains. The
+> -  power domain nodes must have another (implementation dependent) property which
+> -  uniquely identifies the OPP nodes.
+> +  required property for all device nodes but for devices like power domains or
+> +  bandwidth opp tables. The power domain nodes must have another (implementation
+> +  dependent) property which uniquely identifies the OPP nodes. The interconnect
+> +  opps are required to have the opp-peak-bw property.
+> +
+> +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
+> +  big-endian integer. This is a required property for all devices that don't
+> +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
+>   
+>   Optional properties:
+>   - opp-microvolt: voltage in micro Volts.
+> @@ -132,6 +137,10 @@ Optional properties:
+>   - opp-level: A value representing the performance level of the device,
+>     expressed as a 32-bit integer.
+>   
+> +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
+> +  32-bit big-endian integer. This property is only meaningful in OPP tables
+> +  where opp-peak-KBps is present.
+> +
+>   - clock-latency-ns: Specifies the maximum possible transition latency (in
+>     nanoseconds) for switching to this OPP from any other OPP.
+>   
+> 
 
-Michal acked #3 in 20190530065111.GC6703@dhcp22.suse.cz. Afaik not the
-others, but #3 also doesn't make a whole lot of sense without #1...
-
-> a) say what the hell and merge them or
-> b) sit on them for another cycle or
-> c) drop them and ask Chris for a resend so we can start again.
-
-Michal, would you have time to take another look this week? Otherwise,
-I think everyone who would review them has done so.
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
