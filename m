@@ -2,139 +2,136 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187DBC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF8AC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F3D217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CCA20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbfGPOoL (ORCPT
+        id S1728963AbfGPOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:44:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58884 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 10:47:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:35908 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfGPOoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:44:10 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 14A2E85546;
-        Tue, 16 Jul 2019 14:44:10 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-180.rdu2.redhat.com [10.10.122.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 457726013A;
-        Tue, 16 Jul 2019 14:44:07 +0000 (UTC)
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
- <77bba626-f3e6-45a8-aae8-43b945d0fab9@redhat.com>
- <32DD898E-0F5E-4A63-9795-F78411B77A98@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <8ceec931-2921-6ee6-2642-476b4a12281e@redhat.com>
-Date:   Tue, 16 Jul 2019 10:44:06 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726997AbfGPOrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:47:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B8F0337;
+        Tue, 16 Jul 2019 07:47:39 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 281E63F59C;
+        Tue, 16 Jul 2019 07:47:36 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 15:47:30 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        David Brown <david.brown@linaro.org>
+Subject: Re: [PATCH 17/18] arm64: dts: Convert to the hierarchical CPU
+ topology layout for MSM8916
+Message-ID: <20190716144730.GA7250@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-18-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <32DD898E-0F5E-4A63-9795-F78411B77A98@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 16 Jul 2019 14:44:10 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513192300.653-18-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 10:26 AM, Alex Kogan wrote:
->> On Jul 15, 2019, at 5:30 PM, Waiman Long <longman@redhat.com> wrote:
->>
->> On 7/15/19 3:25 PM, Alex Kogan wrote:
->>
->>> /*
->>> - * On 64-bit architectures, the mcs_spinlock structure will be 16 bytes in
->>> - * size and four of them will fit nicely in one 64-byte cacheline. For
->>> - * pvqspinlock, however, we need more space for extra data. To accommodate
->>> - * that, we insert two more long words to pad it up to 32 bytes. IOW, only
->>> - * two of them can fit in a cacheline in this case. That is OK as it is rare
->>> - * to have more than 2 levels of slowpath nesting in actual use. We don't
->>> - * want to penalize pvqspinlocks to optimize for a rare case in native
->>> - * qspinlocks.
->>> + * On 64-bit architectures, the mcs_spinlock structure will be 20 bytes in
->>> + * size. For pvqspinlock or the NUMA-aware variant, however, we need more
->>> + * space for extra data. To accommodate that, we insert two more long words
->>> + * to pad it up to 36 bytes.
->>>  */
->> The 20 bytes figure is wrong. It is actually 24 bytes for 64-bit as the
->> mcs_spinlock structure is 8-byte aligned. For better cacheline
->> alignment, I will like to keep mcs_spinlock to 16 bytes as before.
->> Instead, you can use encode_tail() to store the CNA node pointer in
->> "locked". For instance, use (encode_tail() << 1) in locked to
->> distinguish it from the regular locked=1 value.
-> I think this can work.
-> decode_tail() will get the actual node pointer from the encoded value.
-> And that would keep the size of mcs_spinlock intact.
-> Good idea, thanks!
+On Mon, May 13, 2019 at 09:22:59PM +0200, Ulf Hansson wrote:
+> From: Lina Iyer <lina.iyer@linaro.org>
 >
-> BTW, maybe better change those function names to encode_node() / decode_node() then?
-
-The names look good to me.
-
-
+> In the hierarchical layout, we are creating power domains around each CPU
+> and describes the idle states for them inside the power domain provider
+> node. Note that, the CPU's idle states still needs to be compatible with
+> "arm,idle-state".
 >
->>> s
->>> +
->>> +static void cna_init_node(struct mcs_spinlock *node)
->>> +{
->>> +	struct cna_node *cn = CNA_NODE(node);
->>> +	struct mcs_spinlock *base_node;
->>> +	int cpuid;
->>> +
->>> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
->>> +	/* we store a pointer in the node's @locked field */
->>> +	BUILD_BUG_ON(sizeof(uintptr_t) > sizeof_field(struct mcs_spinlock, locked));
->>> +
->>> +	cpuid = smp_processor_id();
->>> +	cn->numa_node = cpu_to_node(cpuid);
->>> +
->>> +	base_node = this_cpu_ptr(&qnodes[0].mcs);
->>> +	cn->encoded_tail = encode_tail(cpuid, base_node->count - 1);
->>> +}
->>
->> I think you can use an early_init call to initialize the numa_node and
->> encoded_tail values for all the per-cpu CNA nodes instead of doing it
->> every time a node is used. If it turns out that pv_qspinlock is used,
->> the pv_node_init() will properly re-initialize it.
-> Yes, this should work. Thanks.
+> Furthermore, represent the CPU cluster as a separate master power domain,
+> powering the CPU's power domains. The cluster node, contains the idle
+> states for the cluster and each idle state needs to be compatible with the
+> "domain-idle-state".
 >
-> BTW, should not we initialize `cpu` in pv_init_node() that same way?
+> If the running platform is using a PSCI FW that supports the OS initiated
+> CPU suspend mode, which likely should be the case unless the PSCI FW is
+> very old, this change triggers the PSCI driver to enable it.
+>
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> Co-developed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
 
-We would also initialize cpu this way in pv_init_node. The
-smp_processor_id() call is relatively cheap, but the initialization done
-here is more expensive.
+[...]
 
+> @@ -166,12 +170,57 @@
+>  				min-residency-us = <2000>;
+>  				local-timer-stop;
+>  			};
+> +
+> +			CLUSTER_RET: cluster-retention {
+> +				compatible = "domain-idle-state";
+> +				arm,psci-suspend-param = <0x1000010>;
+> +				entry-latency-us = <500>;
+> +				exit-latency-us = <500>;
+> +				min-residency-us = <2000>;
+> +			};
+> +
+> +			CLUSTER_PWRDN: cluster-gdhs {
+> +				compatible = "domain-idle-state";
+> +				arm,psci-suspend-param = <0x1000030>;
+> +				entry-latency-us = <2000>;
+> +				exit-latency-us = <2000>;
+> +				min-residency-us = <6000>;
+> +			};
+>  		};
+>  	};
 
->> The only thing left
->> to do here is perhaps setting tail to NULL.
-> There is no need to initialize cna_node.tail — we never access it unless
-> the node is at the head of the secondary queue, and in that case we 
-> initialize it before placing the node at the head of that queue 
-> (see find_successor()).
+I was trying to understand the composition of composite state parameters
+in this series and that made me look at these DT examples.
 
-OK.
+What format does the above platform use ? I tried matching them to
+both original as well as extended format and I fail to understand.
+Assuming original format:
+	State         power_state PowerLevel  StateType     StateID
+	SPC           0x40000002   0(core)    0(Retention)  0x2 (Res0 b[29]=1?)
+	CLUSTER_RET   0x1000010   1(clusters) 0(Retention)  0x10
+	CLUSTER_PWRDN 0x1000030   1(clusters) 0(Retention?) 0x30
+Now extended format:
+	State         power_state StateType     StateID
+	SPC           0x40000002  0(Retention)  0x40000002 (Res0 b[29]=1?)
+	CLUSTER_RET   0x1000010   0(Retention)  0x1000010
+	CLUSTER_PWRDN 0x1000030   0(Retention?) 0x1000030
 
--Longman
+What am I missing ?
 
+--
+Regards,
+Sudeep
