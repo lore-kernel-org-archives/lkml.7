@@ -2,340 +2,135 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F76C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A0EC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CFF2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0722173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UYBBX5wq"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="D6ERFH5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbfGPWGX (ORCPT
+        id S2388393AbfGPWHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:06:23 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5838 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfGPWGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:06:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2e4a610003>; Tue, 16 Jul 2019 15:06:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Jul 2019 15:06:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Jul 2019 15:06:19 -0700
-Received: from [10.2.164.12] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jul
- 2019 22:06:17 +0000
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <talho@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mperttunen@nvidia.com>,
-        <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
- <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
- <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
- <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
- <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
- <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
- <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
- <ef63f72a-db03-ef28-a371-e578f351c713@nvidia.com>
- <27641e30-fdd1-e53a-206d-71e1f23343fd@gmail.com>
- <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
- <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
- <0ee06d1a-310d-59f7-0aa6-b688b33447f5@nvidia.com>
- <cedfafd0-4114-0821-0c4b-efc17c213449@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <707c4679-fde6-1714-ced0-dcf7ca8380a9@nvidia.com>
-Date:   Tue, 16 Jul 2019 15:06:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <cedfafd0-4114-0821-0c4b-efc17c213449@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jul 2019 18:07:03 -0400
+Received: from mail-eopbgr790077.outbound.protection.outlook.com ([40.107.79.77]:11075
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728434AbfGPWHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:07:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FnjYN2Y31Z7r+o+9zCebwKOG7bQ4/GWzf+zvlwnAKP4BEkEWozaXaN+aUwNC0+s591TNTwLpK8A3ImP9TWv6yLGnbSlxPXuPkm92GTXFahBm+P5iqmrlYjqDfsKfhTA+eAXiRt1w5Y1nyjT0tgKFWEAdX0t5iEpmcgLQ3cs5OLq+yi04mihhbCrI3q2Yaaw29hFLwlX1TrrvoWkLi4Pq6v2RqjJXN28BpSBWP6mWY9Vc3TeZMVoMtfxRzHeRac2rmetmkFuyZdBxOWGj8ejHXmOyshtaKklp/ap/ivvom/iDcwbMwPS/Ay0usNdWKF/7KgEC+cMe31Ww6x72Tpr3Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sN8GCeyLGOOfHaAtRy84EtOV0X4h8D0qnJw4tZJ02o4=;
+ b=MxIf7aYkzpT1PNZQfLBa7qlnk5w6w3Xg4xtmrpJ1vUK07/Pop50B6gLXCHpBgXn3AprnKhu21WzR81t0ia49QHCkD9VEbpRqmvbht/lpTb/z7/qMdGar0S0Xx0P7/TIIVF5dpIuhGps1VfyaT6zq06MZoVLw3uQgsmZZjadapiV9TSFmJQZ/qALF0bxPg56rEHH2T587jh+G2xkkgxcDPG/Atd0ERHgnX3q+oLJhDHqaMGpyCBsxjp9RVWCa1NP11776gtmsHrSWU0hXJUrl5TiLBFGSayrvkSjDz8oisOl0ZV3aeODq0hyIw2dc/ft5OOfigMNaYZbJKk9SYyuq6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sN8GCeyLGOOfHaAtRy84EtOV0X4h8D0qnJw4tZJ02o4=;
+ b=D6ERFH5Cfc9p6O78XhOj7zATHtxzi/tuPKut+ul216j9dirBUgXmtKJMUPE7w8uRU5nOvX2Of9kXqKgk6XPvdJ3iVHDD9CmRQcwJiZ2AIkMwL+mVzUHrHUe6wceLBXTJW8Imu6hQFTSu2yA6MA7RIB5fZuPBVvyqjUwKyb1OgUE=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4104.namprd05.prod.outlook.com (52.135.199.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.8; Tue, 16 Jul 2019 22:06:20 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2094.009; Tue, 16 Jul 2019
+ 22:06:20 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 0/3] resource: find_next_iomem_res() improvements
+Thread-Topic: [PATCH 0/3] resource: find_next_iomem_res() improvements
+Thread-Index: AQHVIaTGJ7ym4R/nDEy6A26DLGCJOaag/0oAgAC3tYCAAA1/gIAAOaaAgCwCaoCAAAGLAA==
+Date:   Tue, 16 Jul 2019 22:06:19 +0000
+Message-ID: <536D5DED-FE80-441E-8715-1E5E594C2AF0@vmware.com>
+References: <20190613045903.4922-1-namit@vmware.com>
+ <CAPcyv4hpWg5DWRhazS-ftyghiZP-J_M-7Vd5tiUd5UKONOib8g@mail.gmail.com>
+ <9387A285-B768-4B58-B91B-61B70D964E6E@vmware.com>
+ <CAPcyv4hstt+0teXPtAq2nwFQaNb9TujgetgWPVMOnYH8JwqGeA@mail.gmail.com>
+ <19C3DCA0-823E-46CB-A758-D5F82C5FA3C8@vmware.com>
+ <20190716150047.3c13945decc052c077e9ee1e@linux-foundation.org>
+In-Reply-To: <20190716150047.3c13945decc052c077e9ee1e@linux-foundation.org>
+Accept-Language: en-US
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563314785; bh=04DuOpRo1r557MEtp4GfQINIEJfsOaFEdM00TbUOAgo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=UYBBX5wqDRUkNDVdH1aguci90apLqcVXPcdRSbxctg7RdpyeErcy2pbRLS7GJ1UUQ
-         RAVtOUzuQzd0wE7jZRxdznj3mdE599RULHFTqPj8dANcQ3ol+Qwk+5U8RYnqIiLq0k
-         Te35J1cRjKWTB/QoHNluM7EZpbk+MmmGzGJ8Exc1zBusC6EReCPhRYE1CzoialEPjZ
-         yhEIxntwZX1Ysj2XSATpdGmCHWi+eiHmeWr+YeepStiENi3RPtoCHo7a9eSKM1W/lY
-         iZw/CIVN7Qdqu/yc5m9VWcsrnaKFDI2HRB44gLbZIFUPc9//naXzhkBBKQ6wqrFFQH
-         xwc1/QxvHHIqw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b50fc135-9fdc-4069-4141-08d70a39d517
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4104;
+x-ms-traffictypediagnostic: BYAPR05MB4104:
+x-microsoft-antispam-prvs: <BYAPR05MB4104A92A4A5D1938E67286AED0CE0@BYAPR05MB4104.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(136003)(39860400002)(376002)(51914003)(189003)(199004)(68736007)(53936002)(476003)(305945005)(14454004)(53546011)(33656002)(5660300002)(6506007)(2906002)(102836004)(76176011)(11346002)(7736002)(186003)(6246003)(446003)(91956017)(76116006)(478600001)(6512007)(8936002)(64756008)(66446008)(4326008)(6116002)(316002)(66556008)(3846002)(66946007)(486006)(81156014)(71200400001)(36756003)(7416002)(256004)(25786009)(71190400001)(6486002)(99286004)(66476007)(8676002)(6436002)(2616005)(26005)(229853002)(66066001)(86362001)(54906003)(81166006)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4104;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CXKkzgrQuAOWtkUTIX3Cf6WphcuLiOGG0RNKZdV0lDVik1QYQqkn1oshdoiENbuxGDRBzS4uDabBmdlnyHU9znQIMJSwWKo5rYPn4FpymsTLoA0degB0+0sF1b4Nu30LxXjdch6VIhHm9p17z8kQSUVyj2rhi9v1lgZQld6Cy8oL1Mkb8DVBhnSITFhbJlvgO0gtBDuzaE9ARMQfF1A4WFAYNUKhfwykXO1uLACcFIJyqjh6/30jYPueiCf2GDoD+deFPS5j6PjmPN6Jv79dzSHRp9oBWVNvCU96WNfJPGsYcnVy4JgHnFoa27YNHZOVYT6GbrJWFodyhpCQrDy3h9qcWR58lu2SMRm25ez526k6YB0XQLEjxRLg+Vy6quOf1S7i8gF0eJRikz5L8AFxzU6Nt+BxFLQMSbjKIQMYIdM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <87A6D898D2097248AFF7555FAD128BAC@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b50fc135-9fdc-4069-4141-08d70a39d517
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 22:06:19.9020
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/16/19 3:00 PM, Dmitry Osipenko wrote:
-> 17.07.2019 0:35, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/16/19 2:21 PM, Dmitry Osipenko wrote:
->>> 17.07.2019 0:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
->>>>> 16.07.2019 22:26, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
->>>>>>> 16.07.2019 21:30, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote:
->>>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
->>>>>>>>>>>>>>> OK, Will add to CPUFreq driver...
->>>>>>>>>>>>>>>> The other thing that also need attention is that T124
->>>>>>>>>>>>>>>> CPUFreq
->>>>>>>>>>>>>>>> driver
->>>>>>>>>>>>>>>> implicitly relies on DFLL driver to be probed first,
->>>>>>>>>>>>>>>> which is
->>>>>>>>>>>>>>>> icky.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Should I add check for successful dfll clk register
->>>>>>>>>>>>>>> explicitly in
->>>>>>>>>>>>>>> CPUFreq driver probe and defer till dfll clk registers?
->>>>>>>>>>>> Probably you should use the "device links". See [1][2] for the
->>>>>>>>>>>> example.
->>>>>>>>>>>>
->>>>>>>>>>>> [1]
->>>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm=
-/tegra/dc.c#L2383
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> [2]
->>>>>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/device_link.=
-html
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> Return EPROBE_DEFER instead of EINVAL if device_link_add()
->>>>>>>>>>>> fails.
->>>>>>>>>>>> And
->>>>>>>>>>>> use of_find_device_by_node() to get the DFLL's device, see [3]=
-.
->>>>>>>>>>>>
->>>>>>>>>>>> [3]
->>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-nex=
-t.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>> Will go thru and add...
->>>>>>>>> Looks like I initially confused this case with getting orphaned
->>>>>>>>> clock.
->>>>>>>>> I'm now seeing that the DFLL driver registers the clock and then
->>>>>>>>> clk_get(dfll) should be returning EPROBE_DEFER until DFLL driver =
-is
->>>>>>>>> probed, hence everything should be fine as-is and there is no rea=
-l
->>>>>>>>> need
->>>>>>>>> for the 'device link'. Sorry for the confusion!
->>>>>>>>>
->>>>>>>>>>>>>> Sorry, I didn't follow the mail thread. Just regarding the
->>>>>>>>>>>>>> DFLL
->>>>>>>>>>>>>> part.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> As you know it, the DFLL clock is one of the CPU clock
->>>>>>>>>>>>>> sources and
->>>>>>>>>>>>>> integrated with DVFS control logic with the regulator. We
->>>>>>>>>>>>>> will not
->>>>>>>>>>>>>> switch
->>>>>>>>>>>>>> CPU to other clock sources once we switched to DFLL.
->>>>>>>>>>>>>> Because the
->>>>>>>>>>>>>> CPU has
->>>>>>>>>>>>>> been regulated by the DFLL HW with the DVFS table (CVB or OP=
-P
->>>>>>>>>>>>>> table
->>>>>>>>>>>>>> you see
->>>>>>>>>>>>>> in the driver.). We shouldn't reparent it to other sources
->>>>>>>>>>>>>> with
->>>>>>>>>>>>>> unknew
->>>>>>>>>>>>>> freq/volt pair. That's not guaranteed to work. We allow
->>>>>>>>>>>>>> switching to
->>>>>>>>>>>>>> open-loop mode but different sources.
->>>>>>>>>>>> Okay, then the CPUFreq driver will have to enforce DFLL freq t=
-o
->>>>>>>>>>>> PLLP's
->>>>>>>>>>>> rate before switching to PLLP in order to have a proper CPU
->>>>>>>>>>>> voltage.
->>>>>>>>>>> PLLP freq is safe to work for any CPU voltage. So no need to
->>>>>>>>>>> enforce
->>>>>>>>>>> DFLL freq to PLLP rate before changing CCLK_G source to PLLP
->>>>>>>>>>> during
->>>>>>>>>>> suspend
->>>>>>>>>>>
->>>>>>>>>> Sorry, please ignore my above comment. During suspend, need to
->>>>>>>>>> change
->>>>>>>>>> CCLK_G source to PLLP when dfll is in closed loop mode first and
->>>>>>>>>> then
->>>>>>>>>> dfll need to be set to open loop.
->>>>>>>>> Okay.
->>>>>>>>>
->>>>>>>>>>>>>> And I don't exactly understand why we need to switch to
->>>>>>>>>>>>>> PLLP in
->>>>>>>>>>>>>> CPU
->>>>>>>>>>>>>> idle
->>>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the time.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> In SC7 entry, the dfll suspend function moves it the open-lo=
-op
->>>>>>>>>>>>>> mode. That's
->>>>>>>>>>>>>> all. The sc7-entryfirmware will handle the rest of the
->>>>>>>>>>>>>> sequence to
->>>>>>>>>>>>>> turn off
->>>>>>>>>>>>>> the CPU power.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> In SC7 resume, the warmboot code will handle the sequence to
->>>>>>>>>>>>>> turn on
->>>>>>>>>>>>>> regulator and power up the CPU cluster. And leave it on PLL_=
-P.
->>>>>>>>>>>>>> After
->>>>>>>>>>>>>> resuming to the kernel, we re-init DFLL, restore the CPU clo=
-ck
->>>>>>>>>>>>>> policy (CPU
->>>>>>>>>>>>>> runs on DFLL open-loop mode) and then moving to close-loop
->>>>>>>>>>>>>> mode.
->>>>>>>>>>>> The DFLL is re-inited after switching CCLK to DFLL parent
->>>>>>>>>>>> during of
->>>>>>>>>>>> the
->>>>>>>>>>>> early clocks-state restoring by CaR driver. Hence instead of
->>>>>>>>>>>> having
->>>>>>>>>>>> odd
->>>>>>>>>>>> hacks in the CaR driver, it is much nicer to have a proper
->>>>>>>>>>>> suspend-resume sequencing of the device drivers. In this case
->>>>>>>>>>>> CPUFreq
->>>>>>>>>>>> driver is the driver that enables DFLL and switches CPU to tha=
-t
->>>>>>>>>>>> clock
->>>>>>>>>>>> source, which means that this driver is also should be
->>>>>>>>>>>> responsible for
->>>>>>>>>>>> management of the DFLL's state during of suspend/resume
->>>>>>>>>>>> process. If
->>>>>>>>>>>> CPUFreq driver disables DFLL during suspend and re-enables it
->>>>>>>>>>>> during
->>>>>>>>>>>> resume, then looks like the CaR driver hacks around DFLL are n=
-ot
->>>>>>>>>>>> needed.
->>>>>>>>>>>>
->>>>>>>>>>>>>> The DFLL part looks good to me. BTW, change the patch
->>>>>>>>>>>>>> subject to
->>>>>>>>>>>>>> "Add
->>>>>>>>>>>>>> suspend-resume support" seems more appropriate to me.
->>>>>>>>>>>>>>
->>>>>>>>>>>>> To clarify this, the sequences for DFLL use are as follows
->>>>>>>>>>>>> (assuming
->>>>>>>>>>>>> all
->>>>>>>>>>>>> required DFLL hw configuration has been done)
->>>>>>>>>>>>>
->>>>>>>>>>>>> Switch to DFLL:
->>>>>>>>>>>>> 0) Save current parent and frequency
->>>>>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>>>> 2) Enable DFLL
->>>>>>>>>>>>> 3) Change cclk_g parent to DFLL
->>>>>>>>>>>>> For OVR regulator:
->>>>>>>>>>>>> 4) Change PWM output pin from tristate to output
->>>>>>>>>>>>> 5) Enable DFLL PWM output
->>>>>>>>>>>>> For I2C regulator:
->>>>>>>>>>>>> 4) Enable DFLL I2C output
->>>>>>>>>>>>> 6) Program DFLL to closed loop mode
->>>>>>>>>>>>>
->>>>>>>>>>>>> Switch away from DFLL:
->>>>>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU frequency is ok fo=
-r
->>>>>>>>>>>>> any
->>>>>>>>>>>>> vdd_cpu voltage
->>>>>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>>>>
->>>>>>>>>> I see during switch away from DFLL (suspend), cclk_g parent is n=
-ot
->>>>>>>>>> changed to PLLP before changing dfll to open loop mode.
->>>>>>>>>>
->>>>>>>>>> Will add this ...
->>>>>>>>> The CPUFreq driver switches parent to PLLP during the probe,
->>>>>>>>> similar
->>>>>>>>> should be done on suspend.
->>>>>>>>>
->>>>>>>>> I'm also wondering if it's always safe to switch to PLLP in the
->>>>>>>>> probe.
->>>>>>>>> If CPU is running on a lower freq than PLLP, then some other more
->>>>>>>>> appropriate intermediate parent should be selected.
->>>>>>>>>
->>>>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at highe=
-r
->>>>>>>> rate
->>>>>>>> so switching to PLL_P during CPUFreq probe prior to dfll clock
->>>>>>>> enable
->>>>>>>> should be safe.
->>>>>>> AFAIK, PLLX could run at ~200MHz. There is also a divided output of
->>>>>>> PLLP
->>>>>>> which CCLKG supports, the PLLP_OUT4.
->>>>>>>
->>>>>>> Probably, realistically, CPU is always running off a fast PLLX duri=
-ng
->>>>>>> boot, but I'm wondering what may happen on KEXEC. I guess ideally
->>>>>>> CPUFreq driver should also have a 'shutdown' callback to teardown
->>>>>>> DFLL
->>>>>>> on a reboot, but likely that there are other clock-related
->>>>>>> problems as
->>>>>>> well that may break KEXEC and thus it is not very important at the
->>>>>>> moment.
->>>>>>>
->>>>>>> [snip]
->>>>>> During bootup CPUG sources from PLL_X. By PLL_P source above I meant
->>>>>> PLL_P_OUT4.
->>>>>>
->>>>>> As per clock policies, PLL_X is always used for high freq like >800M=
-hz
->>>>>> and for low frequency it will be sourced from PLLP.
->>>>> Alright, then please don't forget to pre-initialize PLLP_OUT4 rate to=
- a
->>>>> reasonable value using tegra_clk_init_table or assigned-clocks.
->>>> PLLP_OUT4 rate update is not needed as it is safe to run at 408Mhz
->>>> because it is below fmax @ Vmin
->>> So even 204MHz CVB entries are having the same voltage as 408MHz,
->>> correct? It's not instantly obvious to me from the DFLL driver's code
->>> where the fmax @ Vmin is defined, I see that there is the min_millivolt=
-s
->>> and frequency entries starting from 204MHZ defined per-table.
->> Yes at Vmin CPU Fmax is ~800Mhz. So anything below that will work at
->> Vmin voltage and PLLP max is 408Mhz.
-> Thank you for the clarification. It would be good to have that commented
-> in the code as well.
-OK, Will add...
+PiBPbiBKdWwgMTYsIDIwMTksIGF0IDM6MDAgUE0sIEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgt
+Zm91bmRhdGlvbi5vcmc+IHdyb3RlOg0KPiANCj4gT24gVHVlLCAxOCBKdW4gMjAxOSAyMTo1Njo0
+MyArMDAwMCBOYWRhdiBBbWl0IDxuYW1pdEB2bXdhcmUuY29tPiB3cm90ZToNCj4gDQo+Pj4gLi4u
+YW5kIGlzIGNvbnN0YW50IGZvciB0aGUgbGlmZSBvZiB0aGUgZGV2aWNlIGFuZCBhbGwgc3Vic2Vx
+dWVudCBtYXBwaW5ncy4NCj4+PiANCj4+Pj4gUGVyaGFwcyB5b3Ugd2FudCB0byBjYWNoZSB0aGUg
+Y2FjaGFiaWxpdHktbW9kZSBpbiB2bWEtPnZtX3BhZ2VfcHJvdCAod2hpY2ggSQ0KPj4+PiBzZWUg
+YmVpbmcgZG9uZSBpbiBxdWl0ZSBhIGZldyBjYXNlcyksIGJ1dCBJIGRvbuKAmXQga25vdyB0aGUg
+Y29kZSB3ZWxsIGVub3VnaA0KPj4+PiB0byBiZSBjZXJ0YWluIHRoYXQgZXZlcnkgdm1hIHNob3Vs
+ZCBoYXZlIGEgc2luZ2xlIHByb3RlY3Rpb24gYW5kIHRoYXQgaXQNCj4+Pj4gc2hvdWxkIG5vdCBj
+aGFuZ2UgYWZ0ZXJ3YXJkcy4NCj4+PiANCj4+PiBObywgSSdtIHRoaW5raW5nIHRoaXMgd291bGQg
+bmF0dXJhbGx5IGZpdCBhcyBhIHByb3BlcnR5IGhhbmdpbmcgb2ZmIGENCj4+PiAnc3RydWN0IGRh
+eF9kZXZpY2UnLCBhbmQgdGhlbiBjcmVhdGUgYSB2ZXJzaW9uIG9mIHZtZl9pbnNlcnRfbWl4ZWQo
+KQ0KPj4+IGFuZCB2bWZfaW5zZXJ0X3Bmbl9wbWQoKSB0aGF0IGJ5cGFzcyB0cmFja19wZm5faW5z
+ZXJ0KCkgdG8gaW5zZXJ0IHRoYXQNCj4+PiBzYXZlZCB2YWx1ZS4NCj4+IA0KPj4gVGhhbmtzIGZv
+ciB0aGUgZGV0YWlsZWQgZXhwbGFuYXRpb24uIEnigJlsbCBnaXZlIGl0IGEgdHJ5ICh0aGUgbW9t
+ZW50IEkgZmluZA0KPj4gc29tZSBmcmVlIHRpbWUpLiBJIHN0aWxsIHRoaW5rIHRoYXQgcGF0Y2gg
+Mi8zIGlzIGJlbmVmaWNpYWwsIGJ1dCBiYXNlZCBvbg0KPj4geW91ciBmZWVkYmFjaywgcGF0Y2gg
+My8zIHNob3VsZCBiZSBkcm9wcGVkLg0KPiANCj4gSXQgaGFzIGJlZW4gYSB3aGlsZS4gIFdoYXQg
+c2hvdWxkIHdlIGRvIHdpdGgNCj4gDQo+IHJlc291cmNlLWZpeC1sb2NraW5nLWluLWZpbmRfbmV4
+dF9pb21lbV9yZXMucGF0Y2gNCj4gcmVzb3VyY2UtYXZvaWQtdW5uZWNlc3NhcnktbG9va3Vwcy1p
+bi1maW5kX25leHRfaW9tZW1fcmVzLnBhdGNoDQo+IA0KPiA/DQoNCkkgZGlkbuKAmXQgZ2V0IHRv
+IGZvbGxvdyBEYW4gV2lsbGlhbXMgYWR2aWNlLiBCdXQsIGJvdGggb2YgdHdvIHBhdGNoZXMgYXJl
+DQpmaW5lIG9uIG15IG9waW5pb24gYW5kIHNob3VsZCBnbyB1cHN0cmVhbS4gVGhlIGZpcnN0IG9u
+ZSBmaXhlcyBhIGJ1ZyBhbmQgdGhlDQpzZWNvbmQgb25lIGltcHJvdmVzIHBlcmZvcm1hbmNlIGNv
+bnNpZGVyYWJseSAoYW5kIHJlbW92ZXMgbW9zdCBvZiB0aGUNCm92ZXJoZWFkKS4gRnV0dXJlIGlt
+cHJvdmVtZW50cyBjYW4gZ28gb24gdG9wIG9mIHRoZXNlIHBhdGNoZXMgYW5kIGFyZSBub3QNCmV4
+cGVjdGVkIHRvIGNvbmZsaWN0Lg0KDQpTbyBJIHRoaW5rIHRoZXkgc2hvdWxkIGdvIHVwc3RyZWFt
+IC0gdGhlIGZpcnN0IG9uZSBpbW1lZGlhdGVseSwgdGhlIHNlY29uZA0Kb25lIHdoZW4gcG9zc2li
+bGUu
