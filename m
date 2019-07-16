@@ -2,230 +2,140 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC66C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C6C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A232173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD0D21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:20:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="v+Nv91jW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388855AbfGPWTz (ORCPT
+        id S2388868AbfGPWU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:19:55 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:34270 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbfGPWTx (ORCPT
+        Tue, 16 Jul 2019 18:20:57 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40794 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfGPWU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:19:53 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45pFFL2yMQz1rJhk;
-        Wed, 17 Jul 2019 00:19:50 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45pFFL2bpLz1qqkJ;
-        Wed, 17 Jul 2019 00:19:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 0l4C0OxZZxmO; Wed, 17 Jul 2019 00:19:48 +0200 (CEST)
-X-Auth-Info: 5dlSzn2eGm9e+ncIbVU+/ZN+KJi5Uon5h6+14OnpEMU=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 17 Jul 2019 00:19:48 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v3 3/3] input: touchscreen mc13xxx: Add mc34708 support
-Date:   Wed, 17 Jul 2019 00:19:29 +0200
-Message-Id: <20190716221929.3782-4-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190716221929.3782-1-lukma@denx.de>
-References: <20190716221929.3782-1-lukma@denx.de>
+        Tue, 16 Jul 2019 18:20:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id y20so6906643otk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TNhwUv6Ky0s0w03ioY+550UObTT5jDR+657SS9hX3Ow=;
+        b=v+Nv91jWpEWxB3/zZPcDf9TsGYnNUk2CxCYeiVF+WXu3e72lpqWE3E3zL1uP7kKM/I
+         mWSC+EA9GPfECv8Dn/F4GCe6BsHuCw3YffdB81/ykh7RlRXTTw+lkwKY5db6NKrA0wiM
+         vJIJM0ndSx7Z3vlHSM1Q3GD+OEhEsPak9HqQTmobk2mGCg2RSWBdQZF02DAKviNTolDt
+         9SDDOnUdeKCBGe7Zb1ms0i6Eeqm5M8nPavXAQW+DCdbon412FKOVp1/ASfZ7Zm17UkmT
+         5oS4kv9hgZ/bOnz/bdm2TKsksc6TCLtJ8qcCftpMyybO9L+LzRjA6LNjWj/T+Tz+Wkpf
+         Gyiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TNhwUv6Ky0s0w03ioY+550UObTT5jDR+657SS9hX3Ow=;
+        b=dyVExymm3AETUe5uB80F83gzbEc/rEqfkbeENZNz4W8oFl8ripOP8yLT6iuh2pcwFz
+         g6Nip+sdjV92t2/3pICYETUj04u00XVIH/H62uvBRdJaazcBRUihmTGs9Ce5KWbKYQSL
+         VM9Nn3xASj/m55DmBCxDkvrAxHuZYHaxHgVApxlCvCCBxDAsbmQBB1b+QT11KXbhMJh9
+         wDB0eYe/VxJ6cHJJz5hvYyond6jb3yelsphNViDrLDmqzvdOGNaKmFp84yxdd43axdcE
+         5ivp+FiyCBxgAiCi+z4QM+DxP8pPj5jBscvw1hZfTt69TfknhTtcfuDDZTM/GHZ++PBl
+         RtmQ==
+X-Gm-Message-State: APjAAAVBv9Db4gYGOA83npjx2hhvixTiu7OLz1F8/wiZTS6A6F3q8AZB
+        6EBZ/lmqX06wacC+mEnAVhPLLumaF1bOKDiA7sOzzg==
+X-Google-Smtp-Source: APXvYqwEIU4jOVbAg9CR3IdZtyD05lbj5Yyf9evbtBtEsapl8Q2qFdqA8FewNacU01JSVqaAY5FbVjHEwxNT2ZHQ5YY=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr1338868oto.207.1563315656274;
+ Tue, 16 Jul 2019 15:20:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190613045903.4922-1-namit@vmware.com> <CAPcyv4hpWg5DWRhazS-ftyghiZP-J_M-7Vd5tiUd5UKONOib8g@mail.gmail.com>
+ <9387A285-B768-4B58-B91B-61B70D964E6E@vmware.com> <CAPcyv4hstt+0teXPtAq2nwFQaNb9TujgetgWPVMOnYH8JwqGeA@mail.gmail.com>
+ <19C3DCA0-823E-46CB-A758-D5F82C5FA3C8@vmware.com> <20190716150047.3c13945decc052c077e9ee1e@linux-foundation.org>
+ <CAPcyv4iqNHBy-_WbH9XBg5hSqxa=qnkc88EW5=g=-5845jNzsg@mail.gmail.com> <D463DD43-C09F-4B6E-B1BC-7E1CA5C8A9C4@vmware.com>
+In-Reply-To: <D463DD43-C09F-4B6E-B1BC-7E1CA5C8A9C4@vmware.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 16 Jul 2019 15:20:45 -0700
+Message-ID: <CAPcyv4gGkgCsf4NtDPj7FNcTMO6o+fUYgfq8AP_pLkqDSbxjzA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] resource: find_next_iomem_res() improvements
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On Tue, Jul 16, 2019 at 3:13 PM Nadav Amit <namit@vmware.com> wrote:
+>
+> > On Jul 16, 2019, at 3:07 PM, Dan Williams <dan.j.williams@intel.com> wr=
+ote:
+> >
+> > On Tue, Jul 16, 2019 at 3:01 PM Andrew Morton <akpm@linux-foundation.or=
+g> wrote:
+> >> On Tue, 18 Jun 2019 21:56:43 +0000 Nadav Amit <namit@vmware.com> wrote=
+:
+> >>
+> >>>> ...and is constant for the life of the device and all subsequent map=
+pings.
+> >>>>
+> >>>>> Perhaps you want to cache the cachability-mode in vma->vm_page_prot=
+ (which I
+> >>>>> see being done in quite a few cases), but I don=E2=80=99t know the =
+code well enough
+> >>>>> to be certain that every vma should have a single protection and th=
+at it
+> >>>>> should not change afterwards.
+> >>>>
+> >>>> No, I'm thinking this would naturally fit as a property hanging off =
+a
+> >>>> 'struct dax_device', and then create a version of vmf_insert_mixed()
+> >>>> and vmf_insert_pfn_pmd() that bypass track_pfn_insert() to insert th=
+at
+> >>>> saved value.
+> >>>
+> >>> Thanks for the detailed explanation. I=E2=80=99ll give it a try (the =
+moment I find
+> >>> some free time). I still think that patch 2/3 is beneficial, but base=
+d on
+> >>> your feedback, patch 3/3 should be dropped.
+> >>
+> >> It has been a while.  What should we do with
+> >>
+> >> resource-fix-locking-in-find_next_iomem_res.patch
+> >
+> > This one looks obviously correct to me, you can add:
+> >
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> >
+> >> resource-avoid-unnecessary-lookups-in-find_next_iomem_res.patch
+> >
+> > This one is a good bug report that we need to go fix pgprot lookups
+> > for dax, but I don't think we need to increase the trickiness of the
+> > core resource lookup code in the meantime.
+>
+> I think that traversing big parts of the tree that are known to be
+> irrelevant is wasteful no matter what, and this code is used in other cas=
+es.
+>
+> I don=E2=80=99t think the new code is so tricky - can you point to the pa=
+rt of the
+> code that you find tricky?
 
-The mc34708 has a different bit to enable pen detection. This
-adds the driver data and devtype necessary to probe the device
-and to distinguish between the mc13783 and the mc34708.
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-
----
-Changes for v3:
-- Replace forward declaration of mc13xxx_driver_data with
-  structure definition
-- Rename mc13xxx_driver_data with mc13xxx_chip
-- Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
-  closer to ID table
-- Do not check mc13xxx device type
-
-Changes for v2:
-- Change nested if statements to a single one (with cr0 > ...)
-- Replace hardcoded max resistance value (4080) with a generic driver data
-  value.
-- Introduce new include/linux/mfd/mc34708.h header file for mc34708 specific
-  defines
-- Define as driver data mask and value for accessing mc13xxx registers
-
-Changes from the original patch:
-- Simplify the mcXXXXX_set_pen_detection functions
-- Fix checkpatch warnings
----
- drivers/input/touchscreen/mc13783_ts.c | 56 +++++++++++++++++++++++++++++++---
- 1 file changed, 52 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/input/touchscreen/mc13783_ts.c b/drivers/input/touchscreen/mc13783_ts.c
-index edd49e44e0c9..857c11235141 100644
---- a/drivers/input/touchscreen/mc13783_ts.c
-+++ b/drivers/input/touchscreen/mc13783_ts.c
-@@ -10,6 +10,7 @@
-  */
- #include <linux/platform_device.h>
- #include <linux/mfd/mc13783.h>
-+#include <linux/mfd/mc34708.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/input.h>
-@@ -30,6 +31,18 @@ MODULE_PARM_DESC(sample_tolerance,
- 		"is supposed to be wrong and is discarded.  Set to 0 to "
- 		"disable this check.");
- 
-+enum mc13xxx_type {
-+	MC13XXX_TYPE_MC13783,
-+	MC13XXX_TYPE_MC34708,
-+};
-+
-+struct mc13xxx_chip {
-+	enum mc13xxx_type type;
-+	int max_resistance;
-+	u32 reg_mask;
-+	u32 reg_value;
-+};
-+
- struct mc13783_ts_priv {
- 	struct input_dev *idev;
- 	struct mc13xxx *mc13xxx;
-@@ -37,6 +50,7 @@ struct mc13783_ts_priv {
- 	unsigned int sample[4];
- 	u8 ato;
- 	bool atox;
-+	const struct mc13xxx_chip *chip;
- };
- 
- static irqreturn_t mc13783_ts_handler(int irq, void *data)
-@@ -93,6 +107,9 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
- 
- 	cr0 = (cr0 + cr1) / 2;
- 
-+	if (cr0 > priv->chip->max_resistance)
-+		cr0 = 0;
-+
- 	if (!cr0 || !sample_tolerance ||
- 			(x2 - x0 < sample_tolerance &&
- 			 y2 - y0 < sample_tolerance)) {
-@@ -102,14 +119,14 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
- 			input_report_abs(idev, ABS_Y, y1);
- 
- 			dev_dbg(&idev->dev, "report (%d, %d, %d)\n",
--					x1, y1, 0x1000 - cr0);
-+				x1, y1, priv->chip->max_resistance - cr0);
- 			schedule_delayed_work(&priv->work, HZ / 50);
- 		} else {
- 			dev_dbg(&idev->dev, "report release\n");
- 		}
- 
- 		input_report_abs(idev, ABS_PRESSURE,
--				cr0 ? 0x1000 - cr0 : cr0);
-+				 cr0 ? priv->chip->max_resistance - cr0 : 0);
- 		input_report_key(idev, BTN_TOUCH, cr0);
- 		input_sync(idev);
- 	} else {
-@@ -146,7 +163,8 @@ static int mc13783_ts_open(struct input_dev *dev)
- 		goto out;
- 
- 	ret = mc13xxx_reg_rmw(priv->mc13xxx, MC13XXX_ADC0,
--			MC13XXX_ADC0_TSMOD_MASK, MC13XXX_ADC0_TSMOD0);
-+			      priv->chip->reg_mask,
-+			      priv->chip->reg_value);
- 	if (ret)
- 		mc13xxx_irq_free(priv->mc13xxx, MC13XXX_IRQ_TS, priv);
- out:
-@@ -160,7 +178,7 @@ static void mc13783_ts_close(struct input_dev *dev)
- 
- 	mc13xxx_lock(priv->mc13xxx);
- 	mc13xxx_reg_rmw(priv->mc13xxx, MC13XXX_ADC0,
--			MC13XXX_ADC0_TSMOD_MASK, 0);
-+			priv->chip->reg_mask, 0);
- 	mc13xxx_irq_free(priv->mc13xxx, MC13XXX_IRQ_TS, priv);
- 	mc13xxx_unlock(priv->mc13xxx);
- 
-@@ -172,6 +190,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
- 	struct mc13783_ts_priv *priv;
- 	struct mc13xxx_ts_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct input_dev *idev;
-+	const struct platform_device_id *id = platform_get_device_id(pdev);
- 	int ret = -ENOMEM;
- 
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-@@ -182,6 +201,7 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
- 	INIT_DELAYED_WORK(&priv->work, mc13783_ts_work);
- 	priv->mc13xxx = dev_get_drvdata(pdev->dev.parent);
- 	priv->idev = idev;
-+	priv->chip = (void *)id->driver_data;
- 
- 	if (pdata) {
- 		priv->atox = pdata->atox;
-@@ -228,7 +248,35 @@ static int mc13783_ts_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct mc13xxx_chip mc13783_chip = {
-+	.type = MC13XXX_TYPE_MC13783,
-+	.max_resistance = 4096,
-+	.reg_mask = MC13XXX_ADC0_TSMOD_MASK,
-+	.reg_value = MC13XXX_ADC0_TSMOD0,
-+};
-+
-+static struct mc13xxx_chip mc34708_chip = {
-+	.type = MC13XXX_TYPE_MC34708,
-+	.max_resistance = 4080,
-+	.reg_mask = MC34708_ADC0_TSMASK,
-+	.reg_value = MC34708_ADC0_TSPENDETEN,
-+};
-+
-+static const struct platform_device_id mc13xxx_ts_idtable[] = {
-+	{
-+		.name = "mc13783-ts",
-+		.driver_data = (kernel_ulong_t)&mc13783_chip,
-+	}, {
-+		.name = "mc34708-ts",
-+		.driver_data = (kernel_ulong_t)&mc34708_chip,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(platform, mc13xxx_ts_idtable);
-+
- static struct platform_driver mc13783_ts_driver = {
-+	.id_table	= mc13xxx_ts_idtable,
- 	.remove		= mc13783_ts_remove,
- 	.driver		= {
- 		.name	= MC13783_TS_NAME,
--- 
-2.11.0
-
+Given dax can be updated to avoid this abuse of find_next_iomem_res(),
+it was a general observation that the patch adds more lines than it
+removes and is not strictly necessary. I'm ambivalent as to whether it
+is worth pushing upstream. If anything the changelog is going to be
+invalidated by a change to dax to avoid find_next_iomem_res(). Can you
+update the changelog to be relevant outside of the dax case?
