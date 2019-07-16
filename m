@@ -2,102 +2,196 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE53C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05AAC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508052173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757A72173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbfGPIne (ORCPT
+        id S1731483AbfGPIoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:43:34 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:48877 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfGPInd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:43:33 -0400
-Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 5A1CF100017;
-        Tue, 16 Jul 2019 08:42:25 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 10:42:25 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <sean@poorly.run>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] drm/modes: Don't apply cmdline's rotation if it
- wasn't specified
-Message-ID: <20190716084225.6wf5lsdzukyb6cz5@flea>
-References: <20190711021313.29445-1-digetx@gmail.com>
- <20190712195429.dlz5ofwoafciedcq@flea>
- <11723cfd-12d2-5810-70df-0e053352d648@gmail.com>
+        Tue, 16 Jul 2019 04:44:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24132 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbfGPIoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:44:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 01:44:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,497,1557212400"; 
+   d="scan'208";a="167588676"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jul 2019 01:44:21 -0700
+Message-ID: <5D2D8FB4.3020505@intel.com>
+Date:   Tue, 16 Jul 2019 16:49:56 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="octe5474vzs7zgnm"
-Content-Disposition: inline
-In-Reply-To: <11723cfd-12d2-5810-70df-0e053352d648@gmail.com>
-User-Agent: NeoMutt/20180716
+To:     Eric Hankland <ehankland@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: x86: PMU Event Filter
+References: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com> <5D27FE26.1050002@intel.com> <CAOyeoRV5=6pR7=sFZ+gU68L4rORjRaYDLxQrZb1enaWO=d_zpA@mail.gmail.com>
+In-Reply-To: <CAOyeoRV5=6pR7=sFZ+gU68L4rORjRaYDLxQrZb1enaWO=d_zpA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---octe5474vzs7zgnm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Jul 13, 2019 at 09:57:32PM +0300, Dmitry Osipenko wrote:
-> 12.07.2019 22:54, Maxime Ripard =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, Jul 11, 2019 at 05:13:13AM +0300, Dmitry Osipenko wrote:
-> >> The rotation mode from cmdline shouldn't be taken into account if it
-> >> wasn't specified in the cmdline. This fixes ignored default display
-> >> orientation when display mode is given using cmdline without the
-> >> rotation being specified.
-> >>
-> >> Fixes: 1bf4e09227c3 ("drm/modes: Allow to specify rotation and reflect=
-ion on the commandline")
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >
-> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > Thanks!
-> > Maxime
+On 07/16/2019 08:10 AM, Eric Hankland wrote:
+>> I think just disabling guest cpuid might not be enough, since guest
+>> could write to the msr without checking the cpuid.
+>>
+>> Why not just add a bitmap for fixed counter?
+>> e.g. fixed_counter_reject_bitmap
+>>
+>> At the beginning of reprogram_fixed_counter, we could add the check:
+>>
+>> if (test_bit(idx, &kvm->arch.fixed_counter_reject_bitmap))
+>>       return -EACCES;
+>>
+>> (Please test with your old guest and see if they have issues if we
+>> inject #GP when
+>> they try to set the fixed_ctrl msr. If there is, we could drop -EACCESS
+>> above)
+>>
+>> The bitmap could be set at kvm_vm_ioctl_set_pmu_event_filter.
+> intel_pmu_refresh() checks the guest cpuid and sets the number of
+> fixed counters according to that:
+> pmu->nr_arch_fixed_counters = min_t(int, edx.split.num_counters_fixed,
+> INTEL_PMC_MAX_FIXED);
 >
-> Thank you. Please note that I'm not a DRM maintainer, hence either you
-> should pick up and apply the patch by yourself or somebody else who has
-> the commit rights will have do that. I guess Thierry could also pick up
-> the patch into the Tegra's tree, but this patch is more DRM-generic.
+> and reprogram_fixed_counters()/get_fixed_pmc() respect this so the
+> guest can't just ignore the cpuid.
 
-Right, I've applied it now
+Yes, but as you noticed, we couldn't disable fixed counter 2 while keeping
+counter 3 running via that.
 
-Thanks!
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Adding a bitmap does let you do things like disable the first counter
+> but keep the second and third, but given that there are only three and
+> the events are likely to be on a whitelist anyway, it seemed like
+> adding the bitmap wasn't worth it. If you still feel the same way even
+> though we can disable them via the cpuid, I can add this in.
 
---octe5474vzs7zgnm
-Content-Type: application/pgp-signature; name="signature.asc"
+We need the design to be architecturally clean. For example, if the 
+hardware later
+comes up with fixed counter 5 and 6.
+5 is something we really want to expose to the guest to use while 6 isn't,
+can our design here (further) support that?
 
------BEGIN PGP SIGNATURE-----
+We don't want to re-design this at that time. However, extending what we 
+have would
+be acceptable. So, if you hesitate to add the bitmap method that I 
+described, please
+add GP tags to the ACTIONs defined, e.g.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXS2N8QAKCRDj7w1vZxhR
-xZU/APwMSaCF6bmFUXlM1KJUOeNWQxXyRsoece/0gjVsiShCfAD+INMwbkotiFNg
-3y6stSLHSrLJF4aCkziA0WYN6xwACQ4=
-=/jaE
------END PGP SIGNATURE-----
+enum kvm_pmu_action_type
+{
+   KVM_PMU_EVENT_ACTION_GP_NONE = 0,
+   KVM_PMU_EVENT_ACTION_GP_ACCEPT = 1,
+   KVM_PMU_EVENT_ACTION_GP_REJECT = 2,
+   KVM_PMU_EVENT_ACTION_MAX
+};
 
---octe5474vzs7zgnm--
+and add comments to explain something like below:
+
+Those GP actions are for the filtering of guest events running on the 
+virtual general
+purpose counters. The actions to filter guest events running on the 
+virtual fixed
+function counters are not added currently as they all seem fine to be 
+used by the
+guest so far, but that could be supported on demand in the future via 
+adding new
+actions.
+
+
+>> I think it would be better to add more, please see below:
+>>
+>> enum kvm_pmu_action_type {
+>>       KVM_PMU_EVENT_ACTION_NONE = 0,
+>>       KVM_PMU_EVENT_ACTION_ACCEPT = 1,
+>>       KVM_PMU_EVENT_ACTION_REJECT = 2,
+>>       KVM_PMU_EVENT_ACTION_MAX
+>> };
+>>
+>> and do a check in kvm_vm_ioctl_set_pmu_event_filter()
+>>       if (filter->action >= KVM_PMU_EVENT_ACTION_MAX)
+>>           return -EINVAL;
+>>
+>> This is for detecting the case that we add a new action in
+>> userspace, while the kvm hasn't been updated to support that.
+>>
+>> KVM_PMU_EVENT_ACTION_NONE is for userspace to remove
+>> the filter after they set it.
+> We can achieve the same result by using a reject action with an empty
+> set of events - is there some advantage to "none" over that? I can add
+> that check for valid actions.
+
+Yes, we could also make it work via passing nevents=0.
+
+I slightly prefer the use of the NONE action here. The advantage is
+simpler (less) userspace command. For QEMU, people could
+disable the filter list via qmp command, e.g. pmu-filter=none,
+instead of pmu-filter=accept,nevents=0.
+It also seems more straightforward when people read the usage
+manual - a NONE command to cancel the filtering, instead of
+"first setting this, then setting that.."
+I don't see advantages of using nevents over NONE action.
+
+Anyway, this one isn't a critical issue, and it's up to you here.
+
+
+>
+>>> +#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
+>> Why is this limit needed?
+> Serves to keep the filters on the smaller side and ensures the size
+> calculation can't overflow if users attempt to. Keeping the filter
+> under 4k is nicer for allocation - also, if we want really large
+> filters we might want to do something smarter than a linear traversal
+> of the filter when guests program counters.
+
+I think 63 is too small, and it looks like a random number being put here.
+ From the SDM table 19-3, it seems there are roughly 300 events. 
+Functionally,
+the design should support to filter most of them.
+(optimization with smarter traversal is another story that could be done 
+later)
+
+Maybe
+#define KVM_PMU_EVENT_FILTER_MAX_EVENTS (PAGE_SIZE - sizeof(struct 
+kvm_pmu_event_filter)) / sizeof (__u64)
+?
+
+and please add some comments above about the consideration that we set 
+this number.
+
+
+>>> +       kvfree(filter);
+>> Probably better to have it conditionally?
+>>
+>> if (filter) {
+>>       synchronize_srcu();
+>>       kfree(filter)
+>> }
+>>
+>> You may want to factor it out, so that kvm_pmu_destroy could reuse.
+> Do you mean kvm_arch_destroy_vm? It looks like that's where kvm_arch
+> members are freed. I can do that.
+
+Sounds good.
+
+Best,
+Wei
+
+
