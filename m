@@ -2,139 +2,120 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81F1C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A6DC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50B320659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563301111;
-	bh=vRekJ511YQxzaA6GBXbmteyzC16Ok2DIQfXQpiykRwM=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YIwE2Q3jxMaillJ+s4WUvDPQq7xqLAI6ia0sKyHIO6spXwhU54mONb2BlR7NQFCv9
-	 SCtHiLej16b2IzerwxAxWreTzlozQ6zp0jeGJJsNQzqFM+aqDRff1xpgn4sjeI21zv
-	 CT99a9AtQiKpDq+KIWgYVB/gmor0m9dzdvbOrTGI=
+	by mail.kernel.org (Postfix) with ESMTP id 6BCCD20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oet6rX2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388425AbfGPSSV (ORCPT
+        id S2388479AbfGPSTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:18:21 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58812 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387934AbfGPSSU (ORCPT
+        Tue, 16 Jul 2019 14:19:09 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51603 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPSTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:18:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=gl/ER3CAc9iTxDNrHUNt6+9/WROXYL+w+kSUpiBqivc=; b=axxkLtX5JNM8
-        mNI/ezOy25a8BZYGExyaoMCLNOkzdg7eYdde1UaAGnb/VhfictcWVj4LMbH5HL+DBslPLxn5eTbf2
-        JZmUvIG3p0Z8LruUGT53rTcx+C5LocKEHZst1TiVazGX3xLvCk/4LPC0E61ZYtmiB8TgjnSoc4Sc9
-        GqANQ=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hnS1m-0005yw-Tf; Tue, 16 Jul 2019 18:18:15 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id B1E0E2742BD4; Tue, 16 Jul 2019 19:18:13 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Mark Brown <broonie@kernel.org>, wens@csie.org
-Subject: Applied "regulator: axp20x: fix DCDCA and DCDCD for AXP806" to the regulator tree
-In-Reply-To: <20190713090717.347-2-jernej.skrabec@siol.net>
-X-Patchwork-Hint: ignore
-Message-Id: <20190716181813.B1E0E2742BD4@ypsilon.sirena.org.uk>
-Date:   Tue, 16 Jul 2019 19:18:13 +0100 (BST)
+        Tue, 16 Jul 2019 14:19:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so19635391wma.1;
+        Tue, 16 Jul 2019 11:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lIqXsG3zHlSz/3p5h6qCoCToOwuWr8K0DIq1OkVbWWI=;
+        b=oet6rX2Aa+/ya/nYryVfgg+pPATQvZlrpAldgEvp+mYtomWOthIkW+mWivHQK53jmT
+         MUOItAcn1Uc7UzCG4RnJazfQf0uCID+7ZQIR4MkELDHMT8elKflwRjKaNn+Z3n5bLN/j
+         kvwwJvnSAaIwiOgG2X+v8frP9Cw4hFLO8TTXp/mPQxiAUB5ZNVzD5oilxUDjQqezsFtY
+         IS2NRIF5nW3x7yKQDYiF8tUfo5ILSRLAuMPXSAubethr7b23jG3cvtbwwXzmZ4lWf950
+         XIFwgQM8oX/AkvX+5TU7MxqGx5zz1kWDsu7FtRdeVXaT6S62nm1mUO/mr4tQrvHrAc9U
+         IyRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lIqXsG3zHlSz/3p5h6qCoCToOwuWr8K0DIq1OkVbWWI=;
+        b=pKerAmxpxSFX5/XwHcg+PBmrr42kYFiJAP5Od0R2HSfYdnxjjiiNTfjx5tfNzdp4wa
+         FjfpwniwbKjSrvFOu549PDtkkcf9KAWGCG4PxLEpXHXjnwM58pBgHwk1HKAWgVIpj2zD
+         bn9/aU1vJzn8esx865d+BLpNqYr9bB53fvryQL3w4X9oC1mS9dGtQ3YsTyyR9cmCA+VA
+         0L/2a71BvVfocQLmznYV+Tcqk3EkfDt/L2TuCDkEPPwofrKXHQUo2LFsxT1CHS+TbuxB
+         7Rf08SNxGk4Ro+S8N8mmXjuoO6SVLxtr/utsPVXZQBDFTNCK8gFUaGBEFyytqoBdFCpG
+         2JAw==
+X-Gm-Message-State: APjAAAWE/g9KD1+RGkC9Gf7O2+TFjLWv8Qg2nu1GzVSWx56C51XMMavz
+        XxNInnW++FUZg43FAsdBWA8=
+X-Google-Smtp-Source: APXvYqxmAXgR0/JYyKnKQYHuf7dNpJEuNY0ngKjqjnppH4MCHWif39inWlZ8tXDUomDtRFbndZ+f7g==
+X-Received: by 2002:a7b:cc81:: with SMTP id p1mr30432041wma.107.1563301146302;
+        Tue, 16 Jul 2019 11:19:06 -0700 (PDT)
+Received: from [192.168.2.202] (pD9EA39E9.dip0.t-ipconnect.de. [217.234.57.233])
+        by smtp.gmail.com with ESMTPSA id g131sm14596386wmf.37.2019.07.16.11.19.04
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 11:19:05 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-3-luzmaximilian@gmail.com>
+ <20190716072135.GA806@penguin>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <92e13b01-7353-1430-fb38-b5098d509da2@gmail.com>
+Date:   Tue, 16 Jul 2019 20:19:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190716072135.GA806@penguin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   regulator: axp20x: fix DCDCA and DCDCD for AXP806
+Hi,
 
-has been applied to the regulator tree at
+On 7/16/19 9:21 AM, Dmitry Torokhov wrote:
+> When you are saying that Pro 4 and later models use different
+> notifications, does this mean that Pro 4 does not define any GPIOs?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+Unfortunately, at least the Surface Book (first generation, buttons are
+handled the same way as on the Pro 4) has GPIOs defined in MSHW0040, but
+they are for different use. Specifically: They can detect if the
+clipboard (screen part of the device, the device basically has two parts
+that can be separated: clipboard and base) is being removed. Relying on
+the GPIOs was my first idea too, but that has been reported to shut down
+the Book 1 when the clipboard is detached.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+As far as I know, the OEM platform revision check is the easiest way to
+differentiate between those devices.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> I do not believe -EAGAIN has any special meaning in the driver core;
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I think I got the -EAGAIN from an outdated LWN article when I first
+started working on this, thanks for confirming.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> also when the GPIO controller is not ready gpiod_get() will return
+> -EPROBE_DEFER, which is the prober way if signalling that some resource
+> is not yet available and probe should be retries at a later time.
+>
+> Moreover, I do not believe that gpiod_count() needs GPIO controller to
+> be ready, the count is taken from board firmware or static board file
+> definition, so if gpiod_count() returns 0 it should be clear indication
+> that the driver should not be used with the device.
 
-Thanks,
-Mark
+Thank you for this insight, I will update the patch accordingly.
 
-From 1ef55fed9219963359a7b3bc7edca8517c6e45ac Mon Sep 17 00:00:00 2001
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-Date: Sat, 13 Jul 2019 11:07:16 +0200
-Subject: [PATCH] regulator: axp20x: fix DCDCA and DCDCD for AXP806
-
-Refactoring of the driver introduced bugs in AXP806's DCDCA and DCDCD
-regulator definitions.
-
-In DCDCA case, AXP806_DCDCA_1120mV_STEPS was obtained by subtracting
-0x47 and 0x33. This should be 0x14 (hex) and not 14 (dec).
-
-In DCDCD case, axp806_dcdcd_ranges[] contains two ranges with same
-start and end macros, which is clearly wrong. Second range starts at
-1.6V so it should use AXP806_DCDCD_1600mV_[START|END] macros. They are
-already defined but unused.
-
-Fixes: db4a555f7c4c ("regulator: axp20x: use defines for masks")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://lore.kernel.org/r/20190713090717.347-2-jernej.skrabec@siol.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/axp20x-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 152053361862..c951568994a1 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -240,7 +240,7 @@
- #define AXP806_DCDCA_600mV_END		\
- 	(AXP806_DCDCA_600mV_START + AXP806_DCDCA_600mV_STEPS)
- #define AXP806_DCDCA_1120mV_START	0x33
--#define AXP806_DCDCA_1120mV_STEPS	14
-+#define AXP806_DCDCA_1120mV_STEPS	20
- #define AXP806_DCDCA_1120mV_END		\
- 	(AXP806_DCDCA_1120mV_START + AXP806_DCDCA_1120mV_STEPS)
- #define AXP806_DCDCA_NUM_VOLTAGES	72
-@@ -774,8 +774,8 @@ static const struct regulator_linear_range axp806_dcdcd_ranges[] = {
- 			       AXP806_DCDCD_600mV_END,
- 			       20000),
- 	REGULATOR_LINEAR_RANGE(1600000,
--			       AXP806_DCDCD_600mV_START,
--			       AXP806_DCDCD_600mV_END,
-+			       AXP806_DCDCD_1600mV_START,
-+			       AXP806_DCDCD_1600mV_END,
- 			       100000),
- };
- 
--- 
-2.20.1
-
+Maximilian
