@@ -2,172 +2,107 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1DEC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE35C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC510206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93E821743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0XRWLaf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w8nkOPU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbfGPVpA (ORCPT
+        id S2387663AbfGPVqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 17:45:00 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45380 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfGPVpA (ORCPT
+        Tue, 16 Jul 2019 17:46:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44737 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbfGPVqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 17:45:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so10061286pgp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:45:00 -0700 (PDT)
+        Tue, 16 Jul 2019 17:46:35 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k18so21474457ljc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:46:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4drR0FDgR1qKvDPf6ArOgp5GWnRtGoeeH0ezG721TC0=;
-        b=d0XRWLafSldOVujZRpCkAu9+YwaiUggcPzRRQGuqpuKlW6jllCs6aNRjoFTQhxg4W6
-         z7ImjRNh5QmIhLrvG3LhZo0PIw8SLsbPLLxFxaZOy4h7hkmlvhGkc1vtL4Gsa4mkCHz1
-         zJ+OWNjBPEuKNabEYJEFz46fx9LgdzRJWPcElIRSmJJG5lufLlzetP7GPCAmZHS6V2xl
-         2mxK1+ye+N5ayG7/d9N0ag+WZAL7AAonPq26ki8Ch07dIWP/z73zocHpTVI4WSb32Wj/
-         4Wly/viUTLx9SnnoMfTR1xsYZJ0YcZ3G/B7jx6HPwUu0T3GhkwGGo8T1bQV9zgTEmpzR
-         PxIA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/RAqXRe608t4DMx9FGyKisTh63SKLqBM/Ij+WPbCgPM=;
+        b=w8nkOPU+3uflSrcrXxVEWNs9uhGpDdd+Rzxjc1vZSogoQypeYtVZZXnBAYPYoeQwTk
+         QXylYhCAuTzEveN/SdH0E3tjYsDhtyjvhezP1JjINApaDK6H0Yi17N6btnci60KnTRnv
+         7RX4plxLZk2v0cncumOcFIrmpLUqJn+4F8v0K3eEGHefnLHMrFASyUd0UGVcTzNozd1a
+         vcogndbzJPjwP1MTJvTWUTAO9gkwTq5N8Sr2X2Fi2XFAPKEg6agIcorsdZPHxNFgGWgf
+         7HdIu/jAzowkZHNUKuzdFQlzwV3SabCls6H1gs85AuaxjcVSAOo1qHdsEH//0kKtxz1k
+         8vMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4drR0FDgR1qKvDPf6ArOgp5GWnRtGoeeH0ezG721TC0=;
-        b=GkLdWQ+9PlYWKwIUMSKBuGyX4ndPaGsZLjiO6yh11XdlPXiBhTvG+VtG1CJ7NE4igk
-         4Wsoa0rd9ArwtUpJq4HeBu12EB3YkjghHD4q9fEz9D0x7Ht76Au/Pn/ikDni7josRik7
-         obxRoHZoT9IuDmybm3EZZg/8H1EtEJU7LpApvHB8UoENRg+nzfskgr76GkMiQ79nF39c
-         LwjdILSoP0FCZPxHso24R7h+HfI3wPegF/kcFKELqjMgjkH7Q6jdoB7LiD5GbREvB4uM
-         y6M2PLwlsIuPzVRT9C7kgpNngoGGEHpNJmdWR8Rv/yP6MblHrIZvUZM4wjssX+AI586e
-         6dzw==
-X-Gm-Message-State: APjAAAUAEzGNvrKn6JhP7VYel+uuhB/yqkCcEuvecSIiChn6gZ4XO1eZ
-        D0NR7Ieqb6HMj+plbpHtfcs1pXIKtVg=
-X-Google-Smtp-Source: APXvYqxiDio1TWrmNR0NEynX+8QmbTFyvAzkbSoW72UZvLkMfedCjFiKOzRrZlV77GO0V2OJitoyeQ==
-X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr39000839pji.136.1563313499680;
-        Tue, 16 Jul 2019 14:44:59 -0700 (PDT)
-Received: from localhost ([100.118.89.203])
-        by smtp.gmail.com with ESMTPSA id 135sm20978687pfb.137.2019.07.16.14.44.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 14:44:59 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] drm/vgem: use normal cached mmap'ings
-Date:   Tue, 16 Jul 2019 14:37:42 -0700
-Message-Id: <20190716213746.4670-3-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190716213746.4670-1-robdclark@gmail.com>
-References: <20190716213746.4670-1-robdclark@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/RAqXRe608t4DMx9FGyKisTh63SKLqBM/Ij+WPbCgPM=;
+        b=GzSJzRBuHRsxAYyU5vb939GAdR9bWt4mhgpn9CN7bRjnhFu5Sx8Bls4BoUIJytKNVR
+         e2SV00CVC012WCfcEy7+LqUnceHcFQDwuSV7Ldwz3+drd+S9RdRIHPA1yKvfu/24jw+U
+         2RyjcF5et0XY3y8axBspv6oeCogCyZIsUCWv7YGUCWdT97MzZP7nQkH+L+mEqquhnS1h
+         YPzgRRss6c3eo0f/ek75cclb96+5RxV1OCERtKb7Tt8pwhlh5l7NHLN0TeGx72YM2vye
+         WPI/WfWafAR/olhCdgHOvvsHQUOMrHv6kmmNIPZZCl2Xr7Jw2ajRV0T6Dd+6ooFffE5j
+         DNTQ==
+X-Gm-Message-State: APjAAAVuqEoI9UGTvFDcBeSgJfd+NAphAIvNlC8XVrFd6/tjM2UoWQOF
+        1roqOvjua9vxl85GAJ0ISHEXnqTOMoynwIAnXw8YLw==
+X-Google-Smtp-Source: APXvYqw1LRlGMkwD0Zj/mXq1MDJT8exL4YfTyq/7bILPPJJo6uRhVajc9X7deRiYqmtGZGr6TgE+sPe18oyUING8rnc=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr18018479ljg.62.1563313593593;
+ Tue, 16 Jul 2019 14:46:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190708082343.30726-1-brgl@bgdev.pl> <CACRpkdb5xKHZja0mkd-wZJ+YHZpGJaDrkA0dv60MNYKXFcPK4w@mail.gmail.com>
+ <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com>
+In-Reply-To: <CAMRc=MfB9R70QDqtjG5a5Roq1roeL78Ss5noytrY-7P=tY1OHA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 Jul 2019 23:46:22 +0200
+Message-ID: <CACRpkdaiZgK1EoaUxDtbm_GJHVjZU56e_qBQ-OF0mmwb5W8+tg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: don't WARN() on NULL descs if gpiolib is disabled
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Claus H . Stovgaard" <cst@phaseone.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Tue, Jul 9, 2019 at 4:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> wt., 9 lip 2019 o 15:30 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
 
-Since there is no real device associated with VGEM, it is impossible to
-end up with appropriate dev->dma_ops, meaning that we have no way to
-invalidate the shmem pages allocated by VGEM.  So, at least on platforms
-without drm_cflush_pages(), we end up with corruption when cache lines
-from previous usage of VGEM bo pages get evicted to memory.
+> > I was thinking something like this in the stubs:
+> >
+> > gpiod_get[_index]() {
+> >     return POISON;
+> > }
+> >
+> > gpiod_get[_index]_optional() {
+> >    return NULL;
+> > }
+>
+> This is already being done.
 
-The only sane option is to use cached mappings.
+Ah it is.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-v3: rebased on drm-tip
+> > This way all gpiod_get() and optional calls are properly
+> > handled and the semantic that only _optional calls
+> > can return NULL is preserved. (Your patch would
+> > violate this.)
+> >
+>
+> Maybe I'm missing something, but I don't quite see how my patch
+> violates this behavior. :(
 
- drivers/gpu/drm/vgem/vgem_drv.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+I missed that we actually do pass a poison from the strict
+*get functions, mea culpa.
 
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index e7d12e93b1f0..84262e2bd7f7 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -259,9 +259,6 @@ static int vgem_mmap(struct file *filp, struct vm_area_struct *vma)
- 	if (ret)
- 		return ret;
- 
--	/* Keep the WC mmaping set by drm_gem_mmap() but our pages
--	 * are ordinary and not special.
--	 */
- 	vma->vm_flags = flags | VM_DONTEXPAND | VM_DONTDUMP;
- 	return 0;
- }
-@@ -310,17 +307,17 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
- static int vgem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
--	long n_pages = obj->size >> PAGE_SHIFT;
-+	long i, n_pages = obj->size >> PAGE_SHIFT;
- 	struct page **pages;
- 
- 	pages = vgem_pin_pages(bo);
- 	if (IS_ERR(pages))
- 		return PTR_ERR(pages);
- 
--	/* Flush the object from the CPU cache so that importers can rely
--	 * on coherent indirect access via the exported dma-address.
--	 */
--	drm_clflush_pages(pages, n_pages);
-+	for (i = 0; i < n_pages; i++) {
-+		dma_sync_single_for_device(dev, page_to_phys(pages[i]),
-+					   PAGE_SIZE, DMA_BIDIRECTIONAL);
-+	}
- 
- 	return 0;
- }
-@@ -328,6 +325,13 @@ static int vgem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- static void vgem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
-+	long i, n_pages = obj->size >> PAGE_SHIFT;
-+	struct page **pages = bo->pages;
-+
-+	for (i = 0; i < n_pages; i++) {
-+		dma_sync_single_for_cpu(dev, page_to_phys(pages[i]),
-+					PAGE_SIZE, DMA_BIDIRECTIONAL);
-+	}
- 
- 	vgem_unpin_pages(bo);
- }
-@@ -382,7 +386,7 @@ static void *vgem_prime_vmap(struct drm_gem_object *obj)
- 	if (IS_ERR(pages))
- 		return NULL;
- 
--	return vmap(pages, n_pages, 0, pgprot_writecombine(PAGE_KERNEL));
-+	return vmap(pages, n_pages, 0, PAGE_KERNEL);
- }
- 
- static void vgem_prime_vunmap(struct drm_gem_object *obj, void *vaddr)
-@@ -411,7 +415,7 @@ static int vgem_prime_mmap(struct drm_gem_object *obj,
- 	fput(vma->vm_file);
- 	vma->vm_file = get_file(obj->filp);
- 	vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
--	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-+	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
- 
- 	return 0;
- }
--- 
-2.21.0
+Let's apply this, will you send me a pull request or shall I
+just try to apply it?
 
+Yours,
+Linus Walleij
