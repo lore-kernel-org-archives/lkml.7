@@ -2,380 +2,402 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C7EC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66ABC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45F22080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797842080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 03:41:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mp/8eSWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfGPDlT (ORCPT
+        id S1731632AbfGPDlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 23:41:19 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:43740 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730275AbfGPDlT (ORCPT
+        Mon, 15 Jul 2019 23:41:31 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18969 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730275AbfGPDla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 23:41:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TX1aoqx_1563248467;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TX1aoqx_1563248467)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 16 Jul 2019 11:41:07 +0800
-Subject: [PATCH v2 3/4] numa: introduce numa group per task group
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Peter Zijlstra <peterz@infradead.org>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mcgrof@kernel.org, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
- <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
-Message-ID: <e91a257d-3936-68b5-4845-21bd93db6733@linux.alibaba.com>
-Date:   Tue, 16 Jul 2019 11:41:07 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Mon, 15 Jul 2019 23:41:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2d47640002>; Mon, 15 Jul 2019 20:41:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 15 Jul 2019 20:41:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 15 Jul 2019 20:41:26 -0700
+Received: from [10.2.164.12] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jul
+ 2019 03:41:25 +0000
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1561687972-19319-1-git-send-email-skomatineni@nvidia.com>
+ <1561687972-19319-12-git-send-email-skomatineni@nvidia.com>
+ <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
+ <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
+ <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
+ <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
+Message-ID: <0fe01cb5-78fe-2523-c78f-34698ed95ca5@nvidia.com>
+Date:   Mon, 15 Jul 2019 20:41:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <65c1987f-bcce-2165-8c30-cf8cf3454591@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563248485; bh=mb6zG9Kfw1XuqWJtWsxfhcIaSdl0n4fpf4XDSPnpyfg=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=mp/8eSWM4AHTgEv51/VPvUxgq1UGR8V6tvVOhL5pb+P+guN21/ZE21ImQlA7i8Mu6
+         mKPPTYbCo2d9z5cMgREzPvNEKRP+uzSRuUQfpNCWZHsdEY8Eo33j55DMCcT5k13gk+
+         psO7aLb3x3sIeODXWu0Aa3cmPI/lTWcnarpBKfrC/qPtnLI7sg8lI16e07HHEhMAmD
+         kgWY9uYTKbgqOiTeqTeSuFXRVflPKFCr2Dwn0EQJ5hYrf1HUvAovdaA6YhF0wHMjsh
+         UMmSFtZr3qKyh6V1+KpK7AB6Y4RCLaUXwtUgZ70eH+Hxv8p2l10ev/QLObsSWU5drX
+         yf8eBKPBUtwvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By tracing numa page faults, we recognize tasks sharing the same page,
-and try pack them together into a single numa group.
 
-However when two task share lot's of cache pages while not much
-anonymous pages, since numa balancing do not tracing cache page, they
-have no chance to join into the same group.
-
-While tracing cache page cost too much, we could use some hints from
-userland and cpu cgroup could be a good one.
-
-This patch introduced new entry 'numa_group' for cpu cgroup, by echo
-non-zero into the entry, we can now force all the tasks of this cgroup
-to join the same numa group serving for task group.
-
-In this way tasks are more likely to settle down on the same node, to
-share closer cpu cache and gain benefit from NUMA on both file/anonymous
-pages.
-
-Besides, when multiple cgroup enabled numa group, they will be able to
-exchange task location by utilizing numa migration, in this way they
-could achieve single node settle down without breaking load balance.
-
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
-Since v1:
-  * just rebase, no logical changes
-
- kernel/sched/core.c  |  33 ++++++++++
- kernel/sched/fair.c  | 175 ++++++++++++++++++++++++++++++++++++++++++++++++++-
- kernel/sched/sched.h |  11 ++++
- 3 files changed, 218 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f8aa73aa879b..9f100c48d6e4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6802,6 +6802,8 @@ void sched_offline_group(struct task_group *tg)
- {
- 	unsigned long flags;
-
-+	update_tg_numa_group(tg, false);
-+
- 	/* End participation in shares distribution: */
- 	unregister_fair_sched_group(tg);
-
-@@ -7321,6 +7323,32 @@ static int cpu_numa_stat_show(struct seq_file *sf, void *v)
-
- 	return 0;
- }
-+
-+static DEFINE_MUTEX(numa_mutex);
-+
-+static int cpu_numa_group_show(struct seq_file *sf, void *v)
-+{
-+	struct task_group *tg = css_tg(seq_css(sf));
-+
-+	mutex_lock(&numa_mutex);
-+	show_tg_numa_group(tg, sf);
-+	mutex_unlock(&numa_mutex);
-+
-+	return 0;
-+}
-+
-+static int cpu_numa_group_write_s64(struct cgroup_subsys_state *css,
-+				struct cftype *cft, s64 numa_group)
-+{
-+	int ret;
-+	struct task_group *tg = css_tg(css);
-+
-+	mutex_lock(&numa_mutex);
-+	ret = update_tg_numa_group(tg, numa_group);
-+	mutex_unlock(&numa_mutex);
-+
-+	return ret;
-+}
- #endif
-
- static struct cftype cpu_legacy_files[] = {
-@@ -7364,6 +7392,11 @@ static struct cftype cpu_legacy_files[] = {
- 		.name = "numa_stat",
- 		.seq_show = cpu_numa_stat_show,
- 	},
-+	{
-+		.name = "numa_group",
-+		.write_s64 = cpu_numa_group_write_s64,
-+		.seq_show = cpu_numa_group_show,
-+	},
- #endif
- 	{ }	/* Terminate */
- };
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2c362266af76..c28ba040a563 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1073,6 +1073,7 @@ struct numa_group {
- 	int nr_tasks;
- 	pid_t gid;
- 	int active_nodes;
-+	bool evacuate;
-
- 	struct rcu_head rcu;
- 	unsigned long total_faults;
-@@ -2246,6 +2247,176 @@ static inline void put_numa_group(struct numa_group *grp)
- 		kfree_rcu(grp, rcu);
- }
-
-+void show_tg_numa_group(struct task_group *tg, struct seq_file *sf)
-+{
-+	int nid;
-+	struct numa_group *ng = tg->numa_group;
-+
-+	if (!ng) {
-+		seq_puts(sf, "disabled\n");
-+		return;
-+	}
-+
-+	seq_printf(sf, "id %d nr_tasks %d active_nodes %d\n",
-+		   ng->gid, ng->nr_tasks, ng->active_nodes);
-+
-+	for_each_online_node(nid) {
-+		int f_idx = task_faults_idx(NUMA_MEM, nid, 0);
-+		int pf_idx = task_faults_idx(NUMA_MEM, nid, 1);
-+
-+		seq_printf(sf, "node %d ", nid);
-+
-+		seq_printf(sf, "mem_private %lu mem_shared %lu ",
-+			   ng->faults[f_idx], ng->faults[pf_idx]);
-+
-+		seq_printf(sf, "cpu_private %lu cpu_shared %lu\n",
-+			   ng->faults_cpu[f_idx], ng->faults_cpu[pf_idx]);
-+	}
-+}
-+
-+int update_tg_numa_group(struct task_group *tg, bool numa_group)
-+{
-+	struct numa_group *ng = tg->numa_group;
-+
-+	/* if no change then do nothing */
-+	if ((ng != NULL) == numa_group)
-+		return 0;
-+
-+	if (ng) {
-+		/* put and evacuate tg's numa group */
-+		rcu_assign_pointer(tg->numa_group, NULL);
-+		ng->evacuate = true;
-+		put_numa_group(ng);
-+	} else {
-+		unsigned int size = sizeof(struct numa_group) +
-+				    4*nr_node_ids*sizeof(unsigned long);
-+
-+		ng = kzalloc(size, GFP_KERNEL | __GFP_NOWARN);
-+		if (!ng)
-+			return -ENOMEM;
-+
-+		refcount_set(&ng->refcount, 1);
-+		spin_lock_init(&ng->lock);
-+		ng->faults_cpu = ng->faults + NR_NUMA_HINT_FAULT_TYPES *
-+						nr_node_ids;
-+		/* now make tasks see and join */
-+		rcu_assign_pointer(tg->numa_group, ng);
-+	}
-+
-+	return 0;
-+}
-+
-+static bool tg_numa_group(struct task_struct *p)
-+{
-+	int i;
-+	struct task_group *tg;
-+	struct numa_group *grp, *my_grp;
-+
-+	rcu_read_lock();
-+
-+	tg = task_group(p);
-+	if (!tg)
-+		goto no_join;
-+
-+	grp = rcu_dereference(tg->numa_group);
-+	my_grp = rcu_dereference(p->numa_group);
-+
-+	if (!grp)
-+		goto no_join;
-+
-+	if (grp == my_grp) {
-+		if (!grp->evacuate)
-+			goto joined;
-+
-+		/*
-+		 * Evacuate task from tg's numa group
-+		 */
-+		rcu_read_unlock();
-+
-+		spin_lock_irq(&grp->lock);
-+
-+		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-+			grp->faults[i] -= p->numa_faults[i];
-+
-+		grp->total_faults -= p->total_numa_faults;
-+		grp->nr_tasks--;
-+
-+		spin_unlock_irq(&grp->lock);
-+
-+		rcu_assign_pointer(p->numa_group, NULL);
-+
-+		put_numa_group(grp);
-+
-+		return false;
-+	}
-+
-+	if (!get_numa_group(grp))
-+		goto no_join;
-+
-+	rcu_read_unlock();
-+
-+	/*
-+	 * Just join tg's numa group
-+	 */
-+	if (!my_grp) {
-+		spin_lock_irq(&grp->lock);
-+
-+		if (refcount_read(&grp->refcount) == 2) {
-+			grp->gid = p->pid;
-+			grp->active_nodes = 1;
-+			grp->max_faults_cpu = 0;
-+		}
-+
-+		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-+			grp->faults[i] += p->numa_faults[i];
-+
-+		grp->total_faults += p->total_numa_faults;
-+		grp->nr_tasks++;
-+
-+		spin_unlock_irq(&grp->lock);
-+		rcu_assign_pointer(p->numa_group, grp);
-+
-+		return true;
-+	}
-+
-+	/*
-+	 * Switch from the task's numa group to the tg's
-+	 */
-+	double_lock_irq(&my_grp->lock, &grp->lock);
-+
-+	if (refcount_read(&grp->refcount) == 2) {
-+		grp->gid = p->pid;
-+		grp->active_nodes = 1;
-+		grp->max_faults_cpu = 0;
-+	}
-+
-+	for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++) {
-+		my_grp->faults[i] -= p->numa_faults[i];
-+		grp->faults[i] += p->numa_faults[i];
-+	}
-+
-+	my_grp->total_faults -= p->total_numa_faults;
-+	grp->total_faults += p->total_numa_faults;
-+
-+	my_grp->nr_tasks--;
-+	grp->nr_tasks++;
-+
-+	spin_unlock(&my_grp->lock);
-+	spin_unlock_irq(&grp->lock);
-+
-+	rcu_assign_pointer(p->numa_group, grp);
-+
-+	put_numa_group(my_grp);
-+	return true;
-+
-+joined:
-+	rcu_read_unlock();
-+	return true;
-+no_join:
-+	rcu_read_unlock();
-+	return false;
-+}
-+
- static void task_numa_group(struct task_struct *p, int cpupid, int flags,
- 			int *priv)
- {
-@@ -2416,7 +2587,9 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
- 		priv = 1;
- 	} else {
- 		priv = cpupid_match_pid(p, last_cpupid);
--		if (!priv && !(flags & TNF_NO_GROUP))
-+		if (tg_numa_group(p))
-+			priv = (flags & TNF_SHARED) ? 0 : priv;
-+		else if (!priv && !(flags & TNF_NO_GROUP))
- 			task_numa_group(p, last_cpupid, flags, &priv);
- 	}
-
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 456f83f7f595..23e4a62cd37b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -408,6 +408,7 @@ struct task_group {
-
- #ifdef CONFIG_NUMA_BALANCING
- 	struct numa_stat __percpu *numa_stat;
-+	void *numa_group;
- #endif
- };
-
-@@ -1316,11 +1317,21 @@ extern int migrate_task_to(struct task_struct *p, int cpu);
- extern int migrate_swap(struct task_struct *p, struct task_struct *t,
- 			int cpu, int scpu);
- extern void init_numa_balancing(unsigned long clone_flags, struct task_struct *p);
-+extern void show_tg_numa_group(struct task_group *tg, struct seq_file *sf);
-+extern int update_tg_numa_group(struct task_group *tg, bool numa_group);
- #else
- static inline void
- init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
- {
- }
-+static inline void
-+show_tg_numa_group(struct task_group *tg, struct seq_file *sf)
-+{
-+}
-+update_tg_numa_group(struct task_group *tg, bool numa_group)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_NUMA_BALANCING */
-
- #ifdef CONFIG_SMP
--- 
-2.14.4.44.g2045bb6
-
+On 7/15/19 8:00 PM, Sowjanya Komatineni wrote:
+>
+> On 7/15/19 5:35 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/14/19 2:41 PM, Dmitry Osipenko wrote:
+>>> 13.07.2019 8:54, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 6/29/19 8:10 AM, Dmitry Osipenko wrote:
+>>>>> 28.06.2019 5:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> This patch adds system suspend and resume support for Tegra210
+>>>>>> clocks.
+>>>>>>
+>>>>>> All the CAR controller settings are lost on suspend when core power
+>>>>>> goes off.
+>>>>>>
+>>>>>> This patch has implementation for saving and restoring all the PLLs
+>>>>>> and clocks context during system suspend and resume to have the
+>>>>>> clocks back to same state for normal operation.
+>>>>>>
+>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>> =C2=A0=C2=A0 drivers/clk/tegra/clk-tegra210.c | 115
+>>>>>> ++++++++++++++++++++++++++++++++++++++-
+>>>>>> =C2=A0=C2=A0 drivers/clk/tegra/clk.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 14 +++++
+>>>>>> =C2=A0=C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+>>>>>> =C2=A0=C2=A0 3 files changed, 127 insertions(+), 3 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c
+>>>>>> b/drivers/clk/tegra/clk-tegra210.c
+>>>>>> index 1c08c53482a5..1b839544e086 100644
+>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>>> @@ -9,10 +9,12 @@
+>>>>>> =C2=A0=C2=A0 #include <linux/clkdev.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/of.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/of_address.h>
+>>>>>> +#include <linux/of_platform.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/delay.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/export.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/mutex.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/clk/tegra.h>
+>>>>>> +#include <linux/syscore_ops.h>
+>>>>>> =C2=A0=C2=A0 #include <dt-bindings/clock/tegra210-car.h>
+>>>>>> =C2=A0=C2=A0 #include <dt-bindings/reset/tegra210-car.h>
+>>>>>> =C2=A0=C2=A0 #include <linux/iopoll.h>
+>>>>>> @@ -20,6 +22,7 @@
+>>>>>> =C2=A0=C2=A0 #include <soc/tegra/pmc.h>
+>>>>>> =C2=A0=C2=A0 =C2=A0 #include "clk.h"
+>>>>>> +#include "clk-dfll.h"
+>>>>>> =C2=A0=C2=A0 #include "clk-id.h"
+>>>>>> =C2=A0=C2=A0 =C2=A0 /*
+>>>>>> @@ -225,6 +228,7 @@
+>>>>>> =C2=A0=C2=A0 =C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>>>> =C2=A0=C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>> =C2=A0=C2=A0 =C2=A0 #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>> =C2=A0=C2=A0 #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>>> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll_freq_table=
+ *fentry;
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll pllu;
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 reg;
+>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (fentry =3D pll_u_fr=
+eq_table; fentry->input_rate;=20
+>>>>>> fentry++) {
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (fen=
+try->input_rate =3D=3D pll_ref_freq)
+>>>>>> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fence_udelay(1, clk_base);
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg |=3D PLL_ENABLE;
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(reg, clk_base + PLLU_BAS=
+E);
+>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(1, clk_base);
+>>>>>> =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0 readl_relaxed_poll_timeout_atomic(c=
+lk_base + PLLU_BASE, reg,
+>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg & PLL_BASE=
+_LOCK, 2, 1000);
+>>>>>> -=C2=A0=C2=A0=C2=A0 if (!(reg & PLL_BASE_LOCK)) {
+>>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra210_wait_for_mask(&pllu, PLLU_BASE,=
+ PLL_BASE_LOCK);
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_err(=
+"Timed out waiting for PLL_U to lock\n");
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return =
+-ETIMEDOUT;
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>> @@ -3283,6 +3288,103 @@ static void=20
+>>>>>> tegra210_disable_cpu_clock(u32 cpu)
+>>>>>> =C2=A0=C2=A0 }
+>>>>>> =C2=A0=C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
+>>>>>> +static u32 cpu_softrst_ctx[3];
+>>>>>> +static struct platform_device *dfll_pdev;
+>>>>>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) +
+>>>>>> ((_off) * 4))
+>>>>>> +#define car_writel(_val, _base, _off) \
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(_val, clk=
+_base + (_base) + ((_off) * 4))
+>>>>>> +
+>>>>>> +static int tegra210_clk_suspend(void)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
+>>>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_cclkg_burst_policy_save_context();
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (!dfll_pdev) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 node =3D of_find_compati=
+ble_node(NULL, NULL,
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 "nvidia,tegra210-dfll");
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (node)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+dfll_pdev =3D of_find_device_by_node(node);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 of_node_put(node);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!dfll_pdev)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+pr_err("dfll node not found. no suspend for dfll\n");
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_suspend(dfll_=
+pdev);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 /* Enable PLLP_OUT_CPU after dfll suspend */
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(true);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_sclk_cclklp_burst_policy_save_context();
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_save_context();
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx); i=
+++)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu_softrst_ctx[i] =3D c=
+ar_readl(CPU_SOFTRST_CTRL, i);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static void tegra210_clk_resume(void)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int i;
+>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *parent;
+>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *clk;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clk_restore_context restores clocks as p=
+er the clock tree.
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * dfllCPU_out is first in the clock tree t=
+o get restored=20
+>>>>>> and it
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * involves programming DFLL controller alo=
+ng with restoring=20
+>>>>>> CPUG
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clock burst policy.
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * DFLL programming needs dfll_ref and dfll=
+_soc peripheral=20
+>>>>>> clocks
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * to be restores which are part ofthe peri=
+pheral clocks.
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^ white-space
+>>>
+>>> Please use spellchecker to avoid typos.
+>>>
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * So, peripheral clocks restore should hap=
+pen prior to dfll=20
+>>>>>> clock
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * restore.
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_osc_resume(clk_base);
+>>>>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx); i=
+++)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 car_writel(cpu_softrst_c=
+tx[i], CPU_SOFTRST_CTRL, i);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 /* restore all plls and peripheral clocks */
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra210_init_pllu();
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_restore_context();
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(5, clk_base);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 /* resume SCLK and CPULP clocks */
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_sclk_cpulp_burst_policy_restore_context();
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * restore CPUG clocks:
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - enable DFLL in open loop mode
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - switch CPUG to DFLL clock source
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - close DFLL loop
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * - sync PLLX state
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_resume(dfll_p=
+dev, false);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_cclkg_burst_policy_restore_context();
+>>>>>> +=C2=A0=C2=A0=C2=A0 fence_udelay(2, clk_base);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (dfll_pdev)
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dfll_resume(dfll_p=
+dev, true);
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 parent =3D
+>>>>>> clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk =3D clks[TEGRA210_CLK_PLL_X];
+>>>>>> +=C2=A0=C2=A0=C2=A0 if (parent !=3D __clk_get_hw(clk))
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_clk_sync_state_pll=
+(__clk_get_hw(clk));
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 /* Disable PLL_OUT_CPU after DFLL resume */
+>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_clk_set_pllp_out_cpu(false);
+>>>>>> +}
+>>>>>> +
+>>>>>> =C2=A0=C2=A0 static void tegra210_cpu_clock_suspend(void)
+>>>>>> =C2=A0=C2=A0 {
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* switch coresite to clk_m, sa=
+ve off original source */
+>>>>>> @@ -3298,6 +3400,11 @@ static void tegra210_cpu_clock_resume(void)
+>>>>>> =C2=A0=C2=A0 }
+>>>>>> =C2=A0=C2=A0 #endif
+>>>>>> =C2=A0=C2=A0 +static struct syscore_ops tegra_clk_syscore_ops =3D {
+>>>>>> +=C2=A0=C2=A0=C2=A0 .suspend =3D tegra210_clk_suspend,
+>>>>>> +=C2=A0=C2=A0=C2=A0 .resume =3D tegra210_clk_resume,
+>>>>>> +};
+>>>>>> +
+>>>>>> =C2=A0=C2=A0 static struct tegra_cpu_car_ops tegra210_cpu_car_ops =
+=3D {
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .wait_for_reset=C2=A0=C2=A0=C2=
+=A0 =3D tegra210_wait_cpu_in_reset,
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable_clock=C2=A0=C2=A0=C2=
+=A0 =3D tegra210_disable_cpu_clock,
+>>>>>> @@ -3583,5 +3690,7 @@ static void __init tegra210_clock_init(struct
+>>>>>> device_node *np)
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra210_mbist_clk_init();
+>>>>>> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_cpu_car_ops =3D &t=
+egra210_cpu_car_ops;
+>>>>>> +
+>>>>>> +=C2=A0=C2=A0=C2=A0 register_syscore_ops(&tegra_clk_syscore_ops);
+>>>>>> =C2=A0=C2=A0 }
+>>>>> Is it really worthwhile to use syscore_ops for suspend/resume given
+>>>>> that drivers for
+>>>>> won't resume before the CLK driver anyway? Are there any other=20
+>>>>> options
+>>>>> for CLK
+>>>>> suspend/resume?
+>>>>>
+>>>>> I'm also not sure whether PM runtime API could be used at all in the
+>>>>> context of
+>>>>> syscore_ops ..
+>>>>>
+>>>>> Secondly, what about to use generic clk_save_context() /
+>>>>> clk_restore_context()
+>>>>> helpers for the suspend-resume? It looks to me that some other
+>>>>> essential (and proper)
+>>>>> platform driver (soc/tegra/? PMC?) should suspend-resume the clocks
+>>>>> using the generic
+>>>>> CLK Framework API.
+>>>> Clock resume should happen very early to restore peripheral and cpu
+>>>> clocks very early than peripheral drivers resume happens.
+>>> If all peripheral drivers properly requested all of the necessary=20
+>>> clocks
+>>> and CLK driver was a platform driver, then I guess the probe should=20
+>>> have
+>>> been naturally ordered. But that's not very achievable with the
+>>> currently available infrastructure in the kernel, so I'm not arguing
+>>> that the clocks should be explicitly resumed before the users.
+>>>
+>>>> this patch series uses clk_save_context and clk_restore_context for
+>>>> corresponding divider, pll, pllout.. save and restore context.
+>>> Now I see that indeed this API is utilized in this patch, thank you for
+>>> the clarification.
+>>>
+>>>> But as there is dependency on dfll resume and cpu and pllx clocks
+>>>> restore, couldnt use clk_save_context and clk_restore_context for=20
+>>>> dfll.
+>>>>
+>>>> So implemented recommended dfll resume sequence in main Tegra210 clock
+>>>> driver along with invoking clk_save_context/clk_restore_context where
+>>>> all other clocks save/restore happens as per clock tree traversal.
+>>> Could you please clarify what part of peripherals clocks is required=20
+>>> for
+>>> DFLL's restore? Couldn't DFLL driver be changed to avoid that quirkness
+>>> and thus to make DFLL driver suspend/resume the clock?
+>>
+>> DFLL source ref_clk and soc_clk need to be restored prior to dfll.
+>>
+>> I see dfllCPU_out parent to CCLK_G first in the clock tree and=20
+>> dfll_ref and dfll_soc peripheral clocks are not resumed by the time=20
+>> dfll resume happens first.
+>>
+>> ref_clk and soc_clk source is from pll_p and clock tree has these=20
+>> registered under pll_p which happens later.
+>>
+>> tegra210_clock_init registers in order plls, peripheral clocks,=20
+>> super_clk init for cclk_g during clock driver probe and dfll probe=20
+>> and register happens later.
+>>
+> One more thing, CLDVFS peripheral clock enable is also needed to be=20
+> enabled to program DFLL Controller and all peripheral clock context is=20
+> restored only after their PLL sources are restored.
+>
+> DFLL restore involves dfll source clock resume along with CLDVFS=20
+> periheral clock enable and reset
+>
+Will try with dfll_pm_ops instead of dfll suspend/resume in tegra210=20
+clock driver...
