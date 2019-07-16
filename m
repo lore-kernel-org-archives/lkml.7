@@ -5,123 +5,109 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21DCC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACD1C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985E72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA8720651
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNEhFa51"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/U++A4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388087AbfGPPw6 (ORCPT
+        id S2388104AbfGPPxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:52:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43262 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388056AbfGPPwy (ORCPT
+        Tue, 16 Jul 2019 11:53:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42671 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387977AbfGPPwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:52:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p13so21500375wru.10;
-        Tue, 16 Jul 2019 08:52:53 -0700 (PDT)
+        Tue, 16 Jul 2019 11:52:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so6521723wrr.9;
+        Tue, 16 Jul 2019 08:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=g4/LnDdA+06sof/xLsQmMbQHRCzvaeIzQEgPXpxIcrY=;
-        b=DNEhFa5155bma4gi9Edf1Yj6PaP8/rc64s5VvCx5Add/DmSL9t9o9qxi6Y4JeFZycp
-         aF0srA3QYWm0c187KyWift4NAb9VVcocltiiVaybGE6yT6+Uh2KwzdetEmAlNAGcIsSa
-         HLVvDuMiQGQ1io8snnkxyqVGXyDT0n2jIU48TMij3UY0BVBCeKeR88VzjZtNmuXcZCuN
-         OsHX/vh5B1MmMZ5R6CGo2DqUcXWAy3KHcJSFNod4qJDcm7vKsVnrnybw/8XVRr6j6w9z
-         E+bei9n1sGX1uBiSCOGt1d9UoYxEJehyloJHixgirg97AfKq9xh04y3eIWFrOi6UsNph
-         6HtA==
+        bh=JGa70Quc4Z0AaxrkSEcWukKTNPw7McenYMvZ7Zt5G8w=;
+        b=D/U++A4qxgifbNPmfVJSPVdStFvp9ZU18JdCHpUB4DdrTH7sdwdpIGKhYvyKaBeu9x
+         01cfLCevMxzmf9suwDO5Q3dBokIo/LPQD54PrcJMv4FPY7/e/T8wqgyAkTs1I1KL4M2b
+         qzUjNRHaKDrr75nVIBdWN0OHURODgQKpExlEvZ22h8PC8JIsFEYuStp0CahMd0IU/0l/
+         bGNRUYlGbo4Zwwy6n/kA0wxJZZ1iUoHa1XtJwU6MmJ4cTiP8sZod1fq3e5WNkOufaF41
+         iR0VCe7wITMMSY+f8912BEQvDwB0vMGqzBOd8mjt2brnQ1nFABgs3m9WBvhyV2ntny22
+         olTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g4/LnDdA+06sof/xLsQmMbQHRCzvaeIzQEgPXpxIcrY=;
-        b=VprHQDcVA6dFalxsr4YAcsZ1iLVZ4EpO6TS+gqRigLM3IAR9fD9QfjrVMnGeZ+qQvL
-         HTZa3KNZ2Wu7OQVfVfT2N2/pCefxm/PlQco+jy/OJx4VXk6QTwe9dW7TfjdLTuE2X8/f
-         FmYXqMjXWJo7bcaLdovveSzhPLsjdAVB3xSQYKjhgz99KTSZWb9aaYypmg5ij7xmtAg7
-         J0lj4znDllWpne+AyK6sPrxR/9RzWwW2Jc7nJBpp9k+YO0ZCJzAjnGy+l5fzOgBtFGI3
-         Ip6tVGFqqK6FI0iji/0U3SEEiYLyKsSU45rq0gvdMZAypgjJJeFXrKWyjC7rp3MXvEXy
-         ozBQ==
-X-Gm-Message-State: APjAAAU586kP4anrKu7RW8Y8L7Di5+EbKXsFEwPb8gJa5oAAeXFel+O1
-        SbvanLBKYqPz19dBC8Ej4mY=
-X-Google-Smtp-Source: APXvYqz9reS0wYGZ0qWcAIyFS+EYd27c7NNOotzJmQRly+vqVmbCg6t6xud29k42XqvOCXkjL+vVJA==
-X-Received: by 2002:adf:ed8a:: with SMTP id c10mr38084747wro.33.1563292372646;
-        Tue, 16 Jul 2019 08:52:52 -0700 (PDT)
+        bh=JGa70Quc4Z0AaxrkSEcWukKTNPw7McenYMvZ7Zt5G8w=;
+        b=Ef3S1qlPOmGd5INM3C6htNWnSmy5JzH+5awgbdSNzTN8kYL0h9vqIltOae9b3or/CK
+         5I5Ttm8oTFHVlVc405jQRZ9RAlcVcg/rIInniaPk0XmniVYAfBOUI4frg6qtNCyEwtnc
+         c9jHjQ6guJ5R/5R4x1ehRzTVgRJCasa8V42AjaOlgc3I+6xFHeOLDVQToqlu5FG5Bqx2
+         LXgX1ExUhl0xHEUY54m57ARg4WCftzAereBxceldp+HcaiFixbO6pTeaIT3Sp/5p1vwk
+         5wvBZcfIGj7ILctcbrOfdaGdUqFn+s2HGohbvrPe+THydSWCy0LYUCJNqbP+gB4LhLTS
+         JEKg==
+X-Gm-Message-State: APjAAAWogZ6QW/BAGaeBg4BG51ERSk9khxcfyxXHxtqf7z33RFfPK+OE
+        4HORar6zBexwU5kYOBfaoqo=
+X-Google-Smtp-Source: APXvYqwIpHD1mj+uv+1VCxPyVxqXCi20ZlED3q8lvK7XmorLtU/ScTf3OZA47jdsYSpuoVcrtJ299g==
+X-Received: by 2002:a5d:528d:: with SMTP id c13mr36208049wrv.247.1563292368676;
+        Tue, 16 Jul 2019 08:52:48 -0700 (PDT)
 Received: from localhost (smbhubinfra01.hotspot.hub-one.net. [213.174.99.146])
-        by smtp.gmail.com with ESMTPSA id 5sm19746642wmg.42.2019.07.16.08.52.51
+        by smtp.gmail.com with ESMTPSA id i12sm12800327wrx.61.2019.07.16.08.52.47
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jul 2019 08:52:51 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 09:39:35 +0200
+        Tue, 16 Jul 2019 08:52:48 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 09:34:25 +0200
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Mukesh Ojha <mojha@codeaurora.org>
 Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, linux-imx@nxp.com,
         linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] Input: s3c2410_ts: Use
- devm_platform_ioremap_resource()
-Message-ID: <20190716073935.GE1182@penguin>
+Subject: Re: [PATCH 4/5] Input: sun4i-ts: Use devm_platform_ioremap_resource()
+Message-ID: <20190716073425.GC1182@penguin>
 References: <1554362243-2888-1-git-send-email-mojha@codeaurora.org>
- <1554362243-2888-4-git-send-email-mojha@codeaurora.org>
+ <1554362243-2888-5-git-send-email-mojha@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554362243-2888-4-git-send-email-mojha@codeaurora.org>
+In-Reply-To: <1554362243-2888-5-git-send-email-mojha@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mukesh,
-
-On Thu, Apr 04, 2019 at 12:47:21PM +0530, Mukesh Ojha wrote:
+On Thu, Apr 04, 2019 at 12:47:22PM +0530, Mukesh Ojha wrote:
 > devm_platform_ioremap_resource() internally have platform_get_resource()
 > and devm_ioremap_resource() in it. So instead of calling them separately
 > use devm_platform_ioremap_resource() directly.
 > 
 > Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Applied, thank you.
+
 > ---
->  drivers/input/touchscreen/s3c2410_ts.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
+>  drivers/input/touchscreen/sun4i-ts.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/input/touchscreen/s3c2410_ts.c b/drivers/input/touchscreen/s3c2410_ts.c
-> index 1173890..e11cdae 100644
-> --- a/drivers/input/touchscreen/s3c2410_ts.c
-> +++ b/drivers/input/touchscreen/s3c2410_ts.c
-> @@ -242,7 +242,6 @@ static int s3c2410ts_probe(struct platform_device *pdev)
->  	struct s3c2410_ts_mach_info *info;
->  	struct device *dev = &pdev->dev;
->  	struct input_dev *input_dev;
-> -	struct resource *res;
->  	int ret = -EINVAL;
->  
->  	/* Initialise input stuff */
-> @@ -277,14 +276,7 @@ static int s3c2410ts_probe(struct platform_device *pdev)
->  		goto err_clk;
+> diff --git a/drivers/input/touchscreen/sun4i-ts.c b/drivers/input/touchscreen/sun4i-ts.c
+> index d2e14d9..bbb0104 100644
+> --- a/drivers/input/touchscreen/sun4i-ts.c
+> +++ b/drivers/input/touchscreen/sun4i-ts.c
+> @@ -309,8 +309,7 @@ static int sun4i_ts_probe(struct platform_device *pdev)
+>  		input_set_drvdata(ts->input, ts);
 >  	}
 >  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		dev_err(dev, "no resource for registers\n");
-> -		ret = -ENOENT;
-> -		goto err_clk;
-> -	}
-> -
-> -	ts.io = ioremap(res->start, resource_size(res));
-> +	ts.io = devm_platform_ioremap_resource(pdev, 0);
-
-This is not an equivalent transformation: the original code (rightly or
-wrongly) did not request the memory regions described by 'res' while new
-variant does.
-
-Also you can't simply slap a single devm resource in a driver that does
-not use managed resources as it messes up the release order.
+> -	ts->base = devm_ioremap_resource(dev,
+> -			      platform_get_resource(pdev, IORESOURCE_MEM, 0));
+> +	ts->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(ts->base))
+>  		return PTR_ERR(ts->base);
+>  
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+> Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> 
 
 -- 
 Dmitry
