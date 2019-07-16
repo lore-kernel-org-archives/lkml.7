@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21089C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BC5C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0163021743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D39321743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388189AbfGPQ13 (ORCPT
+        id S2388214AbfGPQ1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:27:29 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61747 "EHLO
+        Tue, 16 Jul 2019 12:27:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61836 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388088AbfGPQ1U (ORCPT
+        with ESMTP id S2387958AbfGPQ1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:27:20 -0400
+        Tue, 16 Jul 2019 12:27:19 -0400
 Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 047488ca11a0ecf9; Tue, 16 Jul 2019 18:27:17 +0200
+ id e17e7cc6a5295d67; Tue, 16 Jul 2019 18:27:16 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
@@ -32,9 +32,9 @@ Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
         "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH 1/8] PCI: irq: Introduce rearm_wake_irq()
-Date:   Tue, 16 Jul 2019 18:10:03 +0200
-Message-ID: <3015522.mud9xMNCOm@kreacher>
+Subject: [PATCH 3/8] ACPI: EC: Return bool from acpi_ec_dispatch_gpe()
+Date:   Tue, 16 Jul 2019 18:12:59 +0200
+Message-ID: <4778086.90p4OrCUAx@kreacher>
 In-Reply-To: <71085220.z6FKkvYQPX@kreacher>
 References: <71085220.z6FKkvYQPX@kreacher>
 MIME-Version: 1.0
@@ -47,69 +47,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Introduce a new function, rearm_wake_irq(), allowing a wakeup IRQ
-to be armed for systen wakeup detection again without running any
-action handlers associated with it after it has been armed for
-wakeup detection and triggered.
+On some systems, if suspend-to-idle is used, the EC may singal system
+wakeup events (power button events, for example) as well as events
+that should not cause the system to resume and acpi_ec_dispatch_gpe()
+needs to be called to determine whether or not the system should
+resume then.  In particular, if acpi_ec_dispatch_gpe() doesn't detect
+any EC events at all, the system should remain suspended, so it is
+useful to know when that is the case.
 
-That is useful for IRQs, like ACPI SCI, that may deliver wakeup
-as well as non-wakeup interrupts when armed for systen wakeup
-detection.  In those cases, it may be possible to determine whether
-or not the delivered interrupt is a systen wakeup one without
-running the entire action handler (or handlers, if the IRQ is
-shared) for the IRQ, and if the interrupt turns out to be a
-non-wakeup one, the IRQ can be rearmed with the help of the
-new function.
+For this reason, make acpi_ec_dispatch_gpe() return a bool value
+indicating whether or not any EC events have been detected by it.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/linux/interrupt.h |    1 +
- kernel/irq/pm.c           |   20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/acpi/ec.c       |   11 ++++++++---
+ drivers/acpi/internal.h |    2 +-
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-Index: linux-pm/kernel/irq/pm.c
+Index: linux-pm/drivers/acpi/ec.c
 ===================================================================
---- linux-pm.orig/kernel/irq/pm.c
-+++ linux-pm/kernel/irq/pm.c
-@@ -177,6 +177,26 @@ static void resume_irqs(bool want_early)
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -1060,10 +1060,15 @@ void acpi_ec_set_gpe_wake_mask(u8 action
+ 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
  }
  
- /**
-+ * rearm_wake_irq - rearm a wakeup interrupt line after signaling wakeup
-+ * @irq: Interrupt to rearm
-+ */
-+void rearm_wake_irq(unsigned int irq)
-+{
-+	unsigned long flags;
-+	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
+-void acpi_ec_dispatch_gpe(void)
++bool acpi_ec_dispatch_gpe(void)
+ {
+-	if (first_ec)
+-		acpi_dispatch_gpe(NULL, first_ec->gpe);
++	u32 ret;
 +
-+	if (!desc || !(desc->istate & IRQS_SUSPENDED) ||
-+	    !irqd_is_wakeup_set(&desc->irq_data))
-+		return;
++	if (!first_ec)
++		return false;
 +
-+	desc->istate &= ~IRQS_SUSPENDED;
-+	irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
-+	__enable_irq(desc);
-+
-+	irq_put_desc_busunlock(desc, flags);
-+}
-+
-+/**
-  * irq_pm_syscore_ops - enable interrupt lines early
-  *
-  * Enable all interrupt lines with %IRQF_EARLY_RESUME set.
-Index: linux-pm/include/linux/interrupt.h
-===================================================================
---- linux-pm.orig/include/linux/interrupt.h
-+++ linux-pm/include/linux/interrupt.h
-@@ -238,6 +238,7 @@ extern void teardown_percpu_nmi(unsigned
- /* The following three functions are for the core kernel use only. */
- extern void suspend_device_irqs(void);
- extern void resume_device_irqs(void);
-+extern void rearm_wake_irq(unsigned int irq);
++	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
++	return ret == ACPI_INTERRUPT_HANDLED;
+ }
  
- /**
-  * struct irq_affinity_notify - context for notification of IRQ affinity changes
+ /* --------------------------------------------------------------------------
+Index: linux-pm/drivers/acpi/internal.h
+===================================================================
+--- linux-pm.orig/drivers/acpi/internal.h
++++ linux-pm/drivers/acpi/internal.h
+@@ -196,7 +196,7 @@ void acpi_ec_block_transactions(void);
+ void acpi_ec_unblock_transactions(void);
+ void acpi_ec_mark_gpe_for_wake(void);
+ void acpi_ec_set_gpe_wake_mask(u8 action);
+-void acpi_ec_dispatch_gpe(void);
++bool acpi_ec_dispatch_gpe(void);
+ int acpi_ec_add_query_handler(struct acpi_ec *ec, u8 query_bit,
+ 			      acpi_handle handle, acpi_ec_query_func func,
+ 			      void *data);
 
 
 
