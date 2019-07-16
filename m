@@ -2,211 +2,172 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03259C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7589C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D5B2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B6020880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGhG0FJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388445AbfGPS06 (ORCPT
+        id S2388458AbfGPS2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:26:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388036AbfGPS05 (ORCPT
+        Tue, 16 Jul 2019 14:28:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37703 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388345AbfGPS2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:26:57 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GILwVX084243
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:26:55 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tsk881q9h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:26:55 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 16 Jul 2019 19:26:54 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Jul 2019 19:26:44 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIQh3r15860536
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 18:26:43 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE3B7B2066;
-        Tue, 16 Jul 2019 18:26:42 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70B34B2068;
-        Tue, 16 Jul 2019 18:26:42 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jul 2019 18:26:42 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7609D16C8EBE; Tue, 16 Jul 2019 11:26:42 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:26:42 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
-Reply-To: paulmck@linux.ibm.com
-References: <20190712170024.111093-1-joel@joelfernandes.org>
- <20190712170024.111093-4-joel@joelfernandes.org>
+        Tue, 16 Jul 2019 14:28:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so9515278pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WeYKS39OFMhl8zrxoxlQCu4IDPAmvCEoho+1+F9/K+M=;
+        b=nGhG0FJAUkp4b4zmPkND0sQYo5k36iIb/6RhVcYjX3bMXU/Xm3jDYlZsTIV1Ihv319
+         ugALQhOVJ5k/hzaqtvezNXhFkqRYRErw94PsyamEk9dd/qpLl1KoTCfcF82EUha893uT
+         u636i4Q3/aJ1/SWOxUQ+tNy7JfXEP6iL5b0uWoltNYMhvzyzes5NRU6Vq0pAtb/il0qi
+         4y3SZdLlg3kLMeLXSUrI/bGHXqh8Wk0zT8IqJoRLXjkTA8EGqbk9h/t+nkucJJiAE1oJ
+         ci4ne5wz/VZj1DIEAEJib17xhkkd9kR0agOhTTzh7vFPlu68bTP/XgkrTvOctBtES3eV
+         h2bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WeYKS39OFMhl8zrxoxlQCu4IDPAmvCEoho+1+F9/K+M=;
+        b=gQ3FRfr0JSeZyYfJLrMcZ6Hao7MKqSdsn1A01lu22n5R3/vLgciEsKMGFC8862dspL
+         d6Vui/+okgcJ/U5OByMW2tWnIXKu3nRK1Upu26dfMDHhvVUWOUyj2gbuVwv4Q3A+ou/A
+         9FlgHOvC4WIqaWa+mriLg5HrqXL0xwE5yBH86XUsNq1r+dvSPhbD2+mmE2m2H0epU3zd
+         zs0PiohZMIDLsGQj5yTQx3yMaZUKm5u27x57Xx0DsSlH0qIGFDdi4kStGmoBUG86xB8R
+         mLyGosJto4ZmlJSCgZtA/mA+zWvUTZc42dQSlgc68+9L/AEZ29s9gMtbc3+vXcYb2xR6
+         iHeA==
+X-Gm-Message-State: APjAAAUjAlgdmtsbRVzU8je9EfjG1+CfRPOH7MPf5zM1pL5qcmSoMP1q
+        Mi2M3CODhnb2/O4VoWhkDmfJ/0NFvZU/Yj5oUYmnZA==
+X-Google-Smtp-Source: APXvYqy+seZIjulCJjRu3TVG3OVAN7RKTOI4pjWv7540ZQ3fMp8SANHVHCLTXuwBIJOzJsZDGtmbnYqwuwo+R0idRfU=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr38791644pjs.73.1563301720040;
+ Tue, 16 Jul 2019 11:28:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712170024.111093-4-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19071618-2213-0000-0000-000003AF9AB3
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011440; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01233103; UDB=6.00649716; IPR=6.01014414;
- MB=3.00027748; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-16 18:26:52
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071618-2214-0000-0000-00005F427600
-Message-Id: <20190716182642.GB22819@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907160225
+References: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
+In-Reply-To: <CAG=yYw=S197+2TzdPaiEaz-9MRuVtd+Q_L9W8GOf4jKwyppNjQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 16 Jul 2019 11:28:29 -0700
+Message-ID: <CAKwvOdmg2b2PMzuzNmutacFArBNagjtwG=_VZvKhb4okzSkdiA@mail.gmail.com>
+Subject: Re: BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+To:     Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        tobin@kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
-> The rcu/sync code was doing its own check whether we are in a reader
-> section. With RCU consolidating flavors and the generic helper added in
-> this series, this is no longer need. We can just use the generic helper
-> and it results in a nice cleanup.
-> 
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Wed, Jul 10, 2019 at 10:44 AM Jeffrin Thalakkottoor
+<jeffrin@rajagiritech.edu.in> wrote:
+>
+> hello all ,
+>
+> i encountered a KASAN bug related .    here are some related information...
+>
+>
+> -------------------x-----------------------------x------------------
+> [   30.037312] BUG: KASAN: global-out-of-bounds in
+> ata_exec_internal_sg+0x50f/0xc70
+> [   30.037447] Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+>
+>
+> [   30.039935] The buggy address belongs to the variable:
+> [   30.040059]  cdb.48319+0x0/0x40
+>
+> [   30.040241] Memory state around the buggy address:
+> [   30.040362]  ffffffff91f41e80: fa fa fa fa 00 00 fa fa fa fa fa fa
+> 00 00 07 fa
+> [   30.040498]  ffffffff91f41f00: fa fa fa fa 00 00 00 00 00 00 00 03
+> fa fa fa fa
+> [   30.040628] >ffffffff91f41f80: 00 04 fa fa fa fa fa fa 00 00 fa fa
+> fa fa fa fa
+> [   30.040755]                       ^
+> [   30.040868]  ffffffff91f42000: 00 00 00 04 fa fa fa fa 00 fa fa fa
+> fa fa fa fa
+> [   30.041003]  ffffffff91f42080: 04 fa fa fa fa fa fa fa 00 04 fa fa
+> fa fa fa fa
+>
+> ---------------------------x--------------------------x----------------
+> $uname -a
+> Linux debian 5.2.0-rc7+ #4 SMP Tue Jul 9 02:54:07 IST 2019 x86_64 GNU/Linux
+> $
+>
+> --------------------x----------------------------x---------------------------
+> (gdb) l *ata_exec_internal_sg+0x50f
+> 0xffffffff81c7b59f is in ata_exec_internal_sg (./include/linux/string.h:359).
 
-This needs to be forward-ported to current mainline.  (Or, I believe
-equivalently for this file, to branch "dev" of -rcu.)
+So looks like ata_exec_internal_sg() is panic'ing when...
 
-Especially given that you have Oleg's Ack, I would be happy to
-take the forward-ported version.
+> 354 if (q_size < size)
+> 355 __read_overflow2();
+> 356 }
+> 357 if (p_size < size || q_size < size)
+> 358 fortify_panic(__func__);
+> 359 return __builtin_memcpy(p, q, size);
+> 360 }
+> 361
+> 362 __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
 
-							Thanx, Paul
+...a call to memmove is made? Without having looked at the source of
+ata_exec_internal_sg(), it's possible that either through inlining, or
+the compiler generating a memmove, that one of the arguments was not
+quite right.  I suggest spending more time isolating where this is
+coming from, if you can reliably reproduce, or CC whoever wrote or
+maintains the code and ask them to take a look.
 
-> ---
-> Please note: Only build and boot tested this particular patch so far.
-> 
->  include/linux/rcu_sync.h |  5 ++---
->  kernel/rcu/sync.c        | 22 ----------------------
->  2 files changed, 2 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
-> index 6fc53a1345b3..c954f1efc919 100644
-> --- a/include/linux/rcu_sync.h
-> +++ b/include/linux/rcu_sync.h
-> @@ -39,9 +39,8 @@ extern void rcu_sync_lockdep_assert(struct rcu_sync *);
->   */
->  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
->  {
-> -#ifdef CONFIG_PROVE_RCU
-> -	rcu_sync_lockdep_assert(rsp);
-> -#endif
-> +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
-> +			 "suspicious rcu_sync_is_idle() usage");
->  	return !rsp->gp_state; /* GP_IDLE */
->  }
->  
-> diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
-> index a8304d90573f..535e02601f56 100644
-> --- a/kernel/rcu/sync.c
-> +++ b/kernel/rcu/sync.c
-> @@ -10,37 +10,25 @@
->  #include <linux/rcu_sync.h>
->  #include <linux/sched.h>
->  
-> -#ifdef CONFIG_PROVE_RCU
-> -#define __INIT_HELD(func)	.held = func,
-> -#else
-> -#define __INIT_HELD(func)
-> -#endif
-> -
->  static const struct {
->  	void (*sync)(void);
->  	void (*call)(struct rcu_head *, void (*)(struct rcu_head *));
->  	void (*wait)(void);
-> -#ifdef CONFIG_PROVE_RCU
-> -	int  (*held)(void);
-> -#endif
->  } gp_ops[] = {
->  	[RCU_SYNC] = {
->  		.sync = synchronize_rcu,
->  		.call = call_rcu,
->  		.wait = rcu_barrier,
-> -		__INIT_HELD(rcu_read_lock_held)
->  	},
->  	[RCU_SCHED_SYNC] = {
->  		.sync = synchronize_rcu,
->  		.call = call_rcu,
->  		.wait = rcu_barrier,
-> -		__INIT_HELD(rcu_read_lock_sched_held)
->  	},
->  	[RCU_BH_SYNC] = {
->  		.sync = synchronize_rcu,
->  		.call = call_rcu,
->  		.wait = rcu_barrier,
-> -		__INIT_HELD(rcu_read_lock_bh_held)
->  	},
->  };
->  
-> @@ -49,16 +37,6 @@ enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
->  
->  #define	rss_lock	gp_wait.lock
->  
-> -#ifdef CONFIG_PROVE_RCU
-> -void rcu_sync_lockdep_assert(struct rcu_sync *rsp)
-> -{
-> -	RCU_LOCKDEP_WARN(!gp_ops[rsp->gp_type].held(),
-> -			 "suspicious rcu_sync_is_idle() usage");
-> -}
-> -
-> -EXPORT_SYMBOL_GPL(rcu_sync_lockdep_assert);
-> -#endif
-> -
->  /**
->   * rcu_sync_init() - Initialize an rcu_sync structure
->   * @rsp: Pointer to rcu_sync structure to be initialized
-> -- 
-> 2.22.0.510.g264f2c817a-goog
-> 
+The cited code looks like a check comparing that the pointer distance
+is greater than the size of bytes being passed in.  I'd wager
+someone's calling memmove with overlapping memory regions when they
+really wanted memcpy.  Maybe a better question, is why was memmove
+ever used; if there was some invariant that the memory regions
+overlapped, why is that invariant no longer holding.
 
+Anyways, sorry I don't have more time to look into this.  Thank you
+for the report.
+
+> 363 {
+> (gdb)
+> --------------------------x--------------------------
+> GNU Make            4.2.1
+> Binutils            2.31.1
+> Util-linux          2.33.1
+> Mount                2.33.1
+> Linux C Library      2.28
+> Dynamic linker (ldd) 2.28
+> Procps              3.3.15
+> Kbd                  2.0.4
+> Console-tools        2.0.4
+> Sh-utils            8.30
+> Udev                241
+> ---------------------x--------------------------------x
+> Thread model: posix
+> gcc version 8.3.0 (Debian 8.3.0-7)
+> ---------------------x--------------------------------x
+>
+> Please ask if more information is needed.
+>
+> --
+> software engineer
+> rajagiri school of engineering and technology
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
