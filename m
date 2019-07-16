@@ -2,78 +2,112 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BAAC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3DCC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADFC21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E7120449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731577AbfGPJdE (ORCPT
+        id S1731964AbfGPJdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:33:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:40185 "EHLO verein.lst.de"
+        Tue, 16 Jul 2019 05:33:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33732 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfGPJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:33:04 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3360468B05; Tue, 16 Jul 2019 11:33:02 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 11:33:01 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, Paul Pawlowski <paul@mrarm.io>
-Subject: Re: [PATCH 2/3] nvme: Retrieve the required IO queue entry size
- from the controller
-Message-ID: <20190716093301.GA32562@lst.de>
-References: <20190716004649.17799-1-benh@kernel.crashing.org> <20190716004649.17799-2-benh@kernel.crashing.org> <20190716060430.GB29414@lst.de> <ad18ff8d004225e102076f8e1fb617916617f337.camel@kernel.crashing.org>
+        id S1726997AbfGPJdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:33:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DAFA081F18;
+        Tue, 16 Jul 2019 09:33:22 +0000 (UTC)
+Received: from [10.36.116.32] (ovpn-116-32.ams2.redhat.com [10.36.116.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCC645C21A;
+        Tue, 16 Jul 2019 09:33:17 +0000 (UTC)
+Subject: Re: [PATCH v4 16/22] iommu/vt-d: Move domain helper to header
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1560087862-57608-17-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <6c983a69-076b-da70-e41e-5f4dd6750cd0@redhat.com>
+Date:   Tue, 16 Jul 2019 11:33:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad18ff8d004225e102076f8e1fb617916617f337.camel@kernel.crashing.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1560087862-57608-17-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 16 Jul 2019 09:33:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 04:21:14PM +1000, Benjamin Herrenschmidt wrote:
-> > Actually, this doesn't work on a "real" nvme controller, to change CC
-> > values the controller needs to be disabled.
+Hi Jacob,
+On 6/9/19 3:44 PM, Jacob Pan wrote:
+> Move domainer helper to header to be used by SVA code.
 > 
-> Not really. The specs says that MPS, AMD and CSS need to be set before
-> enabling, but IOCQES and IOSQES can be modified later as long as there
-> is no IO queue created yet.
-
-I guess that is true based on the spec.
-
-> This is necessary otherwise there's a chicken and egg problem. You need
-> the admin queue to do the controller id in order to get the sizes and
-> for that you need the controller to be enabled.
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 6 ------
+>  include/linux/intel-iommu.h | 6 ++++++
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> Note: This is not a huge issue anyway since I only update the register
-> if the required size isn't 6 which is probably never going to be the
-> case on non-Apple HW.
-
-Yes, but the whole point of making you go down the route is so that
-we can share the code with eventual real nvme controllers that can
-support a larger SQE size.
-
-> >   So back to the version
-> > you circulated to me in private mail that just sets q->sqes and has a
-> > comment that this is magic for The Apple controller.  If/when we get
-> > standardized large SQE support we'll need to discover that earlier or
-> > do a disable/enable dance.  Sorry for misleading you down this road and
-> > creating the extra work.  
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 39b63fe..7cfa0eb 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -427,12 +427,6 @@ static void init_translation_status(struct intel_iommu *iommu)
+>  		iommu->flags |= VTD_FLAG_TRANS_PRE_ENABLED;
+>  }
+>  
+> -/* Convert generic 'struct iommu_domain to private struct dmar_domain */
+> -static struct dmar_domain *to_dmar_domain(struct iommu_domain *dom)
+> -{
+> -	return container_of(dom, struct dmar_domain, domain);
+> -}
+> -
+>  static int __init intel_iommu_setup(char *str)
+>  {
+>  	if (!str)
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 8605c74..b75f17d 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -597,6 +597,12 @@ static inline void __iommu_flush_cache(
+>  		clflush_cache_range(addr, size);
+>  }
+>  
+> +/* Convert generic 'struct iommu_domain to private struct dmar_domain */
+fix the single '?
+> +static inline struct dmar_domain *to_dmar_domain(struct iommu_domain *dom)
+> +{
+> +	return container_of(dom, struct dmar_domain, domain);
+> +}
+> +
+>  /*
+>   * 0: readable
+>   * 1: writable
 > 
-> I think it's still ok, let me know...
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Ok, let's go with this series then unless the other maintainers have
-objections.
+Thanks
 
-I'm still not sure if we want to queue this up for 5.3 (new hardware
-enablement) or wait a bit, though.
+Eric
+
