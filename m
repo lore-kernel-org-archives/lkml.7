@@ -2,131 +2,521 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06247C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6935FC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D489B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563280856;
-	bh=sDCrB67DtJxCMeHqRCCcdHbOVzyaUEWlKyDhDHV5pj8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Yx1yT5dii3m9TX/KMQKNxY75B26UHMtlS1Q6Ktqrw5pIAVYSdEBmVxYqdHJlRA5+3
-	 vjAUqtBOnBPribi3OMTb2ndwMl7nQFDPOkcoI+aF98IdFKT2dD8+lhXB99dPOn00GQ
-	 XiFf04GOvwfgQBI5G9JNvILYXGPqOTRSM8tsAZvA=
+	by mail.kernel.org (Postfix) with ESMTP id 29A9320693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbfGPMkz (ORCPT
+        id S1732362AbfGPMm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:40:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49338 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPMkz (ORCPT
+        Tue, 16 Jul 2019 08:42:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50838 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGPMm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:40:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k7uNjGYc5NGW86U1WwRqV0gayXTomQeitE9Om1/SzOk=; b=u1ZS6tKNBRD5Lu81RQ1RdVPM3
-        G6YKyiYLYqejgDbPnCYdCEltx0Vy2Ft9wL4QrGxzSdU7fxeQNDu42H84Rh6Fz2em46n6Hg3gnYLnf
-        f5mFBK4Y31pL0QEBy0tiHM8MmtgyC9jAnd5DKhfo5o3wPtOr/3VttlPVyskHlYiUpP0/2c/Var7ME
-        FIvfU8YSOKXyyAs9N3LJJbfQCCvWmWx1OrHbWbzz8beeJk0Uqbp9sFdPKo8haejP5vYv6ywojPdrW
-        m+ICy4XmMmWh/jBBOV39BcNGvo0qbXBfx8Kjs8B3zACHU6u7qe2KFeqeFqR5yx+2VCA2RfxUkYkQ8
-        XeAxwPEJA==;
-Received: from [189.27.46.152] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnMlH-0007gL-6Y; Tue, 16 Jul 2019 12:40:51 +0000
-Date:   Tue, 16 Jul 2019 09:40:47 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rdma tree with the v4l-dvb-next
- tree
-Message-ID: <20190716094047.38e0074b@coco.lan>
-In-Reply-To: <20190716122637.GA29741@mellanox.com>
-References: <20190716104614.2ec8b57c@canb.auug.org.au>
-        <20190716122637.GA29741@mellanox.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 16 Jul 2019 08:42:56 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <seth.forshee@canonical.com>)
+        id 1hnMnF-0007OD-7r
+        for linux-kernel@vger.kernel.org; Tue, 16 Jul 2019 12:42:53 +0000
+Received: by mail-io1-f71.google.com with SMTP id u25so23080090iol.23
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 05:42:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vrh6MjttKRJ273Aca+STVEacAIW6FjOkDgvA83mPLDI=;
+        b=swIru4DRl/94BjM92v7nde8nCfW/Sjp6mlDypRfIDflypU2UUZwjPQUjYYyLlafUfk
+         Kk1hfDPVk2xsMlxLhGc0O6MhI4ShtD46UALVDssG4s9Tk5KG1GvRbt5FPEeXbt3YWJft
+         6qzxH6JBVA7mDvlkrczYKiBBe1w51IMrBBt9IwTfJ6ejYjQq70Ki/tgYCFdXPe+5CZjR
+         XzXoOai1+Tj9ouqTTLFjcG20jW/EqrilRcHFYr9k5Nig9tXKuj7w1sNfopFi3xnkMc2K
+         cGjEgChyRYTf7qN44pyA1oGx4bawSLe06VgNatSqJyuG6RpoBQ/Sg8Tv5EQWQkXCdOhz
+         Rtrg==
+X-Gm-Message-State: APjAAAW8al9jV0nh4wgn1g2yRazxRGZgNksf647b+AzLxzjTNwILoMci
+        OOHsnkMjkvcw8dp4KPp8tPFC7fvNCjj9CTUPy2zO898janJRwrm1Wv+pFf+L0razMHokj51dkfK
+        yHPtg/nHPsmHbTSS5b501hausuwtxKSWLf1YTMgQQQQ==
+X-Received: by 2002:a5e:820a:: with SMTP id l10mr6558630iom.283.1563280972047;
+        Tue, 16 Jul 2019 05:42:52 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzM3bNUygmuFtcf+pQmFSSJh7gIG/IszUgyLD3ehTxgtY7gdey5PiLfllf7MPxx8rOSQPE8oA==
+X-Received: by 2002:a5e:820a:: with SMTP id l10mr6558604iom.283.1563280971621;
+        Tue, 16 Jul 2019 05:42:51 -0700 (PDT)
+Received: from localhost ([2605:a601:ac2:fb20:31dd:dc66:96d:f1eb])
+        by smtp.gmail.com with ESMTPSA id k26sm15605399ios.38.2019.07.16.05.42.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 05:42:50 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 07:42:49 -0500
+From:   Seth Forshee <seth.forshee@canonical.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, kbuild-all@01.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [kbuild:kbuild 5/19] drivers/atm/eni.o: warning: objtool:
+ eni_init_one()+0xe42: indirect call found in RETPOLINE build
+Message-ID: <20190716124249.GP5418@ubuntu-xps13>
+References: <201907160706.9xUSQ36X%lkp@intel.com>
+ <CAK7LNATqxQnen2Tzcici8GnJuc-qNeCYcCYisKM2OkNow1FDnQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNATqxQnen2Tzcici8GnJuc-qNeCYcCYisKM2OkNow1FDnQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 16 Jul 2019 12:26:40 +0000
-Jason Gunthorpe <jgg@mellanox.com> escreveu:
-
-> On Tue, Jul 16, 2019 at 10:46:14AM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Today's linux-next merge of the rdma tree got a conflict in:
-> > 
-> >   Documentation/index.rst
-> > 
-> > between commit:
-> > 
-> >   09fdc957ad0d ("docs: leds: add it to the driver-api book")
-> > (and others following)
-> > 
-> > from the v4l-dvb-next tree and commit:
-> > 
-> >   a3a400da206b ("docs: infiniband: add it to the driver-api bookset")
-> > 
-> > from the rdma tree.
-> > 
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.  
+On Tue, Jul 16, 2019 at 03:57:24PM +0900, Masahiro Yamada wrote:
+> (+ Josh Poimboeuf)
 > 
-> I'm surprised this is coming from a v4l tree..
-
-Jon asked me to send a pull request with the pending conversion
-patches. I opted to apply them to my v4l-dvb-next tree, just because
-it was the simplest way of having those at linux-next :-)
-
+> On Tue, Jul 16, 2019 at 8:44 AM kbuild test robot <lkp@intel.com> wrote:
+> >
+> > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git kbuild
+> > head:   0ff0c3753e06c0420c80dac1b0187a442b372acb
+> > commit: 2eaf4e87ba258cc3f27e486cdf32d5ba76303c6f [5/19] kbuild: add -fcf-protection=none to retpoline flags
+> > config: x86_64-randconfig-s2-07160214 (attached as .config)
+> > compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
+> > reproduce:
+> >         git checkout 2eaf4e87ba258cc3f27e486cdf32d5ba76303c6f
+> >         # save the attached .config to linux build tree
+> >         make ARCH=x86_64
 > 
-> > diff --cc Documentation/index.rst
-> > index f379e43fcda0,869616b57aa8..000000000000
-> > --- a/Documentation/index.rst
-> > +++ b/Documentation/index.rst
-> > @@@ -96,23 -90,9 +96,24 @@@ needed)
-> >   
-> >      driver-api/index
-> >      core-api/index
-> >  +   locking/index
-> >  +   accounting/index
-> >  +   block/index
-> >  +   cdrom/index
-> >  +   ide/index
-> >  +   fb/index
-> >  +   fpga/index
-> >  +   hid/index
-> >  +   iio/index
-> >  +   leds/index
-> > +    infiniband/index  
+> 0-day bot reports objtool warnings with the following applied:
+> https://patchwork.kernel.org/patch/11037379/
 > 
-> This should be kept sorted, Mauro rdma is already merged you'll need
-> to tell Linus about this trivial conflict when you send your patches.
+> I have no idea about objtool.
+> 
+> Is it better to drop this patch for now?
 
-Yeah, I placed a comment about that at the pull request I sent
-earlier today.
+I'm surprised that the change would have any impact on a build with
+gcc-4.9, since -fcf-protection seems to have been introduced in gcc-8. I
+guess there's no full build log that would let us see the actual flags
+passed to the compiler.
 
-In any case, this is a simple conflict. It should be trivial for
-Linus to address it.
+I'll try to reproduce this result. If you think the patch should be
+dropped in the meantime, that's fine.
 
 Thanks,
-Mauro
+Seth
+
+> 
+> Thanks.
+> 
+> 
+> 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> >
+> > All warnings (new ones prefixed by >>):
+> >
+> >    drivers/atm/eni.o: warning: objtool: eni_do_release()+0x1a: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: do_tx()+0x1be: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_send()+0x15b: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_send()+0x1b4: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_send()+0x24d: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_int()+0xd1: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: poll_rx.isra.16()+0x99: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: poll_rx.isra.16()+0xf7: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: poll_rx.isra.16()+0x20c: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: poll_rx.isra.16()+0x266: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_ioctl()+0x54: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_tasklet()+0x3f7: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_tasklet()+0x420: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_tasklet()+0x62f: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: eni_tasklet()+0x673: indirect call found in RETPOLINE build
+> > >> drivers/atm/eni.o: warning: objtool: eni_init_one()+0xe42: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: do_rx_dma.constprop.28()+0xaf: indirect call found in RETPOLINE build
+> >    drivers/atm/eni.o: warning: objtool: do_rx_dma.constprop.28()+0x49c: indirect call found in RETPOLINE build
+> > --
+> >    net//batman-adv/sysfs.o: warning: objtool: batadv_show_gw_sel_class()+0x6c: indirect call found in RETPOLINE build
+> > >> net//batman-adv/sysfs.o: warning: objtool: __batadv_store_uint_attr.isra.9.constprop.10()+0xb7: indirect call found in RETPOLINE build
+> >    net//batman-adv/sysfs.o: warning: objtool: batadv_store_gw_sel_class()+0x8b: indirect call found in RETPOLINE build
+> > --
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpower()+0xd7: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpower()+0x257: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpower()+0x2f4: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwretry()+0xfb: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwretry()+0x219: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwretry()+0x2b1: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwfrag()+0xce: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwfrag()+0x1f6: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwfrag()+0x2c8: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwrts()+0xc8: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwrts()+0x1f0: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwrts()+0x2c2: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x177: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x288: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x3ce: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x4a5: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x53d: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x5d5: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x748: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x7b5: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwpmksa()+0x824: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwrate()+0x1e4: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwrate()+0x2eb: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwrate()+0x413: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wireless_stats()+0x12d: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wireless_stats()+0x2bb: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wireless_stats()+0x36f: indirect call found in RETPOLINE build
+> > >> net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x254: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x4a4: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x5cb: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x67e: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x82f: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x9f8: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0xac3: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0xc2c: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0xe93: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0xfea: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x106e: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_set_encryption()+0x119a: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwencode()+0x237: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwencode()+0x398: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwencode()+0x43c: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwtxpower()+0xcd: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwtxpower()+0x1f2: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwtxpower()+0x309: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwtxpower()+0x113: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwtxpower()+0x268: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwtxpower()+0x34a: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwrate()+0x145: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwrate()+0x262: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwrate()+0x341: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwfreq()+0xd2: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwfreq()+0x242: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_giwfreq()+0x343: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwap()+0x134: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwap()+0x258: indirect call found in RETPOLINE build
+> >    net//wireless/wext-compat.o: warning: objtool: cfg80211_wext_siwap()+0x2f1: indirect call found in RETPOLINE build
+> > --
+> >     ^
+> >    include/linux/mm.h:2098:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pagecache_init(void);
+> >     ^
+> >    include/linux/mm.h:2101:3: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >       unsigned long zone_start_pfn, unsigned long *zholes_size);
+> >       ^
+> >    include/linux/mm.h:2240:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init mmap_init(void);
+> >     ^
+> >    In file included from include/linux/scatterlist.h:8:0,
+> >                     from include/linux/dma-mapping.h:11,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/linux/etherdevice.h:20,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/mm.h:2892:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     void __init setup_nr_node_ids(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/swiotlb.h:5:0,
+> >                     from arch/x86/include/asm/dma-mapping.h:13,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/linux/etherdevice.h:20,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/swiotlb.h:37:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init swiotlb_update_mem_attributes(void);
+> >     ^
+> >    include/linux/swiotlb.h:74:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     void __init swiotlb_exit(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/dma-mapping.h:13:0,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/linux/etherdevice.h:20,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    arch/x86/include/asm/swiotlb.h:9:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern int __init pci_swiotlb_detect_override(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:10:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern int __init pci_swiotlb_detect_4gb(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:11:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pci_swiotlb_init(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:12:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pci_swiotlb_late_init(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/dma-mapping.h:14:0,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/linux/etherdevice.h:20,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/dma-contiguous.h:84:12: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >                bool fixed);
+> >                ^
+> >    In file included from include/linux/skbuff.h:30:0,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/linux/etherdevice.h:20,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/dma-mapping.h:627:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init dma_atomic_pool_init(gfp_t gfp, pgprot_t prot);
+> >     ^
+> >    In file included from include/linux/seq_file.h:12:0,
+> >                     from include/linux/seq_file_net.h:5,
+> >                     from include/net/net_namespace.h:178,
+> >                     from include/linux/netdevice.h:38,
+> >                     from include/linux/etherdevice.h:21,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/cred.h:168:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init cred_init(void);
+> >     ^
+> >    In file included from include/net/net_namespace.h:192:0,
+> >                     from include/linux/netdevice.h:38,
+> >                     from include/linux/etherdevice.h:21,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/nsproxy.h:74:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init nsproxy_cache_init(void);
+> >     ^
+> >    In file included from include/linux/interrupt.h:19:0,
+> >                     from include/linux/kernel_stat.h:9,
+> >                     from include/linux/cgroup.h:26,
+> >                     from include/net/netprio_cgroup.h:11,
+> >                     from include/linux/netdevice.h:42,
+> >                     from include/linux/etherdevice.h:21,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    arch/x86/include/asm/irq.h:43:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init init_IRQ(void);
+> >     ^
+> >    In file included from include/linux/etherdevice.h:21:0,
+> >                     from drivers/net/usb/ax88179_178a.c:9:
+> >    include/linux/netdevice.h:300:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init netdev_boot_setup(char *str);
+> >     ^
+> >    include/linux/netdevice.h:4396:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init dev_proc_init(void);
+> >     ^
+> > >> drivers/net/usb/ax88179_178a.c:1780:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     module_usb_driver(ax88179_178a_driver);
+> >     ^
+> > --
+> >       ^
+> >    include/linux/mm.h:2240:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init mmap_init(void);
+> >     ^
+> >    In file included from include/linux/scatterlist.h:8:0,
+> >                     from include/linux/dma-mapping.h:11,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    include/linux/mm.h:2892:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     void __init setup_nr_node_ids(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/swiotlb.h:5:0,
+> >                     from arch/x86/include/asm/dma-mapping.h:13,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    include/linux/swiotlb.h:37:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init swiotlb_update_mem_attributes(void);
+> >     ^
+> >    include/linux/swiotlb.h:74:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     void __init swiotlb_exit(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/dma-mapping.h:13:0,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    arch/x86/include/asm/swiotlb.h:9:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern int __init pci_swiotlb_detect_override(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:10:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern int __init pci_swiotlb_detect_4gb(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:11:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pci_swiotlb_init(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:12:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pci_swiotlb_late_init(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/dma-mapping.h:14:0,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    include/linux/dma-contiguous.h:84:12: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >                bool fixed);
+> >                ^
+> >    In file included from include/linux/skbuff.h:30:0,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    include/linux/dma-mapping.h:627:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init dma_atomic_pool_init(gfp_t gfp, pgprot_t prot);
+> >     ^
+> >    In file included from include/linux/seq_file.h:12:0,
+> >                     from include/linux/seq_file_net.h:5,
+> >                     from include/net/net_namespace.h:178,
+> >                     from include/linux/netdevice.h:38,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    include/linux/cred.h:168:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init cred_init(void);
+> >     ^
+> >    In file included from include/net/net_namespace.h:192:0,
+> >                     from include/linux/netdevice.h:38,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    include/linux/nsproxy.h:74:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init nsproxy_cache_init(void);
+> >     ^
+> >    In file included from include/linux/interrupt.h:19:0,
+> >                     from include/linux/kernel_stat.h:9,
+> >                     from include/linux/cgroup.h:26,
+> >                     from include/net/netprio_cgroup.h:11,
+> >                     from include/linux/netdevice.h:42,
+> >                     from drivers/net/usb/cdc_ether.c:12:
+> >    arch/x86/include/asm/irq.h:43:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init init_IRQ(void);
+> >     ^
+> >    In file included from drivers/net/usb/cdc_ether.c:12:0:
+> >    include/linux/netdevice.h:300:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init netdev_boot_setup(char *str);
+> >     ^
+> >    include/linux/netdevice.h:4396:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init dev_proc_init(void);
+> >     ^
+> > >> drivers/net/usb/cdc_ether.c:967:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     module_usb_driver(cdc_driver);
+> >     ^
+> > --
+> >       ^
+> >    include/linux/mm.h:2240:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init mmap_init(void);
+> >     ^
+> >    In file included from include/linux/scatterlist.h:8:0,
+> >                     from include/linux/dma-mapping.h:11,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    include/linux/mm.h:2892:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     void __init setup_nr_node_ids(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/swiotlb.h:5:0,
+> >                     from arch/x86/include/asm/dma-mapping.h:13,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    include/linux/swiotlb.h:37:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init swiotlb_update_mem_attributes(void);
+> >     ^
+> >    include/linux/swiotlb.h:74:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     void __init swiotlb_exit(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/dma-mapping.h:13:0,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    arch/x86/include/asm/swiotlb.h:9:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern int __init pci_swiotlb_detect_override(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:10:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern int __init pci_swiotlb_detect_4gb(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:11:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pci_swiotlb_init(void);
+> >     ^
+> >    arch/x86/include/asm/swiotlb.h:12:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init pci_swiotlb_late_init(void);
+> >     ^
+> >    In file included from arch/x86/include/asm/dma-mapping.h:14:0,
+> >                     from include/linux/dma-mapping.h:266,
+> >                     from include/linux/skbuff.h:30,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    include/linux/dma-contiguous.h:84:12: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >                bool fixed);
+> >                ^
+> >    In file included from include/linux/skbuff.h:30:0,
+> >                     from include/linux/if_ether.h:19,
+> >                     from include/uapi/linux/ethtool.h:19,
+> >                     from include/linux/ethtool.h:18,
+> >                     from include/linux/netdevice.h:37,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    include/linux/dma-mapping.h:627:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init dma_atomic_pool_init(gfp_t gfp, pgprot_t prot);
+> >     ^
+> >    In file included from include/linux/seq_file.h:12:0,
+> >                     from include/linux/seq_file_net.h:5,
+> >                     from include/net/net_namespace.h:178,
+> >                     from include/linux/netdevice.h:38,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    include/linux/cred.h:168:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init cred_init(void);
+> >     ^
+> >    In file included from include/net/net_namespace.h:192:0,
+> >                     from include/linux/netdevice.h:38,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    include/linux/nsproxy.h:74:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init nsproxy_cache_init(void);
+> >     ^
+> >    In file included from include/linux/interrupt.h:19:0,
+> >                     from include/linux/kernel_stat.h:9,
+> >                     from include/linux/cgroup.h:26,
+> >                     from include/net/netprio_cgroup.h:11,
+> >                     from include/linux/netdevice.h:42,
+> >                     from drivers/net/usb/smsc75xx.c:10:
+> >    arch/x86/include/asm/irq.h:43:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     extern void __init init_IRQ(void);
+> >     ^
+> >    In file included from drivers/net/usb/smsc75xx.c:10:0:
+> >    include/linux/netdevice.h:300:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init netdev_boot_setup(char *str);
+> >     ^
+> >    include/linux/netdevice.h:4396:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     int __init dev_proc_init(void);
+> >     ^
+> > >> drivers/net/usb/smsc75xx.c:2338:1: warning: '__indirect_branch__' attribute directive ignored [-Wattributes]
+> >     module_usb_driver(smsc75xx_driver);
+> >     ^
+> > ..
+> >
+> > ---
+> > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+> 
+> 
+> --
+> Best Regards
+> 
+> Masahiro Yamada
