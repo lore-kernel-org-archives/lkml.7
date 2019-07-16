@@ -2,308 +2,237 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C86AC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB6C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287F720880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cyDgYafj"
+	by mail.kernel.org (Postfix) with ESMTP id 684FB20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733135AbfGPJzU (ORCPT
+        id S2387456AbfGPJzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:55:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44052 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733061AbfGPJzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:55:18 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so8843261pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FCHE6jmJHvvf4ZOfPHyOAwxkEw7udl1CJtgxI9QEJbs=;
-        b=cyDgYafjtQ9BTLfXLwRoWNuVpBgLISxcZazGQYNrTGFUzlsgpGS5yhv/yPp7LXUPYv
-         rTOA5TTk/wdufu1YAISq/IoarJgOmanKbMeIuXOb6AjUvC7b3XjEsefLkgEB6vYpgSBh
-         Uu1DYcNJYyWfjkGOTv6dSXqxGYj1jiAZZcX8LjVTTE4lMxEIiwbg6XgvEKKQvNp1QOXC
-         LejdLEMEqdrQagKYWyxCAieW4SOivR/2TQAZ1tPzejXzJErkSV4RZwPzgP+v7bJRKhs7
-         tHYeH++bwkEyZWAYE1Og5vEGwfutWGp6OlbowV/sjNT0rd123qx6chxSx/PznWhvxZDQ
-         IAyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FCHE6jmJHvvf4ZOfPHyOAwxkEw7udl1CJtgxI9QEJbs=;
-        b=tQG78ILQx5x5vISw/3tGDZvAt9m/KGzVBlzhSYtFoPPYlQgFy5/3/mGE7yc8x35tsc
-         ebrC46K/cYP//342SHPp9Ay0fT2ysaae04ZA5NiN5f6Is188YLFT2uRcU2EHvNTx5ZAR
-         76fhBt/u1eSMBfsZbBmNbJ9e+7dniU15BHFGUxL/pFNUaeht112gLuLCxJ37vme/RbeZ
-         LIhGWo3SjgF4NNgPiAnVZxB36e7E+pskjEGTscLDbiN1v5U/decycdnQqZGSrnDyDbT6
-         EvTryfwHJzt96tyXYfR04AHH02uy/LED9yKlePdVO8C3WK7ih4QQDt6fYdawwmYdEE20
-         PZ0g==
-X-Gm-Message-State: APjAAAWDZ38wIEKZPN4m6jHXJqgFggDRCu16jeS/F3Km8vjaC+KkZMGM
-        qNFW99MsX0K5ndA9RbMkzH4bCQ==
-X-Google-Smtp-Source: APXvYqwMBob2VfmnrLN5v4d5N+jfwUfKIWSHNvnYNp2pCMrmR3RooE8VYXZ1G5UeTyBjp6+lja6m2w==
-X-Received: by 2002:a17:90a:a410:: with SMTP id y16mr35296476pjp.62.1563270917408;
-        Tue, 16 Jul 2019 02:55:17 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id bg3sm19071910pjb.9.2019.07.16.02.55.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 02:55:16 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 07/10] cpufreq: powerpc_cbe: Switch to QoS requests instead of cpufreq notifier
-Date:   Tue, 16 Jul 2019 15:24:51 +0530
-Message-Id: <889777691cd3de894c37f5113e4ec1cc73473a0f.1563270828.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-In-Reply-To: <cover.1563270828.git.viresh.kumar@linaro.org>
-References: <cover.1563270828.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 16 Jul 2019 05:55:51 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:50148 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728285AbfGPJzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:55:51 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0847820004B;
+        Tue, 16 Jul 2019 11:55:48 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 69425200008;
+        Tue, 16 Jul 2019 11:55:43 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C00E040293;
+        Tue, 16 Jul 2019 17:55:37 +0800 (SGT)
+From:   shengjiu.wang@nxp.com
+To:     brian.austin@cirrus.com, Paul.Handrigan@cirrus.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: cs42xx8: Fix MFREQ selection issue for async mode
+Date:   Tue, 16 Jul 2019 17:45:47 +0800
+Message-Id: <20190716094547.46787-1-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpufreq core now takes the min/max frequency constraints via QoS
-requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Switch over to using the QoS request for maximum frequency constraint
-for ppc_cbe_cpufreq driver.
+When sample rate of TX is different with sample rate of RX in
+async mode, the MFreq selection will be wrong.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+For example, sysclk = 24.576MHz, TX rate = 96000Hz, RX rate = 48000Hz.
+Then ratio of TX = 256, ratio of RX = 512, For MFreq is shared by TX
+and RX instance, the correct value of MFreq is 2 for both TX and RX.
+
+But original method will cause MFreq = 0 for TX, MFreq = 2 for RX.
+If TX is started after RX, RX will be impacted, RX work abnormal with
+MFreq = 0.
+
+This patch is to select proper MFreq value according to TX rate and
+RX rate.
+
+Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver support for CS42448/CS42888")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
- drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
- drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
- 3 files changed, 86 insertions(+), 37 deletions(-)
+ sound/soc/codecs/cs42xx8.c | 116 +++++++++++++++++++++++++++++++------
+ 1 file changed, 97 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
-index b83f36febf03..c58abb4cca3a 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq.c
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
-@@ -110,6 +110,13 @@ static int cbe_cpufreq_cpu_init(struct cpufreq_policy *policy)
- #endif
+diff --git a/sound/soc/codecs/cs42xx8.c b/sound/soc/codecs/cs42xx8.c
+index b377cddaf2e6..804969495754 100644
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -47,6 +47,7 @@ struct cs42xx8_priv {
+ 	unsigned long sysclk;
+ 	u32 tx_channels;
+ 	struct gpio_desc *gpiod_reset;
++	u32 rate[2];
+ };
  
- 	policy->freq_table = cbe_freqs;
-+	cbe_cpufreq_pmi_policy_init(policy);
+ /* -127.5dB to 0dB with step of 0.5dB */
+@@ -176,21 +177,27 @@ static const struct snd_soc_dapm_route cs42xx8_adc3_dapm_routes[] = {
+ };
+ 
+ struct cs42xx8_ratios {
+-	unsigned int ratio;
+-	unsigned char speed;
+-	unsigned char mclk;
++	unsigned int mfreq;
++	unsigned int min_mclk;
++	unsigned int max_mclk;
++	unsigned int ratio[3];
+ };
+ 
++/*
++ * According to reference mannual, define the cs42xx8_ratio struct
++ * MFreq2 | MFreq1 | MFreq0 |     Description     | SSM | DSM | QSM |
++ * 0      | 0      | 0      |1.029MHz to 12.8MHz  | 256 | 128 |  64 |
++ * 0      | 0      | 1      |1.536MHz to 19.2MHz  | 384 | 192 |  96 |
++ * 0      | 1      | 0      |2.048MHz to 25.6MHz  | 512 | 256 | 128 |
++ * 0      | 1      | 1      |3.072MHz to 38.4MHz  | 768 | 384 | 192 |
++ * 1      | x      | x      |4.096MHz to 51.2MHz  |1024 | 512 | 256 |
++ */
+ static const struct cs42xx8_ratios cs42xx8_ratios[] = {
+-	{ 64, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_256(4) },
+-	{ 96, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_384(4) },
+-	{ 128, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_512(4) },
+-	{ 192, CS42XX8_FM_QUAD, CS42XX8_FUNCMOD_MFREQ_768(4) },
+-	{ 256, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_256(1) },
+-	{ 384, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_384(1) },
+-	{ 512, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_512(1) },
+-	{ 768, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_768(1) },
+-	{ 1024, CS42XX8_FM_SINGLE, CS42XX8_FUNCMOD_MFREQ_1024(1) }
++	{ 0, 1029000, 12800000, {256, 128, 64} },
++	{ 2, 1536000, 19200000, {384, 192, 96} },
++	{ 4, 2048000, 25600000, {512, 256, 128} },
++	{ 6, 3072000, 38400000, {768, 384, 192} },
++	{ 8, 4096000, 51200000, {1024, 512, 256} },
+ };
+ 
+ static int cs42xx8_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+@@ -257,14 +264,68 @@ static int cs42xx8_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct cs42xx8_priv *cs42xx8 = snd_soc_component_get_drvdata(component);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+-	u32 ratio = cs42xx8->sysclk / params_rate(params);
+-	u32 i, fm, val, mask;
++	u32 ratio[2];
++	u32 rate[2];
++	u32 fm[2];
++	u32 i, val, mask;
++	bool condition1, condition2;
+ 
+ 	if (tx)
+ 		cs42xx8->tx_channels = params_channels(params);
+ 
++	rate[tx]  = params_rate(params);
++	rate[!tx] = cs42xx8->rate[!tx];
++
++	ratio[tx] = rate[tx] > 0 ? cs42xx8->sysclk / rate[tx] : 0;
++	ratio[!tx] = rate[!tx] > 0 ? cs42xx8->sysclk / rate[!tx] : 0;
++
++	/* Get functional mode for tx and rx according to rate */
++	for (i = 0; i < 2; i++) {
++		if (cs42xx8->slave_mode) {
++			fm[i] = CS42XX8_FM_AUTO;
++		} else {
++			if (rate[i] < 50000) {
++				fm[i] = CS42XX8_FM_SINGLE;
++			} else if (rate[i] > 50000 && rate[i] < 100000) {
++				fm[i] = CS42XX8_FM_DOUBLE;
++			} else if (rate[i] > 100000 && rate[i] < 200000) {
++				fm[i] = CS42XX8_FM_QUAD;
++			} else {
++				dev_err(component->dev,
++					"unsupported sample rate\n");
++				return -EINVAL;
++			}
++		}
++	}
++
+ 	for (i = 0; i < ARRAY_SIZE(cs42xx8_ratios); i++) {
+-		if (cs42xx8_ratios[i].ratio == ratio)
++		/* Is the ratio[tx] valid ? */
++		condition1 = ((fm[tx] == CS42XX8_FM_AUTO) ?
++			(cs42xx8_ratios[i].ratio[0] == ratio[tx] ||
++			cs42xx8_ratios[i].ratio[1] == ratio[tx] ||
++			cs42xx8_ratios[i].ratio[2] == ratio[tx]) :
++			(cs42xx8_ratios[i].ratio[fm[tx]] == ratio[tx])) &&
++			cs42xx8->sysclk >= cs42xx8_ratios[i].min_mclk &&
++			cs42xx8->sysclk <= cs42xx8_ratios[i].max_mclk;
++
++		if (!ratio[tx])
++			condition1 = true;
++
++		/* Is the ratio[!tx] valid ? */
++		condition2 = ((fm[!tx] == CS42XX8_FM_AUTO) ?
++			(cs42xx8_ratios[i].ratio[0] == ratio[!tx] ||
++			cs42xx8_ratios[i].ratio[1] == ratio[!tx] ||
++			cs42xx8_ratios[i].ratio[2] == ratio[!tx]) :
++			(cs42xx8_ratios[i].ratio[fm[!tx]] == ratio[!tx]));
++
++		if (!ratio[!tx])
++			condition2 = true;
++
++		/*
++		 * Both ratio[tx] and ratio[!tx] is valid, then we get
++		 * a proper MFreq.
++		 */
++		if (condition1 && condition2)
+ 			break;
+ 	}
+ 
+@@ -273,15 +334,31 @@ static int cs42xx8_hw_params(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 
+-	mask = CS42XX8_FUNCMOD_MFREQ_MASK;
+-	val = cs42xx8_ratios[i].mclk;
++	cs42xx8->rate[tx] = params_rate(params);
+ 
+-	fm = cs42xx8->slave_mode ? CS42XX8_FM_AUTO : cs42xx8_ratios[i].speed;
++	mask = CS42XX8_FUNCMOD_MFREQ_MASK;
++	val = cs42xx8_ratios[i].mfreq;
+ 
+ 	regmap_update_bits(cs42xx8->regmap, CS42XX8_FUNCMOD,
+ 			   CS42XX8_FUNCMOD_xC_FM_MASK(tx) | mask,
+-			   CS42XX8_FUNCMOD_xC_FM(tx, fm) | val);
++			   CS42XX8_FUNCMOD_xC_FM(tx, fm[tx]) | val);
++
 +	return 0;
 +}
 +
-+static int cbe_cpufreq_cpu_exit(struct cpufreq_policy *policy)
++static int cs42xx8_hw_free(struct snd_pcm_substream *substream,
++			   struct snd_soc_dai *dai)
 +{
-+	cbe_cpufreq_pmi_policy_exit(policy);
++	struct snd_soc_component *component = dai->component;
++	struct cs42xx8_priv *cs42xx8 = snd_soc_component_get_drvdata(component);
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 
++	/* Clear stored rate */
++	cs42xx8->rate[tx] = 0;
++
++	regmap_update_bits(cs42xx8->regmap, CS42XX8_FUNCMOD,
++			   CS42XX8_FUNCMOD_xC_FM_MASK(tx),
++			   CS42XX8_FUNCMOD_xC_FM(tx, CS42XX8_FM_AUTO));
  	return 0;
  }
  
-@@ -129,6 +136,7 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
- 	.verify		= cpufreq_generic_frequency_table_verify,
- 	.target_index	= cbe_cpufreq_target,
- 	.init		= cbe_cpufreq_cpu_init,
-+	.exit		= cbe_cpufreq_cpu_exit,
- 	.name		= "cbe-cpufreq",
- 	.flags		= CPUFREQ_CONST_LOOPS,
- };
-@@ -139,15 +147,24 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
- 
- static int __init cbe_cpufreq_init(void)
- {
-+	int ret;
-+
- 	if (!machine_is(cell))
- 		return -ENODEV;
- 
--	return cpufreq_register_driver(&cbe_cpufreq_driver);
-+	cbe_cpufreq_pmi_init();
-+
-+	ret = cpufreq_register_driver(&cbe_cpufreq_driver);
-+	if (ret)
-+		cbe_cpufreq_pmi_exit();
-+
-+	return ret;
- }
- 
- static void __exit cbe_cpufreq_exit(void)
- {
- 	cpufreq_unregister_driver(&cbe_cpufreq_driver);
-+	cbe_cpufreq_pmi_exit();
- }
- 
- module_init(cbe_cpufreq_init);
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.h b/drivers/cpufreq/ppc_cbe_cpufreq.h
-index 9d973519d669..00cd8633b0d9 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq.h
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq.h
-@@ -20,6 +20,14 @@ int cbe_cpufreq_set_pmode_pmi(int cpu, unsigned int pmode);
- 
- #if IS_ENABLED(CONFIG_CPU_FREQ_CBE_PMI)
- extern bool cbe_cpufreq_has_pmi;
-+void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy);
-+void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy);
-+void cbe_cpufreq_pmi_init(void);
-+void cbe_cpufreq_pmi_exit(void);
- #else
- #define cbe_cpufreq_has_pmi (0)
-+static inline void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy) {}
-+static inline void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy) {}
-+static inline void cbe_cpufreq_pmi_init(void) {}
-+static inline void cbe_cpufreq_pmi_exit(void) {}
- #endif
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-index 97c8ee4614b7..0babb27c1c72 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-@@ -12,6 +12,7 @@
- #include <linux/timer.h>
- #include <linux/init.h>
- #include <linux/of_platform.h>
-+#include <linux/pm_qos.h>
- 
- #include <asm/processor.h>
- #include <asm/prom.h>
-@@ -24,8 +25,6 @@
- 
- #include "ppc_cbe_cpufreq.h"
- 
--static u8 pmi_slow_mode_limit[MAX_CBE];
--
- bool cbe_cpufreq_has_pmi = false;
- EXPORT_SYMBOL_GPL(cbe_cpufreq_has_pmi);
- 
-@@ -65,64 +64,89 @@ EXPORT_SYMBOL_GPL(cbe_cpufreq_set_pmode_pmi);
- 
- static void cbe_cpufreq_handle_pmi(pmi_message_t pmi_msg)
- {
-+	struct cpufreq_policy *policy;
-+	struct dev_pm_qos_request *req;
- 	u8 node, slow_mode;
-+	int cpu, ret;
- 
- 	BUG_ON(pmi_msg.type != PMI_TYPE_FREQ_CHANGE);
- 
- 	node = pmi_msg.data1;
- 	slow_mode = pmi_msg.data2;
- 
--	pmi_slow_mode_limit[node] = slow_mode;
-+	cpu = cbe_node_to_cpu(node);
- 
- 	pr_debug("cbe_handle_pmi: node: %d max_freq: %d\n", node, slow_mode);
--}
--
--static int pmi_notifier(struct notifier_block *nb,
--				       unsigned long event, void *data)
--{
--	struct cpufreq_policy *policy = data;
--	struct cpufreq_frequency_table *cbe_freqs = policy->freq_table;
--	u8 node;
--
--	/* Should this really be called for CPUFREQ_ADJUST and CPUFREQ_NOTIFY
--	 * policy events?)
--	 */
--	node = cbe_cpu_to_node(policy->cpu);
--
--	pr_debug("got notified, event=%lu, node=%u\n", event, node);
- 
--	if (pmi_slow_mode_limit[node] != 0) {
--		pr_debug("limiting node %d to slow mode %d\n",
--			 node, pmi_slow_mode_limit[node]);
-+	policy = cpufreq_cpu_get(cpu);
-+	if (!policy) {
-+		pr_warn("cpufreq policy not found cpu%d\n", cpu);
-+		return;
-+	}
- 
--		cpufreq_verify_within_limits(policy, 0,
-+	req = policy->driver_data;
- 
--			cbe_freqs[pmi_slow_mode_limit[node]].frequency);
--	}
-+	ret = dev_pm_qos_update_request(req,
-+			policy->freq_table[slow_mode].frequency);
-+	if (ret)
-+		pr_warn("Failed to update freq constraint: %d\n", ret);
-+	else
-+		pr_debug("limiting node %d to slow mode %d\n", node, slow_mode);
- 
--	return 0;
-+	cpufreq_cpu_put(policy);
- }
- 
--static struct notifier_block pmi_notifier_block = {
--	.notifier_call = pmi_notifier,
--};
--
- static struct pmi_handler cbe_pmi_handler = {
- 	.type			= PMI_TYPE_FREQ_CHANGE,
- 	.handle_pmi_message	= cbe_cpufreq_handle_pmi,
+@@ -302,6 +379,7 @@ static const struct snd_soc_dai_ops cs42xx8_dai_ops = {
+ 	.set_fmt	= cs42xx8_set_dai_fmt,
+ 	.set_sysclk	= cs42xx8_set_dai_sysclk,
+ 	.hw_params	= cs42xx8_hw_params,
++	.hw_free	= cs42xx8_hw_free,
+ 	.digital_mute	= cs42xx8_digital_mute,
  };
  
-+void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy)
-+{
-+	struct dev_pm_qos_request *req;
-+	int ret;
-+
-+	if (!cbe_cpufreq_has_pmi)
-+		return;
-+
-+	req = kzalloc(sizeof(*req), GFP_KERNEL);
-+	if (!req)
-+		return;
-+
-+	ret = dev_pm_qos_add_request(get_cpu_device(policy->cpu), req,
-+				     DEV_PM_QOS_MAX_FREQUENCY,
-+				     policy->freq_table[0].frequency);
-+	if (ret < 0) {
-+		pr_err("Failed to add freq constraint (%d)\n", ret);
-+		kfree(req);
-+		return;
-+	}
- 
-+	policy->driver_data = req;
-+}
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_init);
- 
--static int __init cbe_cpufreq_pmi_init(void)
-+void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy)
- {
--	cbe_cpufreq_has_pmi = pmi_register_handler(&cbe_pmi_handler) == 0;
-+	struct dev_pm_qos_request *req = policy->driver_data;
- 
--	if (!cbe_cpufreq_has_pmi)
--		return -ENODEV;
-+	if (cbe_cpufreq_has_pmi) {
-+		dev_pm_qos_remove_request(req);
-+		kfree(req);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_exit);
- 
--	cpufreq_register_notifier(&pmi_notifier_block, CPUFREQ_POLICY_NOTIFIER);
-+void cbe_cpufreq_pmi_init(void)
-+{
-+	if (!pmi_register_handler(&cbe_pmi_handler))
-+		cbe_cpufreq_has_pmi = true;
-+}
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_init);
- 
--	return 0;
-+void cbe_cpufreq_pmi_exit(void)
-+{
-+	pmi_unregister_handler(&cbe_pmi_handler);
-+	cbe_cpufreq_has_pmi = false;
- }
--device_initcall(cbe_cpufreq_pmi_init);
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_exit);
 -- 
-2.21.0.rc0.269.g1a574e7a288b
+2.21.0
 
