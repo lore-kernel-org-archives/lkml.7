@@ -2,200 +2,164 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B4BC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD82C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C10A20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B335F21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZCLmPdS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbfGPIct (ORCPT
+        id S1730972AbfGPIgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:32:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:59394 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfGPIct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:32:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 165122B;
-        Tue, 16 Jul 2019 01:32:48 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A3F83F59C;
-        Tue, 16 Jul 2019 01:32:45 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/3] Support CPU hotplug for ARM64
-To:     Jia He <jiakernel2@gmail.com>,
-        Maran Wilson <maran.wilson@oracle.com>,
-        James Morse <james.morse@arm.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     jonathan.cameron@huawei.com, john.garry@huawei.com,
-        rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, huawei.libin@huawei.com,
-        guohanjun@huawei.com, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
- <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
- <51cc9a5c-9968-c4b1-0bc7-870f44a3a761@oracle.com>
- <06ef13e1-fffe-d4a2-721e-f666f331fb3c@arm.com>
- <1a7b2f39-ca77-5b5f-cbb5-6356e51b0d7a@gmail.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <682936cd-139e-64d5-9ab2-4ebd09e89e3d@arm.com>
-Date:   Tue, 16 Jul 2019 09:32:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1a7b2f39-ca77-5b5f-cbb5-6356e51b0d7a@gmail.com>
-Content-Type: text/plain; charset=gbk
+        Tue, 16 Jul 2019 04:36:13 -0400
+Received: from mail-eopbgr70077.outbound.protection.outlook.com ([40.107.7.77]:46506
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727042AbfGPIgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:36:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JiJbUWXTYk5R04nFDM2D0x/DRZYBgXcgZ0lLPtfu6NokheEga6jMsQ6JRfhm7yZTje6DWcy0JaPJmgCMtEbEKtDq/Si6ytJtwkNJSjRGa4Yn8mwD7NfMc96zxG9DgHBYEXjJXo+CJwIwyDf/2F7oU4QtifsGz+iMrAXRKK/zidk8MQF+GAXjF8YAMj8O984nF3bekSeJMZ8fY1McLdm7+qYELjAWLwqlhIPBFFgYyylqfT1BSNbeG4eTW47a8uLjLizl+T39uuCy6HYfEOvdQSdXm3spnJdtAfpKqaqMQb4gUPTh9cBo/EhzAeMeCGex257RLXqM3XkzfsGpEXReGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w83cFNKV+uozj3pi29g89oBPXrMbtsS5du5297YNKy8=;
+ b=cCKkfnb85vDNFN5cMX0/P0FjbRpIkC94pMkIZIhWeYz7iFJamdIJkKvOqpJsoLsXZaxGWdpYm+6TO2RqiUAtB21n8tIU4UcZOxErskcYpJGa3JBHYEkOKGtUyIUEZ3O9BRCW7uauArlRUZYP8rjcmOUHiJOpXyDNpoanC0uClqwLh2THdO7DhZX6TGrDSZ49hDsxWo5senxl1PTUDZS+v/jsH1yF0qiPJA5LNU0niM8qQTByeDXFNo5TfdecFM8e1M/00QNk4ZIFn3tiL9sI2nlWgn3wR0p0kT57gDu+lzLNzUENQ+vbFeNbdSVUObBQ1Ta/8dPJCLf8BpixERlb0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w83cFNKV+uozj3pi29g89oBPXrMbtsS5du5297YNKy8=;
+ b=ZCLmPdS+FeTD0CcqkvP3jGi9DVmRqfgFdtuAPMaWrX6GBhoYlxlnhlMMcO0X6Y4xADq7jVpZ+1lVCen0tLaq/nt77nzQXK//16SVxPYsGf6+7nfp6hMzLqdhjSirFZZ10/25OXZsVhtCP5MNkvy67TGvIpsvfbgMhAbna8Gpw5s=
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
+ VI1PR0402MB3824.eurprd04.prod.outlook.com (52.134.16.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Tue, 16 Jul 2019 08:36:09 +0000
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::a186:c119:606e:bdc4]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::a186:c119:606e:bdc4%4]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
+ 08:36:09 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
+Subject: RE: [PATCH v2 5/6] staging: fsl-dpaa2/ethsw: Add switch driver
+ documentation
+Thread-Topic: [PATCH v2 5/6] staging: fsl-dpaa2/ethsw: Add switch driver
+ documentation
+Thread-Index: AQHVMz3BTGBjH61q0EuXmPZPH88RYabMIiqAgADaFWA=
+Date:   Tue, 16 Jul 2019 08:36:08 +0000
+Message-ID: <VI1PR0402MB28008341F0B606DFEBE03713E0CE0@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+References: <1562336836-17119-1-git-send-email-ioana.ciornei@nxp.com>
+ <1562336836-17119-6-git-send-email-ioana.ciornei@nxp.com>
+ <20190715193431.GA15581@kroah.com>
+In-Reply-To: <20190715193431.GA15581@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [82.144.34.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 99350ce0-6691-4a6a-00ec-08d709c8a6b4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3824;
+x-ms-traffictypediagnostic: VI1PR0402MB3824:
+x-microsoft-antispam-prvs: <VI1PR0402MB3824329824E2B9C658C5D6FDE0CE0@VI1PR0402MB3824.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(199004)(189003)(44832011)(186003)(102836004)(68736007)(256004)(81166006)(446003)(11346002)(476003)(81156014)(26005)(486006)(6116002)(3846002)(6916009)(74316002)(305945005)(7736002)(8936002)(2906002)(33656002)(86362001)(66066001)(71190400001)(14454004)(8676002)(478600001)(99286004)(9686003)(66946007)(66446008)(64756008)(66556008)(66476007)(76116006)(55016002)(316002)(25786009)(54906003)(229853002)(52536014)(71200400001)(4326008)(7696005)(76176011)(6506007)(53936002)(5660300002)(6436002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3824;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5YmS2b5EJl7p+obrDD7dNcN0fbEgiUhq4sai57/uRL+aSgUmfYDdL93LR619gdTvWocd73VXW58PWcJX8MsSdAsKawl4r3q3gEcMH7pdBcWvbn+kFawDDMbHLSLyoZ/hUiEqGundYNKDhEt2hVik8UdIT+eJdjRa2AOziL89Atq8ZV0nH0J5Cn13iZZE1FCHF01Wmyv87I1eiM5bo4TU3YzQlr8kZonrWMAyQKAzeJJslKLlGcsyrW6LY/TF+gRTo+VDVYCg17b/xwukv9KcaNSsTFojGR23aMxLg0PYo+3pBltCtjPUGxU7tSgx3orQ/vGi66j6NlREK0BYtqxSjekeFmY6R1w6CPBIyeoXGHuDkZDm1fJiZ0THtYEYex7r93cSJHt99TTAWjStcCIufWi5fB/qDKAkbgG4j6sJ8Lw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99350ce0-6691-4a6a-00ec-08d709c8a6b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 08:36:08.9406
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ioana.ciornei@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3824
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jia,
+> Subject: Re: [PATCH v2 5/6] staging: fsl-dpaa2/ethsw: Add switch driver
+> documentation
+>=20
+> On Fri, Jul 05, 2019 at 05:27:15PM +0300, Ioana Ciornei wrote:
+> > From: Razvan Stefanescu <razvan.stefanescu@nxp.com>
+> >
+> > Add a switch driver entry in the dpaa2 overview documentation.
+> >
+> > Signed-off-by: Razvan Stefanescu <razvan.stefanescu@nxp.com>
+> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> > ---
+> > Changes in v2:
+> >  - none
+> >
+> >  .../networking/device_drivers/freescale/dpaa2/overview.rst          | =
+6 ++++++
+> >  MAINTAINERS                                                         | =
+1 +
+> >  2 files changed, 7 insertions(+)
+> >
+> > diff --git
+> > a/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
+> > b/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
+> > index d638b5a8aadd..7b7f35908890 100644
+> > ---
+> > a/Documentation/networking/device_drivers/freescale/dpaa2/overview.rst
+> > +++ b/Documentation/networking/device_drivers/freescale/dpaa2/overview
+> > +++ .rst
+> > @@ -393,6 +393,12 @@ interfaces needed to connect the DPAA2 network
+> > interface to  the network stack.
+> >  Each DPNI corresponds to a Linux network interface.
+> >
+> > +Ethernet L2 Switch driver
+> > +-------------------------
+> > +The Ethernet L2 Switch driver is bound to a DPSW and makes use of the
+> > +switchdev support in kernel.
+> > +Each switch port has a corresponding Linux network interface.
+> > +
+> >  MAC driver
+> >  ----------
+> >  An Ethernet PHY is an off-chip, board specific component and is
+> > managed diff --git a/MAINTAINERS b/MAINTAINERS index
+> > c0a02dccc869..5c51be8e281c 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4938,6 +4938,7 @@ M:	Ioana Ciornei <ioana.ciornei@nxp.com>
+> >  L:	linux-kernel@vger.kernel.org
+> >  S:	Maintained
+> >  F:	drivers/staging/fsl-dpaa2/ethsw
+> > +F:
+> 	Documentation/networking/device_drivers/freescale/dpaa2/overview.r
+> st
+> >
+> >  DPAA2 PTP CLOCK DRIVER
+> >  M:	Yangbo Lu <yangbo.lu@nxp.com>
+> > --
+> > 1.9.1
+> >
+>=20
+> This patch did not apply :(
 
-On 16/07/2019 08:59, Jia He wrote:
-> Hi Marc
-> 
-> On 2019/7/10 17:15, Marc Zyngier wrote:
->> On 09/07/2019 20:06, Maran Wilson wrote:
->>> On 7/5/2019 3:12 AM, James Morse wrote:
->>>> Hi guys,
->>>>
->>>> (CC: +kvmarm list)
->>>>
->>>> On 29/06/2019 03:42, Xiongfeng Wang wrote:
->>>>> This patchset mark all the GICC node in MADT as possible CPUs even though it
->>>>> is disabled. But only those enabled GICC node are marked as present CPUs.
->>>>> So that kernel will initialize some CPU related data structure in advance before
->>>>> the CPU is actually hot added into the system. This patchset also implement
->>>>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
->>>>> needed to enable CPU hotplug.
->>>>>
->>>>> To support CPU hotplug, we need to add all the possible GICC node in MADT
->>>>> including those CPUs that are not present but may be hot added later. Those
->>>>> CPUs are marked as disabled in GICC nodes.
->>>> ... what do you need this for?
->>>>
->>>> (The term cpu-hotplug in the arm world almost never means hot-adding a new package/die to
->>>> the platform, we usually mean taking CPUs online/offline for power management. e.g.
->>>> cpuhp_offline_cpu_device())
->>>>
->>>> It looks like you're adding support for hot-adding a new package/die to the platform ...
->>>> but only for virtualisation.
->>>>
->>>> I don't see why this is needed for virtualisation. The in-kernel irqchip needs to know
->>>> these vcpu exist before you can enter the guest for the first time. You can't create them
->>>> late. At best you're saving the host scheduling a vcpu that is offline. Is this really a
->>>> problem?
->>>>
->>>> If we moved PSCI support to user-space, you could avoid creating host vcpu threads until
->>>> the guest brings the vcpu online, which would solve that problem, and save the host
->>>> resources for the thread too. (and its acpi/dt agnostic)
->>>>
->>>> I don't see the difference here between booting the guest with 'maxcpus=1', and bringing
->>>> the vcpu online later. The only real difference seems to be moving the can-be-online
->>>> policy into the hypervisor/VMM...
->>> Isn't that an important distinction from a cloud service provider's
->>> perspective?
->>>
->>> As far as I understand it, you also need CPU hotplug capabilities to
->>> support things like Kata runtime under Kubernetes. i.e. when
->>> implementing your containers in the form of light weight VMs for the
->>> additional security ... and the orchestration layer cannot determine
->>> ahead of time how much CPU/memory resources are going to be needed to
->>> run the pod(s).
->> Why would it be any different? You can pre-allocate your vcpus, leave
->> them parked until some external agent decides to signal the container
->> that it it can use another bunch of CPUs. At that point, the container
->> must actively boot these vcpus (they aren't going to come up by magic).
->>
->> Given that you must have sized your virtual platform to deal with the
->> maximum set of resources you anticipate (think of the GIC
->> redistributors, for example), I really wonder what you gain here.
-> I agree with your point in GIC aspect. It will mess up things if it makes
-> 
-> GIC resource hotpluggable in qemu.
+Sorry for this. I'll take this chance to also add more information and send=
+ it properly.
 
-It is far worse than just a mess. You'd need to come up with a way to
-place your redistributors in memory, and tell the running guest where
-these redistributors are. Currently, there is no method to describe such
-changes to the address space, and I certainly don't want QEMU to invent
-one. This needs to be modeled after what would happen on real HW.
-
-> But it also would be better that vmm
-> 
-> only startup limited vcpu thread resource.
-> 
-> How about:
-> 
-> 1. qemu only starts only N vcpu thread (-smp N, maxcpus=M)
-> 
-> 2. qemu reserves the GIC resource with maxium M vcpu number
-
-Note that this implies actually initializing M vcpus in the VM. You may
-not have created the corresponding (M - N) threads, but the vcpus will
-exist. Can you please quantify how much you'd save by doing that?
-
-> 3. when qmp cmd cpu hotplug-add is triggerred, send a GED event to guest kernel
-> 
-> 4. guest kernel recv it and trigger the acpi plug process.
-> 
-> Currently ACPI_CPU_HOTPLUG is enabled for Kconfig but completely not workable.
-
-Well, there so far *zero* CPU_HOTPLUG in the arm64 kernel other than
-getting CPUs in and out of PSCI.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--
+Ioana
