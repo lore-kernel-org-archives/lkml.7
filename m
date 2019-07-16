@@ -2,107 +2,90 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331FFC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE92CC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B7F9218A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SKrdMAcF"
+	by mail.kernel.org (Postfix) with ESMTP id ACF4F20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388943AbfGPXhB (ORCPT
+        id S2389015AbfGPXha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:37:01 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51361 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387623AbfGPXhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:37:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pGyL0HXrz9s3l;
-        Wed, 17 Jul 2019 09:36:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563320218;
-        bh=hoQVxDinIKNkDATU7tpI+LeYJYnCFGspc4zHVsO6MOg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SKrdMAcFP36B1mv4a0U/Xu03UEV6sQWsnm7leJysoc2HkRQ2QX/s/n/k/xev5uNme
-         fEtErVO8/ojV2DjDpOhJHKTs1aufnePTxK3vXL8gkA7TSdTJaFycwm5U2OTPfB+9x7
-         F11x52PRvfvwd+x5npsmFfP+HQtiStG+kVFU5dHv9mg3kW3mXvVbZJMs21S0yJAf3d
-         AcUdb+8HSUwdreYBlgG4GqIry5vU4gQWlCNyX3erpJ2/uV7cs4PZsIQkCDuVNAppwS
-         dke73/iu2sElQWa9WiVPqq2a9Kj+MJLq6Vw1LTX8UkUfwh7IeIK3+kQh230u4eQYgn
-         dTPpT+5E5foYA==
-Date:   Wed, 17 Jul 2019 09:36:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sheriff Esseson <sheriffesseson@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: linux-next: manual merge of the xfs tree with Linus' tree
-Message-ID: <20190717093657.37a4186e@canb.auug.org.au>
+        Tue, 16 Jul 2019 19:37:30 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39465 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387623AbfGPXha (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:37:30 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x6GNb898019260
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 19:37:09 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id A0775420054; Tue, 16 Jul 2019 19:37:08 -0400 (EDT)
+Date:   Tue, 16 Jul 2019 19:37:08 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Mike Lothian <mike@fireburn.co.uk>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
+Message-ID: <20190716233708.GA11824@mit.edu>
+Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
+ <20190716170606.GA38406@archlinux-threadripper>
+ <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+ <20190716195957.GA38495@archlinux-threadripper>
+ <CAHbf0-GjYKZtV2786d5n2EEnVM9TW6cZbxjG3mtqm_bw=1CThA@mail.gmail.com>
+ <alpine.DEB.2.21.1907170015530.1767@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/1gVKxdAeql9+nyt7jnlkzFp"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907170015530.1767@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1gVKxdAeql9+nyt7jnlkzFp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 17, 2019 at 12:25:14AM +0200, Thomas Gleixner wrote:
+> > It's been my default system linker for years and I've had very few issues
+> > with it and it's a big improvement when linking with LTO
+> 
+> I understand, but the fact that you need to turn off config options in
+> order to build a kernel and the clear statement that it's not recommended
+> makes it truly unsuitable and unmaintainable for us.
 
-Hi all,
+Or if you work for a cloud company who is willing to make the gold
+linker work for your specific use case and configuration (and ideally,
+have gold toolchain experts on staff who will work with you), then it
+might be OK, but just for that particular use case.  (Just as Android
+kernels worked with Clang when Clang was still miscompiling kernel on
+different architectures and configurations.)  In those cases, you can
+just carry a patch to force the gold linker to work.
 
-Today's linux-next merge of the xfs tree got a conflict in:
+The point though is the teams that were using alternative,
+not-always-reliable toolchains, were big boys and girls, and they
+weren't asking the upstream kernel devs for support.  And they only
+cared about a few specific configurations, and not something that
+would work for all or even most configurations and hardware platforms.
 
-  Documentation/admin-guide/index.rst
-
-between commit:
-
-  66f2a122c68d ("docs: Move binderfs to admin-guide")
-
-from Linus' tree and commit:
-
-  89b408a68b9d ("Documentation: filesystem: Convert xfs.txt to ReST")
-
-from the xfs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1gVKxdAeql9+nyt7jnlkzFp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0uX5kACgkQAVBC80lX
-0GwmHwf/Xk4ev3lF3dqRLCX46J22k80G1RUiw0cgtFgPzbwVxYU1xVIaQUq5fPQ8
-Zp1n3XnXmKnVJyMmP/ie72i/YNdxCWZYIu6rUxjWF+8/5jq8vXqRRSG5Vwnp41Jb
-xV4Y7K0LhG5hSfoCen+E9rkGhM9NJ4d/heLmZXvdz4v4AP8dt+zHGfHEarjv3egC
-Vyly8WW0dlITKnNYsB1MqaF6rC6XyD/F81N9VhHVXkQ4VudHECBFZlmt/lDsIiTX
-E/5B8P3rIIfYmUj4As2RRrOqnboJQ/l7gHmc82yPwHs+ATXFtLbntM8hoOiUdQQ9
-+8zmrWtk1gzXEY6IfHvrXKR7BR9jpw==
-=0zfE
------END PGP SIGNATURE-----
-
---Sig_/1gVKxdAeql9+nyt7jnlkzFp--
+	      	       	      	   	- Ted
