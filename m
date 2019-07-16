@@ -2,158 +2,188 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98C5C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812CDC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CF121743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5475A206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388251AbfGPQ1p (ORCPT
+        id S1732876AbfGPQdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:27:45 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54735 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfGPQ1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:27:16 -0400
-Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id b0f0202333839c8a; Tue, 16 Jul 2019 18:27:12 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH 8/8] PM: sleep: Drop dpm_noirq_begin() and dpm_noirq_end()
-Date:   Tue, 16 Jul 2019 18:21:40 +0200
-Message-ID: <4184131.FIsGukcAIl@kreacher>
-In-Reply-To: <71085220.z6FKkvYQPX@kreacher>
-References: <71085220.z6FKkvYQPX@kreacher>
+        Tue, 16 Jul 2019 12:33:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21042 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbfGPQdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 12:33:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 09:32:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,498,1557212400"; 
+   d="scan'208,223";a="366717660"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2019 09:32:59 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 16 Jul 2019 09:32:58 -0700
+Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.206]) by
+ FMSMSX113.amr.corp.intel.com ([169.254.13.252]) with mapi id 14.03.0439.000;
+ Tue, 16 Jul 2019 09:32:58 -0700
+From:   "Souza, Jose" <jose.souza@intel.com>
+To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QCAAADBAIAAGPCAgAAIRACAAANRAIAABuIAgAAHAoCAAANkgIAA9aWAgAACeQCABSUwAIAACPCAgAE98wA=
+Date:   Tue, 16 Jul 2019 16:32:58 +0000
+Message-ID: <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
+         <1562941185.3398.1.camel@HansenPartnership.com>
+         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
+         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+In-Reply-To: <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.121.193.213]
+Content-Type: multipart/mixed;
+        boundary="_002_a10f009fc160f05077760ff59cd86a9c99006b39camelintelcom_"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+--_002_a10f009fc160f05077760ff59cd86a9c99006b39camelintelcom_
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <793D261D8F404740BBFC76C2818EB76A@intel.com>
+Content-Transfer-Encoding: base64
 
-Note that after previous changes dpm_noirq_begin() and
-dpm_noirq_end() each have only one caller, so move the code from
-them to their respective callers and drop them.
+VGhhbmtzIFBhdWwNCg0KUGF1bCBhbmQgSmFtZXMgY291bGQgeW91IHRlc3QgdGhpcyBmaW5hbCBz
+b2x1dGlvbihhdCBsZWFzdCBmb3IgNS4yKT8NClBsZWFzZSByZXZlcnQgdGhlIGhhY2sgcGF0Y2gg
+YW5kIGFwcGx5IHRoaXMgb25lLg0KDQpUaGFua3MNCg0KDQpPbiBNb24sIDIwMTktMDctMTUgYXQg
+MjM6MzQgKzAyMDAsIFBhdWwgQm9sbGUgd3JvdGU6DQo+IEhpIEpvc2UsDQo+IA0KPiBTb3V6YSwg
+Sm9zZSBzY2hyZWVmIG9wIG1hIDE1LTA3LTIwMTkgb20gMjE6MDMgWyswMDAwXToNCj4gPiBTbyB0
+aGUgaXNzdWUgZGlkIG5vdCBoYXBwZW5lZCBhZ2FpbiB3aXRoIHRoZSBwYXRjaCBhcHBsaWVkPw0K
+PiANCj4gTm90IGluIHRoZSB0aHJlZSBkYXlzIHRoYXQgSSd2ZSBiZWVuIHJ1bm5pbmcgNS4yIGtl
+cm5lbHMgd2l0aCB0aGUNCj4gaGFjayBhcHBsaWVkDQo+IChzbyB0aGF0IHNob3VsZCBiZSBhYm91
+dCB0d2VsdmUgaG91cnMgb2YgcHJvcGVyIHVwdGltZSkuDQo+IA0KPiA+IElmIHlvdSBzdGlsbCBo
+YXZlIHRoZSBrZXJuZWwgNS4xIGluc3RhbGxlZCBjb3VsZCB5b3Ugc2hhcmUgeW91cg0KPiA+IC9z
+eXMva2VybmVsL2RlYnVnL2RyaS8wL2k5MTVfZWRwX3Bzcl9zdGF0dXMgd2l0aCB0aGUgb2xkZXIg
+a2VybmVsPw0KPiA+IFdlIHdhbnQgdG8gY2hlY2sgaWYgdHJhaW5pbmcgdmFsdWVzIGNoYW5nZWQg
+YmV0d2VlbiBrZXJuZWwNCj4gPiB2ZXJzaW9ucy4NCj4gDQo+IFN1cmUuIE9uIDUuMS4xNyBJIGdl
+dDoNCj4gICAgIFNpbmsgc3VwcG9ydDogeWVzIFsweDAxXQ0KPiAgICAgUFNSIG1vZGU6IFBTUjEg
+ZW5hYmxlZA0KPiAgICAgU291cmNlIFBTUiBjdGw6IGVuYWJsZWQgWzB4ODFmMDA2MjZdDQo+ICAg
+ICBTb3VyY2UgUFNSIHN0YXR1czogSURMRSBbMHgwNDBiMDAwMV0NCj4gICAgIEJ1c3kgZnJvbnRi
+dWZmZXIgYml0czogMHgwMDAwMDAwMA0KPiANCj4gQW5kLCBpbiBjYXNlIHlvdSBuZWVkIGl0LCBv
+biA1LjIuMStoYWNrIEkgZ2V0Og0KPiAgICAgU2luayBzdXBwb3J0OiB5ZXMgWzB4MDFdDQo+ICAg
+ICBQU1IgbW9kZTogUFNSMSBlbmFibGVkDQo+ICAgICBTb3VyY2UgUFNSIGN0bDogZW5hYmxlZCBb
+MHg4MWYwMDYyNl0NCj4gICAgIFNvdXJjZSBQU1Igc3RhdHVzOiBJRExFIFsweDA0MDMwMDA2XQ0K
+PiAgICAgQnVzeSBmcm9udGJ1ZmZlciBiaXRzOiAweDAwMDAwMDAwDQo+IA0KPiBIb3BlIHRoaXMg
+aGVscHMsDQo+IA0KPiANCj4gUGF1bA0KPiANCg==
 
-Also note that dpm_noirq_resume_devices() and
-dpm_noirq_suspend_devices() need not be exported any more, so make
-them both static.
+--_002_a10f009fc160f05077760ff59cd86a9c99006b39camelintelcom_
+Content-Type: text/x-patch;
+	name="0001-Revert-drm-i915-vbt-Parse-and-use-the-new-field-with.patch"
+Content-Description: 0001-Revert-drm-i915-vbt-Parse-and-use-the-new-field-with.patch
+Content-Disposition: attachment;
+	filename="0001-Revert-drm-i915-vbt-Parse-and-use-the-new-field-with.patch";
+	size=3981; creation-date="Tue, 16 Jul 2019 16:32:58 GMT";
+	modification-date="Tue, 16 Jul 2019 16:32:58 GMT"
+Content-ID: <9145BE30AE8B9A40BD9D0576B6BAA0B6@intel.com>
+Content-Transfer-Encoding: base64
 
-This change is not expected to alter functionality.
+RnJvbSA1ZDRmY2U5ODg5ZTI1ODI4ZWUzNTQ4MWEwOTkyOWU4ZWU2MTZjOTMzIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiA9P1VURi04P3E/Sm9zPUMzPUE5PTIwUm9iZXJ0bz0yMGRlPTIw
+U291emE/PSA8am9zZS5zb3V6YUBpbnRlbC5jb20+CkRhdGU6IFR1ZSwgMTYgSnVsIDIwMTkgMDk6
+MjY6MDggLTA3MDAKU3ViamVjdDogW1BBVENIXSBSZXZlcnQgImRybS9pOTE1L3ZidDogUGFyc2Ug
+YW5kIHVzZSB0aGUgbmV3IGZpZWxkIHdpdGggUFNSMgogVFAyLzMgd2FrZXVwIHRpbWUiCk1JTUUt
+VmVyc2lvbjogMS4wCkNvbnRlbnQtVHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOApDb250
+ZW50LVRyYW5zZmVyLUVuY29kaW5nOiA4Yml0CgpUaGlzIHBhdGNoIGlzIGNhdXNpbmcgUFNSX0NU
+TF9UUDJfVFAzIHRvIGJlIHNldCB0bwpQU1JfVFAyX1RQM19USU1FXzB1cyB3aGlsZSBWQlQgaGF2
+ZSBhIGRpZmZlcmVudCB2YWx1ZSBjYXVzaW5nIHNjcmVlbgpmcmVlemluZyBhZnRlciBleGl0aW5n
+IFBTUi4KCkZvciBub3cgbGV0cyBqdXN0IHJldmVydCBpdCBhbmQgbGF0ZXIgSSB3aWxsIGJyaW5n
+IGl0IGJhY2sgZml4ZWQuCgpUaGlzIHJldmVydHMgY29tbWl0IDg4YTBkOTYwNmFmZjA5ZDJiMWM1
+ZGJlOTVhOWRmOWRhYzQ0ZTc5YjYuCgpTaWduZWQtb2ZmLWJ5OiBKb3PDqSBSb2JlcnRvIGRlIFNv
+dXphIDxqb3NlLnNvdXphQGludGVsLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1
+X2Rydi5oICAgICAgIHwgIDEgLQogZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxfYmlvcy5jICAg
+ICB8IDI1IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS9pOTE1L2lu
+dGVsX3Bzci5jICAgICAgfCAgOCArKysrLS0tLQogZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxf
+dmJ0X2RlZnMuaCB8ICAzIC0tLQogNCBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDMz
+IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9pOTE1L2k5MTVfZHJ2
+LmggYi9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X2Rydi5oCmluZGV4IDA2NmZkMmExMjg1MS4u
+ZDM3MjYyYWExNmNhIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X2Rydi5o
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1L2k5MTVfZHJ2LmgKQEAgLTEwMTMsNyArMTAxMyw2
+IEBAIHN0cnVjdCBpbnRlbF92YnRfZGF0YSB7CiAJCWVudW0gcHNyX2xpbmVzX3RvX3dhaXQgbGlu
+ZXNfdG9fd2FpdDsKIAkJaW50IHRwMV93YWtldXBfdGltZV91czsKIAkJaW50IHRwMl90cDNfd2Fr
+ZXVwX3RpbWVfdXM7Ci0JCWludCBwc3IyX3RwMl90cDNfd2FrZXVwX3RpbWVfdXM7CiAJfSBwc3I7
+CiAKIAlzdHJ1Y3QgewpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxfYmlv
+cy5jIGIvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxfYmlvcy5jCmluZGV4IDFkYzhkMDNmZjEy
+Ny4uNDU1Y2MwNzM5MmFmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pbnRlbF9i
+aW9zLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxfYmlvcy5jCkBAIC03NjAsMzEg
+Kzc2MCw2IEBAIHBhcnNlX3BzcihzdHJ1Y3QgZHJtX2k5MTVfcHJpdmF0ZSAqZGV2X3ByaXYsIGNv
+bnN0IHN0cnVjdCBiZGJfaGVhZGVyICpiZGIpCiAJCWRldl9wcml2LT52YnQucHNyLnRwMV93YWtl
+dXBfdGltZV91cyA9IHBzcl90YWJsZS0+dHAxX3dha2V1cF90aW1lICogMTAwOwogCQlkZXZfcHJp
+di0+dmJ0LnBzci50cDJfdHAzX3dha2V1cF90aW1lX3VzID0gcHNyX3RhYmxlLT50cDJfdHAzX3dh
+a2V1cF90aW1lICogMTAwOwogCX0KLQotCWlmIChiZGItPnZlcnNpb24gPj0gMjI2KSB7Ci0JCXUz
+MiB3YWtldXBfdGltZSA9IHBzcl90YWJsZS0+cHNyMl90cDJfdHAzX3dha2V1cF90aW1lOwotCi0J
+CXdha2V1cF90aW1lID0gKHdha2V1cF90aW1lID4+ICgyICogcGFuZWxfdHlwZSkpICYgMHgzOwot
+CQlzd2l0Y2ggKHdha2V1cF90aW1lKSB7Ci0JCWNhc2UgMDoKLQkJCXdha2V1cF90aW1lID0gNTAw
+OwotCQkJYnJlYWs7Ci0JCWNhc2UgMToKLQkJCXdha2V1cF90aW1lID0gMTAwOwotCQkJYnJlYWs7
+Ci0JCWNhc2UgMzoKLQkJCXdha2V1cF90aW1lID0gNTA7Ci0JCQlicmVhazsKLQkJZGVmYXVsdDoK
+LQkJY2FzZSAyOgotCQkJd2FrZXVwX3RpbWUgPSAyNTAwOwotCQkJYnJlYWs7Ci0JCX0KLQkJZGV2
+X3ByaXYtPnZidC5wc3IucHNyMl90cDJfdHAzX3dha2V1cF90aW1lX3VzID0gd2FrZXVwX3RpbWU7
+Ci0JfSBlbHNlIHsKLQkJLyogUmV1c2luZyBQU1IxIHdha2V1cCB0aW1lIGZvciBQU1IyIGluIG9s
+ZGVyIFZCVHMgKi8KLQkJZGV2X3ByaXYtPnZidC5wc3IucHNyMl90cDJfdHAzX3dha2V1cF90aW1l
+X3VzID0gZGV2X3ByaXYtPnZidC5wc3IudHAyX3RwM193YWtldXBfdGltZV91czsKLQl9CiB9CiAK
+IHN0YXRpYyB2b2lkIHBhcnNlX2RzaV9iYWNrbGlnaHRfcG9ydHMoc3RydWN0IGRybV9pOTE1X3By
+aXZhdGUgKmRldl9wcml2LApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxf
+cHNyLmMgYi9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pbnRlbF9wc3IuYwppbmRleCA5NjM2NjNiYTBl
+ZGYuLjM5MjZmNGJmMDVmNiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxf
+cHNyLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2k5MTUvaW50ZWxfcHNyLmMKQEAgLTUyMywxMiAr
+NTIzLDEyIEBAIHN0YXRpYyB2b2lkIGhzd19hY3RpdmF0ZV9wc3IyKHN0cnVjdCBpbnRlbF9kcCAq
+aW50ZWxfZHApCiAKIAl2YWwgfD0gRURQX1BTUjJfRlJBTUVfQkVGT1JFX1NVKGRldl9wcml2LT5w
+c3Iuc2lua19zeW5jX2xhdGVuY3kgKyAxKTsKIAotCWlmIChkZXZfcHJpdi0+dmJ0LnBzci5wc3Iy
+X3RwMl90cDNfd2FrZXVwX3RpbWVfdXMgPj0gMCAmJgotCSAgICBkZXZfcHJpdi0+dmJ0LnBzci5w
+c3IyX3RwMl90cDNfd2FrZXVwX3RpbWVfdXMgPD0gNTApCisJaWYgKGRldl9wcml2LT52YnQucHNy
+LnRwMl90cDNfd2FrZXVwX3RpbWVfdXMgPj0gMCAmJgorCSAgICBkZXZfcHJpdi0+dmJ0LnBzci50
+cDJfdHAzX3dha2V1cF90aW1lX3VzIDw9IDUwKQogCQl2YWwgfD0gRURQX1BTUjJfVFAyX1RJTUVf
+NTB1czsKLQllbHNlIGlmIChkZXZfcHJpdi0+dmJ0LnBzci5wc3IyX3RwMl90cDNfd2FrZXVwX3Rp
+bWVfdXMgPD0gMTAwKQorCWVsc2UgaWYgKGRldl9wcml2LT52YnQucHNyLnRwMl90cDNfd2FrZXVw
+X3RpbWVfdXMgPD0gMTAwKQogCQl2YWwgfD0gRURQX1BTUjJfVFAyX1RJTUVfMTAwdXM7Ci0JZWxz
+ZSBpZiAoZGV2X3ByaXYtPnZidC5wc3IucHNyMl90cDJfdHAzX3dha2V1cF90aW1lX3VzIDw9IDUw
+MCkKKwllbHNlIGlmIChkZXZfcHJpdi0+dmJ0LnBzci50cDJfdHAzX3dha2V1cF90aW1lX3VzIDw9
+IDUwMCkKIAkJdmFsIHw9IEVEUF9QU1IyX1RQMl9USU1FXzUwMHVzOwogCWVsc2UKIAkJdmFsIHw9
+IEVEUF9QU1IyX1RQMl9USU1FXzI1MDB1czsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9p
+OTE1L2ludGVsX3ZidF9kZWZzLmggYi9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pbnRlbF92YnRfZGVm
+cy5oCmluZGV4IGZkYmJiOWE1MzgwNC4uYmYzNjYyYWQ1ZmVkIDEwMDY0NAotLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vaTkxNS9pbnRlbF92YnRfZGVmcy5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1
+L2ludGVsX3ZidF9kZWZzLmgKQEAgLTc3Miw5ICs3NzIsNiBAQCBzdHJ1Y3QgcHNyX3RhYmxlIHsK
+IAkvKiBUUCB3YWtlIHVwIHRpbWUgaW4gbXVsdGlwbGUgb2YgMTAwICovCiAJdTE2IHRwMV93YWtl
+dXBfdGltZTsKIAl1MTYgdHAyX3RwM193YWtldXBfdGltZTsKLQotCS8qIFBTUjIgVFAyL1RQMyB3
+YWtldXAgdGltZSBmb3IgMTYgcGFuZWxzICovCi0JdTMyIHBzcjJfdHAyX3RwM193YWtldXBfdGlt
+ZTsKIH0gX19wYWNrZWQ7CiAKIHN0cnVjdCBiZGJfcHNyIHsKLS0gCjIuMjIuMAoK
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/base/power/main.c |   30 ++++++++++++------------------
- include/linux/pm.h        |    4 ----
- 2 files changed, 12 insertions(+), 22 deletions(-)
-
-Index: linux-pm/drivers/base/power/main.c
-===================================================================
---- linux-pm.orig/drivers/base/power/main.c
-+++ linux-pm/drivers/base/power/main.c
-@@ -716,7 +716,7 @@ static void async_resume_noirq(void *dat
- 	put_device(dev);
- }
- 
--void dpm_noirq_resume_devices(pm_message_t state)
-+static void dpm_noirq_resume_devices(pm_message_t state)
- {
- 	struct device *dev;
- 	ktime_t starttime = ktime_get();
-@@ -760,13 +760,6 @@ void dpm_noirq_resume_devices(pm_message
- 	trace_suspend_resume(TPS("dpm_resume_noirq"), state.event, false);
- }
- 
--void dpm_noirq_end(void)
--{
--	resume_device_irqs();
--	device_wakeup_disarm_wake_irqs();
--	cpuidle_resume();
--}
--
- /**
-  * dpm_resume_noirq - Execute "noirq resume" callbacks for all devices.
-  * @state: PM transition of the system being carried out.
-@@ -777,7 +770,11 @@ void dpm_noirq_end(void)
- void dpm_resume_noirq(pm_message_t state)
- {
- 	dpm_noirq_resume_devices(state);
--	dpm_noirq_end();
-+
-+	resume_device_irqs();
-+	device_wakeup_disarm_wake_irqs();
-+
-+	cpuidle_resume();
- }
- 
- static pm_callback_t dpm_subsys_resume_early_cb(struct device *dev,
-@@ -1357,14 +1354,7 @@ static int device_suspend_noirq(struct d
- 	return __device_suspend_noirq(dev, pm_transition, false);
- }
- 
--void dpm_noirq_begin(void)
--{
--	cpuidle_pause();
--	device_wakeup_arm_wake_irqs();
--	suspend_device_irqs();
--}
--
--int dpm_noirq_suspend_devices(pm_message_t state)
-+static int dpm_noirq_suspend_devices(pm_message_t state)
- {
- 	ktime_t starttime = ktime_get();
- 	int error = 0;
-@@ -1421,7 +1411,11 @@ int dpm_suspend_noirq(pm_message_t state
- {
- 	int ret;
- 
--	dpm_noirq_begin();
-+	cpuidle_pause();
-+
-+	device_wakeup_arm_wake_irqs();
-+	suspend_device_irqs();
-+
- 	ret = dpm_noirq_suspend_devices(state);
- 	if (ret)
- 		dpm_resume_noirq(resume_event(state));
-Index: linux-pm/include/linux/pm.h
-===================================================================
---- linux-pm.orig/include/linux/pm.h
-+++ linux-pm/include/linux/pm.h
-@@ -712,8 +712,6 @@ struct dev_pm_domain {
- extern void device_pm_lock(void);
- extern void dpm_resume_start(pm_message_t state);
- extern void dpm_resume_end(pm_message_t state);
--extern void dpm_noirq_resume_devices(pm_message_t state);
--extern void dpm_noirq_end(void);
- extern void dpm_resume_noirq(pm_message_t state);
- extern void dpm_resume_early(pm_message_t state);
- extern void dpm_resume(pm_message_t state);
-@@ -722,8 +720,6 @@ extern void dpm_complete(pm_message_t st
- extern void device_pm_unlock(void);
- extern int dpm_suspend_end(pm_message_t state);
- extern int dpm_suspend_start(pm_message_t state);
--extern void dpm_noirq_begin(void);
--extern int dpm_noirq_suspend_devices(pm_message_t state);
- extern int dpm_suspend_noirq(pm_message_t state);
- extern int dpm_suspend_late(pm_message_t state);
- extern int dpm_suspend(pm_message_t state);
-
-
-
+--_002_a10f009fc160f05077760ff59cd86a9c99006b39camelintelcom_--
