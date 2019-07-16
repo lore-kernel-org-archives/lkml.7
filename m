@@ -6,155 +6,116 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED33FC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E042DC76191
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA17620880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29C820880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733095AbfGPArU (ORCPT
+        id S1733130AbfGPArX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 20:47:20 -0400
-Received: from gate.crashing.org ([63.228.1.57]:36339 "EHLO gate.crashing.org"
+        Mon, 15 Jul 2019 20:47:23 -0400
+Received: from gate.crashing.org ([63.228.1.57]:36341 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbfGPArU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 20:47:20 -0400
+        id S1730355AbfGPArV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 20:47:21 -0400
 Received: from ufdda393ec48b57.ant.amazon.com (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6G0l1P5001806;
-        Mon, 15 Jul 2019 19:47:02 -0500
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6G0l1P7001806;
+        Mon, 15 Jul 2019 19:47:09 -0500
 From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
 To:     linux-nvme@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
         Keith Busch <kbusch@kernel.org>,
         Christoph Hellwig <hch@lst.de>, Paul Pawlowski <paul@mrarm.io>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH 1/3] nvme: Pass the queue to SQ_SIZE/CQ_SIZE macros
-Date:   Tue, 16 Jul 2019 10:46:47 +1000
-Message-Id: <20190716004649.17799-1-benh@kernel.crashing.org>
+Subject: [PATCH 3/3] nvme: Add support for Apple 2018+ models
+Date:   Tue, 16 Jul 2019 10:46:49 +1000
+Message-Id: <20190716004649.17799-3-benh@kernel.crashing.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190716004649.17799-1-benh@kernel.crashing.org>
+References: <20190716004649.17799-1-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will make it easier to handle variable queue entry sizes
-later. No functional change.
+Based on reverse engineering and original patch by
+
+Paul Pawlowski <paul@mrarm.io>
+
+This adds support for Apple weird implementation of NVME in their
+2018 or later machines. It accounts for the twice-as-big SQ entries
+for the IO queues, and the fact that only interrupt vector 0 appears
+to function properly.
 
 Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-
-# Conflicts:
-#	drivers/nvme/host/pci.c
 ---
- drivers/nvme/host/pci.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/nvme/host/core.c |  5 ++++-
+ drivers/nvme/host/nvme.h | 10 ++++++++++
+ drivers/nvme/host/pci.c  |  6 ++++++
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 716ebe87a2b8..480ea24d8cf4 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2701,7 +2701,10 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+ 		ctrl->hmmaxd = le16_to_cpu(id->hmmaxd);
+ 
+ 		/* Grab required IO queue size */
+-		ctrl->iosqes = id->sqes & 0xf;
++		if (ctrl->quirks & NVME_QUIRK_128_BYTES_SQES)
++			ctrl->iosqes = 7;
++		else
++			ctrl->iosqes = id->sqes & 0xf;
+ 		if (ctrl->iosqes < NVME_NVM_IOSQES) {
+ 			dev_err(ctrl->device,
+ 				"unsupported required IO queue size %d\n", ctrl->iosqes);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 34ef35fcd8a5..b2a78d08b984 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -92,6 +92,16 @@ enum nvme_quirks {
+ 	 * Broken Write Zeroes.
+ 	 */
+ 	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
++
++	/*
++	 * Use only one interrupt vector for all queues
++	 */
++	NVME_QUIRK_SINGLE_VECTOR		= (1 << 10),
++
++	/*
++	 * Use non-standard 128 bytes SQEs.
++	 */
++	NVME_QUIRK_128_BYTES_SQES		= (1 << 11),
+ };
+ 
+ /*
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index dd10cf78f2d3..8f006638452b 100644
+index 54b35ea4af88..ab2358137419 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -28,8 +28,8 @@
- #include "trace.h"
- #include "nvme.h"
+@@ -2080,6 +2080,9 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 	dev->io_queues[HCTX_TYPE_DEFAULT] = 1;
+ 	dev->io_queues[HCTX_TYPE_READ] = 0;
  
--#define SQ_SIZE(depth)		(depth * sizeof(struct nvme_command))
--#define CQ_SIZE(depth)		(depth * sizeof(struct nvme_completion))
-+#define SQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_command))
-+#define CQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_completion))
- 
- #define SGES_PER_PAGE	(PAGE_SIZE / sizeof(struct nvme_sgl_desc))
- 
-@@ -1344,16 +1344,16 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 
- static void nvme_free_queue(struct nvme_queue *nvmeq)
- {
--	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq->q_depth),
-+	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq),
- 				(void *)nvmeq->cqes, nvmeq->cq_dma_addr);
- 	if (!nvmeq->sq_cmds)
- 		return;
- 
- 	if (test_and_clear_bit(NVMEQ_SQ_CMB, &nvmeq->flags)) {
- 		pci_free_p2pmem(to_pci_dev(nvmeq->dev->dev),
--				nvmeq->sq_cmds, SQ_SIZE(nvmeq->q_depth));
-+				nvmeq->sq_cmds, SQ_SIZE(nvmeq));
- 	} else {
--		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq->q_depth),
-+		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq),
- 				nvmeq->sq_cmds, nvmeq->sq_dma_addr);
- 	}
++	if (dev->ctrl.quirks & NVME_QUIRK_SINGLE_VECTOR)
++		irq_queues = 1;
++
+ 	return pci_alloc_irq_vectors_affinity(pdev, 1, irq_queues,
+ 			      PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY, &affd);
  }
-@@ -1433,12 +1433,12 @@ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
- }
- 
- static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
--				int qid, int depth)
-+				int qid)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 
- 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
--		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
-+		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(nvmeq));
- 		if (nvmeq->sq_cmds) {
- 			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
- 							nvmeq->sq_cmds);
-@@ -1447,11 +1447,11 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
- 				return 0;
- 			}
- 
--			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
-+			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(nvmeq));
- 		}
- 	}
- 
--	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(depth),
-+	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(nvmeq),
- 				&nvmeq->sq_dma_addr, GFP_KERNEL);
- 	if (!nvmeq->sq_cmds)
- 		return -ENOMEM;
-@@ -1465,12 +1465,13 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
- 	if (dev->ctrl.queue_count > qid)
- 		return 0;
- 
--	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(depth),
-+	nvmeq->q_depth = depth;
-+	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(nvmeq),
- 					 &nvmeq->cq_dma_addr, GFP_KERNEL);
- 	if (!nvmeq->cqes)
- 		goto free_nvmeq;
- 
--	if (nvme_alloc_sq_cmds(dev, nvmeq, qid, depth))
-+	if (nvme_alloc_sq_cmds(dev, nvmeq, qid))
- 		goto free_cqdma;
- 
- 	nvmeq->dev = dev;
-@@ -1479,15 +1480,14 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
- 	nvmeq->cq_head = 0;
- 	nvmeq->cq_phase = 1;
- 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
--	nvmeq->q_depth = depth;
- 	nvmeq->qid = qid;
- 	dev->ctrl.queue_count++;
- 
- 	return 0;
- 
-  free_cqdma:
--	dma_free_coherent(dev->dev, CQ_SIZE(depth), (void *)nvmeq->cqes,
--							nvmeq->cq_dma_addr);
-+	dma_free_coherent(dev->dev, CQ_SIZE(nvmeq), (void *)nvmeq->cqes,
-+			  nvmeq->cq_dma_addr);
-  free_nvmeq:
- 	return -ENOMEM;
- }
-@@ -1515,7 +1515,7 @@ static void nvme_init_queue(struct nvme_queue *nvmeq, u16 qid)
- 	nvmeq->cq_head = 0;
- 	nvmeq->cq_phase = 1;
- 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
--	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq->q_depth));
-+	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq));
- 	nvme_dbbuf_init(dev, nvmeq, qid);
- 	dev->online_queues++;
- 	wmb(); /* ensure the first interrupt sees the initialization */
+@@ -3037,6 +3040,9 @@ static const struct pci_device_id nvme_id_table[] = {
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
++		.driver_data = NVME_QUIRK_SINGLE_VECTOR |
++				NVME_QUIRK_128_BYTES_SQES },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, nvme_id_table);
 -- 
 2.17.1
 
