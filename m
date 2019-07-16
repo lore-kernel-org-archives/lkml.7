@@ -2,219 +2,179 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8941EC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3EFC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2922145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P7pXuZW1"
+	by mail.kernel.org (Postfix) with ESMTP id 4FC772145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbfGPJzQ (ORCPT
+        id S1733176AbfGPJzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:55:16 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42077 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732923AbfGPJzP (ORCPT
+        Tue, 16 Jul 2019 05:55:21 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:34307 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732923AbfGPJzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:55:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so9839501plb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SWb56XEnAkwuUUTQuv4g9CftmyTnuWFI0OcyOh8bV4E=;
-        b=P7pXuZW1lJ8u1aom5nEmPqGoSfpfcmLJUxPBNeM2o020xDjJZewv9KksFoB5SSIQVi
-         QIBeycHlDSjUHhcf4/+gxvCfMbAAfvKV9unZPA3EHVyJH+Sb0UOZieH4z/zj+GuLl6TX
-         IR20OZ6VkiyhUKOFhO4M65yEN3xmPEySfEpi7QIO+Y6OWH44PnWjq9iDQxSA+0l53k5I
-         bho1MEAFwdg9BzUeHBuD5/bt2B9vKl15Jb41phYGVYEZxtClXjm82f9oAe/tTA7Pmcu6
-         8V13Iblir4uOpr7EzJTuZQL47KZXU19UiWMGXW79C38DHYcjHqmnP5PLPm6zAkJVhAHG
-         TlSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SWb56XEnAkwuUUTQuv4g9CftmyTnuWFI0OcyOh8bV4E=;
-        b=J1FkuPssa6RM8Jx0HyHCyYt6T5hpj0tXOJYtdEdapHwxLffraL+2yQLT3YE+Axy8le
-         LzTy0kpur+B61C3MaEzS+Yikl2gSbJOIQ6TQ+cT0ksT70FWcRD7LkvmatlFWNZ22PThg
-         eB6u1J1RsbKMYNh7SKIXSSnwnrogA0J/d1jXVo9Dd7T1KhyjeP2fj2bY8r8MZcN7z2/N
-         uJqjuzKg7X8lTQOYjHhIXm9z/kSRaESGNDXismoqaahm7OwKZrdt6geBlWc7rjGcw9VW
-         zWntk6QbMjXHn7jpDT8Vr8xBUnlkAodaOm6oDaLfTdj389gIk0Sroy4FXtgnqXCXqNsS
-         oHCg==
-X-Gm-Message-State: APjAAAXjs42W82N0s/yZkjH62rfXlk/ZVZWtY5uDRbdw9hYK4T5+WUsS
-        JMExvbPLLdzY3YfRHadzCnGVUCPudVc=
-X-Google-Smtp-Source: APXvYqzxPE3AzSxZ4IozOeqfd8LPY3NZQhWn3t12CQyYfpNowAWHzPxfV0t1jEM6kojYvN9a82a2Wg==
-X-Received: by 2002:a17:902:e282:: with SMTP id cf2mr34506552plb.301.1563270914414;
-        Tue, 16 Jul 2019 02:55:14 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id a5sm18383524pjv.21.2019.07.16.02.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 02:55:13 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/10] powerpc: macintosh: Switch to QoS requests instead of cpufreq notifier
-Date:   Tue, 16 Jul 2019 15:24:50 +0530
-Message-Id: <c9c6dc91bb2315b30adb8d98264b6a5c4935ee52.1563270828.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-In-Reply-To: <cover.1563270828.git.viresh.kumar@linaro.org>
-References: <cover.1563270828.git.viresh.kumar@linaro.org>
+        Tue, 16 Jul 2019 05:55:19 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 13B4224001C;
+        Tue, 16 Jul 2019 09:54:06 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 11:54:05 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 5.3
+Message-ID: <20190716095405.GA2449@piout.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cpufreq core now takes the min/max frequency constraints via QoS
-requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+Hello Linus,
 
-Switch over to using the QoS request for maximum frequency constraint
-for windfarm_cpufreq_clamp driver.
+A quiet cycle this time. I'm a bit late for this PR but I threw in a few
+fixes instead of waiting for -rc1.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/macintosh/windfarm_cpufreq_clamp.c | 77 ++++++++++++++--------
- 1 file changed, 50 insertions(+), 27 deletions(-)
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-diff --git a/drivers/macintosh/windfarm_cpufreq_clamp.c b/drivers/macintosh/windfarm_cpufreq_clamp.c
-index 52fd5fca89a0..705c6200814b 100644
---- a/drivers/macintosh/windfarm_cpufreq_clamp.c
-+++ b/drivers/macintosh/windfarm_cpufreq_clamp.c
-@@ -3,9 +3,11 @@
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
-+#include <linux/pm_qos.h>
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/wait.h>
-+#include <linux/cpu.h>
- #include <linux/cpufreq.h>
- 
- #include <asm/prom.h>
-@@ -16,36 +18,24 @@
- 
- static int clamped;
- static struct wf_control *clamp_control;
--
--static int clamp_notifier_call(struct notifier_block *self,
--			       unsigned long event, void *data)
--{
--	struct cpufreq_policy *p = data;
--	unsigned long max_freq;
--
--	if (event != CPUFREQ_ADJUST)
--		return 0;
--
--	max_freq = clamped ? (p->cpuinfo.min_freq) : (p->cpuinfo.max_freq);
--	cpufreq_verify_within_limits(p, 0, max_freq);
--
--	return 0;
--}
--
--static struct notifier_block clamp_notifier = {
--	.notifier_call = clamp_notifier_call,
--};
-+static struct dev_pm_qos_request qos_req;
-+static unsigned int min_freq, max_freq;
- 
- static int clamp_set(struct wf_control *ct, s32 value)
- {
--	if (value)
-+	unsigned int freq;
-+
-+	if (value) {
-+		freq = min_freq;
- 		printk(KERN_INFO "windfarm: Clamping CPU frequency to "
- 		       "minimum !\n");
--	else
-+	} else {
-+		freq = max_freq;
- 		printk(KERN_INFO "windfarm: CPU frequency unclamped !\n");
-+	}
- 	clamped = value;
--	cpufreq_update_policy(0);
--	return 0;
-+
-+	return dev_pm_qos_update_request(&qos_req, freq);
- }
- 
- static int clamp_get(struct wf_control *ct, s32 *value)
-@@ -74,27 +64,60 @@ static const struct wf_control_ops clamp_ops = {
- 
- static int __init wf_cpufreq_clamp_init(void)
- {
-+	struct cpufreq_policy *policy;
- 	struct wf_control *clamp;
-+	struct device *dev;
-+	int ret;
-+
-+	policy = cpufreq_cpu_get(0);
-+	if (!policy) {
-+		pr_warn("%s: cpufreq policy not found cpu0\n", __func__);
-+		return -EPROBE_DEFER;
-+	}
-+
-+	min_freq = policy->cpuinfo.min_freq;
-+	max_freq = policy->cpuinfo.max_freq;
-+	cpufreq_cpu_put(policy);
-+
-+	dev = get_cpu_device(0);
-+	if (unlikely(!dev)) {
-+		pr_warn("%s: No cpu device for cpu0\n", __func__);
-+		return -ENODEV;
-+	}
- 
- 	clamp = kmalloc(sizeof(struct wf_control), GFP_KERNEL);
- 	if (clamp == NULL)
- 		return -ENOMEM;
--	cpufreq_register_notifier(&clamp_notifier, CPUFREQ_POLICY_NOTIFIER);
-+
-+	ret = dev_pm_qos_add_request(dev, &qos_req, DEV_PM_QOS_MAX_FREQUENCY,
-+				     max_freq);
-+	if (ret < 0) {
-+		pr_err("%s: Failed to add freq constraint (%d)\n", __func__,
-+		       ret);
-+		goto free;
-+	}
-+
- 	clamp->ops = &clamp_ops;
- 	clamp->name = "cpufreq-clamp";
--	if (wf_register_control(clamp))
-+	ret = wf_register_control(clamp);
-+	if (ret)
- 		goto fail;
- 	clamp_control = clamp;
- 	return 0;
-  fail:
-+	dev_pm_qos_remove_request(&qos_req);
-+
-+ free:
- 	kfree(clamp);
--	return -ENODEV;
-+	return ret;
- }
- 
- static void __exit wf_cpufreq_clamp_exit(void)
- {
--	if (clamp_control)
-+	if (clamp_control) {
- 		wf_unregister_control(clamp_control);
-+		dev_pm_qos_remove_request(&qos_req);
-+	}
- }
- 
- 
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.3
+
+for you to fetch changes up to f0162d21cc8025c828fafe56ee25801f770f41da:
+
+  rtc: wm831x: Add IRQF_ONESHOT flag (2019-07-13 21:39:51 +0200)
+
+----------------------------------------------------------------
+RTC for 5.3
+
+Drivers:
+ - ds1307: properly handle oscillator failure flags
+ - imx-sc: alarm support
+ - pcf2123: alarm support, correct offset handling
+ - sun6i: add R40 support
+ - simplify getting the adapter of an i2c client
+
+----------------------------------------------------------------
+Alexandre Belloni (3):
+      rtc: ds1307: properly handle oscillator failure flags
+      rtc: st-lpc: remove unnecessary check
+      rtc: pcf2123: fix negative offset rounding
+
+Anson Huang (1):
+      rtc: imx-sc: add rtc alarm support
+
+Chen-Yu Tsai (2):
+      rtc: pcf8563: Fix interrupt trigger method
+      rtc: pcf8563: Clear event flags and disable interrupts before requesting irq
+
+Dmitry Osipenko (1):
+      rtc: tegra: Drop MODULE_ALIAS
+
+Dylan Howey (4):
+      rtc: pcf2123: remove sysfs register view
+      rtc: pcf2123: port to regmap
+      rtc: pcf2123: use %ptR
+      rtc: pcf2123: add alarm support
+
+Hariprasad Kelam (1):
+      rtc: wm831x: Add IRQF_ONESHOT flag
+
+Markus Elfring (1):
+      rtc: stm32: remove one condition check in stm32_rtc_set_alarm()
+
+Maxime Ripard (6):
+      dt-bindings: rtc: Add YAML schemas for the generic RTC bindings
+      dt-bindings: rtc: Move trivial RTC over to a schemas of their own
+      dt-bindings: rtc: Convert Allwinner A10 RTC to a schema
+      dt-bindings: rtc: Convert Allwinner A31 RTC to a schema
+      dt-bindings: rtc: sun6i: Add the R40 RTC compatible
+      rtc: sun6i: Add R40 compatible
+
+Michał Mirosław (2):
+      rtc: tps65910: remove superfluous Kconfig dependency
+      rtc: tps65910: fix typo in register name in read_alarm()
+
+Nicholas Mc Guire (1):
+      rtc: ds2404: use hw endiannes variable
+
+Puranjay Mohan (1):
+      rtc: interface: Change type of 'count' from int to u64
+
+Richard Leitner (4):
+      rtc: s35390a: clarify INT2 pin output modes
+      rtc: s35390a: set uie_unsupported
+      rtc: s35390a: introduce struct device in probe
+      rtc: s35390a: change FLAG defines to use BIT macro
+
+Roman Stratiienko (1):
+      rtc: test: enable wakeup flags
+
+Thierry Reding (3):
+      rtc: tegra: checkpatch and miscellaneous cleanups
+      rtc: tegra: Use consistent variable names and types
+      rtc: tegra: Turn into regular driver
+
+Wolfram Sang (5):
+      rtc: fm3130: simplify getting the adapter of a client
+      rtc: m41t80: simplify getting the adapter of a client
+      rtc: rv8803: simplify getting the adapter of a client
+      rtc: rx8010: simplify getting the adapter of a client
+      rtc: rx8025: simplify getting the adapter of a client
+
+YueHaibing (1):
+      rtc: pcf2123: Fix build error
+
+ .../bindings/rtc/allwinner,sun4i-a10-rtc.yaml      |  43 +++
+ .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml      | 134 ++++++++
+ Documentation/devicetree/bindings/rtc/rtc.txt      |  73 +----
+ Documentation/devicetree/bindings/rtc/rtc.yaml     |  50 +++
+ .../devicetree/bindings/rtc/sun6i-rtc.txt          |  46 ---
+ .../devicetree/bindings/rtc/sunxi-rtc.txt          |  17 -
+ .../devicetree/bindings/rtc/trivial-rtc.yaml       |  92 ++++++
+ drivers/rtc/Kconfig                                |   3 +-
+ drivers/rtc/interface.c                            |   2 +-
+ drivers/rtc/rtc-ds1307.c                           | 129 ++++----
+ drivers/rtc/rtc-ds2404.c                           |   5 +-
+ drivers/rtc/rtc-fm3130.c                           |   8 +-
+ drivers/rtc/rtc-imx-sc.c                           |  87 +++++
+ drivers/rtc/rtc-m41t80.c                           |   2 +-
+ drivers/rtc/rtc-pcf2123.c                          | 354 ++++++++++-----------
+ drivers/rtc/rtc-pcf8563.c                          |  13 +-
+ drivers/rtc/rtc-rv8803.c                           |   2 +-
+ drivers/rtc/rtc-rx8010.c                           |   2 +-
+ drivers/rtc/rtc-rx8025.c                           |   2 +-
+ drivers/rtc/rtc-s35390a.c                          |  55 ++--
+ drivers/rtc/rtc-st-lpc.c                           |   4 -
+ drivers/rtc/rtc-stm32.c                            |   6 +-
+ drivers/rtc/rtc-sun6i.c                            |   1 +
+ drivers/rtc/rtc-tegra.c                            | 253 +++++++--------
+ drivers/rtc/rtc-test.c                             |   1 +
+ drivers/rtc/rtc-tps65910.c                         |   2 +-
+ drivers/rtc/rtc-wm831x.c                           |   3 +-
+ 27 files changed, 821 insertions(+), 568 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/allwinner,sun4i-a10-rtc.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+ delete mode 100644 Documentation/devicetree/bindings/rtc/sunxi-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+
 -- 
-2.21.0.rc0.269.g1a574e7a288b
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
