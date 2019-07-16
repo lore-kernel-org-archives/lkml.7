@@ -2,144 +2,114 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0BBC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814BCC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1A520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563303619;
-	bh=PcKLpA+pS1VyNuIrEf+5mScc/jl5xMwC/Ln9VrThiwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pTvZ8hlxAChANzX2IoP/cnMP1qeluhUm+XcDHTYlgCR9f0rpVkFDtrfBu/n5OWMrA
-	 +TBUK2W5LeWzO+qnKeRU4dGAhdaFKPEEq69TrC2ddGPqzyAwLJYAKFKtpfWVWajSXR
-	 /Rb/uaTeGP8qDYsnQnnzJNebkn9kksoD1Ep0qzMY=
+	by mail.kernel.org (Postfix) with ESMTP id 5B1F520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:00:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pks5xS8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388607AbfGPTAT (ORCPT
+        id S2388619AbfGPTAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728438AbfGPTAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:00:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205B620665;
-        Tue, 16 Jul 2019 19:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563303617;
-        bh=PcKLpA+pS1VyNuIrEf+5mScc/jl5xMwC/Ln9VrThiwM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ds6GCOFDWGbqaeNEXsfyh5tTrSYmUSx2y6p+eKtWUUz6ysDpx1PT+fCUkaFwglGSE
-         t11NOTkWtJPELCIfTSIY/hr7rfCOG445Vc4M6SbnWLkvumfjge1koPnOC50gsqRC4K
-         jj3+9KVPYqnbOCetP8iEXNID4IrEyoeh5AeMtseM=
-Date:   Tue, 16 Jul 2019 14:00:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20190716190013.GB4470@google.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-13-vidyas@nvidia.com>
- <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
- <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
- <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
- <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
- <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+        Tue, 16 Jul 2019 15:00:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36328 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728484AbfGPTAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 15:00:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id k8so10596685plt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=1B56XSbDBuYHFMJ37XDtNgfqOsayMrPq/5G4MtUA+Fs=;
+        b=pks5xS8wfiqunFbSMoh0q7jPy+49A5ZW0LtcnZeO8ou5TRp0xQE5mYpd3JiZbYtMcD
+         3DnyQjLjnkohoRfMcZZ7ltkHfd/UaWdg5w/8uuBu3/m1AiWhqaBVnfmg3XiqMBo72vzF
+         AcHodwjoVOtPYdE8/gbcOy1UGoYKk9XC8/brRwt4YZRlHhnfjN0PaPHX+ZoEKodwhCPk
+         BUru/LlxbxZAd/zlN6PN5IY9VL4MUz5qaYhnu37Y++7nbGHpa8foR22vFOu6E0lHHiJt
+         NnQFXCRRYkhmbkqqZQTtC2ECOxw2OsXzDClA+PcY33Ne++7K/aAcmMg5dkRLXCWFnPhb
+         Zn0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1B56XSbDBuYHFMJ37XDtNgfqOsayMrPq/5G4MtUA+Fs=;
+        b=qfA78HzVzVj1XiL+m6MnvaR4d4kiM2bK7hhq1c8PAbzs6OAQHgJnPDEtQqrTAUXooX
+         qdvWKcXT6/PrGXbY8c9DkQwA1OnWra6fr6FElVdLRvb9UdQEeogVx+4xKuGVPzydY/+X
+         aLEfoyecCZ0Sdvk4phNOzZ2q3n9sklcn+x34xrIvtvG5evBPiXIC2/ALEJfA8ddxVxlt
+         NP8huchQyAXrlM5y0L1THbqnUjUVL0OfH5jpizz7F9D1K6bL5i5Yzk/Iy2Qx1vry0gyU
+         iHgXS/jvw0PNQhY5knhnMwOcuuGITLO/g329r11YaLSDnp3dp5ESZXOwYHidPzAcO5zI
+         +QpA==
+X-Gm-Message-State: APjAAAViZYK4NT3HFcSZOUMnJSVLbWFrE8Nu8vGwAFTQdcoNi9K2sqhb
+        FUACY/WsFnm0VrK2BuJ79OUPNw==
+X-Google-Smtp-Source: APXvYqyNWSxVhdaYi3K1840JkoJ+6FR1DAdx6nUmLsiCpG+eMmldhNRu1xegnqvVA7MTDBcS4R2NpQ==
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr37054376plf.246.1563303634127;
+        Tue, 16 Jul 2019 12:00:34 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a3sm10120371pfc.70.2019.07.16.12.00.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 12:00:33 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 12:01:53 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Suman Anna <s-anna@ti.com>
+Subject: [GIT PULL] hwspinlock updates for v5.3
+Message-ID: <20190716190153.GC8572@tuxbook-pro>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:22:25PM +0100, Lorenzo Pieralisi wrote:
-> On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-> > > > > So if the link is not up we still go ahead and make probe
-> > > > > succeed. What for ?
-> > > > We may need root port to be available to support hot-plugging of
-> > > > endpoint devices, so, we don't fail the probe.
-> > > 
-> > > We need it or we don't. If you do support hotplugging of endpoint
-> > > devices point me at the code, otherwise link up failure means
-> > > failure to probe.
-> > Currently hotplugging of endpoint is not supported, but it is one of
-> > the use cases that we may add support for in future. 
-> 
-> You should elaborate on this, I do not understand what you mean,
-> either the root port(s) supports hotplug or it does not.
-> 
-> > But, why should we fail probe if link up doesn't happen? As such,
-> > nothing went wrong in terms of root port initialization right?  I
-> > checked other DWC based implementations and following are not failing
-> > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
-> > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
-> > pci-keystone.c, pci-layerscape.c
-> > 
-> > Although following do fail the probe if link is not up.  pcie-qcom.c,
-> > pcie-uniphier.c, pci-meson.c
-> > 
-> > So, to me, it looks more like a choice we can make whether to fail the
-> > probe or not and in this case we are choosing not to fail.
-> 
-> I disagree. I had an offline chat with Bjorn and whether link-up should
-> fail the probe or not depends on whether the root port(s) is hotplug
-> capable or not and this in turn relies on the root port "Slot
-> implemented" bit in the PCI Express capabilities register.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-There might be a little more we can talk about in this regard.  I did
-bring up the "Slot implemented" bit, but after thinking about it more,
-I don't really think the host bridge driver should be looking at that.
-That's a PCIe concept, and it's really *downstream* from the host
-bridge itself.  The host bridge is logically a device on the CPU bus,
-not the PCI bus.
+are available in the Git repository at:
 
-I'm starting to think that the host bridge driver probe should be
-disconnected from question of whether the root port links are up.
+  git://github.com/andersson/remoteproc tags/hwlock-v5.3
 
-Logically, the host bridge driver connects the CPU bus to a PCI root
-bus, so it converts CPU-side accesses to PCI config, memory, or I/O
-port transactions.  Given that, the PCI core can enumerate devices on
-the root bus and downstream buses.
+for you to fetch changes up to 360aa640a59f269b784848c0b2d6d462952750d9:
 
-Devices on the root bus typically include Root Ports, but might also
-include endpoints, Root Complex Integrated Endpoints, Root Complex
-Event Collectors, etc.  I think in principle, we would want the host
-bridge probe to succeed so we can use these devices even if none of
-the Root Ports have a link.
+  hwspinlock: add the 'in_atomic' API (2019-06-29 21:08:14 -0700)
 
-If a Root Port is present, I think users will expect to see it in the
-"lspci" output, even if its downstream link is not up.  That will
-enable things like manually poking the Root Port via "setpci" for
-debug.  And if it has a connector, the generic pciehp should be able
-to handle hot-add events without any special help from the host bridge
-driver.
+----------------------------------------------------------------
+hwspinlock updates for v5.3
 
-On ACPI systems there is no concept of the host bridge driver probe
-failing because of lack of link on a Root Port.  If a Root Port
-doesn't have an operational link, we still keep the pci_root.c driver,
-and we'll enumerate the Root Port itself.  So I tend to think DT
-systems should behave the same way, i.e., the driver probe should
-succeed unless it fails to allocate resources or something similar.  I
-think this is analogous to a NIC or USB adapter driver, where the
-probe succeeds even if there's no network cable or USB device
-attached.
+This contains support for hardware spinlock TI K3 AM65x and J721E family
+of SoCs, support for using hwspinlocks from atomic context and better
+error reporting when dealing with hardware disabled in DeviceTree.
 
-Bjorn
+----------------------------------------------------------------
+Fabien Dessenne (4):
+      hwspinlock: ignore disabled device
+      hwspinlock: stm32: implement the relax() ops
+      hwspinlock: document the hwspinlock 'raw' API
+      hwspinlock: add the 'in_atomic' API
+
+Suman Anna (3):
+      dt-bindings: hwlock: Update OMAP binding for TI K3 SoCs
+      hwspinlock/omap: Add support for TI K3 SoCs
+      hwspinlock/omap: Add a trace during probe
+
+ .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 25 +++++--
+ Documentation/hwspinlock.txt                       | 81 ++++++++++++++++++++++
+ drivers/hwspinlock/Kconfig                         |  2 +-
+ drivers/hwspinlock/hwspinlock_core.c               | 48 +++++++++----
+ drivers/hwspinlock/omap_hwspinlock.c               |  4 ++
+ drivers/hwspinlock/stm32_hwspinlock.c              |  7 ++
+ include/linux/hwspinlock.h                         | 61 +++++++++++++++-
+ 7 files changed, 206 insertions(+), 22 deletions(-)
