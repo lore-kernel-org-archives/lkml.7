@@ -2,94 +2,122 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C377C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442D6C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F2E2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:54:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AkELagJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 25D002173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732768AbfGPMyx (ORCPT
+        id S1732469AbfGPM51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:54:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51426 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGPMyw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:54:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xhpoIoqvW1VJHZbGo76qDnYFPD0KXuaoqgNk9c8CJVc=; b=AkELagJ1jf90vb6oxee/3qDgv
-        HgR1FVs3sShL5SAO0VNewuCryMUIh9Ym0pv6qYUqwgv0Z+1SQbbLwYD/jJ9SLwshhKUnZADyJqT7e
-        6lsZAX/IQCCrICvcQlgOfjCKgV6n8McEoZBQdoGMplfYX+crTN+Pq2hC1H/KbcujApeq2V3icbGA3
-        HoHI7AVFF8Q08wNKAkU577dEjUlTyQpILETb2dt6dOiKoP7kyYMb81rpuLJ/xk1nauLwTrYEWHBlR
-        JbiAUnmPY+1Pe9Qhsi12EU5DTsypRkGxtkQU0Waz9sOe09x2rhoM5F9o7rhbURBOcwuGJP1qvoc7M
-        24wR5XNOA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnMyn-0002rE-D7; Tue, 16 Jul 2019 12:54:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CB3EE20B172C9; Tue, 16 Jul 2019 14:54:47 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 14:54:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: kbuild: Fail if gold linker is detected
-Message-ID: <20190716125447.GZ3402@hirez.programming.kicks-ass.net>
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
+        Tue, 16 Jul 2019 08:57:27 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58104 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbfGPM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:57:26 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnN11-0005G9-5N; Tue, 16 Jul 2019 20:57:07 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnN0y-0001sk-IB; Tue, 16 Jul 2019 20:57:04 +0800
+Date:   Tue, 16 Jul 2019 20:57:04 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] padata: Use RCU when fetching pd from do_serial
+Message-ID: <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
+ <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
+ <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
+ <20190716111410.GN17989@gauss3.secunet.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716111410.GN17989@gauss3.secunet.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 02:47:56PM +0200, Thomas Gleixner wrote:
-> The gold linker has known issues of failing the build in random and
-> predictible ways. H.J. stated:
-> 
->   "Since building a workable kernel for different kernel configurations
->    isn't a requirement for gold, I don't recommend gold for kernel."
-> 
-> So instead of dealing with attempts to duct tape gold support without
-> understanding the root cause, fail the build when gold is detected.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Tue, Jul 16, 2019 at 01:14:10PM +0200, Steffen Klassert wrote:
+>
+> Maybe we can fix it if we call padata_free_pd() from
+> padata_serial_worker() when it sent out the last object.
 
-Right, life is too short to fight toolchains that aren't interested in
-working.
+How about using RCU?
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+We still need to fix up the refcnt if it's supposed to limit the
+overall number of outstanding requests.
 
-> ---
->  scripts/Kconfig.include |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> --- a/scripts/Kconfig.include
-> +++ b/scripts/Kconfig.include
-> @@ -35,5 +35,8 @@ ld-option = $(success,$(LD) -v $(1))
->  $(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
->  $(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
->  
-> +# Fail if the linker is gold as it's not capable of linking the kernel proper
-> +$(error-if,$(success, command -v $(LD) -v | grep -q gold), gold linker '$(LD)' not supported)
-> +
->  # gcc version including patch level
->  gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
+---8<---
+The function padata_do_serial uses parallel_data without obeying
+the RCU rules around its life-cycle.  This means that a concurrent
+padata_replace call can result in a crash.
+
+This patch fixes it by using RCU just as we do in padata_do_parallel.
+
+Fixes: 16295bec6398 ("padata: Generic parallelization/...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index 5d13d25da2c8..952f6514dd72 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -35,7 +35,7 @@
+  * struct padata_priv -  Embedded to the users data structure.
+  *
+  * @list: List entry, to attach to the padata lists.
+- * @pd: Pointer to the internal control structure.
++ * @inst: Pointer to the overall control structure.
+  * @cb_cpu: Callback cpu for serializatioon.
+  * @cpu: Cpu for parallelization.
+  * @seq_nr: Sequence number of the parallelized data object.
+@@ -45,7 +45,7 @@
+  */
+ struct padata_priv {
+ 	struct list_head	list;
+-	struct parallel_data	*pd;
++	struct padata_instance	*inst;
+ 	int			cb_cpu;
+ 	int			cpu;
+ 	int			info;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 2d2fddbb7a4c..fb5dd1210d2b 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -128,7 +128,7 @@ int padata_do_parallel(struct padata_instance *pinst,
+ 
+ 	err = 0;
+ 	atomic_inc(&pd->refcnt);
+-	padata->pd = pd;
++	padata->inst = pinst;
+ 	padata->cb_cpu = cb_cpu;
+ 
+ 	target_cpu = padata_cpu_hash(pd);
+@@ -367,7 +368,7 @@ void padata_do_serial(struct padata_priv *padata)
+ 	struct parallel_data *pd;
+ 	int reorder_via_wq = 0;
+ 
+-	pd = padata->pd;
++	pd = rcu_dereference_bh(padata->inst->pd);
+ 
+ 	cpu = get_cpu();
+ 
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
