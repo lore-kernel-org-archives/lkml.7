@@ -2,134 +2,105 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006D5C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F73C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0FF20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563303993;
-	bh=eS+e3j6KlbhbCBZhOl1ZsUQOC29NSfGH32NfQt1p0EA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tAqw8R+8huyMLX/x0sPeVvyn5hYXMTHZPly2zTJ+fFFndoJAq0JbeHlgcYFH3AID0
-	 0PicUCenb65i1+L8yjZxQO7QNX4wsSsWz9E53dqARuCJJK+oYtd6MwqQTQFBkzfzWg
-	 LKWfVl86Ccv03GMXy/AM7NyunVYdQJUZr/7hfcFg=
+	by mail.kernel.org (Postfix) with ESMTP id 5E8A220693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbfGPTGc (ORCPT
+        id S1728772AbfGPTJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:06:32 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35835 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGPTGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:06:32 -0400
-Received: by mail-lf1-f65.google.com with SMTP id p197so14527194lfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LG1qgJpNmSz1iQ9LvaU/8VdF6DJ/KTavEjwp2ttw70g=;
-        b=MwJ2nfHlclEgRkyb3cO8wydTVc4MkHxq5lpaq+vveKIfNftcJMYxbpp1YoaN5DdVVy
-         Iv7VpTl9fhuMRXW8GqMFmHLv8j+EEvX22qy3iQXAwEJFEsq6eRXCiH6+xf5mxjLOd/sA
-         uSM3b50XkOSu5HmVh63QGVthYBPE2OL0vrEog=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LG1qgJpNmSz1iQ9LvaU/8VdF6DJ/KTavEjwp2ttw70g=;
-        b=jiucmckUrgobOOdtFP+FesYKWEb9mlWdCjw4WZzDhIhKs7IegaV1qusgNyPRhdU7ZU
-         coRBHAElGmHFQJkhQWsj9dEDmpeI1zrtNyWXcnZx/mzlh+c8MKVd5G0M3KabCBi4WPVH
-         1ZNN+gCfwX/CVqtvQrPwO2esz1JuF4ok2GcTECKAbZS5a9Hpc+rF48NiM8QVe+3SF39B
-         4jZXPUVy73J+kG9Ire9d6fk5HZwad0mxDPknvnwXCW9wt0jnFdQRBaKX5BKbLkPvfFub
-         Rp+HeBE+PbdZPjKydrCl7YDBwYxJxPwzlUKkKWaOVEhyzQ5045qdHQ0XR33Epycq818a
-         8srA==
-X-Gm-Message-State: APjAAAWexUsm/G6juDtcBoU79pJGArZum68rLi3BtBfwa3AOBgvBdZRb
-        IkuVde97lM9zI+jOGXRs0z7PM3Kl6yo=
-X-Google-Smtp-Source: APXvYqx2s/KYlErDNkeE/tWNhzOf6qb9Od2px90IuHgP4w1JNl/55f4SmqwqYTRaTU0ASG+JdZpFiQ==
-X-Received: by 2002:ac2:4351:: with SMTP id o17mr15464638lfl.100.1563303989523;
-        Tue, 16 Jul 2019 12:06:29 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id s7sm3909944lje.95.2019.07.16.12.06.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 12:06:28 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id 62so9653119lfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:06:28 -0700 (PDT)
-X-Received: by 2002:ac2:4565:: with SMTP id k5mr15576134lfm.170.1563303988234;
- Tue, 16 Jul 2019 12:06:28 -0700 (PDT)
+        Tue, 16 Jul 2019 15:09:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39016 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726213AbfGPTJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 15:09:52 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 617DBC024AFA;
+        Tue, 16 Jul 2019 19:09:52 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-180.rdu2.redhat.com [10.10.122.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DAFF60C4C;
+        Tue, 16 Jul 2019 19:09:51 +0000 (UTC)
+Subject: Re: [PATCH] locking/rwsem: use read_acquire in read_slowpath exit
+ when queue is empty
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jan Stancek <jstancek@redhat.com>, linux-kernel@vger.kernel.org,
+        dbueso@suse.de, will@kernel.org, mingo@redhat.com
+References: <ea7ef295bc438c9d403087943c82ced56730e6e0.1563292737.git.jstancek@redhat.com>
+ <4ef66a01-7937-1eb7-c58b-0992a0142c92@redhat.com>
+ <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <0ebcd9ef-d39a-604f-004e-2697d8bf25f5@redhat.com>
+Date:   Tue, 16 Jul 2019 15:09:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
-In-Reply-To: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 16 Jul 2019 12:06:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whY1J-LFvTa8ihiPNRSv1dwxPk9ycPCEhdcjsk7c=tGAw@mail.gmail.com>
-Message-ID: <CAHk-=whY1J-LFvTa8ihiPNRSv1dwxPk9ycPCEhdcjsk7c=tGAw@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.3
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 16 Jul 2019 19:09:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 9:05 AM Micah Morton <mortonm@chromium.org> wrote:
+On 7/16/19 2:58 PM, Peter Zijlstra wrote:
+> On Tue, Jul 16, 2019 at 12:53:14PM -0400, Waiman Long wrote:
+>> On 7/16/19 12:04 PM, Jan Stancek wrote:
+> Fixes: 4b486b535c33 ("locking/rwsem: Exit read lock slowpath if queue empty & no writer")
+> Signed-off-by: Jan Stancek <jstancek@redhat.com>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Davidlohr Bueso <dbueso@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> ---
+>  kernel/locking/rwsem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> I'm maintaining the new SafeSetID LSM and was told to set up my own
-> tree for sending pull requests rather than sending my changes through
-> James Morris and the security subsystem tree.
+> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> index 37524a47f002..757b198d7a5b 100644
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -1030,7 +1030,7 @@ static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
+>  		 * exit the slowpath and return immediately as its
+>  		 * RWSEM_READER_BIAS has already been set in the count.
+>  		 */
+> -		if (adjustment && !(atomic_long_read(&sem->count) &
+> +		if (adjustment && !(atomic_long_read_acquire(&sem->count) &
+>  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
+>  			raw_spin_unlock_irq(&sem->wait_lock);
+>  			rwsem_set_reader_owned(sem);
+>> The chance of taking this path is not that high. So instead of
+>> increasing the cost of the test by adding an acquire barrier, how about
+>> just adding smp_mb__after_spinlock() before spin_unlock_irq(). This
+>> should have the same effect of making sure that no stale data will be
+>> used in the read-lock critical section.
+> That's actually more expensive on something like ARM64 I expect.
+>
+> The far cheaper alternative is smp_acquire__after_ctrl_dep(), however in
+> general Will seems to prefer using load-acquire over separate barriers,
+> and for x86 it doesn't matter anyway. For PowerPC these two are a wash,
+> both end up with LWSYNC (over SYNC for your alternative).
 
-Yes. It would be good if you also added yourself to the MAINTAINERS
-file. Right now there's no entry for security/safesetid at all.
+With lock event counting turned on, my experience with this code path
+was that it got hit very infrequently. It is even less frequent with the
+latest reader optimistic spinning patch. That is why I prefer making it
+a bit more costly when the condition is true without incurring a cost at
+all when the condition is false which is the majority of the cases.
+Anyway, this additional cost is for arm64 only, but it is still more
+than compensated by all skipping all the waiting list manipulation and
+waking up itself code.
 
-> This is my first time doing one of these pull requests so hopefully I
-> didn't screw something up.
+Cheers,
+Longman
 
-So a couple of notes:
-
- - *please* don't rebase your work in the day before
-
-   Was this in linux-next? was this tested at all? Hard to tell, since
-it was rebased recently, so for all I know it's all completely new
-
- - don't use a random kernel-of-the-day as the base for development
-
-   This is related to the rebasing issue, but is true even if you
-don't rebase. There is no way that it was a good idea to pick my
-random - possibly completely broken - kernel from Sunday afternoon in
-the middle of a merge window as a base for development.
-
-   If you start development, or if you have to rebase (for some *good*
-reason) you need to do so on a good stable base, not on the quick-sand
-that is "random kernel of the day during the busiest merge activity".
-
- - Please use the "git pull-request" format and then add any extra
-notes you feel are necessary
-
-   Yes, your pull request is *almost* git pull-request, but you seem
-to have actively removed whitespace making it almost illegible. It's
-really hard to pick out the line that has the actual git repository
-address, because it's basically hidden inside one big blob of text.
-
-I've pulled this as-is since it's the first time, but I expect better next time.
-
-There are various resources on some cleanliness issues, and people
-fairly recently tried to combine it under
-
-   Documentation/maintainer/rebasing-and-merging.rst
-
-which covers at least the basics on why not to rebase etc.
-
-And if you *do* end up rebasing, consider the end result "untested",
-so then it should have been done before the merge window even started,
-and the rebased branch should have been in linux-next. And not sent to
-me the very next day.
-
-                   Linus
