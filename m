@@ -2,105 +2,116 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B25C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BBEC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0842173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563275396;
-	bh=GTNttLKfykU0fMB8TWGXww71EUURBDV6zbj9y9y9CVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LTZKiBwJ/DEyv/t0JU1hIV/QB1/GlK2Gbb0SV4RLLVpTp0C4M8dw8ItFGbMRpTRMU
-	 Ja6HpFVCnwYj7qo9bc8MqrynNrDw9meIVehPbrx5QP1fKIkm4l3Ha+WH69Og0zAelS
-	 jSxWH5o9E6Y6oEbFy7flI4UO+SsU6dcCBs5vVmWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2481A2173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387608AbfGPLJz (ORCPT
+        id S2387634AbfGPLKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:09:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45160 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733200AbfGPLJz (ORCPT
+        Tue, 16 Jul 2019 07:10:03 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:37697 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733200AbfGPLKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GTNttLKfykU0fMB8TWGXww71EUURBDV6zbj9y9y9CVY=; b=Stdaqrb4Nzvjz4Bj7OxsqHHhD
-        +Td7CdZOlzO+ek+Wlj1/FC/WJHeQ9gSPUYQBkEz/5sipVYr/hPyWPqlS7cSDQnO+iL3ns21zEDaGi
-        3VvzwyAvDJ+Chvj8tqRy5yeKmx6ZrWTp1EMApgzMNqNyFnCUcN19Mpy6CuXjZ4JswoqRQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hnLKz-0004Sl-R4; Tue, 16 Jul 2019 11:09:37 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 9164A2742C01; Tue, 16 Jul 2019 12:09:36 +0100 (BST)
-Date:   Tue, 16 Jul 2019 12:09:36 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
-Message-ID: <20190716110936.GA5428@sirena.org.uk>
-References: <20190715230457.3901-1-robh@kernel.org>
+        Tue, 16 Jul 2019 07:10:02 -0400
+Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hnLL9-0007ym-9m; Tue, 16 Jul 2019 07:09:58 -0400
+Date:   Tue, 16 Jul 2019 07:09:17 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sctp: fix warning "NULL check before some freeing
+ functions is not needed"
+Message-ID: <20190716110917.GA1498@hmswarspite.think-freely.org>
+References: <20190716022002.GA19592@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190715230457.3901-1-robh@kernel.org>
-X-Cookie: May be too intense for some viewers.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716022002.GA19592@hari-Inspiron-1545>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 16, 2019 at 07:50:02AM +0530, Hariprasad Kelam wrote:
+> This patch removes NULL checks before calling kfree.
+> 
+> fixes below issues reported by coccicheck
+> net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  net/sctp/sm_make_chunk.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+> index ed39396..36bd8a6e 100644
+> --- a/net/sctp/sm_make_chunk.c
+> +++ b/net/sctp/sm_make_chunk.c
+> @@ -2582,8 +2582,7 @@ static int sctp_process_param(struct sctp_association *asoc,
+>  	case SCTP_PARAM_STATE_COOKIE:
+>  		asoc->peer.cookie_len =
+>  			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
+> -		if (asoc->peer.cookie)
+> -			kfree(asoc->peer.cookie);
+> +		kfree(asoc->peer.cookie);
+>  		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
+>  		if (!asoc->peer.cookie)
+>  			retval = 0;
+> @@ -2648,8 +2647,7 @@ static int sctp_process_param(struct sctp_association *asoc,
+>  			goto fall_through;
+>  
+>  		/* Save peer's random parameter */
+> -		if (asoc->peer.peer_random)
+> -			kfree(asoc->peer.peer_random);
+> +		kfree(asoc->peer.peer_random);
+>  		asoc->peer.peer_random = kmemdup(param.p,
+>  					    ntohs(param.p->length), gfp);
+>  		if (!asoc->peer.peer_random) {
+> @@ -2663,8 +2661,7 @@ static int sctp_process_param(struct sctp_association *asoc,
+>  			goto fall_through;
+>  
+>  		/* Save peer's HMAC list */
+> -		if (asoc->peer.peer_hmacs)
+> -			kfree(asoc->peer.peer_hmacs);
+> +		kfree(asoc->peer.peer_hmacs);
+>  		asoc->peer.peer_hmacs = kmemdup(param.p,
+>  					    ntohs(param.p->length), gfp);
+>  		if (!asoc->peer.peer_hmacs) {
+> @@ -2680,8 +2677,7 @@ static int sctp_process_param(struct sctp_association *asoc,
+>  		if (!ep->auth_enable)
+>  			goto fall_through;
+>  
+> -		if (asoc->peer.peer_chunks)
+> -			kfree(asoc->peer.peer_chunks);
+> +		kfree(asoc->peer.peer_chunks);
+>  		asoc->peer.peer_chunks = kmemdup(param.p,
+>  					    ntohs(param.p->length), gfp);
+>  		if (!asoc->peer.peer_chunks)
+> -- 
+> 2.7.4
+> 
+> 
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 15, 2019 at 05:04:57PM -0600, Rob Herring wrote:
-> Properties which are child node definitions need to have an explict
-> type. Otherwise, a matching (DT) property can silently match when an
-> error is desired. Fix this up tree-wide. Once this is fixed, the
-> meta-schema will enforce this on any child node definitions.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0tsG0ACgkQJNaLcl1U
-h9DgRwf/RVQwM4uJZfc77Bg1QUPRV93uCJ6maAGlUjFImP1U0fpoRuD/zNm5kiIp
-hJhe5TMTX5ua+ajO5DV9S4HD4tRJBv5imHYgx7edGX0XnD6uBhO/Fx91okJhKb54
-hmWEPpZyjursasR/A6HjQi6+OYEnCqrMoTenaZQZ/R7MlS8Z57C5m8slR9m1tSBp
-xam5qvxG3pn5oNarJlCWF9VcVmZckekdU+qutRLVc3xH8bCF6pjfyR5E1M+qRJV6
-av5KFLsTopgBECl4QPHGqIXqhegIjWyeqeMC69s7Nh8pDFpLIwFJfXd7x7UGStgS
-RrPGZDcB2vfMfsXwQAGfu5lyMqkYJA==
-=IEmg
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
