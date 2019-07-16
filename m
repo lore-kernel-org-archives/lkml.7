@@ -2,88 +2,322 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B574C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076F4C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38ADE20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CC32064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:44:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DeQWMX0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387556AbfGPJoo (ORCPT
+        id S2387562AbfGPJoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:44:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:54042 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728334AbfGPJol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:44:41 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 027507B6789D5CE75D77;
-        Tue, 16 Jul 2019 17:44:39 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 16 Jul 2019 17:44:28 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
-CC:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <gaoxiang25@huawei.com>,
-        <chao@kernel.org>
-Subject: [PATCH v2] staging: erofs: avoid opened loop codes
-Date:   Tue, 16 Jul 2019 17:44:22 +0800
-Message-ID: <20190716094422.110805-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+        Tue, 16 Jul 2019 05:44:54 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:56057 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732424AbfGPJnT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:43:19 -0400
+Received: by mail-pg1-f201.google.com with SMTP id z14so5313215pgr.22
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=/NAvbkNY3XdSXTy//N2m79MHXY3yRzFBsNtG5QpIXIQ=;
+        b=DeQWMX0fzpSzYd2d5RlG1aPh0IyQ5r1D3NurGdITgqstHLYBXjntIv/Xl+sUBmMzNd
+         Jt4MjxcgfzgdI2rGHsfgZPprtXj1n0zTOb9WrcxyH/FaKBLJ1HzzMJ4uiwnk8Yb6WqZR
+         jhNSO3shXOIkvzpUN1AHjpBW/+1RmWKeXQHUIJVrV+53Bsgf88q+6akkEHYMvkNjNiGH
+         3MDyOGYGbkR4JeAKm2dkK+FlSI4iDffwNpmHqRYJq/yxPrcV9NCQjEfyNbFOw5bhQmPz
+         Kr/80pMWg02H614l6+q/YzTnA75gM/e9WKyiTf32kBl+0DBo44wTFjmK/gd6+jopha+v
+         cT3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=/NAvbkNY3XdSXTy//N2m79MHXY3yRzFBsNtG5QpIXIQ=;
+        b=f0UELsTlf/6/iGAo/aPxGQcvq2czJWzzJWNIS2y3DZpCltSME8Fz3LlEJZpcOj8OQd
+         qVm+MNtSjULSJAYj4FlSlvU7el9qEH6qAv3NNwVpez9EeWzPlvyCM+4vov/8oRs7h0Ku
+         k8lus7/0R3l4Dr52le/ZWtNdFhjCMCa/PYO0DtmUKMbwDgg9aXNJicv6CL5yD/nzacdc
+         bOeiQKywkZgsA3T75cebGzMt0jwkabazpjNKrn5yYyMLUO07Qi/k+wWkuBxvlvsQEYaT
+         r6vHsj3+DJJEoaaqNI0ip3GtSuW0I6StAE7i0GnHwMlGF5z9yk7+rLZv/JKCyTsLpiNQ
+         Yj5Q==
+X-Gm-Message-State: APjAAAXkwlChf1SKQK8+KV+g0vR2DzQfPCz3OjGfRow20iqcH8ryc9we
+        cujFAF3IOtuind0uNjo89VZ3m2+w6pTxQbZ0bK49eg==
+X-Google-Smtp-Source: APXvYqw/Xdej96KfBLDFOEAMXThHl1utKJUV5cBRGvYVycrwLJFZnceEmKNz4YQQvtgJ3SO2zjo/dgcrAMcW/b1mecc58w==
+X-Received: by 2002:a63:5964:: with SMTP id j36mr31865122pgm.428.1563270197451;
+ Tue, 16 Jul 2019 02:43:17 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 02:42:47 -0700
+In-Reply-To: <20190716094302.180360-1-brendanhiggins@google.com>
+Message-Id: <20190716094302.180360-4-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190716094302.180360-1-brendanhiggins@google.com>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH v10 03/18] kunit: test: add string_stream a std::stream like
+ string builder
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use __GFP_NOFAIL to avoid opened loop codes in z_erofs_vle_unzip().
+A number of test features need to do pretty complicated string printing
+where it may not be possible to rely on a single preallocated string
+with parameters.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+So provide a library for constructing the string as you go similar to
+C++'s std::string.
+
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 ---
-v2:
-- change variable name from 'flags' to 'gfp_flags' to avoid common
-name.
- drivers/staging/erofs/unzip_vle.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ include/kunit/string-stream.h |  51 ++++++++++++
+ kunit/Makefile                |   3 +-
+ kunit/string-stream.c         | 144 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 197 insertions(+), 1 deletion(-)
+ create mode 100644 include/kunit/string-stream.h
+ create mode 100644 kunit/string-stream.c
 
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index f0dab81ff816..56c009cf611e 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -921,18 +921,18 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 		 mutex_trylock(&z_pagemap_global_lock))
- 		pages = z_pagemap_global;
- 	else {
--repeat:
-+		gfp_t gfp_flags = GFP_KERNEL;
+diff --git a/include/kunit/string-stream.h b/include/kunit/string-stream.h
+new file mode 100644
+index 0000000000000..390d118c41499
+--- /dev/null
++++ b/include/kunit/string-stream.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * C++ stream style string builder used in KUnit for building messages.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
 +
-+		if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES)
-+			gfp_flags |= __GFP_NOFAIL;
++#ifndef _KUNIT_STRING_STREAM_H
++#define _KUNIT_STRING_STREAM_H
 +
- 		pages = kvmalloc_array(nr_pages, sizeof(struct page *),
--				       GFP_KERNEL);
-+				       gfp_flags);
- 
- 		/* fallback to global pagemap for the lowmem scenario */
- 		if (unlikely(!pages)) {
--			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES)
--				goto repeat;
--			else {
--				mutex_lock(&z_pagemap_global_lock);
--				pages = z_pagemap_global;
--			}
-+			mutex_lock(&z_pagemap_global_lock);
-+			pages = z_pagemap_global;
- 		}
- 	}
- 
++#include <linux/types.h>
++#include <linux/mutex.h>
++#include <stdarg.h>
++
++struct string_stream_fragment {
++	struct list_head node;
++	char *fragment;
++};
++
++struct string_stream {
++	size_t length;
++	struct list_head fragments;
++	/* length and fragments are protected by this lock */
++	struct mutex lock;
++};
++
++struct kunit;
++
++struct string_stream *alloc_string_stream(struct kunit *test);
++
++void string_stream_get(struct string_stream *stream);
++
++int string_stream_put(struct string_stream *stream);
++
++int string_stream_add(struct string_stream *stream, const char *fmt, ...);
++
++int string_stream_vadd(struct string_stream *stream,
++		       const char *fmt,
++		       va_list args);
++
++char *string_stream_get_string(struct string_stream *stream);
++
++int string_stream_append(struct string_stream *stream,
++			 struct string_stream *other);
++
++void string_stream_clear(struct string_stream *stream);
++
++bool string_stream_is_empty(struct string_stream *stream);
++
++#endif /* _KUNIT_STRING_STREAM_H */
+diff --git a/kunit/Makefile b/kunit/Makefile
+index 5efdc4dea2c08..275b565a0e81f 100644
+--- a/kunit/Makefile
++++ b/kunit/Makefile
+@@ -1 +1,2 @@
+-obj-$(CONFIG_KUNIT) +=			test.o
++obj-$(CONFIG_KUNIT) +=			test.o \
++					string-stream.o
+diff --git a/kunit/string-stream.c b/kunit/string-stream.c
+new file mode 100644
+index 0000000000000..5e7906ffc7fa1
+--- /dev/null
++++ b/kunit/string-stream.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * C++ stream style string builder used in KUnit for building messages.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++
++#include <linux/list.h>
++#include <linux/slab.h>
++#include <kunit/string-stream.h>
++#include <kunit/test.h>
++
++int string_stream_vadd(struct string_stream *stream,
++		       const char *fmt,
++		       va_list args)
++{
++	struct string_stream_fragment *frag_container;
++	int len;
++	va_list args_for_counting;
++
++	/* Make a copy because `vsnprintf` could change it */
++	va_copy(args_for_counting, args);
++
++	/* Need space for null byte. */
++	len = vsnprintf(NULL, 0, fmt, args_for_counting) + 1;
++
++	va_end(args_for_counting);
++
++	frag_container = kmalloc(sizeof(*frag_container), GFP_KERNEL);
++	if (!frag_container)
++		return -ENOMEM;
++
++	frag_container->fragment = kmalloc(len, GFP_KERNEL);
++	if (!frag_container->fragment) {
++		kfree(frag_container);
++		return -ENOMEM;
++	}
++
++	len = vsnprintf(frag_container->fragment, len, fmt, args);
++	mutex_lock(&stream->lock);
++	stream->length += len;
++	list_add_tail(&frag_container->node, &stream->fragments);
++	mutex_unlock(&stream->lock);
++
++	return 0;
++}
++
++int string_stream_add(struct string_stream *stream, const char *fmt, ...)
++{
++	va_list args;
++	int result;
++
++	va_start(args, fmt);
++	result = string_stream_vadd(stream, fmt, args);
++	va_end(args);
++
++	return result;
++}
++
++void string_stream_clear(struct string_stream *stream)
++{
++	struct string_stream_fragment *frag_container, *frag_container_safe;
++
++	mutex_lock(&stream->lock);
++	list_for_each_entry_safe(frag_container,
++				 frag_container_safe,
++				 &stream->fragments,
++				 node) {
++		list_del(&frag_container->node);
++		kfree(frag_container->fragment);
++		kfree(frag_container);
++	}
++	stream->length = 0;
++	mutex_unlock(&stream->lock);
++}
++
++char *string_stream_get_string(struct string_stream *stream)
++{
++	struct string_stream_fragment *frag_container;
++	size_t buf_len = stream->length + 1; /* +1 for null byte. */
++	char *buf;
++
++	buf = kzalloc(buf_len, GFP_KERNEL);
++	if (!buf)
++		return NULL;
++
++	mutex_lock(&stream->lock);
++	list_for_each_entry(frag_container, &stream->fragments, node)
++		strlcat(buf, frag_container->fragment, buf_len);
++	mutex_unlock(&stream->lock);
++
++	return buf;
++}
++
++int string_stream_append(struct string_stream *stream,
++			 struct string_stream *other)
++{
++	const char *other_content;
++
++	other_content = string_stream_get_string(other);
++
++	if (!other_content)
++		return -ENOMEM;
++
++	return string_stream_add(stream, other_content);
++}
++
++bool string_stream_is_empty(struct string_stream *stream)
++{
++	return list_empty(&stream->fragments);
++}
++
++static int string_stream_init(struct kunit_resource *res, void *context)
++{
++	struct string_stream *stream;
++
++	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
++	if (!stream)
++		return -ENOMEM;
++
++	res->allocation = stream;
++	INIT_LIST_HEAD(&stream->fragments);
++	mutex_init(&stream->lock);
++
++	return 0;
++}
++
++static void string_stream_free(struct kunit_resource *res)
++{
++	struct string_stream *stream = res->allocation;
++
++	string_stream_clear(stream);
++	kfree(stream);
++}
++
++struct string_stream *alloc_string_stream(struct kunit *test)
++{
++	return kunit_alloc_resource(test,
++				    string_stream_init,
++				    string_stream_free,
++				    GFP_KERNEL,
++				    NULL);
++}
 -- 
-2.18.0.rc1
+2.22.0.510.g264f2c817a-goog
 
