@@ -2,81 +2,131 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2324C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5D9C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D53420880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FlbJkTtZ"
+	by mail.kernel.org (Postfix) with ESMTP id 42AC720880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbfGPKXd (ORCPT
+        id S1733023AbfGPK0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:23:33 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:56786 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfGPKXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:23:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=geQnomQajzgBsSVYw/PnnftxW7/f0nnaIsebEDQXuNY=; b=FlbJkTtZ1IvTsDccm1VJQt3rW
-        Sz3zJvkV3o6EPdjxAtfFv31Hzjdlj+DaBzBwzryDBFV1Zn/+QedDxmC4oXNnqDdfbYI1aG/sWFOE2
-        rimoVRhsG8M6UQUyM0Pi4KQutoGRIjXOge4jf4t9PrYkUxn9KLoOxVdBhQo4bXfJwDf5nD05TmpPE
-        V9QaY97exZg9urrNVaNC8vJuoYi3RPlhIRrvftlxB5yRDkqFtdRY0RjKec0lDRsgijTdTgVm4CRVf
-        WZKxzyPlRgtYOYfVL1J+3JC42sdy+wIIVZK6y3a6OkgSESsjhzDDpbQAGGjJuMJozuJ0/CiEasfxQ
-        H9cZc/zXg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnKc7-0005wF-Lm; Tue, 16 Jul 2019 10:23:15 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 36F982021C301; Tue, 16 Jul 2019 12:23:14 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 12:23:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v3 1/5] locking/qspinlock: Make
- arch_mcs_spin_unlock_contended more generic
-Message-ID: <20190716102314.GO3419@hirez.programming.kicks-ass.net>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-2-alex.kogan@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715192536.104548-2-alex.kogan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 16 Jul 2019 06:26:24 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36630 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732546AbfGPK0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:26:24 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FC192000B1;
+        Tue, 16 Jul 2019 12:26:22 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E46DA200042;
+        Tue, 16 Jul 2019 12:26:15 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9B102402D6;
+        Tue, 16 Jul 2019 18:26:08 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        leoyang.li@nxp.com, robh+dt@kernel.org
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm alarm driver
+Date:   Tue, 16 Jul 2019 18:16:55 +0800
+Message-Id: <20190716101655.47418-2-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190716101655.47418-1-biwen.li@nxp.com>
+References: <20190716101655.47418-1-biwen.li@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:25:32PM -0400, Alex Kogan wrote:
+The patch adds binding for ftm alarm driver
 
-> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-> index e14b32c69639..961781624638 100644
-> --- a/kernel/locking/qspinlock.c
-> +++ b/kernel/locking/qspinlock.c
-> @@ -558,7 +558,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
->  	if (!next)
->  		next = smp_cond_load_relaxed(&node->next, (VAL));
->  
-> -	arch_mcs_spin_unlock_contended(&next->locked);
-> +	arch_mcs_spin_unlock_contended(&next->locked, 1);
->  	pv_kick_node(lock, next);
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v5:
+    - None
 
-My problem with this patch is that the above reads really daft. Should
-we rename the whole function? arch_mcs_pass_lock() perhaps?
+Change in v4:
+    - add note about dts and kernel options
+    - add aliases in example
+
+Change in v3:
+	- remove reg-names property
+	- correct cells number
+
+Change in v2:
+	- replace ls1043a with ls1088a as example
+	- add rcpm node and fsl,rcpm-wakeup property
+
+
+ .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+new file mode 100644
+index 000000000000..fb018065406c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+@@ -0,0 +1,49 @@
++Freescale FlexTimer Module (FTM) Alarm
++
++Note:
++- The driver depends on RCPM driver
++  to wake up system in sleep.
++- Need stop using RTC_HCTOSYS or use the DT aliases
++  to ensure the driver is not used as the primary RTC.
++  (Select DT aliases defaultly)
++
++Required properties:
++- compatible : Should be "fsl,<chip>-ftm-alarm", the
++	       supported chips include
++	       "fsl,ls1012a-ftm-alarm"
++	       "fsl,ls1021a-ftm-alarm"
++	       "fsl,ls1028a-ftm-alarm"
++	       "fsl,ls1043a-ftm-alarm"
++	       "fsl,ls1046a-ftm-alarm"
++	       "fsl,ls1088a-ftm-alarm"
++	       "fsl,ls208xa-ftm-alarm"
++- reg : Specifies base physical address and size of the register sets for the
++  FlexTimer Module and base physical address of IP Powerdown Exception Control
++  Register.
++- interrupts : Should be the FlexTimer Module interrupt.
++- fsl,rcpm-wakeup property and rcpm node : Please refer
++	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++
++Optional properties:
++- big-endian: If the host controller is big-endian mode, specify this property.
++  The default endian mode is little-endian.
++
++Example:
++aliases {
++	...
++	rtc1 = ftm_alarm0; /* Use flextimer alarm driver as /dev/rtc1 */
++	...
++};
++
++rcpm: rcpm@1e34040 {
++	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
++	reg = <0x0 0x1e34040 0x0 0x18>;
++	fsl,#rcpm-wakeup-cells = <6>;
++};
++
++ftm_alarm0: timer@2800000 {
++	compatible = "fsl,ls1088a-ftm-alarm";
++	reg = <0x0 0x2800000 0x0 0x10000>;
++	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
++	interrupts = <0 44 4>;
++};
+-- 
+2.17.1
+
