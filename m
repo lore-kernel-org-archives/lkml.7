@@ -2,88 +2,109 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D4BC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A879EC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB61820659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FBD20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563265864;
+	bh=VB8/kZCEs8fqeDRSspU3uESqNJLm+O+NUsXs+MwQPNc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k3A8C1pxDnJftIYaiUnSNTBSGiByI2naKEoX/26hpf0SaM+elR8zLdBuGuPz7WqUk
+	 uyZva17cdLmWle0DWqjzR/kkLXSLjkOOrN20ytyyEJ2Iy8XDXDelzBEeoVp70WnTQX
+	 fmmKpQcD5Jxql/wPUXJytAMXdDo/afm5mYVnfLqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731220AbfGPIal (ORCPT
+        id S1731387AbfGPIbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:30:41 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:49233 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfGPIal (ORCPT
+        Tue, 16 Jul 2019 04:31:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40371 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730984AbfGPIbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:30:41 -0400
-Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C1EAD240005;
-        Tue, 16 Jul 2019 08:28:21 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 10:28:21 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
-Message-ID: <20190716082821.eafjvqfczxahx4as@flea>
-References: <20190715230457.3901-1-robh@kernel.org>
+        Tue, 16 Jul 2019 04:31:02 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w196so14900102oie.7;
+        Tue, 16 Jul 2019 01:31:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dabMYehwAIOMgEox85e65RbhyQ/W0kLnSfW8PvyFA3o=;
+        b=eHf8/UFhq1zrW/GQXHa1Yi1GYxobGWDocrxbrhw9YnX1BSvRF2h5Kb8zoJEkaNnJkD
+         WU1awxn1Neb8h9hHV6KKAh2TyC+tPzwFmtS5T5yAUlFiRr4CzM7imiNurbD/hbQ6x4aR
+         4aYjgnqCypx7JdVc7wTGj8Ud8kqyE/kG3g8q2neAfX1U+ea18wrB0K6uVi3V/8/YqAGx
+         2YeOwC19RE/TUfOIQ8hmxd/dgyX26SXtc0NgUiS1kr5zU8S9WVF+oKQkf8BdiuOxGzTm
+         OSsP9tWKOfx/VfswKOZbkOO5XGvSKt37GQpFkP8MMHfALLl0hNB8cfV8YSEX925IQZLQ
+         iQlQ==
+X-Gm-Message-State: APjAAAX1unlcL5zr6WSf0o+lXSaJLE1B28uq1zakBjjRwzKsRzphSahi
+        /fhs7DwVjQPEj+8ilVxbTo42u+s0xldUhoc2zTo=
+X-Google-Smtp-Source: APXvYqyuzj1SaChLyQaD7xBMjz+TklVFyF4Zmw85XHl+XoWQwfWrnpe0CXQlWQlqx4KzBi2CrYtJcPKqoCYEVRjUbKU=
+X-Received: by 2002:aca:4e89:: with SMTP id c131mr15794912oib.57.1563265861459;
+ Tue, 16 Jul 2019 01:31:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715230457.3901-1-robh@kernel.org>
-User-Agent: NeoMutt/20180716
+References: <20190715203651.GA7513@kroah.com> <20190715214348.81865-1-trong@android.com>
+ <CAJZ5v0gEzZkbeLFtW5yadwxBryvL3vWcUoQTkUy3VkxiTV+UrA@mail.gmail.com> <20190716021102.GA8310@kroah.com>
+In-Reply-To: <20190716021102.GA8310@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Jul 2019 10:30:48 +0200
+Message-ID: <CAJZ5v0hxKeK-eDEs1rGP0ZYbbCHa0q5=ZPMVCemYVHGL48Q=pg@mail.gmail.com>
+Subject: Re: [PATCH v4] PM / wakeup: show wakeup sources stats in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>, sspatil@google.com,
+        kaleshsingh@google.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 05:04:57PM -0600, Rob Herring wrote:
-> Properties which are child node definitions need to have an explict
-> type. Otherwise, a matching (DT) property can silently match when an
-> error is desired. Fix this up tree-wide. Once this is fixed, the
-> meta-schema will enforce this on any child node definitions.
+On Tue, Jul 16, 2019 at 4:13 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-spi@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> On Mon, Jul 15, 2019 at 11:48:27PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Jul 15, 2019 at 11:44 PM Tri Vo <trong@android.com> wrote:
+> > >
+> > > Userspace can use wakeup_sources debugfs node to plot history of suspend
+> > > blocking wakeup sources over device's boot cycle. This information can
+> > > then be used (1) for power-specific bug reporting and (2) towards
+> > > attributing battery consumption to specific processes over a period of
+> > > time.
+> > >
+> > > However, debugfs doesn't have stable ABI. For this reason, create a
+> > > 'struct device' to expose wakeup sources statistics in sysfs under
+> > > /sys/class/wakeup/<name>/.
+> > >
+> > > Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> > > source statistics in sysfs.
+> >
+> > I'm not sure if this is really needed, but I'll let Greg decide.
+>
+> You are right.  Having zillions of config options is a pain, who is
+> going to turn this off?
+>
+> But we can always remove the option before 5.4-rc1, so I'll take this
+> as-is for now :)
+>
+> > Apart from this
+> >
+> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> thanks for the review!  I'll wait for 5.3-rc1 to come out before adding
+> this to my tree.
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+So it occurred to me that maybe it's better if I apply it?  After all,
+this is PM material. :-)
 
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+It is fine by me either way, but then I'm not sure if you want to get
+future bug reports related to this if any ...
