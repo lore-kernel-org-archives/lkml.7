@@ -2,83 +2,106 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93845C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A64C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7F3206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70807206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388356AbfGPRwl convert rfc822-to-8bit (ORCPT
+        id S2388111AbfGPRzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:52:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51094 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728366AbfGPRwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:52:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 65944AC67;
-        Tue, 16 Jul 2019 17:52:39 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 19:52:38 +0200
-From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Nayna Jain <nayna@linux.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>
-Subject: Re: [PATCH v3] tpm: tpm_ibm_vtpm: Fix unallocated banks
-Message-ID: <20190716195238.79271980@kitsune.suse.cz>
-In-Reply-To: <20190711211357.77bl2ixfnplmumcl@linux.intel.com>
-References: <1562861615-11391-1-git-send-email-nayna@linux.ibm.com>
-        <20190711202824.dfhzxcqtk5ouud5n@linux.intel.com>
-        <20190711211357.77bl2ixfnplmumcl@linux.intel.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Tue, 16 Jul 2019 13:55:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:38298 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbfGPRzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 13:55:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDE032B;
+        Tue, 16 Jul 2019 10:55:45 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 994253F71A;
+        Tue, 16 Jul 2019 10:55:43 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 18:55:42 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     Alessio Balsini <balsini@android.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Paul Turner <pjt@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v11 2/5] sched/core: uclamp: Propagate parent clamps
+Message-ID: <20190716175542.p7vs2muslyuez6lq@e110439-lin>
+References: <20190708084357.12944-1-patrick.bellasi@arm.com>
+ <20190708084357.12944-3-patrick.bellasi@arm.com>
+ <20190715164200.GA30862@blackbody.suse.cz>
+ <20190716140706.vuggfigjlys44lkp@e110439-lin>
+ <20190716152929.GD32540@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190716152929.GD32540@blackbody.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 00:13:57 +0300
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-
-> On Thu, Jul 11, 2019 at 11:28:24PM +0300, Jarkko Sakkinen wrote:
-> > On Thu, Jul 11, 2019 at 12:13:35PM -0400, Nayna Jain wrote:  
-> > > The nr_allocated_banks and allocated banks are initialized as part of
-> > > tpm_chip_register. Currently, this is done as part of auto startup
-> > > function. However, some drivers, like the ibm vtpm driver, do not run
-> > > auto startup during initialization. This results in uninitialized memory
-> > > issue and causes a kernel panic during boot.
-> > > 
-> > > This patch moves the pcr allocation outside the auto startup function
-> > > into tpm_chip_register. This ensures that allocated banks are initialized
-> > > in any case.
-> > > 
-> > > Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with
-> > > PCR read")
-> > > Reported-by: Michal Suchanek <msuchanek@suse.de>
-> > > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > > Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> > > Tested-by: Michal Such√°nek <msuchanek@suse.de>  
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>  
+On 16-Jul 17:29, Michal Koutn˝ wrote:
+> On Tue, Jul 16, 2019 at 03:07:06PM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> > That note comes from the previous review cycle and it's based on a
+> > request from Tejun to align uclamp behaviors with the way the
+> > delegation model is supposed to work.
+> I saw and hopefully understood that reasoning -- uclamp.min has the
+> protection semantics and uclamp.max the limit semantics.
 > 
-> Thanks a lot! It is applied now.
+> However, what took me some time to comprehend when the effected
+> uclamp.min and uclamp.max cross over, i.e. that uclamp.min is then bound
+> by uclamp.max (besides parent's uclamp.min). Your commit message
+> explains that and I think it's relevant for the kernel docs file
+> itself.
 
-Fixes the issue for me.
+Right, I've just added a paragraph to the cpu.uclamp.min documentation.
 
-Thanks
+> > You right, the synchronization is introduced by a later patch:
+> > 
+> >    sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+> I saw that lock but didn't realize __setscheduler_uclamp() touches only
+> task's struct uclamp_se, none of task_group's/css's (which is under
+> uclamp_mutex). That seems correct.
 
-Michal
+Right, the mutex is used only on the cgroup side. That's because the
+CGroup API can affect multiple tasks running on different CPUs, thus
+we wanna make sure we don't come up with race conditions. In that
+path we can also afford to go a bit slower.
+
+In the fast path instead we rely on the rq-locks to ensure
+serialization on RUNNABLE tasks clamp updates.
+
+Coming from the __setscheduler_uclamp() side however we don't sync
+RUNNABLE tasks immediately. We delay the update to next enqueue
+opportunity.
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
