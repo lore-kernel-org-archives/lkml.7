@@ -2,171 +2,117 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2BDC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40262C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F36D21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563316337;
-	bh=lyaZPWMuZlefKWF7YWB6HVKNuBIrAxc+DmEusw8Ud/Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WFlYyggrpe7vtB0BfVqqKKWAJomwciMgqaMqPmjrn9J64k72bVmXFC91LApUWfCh0
-	 060SNvDOTcfYXj/0/UzD49Y+bk4zHOPYB8AgVOCiTmXxn6uVsABDCCCiRg/IDnTT/Z
-	 UZO1fqYQTwaaUtvSln1I1IizgRxbHFB3Vun1OFRo=
+	by mail.kernel.org (Postfix) with ESMTP id 036D22173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PlABOLtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbfGPWcQ (ORCPT
+        id S2387958AbfGPWfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbfGPWcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:32:16 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6590217F9;
-        Tue, 16 Jul 2019 22:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563316334;
-        bh=lyaZPWMuZlefKWF7YWB6HVKNuBIrAxc+DmEusw8Ud/Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vNf37OR0RDfDRA/pA30R7v7uYmh+1IpmXebIprzX3BxwoSrlydN97MHm6oxem4sQQ
-         LlrYpfLYwfEtoVDyhkmAEg5oezVsh/7hMHfEObVUHg9diycFqh71DMxFgIL4so284s
-         3dXRKyEG8K3D2g2ZwMfzykw6fo8H8E6kdzvDwXVs=
-Received: by mail-qt1-f172.google.com with SMTP id k10so21384166qtq.1;
-        Tue, 16 Jul 2019 15:32:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAXS5yBQbSWtDdzB9F5/umSDGwMFdD/E7oHZGEewNi6Na8dZusVo
-        H8aX33EMl8QB8RnvIivE4VmIWFnCZywU56Qv2w==
-X-Google-Smtp-Source: APXvYqzMTIC9EQA8xp2dJA+iwx7B3YTOsDqzWXa25k+IfZ0s+trHnbNq6WfnsQJveUanqpenewkZRjviGzl57+0qGfM=
-X-Received: by 2002:ac8:36b9:: with SMTP id a54mr25318805qtc.300.1563316333903;
- Tue, 16 Jul 2019 15:32:13 -0700 (PDT)
+        Tue, 16 Jul 2019 18:35:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37573 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbfGPWfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:35:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so9801092pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=oNKadd/WVCq81IXvSQ0j30TJwkdvFHc6RdF6/To6EAw=;
+        b=PlABOLtxKdt3umkPxr+wy+2HNHScTBvq6WU86sEkXCwrWTcMh0G2g2T6kpThh1kisk
+         7+nncEAlMbqlIRE+f5E+sF92Q0u5QKmJL+9gu+Yup77IlPkp5l7EGMufIUtzof7o8WDP
+         mfFHDWW31G2ojtBEgGD5JV3pdae3gUzylfInc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=oNKadd/WVCq81IXvSQ0j30TJwkdvFHc6RdF6/To6EAw=;
+        b=C1s/+8Jodf8extAftgtXZ6igAdPocbq9nhrAMhWf5oJYBzh/sUJXgxO/lJKuXE0flu
+         4CsQWyHCPsNNATMNF4OECap8QXgczkQg6uvCL19CWQfUkz/j/ktzsmqj0ADzNVxg4hh6
+         P9BeD/sISaHklQKv72JLIhzhvUtGJKtBuDfsSWGIwsDNQRR2lT6/n/l/YMiMOOuFVPFQ
+         RjaLjZtWv9M19AwB1ufougx6nHKtuF2ZPytg4+cacOOPG7GEFpI29DGsYD7guBxW+YPW
+         fO4puClOGENL/UWxkIOY+B2QlyjrnFax8+dzH40suuCbM2S1qbXdSchm6MvYx12tD93w
+         XhVw==
+X-Gm-Message-State: APjAAAURqefxTPicDgSshjGEE/OUJ9uov2ZqIWemdGD7BtDxZFHP12k/
+        HUmbaqWUxsR6Ap9oV5r4MfhhUA==
+X-Google-Smtp-Source: APXvYqxyF6nAHD345G30UUWPahYhM5UqsashUW9Kco4ExdxioImxVm1Ea4YO4E3PAj4jjVj1VYJ7lw==
+X-Received: by 2002:a63:f959:: with SMTP id q25mr36666426pgk.357.1563316546155;
+        Tue, 16 Jul 2019 15:35:46 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w18sm28050816pfj.37.2019.07.16.15.35.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 15:35:45 -0700 (PDT)
+Message-ID: <5d2e5141.1c69fb81.ef731.8450@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190716101655.47418-1-biwen.li@nxp.com> <20190716101655.47418-2-biwen.li@nxp.com>
-In-Reply-To: <20190716101655.47418-2-biwen.li@nxp.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 16 Jul 2019 16:32:01 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
-Message-ID: <CAL_Jsq+U=W_51qUDvOMPgexMOLuqTyYua5H6G-cwFnKCh8YmPg@mail.gmail.com>
-Subject: Re: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Yang-Leo Li <leoyang.li@nxp.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190703050827.173284-1-drinkcat@chromium.org>
+References: <20190703050827.173284-1-drinkcat@chromium.org>
+Subject: Re: [PATCH] of/fdt: Make sure no-map does not remove already reserved regions
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ian Campbell <ian.campbell@citrix.com>,
+        Grant Likely <grant.likely@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 16 Jul 2019 15:35:44 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 4:26 AM Biwen Li <biwen.li@nxp.com> wrote:
->
-> The patch adds binding for ftm alarm driver
-
-Bindings are for h/w, not drivers...
-
-'dt-bindings: rtc: ...' for the subject prefix.
-
->
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Quoting Nicolas Boichat (2019-07-02 22:08:27)
+> If the device tree is incorrectly configured, and attempts to
+> define a "no-map" reserved memory that overlaps with the kernel
+> data/code, the kernel would crash quickly after boot, with no
+> obvious clue about the nature of the issue.
+>=20
+> For example, this would happen if we have the kernel mapped at
+> these addresses (from /proc/iomem):
+> 40000000-41ffffff : System RAM
+>   40080000-40dfffff : Kernel code
+>   40e00000-411fffff : reserved
+>   41200000-413e0fff : Kernel data
+>=20
+> And we declare a no-map shared-dma-pool region at a fixed address
+> within that range:
+> mem_reserved: mem_region {
+>         compatible =3D "shared-dma-pool";
+>         reg =3D <0 0x40000000 0 0x01A00000>;
+>         no-map;
+> };
+>=20
+> To fix this, when removing memory regions at early boot (which is
+> what "no-map" regions do), we need to make sure that the memory
+> is not already reserved. If we do, __reserved_mem_reserve_reg
+> will throw an error:
+> [    0.000000] OF: fdt: Reserved memory: failed to reserve memory
+>    for node 'mem_region': base 0x0000000040000000, size 26 MiB
+> and the code that will try to use the region should also fail,
+> later on.
+>=20
+> We do not do anything for non-"no-map" regions, as memblock
+> explicitly allows reserved regions to overlap, and the commit
+> that this fixes removed the check for that precise reason.
+>=20
+> Fixes: 094cb98179f19b7 ("of/fdt: memblock_reserve /memreserve/ regions in=
+ the case of partial overlap")
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 > ---
-> Change in v5:
->     - None
->
-> Change in v4:
->     - add note about dts and kernel options
->     - add aliases in example
->
-> Change in v3:
->         - remove reg-names property
->         - correct cells number
->
-> Change in v2:
->         - replace ls1043a with ls1088a as example
->         - add rcpm node and fsl,rcpm-wakeup property
->
->
->  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
->
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> new file mode 100644
-> index 000000000000..fb018065406c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> @@ -0,0 +1,49 @@
-> +Freescale FlexTimer Module (FTM) Alarm
-> +
-> +Note:
-> +- The driver depends on RCPM driver
-> +  to wake up system in sleep.
-> +- Need stop using RTC_HCTOSYS or use the DT aliases
-> +  to ensure the driver is not used as the primary RTC.
-> +  (Select DT aliases defaultly)
 
-This is Linux specific and not relevant to the binding.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,<chip>-ftm-alarm", the
-> +              supported chips include
-> +              "fsl,ls1012a-ftm-alarm"
-> +              "fsl,ls1021a-ftm-alarm"
-> +              "fsl,ls1028a-ftm-alarm"
-> +              "fsl,ls1043a-ftm-alarm"
-> +              "fsl,ls1046a-ftm-alarm"
-> +              "fsl,ls1088a-ftm-alarm"
-> +              "fsl,ls208xa-ftm-alarm"
-> +- reg : Specifies base physical address and size of the register sets for the
-> +  FlexTimer Module and base physical address of IP Powerdown Exception Control
-> +  Register.
-> +- interrupts : Should be the FlexTimer Module interrupt.
-> +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> +       Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> +
-> +Optional properties:
-> +- big-endian: If the host controller is big-endian mode, specify this property.
-> +  The default endian mode is little-endian.
-> +
-> +Example:
-> +aliases {
-> +       ...
-> +       rtc1 = ftm_alarm0; /* Use flextimer alarm driver as /dev/rtc1 */
-> +       ...
-> +};
-
-Drop the aliases part. It's not going to work when this is converted
-to DT schema and the comment is Linux specific.
-
-> +
-> +rcpm: rcpm@1e34040 {
-> +       compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> +       reg = <0x0 0x1e34040 0x0 0x18>;
-> +       fsl,#rcpm-wakeup-cells = <6>;
-
-Before there are any users of this, either drop it if it is not
-variable or the correct form would be '#fsl,rcpm-wakeup-cells'.
-
-> +};
-> +
-> +ftm_alarm0: timer@2800000 {
-> +       compatible = "fsl,ls1088a-ftm-alarm";
-> +       reg = <0x0 0x2800000 0x0 0x10000>;
-> +       fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-> +       interrupts = <0 44 4>;
-> +};
-> --
-> 2.17.1
->
