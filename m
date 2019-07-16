@@ -2,139 +2,150 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B0CC76196
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200BDC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A3F20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80A420693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:54:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QqmIswjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387839AbfGPOxm (ORCPT
+        id S2387884AbfGPOyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:53:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:36078 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbfGPOxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:53:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54E0A337;
-        Tue, 16 Jul 2019 07:53:41 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A28203F59C;
-        Tue, 16 Jul 2019 07:53:38 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 15:53:36 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 07/18] drivers: firmware: psci: Prepare to use OS
- initiated suspend mode
-Message-ID: <20190716145336.GC7250@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-8-ulf.hansson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513192300.653-8-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 16 Jul 2019 10:54:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60952 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfGPOyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:54:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GEmcI4125879;
+        Tue, 16 Jul 2019 14:53:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=jMrbDq6/gbs2hZj13b/yWOFJhrxf6vLsu7dgoGkQCnQ=;
+ b=QqmIswjnPG8I98M0sG7apghVmwVrT0Sj3eu3GI5ZetScM+7aZhnuZosT7cMwyTi/OULk
+ Yhkrqy4VxurAGVNzlj87C3i8GPUxt0eAPj7jRqSr5hQLvYtLXk1Wl9liXZRlGHe/JZo6
+ GrGhzBl+yveWTjZT2jEyMmKlse867MdDlLq5RylH11PSss9Sy2cgoELBhRt5VUToKErG
+ S0JLzC9rBKj3+jrPP/ymx5I2xeOIxBHiJ0UZLPpDbh2FwdzOxHiu3XBcSihdQ71WAqSo
+ Hufnto1Fpzzz2FH8pYRS8j9BolLFQnHkjGINwWSbUU+CdVGa+L+G4FyiY7UixacVvExW wg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtn4qc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 14:53:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GEqkxD129539;
+        Tue, 16 Jul 2019 14:53:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2tq4dtynsf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 14:53:08 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6GEr4JB015648;
+        Tue, 16 Jul 2019 14:53:04 GMT
+Received: from [10.39.235.122] (/10.39.235.122)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 16 Jul 2019 14:53:04 +0000
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Re: [PATCH v3 2/5] locking/qspinlock: Refactor the qspinlock slow
+ path
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <20190716102034.GN3419@hirez.programming.kicks-ass.net>
+Date:   Tue, 16 Jul 2019 10:53:02 -0400
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9D5B6F33-6003-4CCA-BBE5-998B5A679B9C@oracle.com>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-3-alex.kogan@oracle.com>
+ <20190716102034.GN3419@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3259)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=888
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907160183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=933 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907160182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:22:49PM +0200, Ulf Hansson wrote:
-> The per CPU variable psci_power_state, contains an array of fixed values,
-> which reflects the corresponding arm,psci-suspend-param parsed from DT, for
-> each of the available CPU idle states.
->
-> This isn't sufficient when using the hierarchical CPU topology in DT in
-> combination with having PSCI OS initiated (OSI) mode enabled. More
-> precisely, in OSI mode, Linux is responsible of telling the PSCI FW what
-> idle state the cluster (a group of CPUs) should enter, while in PSCI
-> Platform Coordinated (PC) mode, each CPU independently votes for an idle
-> state of the cluster.
->
-> For this reason, let's introduce an additional per CPU variable called
-> domain_state and implement two helper functions to read/write its values.
-> Following patches, which implements PM domain support for PSCI, will use
-> the domain_state variable and set it to corresponding bits that represents
-> the selected idle state for the cluster.
->
-> Finally, in psci_cpu_suspend_enter() and psci_suspend_finisher(), let's
-> take into account the values in the domain_state, as to get the complete
-> suspend parameter.
->
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->
-> Changes:
-> 	- Clarify changelog.
-> 	- Drop changes in psci_cpu_on() as it belongs in the patch for hotplug.
-> 	- Move some code inside "#ifdef CONFIG_CPU_IDLE".
->
-> ---
->  drivers/firmware/psci/psci.c | 24 ++++++++++++++++++++----
->  1 file changed, 20 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index b11560f7c4b9..4aec513136e4 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -285,6 +285,17 @@ static int __init psci_features(u32 psci_func_id)
->
->  #ifdef CONFIG_CPU_IDLE
->  static DEFINE_PER_CPU_READ_MOSTLY(u32 *, psci_power_state);
-> +static DEFINE_PER_CPU(u32, domain_state);
-> +
-> +static inline u32 psci_get_domain_state(void)
-> +{
-> +	return __this_cpu_read(domain_state);
-> +}
-> +
-> +static inline void psci_set_domain_state(u32 state)
-> +{
-> +	__this_cpu_write(domain_state, state);
-> +}
->
->  static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
->  {
-> @@ -420,15 +431,17 @@ int psci_cpu_init_idle(struct cpuidle_driver *drv, unsigned int cpu)
->  static int psci_suspend_finisher(unsigned long index)
->  {
->  	u32 *state = __this_cpu_read(psci_power_state);
-> +	u32 composite_state = state[index - 1] | psci_get_domain_state();
->
+On Jul 16, 2019, at 6:20 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>=20
+> On Mon, Jul 15, 2019 at 03:25:33PM -0400, Alex Kogan wrote:
+>=20
+>> +/*
+>> + * set_locked_empty_mcs - Try to set the spinlock value to =
+_Q_LOCKED_VAL,
+>> + * and by doing that unlock the MCS lock when its waiting queue is =
+empty
+>> + * @lock: Pointer to queued spinlock structure
+>> + * @val: Current value of the lock
+>> + * @node: Pointer to the MCS node of the lock holder
+>> + *
+>> + * *,*,* -> 0,0,1
+>> + */
+>> +static __always_inline bool __set_locked_empty_mcs(struct qspinlock =
+*lock,
+>> +						   u32 val,
+>> +						   struct mcs_spinlock =
+*node)
+>> +{
+>> +	return atomic_try_cmpxchg_relaxed(&lock->val, &val, =
+_Q_LOCKED_VAL);
+>> +}
+>=20
+> That name is nonsense. It should be something like:
+>=20
+> static __always_inline bool __try_clear_tail(=E2=80=A6)
 
-The more I read this code and PSCI spec, I think it's not simple OR here
-unless the specification states that. ACPI LPI explicitly stated that as
-it was generic and PSCI doesn't. It can be made workable for original
-format, but I think it's not that simple for extended format unless the
-suspend parameters are carefully designed to achieve that, so we can't
-just convert existing platforms the way it's shown on HiKey in this series.
+We already have set_locked(), so I was trying to convey the fact that we =
+are
+doing the same here, but only when the MCS chain is empty.
 
---
-Regards,
-Sudeep
+I can use __try_clear_tail() instead.
+
+>=20
+>=20
+>> +/*
+>> + * pass_mcs_lock - pass the MCS lock to the next waiter
+>> + * @node: Pointer to the MCS node of the lock holder
+>> + * @next: Pointer to the MCS node of the first waiter in the MCS =
+queue
+>> + */
+>> +static __always_inline void __pass_mcs_lock(struct mcs_spinlock =
+*node,
+>> +					    struct mcs_spinlock *next)
+>> +{
+>> +	arch_mcs_spin_unlock_contended(&next->locked, 1);
+>> +}
+>=20
+> I'm not entirely happy with that name either; but it's not horrible =
+like
+> the other one. Why not mcs_spin_unlock_contended() ?
+
+Sure, I can use mcs_spin_unlock_contended() instead.
+
+Thanks,
+=E2=80=94 Alex
+
