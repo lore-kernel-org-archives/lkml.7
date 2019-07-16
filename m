@@ -2,172 +2,134 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47928C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3706C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EDC20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50C82173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qBKuzkwY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJSPfeIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388628AbfGPT6K (ORCPT
+        id S2388653AbfGPUAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:58:10 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41561 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfGPT6J (ORCPT
+        Tue, 16 Jul 2019 16:00:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54504 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfGPUAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:58:09 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q4so9955060pgj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:58:09 -0700 (PDT)
+        Tue, 16 Jul 2019 16:00:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so19850063wme.4;
+        Tue, 16 Jul 2019 13:00:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=BvRVByTKtdPiNxfsCeySgYk32g6DkoU4cKl3qk6qMVk=;
-        b=qBKuzkwYCRwHvwJn5liGlcD2L84sglQVE5FXCvo+IQv70Uq/MEojS7Kg5S/EDHID12
-         pJ7AZbdF/xARsL3yN93QFo5UjfnJsh3V8hCv4XIGmJLF9mpMJnrN34EauKn5kvkob1P4
-         OXPW2D85z9yIFaBoe6IOKq6xqwgatDCw0gCTrAsm4MSqzeJdG1nIV2sRkUaoN3satqdy
-         3r7ddOP9ZAN5dBl9ASJh37bJiVKi0bznMDEWnqd1hXIgTImiRkLhpgit9myZg8/ywi43
-         KS1jpEZHC5yg7C07gRiNUoidsY7Vqi29u3K0EWMm4F2bOKlF0JdTlr9j0yaRWchOoPlB
-         c+JA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q2k4Tez3BcD/DYNbzop5shEmRtJWPxKAmmFMVnHWHlw=;
+        b=cJSPfeIKP4fg4RqIm/hF2Mv/PaPPlrWrv1jGqmd+PzW9u6Yr2OS4F+Bnf0zR9/DDNT
+         MOcA0LyqKKyGDu8JUOMcwM99+S23y7pi4UdjcE3zXCL3MgaNTAznUqgLEuaVfgaTroKW
+         gtfZVYS8B5ltN0lbmRK/hlBrDmlUCnwkvxGlJMp9iYmGHkwUa7RX9GUXHGZbkUqUDZvK
+         6fMm2xi1PSKmU12WyF7cPtF5daP3KQ3NHAoH0vTaEyDSEZ5tHvSAbaI+8FjoXCrtomYF
+         WoAR2PadyLiElD3JUSV0yvV39xbWD3Hf+kUeHw3mGJk/WiyH52HRVoVLouxsgyG8GdRx
+         pefw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=BvRVByTKtdPiNxfsCeySgYk32g6DkoU4cKl3qk6qMVk=;
-        b=PFjeUvVBJ/pV2s1lFbPNEweUXyeJeFA3iABMjT9B32sr/7VUC2+57uZ9iGk/0ty7We
-         tiYvsbGnWiPbC36tl7+YmlZeLP6FFm85+Hlft1aLZ8q8SxEgbK1oItOgeqqEkMcV/0ju
-         gOY/SZy9uvDstKsZrx2EO67EqlL9P2HiP+c9ioGfFdGbcDo1bgbclrQX0FFZ0BZM54A/
-         YAG/AieEoYTfidVhQAyixDKAWsBb141y2AfGvdWWZeKxkph+cUBG5qOTTPW1rk/8rWDz
-         XIEolcF7aRP6SIMZiynGEYHmDRYQdJe0guFJuh0PD2h48uSt11JAlMSYVn/iEjtU849n
-         YuJg==
-X-Gm-Message-State: APjAAAVngVrJAwnrWUT29CJaKwti7ZfrayYidmVrCq11Kg8AVAxzbFbk
-        Wf2gpYjhFZHgdkJ6CaplVRfZbA==
-X-Google-Smtp-Source: APXvYqxv41o91mStMvD1iotQMy2K+EjhMYtCXsBhaiHxrl4BboXIWLtgAnKu4l6h0Otf6vcXgWdTwA==
-X-Received: by 2002:a63:ee04:: with SMTP id e4mr11958711pgi.53.1563307088226;
-        Tue, 16 Jul 2019 12:58:08 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id e124sm32522864pfh.181.2019.07.16.12.58.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q2k4Tez3BcD/DYNbzop5shEmRtJWPxKAmmFMVnHWHlw=;
+        b=tPls/J89m2TBKm4rayk40YdptQfeXuZfaQ5gjUOBL/dxBqAly5mwtxmvDMhcayMFmb
+         nVljtmzGltagyeRlRjx4qnhMJI1cVyhJZVSgaRcXVqTivuJeetE2C30khV5xLJPEU6PE
+         +wvHPiSzvkka85BaKcvkYO0j1L4GZUsT2ZHamWgzsKJ9Qgd3LGoXBMcpyHYVBV4x6A15
+         e8C0QBYUWUIu9wiu2QHZ23UUvJQi3YzRCSG4NFd/ciMz4pBIcLA7vlJrN4qr3flz3ktl
+         /xDMYrlOGiPY3ZpQpD+ybz5h2YaXU1GgREZ+3Z+e2xxEJ1EyRD/vm5SYZr+/aBH945BP
+         ss5A==
+X-Gm-Message-State: APjAAAUYxAVXbV1Zv3g7yVHNXDIocfzMCmMDaOHbZ1BbbwCaCNYlH5qg
+        O7RWOwMK/ucpXpGOHEd1gsQ=
+X-Google-Smtp-Source: APXvYqyQEr+LTK+JlN52NndYJ0BClzKtNWVdYv17XSWLgYCuugCJDuebXJdlQyq3+lybjIdWKY+eqQ==
+X-Received: by 2002:a1c:b707:: with SMTP id h7mr31522543wmf.45.1563307200469;
+        Tue, 16 Jul 2019 13:00:00 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id b8sm25256991wmh.46.2019.07.16.12.59.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 12:58:07 -0700 (PDT)
-From:   bsegall@google.com
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Pqhil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
-        <1561664970-1555-1-git-send-email-chiluk+linux@indeed.com>
-        <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com>
-Date:   Tue, 16 Jul 2019 12:58:06 -0700
-In-Reply-To: <1561664970-1555-2-git-send-email-chiluk+linux@indeed.com> (Dave
-        Chiluk's message of "Thu, 27 Jun 2019 14:49:30 -0500")
-Message-ID: <xm26ef2pkb01.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 16 Jul 2019 12:59:59 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 12:59:57 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Mike Lothian <mike@fireburn.co.uk>
+Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
+Message-ID: <20190716195957.GA38495@archlinux-threadripper>
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
+ <20190716170606.GA38406@archlinux-threadripper>
+ <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Chiluk <chiluk+linux@indeed.com> writes:
+On Tue, Jul 16, 2019 at 09:47:27PM +0200, Thomas Gleixner wrote:
+> The gold linker has known issues of failing the build both in random and in
+> predictible ways:
+> 
+>  - The x86/X32 VDSO build fails with:
+> 
+>    arch/x86/entry/vdso/vclock_gettime-x32.o:vclock_gettime.c:function do_hres:
+>    error: relocation overflow: reference to 'hvclock_page'
+> 
+>    That's a known issue for years and the usual workaround is to disable
+>    CONFIG_X86_32
+> 
+>  - A recent build failure is caused by turning a relocation into an
+>    absolute one for unknown reasons. See link below.
+> 
+>  - There are a couple of gold workarounds applied already, but reports
+>    about broken builds with ld.gold keep coming in on a regular base and in
+>    most cases the root cause is unclear.
+> 
+> In context of the most recent fail H.J. stated:
+> 
+>   "Since building a workable kernel for different kernel configurations
+>    isn't a requirement for gold, I don't recommend gold for kernel."
+> 
+> So instead of dealing with attempts to duct tape gold support without
+> understanding the root cause and without support from the gold folks, fail
+> the build when gold is detected.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
 
-> It has been observed, that highly-threaded, non-cpu-bound applications
-> running under cpu.cfs_quota_us constraints can hit a high percentage of
-> periods throttled while simultaneously not consuming the allocated
-> amount of quota. This use case is typical of user-interactive non-cpu
-> bound applications, such as those running in kubernetes or mesos when
-> run on multiple cpu cores.
->
-> This has been root caused to threads being allocated per cpu bandwidth
-> slices, and then not fully using that slice within the period. At which
-> point the slice and quota expires. This expiration of unused slice
-> results in applications not being able to utilize the quota for which
-> they are allocated.
->
-> The expiration of per-cpu slices was recently fixed by
-> 'commit 512ac999d275 ("sched/fair: Fix bandwidth timer clock drift
-> condition")'. Prior to that it appears that this has been broken since
-> at least 'commit 51f2176d74ac ("sched/fair: Fix unlocked reads of some
-> cfs_b->quota/period")' which was introduced in v3.16-rc1 in 2014. That
-> added the following conditional which resulted in slices never being
-> expired.
->
-> if (cfs_rq->runtime_expires != cfs_b->runtime_expires) {
-> 	/* extend local deadline, drift is bounded above by 2 ticks */
-> 	cfs_rq->runtime_expires += TICK_NSEC;
->
-> Because this was broken for nearly 5 years, and has recently been fixed
-> and is now being noticed by many users running kubernetes
-> (https://github.com/kubernetes/kubernetes/issues/67577) it is my opinion
-> that the mechanisms around expiring runtime should be removed
-> altogether.
->
-> This allows quota already allocated to per-cpu run-queues to live longer
-> than the period boundary. This allows threads on runqueues that do not
-> use much CPU to continue to use their remaining slice over a longer
-> period of time than cpu.cfs_period_us. However, this helps prevents the
-> above condition of hitting throttling while also not fully utilizing
-> your cpu quota.
->
-> This theoretically allows a machine to use slightly more than its
-> allotted quota in some periods. This overflow would be bounded by the
-> remaining quota left on each per-cpu runqueueu. This is typically no
-> more than min_cfs_rq_runtime=1ms per cpu. For CPU bound tasks this will
-> change nothing, as they should theoretically fully utilize all of their
-> quota in each period. For user-interactive tasks as described above this
-> provides a much better user/application experience as their cpu
-> utilization will more closely match the amount they requested when they
-> hit throttling. This means that cpu limits no longer strictly apply per
-> period for non-cpu bound applications, but that they are still accurate
-> over longer timeframes.
->
-> This greatly improves performance of high-thread-count, non-cpu bound
-> applications with low cfs_quota_us allocation on high-core-count
-> machines. In the case of an artificial testcase (10ms/100ms of quota on
-> 80 CPU machine), this commit resulted in almost 30x performance
-> improvement, while still maintaining correct cpu quota restrictions.
-> That testcase is available at https://github.com/indeedeng/fibtest.
->
-> Fixes: 512ac999d275 ("sched/fair: Fix bandwidth timer clock drift condition")
-> Signed-off-by: Dave Chiluk <chiluk+linux@indeed.com>
-> ---
->  Documentation/scheduler/sched-bwc.txt | 73 ++++++++++++++++++++++++++++-------
->  kernel/sched/fair.c                   | 71 +++-------------------------------
->  kernel/sched/sched.h                  |  4 --
->  3 files changed, 65 insertions(+), 83 deletions(-)
->
-> [...]
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index f35930f..a675c69 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4809,11 +4754,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
->  	if (!runtime)
->  		return;
->  
-> -	runtime = distribute_cfs_runtime(cfs_b, runtime, expires);
-> +	runtime = distribute_cfs_runtime(cfs_b, runtime);
->  
->  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
-> -	if (expires == cfs_b->runtime_expires)
-> -		lsub_positive(&cfs_b->runtime, runtime);
+Based on the crude little testing script I wrote below:
 
-The lsub_positive is still needed, just get rid of the if.
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 
+$ cat test.sh
+#!/bin/bash
 
-Other than that,
-Reviewed-by: Ben Segall <bsegall@google.com>
+# ld.bfd (expected to pass)
+make distclean defconfig || exit ${?}
+
+# ld.gold explicitly (expected to fail)
+make LD=ld.gold distclean defconfig && exit ${?}
+
+# ld.gold as if it were the system linker (expected to fail)
+ln -fs /usr/bin/ld.gold ld
+PATH=${PWD}:${PATH} make distclean defconfig && exit ${?}
+
+# ld.lld (expected to pass)
+make LD=ld.lld distclean defconfig || exit ${?}
