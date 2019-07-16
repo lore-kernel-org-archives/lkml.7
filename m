@@ -2,163 +2,289 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAA9C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD7AC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4ED2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GCZq5KFI"
+	by mail.kernel.org (Postfix) with ESMTP id 654522173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731851AbfGPIvS (ORCPT
+        id S1731912AbfGPIvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:51:18 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:21881 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731403AbfGPIvR (ORCPT
+        Tue, 16 Jul 2019 04:51:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58522 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbfGPIvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:51:17 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190716085114epoutp046edc9fdb264367f0e2113314f548d67c~x1x8OqIcZ0722407224epoutp04d
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 08:51:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190716085114epoutp046edc9fdb264367f0e2113314f548d67c~x1x8OqIcZ0722407224epoutp04d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563267074;
-        bh=ACmg7AjJRbmv8mGq5gKa0bJFXDdGLqITjtTawvIlASk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=GCZq5KFIPo4mvLcEvanLtpAMSJvbHRzu71cmhopmN7nTdJ4PofBtMcknOsoauPPTo
-         LkhzYjkevzg3gVYcmrYM91FNpWVnMLNYojp6fWIYaj8xgJJorbnAmRr7sv+HzsdD7v
-         SZE8aqqkXT+JN6SeEpF6OrmBOJoMlnYIhUSSnIlA=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190716085113epcas1p212a4f08e0086b5c591090dd472431915~x1x7i9__D1067710677epcas1p26;
-        Tue, 16 Jul 2019 08:51:13 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 45nvJF6VyjzMqYlp; Tue, 16 Jul
-        2019 08:51:09 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        44.7C.04075.BFF8D2D5; Tue, 16 Jul 2019 17:51:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190716085106epcas1p4e767ed3858ed9cb3fa631460a2cdd7f5~x1x1evSBQ3230832308epcas1p4Q;
-        Tue, 16 Jul 2019 08:51:06 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190716085106epsmtrp2c953c1719788d049c8c59073b2b2ad00~x1x1dwKIU0187301873epsmtrp2i;
-        Tue, 16 Jul 2019 08:51:06 +0000 (GMT)
-X-AuditID: b6c32a36-b61ff70000000feb-96-5d2d8ffb8d9f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        02.A3.03638.AFF8D2D5; Tue, 16 Jul 2019 17:51:06 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716085106epsmtip1074ab7b2b284a61a7b4ff2438f449579~x1x1BTOw-2378423784epsmtip1-;
-        Tue, 16 Jul 2019 08:51:06 +0000 (GMT)
-Subject: Re: [PATCH v2 4/4] dt-bindings: devfreq: exynos-bus: remove unused
- property
-To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <dd74212e-a422-13ab-8237-fcaf372ab3eb@samsung.com>
-Date:   Tue, 16 Jul 2019 17:54:12 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Tue, 16 Jul 2019 04:51:46 -0400
+Received: from laptop (unknown [IPv6:2a01:cb19:8da1:9c00:f43f:8285:c795:bffa])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: aragua)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A0ED228B66E;
+        Tue, 16 Jul 2019 09:51:43 +0100 (BST)
+Message-ID: <077292af269a17ea642444b9f8b52c55f240811c.camel@collabora.com>
+Subject: Re: [PATCH v4 1/1] iio: common: cros_ec_sensors: Expose
+ cros_ec_sensors frequency range via iio sysfs
+From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     gwendal@chromium.org, egranata@chromium.org, kernel@collabora.com,
+        Nick Vaccaro <nvaccaro@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 16 Jul 2019 10:51:41 +0200
+In-Reply-To: <20190714183123.40855630@archlinux>
+References: <cover.1562672771.git.fabien.lahoudere@collabora.com>
+         <27edd1c47f6d741ee2bfa9ad86c45345e1878ff5.1562672771.git.fabien.lahoudere@collabora.com>
+         <20190714183123.40855630@archlinux>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190715120416.3561-5-k.konieczny@partner.samsung.com>
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsWy7bCmnu7vft1Yg4uXRCw2zljPajH/yDlW
-        i759/xkt+h+/ZrY4f34Du8XZpjfsFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67xdLrF5ks
-        bjeuYLN48+Msk0Xr3iPsFv+ubWSx2PzgGJuDoMeaeWsYPTat6mTz2Lyk3uPguz1MHn1bVjF6
-        HL+xncnj8ya5APaobJuM1MSU1CKF1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUX
-        nwBdt8wcoA+UFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnFJbZKqQUpOQWWBXrFibnFpXnpesn5
-        uVaGBgZGpkCFCdkZz/r3Mxe856yY1bqAqYFxOUcXIyeHhICJxLrZC5i7GLk4hAR2MEp09k9h
-        hHA+ATmrz7FBON8YJeb+eMMG03Jl/zx2iMReRok3S48xgiSEBN4zSrRfKQSxhQXCJG7OPswO
-        YosImEo8Wt3ACtLALHCZRWLao0msIAk2AS2J/S9ugE3lF1CUuPrjMdggXgE7if2bngIdxcHB
-        IqAq8e9DIEhYVCBC4tSReSwQJYISJ2c+AbM5BVwkfndfBRvJLCAucevJfCYIW16ieetssN8k
-        BE6xS3xe2QH1gYvEql9/mSBsYYlXx7ewQ9hSEp/f7YWqqZZYefIIG0RzB6PElv0XWCESxhL7
-        l05mAjmOWUBTYv0ufYiwosTO33MZIRbzSbz72sMKUiIhwCvR0SYEUaIscfnBXai1khKL2zvZ
-        JjAqzULyziwkL8xC8sIshGULGFlWMYqlFhTnpqcWGxYYIcf2JkZw6tYy28G46JzPIUYBDkYl
-        Hl6F/TqxQqyJZcWVuYcYJTiYlUR4bb9qxwrxpiRWVqUW5ccXleakFh9iNAUG9kRmKdHkfGBe
-        ySuJNzQ1MjY2tjAxNDM1NFQS5533RzNWSCA9sSQ1OzW1ILUIpo+Jg1OqgXGXb9C7ZZ6GfFnB
-        5u0sYcY9F8seia2NzvUxWRP3Jt5KPac5fd2x3zGHG91Dt99umLF3Qen/p0cOXnJz8nTjYrUS
-        bzvy/LqpRlLJhYlRmyUNp7PtizzwYiuTVvGFd0LtU3v2J19m77rQa+Kxqs+goeTNLIfcpFmG
-        CxZkh68+Uf4mvjtO9tDWbCWW4oxEQy3mouJEAOWvWCDzAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWy7bCSnO6vft1Yg+3vNSw2zljPajH/yDlW
-        i759/xkt+h+/ZrY4f34Du8XZpjfsFpseX2O1uLxrDpvF594jjBYzzu9jslh75C67xdLrF5ks
-        bjeuYLN48+Msk0Xr3iPsFv+ubWSx2PzgGJuDoMeaeWsYPTat6mTz2Lyk3uPguz1MHn1bVjF6
-        HL+xncnj8ya5APYoLpuU1JzMstQifbsEroxn/fuZC95zVsxqXcDUwLico4uRk0NCwETiyv55
-        7F2MXBxCArsZJf4/n8AKkZCUmHbxKHMXIweQLSxx+HAxRM1bRolJOxezg9QIC4RJ3Jx9GMwW
-        ETCVeLS6gRWkiFngKovE+Y1z2CA6LjJK7Dp0Emwqm4CWxP4XN9hAbH4BRYmrPx4zgti8AnYS
-        +zc9BdvGIqAq8e9DIEhYVCBCYtK1nSwQJYISJ2c+AbM5BVwkfndfBRvJLKAu8WfeJWYIW1zi
-        1pP5TBC2vETz1tnMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7N
-        S9dLzs/dxAiOYi2tHYwnTsQfYhTgYFTi4T2xRydWiDWxrLgy9xCjBAezkgiv7VftWCHelMTK
-        qtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTBycUg2MUnc55mkrTz69/eq/
-        uZ9k+9/OY3SYdOeYhJzpc4ZtRf9/zi/x/qvjvevH66BvTXxTZPXXHHLa87WI2ZLj+WPRbV+Z
-        rtax3j1WLx/LbdHkyLYg+3roRsfmSpGCdQz/MoxD/e7OPM35K6bKIkNnMqNpi+hx/mrvA4IJ
-        GiaR9pt2/+E4zta7QDdWiaU4I9FQi7moOBEAUbNLAd4CAAA=
-X-CMS-MailID: 20190716085106epcas1p4e767ed3858ed9cb3fa631460a2cdd7f5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190715120433eucas1p26681c5c2d87423253b651d88446c538c
-References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
-        <CGME20190715120433eucas1p26681c5c2d87423253b651d88446c538c@eucas1p2.samsung.com>
-        <20190715120416.3561-5-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19. 7. 15. 오후 9:04, Kamil Konieczny wrote:
-> Remove unused DT property "exynos,voltage-tolerance".
+Le dimanche 14 juillet 2019 à 18:31 +0100, Jonathan Cameron a écrit :
+> On Tue,  9 Jul 2019 13:53:45 +0200
+> Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
 > 
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> index f8e946471a58..e71f752cc18f 100644
-> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-> @@ -50,8 +50,6 @@ Required properties only for passive bus device:
->  Optional properties only for parent bus device:
->  - exynos,saturation-ratio: the percentage value which is used to calibrate
->  			the performance count against total cycle count.
-> -- exynos,voltage-tolerance: the percentage value for bus voltage tolerance
-> -			which is used to calculate the max voltage.
->  
->  Detailed correlation between sub-blocks and power line according to Exynos SoC:
->  - In case of Exynos3250, there are two power line as following:
+> > Embedded controller return minimum and maximum frequencies,
+> > unfortunately
+> > we have no way to know the step for all available frequencies.
+> > Even if not complete, we can return a list of known values using
+> > the
+> > standard read_avail callback (IIO_CHAN_INFO_SAMP_FREQ) to provide
+> > them to
+> > userland.
+> > 
+> > Now cros_ec_* sensors provides frequencies values in sysfs like
+> > this:
+> > "0 min max". 0 is always true to disable the sensor.
+> > 
+> > Default frequencies are provided for earlier protocol.
+> > 
+> > Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> > Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> There is some trailing whitespace in here, and with the high level
+> of other work going on in this driver a lot of fuzz.
 > 
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Sorry for that, I will fix it quickly.
+Thanks for reviewing
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> So with the whitespace fixed,
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  .../common/cros_ec_sensors/cros_ec_sensors.c  |  3 +
+> >  .../cros_ec_sensors/cros_ec_sensors_core.c    | 65
+> > +++++++++++++++++++
+> >  drivers/iio/light/cros_ec_light_prox.c        |  3 +
+> >  .../linux/iio/common/cros_ec_sensors_core.h   | 21 ++++++
+> >  4 files changed, 92 insertions(+)
+> > 
+> > diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > index 17af4e0fd5f8..2f1b6d8d617b 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> > @@ -175,6 +175,7 @@ static int cros_ec_sensors_write(struct iio_dev
+> > *indio_dev,
+> >  static const struct iio_info ec_sensors_info = {
+> >  	.read_raw = &cros_ec_sensors_read,
+> >  	.write_raw = &cros_ec_sensors_write,
+> > +	.read_avail = &cros_ec_sensors_core_read_avail,
+> >  };
+> >  
+> >  static int cros_ec_sensors_probe(struct platform_device *pdev)
+> > @@ -211,6 +212,8 @@ static int cros_ec_sensors_probe(struct
+> > platform_device *pdev)
+> >  			BIT(IIO_CHAN_INFO_SCALE) |
+> >  			BIT(IIO_CHAN_INFO_FREQUENCY) |
+> >  			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> > +		channel->info_mask_shared_by_all_available = 
+> > +			BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> >  		channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+> >  		channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+> >  		channel->scan_index = i;
+> > diff --git
+> > a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > index 81111af8a167..805652250960 100644
+> > --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > @@ -50,6 +50,37 @@ static int
+> > cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> >  	return ret;
+> >  }
+> >  
+> > +static void get_default_min_max_freq(enum motionsensor_type type,
+> > +				     u32 *min_freq,
+> > +				     u32 *max_freq)
+> > +{
+> > +	switch (type) {
+> > +	case MOTIONSENSE_TYPE_ACCEL:
+> > +	case MOTIONSENSE_TYPE_GYRO:
+> > +		*min_freq = 12500;
+> > +		*max_freq = 100000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_MAG:
+> > +		*min_freq = 5000;
+> > +		*max_freq = 25000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_PROX:
+> > +	case MOTIONSENSE_TYPE_LIGHT:
+> > +		*min_freq = 100;
+> > +		*max_freq = 50000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_BARO:
+> > +		*min_freq = 250;
+> > +		*max_freq = 20000;
+> > +		break;
+> > +	case MOTIONSENSE_TYPE_ACTIVITY:
+> > +	default:
+> > +		*min_freq = 0;
+> > +		*max_freq = 0;
+> > +		break;
+> > +	}
+> > +}
+> > +
+> >  int cros_ec_sensors_core_init(struct platform_device *pdev,
+> >  			      struct iio_dev *indio_dev,
+> >  			      bool physical_device)
+> > @@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct
+> > platform_device *pdev,
+> >  		}
+> >  		state->type = state->resp->info.type;
+> >  		state->loc = state->resp->info.location;
+> > +
+> > +		/* 0 is a correct value used to stop the device */
+> > +		state->frequencies[0] = 0;
+> > +		if (state->msg->version < 3) {
+> > +			get_default_min_max_freq(state->resp-
+> > >info.type,
+> > +						 &state-
+> > >frequencies[1],
+> > +						 &state-
+> > >frequencies[2]);
+> > +		} else {
+> > +			state->frequencies[1] =
+> > +			    state->resp->info_3.min_frequency;
+> > +			state->frequencies[2] =
+> > +			    state->resp->info_3.max_frequency;
+> > +		}
+> >  	}
+> >  
+> >  	return 0;
+> > @@ -461,6 +505,27 @@ int cros_ec_sensors_core_read(struct
+> > cros_ec_sensors_core_state *st,
+> >  }
+> >  EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read);
+> >  
+> > +int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+> > +				    struct iio_chan_spec const *chan,
+> > +				    const int **vals,
+> > +				    int *type,
+> > +				    int *length,
+> > +				    long mask)
+> > +{
+> > +	struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
+> > +
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > +		*length = ARRAY_SIZE(state->frequencies);
+> > +		*vals = (const int *)&state->frequencies;
+> > +		*type = IIO_VAL_INT;
+> > +		return IIO_AVAIL_LIST;
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(cros_ec_sensors_core_read_avail);
+> > +
+> >  int cros_ec_sensors_core_write(struct cros_ec_sensors_core_state
+> > *st,
+> >  			       struct iio_chan_spec const *chan,
+> >  			       int val, int val2, long mask)
+> > diff --git a/drivers/iio/light/cros_ec_light_prox.c
+> > b/drivers/iio/light/cros_ec_light_prox.c
+> > index 308ee6ff2e22..c62cb022b6bc 100644
+> > --- a/drivers/iio/light/cros_ec_light_prox.c
+> > +++ b/drivers/iio/light/cros_ec_light_prox.c
+> > @@ -164,6 +164,7 @@ static int cros_ec_light_prox_write(struct
+> > iio_dev *indio_dev,
+> >  static const struct iio_info cros_ec_light_prox_info = {
+> >  	.read_raw = &cros_ec_light_prox_read,
+> >  	.write_raw = &cros_ec_light_prox_write,
+> > +	.read_avail = &cros_ec_sensors_core_read_avail,
+> >  };
+> >  
+> >  static int cros_ec_light_prox_probe(struct platform_device *pdev)
+> > @@ -198,6 +199,8 @@ static int cros_ec_light_prox_probe(struct
+> > platform_device *pdev)
+> >  	channel->info_mask_shared_by_all =
+> >  		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+> >  		BIT(IIO_CHAN_INFO_FREQUENCY);
+> > +	channel->info_mask_shared_by_all_available = 
+> > +		BIT(IIO_CHAN_INFO_SAMP_FREQ);
+> >  	channel->scan_type.realbits = CROS_EC_SENSOR_BITS;
+> >  	channel->scan_type.storagebits = CROS_EC_SENSOR_BITS;
+> >  	channel->scan_type.shift = 0;
+> > diff --git a/include/linux/iio/common/cros_ec_sensors_core.h
+> > b/include/linux/iio/common/cros_ec_sensors_core.h
+> > index 0c636b9fe8d7..a9623111f7c9 100644
+> > --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> > +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> > @@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
+> >  				    unsigned long scan_mask, s16
+> > *data);
+> >  
+> >  	int curr_sampl_freq;
+> > +
+> > +	/* Table of known available frequencies : 0, Min and Max in mHz
+> > */
+> > +	int frequencies[3];
+> >  };
+> >  
+> >  /**
+> > @@ -150,6 +153,24 @@ int cros_ec_sensors_core_read(struct
+> > cros_ec_sensors_core_state *st,
+> >  			      struct iio_chan_spec const *chan,
+> >  			      int *val, int *val2, long mask);
+> >  
+> > +/**
+> > + * cros_ec_sensors_core_read_avail() - get available values
+> > + * @indio_dev:		pointer to state information for device
+> > + * @chan:	channel specification structure table
+> > + * @vals:	list of available values
+> > + * @type:	type of data returned
+> > + * @length:	number of data returned in the array
+> > + * @mask:	specifies which values to be requested
+> > + *
+> > + * Return:	an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST
+> > + */
+> > +int cros_ec_sensors_core_read_avail(struct iio_dev *indio_dev,
+> > +				    struct iio_chan_spec const *chan,
+> > +				    const int **vals,
+> > +				    int *type,
+> > +				    int *length,
+> > +				    long mask);
+> > +
+> >  /**
+> >   * cros_ec_sensors_core_write() - function to write a value to the
+> > sensor
+> >   * @st:		pointer to state information for device
+
