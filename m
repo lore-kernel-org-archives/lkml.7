@@ -2,205 +2,151 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A639FC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E836DC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773DF21721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72A320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733253AbfGPKev convert rfc822-to-8bit (ORCPT
+        id S1733241AbfGPKiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:34:51 -0400
-Received: from m9a0002g.houston.softwaregrp.com ([15.124.64.67]:50158 "EHLO
-        m9a0002g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732081AbfGPKeu (ORCPT
+        Tue, 16 Jul 2019 06:38:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36028 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732524AbfGPKiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:34:50 -0400
-Received: FROM m9a0002g.houston.softwaregrp.com (15.121.0.191) BY m9a0002g.houston.softwaregrp.com WITH ESMTP;
- Tue, 16 Jul 2019 10:34:49 +0000
-Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
- M9W0068.microfocus.com (2002:f79:bf::f79:bf) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 16 Jul 2019 10:30:17 +0000
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (15.124.72.13) by
- M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Tue, 16 Jul 2019 10:30:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XtWv4bxbPByek5BHArgVOCxiCoKYox+xSqLUn/SQZUdZc33fWyCljHgAXeQwRRxFM30ggzHGm9GL4fe4hw3UFnTBpCemmeHQbUTYDlKAkIUx4gtl0AGUpAp1X4o04ayWLdAYQDnBehsAtdtW9RdGO+pVsJxcKer14ughx59pU329k9LM/BxM3AbgK3W14H86z98dFs1kVZq26yn3/x310WROMezR7joKI9rwBUebIkrc+PohRSqptZbQpsJ40SKvIox+02Al9YykXrDwroqaOFKD+j5+Do9vey77c5uhqGKHmwQI5m1d26kKeCUXvQnUYkfGXn/vrdAej1xDNbYr+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xmQebN4IJL+xyMpPlM20V2y0XhtweywPn16eYPskVsU=;
- b=NQEuXTX4ksCBhIlq9h4HzlQOlPPW/5wMCC3If5oaoZ5J2F4G1Ci8rGFBED4OomfljaIMW1CA3HWcXBn8KUcZTIqhfKhT02SLYHycNqaOLYJkTNG4ITQbHnqmO1qZ7U8lS1Syz/aJoZbMt/IpG/si6XgNLMdL2VmrGTilrSyvUy4mwyfCR6c8u9aE++3b8XJ3LJ/payTFQqpfhgOjtb9CGErRUC95vcUZkpcqAUWh6Rd8RupCi6PosFufdJG7kZoga0DxfRKd3Fyd4G+61I3vxfRKVvR53FgTqac8LxtHMitn2yyYk8Lkwc4781U98/Nroj80W+Zx/hzk1UJzkGP6MQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=suse.com;dmarc=pass action=none header.from=suse.com;dkim=pass
- header.d=suse.com;arc=none
-Received: from MN2PR18MB2846.namprd18.prod.outlook.com (20.179.21.147) by
- MN2PR18MB3039.namprd18.prod.outlook.com (20.179.83.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Tue, 16 Jul 2019 10:30:14 +0000
-Received: from MN2PR18MB2846.namprd18.prod.outlook.com
- ([fe80::307c:8422:7d8c:8ac6]) by MN2PR18MB2846.namprd18.prod.outlook.com
- ([fe80::307c:8422:7d8c:8ac6%3]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 10:30:14 +0000
-From:   Petr Tesarik <PTesarik@suse.com>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-CC:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Laura Abbott" <labbott@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Raymund Will <rw@suse.com>
-Subject: Re: [PATCH] s390: enable detection of kernel version from bzImage
-Thread-Topic: [PATCH] s390: enable detection of kernel version from bzImage
-Thread-Index: AQHVO1p2NdiEYNQpfUiSTDvrwXSeS6bNDCkA
-Date:   Tue, 16 Jul 2019 10:30:14 +0000
-Message-ID: <20190716123006.2d426ec8@ezekiel.suse.cz>
-References: <your-ad-here.call-01563228330-ext-8076@work.hours>
-        <patch.git-94e9726bbfe5.your-ad-here.call-01563228538-ext-5706@work.hours>
-In-Reply-To: <patch.git-94e9726bbfe5.your-ad-here.call-01563228538-ext-5706@work.hours>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0382.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a3::34) To MN2PR18MB2846.namprd18.prod.outlook.com
- (2603:10b6:208:3e::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=PTesarik@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-x-originating-ip: [213.151.95.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0c2c75df-6128-4ed3-d6f4-08d709d896c7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3039;
-x-ms-traffictypediagnostic: MN2PR18MB3039:
-x-microsoft-antispam-prvs: <MN2PR18MB3039010D62B48E96A8D97C25A6CE0@MN2PR18MB3039.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(376002)(346002)(136003)(189003)(199004)(7736002)(52116002)(76176011)(316002)(186003)(66066001)(25786009)(102836004)(2906002)(386003)(6116002)(6506007)(54906003)(7416002)(3846002)(5660300002)(305945005)(446003)(66946007)(26005)(8676002)(11346002)(53936002)(6916009)(66476007)(486006)(9686003)(4326008)(229853002)(66446008)(50226002)(478600001)(81166006)(6246003)(1076003)(81156014)(8936002)(6486002)(256004)(66556008)(476003)(64756008)(14444005)(86362001)(71190400001)(6436002)(71200400001)(14454004)(68736007)(99286004)(107886003)(80792005)(6512007)(39210200001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR18MB3039;H:MN2PR18MB2846.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nNcnW5B18SYC5zjfgw3VdMqLxNpcbP8s1VSqz0MKEpHy2RLSKx84lKR8VdnxjcqqjhABxoM3t7rB33uC6mItIWenPmhYyi1xs+/8BqNgWpEfZQXrZ9GhA42QdmoegVC++mXbiop7NknlnRRGZp4R62hddt+ipWYwkR+buxeN5zKuL23z6E6SKJ2zUQOG1i1fmGYatbTGaS/zgRdR0DM8PlqmM7zmQC+qAS+ERx/T84cqN7FRnp28MZ/Fw2Kprwb+iRQet8S0T+y/waXx9zxAQ7GbX7jpsJCz/MCzPw80BFwQU4iNetLp7dlYnHFRJb3JBvOrrsetPhMdp0KAVyAtXPmHuCJNBre1jxJYQVU93rCOhUVv9NJoODnuTy+Yw832NPtLAEFDx2dIYd5KkvxqX4UXpGG1vHCXE7gjYZymMrs=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D0754DD86212944AAEE431760676B286@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Tue, 16 Jul 2019 06:38:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id k21so22985679ioj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 03:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=oW/HWWjjYHHi5wFF5o9/pG7QsieQMhoWbLKzyHk0u8o=;
+        b=D3Tssp9EQzrF3TkDANV9v01OZH+8Q90Y68LT0vrUFs2mNhsLezdiMFZJgeM7HbKsnM
+         SImFtL3buzaRXvMn8cShGb0RFOe/1RD2ZQFnFOSBCTrs6CzQqD5fLLKFuVhDHrw4Bgpq
+         qTd3N8em+uP5G5kDg7TZNbBfVAtlj7FVlPpKH6XfXSNF6LbIZcUsOyp5KJunvaThMCXM
+         kFO9cXKDe2G0olJofG1fHvFmbQXO7YylpW+xioMdBL2CliBDBpJXVRGvlUXP3KnrNhJu
+         HzC4wPc2XmMkJjsjGY7ymBJdLjhYeKtfozc5Pcwrop7fM5eCZp+4NbbZvlLJf1Uk01Yi
+         1bAw==
+X-Gm-Message-State: APjAAAXFpYNGwbJgGVhlw0vefEhb1JoUiCtvPkgV1MtUAkBYkvb6gA2W
+        /p58VMdLg+3L20HD89FanDd8eUFxkMKqY81QsartJFUiDyjj
+X-Google-Smtp-Source: APXvYqyqmz3/2jnkLJY2+Cc9UahCylxmUvu5/sL8Jh+77UHF8agMxF5fOSvKau9bcWkyeTZ/7TWyPfLGMoHKsrO//vFLTwUHnmzm
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c2c75df-6128-4ed3-d6f4-08d709d896c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 10:30:14.5798
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PTesarik@suse.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3039
-X-OriginatorOrg: suse.com
+X-Received: by 2002:a02:9a03:: with SMTP id b3mr34355376jal.0.1563273485901;
+ Tue, 16 Jul 2019 03:38:05 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 03:38:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d06dc2058dc9f8f2@google.com>
+Subject: WARNING in shark_write_reg/usb_submit_urb
+From:   syzbot <syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 00:12:19 +0200
-Vasily Gorbik <gor@linux.ibm.com> wrote:
+Hello,
 
-> Extend "parmarea" to include an offset of the version string, which is
-> stored as 8-byte big endian value.
-> 
-> To retrieve version string from bzImage reliably, one should check the
-> presence of "S390EP" ascii string at 0x10008 (available since v3.2),
-> then read the version string offset from 0x10428 (which has been 0
-> since v3.2 up to now). The string is null terminated.
-> 
-> Could be retrieved with the following "file" command magic (requires
-> file v5.34):
-> 8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390
-> >0x10008       string          S390EP  
-> >>0x10428      bequad          >0  
-> >>>(0x10428.Q) string          >\0             \b, version %s  
-> 
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+syzbot found the following crash on:
 
-This looks great! Much cleaner than the original approach.
+HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=111fc400600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
+dashboard link: https://syzkaller.appspot.com/bug?extid=4b3f8190f6e13b3efd74
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10784148600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d826a4600000
 
-Thank you,
-Petr T
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com
 
-> ---
->  arch/s390/boot/Makefile       | 2 +-
->  arch/s390/boot/head.S         | 1 +
->  arch/s390/boot/version.c      | 6 ++++++
->  arch/s390/include/asm/setup.h | 4 +++-
->  4 files changed, 11 insertions(+), 2 deletions(-)
->  create mode 100644 arch/s390/boot/version.c
-> 
-> diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-> index 7cba96e7587b..4cf0bddb7d92 100644
-> --- a/arch/s390/boot/Makefile
-> +++ b/arch/s390/boot/Makefile
-> @@ -36,7 +36,7 @@ CFLAGS_sclp_early_core.o += -I$(srctree)/drivers/s390/char
->  
->  obj-y	:= head.o als.o startup.o mem_detect.o ipl_parm.o ipl_report.o
->  obj-y	+= string.o ebcdic.o sclp_early_core.o mem.o ipl_vmparm.o cmdline.o
-> -obj-y	+= ctype.o text_dma.o
-> +obj-y	+= version.o ctype.o text_dma.o
->  obj-$(CONFIG_PROTECTED_VIRTUALIZATION_GUEST)	+= uv.o
->  obj-$(CONFIG_RELOCATABLE)	+= machine_kexec_reloc.o
->  obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
-> diff --git a/arch/s390/boot/head.S b/arch/s390/boot/head.S
-> index 028aab03a9e7..2087bed6e60f 100644
-> --- a/arch/s390/boot/head.S
-> +++ b/arch/s390/boot/head.S
-> @@ -361,6 +361,7 @@ ENTRY(startup_kdump)
->  	.quad	0			# INITRD_SIZE
->  	.quad	0			# OLDMEM_BASE
->  	.quad	0			# OLDMEM_SIZE
-> +	.quad	kernel_version		# points to kernel version string
->  
->  	.org	COMMAND_LINE
->  	.byte	"root=/dev/ram0 ro"
-> diff --git a/arch/s390/boot/version.c b/arch/s390/boot/version.c
-> new file mode 100644
-> index 000000000000..ea5e49651931
-> --- /dev/null
-> +++ b/arch/s390/boot/version.c
-> @@ -0,0 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <generated/utsrelease.h>
-> +#include <generated/compile.h>
-> +
-> +const char kernel_version[] = UTS_RELEASE
-> +	" (" LINUX_COMPILE_BY "@" LINUX_COMPILE_HOST ") " UTS_VERSION;
-> diff --git a/arch/s390/include/asm/setup.h b/arch/s390/include/asm/setup.h
-> index 925889d360c1..e5d28a475f76 100644
-> --- a/arch/s390/include/asm/setup.h
-> +++ b/arch/s390/include/asm/setup.h
-> @@ -54,6 +54,7 @@
->  #define INITRD_SIZE_OFFSET	0x10410
->  #define OLDMEM_BASE_OFFSET	0x10418
->  #define OLDMEM_SIZE_OFFSET	0x10420
-> +#define KERNEL_VERSION_OFFSET	0x10428
->  #define COMMAND_LINE_OFFSET	0x10480
->  
->  #ifndef __ASSEMBLY__
-> @@ -74,7 +75,8 @@ struct parmarea {
->  	unsigned long initrd_size;			/* 0x10410 */
->  	unsigned long oldmem_base;			/* 0x10418 */
->  	unsigned long oldmem_size;			/* 0x10420 */
-> -	char pad1[0x10480 - 0x10428];			/* 0x10428 - 0x10480 */
-> +	unsigned long kernel_version;			/* 0x10428 */
-> +	char pad1[0x10480 - 0x10430];			/* 0x10430 - 0x10480 */
->  	char command_line[ARCH_COMMAND_LINE_SIZE];	/* 0x10480 */
->  };
->  
+usb 1-1: string descriptor 0 read error: -22
+usb 1-1: New USB device found, idVendor=077d, idProduct=627a, bcdDevice=  
+0.10
+usb 1-1: New USB device strings: Mfr=63, Product=5, SerialNumber=1
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 1 PID: 22 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #14
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x292/0x6c9 kernel/panic.c:219
+  __warn.cold+0x20/0x4b kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 c8 69 e8 fd 4c 89 f7 e8 f0 c4 12 ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 60 3a 1a 86 e8 53 2e be fd <0f> 0b e9 20 f4  
+ff ff e8 9c 69 e8 fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881d9f96f58 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3f2ddd
+RBP: ffff8881cf557590 R08: ffff8881d9f88000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff8881d0c77000 R14: ffff8881d553cd20 R15: ffff8881d5123b00
+  usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
+  usb_bulk_msg+0x228/0x550 drivers/usb/core/message.c:253
+  shark_write_reg+0x1ef/0x2b0 drivers/media/radio/radio-shark2.c:88
+  radio_tea5777_set_freq+0x1ed/0x470 drivers/media/radio/radio-tea5777.c:213
+  radio_tea5777_init+0xb7/0x600 drivers/media/radio/radio-tea5777.c:544
+  usb_shark_probe+0x5b9/0x740 drivers/media/radio/radio-shark2.c:318
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x660 drivers/base/dd.c:509
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:843
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2111
+  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b3d/0x35f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x30b/0x410 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
