@@ -2,59 +2,70 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF2DC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC415C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE712173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97F82173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732318AbfGPMRt (ORCPT
+        id S1732574AbfGPMSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:17:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2232 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726997AbfGPMRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:17:49 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C54159B27B271D41CE26;
-        Tue, 16 Jul 2019 20:17:46 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Jul
- 2019 20:17:36 +0800
-Subject: Re: [PATCH v2] staging: erofs: avoid opened loop codes
-To:     Chao Yu <yuchao0@huawei.com>, <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <chao@kernel.org>
-References: <20190716094422.110805-1-yuchao0@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <e0725b60-c6d2-1590-c974-f79e085e8cb8@huawei.com>
-Date:   Tue, 16 Jul 2019 20:17:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190716094422.110805-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 16 Jul 2019 08:18:12 -0400
+Received: from gate.crashing.org ([63.228.1.57]:56109 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726997AbfGPMSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:18:12 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6GCHu04027160;
+        Tue, 16 Jul 2019 07:17:57 -0500
+Message-ID: <cca6fd560aa1688ca94fc270310a91ccda9aed06.camel@kernel.crashing.org>
+Subject: Re: [PATCH 2/3] nvme: Retrieve the required IO queue entry size
+ from the controller
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
+        Paul Pawlowski <paul@mrarm.io>
+Date:   Tue, 16 Jul 2019 22:17:56 +1000
+In-Reply-To: <20190716120547.GA2388@lst.de>
+References: <20190716004649.17799-1-benh@kernel.crashing.org>
+         <20190716004649.17799-2-benh@kernel.crashing.org>
+         <20190716060430.GB29414@lst.de>
+         <ad18ff8d004225e102076f8e1fb617916617f337.camel@kernel.crashing.org>
+         <20190716093301.GA32562@lst.de>
+         <bfbc7352951d1adc714f699acb49e298c24fe7e3.camel@kernel.crashing.org>
+         <20190716120547.GA2388@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/16 17:44, Chao Yu wrote:
-> Use __GFP_NOFAIL to avoid opened loop codes in z_erofs_vle_unzip().
+On Tue, 2019-07-16 at 14:05 +0200, Christoph Hellwig wrote:
+> On Tue, Jul 16, 2019 at 08:58:28PM +1000, Benjamin Herrenschmidt wrote:
+> > The main risk is if existing controllers return crap in SQES and we try
+> > to then use that crap. The rest should essentially be NOPs.
+> > 
+> > Maybe I should add some kind of printk to warn in case we use/detect a
+> > non-standard size. That would help diagnosing issues.
 > 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> Given that the spec currently requires bits 0 to 3 of SQES to be 6
+> we might as well not check SQES and just hardcode it to 6 or 7 depending
+> on the quirk.  That actually was my initial idea, I just suggested using
+> the SQES naming and indexing.
 
-Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+If we're going to do that, then I can move it back to pci.c and leave
+core.c alone then I suppose. Up to you. I'm just doing that for fun, no
+beef in that game :-) let me know how you want it.
 
-Thanks,
-Gao Xiang
+Cheers,
+Ben.
+
+
