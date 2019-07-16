@@ -2,93 +2,248 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AD2C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB92C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4B22173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="h5BnzYae"
+	by mail.kernel.org (Postfix) with ESMTP id E7595206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbfGPIwn (ORCPT
+        id S1731392AbfGPI4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:52:43 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32851 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfGPIwm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:52:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x3so13150995lfc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XyQtv8q/vojaY1D+1nE9nEqdizDyuspw+4fU4V90wfg=;
-        b=h5BnzYaeTvOlH06pndcuIZMyPpXzgZFv4CdRfrazxDwaTYTWGAhMJJ113o9/HjLPTl
-         TEKInE1moxeMIIt89WjjbS2JZFvGkRLPTRDv1889fKRSTRMXTNHjkdUyw2PkC7jM5Hxn
-         I+c75HbDAdEdXRHgyTOvJopT6y8fD36j8m4ioAgiDjfJfoe80ioBjSFCUrZMLWOK35vu
-         ozPXP2/NFlcAjlO3NqDmZk5WVgnyNeJVB8GEfiA23X8fbX5Qgn7czCxhqRGffjSA1X2W
-         iGIfE5dg15UGF+WGh6o53294EcQDsG9M3FTzfifZVytZz0mY/KsQNrho5379BJ7cKtYu
-         4OtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XyQtv8q/vojaY1D+1nE9nEqdizDyuspw+4fU4V90wfg=;
-        b=IbHm1IUY3AqiGxngmSXC0tWZ2OnQfeWba+qDGUomLe5LTcJaVClNFxo4JSMaCdvij4
-         8auvuM/rFnGYCwa5zhhAwc+AQj6aEZFWxLbnNqto9nmJhuT3474Sjx3sBuT3nnWiec4X
-         5XgQslzu2pU09DP6VUEJK3rrVypl8apXmIipJJr9VwsyI5xa52gA1kDMuHdF6LOGfOYe
-         +qmEkojo+mrkuuWcy90y+CwBKih3mjYv7O+E6XN3AIRRTtqcIuyCopTcFChztXPNBAlT
-         lBeTgAWY7nkF7jD3V7EktUi8cIHP3WU9x8bYPOq+j2fRpRCHeKTnAkFZ7PGdJDgA9oJO
-         Z3Fg==
-X-Gm-Message-State: APjAAAXHtssyFMT+eQFkkfO+aKVXDI2rxu4OkhMtlnvmpLNygQtvg0D4
-        NrYRbgo5A2tgF3XofwtYAkqwQQC4ZoaFxg==
-X-Google-Smtp-Source: APXvYqwYuqhrW3TJhCJZ7PX4BmU4vW0ooe7NeWyaoHIu87HRNCS59SvmIGeZ1Cdj5vYOEfwejxR2oA==
-X-Received: by 2002:ac2:5231:: with SMTP id i17mr14127734lfl.39.1563267160476;
-        Tue, 16 Jul 2019 01:52:40 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:486f:abb9:dd58:ac0e:e00:e686? ([2a00:1fa0:486f:abb9:dd58:ac0e:e00:e686])
-        by smtp.gmail.com with ESMTPSA id i62sm3577698lji.14.2019.07.16.01.52.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 01:52:39 -0700 (PDT)
-Subject: Re: [PATCH] MIPS: Kconfig: remove HAVE_LATENCYTOP_SUPPORT
-To:     Fabian Mewes <architekt@coding4coffee.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190715160849.25964-1-architekt@coding4coffee.org>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <77754e88-ff5d-2021-60f5-80417d61763c@cogentembedded.com>
-Date:   Tue, 16 Jul 2019 11:52:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 04:56:15 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:53414 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727796AbfGPI4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:56:15 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 236CC20455;
+        Tue, 16 Jul 2019 10:56:13 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id F332F20080;
+        Tue, 16 Jul 2019 10:56:12 +0200 (CEST)
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v2] media: dvb: Provide 4 devm variants
+To:     Sean Young <sean@mess.org>, Brad Love <brad@nextdimension.cc>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Message-ID: <568760ff-08d8-6e7f-df35-cf76d4fcf945@free.fr>
+Date:   Tue, 16 Jul 2019 10:56:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190715160849.25964-1-architekt@coding4coffee.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jul 16 10:56:13 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Provide devm variants for automatic resource release on device removal.
+Makes error-handling in probe() much simpler, thus less error-prone.
+And once all resources are devmanaged, remove() is no longer needed.
 
-On 15.07.2019 19:08, Fabian Mewes wrote:
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+Changes from v1:
+x Simplify devm_dvb_register_adapter() implementation
+x Add 3 more devm APIs
+x Document them in devres.rst
+---
+ Documentation/driver-model/devres.rst |  6 ++++++
+ drivers/media/dvb-core/dmxdev.c       | 13 +++++++++++++
+ drivers/media/dvb-core/dvb_demux.c    | 13 +++++++++++++
+ drivers/media/dvb-core/dvb_frontend.c | 13 +++++++++++++
+ drivers/media/dvb-core/dvbdev.c       | 12 ++++++++++++
+ include/media/dmxdev.h                |  3 +++
+ include/media/dvb_demux.h             |  2 ++
+ include/media/dvb_frontend.h          |  3 +++
+ include/media/dvbdev.h                |  3 +++
+ 9 files changed, 68 insertions(+)
 
-> HAVE_LATENCYTOP_SUPPORT was removed all together in da48d094ce5d7.
-
-    You need to also specify that commit's summary enclosed in ("").
-
-> This commit removes a leftover in the MIPS Kconfig.
-> 
-> Signed-off-by: Fabian Mewes <architekt@coding4coffee.org>
-
-MBR, Sergei
+diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
+index a100bef54952..1b6ced8e4294 100644
+--- a/Documentation/driver-model/devres.rst
++++ b/Documentation/driver-model/devres.rst
+@@ -265,6 +265,12 @@ DMA
+ DRM
+   devm_drm_dev_init()
+ 
++DVB
++  devm_dvb_register_adapter()
++  devm_dvb_register_frontend()
++  devm_dvb_dmx_init()
++  devm_dvb_dmxdev_init()
++
+ GPIO
+   devm_gpiod_get()
+   devm_gpiod_get_index()
+diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
+index f14a872d1268..f38b65d1b430 100644
+--- a/drivers/media/dvb-core/dmxdev.c
++++ b/drivers/media/dvb-core/dmxdev.c
+@@ -1444,6 +1444,19 @@ int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *dvb_adapter)
+ 
+ EXPORT_SYMBOL(dvb_dmxdev_init);
+ 
++static void dmxdev_release(void *dmxdev)
++{
++	dvb_dmxdev_release(dmxdev);
++}
++
++int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
++		struct dvb_adapter *dvb_adapter)
++{
++	int rc = dvb_dmxdev_init(dmxdev, dvb_adapter);
++	return rc ? : devm_add_action_or_reset(dev, dmxdev_release, dmxdev);
++}
++EXPORT_SYMBOL(devm_dvb_dmxdev_init);
++
+ void dvb_dmxdev_release(struct dmxdev *dmxdev)
+ {
+ 	dmxdev->exit = 1;
+diff --git a/drivers/media/dvb-core/dvb_demux.c b/drivers/media/dvb-core/dvb_demux.c
+index 39a2c6ccf31d..55b9675b99c5 100644
+--- a/drivers/media/dvb-core/dvb_demux.c
++++ b/drivers/media/dvb-core/dvb_demux.c
+@@ -28,6 +28,7 @@
+ #include <linux/string.h>
+ #include <linux/crc32.h>
+ #include <linux/uaccess.h>
++#include <linux/device.h>
+ #include <asm/div64.h>
+ 
+ #include <media/dvb_demux.h>
+@@ -1317,6 +1318,18 @@ int dvb_dmx_init(struct dvb_demux *dvbdemux)
+ 
+ EXPORT_SYMBOL(dvb_dmx_init);
+ 
++static void dmx_release(void *dvbdemux)
++{
++	dvb_dmx_release(dvbdemux);
++}
++
++int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *dvbdemux)
++{
++	int rc = dvb_dmx_init(dvbdemux);
++	return rc ? : devm_add_action_or_reset(dev, dmx_release, dvbdemux);
++}
++EXPORT_SYMBOL(devm_dvb_dmx_init);
++
+ void dvb_dmx_release(struct dvb_demux *dvbdemux)
+ {
+ 	vfree(dvbdemux->cnt_storage);
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 209186c5cd9b..4a281cd8c064 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -3007,6 +3007,19 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
+ }
+ EXPORT_SYMBOL(dvb_register_frontend);
+ 
++static void unregister_frontend(void *fe)
++{
++	dvb_unregister_frontend(fe);
++}
++
++int devm_dvb_register_frontend(struct device *dev,
++		struct dvb_adapter *dvb, struct dvb_frontend *fe)
++{
++	int rc = dvb_register_frontend(dvb, fe);
++	return rc ? : devm_add_action_or_reset(dev, unregister_frontend, fe);
++}
++EXPORT_SYMBOL(devm_dvb_register_frontend);
++
+ int dvb_unregister_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index a3393cd4e584..7d007bcc2abb 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -885,6 +885,18 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
+ }
+ EXPORT_SYMBOL(dvb_register_adapter);
+ 
++static void unregister_adapter(void *adap)
++{
++	dvb_unregister_adapter(adap);
++}
++
++int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
++		const char *name, struct module *module, short *adapter_nums)
++{
++	int rc = dvb_register_adapter(adap, name, module, dev, adapter_nums);
++	return rc ? : devm_add_action_or_reset(dev, unregister_adapter, adap);
++}
++EXPORT_SYMBOL(devm_dvb_register_adapter);
+ 
+ int dvb_unregister_adapter(struct dvb_adapter *adap)
+ {
+diff --git a/include/media/dmxdev.h b/include/media/dmxdev.h
+index baafa3b8aca4..0300d829aeea 100644
+--- a/include/media/dmxdev.h
++++ b/include/media/dmxdev.h
+@@ -204,6 +204,9 @@ struct dmxdev {
+  */
+ int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *adap);
+ 
++int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
++		struct dvb_adapter *dvb_adapter);
++
+ /**
+  * dvb_dmxdev_release - releases a digital TV demux and unregisters it.
+  *
+diff --git a/include/media/dvb_demux.h b/include/media/dvb_demux.h
+index 3b6aeca7a49e..95fe901076d7 100644
+--- a/include/media/dvb_demux.h
++++ b/include/media/dvb_demux.h
+@@ -266,6 +266,8 @@ struct dvb_demux {
+  */
+ int dvb_dmx_init(struct dvb_demux *demux);
+ 
++int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *demux);
++
+ /**
+  * dvb_dmx_release - releases a digital TV demux internal buffers.
+  *
+diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
+index f05cd7b94a2c..56dbaf3cc7a9 100644
+--- a/include/media/dvb_frontend.h
++++ b/include/media/dvb_frontend.h
+@@ -713,6 +713,9 @@ struct dvb_frontend {
+ int dvb_register_frontend(struct dvb_adapter *dvb,
+ 				 struct dvb_frontend *fe);
+ 
++int devm_dvb_register_frontend(struct device *dev,
++		struct dvb_adapter *dvb, struct dvb_frontend *fe);
++
+ /**
+  * dvb_unregister_frontend() - Unregisters a DVB frontend
+  *
+diff --git a/include/media/dvbdev.h b/include/media/dvbdev.h
+index 551325858de3..32f8d1626319 100644
+--- a/include/media/dvbdev.h
++++ b/include/media/dvbdev.h
+@@ -202,6 +202,9 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
+ 			 struct module *module, struct device *device,
+ 			 short *adapter_nums);
+ 
++int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
++		const char *name, struct module *module, short *adapter_nums);
++
+ /**
+  * dvb_unregister_adapter - Unregisters a DVB adapter
+  *
+-- 
+2.17.1
