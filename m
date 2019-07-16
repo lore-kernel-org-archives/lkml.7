@@ -2,367 +2,131 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D88C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCDFC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7899206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65112206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CsxR848o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zlPZOySk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbfGPIhr (ORCPT
+        id S1731063AbfGPIj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:37:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46354 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbfGPIhr (ORCPT
+        Tue, 16 Jul 2019 04:39:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38386 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfGPIj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:37:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c73so8745145pfb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:37:46 -0700 (PDT)
+        Tue, 16 Jul 2019 04:39:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f5so248151pgu.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d5YQlIKKkuDS08glaQtz+2CmlaQCbXhxEEG92fwEkgc=;
-        b=CsxR848oXNv0SGx7lrrmlW/EFOw9d/A77U3g3HqLdnzQXz9W+0cxfMoa8bEYGoXURh
-         m8GxLMkoHCYswLdtdnUJ+iBrvvcKKjZbcU1qvZqr2o95nWV31wYJsJz5Dh6UhD3jgfTf
-         5nivHOcKZtu6NiXtTp/wAzu9i/RSZAOEHLHz80kaXnhboxxZghbC+4Zr/y70MEqCyABV
-         qn0BYsyJyIthL8JHY+XcetgGY+N2MuOwdMCbhswDZ+jUF5W/jWzTTHxbcIVuDRWHC7id
-         KxQb7HGZt+O2zUduFDS/VkICES4vWtb0wGS9znIb2yrTGO5QGHPknE6OPaDWHe8cPkNv
-         JSeQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=uAruQz0/cDNuufDZKPd/IRh0T9ZXWWj4lYhqkpVhEs8=;
+        b=zlPZOySkHLqWi+pEQXn481ljUFj//r2HStU4XwfOEHuqTYckG6+odAWQB6yBM+AJo9
+         Jqi7O/vwEWuAtot0CprqN00OBe2kE7i9b66IFM/8p3LWctT2QNtwl/nAA3+TiXkMEpks
+         ip610KlGxk+PO5NXXj2dSSziXfGGs0XPyviaRMyAUZ8sVP78oSoiiM6/a8EDdE88HRYM
+         nTcYEHp+mYumdlGZ3VxKgNrjzCKiy8kBazB/CmEOr6WmPo45iw96SRdgJ9nyiICC/paB
+         tp6JRBVzXNlX6sj93xFOMCC2EgutWkgADC6RF92A2u5XKUkJm+qwQSTLXHENlaWJVUSc
+         eo9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d5YQlIKKkuDS08glaQtz+2CmlaQCbXhxEEG92fwEkgc=;
-        b=EI7B4OJEHBATE03xhuVeVdiJNFz16EXfZfchIcKoQCS02QaY38ENh4GbW5LB42ugB8
-         QBCbBSAoCPvl3nfr2u733N4THqnm0+u8zlGKhnARhKSQ4qMMWYHAUuaQSXw6Sb4uNly5
-         zzTi9WyjAB2bbJaOMFQUx6kbHHdzP6uIvomap+IZ31Z1vFs+8GB7BHuCd54ayXTHQnY4
-         Pz8WHBfRr5GBFm39H9Fy77mJaZJQ//Fcnr75HZrgNsNWouKoM5ckW6mLiJonKT89SGWb
-         Ydk8uEG6JOXyAeSSKBjwE4ekEQSYnLg+ODbF70umbEvdILQ9npO1KKt/ejwcONJ2lYQL
-         HboA==
-X-Gm-Message-State: APjAAAV7lNPQokjLFaXDruhKabnuIx5Uj9b2laaok1p/sqDskORwUIZo
-        5lceZcrwEBO9PyYeh8uqXCYBnNaJrnC2sdRs1eSgKA==
-X-Google-Smtp-Source: APXvYqw/pjkOVZaApgOgNLX2yiZ2DSfhsd3LaKVyfBf+7gS0zPt8gXh/9iP62Z9w8bWZyNakENvfhgJaHPTPzm3RyWM=
-X-Received: by 2002:a63:eb51:: with SMTP id b17mr31131916pgk.384.1563266265401;
- Tue, 16 Jul 2019 01:37:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190712081744.87097-1-brendanhiggins@google.com>
- <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org>
- <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
-In-Reply-To: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 16 Jul 2019 01:37:34 -0700
-Message-ID: <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uAruQz0/cDNuufDZKPd/IRh0T9ZXWWj4lYhqkpVhEs8=;
+        b=VmdzOcjZaOSryu9unGsigenI0x3vZNn2k2Y/O8bH+K/PNXLxXB7xom6xzeQWYOMebx
+         h3qKU7VKj17DJpXXdp3pFwLC4qUEJEdaTiksQXutczE6dhEf0BGNLiMXtowc+BRdVX+b
+         qxGpt2mwQ1hsXWe/p1thFOvD+hB32K8uUQCNvCFnrZwn0KhLU1QDs8GblbL494IJ+iBx
+         +Ijg4b89SV/zb5mIknjcHmYUE84yfBhtuur1ZP2LULGi2y/3OHK7zm8Wo29245p522Wm
+         s+DThI0A19GgnijTHEuMzqeKiZ9fyYSdRNxmMJAf+ozPLMRFdKS+e+ga9m894f8dNH+V
+         DOlg==
+X-Gm-Message-State: APjAAAVhgg9VnLh/1i+rSKjCO8QgDZXN6QSky0Dq3hmqYx8Gcx5lLHAS
+        qOxuP96S6yTBHgvQ6ZsZIrDYsw==
+X-Google-Smtp-Source: APXvYqz+Viix925Y0M0SFoaGOcNdMr05fM33QZNnyWdxV+QDE4buLKPms1xJU0KKdExAWl7T4qOzBw==
+X-Received: by 2002:a63:6ec6:: with SMTP id j189mr32907542pgc.168.1563266368504;
+        Tue, 16 Jul 2019 01:39:28 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 33sm26302763pgy.22.2019.07.16.01.39.25
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 16 Jul 2019 01:39:28 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] mmc: host: sdhci-sprd: Fix the incorrect soft reset operation when runtime resuming
+Date:   Tue, 16 Jul 2019 16:39:19 +0800
+Message-Id: <7ab490e5b311f6cb057c4663d69ef7cbe3318dae.1563266066.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:57 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Mon, Jul 15, 2019 at 3:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-07-12 01:17:30)
-> > > diff --git a/include/kunit/kunit-stream.h b/include/kunit/kunit-stream.h
-> > > new file mode 100644
-> > > index 0000000000000..a7b53eabf6be4
-> > > --- /dev/null
-> > > +++ b/include/kunit/kunit-stream.h
-> > > @@ -0,0 +1,81 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +/*
-> > > + * C++ stream style string formatter and printer used in KUnit for outputting
-> > > + * KUnit messages.
-> > > + *
-> > > + * Copyright (C) 2019, Google LLC.
-> > > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > > + */
-> > > +
-> > > +#ifndef _KUNIT_KUNIT_STREAM_H
-> > > +#define _KUNIT_KUNIT_STREAM_H
-> > > +
-> > > +#include <linux/types.h>
-> > > +#include <kunit/string-stream.h>
-> > > +
-> > > +struct kunit;
-> > > +
-> > > +/**
-> > > + * struct kunit_stream - a std::stream style string builder.
-> > > + *
-> > > + * A std::stream style string builder. Allows messages to be built up and
-> > > + * printed all at once.
-> > > + */
-> > > +struct kunit_stream {
-> > > +       /* private: internal use only. */
-> > > +       struct kunit *test;
-> > > +       const char *level;
-> >
-> > Is the level changed? See my comment below, but I wonder if this whole
-> > struct can go away and the wrappers can just operate on 'struct
-> > string_stream' instead.
->
-> I was inclined to agree with you when I first read your comment, but
-> then I thought about the case that someone wants to add in a debug
-> message (of which I currently have none). I think under most
-> circumstances a user of kunit_stream would likely want to pick a
-> default verbosity that maybe I should provide, but may still want
-> different verbosity levels.
->
-> The main reason I want to keep the types separate, string_stream vs.
-> kunit_stream, is that they are intended to be used differently.
-> string_stream is just a generic string builder. If you are using that,
-> you are expecting to see someone building the string at some point and
-> then doing something interesting with it. kunit_stream really tells
-> you specifically that KUnit is putting together a message to
-> communicate something to a user of KUnit. It is really used in a very
-> specific way, and I wouldn't want to generalize its usage beyond how
-> it is currently used. I think in order to preserve the author's
-> intention it adds clarity to keep the types separate regardless of how
-> similar they might be in reality.
->
-> > > +       struct string_stream *internal_stream;
-> > > +};
-> > > diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
-> > > new file mode 100644
-> > > index 0000000000000..8bea1f22eafb5
-> > > --- /dev/null
-> > > +++ b/kunit/kunit-stream.c
-> > > @@ -0,0 +1,123 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * C++ stream style string formatter and printer used in KUnit for outputting
-> > > + * KUnit messages.
-> > > + *
-> > > + * Copyright (C) 2019, Google LLC.
-> > > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > > + */
-> > > +
-> > > +#include <kunit/test.h>
-> > > +#include <kunit/kunit-stream.h>
-> > > +#include <kunit/string-stream.h>
-> > > +
-> > > +void kunit_stream_add(struct kunit_stream *kstream, const char *fmt, ...)
-> > > +{
-> > > +       va_list args;
-> > > +       struct string_stream *stream = kstream->internal_stream;
-> > > +
-> > > +       va_start(args, fmt);
-> > > +
-> > > +       if (string_stream_vadd(stream, fmt, args) < 0)
-> > > +               kunit_err(kstream->test,
-> > > +                         "Failed to allocate fragment: %s\n",
-> > > +                         fmt);
-> > > +
-> > > +       va_end(args);
-> > > +}
-> > > +
-> > > +void kunit_stream_append(struct kunit_stream *kstream,
-> > > +                               struct kunit_stream *other)
-> > > +{
-> > > +       struct string_stream *other_stream = other->internal_stream;
-> > > +       const char *other_content;
-> > > +
-> > > +       other_content = string_stream_get_string(other_stream);
-> > > +
-> > > +       if (!other_content) {
-> > > +               kunit_err(kstream->test,
-> > > +                         "Failed to get string from second argument for appending\n");
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       kunit_stream_add(kstream, other_content);
-> > > +}
-> >
-> > Why can't this function be implemented in the string_stream API? Seems
-> > valid to want to append one stream to another and that isn't
-> > kunit_stream specific.
->
-> Fair point. Will do.
->
-> > > +
-> > > +void kunit_stream_clear(struct kunit_stream *kstream)
-> > > +{
-> > > +       string_stream_clear(kstream->internal_stream);
-> > > +}
-> > > +
-> > > +void kunit_stream_commit(struct kunit_stream *kstream)
-> > > +{
-> > > +       struct string_stream *stream = kstream->internal_stream;
-> > > +       struct string_stream_fragment *fragment;
-> > > +       struct kunit *test = kstream->test;
-> > > +       char *buf;
-> > > +
-> > > +       buf = string_stream_get_string(stream);
-> > > +       if (!buf) {
-> > > +               kunit_err(test,
-> > > +                         "Could not allocate buffer, dumping stream:\n");
-> > > +               list_for_each_entry(fragment, &stream->fragments, node) {
-> > > +                       kunit_err(test, fragment->fragment);
-> > > +               }
-> > > +               kunit_err(test, "\n");
-> > > +               goto cleanup;
-> > > +       }
-> > > +
-> > > +       kunit_printk(kstream->level, test, buf);
-> > > +       kfree(buf);
-> > > +
-> > > +cleanup:
-> >
-> > Drop the goto and use an 'else' please.
->
-> Will do.
->
-> > > +       kunit_stream_clear(kstream);
-> > > +}
-> > > +
-> > > +static int kunit_stream_init(struct kunit_resource *res, void *context)
-> > > +{
-> > > +       struct kunit *test = context;
-> > > +       struct kunit_stream *stream;
-> > > +
-> > > +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
-> > > +       if (!stream)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       res->allocation = stream;
-> > > +       stream->test = test;
-> > > +       stream->internal_stream = alloc_string_stream(test);
-> > > +
-> > > +       if (!stream->internal_stream)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static void kunit_stream_free(struct kunit_resource *res)
-> > > +{
-> > > +       struct kunit_stream *stream = res->allocation;
-> > > +
-> > > +       if (!string_stream_is_empty(stream->internal_stream)) {
-> > > +               kunit_err(stream->test,
-> > > +                         "End of test case reached with uncommitted stream entries\n");
-> > > +               kunit_stream_commit(stream);
-> > > +       }
-> > > +}
-> > > +
-> >
-> > Nitpick: Drop this extra newline.
->
-> Oops, nice catch.
+In sdhci_runtime_resume_host() function, we will always do software reset
+for all, which will cause Spreadtrum host controller work abnormally after
+resuming.
 
-Not super important, but I don't want you to think that I am ignoring
-you. I think you must have unintentionally deleted the last function
-in this file, or maybe you are referring to something that I am just
-not seeing, but I don't see the extra newline here.
+Thus for Spreadtrum platform that do not power down the SD/eMMC card during
+runtime suspend, we should not do software reset for all. To fix this
+issue, adding a specific reset operation that add one condition to validate
+the MMC_CAP_AGGRESSIVE_PM to decide if we can do software reset for all or
+just reset command and data lines.
 
-> > > diff --git a/kunit/test.c b/kunit/test.c
-> > > index f165c9d8e10b0..29edf34a89a37 100644
-> > > --- a/kunit/test.c
-> > > +++ b/kunit/test.c
-> > > @@ -120,6 +120,12 @@ static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
-> > >                               test_case->name);
-> > >  }
-> > >
-> > > +void kunit_fail(struct kunit *test, struct kunit_stream *stream)
-> >
-> > Why doesn't 'struct kunit' have a 'struct kunit_stream' inside of it? It
-> > seems that the two are highly related, to the point that it might just
-> > make sense to have
->
-> A `struct kunit_stream` is usually associated with a message that is
-> being built up over time like maybe an expectation; it is meant to
-> capture the idea that we might want to send some information out to
-> the user pertaining to some thing 'X', but we aren't sure that we
-> actually want to send it until 'X' is complete, but do to the nature
-> of 'X' it is easier to start constructing the message before 'X' is
-> complete.
->
-> Consider a complicated expectation, there might be multiple conditions
-> that satisfy it and multiple conditions which could make it fail. As
-> we start exploring the input to the expectation we gain information
-> that we might want to share back with the user if the expectation were
-> to fail and we might get that information before we are actually sure
-> that the expectation does indeed fail.
->
-> When we first step into the expectation we immediately know the
-> function name, file name, and line number where we are called and
-> would want to put that information into any message we would send to
-> the user about this expectation. Next, we might want to check a
-> property of the input, it may or may not be enough information on its
-> own for the expectation to fail, but we want to share the result of
-> the property check with the user regardless, BUT only if the
-> expectation as a whole fails.
->
-> Hence, we can have multiple `struct kunit_stream`s associated with a
-> `struct kunit` active at any given time.
->
-> >         struct kunit {
-> >                 struct kunit_stream stream;
-> >                 ...
-> >         };
-> >
-> > > +{
-> > > +       kunit_set_failure(test);
-> > > +       kunit_stream_commit(stream);
-> >
-> > And then this function can just take a test and the stream can be
-> > associated with the test directly. Use container_of() to get to the test
-> > when the only pointer in hand is for the stream too.
->
-> Unfortunately that wouldn't work. See my above explanation.
->
-> > > +}
-> > > +
-> > >  void kunit_init_test(struct kunit *test, const char *name)
-> > >  {
-> > >         mutex_init(&test->lock);
->
-> Thanks!
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes from v2:
+ - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
+
+Changes from v1:
+ - Add a specific reset operation instead of changing the core to avoid
+ affecting other hardware.
+---
+ drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+index 603a5d9..bc9393c 100644
+--- a/drivers/mmc/host/sdhci-sprd.c
++++ b/drivers/mmc/host/sdhci-sprd.c
+@@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+ 	return 1 << 31;
+ }
+ 
++static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
++{
++	struct mmc_host *mmc = host->mmc;
++
++	/*
++	 * When try to reset controller after runtime suspend, we should not
++	 * reset for all if the SD/eMMC card is not power down, just reset
++	 * command and data lines instead. Otherwise will meet some strange
++	 * behaviors for Spreadtrum host controller.
++	 */
++	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
++	    !(mmc->caps & MMC_CAP_AGGRESSIVE_PM))
++		mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
++
++	sdhci_reset(host, mask);
++}
++
+ static struct sdhci_ops sdhci_sprd_ops = {
+ 	.read_l = sdhci_sprd_readl,
+ 	.write_l = sdhci_sprd_writel,
+@@ -381,7 +398,7 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+ 	.get_max_clock = sdhci_sprd_get_max_clock,
+ 	.get_min_clock = sdhci_sprd_get_min_clock,
+ 	.set_bus_width = sdhci_set_bus_width,
+-	.reset = sdhci_reset,
++	.reset = sdhci_sprd_reset,
+ 	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+ 	.hw_reset = sdhci_sprd_hw_reset,
+ 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+-- 
+1.7.9.5
+
