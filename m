@@ -2,163 +2,197 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DEFC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA91C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BA420693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D22C20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="CYq86GPn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kJub+36u"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LUCe3kDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733092AbfGPAgH (ORCPT
+        id S1733082AbfGPAiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 20:36:07 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:33339 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730383AbfGPAgH (ORCPT
+        Mon, 15 Jul 2019 20:38:11 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:11459 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730383AbfGPAiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 20:36:07 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7747D24B2;
-        Mon, 15 Jul 2019 20:36:03 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 15 Jul 2019 20:36:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=lu8e+uCpgbaeLhKrGOVG0g/dTSb7gKM
-        npkRfxw4hnDQ=; b=CYq86GPnRvAbQqnT2FQI3ZjJn7JEKJ6/kCZGW6/rVpaKIx0
-        6tIja+Q+ZIuxE5X44URf7fyZ3rUL4CtvEWzufsQjebuEEbtx2NrMZwh3g8HRKb6l
-        l3/72gv/btltkUQw/Fp5NX2XavEPhwsP2c+imP2mEnA7elhaTvbdJaJlU/AMpwH0
-        eOM66D9yG3aB1le5GlPQylnCkrq72DsGbf0VO7nTxx43ApABa3PLxLiXhmoJCJ9l
-        X3Ufau7GXlGsukGNQPR3JSaLdmSemnKF22exKUAlJXlj7Q8fp1kBVMo0dGmAKVtD
-        xY+ealemevz/uXhvgjF+FF8WJi7xOXNRFJDjo5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=lu8e+u
-        CpgbaeLhKrGOVG0g/dTSb7gKMnpkRfxw4hnDQ=; b=kJub+36ucMMFuieARDasOv
-        lsAgmPBfaMZ4Wc57Q6fKdhHHT9Wmi49Z1p5ujybwhDI6o0RK9VXtjrKyifLk4zgw
-        LdQpoQtpJv/YchjSDQ6fWMzRPEWHliUhGl+Cb8+BCDk/WDL/U11qfB3KmTM+P4X1
-        RF3cYrAdlVFNnvrxaqA5RWwiGkl3AvO80MmNnmVNngPCTMmquEqh6brv3VARppJv
-        x8uDsF6342/PGf8w5IwTegVp68jvyWL3YXO7h4Jl4DxLTtI/JkCPxbc242oznut2
-        BdActXPVesaGfTK/LX8zr5JPQ/avgZg1jeTAiU6pqeftTqLLwVWGYdRyP11AHiYA
-        ==
-X-ME-Sender: <xms:8RstXbjUkbDEu6j9WWlg6myxUP9fREb4cOApbg4gAALYd2Qct0eaMw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrheelgdefgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
-    hinhepuggvvhhitggvthhrvggvrdhorhhgnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
-    nhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:8RstXZRWqojCpwkGqjHuSrQ_imrsnMcNF1PXhMvKeMU8jfiicGMSXg>
-    <xmx:8RstXYIy0v0wBG8DskTXa26bDwW9UX_Cy8UvFvpICHADvmCKVKSFAw>
-    <xmx:8RstXbRP3ApibNVpb_MEzmkgh8GWXVhVDZDaDFzNUT084jBMN6NBog>
-    <xmx:8xstXdgtSACnczm7UywOQVm9o6iC8wpf4sNneKB1XIPEszck4oB3Sg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8ED2AE01C8; Mon, 15 Jul 2019 20:36:01 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <3fe55ea9-b949-48a0-9eab-90ad3bc1ee2a@www.fastmail.com>
-In-Reply-To: <CAL_JsqLkOtsAxj9NvNB=EEkH00k-dtNedNY042uuntSmcjhDhA@mail.gmail.com>
-References: <20190712033214.24713-1-andrew@aj.id.au>
- <20190712033214.24713-2-andrew@aj.id.au>
- <CAL_JsqLkOtsAxj9NvNB=EEkH00k-dtNedNY042uuntSmcjhDhA@mail.gmail.com>
-Date:   Tue, 16 Jul 2019 10:06:11 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rob Herring" <robh+dt@kernel.org>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Ryan Chen" <ryanchen.aspeed@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: Document Aspeed SD controller
-Content-Type: text/plain
+        Mon, 15 Jul 2019 20:38:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2d1c6e0000>; Mon, 15 Jul 2019 17:38:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 15 Jul 2019 17:38:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 15 Jul 2019 17:38:08 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jul
+ 2019 00:38:04 +0000
+Subject: Re: [PATCH] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+References: <20190709223556.28908-1-rcampbell@nvidia.com>
+ <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
+ <05fffcad-cf5e-8f0c-f0c7-6ffbd2b10c2e@nvidia.com>
+ <20190715150031.49c2846f4617f30bca5f043f@linux-foundation.org>
+ <0ee5166a-26cd-a504-b9db-cffd082ecd38@nvidia.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <8dd86951-f8b0-75c2-d738-5080343e5dc5@nvidia.com>
+Date:   Mon, 15 Jul 2019 17:38:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <0ee5166a-26cd-a504-b9db-cffd082ecd38@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563237486; bh=ofrUZPeHN8eLZ9OqaICadscElKqWN6p7kWys0JZTuhA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=LUCe3kDURX1xDPj2CwtN0jMKxVWQAyodV2+L1dwfQqHya3HI/sRDK9smEEbPHb0Ff
+         2mWdkD7daq3TlbcP/jPe/QgeLnCmv9MR87AAkK0rYBBLcIdpFz4CVSHPw8Pj6GRf6Z
+         IsVXfYeACcGxnhFyFKkMkmeyzkxVhsMH50pb9rd/qVbK1HzDYSmTjAkqk1jBUST8+s
+         2AA/JJqG6pnvYbOD/effu13h7Q1Yki3WPB2j7nXgiRUYRwqMM6Q2wIoo0HKj7bbmw+
+         lUEQZzcW3IcuLSZC5BOnC8Zm7Y3LCNf520ktUCMVxdFiPfHnYvX4upKEIQxU1HFATa
+         ar0051SC/Q4nA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 7/15/19 4:34 PM, John Hubbard wrote:
+> On 7/15/19 3:00 PM, Andrew Morton wrote:
+>> On Tue, 9 Jul 2019 18:24:57 -0700 Ralph Campbell <rcampbell@nvidia.com> =
+wrote:
+>>
+>>>
+>>> On 7/9/19 5:28 PM, Andrew Morton wrote:
+>>>> On Tue, 9 Jul 2019 15:35:56 -0700 Ralph Campbell <rcampbell@nvidia.com=
+> wrote:
+>>>>
+>>>>> When migrating a ZONE device private page from device memory to syste=
+m
+>>>>> memory, the subpage pointer is initialized from a swap pte which comp=
+utes
+>>>>> an invalid page pointer. A kernel panic results such as:
+>>>>>
+>>>>> BUG: unable to handle page fault for address: ffffea1fffffffc8
+>>>>>
+>>>>> Initialize subpage correctly before calling page_remove_rmap().
+>>>>
+>>>> I think this is
+>>>>
+>>>> Fixes:  a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVIC=
+E page in migration")
+>>>> Cc: stable
+>>>>
+>>>> yes?
+>>>>
+>>>
+>>> Yes. Can you add this or should I send a v2?
+>>
+>> I updated the patch.  Could we please have some review input?
+>>
+>>
+>> From: Ralph Campbell <rcampbell@nvidia.com>
+>> Subject: mm/hmm: fix bad subpage pointer in try_to_unmap_one
+>>
+>> When migrating a ZONE device private page from device memory to system
+>> memory, the subpage pointer is initialized from a swap pte which compute=
+s
+>> an invalid page pointer. A kernel panic results such as:
+>>
+>> BUG: unable to handle page fault for address: ffffea1fffffffc8
+>>
+>> Initialize subpage correctly before calling page_remove_rmap().
+>>
+>> Link: http://lkml.kernel.org/r/20190709223556.28908-1-rcampbell@nvidia.c=
+om
+>> Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE p=
+age in migration")
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+>> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+>> Cc: Jason Gunthorpe <jgg@mellanox.com>
+>> Cc: <stable@vger.kernel.org>
+>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>> ---
+>>
+>>   mm/rmap.c |    1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> --- a/mm/rmap.c~mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one
+>> +++ a/mm/rmap.c
+>> @@ -1476,6 +1476,7 @@ static bool try_to_unmap_one(struct page
+>>   			 * No need to invalidate here it will synchronize on
+>>   			 * against the special swap migration pte.
+>>   			 */
+>> +			subpage =3D page;
+>>   			goto discard;
+>>   		}
+>>  =20
+>=20
+> Hi Ralph and everyone,
+>=20
+> While the above prevents a crash, I'm concerned that it is still not
+> an accurate fix. This fix leads to repeatedly removing the rmap, against =
+the
+> same struct page, which is odd, and also doesn't directly address the
+> root cause, which I understand to be: this routine can't handle migrating
+> the zero page properly--over and back, anyway. (We should also mention mo=
+re
+> about how this is triggered, in the commit description.)
+>=20
+> I'll take a closer look at possible fixes (I have to step out for a bit) =
+soon,
+> but any more experienced help is also appreciated here.
+>=20
+> thanks,
 
-On Tue, 16 Jul 2019, at 07:47, Rob Herring wrote:
-> On Thu, Jul 11, 2019 at 9:32 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
-> > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> > data bus if only a single slot is enabled.
-> >
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> > In v2:
-> >
-> > * Rename to aspeed,sdhci.yaml
-> > * Rename sd-controller compatible
-> > * Add `maxItems: 1` for reg properties
-> > * Move sdhci subnode description to patternProperties
-> > * Drop sdhci compatible requirement
-> > * #address-cells and #size-cells are required
-> > * Prevent additional properties
-> > * Implement explicit ranges in example
-> > * Remove slot property
-> >
-> >  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 90 +++++++++++++++++++
-> >  1 file changed, 90 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> > new file mode 100644
-> > index 000000000000..67a691c3348c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> > @@ -0,0 +1,90 @@
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ASPEED SD/SDIO/eMMC Controller
-> > +
-> > +maintainers:
-> > +  - Andrew Jeffery <andrew@aj.id.au>
-> > +  - Ryan Chen <ryanchen.aspeed@gmail.com>
-> > +
-> > +description: |+
-> > +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
-> > +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
-> > +  only a single slot is enabled.
-> > +
-> > +  The two slots are supported by a common configuration area. As the SDHCIs for
-> > +  the slots are dependent on the common configuration area, they are described
-> > +  as child nodes.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum: [ aspeed,ast2400-sd-controller, aspeed,ast2500-sd-controller ]
-> 
-> This is actually a list of 4 strings. Please reformat to 1 per line.
+I'm not surprised at the confusion. It took me quite awhile to=20
+understand how migrate_vma() works with ZONE_DEVICE private memory.
+The big point to be aware of is that when migrating a page to
+device private memory, the source page's page->mapping pointer
+is copied to the ZONE_DEVICE struct page and the page_mapcount()
+is increased. So, the kernel sees the page as being "mapped"
+but the page table entry as being is_swap_pte() so the CPU will fault
+if it tries to access the mapped address.
+So yes, the source anon page is unmapped, DMA'ed to the device,
+and then mapped again. Then on a CPU fault, the zone device page
+is unmapped, DMA'ed to system memory, and mapped again.
+The rmap_walk() is used to clear the temporary migration pte so
+that is another important detail of how migrate_vma() works.
+At the moment, only single anon private pages can migrate to
+device private memory so there are no subpages and setting it to "page"
+should be correct for now. I'm looking at supporting migration of
+transparent huge pages but that is a work in progress.
+Let me know how much of all that you think should be in the change log.
+Getting an Acked-by from Jerome would be nice too.
 
-On reflection that's obvious, but also a somewhat subtle interaction with the
-preference for no quotes (the obvious caveat being "except where required").
+I see Christoph Hellwig got confused by this too [1].
+I have a patch to clear page->mapping when freeing ZONE_DEVICE private
+struct pages which I'll send out soon.
+I'll probably also add some comments to struct page to include the
+above info and maybe remove the _zd_pad_1 field.
 
-Thanks for pointing it out.
+[1] 740d6310ed4cd5c78e63 ("mm: don't clear ->mapping in hmm_devmem_free")
 
-I have been running `make dt_binding_check` and `make dtbs_check` over
-these, looks like I need to up my game a bit though. Do you do additional things
-in your workflow?
-
-Andrew
