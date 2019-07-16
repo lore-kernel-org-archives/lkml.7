@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341C0C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD023C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099FD21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8289021738
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563251723;
-	bh=bKqdpHWxT+TiiJERtZ0YmKsF4JvnVD0uSemmkoI7PHk=;
+	s=default; t=1563251725;
+	bh=WxQ7vIex/LGserhSv35oUYCl0APxZdNK3czLWsSPsBY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=SKN07Xymfl9pxeycfNv/SmhaG7eDgj4NXr/CUwhFuBtegyCpgEzJ2V2nQw1D6nKMg
-	 C6Y+jZlWAF9yBSe9rXp+vqzlvszkRlhuvctncCoSyrsh9Pqgb2dPtxEsKmn53FpUrl
-	 bdIst3WXauE3a3YM6uW+dxNXoZZVc0dqCPCf7010=
+	b=nKznLM6QtFZHssTMsLNynqsdlDe/99NI71y4pwP58H6NSA37DsK0qIVqjokHRJkL+
+	 5CvilboMgOov1XSYE/NS1OIM0o87g6HKI52oYwc1K1PpeQVJpo/GfFlW8M+LklWh32
+	 y1g7qFfp7ESWBKzTCHi+39Zkw4PgKPmsRt1KKhDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbfGPEfW (ORCPT
+        id S2387405AbfGPEfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 00:35:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
+        Tue, 16 Jul 2019 00:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733198AbfGPEfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 00:35:21 -0400
-Subject: Re: [GIT PULL] power-supply changes for 5.3
+        id S1733272AbfGPEfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 00:35:22 -0400
+Subject: Re: [PULL REQUEST] i2c for 5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563251720;
-        bh=bKqdpHWxT+TiiJERtZ0YmKsF4JvnVD0uSemmkoI7PHk=;
+        s=default; t=1563251721;
+        bh=WxQ7vIex/LGserhSv35oUYCl0APxZdNK3czLWsSPsBY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=n0j236Wzz7J9ywFaPQ0reAQ0ts019voK6JgarR/Epc4s9cauN17NL1++riw7l10cw
-         EDlGUoGAp3Tuv3aBkkc9c5Gn9pxX9qQm5g719UL7BGURHV5NZ9IK/8M3Wfeyg8D+Nf
-         fIl42ILEueRQckjS7dFG6EIQUlUQqtTzRyDqhRJY=
+        b=DgZ57bGp2WRvk44LRVqTpyqNhLS67LtyObpilyAxiyaiMtHOA+Mtq9/d+xsfkpmmm
+         ive2bSrXMN3Ln3MumW/hih2NoANXYjtgCiENW2VF0tkL5OIZI1HuBqL5XIlKJvN9/W
+         3hQBInAEerI6pMQ2RMKRF86U+Br57pyZyKZfqAUs=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190715194933.cq3cfz7g6j3mnbmc@earth.universe>
-References: <20190715194933.cq3cfz7g6j3mnbmc@earth.universe>
+In-Reply-To: <20190715213658.GA5361@kunai>
+References: <20190715213658.GA5361@kunai>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190715194933.cq3cfz7g6j3mnbmc@earth.universe>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git
- tags/for-v5.3
-X-PR-Tracked-Commit-Id: caa2b557841c8cedc1d4862cd31cf76ee940d105
+X-PR-Tracked-Message-Id: <20190715213658.GA5361@kunai>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.3
+X-PR-Tracked-Commit-Id: cc6b9dfb2c5769afeb3335048173c730bdf8dbe1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5fe7b600a116187e10317d83fb56922c4ef6b76d
-Message-Id: <156325172073.15429.16126501134617667212.pr-tracker-bot@kernel.org>
-Date:   Tue, 16 Jul 2019 04:35:20 +0000
-To:     Sebastian Reichel <sre@kernel.org>
+X-PR-Merge-Commit-Id: 273cbf61c3ddee9574ef1f4959b9bc6db5b24271
+Message-Id: <156325172182.15429.614674477388118200.pr-tracker-bot@kernel.org>
+Date:   Tue, 16 Jul 2019 04:35:21 +0000
+To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 15 Jul 2019 21:49:33 +0200:
+The pull request you sent on Mon, 15 Jul 2019 23:37:03 +0200:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.3
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5fe7b600a116187e10317d83fb56922c4ef6b76d
+https://git.kernel.org/torvalds/c/273cbf61c3ddee9574ef1f4959b9bc6db5b24271
 
 Thank you!
 
