@@ -2,105 +2,119 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095F2C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170ACC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC41520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E1920693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvXucYZh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O85w6Uft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387439AbfGPN0e (ORCPT
+        id S2387581AbfGPN0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:26:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39258 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfGPN0e (ORCPT
+        Tue, 16 Jul 2019 09:26:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42424 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfGPN0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:26:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v18so19919397ljh.6;
-        Tue, 16 Jul 2019 06:26:32 -0700 (PDT)
+        Tue, 16 Jul 2019 09:26:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t132so9442830pgb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 06:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i5eernLBaFGhyCIFa6yPKjvfBtf5hN1/5FhaLw6hzyI=;
-        b=gvXucYZhO534m2RGH5gg/cG8eTfj3B6c32P1G69Wvuwp3O4k6rQrig+mRIYeJDgjlt
-         Y7n0Ac1HxHnFYP09tfX6fnZe87kRm54UNadKFlRUThjA+VVJe6+1Ts/QXts++fWrfRp/
-         iSb+ix8YNxR5z3Q0ivKHsxy8yAIxZ1xsdGm09CwPiKtbGBYudXbGdfKaKP5lHzttrFE+
-         tblVAZazjR2NlOx5AMobqN8ypsbwbQi09AonLgfv91fBCrEAi4lJUjWKwUb/+cNzbYef
-         9ZaX4dLpBtAh5MLT7nd15kmFr/Y9oFQ+SKszMJiaVaqNoCHkFCQ2SXYttJwQjbGIy7x+
-         ovnw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iNuXYfJpH7xodxMP8TOSGp32e8S4xkphHFsCZYElfVY=;
+        b=O85w6UftvzCE5S7QNcUPHTwRK89UOIVN5UwkFUBVkoJlgzFkrecIe1HCHZxp8XpTpc
+         LUsUclB+E0i+ylxp3D4lng3UpJtIw1gZXPwBcCaJKcOivr+2o+5GI9PbWUU8w2l4ssaM
+         Qtr9x++RI1Bqm8fFQo7D8JkNWH1KOLvF6koLHwDvY5GzS6HhmQNvb3lah7Oib81HpAUW
+         H5STE9MUFYLpzD/VPToXLQZvmF8aqc9g44wgHJrkD0G6zhs92+jqI5ntp2oCI5TampeZ
+         K+RZc+cL1r1vBvh6vYS5CrrUA77bkwWs9B5APzX0SBgrGjo3Rvd1OWxrYMsqirI00fIB
+         Npbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=i5eernLBaFGhyCIFa6yPKjvfBtf5hN1/5FhaLw6hzyI=;
-        b=pA5LNGK5Tg9DwmwkOcQwoAbyyZjDGQDi80Hse6Qdu8RcODLl5YvVYONtRqVOBEWfv7
-         ExgGQBCzCxPoD9x3qH1IcdqY7Wv2IQY+iY0iHMRQH6WWp3ZKdQEgvlPb1FdU508ZJ125
-         AToIsb9tzzJbuv4qHwfWtypdeJhuAP6eBBaMQyza+6jcfd22MqXr4DSSeehFtZYqQ/RO
-         VIdUmiO/E/AgW0my2TnYOEAk6UREyl8Z+pW7h0LDT8g+uLvEI2MCTJG8JTbcTHtgGgK+
-         KzT+otKuTRSzKnp4RZnCKsSl7L4o+Cyzj2ZrL1fQucSiW7cHktMbIY9sidlLVIkR74qm
-         wCRA==
-X-Gm-Message-State: APjAAAX9Tzqg4Qkp/D/Y/gCDsRNaV9sBWx8cdi2pd0l0HoC38EwwWar+
-        SIaND9Yq5G5vpTBR8DHB87+19SxL
-X-Google-Smtp-Source: APXvYqyW3ijl5BFSBz50w1dNQBMhm3ZSISRMKPZBneOo4V473+dhc7T7buMTUwKZAtM9Ljhj8oObHA==
-X-Received: by 2002:a2e:96d5:: with SMTP id d21mr17883568ljj.170.1563283591701;
-        Tue, 16 Jul 2019 06:26:31 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id a13sm2855146lfi.57.2019.07.16.06.26.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 06:26:31 -0700 (PDT)
-Subject: Re: [PATCH v4 11/24] PM / devfreq: tegra30: Add debug messages
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223640epcas4p15337f40466342832b731ad6a53be946e@epcas4p1.samsung.com>
- <20190707223303.6755-12-digetx@gmail.com>
- <c883bdbe-427f-35a1-9e63-5e4953a84286@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <53cd0ba5-f814-cd9b-19c5-1d42717ca58c@gmail.com>
-Date:   Tue, 16 Jul 2019 16:26:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        bh=iNuXYfJpH7xodxMP8TOSGp32e8S4xkphHFsCZYElfVY=;
+        b=b7aH31K8g3pTUop35jx7sAUqQrYfKwwjyNBYrz0zt7GdTSAs1cB5/rGt+zD4qydyJa
+         UR33cobUiT818eQ4Q0yLMh1omOAfre6xLXZOOm+xpglnSHLdPuz4l35zZ+IZQBqjL2Z8
+         gUDeUvNQcVt0RJoHHX8xdtrGh5lbrc635Pi4Pq76T6GYiZ3h6piwYdi+rWkcgoQcGWDX
+         0tZdEdILoG6HfLtvpbDjzI1WBmlA4EcoJNnhghKclkgljl53Lhu4LFB198s/iT24nPmu
+         8ID0g6obFz5ify75hNww2CWIcsOxBoVvBxdTT1KykfsbY0MOzO0v1x1prn1uW9POoiA5
+         1yBw==
+X-Gm-Message-State: APjAAAXTMKmqyKotntTv3CtHcf2XsoXo0HBJ8w1GzL4eS1vuYN/31GlC
+        dOYbRnk6JHpTFUUfWxEiU2g=
+X-Google-Smtp-Source: APXvYqxMR+qcGzM00MAIReSnrdIh/7uLycc7Pudrqz68yEXSZKY7d3bokAlFxAcJq29ZEfJxTtL3OA==
+X-Received: by 2002:a63:6eca:: with SMTP id j193mr33082479pgc.74.1563283600675;
+        Tue, 16 Jul 2019 06:26:40 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:bf0:b8c3:8577:bf2f:2])
+        by smtp.gmail.com with ESMTPSA id q1sm21472311pfg.84.2019.07.16.06.26.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 06:26:39 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org, willy@infradead.org
+Cc:     urezki@gmail.com, rpenyaev@suse.de, peterz@infradead.org,
+        guro@fb.com, rick.p.edgecombe@intel.com, rppt@linux.ibm.com,
+        aryabinin@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH v5 0/2] mm/vmalloc.c: improve readability and rewrite vmap_area
+Date:   Tue, 16 Jul 2019 21:26:02 +0800
+Message-Id: <20190716132604.28289-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <c883bdbe-427f-35a1-9e63-5e4953a84286@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2019 15:23, Chanwoo Choi пишет:
-> Hi Dmitry,
-> 
-> Usually, the kernel log print for all users
-> such as changing the frequency, fail or success.
-> 
-> But, if the log just show the register dump,
-> it is not useful for all users. It is just used
-> for only specific developer.
-> 
-> I recommend that you better to add more exception handling
-> code on many points instead of just showing the register dump.
+v4 -> v5
+* Base on next-20190716
+* patch 1: From Uladzislau Rezki (Sony) <urezki@gmail.com> (author)
+  - https://lkml.org/lkml/2019/7/16/276
+* patch 2: Use v3
 
-The debug messages are not users, but for developers. Yes, I primarily
-made the debugging to be useful for myself and will be happy to change
-the way debugging is done if there will be any other active developer
-for this driver. The registers dump is more than enough in order to
-understand what's going on, I don't see any real need to change anything
-here for now.
+v3 -> v4:
+* Base on next-20190711
+* patch 1: From: Uladzislau Rezki (Sony) <urezki@gmail.com> (author)
+  - https://lkml.org/lkml/2019/7/3/661
+* patch 2: Modify the layout of struct vmap_area for readability
+
+v2 -> v3:
+* patch 1-4: Abandoned
+* patch 5:
+  - Eliminate "flags" (suggested by Uladzislau Rezki)
+  - Base on https://lkml.org/lkml/2019/6/6/455
+    and https://lkml.org/lkml/2019/7/3/661
+
+v1 -> v2:
+* patch 3: Rename __find_vmap_area to __search_va_in_busy_tree
+           instead of __search_va_from_busy_tree.
+* patch 5: Add motivation and necessary test data to the commit
+           message.
+* patch 5: Let va->flags use only some low bits of va_start
+           instead of completely overwriting va_start.
+
+The current implementation of struct vmap_area wasted space.
+
+After applying this commit, sizeof(struct vmap_area) has been
+reduced from 11 words to 8 words.
+
+Pengfei Li (1):
+  mm/vmalloc: modify struct vmap_area to reduce its size
+
+Uladzislau Rezki (Sony) (1):
+  mm/vmalloc: do not keep unpurged areas in the busy tree
+
+ include/linux/vmalloc.h | 20 +++++++----
+ mm/vmalloc.c            | 76 +++++++++++++++++++++++++++++------------
+ 2 files changed, 67 insertions(+), 29 deletions(-)
+
+-- 
+2.21.0
+
