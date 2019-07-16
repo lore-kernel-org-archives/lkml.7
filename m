@@ -2,81 +2,127 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EE2C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62CEC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9081C2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F65420880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwapdDTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbfGPNST (ORCPT
+        id S2387520AbfGPNTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:18:19 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59358 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfGPNST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:18:19 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hnNLN-0005bY-LT; Tue, 16 Jul 2019 21:18:09 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hnNLL-0004oo-Eq; Tue, 16 Jul 2019 21:18:07 +0800
-Date:   Tue, 16 Jul 2019 21:18:07 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, linux-arch@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: Use RCU when fetching pd from do_serial
-Message-ID: <20190716131807.twahbbdff6jhpnu2@gondor.apana.org.au>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
- <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
- <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
- <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
- <20190716111410.GN17989@gauss3.secunet.de>
- <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
- <20190716131520.GB3402@hirez.programming.kicks-ass.net>
+        Tue, 16 Jul 2019 09:19:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42549 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPNTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:19:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t28so19892432lje.9;
+        Tue, 16 Jul 2019 06:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EkdasPMgGnwihc1DSdnhBOd4C244LSLsm8CGrCb1iAU=;
+        b=YwapdDTLSP9fmg8iiyTzQ/Y504livetiGXjF0pjWgVja6KtV7nKyOLOHSmhpb4omPF
+         JePE9JLsdXwOCs9rPOMD+zSXyGuU6lnmcMzYV0sNT0T4u3ig4HdRygVkArSUb0hnbV0u
+         HH9MSrmXwnOn3+hnncg+sFEyhrtzyeWg43BzrETKjfRNEWBSKWpi0NjH+FyshHdUc2ai
+         zVwALa6M/bBFo4zWABJv75UlSXlZ9ckmS//C2RKwtnkOK6km2LvqFsM0MObDhkVq+9yD
+         clbCxDYIXNS9WNOkvth3Y1USme822AgujW8TWBp7UK7Xr69eiluL0OmS/948gJvbG+2+
+         JXsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EkdasPMgGnwihc1DSdnhBOd4C244LSLsm8CGrCb1iAU=;
+        b=ObpR2VEY3k/6EZkokB2uddC65vRQ08ZX5EOxNpT72Zu3JUIjjgmlb3iPlkzfBWtt+3
+         lwxLtkRiPlb7JfwDIphkGfnyHEZZdAEWOR22qlIKKZXEYkP5VS0TEUvFXADB6LY0Km81
+         rHDWfAmTDV27MvQ1/eAalQYbHhVw0A5wF1mfYB/xAgWqi35EWcsWQWd3WAwD+11Qvh9t
+         lDT0L8CUDn/GIuRR5gYpaTmrGTNTy1fwoiWap98B1vplIjqYayOfULV9XT/9byS9NWpT
+         2zEriEcHbLmsAWP4jhIz2+XOjin/bbR3YfHBU+PXX4287Pqo63+Sm1kWnmINPKCWkJsZ
+         ANyw==
+X-Gm-Message-State: APjAAAWONE+Hk+Cw7J7VObOBhAAtJTl3t16a+pIBwXDSouJwjSdY8gw+
+        8d5KRMy0hHIbf9z4c9MNYAbJ2B/L
+X-Google-Smtp-Source: APXvYqzJJgD5y9i5vztuRuLgouYy44IzN5SEoidUA4vu+xPqFD03Qc2Yqh/OG7KOZ9K2kqRx/B8WOQ==
+X-Received: by 2002:a2e:96d0:: with SMTP id d16mr3668222ljj.14.1563283162653;
+        Tue, 16 Jul 2019 06:19:22 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id k82sm3722138lje.30.2019.07.16.06.19.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 06:19:22 -0700 (PDT)
+Subject: Re: [PATCH v4 09/24] PM / devfreq: tegra30: Reset boosting on startup
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190707223303.6755-1-digetx@gmail.com>
+ <CGME20190707223639epcas4p392300747244905ec06f580394d579eb4@epcas4p3.samsung.com>
+ <20190707223303.6755-10-digetx@gmail.com>
+ <caed4a78-ad8a-5bee-adc4-4a342e2898c3@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d86c8b97-40b7-ba63-e0a0-736862fa786c@gmail.com>
+Date:   Tue, 16 Jul 2019 16:19:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716131520.GB3402@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <caed4a78-ad8a-5bee-adc4-4a342e2898c3@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 03:15:20PM +0200, Peter Zijlstra wrote:
->
-> > @@ -367,7 +368,7 @@ void padata_do_serial(struct padata_priv *padata)
-> >  	struct parallel_data *pd;
-> >  	int reorder_via_wq = 0;
-> >  
-> > -	pd = padata->pd;
-> > +	pd = rcu_dereference_bh(padata->inst->pd);
-> >  
-> >  	cpu = get_cpu();
-> >  
+16.07.2019 15:13, Chanwoo Choi пишет:
+> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+>> Governor could be stopped while boosting is active. We have assumption
+>> that everything is reset on governor's restart, including the boosting
+>> value, which was missed.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index d5d04c25023b..32fe95458ee7 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -536,6 +536,9 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+>>  {
+>>  	u32 val = 0, target_freq;
+>>  
+>> +	/* we don't want boosting on restart */
 > 
-> That's weird for not having a matching assign and lacking comments to
-> explain that.
+> nitpick.
+> I think that following comment is proper in my case.
+> In my case, I think 'we' expression is not good
+> 
+> 	/* Reset the boost frequency on restart */
 
-There is a matching rcu_assign_pointer.  But we should add some
-RCU markers.
+Okay, I'll change the wording.
 
-Or perhaps you're misreading the level of indirections :)
+>> +	dev->boost_freq = 0;
+>> +
+>>  	target_freq = clk_get_rate(tegra->emc_clock) / KHZ;
+>>  	dev->avg_count = target_freq * ACTMON_SAMPLING_PERIOD;
+>>  	device_writel(dev, dev->avg_count, ACTMON_DEV_INIT_AVG);
+>>
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> 
+> 
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
