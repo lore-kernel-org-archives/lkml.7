@@ -2,102 +2,104 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04593C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985BDC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C002E2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7101621743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563317830;
+	bh=3FziCkUhkic52Bz0GkIpF1K3lMHEHAHMOGGv+yHGAuw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HMamwFbA7HNw818hBBIoSpnCpRs31LDbxK6OhNZK+S6Qkl2P1UktFsuUpqslTDrNq
+	 7rsrN8wTqKOHpj8DaebS2oxaK9iet5ks4nK/A2xKvWp6OE5LVdLttoCgoO8oWOvLD+
+	 uKuPoFMD/8PPbIZp69T6TxHdm+AZliHkAV/RmCv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388713AbfGPWzN (ORCPT
+        id S2388810AbfGPW5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:55:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37280 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 18:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfGPWzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:55:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731273AbfGPW5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:57:09 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 508DB81F0E;
-        Tue, 16 Jul 2019 22:55:12 +0000 (UTC)
-Received: from torg (ovpn-122-28.rdu2.redhat.com [10.10.122.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 75942611DB;
-        Tue, 16 Jul 2019 22:55:11 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 17:55:09 -0500
-From:   Clark Williams <williams@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        RT <linux-rt-users@vger.kernel.org>
-Subject: [PREEMPT_RT]  splat in v5.2-rt1:   r t_mutex_owner(lock) != current
-Message-ID: <20190716175509.17b03f1e@torg>
-Organization: Red Hat, Inc
+        by mail.kernel.org (Postfix) with ESMTPSA id EE99721842;
+        Tue, 16 Jul 2019 22:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563317828;
+        bh=3FziCkUhkic52Bz0GkIpF1K3lMHEHAHMOGGv+yHGAuw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tHIuxFwbQhJ6bqRks348x26fjUooue674tNCmsDNaF7YctEzbVuTeO4vbdxLe5cLE
+         wr2dq4jGaVUuCBnAoPYfd5xhW8mPFOUrjiBVZ3pH1dpKxA3QNaKy9G2tZvThaVsBDo
+         xaqSPELdUJF49m3HgBXf5Is5Oh9fRrCtyJt9U1co=
+Received: by mail-qk1-f180.google.com with SMTP id s22so15963969qkj.12;
+        Tue, 16 Jul 2019 15:57:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAV31bEK6SvV0nr0QjaAf4DZdvldR/3Ek1uDcLKhpktjRpTSjGbQ
+        Pv64Vx1F5EooBssnnA1EObH9bNPP7Zck9Qe1pA==
+X-Google-Smtp-Source: APXvYqwIhgBe3UyiAiUUqKGCswul0dCV5zLkXb+CtviKLJPbKPZ2Qp20piCgEBRULt10Vr9A8Ukl3eOF7cL98pjlPQY=
+X-Received: by 2002:a37:a44a:: with SMTP id n71mr22553428qke.393.1563317827063;
+ Tue, 16 Jul 2019 15:57:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 16 Jul 2019 22:55:12 +0000 (UTC)
+References: <20190702004811.136450-1-saravanak@google.com> <20190702004811.136450-3-saravanak@google.com>
+ <CAL_JsqLdvDpKB=iV6x3eTr2F4zY0bxU-Wjb+JeMjj5rdnRc-OQ@mail.gmail.com>
+ <CAGETcx_i9353aRFbJXNS78EvqwmU-2-xSBJ+ySZX1gjjHpz_cg@mail.gmail.com>
+ <9e75b3dd-380b-c868-728f-46379e53bc11@gmail.com> <07812739-0e6b-6598-ac58-8e0ea74a3331@gmail.com>
+ <CAGETcx8YCCGxgXnByenVUb+q8pHPPTjwAjK3L_+9mwoCe=9SbA@mail.gmail.com> <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
+In-Reply-To: <3e340ff1-e842-2521-4344-da62802d472f@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 16 Jul 2019 16:56:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
+Message-ID: <CAL_JsqLySLMLanBJvyWqFGhVzXrEaUP-3t9MDmpnAXhQA_7y=g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] of/platform: Add functional dependency link from
+ DT bindings
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Saw this after applying my thermal lock to raw patch and the change in i915 for lockdep. The 
-splat occurred on boot when creating the kdump initramfs. System is an Intel NUC i7 with 32GB ram
-and 256GB SSD for rootfs. 
+On Mon, Jul 15, 2019 at 7:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 7/15/19 11:40 AM, Saravana Kannan wrote:
+> > Replying again because the previous email accidentally included HTML.
+> >
+> > Thanks for taking the time to reconsider the wording Frank. Your
+> > intention was clear to me in the first email too.
+> >
+> > A kernel command line option can also completely disable this
+> > functionality easily and cleanly. Can we pick that as an option? I've
+> > an implementation of that in the v5 series I sent out last week.
+>
+> Yes, Rob suggested a command line option for debugging, and I am fine with
+> that.  But even with that, I would like a lot of testing so that we have a
+> chance of finding systems that have trouble with the changes and could
+> potentially be fixed before impacting a large number of users.
 
-The booting kernel has rt_mutex debugging turned on as well as lockdep and lockup configs. 
+Leaving it in -next for more than a cycle will not help. There's some
+number of users who test linux-next. Then there's more that test -rc
+kernels. Then there's more that test final releases and/or stable
+kernels. Probably, the more stable the h/w, the more it tends to be
+latter groups. (I don't get reports of breaking PowerMacs with the
+changes sitting in linux-next.)
 
-Jul 16 14:41:48 theseus dracut[3082]: *** Creating initramfs image file '/boot/initramfs-5.2.0-rt1.fixes+kdump.img' done ***
-Jul 16 14:41:48 theseus kernel: ------------[ cut here ]------------
-Jul 16 14:41:48 theseus kernel: DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) != current)
-Jul 16 14:41:48 theseus kernel: WARNING: CPU: 1 PID: 8349 at kernel/locking/rtmutex-debug.c:145 debug_rt_mutex_unlock+0x47/0x50
-Jul 16 14:41:48 theseus kernel: Modules linked in: rfcomm xt_CHECKSUM xt_MASQUERADE tun bridge stp llc fuse nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ebtable_nat ip6table_nat ip6table_mangle ip6table_raw>
-Jul 16 14:41:48 theseus kernel:  snd_rawmidi snd_hda_core media snd_hwdep snd_seq btusb wmi_bmof snd_seq_device iwlwifi btrtl intel_wmi_thunderbolt btbcm snd_pcm iTCO_wdt btintel iTCO_vendor_support pcspkr bluetooth snd_timer rtsx_pci_ms cfg80211 snd memstick ecdh_generic i2c_i801 soundcore ec>
-Jul 16 14:41:48 theseus kernel: CPU: 1 PID: 8349 Comm: fsfreeze Not tainted 5.2.0-rt1.fixes+ #16
-Jul 16 14:41:48 theseus kernel: Hardware name: Intel Corporation NUC7i7BNH/NUC7i7BNB, BIOS BNKBL357.86A.0054.2017.1025.1822 10/25/2017
-Jul 16 14:41:48 theseus kernel: RIP: 0010:debug_rt_mutex_unlock+0x47/0x50
-Jul 16 14:41:48 theseus kernel: Code: c2 75 01 c3 e8 6a c1 3e 00 85 c0 74 f6 8b 05 30 3c 66 01 85 c0 75 ec 48 c7 c6 a0 b3 2e b1 48 c7 c7 48 bf 2c b1 e8 42 7d f8 ff <0f> 0b c3 66 0f 1f 44 00 00 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f
-Jul 16 14:41:48 theseus kernel: RSP: 0018:ffffc03c5b607dd0 EFLAGS: 00010086
-Jul 16 14:41:48 theseus kernel: RAX: 0000000000000000 RBX: ffff9a7d6deb0d98 RCX: 0000000000000000
-Jul 16 14:41:48 theseus kernel: RDX: ffffffffb167ce50 RSI: 00000000ffffffff RDI: 00000000ffffffff
-Jul 16 14:41:48 theseus kernel: RBP: ffff9a7d6deb0ab0 R08: 0000000000000000 R09: ffffffffb167cd20
-Jul 16 14:41:48 theseus kernel: R10: ffffc03c5b607d10 R11: ffffffffb2aa38eb R12: 0000000000000246
-Jul 16 14:41:48 theseus kernel: R13: ffffc03c5b607e00 R14: ffffc03c5b607e10 R15: ffffffffb034c53f
-Jul 16 14:41:48 theseus kernel: FS:  00007fd6e2f0e540(0000) GS:ffff9a7d9e600000(0000) knlGS:0000000000000000
-Jul 16 14:41:48 theseus kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Jul 16 14:41:48 theseus kernel: CR2: 0000563557bc0178 CR3: 0000000792188006 CR4: 00000000003606e0
-Jul 16 14:41:48 theseus kernel: Call Trace:
-Jul 16 14:41:48 theseus kernel:  rt_mutex_slowunlock+0x25/0x80
-Jul 16 14:41:48 theseus kernel:  __rt_mutex_unlock+0x45/0x80
-Jul 16 14:41:48 theseus kernel:  percpu_up_write+0x1f/0x30
-Jul 16 14:41:48 theseus kernel:  thaw_super_locked+0xde/0x110
-Jul 16 14:41:48 theseus kernel:  do_vfs_ioctl+0x5de/0x720
-Jul 16 14:41:48 theseus kernel:  ksys_ioctl+0x5e/0x90
-Jul 16 14:41:48 theseus kernel:  __x64_sys_ioctl+0x16/0x20
-Jul 16 14:41:48 theseus kernel:  do_syscall_64+0x66/0xb0
-Jul 16 14:41:48 theseus kernel:  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-Jul 16 14:41:48 theseus kernel: RIP: 0033:0x7fd6e2e391fb
-Jul 16 14:41:48 theseus kernel: Code: 0f 1e fa 48 8b 05 8d dc 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 5d dc 0c 00 f7 d8 64 89 01 48
-Jul 16 14:41:48 theseus kernel: RSP: 002b:00007ffe61e2f498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-Jul 16 14:41:48 theseus kernel: RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fd6e2e391fb
-Jul 16 14:41:48 theseus kernel: RDX: 0000000000000000 RSI: 00000000c0045878 RDI: 0000000000000003
-Jul 16 14:41:48 theseus kernel: RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000000
-Jul 16 14:41:48 theseus kernel: R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-Jul 16 14:41:48 theseus kernel: R13: 00007ffe61e309fa R14: 0000000000000000 R15: 0000000000000000
-Jul 16 14:41:48 theseus kernel: irq event stamp: 6254
-Jul 16 14:41:48 theseus kernel: hardirqs last  enabled at (6253): [<ffffffffb0ac8590>] _raw_spin_unlock_irqrestore+0x60/0x90
-Jul 16 14:41:48 theseus kernel: hardirqs last disabled at (6254): [<ffffffffb0ac8713>] _raw_spin_lock_irqsave+0x23/0x90
-Jul 16 14:41:48 theseus kernel: softirqs last  enabled at (3330): [<ffffffffb003e4a8>] fpu__clear+0x88/0x200
-Jul 16 14:41:48 theseus kernel: softirqs last disabled at (3327): [<ffffffffb003e46b>] fpu__clear+0x4b/0x200
-Jul 16 14:41:48 theseus kernel: ---[ end trace 0000000000000002 ]---
-Jul 16 14:41:49 theseus kdumpctl[1500]: kexec: loaded kdump kernel
-Jul 16 14:41:49 theseus kdumpctl[1500]: Starting kdump: [OK]
+My main worry about this being off by default is it won't get tested.
+I'm not sure there's enough interest to drive folks to turn it on and
+test. Maybe it needs to be on until we see breakage.
 
--- 
-The United States Coast Guard
-Ruining Natural Selection since 1790
+Rob
