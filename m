@@ -2,111 +2,109 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1A3C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301F1C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F892064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0704D2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJHmxF/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbfGPR3S (ORCPT
+        id S2388284AbfGPR3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:29:18 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:47586 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728124AbfGPR3S (ORCPT
+        Tue, 16 Jul 2019 13:29:32 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34174 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbfGPR3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:29:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TX4BEhE_1563298132;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX4BEhE_1563298132)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 17 Jul 2019 01:28:55 +0800
-Subject: Re: [v2 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
- mapped correctly in mbind
-To:     Vlastimil Babka <vbabka@suse.cz>, mhocko@kernel.org,
-        mgorman@techsingularity.net, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
- <1561162809-59140-3-git-send-email-yang.shi@linux.alibaba.com>
- <0cbc99f6-76a9-7357-efa7-a2d551b3cd12@suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <9defdc16-c825-05b7-b394-abdf39000220@linux.alibaba.com>
-Date:   Tue, 16 Jul 2019 10:28:51 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 16 Jul 2019 13:29:32 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so3553539pgc.1;
+        Tue, 16 Jul 2019 10:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=iFsg7zgErG7qPu+qK+vn8Dl0lcUvmaJEqbe5euJxvQo=;
+        b=bJHmxF/wDfkcxpPQa+kixCbcwLFC9m1Q3qpzVmgxC8udYiSLJj52BTGIr0ZXNeboyN
+         xj4s6+vyb7pdmf/KK6TQavUzo3NETbx1pcKYtwAUT9dHYJBqNGkbF+GDQuEnTqfu3OLv
+         MsluebH82XPNZXjEndd+cdnzdTY2ah4P+XBeolGYmPbVOtxsD6NrcE9A63BUVkI7ji8M
+         SjroM3A19LR+xnW8TKP6rXsih7kc0MF6HYSqsx4K4QZp+AvIQTRVitWulFVxRPmhKQjZ
+         aNlsJFhiCMlODaiRKO3e1BC5WH3rZgO6+AHNcD3w62zrKd9U3ksy9Enwby29DrtwpD/y
+         AyNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=iFsg7zgErG7qPu+qK+vn8Dl0lcUvmaJEqbe5euJxvQo=;
+        b=FP8eGvjxPUt2IkNvBpFTJA6ec0SKIFCPMpABaYUBKJKkjPVG3YEYDGDmYf0sVWfT2D
+         IMh9dVaY7je7jGfYDP5cjjDpAjMdmb67kPRrUVxjKNTLgRBwOwIU9Fe06R6sG1kCIY4q
+         KEkmv+4xku4sZltAlvmAEitGYB+5Lh/czsqfjzgutwbxNGTJpr2DMhNYhD6PCZyaLJqH
+         fFHT9NqwDT8XHRmzjslHN0l25TYpeh7wlS6QzFlilDjcwIkMSzeOh5m6tdetJ+52t6KP
+         whdftzmDUpuOqimKZOu/+LZ2YHn9EPWEO5gZMtfmy7Cma2d8BkNZ1HLg5o4GeaPWG66D
+         5hnQ==
+X-Gm-Message-State: APjAAAU/xRdfGma7JyCXaqF2qa8ycnetjBM8Ho9mprE6KXAe8BD4nhYP
+        iDXbfVq0/yhjPVEi2YAqEDo=
+X-Google-Smtp-Source: APXvYqxBKqWUm1cOx4GABfPPUq2U6TC9lPoGvk2pRh0AJkgEWJlinxI/cvKvypfJ1dyLvzBkaRC9WA==
+X-Received: by 2002:a17:90a:80c4:: with SMTP id k4mr38638700pjw.74.1563298171637;
+        Tue, 16 Jul 2019 10:29:31 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id 21sm10104389pfj.76.2019.07.16.10.29.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 10:29:30 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 22:59:25 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] infiniband: hw: qib: Unneeded variable ret
+Message-ID: <20190716172924.GA12241@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <0cbc99f6-76a9-7357-efa7-a2d551b3cd12@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+fix below issue reported by coccicheck
+drivers/infiniband/hw/qib/qib_file_ops.c:1792:5-8: Unneeded variable:
+"ret". Return "0" on line 1876
 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/infiniband/hw/qib/qib_file_ops.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-On 7/16/19 5:07 AM, Vlastimil Babka wrote:
-> On 6/22/19 2:20 AM, Yang Shi wrote:
->> @@ -969,10 +975,21 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
->>   /*
->>    * page migration, thp tail pages can be passed.
->>    */
->> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
->> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->>   				unsigned long flags)
->>   {
->>   	struct page *head = compound_head(page);
->> +
->> +	/*
->> +	 * Non-movable page may reach here.  And, there may be
->> +	 * temporaty off LRU pages or non-LRU movable pages.
->> +	 * Treat them as unmovable pages since they can't be
->> +	 * isolated, so they can't be moved at the moment.  It
->> +	 * should return -EIO for this case too.
->> +	 */
->> +	if (!PageLRU(head) && (flags & MPOL_MF_STRICT))
->> +		return -EIO;
->> +
-> Hm but !PageLRU() is not the only way why queueing for migration can
-> fail, as can be seen from the rest of the function. Shouldn't all cases
-> be reported?
-
-Do you mean the shared pages and isolation failed pages? I'm not sure 
-whether we should consider these cases break the semantics or not, so I 
-leave them as they are. But, strictly speaking they should be reported 
-too, at least for the isolation failed page.
-
-Thanks,
-Yang
-
->
->>   	/*
->>   	 * Avoid migrating a page that is shared with others.
->>   	 */
->> @@ -984,6 +1001,8 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
->>   				hpage_nr_pages(head));
->>   		}
->>   	}
->> +
->> +	return 0;
->>   }
->>   
->>   /* page allocation callback for NUMA node migration */
->> @@ -1186,9 +1205,10 @@ static struct page *new_page(struct page *page, unsigned long start)
->>   }
->>   #else
->>   
->> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
->> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->>   				unsigned long flags)
->>   {
->> +	return -EIO;
->>   }
->>   
->>   int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
->>
+diff --git a/drivers/infiniband/hw/qib/qib_file_ops.c b/drivers/infiniband/hw/qib/qib_file_ops.c
+index 27b6e66..b014422 100644
+--- a/drivers/infiniband/hw/qib/qib_file_ops.c
++++ b/drivers/infiniband/hw/qib/qib_file_ops.c
+@@ -1789,7 +1789,6 @@ static void unlock_expected_tids(struct qib_ctxtdata *rcd)
+ 
+ static int qib_close(struct inode *in, struct file *fp)
+ {
+-	int ret = 0;
+ 	struct qib_filedata *fd;
+ 	struct qib_ctxtdata *rcd;
+ 	struct qib_devdata *dd;
+@@ -1873,7 +1872,7 @@ static int qib_close(struct inode *in, struct file *fp)
+ 
+ bail:
+ 	kfree(fd);
+-	return ret;
++	return 0;
+ }
+ 
+ static int qib_ctxt_info(struct file *fp, struct qib_ctxt_info __user *uinfo)
+-- 
+2.7.4
 
