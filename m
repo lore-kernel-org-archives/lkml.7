@@ -2,140 +2,131 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB61C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4A8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124E521743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB9621743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rWjPhmk9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lGia3dcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfGQNOf (ORCPT
+        id S1726580AbfGQNQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:14:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60750 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfGQNOf (ORCPT
+        Wed, 17 Jul 2019 09:16:48 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34838 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfGQNQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:14:35 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HDEPVB051538;
-        Wed, 17 Jul 2019 08:14:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563369265;
-        bh=MVYQ4EwMJMXmcBaMpkvWQRFoUm35w+HQYW/PHcy1kFc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rWjPhmk9DU9HJIORujSb2McQa1FSgeWq54pLhFe2Nmw10zDo5kvu3QR3wsj/0yko6
-         fKmuX1/Xm6BYWYj9IVi5gyiB62Be8rgNTpbAXeNZaMU6KMpGsveuojoPl08CzYWH9g
-         WZUw35WR8ObV1Oez3ejRxxhta5AGluR9EZYHY6XY=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HDEPmO039603
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jul 2019 08:14:25 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Jul 2019 08:14:25 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Jul 2019 08:14:25 -0500
-Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HDENq3080895;
-        Wed, 17 Jul 2019 08:14:23 -0500
-Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
- to the LED core
-To:     Dan Murphy <dmurphy@ti.com>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <daniel.thompson@linaro.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20190715155657.22976-1-jjhiblot@ti.com>
- <20190715155657.22976-3-jjhiblot@ti.com>
- <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <3b8e5847-6859-d78d-6274-7a879557dcae@ti.com>
-Date:   Wed, 17 Jul 2019 15:14:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 17 Jul 2019 09:16:48 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDDtDc093407;
+        Wed, 17 Jul 2019 13:16:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=MJEwO54lmmPvXRI8FYtOyTN+c7zUXuOQr44nzf5sm7Y=;
+ b=lGia3dczEYc+Jx5Sud5AixQImtoAKnVWZsB+O63uURD8NR7O6afwJpcZlZsBI4awEVR6
+ Goc+nlf9G+mPfIQz6OV8XUichp3IsXX8r6GV/DwuA9RM/661uFUygonIO+rXca0CmWHG
+ jaMZgGUL59XSKEH4B2YOJ0KezaWEBWy6Z+u5eNde7huk6JHIvFykbOTCFlosVRIHs0xq
+ bbyHz+kEBaAJKruJNxeKjDFKjkOMUQiNR+cAzhpfj+0gKE7NR75J9srbzC4HDjsNY60H
+ qWHs3y3tzt0bPMUXKHk5xp9JERh8t71zeQTxFAzdRiW7CEZpF7spoMTbYB6tCo5sh+E1 VA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2tq78ptjp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 13:16:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDCl2G074511;
+        Wed, 17 Jul 2019 13:14:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2tq5bd088x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 13:14:23 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6HDEMeT007829;
+        Wed, 17 Jul 2019 13:14:22 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jul 2019 13:14:22 +0000
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] x86, boot: Remove multiple copy of static function sanitize_boot_params()
+Date:   Tue, 16 Jul 2019 21:18:12 +0800
+Message-Id: <1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907170161
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907170161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Kernel build reporting warnings:
+ 'sanitize_boot_params' defined but not used [-Wunused-function]
 
-On 15/07/2019 20:59, Dan Murphy wrote:
-> JJ
->
-> On 7/15/19 10:56 AM, Jean-Jacques Hiblot wrote:
->> A LED is usually powered by a voltage/current regulator. Let the LED 
->> core
->> know about it. This allows the LED core to turn on or off the power 
->> supply
->> as needed.
->
-> This allows the LED core to turn on or off managed power supplies.
->
->
->>
->> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
->> ---
+at below files:
+arch/x86/boot/compressed/cmdline.c
+arch/x86/boot/compressed/error.c
+arch/x86/boot/compressed/early_serial_console.c
+arch/x86/boot/compressed/acpi.c
 
->>       if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
->>           ret = led_add_brightness_hw_changed(led_cdev);
->>           if (ret) {
->> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->> index 7107cd7e87cf..a12b880b0a2f 100644
->> --- a/drivers/leds/led-core.c
->> +++ b/drivers/leds/led-core.c
->> @@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
->>   LIST_HEAD(leds_list);
->>   EXPORT_SYMBOL_GPL(leds_list);
->>   +static bool __led_need_regulator_update(struct led_classdev 
->> *led_cdev,
->> +                    int brightness)
->> +{
->> +    bool new_state = (brightness != LED_OFF);
->> +
->> +    return led_cdev->regulator && led_cdev->regulator_state != 
->> new_state;
->> +}
->> +
->> +static int __led_handle_regulator(struct led_classdev *led_cdev,
->> +                int brightness)
->> +{
->> +    int rc;
->
-> Should there be a check for the regulator pointer.
->
-> If (!led_cdev->regulator)
->
->     return 0;
+That's due to they each include misc.h which includes a definition
+of sanitize_boot_params().
 
-Not required because __led_need_regulator_update() returns false if 
-led_cdev->regulator is NULL.
+Remove the inclusion from misc.h and have the c file including
+bootparam_utils.h directly.
 
-Thanks for the review
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+---
+ arch/x86/boot/compressed/misc.c | 1 +
+ arch/x86/boot/compressed/misc.h | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-JJ
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 24e65a0..53ac0cb 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -17,6 +17,7 @@
+ #include "pgtable.h"
+ #include "../string.h"
+ #include "../voffset.h"
++#include <asm/bootparam_utils.h>
+ 
+ /*
+  * WARNING!!
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index d2f1841..c818139 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -23,7 +23,6 @@
+ #include <asm/page.h>
+ #include <asm/boot.h>
+ #include <asm/bootparam.h>
+-#include <asm/bootparam_utils.h>
+ 
+ #define BOOT_CTYPE_H
+ #include <linux/acpi.h>
+-- 
+1.8.3.1
 
->
->
-> Otherwise
->
-> Reviewed-by: Dan Murphy <dmurphy@ti.com>
->
-> <snip>
->
