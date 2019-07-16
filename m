@@ -2,87 +2,146 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB60C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD522C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E112173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E8821841
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RpCqwPCv"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ka16flw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389010AbfGPXWv (ORCPT
+        id S2389065AbfGPX2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:22:51 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:40300 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfGPXWv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:22:51 -0400
-Received: by mail-vk1-f196.google.com with SMTP id s16so4561103vke.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yjpiai5hkCYLL6Diojv89YWK7LVysGGzfUoUrfBoeQ4=;
-        b=RpCqwPCvhvOPAtlSlatjK+atlcOC50FQcSClS0zKZgzBPDO/DW9MiVWDoZF58z5MdB
-         fnyNbMK3RMD8HWeS3xtOcaJ5UaNwSop31ZerBzqTWC0XCvKIsd1S8s95vHljNbcIZWXE
-         fI5qKOqIfdpP3Hm/+0L6i62IX70ZMgzJc4HqcoGlLbXi3l0P+f6a+f0T1CMKj356LoWd
-         mH1CD9c8Pr7oWbnQkDunKHAZE7tI6iiPcWQyHiGGYiNIZQhRWEAvw4YNZho4wxeVkn8U
-         AVpyxNe1w6+FrA59cJIayB2b/wKm+AVSzszC68evKv0kBMXA36YaJRP0LTi1WGRp4Zfu
-         oi1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yjpiai5hkCYLL6Diojv89YWK7LVysGGzfUoUrfBoeQ4=;
-        b=MqPBDWB5jptijezC95aUNUBH7P6l31yAAPLoHdwhPzcd6ctAjnAcTaTXxQ/4+w6Dvi
-         tOuVgkckhMvcqntnLh3++N+qbDAerIn2CCyr/tU1JO3yzMXOSEZLqlV6IAGex8eMd6M2
-         giYtI/nxIPh3NKkltFCm3T9dV/C02bUtYEArRBe8+feHIyPs47i+os0xuEozlpdl65hO
-         X8bwXI0tGo05R0s2heAWqNTE5CpokFbd34z0j4TTTKJ2S2s2UYVBfAgUJ6Dlh+/kLIto
-         eVHzeyd5jojmmHBZF8egV3UU25FBaWSBT09cTN4xEnvcrST/L3BWzmv+aUbRqO0rtpRg
-         rtFA==
-X-Gm-Message-State: APjAAAWecLkJGmm5GkztEHmCNMRfdwlgyKTWmk47gSi7+CW+K1B9Nwaz
-        G00lJCELfecKLxH2MsENj3alGzJqUbVozsEyvXbKuA==
-X-Google-Smtp-Source: APXvYqypcm143UE8WXo2p4xQIYE4/nSLIYw9Jmalgee0YoQ3TxaTvtAIBcOrWMDEUoeTN8IBjeyCTb/bN9WDKfiOz14=
-X-Received: by 2002:a1f:3dc1:: with SMTP id k184mr13794381vka.24.1563319369484;
- Tue, 16 Jul 2019 16:22:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190715195946.223443-1-matthewgarrett@google.com>
- <20190715195946.223443-28-matthewgarrett@google.com> <20190716191439.59a1ac32@gandalf.local.home>
-In-Reply-To: <20190716191439.59a1ac32@gandalf.local.home>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Tue, 16 Jul 2019 16:22:38 -0700
-Message-ID: <CACdnJut3FDAqpELYOicR9-tYCF+G_213J0nGJHeR5EPqXqToVg@mail.gmail.com>
-Subject: Re: [PATCH V35 27/29] tracefs: Restrict tracefs when the kernel is
- locked down
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
+        Tue, 16 Jul 2019 19:28:20 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41511 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfGPX2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:28:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pGmJ2zpSz9s3l;
+        Wed, 17 Jul 2019 09:28:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563319696;
+        bh=rwxKbah4VfF7BG5Oj6ZkNXpTV6etHJFRWQvfPcRHh/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ka16flw1aRM5RL34BTfjnFB5oXVz0mnkGzNRqCRCPMOzgeF2cyHLOfAXOMcS4CAfT
+         SojmXzZJJzEAyi0BiUof3x+e2qvBxDjfNDJaWFkoctgs7tcT44PwLfg+0ARhQfLqgA
+         FXSRaHPDUhpBjTJ3YzChLzpyifdn83P8kal2RqI8DR8y3MfWb194oLxMvSRproA251
+         Fz79n6JSEe/JTOCFHyR0ZQzyOEgBRk6NG3vlpiKgaN0EDQRYJKJlgHNim1K4AxVwMM
+         YtMBIR+I1S61cYwwc681nTuRk31ZQYfRq5wapE8MprvFivMgt8ck+K+tARjkERHGrh
+         xf3fVxbVb0YMA==
+Date:   Wed, 17 Jul 2019 09:28:01 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Mark Zhang <markz@mellanox.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Majd Dibbiny <majd@mellanox.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rdma tree
+Message-ID: <20190717092801.77037015@canb.auug.org.au>
+In-Reply-To: <20190710143036.1582c79d@canb.auug.org.au>
+References: <20190709133019.25a8cd27@canb.auug.org.au>
+        <ba1dd3e2-3091-816c-c308-2f9dd4385596@mellanox.com>
+        <20190709071758.GI7034@mtr-leonro.mtl.com>
+        <20190709124631.GG3436@mellanox.com>
+        <20190710110443.002220c8@canb.auug.org.au>
+        <20190710143036.1582c79d@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/KoH5lVAefuFawhjo7irS3qR"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 4:14 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> Small nit, but please add this as the first declaration, to keep the
-> "upside-down x-mas tree" look. I know some of the other functions in
-> this file don't follow that (which should be cleaned up some day), but
-> I'd like to avoid adding more that breaks the aesthetic of the code.
+--Sig_/KoH5lVAefuFawhjo7irS3qR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-ACK.
+Hi,
 
-> > +
-> > +     if (fops)
+On Wed, 10 Jul 2019 14:30:36 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> I think you meant "if (!fops)".
+> On Wed, 10 Jul 2019 11:04:43 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > On Tue, 9 Jul 2019 12:46:34 +0000 Jason Gunthorpe <jgg@mellanox.com> wr=
+ote: =20
+> > >
+> > > It isn't quite enough to make the header compile stand alone, I'm
+> > > adding this instead.
+> > >=20
+> > > From 37c1e072276b03b080eb24ff24c39080aeaf49ef Mon Sep 17 00:00:00 2001
+> > > From: Jason Gunthorpe <jgg@mellanox.com>
+> > > Date: Tue, 9 Jul 2019 09:44:47 -0300
+> > > Subject: [PATCH] RDMA/counters: Make rdma_counter.h compile stand alo=
+ne   =20
+> >=20
+> > I will apply this to linux-next today and reenable the stand alone
+> > building for rdma_counter.h =20
+>=20
+> That worked for me ...
 
-Blink. Whoops! Yup.
+rdma_counter.h should be able to be removed from the exceptions list now.
+
+I have been building linux-next with this patch for a while, so maybe
+it could be applied to the kbuild tree?
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 10 Jul 2019 13:03:16 +1000
+Subject: [PATCH] rdma: attempt to build rdma_counter.h stand alone again
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/Kbuild | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/Kbuild b/include/Kbuild
+index 7e9f1acb9dd5..765ff864130d 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -949,7 +949,6 @@ header-test-			+=3D pcmcia/ds.h
+ header-test-			+=3D rdma/ib.h
+ header-test-			+=3D rdma/iw_portmap.h
+ header-test-			+=3D rdma/opa_port_info.h
+-header-test-			+=3D rdma/rdma_counter.h
+ header-test-			+=3D rdma/rdmavt_cq.h
+ header-test-			+=3D rdma/restrack.h
+ header-test-			+=3D rdma/signature.h
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/KoH5lVAefuFawhjo7irS3qR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0uXYEACgkQAVBC80lX
+0GzDtAf/XyHO+dBLQ6dMUwGRO8Nb0lKbujqapttpU/NtqcBv5FrD6kOrlVJplXDB
+UL+DCm8LEp33pb2FRchB2pPzDSWrJSR1YIW0MeJ9+0u+rPjqlq/duncNDm2eQKCZ
+YhdmcoTpkbCO8YVt6EMddoZzBJq+cWVFf0f4JNpj5ZjiZdjIyV2EqQ0EyvSzsHkI
+M1SN7p5H86XM3+1bKoHB5wIcsQODFJYAbGdTrXO4ySQmfz3hqmpnZOGcdnClsN27
+VUjkIm4hDzbfhfT0QV+kVfShz3EtpUdNtO5sUDWMQ+Mm89F87W56nZC2gPiz9cII
+RWLPpIIFYIxxp6rpGSlIYY3Xa2NtbA==
+=9q44
+-----END PGP SIGNATURE-----
+
+--Sig_/KoH5lVAefuFawhjo7irS3qR--
