@@ -2,153 +2,118 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93208C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC22C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715CC2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D221E20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:14:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Kw1mKomL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388705AbfGPUKt (ORCPT
+        id S2388693AbfGPUOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:10:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59722 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 16:14:12 -0400
+Received: from mout.gmx.net ([212.227.15.19]:36299 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728575AbfGPUKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:10:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 361C13082B6D;
-        Tue, 16 Jul 2019 20:10:48 +0000 (UTC)
-Received: from torg (ovpn-122-28.rdu2.redhat.com [10.10.122.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76D2C60C44;
-        Tue, 16 Jul 2019 20:10:42 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 15:10:40 -0500
-From:   Clark Williams <williams@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <clark.williams@gmail.com>,
-        Julia Cartwright <julia@ni.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
-Message-ID: <20190716151040.04ef9122@torg>
-In-Reply-To: <20190715150601.205143057@linutronix.de>
-References: <20190715150402.798499167@linutronix.de>
-        <20190715150601.205143057@linutronix.de>
-Organization: Red Hat, Inc
+        id S1728137AbfGPUOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 16:14:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563308042;
+        bh=7VY8YH9jMovACrIdrhvISc8JByEG9+fowfzeNmRgOfo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Kw1mKomLyf4TbBJ/zg23P7apFrDxlIIFzSokOMo69AtSxElmYEy4eq2eopppd7wMr
+         V8XRtNTIUYn4ltq5K91JC1v/XK7U38Oklx26zHYJGCDzpAqlGcHoZIBzBhosfArtWz
+         QREVdI+1aykJHs0N3A/CQ2T+LAPEzD202Z7jEasM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.163.176]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MkHMZ-1iC4Dg3Ysb-00kbu2; Tue, 16
+ Jul 2019 22:14:01 +0200
+Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
+To:     Christian Brauner <christian@brauner.io>,
+        Sven Schnelle <svens@stackframe.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>, mpe@ellerman.id.au
+References: <20190714192205.27190-1-christian@brauner.io>
+ <20190714192205.27190-2-christian@brauner.io>
+ <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+ <20190716130631.tohj4ub54md25dys@brauner.io>
+ <20190716185310.GA12537@t470p.stackframe.org>
+ <20190716185554.gwpppirvmxgvnkgb@brauner.io>
+From:   Helge Deller <deller@gmx.de>
+Message-ID: <6d47935e-218c-3eb9-7617-14ce199f5958@gmx.de>
+Date:   Tue, 16 Jul 2019 22:13:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 16 Jul 2019 20:10:48 +0000 (UTC)
+In-Reply-To: <20190716185554.gwpppirvmxgvnkgb@brauner.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2cW2yydYOFZ0K7SnlkSJRJZL6gbN19kSgKbyZFedY35qUSBwLwc
+ KFwmZoyiIfN7b/p+DVlTRhgAyhZ7VdGpXdQVEnj51qjaJkW5gaAkDBU8LIwUGMGXiMX9maV
+ GUvBYvRjVz9REkKhNe849boNzNZvi79Q2Q2BRRVgSNGmQF+a0pftaHPMxwZ9+pCndGXBx6X
+ LsecZ2wqaeXWgof6fVzqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4Ns/Ko0qGwY=:qtFJO0B/HPz+a+JhQFRjzt
+ ZUmBSoerPrHropq5sAotY7F8GaBnQ0NKeQ9hZL+YtLcMAI3L6BI6rfq0NI6MgK1ZvAJLCivvK
+ NUgYMbGygYMSZU1miPsKEwZe124zRrnQ4jnIE+BCdyaJL/Ssq6oTdgKcVUBSh2BII2oU+sttV
+ ecWbKpu70lESoJDAcsv0lXwvx07tynJ7eNdW3D4REVKuw0BdPjcPkI3qjL7eyNRw1ikd9/Kep
+ bnMPAsfRIeDkbNDu5HKUYZziuZQ+rDL3wX4ZQh0M5zvEnDKQQ7ao22hMHeF5HttlHo7j7kBsr
+ SBEp/IIYng2xB8hK2juSQCSrriAv4frGKPVlQuWEhsJtrmL4N1pQMyPXVa5vlkRumb5j9Y575
+ RurDMzLcXjUk+DNB3VfJZfQY13lyP9TRMdcmdF/8iyYUNhokijDyW6OGl2ZcptYU57mg1mn35
+ WXx+gGRZ8OvEmgH8Adw9FYmkq/dAT/6HKGyd7ZfGzQvoAnRV89YHGodH/L0414MH9JmnTpCpI
+ goqA+ognB/fN5yuP919sKtuEo0KqX5TJtbnomJickKwpi6bhD/JLgTq6t5rYq305LZwh3V3iK
+ OWzAvy9og0GIV4/tAIl1tO59MaKYf4Jn7AEIiGHNMe3Oj3ko4cz2FfKue8lmpYplbnHGOwDPc
+ 6LPDVHagzO6qa70bQ4Gv9llAiOXToQvLWXcmDySzZJ5/LpYp44q+l0jHR1BMv2zUk+90s7vrk
+ 4yTl0/SIDguuv5NG39l57oLmZbEuMMLEbqBlmac8YZ8/iaPvkK39hs4dVQSc4HjZcKiMa4Fzc
+ MV1yaXRWMb/fR7NZDBbv3mDPGqTwsp5HZW4TzEMWF4uFEnlAtTSL3Xns/LIOAusoitQPTDGUp
+ H1zyjdpt6XYPGx3d6diD8rIq+nW4jhpwV+UD4re43PHvScbEs2Omuqo04uuO3eavxgmae26tC
+ 6LAMUB8EYaSMzPrwEr/RavbNClLho2zcLOfS5QDolc9rna6TUQsVOYVq/V88IYTUsoce2T7ug
+ m/f+5kqLNFStp+2aTBQCjG6TUey84zJXzc8FjGVoGBSvxXfqeU7HTShckbQzDRhAeZ92oID8H
+ o04wxVl/EgW4Q9b/TZNQ4z9aVVmJ0CCXIFs4R48cmHufzn9EI6krvCJS2QSHx/euHF6sSXWUa
+ NNirjIOYkJY82JMmOEVtBD7qpV+2AU18wSLPuvHkxhUkp613AAth7qcOVrwM8dGNvw5lE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jul 2019 17:04:03 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On 16.07.19 20:55, Christian Brauner wrote:
+> On Tue, Jul 16, 2019 at 08:53:10PM +0200, Sven Schnelle wrote:
+>> Hi,
+>>
+>> [Adding Helge to CC list]
+>>
+>> On Tue, Jul 16, 2019 at 03:06:33PM +0200, Christian Brauner wrote:
+>>> On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
+>>>> I think Vasily already has a clone3 patch for s390x with 435.
+>>>
+>>> A quick follow-up on this. Helge and Michael have asked whether there
+>>> are any tests for clone3. Yes, there will be and I try to have them
+>>> ready by the end of the this or next week for review. In the meantime =
+I
+>>> hope the following minimalistic test program that just verifies very
+>>> very basic functionality (It's not pretty.) will help you test:
+>>> [..]
+>>
+>> On PA-RISC this seems to work fine with Helge's patch to wire up the
+>> clone3 syscall.
+>
+> [...]
+> In any case, I saw Helge's patch and I think I might've missed to add an
+> Acked-by but feel free to add it.
 
-> Add a new entry to the preemption menu which enables the real-time support
-> for the kernel. The choice is only enabled when an architecture supports
-> it.
-> 
-> It selects PREEMPT as the RT features depend on it. To achieve that the
-> existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
-> well.
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Thanks!
+I've added the patch to the parisc-linux for-next tree.
 
-Excited to see this Thomas. Now I can start planning to build from a single tree
-rather than an RT tree off to the side of RHEL :)
-
-Acked-by: Clark Williams <williams@redhat.com>
-
-> ---
->  arch/Kconfig           |    3 +++
->  kernel/Kconfig.preempt |   25 +++++++++++++++++++++++--
->  2 files changed, 26 insertions(+), 2 deletions(-)
-> 
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -809,6 +809,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
->  config ARCH_NO_PREEMPT
->  	bool
->  
-> +config ARCH_SUPPORTS_RT
-> +	bool
-> +
->  config CPU_NO_EFFICIENT_FFS
->  	def_bool n
->  
-> --- a/kernel/Kconfig.preempt
-> +++ b/kernel/Kconfig.preempt
-> @@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
->  
->  	  Select this if you are building a kernel for a desktop system.
->  
-> -config PREEMPT
-> +config PREEMPT_LL
->  	bool "Preemptible Kernel (Low-Latency Desktop)"
->  	depends on !ARCH_NO_PREEMPT
-> -	select PREEMPT_COUNT
-> +	select PREEMPT
->  	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
->  	help
->  	  This option reduces the latency of the kernel by making
-> @@ -55,7 +55,28 @@ config PREEMPT
->  	  embedded system with latency requirements in the milliseconds
->  	  range.
->  
-> +config PREEMPT_RT
-> +	bool "Fully Preemptible Kernel (Real-Time)"
-> +	depends on EXPERT && ARCH_SUPPORTS_RT
-> +	select PREEMPT
-> +	help
-> +	  This option turns the kernel into a real-time kernel by replacing
-> +	  various locking primitives (spinlocks, rwlocks, etc) with
-> +	  preemptible priority-inheritance aware variants, enforcing
-> +	  interrupt threading and introducing mechanisms to break up long
-> +	  non-preemtible sections. This makes the kernel, except for very
-> +	  low level and critical code pathes (entry code, scheduler, low
-> +	  level interrupt handling) fully preemtible and brings most
-> +	  execution contexts under scheduler control.
-> +
-> +	  Select this if you are building a kernel for systems which
-> +	  require real-time guarantees.
-> +
->  endchoice
->  
->  config PREEMPT_COUNT
->         bool
-> +
-> +config PREEMPT
-> +       bool
-> +       select PREEMPT_COUNT
-> 
-> 
-
-
--- 
-The United States Coast Guard
-Ruining Natural Selection since 1790
+Helge
