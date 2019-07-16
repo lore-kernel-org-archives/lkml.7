@@ -2,178 +2,82 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5879C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA20CC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A0320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrzqnSsA"
+	by mail.kernel.org (Postfix) with ESMTP id 9E16920693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732926AbfGPA3N (ORCPT
+        id S1732897AbfGPAcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 20:29:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43775 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730355AbfGPA3M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 20:29:12 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h59so15205831otb.10;
-        Mon, 15 Jul 2019 17:29:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5BYdUBysZ67vKMguvZgCh6yaor9Vs/Z93uWHz9zlur8=;
-        b=qrzqnSsAKZNB/gem9bh/PkqLvVoR1oPCSliwxzsHir00TcpgIFy8AqTQIBspieq+bY
-         oSinjoTFA9vRBFsRFOrXQbG3M9Xw0dvRlMoiIcewyU5D+7zxapkXZioy952S9ieXo8J3
-         dLEGfocIuYgtUOQ8Y89CqwaILV2mKIj47y1DGwoa84qicsAyMD2nX3HzDKqHZEZM0VoU
-         CYPCCAMkyM6+67xwDgCSc9rCBA++QDEQVW34C6PFmHyd7sqerODgwUXcAE3ynqQUQXOI
-         a3XMHvh26a4Lw21UNpCplFEdq1j6AKNJddJrQ0gLoN9URjYCbKhN8JyfnM1q7XosTYyS
-         GsSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5BYdUBysZ67vKMguvZgCh6yaor9Vs/Z93uWHz9zlur8=;
-        b=RFmTn/dASYH9Mrd6ofqO+W95hjGxm+4BcrqtQtQOFxI5Af+pvOiQAG+W774f7ePX8r
-         mqCAX/n98UlID1tI0YTiL+BFVkaEWq3R+GmcvdCXkzSwIURBEJBSXWJgbN4KgyKirgEW
-         89W2xjAeBaVGp/XhgTgeNQs1p0ZMHLGNfkRsku7fiJb0jsgji2LPoeIHljILxys4MO9K
-         FlZukemjWZcWTrdavoSjp/F9Y64xTU/MnkFJm/Dvc99oj4bLJsT27KY3xPMt+dHglLT4
-         vzsSZJ7Q/mhDa0qKsyM9U/6XSfgO26wR+GJ0V0EenGF8xXdeMAIckz//kLHdxqIPghby
-         sL6Q==
-X-Gm-Message-State: APjAAAXzpwMdbGSpsw5LolCPI0LFIc36FV/q9WLVemGojtJ+s9B1FlMV
-        h9/BFxWe0wIQQImkph9x+I9Kw50OlPw1Chh7sq4=
-X-Google-Smtp-Source: APXvYqyEwg0cMSPwazZQij8oSS8ufGofjpqsKvgU98cS9UwddqUTmsuhAclAe7DHgcfs5tJkXQ2qzoJLnu9bi6JTBlk=
-X-Received: by 2002:a9d:4b02:: with SMTP id q2mr2561759otf.312.1563236951460;
- Mon, 15 Jul 2019 17:29:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190607094030.GA12373@lst.de> <66707fcc-b48e-02d3-5ed7-6b7e77d53266@samsung.com>
- <20190612152022.c3cfhp4cauhzhfyr@flea> <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea> <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea> <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
- <20190710114042.ybgavnxb4hgqrtor@flea> <CA+E=qVdFoT137pADfxz3uMwhOqjqrA9+6hBeOfbJxuH-M-3Pjw@mail.gmail.com>
- <20190712201543.krhsfjepd3cqndla@flea>
-In-Reply-To: <20190712201543.krhsfjepd3cqndla@flea>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 15 Jul 2019 17:28:53 -0700
-Message-ID: <CA+E=qVeDpLqAM6Qsd6oHfeYHB_JHdSb5GtY7i994GT5_RW4_Bg@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>,
-        Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 15 Jul 2019 20:32:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41711 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730383AbfGPAcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 20:32:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jul 2019 17:32:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,494,1557212400"; 
+   d="scan'208";a="318836457"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga004.jf.intel.com with ESMTP; 15 Jul 2019 17:32:23 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id F2220301AE9; Mon, 15 Jul 2019 17:32:22 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 17:32:22 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Uros Bizjak <ubizjak@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Subject: Re: [RFC PATCH, x86]: Disable CPA cache flush for selfsnoop targets
+Message-ID: <20190716003222.GJ32439@tassilo.jf.intel.com>
+References: <CAFULd4b=5-=WfF9OPCX+H9VDnsgbN7OBFj-XP=MZ0QqF5WpvQA@mail.gmail.com>
+ <8736j7gsza.fsf@linux.intel.com>
+ <alpine.DEB.2.21.1907152033020.1767@nanos.tec.linutronix.de>
+ <CAFULd4bcB8tsgZuxZJm_ksp5zyDQXjO=v_Ov622Bmhx=fr7KuA@mail.gmail.com>
+ <alpine.DEB.2.21.1907152129350.1767@nanos.tec.linutronix.de>
+ <20190715193836.GF32439@tassilo.jf.intel.com>
+ <CALCETrVonxn6tDkxZnbetM9W4Uxxm7-M-tv1e7YsieX3U5OBKA@mail.gmail.com>
+ <20190715225305.GI32439@tassilo.jf.intel.com>
+ <CALCETrW8yTRyP3qnOv04B2XvR5ZHDUky15CCBR2gtNVG3bea-Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrW8yTRyP3qnOv04B2XvR5ZHDUky15CCBR2gtNVG3bea-Q@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 1:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Wed, Jul 10, 2019 at 03:11:04PM -0700, Vasily Khoruzhick wrote:
-> > On Wed, Jul 10, 2019 at 4:40 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > There's another issue: if we introduce edp-connector we'll have to
-> > > > > > specify power up delays somewhere (in dts? or in platform driver?), so
-> > > > > > edp-connector doesn't really solve the issue of multiple panels with
-> > > > > > same motherboard.
-> > > > >
-> > > > > And that's what that compatible is about :)
-> > > >
-> > > > Sorry, I fail to see how it would be different from using existing
-> > > > panels infrastructure and different panels compatibles. I think Rob's
-> > > > idea was to introduce generic edp-connector.
-> > >
-> > > Again, there's no such thing as a generic edp-connector. The spec
-> > > doesn't define anything related to the power sequence for example.
-> > >
-> > > > If we can't make it generic then let's use panel infrastructure.
-> > >
-> > > Which uses a device specific compatible. Really, I'm not sure what
-> > > your objection and / or argument is here.
-> > >
-> > > In addition, when that was brought up in the discussion, you rejected
-> > > it because it was inconvenient:
-> > > https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
+On Mon, Jul 15, 2019 at 04:10:36PM -0700, Andy Lutomirski wrote:
+> On Mon, Jul 15, 2019 at 3:53 PM Andi Kleen <ak@linux.intel.com> wrote:
 > >
-> > It is inconvenient, but I don't understand how having board-specific
-> > connectors fixes it.
->
-> How it would not fix it?
+> > > I haven't tested on a real kernel with i915.  Does i915 really hit
+> > > this code path?  Does it happen more than once or twice at boot?
+> >
+> > Yes some workloads allocate/free a lot of write combined memory
+> > for graphics objects.
+> >
+> 
+> But where does that memory come from?  If it's from device memory
+> (i.e. memory that's not in the kernel direct map), then, unless I
+> missed something, we're never changing the cache mode per se -- we're
+> just ioremap_wc-ing it, which doesn't require a flush.
 
-I think I got your idea, but yet I think it's not the best solution.
-
-Do I understand correctly that you're proposing to introduce
-board-specific edp-connector driver that will be aware of worst case
-power up delays and will control backlight and power?
-
-Then why not to add another board-specific panel (e.g.
-"pine64,pinebook-panel") to simple-panel.c that does the same?
-
-> You'll have one connector, without the need to describe each and every
-> panel in the device tree and rely on the EDID instead, and you'll have
-> the option to power up the regulator you need.
->
-> I really don't understand what's the issue here, so let's take a step
-> back. What are is the issue , what are your requirements, and how
-> would you like that to be described ?
-
-We have a device (Pinebook) that uses the same board with multiple edp
-panels. So far there're pinebooks with 3 different panels: 11" with
-768p panel, 11" with 1080p panel, 14" with 768p panel.
-
-Currently there's no way to describe all pinebooks with a single dts.
-There's a simple workaround though -- we can just specify a panel with
-worst power up delays in dts and it'll work since anx6345 driver
-ignores panel modes anyway and uses EDID.
-
-Originally I proposed to extend simple-panel driver to support generic
-edp-panel but it was rejected. I still believe that it's the best
-solution assuming we can specify delays in dts, since panels list is
-specific to particular device and it probably can't be reused, i.e.
-there's no good reason to move it into C code.
-
-Rob Herring proposed to introduce edp-connector. While I still believe
-that it's not accurate description of hardware since it'll have to
-have backlight node (backlight is actually panel property) I was OK
-with this approach assuming we can store delays in dts.
-
-Later it evolved into board-specific edp-connector.
-
-So far I don't understand why everyone is trying to avoid introducing
-edp-panel driver that can read delays from dts. Basically, I don't
-understand what's the magic behind simple-panel.c and why new panels
-should be added there rather than described in dts. [1] Doesn't
-explain that.
-
-[1] http://sietch-tagr.blogspot.com/2016/04/display-panels-are-not-special.html
-
-Regards,
-Vasily
+Integraded graphics doesn't have device memory. There's an reserved
+memory area, but a lot of the buffers the GPU works with
+come from main memory.
 
 
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+-Andi
