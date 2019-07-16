@@ -2,122 +2,157 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442D6C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0761C76196
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D002173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7921D2173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:59:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrBp9R2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732469AbfGPM51 (ORCPT
+        id S1733192AbfGPM7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:57:27 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58104 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfGPM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:57:26 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hnN11-0005G9-5N; Tue, 16 Jul 2019 20:57:07 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hnN0y-0001sk-IB; Tue, 16 Jul 2019 20:57:04 +0800
-Date:   Tue, 16 Jul 2019 20:57:04 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] padata: Use RCU when fetching pd from do_serial
-Message-ID: <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
- <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
- <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
- <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
- <20190716111410.GN17989@gauss3.secunet.de>
+        Tue, 16 Jul 2019 08:59:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37185 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfGPM7R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:59:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so20863180wrr.4;
+        Tue, 16 Jul 2019 05:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=w9BxyRWmPBlvIeLtR87nRY5VKE+s5L3fJe5sGlRHZJM=;
+        b=jrBp9R2lSvz8mzkqTX5FdlapNqw8F9d8ZpJXbN3mOzvIEKGOBn3NsI2DDna5+kvejb
+         CqusQJuIfUj6WOqKeRbupdtCZAX6qig9Qv/m+Nf6wcYRWBlBA1EfMWW/l0EzRdsE91ry
+         53k7IVXKUcMR0ketxsgIgOy/6WaBE8/9fBnRUa/HsqO1VRgt5gPRQtzMaLdBacqGNtAj
+         8FTie2M3ITO0bTG1nlg5IIGkwnsobaOHKJpSWU9lAcxILoxxb42PVgzWMgWwzLc/vD5+
+         hPzfxpCtlUw4mi8WMT8jIZTn6dQrIo3QJKpHDauhCQZIQmcRt2tUPYAojf20prF3Zfws
+         b9Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=w9BxyRWmPBlvIeLtR87nRY5VKE+s5L3fJe5sGlRHZJM=;
+        b=UVYsd6S6jIJy3WJEbnEvtywxb9jbSrFE3O7Cq5NrJLsTddTzKxCKEGWkAoeuWJEnZv
+         8PMpb0gSVENMCps80Ox3tmj0bLWsbBZ05Ri+ZoDKiRysfr+38gmAh36HEpSgR0P3uzjL
+         dk6DZjH1M2H2IWgPlS1yUD0ytbxRalsGh+1j+VqaF+HQYiIyO8QvMpYx/CDjbedfIzJ0
+         GBsxsjWiFjp4GAWtBQNNvDqz/0Q5D4w3H12l0q2L3Jq4CCsJ+UBVuxH3o/UZqzahSzv1
+         UkJAza53VHr2AhNCL6sKd0iy6BkfHaWtfeSJBSZFajHi9fclivfpV3ysvZOOb1kiPYJg
+         uy7g==
+X-Gm-Message-State: APjAAAV/TAEwa3CrZwgdC0Lv/3qzcetvZi+4qaEVQ2Us9KAHlgoZIfJl
+        YfC4j0mm41KXNVRhKaE4pWeaeEbM
+X-Google-Smtp-Source: APXvYqwUNedV7nyiAJsfAYj0IfYBVVW61M2i41mNTJJt8+IhH3UY5jgZgdgze/yJYLTpoxXKih7DTA==
+X-Received: by 2002:a5d:6406:: with SMTP id z6mr35491318wru.280.1563281954206;
+        Tue, 16 Jul 2019 05:59:14 -0700 (PDT)
+Received: from [10.43.17.52] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id g17sm14849574wrm.7.2019.07.16.05.59.12
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 05:59:13 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 0/1] Add dm verity root hash pkcs7 sig validation.
+To:     Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+Cc:     ebiggers@google.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org,
+        Scott Shell <SCOTTSH@microsoft.com>,
+        Nazmus Sakib <mdsakib@microsoft.com>, mpatocka@redhat.com
+References: <20190701181958.6493-1-jaskarankhurana@linux.microsoft.com>
+ <MN2PR21MB12008A962D4DD8662B3614508AF20@MN2PR21MB1200.namprd21.prod.outlook.com>
+ <alpine.LRH.2.21.1907121025510.66082@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <395efa90-65d8-d832-3e2b-2b8ee3794688@gmail.com>
+Date:   Tue, 16 Jul 2019 14:59:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716111410.GN17989@gauss3.secunet.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <alpine.LRH.2.21.1907121025510.66082@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 01:14:10PM +0200, Steffen Klassert wrote:
->
-> Maybe we can fix it if we call padata_free_pd() from
-> padata_serial_worker() when it sent out the last object.
+On 12/07/2019 19:33, Jaskaran Singh Khurana wrote:
+> 
+> Hello Milan,
+> 
+>> Changes in v6:
+>>
+>> Address comments from Milan Broz and Eric Biggers on v5.
+>>
+>> -Keep the verification code under config DM_VERITY_VERIFY_ROOTHASH_SIG.
+>>
+>> -Change the command line parameter to requires_signatures(bool) which will
+>> force root hash to be signed and trusted if specified.
+>>
+>> -Fix the signature not being present in verity_status. Merged the
+>> https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fmbroz%2Flinux.git%2Fcommit%2F%3Fh%3Ddm-cryptsetup%26id%3Da26c10806f5257e255b6a436713127e762935ad3&amp;data=02%7C01%7CJaskaran.Khurana%40microsoft.com%7C18f92445e46940aeebb008d6fe50c610%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C636976020210890638&amp;sdata=aY0V9%2FBz2RHryIvoftGKUGnyPp9Fsc1JY4FZbHfW4hg%3D&amp;reserved=0
+>> made by Milan Broz and tested it.
+>>
+>>
+> 
+> Could you please provide feedback on this v6 version.
 
-How about using RCU?
+Hi,
 
-We still need to fix up the refcnt if it's supposed to limit the
-overall number of outstanding requests.
+I am ok with the v6 patch; I think Mike will return to it in 5.4 reviews.
 
----8<---
-The function padata_do_serial uses parallel_data without obeying
-the RCU rules around its life-cycle.  This means that a concurrent
-padata_replace call can result in a crash.
+But the documentation is very brief. I spent quite a long time to configure the system properly.
+I think you should add more description (at least to patch header) how to use this feature in combination with system keyring.
 
-This patch fixes it by using RCU just as we do in padata_do_parallel.
+Do I understand correctly that these steps need to be done?
 
-Fixes: 16295bec6398 ("padata: Generic parallelization/...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+ - user configures a certificate and adds it in kernel builtin keyring (I used CONFIG_SYSTEM_TRUSTED_KEYS option).
+ - the dm-verity device root hash is signed directly by a key of this cert
+ - the signature is uploaded to the user keyring
+ - reference to signature in keyring is added as an optional dm-verity table parameter root_hash_sig_key_desc
+ - optionally, require_signatures dm-verity module is set to enforce signatures.
 
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index 5d13d25da2c8..952f6514dd72 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -35,7 +35,7 @@
-  * struct padata_priv -  Embedded to the users data structure.
-  *
-  * @list: List entry, to attach to the padata lists.
-- * @pd: Pointer to the internal control structure.
-+ * @inst: Pointer to the overall control structure.
-  * @cb_cpu: Callback cpu for serializatioon.
-  * @cpu: Cpu for parallelization.
-  * @seq_nr: Sequence number of the parallelized data object.
-@@ -45,7 +45,7 @@
-  */
- struct padata_priv {
- 	struct list_head	list;
--	struct parallel_data	*pd;
-+	struct padata_instance	*inst;
- 	int			cb_cpu;
- 	int			cpu;
- 	int			info;
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 2d2fddbb7a4c..fb5dd1210d2b 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -128,7 +128,7 @@ int padata_do_parallel(struct padata_instance *pinst,
- 
- 	err = 0;
- 	atomic_inc(&pd->refcnt);
--	padata->pd = pd;
-+	padata->inst = pinst;
- 	padata->cb_cpu = cb_cpu;
- 
- 	target_cpu = padata_cpu_hash(pd);
-@@ -367,7 +368,7 @@ void padata_do_serial(struct padata_priv *padata)
- 	struct parallel_data *pd;
- 	int reorder_via_wq = 0;
- 
--	pd = padata->pd;
-+	pd = rcu_dereference_bh(padata->inst->pd);
- 
- 	cpu = get_cpu();
- 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+For reference, below is the bash script I used (with unpatched veritysetup to generate working DM table), is the expected workflow here?
+
+#!/bin/bash
+
+NAME=test
+DEV=/dev/sdc
+DEV_HASH=/dev/sdd
+ROOT_HASH=778fccab393842688c9af89cfd0c5cde69377cbe21ed439109ec856f2aa8a423
+SIGN=sign.txt
+SIGN_NAME=verity:$NAME
+
+# get unsigned device-mapper table using unpatched veritysetup
+veritysetup open $DEV $NAME $DEV_HASH $ROOT_HASH
+TABLE=$(dmsetup table $NAME)
+veritysetup close $NAME
+
+# Generate self-signed CA key, must be in .config as CONFIG_SYSTEM_TRUSTED_KEYS="path/ca.pem"
+#openssl req -x509 -newkey rsa:1024 -keyout ca_key.pem -out ca.pem -nodes -days 365 -set_serial 01 -subj /CN=example.com
+
+# sign root hash directly by CA cert
+echo -n $ROOT_HASH | openssl smime -sign -nocerts -noattr -binary -inkey ca_key.pem -signer ca.pem -outform der -out $SIGN
+
+# load signature to keyring
+keyctl padd user $SIGN_NAME @u <$SIGN
+
+# add device-mapper table, now with sighed root hash optional argument
+dmsetup create -r $NAME --table "$TABLE 2 root_hash_sig_key_desc $SIGN_NAME"
+dmsetup table $NAME
+
+# cleanup
+dmsetup remove $NAME
+keyctl clear @u
+
+
+Milan
