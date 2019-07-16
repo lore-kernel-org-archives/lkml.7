@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3ACC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEC9C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AEA20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2CC20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563301105;
-	bh=zJR2hpbk5U2V5HqlQDZbA9+nV9PVWNsGqElGtHzRxqc=;
+	s=default; t=1563301106;
+	bh=ibIzwDrMEg7O1tz0RohdZG9NDGmR8rHKZ4qhn4NsXww=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=jF3kkX39RUHfGaH3KopdgRTtL9aJWw80fOdIoo2b8LEJCtgI7c/8s8jRUg6GiaZpg
-	 ymQZLDHMJAm/6NapNCiFRXs9iOevq3jXk6fWwt7hkoXSkU4vhImVYgn39EJ8fcYLKu
-	 kNyeELJP71iean3pAr7T9tId+nXOmzEgn+YQfFZI=
+	b=MNO+YdZedqGxTbLSKXOymfQ3XBdcFooq7kuVLumJBdzcFlnBvV5pO32egszMUyR8k
+	 p8AwNs1cXcQ4f8MjMYkl7MueG7JAkC+h7M9AnXLAE7xQqu84BXDFfOcy66QZB/Sav0
+	 LkMnROBI5kNKwEPfLd8NCWO0/jADPCRBzmub8G48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388456AbfGPSSY (ORCPT
+        id S2388470AbfGPSSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:18:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58904 "EHLO
+        Tue, 16 Jul 2019 14:18:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58906 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388348AbfGPSSX (ORCPT
+        with ESMTP id S2388395AbfGPSSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jul 2019 14:18:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cRKuEDJ/FB9J2ll+d0oSNxmNcsGoBayeoTn6TOmXgto=; b=w60j8A2KGH0T
-        Ds7zrZ9yrRUsMsg8UMoJSEn1vs9Pbaldjn2X2+GqKwu0VDOnRH6p6xtq/VZ8u8k2MAvqYEHCK0mir
-        Js2D52tFq7M4tt9zfwn3CoN/Sjz6tHZCe/d4EdiHgWjBV0YCtpqA+Jd3uWMogtlmirRwBj0IZ6haf
-        F7H7o=;
+        List-Archive; bh=xOHLMbPHcvk/YRwlG+YY9Bb912WwVjs7eTKG7HprBsM=; b=doRmbBl4T5Vm
+        XJF2E97u+PTQktb2V5HfOnEhZe7WzthGej+bwRvTUpFsioo/DdDLS86rgGySUJN0XR69jKzrcnvO2
+        60DhCmz7e54fmD6pjx0TGgCWFcRWtVQTBUTcxrHG4SK5gEz5m75kdpKimTRGwwvCE5fq8VSsYoASQ
+        1f8qg=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hnS1h-0005ye-K1; Tue, 16 Jul 2019 18:18:09 +0000
+        id 1hnS1i-0005yk-JC; Tue, 16 Jul 2019 18:18:10 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6D85F2742BE5; Tue, 16 Jul 2019 19:18:08 +0100 (BST)
+        id 324D02742BD4; Tue, 16 Jul 2019 19:18:08 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Wen Yang <wen.yang99@zte.com.cn>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -57,10 +57,10 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Takashi Iwai <tiwai@suse.com>, tiwai@suse.com,
         wang.yi59@zte.com.cn, xue.zhihong@zte.com.cn
-Subject: Applied "ASoC: samsung: odroid: fix an use-after-free issue for codec" to the asoc tree
-In-Reply-To: <1562989575-33785-2-git-send-email-wen.yang99@zte.com.cn>
+Subject: Applied "ASoC: samsung: odroid: fix a double-free issue for cpu_dai" to the asoc tree
+In-Reply-To: <1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn>
 X-Patchwork-Hint: ignore
-Message-Id: <20190716181808.6D85F2742BE5@ypsilon.sirena.org.uk>
+Message-Id: <20190716181808.324D02742BD4@ypsilon.sirena.org.uk>
 Date:   Tue, 16 Jul 2019 19:18:08 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -69,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: samsung: odroid: fix an use-after-free issue for codec
+   ASoC: samsung: odroid: fix a double-free issue for cpu_dai
 
 has been applied to the asoc tree at
 
@@ -94,15 +94,30 @@ to this mail.
 Thanks,
 Mark
 
-From 9b6d104a6b150bd4d3e5b039340e1f6b20c2e3c1 Mon Sep 17 00:00:00 2001
+From 2abee12c0ab1924a69993d2c063a39a952e7d836 Mon Sep 17 00:00:00 2001
 From: Wen Yang <wen.yang99@zte.com.cn>
-Date: Sat, 13 Jul 2019 11:46:14 +0800
-Subject: [PATCH] ASoC: samsung: odroid: fix an use-after-free issue for codec
+Date: Sat, 13 Jul 2019 11:46:15 +0800
+Subject: [PATCH] ASoC: samsung: odroid: fix a double-free issue for cpu_dai
 
-The codec variable is still being used after the of_node_put() call,
-which may result in use-after-free.
+The cpu_dai variable is still being used after the of_node_put() call,
+which may result in double-free:
 
-Fixes: bc3cf17b575a ("ASoC: samsung: odroid: Add support for secondary CPU DAI")
+        of_node_put(cpu_dai);            ---> released here
+
+        ret = devm_snd_soc_register_card(dev, card);
+        if (ret < 0) {
+...
+                goto err_put_clk_i2s;    --> jump to err_put_clk_i2s
+...
+
+err_put_clk_i2s:
+        clk_put(priv->clk_i2s_bus);
+err_put_sclk:
+        clk_put(priv->sclk_i2s);
+err_put_cpu_dai:
+        of_node_put(cpu_dai);            --> double-free here
+
+Fixes: d832d2b246c5 ("ASoC: samsung: odroid: Fix of_node refcount unbalance")
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Sangbeom Kim <sbkim73@samsung.com>
@@ -113,43 +128,31 @@ Cc: Jaroslav Kysela <perex@perex.cz>
 Cc: Takashi Iwai <tiwai@suse.com>
 Cc: alsa-devel@alsa-project.org
 Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/1562989575-33785-2-git-send-email-wen.yang99@zte.com.cn
+Link: https://lore.kernel.org/r/1562989575-33785-3-git-send-email-wen.yang99@zte.com.cn
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/samsung/odroid.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/samsung/odroid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index dfb6e460e7eb..64ebe895cdd7 100644
+index 64ebe895cdd7..f0f5fa9c27d3 100644
 --- a/sound/soc/samsung/odroid.c
 +++ b/sound/soc/samsung/odroid.c
-@@ -284,9 +284,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
+@@ -308,7 +308,6 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 		ret = PTR_ERR(priv->clk_i2s_bus);
+ 		goto err_put_sclk;
  	}
+-	of_node_put(cpu_dai);
  
- 	of_node_put(cpu);
--	of_node_put(codec);
- 	if (ret < 0)
--		return ret;
-+		goto err_put_node;
- 
- 	ret = snd_soc_of_get_dai_link_codecs(dev, codec, codec_link);
- 	if (ret < 0)
-@@ -317,6 +316,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 	ret = devm_snd_soc_register_card(dev, card);
+ 	if (ret < 0) {
+@@ -316,6 +315,7 @@ static int odroid_audio_probe(struct platform_device *pdev)
  		goto err_put_clk_i2s;
  	}
  
-+	of_node_put(codec);
++	of_node_put(cpu_dai);
+ 	of_node_put(codec);
  	return 0;
- 
- err_put_clk_i2s:
-@@ -326,6 +326,8 @@ static int odroid_audio_probe(struct platform_device *pdev)
- err_put_cpu_dai:
- 	of_node_put(cpu_dai);
- 	snd_soc_of_put_dai_link_codecs(codec_link);
-+err_put_node:
-+	of_node_put(codec);
- 	return ret;
- }
  
 -- 
 2.20.1
