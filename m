@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16978C76196
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219AEC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2ACB206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0419F21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbfGPQ1Q (ORCPT
+        id S2388121AbfGPQ1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:27:16 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44817 "EHLO
+        Tue, 16 Jul 2019 12:27:20 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53371 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387958AbfGPQ1Q (ORCPT
+        with ESMTP id S2388046AbfGPQ1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:27:16 -0400
+        Tue, 16 Jul 2019 12:27:18 -0400
 Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 492423adba02cbe0; Tue, 16 Jul 2019 18:27:13 +0200
+ id 50c6e6fd674ef2b9; Tue, 16 Jul 2019 18:27:15 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
@@ -32,9 +32,9 @@ Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
         "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH 7/8] PM: sleep: Integrate suspend-to-idle with generig suspend flow
-Date:   Tue, 16 Jul 2019 18:20:44 +0200
-Message-ID: <4251553.8YHTM1NVoD@kreacher>
+Subject: [PATCH 4/8] PM: sleep: Fix possible overflow in pm_system_cancel_wakeup()
+Date:   Tue, 16 Jul 2019 18:14:58 +0200
+Message-ID: <2970489.lynJ6BP8VZ@kreacher>
 In-Reply-To: <71085220.z6FKkvYQPX@kreacher>
 References: <71085220.z6FKkvYQPX@kreacher>
 MIME-Version: 1.0
@@ -47,73 +47,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-After previous changes the suspend-to-idle code flow can be
-integrated more tightly with the generic system suspend code flow
-by making suspend_enter() call s2idle_loop() later and removing
-the direct invocations of dpm_noirq_begin(),
-dpm_noirq_suspend_devices(), dpm_noirq_end(), and
-dpm_noirq_resume_devices() from the latter, so do that.
+It is not actually guaranteed that pm_abort_suspend will be
+nonzero when pm_system_cancel_wakeup() is called which may lead to
+subtle issues, so make it use atomic_dec_if_positive() instead of
+atomic_dec() for the safety sake.
 
-This change is not expected to alter functionality.
-
+Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- kernel/power/suspend.c |   21 +++++----------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
+ drivers/base/power/wakeup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: linux-pm/kernel/power/suspend.c
+Index: linux-pm/drivers/base/power/wakeup.c
 ===================================================================
---- linux-pm.orig/kernel/power/suspend.c
-+++ linux-pm/kernel/power/suspend.c
-@@ -119,13 +119,6 @@ static void s2idle_enter(void)
+--- linux-pm.orig/drivers/base/power/wakeup.c
++++ linux-pm/drivers/base/power/wakeup.c
+@@ -859,7 +859,7 @@ EXPORT_SYMBOL_GPL(pm_system_wakeup);
  
- static void s2idle_loop(void)
+ void pm_system_cancel_wakeup(void)
  {
--	int error;
--
--	dpm_noirq_begin();
--	error = dpm_noirq_suspend_devices(PMSG_SUSPEND);
--	if (error)
--		goto resume;
--
- 	pm_pr_dbg("suspend-to-idle\n");
- 
- 	/*
-@@ -150,10 +143,6 @@ static void s2idle_loop(void)
- 	}
- 
- 	pm_pr_dbg("resume from suspend-to-idle\n");
--
--resume:
--	dpm_noirq_resume_devices(PMSG_RESUME);
--	dpm_noirq_end();
+-	atomic_dec(&pm_abort_suspend);
++	atomic_dec_if_positive(&pm_abort_suspend);
  }
  
- void s2idle_wake(void)
-@@ -408,11 +397,6 @@ static int suspend_enter(suspend_state_t
- 	if (error)
- 		goto Devices_early_resume;
- 
--	if (state == PM_SUSPEND_TO_IDLE && pm_test_level != TEST_PLATFORM) {
--		s2idle_loop();
--		goto Platform_early_resume;
--	}
--
- 	error = dpm_suspend_noirq(PMSG_SUSPEND);
- 	if (error) {
- 		pr_err("noirq suspend of devices failed\n");
-@@ -425,6 +409,11 @@ static int suspend_enter(suspend_state_t
- 	if (suspend_test(TEST_PLATFORM))
- 		goto Platform_wake;
- 
-+	if (state == PM_SUSPEND_TO_IDLE) {
-+		s2idle_loop();
-+		goto Platform_wake;
-+	}
-+
- 	error = suspend_disable_secondary_cpus();
- 	if (error || suspend_test(TEST_CPUS))
- 		goto Enable_cpus;
+ void pm_wakeup_clear(bool reset)
 
 
 
