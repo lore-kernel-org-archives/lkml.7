@@ -2,114 +2,110 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349FC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 01:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F28C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 01:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11BD20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 01:26:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+iDl3zb"
+	by mail.kernel.org (Postfix) with ESMTP id 10B2B20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 01:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563240724;
+	bh=CIqTfX+vttlz4uAKAM93jj9vhqtEhSCu2BnqIEw84H8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bOSJhLe3U1qdgMMP1LAgErWr9JckUOH2w+6OijRBer5/9B8MvPdYCfDwKlxkQ1Vck
+	 qtnNUbrhlwjIt7AUMHX8SyMDClcHLj50OvFWyD3Ng6jBdwmQ18tM9kGNovHWAD+EQw
+	 CW4I18zlIGSU8Qxb7RVY4+6OFYpdvJQyC0Px98no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732083AbfGPB06 (ORCPT
+        id S1731556AbfGPBcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 21:26:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39860 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730607AbfGPB06 (ORCPT
+        Mon, 15 Jul 2019 21:32:00 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:46706 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730400AbfGPBcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 21:26:58 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so19009050wrt.6;
-        Mon, 15 Jul 2019 18:26:56 -0700 (PDT)
+        Mon, 15 Jul 2019 21:32:00 -0400
+Received: by mail-lf1-f45.google.com with SMTP id z15so8092439lfh.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 18:31:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OJKGfm4zPYEeDJ64R4ToC+PbXLnEzfGrEQo6pdlpNP8=;
-        b=Z+iDl3zbbSqm+cZ1DbJoZQ4JVZrZS+3NgT6IUkEHLJYLGXYwGLpulc8+qBb5BZMFMx
-         xPbMTzvoEFGE5/p+TG1HXN9HNt5MMfiecWwVQrpA0q8VAssMLnAX/1lr0xHHdr+NxpBg
-         Av/GC8PPSRpyiUDPwNs3PKrgquTN7eSZcc5tMJmyENceBnEonRJZAstLHmsUS3huTSvy
-         +9gAVtOHgCKcHVpyHFXDIem/J5FR+Hos5iDX33J7ejTKL4cHat6reDmk8g3kWxSoUk+q
-         O1dLwAoE2HUNQG9N4PgtU8r6gN6fgdfjWccc4AKPBuzdgEThe5+wpafY1Mr0H3ZfCQlY
-         jP2A==
+         :cc;
+        bh=8MTovimhI6De2cI3DcsVuiEx+QTqzfDNjeAX4Ay9ZtM=;
+        b=DplOrNfYlV3CrQj7L74n45nVI2h88eVaf8zWeB5KxygHLqJZcLBl432vBPRshqTDX5
+         5ILgXHLHe26kJeqyVcc8YvTfzCIx5aCSV3zvP2iPUUByBZ+/Bzb6MAGZc4XamQY11uQR
+         TNUcrFNyYYbi+y1doRV4d6WqkMvqni/BD7FdU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OJKGfm4zPYEeDJ64R4ToC+PbXLnEzfGrEQo6pdlpNP8=;
-        b=iYw/L/exr+4nf0PcMknar1gI/R8UJAIqYrwSJV2wbw3eRJeF9QSEIKrMRm8EaMiulg
-         L4pWPPFEDHvmpEACEwaK2ESSyNfSarMOCQIewgZ78ZgdMFk61lQMbxoTnNo0cRi7lEei
-         dqbBR9v5ZLBe9iRLa3lsJ7U8gm0HTIrC/yk1Asaq2AWjqxbORlCcPenCnKGqjdY22No3
-         cwepusymDSQrW7JJd8QXmYkgzmBx6VqncxpTECyVgZTomhLRAa8hvhu0krGqN86EBJxz
-         Kz9axBLn4guQ6zC9uGUSJkES3O7rf0fdyOh52Nps+OBpVIG5R7Xo6WECXTT1Ghs0/yio
-         bFoA==
-X-Gm-Message-State: APjAAAUEvgSim3jmV45piuwZ5WS0k+C2OqjpJs5szU4f151sbubObXbJ
-        gI+7Ut5hEs2+KkB08Yame1acO7hl4JUZP3uP0ng=
-X-Google-Smtp-Source: APXvYqxiCotRSbNaIj7YIiRueXmmYF/HgKhYYs5qxUmBp/UJ2YY1WlBJJqvTEjy9YMhV82itYVDWY0KlsOJ+T9qD5Kw=
-X-Received: by 2002:a5d:43c9:: with SMTP id v9mr30984868wrr.70.1563240415647;
- Mon, 15 Jul 2019 18:26:55 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=8MTovimhI6De2cI3DcsVuiEx+QTqzfDNjeAX4Ay9ZtM=;
+        b=IOtAM2RwRV7/NiDaw2zgwtMMyCSOaXsFRwkygoV1C5ThUpEAmBtNJk3FdGh1+UAJww
+         Fu8knBH8UVBNmVyfXmU0T/IOECapkE/F54tdmPjvSnmu6FJSgAXzequ1Zhqr+b3jfF4h
+         6iNuMx2dOThxU93ZyIGT/6ldbEUltd5nQB5byzipSaQek8iXqfM0RUFwsMuUYvQ9r3IR
+         VgMZ7mUjzRNY0yzvvDWnB/Eew+JuwTaYTHNEsTWwPL7rrZJZ0g+6fcGCJ2M6mAkaxybv
+         KmIdo5iAbm2yDXWDemqRbuNRR5xP6iyr9Zq3eT6p83K0eBLr3nX0sl+aLURuo56q0Ojh
+         8C+g==
+X-Gm-Message-State: APjAAAWfTgxMyC4hyL1qtC99puNM9ubMT9OntHoIRM3TGZ1THWiqPfN0
+        qbqiVAupyspQfUtj+5l/rr02OXsT14s=
+X-Google-Smtp-Source: APXvYqyHjiHU8+LPrGZW8LUYk0QQkPd733ph0SPJwiRv4zDKQ+FUpN2Z9WzgWfZHoWLwfi7ZdFbDaw==
+X-Received: by 2002:a19:f819:: with SMTP id a25mr13580168lff.183.1563240718188;
+        Mon, 15 Jul 2019 18:31:58 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id v22sm2580255lfe.49.2019.07.15.18.31.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 18:31:57 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id c19so12379103lfm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 18:31:57 -0700 (PDT)
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr1828591lfp.61.1563240716994;
+ Mon, 15 Jul 2019 18:31:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190710074552.74394-1-xingwu.yang@gmail.com> <20190710080609.smxjqe2d5jyro4hv@verge.net.au>
- <20190715082747.fdlpvekbqyhwx724@salvia>
-In-Reply-To: <20190715082747.fdlpvekbqyhwx724@salvia>
-From:   yangxingwu <xingwu.yang@gmail.com>
-Date:   Tue, 16 Jul 2019 09:26:44 +0800
-Message-ID: <CA+7U5JvJMTjCuxo8Mf7tiXZADe-q4covYxX7NsG8EMCcJh5mtA@mail.gmail.com>
-Subject: Re: [PATCH] ipvs: remove unnecessary space
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Simon Horman <horms@verge.net.au>, wensong@linux-vs.org, ja@ssi.bg,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org
+References: <CAPM=9txxWeKW1VLWNzLEykELmSCqo_kOHBDdJH-cJfAJXZnnuw@mail.gmail.com>
+In-Reply-To: <CAPM=9txxWeKW1VLWNzLEykELmSCqo_kOHBDdJH-cJfAJXZnnuw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 15 Jul 2019 18:31:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj8hWQ1xnPAviyMFN1J4VcDsYnfDmGTYbgExZ8zzQdcPQ@mail.gmail.com>
+Message-ID: <CAHk-=wj8hWQ1xnPAviyMFN1J4VcDsYnfDmGTYbgExZ8zzQdcPQ@mail.gmail.com>
+Subject: Re: [git pull] drm pull for 5.3-rc1
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ok
+On Mon, Jul 15, 2019 at 11:38 AM Dave Airlie <airlied@gmail.com> wrote:
+>
+> The reason I was waiting for the HMM tree to land, is a single silent
+> merge conflict needs to be resolved after merging this as below.
 
-I will remove all unnecessary spaces and send the v2 patch
+There's more than that there.
 
-Thansk Pablo
+For example, the DRM_AMDGPU_USERPTR config has a
 
-Pablo Neira Ayuso <pablo@netfilter.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8815=
-=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=884:27=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> On Wed, Jul 10, 2019 at 10:06:09AM +0200, Simon Horman wrote:
-> > On Wed, Jul 10, 2019 at 03:45:52PM +0800, yangxingwu wrote:
-> > > ---
-> > >  net/netfilter/ipvs/ip_vs_mh.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs=
-_mh.c
-> > > index 94d9d34..98e358e 100644
-> > > --- a/net/netfilter/ipvs/ip_vs_mh.c
-> > > +++ b/net/netfilter/ipvs/ip_vs_mh.c
-> > > @@ -174,8 +174,8 @@ static int ip_vs_mh_populate(struct ip_vs_mh_stat=
-e *s,
-> > >             return 0;
-> > >     }
-> > >
-> > > -   table =3D  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-> > > -                    sizeof(unsigned long), GFP_KERNEL);
-> > > +   table =3D kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-> > > +                   sizeof(unsigned long), GFP_KERNEL);
->
-> May I ask one thing? :-)
->
-> Please, remove all unnecessary spaces in one go, search for:
->
->         git grep "=3D  "
->
-> in the netfilter tree, and send a v2 for this one.
->
-> Thanks.
+        depends on ARCH_HAS_HMM
+        select HMM_MIRROR
+
+and that won't work any more. The hmm tree changed the requirements to be
+
+        depends on HMM_MIRROR
+
+instead.
+
+Now, arguably the hmm tree change in this respect is an annoyance -
+the old model was much more user-friendly where the drivers that
+wanted HMM would just select it when it was available.
+
+See commit 43535b0aefab ("mm: remove the HMM config option").
+
+I've done the merge, but my tests are still on-going. And after I've
+finished those, I'll compare against your suggested merge to see if I
+missed anything in turn..
+
+                 Linus
