@@ -2,92 +2,97 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625B1C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5AEC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3F320880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA0A21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfGPHmH (ORCPT
+        id S1729749AbfGPHoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:42:07 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:47232 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfGPHmH (ORCPT
+        Tue, 16 Jul 2019 03:44:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57888 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfGPHoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:42:07 -0400
-X-Greylist: delayed 336 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jul 2019 03:42:06 EDT
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 12BC013D942FA2;
-        Tue, 16 Jul 2019 07:36:25 +0000 (UTC)
-Received: from saetre.corp.logitech.com?044 (unknown [154.53.1.40])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 16 Jul 2019 03:44:54 -0400
+Received: from pc-375.home (2a01cb0c88d94a005820d607da339aae.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:88d9:4a00:5820:d607:da33:9aae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Tue, 16 Jul 2019 07:36:24 +0000 (UTC)
-From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
-Cc:     nlopezcasad@logitech.com,
-        =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hid-logitech-dj: rename "gaming" receiver to "lightspeed"
-Date:   Tue, 16 Jul 2019 08:36:21 +0100
-Message-Id: <20190716073621.4290-1-lains@archlinux.org>
-X-Mailer: git-send-email 2.22.0
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 645C928B69A;
+        Tue, 16 Jul 2019 08:44:53 +0100 (BST)
+Date:   Tue, 16 Jul 2019 09:44:50 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Cc:     miquel.raynal@bootlin.com, bbrezillon@kernel.org, richard@nod.at,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, vigneshr@ti.com,
+        yamada.masahiro@socionext.com, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, michal.simek@xilinx.com,
+        svemula@xilinx.com, nagasuresh12@gmail.com
+Subject: Re: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over
+ write driver's read_page()/write_page()
+Message-ID: <20190716094450.122ba6e7@pc-375.home>
+In-Reply-To: <20190716093137.3d8e8c1f@pc-375.home>
+References: <20190716053051.11282-1-naga.sureshkumar.relli@xilinx.com>
+        <20190716093137.3d8e8c1f@pc-375.home>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this should help people identify the receiver. there are several
-receivers used in gaming mice. the "lightspeed" technology is pretty
-well advertise so this won't just be an obscure name.
+On Tue, 16 Jul 2019 09:31:37 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-Signed-off-by: Filipe Laíns <lains@archlinux.org>
----
- drivers/hid/hid-ids.h         | 2 +-
- drivers/hid/hid-logitech-dj.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> On Mon, 15 Jul 2019 23:30:51 -0600
+> Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
+> 
+> > Add check before assigning chip->ecc.read_page() and chip->ecc.write_page()
+> > 
+> > Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+> > ---
+> > Changes in v18
+> >  - None
+> > ---
+> >  drivers/mtd/nand/raw/nand_micron.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
+> > index cbd4f09ac178..565f2696c747 100644
+> > --- a/drivers/mtd/nand/raw/nand_micron.c
+> > +++ b/drivers/mtd/nand/raw/nand_micron.c
+> > @@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_chip *chip)
+> >  		chip->ecc.size = 512;
+> >  		chip->ecc.strength = chip->base.eccreq.strength;
+> >  		chip->ecc.algo = NAND_ECC_BCH;
+> > -		chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> > -		chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+> > +		if (!chip->ecc.read_page)
+> > +			chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> > +
+> > +		if (!chip->ecc.write_page)
+> > +			chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+> >    
+> 
+> Seriously?! I told you this was inappropriate and you keep sending this
+> patch. So let's make it clear:
+> 
+> Nacked-by: Boris Brezillon <boris.brezillon@collabora.com>
+> 
+> Fix your controller driver instead of adding hacks to the Micron logic!
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 0d695f8e1b2c..ab9d382b067d 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -768,7 +768,7 @@
- #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER		0xc52f
- #define USB_DEVICE_ID_LOGITECH_UNIFYING_RECEIVER_2	0xc532
- #define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_2		0xc534
--#define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_GAMING	0xc539
-+#define USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED	0xc539
- #define USB_DEVICE_ID_SPACETRAVELLER	0xc623
- #define USB_DEVICE_ID_SPACENAVIGATOR	0xc626
- #define USB_DEVICE_ID_DINOVO_DESKTOP	0xc704
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index 6196217a7d93..4334acb49129 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -1832,9 +1832,9 @@ static const struct hid_device_id logi_dj_receivers[] = {
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
- 			 USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_2),
- 	 .driver_data = recvr_type_hidpp},
--	{ /* Logitech gaming receiver (0xc539) */
-+	{ /* Logitech lightspeed receiver (0xc539) */
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
--		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_GAMING),
-+		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED),
- 	 .driver_data = recvr_type_gaming_hidpp},
- 	{ /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
- 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_MX3000_RECEIVER),
--- 
-2.22.0
+Not even going to review the other patch: if you have to do that, that
+means the driver is broken. On a side note, this patch series is still
+not threaded as it should be and it's a v18 for a damn NAND controller
+driver! Sorry but you reached the limit of my patience. Please find
+someone to help you with that task.
