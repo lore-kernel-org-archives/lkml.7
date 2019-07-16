@@ -2,109 +2,72 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5A3C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AE7C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A746B2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4mQ94xT"
+	by mail.kernel.org (Postfix) with ESMTP id 902992145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388247AbfGPRhS (ORCPT
+        id S2388286AbfGPRif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:37:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44255 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPRhS (ORCPT
+        Tue, 16 Jul 2019 13:38:35 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:38642 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728121AbfGPRie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:37:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t14so10448291plr.11;
-        Tue, 16 Jul 2019 10:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=r8DZ4+TCHU5YJteXYwVIzG9DedFytInB8jpSvxKVm2A=;
-        b=M4mQ94xTQPQ9pY9zxGxX73zqKMWtbquCdQycZo/YPz1d4M/fKVfuNJMfN3XWxdwKT2
-         2ofTGW48AdtJ577O49p+kPnrfgd7tzcoDOvX8T3FGDQzeGNBzFEi5EH7RIvJRKnO/AgF
-         bBKnHdDbv8NNWjg0D82TXs984bNvEMIltWiRsonJNypX1aqgC6iTuF7Vn27PgOw7sfpj
-         0glWeZNfHq6P+IkAdx9E9yy04XSZ/X64Ibwa5GALDhNIgX92QsU+sPvd1fzdOiVYQzlK
-         1b0+Djrc2ENirIk0XOScDrD1SKXtn1Lu+g3nA2HFpEWZgzikFuGO5LK2YcpYDc6xBUT5
-         58Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=r8DZ4+TCHU5YJteXYwVIzG9DedFytInB8jpSvxKVm2A=;
-        b=TEIeCrvFTgtFpJym19aJJgEsmbhNpjKdmPwMgjO3hSs0Rw04TpsByWhcm6uI73ZEPA
-         VD7PkNU+jRBKqTglg/wLEZIQDD5Rs4MvyGLZus6cnzpBRnRTp78rtZfZtG0V5NZHravF
-         CvW2o3lIcg6gRj7TNcgKS8HCL8qJqXVp9UmPUUVozENJPSzSdTuU6R7eoryevfJYhs3e
-         xJH2/XFwlKPJKBMWrOQK+tt5rcclXdqfDiGCyU3OG6K3sIpCOx8AMjB4i+QwTB0lthBL
-         ocBIzzqbRZtfGHTEHU39sMIsjGsBQrxYeM46bj5Flfy9dJxS6JCFjeJZVjnPffg9rMGC
-         Fvnw==
-X-Gm-Message-State: APjAAAX4Rowpc0LaYrvY1x8paDu3gd3zFERV7/HIJicn60ze/8hksKxs
-        XqpCY/EKFczh9B489lr2Fji/J+Ti
-X-Google-Smtp-Source: APXvYqxn9+vgjYsY4Pvt44NfOX+4Q9kf56Ci+2S6DyAMNTg07NX2nwtDAiab0OtbW1fYaO/Nw/ofDA==
-X-Received: by 2002:a17:902:12d:: with SMTP id 42mr35458184plb.187.1563298637400;
-        Tue, 16 Jul 2019 10:37:17 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id j12sm11011828pff.4.2019.07.16.10.37.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 10:37:16 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 23:07:12 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] infiniband: hw: qedr: Remove Unneeded variable rc
-Message-ID: <20190716173712.GA12949@hari-Inspiron-1545>
+        Tue, 16 Jul 2019 13:38:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TX449w3_1563298709;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX449w3_1563298709)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 17 Jul 2019 01:38:32 +0800
+Subject: Re: [PATCH] mm: page_alloc: document kmemleak's non-blockable
+ __GFP_NOFAIL case
+To:     Catalin Marinas <catalin.marinas@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     "dvyukov@google.com" <dvyukov@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1562964544-59519-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190715131732.GX29483@dhcp22.suse.cz>
+ <F89E7123-C21C-41AA-8084-1DB4C832D7BD@gmail.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <9e31ca96-eb92-4946-d0db-b4e7b6ede057@linux.alibaba.com>
+Date:   Tue, 16 Jul 2019 10:38:28 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <F89E7123-C21C-41AA-8084-1DB4C832D7BD@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below issue reported by coccicheck
-drivers/infiniband/hw/qedr/verbs.c:2454:5-7: Unneeded variable: "rc".
-Return "0" on line 2499
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/infiniband/hw/qedr/verbs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index 27d90a84..0c6a4bc 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -2451,7 +2451,6 @@ int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
- 	struct qedr_dev *dev = qp->dev;
- 	struct ib_qp_attr attr;
- 	int attr_mask = 0;
--	int rc = 0;
- 
- 	DP_DEBUG(dev, QEDR_MSG_QP, "destroy qp: destroying %p, qp type=%d\n",
- 		 qp, qp->qp_type);
-@@ -2496,7 +2495,7 @@ int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
- 		xa_erase_irq(&dev->qps, qp->qp_id);
- 		kfree(qp);
- 	}
--	return rc;
-+	return 0;
- }
- 
- int qedr_create_ah(struct ib_ah *ibah, struct rdma_ah_attr *attr, u32 flags,
--- 
-2.7.4
+On 7/15/19 8:01 AM, Catalin Marinas wrote:
+> On 15 Jul 2019, at 08:17, Michal Hocko <mhocko@kernel.org> wrote:
+>> On Sat 13-07-19 04:49:04, Yang Shi wrote:
+>>> When running ltp's oom test with kmemleak enabled, the below warning was
+>>> triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
+>>> passed in:
+>> kmemleak is broken and this is a long term issue. I thought that
+>> Catalin had something to address this.
+> What needs to be done in the short term is revert commit d9570ee3bd1d4f20ce63485f5ef05663866fe6c0. Longer term the solution is to embed kmemleak metadata into the slab so that we don’t have the situation where the primary slab allocation success but the kmemleak metadata fails.
+>
+> I’m on holiday for one more week with just a phone to reply from but feel free to revert the above commit. I’ll follow up with a better solution.
+
+Thanks, I'm going to submit a new patch to revert that commit.
+
+Yang
+
+>
+> Catalin
 
