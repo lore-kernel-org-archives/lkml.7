@@ -2,139 +2,241 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04DCC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DFFC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FA42173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6704F20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:52:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZCyVikwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388506AbfGPSwA (ORCPT
+        id S2388558AbfGPSwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:52:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33422 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728190AbfGPSv7 (ORCPT
+        Tue, 16 Jul 2019 14:52:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46789 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388491AbfGPSwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:51:59 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GIlNTt044569;
-        Tue, 16 Jul 2019 14:50:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tshucnx7j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 14:50:20 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6GIlOPo044688;
-        Tue, 16 Jul 2019 14:50:19 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tshucnx60-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 14:50:19 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6GIoFHR005702;
-        Tue, 16 Jul 2019 18:50:17 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x61abh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 18:50:17 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIoHCZ52494808
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 18:50:17 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E16E7B206E;
-        Tue, 16 Jul 2019 18:50:16 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A925BB2075;
-        Tue, 16 Jul 2019 18:50:01 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jul 2019 18:50:01 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9820C16C905B; Tue, 16 Jul 2019 11:50:01 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:50:01 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        peterz@infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH v2 2/9] rcu: Add support for consolidated-RCU reader
- checking
-Message-ID: <20190716185001.GL14271@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190712170024.111093-1-joel@joelfernandes.org>
- <20190712170024.111093-3-joel@joelfernandes.org>
- <20190716182237.GA22819@linux.ibm.com>
- <20190716183517.GA129705@google.com>
+        Tue, 16 Jul 2019 14:52:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c73so9530939pfb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Sc1kdmcO2G1QWedlTtE0HWQNxV/ni4EPFOSD4mvak8=;
+        b=ZCyVikwrrrr8sEcxgSZmPCownGxV/MYXa9j9+YIXCmXlRbEQ5VjfXvY6EcfEFY0pDg
+         6dohrkhT2K+GARGPKad8XT+z84UGHhs+1Xe2Gr3yLe4RfxNa6azK8YLYA8FUJ+8Rv6+s
+         uvS7hFRU5185+p2+YN1LU/ofoZnJQq4EfMM/ZPnOobUk19gIGry+csN0JORk+r8tTrbi
+         oUdOxHt9FJy5A/SvDK2g7lqyOVIMdSPer+OI1R5OSvoQyetli09vGD0rchW8OJF1qn6Z
+         Z0XcmPsHMRy9jdficyjdT0pE9Mk6Fp36dHk3laDmzAh/MRn5oNKkT6OgTaYUqdocn093
+         FUgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Sc1kdmcO2G1QWedlTtE0HWQNxV/ni4EPFOSD4mvak8=;
+        b=T9uhJMUDL/G+lI3msabuz28C8htx25LQVEtfIdoiigWwZWtNCVtMjXCOMSlXQtnZjq
+         fbVpVXtz/3B7pZKiEJZ1/biqzipA+QzCgHm5EabBCY5Ppgi0nocHGzcwqoZLsgaNUbQ+
+         mtCPArobv2fTN1KR38KQWvR26uJFHKzQTUpxBtCXu2gJKaYGTjgimSDBDqfbfJvbtrZY
+         Af0dY8kRmCdLOVBAvHd3BxkRSqjHzbl0hOxMo7dd4GoUGGuIzQLUW/3NiA45wGAfnu8C
+         VLwf3JRRcOUZSSIF1Dy0T57TWCZuoKQQ186ViMAe7PlfzxS9UOnWEQBoIQNoNJzerlJW
+         d4Hg==
+X-Gm-Message-State: APjAAAXEqp29cF8xoXWatudLM9L5a4/VMRvBHtwN2J9VQmwqN669WPy/
+        nTCZeB4BilJFnGit649Wilw3m554zRmYeuYRa0kYaA==
+X-Google-Smtp-Source: APXvYqyvfY7UpJRH7AXfo8+3L9F6UTsOiqoCvfNJ3LqUN5j48+NPSYN6SjLKREysI2CCnCLUFfoeygqKsabLc+vk6aw=
+X-Received: by 2002:a63:205f:: with SMTP id r31mr35929294pgm.159.1563303133100;
+ Tue, 16 Jul 2019 11:52:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716183517.GA129705@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907160230
+References: <20190712081744.87097-1-brendanhiggins@google.com>
+ <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org>
+ <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+ <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com> <20190716175021.9CA412173C@mail.kernel.org>
+In-Reply-To: <20190716175021.9CA412173C@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 16 Jul 2019 11:52:01 -0700
+Message-ID: <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 02:35:17PM -0400, Joel Fernandes wrote:
-> On Tue, Jul 16, 2019 at 11:22:37AM -0700, Paul E. McKenney wrote:
-> > On Fri, Jul 12, 2019 at 01:00:17PM -0400, Joel Fernandes (Google) wrote:
-> > > This patch adds support for checking RCU reader sections in list
-> > > traversal macros. Optionally, if the list macro is called under SRCU or
-> > > other lock/mutex protection, then appropriate lockdep expressions can be
-> > > passed to make the checks pass.
-> > > 
-> > > Existing list_for_each_entry_rcu() invocations don't need to pass the
-> > > optional fourth argument (cond) unless they are under some non-RCU
-> > > protection and needs to make lockdep check pass.
-> > > 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > If you fold in the checks for extra parameters, I will take this
-> > one and also 1/9.
-> 
-> I folded the checks in and also threw in the rcu-sync with Oleg's ack:
-> 
-> Could you pull into /dev branch?
-> 
-> git pull https://github.com/joelagnel/linux-kernel.git list-first-three
-> (Based on your dev branch)
+On Tue, Jul 16, 2019 at 10:50 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-07-16 01:37:34)
+> > On Tue, Jul 16, 2019 at 12:57 AM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> > >
+> > > A `struct kunit_stream` is usually associated with a message that is
+> > > being built up over time like maybe an expectation; it is meant to
+> > > capture the idea that we might want to send some information out to
+> > > the user pertaining to some thing 'X', but we aren't sure that we
+> > > actually want to send it until 'X' is complete, but do to the nature
+> > > of 'X' it is easier to start constructing the message before 'X' is
+> > > complete.
+> > >
+> > > Consider a complicated expectation, there might be multiple conditions
+> > > that satisfy it and multiple conditions which could make it fail. As
+> > > we start exploring the input to the expectation we gain information
+> > > that we might want to share back with the user if the expectation were
+> > > to fail and we might get that information before we are actually sure
+> > > that the expectation does indeed fail.
+> > >
+> > > When we first step into the expectation we immediately know the
+> > > function name, file name, and line number where we are called and
+> > > would want to put that information into any message we would send to
+> > > the user about this expectation. Next, we might want to check a
+> > > property of the input, it may or may not be enough information on its
+> > > own for the expectation to fail, but we want to share the result of
+> > > the property check with the user regardless, BUT only if the
+> > > expectation as a whole fails.
+> > >
+> > > Hence, we can have multiple `struct kunit_stream`s associated with a
+> > > `struct kunit` active at any given time.
+>
+> I'm coming back to this now after reading the rest of the patches that
+> deal with assertions and expectations. It looks like the string stream
+> is there to hold a few different pieces of information:
+>
+>  - Line Number
+>  - File Name
+>  - Function Name
+>
+> The above items could be stored in a structure on the stack that then
+> gets printed and formatted when the expectation or assertion fails. That
+> would make the whole string stream structure and code unnecessary.
 
-Given that I am going to have to rebase these a few times, please
-email a v4.
+Most of the expectations and assertions in this patchset are fairly
+simple, and what you are describing would probably work. However, I
+have some expectations I plan on adding in later patchsets that make
+much more complicated checks.
 
-							Thanx, Paul
+> The only hypothetical case where this can't be done is a complicated
+> assertion or expectation that does more than one check and can't be
+> written as a function that dumps out what went wrong. Is this a real
+> problem? Maybe such an assertion should just open code that logic so we
+> don't have to build up a string for all the other simple cases.
+
+I have some expectations in follow up patchsets for which I created a
+set of composable matchers for matching structures and function calls
+that by their nature cannot be written as a single function. The
+matcher thing is a bit speculative, I know, but for any kind of
+function call matching, you need to store a record of functions you
+are expecting to have called and then each one needs to have a set of
+expectations defined by the user; I don't think there is a way to do
+that that doesn't involve having multiple separate functions each
+having some information useful to constructing the message.
+
+I know the code in question isn't in this patchset; the function
+matching code was in one of the earlier versions of the RFC, but I
+dropped it to make this patchset smaller and more manageable. So I get
+it if you would like me to drop it and add it back in when I try to
+get the function and structure matching stuff in, but I would really
+prefer to keep it as is if you don't care too much.
+
+> It seems far simpler to get rid of the string stream API and just have a
+> struct for this.
+>
+>         struct kunit_fail_msg {
+>                 const char *line;
+>                 const char *file;
+>                 const char *func;
+>                 const char *msg;
+>         };
+>
+> Then you can have the assertion macros create this on the stack (with
+> another macro?).
+>
+>         #define DEFINE_KUNIT_FAIL_MSG(name, _msg) \
+>                 struct kunit_fail_msg name = { \
+>                         .line =  __LINE__, \
+>                         .file = __FILE__, \
+>                         .func = __func__, \
+>                         .msg = _msg, \
+>                 }
+>
+> Note: I don't know if the __LINE__ above will use the macro location, so
+> this probably needs another wrapper to put the right line number there.
+
+No, that should work. It picks up where the macro ends up being
+finally evaluated.
+
+> I don't want to derail this whole series on this topic, but it seems
+> like a bunch of code is there to construct this same set of information
+> over and over again into a buffer a little bit at a time and then throw
+> it away when nothing fails just because we may want to support the case
+> where we have some unstructured data to inform the user about.
+
+Yeah, that's fair. I think there are a number of improvements to be
+made with how the expectations are defined other than that, but I was
+hoping I could do that after this patchset is merged. I just figured
+with the kinds of things I would like to do, it would lead to a whole
+new round of discussion.
+
+In either case, I think I would still like to use the `struct
+kunit_stream` as part of the interface to share the failure message
+with the test case runner code in test.c, at least eventually, so that
+I only have to have one way to receive data from expectations, but I
+think I can do that and still do what you suggest by just constructing
+the kunit_stream at the end of expectations where it is feasible.
+
+All in all I agree with what you are saying, but I would rather do it
+as a follow up possibly once we have some more code on the table. I
+could just see this opening up a whole new can of worms where we
+debate about exactly how expectations and assertions work for another
+several months, only to rip it all out shortly there after. I know
+that's how these things go, but that's my preference.
+
+I can do what you suggest if you feel strongly about it, but I would
+prefer to hold off until later. It's your call.
+
+> Why not build in the structured part into the framework (i.e. the struct
+> above) so that it's always there and then add the string building part
+> later when we have to?
+
+See above comments.
