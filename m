@@ -2,132 +2,143 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48FDC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A49C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35C120880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F2420880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563291243;
+	bh=V4ev/UU39RHvFkNjkPsY3SOAdIqI9PBECtJV0Q6gb5E=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=Dwjam0HHTRy3kfRsp1Lme38qYBfRmMkxlkUJKcUz8V9t7+mEh4+BWbA1XY67dLsQT
+	 Xf40lVqMeuqvdYgE/MLgfQuFdX65wqPBFNf8fAR48JRqYDlpiWmjSLncN5uGo/Oded
+	 sB+yBJJJKno2e6TTBhJyo8MmjIuifhHp9eIg1MGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbfGPPdk (ORCPT
+        id S2387971AbfGPPeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:33:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37014 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 11:34:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfGPPdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:33:40 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725926AbfGPPeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:34:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4A73C034DF3;
-        Tue, 16 Jul 2019 15:33:39 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09C221001B00;
-        Tue, 16 Jul 2019 15:33:38 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 11:33:37 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: Re: [PATCH] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
-Message-ID: <20190716153337.GA3490@redhat.com>
-References: <20190709223556.28908-1-rcampbell@nvidia.com>
- <20190709172823.9413bb2333363f7e33a471a0@linux-foundation.org>
- <05fffcad-cf5e-8f0c-f0c7-6ffbd2b10c2e@nvidia.com>
- <20190715150031.49c2846f4617f30bca5f043f@linux-foundation.org>
- <0ee5166a-26cd-a504-b9db-cffd082ecd38@nvidia.com>
- <8dd86951-f8b0-75c2-d738-5080343e5dc5@nvidia.com>
- <6a52c2a0-8d27-2ce4-e797-7cae653df21a@nvidia.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB182054F;
+        Tue, 16 Jul 2019 15:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563291240;
+        bh=V4ev/UU39RHvFkNjkPsY3SOAdIqI9PBECtJV0Q6gb5E=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=OI5X53OX1byrP6tlrUCjRpeJ1oQOTnBd5OqI0zkPlySCP8J7YdSPWzyzurB0yXcW5
+         tojB8NLHwRsWz19d2LLzm7R0Y/GV+eoAx6B2iENKbOicQFlEaTQrErT0xo7BH5fqoh
+         gpLKApR/IyGssgFicaQIy6L8qsIKeBP/gh0ZNKpo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6a52c2a0-8d27-2ce4-e797-7cae653df21a@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 16 Jul 2019 15:33:39 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFd5g47y4vDB2P=EsGN8305LGeQPCTveNs-Jd5-=6K-XKY==CA@mail.gmail.com>
+References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-4-brendanhiggins@google.com> <20190715204356.4E3F92145D@mail.kernel.org> <CAFd5g47481sRaez=yEJN4_ghiXZbxayk1Y04tAZpuzPLsmnhKg@mail.gmail.com> <20190715220407.0030420665@mail.kernel.org> <CAFd5g44bE0F=wq_fOAnxFTtoOyx1dUshhDAkKWr5hX9ipJ4Sxw@mail.gmail.com> <CAFd5g47y4vDB2P=EsGN8305LGeQPCTveNs-Jd5-=6K-XKY==CA@mail.gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v9 03/18] kunit: test: add string_stream a std::stream like string builder
+User-Agent: alot/0.8.1
+Date:   Tue, 16 Jul 2019 08:33:59 -0700
+Message-Id: <20190716153400.5CB182054F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:14:31PM -0700, John Hubbard wrote:
-> On 7/15/19 5:38 PM, Ralph Campbell wrote:
-> > On 7/15/19 4:34 PM, John Hubbard wrote:
-> > > On 7/15/19 3:00 PM, Andrew Morton wrote:
-> > > > On Tue, 9 Jul 2019 18:24:57 -0700 Ralph Campbell <rcampbell@nvidia.com> wrote:
-> > > > 
-> > > >   mm/rmap.c |    1 +
-> > > >   1 file changed, 1 insertion(+)
-> > > > 
-> > > > --- a/mm/rmap.c~mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one
-> > > > +++ a/mm/rmap.c
-> > > > @@ -1476,6 +1476,7 @@ static bool try_to_unmap_one(struct page
-> > > >                * No need to invalidate here it will synchronize on
-> > > >                * against the special swap migration pte.
-> > > >                */
-> > > > +            subpage = page;
-> > > >               goto discard;
-> > > >           }
-> > > 
-> > > Hi Ralph and everyone,
-> > > 
-> > > While the above prevents a crash, I'm concerned that it is still not
-> > > an accurate fix. This fix leads to repeatedly removing the rmap, against the
-> > > same struct page, which is odd, and also doesn't directly address the
-> > > root cause, which I understand to be: this routine can't handle migrating
-> > > the zero page properly--over and back, anyway. (We should also mention more
-> > > about how this is triggered, in the commit description.)
-> > > 
-> > > I'll take a closer look at possible fixes (I have to step out for a bit) soon,
-> > > but any more experienced help is also appreciated here.
-> > > 
-> > > thanks,
-> > 
-> > I'm not surprised at the confusion. It took me quite awhile to
-> > understand how migrate_vma() works with ZONE_DEVICE private memory.
-> > The big point to be aware of is that when migrating a page to
-> > device private memory, the source page's page->mapping pointer
-> > is copied to the ZONE_DEVICE struct page and the page_mapcount()
-> > is increased. So, the kernel sees the page as being "mapped"
-> > but the page table entry as being is_swap_pte() so the CPU will fault
-> > if it tries to access the mapped address.
-> 
-> Thanks for humoring me here...
-> 
-> The part about the source page's page->mapping pointer being *copied*
-> to the ZONE_DEVICE struct page is particularly interesting, and belongs
-> maybe even in a comment (if not already there). Definitely at least in
-> the commit description, for now.
-> 
-> > So yes, the source anon page is unmapped, DMA'ed to the device,
-> > and then mapped again. Then on a CPU fault, the zone device page
-> > is unmapped, DMA'ed to system memory, and mapped again.
-> > The rmap_walk() is used to clear the temporary migration pte so
-> > that is another important detail of how migrate_vma() works.
-> > At the moment, only single anon private pages can migrate to
-> > device private memory so there are no subpages and setting it to "page"
-> > should be correct for now. I'm looking at supporting migration of
-> > transparent huge pages but that is a work in progress.
-> 
-> Well here, I worry, because subpage != tail page, right? subpage is a
-> strange variable name, and here it is used to record the page that
-> corresponds to *each* mapping that is found during the reverse page
-> mapping walk.
-> 
-> And that makes me suspect that if there were more than one of these
-> found (which is unlikely, given the light testing that we have available
-> so far, I realize), then there could possibly be a problem with the fix,
-> yes?
+Quoting Brendan Higgins (2019-07-15 15:43:20)
+> On Mon, Jul 15, 2019 at 3:11 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > On Mon, Jul 15, 2019 at 3:04 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-07-15 14:11:50)
+> > > > On Mon, Jul 15, 2019 at 1:43 PM Stephen Boyd <sboyd@kernel.org> wro=
+te:
+> > > > >
+> > > > > I also wonder if it would be better to just have a big slop buffe=
+r of a
+> > > > > 4K page or something so that we almost never have to allocate any=
+thing
+> > > > > with a string_stream and we can just rely on a reader consuming d=
+ata
+> > > > > while writers are writing. That might work out better, but I don'=
+t quite
+> > > > > understand the use case for the string stream.
+> > > >
+> > > > That makes sense, but might that also waste memory since we will
+> > > > almost never need that much memory?
+> > >
+> > > Why do we care? These are unit tests.
+> >
+> > Agreed.
+> >
+> > > Having allocations in here makes
+> > > things more complicated, whereas it would be simpler to have a pointer
+> > > and a spinlock operating on a chunk of memory that gets flushed out
+> > > periodically.
+> >
+> > I am not so sure. I have to have the logic to allocate memory in some
+> > case no matter what (what if I need more memory that my preallocated
+> > chuck?). I think it is simpler to always request an allocation than to
+> > only sometimes request an allocation.
+>=20
+> Another even simpler alternative might be to just allocate memory
+> using kunit_kmalloc as we need it and just let the kunit_resource code
+> handle cleaning it all up when the test case finishes.
 
-No THP when migrating to device memory so no tail vs head page here.
+Sure, sounds like a nice way to avoid duplicating similar logic to
+maintain a list of things to free later.
 
-Cheers,
-Jérôme
+>=20
+> What do you think?
+
+If you go the allocation route then you'll need to have the flags to
+know what context you're in to allocate appropriately. Does that mean
+all the string operations will now take GFP flags?
+
