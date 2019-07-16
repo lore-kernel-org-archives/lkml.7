@@ -2,96 +2,199 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8DEC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577A9C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0C120880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1F620880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWz4yv38"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LY0KetFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387742AbfGPLrf (ORCPT
+        id S1732464AbfGPLsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:47:35 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46483 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbfGPLre (ORCPT
+        Tue, 16 Jul 2019 07:48:19 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:26045 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728437AbfGPLsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:47:34 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c73so8984772pfb.13;
-        Tue, 16 Jul 2019 04:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=qPnqoEfs2c2FJiT2itcjWmfJK1RsKaw7z2dBi7iQTJ8=;
-        b=GWz4yv38B5GHtENqY4vKofVQ91e0o/Wf3To5Ps1dYZG0HD5Ek2EHO2Dc7Ow7eTInF8
-         6V2Ylge8TO9m/bByMpQYgvAJMrZvdG3hSLoe3le3WrAf4DJkafN2xpBGM8XjRxts22Wl
-         fwEiPyHbfrkm6UMLSuHMn/gd7z8YK8aSErG8WB+A5roIC5O0ZPZ/6GMpagTh5qiyB+K7
-         yG6MrQ7ON432Xy90IZVQ3KnMcyWz9iH91bIQQjqhHjYLmAxiZwGFc9kDORakmYFFow9m
-         dvKHxsEKn/ChfEWmG3TrgmHbJEuO1ziKFvpkOF6Z/rwgSAH09LcgUIkZ09KBkugy6xrh
-         5rJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=qPnqoEfs2c2FJiT2itcjWmfJK1RsKaw7z2dBi7iQTJ8=;
-        b=FYjnDJAGC0Fe1sK3mfdTuwoQu6n+wYawoYMDkkDkDTyW4gQfMOMQEPb/r+njILVWZf
-         vGHsIc+W/T8ju1c7ZcR9J7K0smEOQKXfBuHpsa64R7TZFOph9Et6JefZkKH+HUUP0LlY
-         QrwghaDQBKBr+DYW30XnnEYwu+d8h2JxezEDv+lp/+HYIeNs5XMDpyqqPGwaf4HvDia/
-         1BH0jhBseU8mkVoJnxPPR3Bv4hHwpNIkbLXfPUxWQInmUGy1AHOseM9G2rPFBRXAH0Iz
-         4SssO3aB3jLXNRnBSsZA4X5D7QS47U9JebNeR4eZ98KfBuqvEXnH9QshjZEIudgnMegc
-         QRQg==
-X-Gm-Message-State: APjAAAVNVv9FWeTUauqAoZB4Y2UZRN9xXgeoIvtDnUMk0VsYES4wePr/
-        e+643g7tgAg1qVO8NFOUXIQ=
-X-Google-Smtp-Source: APXvYqzHZwrzaDAsguaX2IsIyUiWc2RXpFglPckISYDzHT896XmmxWdI422IRFIGhq+LtZkupLz2ig==
-X-Received: by 2002:a63:60a:: with SMTP id 10mr2299610pgg.381.1563277654138;
-        Tue, 16 Jul 2019 04:47:34 -0700 (PDT)
-Received: from localhost ([203.220.8.141])
-        by smtp.gmail.com with ESMTPSA id t10sm19804313pjr.13.2019.07.16.04.47.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 04:47:33 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 21:47:27 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3 0/5] Add NUMA-awareness to qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, arnd@arndb.de, bp@alien8.de,
-        guohanjun@huawei.com, hpa@zytor.com, jglauber@marvell.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        longman@redhat.com, mingo@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, will.deacon@arm.com, x86@kernel.org
-Cc:     daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com, steven.sistare@oracle.com
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
-In-Reply-To: <20190715192536.104548-1-alex.kogan@oracle.com>
+        Tue, 16 Jul 2019 07:48:18 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190716114815epoutp03e6fd179c0870c26b21498508e4a5b839~x4MgTO4Jp1138111381epoutp03b
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:48:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190716114815epoutp03e6fd179c0870c26b21498508e4a5b839~x4MgTO4Jp1138111381epoutp03b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563277695;
+        bh=Dyv6w+uTWtVQSsv2ZPQrUY8BCpkig6DYkgOKhcfDw6s=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LY0KetFm2iyDBY+PPn80tUUnjcA0AQNU3vFKlz0H8CdF37My2h+Q54F9bpO8x1jGM
+         rwecmi5ntrFYwQmTVNDcgdfQz7/wQrNFBmabX5wOTwHOAK51SHED3/p4J67hzg28Hi
+         ov+GtVhPq0iaWKykAvFh4PZcLRK8rKbSBUT+ORNE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190716114815epcas1p481e6e589a9335446b2bd69e4f7bcb1a0~x4MgBmVGn1316613166epcas1p4q;
+        Tue, 16 Jul 2019 11:48:15 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 45nzDY0zB6zMqYkY; Tue, 16 Jul
+        2019 11:48:13 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.4E.04066.C79BD2D5; Tue, 16 Jul 2019 20:48:13 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190716114812epcas1p2b2b823e4c878060cfe751a094897fa0f~x4MdnSwMp1330913309epcas1p2L;
+        Tue, 16 Jul 2019 11:48:12 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190716114812epsmtrp18a2ecf280f01ebd8dd9bf7e0d629da33~x4Mdj_9c11911419114epsmtrp1r;
+        Tue, 16 Jul 2019 11:48:12 +0000 (GMT)
+X-AuditID: b6c32a37-e27ff70000000fe2-52-5d2db97ca1d5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A2.0D.03706.C79BD2D5; Tue, 16 Jul 2019 20:48:12 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190716114812epsmtip1ab6e8f6885a4894f29421f436be0c765~x4MdYFEv81787417874epsmtip1g;
+        Tue, 16 Jul 2019 11:48:12 +0000 (GMT)
+Subject: Re: [PATCH v4 04/24] PM / devfreq: tegra30: Drop write-barrier
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <1aaa2e01-dcb3-7499-61ef-0b5fe4b94e77@samsung.com>
+Date:   Tue, 16 Jul 2019 20:51:19 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1563277166.m9swqogbqb.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190707223303.6755-5-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se2xLURzHnfb29k7Ujs7jZwnmysLKrFdX7mQV8SwmW0K8YuZmu2lnfaW3
+        EyNiVNDFY0yyKFrPGCJeQ9thUfNcbMz7MRZb4hEhw8Y2Ru/uxP77/L75/s75fc/5UXL1KTKW
+        yrW5eKeNs9Bkb+Li9QRt4tpgYqb2aJ2MPdnciNiN3kMEe2/DJyX7MLSPZL9tq0Ks57uXZF+u
+        LyPZtpCPYLefqiMnRxkD9UeQMeitVxq3uT+Txu3lJ5Dx27mhGYolealmnsvhnXG8Lduek2sz
+        Geg587KmZunHa5lEJoWdQMfZOCtvoKelZSTOyLVEBqLjVnKW/IiUwQkCnTQp1WnPd/FxZrvg
+        MtC8I8fiSHGMFTirkG8zjc22WycyWu04fcS4PM8cqmgkHKdjVl39oSlEb6OLUBQFOBl2NQWI
+        ItSbUuMAgidl12RS8RXBwacVSqloRVDa+UTxr+VPwzulyGp8BUG7Z4XEXxBcaE0pQhQVg2dC
+        aYdG7O2POxF42tyk6JHjxXA9eFImMok1UPn+WZcejYfD45+NSGQVngSH7h8kRCZwPJwPbO66
+        dwBeBHerfITk6Qd39jR1cRTWQ/NzP5LOHwQvmvwyiYeB+8JeuTgE4D8k+F4/UEoBpkHH01ZS
+        4hj4eKu8W4+FDzs2dfMaOH6nipSatyAor7zfnV4HlUdLZGJKOU6A06EkSR4OwY793UP0hc8t
+        WxWiBbAKtmxSS5YR8LChXibxYDi82UMWI9rbI463RwRvjwje/5cdQMQJNJB3CFYTLzAOXc+/
+        Poe6VlUzIYDO1KSFEaYQ3Ud1+/KYTLWCWykUWMMIKDndX2VoGZ2pVuVwBat5pz3LmW/hhTDS
+        R157pzx2QLY9svg2VxajH6fT6dhkZryeYehBKt+vhEw1NnEuPo/nHbzzX5+MiootRAtTZdF7
+        VKN26/L8r6YUezoXKGB2rX/prMKGN+3JBYKX14f33lpX0qduRK+pGxvnNuP45BLf4PQf+huT
+        zQnm+uoQ1JbPTWtv25k0Pdx88dKyRYGrAw2GTw3Pz4ycv2+00n3DXxr/yPTbUeMeQp59lB1c
+        U1FYfMyTWvvu5uWC9K3VLTQhmDlGI3cK3F90pMzFwAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG7NTt1Yg6cHVSxWf3zMaNEyaxGL
+        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
+        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgydu1+zFKwXrhi33etBsZH/F2MnBwSAiYS/x88
+        Z+9i5OIQEtjNKLHj/gZGiISkxLSLR5m7GDmAbGGJw4eLIWreMkrsOvucESQuLOAuMf23Fkhc
+        RKCJSWJT7wV2kF5mgUiJnrlb2CAaNjNKXLm3iQkkwSagJbH/xQ02EJtfQFHi6o/HYMt4Bewk
+        Fl1YyAJiswioSmze0c4KYosKREhMuraTBaJGUOLkzCdgNqeAqcTHm/MZIZapS/yZd4kZwhaX
+        uPVkPhOELS/RvHU28wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL
+        89L1kvNzNzGCI0xLcwfj5SXxhxgFOBiVeHhP7NGJFWJNLCuuzD3EKMHBrCTCa/tVO1aINyWx
+        siq1KD++qDQntfgQozQHi5I479O8Y5FCAumJJanZqakFqUUwWSYOTqkGxsDzE33WHZniq/K+
+        ab+TVoJ4xGrWJkVh7/oqXsOqukMaTWe/+83PDCx7dGXObKHfLBWXv6aJCrmerZ9WWtXPvOV7
+        jFbN+jvpp9NU1A1nm4Y4fo/1UYg9czQ7xtrV9/XKlV3SBp/YVKaVR3zvuNBle51v0WSZR+rb
+        /1WvnzyVc2uOmt58814mJZbijERDLeai4kQAHCWz5KwCAAA=
+X-CMS-MailID: 20190716114812epcas1p2b2b823e4c878060cfe751a094897fa0f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223727epcas4p450b911e20b59833cf68975099c7e4bfa
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223727epcas4p450b911e20b59833cf68975099c7e4bfa@epcas4p4.samsung.com>
+        <20190707223303.6755-5-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex Kogan's on July 16, 2019 5:25 am:
-> Our evaluation shows that CNA also improves performance of user=20
-> applications that have hot pthread mutexes. Those mutexes are=20
-> blocking, and waiting threads park and unpark via the futex=20
-> mechanism in the kernel. Given that kernel futex chains, which
-> are hashed by the mutex address, are each protected by a=20
-> chain-specific spin lock, the contention on a user-mode mutex=20
-> translates into contention on a kernel level spinlock.=20
+Hi Dmitry,
 
-What applications are those, what performance numbers? Arguably that's
-much more interesting than microbenchmarks (which are mainly useful to
-help ensure the fast paths are not impacted IMO).
+On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+> There is no need in a write-barrier now, given that interrupt masking is
+> handled by CPU's GIC now. Hence we know exactly that interrupt won't fire
+> after stopping the devfreq's governor. In other cases we don't care about
+> potential buffering of the writes to hardware and thus there is no need to
+> stall CPU.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 14 --------------
+>  1 file changed, 14 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 5e606ae3f238..4be7858c33bc 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -230,12 +230,6 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
+>  		      ACTMON_DEV_LOWER_WMARK);
+>  }
+>  
+> -static void actmon_write_barrier(struct tegra_devfreq *tegra)
+> -{
+> -	/* ensure the update has reached the ACTMON */
+> -	readl(tegra->regs + ACTMON_GLB_STATUS);
+> -}
+> -
+>  static void actmon_isr_device(struct tegra_devfreq *tegra,
+>  			      struct tegra_devfreq_device *dev)
+>  {
+> @@ -287,8 +281,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+>  	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
+>  
+>  	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
+> -
+> -	actmon_write_barrier(tegra);
+>  }
+>  
+>  static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+> @@ -376,8 +368,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+>  		tegra_devfreq_update_wmark(tegra, dev);
+>  	}
+>  
+> -	actmon_write_barrier(tegra);
+> -
+>  	return NOTIFY_OK;
+>  }
+>  
+> @@ -423,8 +413,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
+>  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
+>  		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
+>  
+> -	actmon_write_barrier(tegra);
+> -
+>  	enable_irq(tegra->irq);
+>  }
+>  
+> @@ -439,8 +427,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+>  		device_writel(&tegra->devices[i], ACTMON_INTR_STATUS_CLEAR,
+>  			      ACTMON_DEV_INTR_STATUS);
+>  	}
+> -
+> -	actmon_write_barrier(tegra);
+>  }
+>  
+>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+> 
 
-Thanks,
-Nick
-=
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
