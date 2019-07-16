@@ -2,110 +2,216 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02313C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C362C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D0820880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:28:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HaFxzYUq"
+	by mail.kernel.org (Postfix) with ESMTP id 3B58C2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388483AbfGPS2z (ORCPT
+        id S2388365AbfGPS3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:28:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38867 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPS2y (ORCPT
+        Tue, 16 Jul 2019 14:29:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48806 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728121AbfGPS3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:28:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y15so9520637pfn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:subject:cc:user-agent:date;
-        bh=zvGcK+VeZ8cxUQUUb/Ziua1dyjBrgzj1NF9vZ94FkTY=;
-        b=HaFxzYUquBICo8Qa2dhDAMayVb4+B8XnoZq6FveM6TFEZ4xttZwMrCmGGANC/QGVlw
-         u+Q8JPimlFkaChFUdUbnRKD6m1PJup0MyZsBkdRyVka7yI9ODuShs0+cBre686lEzvVj
-         jGQyqpkhbiFKGwnAmGCcyqaMlrf7d6Hd+QgwM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:subject:cc
-         :user-agent:date;
-        bh=zvGcK+VeZ8cxUQUUb/Ziua1dyjBrgzj1NF9vZ94FkTY=;
-        b=JX/AjggZ5h6dZRo0JF9noDQNxKn6ggZ1wLEKgp7ezTU0CnynXP7ZO56ggS1dK/vlgs
-         9/kpmehPf7jRTmUOeIYH/o3bTURo7G8gwk/tHKFOT+HvtG0GsL4tBRq7feJFCP3vhekR
-         HmVCpblpgZzs/Z0fbQGPCbuwfsaw3x5MWWlvPd5KaxaxZsC29DRtSidZy1+8MtShx9xJ
-         ZPpaVyYSboNi0MqkeIKyGPmnZx2i5adWcZIMKpg+cuBHZMd/6j9Bpc3b8+CT9hJtXSLC
-         5EmM5aNdsPGQyrabQs4TBazI+18x2/ru6RXEqGDi94i2BbEWJWL5YrS1tRs/LB8btwDm
-         e+9A==
-X-Gm-Message-State: APjAAAVyEOcsW/kWEoDUE36sTXcgcLZ7keRjVXwOLY2LNUGzLDYjgeOg
-        F6eNtcSXNyl727x4BLTwKGLqoQ==
-X-Google-Smtp-Source: APXvYqz4qZBoRB6OmcdQOJn/RkfEoww9MxRhFBGtRytBBWzy2H7BHROzWqtrB66vhSitRPsWPlDCmg==
-X-Received: by 2002:a63:5550:: with SMTP id f16mr17160524pgm.426.1563301733618;
-        Tue, 16 Jul 2019 11:28:53 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x8sm18949101pfa.46.2019.07.16.11.28.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 11:28:52 -0700 (PDT)
-Message-ID: <5d2e1764.1c69fb81.448bb.65c0@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190624142654.zprcpz42hivuyrjq@gondor.apana.org.au>
-References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190613232613.GH22901@ziepe.ca> <5d03e394.1c69fb81.f028c.bffb@mx.google.com> <20190617225134.GA30762@ziepe.ca> <5d0c2cd6.1c69fb81.e66af.32bf@mx.google.com> <20190624142654.zprcpz42hivuyrjq@gondor.apana.org.au>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 1/8] tpm: block messages while suspended
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Tue, 16 Jul 2019 14:29:35 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GITY3U061051
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:29:34 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tsj8245s4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:29:32 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 16 Jul 2019 19:28:28 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Jul 2019 19:28:18 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GISHpS53281224
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 18:28:17 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32C51B2064;
+        Tue, 16 Jul 2019 18:28:17 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC2A1B205F;
+        Tue, 16 Jul 2019 18:28:16 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jul 2019 18:28:16 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D4CF316C905B; Tue, 16 Jul 2019 11:28:16 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 11:28:16 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Matt Mackall <mpm@selenic.com>, linux-crypto@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Tue, 16 Jul 2019 11:28:51 -0700
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, peterz@infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v2 3/9] rcu/sync: Remove custom check for reader-section
+Reply-To: paulmck@linux.ibm.com
+References: <20190712170024.111093-1-joel@joelfernandes.org>
+ <20190712170024.111093-4-joel@joelfernandes.org>
+ <20190716182642.GB22819@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716182642.GB22819@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19071618-0072-0000-0000-00000449AC27
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011440; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01233103; UDB=6.00649716; IPR=6.01014415;
+ MB=3.00027748; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-16 18:28:26
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071618-0073-0000-0000-00004CB9F7A1
+Message-Id: <20190716182816.GA23249@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160226
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Herbert Xu (2019-06-24 07:26:54)
-> On Thu, Jun 20, 2019 at 06:03:17PM -0700, Stephen Boyd wrote:
-> >
-> > What do you think of the attached patch? I haven't tested it, but it
-> > would make sure that the kthread is frozen so that the hardware can be
-> > resumed before the kthread is thawed and tries to go touch the hardware.
->=20
-> Looks good to me.
->=20
+On Tue, Jul 16, 2019 at 11:26:42AM -0700, Paul E. McKenney wrote:
+> On Fri, Jul 12, 2019 at 01:00:18PM -0400, Joel Fernandes (Google) wrote:
+> > The rcu/sync code was doing its own check whether we are in a reader
+> > section. With RCU consolidating flavors and the generic helper added in
+> > this series, this is no longer need. We can just use the generic helper
+> > and it results in a nice cleanup.
+> > 
+> > Cc: Oleg Nesterov <oleg@redhat.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> This needs to be forward-ported to current mainline.  (Or, I believe
+> equivalently for this file, to branch "dev" of -rcu.)
+> 
+> Especially given that you have Oleg's Ack, I would be happy to
+> take the forward-ported version.
 
-Thanks for checking. I haven't been able to reproduce the problem yet to
-confirm this is actually fixing anything, even after tweaking the sysctl
-values for khwrng to try and force the thread to run continuously.
+Never mind, I am one version behind.  Apologies for the noise!
 
-From reading the bug report that caused this 'is_suspended' code to be
-added to the driver I'm fairly convinced this is the right solution. To
-give some more background, it looks like we use s2idle suspend (i.e.
-all CPUs are idle across suspend) and then we have the kthread running
-to ask the hardware for some more random numbers. The i2c transaction
-fails when asking the hwrng for data, and we see these messages printed
-on the resume path:
+							Thanx, Paul
 
-	i2c_designware i2c_designware.2: i2c_dw_handle_tx_abort: lost arbitration
-	tpm tpm0: i2c transfer failed (attempt 3/3): -11
-	tpm0: tpm_transmit: tpm_send: error -11
-	hwrng: no data available
-
-Userspace tasks are thawed after this failure so it looks like something
-in the kernel kicks khwrng to grab more data before the i2c bus can be
-resumed.
+> > ---
+> > Please note: Only build and boot tested this particular patch so far.
+> > 
+> >  include/linux/rcu_sync.h |  5 ++---
+> >  kernel/rcu/sync.c        | 22 ----------------------
+> >  2 files changed, 2 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+> > index 6fc53a1345b3..c954f1efc919 100644
+> > --- a/include/linux/rcu_sync.h
+> > +++ b/include/linux/rcu_sync.h
+> > @@ -39,9 +39,8 @@ extern void rcu_sync_lockdep_assert(struct rcu_sync *);
+> >   */
+> >  static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+> >  {
+> > -#ifdef CONFIG_PROVE_RCU
+> > -	rcu_sync_lockdep_assert(rsp);
+> > -#endif
+> > +	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+> > +			 "suspicious rcu_sync_is_idle() usage");
+> >  	return !rsp->gp_state; /* GP_IDLE */
+> >  }
+> >  
+> > diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+> > index a8304d90573f..535e02601f56 100644
+> > --- a/kernel/rcu/sync.c
+> > +++ b/kernel/rcu/sync.c
+> > @@ -10,37 +10,25 @@
+> >  #include <linux/rcu_sync.h>
+> >  #include <linux/sched.h>
+> >  
+> > -#ifdef CONFIG_PROVE_RCU
+> > -#define __INIT_HELD(func)	.held = func,
+> > -#else
+> > -#define __INIT_HELD(func)
+> > -#endif
+> > -
+> >  static const struct {
+> >  	void (*sync)(void);
+> >  	void (*call)(struct rcu_head *, void (*)(struct rcu_head *));
+> >  	void (*wait)(void);
+> > -#ifdef CONFIG_PROVE_RCU
+> > -	int  (*held)(void);
+> > -#endif
+> >  } gp_ops[] = {
+> >  	[RCU_SYNC] = {
+> >  		.sync = synchronize_rcu,
+> >  		.call = call_rcu,
+> >  		.wait = rcu_barrier,
+> > -		__INIT_HELD(rcu_read_lock_held)
+> >  	},
+> >  	[RCU_SCHED_SYNC] = {
+> >  		.sync = synchronize_rcu,
+> >  		.call = call_rcu,
+> >  		.wait = rcu_barrier,
+> > -		__INIT_HELD(rcu_read_lock_sched_held)
+> >  	},
+> >  	[RCU_BH_SYNC] = {
+> >  		.sync = synchronize_rcu,
+> >  		.call = call_rcu,
+> >  		.wait = rcu_barrier,
+> > -		__INIT_HELD(rcu_read_lock_bh_held)
+> >  	},
+> >  };
+> >  
+> > @@ -49,16 +37,6 @@ enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
+> >  
+> >  #define	rss_lock	gp_wait.lock
+> >  
+> > -#ifdef CONFIG_PROVE_RCU
+> > -void rcu_sync_lockdep_assert(struct rcu_sync *rsp)
+> > -{
+> > -	RCU_LOCKDEP_WARN(!gp_ops[rsp->gp_type].held(),
+> > -			 "suspicious rcu_sync_is_idle() usage");
+> > -}
+> > -
+> > -EXPORT_SYMBOL_GPL(rcu_sync_lockdep_assert);
+> > -#endif
+> > -
+> >  /**
+> >   * rcu_sync_init() - Initialize an rcu_sync structure
+> >   * @rsp: Pointer to rcu_sync structure to be initialized
+> > -- 
+> > 2.22.0.510.g264f2c817a-goog
+> > 
 
