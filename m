@@ -2,161 +2,107 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFFEC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6631C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF252173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1292173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHXFcCg5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FKSFGu7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfGPKoA (ORCPT
+        id S2387491AbfGPKow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:44:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38606 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733198AbfGPKn7 (ORCPT
+        Tue, 16 Jul 2019 06:44:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58864 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732524AbfGPKow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:43:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so19423174ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 03:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FnTfXGgjsLntS6jMo62yzl6Vn1EtGc1DavczK9ylaTg=;
-        b=jHXFcCg5eMxU9fvvATy+HY8vK6OGkZoncERbEqWIX438Er7GL7G1sc7wTc9eC0T/7y
-         tKNUGVP5SaCTkDkhNlhY2rfVXSDClMj9GcCJXTPyIgwUF3pdtizk9Ufe3c4sbdIdUtOD
-         EOrgMCId1bCsWIe0H/zFann9m1M7rTbV+cgxnrs6T1UiDMLXwqeigxLHvHHLgLpmpHF3
-         +xJ7As78LQoPBGkZ0hv2qrsBVTRdzcniNI3fjTmn7XHgZLF5sFeFYYRM9o1wk7kUmNjS
-         Zcy9DLu2qcM3WYEHgx4gQ3VMRKpDPjJzrI7Mi0n4lfZ0mKr0Skc0ZHvyrUISPmzZvaF8
-         jR3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FnTfXGgjsLntS6jMo62yzl6Vn1EtGc1DavczK9ylaTg=;
-        b=ncmHaZRMHW7Uu5J1r6VxMpl6Bu2D46ppT+z6JuZ4fSDFcMbJm54ZOOtLhs3f5B6jpo
-         oDpt4LbJSkpQmbGMTIWoGTXIu1k7m8zWg5sizWS6+SkDVW5qwZyLamCdUQ4AAzmTayTY
-         IWcNJ6z1prQLtvfTYBDwrKking+XOV63cuKQoF5paxJTMe24cxEpj2kvuQPLURA6CuaM
-         H1g1a6z214IkCieZMn5lzbxXJCncjWOEPvL0mgODRNlmtP3iy8SFGR4jOfy7xz4+3olq
-         EwC0ed6btC240qUkrpIH2utMMj1HaWiAVURCL6I7vF275ZssDySfa6w3NlkuuOhzCEaQ
-         H7yg==
-X-Gm-Message-State: APjAAAVObL+49ReyrjM5egMR+aldF+SyGMQTFs5nvn8mkgPKOHGPa7L8
-        LJGCSsR5K//mg1lIf2VoF8lADQ==
-X-Google-Smtp-Source: APXvYqwrjsaHjjWEhxg9mvVXCnV8LgsPfXPdkWh4OMeVg0WuJU792Pm3t0xS4HUeqUeuo3TGp+m9xw==
-X-Received: by 2002:a2e:6348:: with SMTP id x69mr17264128ljb.186.1563273836873;
-        Tue, 16 Jul 2019 03:43:56 -0700 (PDT)
-Received: from centauri (ua-83-226-229-61.bbcust.telenor.se. [83.226.229.61])
-        by smtp.gmail.com with ESMTPSA id b192sm2748745lfg.75.2019.07.16.03.43.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 03:43:56 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 12:43:54 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] opp: Return genpd virtual devices from
- dev_pm_opp_attach_genpd()
-Message-ID: <20190716104354.GA13780@centauri>
-References: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
+        Tue, 16 Jul 2019 06:44:52 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6GAiism017500;
+        Tue, 16 Jul 2019 05:44:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563273884;
+        bh=xAUeoAyBbOBCb3mEnXWmyizdBhqwUzcNWgmgEUmhoeI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FKSFGu7JJ2KD4x1wu8mJ0wJw9dC9x0iMgIeiYpYtbNMsj4UDPDXXResfNsD/50bSd
+         nzJNjkoJISnwf9eOUM11U65sTxYBDzN7H4KkuzIuwdO+rl6J67697A8gjteVBCPzT5
+         678muO2ndffPko7HCBQsYZ0dSmj2QLx8vtcP2MMM=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6GAiiju091125
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 16 Jul 2019 05:44:44 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 16
+ Jul 2019 05:44:44 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 16 Jul 2019 05:44:43 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6GAie9C058777;
+        Tue, 16 Jul 2019 05:44:41 -0500
+Subject: Re: [RESEND PATCH next v2 0/6] ARM: keystone: update dt and enable
+ cpts support
+To:     <santosh.shilimkar@oracle.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190705151247.30422-1-grygorii.strashko@ti.com>
+ <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+From:   grygorii <grygorii.strashko@ti.com>
+Message-ID: <a2dae3a5-7e25-1de0-e722-8860b58cb3a2@ti.com>
+Date:   Tue, 16 Jul 2019 16:14:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <2ef8b34e-7a6e-b3e4-90e0-c4e7f16c2e99@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 11:30:11AM +0530, Viresh Kumar wrote:
-> The cpufreq drivers don't need to do runtime PM operations on the
-> virtual devices returned by dev_pm_domain_attach_by_name() and so the
-> virtual devices weren't shared with the callers of
-> dev_pm_opp_attach_genpd() earlier.
-> 
-> But the IO device drivers would want to do that. This patch updates the
-> prototype of dev_pm_opp_attach_genpd() to accept another argument to
-> return the pointer to the array of genpd virtual devices.
-> 
-> Reported-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> @Rajendra: Can you please test this one ? I have only compile tested it.
-> 
->  drivers/opp/core.c     | 5 ++++-
->  include/linux/pm_opp.h | 4 ++--
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 2958cc7bbb58..07b6f1187b3b 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1775,6 +1775,7 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
->   * dev_pm_opp_attach_genpd - Attach genpd(s) for the device and save virtual device pointer
->   * @dev: Consumer device for which the genpd is getting attached.
->   * @names: Null terminated array of pointers containing names of genpd to attach.
-> + * @virt_devs: Pointer to return the array of virtual devices.
->   *
->   * Multiple generic power domains for a device are supported with the help of
->   * virtual genpd devices, which are created for each consumer device - genpd
-> @@ -1789,7 +1790,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
->   * This helper needs to be called once with a list of all genpd to attach.
->   * Otherwise the original device structure will be used instead by the OPP core.
->   */
-> -struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
-> +struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
-> +		const char **names, struct device ***virt_devs)
->  {
->  	struct opp_table *opp_table;
->  	struct device *virt_dev;
-> @@ -1850,6 +1852,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
->  		name++;
->  	}
->  
-> +	*virt_devs = opp_table->genpd_virt_devs;
 
-Could we perhaps only do this if (virt_devs), that way callers can send in
-NULL if they don't care about the genpd virtual devices.
 
-Kind regards,
-Niklas
+On 06/07/2019 05:18, santosh.shilimkar@oracle.com wrote:
+> On 7/5/19 8:12 AM, Grygorii Strashko wrote:
+>> Hi Santosh,
+>>
+>> This series is set of platform changes required to enable NETCP CPTS reference
+>> clock selection and final patch to enable CPTS for Keystone 66AK2E/L/HK SoCs.
+>>
+>> Those patches were posted already [1] together with driver's changes, so this
+>> is re-send of DT/platform specific changes only, as driver's changes have
+>> been merged already.
+>>
+>> Patches 1-5: CPTS DT nodes update for TI Keystone 2 66AK2HK/E/L SoCs.
+>> Patch 6: enables CPTS for TI Keystone 2 66AK2HK/E/L SoCs.
+>>
+>> [1] https://patchwork.kernel.org/cover/10980037/
+>>
+>> Grygorii Strashko (6):
+>>    ARM: dts: keystone-clocks: add input fixed clocks
+>>    ARM: dts: k2e-clocks: add input ext. fixed clocks tsipclka/b
+>>    ARM: dts: k2e-netcp: add cpts refclk_mux node
+>>    ARM: dts: k2hk-netcp: add cpts refclk_mux node
+>>    ARM: dts: k2l-netcp: add cpts refclk_mux node
+>>    ARM: configs: keystone: enable cpts
+>>
+> Will add these for 5.4 queue. Thanks !!
 
->  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
->  
->  	return opp_table;
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index be570761b77a..7c2fe2952f40 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -131,7 +131,7 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char * name);
->  void dev_pm_opp_put_clkname(struct opp_table *opp_table);
->  struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev, int (*set_opp)(struct dev_pm_set_opp_data *data));
->  void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
-> -struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names);
-> +struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs);
->  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
->  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
->  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
-> @@ -295,7 +295,7 @@ static inline struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const
->  
->  static inline void dev_pm_opp_put_clkname(struct opp_table *opp_table) {}
->  
-> -static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
-> +static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs)
->  {
->  	return ERR_PTR(-ENOTSUPP);
->  }
-> -- 
-> 2.21.0.rc0.269.g1a574e7a288b
-> 
+Thank you
+
+-- 
+Best regards,
+grygorii
