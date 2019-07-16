@@ -2,136 +2,155 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DC1C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D11C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA8620880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B7020880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pYsWKhEX"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DaEnJlnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733104AbfGPM02 (ORCPT
+        id S1733187AbfGPM0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:26:28 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50608 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPM02 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:26:28 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190716122627euoutp02e8a10a7fa1b446416fe189fd98f30d95~x4t2j0P_j0658206582euoutp02d
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:26:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190716122627euoutp02e8a10a7fa1b446416fe189fd98f30d95~x4t2j0P_j0658206582euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563279987;
-        bh=zf1SxDfLXmgU3SgPoMi4phv/xSiFjD1yiDoP1x528pM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=pYsWKhEX74Ck/WYbpIaV3ssTlAvIeNm+zRGBCJ+hNC/V6+OOtwOipqYvcdc8AY00B
-         +BuNoCbxVdI2ZrasowjyPFveQP5ExtitnsFQaJ9dda6zra8OxFf+8hEll2jW+ouYMS
-         t1dzqYENH+sNe82eM1hLlzSF6kefH/uwTx19P764=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190716122626eucas1p2f58b6b1dacae0847ccce4b90920c47ca~x4t1_BREm0474304743eucas1p21;
-        Tue, 16 Jul 2019 12:26:26 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 23.CA.04325.272CD2D5; Tue, 16
-        Jul 2019 13:26:26 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716122625eucas1p2093f157267d4ad2ca6757496ed690c90~x4t1Om64q0474304743eucas1p20;
-        Tue, 16 Jul 2019 12:26:25 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190716122625eusmtrp1a78971d80d5d4e90aec24b9c60961235~x4t1AjR941461614616eusmtrp1w;
-        Tue, 16 Jul 2019 12:26:25 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-b5-5d2dc2727795
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 98.74.04146.172CD2D5; Tue, 16
-        Jul 2019 13:26:25 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716122625eusmtip111edf3643d3e89b35d888fc00283dbb9~x4t0qttZP1205612056eusmtip1E;
-        Tue, 16 Jul 2019 12:26:25 +0000 (GMT)
-Subject: Re: [PATCH 03/10] video: pxafb: Remove cpufreq policy notifier
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <648e2ab5-afd7-3b9c-de8b-1e14c0be83e2@samsung.com>
-Date:   Tue, 16 Jul 2019 14:26:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <e69d47b1d497bdbd8c988754d98714e78ddc0a80.1563270828.git.viresh.kumar@linaro.org>
+        Tue, 16 Jul 2019 08:26:45 -0400
+Received: from mail-eopbgr80072.outbound.protection.outlook.com ([40.107.8.72]:51494
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728121AbfGPM0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 08:26:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UJcaSurSLZ8e5hyP/Ux6k3qtFtIEZFtiXs9SjlU1rDc+jwwkYNrgUYuz4GF4RmOQFBSCyxhqKZPyj/n2g1hG0ocdp6kJOCYwcdkCqF6GPqmPLVsXRZxN5+74ajMPPLq8ajy6xJFbww4fB+oHIYihPNJrUMx6PhG7vLBcjjo/ftXjnN00wRUzp3Mc8ObdKhqwXTUpQexyRMywugo7AUCERPNx8Q2tGQ2mYvij8BXq+4PtmyfkTjAUMcLdteG2QnddM4ksg6HIABtAAJb0t0YaXP7UIzUwURiu0hTlXX1WYh/IeIxyn/WId6OMJ27JzY84pxHJ+Mzs8ShWyqQpwpLnrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BMH+GrufTBUitMHTytEFLheaMf0/0DfQy/UYM/WwNDk=;
+ b=Z6N4YGye76OfFTU+mG55Urm2m7F1LTLS5EmkQ8y+f2EoAZZD0YbStUg0MtM2Kc+uxui5lsWkSBOJ5HHXJSbCmLxk0MwPv1KSX8put6jojFZkahoVqYMsSw31BhAgFf3zEbvdz6odlzhY7EiWtaJhSROiiVLVMOccMC2K9OpoAoO48kerX7CgAQMs+pBIGIpPrmO8z1vtfCfWhzzWU6G+27+JLnJqYreuxTssc6zKUx+MZTSbASMVrXrFnYc9D7XwiP7mjO7Yb2WCyXjNTqLo1zH4+j9WxEHioNW14iGak3YNCOIT/EvBCgOUnKLPY5KDpoIXh39I+hK98YuLT8sSIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BMH+GrufTBUitMHTytEFLheaMf0/0DfQy/UYM/WwNDk=;
+ b=DaEnJlnrvs2xHmDayvx27rDqyYyjXonWkTPtPcR2SpHPE8xqb1A2aLI7krulS/KI//YmLsvehWUn2Nfwqel8JF1WE42TjD91SwtQMkq0XexKUPH6TvfM4WmtXjNOssZn2qQn5Xsu32GcV++D2BalXPzmC8D9LQBnvn0VbtsV9lM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6112.eurprd05.prod.outlook.com (20.178.204.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.11; Tue, 16 Jul 2019 12:26:41 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
+ 12:26:41 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the rdma tree with the v4l-dvb-next
+ tree
+Thread-Topic: linux-next: manual merge of the rdma tree with the v4l-dvb-next
+ tree
+Thread-Index: AQHVO2/tbODbR7FZn0qQzE55M1UGyabNLIyA
+Date:   Tue, 16 Jul 2019 12:26:40 +0000
+Message-ID: <20190716122637.GA29741@mellanox.com>
+References: <20190716104614.2ec8b57c@canb.auug.org.au>
+In-Reply-To: <20190716104614.2ec8b57c@canb.auug.org.au>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7djPc7pFh3RjDaa8Fba48vU9m8WJvg+s
-        Fpd3zWGz+Nx7hNHizOlLrBYdR74xW2z86uHA7nHn2h42j/vdx5k8tlxtZ/H4vEkugCWKyyYl
-        NSezLLVI3y6BK+PWjwvMBc9YKm4c/sfewPiHuYuRk0NCwERi96uv7F2MXBxCAisYJab8Wc0G
-        4XxhlDjYO50ZwvnMKPFh/n64lrMzrzNCJJYzSsy9/REsISTwllHi54RUEFtYwF1i7dttTF2M
-        HBwiAloSL2+ChZkFzjFKnL3pC2KzCVhJTGxfxQhi8wrYSRzedZkFxGYRUJV4/3YrWFxUIELi
-        /rENrBA1ghInZz4Bq+EUiJP4u3cGO8RMcYlbT+YzQdjyEtvfzgE7WkJgHbvE+/uPmCCOdpFY
-        +GAmO4QtLPHq+BYoW0bi9OQeFqgGRom/HS+gurczSiyf/I8Nospa4vDxi6wg3zALaEqs36UP
-        EXaUePXwECNIWEKAT+LGW0GII/gkJm0DhRxImFeio00IolpNYsOyDWwwa7t2rmSewKg0C8lr
-        s5C8MwvJO7MQ9i5gZFnFKJ5aWpybnlpsnJdarlecmFtcmpeul5yfu4kRmHZO/zv+dQfjvj9J
-        hxgFOBiVeHhP7NGJFWJNLCuuzD3EKMHBrCTCa/tVO1aINyWxsiq1KD++qDQntfgQozQHi5I4
-        bzXDg2ghgfTEktTs1NSC1CKYLBMHp1QDY+ydsN2i11Z8LrvmayWfqbntrVN+/1QB/TWbMxJ6
-        DnMxCR3+EyXBlO8b3/EwIG26QbD2sbxJ13b6xAtElflNFBM2uRDiwcwy4VLF6VAW/azLj6+t
-        XRW3tJSl6Hjcm5eq72coJ+4rO+adpRL+dm9k/uIG14R+pRPnX7Es7+3m+twqednrvlqIEktx
-        RqKhFnNRcSIA3wqUrTcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xu7qFh3RjDZ6vUrC48vU9m8WJvg+s
-        Fpd3zWGz+Nx7hNHizOlLrBYdR74xW2z86uHA7nHn2h42j/vdx5k8tlxtZ/H4vEkugCVKz6Yo
-        v7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PWjwvMBc9Y
-        Km4c/sfewPiHuYuRk0NCwETi7MzrjF2MXBxCAksZJY69msLWxcgBlJCROL6+DKJGWOLPtS42
-        iJrXjBInPk5nAUkIC7hLrH27jQmkXkRAS+LlzVSQGmaBC4wSsz60QQ3tY5R49ewFK0gDm4CV
-        xMT2VYwgNq+AncThXZfBBrEIqEq8f7sVLC4qECFx5v0KFogaQYmTM5+A2ZwCcRJ/985gB7GZ
-        BdQl/sy7xAxhi0vcejKfCcKWl9j+dg7zBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4sN
-        9YoTc4tL89L1kvNzNzECI23bsZ+bdzBe2hh8iFGAg1GJh/fEHp1YIdbEsuLK3EOMEhzMSiK8
-        tl+1Y4V4UxIrq1KL8uOLSnNSiw8xmgI9N5FZSjQ5H5gE8kriDU0NzS0sDc2NzY3NLJTEeTsE
-        DsYICaQnlqRmp6YWpBbB9DFxcEo1MLqk8E+O3rSY8USCbJHVX3lZ/pyELfvc+vOsJ7Y9M566
-        6NyfaWfL12lvPySdeHvrS6UZNfwnU1jCI5T8JraGL9V50X7vY4DA537dhfn+y8Pl/rqtzuTS
-        60w/qy48X3qD5NaQKHdWh+oNgh6TviT1ZH2KmJhfHe18/fvfmdd3sM/zyr/X5l/yWomlOCPR
-        UIu5qDgRADDAAcfKAgAA
-X-CMS-MailID: 20190716122625eucas1p2093f157267d4ad2ca6757496ed690c90
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190716122625eucas1p2093f157267d4ad2ca6757496ed690c90
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190716122625eucas1p2093f157267d4ad2ca6757496ed690c90
-References: <cover.1563270828.git.viresh.kumar@linaro.org>
-        <e69d47b1d497bdbd8c988754d98714e78ddc0a80.1563270828.git.viresh.kumar@linaro.org>
-        <CGME20190716122625eucas1p2093f157267d4ad2ca6757496ed690c90@eucas1p2.samsung.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR1501CA0009.namprd15.prod.outlook.com
+ (2603:10b6:207:17::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 77e3bfae-ff06-466d-97d9-08d709e8dae5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6112;
+x-ms-traffictypediagnostic: VI1PR05MB6112:
+x-microsoft-antispam-prvs: <VI1PR05MB6112DDD8787817F7D992B4D7CFCE0@VI1PR05MB6112.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0100732B76
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(366004)(396003)(376002)(53754006)(199004)(189003)(6436002)(81156014)(68736007)(99286004)(66066001)(102836004)(81166006)(8936002)(66476007)(26005)(6246003)(6506007)(66556008)(186003)(2616005)(4326008)(6486002)(386003)(486006)(86362001)(76176011)(8676002)(2906002)(14454004)(229853002)(33656002)(52116002)(1076003)(6916009)(25786009)(71190400001)(446003)(71200400001)(305945005)(6116002)(3846002)(6512007)(478600001)(476003)(54906003)(5660300002)(256004)(66446008)(64756008)(53936002)(11346002)(7736002)(316002)(36756003)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6112;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TQlTMkHG0dClFP89G8wPu+eTMvfvNyVty3PWKGjVm7O51NtNOTFTZ/Lrnq1f6AOEGDNmq90iop0rtXPtqmDBHEYbYiiuDMr2+XipwzZqM8eVXAjH3GSOFHaSvSGPpk8lAOvY6fjSh27txS6ZHCKKRa6ZV0ToyyJB40gLOKVavkPJLUgvjrQZiq6K092PORhgnNRjRGQZXPwRJWn3tk8XLkZM6V8HNGmI6I0YDn1SQFuUZwBeOJngcfwsLw2OxoY7005EQVAbyW1iH3N/r7v3vnbtE5DsQ8OGpix2kE0MHycJfmykuZtxifW+PHeOJP0h7f/Q1/fBoJjoDXkNFPNAHgEXH84CaWDOZHxv2ddffswpC31hXJpNcrsSiaAPGA9k0Unvo164lVETRKLZZxdVOH9N/lfltb5ZRVWlaUaMOOM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EE73668CC7A2B942820EAE89573B18B5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77e3bfae-ff06-466d-97d9-08d709e8dae5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 12:26:41.0144
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 16, 2019 at 10:46:14AM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Today's linux-next merge of the rdma tree got a conflict in:
+>=20
+>   Documentation/index.rst
+>=20
+> between commit:
+>=20
+>   09fdc957ad0d ("docs: leds: add it to the driver-api book")
+> (and others following)
+>=20
+> from the v4l-dvb-next tree and commit:
+>=20
+>   a3a400da206b ("docs: infiniband: add it to the driver-api bookset")
+>=20
+> from the rdma tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-On 7/16/19 11:54 AM, Viresh Kumar wrote:
-> The cpufreq policy notifier's CPUFREQ_ADJUST notification is going to
-> get removed soon.
-> 
-> The notifier callback pxafb_freq_policy() isn't doing anything apart
-> from printing a debug message on CPUFREQ_ADJUST notification. There is
-> no point in keeping an otherwise empty callback and registering the
-> notifier.
-> 
-> Remove it.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+I'm surprised this is coming from a v4l tree..
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> diff --cc Documentation/index.rst
+> index f379e43fcda0,869616b57aa8..000000000000
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@@ -96,23 -90,9 +96,24 @@@ needed)
+>  =20
+>      driver-api/index
+>      core-api/index
+>  +   locking/index
+>  +   accounting/index
+>  +   block/index
+>  +   cdrom/index
+>  +   ide/index
+>  +   fb/index
+>  +   fpga/index
+>  +   hid/index
+>  +   iio/index
+>  +   leds/index
+> +    infiniband/index
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+This should be kept sorted, Mauro rdma is already merged you'll need
+to tell Linus about this trivial conflict when you send your patches.
+
+Thanks,
+Jason
