@@ -2,151 +2,118 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6C0C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D034C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF32173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E3520880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MxOixC4E"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQADIp2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfGPFAe (ORCPT
+        id S1726709AbfGPFDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 01:00:34 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:58743 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfGPFAd (ORCPT
+        Tue, 16 Jul 2019 01:03:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35002 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfGPFDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 01:00:33 -0400
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x6G50Sjd002379;
-        Tue, 16 Jul 2019 14:00:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6G50Sjd002379
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563253230;
-        bh=FPGAGm8ESlaP4ztyHEngsuJk8vAGn0UUpSZ7pP90xF4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MxOixC4EJW207dx9+ev/BxpkmmNyG0UfllLJ3WAMV8KqU4mBHpw7r+qcd9Q63ldxs
-         rlHmjqjlxggei5abnX3rnpiQH+uAhr6pOO2K2mj3w64lJ6/PooWANy1GUaKEJqnRXh
-         fKGpc+MrZISbc93qq/IEbKJn5im3U197nY+8cAEBB/MjCrw+bURnsi5281tbbdUe1A
-         VOLBuSw2m9nsRI5Mq2LUE8WLsdI8tjhBGJ+t8BrVeZy16oCsoBO0ZCC34dJFjh0ltU
-         9tJL9NxDO0j3nhncrrvsrgSWRVV8la/hGcEIjeFvuJ+oH6X/nI5IR+QC2NLE9GYpqk
-         Gvram8jCKv++A==
-X-Nifty-SrcIP: [209.85.221.171]
-Received: by mail-vk1-f171.google.com with SMTP id m17so3925083vkl.2;
-        Mon, 15 Jul 2019 22:00:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAWQ8f0fFAiPleNpxHB+pK8JnZ9ot7QF4WhvGOFTBguqPaE2R8Kk
-        WahTvNwqgDaE4FKaabNweEGestSeFFhqAmA3aqA=
-X-Google-Smtp-Source: APXvYqwhI6A4AGx+YbJO1T+XUz24WZMm5wmOj6YH1tsONEqhJesi8+5zwcvdIlMbW4BzLhtU2nMdNzxrKYrfA4HekDk=
-X-Received: by 2002:a1f:ac1:: with SMTP id 184mr11722686vkk.0.1563253227758;
- Mon, 15 Jul 2019 22:00:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190716143121.3027ef58@canb.auug.org.au>
-In-Reply-To: <20190716143121.3027ef58@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 16 Jul 2019 13:59:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASwwOo13p+GgVZ7txiNH4fpb7himmsDHHoQnfnraPZxHw@mail.gmail.com>
-Message-ID: <CAK7LNASwwOo13p+GgVZ7txiNH4fpb7himmsDHHoQnfnraPZxHw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the kbuild tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Jul 2019 01:03:32 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s1so2490930pgr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 22:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=XuPh1ec5nyWI9lzxp+dj0MV4o3EuhJcXc845yk8LJjk=;
+        b=fQADIp2YgdYHdH1vX7+wb+Xf44XKPz90A4MQaawD9H4et04YyTumC1Vl+ZA5hbQSJz
+         GWhkkNiFU5CD4DeVwbcshRHJ35gDgWgT1I13VRIuvRyRmnS31qL+OnyYS/FGN9YNsCro
+         vDld9SXrbOgd9AxZaqULs6MMDYonX6w3aD4GsgE7Aw9laYfMCvIoHq/u9uEdghNPiDbS
+         hDHY/IVeemd9h3/7ermIDO/1DTGlCIL0PQyWsQd3epqzzK/d7tS0fXdghZcdw6NErEFx
+         kyzYlFF7CqBCFfVtwyKzRFdDml26ZhEUDgwGfNgH9cm0VZVb5Yr8p4t4wVezkcIAgzUN
+         T3rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XuPh1ec5nyWI9lzxp+dj0MV4o3EuhJcXc845yk8LJjk=;
+        b=FboKnasoE5M9t47En0elKqlg7lOn2wpl/hgrwX0DCU5Nsv5HZVSxAbmsqHdu7OMKi5
+         TlNn+cLaPFBMvzxeekKMtMD1NPUm1Lk4BiORsvGI6cmotTdlx/Eix8A8EqE0eey9Q+2N
+         b2YWWU5B6hUwzd3prfWRKq04Cbh8KVH3xOLlJsHu2yu/kus4WjfQYUQ6Ee025W6R7UVw
+         gZ86kEXWRyAx0wiBJrleZD9mYtJar7QUFnEMzbh7f3dO9RSXQAe9obYOTckf3YauIryj
+         3Gp1R7HJSGzzfNRaFyukxf2w2CtmiqTbrs/cMripAjMCj/B+96i3uTMdfc/wJ+lZb8Xr
+         mFtg==
+X-Gm-Message-State: APjAAAXTOBNQE+vazx28KmJMBp9KYjJ6bMUER73+27VC7SM4iJLgBmTg
+        ZnU99LV/wX7Au5lMA1233tuMJw==
+X-Google-Smtp-Source: APXvYqzI8VHfkqwCCD5Y4gUoyXvCjlVeGNhjcHrJUOtCmXjX/eamvM/OJL/hY9jIB0VNLLNw1gSdCQ==
+X-Received: by 2002:a17:90a:2190:: with SMTP id q16mr32606625pjc.23.1563253411592;
+        Mon, 15 Jul 2019 22:03:31 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j20sm18434336pfr.113.2019.07.15.22.03.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jul 2019 22:03:30 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Chris Lew <clew@codeaurora.org>
+Subject: [PATCH] remoteproc: qcom: Move glink_ssr notification after stop
+Date:   Mon, 15 Jul 2019 22:03:27 -0700
+Message-Id: <20190716050327.8866-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+glink_ssr is used to signal a remote processor "A" about the stopping of
+another remote processor "B", so that in the event that remote processor
+B is ever booted again the fifos of the glink channel between A and B is
+in a known state.
 
-On Tue, Jul 16, 2019 at 1:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the kbuild tree, today's linux-next build (x86_64
-> allnoconfig) failed like this:
->
-> make[1]: *** No rule to make target 'modules.order', needed by 'autoksyms_recursive'.  Stop.
->
-> Starting with commit
->
->   656c0ac3cb4b ("kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod")
->
-> i.e. after reverting just:
->
-> 25a55e249bc0 Revert "kbuild: create *.mod with full directory path and remove MODVERDIR"
-> 15657d9eceb6 Revert "kbuild: remove the first line of *.mod files"
-> 8c21f4122839 Revert "kbuild: remove 'prepare1' target"
-> 35bc41d44d2d Revert "kbuild: split out *.mod out of {single,multi}-used-m rules"
->
-> I get
->
-> cat: modules.order: No such file or directory
->
-> near the end of the allnoconfig build (but it does not fail).
->
-> and when I remove 25a55e249bc0 i.e. stop reverting
->
->   0539f970a842 ("kbuild: create *.mod with full directory path and remove MODVERDIR")
->
-> the build fails.
->
-> So, for today I have reverted these 4 commits:
->
->   56dce8121e97 ("kbuild: split out *.mod out of {single,multi}-used-m rules")
->   fbe0b5eb7890 ("kbuild: remove 'prepare1' target")
->   008fa222d268 ("kbuild: remove the first line of *.mod files")
->   0539f970a842 ("kbuild: create *.mod with full directory path and remove MODVERDIR")
->
+But if remote processor A receives this notification before B is
+actually stopped the newly reset fifo indices will be interpreted as
+there being "data" on the channel and either side of the channel will
+enter a fatal error handler.
 
+Move the glink_ssr notification to the "unprepare" state of the
+rproc_subdev to avoid this issue.
 
-Ugh, sorry for the breakage.
+This has the side effect of us not notifying the dying remote processor
+itself about its fate, which has been seen to block in certain resource
+constraint scenarios.
 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/remoteproc/qcom_common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For the build error, I will fix it as follows for tomorrow's linux-next:
-
-diff --git a/Makefile b/Makefile
-index bfb08cc647f8..5f3daca90862 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1028,8 +1028,8 @@ vmlinux-deps := $(KBUILD_LDS)
-$(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)
-
- # Recurse until adjust_autoksyms.sh is satisfied
- PHONY += autoksyms_recursive
--autoksyms_recursive: $(vmlinux-deps) modules.order
- ifdef CONFIG_TRIM_UNUSED_KSYMS
-+autoksyms_recursive: $(vmlinux-deps) modules.order
-        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/adjust_autoksyms.sh \
-          "$(MAKE) -f $(srctree)/Makefile vmlinux"
- endif
-
-
-
-For the warning, I will fix it as follows for tomorrow's linux-next:
-
-diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-index 3e229d4f4d72..6b19c1a4eae5 100644
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-@@ -64,7 +64,9 @@ modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
- modorder := $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)modules.order
-
- # Step 1), find all modules listed in modules.order
-+ifdef CONFIG_MODULES
- modules := $(sort $(shell cat $(modorder)))
-+endif
-
- # Stop after building .o files if NOFINAL is set. Makes compile tests quicker
- _modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
-
-
-Thanks!
-
+diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+index 6a448429f223..60650bcc8c67 100644
+--- a/drivers/remoteproc/qcom_common.c
++++ b/drivers/remoteproc/qcom_common.c
+@@ -200,7 +200,7 @@ void qcom_unregister_ssr_notifier(struct notifier_block *nb)
+ }
+ EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
+ 
+-static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
++static void ssr_notify_unprepare(struct rproc_subdev *subdev)
+ {
+ 	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+ 
+@@ -220,7 +220,7 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
+ 			 const char *ssr_name)
+ {
+ 	ssr->name = ssr_name;
+-	ssr->subdev.stop = ssr_notify_stop;
++	ssr->subdev.unprepare = ssr_notify_unprepare;
+ 
+ 	rproc_add_subdev(rproc, &ssr->subdev);
+ }
 -- 
-Best Regards
-Masahiro Yamada
+2.18.0
+
