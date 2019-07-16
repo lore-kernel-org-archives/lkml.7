@@ -2,156 +2,102 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5CCC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D6C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84EF20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6814220693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N48FQRXz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rTafQ1i3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388481AbfGPS6p (ORCPT
+        id S2388443AbfGPS7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:58:45 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34280 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728672AbfGPS6p (ORCPT
+        Tue, 16 Jul 2019 14:59:39 -0400
+Received: from mail-pl1-f177.google.com ([209.85.214.177]:46851 "EHLO
+        mail-pl1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbfGPS7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:58:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l12so16464336oil.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:58:44 -0700 (PDT)
+        Tue, 16 Jul 2019 14:59:39 -0400
+Received: by mail-pl1-f177.google.com with SMTP id c2so10556070plz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bKqvJ4KVvMjZevsjiH9ZbBIG3O/bWHc4fStP7VeXPqo=;
-        b=N48FQRXzdJ0h2mmJ3Zu+1ca6vXioLCPWbJNDsqs2sjjBeE0x70GmtJG0N3iiBUAxaw
-         YDYmjybPLcsokdIDwwCx+rSIvAPeEIMkomRZbABlmW7+EEWMppv1Vh/BMwICt+r96JmV
-         3Yi8yhGJK0xq3FnjXl5FIyMXtUlV+XCXarAbDCe1DBsSuHzr4STvdk1cpPVAr+TU2FeN
-         vxR7KOxDGizVbKa+nY57AR1SvEJVYKZlxFRs8SPX+oxxY98PdcaoMsjbkaSSLMc1oGzT
-         GkFuX/d7KXofUK630+e/vQ0OBjdCBs7xhGG+ss1ZJVlkJip5rnLoUr8izDC8SacIWn2l
-         mgig==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=hBJsfG+kxvEykqFUPJPZgqlmTa9miwWtUSC2L+vLfP0=;
+        b=rTafQ1i3JELdrOWJ5WSPdSQQwWR9tojAgsl4geqBK2ZdDVwUPVO5YBRRdmHlAMJj8h
+         T3cIKg3ivUvNYeW+SQt5fcjPlhM6xsK84xL1NqIhkBoSy2h6a2RNvC4KTsY5ruB+TJPh
+         a6fSWDYUwWmjaJI+265DFaBcq14FLWh3XyX7CzhJ8qsiTs4K2qNpwP9B4/CX+HDSNua2
+         t+cuf4OmTC6gFXaAnM/QAwdfKPK8ire8G6YjF3jHdzA9TUSIrU3A/AcXiM9voIVS78Hn
+         t81Odf6StdnitZCOEhpJsq24DvZVwpJ99em5+JTs748nSoL1O4trtGWXzdZHhmi8nmkl
+         NE2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bKqvJ4KVvMjZevsjiH9ZbBIG3O/bWHc4fStP7VeXPqo=;
-        b=C8UAiR6TEC/oCOn/tLp6YwfD4lDjvK5+p7MyL6nXvAw/AzoSqsxKwSPQVo0OWIEGSL
-         vYI7lIGOPM7D1CTJyA304aooYTLH4AHOuc9E0JGS6UcuiU+8QEa+N3shtxr1tT8I/b9v
-         kidklA13a8jKk59P7KHs2cRnH+4tNoc9hbAHO+uEh+RH9m6pexqBRXzv+34Om87TJ+xL
-         twmxWfOf9ifmYhbGAxquUAnoSVRU1SLz4OVoseTHizXJdgBqY/lQbquGww2v+EzgJdR7
-         vlt4UW9YXZcCEy1AxWSdD8KWshzNIK6qh5Aasgg8YcptKGUEJVUSVf3IrXL8hdvAr5J8
-         FQQQ==
-X-Gm-Message-State: APjAAAW4PriPlJycnX/mcNd9wCEhbjh7nW6Sk36XMeHZw9Iv0FpQ7P4k
-        AJiYAQt2o3PUxleqHnGvngzEu5/lQWRdxdCtjB5UTg==
-X-Google-Smtp-Source: APXvYqxMQR/81HXmnAExIUv5kJyXmc10HoZQ6gjI2/nHBupxL139pCza9qYN/IuwOoitZ2NX9Ti/aFO2OkrTJ7DlOzc=
-X-Received: by 2002:aca:5106:: with SMTP id f6mr18154752oib.69.1563303523968;
- Tue, 16 Jul 2019 11:58:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=hBJsfG+kxvEykqFUPJPZgqlmTa9miwWtUSC2L+vLfP0=;
+        b=gMJYKn0ceacw8zw5uABi1fsAP68oNCv/lUT/acjSM3TPrjVd8v29AxwRyhho+zza9Y
+         OghOef3WmcWlZI/uVgI7aAM+AG8zNCIf2xVoZ71PUQsJMaazO04RJQEt9maoOrGa4u6K
+         c6ovpYdlo4SSyZYF6lzCpvICvpLXRdJhNY8lJkwWKBg6GdOKhcLymhy9mpxSAU8zEx9z
+         bbVMElyu0RdDlo+aziPOUchLSn/oG9Ij9hIdSmrQIOw1Ull5Ju7/4hLdSidLau6mzVJu
+         1F8xAIJNGiokoirfN6Jcbz1zTdNgX/XTsLC/ZR0D+mbFi4M5TICGT7As2WTbCvcbkrF+
+         z+tQ==
+X-Gm-Message-State: APjAAAV7xL1uCtCKhV45a4MpRV/g3pT2o04xPwMy7wlvi456btwRnADZ
+        30CMYkfEpv5fw2uNzejC6PPKWg==
+X-Google-Smtp-Source: APXvYqxJBz67JnnuTcUz76s83oxJjhlbQ27GD9dFu8zmDsc8MA6X4i+IL4StramzuJafjdqHNn3w2Q==
+X-Received: by 2002:a17:902:2862:: with SMTP id e89mr38000072plb.258.1563303578543;
+        Tue, 16 Jul 2019 11:59:38 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i124sm42317997pfe.61.2019.07.16.11.59.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 11:59:37 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 12:00:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [GIT PULL] rpmsg updates for v5.3
+Message-ID: <20190716190057.GA8572@tuxbook-pro>
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
- <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
-In-Reply-To: <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 16 Jul 2019 11:58:08 -0700
-Message-ID: <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
- opp-avg-KBps bindings
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Saravana,
->
-> https://patchwork.kernel.org/patch/10850815/
-> There was already a discussion ^^ on how bandwidth bindings were to be
-> named.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Yes, I'm aware of that series. That series is trying to define a BW
-mapping for an existing frequency OPP table. This patch is NOT about
-adding a mapping to an existing table. This patch is about adding the
-notion of BW OPP tables where BW is the "key" instead of "frequency".
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-So let's not mixed up these two series.
+are available in the Git repository at:
 
--Saravana
+  git://github.com/andersson/remoteproc tags/rpmsg-v5.3
 
-> On 7/3/19 6:40 AM, Saravana Kannan wrote:
-> > Interconnects often quantify their performance points in terms of
-> > bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
-> > allow specifying Bandwidth OPP tables in DT.
-> >
-> > opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
-> > tables.
-> >
-> > opp-avg-KBps is an optional property that can be used in Bandwidth OPP
-> > tables.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >   Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
-> >   1 file changed, 12 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index 76b6c79604a5..c869e87caa2a 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -83,9 +83,14 @@ properties.
-> >
-> >   Required properties:
-> >   - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
-> > -  required property for all device nodes but devices like power domains. The
-> > -  power domain nodes must have another (implementation dependent) property which
-> > -  uniquely identifies the OPP nodes.
-> > +  required property for all device nodes but for devices like power domains or
-> > +  bandwidth opp tables. The power domain nodes must have another (implementation
-> > +  dependent) property which uniquely identifies the OPP nodes. The interconnect
-> > +  opps are required to have the opp-peak-bw property.
-> > +
-> > +- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-> > +  big-endian integer. This is a required property for all devices that don't
-> > +  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
-> >
-> >   Optional properties:
-> >   - opp-microvolt: voltage in micro Volts.
-> > @@ -132,6 +137,10 @@ Optional properties:
-> >   - opp-level: A value representing the performance level of the device,
-> >     expressed as a 32-bit integer.
-> >
-> > +- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
-> > +  32-bit big-endian integer. This property is only meaningful in OPP tables
-> > +  where opp-peak-KBps is present.
-> > +
-> >   - clock-latency-ns: Specifies the maximum possible transition latency (in
-> >     nanoseconds) for switching to this OPP from any other OPP.
-> >
-> >
->
-> --
-> Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+for you to fetch changes up to 54119bc1110dab2fa389f45c73a0787b8e037e8b:
+
+  rpmsg: core: Make remove handler for rpmsg driver optional. (2019-05-21 23:54:06 -0700)
+
+----------------------------------------------------------------
+rpmsg updates for v5.3
+
+This contains a DT binding update and a change to make the remote
+function of rpmsg_devices optional.
+
+----------------------------------------------------------------
+Pi-Hsun Shih (1):
+      rpmsg: core: Make remove handler for rpmsg driver optional.
+
+Sibi Sankar (1):
+      dt-bindings: soc: qcom: Add remote-pid binding for GLINK SMEM
+
+ Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+ drivers/rpmsg/rpmsg_core.c                                | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
