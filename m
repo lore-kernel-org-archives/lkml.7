@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1674C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23A6C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE7E20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E65A217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfxbVk9z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R46pC3b7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387644AbfGPN0t (ORCPT
+        id S2387686AbfGPN05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:26:49 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33274 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfGPN0t (ORCPT
+        Tue, 16 Jul 2019 09:26:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40130 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfGPN05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:26:49 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f20so219963pgj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 06:26:48 -0700 (PDT)
+        Tue, 16 Jul 2019 09:26:57 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a93so10112394pla.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 06:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vzHJ6zZC4j+G0RNaMkru3klGJtcfV37NNKvE8Og+hcc=;
-        b=SfxbVk9zgVz2Ps0un9Tse4hUUdRf4Prepk2LjLe8DpwR4BEOKi0VTBn5xTg778ccqU
-         rTdChq6dKK0X9Rw/Y98Md2IuIVKqlLE0eM/jnTER1i49F+02juTX2RTXM87i5Yu5lnER
-         gfVozyJJ0n+ugVPE2FNlkjNrangn//4DjlnFNPraQt6QSB4PgzoFKj3ahJN+Al4Yos/3
-         fMsiZ96gCoc2hJ9TJ48WLN2ca5STZiijBBKl915p0l5tQvnYXfP+8CeK6M+sFH3Lr34B
-         vXPkppZyoVe2jZMNa0MNHbDJEkFFP8vVdUNd5PB1znbrTihyFqmk6J9cY0wyu/sTaoKi
-         AQ0w==
+        bh=2FLMt1biejUADnaZS+D7n9SrnPK40F0jXQ5om7TEM0E=;
+        b=R46pC3b7xctfYiDbpcjsza4HTmNx/760I2ZaF5EDledhg5vHet72yrOirw34e4/Hwj
+         a9XoTMetn8gr04TAIhE2LlWxSqPKgOVdS86OM+fcojB7GI2ad77E+i1jpeqKV1+2cEXe
+         2cnBZvd8RrCgjlzvvKJMItIGEgUzHUMwqJ08iwCMu+urNd/gsaxKdt4ji6oD/yqJ9OIH
+         iA7wIo+ojN1xpialB5aVNj6g/NfG5lUi4MGaFRthczcja3mE2vVQnE/lPC/wRJoliTKR
+         cdRyNH5A1gPD9fXBd/AjwTF+98c6JPOq0uOF0Ht1KinYxfj2YU02TOo6Oqg1Dy5trgYY
+         UGYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vzHJ6zZC4j+G0RNaMkru3klGJtcfV37NNKvE8Og+hcc=;
-        b=Mc1FM5Vnl6MrNpwz3TiiPb5j9gC/MUNLuF5ERB3/6XUWdRxczIhPOcNglmaRdDHaBE
-         z3riWGS10+Q28Shfp4/qGtYEIPnIRe0MvtkT/YrSd3ZTPvgjGZqB0N7/lyvM610Yp5PB
-         VI2XQiGlvad72E4FtWPkSdXPMfzIdnB2zXPm0ZtNNSqUxBaQloeTL9Klr4QctYjNm/VR
-         LZrJPJAe/gE0xgJtUZ1XM6mWwqP4cAeTJQrU2YgTDvjo3AfguBdYRR/8Tw/aEPrSeiZl
-         SsPqNuAKuYTqqO2reASFjbMyjY7wb1UHfuwx/E4en5ln7A0dAiIjKpulak5cF+HMslP1
-         mvzg==
-X-Gm-Message-State: APjAAAXmyHmuCCSPwcbxeu5D/0Uoy6puzmmqz5IEmgSAYOpDvTQEbNOj
-        aigJOFrDAJTpkEy2wNkiaBU=
-X-Google-Smtp-Source: APXvYqz5OuQb6D2Fp8RCUxssijj+aLGD4V7/ZrKKVKZHGaNlTSTN/MhpzdVUfmVeJIZ7W1vTufjRog==
-X-Received: by 2002:a63:9a41:: with SMTP id e1mr34297879pgo.210.1563283608045;
-        Tue, 16 Jul 2019 06:26:48 -0700 (PDT)
+        bh=2FLMt1biejUADnaZS+D7n9SrnPK40F0jXQ5om7TEM0E=;
+        b=ZhZgR/PDGEBZCAdAnhBKNYs6cmDUAtS2ZdOAn6XAMqxo7n3fxOI8RmPVEUKwU6LOGc
+         kY/8CRVO0CKXPN/oMZ8Tc8ab6xIIT+ForfSWkLBDYCbuYQuJD4/QxhMo8n3IdO8HWqM8
+         s8h2kAf8psYLdwqVFfIoTPcgv66K2O4eqVtozMFN4OR7sEDvG8cF00nBtx5LKiqUsWLe
+         ctg+JPOPO1m80CR6hoXBIHU485+MsC9+3Xgex211BSBKjxp2PqyAI6PLG+6VmBiYYNfr
+         1Pm0JZV3GpVqNE880mwHo6PTNBI7NpYl2ZrpBJHYotsMafMeVuas+S8aqjQtlXDkwBu4
+         6pGQ==
+X-Gm-Message-State: APjAAAUIP5cqZ53yGe3Ho1mKMNZcvLmGnjKSNAdGhUXR3gt/vgoITa4u
+        jaiXcFjZw0YI28P8tDmbQhw=
+X-Google-Smtp-Source: APXvYqwLdB8Cef6LQ3pqCCQ0P7hsVjjgWF54ZHRKloxBfozTuaD/IY5JZ7PR7zFLuVVRnsib5VBBgA==
+X-Received: by 2002:a17:902:7448:: with SMTP id e8mr35514887plt.85.1563283615828;
+        Tue, 16 Jul 2019 06:26:55 -0700 (PDT)
 Received: from localhost.localdomain.localdomain ([2408:823c:c11:bf0:b8c3:8577:bf2f:2])
-        by smtp.gmail.com with ESMTPSA id q1sm21472311pfg.84.2019.07.16.06.26.41
+        by smtp.gmail.com with ESMTPSA id q1sm21472311pfg.84.2019.07.16.06.26.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 06:26:47 -0700 (PDT)
+        Tue, 16 Jul 2019 06:26:55 -0700 (PDT)
 From:   Pengfei Li <lpf.vector@gmail.com>
 To:     akpm@linux-foundation.org, willy@infradead.org
 Cc:     urezki@gmail.com, rpenyaev@suse.de, peterz@infradead.org,
         guro@fb.com, rick.p.edgecombe@intel.com, rppt@linux.ibm.com,
         aryabinin@virtuozzo.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] mm/vmalloc: do not keep unpurged areas in the busy tree
-Date:   Tue, 16 Jul 2019 21:26:03 +0800
-Message-Id: <20190716132604.28289-2-lpf.vector@gmail.com>
+        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH v5 2/2] mm/vmalloc: modify struct vmap_area to reduce its size
+Date:   Tue, 16 Jul 2019 21:26:04 +0800
+Message-Id: <20190716132604.28289-3-lpf.vector@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190716132604.28289-1-lpf.vector@gmail.com>
 References: <20190716132604.28289-1-lpf.vector@gmail.com>
@@ -76,165 +76,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Objective
+---------
+The current implementation of struct vmap_area wasted space.
 
-The busy tree can be quite big, even though the area is freed
-or unmapped it still stays there until "purge" logic removes
-it.
+After applying this commit, sizeof(struct vmap_area) has been
+reduced from 11 words to 8 words.
 
-1) Optimize and reduce the size of "busy" tree by removing a
-node from it right away as soon as user triggers free paths.
-It is possible to do so, because the allocation is done using
-another augmented tree.
+Description
+-----------
+1) Pack "subtree_max_size", "vm" and "purge_list".
+This is no problem because
+    A) "subtree_max_size" is only used when vmap_area is in
+       "free" tree
+    B) "vm" is only used when vmap_area is in "busy" tree
+    C) "purge_list" is only used when vmap_area is in
+       vmap_purge_list
 
-The vmalloc test driver shows the difference, for example the
-"fix_size_alloc_test" is ~11% better comparing with default
-configuration:
+2) Eliminate "flags".
+Since only one flag VM_VM_AREA is being used, and the same
+thing can be done by judging whether "vm" is NULL, then the
+"flags" can be eliminated.
 
-sudo ./test_vmalloc.sh performance
-
-<default>
-Summary: fix_size_alloc_test loops: 1000000 avg: 993985 usec
-Summary: full_fit_alloc_test loops: 1000000 avg: 973554 usec
-Summary: long_busy_list_alloc_test loops: 1000000 avg: 12617652 usec
-<default>
-
-<this patch>
-Summary: fix_size_alloc_test loops: 1000000 avg: 882263 usec
-Summary: full_fit_alloc_test loops: 1000000 avg: 973407 usec
-Summary: long_busy_list_alloc_test loops: 1000000 avg: 12593929 usec
-<this patch>
-
-2) Since the busy tree now contains allocated areas only and does
-not interfere with lazily free nodes, introduce the new function
-show_purge_info() that dumps "unpurged" areas that is propagated
-through "/proc/vmallocinfo".
-
-3) Eliminate VM_LAZY_FREE flag.
-
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+Suggested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
- mm/vmalloc.c | 52 ++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 44 insertions(+), 8 deletions(-)
+ include/linux/vmalloc.h | 20 +++++++++++++-------
+ mm/vmalloc.c            | 24 ++++++++++--------------
+ 2 files changed, 23 insertions(+), 21 deletions(-)
 
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 9b21d0047710..a1334bd18ef1 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -51,15 +51,21 @@ struct vmap_area {
+ 	unsigned long va_start;
+ 	unsigned long va_end;
+ 
+-	/*
+-	 * Largest available free size in subtree.
+-	 */
+-	unsigned long subtree_max_size;
+-	unsigned long flags;
+ 	struct rb_node rb_node;         /* address sorted rbtree */
+ 	struct list_head list;          /* address sorted list */
+-	struct llist_node purge_list;    /* "lazy purge" list */
+-	struct vm_struct *vm;
++
++	/*
++	 * The following three variables can be packed, because
++	 * a vmap_area object is always one of the three states:
++	 *    1) in "free" tree (root is vmap_area_root)
++	 *    2) in "busy" tree (root is free_vmap_area_root)
++	 *    3) in purge list  (head is vmap_purge_list)
++	 */
++	union {
++		unsigned long subtree_max_size; /* in "free" tree */
++		struct vm_struct *vm;           /* in "busy" tree */
++		struct llist_node purge_list;   /* in purge list */
++	};
+ };
+ 
+ /*
 diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 4fa8d84599b0..71d8040a8a0b 100644
+index 71d8040a8a0b..39bf9cf4175a 100644
 --- a/mm/vmalloc.c
 +++ b/mm/vmalloc.c
 @@ -329,7 +329,6 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
  #define DEBUG_AUGMENT_PROPAGATE_CHECK 0
  #define DEBUG_AUGMENT_LOWEST_MATCH_CHECK 0
  
--#define VM_LAZY_FREE	0x02
- #define VM_VM_AREA	0x04
+-#define VM_VM_AREA	0x04
  
  static DEFINE_SPINLOCK(vmap_area_lock);
-@@ -1276,7 +1275,14 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
- 	llist_for_each_entry_safe(va, n_va, valist, purge_list) {
- 		unsigned long nr = (va->va_end - va->va_start) >> PAGE_SHIFT;
+ /* Export for kexec only */
+@@ -1115,7 +1114,7 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
  
--		__free_vmap_area(va);
-+		/*
-+		 * Finally insert or merge lazily-freed area. It is
-+		 * detached and there is no need to "unlink" it from
-+		 * anything.
-+		 */
-+		merge_or_add_vmap_area(va,
-+			&free_vmap_area_root, &free_vmap_area_list);
-+
- 		atomic_long_sub(nr, &vmap_lazy_nr);
+ 	va->va_start = addr;
+ 	va->va_end = addr + size;
+-	va->flags = 0;
++	va->vm = NULL;
+ 	insert_vmap_area(va, &vmap_area_root, &vmap_area_list);
  
- 		if (atomic_long_read(&vmap_lazy_nr) < resched_threshold)
-@@ -1318,6 +1324,10 @@ static void free_vmap_area_noflush(struct vmap_area *va)
- {
- 	unsigned long nr_lazy;
+ 	spin_unlock(&vmap_area_lock);
+@@ -1922,7 +1921,6 @@ void __init vmalloc_init(void)
+ 		if (WARN_ON_ONCE(!va))
+ 			continue;
  
-+	spin_lock(&vmap_area_lock);
-+	unlink_va(va, &vmap_area_root);
-+	spin_unlock(&vmap_area_lock);
-+
- 	nr_lazy = atomic_long_add_return((va->va_end - va->va_start) >>
- 				PAGE_SHIFT, &vmap_lazy_nr);
+-		va->flags = VM_VM_AREA;
+ 		va->va_start = (unsigned long)tmp->addr;
+ 		va->va_end = va->va_start + tmp->size;
+ 		va->vm = tmp;
+@@ -2020,7 +2018,6 @@ static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+ 	vm->size = va->va_end - va->va_start;
+ 	vm->caller = caller;
+ 	va->vm = vm;
+-	va->flags |= VM_VM_AREA;
+ 	spin_unlock(&vmap_area_lock);
+ }
  
-@@ -2137,14 +2147,13 @@ struct vm_struct *remove_vm_area(const void *addr)
+@@ -2125,10 +2122,10 @@ struct vm_struct *find_vm_area(const void *addr)
+ 	struct vmap_area *va;
  
- 	might_sleep();
+ 	va = find_vmap_area((unsigned long)addr);
+-	if (va && va->flags & VM_VM_AREA)
+-		return va->vm;
++	if (!va)
++		return NULL;
  
--	va = find_vmap_area((unsigned long)addr);
-+	spin_lock(&vmap_area_lock);
-+	va = __find_vmap_area((unsigned long)addr);
- 	if (va && va->flags & VM_VM_AREA) {
+-	return NULL;
++	return va->vm;
+ }
+ 
+ /**
+@@ -2149,11 +2146,10 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 
+ 	spin_lock(&vmap_area_lock);
+ 	va = __find_vmap_area((unsigned long)addr);
+-	if (va && va->flags & VM_VM_AREA) {
++	if (va && va->vm) {
  		struct vm_struct *vm = va->vm;
  
--		spin_lock(&vmap_area_lock);
  		va->vm = NULL;
- 		va->flags &= ~VM_VM_AREA;
--		va->flags |= VM_LAZY_FREE;
+-		va->flags &= ~VM_VM_AREA;
  		spin_unlock(&vmap_area_lock);
  
  		kasan_free_shadow(vm);
-@@ -2152,6 +2161,8 @@ struct vm_struct *remove_vm_area(const void *addr)
+@@ -2856,7 +2852,7 @@ long vread(char *buf, char *addr, unsigned long count)
+ 		if (!count)
+ 			break;
  
- 		return vm;
- 	}
-+
-+	spin_unlock(&vmap_area_lock);
- 	return NULL;
- }
+-		if (!(va->flags & VM_VM_AREA))
++		if (!va->vm)
+ 			continue;
  
-@@ -3431,6 +3442,22 @@ static void show_numa_info(struct seq_file *m, struct vm_struct *v)
- 	}
- }
+ 		vm = va->vm;
+@@ -2936,7 +2932,7 @@ long vwrite(char *buf, char *addr, unsigned long count)
+ 		if (!count)
+ 			break;
  
-+static void show_purge_info(struct seq_file *m)
-+{
-+	struct llist_node *head;
-+	struct vmap_area *va;
-+
-+	head = READ_ONCE(vmap_purge_list.first);
-+	if (head == NULL)
-+		return;
-+
-+	llist_for_each_entry(va, head, purge_list) {
-+		seq_printf(m, "0x%pK-0x%pK %7ld unpurged vm_area\n",
-+			(void *)va->va_start, (void *)va->va_end,
-+			va->va_end - va->va_start);
-+	}
-+}
-+
- static int s_show(struct seq_file *m, void *p)
- {
- 	struct vmap_area *va;
-@@ -3443,10 +3470,9 @@ static int s_show(struct seq_file *m, void *p)
- 	 * behalf of vmap area is being tear down or vm_map_ram allocation.
+-		if (!(va->flags & VM_VM_AREA))
++		if (!va->vm)
+ 			continue;
+ 
+ 		vm = va->vm;
+@@ -3466,10 +3462,10 @@ static int s_show(struct seq_file *m, void *p)
+ 	va = list_entry(p, struct vmap_area, list);
+ 
+ 	/*
+-	 * s_show can encounter race with remove_vm_area, !VM_VM_AREA on
+-	 * behalf of vmap area is being tear down or vm_map_ram allocation.
++	 * If !va->vm then this vmap_area object is allocated
++	 * by vm_map_ram.
  	 */
- 	if (!(va->flags & VM_VM_AREA)) {
--		seq_printf(m, "0x%pK-0x%pK %7ld %s\n",
-+		seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
+-	if (!(va->flags & VM_VM_AREA)) {
++	if (!va->vm) {
+ 		seq_printf(m, "0x%pK-0x%pK %7ld vm_map_ram\n",
  			(void *)va->va_start, (void *)va->va_end,
--			va->va_end - va->va_start,
--			va->flags & VM_LAZY_FREE ? "unpurged vm_area" : "vm_map_ram");
-+			va->va_end - va->va_start);
- 
- 		return 0;
- 	}
-@@ -3482,6 +3508,16 @@ static int s_show(struct seq_file *m, void *p)
- 
- 	show_numa_info(m, v);
- 	seq_putc(m, '\n');
-+
-+	/*
-+	 * As a final step, dump "unpurged" areas. Note,
-+	 * that entire "/proc/vmallocinfo" output will not
-+	 * be address sorted, because the purge list is not
-+	 * sorted.
-+	 */
-+	if (list_is_last(&va->list, &vmap_area_list))
-+		show_purge_info(m);
-+
- 	return 0;
- }
- 
+ 			va->va_end - va->va_start);
 -- 
 2.21.0
 
