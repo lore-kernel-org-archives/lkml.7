@@ -2,659 +2,1096 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B532CC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C367C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C3521721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Xu9N0A/4"
+	by mail.kernel.org (Postfix) with ESMTP id 07085206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563274892;
+	bh=1DAhrUe/Akt4yHwuWxmtYzHYYpnntRto0GjVqJ6eFeA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=JE0tq/x1GeesGiRbwbW7WVUD4ZqwKe0nFS71PKUhJvah8/mBLRDINyPZICEVxyUu6
+	 DWmGOMP2q7le+pyZVwD9sSBtOAubGr4ObBBOfYxo3fI1JxNiw43/RnNloFfj+Tdv1t
+	 09fM5TrvGReYtLOK7VdPcKLxc7GO/Cbx8ppdQhp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387530AbfGPK7m (ORCPT
+        id S2387531AbfGPLBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:59:42 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56091 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733037AbfGPK7m (ORCPT
+        Tue, 16 Jul 2019 07:01:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33818 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733037AbfGPLBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:59:42 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190716105940euoutp010f337343d1b1ecd50deb255c68618f7b~x3iFZZx-C3222632226euoutp01g
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 10:59:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190716105940euoutp010f337343d1b1ecd50deb255c68618f7b~x3iFZZx-C3222632226euoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563274780;
-        bh=j1vm47pO077UaRo/L7zcyCPJ4i3+xQKRoeSR6qhWXlU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Xu9N0A/4znjjTDdFIc/T06KDWAp1h2xsUhi2UTCZpnrmSenqQBtzJzVvhVbTz4wwa
-         IoSB3DCFUx6lciYndd14PhlNJnSSqy6sdR+s4+4Q57IQ8YYsTb/9mr4OjrPWf8Qis3
-         UP/QPcFmUttCXlu3DtYXLlv2Vf1Pe1uTFkQyFclE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190716105939eucas1p1d819c04050425de3cf0beb7982027125~x3iErz_tG0327403274eucas1p1O;
-        Tue, 16 Jul 2019 10:59:39 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 71.FE.04325.B1EAD2D5; Tue, 16
-        Jul 2019 11:59:39 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716105938eucas1p2fef8a70ad880cf48c273768fc5b707a3~x3iD3g2p-1483114831eucas1p2L;
-        Tue, 16 Jul 2019 10:59:38 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190716105938eusmtrp133052bc980df447f01e4903fea59706e~x3iDpQZya2272822728eusmtrp1j;
-        Tue, 16 Jul 2019 10:59:38 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-44-5d2dae1ba530
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 00.80.04140.A1EAD2D5; Tue, 16
-        Jul 2019 11:59:38 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716105937eusmtip1b75fefdf26a3e94c7683877ca76203c1~x3iC6lnZj2032820328eusmtip1d;
-        Tue, 16 Jul 2019 10:59:37 +0000 (GMT)
-Subject: Re: [PATCH v2 2/4] devfreq: exynos-bus: convert to use
- dev_pm_opp_set_rate()
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <3ba736fa-832c-a72c-e60b-f4328e54c524@samsung.com>
-Date:   Tue, 16 Jul 2019 12:59:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 16 Jul 2019 07:01:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QK5MXCj6vyX+zVfDdC+Ad2MD8OAJPBHQSqUNp7OP34s=; b=lpd9A/kahrj80XyY+gdl0Fxfl
+        r39oK0FkesiJoYVyg3YyjQ/3aZ1wSRKzgN7HIlnptr7T97DP/nHRd1Lk2r7Wq0aJXCadZ4Nzu9MQD
+        9AkBs1ZaFxgTXEQQ6Cfp2eHkgjtKSk8ivtP96A7TSiqI5Bqu7qX2X3OFhwlq831sSmvBPNjsH98zx
+        +xlRLdVi+qILUue6/91S2X0i1ygmdA5eeNzjtjUXp5vIAKnuiDrFEJ9HeWWx9oIxWN/AXvHbvXbVG
+        kVBb3y+HUnyj4mjXs/WECk88tHgL1fEN6CgvhahshbeuVwpdkxBR65dsRu/y9cStB63/McEEPGZc4
+        +zL5EwDxg==;
+Received: from [189.27.46.152] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnLD4-0004NY-Vw; Tue, 16 Jul 2019 11:01:28 +0000
+Date:   Tue, 16 Jul 2019 08:01:22 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Documentation Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v5.3-rc1] docs: addition of a large set of files to
+ the documentation body
+Message-ID: <20190716080122.28a17014@coco.lan>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <5612547b-47c8-0dc4-cb3c-e972782d5a26@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0yNcRjH/d578ebtFD1yac5iRMU0fi4Vm9mZzWVmk0t06F216sh5y/UP
-        0qpTdMGGYqWF6ginopIuK8fpRqdoilAucy1jZRQOnfPW9N/neZ7vd8/32R6OVHykXbkwTbSo
-        1agjlIw9VWoabPGcesMzcMHTC1Nwx8B7GmcbW2icWv0X4bQ3n0lsNhtY/PB4L4uL3zyh8eOK
-        iwzuTzEifN5cTeDrxhcsvtLRRuCu2HwG9/58SOD4KiOLLU+KKFzSY2JWOqoKswqRqlifxKhK
-        Lh9V1X6pJFSpt/RIVd9ZRqj6i2dsZLfZrwgWI8L2i1pvvyD70NdXe8ioyhR00JJURhxDLeHJ
-        yI4DwQfaC3KYZGTPKYR8BOmJWYRcDCB41XSWlYt+BCeakolRS2PqTVIe5CHIGTSP+PsQ1MUl
-        2lROwhYY6q5AVnYW5kDGn3ZkFZFCKwWma120dcAIy+BUot4m4gU/KKg02ZgSZkGRrsnGk4QA
-        6DYZaFnjCI0Zbykr2wn+cPd5LWtlUnCBZ2+zCZndIO72BVs8EJI4+JnYgOTcqyHfXMPI7ASf
-        6m+xMk+D5jMnKdlwA8Ef3YcRdxmCvDOWEcdyuFffNhyDG14xF25WeMvtVfA6foiwtkFwgM4+
-        RzmEA5wuPUfKbR50CQpZPRsMVw3M6NrkOwVkOlJmjjktc8w5mWPOyfy/9xKi9MhFjJEiQ0Rp
-        kUY84CWpI6UYTYjXnr2RxWj4AZst9d/LUfXv3XVI4JByAt9QOT9QQav3S4ci6xBwpNKZ9/0+
-        L1DBB6sPHRa1e3dpYyJEqQ5N5SilC39kXM92hRCijhbDRTFK1I5OCc7O9RjKuWPxH6RxgkP6
-        0lVGxcua8m+P9HYTF/elL/qVkZ3r6rOtfb1X+0DE5KAa51xWc3qO39fwx1rP3pNdG3Lvu61L
-        NYxX7qvyqtCx7wJ0Lr7NvK5tedTMtJjNkx+ccE9Tza3Kkr768K2TZvescaxestM98MfWWI+s
-        RxPXTl+/accSPpg+rKSkUPVCD1Irqf8BbQE+z3wDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xu7pS63RjDSYuVLC4/uU5q8X8I+dY
-        Lfr2/We06H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
-        uN24gs3izY+zTBate4+wW/y7tpHFYvODY2wOgh5r5q1h9Ni0qpPNY/OSeo+D7/YwefRtWcXo
-        cfzGdiaPz5vkAtij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMy
-        y1KL9O0S9DIeLXvAXLCnl7HiX+d2pgbGc9ldjJwcEgImEif71jN3MXJxCAksZZTYu62NvYuR
-        AyghI3F8fRlEjbDEn2tdbBA1rxklFq3+yQ6SEBYIl/h1fxcjiC0ioCEx8+8VMJtZ4BKLRPP0
-        UoiGD0wScxvegyXYBKwkJravArN5BewkVu45BmazCKhKbOw4BWaLCkRInHm/ggWiRlDi5Mwn
-        YDangL3E7jsH2SEWqEv8mXeJGcIWl7j1ZD4ThC0v0bx1NvMERqFZSNpnIWmZhaRlFpKWBYws
-        qxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQKjfduxn1t2MHa9Cz7EKMDBqMTDe2KPTqwQa2JZ
-        cWXuIUYJDmYlEV7br9qxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTER5JfGGpobmFpaG
-        5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYGSonzAo6FZcjPf14tIb3F/v+0s9C
-        01efE9HWWHzR6Hrm5uzrZw8/6y09Kn7EMXIV17KamQWXl+t51b5fknv4vHh44cbZEd9+b3ga
-        94GvWp+9wO9viJDhwjPLFovKMU+aLHiS1+vlgriFz4N0/KK7LYWZdn24/aBz3/LpGi16706x
-        P5nF58wjpsRSnJFoqMVcVJwIAPavALkMAwAA
-X-CMS-MailID: 20190716105938eucas1p2fef8a70ad880cf48c273768fc5b707a3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a
-References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
-        <CGME20190715120431eucas1p215eae81d0ca772d7e2a22a803669068a@eucas1p2.samsung.com>
-        <20190715120416.3561-3-k.konieczny@partner.samsung.com>
-        <7f7cf551-005a-c647-d571-77eb5426478a@samsung.com>
-        <3d1687b7-4825-ad82-2706-a712c30e530b@samsung.com>
-        <5612547b-47c8-0dc4-cb3c-e972782d5a26@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-On 7/16/19 12:33 PM, Chanwoo Choi wrote:
-> Hi Bartlomiej,
-> 
-> On 19. 7. 16. 오후 7:13, Bartlomiej Zolnierkiewicz wrote:
->>
->> Hi Chanwoo,
->>
->> On 7/16/19 5:56 AM, Chanwoo Choi wrote:
->>> Hi Kamil,
->>>
->>> Looks good to me. But, this patch has some issue.
->>> I added the detailed reviews.
->>>
->>> I recommend that you make the separate patches as following
->>> in order to clarify the role of which apply the dev_pm_opp_* function.
->>>
->>> First patch,
->>> Need to consolidate the following two function into one function.
->>> because the original exynos-bus.c has the problem that the regulator
->>> of parent devfreq device have to be enabled before enabling the clock.
->>> This issue did not happen because bootloader enables the bus-related
->>> regulators before kernel booting.
->>> - exynos_bus_parse_of()
->>> - exynos_bus_parent_parse_of()
->>>> Second patch,
->>> Apply dev_pm_opp_set_regulators() and dev_pm_opp_set_rate()
->>>
->>>
->>> On 19. 7. 15. 오후 9:04, Kamil Konieczny wrote:
->>>> Reuse opp core code for setting bus clock and voltage. As a side
->>>> effect this allow useage of coupled regulators feature (required
->>>> for boards using Exynos5422/5800 SoCs) because dev_pm_opp_set_rate()
->>>> uses regulator_set_voltage_triplet() for setting regulator voltage
->>>> while the old code used regulator_set_voltage_tol() with fixed
->>>> tolerance. This patch also removes no longer needed parsing of DT
->>>> property "exynos,voltage-tolerance" (no Exynos devfreq DT node uses
->>>> it).
->>>>
->>>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->>>> ---
->>>>  drivers/devfreq/exynos-bus.c | 172 ++++++++++++++---------------------
->>>>  1 file changed, 66 insertions(+), 106 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->>>> index 486cc5b422f1..7fc4f76bd848 100644
->>>> --- a/drivers/devfreq/exynos-bus.c
->>>> +++ b/drivers/devfreq/exynos-bus.c
->>>> @@ -25,7 +25,6 @@
->>>>  #include <linux/slab.h>
->>>>  
->>>>  #define DEFAULT_SATURATION_RATIO	40
->>>> -#define DEFAULT_VOLTAGE_TOLERANCE	2
->>>>  
->>>>  struct exynos_bus {
->>>>  	struct device *dev;
->>>> @@ -37,9 +36,9 @@ struct exynos_bus {
->>>>  
->>>>  	unsigned long curr_freq;
->>>>  
->>>> -	struct regulator *regulator;
->>>> +	struct opp_table *opp_table;
->>>> +
->>>>  	struct clk *clk;
->>>> -	unsigned int voltage_tolerance;
->>>>  	unsigned int ratio;
->>>>  };
->>>>  
->>>> @@ -99,56 +98,25 @@ static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
->>>>  {
->>>>  	struct exynos_bus *bus = dev_get_drvdata(dev);
->>>>  	struct dev_pm_opp *new_opp;
->>>> -	unsigned long old_freq, new_freq, new_volt, tol;
->>>>  	int ret = 0;
->>>> -
->>>> -	/* Get new opp-bus instance according to new bus clock */
->>>> +	/*
->>>> +	 * New frequency for bus may not be exactly matched to opp, adjust
->>>> +	 * *freq to correct value.
->>>> +	 */
->>>
->>> You better to change this comment with following styles
->>> to keep the consistency:
->>>
->>> 	/* Get correct frequency for bus ... */
->>>
->>>>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
->>>>  	if (IS_ERR(new_opp)) {
->>>>  		dev_err(dev, "failed to get recommended opp instance\n");
->>>>  		return PTR_ERR(new_opp);
->>>>  	}
->>>>  
->>>> -	new_freq = dev_pm_opp_get_freq(new_opp);
->>>> -	new_volt = dev_pm_opp_get_voltage(new_opp);
->>>>  	dev_pm_opp_put(new_opp);
->>>>  
->>>> -	old_freq = bus->curr_freq;
->>>> -
->>>> -	if (old_freq == new_freq)
->>>> -		return 0;
->>>> -	tol = new_volt * bus->voltage_tolerance / 100;
->>>> -
->>>>  	/* Change voltage and frequency according to new OPP level */
->>>>  	mutex_lock(&bus->lock);
->>>> +	ret = dev_pm_opp_set_rate(dev, *freq);
->>>> +	if (!ret)
->>>> +		bus->curr_freq = *freq;
->>>
->>> Have to print the error log if ret has minus error value.
->>
->> dev_pm_opp_set_rate() should print the error message on all
->> errors so wouldn't printing the error log also here be superfluous?
->>
->> [ Please also note that the other user of dev_pm_opp_set_rate()
->>   (cpufreq-dt cpufreq driver) doesn't do this. ]
-> 
-> OK. Thanks for the explanation. 
-> 
->>
->>> Modify it as following:
->>>
->>> 	if (ret < 0) {
->>> 		dev_err(dev, "failed to set bus rate\n");
->>> 		goto err:
->>> 	}
->>> 	bus->curr_freq = *freq;
->>>
->>> err:
->>> 	mutex_unlock(&bus->lock);
->>> 	
->>> 	return ret;
->>>
->>>>  
->>>> -	if (old_freq < new_freq) {
->>>> -		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
->>>> -		if (ret < 0) {
->>>> -			dev_err(bus->dev, "failed to set voltage\n");
->>>> -			goto out;
->>>> -		}
->>>> -	}
->>>> -
->>>> -	ret = clk_set_rate(bus->clk, new_freq);
->>>> -	if (ret < 0) {
->>>> -		dev_err(dev, "failed to change clock of bus\n");
->>>> -		clk_set_rate(bus->clk, old_freq);
->>>> -		goto out;
->>>> -	}
->>>> -
->>>> -	if (old_freq > new_freq) {
->>>> -		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
->>>> -		if (ret < 0) {
->>>> -			dev_err(bus->dev, "failed to set voltage\n");
->>>> -			goto out;
->>>> -		}
->>>> -	}
->>>> -	bus->curr_freq = new_freq;
->>>> -
->>>> -	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
->>>> -			old_freq, new_freq, clk_get_rate(bus->clk));
->>>> -out:
->>>>  	mutex_unlock(&bus->lock);
->>>>  
->>>>  	return ret;
->>>> @@ -194,10 +162,11 @@ static void exynos_bus_exit(struct device *dev)
->>>>  	if (ret < 0)
->>>>  		dev_warn(dev, "failed to disable the devfreq-event devices\n");
->>>>  
->>>> -	if (bus->regulator)
->>>> -		regulator_disable(bus->regulator);
->>>> +	if (bus->opp_table)
->>>> +		dev_pm_opp_put_regulators(bus->opp_table);
->>>
->>> Have to disable regulator after disabling the clock
->>> to prevent the h/w fault.
->>>
->>> I think that you should call them with following sequence:
->>>
->>> 	clk_disable_unprepare(bus->clk);
->>> 	if (bus->opp_table)
->>> 		dev_pm_opp_put_regulators(bus->opp_table);
->>> 	dev_pm_opp_of_remove_table(dev);
->>>
->>>>  
->>>>  	dev_pm_opp_of_remove_table(dev);
->>>> +
->>>>  	clk_disable_unprepare(bus->clk);
->>>>  }
->>>>  
->>>> @@ -209,39 +178,26 @@ static int exynos_bus_passive_target(struct device *dev, unsigned long *freq,
->>>>  {
->>>>  	struct exynos_bus *bus = dev_get_drvdata(dev);
->>>>  	struct dev_pm_opp *new_opp;
->>>> -	unsigned long old_freq, new_freq;
->>>> -	int ret = 0;
->>>> +	int ret;
->>>>  
->>>> -	/* Get new opp-bus instance according to new bus clock */
->>>> +	/*
->>>> +	 * New frequency for bus may not be exactly matched to opp, adjust
->>>> +	 * *freq to correct value.
->>>> +	 */
->>>
->>> You better to change this comment with following styles
->>> to keep the consistency:
->>>
->>> 	/* Get correct frequency for bus ... */
->>>
->>>>  	new_opp = devfreq_recommended_opp(dev, freq, flags);
->>>>  	if (IS_ERR(new_opp)) {
->>>>  		dev_err(dev, "failed to get recommended opp instance\n");
->>>>  		return PTR_ERR(new_opp);
->>>>  	}
->>>>  
->>>> -	new_freq = dev_pm_opp_get_freq(new_opp);
->>>>  	dev_pm_opp_put(new_opp);
->>>>  
->>>> -	old_freq = bus->curr_freq;
->>>> -
->>>> -	if (old_freq == new_freq)
->>>> -		return 0;
->>>> -
->>>>  	/* Change the frequency according to new OPP level */
->>>>  	mutex_lock(&bus->lock);
->>>> +	ret = dev_pm_opp_set_rate(dev, *freq);
->>>> +	if (!ret)
->>>> +		bus->curr_freq = *freq;
->>>
->>> ditto. Have to print the error log, check above comment.
->>>
->>>>  
->>>> -	ret = clk_set_rate(bus->clk, new_freq);
->>>> -	if (ret < 0) {
->>>> -		dev_err(dev, "failed to set the clock of bus\n");
->>>> -		goto out;
->>>> -	}
->>>> -
->>>> -	*freq = new_freq;
->>>> -	bus->curr_freq = new_freq;
->>>> -
->>>> -	dev_dbg(dev, "Set the frequency of bus (%luHz -> %luHz, %luHz)\n",
->>>> -			old_freq, new_freq, clk_get_rate(bus->clk));
->>>> -out:
->>>>  	mutex_unlock(&bus->lock);
->>>>  
->>>>  	return ret;
->>>> @@ -259,20 +215,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->>>>  					struct exynos_bus *bus)
->>>>  {
->>>>  	struct device *dev = bus->dev;
->>>> -	int i, ret, count, size;
->>>> -
->>>> -	/* Get the regulator to provide each bus with the power */
->>>> -	bus->regulator = devm_regulator_get(dev, "vdd");
->>>> -	if (IS_ERR(bus->regulator)) {
->>>> -		dev_err(dev, "failed to get VDD regulator\n");
->>>> -		return PTR_ERR(bus->regulator);
->>>> -	}
->>>> -
->>>> -	ret = regulator_enable(bus->regulator);
->>>> -	if (ret < 0) {
->>>> -		dev_err(dev, "failed to enable VDD regulator\n");
->>>> -		return ret;
->>>> -	}
->>>> +	int i, count, size;
->>>>  
->>>>  	/*
->>>>  	 * Get the devfreq-event devices to get the current utilization of
->>>> @@ -281,24 +224,20 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->>>>  	count = devfreq_event_get_edev_count(dev);
->>>>  	if (count < 0) {
->>>>  		dev_err(dev, "failed to get the count of devfreq-event dev\n");
->>>> -		ret = count;
->>>> -		goto err_regulator;
->>>> +		return count;
->>>>  	}
->>>> +
->>>>  	bus->edev_count = count;
->>>>  
->>>>  	size = sizeof(*bus->edev) * count;
->>>>  	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
->>>> -	if (!bus->edev) {
->>>> -		ret = -ENOMEM;
->>>> -		goto err_regulator;
->>>> -	}
->>>> +	if (!bus->edev)
->>>> +		return -ENOMEM;
->>>>  
->>>>  	for (i = 0; i < count; i++) {
->>>>  		bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
->>>> -		if (IS_ERR(bus->edev[i])) {
->>>> -			ret = -EPROBE_DEFER;
->>>> -			goto err_regulator;
->>>> -		}
->>>> +		if (IS_ERR(bus->edev[i]))
->>>> +			return -EPROBE_DEFER;
->>>>  	}
->>>>  
->>>>  	/*
->>>> @@ -314,22 +253,15 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
->>>>  	if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
->>>>  		bus->ratio = DEFAULT_SATURATION_RATIO;
->>>>  
->>>> -	if (of_property_read_u32(np, "exynos,voltage-tolerance",
->>>> -					&bus->voltage_tolerance))
->>>> -		bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
->>>> -
->>>>  	return 0;
->>>> -
->>>> -err_regulator:
->>>> -	regulator_disable(bus->regulator);
->>>> -
->>>> -	return ret;
->>>>  }
->>>>  
->>>>  static int exynos_bus_parse_of(struct device_node *np,
->>>> -			      struct exynos_bus *bus)
->>>> +			      struct exynos_bus *bus, bool passive)
->>>>  {
->>>>  	struct device *dev = bus->dev;
->>>> +	struct opp_table *opp_table;
->>>> +	const char *vdd = "vdd";
->>>>  	struct dev_pm_opp *opp;
->>>>  	unsigned long rate;
->>>>  	int ret;
->>>> @@ -347,11 +279,22 @@ static int exynos_bus_parse_of(struct device_node *np,
->>>>  		return ret;
->>>>  	}
->>>>  
->>>> +	if (!passive) {
->>>> +		opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);
->>>> +		if (IS_ERR(opp_table)) {
->>>> +			ret = PTR_ERR(opp_table);
->>>> +			dev_err(dev, "failed to set regulators %d\n", ret);
->>>> +			goto err_clk;/
->>>> +		}
->>>> +
->>>> +		bus->opp_table = opp_table;
->>>> +	}
->>>
->>> This driver has exynos_bus_parent_parse_of() function for parent devfreq device.
->>> dev_pm_opp_set_regulators() have to be called in exynos_bus_parent_parse_of()
->>> because the regulator is only used by parent devfreq device.
->>
->> exynos_bus_parse_of() is called for all devfreq devices (including
->> parent) and (as you've noticed) the regulator should be enabled before
->> enabling clock (which is done in exynos_bus_parse_of()) so adding
->> extra argument to exynos_bus_parse_of() (like it is done currently in
->> the patch) 
-> 
-> I think that this patch has still the problem about call sequence
-> between clock and regulator as following:
+As agreed with Jon, I'm sending this big series directly to you, c/c him,
+as this series required a special care, in order to avoid conflicts with
+other trees.
 
-Yes, this should be fixed (though the wrong sequence between regulator
-and clock handling is not introduced by the patchset itself and is present
-in the original driver code).
+Please pull from:
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git tags/docs/v5.3-1
 
-> 273         ret = clk_prepare_enable(bus->clk);                                     
-> 274         if (ret < 0) {                                                          
-> 275                 dev_err(dev, "failed to get enable clock\n");                   
-> 276                 return ret;                                                     
-> 277         }                                                                       
-> 278                                                                                 
-> 279         if (!passive) {                                                         
-> 280                 opp_table = dev_pm_opp_set_regulators(dev, &vdd, 1);            
-> 281                 if (IS_ERR(opp_table)) {                                        
-> 282                         ret = PTR_ERR(opp_table);                               
-> 283                         dev_err(dev, "failed to set regulators %d\n", ret);     
-> 284                         goto err_clk;                                           
-> 285                 }                                                               
-> 286                                                                                 
-> 287                 bus->opp_table = opp_table;                                     
-> 288         }                   
-> 
-> makes it possible to do the setup correctly without the need
->> of merging both functions into one huge function (which would be more
->> difficult to follow than two simpler functions IMHO). Is that approach
->> acceptable or do you prefer one big function?
-> 
-> Actually, I don't force to make one function for both
-> exynos_bus_parse_of() and exynos_bus_parent_parse_of().
-> 
-> If we just keep this code, dev_pm_opp_set_regulators()
-> should be handled in exynos_bus_parent_parse_of()
-> because only parent devfreq device controls the regulator.
+For a series of patches that add several files that are compatible with
+ReST to the Kernel documentation body.
 
-Could your please explain rationale for this requirement (besides
-function name)?
+PS.: there's a trivial conflict with rdma tree, due to the addition
+of infiniband to Documentation/index.rst.
 
-The patch adds 'bool passive' argument (which is set to false for
-parent devfreq device and true for child devfreq device) to
-exynos_bus_parse_of() (which is called for *all* devfreq devices
-and is called before exynos_bus_parent_parse_of()) and there is
-no hard requirement to call dev_pm_opp_set_regulators() in
-exynos_bus_parent_parse_of() so after only changing the ordering
-between regulator and clock handling the setup code should be
-correct.
+Thanks!
+Mauro
 
-[ Please note that this patch moves parent/child detection before
-  exynos_bus_parse_of() call. ]
+The following changes since commit fec88ab0af9706b2201e5daf377c5031c62d11f7:
 
-> In order to keep the two functions, maybe have to change
-> the call the sequence between exynos_bus_parse_of() and
-> exynos_bus_parent_parse_of().
+  Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2019-07-14 19:42:11 -0700)
 
-Doesn't seem to be needed, care to explain it more?
+are available in the Git repository at:
 
-> Once again, I don't force any fixed method. I want to fix them
-> with correct way.
-> 
->>
->>>> +
->>>>  	/* Get the freq and voltage from OPP table to scale the bus freq */
->>>>  	ret = dev_pm_opp_of_add_table(dev);
->>>>  	if (ret < 0) {
->>>>  		dev_err(dev, "failed to get OPP table\n");
->>>> -		goto err_clk;
->>>> +		goto err_regulator;
->>>>  	}
->>>>  
->>>>  	rate = clk_get_rate(bus->clk);
->>>> @@ -362,6 +305,7 @@ static int exynos_bus_parse_of(struct device_node *np,
->>>>  		ret = PTR_ERR(opp);
->>>>  		goto err_opp;
->>>>  	}
->>>> +
->>>>  	bus->curr_freq = dev_pm_opp_get_freq(opp);
->>>>  	dev_pm_opp_put(opp);
->>>>  
->>>> @@ -369,6 +313,13 @@ static int exynos_bus_parse_of(struct device_node *np,
->>>>  
->>>>  err_opp:
->>>>  	dev_pm_opp_of_remove_table(dev);
->>>> +
->>>> +err_regulator:
->>>> +	if (bus->opp_table) {
->>>> +		dev_pm_opp_put_regulators(bus->opp_table);
->>>> +		bus->opp_table = NULL;
->>>> +	}
->>>
->>> As I mentioned above, it it wrong to call dev_pm_opp_put_regulators()
->>> after removing the opp_table by dev_pm_opp_of_remove_table().
->>>
->>>> +
->>>>  err_clk:
->>>>  	clk_disable_unprepare(bus->clk);
->>>>  
->>>> @@ -386,6 +337,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>>  	struct exynos_bus *bus;
->>>>  	int ret, max_state;
->>>>  	unsigned long min_freq, max_freq;
->>>> +	bool passive = false;
->>>>  
->>>>  	if (!np) {
->>>>  		dev_err(dev, "failed to find devicetree node\n");
->>>> @@ -395,12 +347,18 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>>  	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
->>>>  	if (!bus)
->>>>  		return -ENOMEM;
->>>> +
->>>>  	mutex_init(&bus->lock);
->>>>  	bus->dev = &pdev->dev;
->>>>  	platform_set_drvdata(pdev, bus);
->>>> +	node = of_parse_phandle(dev->of_node, "devfreq", 0);
->>>> +	if (node) {
->>>> +		of_node_put(node);
->>>> +		passive = true;
->>>> +	}
->>>>  
->>>>  	/* Parse the device-tree to get the resource information */
->>>> -	ret = exynos_bus_parse_of(np, bus);
->>>> +	ret = exynos_bus_parse_of(np, bus, passive);
->>>>  	if (ret < 0)
->>>>  		return ret;
->>>>  
->>>> @@ -410,13 +368,10 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>>  		goto err;
->>>>  	}
->>>>  
->>>> -	node = of_parse_phandle(dev->of_node, "devfreq", 0);
->>>> -	if (node) {
->>>> -		of_node_put(node);
->>>> +	if (passive)
->>>>  		goto passive;
->>>> -	} else {
->>>> -		ret = exynos_bus_parent_parse_of(np, bus);
->>>> -	}
->>>> +
->>>> +	ret = exynos_bus_parent_parse_of(np, bus);
->>>>  
->>>
->>> Remove unneeded blank line.
->>>
->>>>  	if (ret < 0)
->>>>  		goto err;
->>>> @@ -509,6 +464,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
->>>>  
->>>>  err:
->>>>  	dev_pm_opp_of_remove_table(dev);
->>>> +	if (bus->opp_table) {
->>>> +		dev_pm_opp_put_regulators(bus->opp_table);
->>>> +		bus->opp_table = NULL;
->>>> +	}
->>>> +
->>>
->>> ditto.
->>> Have to disable regulator after disabling the clock
->>> to prevent the h/w fault.
->>>
->>> I think that you should call them with following sequence:
->>>
->>> 	clk_disable_unprepare(bus->clk);
->>> 	if (bus->opp_table)
->>> 		dev_pm_opp_put_regulators(bus->opp_table);
->>> 	dev_pm_opp_of_remove_table(dev);
->>>
->>>>  	clk_disable_unprepare(bus->clk);
->>>>  
->>>>  	return ret;
->>
->> Best regards,
->> --
->> Bartlomiej Zolnierkiewicz
->> Samsung R&D Institute Poland
->> Samsung Electronics
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media.git tags/docs/v5.3-1
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+for you to fetch changes up to 168869492e7009b6861b615f1d030c99bc805e83:
+
+  docs: kbuild: fix build with pdf and fix some minor issues (2019-07-15 11:03:04 -0300)
+
+----------------------------------------------------------------
+docs conversion for v5.3-rc1
+
+----------------------------------------------------------------
+Mauro Carvalho Chehab (77):
+      docs: locking: convert docs to ReST and rename to *.rst
+      docs: connector: convert to ReST and rename to connector.rst
+      docs: lcd-panel-cgram.txt: convert docs to ReST and rename to *.rst
+      docs: lp855x-driver.txt: convert to ReST and move to kernel-api
+      docs: m68k: convert docs to ReST and rename to *.rst
+      docs: cma/debugfs.txt: convert docs to ReST and rename to *.rst
+      docs: console.txt: convert docs to ReST and rename to *.rst
+      docs: pti_intel_mid.txt: convert it to pti_intel_mid.rst
+      docs: early-userspace: convert docs to ReST and rename to *.rst
+      docs: arm: convert docs to ReST and rename to *.rst
+      docs: memory-devices: convert ti-emif.txt to ReST
+      docs: xen-tpmfront.txt: convert it to .rst
+      docs: bus-devices: ti-gpmc.rst: convert it to ReST
+      docs: nvmem: convert docs to ReST and rename to *.rst
+      docs: phy: convert samsung-usb2.txt to ReST format
+      docs: rbtree.txt: fix Sphinx build warnings
+      docs: DMA-API-HOWTO.txt: fix an unmarked code block
+      docs: accounting: convert to ReST
+      docs: ia64: convert to ReST
+      docs: laptops: convert to ReST
+      docs: namespaces: convert to ReST
+      docs: nfc: convert to ReST
+      docs: md: convert to ReST
+      docs: mtd: convert to ReST
+      docs: nvdimm: convert to ReST
+      docs: xtensa: convert to ReST
+      docs: mmc: convert to ReST
+      docs: ioctl-number.txt: convert it to ReST format
+      docs: ioctl: convert to ReST
+      docs: rapidio: convert to ReST
+      docs: blockdev: convert to ReST
+      docs: perf: convert to ReST
+      docs: sysctl: convert to ReST
+      docs: block: convert to ReST
+      docs: move gcc_plugins.txt to core-api and rename to .rst
+      docs: logo.txt: rename it to COPYING-logo
+      docs: rapidio: add it to the driver API
+      docs: perf: move to the admin-guide
+      docs: nvdimm: add it to the driver-api book
+      docs: namespace: move it to the admin-guide
+      docs: mtd: move it to the driver-api book
+      docs: nfc: add it to the driver-api book
+      docs: mmc: move it to the driver-api
+      docs: md: move it to the driver-api book
+      docs: leds: add it to the driver-api book
+      docs: ioctl: add it to the uAPI guide
+      docs: interconnect.rst: add it to the driver-api guide
+      docs: add arch doc directories to the index
+      docs: device-mapper: move it to the admin-guide
+      docs: early-userspace: move to driver-api guide
+      docs: admin-guide: move sysctl directory to it
+      docs: admin-guide: add laptops documentation
+      docs: admin-guide: add kdump documentation into it
+      docs: blockdev: add it to the admin-guide
+      docs: security: move some books to it and update
+      docs: x86: move two x86-specific files to x86 arch dir
+      docs: ocxl.rst: add it to the uAPI book
+      docs: lp855x-driver.rst: add it to the driver-api book
+      docs: driver-model: move it to the driver-api book
+      docs: add some documentation dirs to the driver-api book
+      docs: aoe: add it to the driver-api book
+      docs: cgroup-v1: add it to the admin-guide book
+      docs: admin-guide: add a series of orphaned documents
+      docs: driver-api: add a series of orphaned documents
+      docs: driver-api: add xilinx driver API documentation
+      docs: driver-api: add remaining converted dirs to it
+      docs: serial: move it to the driver-api
+      docs: phy: place documentation under driver-api
+      docs: add a memory-devices subdir to driver-api
+      docs: add SPDX tags to new index files
+      docs: add some directories to the main documentation index
+      docs: locking: add it to the main index
+      docs: gpio: add sysfs interface to the admin-guide
+      docs: don't use nested tables
+      docs: arm: fix a breakage with pdf output
+      docs: block: fix pdf output
+      docs: kbuild: fix build with pdf and fix some minor issues
+
+ CREDITS                                            |    2 +-
+ Documentation/ABI/obsolete/sysfs-gpio              |    2 +-
+ Documentation/ABI/removed/sysfs-class-rfkill       |    2 +-
+ Documentation/ABI/stable/sysfs-class-rfkill        |    2 +-
+ Documentation/ABI/stable/sysfs-devices-node        |    2 +-
+ Documentation/ABI/testing/procfs-diskstats         |    2 +-
+ Documentation/ABI/testing/sysfs-block              |    2 +-
+ Documentation/ABI/testing/sysfs-block-device       |    2 +-
+ Documentation/ABI/testing/sysfs-class-switchtec    |    2 +-
+ Documentation/ABI/testing/sysfs-devices-system-cpu |    4 +-
+ .../ABI/testing/sysfs-platform-asus-laptop         |    2 +-
+ Documentation/{logo.txt => COPYING-logo}           |    0
+ Documentation/DMA-API-HOWTO.txt                    |    2 +-
+ .../{cgroupstats.txt => cgroupstats.rst}           |   14 +-
+ .../{delay-accounting.txt => delay-accounting.rst} |   61 +-
+ Documentation/accounting/index.rst                 |   14 +
+ Documentation/accounting/{psi.txt => psi.rst}      |   42 +-
+ .../{taskstats-struct.txt => taskstats-struct.rst} |   79 +-
+ .../accounting/{taskstats.txt => taskstats.rst}    |   15 +-
+ Documentation/{ => admin-guide}/aoe/aoe.rst        |    4 +-
+ Documentation/{ => admin-guide}/aoe/autoload.sh    |    0
+ Documentation/{ => admin-guide}/aoe/examples.rst   |    0
+ Documentation/{ => admin-guide}/aoe/index.rst      |    2 -
+ Documentation/{ => admin-guide}/aoe/status.sh      |    0
+ Documentation/{ => admin-guide}/aoe/todo.rst       |    0
+ .../{ => admin-guide}/aoe/udev-install.sh          |    0
+ Documentation/{ => admin-guide}/aoe/udev.txt       |    2 +-
+ .../blockdev/drbd/DRBD-8.3-data-packets.svg        |    0
+ .../blockdev/drbd/DRBD-data-packets.svg            |    0
+ .../blockdev/drbd/conn-states-8.dot                |    0
+ .../blockdev/drbd/data-structure-v9.rst}           |    6 +-
+ .../blockdev/drbd/disk-states-8.dot                |    0
+ .../drbd/drbd-connection-state-overview.dot        |    0
+ .../admin-guide/blockdev/drbd/figures.rst          |   30 +
+ .../blockdev/drbd/index.rst}                       |   15 +-
+ .../blockdev/drbd/node-states-8.dot                |    1 -
+ .../floppy.txt => admin-guide/blockdev/floppy.rst} |   88 +-
+ Documentation/admin-guide/blockdev/index.rst       |   16 +
+ .../nbd.txt => admin-guide/blockdev/nbd.rst}       |    2 +-
+ .../paride.txt => admin-guide/blockdev/paride.rst} |  196 ++--
+ .../blockdev/ramdisk.rst}                          |   55 +-
+ .../zram.txt => admin-guide/blockdev/zram.rst}     |  197 ++--
+ .../{btmrvl.txt => admin-guide/btmrvl.rst}         |    0
+ Documentation/admin-guide/bug-hunting.rst          |    4 +-
+ .../cgroup-v1/blkio-controller.rst                 |    0
+ .../{ => admin-guide}/cgroup-v1/cgroups.rst        |    4 +-
+ .../{ => admin-guide}/cgroup-v1/cpuacct.rst        |    0
+ .../{ => admin-guide}/cgroup-v1/cpusets.rst        |    2 +-
+ .../{ => admin-guide}/cgroup-v1/devices.rst        |    0
+ .../cgroup-v1/freezer-subsystem.rst                |    0
+ .../{ => admin-guide}/cgroup-v1/hugetlb.rst        |    0
+ .../{ => admin-guide}/cgroup-v1/index.rst          |    2 -
+ .../{ => admin-guide}/cgroup-v1/memcg_test.rst     |    4 +-
+ .../{ => admin-guide}/cgroup-v1/memory.rst         |    0
+ .../{ => admin-guide}/cgroup-v1/net_cls.rst        |    0
+ .../{ => admin-guide}/cgroup-v1/net_prio.rst       |    0
+ Documentation/{ => admin-guide}/cgroup-v1/pids.rst |    0
+ Documentation/{ => admin-guide}/cgroup-v1/rdma.rst |    0
+ Documentation/admin-guide/cgroup-v2.rst            |    8 +-
+ .../clearing-warn-once.rst}                        |    0
+ .../{cpu-load.txt => admin-guide/cpu-load.rst}     |    0
+ .../cputopology.rst}                               |    0
+ .../device-mapper/cache-policies.rst               |    0
+ .../{ => admin-guide}/device-mapper/cache.rst      |    0
+ .../{ => admin-guide}/device-mapper/delay.rst      |    0
+ .../{ => admin-guide}/device-mapper/dm-crypt.rst   |    0
+ .../{ => admin-guide}/device-mapper/dm-dust.txt    |    0
+ .../{ => admin-guide}/device-mapper/dm-flakey.rst  |    0
+ .../{ => admin-guide}/device-mapper/dm-init.rst    |    0
+ .../device-mapper/dm-integrity.rst                 |    0
+ .../{ => admin-guide}/device-mapper/dm-io.rst      |    0
+ .../{ => admin-guide}/device-mapper/dm-log.rst     |    0
+ .../device-mapper/dm-queue-length.rst              |    0
+ .../{ => admin-guide}/device-mapper/dm-raid.rst    |    0
+ .../device-mapper/dm-service-time.rst              |    0
+ .../{ => admin-guide}/device-mapper/dm-uevent.rst  |    0
+ .../{ => admin-guide}/device-mapper/dm-zoned.rst   |    0
+ .../{ => admin-guide}/device-mapper/era.rst        |    0
+ .../{ => admin-guide}/device-mapper/index.rst      |    2 -
+ .../{ => admin-guide}/device-mapper/kcopyd.rst     |    0
+ .../{ => admin-guide}/device-mapper/linear.rst     |    0
+ .../{ => admin-guide}/device-mapper/log-writes.rst |    0
+ .../device-mapper/persistent-data.rst              |    0
+ .../{ => admin-guide}/device-mapper/snapshot.rst   |    0
+ .../{ => admin-guide}/device-mapper/statistics.rst |    4 +-
+ .../{ => admin-guide}/device-mapper/striped.rst    |    0
+ .../{ => admin-guide}/device-mapper/switch.rst     |    0
+ .../device-mapper/thin-provisioning.rst            |    0
+ .../{ => admin-guide}/device-mapper/unstriped.rst  |    0
+ .../{ => admin-guide}/device-mapper/verity.rst     |    0
+ .../{ => admin-guide}/device-mapper/writecache.rst |    0
+ .../{ => admin-guide}/device-mapper/zero.rst       |    0
+ .../{efi-stub.txt => admin-guide/efi-stub.rst}     |    0
+ Documentation/{ => admin-guide}/gpio/index.rst     |    2 +-
+ Documentation/{ => admin-guide}/gpio/sysfs.rst     |    0
+ .../{highuid.txt => admin-guide/highuid.rst}       |    0
+ Documentation/admin-guide/hw-vuln/l1tf.rst         |    2 +-
+ .../{hw_random.txt => admin-guide/hw_random.rst}   |    0
+ Documentation/admin-guide/index.rst                |   28 +
+ .../{iostats.txt => admin-guide/iostats.rst}       |    0
+ .../{ => admin-guide}/kdump/gdbmacros.txt          |    0
+ Documentation/{ => admin-guide}/kdump/index.rst    |    1 -
+ Documentation/{ => admin-guide}/kdump/kdump.rst    |    0
+ .../{ => admin-guide}/kdump/vmcoreinfo.rst         |    0
+ Documentation/admin-guide/kernel-parameters.rst    |    2 +-
+ Documentation/admin-guide/kernel-parameters.txt    |   44 +-
+ .../kernel-per-CPU-kthreads.rst}                   |    2 +-
+ .../laptops/asus-laptop.rst}                       |   92 +-
+ .../laptops/disk-shock-protection.rst}             |   32 +-
+ Documentation/admin-guide/laptops/index.rst        |   17 +
+ .../laptops/laptop-mode.rst}                       |  579 +++++----
+ .../{ => admin-guide}/laptops/lg-laptop.rst        |    1 -
+ .../laptops/sony-laptop.rst}                       |   58 +-
+ .../sonypi.txt => admin-guide/laptops/sonypi.rst}  |   50 +-
+ .../laptops/thinkpad-acpi.rst}                     |  369 +++---
+ .../laptops/toshiba_haps.rst}                      |   49 +-
+ .../lcd-panel-cgram.rst}                           |    7 +-
+ Documentation/{ldm.txt => admin-guide/ldm.rst}     |    0
+ .../lockup-watchdogs.rst}                          |    0
+ .../debugfs.txt => admin-guide/mm/cma_debugfs.rst} |    6 +-
+ Documentation/admin-guide/mm/index.rst             |    3 +-
+ Documentation/admin-guide/mm/ksm.rst               |    2 +-
+ .../admin-guide/mm/numa_memory_policy.rst          |    2 +-
+ .../namespaces/compatibility-list.rst}             |   10 +-
+ Documentation/admin-guide/namespaces/index.rst     |   11 +
+ .../namespaces/resource-control.rst}               |    4 +
+ .../{numastat.txt => admin-guide/numastat.rst}     |    0
+ .../arm-ccn.txt => admin-guide/perf/arm-ccn.rst}   |   18 +-
+ .../perf/arm_dsu_pmu.rst}                          |    5 +-
+ .../hisi-pmu.txt => admin-guide/perf/hisi-pmu.rst} |   37 +-
+ Documentation/admin-guide/perf/index.rst           |   16 +
+ .../perf/qcom_l2_pmu.rst}                          |    3 +-
+ .../perf/qcom_l3_pmu.rst}                          |    3 +-
+ .../perf/thunderx2-pmu.rst}                        |   25 +-
+ .../perf/xgene-pmu.rst}                            |    3 +-
+ Documentation/{pnp.txt => admin-guide/pnp.rst}     |    0
+ .../{driver-api => admin-guide}/rapidio.rst        |    0
+ Documentation/{rtc.txt => admin-guide/rtc.rst}     |    0
+ Documentation/{svga.txt => admin-guide/svga.rst}   |    0
+ Documentation/admin-guide/sysctl/abi.rst           |   67 ++
+ .../{sysctl/fs.txt => admin-guide/sysctl/fs.rst}   |  146 +--
+ .../README => admin-guide/sysctl/index.rst}        |   34 +-
+ .../kernel.txt => admin-guide/sysctl/kernel.rst}   |  374 +++---
+ .../{sysctl/net.txt => admin-guide/sysctl/net.rst} |  141 ++-
+ .../sunrpc.txt => admin-guide/sysctl/sunrpc.rst}   |   13 +-
+ .../user.txt => admin-guide/sysctl/user.rst}       |   32 +-
+ .../{sysctl/vm.txt => admin-guide/sysctl/vm.rst}   |  264 +++--
+ .../video-output.rst}                              |    0
+ Documentation/arm/Marvell/README                   |  395 -------
+ Documentation/arm/Netwinder                        |   78 --
+ Documentation/arm/SA1100/FreeBird                  |   21 -
+ Documentation/arm/SA1100/empeg                     |    2 -
+ Documentation/arm/SA1100/serial_UART               |   47 -
+ Documentation/arm/{README => arm.rst}              |   50 +-
+ Documentation/arm/{Booting => booting.rst}         |   71 +-
+ ...avoidance.txt => cluster-pm-race-avoidance.rst} |  177 +--
+ Documentation/arm/{firmware.txt => firmware.rst}   |   14 +-
+ Documentation/arm/index.rst                        |   80 ++
+ Documentation/arm/{Interrupts => interrupts.rst}   |   90 +-
+ Documentation/arm/{IXP4xx => ixp4xx.rst}           |   61 +-
+ .../{kernel_mode_neon.txt => kernel_mode_neon.rst} |    3 +
+ ...el_user_helpers.txt => kernel_user_helpers.rst} |   79 +-
+ .../arm/keystone/{knav-qmss.txt => knav-qmss.rst}  |    6 +-
+ .../arm/keystone/{Overview.txt => overview.rst}    |   47 +-
+ Documentation/arm/marvel.rst                       |  488 ++++++++
+ .../arm/{mem_alignment => mem_alignment.rst}       |   11 +-
+ Documentation/arm/{memory.txt => memory.rst}       |    9 +-
+ .../arm/{Microchip/README => microchip.rst}        |   63 +-
+ Documentation/arm/netwinder.rst                    |   85 ++
+ Documentation/arm/nwfpe/index.rst                  |   13 +
+ .../arm/nwfpe/{README.FPE => netwinder-fpe.rst}    |   24 +-
+ Documentation/arm/nwfpe/{NOTES => notes.rst}       |    3 +
+ Documentation/arm/nwfpe/{README => nwfpe.rst}      |   10 +-
+ Documentation/arm/nwfpe/{TODO => todo.rst}         |   47 +-
+ Documentation/arm/{OMAP/DSS => omap/dss.rst}       |  102 +-
+ Documentation/arm/omap/index.rst                   |   12 +
+ Documentation/arm/{OMAP/README => omap/omap.rst}   |    7 +
+ .../arm/{OMAP/omap_pm => omap/omap_pm.rst}         |   55 +-
+ Documentation/arm/{Porting => porting.rst}         |   14 +-
+ Documentation/arm/pxa/{mfp.txt => mfp.rst}         |  110 +-
+ .../arm/{SA1100/ADSBitsy => sa1100/adsbitsy.rst}   |   14 +-
+ .../arm/{SA1100/Assabet => sa1100/assabet.rst}     |  193 +--
+ .../arm/{SA1100/Brutus => sa1100/brutus.rst}       |   49 +-
+ Documentation/arm/{SA1100/CERF => sa1100/cerf.rst} |   10 +-
+ Documentation/arm/sa1100/freebird.rst              |   25 +
+ .../GraphicsClient => sa1100/graphicsclient.rst}   |   48 +-
+ .../GraphicsMaster => sa1100/graphicsmaster.rst}   |   13 +-
+ .../HUW_WEBPANEL => sa1100/huw_webpanel.rst}       |    8 +-
+ Documentation/arm/sa1100/index.rst                 |   25 +
+ Documentation/arm/{SA1100/Itsy => sa1100/itsy.rst} |   14 +-
+ Documentation/arm/{SA1100/LART => sa1100/lart.rst} |    3 +-
+ .../{SA1100/nanoEngine => sa1100/nanoengine.rst}   |    6 +-
+ .../arm/{SA1100/Pangolin => sa1100/pangolin.rst}   |   10 +-
+ Documentation/arm/{SA1100/PLEB => sa1100/pleb.rst} |    6 +-
+ Documentation/arm/sa1100/serial_uart.rst           |   51 +
+ .../arm/{SA1100/Tifon => sa1100/tifon.rst}         |    4 +-
+ Documentation/arm/{SA1100/Yopy => sa1100/yopy.rst} |    5 +-
+ .../CPUfreq.txt => samsung-s3c24xx/cpufreq.rst}    |    5 +-
+ .../eb2410itx.rst}                                 |    5 +-
+ .../GPIO.txt => samsung-s3c24xx/gpio.rst}          |   23 +-
+ .../H1940.txt => samsung-s3c24xx/h1940.rst}        |    5 +-
+ Documentation/arm/samsung-s3c24xx/index.rst        |   20 +
+ .../NAND.txt => samsung-s3c24xx/nand.rst}          |    6 +-
+ .../Overview.txt => samsung-s3c24xx/overview.rst}  |   21 +-
+ .../S3C2412.txt => samsung-s3c24xx/s3c2412.rst}    |    5 +-
+ .../S3C2413.txt => samsung-s3c24xx/s3c2413.rst}    |    7 +-
+ .../SMDK2440.txt => samsung-s3c24xx/smdk2440.rst}  |    5 +-
+ .../Suspend.txt => samsung-s3c24xx/suspend.rst}    |   20 +-
+ .../USB-Host.txt => samsung-s3c24xx/usb-host.rst}  |   16 +-
+ .../bootloader-interface.rst}                      |   27 +-
+ .../clksrc-change-registers.awk                    |    0
+ .../arm/{Samsung/GPIO.txt => samsung/gpio.rst}     |    7 +-
+ Documentation/arm/samsung/index.rst                |   12 +
+ .../{Samsung/Overview.txt => samsung/overview.rst} |   15 +-
+ Documentation/arm/{Setup => setup.rst}             |   49 +-
+ .../arm/{SH-Mobile => sh-mobile}/.gitignore        |    0
+ .../arm/{SPEAr/overview.txt => spear/overview.rst} |   21 +-
+ .../arm/sti/{overview.txt => overview.rst}         |   21 +-
+ .../{stih407-overview.txt => stih407-overview.rst} |    9 +-
+ .../{stih415-overview.txt => stih415-overview.rst} |    8 +-
+ .../{stih416-overview.txt => stih416-overview.rst} |    5 +-
+ .../{stih418-overview.txt => stih418-overview.rst} |    9 +-
+ Documentation/arm/stm32/overview.rst               |    2 -
+ Documentation/arm/stm32/stm32f429-overview.rst     |    7 +-
+ Documentation/arm/stm32/stm32f746-overview.rst     |    7 +-
+ Documentation/arm/stm32/stm32f769-overview.rst     |    7 +-
+ Documentation/arm/stm32/stm32h743-overview.rst     |    7 +-
+ Documentation/arm/stm32/stm32mp157-overview.rst    |    3 +-
+ Documentation/arm/{sunxi/README => sunxi.rst}      |   98 +-
+ Documentation/arm/sunxi/{clocks.txt => clocks.rst} |    7 +-
+ .../arm/{swp_emulation => swp_emulation.rst}       |   24 +-
+ Documentation/arm/{tcm.txt => tcm.rst}             |   54 +-
+ Documentation/arm/{uefi.txt => uefi.rst}           |   39 +-
+ .../release-notes.txt => vfp/release-notes.rst}    |    4 +-
+ Documentation/arm/{vlocks.txt => vlocks.rst}       |    9 +-
+ Documentation/arm64/index.rst                      |    2 -
+ Documentation/backlight/lp855x-driver.txt          |   66 --
+ .../block/{bfq-iosched.txt => bfq-iosched.rst}     |   68 +-
+ Documentation/block/{biodoc.txt => biodoc.rst}     |  335 ++++--
+ Documentation/block/{biovecs.txt => biovecs.rst}   |   20 +-
+ Documentation/block/capability.rst                 |   18 +
+ Documentation/block/capability.txt                 |   15 -
+ ...cmdline-partition.txt => cmdline-partition.rst} |   13 +-
+ .../{data-integrity.txt => data-integrity.rst}     |   60 +-
+ .../{deadline-iosched.txt => deadline-iosched.rst} |   21 +-
+ Documentation/block/index.rst                      |   25 +
+ Documentation/block/{ioprio.txt => ioprio.rst}     |  103 +-
+ .../block/{kyber-iosched.txt => kyber-iosched.rst} |    3 +-
+ Documentation/block/{null_blk.txt => null_blk.rst} |   65 +-
+ Documentation/block/{pr.txt => pr.rst}             |   18 +-
+ .../block/{queue-sysfs.txt => queue-sysfs.rst}     |    7 +-
+ Documentation/block/{request.txt => request.rst}   |   47 +-
+ Documentation/block/{stat.txt => stat.rst}         |   13 +-
+ .../{switching-sched.txt => switching-sched.rst}   |   28 +-
+ ...che_control.txt => writeback_cache_control.rst} |   12 +-
+ Documentation/cdrom/index.rst                      |    2 +-
+ .../{gcc-plugins.txt => core-api/gcc-plugins.rst}  |    0
+ Documentation/core-api/index.rst                   |    1 +
+ Documentation/core-api/printk-formats.rst          |    2 +-
+ Documentation/devicetree/bindings/arm/xen.txt      |    2 +-
+ .../devicetree/bindings/phy/phy-bindings.txt       |    2 +-
+ .../devicetree/bindings/phy/phy-pxa-usb.txt        |    2 +-
+ Documentation/devicetree/booting-without-of.txt    |    4 +-
+ .../driver-api/backlight/lp855x-driver.rst         |   81 ++
+ .../{bt8xxgpio.txt => driver-api/bt8xxgpio.rst}    |    0
+ .../connector.txt => driver-api/connector.rst}     |  130 +--
+ .../console.txt => driver-api/console.rst}         |   63 +-
+ .../{dcdbas.txt => driver-api/dcdbas.rst}          |    0
+ .../{dell_rbu.txt => driver-api/dell_rbu.rst}      |    0
+ .../{ => driver-api}/driver-model/binding.rst      |    0
+ .../{ => driver-api}/driver-model/bus.rst          |    0
+ .../{ => driver-api}/driver-model/class.rst        |    0
+ .../driver-model/design-patterns.rst               |    0
+ .../{ => driver-api}/driver-model/device.rst       |    0
+ .../{ => driver-api}/driver-model/devres.rst       |    0
+ .../{ => driver-api}/driver-model/driver.rst       |    0
+ .../{ => driver-api}/driver-model/index.rst        |    2 -
+ .../{ => driver-api}/driver-model/overview.rst     |    0
+ .../{ => driver-api}/driver-model/platform.rst     |    0
+ .../{ => driver-api}/driver-model/porting.rst      |    2 +-
+ .../early-userspace/buffer-format.rst}             |   19 +-
+ .../early-userspace/early_userspace_support.rst}   |    3 +
+ Documentation/driver-api/early-userspace/index.rst |   18 +
+ .../{EDID/howto.rst => driver-api/edid.rst}        |    2 +-
+ Documentation/{eisa.txt => driver-api/eisa.rst}    |    4 +-
+ Documentation/driver-api/gpio/driver.rst           |    2 +-
+ Documentation/driver-api/index.rst                 |   43 +-
+ .../{interconnect => driver-api}/interconnect.rst  |    2 -
+ Documentation/{isa.txt => driver-api/isa.rst}      |    0
+ .../{isapnp.txt => driver-api/isapnp.rst}          |    0
+ .../pblk.txt => driver-api/lightnvm-pblk.rst}      |    0
+ Documentation/driver-api/md/index.rst              |   12 +
+ .../md/md-cluster.rst}                             |  184 ++-
+ .../md/raid5-cache.rst}                            |   28 +-
+ .../raid5-ppl.txt => driver-api/md/raid5-ppl.rst}  |    2 +
+ Documentation/driver-api/memory-devices/index.rst  |   18 +
+ .../memory-devices/ti-emif.rst}                    |   27 +-
+ .../memory-devices/ti-gpmc.rst}                    |  163 ++-
+ .../men-chameleon-bus.rst}                         |    0
+ Documentation/driver-api/mmc/index.rst             |   13 +
+ .../mmc/mmc-async-req.rst}                         |   59 +-
+ .../mmc/mmc-dev-attrs.rst}                         |   32 +-
+ .../mmc/mmc-dev-parts.rst}                         |   13 +-
+ .../mmc-tools.txt => driver-api/mmc/mmc-tools.rst} |    5 +-
+ Documentation/driver-api/mtd/index.rst             |   12 +
+ .../intel-spi.txt => driver-api/mtd/intel-spi.rst} |   46 +-
+ .../nand_ecc.txt => driver-api/mtd/nand_ecc.rst}   |  497 ++++----
+ .../spi-nor.txt => driver-api/mtd/spi-nor.rst}     |    7 +-
+ Documentation/driver-api/nfc/index.rst             |   11 +
+ .../nfc-hci.txt => driver-api/nfc/nfc-hci.rst}     |  167 +--
+ .../nfc-pn544.txt => driver-api/nfc/nfc-pn544.rst} |    6 +-
+ Documentation/{ntb.txt => driver-api/ntb.rst}      |    0
+ .../{nvdimm/btt.txt => driver-api/nvdimm/btt.rst}  |  144 +--
+ Documentation/driver-api/nvdimm/index.rst          |   12 +
+ .../nvdimm.txt => driver-api/nvdimm/nvdimm.rst}    |  526 +++++----
+ .../nvdimm/security.rst}                           |    4 +-
+ .../{nvmem/nvmem.txt => driver-api/nvmem.rst}      |  112 +-
+ .../parport-lowlevel.rst}                          |    0
+ Documentation/driver-api/phy/index.rst             |   18 +
+ Documentation/{phy.txt => driver-api/phy/phy.rst}  |    0
+ .../phy/samsung-usb2.rst}                          |   60 +-
+ Documentation/driver-api/pps.rst                   |    2 +-
+ Documentation/driver-api/pti_intel_mid.rst         |  106 ++
+ Documentation/driver-api/ptp.rst                   |    2 +-
+ Documentation/{pwm.txt => driver-api/pwm.rst}      |    0
+ Documentation/driver-api/rapidio/index.rst         |   15 +
+ .../rapidio/mport_cdev.rst}                        |   47 +-
+ .../rapidio.txt => driver-api/rapidio/rapidio.rst} |   39 +-
+ .../rio_cm.txt => driver-api/rapidio/rio_cm.rst}   |   66 +-
+ .../sysfs.txt => driver-api/rapidio/sysfs.rst}     |    4 +
+ .../tsi721.txt => driver-api/rapidio/tsi721.rst}   |   45 +-
+ .../{rfkill.txt => driver-api/rfkill.rst}          |    0
+ .../{ => driver-api}/serial/cyclades_z.rst         |    0
+ Documentation/{ => driver-api}/serial/driver.rst   |    2 +-
+ Documentation/{ => driver-api}/serial/index.rst    |    2 +-
+ .../{ => driver-api}/serial/moxa-smartio.rst       |    0
+ Documentation/{ => driver-api}/serial/n_gsm.rst    |    0
+ Documentation/{ => driver-api}/serial/rocket.rst   |    0
+ .../{ => driver-api}/serial/serial-iso7816.rst     |    0
+ .../{ => driver-api}/serial/serial-rs485.rst       |    0
+ Documentation/{ => driver-api}/serial/tty.rst      |    0
+ .../{sgi-ioc4.txt => driver-api/sgi-ioc4.rst}      |    0
+ Documentation/{SM501.txt => driver-api/sm501.rst}  |    0
+ .../smsc_ece1099.rst}                              |    0
+ .../{switchtec.txt => driver-api/switchtec.rst}    |    2 +-
+ .../{sync_file.txt => driver-api/sync_file.rst}    |    0
+ .../vfio-mediated-device.rst}                      |    2 +-
+ Documentation/{vfio.txt => driver-api/vfio.rst}    |    0
+ Documentation/{ => driver-api}/xilinx/eemi.rst     |    0
+ Documentation/{ => driver-api}/xilinx/index.rst    |    1 -
+ .../{xillybus.txt => driver-api/xillybus.rst}      |    0
+ Documentation/{zorro.txt => driver-api/zorro.rst}  |    0
+ Documentation/fault-injection/index.rst            |    2 +-
+ Documentation/fb/fbcon.rst                         |    4 +-
+ Documentation/fb/index.rst                         |    2 +-
+ Documentation/fb/vesafb.rst                        |    2 +-
+ Documentation/filesystems/nfs/nfsroot.txt          |    2 +-
+ Documentation/filesystems/proc.txt                 |    2 +-
+ .../filesystems/ramfs-rootfs-initramfs.txt         |    4 +-
+ Documentation/filesystems/sysfs.txt                |    2 +-
+ Documentation/filesystems/tmpfs.txt                |    2 +-
+ Documentation/firmware-guide/acpi/enumeration.rst  |    2 +-
+ Documentation/fpga/index.rst                       |    2 +-
+ Documentation/hid/index.rst                        |    2 +-
+ Documentation/hwmon/submitting-patches.rst         |    2 +-
+ Documentation/ia64/{aliasing.txt => aliasing.rst}  |   73 +-
+ Documentation/ia64/{efirtc.txt => efirtc.rst}      |  120 +-
+ .../ia64/{err_inject.txt => err_inject.rst}        |  359 +++---
+ Documentation/ia64/{fsys.txt => fsys.rst}          |  133 ++-
+ Documentation/ia64/{README => ia64.rst}            |   26 +-
+ Documentation/ia64/index.rst                       |   18 +
+ .../ia64/{IRQ-redir.txt => irq-redir.rst}          |   31 +-
+ Documentation/ia64/{mca.txt => mca.rst}            |   10 +-
+ Documentation/ia64/{serial.txt => serial.rst}      |   36 +-
+ Documentation/ia64/xen.rst                         |  206 ++++
+ Documentation/ia64/xen.txt                         |  183 ---
+ Documentation/ide/index.rst                        |    2 +-
+ Documentation/iio/index.rst                        |    2 +-
+ Documentation/index.rst                            |   32 +
+ ...tching-up-ioctls.txt => botching-up-ioctls.rst} |    1 +
+ Documentation/ioctl/cdrom.rst                      | 1233 ++++++++++++++++++++
+ Documentation/ioctl/cdrom.txt                      |  967 ---------------
+ Documentation/ioctl/{hdio.txt => hdio.rst}         |  835 ++++++++-----
+ Documentation/ioctl/index.rst                      |   16 +
+ .../{ioctl-decoding.txt => ioctl-decoding.rst}     |   13 +-
+ Documentation/ioctl/ioctl-number.rst               |  361 ++++++
+ Documentation/ioctl/ioctl-number.txt               |  351 ------
+ Documentation/kbuild/index.rst                     |    2 +-
+ Documentation/kbuild/issues.rst                    |   20 +-
+ Documentation/kbuild/kbuild.rst                    |    3 +-
+ Documentation/kbuild/kconfig-language.rst          |   12 +
+ Documentation/kbuild/kconfig.rst                   |    8 +-
+ Documentation/kbuild/makefiles.rst                 |    1 +
+ Documentation/kernel-hacking/locking.rst           |    2 +-
+ Documentation/leds/index.rst                       |    2 +-
+ Documentation/livepatch/index.rst                  |    2 +-
+ Documentation/locking/index.rst                    |   24 +
+ .../{lockdep-design.txt => lockdep-design.rst}     |   51 +-
+ Documentation/locking/lockstat.rst                 |  204 ++++
+ Documentation/locking/lockstat.txt                 |  183 ---
+ .../locking/{locktorture.txt => locktorture.rst}   |  105 +-
+ .../locking/{mutex-design.txt => mutex-design.rst} |   26 +-
+ .../{rt-mutex-design.txt => rt-mutex-design.rst}   |  139 ++-
+ .../locking/{rt-mutex.txt => rt-mutex.rst}         |   30 +-
+ .../locking/{spinlocks.txt => spinlocks.rst}       |   32 +-
+ .../{ww-mutex-design.txt => ww-mutex-design.rst}   |   82 +-
+ Documentation/m68k/index.rst                       |   17 +
+ .../{kernel-options.txt => kernel-options.rst}     |  319 ++---
+ Documentation/mic/index.rst                        |    2 -
+ Documentation/netlabel/index.rst                   |    2 +-
+ Documentation/networking/ip-sysctl.txt             |    2 +-
+ Documentation/pcmcia/index.rst                     |    2 +-
+ Documentation/pi-futex.txt                         |    2 +-
+ Documentation/powerpc/firmware-assisted-dump.txt   |    2 +-
+ Documentation/process/submit-checklist.rst         |    2 +-
+ Documentation/pti/pti_intel_mid.txt                |   99 --
+ Documentation/rbtree.txt                           |    6 +-
+ Documentation/riscv/index.rst                      |    2 -
+ Documentation/s390/debugging390.rst                |    2 +-
+ Documentation/s390/index.rst                       |    2 -
+ Documentation/s390/vfio-ccw.rst                    |    6 +-
+ Documentation/scheduler/index.rst                  |    2 -
+ Documentation/scheduler/sched-deadline.rst         |    2 +-
+ Documentation/scheduler/sched-design-CFS.rst       |    2 +-
+ Documentation/scheduler/sched-rt-group.rst         |    2 +-
+ Documentation/security/index.rst                   |    5 +-
+ .../security/{LSM.rst => lsm-development.rst}      |    0
+ Documentation/{lsm.txt => security/lsm.rst}        |    0
+ Documentation/{SAK.txt => security/sak.rst}        |    0
+ .../{siphash.txt => security/siphash.rst}          |    0
+ Documentation/security/tpm/index.rst               |    1 +
+ .../tpm/{xen-tpmfront.txt => xen-tpmfront.rst}     |  105 +-
+ Documentation/sparc/index.rst                      |    2 -
+ Documentation/sysctl/abi.txt                       |   54 -
+ Documentation/target/index.rst                     |    2 +-
+ Documentation/timers/index.rst                     |    2 +-
+ .../translations/it_IT/kernel-hacking/locking.rst  |    2 +-
+ .../it_IT/process/submit-checklist.rst             |    2 +-
+ Documentation/translations/zh_CN/arm/Booting       |    4 +-
+ .../translations/zh_CN/arm/kernel_user_helpers.txt |    4 +-
+ .../translations/zh_CN/filesystems/sysfs.txt       |    2 +-
+ Documentation/translations/zh_CN/gpio.txt          |    4 +-
+ Documentation/translations/zh_CN/oops-tracing.txt  |    4 +-
+ .../zh_CN/process/submit-checklist.rst             |    2 +-
+ .../{ => userspace-api}/accelerators/ocxl.rst      |    2 -
+ Documentation/userspace-api/index.rst              |    1 +
+ Documentation/vm/numa.rst                          |    4 +-
+ Documentation/vm/page_migration.rst                |    2 +-
+ Documentation/vm/unevictable-lru.rst               |    4 +-
+ Documentation/w1/w1.netlink                        |    2 +-
+ Documentation/watchdog/index.rst                   |    2 +-
+ Documentation/x86/index.rst                        |    2 +
+ .../{Intel-IOMMU.txt => x86/intel-iommu.rst}       |    0
+ Documentation/{intel_txt.txt => x86/intel_txt.rst} |    0
+ Documentation/x86/topology.rst                     |    2 +-
+ Documentation/x86/x86_64/fake-numa-for-cpusets.rst |    4 +-
+ Documentation/xtensa/{atomctl.txt => atomctl.rst}  |   13 +-
+ Documentation/xtensa/{booting.txt => booting.rst}  |    5 +-
+ Documentation/xtensa/index.rst                     |   12 +
+ Documentation/xtensa/mmu.rst                       |  195 ++++
+ Documentation/xtensa/mmu.txt                       |  189 ---
+ MAINTAINERS                                        |   90 +-
+ arch/arm/Kconfig                                   |    6 +-
+ arch/arm/common/mcpm_entry.c                       |    2 +-
+ arch/arm/common/mcpm_head.S                        |    2 +-
+ arch/arm/common/vlock.S                            |    2 +-
+ arch/arm/include/asm/setup.h                       |    2 +-
+ arch/arm/include/uapi/asm/setup.h                  |    2 +-
+ arch/arm/kernel/entry-armv.S                       |    2 +-
+ arch/arm/mach-exynos/common.h                      |    2 +-
+ arch/arm/mach-ixp4xx/Kconfig                       |   14 +-
+ arch/arm/mach-s3c24xx/pm.c                         |    2 +-
+ arch/arm/mm/Kconfig                                |    4 +-
+ arch/arm/plat-samsung/Kconfig                      |    6 +-
+ arch/arm/tools/mach-types                          |    2 +-
+ arch/arm64/Kconfig                                 |    4 +-
+ arch/arm64/kernel/kuser32.S                        |    2 +-
+ arch/ia64/kernel/efi.c                             |    2 +-
+ arch/ia64/kernel/fsys.S                            |    2 +-
+ arch/ia64/mm/ioremap.c                             |    2 +-
+ arch/ia64/pci/pci.c                                |    2 +-
+ arch/mips/bmips/setup.c                            |    2 +-
+ arch/parisc/Kconfig                                |    2 +-
+ arch/sh/Kconfig                                    |    4 +-
+ arch/sparc/Kconfig                                 |    2 +-
+ arch/x86/Kconfig                                   |    8 +-
+ arch/xtensa/include/asm/initialize_mmu.h           |    2 +-
+ block/Kconfig                                      |    4 +-
+ block/Kconfig.iosched                              |    2 +-
+ block/bfq-iosched.c                                |    2 +-
+ block/blk-integrity.c                              |    2 +-
+ block/ioprio.c                                     |    2 +-
+ block/mq-deadline.c                                |    2 +-
+ block/partitions/Kconfig                           |    2 +-
+ block/partitions/cmdline.c                         |    2 +-
+ drivers/base/platform.c                            |    2 +-
+ drivers/block/Kconfig                              |    8 +-
+ drivers/block/floppy.c                             |    2 +-
+ drivers/block/zram/Kconfig                         |    6 +-
+ drivers/char/Kconfig                               |    6 +-
+ drivers/char/hw_random/core.c                      |    2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c          |    2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss-core.c            |    2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c            |    2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss.h                 |    2 +-
+ drivers/dma-buf/Kconfig                            |    2 +-
+ drivers/gpio/Kconfig                               |    2 +-
+ drivers/gpio/gpio-cs5535.c                         |    2 +-
+ drivers/gpu/drm/Kconfig                            |    2 +-
+ drivers/gpu/drm/drm_ioctl.c                        |    2 +-
+ drivers/gpu/drm/drm_modeset_lock.c                 |    2 +-
+ drivers/input/touchscreen/sun4i-ts.c               |    2 +-
+ drivers/md/Kconfig                                 |    2 +-
+ drivers/md/dm-init.c                               |    2 +-
+ drivers/md/dm-raid.c                               |    2 +-
+ drivers/mtd/nand/raw/nand_ecc.c                    |    2 +-
+ drivers/net/ethernet/intel/ice/ice_main.c          |    2 +-
+ drivers/nvdimm/Kconfig                             |    2 +-
+ drivers/pci/switch/Kconfig                         |    2 +-
+ drivers/perf/qcom_l3_pmu.c                         |    2 +-
+ drivers/platform/x86/Kconfig                       |    8 +-
+ drivers/platform/x86/dcdbas.c                      |    2 +-
+ drivers/platform/x86/dell_rbu.c                    |    2 +-
+ drivers/pnp/isapnp/Kconfig                         |    2 +-
+ drivers/rapidio/Kconfig                            |    2 +-
+ drivers/staging/unisys/Documentation/overview.txt  |    4 +-
+ drivers/tty/Kconfig                                |    6 +-
+ drivers/tty/serial/Kconfig                         |    2 +-
+ drivers/tty/serial/ucc_uart.c                      |    2 +-
+ drivers/vfio/Kconfig                               |    2 +-
+ drivers/vfio/mdev/Kconfig                          |    2 +-
+ drivers/w1/Kconfig                                 |    2 +-
+ fs/proc/Kconfig                                    |    2 +-
+ include/linux/cgroup-defs.h                        |    2 +-
+ include/linux/connector.h                          |   63 +-
+ include/linux/device.h                             |    2 +-
+ include/linux/hw_random.h                          |    2 +-
+ include/linux/lockdep.h                            |    2 +-
+ include/linux/mutex.h                              |    2 +-
+ include/linux/platform_device.h                    |    2 +-
+ include/linux/rwsem.h                              |    2 +-
+ include/linux/serial_core.h                        |    2 +-
+ include/uapi/linux/bpf.h                           |    2 +-
+ include/uapi/rdma/rdma_user_ioctl_cmds.h           |    2 +-
+ init/Kconfig                                       |    6 +-
+ kernel/cgroup/cpuset.c                             |    2 +-
+ kernel/locking/mutex.c                             |    2 +-
+ kernel/locking/rtmutex.c                           |    2 +-
+ kernel/panic.c                                     |    2 +-
+ lib/Kconfig.debug                                  |    4 +-
+ mm/swap.c                                          |    2 +-
+ samples/Kconfig                                    |    2 +-
+ scripts/coccinelle/free/devm_free.cocci            |    2 +-
+ scripts/gcc-plugins/Kconfig                        |    2 +-
+ security/Kconfig                                   |    2 +-
+ security/device_cgroup.c                           |    2 +-
+ tools/include/uapi/linux/bpf.h                     |    2 +-
+ tools/testing/selftests/zram/README                |    2 +-
+ usr/Kconfig                                        |    2 +-
+ 559 files changed, 10527 insertions(+), 7593 deletions(-)
+ rename Documentation/{logo.txt => COPYING-logo} (100%)
+ rename Documentation/accounting/{cgroupstats.txt => cgroupstats.rst} (77%)
+ rename Documentation/accounting/{delay-accounting.txt => delay-accounting.rst} (77%)
+ create mode 100644 Documentation/accounting/index.rst
+ rename Documentation/accounting/{psi.txt => psi.rst} (91%)
+ rename Documentation/accounting/{taskstats-struct.txt => taskstats-struct.rst} (78%)
+ rename Documentation/accounting/{taskstats.txt => taskstats.rst} (95%)
+ rename Documentation/{ => admin-guide}/aoe/aoe.rst (97%)
+ rename Documentation/{ => admin-guide}/aoe/autoload.sh (100%)
+ rename Documentation/{ => admin-guide}/aoe/examples.rst (100%)
+ rename Documentation/{ => admin-guide}/aoe/index.rst (95%)
+ rename Documentation/{ => admin-guide}/aoe/status.sh (100%)
+ rename Documentation/{ => admin-guide}/aoe/todo.rst (100%)
+ rename Documentation/{ => admin-guide}/aoe/udev-install.sh (100%)
+ rename Documentation/{ => admin-guide}/aoe/udev.txt (93%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/DRBD-8.3-data-packets.svg (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/DRBD-data-packets.svg (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/conn-states-8.dot (100%)
+ rename Documentation/{blockdev/drbd/data-structure-v9.txt => admin-guide/blockdev/drbd/data-structure-v9.rst} (94%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/disk-states-8.dot (100%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/drbd-connection-state-overview.dot (100%)
+ create mode 100644 Documentation/admin-guide/blockdev/drbd/figures.rst
+ rename Documentation/{blockdev/drbd/README.txt => admin-guide/blockdev/drbd/index.rst} (55%)
+ rename Documentation/{ => admin-guide}/blockdev/drbd/node-states-8.dot (99%)
+ rename Documentation/{blockdev/floppy.txt => admin-guide/blockdev/floppy.rst} (81%)
+ create mode 100644 Documentation/admin-guide/blockdev/index.rst
+ rename Documentation/{blockdev/nbd.txt => admin-guide/blockdev/nbd.rst} (96%)
+ rename Documentation/{blockdev/paride.txt => admin-guide/blockdev/paride.rst} (81%)
+ rename Documentation/{blockdev/ramdisk.txt => admin-guide/blockdev/ramdisk.rst} (84%)
+ rename Documentation/{blockdev/zram.txt => admin-guide/blockdev/zram.rst} (76%)
+ rename Documentation/{btmrvl.txt => admin-guide/btmrvl.rst} (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/blkio-controller.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/cgroups.rst (99%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/cpuacct.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/cpusets.rst (99%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/devices.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/freezer-subsystem.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/hugetlb.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/index.rst (97%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/memcg_test.rst (98%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/memory.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/net_cls.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/net_prio.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/pids.rst (100%)
+ rename Documentation/{ => admin-guide}/cgroup-v1/rdma.rst (100%)
+ rename Documentation/{clearing-warn-once.txt => admin-guide/clearing-warn-once.rst} (100%)
+ rename Documentation/{cpu-load.txt => admin-guide/cpu-load.rst} (100%)
+ rename Documentation/{cputopology.txt => admin-guide/cputopology.rst} (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/cache-policies.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/cache.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/delay.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-crypt.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-dust.txt (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-flakey.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-init.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-integrity.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-io.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-log.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-queue-length.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-raid.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-service-time.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-uevent.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/dm-zoned.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/era.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/index.rst (98%)
+ rename Documentation/{ => admin-guide}/device-mapper/kcopyd.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/linear.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/log-writes.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/persistent-data.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/snapshot.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/statistics.rst (98%)
+ rename Documentation/{ => admin-guide}/device-mapper/striped.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/switch.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/thin-provisioning.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/unstriped.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/verity.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/writecache.rst (100%)
+ rename Documentation/{ => admin-guide}/device-mapper/zero.rst (100%)
+ rename Documentation/{efi-stub.txt => admin-guide/efi-stub.rst} (100%)
+ rename Documentation/{ => admin-guide}/gpio/index.rst (78%)
+ rename Documentation/{ => admin-guide}/gpio/sysfs.rst (100%)
+ rename Documentation/{highuid.txt => admin-guide/highuid.rst} (100%)
+ rename Documentation/{hw_random.txt => admin-guide/hw_random.rst} (100%)
+ rename Documentation/{iostats.txt => admin-guide/iostats.rst} (100%)
+ rename Documentation/{ => admin-guide}/kdump/gdbmacros.txt (100%)
+ rename Documentation/{ => admin-guide}/kdump/index.rst (97%)
+ rename Documentation/{ => admin-guide}/kdump/kdump.rst (100%)
+ rename Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst (100%)
+ rename Documentation/{kernel-per-CPU-kthreads.txt => admin-guide/kernel-per-CPU-kthreads.rst} (99%)
+ rename Documentation/{laptops/asus-laptop.txt => admin-guide/laptops/asus-laptop.rst} (84%)
+ rename Documentation/{laptops/disk-shock-protection.txt => admin-guide/laptops/disk-shock-protection.rst} (91%)
+ create mode 100644 Documentation/admin-guide/laptops/index.rst
+ rename Documentation/{laptops/laptop-mode.txt => admin-guide/laptops/laptop-mode.rst} (62%)
+ rename Documentation/{ => admin-guide}/laptops/lg-laptop.rst (99%)
+ rename Documentation/{laptops/sony-laptop.txt => admin-guide/laptops/sony-laptop.rst} (85%)
+ rename Documentation/{laptops/sonypi.txt => admin-guide/laptops/sonypi.rst} (82%)
+ rename Documentation/{laptops/thinkpad-acpi.txt => admin-guide/laptops/thinkpad-acpi.rst} (89%)
+ rename Documentation/{laptops/toshiba_haps.txt => admin-guide/laptops/toshiba_haps.rst} (58%)
+ rename Documentation/{auxdisplay/lcd-panel-cgram.txt => admin-guide/lcd-panel-cgram.rst} (89%)
+ rename Documentation/{ldm.txt => admin-guide/ldm.rst} (100%)
+ rename Documentation/{lockup-watchdogs.txt => admin-guide/lockup-watchdogs.rst} (100%)
+ rename Documentation/{cma/debugfs.txt => admin-guide/mm/cma_debugfs.rst} (92%)
+ rename Documentation/{namespaces/compatibility-list.txt => admin-guide/namespaces/compatibility-list.rst} (86%)
+ create mode 100644 Documentation/admin-guide/namespaces/index.rst
+ rename Documentation/{namespaces/resource-control.txt => admin-guide/namespaces/resource-control.rst} (89%)
+ rename Documentation/{numastat.txt => admin-guide/numastat.rst} (100%)
+ rename Documentation/{perf/arm-ccn.txt => admin-guide/perf/arm-ccn.rst} (86%)
+ rename Documentation/{perf/arm_dsu_pmu.txt => admin-guide/perf/arm_dsu_pmu.rst} (92%)
+ rename Documentation/{perf/hisi-pmu.txt => admin-guide/perf/hisi-pmu.rst} (73%)
+ create mode 100644 Documentation/admin-guide/perf/index.rst
+ rename Documentation/{perf/qcom_l2_pmu.txt => admin-guide/perf/qcom_l2_pmu.rst} (94%)
+ rename Documentation/{perf/qcom_l3_pmu.txt => admin-guide/perf/qcom_l3_pmu.rst} (93%)
+ rename Documentation/{perf/thunderx2-pmu.txt => admin-guide/perf/thunderx2-pmu.rst} (73%)
+ rename Documentation/{perf/xgene-pmu.txt => admin-guide/perf/xgene-pmu.rst} (96%)
+ rename Documentation/{pnp.txt => admin-guide/pnp.rst} (100%)
+ rename Documentation/{driver-api => admin-guide}/rapidio.rst (100%)
+ rename Documentation/{rtc.txt => admin-guide/rtc.rst} (100%)
+ rename Documentation/{svga.txt => admin-guide/svga.rst} (100%)
+ create mode 100644 Documentation/admin-guide/sysctl/abi.rst
+ rename Documentation/{sysctl/fs.txt => admin-guide/sysctl/fs.rst} (77%)
+ rename Documentation/{sysctl/README => admin-guide/sysctl/index.rst} (78%)
+ rename Documentation/{sysctl/kernel.txt => admin-guide/sysctl/kernel.rst} (79%)
+ rename Documentation/{sysctl/net.txt => admin-guide/sysctl/net.rst} (85%)
+ rename Documentation/{sysctl/sunrpc.txt => admin-guide/sysctl/sunrpc.rst} (62%)
+ rename Documentation/{sysctl/user.txt => admin-guide/sysctl/user.rst} (77%)
+ rename Documentation/{sysctl/vm.txt => admin-guide/sysctl/vm.rst} (84%)
+ rename Documentation/{video-output.txt => admin-guide/video-output.rst} (100%)
+ delete mode 100644 Documentation/arm/Marvell/README
+ delete mode 100644 Documentation/arm/Netwinder
+ delete mode 100644 Documentation/arm/SA1100/FreeBird
+ delete mode 100644 Documentation/arm/SA1100/empeg
+ delete mode 100644 Documentation/arm/SA1100/serial_UART
+ rename Documentation/arm/{README => arm.rst} (88%)
+ rename Documentation/arm/{Booting => booting.rst} (89%)
+ rename Documentation/arm/{cluster-pm-race-avoidance.txt => cluster-pm-race-avoidance.rst} (84%)
+ rename Documentation/arm/{firmware.txt => firmware.rst} (86%)
+ create mode 100644 Documentation/arm/index.rst
+ rename Documentation/arm/{Interrupts => interrupts.rst} (81%)
+ rename Documentation/arm/{IXP4xx => ixp4xx.rst} (84%)
+ rename Documentation/arm/{kernel_mode_neon.txt => kernel_mode_neon.rst} (99%)
+ rename Documentation/arm/{kernel_user_helpers.txt => kernel_user_helpers.rst} (78%)
+ rename Documentation/arm/keystone/{knav-qmss.txt => knav-qmss.rst} (92%)
+ rename Documentation/arm/keystone/{Overview.txt => overview.rst} (59%)
+ create mode 100644 Documentation/arm/marvel.rst
+ rename Documentation/arm/{mem_alignment => mem_alignment.rst} (89%)
+ rename Documentation/arm/{memory.txt => memory.rst} (90%)
+ rename Documentation/arm/{Microchip/README => microchip.rst} (92%)
+ create mode 100644 Documentation/arm/netwinder.rst
+ create mode 100644 Documentation/arm/nwfpe/index.rst
+ rename Documentation/arm/nwfpe/{README.FPE => netwinder-fpe.rst} (94%)
+ rename Documentation/arm/nwfpe/{NOTES => notes.rst} (99%)
+ rename Documentation/arm/nwfpe/{README => nwfpe.rst} (98%)
+ rename Documentation/arm/nwfpe/{TODO => todo.rst} (75%)
+ rename Documentation/arm/{OMAP/DSS => omap/dss.rst} (86%)
+ create mode 100644 Documentation/arm/omap/index.rst
+ rename Documentation/arm/{OMAP/README => omap/omap.rst} (62%)
+ rename Documentation/arm/{OMAP/omap_pm => omap/omap_pm.rst} (83%)
+ rename Documentation/arm/{Porting => porting.rst} (94%)
+ rename Documentation/arm/pxa/{mfp.txt => mfp.rst} (83%)
+ rename Documentation/arm/{SA1100/ADSBitsy => sa1100/adsbitsy.rst} (90%)
+ rename Documentation/arm/{SA1100/Assabet => sa1100/assabet.rst} (62%)
+ rename Documentation/arm/{SA1100/Brutus => sa1100/brutus.rst} (75%)
+ rename Documentation/arm/{SA1100/CERF => sa1100/cerf.rst} (91%)
+ create mode 100644 Documentation/arm/sa1100/freebird.rst
+ rename Documentation/arm/{SA1100/GraphicsClient => sa1100/graphicsclient.rst} (87%)
+ rename Documentation/arm/{SA1100/GraphicsMaster => sa1100/graphicsmaster.rst} (92%)
+ rename Documentation/arm/{SA1100/HUW_WEBPANEL => sa1100/huw_webpanel.rst} (78%)
+ create mode 100644 Documentation/arm/sa1100/index.rst
+ rename Documentation/arm/{SA1100/Itsy => sa1100/itsy.rst} (88%)
+ rename Documentation/arm/{SA1100/LART => sa1100/lart.rst} (90%)
+ rename Documentation/arm/{SA1100/nanoEngine => sa1100/nanoengine.rst} (74%)
+ rename Documentation/arm/{SA1100/Pangolin => sa1100/pangolin.rst} (81%)
+ rename Documentation/arm/{SA1100/PLEB => sa1100/pleb.rst} (95%)
+ create mode 100644 Documentation/arm/sa1100/serial_uart.rst
+ rename Documentation/arm/{SA1100/Tifon => sa1100/tifon.rst} (88%)
+ rename Documentation/arm/{SA1100/Yopy => sa1100/yopy.rst} (74%)
+ rename Documentation/arm/{Samsung-S3C24XX/CPUfreq.txt => samsung-s3c24xx/cpufreq.rst} (96%)
+ rename Documentation/arm/{Samsung-S3C24XX/EB2410ITX.txt => samsung-s3c24xx/eb2410itx.rst} (92%)
+ rename Documentation/arm/{Samsung-S3C24XX/GPIO.txt => samsung-s3c24xx/gpio.rst} (89%)
+ rename Documentation/arm/{Samsung-S3C24XX/H1940.txt => samsung-s3c24xx/h1940.rst} (94%)
+ create mode 100644 Documentation/arm/samsung-s3c24xx/index.rst
+ rename Documentation/arm/{Samsung-S3C24XX/NAND.txt => samsung-s3c24xx/nand.rst} (92%)
+ rename Documentation/arm/{Samsung-S3C24XX/Overview.txt => samsung-s3c24xx/overview.rst} (94%)
+ rename Documentation/arm/{Samsung-S3C24XX/S3C2412.txt => samsung-s3c24xx/s3c2412.rst} (96%)
+ rename Documentation/arm/{Samsung-S3C24XX/S3C2413.txt => samsung-s3c24xx/s3c2413.rst} (77%)
+ rename Documentation/arm/{Samsung-S3C24XX/SMDK2440.txt => samsung-s3c24xx/smdk2440.rst} (94%)
+ rename Documentation/arm/{Samsung-S3C24XX/Suspend.txt => samsung-s3c24xx/suspend.rst} (94%)
+ rename Documentation/arm/{Samsung-S3C24XX/USB-Host.txt => samsung-s3c24xx/usb-host.rst} (94%)
+ rename Documentation/arm/{Samsung/Bootloader-interface.txt => samsung/bootloader-interface.rst} (72%)
+ rename Documentation/arm/{Samsung => samsung}/clksrc-change-registers.awk (100%)
+ rename Documentation/arm/{Samsung/GPIO.txt => samsung/gpio.rst} (87%)
+ create mode 100644 Documentation/arm/samsung/index.rst
+ rename Documentation/arm/{Samsung/Overview.txt => samsung/overview.rst} (86%)
+ rename Documentation/arm/{Setup => setup.rst} (87%)
+ rename Documentation/arm/{SH-Mobile => sh-mobile}/.gitignore (100%)
+ rename Documentation/arm/{SPEAr/overview.txt => spear/overview.rst} (91%)
+ rename Documentation/arm/sti/{overview.txt => overview.rst} (82%)
+ rename Documentation/arm/sti/{stih407-overview.txt => stih407-overview.rst} (82%)
+ rename Documentation/arm/sti/{stih415-overview.txt => stih415-overview.rst} (79%)
+ rename Documentation/arm/sti/{stih416-overview.txt => stih416-overview.rst} (83%)
+ rename Documentation/arm/sti/{stih418-overview.txt => stih418-overview.rst} (83%)
+ rename Documentation/arm/{sunxi/README => sunxi.rst} (83%)
+ rename Documentation/arm/sunxi/{clocks.txt => clocks.rst} (92%)
+ rename Documentation/arm/{swp_emulation => swp_emulation.rst} (63%)
+ rename Documentation/arm/{tcm.txt => tcm.rst} (86%)
+ rename Documentation/arm/{uefi.txt => uefi.rst} (63%)
+ rename Documentation/arm/{VFP/release-notes.txt => vfp/release-notes.rst} (92%)
+ rename Documentation/arm/{vlocks.txt => vlocks.rst} (98%)
+ delete mode 100644 Documentation/backlight/lp855x-driver.txt
+ rename Documentation/block/{bfq-iosched.txt => bfq-iosched.rst} (95%)
+ rename Documentation/block/{biodoc.txt => biodoc.rst} (85%)
+ rename Documentation/block/{biovecs.txt => biovecs.rst} (92%)
+ create mode 100644 Documentation/block/capability.rst
+ delete mode 100644 Documentation/block/capability.txt
+ rename Documentation/block/{cmdline-partition.txt => cmdline-partition.rst} (92%)
+ rename Documentation/block/{data-integrity.txt => data-integrity.rst} (91%)
+ rename Documentation/block/{deadline-iosched.txt => deadline-iosched.rst} (89%)
+ create mode 100644 Documentation/block/index.rst
+ rename Documentation/block/{ioprio.txt => ioprio.rst} (75%)
+ rename Documentation/block/{kyber-iosched.txt => kyber-iosched.rst} (86%)
+ rename Documentation/block/{null_blk.txt => null_blk.rst} (60%)
+ rename Documentation/block/{pr.txt => pr.rst} (93%)
+ rename Documentation/block/{queue-sysfs.txt => queue-sysfs.rst} (99%)
+ rename Documentation/block/{request.txt => request.rst} (59%)
+ rename Documentation/block/{stat.txt => stat.rst} (89%)
+ rename Documentation/block/{switching-sched.txt => switching-sched.rst} (67%)
+ rename Documentation/block/{writeback_cache_control.txt => writeback_cache_control.rst} (94%)
+ rename Documentation/{gcc-plugins.txt => core-api/gcc-plugins.rst} (100%)
+ create mode 100644 Documentation/driver-api/backlight/lp855x-driver.rst
+ rename Documentation/{bt8xxgpio.txt => driver-api/bt8xxgpio.rst} (100%)
+ rename Documentation/{connector/connector.txt => driver-api/connector.rst} (57%)
+ rename Documentation/{console/console.txt => driver-api/console.rst} (79%)
+ rename Documentation/{dcdbas.txt => driver-api/dcdbas.rst} (100%)
+ rename Documentation/{dell_rbu.txt => driver-api/dell_rbu.rst} (100%)
+ rename Documentation/{ => driver-api}/driver-model/binding.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/bus.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/class.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/design-patterns.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/device.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/devres.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/driver.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/index.rst (96%)
+ rename Documentation/{ => driver-api}/driver-model/overview.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/platform.rst (100%)
+ rename Documentation/{ => driver-api}/driver-model/porting.rst (99%)
+ rename Documentation/{early-userspace/buffer-format.txt => driver-api/early-userspace/buffer-format.rst} (91%)
+ rename Documentation/{early-userspace/README => driver-api/early-userspace/early_userspace_support.rst} (99%)
+ create mode 100644 Documentation/driver-api/early-userspace/index.rst
+ rename Documentation/{EDID/howto.rst => driver-api/edid.rst} (98%)
+ rename Documentation/{eisa.txt => driver-api/eisa.rst} (98%)
+ rename Documentation/{interconnect => driver-api}/interconnect.rst (99%)
+ rename Documentation/{isa.txt => driver-api/isa.rst} (100%)
+ rename Documentation/{isapnp.txt => driver-api/isapnp.rst} (100%)
+ rename Documentation/{lightnvm/pblk.txt => driver-api/lightnvm-pblk.rst} (100%)
+ create mode 100644 Documentation/driver-api/md/index.rst
+ rename Documentation/{md/md-cluster.txt => driver-api/md/md-cluster.rst} (68%)
+ rename Documentation/{md/raid5-cache.txt => driver-api/md/raid5-cache.rst} (92%)
+ rename Documentation/{md/raid5-ppl.txt => driver-api/md/raid5-ppl.rst} (98%)
+ create mode 100644 Documentation/driver-api/memory-devices/index.rst
+ rename Documentation/{memory-devices/ti-emif.txt => driver-api/memory-devices/ti-emif.rst} (80%)
+ rename Documentation/{bus-devices/ti-gpmc.txt => driver-api/memory-devices/ti-gpmc.rst} (58%)
+ rename Documentation/{men-chameleon-bus.txt => driver-api/men-chameleon-bus.rst} (100%)
+ create mode 100644 Documentation/driver-api/mmc/index.rst
+ rename Documentation/{mmc/mmc-async-req.txt => driver-api/mmc/mmc-async-req.rst} (75%)
+ rename Documentation/{mmc/mmc-dev-attrs.txt => driver-api/mmc/mmc-dev-attrs.rst} (73%)
+ rename Documentation/{mmc/mmc-dev-parts.txt => driver-api/mmc/mmc-dev-parts.rst} (83%)
+ rename Documentation/{mmc/mmc-tools.txt => driver-api/mmc/mmc-tools.rst} (92%)
+ create mode 100644 Documentation/driver-api/mtd/index.rst
+ rename Documentation/{mtd/intel-spi.txt => driver-api/mtd/intel-spi.rst} (71%)
+ rename Documentation/{mtd/nand_ecc.txt => driver-api/mtd/nand_ecc.rst} (67%)
+ rename Documentation/{mtd/spi-nor.txt => driver-api/mtd/spi-nor.rst} (94%)
+ create mode 100644 Documentation/driver-api/nfc/index.rst
+ rename Documentation/{nfc/nfc-hci.txt => driver-api/nfc/nfc-hci.rst} (71%)
+ rename Documentation/{nfc/nfc-pn544.txt => driver-api/nfc/nfc-pn544.rst} (82%)
+ rename Documentation/{ntb.txt => driver-api/ntb.rst} (100%)
+ rename Documentation/{nvdimm/btt.txt => driver-api/nvdimm/btt.rst} (71%)
+ create mode 100644 Documentation/driver-api/nvdimm/index.rst
+ rename Documentation/{nvdimm/nvdimm.txt => driver-api/nvdimm/nvdimm.rst} (60%)
+ rename Documentation/{nvdimm/security.txt => driver-api/nvdimm/security.rst} (99%)
+ rename Documentation/{nvmem/nvmem.txt => driver-api/nvmem.rst} (62%)
+ rename Documentation/{parport-lowlevel.txt => driver-api/parport-lowlevel.rst} (100%)
+ create mode 100644 Documentation/driver-api/phy/index.rst
+ rename Documentation/{phy.txt => driver-api/phy/phy.rst} (100%)
+ rename Documentation/{phy/samsung-usb2.txt => driver-api/phy/samsung-usb2.rst} (77%)
+ create mode 100644 Documentation/driver-api/pti_intel_mid.rst
+ rename Documentation/{pwm.txt => driver-api/pwm.rst} (100%)
+ create mode 100644 Documentation/driver-api/rapidio/index.rst
+ rename Documentation/{rapidio/mport_cdev.txt => driver-api/rapidio/mport_cdev.rst} (84%)
+ rename Documentation/{rapidio/rapidio.txt => driver-api/rapidio/rapidio.rst} (97%)
+ rename Documentation/{rapidio/rio_cm.txt => driver-api/rapidio/rio_cm.rst} (76%)
+ rename Documentation/{rapidio/sysfs.txt => driver-api/rapidio/sysfs.rst} (75%)
+ rename Documentation/{rapidio/tsi721.txt => driver-api/rapidio/tsi721.rst} (79%)
+ rename Documentation/{rfkill.txt => driver-api/rfkill.rst} (100%)
+ rename Documentation/{ => driver-api}/serial/cyclades_z.rst (100%)
+ rename Documentation/{ => driver-api}/serial/driver.rst (99%)
+ rename Documentation/{ => driver-api}/serial/index.rst (90%)
+ rename Documentation/{ => driver-api}/serial/moxa-smartio.rst (100%)
+ rename Documentation/{ => driver-api}/serial/n_gsm.rst (100%)
+ rename Documentation/{ => driver-api}/serial/rocket.rst (100%)
+ rename Documentation/{ => driver-api}/serial/serial-iso7816.rst (100%)
+ rename Documentation/{ => driver-api}/serial/serial-rs485.rst (100%)
+ rename Documentation/{ => driver-api}/serial/tty.rst (100%)
+ rename Documentation/{sgi-ioc4.txt => driver-api/sgi-ioc4.rst} (100%)
+ rename Documentation/{SM501.txt => driver-api/sm501.rst} (100%)
+ rename Documentation/{smsc_ece1099.txt => driver-api/smsc_ece1099.rst} (100%)
+ rename Documentation/{switchtec.txt => driver-api/switchtec.rst} (97%)
+ rename Documentation/{sync_file.txt => driver-api/sync_file.rst} (100%)
+ rename Documentation/{vfio-mediated-device.txt => driver-api/vfio-mediated-device.rst} (99%)
+ rename Documentation/{vfio.txt => driver-api/vfio.rst} (100%)
+ rename Documentation/{ => driver-api}/xilinx/eemi.rst (100%)
+ rename Documentation/{ => driver-api}/xilinx/index.rst (94%)
+ rename Documentation/{xillybus.txt => driver-api/xillybus.rst} (100%)
+ rename Documentation/{zorro.txt => driver-api/zorro.rst} (100%)
+ rename Documentation/ia64/{aliasing.txt => aliasing.rst} (83%)
+ rename Documentation/ia64/{efirtc.txt => efirtc.rst} (70%)
+ rename Documentation/ia64/{err_inject.txt => err_inject.rst} (82%)
+ rename Documentation/ia64/{fsys.txt => fsys.rst} (76%)
+ rename Documentation/ia64/{README => ia64.rst} (61%)
+ create mode 100644 Documentation/ia64/index.rst
+ rename Documentation/ia64/{IRQ-redir.txt => irq-redir.rst} (86%)
+ rename Documentation/ia64/{mca.txt => mca.rst} (96%)
+ rename Documentation/ia64/{serial.txt => serial.rst} (87%)
+ create mode 100644 Documentation/ia64/xen.rst
+ delete mode 100644 Documentation/ia64/xen.txt
+ rename Documentation/ioctl/{botching-up-ioctls.txt => botching-up-ioctls.rst} (99%)
+ create mode 100644 Documentation/ioctl/cdrom.rst
+ delete mode 100644 Documentation/ioctl/cdrom.txt
+ rename Documentation/ioctl/{hdio.txt => hdio.rst} (54%)
+ create mode 100644 Documentation/ioctl/index.rst
+ rename Documentation/ioctl/{ioctl-decoding.txt => ioctl-decoding.rst} (54%)
+ create mode 100644 Documentation/ioctl/ioctl-number.rst
+ delete mode 100644 Documentation/ioctl/ioctl-number.txt
+ create mode 100644 Documentation/locking/index.rst
+ rename Documentation/locking/{lockdep-design.txt => lockdep-design.rst} (93%)
+ create mode 100644 Documentation/locking/lockstat.rst
+ delete mode 100644 Documentation/locking/lockstat.txt
+ rename Documentation/locking/{locktorture.txt => locktorture.rst} (57%)
+ rename Documentation/locking/{mutex-design.txt => mutex-design.rst} (94%)
+ rename Documentation/locking/{rt-mutex-design.txt => rt-mutex-design.rst} (91%)
+ rename Documentation/locking/{rt-mutex.txt => rt-mutex.rst} (71%)
+ rename Documentation/locking/{spinlocks.txt => spinlocks.rst} (89%)
+ rename Documentation/locking/{ww-mutex-design.txt => ww-mutex-design.rst} (93%)
+ create mode 100644 Documentation/m68k/index.rst
+ rename Documentation/m68k/{kernel-options.txt => kernel-options.rst} (78%)
+ delete mode 100644 Documentation/pti/pti_intel_mid.txt
+ rename Documentation/security/{LSM.rst => lsm-development.rst} (100%)
+ rename Documentation/{lsm.txt => security/lsm.rst} (100%)
+ rename Documentation/{SAK.txt => security/sak.rst} (100%)
+ rename Documentation/{siphash.txt => security/siphash.rst} (100%)
+ rename Documentation/security/tpm/{xen-tpmfront.txt => xen-tpmfront.rst} (66%)
+ delete mode 100644 Documentation/sysctl/abi.txt
+ rename Documentation/{ => userspace-api}/accelerators/ocxl.rst (99%)
+ rename Documentation/{Intel-IOMMU.txt => x86/intel-iommu.rst} (100%)
+ rename Documentation/{intel_txt.txt => x86/intel_txt.rst} (100%)
+ rename Documentation/xtensa/{atomctl.txt => atomctl.rst} (81%)
+ rename Documentation/xtensa/{booting.txt => booting.rst} (91%)
+ create mode 100644 Documentation/xtensa/index.rst
+ create mode 100644 Documentation/xtensa/mmu.rst
+ delete mode 100644 Documentation/xtensa/mmu.txt
+
