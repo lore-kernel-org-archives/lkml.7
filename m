@@ -2,134 +2,109 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973A5C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5A3C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4B720693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A746B2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="InSyd6mU";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Vv5VjC8b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4mQ94xT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388289AbfGPRgd (ORCPT
+        id S2388247AbfGPRhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:36:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48438 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPRgc (ORCPT
+        Tue, 16 Jul 2019 13:37:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44255 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGPRhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:36:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D5C8D60591; Tue, 16 Jul 2019 17:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563298591;
-        bh=flqKaEmSQjxxoHBpu8cQ/orRLe2npA6LtU2nHtNtRwQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=InSyd6mUA5T/6MMXzp9SmTR19V61VKuCg6PR0tlj0dqcnP3Q/be3ywuUiiwowI0I4
-         pu/6Uh2yUp1LmZRmlbwibzurLyJodJD6XNGot8aMiCBOhwsBDbYdgBpPMSwJcrkuR/
-         iTfKtLj6FlBQkCRUMBU0wThAWDrTjvr+Pja+LQ7k=
-Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DCAF6049C;
-        Tue, 16 Jul 2019 17:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563298587;
-        bh=flqKaEmSQjxxoHBpu8cQ/orRLe2npA6LtU2nHtNtRwQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Vv5VjC8btXcbR+RRKt75OO90/3lHKCdmZdLEMsvpgkhItgVOHNZNZmX884opmM0Bb
-         qeBJBCQtAil4E6xmh1PS1sqFRPCIOxtaH5w7iPRYFBkrReKWWiLJ3VekqVpiQjcHUI
-         JQXQV3yjWN9yZIKVSiPGgb4+IEcXkFTB6/DOs7sA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DCAF6049C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-Subject: Re: [PATCH v2 3/4] PM / devfreq: Cache OPP table reference in devfreq
-To:     Saravana Kannan <saravanak@google.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     kernel-team@android.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adharmap@codeaurora.org
-References: <20190625213337.157525-1-saravanak@google.com>
- <20190625213337.157525-4-saravanak@google.com>
-From:   Sibi Sankar <sibis@codeaurora.org>
-Message-ID: <e9c9b150-43a6-dc6b-5d88-21608120e940@codeaurora.org>
-Date:   Tue, 16 Jul 2019 23:06:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Jul 2019 13:37:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so10448291plr.11;
+        Tue, 16 Jul 2019 10:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=r8DZ4+TCHU5YJteXYwVIzG9DedFytInB8jpSvxKVm2A=;
+        b=M4mQ94xTQPQ9pY9zxGxX73zqKMWtbquCdQycZo/YPz1d4M/fKVfuNJMfN3XWxdwKT2
+         2ofTGW48AdtJ577O49p+kPnrfgd7tzcoDOvX8T3FGDQzeGNBzFEi5EH7RIvJRKnO/AgF
+         bBKnHdDbv8NNWjg0D82TXs984bNvEMIltWiRsonJNypX1aqgC6iTuF7Vn27PgOw7sfpj
+         0glWeZNfHq6P+IkAdx9E9yy04XSZ/X64Ibwa5GALDhNIgX92QsU+sPvd1fzdOiVYQzlK
+         1b0+Djrc2ENirIk0XOScDrD1SKXtn1Lu+g3nA2HFpEWZgzikFuGO5LK2YcpYDc6xBUT5
+         58Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=r8DZ4+TCHU5YJteXYwVIzG9DedFytInB8jpSvxKVm2A=;
+        b=TEIeCrvFTgtFpJym19aJJgEsmbhNpjKdmPwMgjO3hSs0Rw04TpsByWhcm6uI73ZEPA
+         VD7PkNU+jRBKqTglg/wLEZIQDD5Rs4MvyGLZus6cnzpBRnRTp78rtZfZtG0V5NZHravF
+         CvW2o3lIcg6gRj7TNcgKS8HCL8qJqXVp9UmPUUVozENJPSzSdTuU6R7eoryevfJYhs3e
+         xJH2/XFwlKPJKBMWrOQK+tt5rcclXdqfDiGCyU3OG6K3sIpCOx8AMjB4i+QwTB0lthBL
+         ocBIzzqbRZtfGHTEHU39sMIsjGsBQrxYeM46bj5Flfy9dJxS6JCFjeJZVjnPffg9rMGC
+         Fvnw==
+X-Gm-Message-State: APjAAAX4Rowpc0LaYrvY1x8paDu3gd3zFERV7/HIJicn60ze/8hksKxs
+        XqpCY/EKFczh9B489lr2Fji/J+Ti
+X-Google-Smtp-Source: APXvYqxn9+vgjYsY4Pvt44NfOX+4Q9kf56Ci+2S6DyAMNTg07NX2nwtDAiab0OtbW1fYaO/Nw/ofDA==
+X-Received: by 2002:a17:902:12d:: with SMTP id 42mr35458184plb.187.1563298637400;
+        Tue, 16 Jul 2019 10:37:17 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.86.126])
+        by smtp.gmail.com with ESMTPSA id j12sm11011828pff.4.2019.07.16.10.37.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 10:37:16 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 23:07:12 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] infiniband: hw: qedr: Remove Unneeded variable rc
+Message-ID: <20190716173712.GA12949@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190625213337.157525-4-saravanak@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Saravana,
+fix below issue reported by coccicheck
+drivers/infiniband/hw/qedr/verbs.c:2454:5-7: Unneeded variable: "rc".
+Return "0" on line 2499
 
-On 6/26/19 3:03 AM, Saravana Kannan wrote:
-> The OPP table can be used often in devfreq. Trying to get it each time can
-> be expensive, so cache it in the devfreq struct.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->   drivers/devfreq/devfreq.c | 6 ++++++
->   include/linux/devfreq.h   | 1 +
->   2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 6b6991f0e873..ac62b78dc035 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -597,6 +597,8 @@ static void devfreq_dev_release(struct device *dev)
->   	if (devfreq->profile->exit)
->   		devfreq->profile->exit(devfreq->dev.parent);
->   
-> +	if (devfreq->opp_table)
-> +		dev_pm_opp_put_opp_table(devfreq->opp_table);
->   	mutex_destroy(&devfreq->lock);
->   	kfree(devfreq);
->   }
-> @@ -677,6 +679,10 @@ struct devfreq *devfreq_add_device(struct device *dev,
->   	devfreq->max_freq = devfreq->scaling_max_freq;
->   
->   	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
-> +	devfreq->opp_table = dev_pm_opp_get_opp_table(dev);
-> +	if (IS_ERR(devfreq->opp_table))
-> +		devfreq->opp_table = NULL;
-> +
->   	atomic_set(&devfreq->suspend_count, 0);
->   
->   	dev_set_name(&devfreq->dev, "devfreq%d",
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index fbffa74bfc1b..0d877c9513d7 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -156,6 +156,7 @@ struct devfreq {
->   	struct devfreq_dev_profile *profile;
->   	const struct devfreq_governor *governor;
->   	char governor_name[DEVFREQ_NAME_LEN];
-> +	struct opp_table *opp_table;
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/infiniband/hw/qedr/verbs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-please add it to the function docs as well
-
->   	struct notifier_block nb;
->   	struct delayed_work work;
->   
-> 
-
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 27d90a84..0c6a4bc 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -2451,7 +2451,6 @@ int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
+ 	struct qedr_dev *dev = qp->dev;
+ 	struct ib_qp_attr attr;
+ 	int attr_mask = 0;
+-	int rc = 0;
+ 
+ 	DP_DEBUG(dev, QEDR_MSG_QP, "destroy qp: destroying %p, qp type=%d\n",
+ 		 qp, qp->qp_type);
+@@ -2496,7 +2495,7 @@ int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
+ 		xa_erase_irq(&dev->qps, qp->qp_id);
+ 		kfree(qp);
+ 	}
+-	return rc;
++	return 0;
+ }
+ 
+ int qedr_create_ah(struct ib_ah *ibah, struct rdma_ah_attr *attr, u32 flags,
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
