@@ -2,148 +2,147 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1737DC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D581EC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4CE2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OCB8W11M"
+	by mail.kernel.org (Postfix) with ESMTP id AD11520693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388341AbfGPSIx (ORCPT
+        id S2388299AbfGPSL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:08:53 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44406 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388310AbfGPSIw (ORCPT
+        Tue, 16 Jul 2019 14:11:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47100 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728137AbfGPSL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:08:52 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6GI8nXO083448;
-        Tue, 16 Jul 2019 13:08:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563300529;
-        bh=B7gPU0oH6hxYy1ylLsR2AOejA70E1O6r06wLMSX9mBM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OCB8W11M+F7vpmYqAbmiA251t2aO7VFuaYqNamSiwIMd4fHYX3bg2gdTigZojZlOZ
-         /EX0Vw3/WbQn9RirQkEpqXw5pCUMWMFaRHpzDWB4l2V1Ex6FhVmeKy+gD+qITKZlss
-         HfIEzTAclCJKwLnUiQO2hbc1IfDH3y569IhpyBSg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6GI8nI6099075
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Jul 2019 13:08:49 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 16
- Jul 2019 13:08:49 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 16 Jul 2019 13:08:49 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6GI8nhY078141;
-        Tue, 16 Jul 2019 13:08:49 -0500
-Subject: Re: [RFT][PATCH 1/2] regulator: lm363x: Fix off-by-one n_voltages for
- lm3632 ldo_vpos/ldo_vneg
-To:     Axel Lin <axel.lin@ingics.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190626132632.32629-1-axel.lin@ingics.com>
- <a99b04a3-f079-3a43-9e19-d9501b76a96e@ti.com>
- <CAFRkauAewFwcQNzpSfAfXMiCdHuENcg2NRzKECjPQ1RtUCuXEA@mail.gmail.com>
- <CAFRkauAuvM5gjCDnJeVgKy48Qr6yRyX6L-B1f=bdhM3+rApTTQ@mail.gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e94bbf28-37b2-d51f-ec65-ed282bd77e81@ti.com>
-Date:   Tue, 16 Jul 2019 13:08:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAFRkauAuvM5gjCDnJeVgKy48Qr6yRyX6L-B1f=bdhM3+rApTTQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 16 Jul 2019 14:11:28 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GIBRn5073740
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:11:27 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tshy54m60-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:11:27 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kmahlkuc@linux.vnet.ibm.com>;
+        Tue, 16 Jul 2019 19:11:20 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Jul 2019 19:11:17 +0100
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIBGmA52494678
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 18:11:16 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 337666E054;
+        Tue, 16 Jul 2019 18:11:16 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBF1F6E064;
+        Tue, 16 Jul 2019 18:11:15 +0000 (GMT)
+Received: from oc6220003374.ibm.com (unknown [9.40.45.99])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jul 2019 18:11:15 +0000 (GMT)
+From:   KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+Subject: [PATCH] drm/radeon: Fix EEH during kexec
+Date:   Tue, 16 Jul 2019 13:10:02 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19071618-8235-0000-0000-00000EB70A7E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011440; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01233098; UDB=6.00649713; IPR=6.01014409;
+ MB=3.00027747; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-16 18:11:19
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071618-8236-0000-0000-0000466A69BE
+Message-Id: <1563300606-28434-1-git-send-email-kmahlkuc@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=730 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160223
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Axel
+During kexec some adapters hit an EEH since they are not properly
+shut down in the radeon_pci_shutdown() function. Adding
+radeon_suspend_kms() fixes this issue.
 
-On 7/7/19 9:02 PM, Axel Lin wrote:
-> Axel Lin <axel.lin@ingics.com> 於 2019年6月26日 週三 下午11:12寫道：
->> Dan Murphy <dmurphy@ti.com> 於 2019年6月26日 週三 下午11:07寫道：
->>> Hello
->>>
->>> On 6/26/19 8:26 AM, Axel Lin wrote:
->>>> According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
->>>> Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
->>>> Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
->>>> 000000: 4 V
->>>> 000001: 4.05 V
->>>> 000010: 4.1 V
->>>> ....................
->>>> 011101: 5.45 V
->>>> 011110: 5.5 V (Default)
->>>> 011111: 5.55 V
->>>> ....................
->>>> 100111: 5.95 V
->>>> 101000: 6 V
->>>> Note: Codes 101001 to 111111 map to 6 V
->>>>
->>>> The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
->>>> can match the datasheet.
->>>>
->>>> Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
->>>> Signed-off-by: Axel Lin <axel.lin@ingics.com>
->>>> ---
->>>>    drivers/regulator/lm363x-regulator.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
->>>> index 5647e2f97ff8..e4a27d63bf90 100644
->>>> --- a/drivers/regulator/lm363x-regulator.c
->>>> +++ b/drivers/regulator/lm363x-regulator.c
->>>> @@ -30,7 +30,7 @@
->>>>
->>>>    /* LM3632 */
->>>>    #define LM3632_BOOST_VSEL_MAX               0x26
->>>> -#define LM3632_LDO_VSEL_MAX          0x29
->>>> +#define LM3632_LDO_VSEL_MAX          0x28
->>> Similar comment as I made on the LM36274
->>>
->>> These are 0 based registers so it is 28 + 1
->> The code shows:  .n_voltages     = LM3632_LDO_VSEL_MAX + 1
->> so LM3632_LDO_VSEL_MAX needs to be 0x28.
->>
->>                  .name           = "ldo_vpos",
->>                  .of_match       = "vpos",
->>                  .id             = LM3632_LDO_POS,
->>                  .ops            = &lm363x_regulator_voltage_table_ops,
->>                  .n_voltages     = LM3632_LDO_VSEL_MAX + 1,
-> Hi Dan,
-> I'm wondering if you read my previous reply.
+Since radeon.h is now included in radeon_drv.c radeon_init() needs
+a new name. I chose radeon_initl(). This can be changed if there is
+another suggestion for a name.
 
-Yes I just got to it I was buried with other work.  Thanks for the bump 
-on the list.
+Signed-off-by: Kyle Mahlkuch <Kyle.Mahlkuch at ibm.com>
+---
+ drivers/gpu/drm/radeon/radeon_drv.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-I will have to try this on my board.
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 2e96c88..550f9b0 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -32,6 +32,7 @@
+ #include <drm/drmP.h>
+ #include <drm/radeon_drm.h>
+ #include "radeon_drv.h"
++#include "radeon.h"
+ 
+ #include <drm/drm_pciids.h>
+ #include <linux/console.h>
+@@ -344,11 +345,21 @@ static int radeon_pci_probe(struct pci_dev *pdev,
+ static void
+ radeon_pci_shutdown(struct pci_dev *pdev)
+ {
++	struct drm_device *ddev = pci_get_drvdata(pdev);
++	struct radeon_device *rdev = ddev->dev_private;
++
+ 	/* if we are running in a VM, make sure the device
+ 	 * torn down properly on reboot/shutdown
+ 	 */
+ 	if (radeon_device_is_virtual())
+ 		radeon_pci_remove(pdev);
++
++	/* Some adapters need to be suspended before a
++	* shutdown occurs in order to prevent an error
++	* during kexec.
++	*/
++	if (rdev->family == CHIP_CAICOS)
++		radeon_suspend_kms(ddev, true, true, false);
+ }
+ 
+ static int radeon_pmops_suspend(struct device *dev)
+@@ -589,7 +600,7 @@ static long radeon_kms_compat_ioctl(struct file *filp, unsigned int cmd, unsigne
+ 	.driver.pm = &radeon_pm_ops,
+ };
+ 
+-static int __init radeon_init(void)
++static int __init radeon_initl(void)
+ {
+ 	if (vgacon_text_force() && radeon_modeset == -1) {
+ 		DRM_INFO("VGACON disable radeon kernel modesetting.\n");
+@@ -621,7 +632,7 @@ static void __exit radeon_exit(void)
+ 	radeon_unregister_atpx_handler();
+ }
+ 
+-module_init(radeon_init);
++module_init(radeon_initl);
+ module_exit(radeon_exit);
+ 
+ MODULE_AUTHOR(DRIVER_AUTHOR);
+-- 
+1.8.3.1
 
-FYI this is not really my code Milo K was the original author.
-
-I just added another entry to the driver.  But since Milo is MIA I will
-
-give it a look once I finish up my LED work next week
-
-Dan
-
-<snip>
-
-> Regards,
-> Axel
