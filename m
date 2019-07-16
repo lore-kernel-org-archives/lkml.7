@@ -2,129 +2,104 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F286EC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD575C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C588B20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE22206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KxyVTtnV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KxyVTtnV"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="RL+CgOhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfGPEWI (ORCPT
+        id S1726484AbfGPE0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 00:22:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43632 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfGPEWI (ORCPT
+        Tue, 16 Jul 2019 00:26:00 -0400
+Received: from mail-oi1-f172.google.com ([209.85.167.172]:40306 "EHLO
+        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfGPE0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 00:22:08 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D25CB605FE; Tue, 16 Jul 2019 04:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563250926;
-        bh=gMr1kGTRi06a6sSsz7Od65gf4AEFcJB1U/xs+pRKtSU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KxyVTtnV0rY9Js4Uqjdck4ZoazH6qLq5UoB1hwrmdTTqRwcmneo1rQIluMrvyT3fZ
-         s3KO9b8cHFoMaUKt/BYUbmzjguMPznGBcptny2wa0Q2+OuCsRG0p57Ikq/GgLysvzy
-         ZF7iMRyUHSx78oD1j01DiB7WO0fBF6HoNHMQINPs=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3644605FE;
-        Tue, 16 Jul 2019 04:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563250926;
-        bh=gMr1kGTRi06a6sSsz7Od65gf4AEFcJB1U/xs+pRKtSU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KxyVTtnV0rY9Js4Uqjdck4ZoazH6qLq5UoB1hwrmdTTqRwcmneo1rQIluMrvyT3fZ
-         s3KO9b8cHFoMaUKt/BYUbmzjguMPznGBcptny2wa0Q2+OuCsRG0p57Ikq/GgLysvzy
-         ZF7iMRyUHSx78oD1j01DiB7WO0fBF6HoNHMQINPs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3644605FE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v1 3/3] clk: qcom: rcg: update the DFS macro for RCG
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org>
- <1557339895-21952-4-git-send-email-tdas@codeaurora.org>
- <155742286525.14659.18081373668341127486@swboyd.mtv.corp.google.com>
- <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org>
- <155751085370.14659.7749105088997177801@swboyd.mtv.corp.google.com>
- <f65811f8-42ea-6365-7822-db662eaea228@codeaurora.org>
- <20190715224441.F12122080A@mail.kernel.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <243de3a4-292b-77c0-6232-0b38d124d183@codeaurora.org>
-Date:   Tue, 16 Jul 2019 09:52:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 16 Jul 2019 00:26:00 -0400
+Received: by mail-oi1-f172.google.com with SMTP id w196so14493347oie.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 21:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bRcWjRmFxDg4SEfu8zxM0/EewJf42HkBJR2XudH/ONs=;
+        b=RL+CgOhEgmcOursufR7ym3mvIjJtb8YF7FA4i1dQ+ChMdYOfqc7cBf1uOv9gSILKoX
+         b/ZIQDh1+yyo4WOQI1zWbL9UsnEN41d9c8eOhCQUlxEnAf2ba9RhvS4YCEghd38lJe/P
+         0X9z0o5i1Y64obie0hpaNiQlXjXOdyEuuLToKg649QodM5sbHcnrdwTceEK3QuZMYeVi
+         nUsi/7l8E0iK4k9MhDtE6M0Gp72ZoUBYcsME/7rFufU+w6cq1dqrO5ggcgOHhn7elBYw
+         iMX5dj6Pj8/PXmgIr7J2qXmqfIRtNxHCYfrW5TqGv+sKiXlZ/Q7c6ceS3NWIdIHEBq1r
+         Nzwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bRcWjRmFxDg4SEfu8zxM0/EewJf42HkBJR2XudH/ONs=;
+        b=g+BAL9Te14iuHULBagVGuX5zsvEHAyWMe+O758J9SZ2qK483S1ZQgM+B9uVTC7Ucyh
+         XWGNLrKWHBDfRx9hIDsnSFc++i/8jfsEvQi/TWy0k9hjSJfyi3ZzH0CJG+QkDlWbsuz3
+         UtxGrxm/UwcesNEc6rl+WuSzD4J5OrQfiIwssDlT3vSRkVRtna5OmkaWCb5GI1ZmcWY1
+         elg0KWL/kQ5Wc26HwNy2mY9Gc702uo+fTzjpf5oHghVvaDCHOk2P4b6VDclfyGxU5P/o
+         PNsOUNz7AgoxrOpnefAkPiqvrgbfu4HLaPQ6Q4DTb/GtC/lTIzAEsF3NopmT0BtwAc0K
+         NOWQ==
+X-Gm-Message-State: APjAAAWKCRk8trg+DPoWooIYPOOIl9G/cq9k7DcqBMPhaUBM9l8nk4LM
+        LaQGt09jdFjxTSFpodehkq9EFnB0bM9P3ESC8Z6fMw==
+X-Google-Smtp-Source: APXvYqznIzJKBkcX2EHDSxKUoYWP9K8fyWDLsG2+p7M5YMdh44wYFm51T0RqPbprZgpvnEg5STv9Fldjf1pllgR7iyU=
+X-Received: by 2002:aca:fc50:: with SMTP id a77mr15040114oii.0.1563251159049;
+ Mon, 15 Jul 2019 21:25:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190715224441.F12122080A@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190704205536.32740b34@canb.auug.org.au> <20190704125539.GL3401@mellanox.com>
+ <20190704230133.1fe67031@canb.auug.org.au> <20190704132836.GM3401@mellanox.com>
+ <20190705070810.1e01ea9d@canb.auug.org.au> <CAPcyv4hHC3s3nePSSHaKkFFbxuABZE3GLa7Li=0j6Z45ERrPEg@mail.gmail.com>
+ <20190705120810.GA31525@mellanox.com> <20190706220426.c2c4518f20e1ecc7ddd069fa@linux-foundation.org>
+In-Reply-To: <20190706220426.c2c4518f20e1ecc7ddd069fa@linux-foundation.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 15 Jul 2019 21:25:47 -0700
+Message-ID: <CAPcyv4i=c4ByS9dC4+vLf0Y0xNNcH2RemzwGj9eCdATMp=gb+w@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the hmm tree
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Stephen,
+On Sat, Jul 6, 2019 at 10:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Fri, 5 Jul 2019 12:08:15 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> > On Thu, Jul 04, 2019 at 04:29:55PM -0700, Dan Williams wrote:
+> > > Guys, Andrew has kicked the subsection patches out of -mm because of
+> > > the merge conflicts. Can we hold off on the hmm cleanups for this
+> > > cycle?
+> >
+> > I agree with you we should prioritize your subsection patches over
+> > CH's cleanup if we cannot have both.
+> >
+> > As I said, I'll drop CH's at Andrews request, but I do not want to
+> > make any changes without being aligned with him.
+>
+> OK, I had a shot at repairing the damage on top of current linux-next.
+> The great majority of the issues were in
+> mm-devm_memremap_pages-enable-sub-section-remap.patch.
+>
+> Below are the rejects which I saw and below that is my attempt to
+> resolve it all.  Dan, please go through this with a toothcomb.  I've
+> just done an mmotm release with all this in it so please do whatever's
+> needed to verify that it's all working correctly.
 
-Thanks for the review.
+Apologies for the delay, I was offline last week for a move. This
+looks good to me and even caught some "X >> PAGE_SHIFT" to
+"PHYS_PFN(X)" conversions that I missed. It also passes my testing.
+Thank you accommodating a rebase.
 
-On 7/16/2019 4:14 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-05-12 20:44:46)
->> On 5/10/2019 11:24 PM, Stephen Boyd wrote:
->>>>>> diff --git a/drivers/clk/qcom/clk-rcg.h b/drivers/clk/qcom/clk-rcg.h
->>>>>> index 5562f38..e40e8f8 100644
->>>>>> --- a/drivers/clk/qcom/clk-rcg.h
->>>>>> +++ b/drivers/clk/qcom/clk-rcg.h
->>>>>> @@ -171,7 +171,7 @@ struct clk_rcg_dfs_data {
->>>>>>     };
->>>>>>
->>>>>>     #define DEFINE_RCG_DFS(r) \
->>>>>> -       { .rcg = &r##_src, .init = &r##_init }
->>>>>> +       { .rcg = &r, .init = &r##_init }
->>>>>
->>>>> Why do we need to rename the init data?
->>>>>
->>>>
->>>> We want to manage the init data as the clock source name, so that we
->>>> could manage to auto generate our code. So that we do not have to
->>>> re-name the clock init data manually if the DFS source names gets
->>>> updated at any point of time.
->>>>
->>>
->>> Why is the clk name changing to not have a _src after the "root" of the
->>> clk name? As long as I can remember, RCGs have a "_src" postfix.
->>>
->>
->> Yes, the RCGs would have _src, so we do want the init data also to be
->> generated with _src postfix. So that we do not have to manually clean up
->> the generated code.
->>
-> 
-> Please manually cleanup the generated code, or fix the code
-> generator to do what you want.
-> 
-
-Fixing the code manually is not what we intend to do and it is time 
-consuming with too many DFS controlled clocks. This really helps us 
-align to internal code.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Now to take a look at Oscar's fixes.
