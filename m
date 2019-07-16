@@ -2,211 +2,84 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414DBC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7E6C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E4E20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7C720659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:32:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AhANZlza"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EzQNWrBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbfGPUbG (ORCPT
+        id S2388739AbfGPUcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:31:06 -0400
-Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:53845
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728535AbfGPUbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:31:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R2Yejd4V2FP+mAAm+/6scxg5PuqHS3ltYYo9tHKqujFkvGe1rJRmh4FPRnMROnkUucCDBu35bE5nESO8fyuX63aWUECAL2AUhUp2KuFn/6gWAma6xpN+hnx9wBf4aXUXpwKmt53dlFb5bktEpXyyR+e3TNKxUulkIarOU+28acrbTtAKUHoBb9nfjMa0ohIkQvRe5lw93hfGlHkWdISVajwtUU2Rq6b0ET4DDVrUdZtggteE42FpEwGz73+SY42GA6dqnAQZ99P4rCvSyI8ono3d4Q2bbs+OoV6dDneo09VvRWkW9NZdx5gfa6RXrSy9/WcbS9JCROh4nbLLqv7JfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uJa/5AgrWM3v0gvkTN15W6RNVA6A+KvOz+bap9Z7xAk=;
- b=bWkrDQYbeFaPmYx5ZkBa3OVr4MSj9a3XJmnH5TvDJkzuaYVy8ygzCcjWWbz41CAmrYRgxieXN8/kyMBev1MYqdmvayHX8XXWxsMWOK2pNSTnq2vVe6nU26lecR9KZvUQkhZn+Y7tsMUFiMrlbUDAsYJAsXh7pC71EVKW0o/lViY66eQKnWAPZV8XfCRS2FQFGnszETO29xgdLhXE4xkepxOp5j7Zfbbnt2ovVwLlHp7u+dwKxeo/ZGslG+gGL84dAAfn/dIBPsAx+2jUQgKqXnyxJPjaXywwrDj6WregLLqO2Ii+H04ydmcLtRI1TGGCWNUfhVMniEX0YDAnrlq7qA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uJa/5AgrWM3v0gvkTN15W6RNVA6A+KvOz+bap9Z7xAk=;
- b=AhANZlzat+HvT4cH/ZdkfGadGYVRRBSYAD/7IBr1jwVREYToQLfs3JBNkhiaMUvs57QbVtbpM4fEHUHqI5Nj2/MlusuVWBbGaT+AV182H4x43WF3FJXy+rU60kUQSM2FATSuAVKQh0F3lu2c4Pc2hCa5zDmrGQXxNdPMC5rJO1k=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
- VE1PR04MB6352.eurprd04.prod.outlook.com (10.255.118.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Tue, 16 Jul 2019 20:31:01 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::358c:d36c:4f8:db79]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::358c:d36c:4f8:db79%4]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 20:31:01 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Biwen Li <biwen.li@nxp.com>
-Subject: RE: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-Thread-Topic: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-Thread-Index: AQHVO8DqfFmzy9Szzkm2ppeHuiuc3qbNsvhg
-Date:   Tue, 16 Jul 2019 20:31:01 +0000
-Message-ID: <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190716101655.47418-1-biwen.li@nxp.com>
- <20190716101655.47418-2-biwen.li@nxp.com>
-In-Reply-To: <20190716101655.47418-2-biwen.li@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ebebe433-8cd4-4032-55da-08d70a2c84b8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6352;
-x-ms-traffictypediagnostic: VE1PR04MB6352:
-x-microsoft-antispam-prvs: <VE1PR04MB635270F7F1E82EC964C167868FCE0@VE1PR04MB6352.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(136003)(376002)(39860400002)(346002)(366004)(396003)(189003)(199004)(13464003)(86362001)(71200400001)(66066001)(71190400001)(53546011)(6506007)(6246003)(6436002)(66946007)(7696005)(64756008)(102836004)(52536014)(478600001)(486006)(2201001)(66476007)(66446008)(25786009)(53936002)(5660300002)(229853002)(76116006)(9686003)(55016002)(54906003)(305945005)(316002)(110136005)(476003)(446003)(8936002)(81156014)(81166006)(8676002)(11346002)(186003)(74316002)(256004)(26005)(3846002)(99286004)(6116002)(2501003)(2906002)(76176011)(66556008)(33656002)(14454004)(68736007)(4326008)(7736002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6352;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ymBBRVVzhgWizqSkFZNlu+OZPMfBCh24Hg0twjtv7EL9dPfV+K9M+8QF5vPbg0W4Xih56iKiFUDl6vNAPHh2wO8Ah916JKKiLgNMyJ/027/oeceX+WbAHLpOIVePWMXqEg+kxx3/wxtS6kPYUjRvsyHiGjM18/Of1aDvh5+fwXRikU8b5svvECODIwaB4Y8Pnxxl4nTr7lbtfnYsQJPDE2WHaDgEYyBxkF7tUkP/k/UXQYuPmi7FkW+eHkERcg//mhYX5jDs79W7LZvkDQtb3nlR+R9QEfLAQOjAukSeoqtxLRiq4FvgXotQ3zPsu9ZfooZQqCKSJPnKxPfCoDfkWTCrSyoH7O8m9J9FB8nsSO5ItcD0721RrmKB8eiwN/BZU31usZxDJNmCoBCCG/EZK03aktsCAldGopr94SCrTVE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jul 2019 16:32:46 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:36980 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728340AbfGPUcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 16:32:45 -0400
+Received: by mail-vs1-f67.google.com with SMTP id v6so14881240vsq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 13:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=81NxWyaYYLOx3U0CNAY+vem2FwAQtGrb2n7o/OCCQ6Q=;
+        b=EzQNWrBC5qDZZtG/w0lKikRR/oNojiw9cBTeaFyF+wRtC0dUeoMDAVmJAyqgyBzSEe
+         NnHR+bKb6u1SnmKae3PIH+umXwHZMHtFajbm/8e/0FKjLrjds+MrgdBNWGVgxTk/yr6r
+         a85dbUuIp7o5N3v/8tNZHHWO3WTJG2qgU7hh2JmzThDmC4LWVEqOIQxnLnkYtDSCe2ti
+         5FQhqEyqvKKdQWNiHM1ecC46U6rAWhmCVAaC9TfrC8eScLAfgKAcSwq1bSAoiEmgzGkY
+         v9jXDgZ1Ero5tUf69xUGxmjRwnF44LzOVHGe3Veh7QYw4fFvqvGOrUYAfq8zFdebhPQT
+         bgcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=81NxWyaYYLOx3U0CNAY+vem2FwAQtGrb2n7o/OCCQ6Q=;
+        b=rs21K/Jkz2lLM10gfVh64VFvEuIJLWVL8EEK3VvK7VzfnpNawu5Q9FFKEt807uRht7
+         2+Fyf0UK1Mmq8NtuiNz4f7GwLuxGEivZ9VtzuBLIWqE/09iDEVcwXM2PbXYi917oRx6n
+         pLKmn/pdmLl7bEDPbQT+wbbISDjAYDXxcto3cC5myBrnGWuesIWMt3r1sSguoqcbiL+q
+         yRBt4tCi4eQ6v5mf4yjKU4TouEo4vA0ZenKFDUYGAM5P+9GS3JAj34J7DPBaqDE2SiNU
+         ite0bRPHbUw3Y8ee1Upg7gc420WgQhqsZEIeEqzU8kvWAGT++c3eD4xrwD3QvaeT7Dpa
+         F5tw==
+X-Gm-Message-State: APjAAAX7Dft2u5H6hDlFJFelg45C337jIsMjfNmlT6pfUV1CBKgNUByb
+        aWVViVREFg+3Jim1U338ZRQQQMTU3I/j+33SSPga0Q==
+X-Google-Smtp-Source: APXvYqxQj6V0JsV1Wq1M4PK/ZqnLQAggZqvxwAWQtvoVxjTqMsgvXgRRn/MxQo0FX6SkSFdhHPKRHE9oRdeF58llyro=
+X-Received: by 2002:a67:fb02:: with SMTP id d2mr12106614vsr.207.1563309164025;
+ Tue, 16 Jul 2019 13:32:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebebe433-8cd4-4032-55da-08d70a2c84b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 20:31:01.6707
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6352
+References: <20190715195946.223443-1-matthewgarrett@google.com>
+ <20190715195946.223443-24-matthewgarrett@google.com> <5d363f09-d649-5693-45c0-bb99d69f0f38@iogearbox.net>
+In-Reply-To: <5d363f09-d649-5693-45c0-bb99d69f0f38@iogearbox.net>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Tue, 16 Jul 2019 13:32:33 -0700
+Message-ID: <CACdnJuudpnaQ5YUhoxmxNWVdRB6v0u0Bf2O6NmYOXjp8_govyg@mail.gmail.com>
+Subject: Re: [PATCH V35 23/29] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 15, 2019 at 3:54 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> Hmm, does security_locked_down() ever return a code > 0 or why do you
+> have the double check on return code? If not, then for clarity the
+> ret code from security_locked_down() should be checked as 'ret < 0'
+> as well and out label should be at the memset directly instead.
 
-
-> -----Original Message-----
-> From: Biwen Li <biwen.li@nxp.com>
-> Sent: Tuesday, July 16, 2019 5:17 AM
-> To: a.zummo@towertech.it; alexandre.belloni@bootlin.com; Leo Li
-> <leoyang.li@nxp.com>; robh+dt@kernel.org
-> Cc: linux-rtc@vger.kernel.org; linux-kernel@vger.kernel.org; Xiaobo Xie
-> <xiaobo.xie@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>; Ran Wang
-> <ran.wang_1@nxp.com>; mark.rutland@arm.com;
-> devicetree@vger.kernel.org; Biwen Li <biwen.li@nxp.com>
-> Subject: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm al=
-arm
-> driver
->=20
-> The patch adds binding for ftm alarm driver
->=20
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v5:
->     - None
->=20
-> Change in v4:
->     - add note about dts and kernel options
->     - add aliases in example
->=20
-> Change in v3:
-> 	- remove reg-names property
-> 	- correct cells number
->=20
-> Change in v2:
-> 	- replace ls1043a with ls1088a as example
-> 	- add rcpm node and fsl,rcpm-wakeup property
->=20
->=20
->  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-
-> alarm.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> new file mode 100644
-> index 000000000000..fb018065406c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> @@ -0,0 +1,49 @@
-> +Freescale FlexTimer Module (FTM) Alarm
-> +
-> +Note:
-> +- The driver depends on RCPM driver
-> +  to wake up system in sleep.
-> +- Need stop using RTC_HCTOSYS or use the DT aliases
-> +  to ensure the driver is not used as the primary RTC.
-> +  (Select DT aliases defaultly)
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,<chip>-ftm-alarm", the
-> +	       supported chips include
-> +	       "fsl,ls1012a-ftm-alarm"
-> +	       "fsl,ls1021a-ftm-alarm"
-> +	       "fsl,ls1028a-ftm-alarm"
-> +	       "fsl,ls1043a-ftm-alarm"
-> +	       "fsl,ls1046a-ftm-alarm"
-> +	       "fsl,ls1088a-ftm-alarm"
-> +	       "fsl,ls208xa-ftm-alarm"
-> +- reg : Specifies base physical address and size of the register sets fo=
-r the
-> +  FlexTimer Module and base physical address of IP Powerdown Exception
-> Control
-> +  Register.
-
-You removed the IP Powerdown exception register in the examples, but not he=
-re.
-
-> +- interrupts : Should be the FlexTimer Module interrupt.
-> +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> +	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> +
-> +Optional properties:
-> +- big-endian: If the host controller is big-endian mode, specify this pr=
-operty.
-> +  The default endian mode is little-endian.
-> +
-> +Example:
-> +aliases {
-> +	...
-> +	rtc1 =3D ftm_alarm0; /* Use flextimer alarm driver as /dev/rtc1 */
-> +	...
-> +};
-> +
-> +rcpm: rcpm@1e34040 {
-> +	compatible =3D "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> +	reg =3D <0x0 0x1e34040 0x0 0x18>;
-> +	fsl,#rcpm-wakeup-cells =3D <6>;
-> +};
-> +
-> +ftm_alarm0: timer@2800000 {
-> +	compatible =3D "fsl,ls1088a-ftm-alarm";
-> +	reg =3D <0x0 0x2800000 0x0 0x10000>;
-> +	fsl,rcpm-wakeup =3D <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-> +	interrupts =3D <0 44 4>;
-> +};
-> --
-> 2.17.1
-
+It doesn't, so I'll update. Thanks!
