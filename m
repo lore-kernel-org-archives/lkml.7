@@ -7,120 +7,109 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01ACC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806D1C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0C22064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCBD2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rzasgh4k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILTfJYZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388575AbfGPSru (ORCPT
+        id S2388580AbfGPSsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:47:50 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39848 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbfGPSru (ORCPT
+        Tue, 16 Jul 2019 14:48:18 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45801 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfGPSsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:47:50 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u25so9319348wmc.4;
-        Tue, 16 Jul 2019 11:47:48 -0700 (PDT)
+        Tue, 16 Jul 2019 14:48:17 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s22so15429817qkj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=la7tyf8ZPvrnrjwCqpENoZfGCM6j/pjcLrF4W1pZ+rY=;
-        b=Rzasgh4koX7egHkPZapYQpqOqr5V0KdP9Amkfg9lgCJK7rw363mdbEp3iWx2c3xvir
-         xdX43TR6TrHCZ50yHqFcTt5uDVyaArbRVVAu8AcH0H3ZhsWmu116mXxKkTzHhuN3kJna
-         wZ+8QLY3SR0VV+w/eJGZkKUj//jh5o2e5qtKMpgvOVXfd3OeznGIjXLfi9VAPTsHDBDv
-         wp2gh+xw6HDAb48gOIn7wNeTb90pv4ASdvju3i2LJXsnGtF9H4hSNRZ6QPOsq+tUD1G2
-         G6pynhwrr9HN4O2Rb792Nrc0qz39g8hwNkW4ERLYxMEACZUKkFFyBYuflf+A0/M6Ojm0
-         0NOA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i6md9rIChQVXhaUo7ltMaY/nR+bnXEpUHUJSCYG9md0=;
+        b=ILTfJYZA0dsy4ktuQXFAJJYv14hDbEnQAQCVgh7Iaq+NYq0ff/1ayrPU5xg8E1z/kR
+         msIuoxQRjAX7FB7gbclF903P0R8cbXcTQb8MeEL9Xfb/4OKT5VbEQIGsI0DHb8jpDBKL
+         O29YGMYytCg1G9XJY0B2oxN2ONXNgzp/NLscQHBHkg3vf+ckCuMnvV9DA4jiDP7gjZde
+         kP0JVrT5cnwABvkRHFI6Kq39KhSX3UFmPO3zam73ETw1hfkd6EUOdOoC3Y4W0rVSKk2T
+         HKM0OSlBQmuTeUIpgNVtOqAnJMtsXhJJIQMY1e+iwZ6keCRCZMAV7YUnv1J2rCNjQNSS
+         U/Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=la7tyf8ZPvrnrjwCqpENoZfGCM6j/pjcLrF4W1pZ+rY=;
-        b=F0m0wFz7g3qaN1GkEghzJV7BzoJbx9S2TcE3IwDIO/HZJnvPiI0xos6rCy8bNY8RKN
-         NLDMMGzzSsNOtpUyHl8xL+EXeONDp8lmySSHsk1Th7yb1ctuFtbozmgOiatROYcUJFm+
-         k/VtCIqpgdya1eaIJ/VMLpdhjCy0ZIL5ooKy45037svQ2WTCuyhYQ108xLpF8UzyxzVO
-         56PZ0ddqVkHCF7e5u6thZCEoJyQZ5fQ2yQduFa0FTyEykj9QFDwqDbwffWEdDSy5KYaR
-         fmyPFVhbTvepjvatoqvcS7xsAJoaPU8eJzUMeFF3fI6UqE22Mrqy5FIeNFNHM6exjAfn
-         986Q==
-X-Gm-Message-State: APjAAAUSozQlQfoilmPH5zrBMuiP7cw9w0QpOKhvVBQmWy6HHGRzYoh5
-        VHALZ/JYXTzgMHb+ia8e3OgGfVbmPxs=
-X-Google-Smtp-Source: APXvYqy2/SaHVfv0ZA468Q8Vk4qvCfbFHdaeCRTzyNzYAfwnhcqrN0fEKdlQGtE2FC32qHEJN15Jjw==
-X-Received: by 2002:a1c:a7c6:: with SMTP id q189mr32313689wme.146.1563302867385;
-        Tue, 16 Jul 2019 11:47:47 -0700 (PDT)
-Received: from localhost (smb-adpcdg1-05.hotspot.hub-one.net. [213.174.99.133])
-        by smtp.gmail.com with ESMTPSA id y16sm20774858wrw.33.2019.07.16.11.47.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jul 2019 11:47:46 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 20:47:44 +0200
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>
-Cc:     Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] Input: add Apple SPI keyboard and trackpad driver.
-Message-ID: <20190716184744.GC1140@penguin>
-References: <20190419081926.13567-1-ronald@innovation.ch>
- <20190419081926.13567-3-ronald@innovation.ch>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i6md9rIChQVXhaUo7ltMaY/nR+bnXEpUHUJSCYG9md0=;
+        b=jEGi5cYAVwSVRYs6jiJMjEhE1H1KJX9bCUBprr4rjhLyesN0Zcx/rQHzUGIuDYsLo7
+         yttt3gIP9SHST5Zhu5KNMl8S/rdVncfvgRQnpbTqwJWPsgRcQ+bf5ph5lVdcWj9psdaB
+         GJIhx0ERBnmzUhHFIGVsHydkeeK0NWx7aVO3gV8sOLXob2spioqiTPMw8Pq2v9ARCO1l
+         6ni4JfGXbfD3W8DpQhmkAuOgMOepzFsvl4vuOZvcudASDC1pXY7DTOegB1LTE8wdY2jw
+         mlm/p6OeUcRCBxwW4zOcm9Hy7nz1znyDPV/1yH3nSQCUAPTa4j7jLsEqN+AWL/Ww/7xr
+         G1VQ==
+X-Gm-Message-State: APjAAAWJATNti58UifcIYmI9lZV8ePNfB9anbuXOoAe6Wcnwxu1ANOQ2
+        3fjX0UtamwoLYhmIjsBL5CI=
+X-Google-Smtp-Source: APXvYqy319fobg/H7CDwBog85rwBv9IKwqRXEjceaqrEo2S3dg9dnFe9DcIwzCwCcTaOlA6cSPOZ2g==
+X-Received: by 2002:a37:9a0b:: with SMTP id c11mr23468713qke.204.1563302895920;
+        Tue, 16 Jul 2019 11:48:15 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id h19sm7111975qto.3.2019.07.16.11.48.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 11:48:15 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F279F40340; Tue, 16 Jul 2019 15:48:10 -0300 (-03)
+Date:   Tue, 16 Jul 2019 15:48:10 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, mbd@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH] perf stat: Fix segfault for event group in repeat mode
+Message-ID: <20190716184810.GF3624@kernel.org>
+References: <20190710204540.176495-1-nums@google.com>
+ <20190714204432.GA8120@krava>
+ <20190714205505.GB8120@krava>
+ <CABPqkBSq35HZVk2CNi8xy9j7eb3EWRXSdgPKd+fmv2XaKPjOqA@mail.gmail.com>
+ <20190715075912.GA2821@krava>
+ <CABPqkBR=arE==2H2H0t1uAU2aTgPOr6Yucgh16J0rKughf_=CQ@mail.gmail.com>
+ <20190715083105.GB2821@krava>
+ <20190715142121.GC6032@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190419081926.13567-3-ronald@innovation.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190715142121.GC6032@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ronald,
-
-On Fri, Apr 19, 2019 at 01:19:26AM -0700, Ronald Tschalär wrote:
-> The keyboard and trackpad on recent MacBook's (since 8,1) and
-> MacBookPro's (13,* and 14,*) are attached to an SPI controller instead
-> of USB, as previously. The higher level protocol is not publicly
-> documented and hence has been reverse engineered. As a consequence there
-> are still a number of unknown fields and commands. However, the known
-> parts have been working well and received extensive testing and use.
+Em Mon, Jul 15, 2019 at 04:21:21PM +0200, Jiri Olsa escreveu:
+> Numfor Mbiziwo-Tiapo reported segfault on stat of event
+> group in repeat mode:
 > 
-> In order for this driver to work, the proper SPI drivers need to be
-> loaded too; for MB8,1 these are spi_pxa2xx_platform and spi_pxa2xx_pci;
-> for all others they are spi_pxa2xx_platform and intel_lpss_pci. For this
-> reason enabling this driver in the config implies enabling the above
-> drivers.
+>   # perf stat -e '{cycles,instructions}' -r 10 ls
+> 
+> It's caused by memory corruption due to not cleaned
+> evsel's id array and index, which needs to be rebuilt
+> in every stat iteration. Currently the ids index grows,
+> while the array (which is also not freed) has the same
+> size.
+> 
+> Fixing this by releasing id array and zeroing ids index
+> in perf_evsel__close function.
+> 
+> We also need to keep the evsel_list alive for stat
+> record (which is disabled in repeat mode).
 
-I applied the patch (but changed __u8 to u8 as that's preferred form for
-inside the kernel, and added error handling for input_mt_init_slots) but
-we need to do some more work on the driver.
+Thanks, applied.
 
-My main issue is with registering touchpad device asynchronously,
-independent from the probe() function. This means (as far as I can tell)
-that any error is not really appropriately handled (as by that time it
-is too late to signal errors from probe()) and devm functions are not
-going to be called, leaving remnants of the resources in memory on
-driver unload. It also brings in issues with suspend/resume (what
-happens if you suspend really quickly while device is not registered
-yet?), etc, etc.
-
-Can we switch to calling DEV_INFO command synchronously from probe()? If
-we are concerned about it taking relatively long time we can always
-annotate the driver as having probe_type = PROBE_PREFER_ASYNCHRONOUS so
-that other devices can be probed simultaneously with applespi.
-
-Thanks.
-
--- 
-Dmitry
+- Arnaldo
