@@ -2,445 +2,175 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0D1C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10D9C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA5E20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:48:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6WB3png"
+	by mail.kernel.org (Postfix) with ESMTP id 8671F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:50:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563299424;
+	bh=G8HZaTkY2j5PHpLqA7tOHBlpXfS88fwdr/i1I0KvhMc=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=jCBUku4FWDAXZQLCFgjrg3cOD0dxvoFnh/D+tY3knBJk6fCAVZI5FWqE89VV6Xlam
+	 kVCk07aTM/OcnYMhnAByZxk8hxdW1V+r84zNNh3iX6d7dviIKNp/O1dPQwoZ8JAiWb
+	 9Ay56NYeUD+AVKY7HBJm3fxedAosnQYgXnaplWZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbfGPRsO (ORCPT
+        id S2388314AbfGPRuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:48:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43486 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbfGPRsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:48:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f25so9789675pgv.10;
-        Tue, 16 Jul 2019 10:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9g4Md16DCAxWYz0fYzP1PJhZRgUGpb8Cny7KRqZ/Ew0=;
-        b=Z6WB3pngMQtPLpQxxvQac9oM2e37ImNX+vxNX5iUn6gjv6OFmkKv94mojBUEDA5+Ai
-         l6f2AD+8Wz9XIlT4OsAWTS62vaRdSv9vRbJqkFrYei8D7SN9s56O2xzFU4hQRfskxete
-         ZPyiv6JyI6+ILOrGa+FDay5VrMQOjghQhLiIadAewHe+CuemnJprp2LRfOdXyf5W6Qah
-         bhqIp5agYmDSR0CHaF3W7m+9zK50TGWwbsN1NoW4S3aKZeexyyWRxaR6zlct5d45+7u3
-         Nq/9ZG8nX1IJkWgeIv02RL2hUB2Qma6O4FKm1Z4nBckGfBJGkowW0x/CamlTguOrywpN
-         bVLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9g4Md16DCAxWYz0fYzP1PJhZRgUGpb8Cny7KRqZ/Ew0=;
-        b=ZVE4qbbRYaVG9IhF+2co2G8bgaAjijscuDt/4mbfx+cpGxwSt4s5hvaRKMAbtye8Ir
-         sG5SZAUI0Z8cAOT31DhSysuNG7ILsMbLWUy2iL7IVcuILW8eEEnVowebKOwmIAoH4mYl
-         O1AyEMv20k//FtP2Rr27eezWt063b5TDYOGwHj2BWO/21qtIk+1b7WwGXrnf3eqdOJ96
-         42SFE5EceTKprmt2plyyHacAonPx99guDDyR1M2vI4fmq/iH+k+2pgYSfeJv8vQLzuDb
-         SfiqOmBr220sFzcqZ4p0PVXAMjYSEaO/kDsiU8/1b1T4akT7DsO3Tfz1QX35MlV86rlc
-         YL+A==
-X-Gm-Message-State: APjAAAXryZqlJuYM6yfsFIVFRRX/sqsLi+Zgm1+7aq0+jD+cJqoQlYK9
-        YmpqtEqlXBt+udmHz+VB0Tc=
-X-Google-Smtp-Source: APXvYqx8QX41rDX34LIUzD8Oec4VxbCKn35kpEbgw14+HdY+DpTKpNjb9u2WDeygpdvc6XYdJUsJGA==
-X-Received: by 2002:a65:654f:: with SMTP id a15mr34676339pgw.73.1563299292765;
-        Tue, 16 Jul 2019 10:48:12 -0700 (PDT)
-Received: from localhost ([100.118.89.203])
-        by smtp.gmail.com with ESMTPSA id 65sm21825749pff.148.2019.07.16.10.48.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 10:48:12 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Eric Biggers <ebiggers@google.com>,
-        Deepak Sharma <deepak.sharma@amd.com>,
-        linux-kernel@vger.kernel.org, etnaviv@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: [PATCH v2 2/3] drm: plumb attaching dev thru to prime_pin/unpin
-Date:   Tue, 16 Jul 2019 10:43:22 -0700
-Message-Id: <20190716174331.7371-2-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190716174331.7371-1-robdclark@gmail.com>
-References: <20190716174331.7371-1-robdclark@gmail.com>
+        Tue, 16 Jul 2019 13:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728137AbfGPRuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 13:50:23 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA412173C;
+        Tue, 16 Jul 2019 17:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563299421;
+        bh=G8HZaTkY2j5PHpLqA7tOHBlpXfS88fwdr/i1I0KvhMc=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=SnmjZaJScqEkihvVKGQqkSTD5onJWfK+cHhQQBbW17pnjC+nIb+4uWvnjgWV9lKVf
+         RdeeDLVXiDN2OyNKReRvzCItePqhEAfh7wbGzPcKWhCodyowk7MK4OaaP5GrxgXHmA
+         SzXYxjU8ExAf2vD0GT0p9eiAqUSs49f1Guip83jU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org> <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com> <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+User-Agent: alot/0.8.1
+Date:   Tue, 16 Jul 2019 10:50:20 -0700
+Message-Id: <20190716175021.9CA412173C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Quoting Brendan Higgins (2019-07-16 01:37:34)
+> On Tue, Jul 16, 2019 at 12:57 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > A `struct kunit_stream` is usually associated with a message that is
+> > being built up over time like maybe an expectation; it is meant to
+> > capture the idea that we might want to send some information out to
+> > the user pertaining to some thing 'X', but we aren't sure that we
+> > actually want to send it until 'X' is complete, but do to the nature
+> > of 'X' it is easier to start constructing the message before 'X' is
+> > complete.
+> >
+> > Consider a complicated expectation, there might be multiple conditions
+> > that satisfy it and multiple conditions which could make it fail. As
+> > we start exploring the input to the expectation we gain information
+> > that we might want to share back with the user if the expectation were
+> > to fail and we might get that information before we are actually sure
+> > that the expectation does indeed fail.
+> >
+> > When we first step into the expectation we immediately know the
+> > function name, file name, and line number where we are called and
+> > would want to put that information into any message we would send to
+> > the user about this expectation. Next, we might want to check a
+> > property of the input, it may or may not be enough information on its
+> > own for the expectation to fail, but we want to share the result of
+> > the property check with the user regardless, BUT only if the
+> > expectation as a whole fails.
+> >
+> > Hence, we can have multiple `struct kunit_stream`s associated with a
+> > `struct kunit` active at any given time.
 
-Needed in the following patch for cache operations.
+I'm coming back to this now after reading the rest of the patches that
+deal with assertions and expectations. It looks like the string stream
+is there to hold a few different pieces of information:
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/drm_gem.c                   | 10 ++++++----
- drivers/gpu/drm/drm_gem_vram_helper.c       |  6 ++++--
- drivers/gpu/drm/drm_prime.c                 |  4 ++--
- drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c |  4 ++--
- drivers/gpu/drm/msm/msm_drv.h               |  4 ++--
- drivers/gpu/drm/msm/msm_gem_prime.c         |  4 ++--
- drivers/gpu/drm/nouveau/nouveau_gem.h       |  4 ++--
- drivers/gpu/drm/nouveau/nouveau_prime.c     |  4 ++--
- drivers/gpu/drm/qxl/qxl_prime.c             |  4 ++--
- drivers/gpu/drm/radeon/radeon_prime.c       |  4 ++--
- drivers/gpu/drm/vboxvideo/vbox_prime.c      |  4 ++--
- drivers/gpu/drm/vgem/vgem_drv.c             |  4 ++--
- include/drm/drm_drv.h                       |  4 ++--
- include/drm/drm_gem.h                       |  4 ++--
- include/drm/drm_gem_vram_helper.h           |  4 ++--
- 15 files changed, 36 insertions(+), 32 deletions(-)
+ - Line Number
+ - File Name
+ - Function Name
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 7d6242cc69f2..0a2645769624 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1219,18 +1219,19 @@ void drm_gem_print_info(struct drm_printer *p, unsigned int indent,
- /**
-  * drm_gem_pin - Pin backing buffer in memory
-  * @obj: GEM object
-+ * @dev: the device the buffer is being pinned for
-  *
-  * Make sure the backing buffer is pinned in memory.
-  *
-  * Returns:
-  * 0 on success or a negative error code on failure.
-  */
--int drm_gem_pin(struct drm_gem_object *obj)
-+int drm_gem_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	if (obj->funcs && obj->funcs->pin)
- 		return obj->funcs->pin(obj);
- 	else if (obj->dev->driver->gem_prime_pin)
--		return obj->dev->driver->gem_prime_pin(obj);
-+		return obj->dev->driver->gem_prime_pin(obj, dev);
- 	else
- 		return 0;
- }
-@@ -1239,15 +1240,16 @@ EXPORT_SYMBOL(drm_gem_pin);
- /**
-  * drm_gem_unpin - Unpin backing buffer from memory
-  * @obj: GEM object
-+ * @dev: the device the buffer is being pinned for
-  *
-  * Relax the requirement that the backing buffer is pinned in memory.
-  */
--void drm_gem_unpin(struct drm_gem_object *obj)
-+void drm_gem_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	if (obj->funcs && obj->funcs->unpin)
- 		obj->funcs->unpin(obj);
- 	else if (obj->dev->driver->gem_prime_unpin)
--		obj->dev->driver->gem_prime_unpin(obj);
-+		obj->dev->driver->gem_prime_unpin(obj, dev);
- }
- EXPORT_SYMBOL(drm_gem_unpin);
- 
-diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-index 4de782ca26b2..62fafec93948 100644
---- a/drivers/gpu/drm/drm_gem_vram_helper.c
-+++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-@@ -548,7 +548,8 @@ EXPORT_SYMBOL(drm_gem_vram_driver_dumb_mmap_offset);
-  * 0 on success, or
-  * a negative errno code otherwise.
-  */
--int drm_gem_vram_driver_gem_prime_pin(struct drm_gem_object *gem)
-+int drm_gem_vram_driver_gem_prime_pin(struct drm_gem_object *gem,
-+				      struct device *dev)
- {
- 	struct drm_gem_vram_object *gbo = drm_gem_vram_of_gem(gem);
- 
-@@ -569,7 +570,8 @@ EXPORT_SYMBOL(drm_gem_vram_driver_gem_prime_pin);
- 	Implements &struct drm_driver.gem_prime_unpin
-  * @gem:	The GEM object to unpin
-  */
--void drm_gem_vram_driver_gem_prime_unpin(struct drm_gem_object *gem)
-+void drm_gem_vram_driver_gem_prime_unpin(struct drm_gem_object *gem,
-+					 struct device *dev)
- {
- 	struct drm_gem_vram_object *gbo = drm_gem_vram_of_gem(gem);
- 
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index d0c01318076b..505893cfac8e 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -196,7 +196,7 @@ int drm_gem_map_attach(struct dma_buf *dma_buf,
- {
- 	struct drm_gem_object *obj = dma_buf->priv;
- 
--	return drm_gem_pin(obj);
-+	return drm_gem_pin(obj, attach->dev);
- }
- EXPORT_SYMBOL(drm_gem_map_attach);
- 
-@@ -213,7 +213,7 @@ void drm_gem_map_detach(struct dma_buf *dma_buf,
- {
- 	struct drm_gem_object *obj = dma_buf->priv;
- 
--	drm_gem_unpin(obj);
-+	drm_gem_unpin(obj, attach->dev);
- }
- EXPORT_SYMBOL(drm_gem_map_detach);
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-index 00e8b6a817e3..44385d590aa7 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-@@ -43,7 +43,7 @@ int etnaviv_gem_prime_mmap(struct drm_gem_object *obj,
- 	return etnaviv_obj->ops->mmap(etnaviv_obj, vma);
- }
- 
--int etnaviv_gem_prime_pin(struct drm_gem_object *obj)
-+int etnaviv_gem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	if (!obj->import_attach) {
- 		struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
-@@ -55,7 +55,7 @@ int etnaviv_gem_prime_pin(struct drm_gem_object *obj)
- 	return 0;
- }
- 
--void etnaviv_gem_prime_unpin(struct drm_gem_object *obj)
-+void etnaviv_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	if (!obj->import_attach) {
- 		struct etnaviv_gem_object *etnaviv_obj = to_etnaviv_bo(obj);
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index 9ada948f6b01..6f8f6df9c289 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -298,8 +298,8 @@ void msm_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr);
- int msm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
- struct drm_gem_object *msm_gem_prime_import_sg_table(struct drm_device *dev,
- 		struct dma_buf_attachment *attach, struct sg_table *sg);
--int msm_gem_prime_pin(struct drm_gem_object *obj);
--void msm_gem_prime_unpin(struct drm_gem_object *obj);
-+int msm_gem_prime_pin(struct drm_gem_object *obj, struct device *dev);
-+void msm_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev);
- void *msm_gem_get_vaddr(struct drm_gem_object *obj);
- void *msm_gem_get_vaddr_active(struct drm_gem_object *obj);
- void msm_gem_put_vaddr(struct drm_gem_object *obj);
-diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/msm_gem_prime.c
-index 60bb290700ce..8e0ddf5c9460 100644
---- a/drivers/gpu/drm/msm/msm_gem_prime.c
-+++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-@@ -58,14 +58,14 @@ struct drm_gem_object *msm_gem_prime_import_sg_table(struct drm_device *dev,
- 	return msm_gem_import(dev, attach->dmabuf, sg);
- }
- 
--int msm_gem_prime_pin(struct drm_gem_object *obj)
-+int msm_gem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	if (!obj->import_attach)
- 		msm_gem_get_pages(obj);
- 	return 0;
- }
- 
--void msm_gem_prime_unpin(struct drm_gem_object *obj)
-+void msm_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	if (!obj->import_attach)
- 		msm_gem_put_pages(obj);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.h b/drivers/gpu/drm/nouveau/nouveau_gem.h
-index fe39998f65cc..91dcf89138f1 100644
---- a/drivers/gpu/drm/nouveau/nouveau_gem.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_gem.h
-@@ -32,9 +32,9 @@ extern int nouveau_gem_ioctl_cpu_fini(struct drm_device *, void *,
- extern int nouveau_gem_ioctl_info(struct drm_device *, void *,
- 				  struct drm_file *);
- 
--extern int nouveau_gem_prime_pin(struct drm_gem_object *);
-+extern int nouveau_gem_prime_pin(struct drm_gem_object *, struct device *);
- struct reservation_object *nouveau_gem_prime_res_obj(struct drm_gem_object *);
--extern void nouveau_gem_prime_unpin(struct drm_gem_object *);
-+extern void nouveau_gem_prime_unpin(struct drm_gem_object *, struct device *);
- extern struct sg_table *nouveau_gem_prime_get_sg_table(struct drm_gem_object *);
- extern struct drm_gem_object *nouveau_gem_prime_import_sg_table(
- 	struct drm_device *, struct dma_buf_attachment *, struct sg_table *);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_prime.c b/drivers/gpu/drm/nouveau/nouveau_prime.c
-index 1fefc93af1d7..dec2d5e37b34 100644
---- a/drivers/gpu/drm/nouveau/nouveau_prime.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_prime.c
-@@ -88,7 +88,7 @@ struct drm_gem_object *nouveau_gem_prime_import_sg_table(struct drm_device *dev,
- 	return &nvbo->gem;
- }
- 
--int nouveau_gem_prime_pin(struct drm_gem_object *obj)
-+int nouveau_gem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct nouveau_bo *nvbo = nouveau_gem_object(obj);
- 	int ret;
-@@ -101,7 +101,7 @@ int nouveau_gem_prime_pin(struct drm_gem_object *obj)
- 	return 0;
- }
- 
--void nouveau_gem_prime_unpin(struct drm_gem_object *obj)
-+void nouveau_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct nouveau_bo *nvbo = nouveau_gem_object(obj);
- 
-diff --git a/drivers/gpu/drm/qxl/qxl_prime.c b/drivers/gpu/drm/qxl/qxl_prime.c
-index 7d3816fca5a8..21e9b44eb2e4 100644
---- a/drivers/gpu/drm/qxl/qxl_prime.c
-+++ b/drivers/gpu/drm/qxl/qxl_prime.c
-@@ -28,14 +28,14 @@
- /* Empty Implementations as there should not be any other driver for a virtual
-  * device that might share buffers with qxl */
- 
--int qxl_gem_prime_pin(struct drm_gem_object *obj)
-+int qxl_gem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct qxl_bo *bo = gem_to_qxl_bo(obj);
- 
- 	return qxl_bo_pin(bo);
- }
- 
--void qxl_gem_prime_unpin(struct drm_gem_object *obj)
-+void qxl_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct qxl_bo *bo = gem_to_qxl_bo(obj);
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_prime.c b/drivers/gpu/drm/radeon/radeon_prime.c
-index d3a5bea9a2c5..2d3eadcf0f2d 100644
---- a/drivers/gpu/drm/radeon/radeon_prime.c
-+++ b/drivers/gpu/drm/radeon/radeon_prime.c
-@@ -83,7 +83,7 @@ struct drm_gem_object *radeon_gem_prime_import_sg_table(struct drm_device *dev,
- 	return &bo->gem_base;
- }
- 
--int radeon_gem_prime_pin(struct drm_gem_object *obj)
-+int radeon_gem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct radeon_bo *bo = gem_to_radeon_bo(obj);
- 	int ret = 0;
-@@ -101,7 +101,7 @@ int radeon_gem_prime_pin(struct drm_gem_object *obj)
- 	return ret;
- }
- 
--void radeon_gem_prime_unpin(struct drm_gem_object *obj)
-+void radeon_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct radeon_bo *bo = gem_to_radeon_bo(obj);
- 	int ret = 0;
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_prime.c b/drivers/gpu/drm/vboxvideo/vbox_prime.c
-index 702b1aa53494..ad6de9a41950 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_prime.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_prime.c
-@@ -13,13 +13,13 @@
-  * device that might share buffers with vboxvideo
-  */
- 
--int vbox_gem_prime_pin(struct drm_gem_object *obj)
-+int vbox_gem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	WARN_ONCE(1, "not implemented");
- 	return -ENODEV;
- }
- 
--void vbox_gem_prime_unpin(struct drm_gem_object *obj)
-+void vbox_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	WARN_ONCE(1, "not implemented");
- }
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index 11a8f99ba18c..a179e962b79e 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -307,7 +307,7 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
- 	mutex_unlock(&bo->pages_lock);
- }
- 
--static int vgem_prime_pin(struct drm_gem_object *obj)
-+static int vgem_prime_pin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
- 	long n_pages = obj->size >> PAGE_SHIFT;
-@@ -325,7 +325,7 @@ static int vgem_prime_pin(struct drm_gem_object *obj)
- 	return 0;
- }
- 
--static void vgem_prime_unpin(struct drm_gem_object *obj)
-+static void vgem_prime_unpin(struct drm_gem_object *obj, struct device *dev)
- {
- 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
- 
-diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
-index 68ca736c548d..6a9489b9532f 100644
---- a/include/drm/drm_drv.h
-+++ b/include/drm/drm_drv.h
-@@ -584,8 +584,8 @@ struct drm_driver {
- 	 */
- 	struct drm_gem_object * (*gem_prime_import)(struct drm_device *dev,
- 				struct dma_buf *dma_buf);
--	int (*gem_prime_pin)(struct drm_gem_object *obj);
--	void (*gem_prime_unpin)(struct drm_gem_object *obj);
-+	int (*gem_prime_pin)(struct drm_gem_object *obj, struct device *dev);
-+	void (*gem_prime_unpin)(struct drm_gem_object *obj, struct device *dev);
- 	struct reservation_object * (*gem_prime_res_obj)(
- 				struct drm_gem_object *obj);
- 	struct sg_table *(*gem_prime_get_sg_table)(struct drm_gem_object *obj);
-diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-index 5047c7ee25f5..ebd12be354d2 100644
---- a/include/drm/drm_gem.h
-+++ b/include/drm/drm_gem.h
-@@ -401,8 +401,8 @@ int drm_gem_dumb_destroy(struct drm_file *file,
- 			 struct drm_device *dev,
- 			 uint32_t handle);
- 
--int drm_gem_pin(struct drm_gem_object *obj);
--void drm_gem_unpin(struct drm_gem_object *obj);
-+int drm_gem_pin(struct drm_gem_object *obj, struct device *dev);
-+void drm_gem_unpin(struct drm_gem_object *obj, struct device *dev);
- void *drm_gem_vmap(struct drm_gem_object *obj);
- void drm_gem_vunmap(struct drm_gem_object *obj, void *vaddr);
- 
-diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
-index 9581ea0a4f7e..33556e157202 100644
---- a/include/drm/drm_gem_vram_helper.h
-+++ b/include/drm/drm_gem_vram_helper.h
-@@ -133,8 +133,8 @@ int drm_gem_vram_driver_dumb_mmap_offset(struct drm_file *file,
-  * PRIME helpers for struct drm_driver
-  */
- 
--int drm_gem_vram_driver_gem_prime_pin(struct drm_gem_object *obj);
--void drm_gem_vram_driver_gem_prime_unpin(struct drm_gem_object *obj);
-+int drm_gem_vram_driver_gem_prime_pin(struct drm_gem_object *obj, struct device *dev);
-+void drm_gem_vram_driver_gem_prime_unpin(struct drm_gem_object *obj, struct device *dev);
- void *drm_gem_vram_driver_gem_prime_vmap(struct drm_gem_object *obj);
- void drm_gem_vram_driver_gem_prime_vunmap(struct drm_gem_object *obj,
- 					  void *vaddr);
--- 
-2.21.0
+The above items could be stored in a structure on the stack that then
+gets printed and formatted when the expectation or assertion fails. That
+would make the whole string stream structure and code unnecessary.
+
+The only hypothetical case where this can't be done is a complicated
+assertion or expectation that does more than one check and can't be
+written as a function that dumps out what went wrong. Is this a real
+problem? Maybe such an assertion should just open code that logic so we
+don't have to build up a string for all the other simple cases.
+
+It seems far simpler to get rid of the string stream API and just have a
+struct for this.
+
+	struct kunit_fail_msg {
+		const char *line;
+		const char *file;
+		const char *func;
+		const char *msg;
+	};
+
+Then you can have the assertion macros create this on the stack (with
+another macro?).
+
+	#define DEFINE_KUNIT_FAIL_MSG(name, _msg) \
+		struct kunit_fail_msg name =3D { \
+			.line =3D  __LINE__, \
+			.file =3D __FILE__, \
+			.func =3D __func__, \
+			.msg =3D _msg, \
+		}
+
+Note: I don't know if the __LINE__ above will use the macro location, so
+this probably needs another wrapper to put the right line number there.
+
+I don't want to derail this whole series on this topic, but it seems
+like a bunch of code is there to construct this same set of information
+over and over again into a buffer a little bit at a time and then throw
+it away when nothing fails just because we may want to support the case
+where we have some unstructured data to inform the user about.
+
+Why not build in the structured part into the framework (i.e. the struct
+above) so that it's always there and then add the string building part
+later when we have to?
 
