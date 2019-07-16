@@ -2,109 +2,107 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E780DC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2FCC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8CB2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F262173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCtz0JYS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZMThBuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387640AbfGPLL0 (ORCPT
+        id S2387661AbfGPLLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:11:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45361 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733200AbfGPLL0 (ORCPT
+        Tue, 16 Jul 2019 07:11:35 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41189 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387643AbfGPLLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:11:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so9260716pgp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 04:11:26 -0700 (PDT)
+        Tue, 16 Jul 2019 07:11:35 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so19502554ljg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 04:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=tG4oN7QUyXBM9ONfLmraVG6pWQWDU28XTB/o4iOsC64=;
-        b=lCtz0JYSz/PN5ckXRERy5AhE//7W2BwCQ5+3jNGJLYSoc6xU4cGFZVKPCTcwZPDPde
-         ZMAQNppd4iZ/2+BxXt9OqQAob7W24AQe8KeMnseH7Ix83ZM5Kl9it6WcPSTJLmMErMz/
-         jKY4LWMLzCGtGDexq48mmnbjGK1AFtrvOOUoYnTRXteWT+KVoBoCGshkqRYACoPC7D1K
-         COyc+MfsbAinmNXL/VXcywePCUgFKvch/hWkefQpW1jj5Q5CbEGGACfPr5Fm+Bsn4/XU
-         Er41rmbDvQBW/5uOwpmYCUfFmefUg3m1GGvywEZnR3K0rufXC1kTEVNbp5TeB/DzZcZY
-         e6gQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3UppoPnrfp6kARoJ/BDdFjbxhg47y2G5VBuTvBYTHHQ=;
+        b=ZZMThBuqDwl13ushWHRzxVb31hKXGtnUr381OARDy7qrG6qqWJpTATmxvAQnytdAd3
+         WWDhBdDpm+aWAaKR6GNoMepO73uWzpX3Qrndbq8J4ty6ViUsvfMqyfs6/itFL/SsfjvD
+         CzxIFvBlOjGBd7b3bQw1kh10DwoT/SRvujKG3kD7MpfQ58VUFlH7XAtPL2MVgV+UUGdM
+         PdJxH8MVJRUyObEnV+822Z8xRF663Ftj2lbHKB47Za8KRrcZFef/noS7YpIO/Wdn4R3n
+         v/aLNt5jQ5gRow8yjC6AmEIagWic/ijm95+H7igKOYeyZsuZTnBx5UE36T44aBN4y5d1
+         VXSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tG4oN7QUyXBM9ONfLmraVG6pWQWDU28XTB/o4iOsC64=;
-        b=Y+nHhxZbmyMEyaHt4EaqluXcsMeG8Ev5uUAYO4q6/lb98OzqV3h41+AKrTkZEfQx33
-         nSjHgj+iRF19gy/eib1szMbfrdjtrf6Or+v6be6IZsQqAKbm6UKsBFAXBJweRm45l5ev
-         E5lv0Vz+KQOdvm0HJH/MtQ7TdHsag8YRnCEFdJIxSff8rnWycUgdebCo90RVqWr4VGsP
-         ywCwheR7hNmiVEEnZ16BbHgXb5Rd0yVJMODDHnnssg7q7MZxreI4ciGRTsSKdUqj0frT
-         3fsWqNb0AgKo5/hP0BuiZDn+g3gcaPMw54aT8+tD/JACtr7vARjjLE4SuBWinweCnOeY
-         Mw+w==
-X-Gm-Message-State: APjAAAVZa839+vFFsIFgtHGqS6NRQmJEQYpKmnBOqCC+Go6bXL5RWsRk
-        iOrtisAbKOaTxI2qTrL8bSYnen037it2olqu
-X-Google-Smtp-Source: APXvYqwPS+CFG1iax9c+LnijjFVPtOXpIKUde+Ow5kW1GvzLjT6mFfO0E6b+5ySl1KmmSCkZDEJPCQ==
-X-Received: by 2002:a17:90a:3401:: with SMTP id o1mr35150615pjb.7.1563275485431;
-        Tue, 16 Jul 2019 04:11:25 -0700 (PDT)
-Received: from ubuntu ([101.198.192.11])
-        by smtp.gmail.com with ESMTPSA id i9sm16978531pjj.2.2019.07.16.04.11.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3UppoPnrfp6kARoJ/BDdFjbxhg47y2G5VBuTvBYTHHQ=;
+        b=ajXzrZDSV2L9PLTiCJ+7lQcoXuze5cfZgtx1+FlZ4h+btnBpAgWZSM57VUZKqJ8b/J
+         L6Yt2xneT3JF8YB0WpH+BtKDnBwUfLrtuDPAqGJX6joxWRMF7vgNKTsIA+XsvJ24+g7Z
+         W6PwVkI6aaJRBzLZIZOyWpDA85Yrj4loS+1hK/w8IFTsnKFRH4rMTGX1rnjwzITLk3o9
+         JuxVVVPSy6fzPNZCOaGSrdLhgYdXOdn1VJbGLDUJ9XxXamPim3pvF4gEOzMJqdmy4xZW
+         yujzBg+rzLzpONYFnStet8zwT/und6v1AyaAIpPeRg1qEXpUC8i9w8bRn583G0HPBVWr
+         G51w==
+X-Gm-Message-State: APjAAAVAEXL3X20ovdO/6wn6kflEfQGdPSPVL+W8p/W6SGlaAdlGjNU5
+        chTEYRMMurMVhnVAYivvOQbg3w==
+X-Google-Smtp-Source: APXvYqzeSAcuRom68dwCg4OqurM1KOFbKuik+yk8ytvJMNyBTrsS8bz4TOshqSAR5pUyabqrXE0MZg==
+X-Received: by 2002:a2e:b4c9:: with SMTP id r9mr17164546ljm.196.1563275493271;
+        Tue, 16 Jul 2019 04:11:33 -0700 (PDT)
+Received: from centauri (ua-83-226-229-61.bbcust.telenor.se. [83.226.229.61])
+        by smtp.gmail.com with ESMTPSA id m25sm2768631lfc.83.2019.07.16.04.11.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 04:11:25 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 04:11:22 -0700
-From:   JingYi Hou <houjingyi647@gmail.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: fix double fetch in
- amdgpu_ras_debugfs_ctrl_parse_data()
-Message-ID: <20190716111122.GA35069@ubuntu>
+        Tue, 16 Jul 2019 04:11:32 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 13:11:30 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Sricharan R <sricharan@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 02/13] cpufreq: qcom: Re-organise kryo cpufreq to use it
+ for other nvmem based qcom socs
+Message-ID: <20190716111130.GB13918@centauri>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-3-niklas.cassel@linaro.org>
+ <20190710061839.quncnis6pjyjntip@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190710061839.quncnis6pjyjntip@vireshk-i7>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In amdgpu_ras_debugfs_ctrl_parse_data(), first fetch str from buf to
-get op value, if op == -1 which means no command matched, fetch data
-from buf again.
+On Wed, Jul 10, 2019 at 11:48:39AM +0530, Viresh Kumar wrote:
+> On 05-07-19, 11:57, Niklas Cassel wrote:
+> > -static struct platform_driver qcom_cpufreq_kryo_driver = {
+> > -	.probe = qcom_cpufreq_kryo_probe,
+> > -	.remove = qcom_cpufreq_kryo_remove,
+> > +static struct platform_driver qcom_cpufreq_driver = {
+> > +	.probe = qcom_cpufreq_probe,
+> > +	.remove = qcom_cpufreq_remove,
+> >  	.driver = {
+> > -		.name = "qcom-cpufreq-kryo",
+> > +		.name = "qcom-cpufreq",
+> 
+> Should we still name it "qcom-cpufreq-nvmem" here ? Only the string
+> here.
 
-If change buf between two fetches may cause security problems or
-unexpected behaivor. amdgpu_ras_debugfs_ctrl_parse_data() was called
-by amdgpu_ras_debugfs_ctrl_write() and value of op was used later.
+Sure, I can fix this in next version.
 
-We should check whether data->op == -1 or not after second fetch. if
-data->op != -1 means buf changed and should return -EINVAL.
+Kind regards,
+Niklas
 
-Signed-off-by: JingYi Hou <houjingyi647@gmail.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index 22bd21efe6b1..845e73e98cd7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -233,6 +233,9 @@ static int amdgpu_ras_debugfs_ctrl_parse_data(struct file *f,
-
- 		if (copy_from_user(data, buf, sizeof(*data)))
- 			return -EINVAL;
-+
-+		if(data->op != -1)
-+			return -EINVAL;
- 	}
-
- 	return 0;
---
-2.20.1
-
+> 
+> >  	},
+> >  };
+> 
+> -- 
+> viresh
