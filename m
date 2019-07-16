@@ -2,89 +2,120 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C8AC76191
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7600C76191
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE2C2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563243241;
-	bh=1WXPaLAxJOus0JflLOCmf91JljCoNLWlAUD7TSVunLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jumeuseRSFETB8L5tdxQPTjV/e9oUVCy0C31cew3mHvMWwjFfY2WG1PAbIpcg0xlS
-	 20yZcZFtlisCT4zDgxLt4LAmFF0ZZtBF9/Fzp6gBPP1eKLAm+FTF2VWcqiOjp2wcSA
-	 vh3nLCdVqrb4SHdXyC6juyXVUPgZi/xY9qv4pL7c=
+	by mail.kernel.org (Postfix) with ESMTP id 94CD92080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:18:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V46i+hrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbfGPCOA (ORCPT
+        id S2387979AbfGPCSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 22:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733303AbfGPCOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 22:14:00 -0400
-Received: from localhost (unknown [88.128.80.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B527C20880;
-        Tue, 16 Jul 2019 02:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563243239;
-        bh=1WXPaLAxJOus0JflLOCmf91JljCoNLWlAUD7TSVunLA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=otpIewzTS2BCt4D6NLKOkDkFrN+yl1xFmNapQfs4OCftxcE6ZgRSBnNEJBuUzAaNG
-         DcJDE7j2jP0Sea0ksNgunMOHibyOErzZLgL5H2ifQOEASbJxod0S4w5YvIYppWMHiZ
-         tRUfvtTj4oi8FKKc9OM2Bt1Opfve1sbf7Y/nVcTo=
-Date:   Tue, 16 Jul 2019 04:12:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tri Vo <trong@android.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>, kaleshsingh@google.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [PATCH v3] PM / wakeup: show wakeup sources stats in sysfs
-Message-ID: <20190716021201.GB8310@kroah.com>
-References: <CANA+-vAxU5jp6PQ26NU+UMc6iyw6KkBS9nbd6wj0qqkO-1WhYg@mail.gmail.com>
- <20190715201116.221078-1-trong@android.com>
- <20190715203651.GA7513@kroah.com>
- <CANA+-vC+_Gp4RwdLH_XYDAepRONB66PdekvaCxNT3ZVGx73G6A@mail.gmail.com>
+        Mon, 15 Jul 2019 22:18:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41607 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387939AbfGPCSP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 22:18:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so15908827wrm.8;
+        Mon, 15 Jul 2019 19:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Tn8Q62o1MgY48Mx+DllWlgBdVj6RmFfgXYsNBaQSZ5o=;
+        b=V46i+hrPbWUvgvrzDR/9EzpLX1v1cyAkGkD91Mjz/c9J+pPQpFGu4D+rS+dUFZag+f
+         0hQm+etps2AyanmliTDyA3hkJc/VMkmYtBIaUbogLnh2A5ma0prtiUfI3/a0SpD7tAsh
+         UuZ1TdkZjkhhHc3ypMtJJmt1XKWLVhkCe3L4NFWlXOWoNy0OXbuPnVVdlfs9g0QEB44Q
+         a0I1AeAQ4y5h86sqW6QoMcIo4po3Dp23IgyunOq+ybsBaiS55wWlGv5s/p0fVJpO+DXW
+         5hkTRCN/2p0HAqGjQUIwnmnsoncJ7Q3MhoqEyiF77RoTnJjT7EUHmAdq2/zlDGary92v
+         dKOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Tn8Q62o1MgY48Mx+DllWlgBdVj6RmFfgXYsNBaQSZ5o=;
+        b=cFdc1XtOqOKxOtLsGv9lVHcHF6SLIITalJ5EC3JILFdxvUKKtmI/6r0gGH7dsdUSPk
+         9fu4hlqDOs0htnHFOeDQy4lZqq8Y8eRQI+6Z4Bie1e07Mnr3HSd87C9G+wO8wYAiMsUo
+         MaW0PBd81f3j6R/7Rz5NaSlXekAnkBBhbO0qU/kYhOpxGJqFYvTeeoWvQKjmCVf6DHNl
+         5YTPYij2M8VwpsGCRia2PBvR54mSLr0HiKJwnmGcedIJ+W1dqRxQI1vh0r8yX9uHoE05
+         p72xj4J0xD3TZ9WgMmrksPmrrMga/o/nD+YbYbx0F2qiierzggcIvMdYtXJEt7+V/brZ
+         yLyQ==
+X-Gm-Message-State: APjAAAXhh7L855rkxftO5hY68asxDT2UrvLE3pxaI4dRhw9Fst+aTK7d
+        5yu6zWP8WKOI6ZvNlONFhNvKNw9zyRhFpEaLGJE=
+X-Google-Smtp-Source: APXvYqw5k51vPdH+MPyeHt8Xk2DH9OvBtNrXtY2oqeThWPTsX9JElKP296bWVBdpetUdaTPsX38OkGraE9Ld1WOpkG8=
+X-Received: by 2002:adf:80e1:: with SMTP id 88mr30984324wrl.127.1563243492462;
+ Mon, 15 Jul 2019 19:18:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANA+-vC+_Gp4RwdLH_XYDAepRONB66PdekvaCxNT3ZVGx73G6A@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190710074552.74394-1-xingwu.yang@gmail.com> <20190710080609.smxjqe2d5jyro4hv@verge.net.au>
+ <20190715082747.fdlpvekbqyhwx724@salvia>
+In-Reply-To: <20190715082747.fdlpvekbqyhwx724@salvia>
+From:   yangxingwu <xingwu.yang@gmail.com>
+Date:   Tue, 16 Jul 2019 10:18:01 +0800
+Message-ID: <CA+7U5JsvP5gyO_xRboPsF+m4Zg5g9XCsZwpjqAs4OZqmUqAbeg@mail.gmail.com>
+Subject: Re: [PATCH] ipvs: remove unnecessary space
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     Simon Horman <horms@verge.net.au>, wensong@linux-vs.org, ja@ssi.bg,
+        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 02:48:13PM -0700, Tri Vo wrote:
-> > And I am guessing that you actually tested this all out, and it works
-> > for you?
-> 
-> Yes, I played around with wakelocks to make sure that wakeup source
-> stats are added/updated/removed as expected.
+Pablo
 
-Great!
+v2 has been sent
 
-> > Have you changed Android userspace to use the new api with no
-> > problems?
-> 
-> Kalesh helped me test this patch (added him in Tested-by: field in
-> latest patch version). We haven't tested beyond booting and manual
-> inspection on android devices. Android userspace changes should be
-> fairly trivial though.
+I made the following changes:
 
-Ok, I know some people wanted to do some premature optimization with the
-original discussion about this, glad to see it's not needed...
+1. remove all unnecessary spaces in one go
+2. revert bitmap_alloc ( since it's irrelevant to this subject)
+3. chenge subject to "net/netfiler:remove unnecessary space"
 
-thanks,
+thanks
 
-greg k-h
+Pablo Neira Ayuso <pablo@netfilter.org> =E4=BA=8E2019=E5=B9=B47=E6=9C=8815=
+=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=884:27=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> On Wed, Jul 10, 2019 at 10:06:09AM +0200, Simon Horman wrote:
+> > On Wed, Jul 10, 2019 at 03:45:52PM +0800, yangxingwu wrote:
+> > > ---
+> > >  net/netfilter/ipvs/ip_vs_mh.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs=
+_mh.c
+> > > index 94d9d34..98e358e 100644
+> > > --- a/net/netfilter/ipvs/ip_vs_mh.c
+> > > +++ b/net/netfilter/ipvs/ip_vs_mh.c
+> > > @@ -174,8 +174,8 @@ static int ip_vs_mh_populate(struct ip_vs_mh_stat=
+e *s,
+> > >             return 0;
+> > >     }
+> > >
+> > > -   table =3D  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
+> > > -                    sizeof(unsigned long), GFP_KERNEL);
+> > > +   table =3D kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
+> > > +                   sizeof(unsigned long), GFP_KERNEL);
+>
+> May I ask one thing? :-)
+>
+> Please, remove all unnecessary spaces in one go, search for:
+>
+>         git grep "=3D  "
+>
+> in the netfilter tree, and send a v2 for this one.
+>
+> Thanks.
