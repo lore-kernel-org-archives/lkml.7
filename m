@@ -2,131 +2,117 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCDFC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28DBC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65112206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zlPZOySk"
+	by mail.kernel.org (Postfix) with ESMTP id 86B7E2173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563266380;
+	bh=ssPZAo5dXHHPNouNGTvVRALYu0oPoZ+PbbXzdC0B6Kw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ji+SSLoBZHj/W1Ydiq6yUIVtgtzI/+ZU2oovwGFrGrWMVD67WfxEJ/1X12sRJtr1e
+	 kbxACDN1Rjy/iqlXIqVrsVCsmCV54A6qjum5oFjvLh/kd9zlwjbaVV3WUTqFSmF2gE
+	 m0zp1BdfhIdRCQYcnDyDtT+GrPvB7HSUqyD1R0N0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfGPIj3 (ORCPT
+        id S1731460AbfGPIjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:39:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38386 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbfGPIj3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:39:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f5so248151pgu.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=uAruQz0/cDNuufDZKPd/IRh0T9ZXWWj4lYhqkpVhEs8=;
-        b=zlPZOySkHLqWi+pEQXn481ljUFj//r2HStU4XwfOEHuqTYckG6+odAWQB6yBM+AJo9
-         Jqi7O/vwEWuAtot0CprqN00OBe2kE7i9b66IFM/8p3LWctT2QNtwl/nAA3+TiXkMEpks
-         ip610KlGxk+PO5NXXj2dSSziXfGGs0XPyviaRMyAUZ8sVP78oSoiiM6/a8EDdE88HRYM
-         nTcYEHp+mYumdlGZ3VxKgNrjzCKiy8kBazB/CmEOr6WmPo45iw96SRdgJ9nyiICC/paB
-         tp6JRBVzXNlX6sj93xFOMCC2EgutWkgADC6RF92A2u5XKUkJm+qwQSTLXHENlaWJVUSc
-         eo9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uAruQz0/cDNuufDZKPd/IRh0T9ZXWWj4lYhqkpVhEs8=;
-        b=VmdzOcjZaOSryu9unGsigenI0x3vZNn2k2Y/O8bH+K/PNXLxXB7xom6xzeQWYOMebx
-         h3qKU7VKj17DJpXXdp3pFwLC4qUEJEdaTiksQXutczE6dhEf0BGNLiMXtowc+BRdVX+b
-         qxGpt2mwQ1hsXWe/p1thFOvD+hB32K8uUQCNvCFnrZwn0KhLU1QDs8GblbL494IJ+iBx
-         +Ijg4b89SV/zb5mIknjcHmYUE84yfBhtuur1ZP2LULGi2y/3OHK7zm8Wo29245p522Wm
-         s+DThI0A19GgnijTHEuMzqeKiZ9fyYSdRNxmMJAf+ozPLMRFdKS+e+ga9m894f8dNH+V
-         DOlg==
-X-Gm-Message-State: APjAAAVhgg9VnLh/1i+rSKjCO8QgDZXN6QSky0Dq3hmqYx8Gcx5lLHAS
-        qOxuP96S6yTBHgvQ6ZsZIrDYsw==
-X-Google-Smtp-Source: APXvYqz+Viix925Y0M0SFoaGOcNdMr05fM33QZNnyWdxV+QDE4buLKPms1xJU0KKdExAWl7T4qOzBw==
-X-Received: by 2002:a63:6ec6:: with SMTP id j189mr32907542pgc.168.1563266368504;
-        Tue, 16 Jul 2019 01:39:28 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 33sm26302763pgy.22.2019.07.16.01.39.25
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 16 Jul 2019 01:39:28 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Cc:     baolin.wang@linaro.org, vincent.guittot@linaro.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] mmc: host: sdhci-sprd: Fix the incorrect soft reset operation when runtime resuming
-Date:   Tue, 16 Jul 2019 16:39:19 +0800
-Message-Id: <7ab490e5b311f6cb057c4663d69ef7cbe3318dae.1563266066.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 16 Jul 2019 04:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727105AbfGPIji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:39:38 -0400
+Received: from localhost (unknown [113.157.217.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B244206C2;
+        Tue, 16 Jul 2019 08:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563266378;
+        bh=ssPZAo5dXHHPNouNGTvVRALYu0oPoZ+PbbXzdC0B6Kw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X7JVunjjTnc01kKlaG12hQOaomPng4ObG+rthUu1fZurnw5j/g+wfAA0osSY06CcO
+         OFTJxTUzD+e5WBTlt7HfrbSkiUwbSezum1FV7QTjCH0ReSSgz4uYeg4AFpgB2keKLE
+         x6N7nZgDYCTGru+0tcfxeQvNtD6zcuJBomrr7cEI=
+Date:   Tue, 16 Jul 2019 17:36:53 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     john.hubbard@gmail.com
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, Vandana BN <bnvandana@gmail.com>,
+        Geordan Neukum <gneukum1@gmail.com>,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Subject: Re: [PATCH] staging: kpc2000: whitespace and line length cleanup
+Message-ID: <20190716083653.GB26457@kroah.com>
+References: <20190715212123.432-1-jhubbard@nvidia.com>
+ <20190715212123.432-2-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190715212123.432-2-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sdhci_runtime_resume_host() function, we will always do software reset
-for all, which will cause Spreadtrum host controller work abnormally after
-resuming.
+On Mon, Jul 15, 2019 at 02:21:23PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> This commit was created by running indent(1):
+>     `indent -linux`
+> 
+> ...and then applying some manual corrections and
+> cleanup afterward, to keep it sane. No functional changes
+> were made.
+> 
+> In addition to whitespace changes, some strings were split,
+> but not strings that were likely to be a grep problem
+> (in other words, if a user is likely to grep for a string
+> within the driver, that should still work in most cases).
+> 
+> A few "void * foo" cases were fixed to be "void *foo".
+> 
+> That was enough to make checkpatch.pl run without errors,
+> although note that there are lots of serious warnings
+> remaining--but those require functional, not just whitespace
+> changes. So those are left for a separate patch.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Simon Sandström <simon@nikanor.nu>
+> Cc: Geordan Neukum <gneukum1@gmail.com>
+> Cc: Jeremy Sowden <jeremy@azazel.net>
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Vandana BN <bnvandana@gmail.com>
+> Cc: devel@driverdev.osuosl.org
+> Cc: Bharath Vedartham <linux.bhar@gmail.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  drivers/staging/kpc2000/kpc2000_i2c.c         | 189 +++++++++++------
+>  drivers/staging/kpc2000/kpc2000_spi.c         | 116 +++++-----
+>  drivers/staging/kpc2000/kpc_dma/dma.c         | 109 ++++++----
+>  drivers/staging/kpc2000/kpc_dma/fileops.c     | 199 +++++++++++-------
+>  .../staging/kpc2000/kpc_dma/kpc_dma_driver.c  | 113 +++++-----
+>  .../staging/kpc2000/kpc_dma/kpc_dma_driver.h  | 156 +++++++-------
+>  6 files changed, 509 insertions(+), 373 deletions(-)
 
-Thus for Spreadtrum platform that do not power down the SD/eMMC card during
-runtime suspend, we should not do software reset for all. To fix this
-issue, adding a specific reset operation that add one condition to validate
-the MMC_CAP_AGGRESSIVE_PM to decide if we can do software reset for all or
-just reset command and data lines.
+THat's way too many different types of changes to do all at once, and
+some of these are making the code look worse, not better.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
-Changes from v2:
- - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
+There's a reason we don't run lindent :)
 
-Changes from v1:
- - Add a specific reset operation instead of changing the core to avoid
- affecting other hardware.
----
- drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+If you want to do one-type-of-fix-per-patch, I'll gladly take these,
+otherwise, I recommend leaving this for those people learning how to do
+development to do.
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 603a5d9..bc9393c 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
- 	return 1 << 31;
- }
- 
-+static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
-+{
-+	struct mmc_host *mmc = host->mmc;
-+
-+	/*
-+	 * When try to reset controller after runtime suspend, we should not
-+	 * reset for all if the SD/eMMC card is not power down, just reset
-+	 * command and data lines instead. Otherwise will meet some strange
-+	 * behaviors for Spreadtrum host controller.
-+	 */
-+	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
-+	    !(mmc->caps & MMC_CAP_AGGRESSIVE_PM))
-+		mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
-+
-+	sdhci_reset(host, mask);
-+}
-+
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -381,7 +398,7 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
- 	.get_max_clock = sdhci_sprd_get_max_clock,
- 	.get_min_clock = sdhci_sprd_get_min_clock,
- 	.set_bus_width = sdhci_set_bus_width,
--	.reset = sdhci_reset,
-+	.reset = sdhci_sprd_reset,
- 	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
- 	.hw_reset = sdhci_sprd_hw_reset,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
--- 
-1.7.9.5
+thanks,
 
+greg k-h
