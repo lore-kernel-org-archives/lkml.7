@@ -2,84 +2,125 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6813C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9E7C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B64F206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1AA206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymf6xo4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbfGPWZY (ORCPT
+        id S2388489AbfGPW05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:25:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51238 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728434AbfGPWZY (ORCPT
+        Tue, 16 Jul 2019 18:26:57 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45716 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728434AbfGPW04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:25:24 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hnVsp-0007Sz-HC; Wed, 17 Jul 2019 00:25:16 +0200
-Date:   Wed, 17 Jul 2019 00:25:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mike Lothian <mike@fireburn.co.uk>
-cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-In-Reply-To: <CAHbf0-GjYKZtV2786d5n2EEnVM9TW6cZbxjG3mtqm_bw=1CThA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907170015530.1767@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
- <20190716195957.GA38495@archlinux-threadripper> <CAHbf0-GjYKZtV2786d5n2EEnVM9TW6cZbxjG3mtqm_bw=1CThA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 16 Jul 2019 18:26:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so10826809plr.12;
+        Tue, 16 Jul 2019 15:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hcjV9uH9o/Tpwbd+n48l2oD9yyltFtf5hW/1E21RjyU=;
+        b=Ymf6xo4NrjW2SIVOsZOOqSvetHWupjVmlYrmElXDyHBKCX8ks4YgoT7Anv5Qpom3GA
+         qnP5F7jnSEy+ilw9DoY72QKUnhDhBtQlhoBpsgip8PfmUHXc2eEKy/Yfm0ax8OXHa0Yb
+         MIoHxh045on0dY/ZFz0VdDKW+zMNgxe+lYfouF865NoJ9R4vBJG1R3l14IEacMupMwyA
+         t77qcoozBWRaZlVop7hqq3X3DTIbqnGOvpG9prSTXDu1cc2vYN1NxzhGv/F5OvJZfmBH
+         utVEaG7rHNqfd45NSI7jCq6f9bYsfmufbe6w5OeAJccc6jN6ccfcLte3It6Yh9VJ4ytv
+         5RFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hcjV9uH9o/Tpwbd+n48l2oD9yyltFtf5hW/1E21RjyU=;
+        b=TnjCOu2x/K4ATt6NfCFpCzWPu2n+VRiU1eeu/bTY0ff83Kgu9rm0nflvxFZbtLAXbL
+         ceLBJgQmNyiOIh2vRFntrElA4Dxw5nxd0pWUPhQATJkWUqvlP836vvch813hAJ/ClNjh
+         DIP9PBUhU2FF9mp8ceOFdcuzcEVUmkIsng8R8SJKkLD+plXTWLO4QudVTQdy/fNqjW1H
+         g4TY7Jf1/JR4xL+HkN4bfbBciGnJZE6wS5c6xy3hlQDrmCC54I9MVFhnaKV4s373bh9P
+         eW9/4K3jk0myTQ0lkDlxpAqIM3i3cYhMH5UqGvXupJ0DCfJgetVCwnyxs1sLIUwWFwdb
+         dU/g==
+X-Gm-Message-State: APjAAAXHlDpLWnQsaVtpx91CqGJxesY7koe2i4Zf6hgZWu0S78fiHcla
+        IEhpZXxNPwjJZXYtsUmhg0I=
+X-Google-Smtp-Source: APXvYqwC3kdgKK35Yn22pK0bh+EbrHOnIHECPI36YpDJ37htRFwCfM16yjI+qWCYeN28q10/j4LYFg==
+X-Received: by 2002:a17:902:7894:: with SMTP id q20mr37225250pll.339.1563316015990;
+        Tue, 16 Jul 2019 15:26:55 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::c7d4])
+        by smtp.gmail.com with ESMTPSA id l15sm21540039pgf.5.2019.07.16.15.26.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 15:26:54 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 15:26:52 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        Manali Shukla <manalishukla14@gmail.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matt Mullins <mmullins@fb.com>,
+        Michal Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
+        namhyung@kernel.org, netdev@vger.kernel.org,
+        paul.chaignon@gmail.com, primiano@google.com,
+        Qais Yousef <qais.yousef@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
+References: <20190710141548.132193-1-joel@joelfernandes.org>
+ <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+ <20190716213050.GA161922@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716213050.GA161922@google.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike,
-
-On Tue, 16 Jul 2019, Mike Lothian wrote:
-> On Tue, 16 Jul 2019 at 21:00, Nathan Chancellor wrote
+On Tue, Jul 16, 2019 at 05:30:50PM -0400, Joel Fernandes wrote:
 > 
-> Would it be possible to force ld.bfd with -fuse-ld=bfd when gold is detected?
+> I also thought about the pinning idea before, but we also want to add support
+> for not just raw tracepoints, but also regular tracepoints (events if you
+> will). I am hesitant to add a new BPF API just for creating regular
+> tracepoints and then pinning those as well.
 
-It's probably possible but way beyond my kbuild foo.
+and they should be done through the pinning as well.
 
-Adding LD=ld.bfd to the make invocation is the trivial workaround.
+> I don't see why a new bpf node for a trace event is a bad idea, really.
 
-> Are there gold bug reports for any of the issues that have been seen
-> with gold?
+See the patches for kprobe/uprobe FD-based api and the reasons behind it.
+tldr: text is racy, doesn't scale, poor security, etc.
 
-Yes. Some got resolved, some not.
+> tracefs is how we deal with trace events on Android. 
 
-> It's been my default system linker for years and I've had very few issues
-> with it and it's a big improvement when linking with LTO
+android has made mistakes in the past as well.
 
-I understand, but the fact that you need to turn off config options in
-order to build a kernel and the clear statement that it's not recommended
-makes it truly unsuitable and unmaintainable for us.
+> This is a natural extension to that and fits with the security model
+> well.
 
-If the gold people are interested to link a kernel and resolve all issues,
-this surely can be revisited. We work with tooling folks and we try to
-accomodate different tools, see the ongoing efforts for clang, but that
-requires commitment from the tooling side.
-
-Thanks,
-
-	tglx
-
+I think it's the opposite.
+I'm absolutely against text based apis.
 
