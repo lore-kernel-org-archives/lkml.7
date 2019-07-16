@@ -2,97 +2,92 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE96AC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0939C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9411B2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9002173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563319350;
+	bh=oH4dxe1cgmLfNgwvsKs5dsQmg2kxXHsnnY8s7bp/4vs=;
+	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
+	b=ZUPgMeqwEPnI73Kaodrp78DsWlgHnWolYMe/d6BTLAu6x76VoSrXx9u2enOrn1FtM
+	 auqpfG5z1/QydwBaDlik4Uz5L3N5vPnVfB3q0NU934plxRDgOwDDyadDhH3CIjU5Vj
+	 CYK+aYTIm4rf7jfHMkLHEzykbF9eTpY1URfKqKEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388944AbfGPXVF (ORCPT
+        id S2388984AbfGPXW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:21:05 -0400
-Received: from anholt.net ([50.246.234.109]:53906 "EHLO anholt.net"
+        Tue, 16 Jul 2019 19:22:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbfGPXVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:21:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 32E5A10A2C47;
-        Tue, 16 Jul 2019 16:21:04 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id wrnpGYEhumn2; Tue, 16 Jul 2019 16:21:03 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id E975C10A264A;
-        Tue, 16 Jul 2019 16:21:02 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id DD8EF2FE2547; Tue, 16 Jul 2019 16:21:03 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>
-Subject: Re: [Intel-gfx] [PATCH v3 1/3] drm/gem: don't force writecombine mmap'ing
-In-Reply-To: <20190716213746.4670-1-robdclark@gmail.com>
-References: <20190716213746.4670-1-robdclark@gmail.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Tue, 16 Jul 2019 16:21:01 -0700
-Message-ID: <87o91th8gy.fsf@anholt.net>
+        id S1728601AbfGPXW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:22:29 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B84F2173E;
+        Tue, 16 Jul 2019 23:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563319348;
+        bh=oH4dxe1cgmLfNgwvsKs5dsQmg2kxXHsnnY8s7bp/4vs=;
+        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
+        b=05KDeuThBfQLNN93tJzzuUbxEQwPQMNAVtCIUJOYkpfO3j4iXkrn7TyEKcJZdpClO
+         59v/mKf44ALLlh9T8aKu0Cgmd01WETJh3G+88ofr5WY3kQ6LfZ4tFu5KSUx8GlaIyw
+         TmDrAQjomZGMSlzIPon57Op/XQWwm/4TwUUe7SFU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <243de3a4-292b-77c0-6232-0b38d124d183@codeaurora.org>
+References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org> <1557339895-21952-4-git-send-email-tdas@codeaurora.org> <155742286525.14659.18081373668341127486@swboyd.mtv.corp.google.com> <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org> <155751085370.14659.7749105088997177801@swboyd.mtv.corp.google.com> <f65811f8-42ea-6365-7822-db662eaea228@codeaurora.org> <20190715224441.F12122080A@mail.kernel.org> <243de3a4-292b-77c0-6232-0b38d124d183@codeaurora.org>
+Subject: Re: [PATCH v1 3/3] clk: qcom: rcg: update the DFS macro for RCG
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 16 Jul 2019 16:22:27 -0700
+Message-Id: <20190716232228.2B84F2173E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Quoting Taniya Das (2019-07-15 21:22:02)
+> Hello Stephen,
+>=20
+> Thanks for the review.
+>=20
+> On 7/16/2019 4:14 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-05-12 20:44:46)
+> >> On 5/10/2019 11:24 PM, Stephen Boyd wrote:
+> >>> Why is the clk name changing to not have a _src after the "root" of t=
+he
+> >>> clk name? As long as I can remember, RCGs have a "_src" postfix.
+> >>>
+> >>
+> >> Yes, the RCGs would have _src, so we do want the init data also to be
+> >> generated with _src postfix. So that we do not have to manually clean =
+up
+> >> the generated code.
+> >>
+> >=20
+> > Please manually cleanup the generated code, or fix the code
+> > generator to do what you want.
+> >=20
+>=20
+> Fixing the code manually is not what we intend to do and it is time=20
+> consuming with too many DFS controlled clocks. This really helps us=20
+> align to internal code.
+>=20
 
-Rob Clark <robdclark@gmail.com> writes:
+And you can't fix the code generator to drop the _src part of whatever
+is spit out for the DFS lines?
 
-> From: Rob Clark <robdclark@chromium.org>
->
-> The driver should be in control of this.
->
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
-> It is possible that this was masking bugs (ie. not setting appropriate
-> pgprot) in drivers.  I don't have a particularly good idea for tracking
-> those down (since I don't have the hw for most drivers).  Unless someone
-> has a better idea, maybe land this and let driver maintainers fix any
-> potential fallout in their drivers?
->
-> This is necessary for the last patch to fix VGEM brokenness on arm.
-
-This will break at least v3d and panfrost, and it looks like cirrus as
-well, since you're now promoting the mapping to cached by default and
-drm_gem_shmem_helper now produces cached mappings.  That's all I could
-find that would break, but don't trust me on that.
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAl0uW90ACgkQtdYpNtH8
-nuhEYQ//SHu8CMphEkC2owZV5vypxTHr7xCw11FdyGvA/BKc+ydJ/bLYJC9AZ4q2
-RLnWRI2LhwJxpXdLIvW1SFeZwj3RqhAcngI6hccJD9EB+75IjeqtLMuvKn5WNjV1
-mY+gNypUpx3ENntShYWB/cpXiKiEKTYKP+1UjRewSxzSwICf9NEdc0k+BMLs0mpP
-BdT7agdnuD90yX6o080eiz5pRGFw7GgpXbvC2jmUIulS+ITHzf0n4zsQ70zIxRNa
-NT+gsw8nb2WOjJgIl8AJIV1iFWtn186C1gKP0m3E0ldRITcbP/rh4uU4MLL9mh7v
-NmWFJ/p0Ja7LrWI5RIWMrcBGx+tDO2rzoAyVmgekC4HEa2ueSfxsIQKwxarwne1D
-nsKwuZZ4F8pyCmlMCQLdi51eM7hvn1nd4DbPq9WQ8s3diQFy0+MXUJUE6VIJU5jz
-UynwKRHIOYrBHnYm4dqnLugXnlYVakvVJGrnyrzg+AvjTerx6l0DzMXo+v5dRJFS
-J5CWYdhbewr7XGEzjdn2GNMs1p/x+ZU7zEvDCWjPAPxag8Ay5cfkeBTQbvlEqMX3
-GMcY4av5AdB9G3MA4gJb95Ykkx4dFbA3z00kJfvi2uE3wT8Ia9Yq2eXj3g/YCzCX
-EnDcGbs+9Cp7gdww2Z4xHVTpz4m39X2NeOld2sZX6TfBepurmVQ=
-=CmID
------END PGP SIGNATURE-----
---=-=-=--
