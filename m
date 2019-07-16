@@ -2,112 +2,207 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3DCC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0098DC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E7120449
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A3921721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbfGPJdX (ORCPT
+        id S1732140AbfGPJd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:33:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33732 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 05:33:58 -0400
+Received: from comms.puri.sm ([159.203.221.185]:46390 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfGPJdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:33:23 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DAFA081F18;
-        Tue, 16 Jul 2019 09:33:22 +0000 (UTC)
-Received: from [10.36.116.32] (ovpn-116-32.ams2.redhat.com [10.36.116.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BCC645C21A;
-        Tue, 16 Jul 2019 09:33:17 +0000 (UTC)
-Subject: Re: [PATCH v4 16/22] iommu/vt-d: Move domain helper to header
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1560087862-57608-17-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <6c983a69-076b-da70-e41e-5f4dd6750cd0@redhat.com>
-Date:   Tue, 16 Jul 2019 11:33:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <1560087862-57608-17-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 16 Jul 2019 09:33:23 +0000 (UTC)
+        id S1726997AbfGPJd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:33:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 48662DFD96;
+        Tue, 16 Jul 2019 02:33:57 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zei7lPjO_EwI; Tue, 16 Jul 2019 02:33:56 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCHv2 1/3] iio: imu: st_lsm6sdx: move register definitions to sensor_settings struct
+Date:   Tue, 16 Jul 2019 11:33:23 +0200
+Message-Id: <20190716093325.7683-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-On 6/9/19 3:44 PM, Jacob Pan wrote:
-> Move domainer helper to header to be used by SVA code.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/intel-iommu.c | 6 ------
->  include/linux/intel-iommu.h | 6 ++++++
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 39b63fe..7cfa0eb 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -427,12 +427,6 @@ static void init_translation_status(struct intel_iommu *iommu)
->  		iommu->flags |= VTD_FLAG_TRANS_PRE_ENABLED;
->  }
->  
-> -/* Convert generic 'struct iommu_domain to private struct dmar_domain */
-> -static struct dmar_domain *to_dmar_domain(struct iommu_domain *dom)
-> -{
-> -	return container_of(dom, struct dmar_domain, domain);
-> -}
-> -
->  static int __init intel_iommu_setup(char *str)
->  {
->  	if (!str)
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 8605c74..b75f17d 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -597,6 +597,12 @@ static inline void __iommu_flush_cache(
->  		clflush_cache_range(addr, size);
->  }
->  
-> +/* Convert generic 'struct iommu_domain to private struct dmar_domain */
-fix the single '?
-> +static inline struct dmar_domain *to_dmar_domain(struct iommu_domain *dom)
-> +{
-> +	return container_of(dom, struct dmar_domain, domain);
-> +}
-> +
->  /*
->   * 0: readable
->   * 1: writable
-> 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Move some register definitions to the per-device array of struct
+st_lsm6dsx_sensor_settings in order to simplify adding new sensor
+devices to the driver.
 
-Thanks
+Also, remove completely unused register definitions.
 
-Eric
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+---
+
+
+This is already based on Lorenzo's recent changes:
+https://lore.kernel.org/linux-iio/853f216a-7814-cb79-180b-078ac5e8a359@puri.sm/T/#u
+https://lore.kernel.org/linux-iio/501b0db9-63cb-905c-c09b-682eb73f1ff3@puri.sm/T/#u
+
+revision history:
+v2: improve variable names, thanks Lorenzo
+
+thanks
+                       martin
+
+
+
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
+ 2 files changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+index ab1c66615d67..3c47f5d27d30 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -198,6 +198,9 @@ struct st_lsm6dsx_ext_dev_settings {
+ /**
+  * struct st_lsm6dsx_settings - ST IMU sensor settings
+  * @wai: Sensor WhoAmI default value.
++ * @int1_addr: Control Register address for INT1
++ * @int2_addr: Control Register address for INT2
++ * @reset_addr: register address for reset/reboot
+  * @max_fifo_size: Sensor max fifo length in FIFO words.
+  * @id: List of hw id/device name supported by the driver configuration.
+  * @odr_table: Hw sensors odr table (Hz + val).
+@@ -210,6 +213,9 @@ struct st_lsm6dsx_ext_dev_settings {
+  */
+ struct st_lsm6dsx_settings {
+ 	u8 wai;
++	u8 int1_addr;
++	u8 int2_addr;
++	u8 reset_addr;
+ 	u16 max_fifo_size;
+ 	struct {
+ 		enum st_lsm6dsx_hw_id hw_id;
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index 9aa109428a52..e0d2149625cc 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -49,17 +49,12 @@
+ 
+ #include "st_lsm6dsx.h"
+ 
+-#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+-#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+ #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+ #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+-#define ST_LSM6DSX_REG_RESET_ADDR		0x12
+ #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
+ #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
+ #define ST_LSM6DSX_REG_BDU_ADDR			0x12
+ #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
+-#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
+ 
+ #define ST_LSM6DSX_REG_ACC_OUT_X_L_ADDR		0x28
+ #define ST_LSM6DSX_REG_ACC_OUT_Y_L_ADDR		0x2a
+@@ -72,6 +67,9 @@
+ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	{
+ 		.wai = 0x69,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 1365,
+ 		.id = {
+ 			{
+@@ -170,6 +168,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x69,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -268,6 +269,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6a,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 682,
+ 		.id = {
+ 			{
+@@ -375,6 +379,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6c,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -494,6 +501,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -584,6 +594,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+ 	},
+ 	{
+ 		.wai = 0x6b,
++		.int1_addr = 0x0d,
++		.int2_addr = 0x0e,
++		.reset_addr = 0x12,
+ 		.max_fifo_size = 512,
+ 		.id = {
+ 			{
+@@ -1117,10 +1130,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+ 
+ 	switch (drdy_pin) {
+ 	case 1:
+-		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
++		*drdy_reg = hw->settings->int1_addr;
+ 		break;
+ 	case 2:
+-		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
++		*drdy_reg = hw->settings->int2_addr;
+ 		break;
+ 	default:
+ 		dev_err(hw->dev, "unsupported data ready pin\n");
+@@ -1220,7 +1233,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	int err;
+ 
+ 	/* device sw reset */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
+ 				 ST_LSM6DSX_REG_RESET_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
+ 	if (err < 0)
+@@ -1229,7 +1242,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+ 	msleep(50);
+ 
+ 	/* reload trimming parameter */
+-	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
++	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
+ 				 ST_LSM6DSX_REG_BOOT_MASK,
+ 				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
+ 	if (err < 0)
+-- 
+2.20.1
 
