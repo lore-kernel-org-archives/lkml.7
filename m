@@ -2,123 +2,205 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD1C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B38AC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1653E21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:48:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nRiNC+kU"
+	by mail.kernel.org (Postfix) with ESMTP id 282F520880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbfGPOsx (ORCPT
+        id S2387889AbfGPOs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:48:53 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:47005 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387838AbfGPOsw (ORCPT
+        Tue, 16 Jul 2019 10:48:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11678 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387838AbfGPOs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:48:52 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so9638912lfh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 07:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YrNz8Q0qPVQBIoGob+UcRjTxZM1rMVhgoGUsAEtnBd8=;
-        b=nRiNC+kUdj8lsYEzkcic81q9xM1RzrwfOcHBr5/kNF0xZPu/wF9Vuhh3dG+c5MjMsB
-         Lcd+uU1Eyy9SGkEH1qTwGyP5MmWQw80swJjOgDqnNzvvPSbELxtkfVNzxvC1rzKPff4T
-         nlkrn59+VV4ygIjhgauMHTsYBOdeAARNubjpDOia/L0U+3Q449nuF7uWDDAAdvL1dmFd
-         wJkmpbOwdAES6uGqXCQbVrzRu18SfRx3imvYjibztYVB/oUecv5Q1nVe3IgQqHZsjfPC
-         c+pHZCA00FHgqIAk0IDcmvCtqYbkEEM0TRO78bDpZYR17llbBNgvigXKjGMP63jnccZl
-         Rtog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YrNz8Q0qPVQBIoGob+UcRjTxZM1rMVhgoGUsAEtnBd8=;
-        b=M6B/MUnqsCu0ymYQc7wNegGuArbPvB1PvICHwrFUtLAbtMNzzJH/D5t2WzjUXpJZyQ
-         XNun2xnLnohKlSaLkhJHogNpzZCZksYsT0bK3NMkl7zsamapT23L9Bkyas/whOnPTl7h
-         qD6vUbVpX0ACy5U5c9J/4ZM/tmcCnZUANxDfGX/u5yJ9s9g7q85woaq/hOn38yf6XAyr
-         QqU7ufNDK2p4/DFs3+Ctu6To3Z3iqIqQPDsozmHkbuMfIBQ5M0oJwOIUAPIN2f5GPZZU
-         jyHphnJnFMMqdvbp0XUhn2E+V8mXK5PU+K8NNRSCpKD+2COCLma6TsSGDa57/hnLWapQ
-         MHjg==
-X-Gm-Message-State: APjAAAUp3Qmyh4Ix/zMWQWm1kSNuV8/CwAg/SuWokOVWSnXyV8vmmARN
-        m62l6GrLFDsC7nviMirzMq6q8GGpUGNu5Jjmrr2PeQ==
-X-Google-Smtp-Source: APXvYqzwgfoA/O0/6VCpe6UiVXMfT4oG6b+Xw+pP/6lwm4luF7oDF7cnWd0k0s/a94sofLAj5fHQ1EasPXvqmHlPG74=
-X-Received: by 2002:a19:ed0c:: with SMTP id y12mr14444159lfy.191.1563288530642;
- Tue, 16 Jul 2019 07:48:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190405174708.1010-1-guro@fb.com> <20190405174708.1010-7-guro@fb.com>
-In-Reply-To: <20190405174708.1010-7-guro@fb.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 16 Jul 2019 20:18:39 +0530
-Message-ID: <CA+G9fYvz6MA0N8GgwY5QNdWBAw+XT9QcmwnABsSpjLnwz_jLzA@mail.gmail.com>
-Subject: Re: [PATCH v10 6/9] kselftests: cgroup: add freezer controller self-tests
-To:     Roman Gushchin <guroan@gmail.com>
-Cc:     Tejun Heo <tj@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        kernel-team@fb.com, cgroups@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>, Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Jul 2019 10:48:57 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GElWEv040725;
+        Tue, 16 Jul 2019 10:48:56 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tsfhuupry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 10:48:56 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6GEj31j003070;
+        Tue, 16 Jul 2019 14:48:55 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03dal.us.ibm.com with ESMTP id 2tq6x77kxk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 14:48:55 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GEmrqL46858746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 14:48:53 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 800A478063;
+        Tue, 16 Jul 2019 14:48:53 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D8C77805F;
+        Tue, 16 Jul 2019 14:48:53 +0000 (GMT)
+Received: from oc6220003374.ibm.com (unknown [9.40.45.99])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jul 2019 14:48:53 +0000 (GMT)
+From:   KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+Cc:     james.smart@broadcom.com, dick.kennedy@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+Subject: [PATCH] lpfc: Fix Buffer Overflow Error
+Date:   Tue, 16 Jul 2019 09:48:38 -0500
+Message-Id: <1563288518-19234-1-git-send-email-kmahlkuc@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160182
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
+Power and x86 have different page sizes so rather than allocate the
+buffer based on number of pages we should allocate space by using
+max_sectors. There is also code in lpfc_scsi.c to be sure we don't
+write past the end of this buffer.
 
-Just want to share information here on what we notice on running this test case,
+Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+---
+ drivers/scsi/lpfc/lpfc_init.c | 41 +++++++----------------------------------
+ drivers/scsi/lpfc/lpfc_scsi.c | 14 ++++++++++++--
+ 2 files changed, 19 insertions(+), 36 deletions(-)
 
-On Fri, 5 Apr 2019 at 23:17, Roman Gushchin <guroan@gmail.com> wrote:
->
-> This patch implements 9 tests for the freezer controller for
-> cgroup v2:
-...
-> 6) ptrace test: the test checks that it's possible to attach to
-> a process in a frozen cgroup, get some information and detach, and
-> the cgroup will remain frozen.
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index eaaef68..59b52a0 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -39,6 +39,7 @@
+ #include <linux/msi.h>
+ #include <linux/irq.h>
+ #include <linux/bitops.h>
++#include <linux/vmalloc.h>
+ 
+ #include <scsi/scsi.h>
+ #include <scsi/scsi_device.h>
+@@ -7549,7 +7550,6 @@ struct lpfc_rpi_hdr *
+ 	uint32_t old_mask;
+ 	uint32_t old_guard;
+ 
+-	int pagecnt = 10;
+ 	if (phba->cfg_prot_mask && phba->cfg_prot_guard) {
+ 		lpfc_printf_log(phba, KERN_INFO, LOG_INIT,
+ 				"1478 Registering BlockGuard with the "
+@@ -7588,23 +7588,9 @@ struct lpfc_rpi_hdr *
+ 	}
+ 
+ 	if (!_dump_buf_data) {
+-		while (pagecnt) {
+-			spin_lock_init(&_dump_buf_lock);
+-			_dump_buf_data =
+-				(char *) __get_free_pages(GFP_KERNEL, pagecnt);
+-			if (_dump_buf_data) {
+-				lpfc_printf_log(phba, KERN_ERR, LOG_BG,
+-					"9043 BLKGRD: allocated %d pages for "
+-				       "_dump_buf_data at 0x%p\n",
+-				       (1 << pagecnt), _dump_buf_data);
+-				_dump_buf_data_order = pagecnt;
+-				memset(_dump_buf_data, 0,
+-				       ((1 << PAGE_SHIFT) << pagecnt));
+-				break;
+-			} else
+-				--pagecnt;
+-		}
+-		if (!_dump_buf_data_order)
++		_dump_buf_data = (char *) vmalloc(shost->hostt->max_sectors * 512);
++		_dump_buf_data_order = get_order(shost->hostt->max_sectors * 512);
++		if (!_dump_buf_data)
+ 			lpfc_printf_log(phba, KERN_ERR, LOG_BG,
+ 				"9044 BLKGRD: ERROR unable to allocate "
+ 			       "memory for hexdump\n");
+@@ -7613,22 +7599,9 @@ struct lpfc_rpi_hdr *
+ 			"9045 BLKGRD: already allocated _dump_buf_data=0x%p"
+ 		       "\n", _dump_buf_data);
+ 	if (!_dump_buf_dif) {
+-		while (pagecnt) {
+-			_dump_buf_dif =
+-				(char *) __get_free_pages(GFP_KERNEL, pagecnt);
+-			if (_dump_buf_dif) {
+-				lpfc_printf_log(phba, KERN_ERR, LOG_BG,
+-					"9046 BLKGRD: allocated %d pages for "
+-				       "_dump_buf_dif at 0x%p\n",
+-				       (1 << pagecnt), _dump_buf_dif);
+-				_dump_buf_dif_order = pagecnt;
+-				memset(_dump_buf_dif, 0,
+-				       ((1 << PAGE_SHIFT) << pagecnt));
+-				break;
+-			} else
+-				--pagecnt;
+-		}
+-		if (!_dump_buf_dif_order)
++		_dump_buf_dif = (char *) vmalloc(shost->hostt->max_sectors * 512);
++		_dump_buf_dif_order = get_order(shost->hostt->max_sectors * 512);
++		if (!_dump_buf_dif)
+ 			lpfc_printf_log(phba, KERN_ERR, LOG_BG,
+ 			"9047 BLKGRD: ERROR unable to allocate "
+ 			       "memory for hexdump\n");
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index ba996fb..719612d 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -92,7 +92,7 @@ struct scsi_dif_tuple {
+ static void
+ lpfc_debug_save_data(struct lpfc_hba *phba, struct scsi_cmnd *cmnd)
+ {
+-	void *src, *dst;
++	void *src, *dst, *end;
+ 	struct scatterlist *sgde = scsi_sglist(cmnd);
+ 
+ 	if (!_dump_buf_data) {
+@@ -110,7 +110,12 @@ struct scsi_dif_tuple {
+ 	}
+ 
+ 	dst = (void *) _dump_buf_data;
++	end = ((char *) dst) + ((1 << PAGE_SHIFT) << _dump_buf_data_order);
+ 	while (sgde) {
++		if (dst + sgde->length >= end) {
++			printk(KERN_ERR "overflow buffer\n");
++			break;
++		}
+ 		src = sg_virt(sgde);
+ 		memcpy(dst, src, sgde->length);
+ 		dst += sgde->length;
+@@ -121,7 +126,7 @@ struct scsi_dif_tuple {
+ static void
+ lpfc_debug_save_dif(struct lpfc_hba *phba, struct scsi_cmnd *cmnd)
+ {
+-	void *src, *dst;
++	void *src, *dst, *end;
+ 	struct scatterlist *sgde = scsi_prot_sglist(cmnd);
+ 
+ 	if (!_dump_buf_dif) {
+@@ -138,7 +143,12 @@ struct scsi_dif_tuple {
+ 	}
+ 
+ 	dst = _dump_buf_dif;
++	end = ((char *) dst) + ((1 << PAGE_SHIFT) << _dump_buf_dif_order);
+ 	while (sgde) {
++		if (dst + sgde->length >= end) {
++			printk(KERN_ERR "overflow buffer\n");
++			break;
++		}
+ 		src = sg_virt(sgde);
+ 		memcpy(dst, src, sgde->length);
+ 		dst += sgde->length;
+-- 
+1.8.3.1
 
-selftests cgroup test_freezer failed because of the sys entry path not found.
- Cgroup /sys/fs/cgroup/unified/cg_test_ptrace isn't frozen
-/sys/fs/cgroup/unified/cg_test_ptrace: isn't_frozen #
-# not ok 6 test_cgfreezer_ptrace
-
-This test case fails intermittently.
-
-Test output:
--------------
-# selftests cgroup test_freezer
-cgroup: test_freezer_ #
-# Cgroup /sys/fs/cgroup/unified/cg_test_ptrace isn't frozen
-/sys/fs/cgroup/unified/cg_test_ptrace: isn't_frozen #
-# ok 1 test_cgfreezer_simple
-1: test_cgfreezer_simple_ #
-# ok 2 test_cgfreezer_tree
-2: test_cgfreezer_tree_ #
-# ok 3 test_cgfreezer_forkbomb
-3: test_cgfreezer_forkbomb_ #
-# ok 4 test_cgfreezer_rmdir
-4: test_cgfreezer_rmdir_ #
-# ok 5 test_cgfreezer_migrate
-5: test_cgfreezer_migrate_ #
-# not ok 6 test_cgfreezer_ptrace
-ok: 6_test_cgfreezer_ptrace #
-# ok 7 test_cgfreezer_stopped
-7: test_cgfreezer_stopped_ #
-# ok 8 test_cgfreezer_ptraced
-8: test_cgfreezer_ptraced_ #
-# ok 9 test_cgfreezer_vfork
-9: test_cgfreezer_vfork_ #
-[FAIL] 3 selftests cgroup test_freezer
-selftests: cgroup_test_freezer [FAIL]
-
-Test results link,
-https://qa-reports.linaro.org/lkft/linux-mainline-oe/tests/kselftest/cgroup_test_freezer?page=1
-
-- Naresh
