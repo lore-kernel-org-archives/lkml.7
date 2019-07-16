@@ -2,316 +2,216 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C732C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E63C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6AF20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BABE20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QeHZ0Ror"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbfGPJzv (ORCPT
+        id S1732036AbfGPJ6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:55:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40108 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfGPJzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:55:51 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C57A30842A0;
-        Tue, 16 Jul 2019 09:55:49 +0000 (UTC)
-Received: from redhat.com (ovpn-120-102.rdu2.redhat.com [10.10.120.102])
-        by smtp.corp.redhat.com (Postfix) with SMTP id BD23B1001B38;
-        Tue, 16 Jul 2019 09:55:32 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 05:55:31 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
- via hinting
-Message-ID: <20190716055017-mutt-send-email-mst@kernel.org>
-References: <20190619222922.1231.27432.stgit@localhost.localdomain>
- <20190619223338.1231.52537.stgit@localhost.localdomain>
+        Tue, 16 Jul 2019 05:58:14 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:53972 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731166AbfGPJ6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:58:14 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190716095811epoutp04d1ef6cb55b820ab8509d00cc6b6b7738~x2sZTItWW0463304633epoutp04a
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:58:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190716095811epoutp04d1ef6cb55b820ab8509d00cc6b6b7738~x2sZTItWW0463304633epoutp04a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563271091;
+        bh=8m7yojX5VERnehuP4IDCcAS+gpljyXXgYtBRJsLnIn4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QeHZ0RorpZs9FWRbh0uLjGMBwI4qf2R3KXRXbY9vmxM2Q6iCdWhC7dkT6OFIK5/De
+         +C+VUO7xBk8WLWMxdkBM9C6WIxtf2LspvccjsMkTsp0dEvxqptwGQvzoBKaWxwnAXp
+         wSrggjymoBRc3qyxmIHDNX8WC0MQLHqIBj6y2a8Q=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190716095810epcas1p29f5c6e495f69535a9e87b54ccf181655~x2sYhhVuz1876318763epcas1p2E;
+        Tue, 16 Jul 2019 09:58:10 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 45nwnX0GP1zMqYkd; Tue, 16 Jul
+        2019 09:58:08 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0F.60.04066.FAF9D2D5; Tue, 16 Jul 2019 18:58:07 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190716095807epcas1p36f57bd2bd104c0c05c53db052ce8b210~x2sWKvmlN3194731947epcas1p30;
+        Tue, 16 Jul 2019 09:58:07 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190716095807epsmtrp18101c7cdaf68d6f1cd11d6ebf43d71f2~x2sWJSu9X1917719177epsmtrp1L;
+        Tue, 16 Jul 2019 09:58:07 +0000 (GMT)
+X-AuditID: b6c32a37-e3fff70000000fe2-c9-5d2d9faff48f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        89.37.03638.FAF9D2D5; Tue, 16 Jul 2019 18:58:07 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190716095807epsmtip126140c206ac4fd539b9fc01f07544665~x2sV32aHp2724927249epsmtip1Q;
+        Tue, 16 Jul 2019 09:58:07 +0000 (GMT)
+Subject: Re: [PATCH v1 10/50] clk: samsung: change ACLK100_NOC clocks
+ definitions Exynos5x
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        kyungmin.park@samsung.com, a.hajda@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <63cb24f8-5666-3fb4-0c98-ecc54cd4266f@samsung.com>
+Date:   Tue, 16 Jul 2019 19:01:13 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619223338.1231.52537.stgit@localhost.localdomain>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 16 Jul 2019 09:55:50 +0000 (UTC)
+In-Reply-To: <20190715124417.4787-11-l.luba@partner.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCJsWRmVeSWpSXmKPExsWy7bCmge76+bqxBhuOWVvcWneO1WLjjPWs
+        FvOPAFn9j18zW5w/v4Hd4mzTG3aLWw0yFpseX2O1+Nhzj9Xi8q45bBYzzu9jslh75C67xdLr
+        F5ksLp5ytbjduILNonXvEXaLw2/aWS3+XdvI4iDksWbeGkaP9zda2T02repk89i8pN7j4Ls9
+        TB59W1YxenzeJBfAHpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr
+        5OIToOuWmQP0hJJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0L10v
+        OT/XytDAwMgUqDAhO2PqxjOMBWflKrYs3sjSwHhAsouRk0NCwERi95tGxi5GLg4hgR2MEl+n
+        HWWGcD4xSvzvX8oC4XxjlNhz+SQ7TMvdeVugWvYySvRt/A3V8p5R4tnqNcwgVcICMRKnJnQz
+        gtgiAucYJTqeSoPYzALTmCRmzRMFsdkEtCT2v7jBBmLzCyhKXP3xGKyeV8BO4s+tXWBzWARU
+        JY7OagKLiwpESJw6Mo8FokZQ4uTMJ2A2p4CDxKdZXYwQ88Ulbj2ZzwRhy0s0b50NdpyEwCl2
+        iUdfm5ggXnCR2D3vCNQ7whKvjm+BsqUkXva3QdnVEitPHmGDaO5glNiy/wIrRMJYYv/SyUCD
+        OIA2aEqs36UPEVaU2Pl7LtQRfBLvvvawgpRICPBKdLQJQZQoS1x+cBfqBEmJxe2dbBMYlWYh
+        eWcWkhdmIXlhFsKyBYwsqxjFUguKc9NTiw0LjJGjexMjOIVrme9g3HDO5xCjAAejEg/viT06
+        sUKsiWXFlbmHGCU4mJVEeG2/ascK8aYkVlalFuXHF5XmpBYfYjQFhvZEZinR5HxgfskriTc0
+        NTI2NrYwMTQzNTRUEued90czVkggPbEkNTs1tSC1CKaPiYNTqoGxSFndZJ47e+HzQ8XLr60y
+        vuW96EjWwX1MEwuDyqaxNFycV5BypTJy813XKSL1fa9drFjamnxCiv1vvhYr+MPpvXS7yeUW
+        Vq3OpIYVEadsLVf6y+f1+tSs6PJj4TCU265v4s0YWsAVNSHs21XhB8z7A/62GU6Zx7XxTDTD
+        gVMbsnwXnjwnwKvEUpyRaKjFXFScCABuWLF89wMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsWy7bCSnO76+bqxBgcWKFjcWneO1WLjjPWs
+        FvOPAFn9j18zW5w/v4Hd4mzTG3aLWw0yFpseX2O1+Nhzj9Xi8q45bBYzzu9jslh75C67xdLr
+        F5ksLp5ytbjduILNonXvEXaLw2/aWS3+XdvI4iDksWbeGkaP9zda2T02repk89i8pN7j4Ls9
+        TB59W1YxenzeJBfAHsVlk5Kak1mWWqRvl8CVMXXjGcaCs3IVWxZvZGlgPCDZxcjJISFgInF3
+        3hbGLkYuDiGB3YwSp1e+ZYFISEpMu3iUuYuRA8gWljh8uBii5i2jxNyri5hBaoQFYiROTegG
+        axYROMco0ff3LDtIgllgGpPEifVgRUICJxgl9m8qBbHZBLQk9r+4wQZi8wsoSlz98ZgRxOYV
+        sJP4c2sXWD2LgKrE0VlNYHFRgQiJSdd2skDUCEqcnPkEzOYUcJD4NKuLEWKXusSfeZeYIWxx
+        iVtP5jNB2PISzVtnM09gFJ6FpH0WkpZZSFpmIWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4
+        NC9dLzk/dxMjOJa1tHYwnjgRf4hRgINRiYf3xB6dWCHWxLLiytxDjBIczEoivLZftWOFeFMS
+        K6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1MFpkyOdeXqd5VbPF
+        icvlaUyJW6L4i5Xen1J6A88Icp98vlS74PjcD7vzr2lsa5poMStRdX7rUbtgF5MNUlLHXf9V
+        LUqK5k4yb30TWXwkRDzW7Jz7k9eZt/RcQ4RPmJ5fonv7zd5bn5d3i1oktLZ8PyV7PFr0t79s
+        IUfFm3o31U0zH8/LmmW+VomlOCPRUIu5qDgRAEAwu8XhAgAA
+X-CMS-MailID: 20190716095807epcas1p36f57bd2bd104c0c05c53db052ce8b210
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190715124441eucas1p29f1205c20e9bea5b33f8f0b5747b1102
+References: <20190715124417.4787-1-l.luba@partner.samsung.com>
+        <CGME20190715124441eucas1p29f1205c20e9bea5b33f8f0b5747b1102@eucas1p2.samsung.com>
+        <20190715124417.4787-11-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 03:33:38PM -0700, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Hi,
+
+I checked the range of ratio as following: Looks good to me.
+But, you better to make it to fix the ratio range without adding ID.
+Please merge the code related to adding IDs into one patch.
+- Exynos5422 TRM ACLK_100_NOC_RATIO [23:20]
+- Exynos5420 TRM ACLK_100_NOC_RATIO [22:20]
+
+On 19. 7. 15. 오후 9:43, Lukasz Luba wrote:
+> The ACLK100_NOC has different topology in Exynos5420 and 5422/5800.  In
+> Exynos5420 this clock divider has 3 bits while in 5422/5800 has 4 bits.
+> The patch adds needed dividers in the exynos5800_div_clks, updates
+> exynos5x_div_clks and exynos5420_div_clks properly. It also adds IDs to
+> manage clocks from DT.
 > 
-> Add support for aerating memory using the hinting feature provided by
-> virtio-balloon. Hinting differs from the regular balloon functionality in
-> that is is much less durable than a standard memory balloon. Instead of
-> creating a list of pages that cannot be accessed the pages are only
-> inaccessible while they are being indicated to the virtio interface. Once
-> the interface has acknowledged them they are placed back into their
-> respective free lists and are once again accessible by the guest system.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
->  drivers/virtio/Kconfig              |    1 
->  drivers/virtio/virtio_balloon.c     |  110 ++++++++++++++++++++++++++++++++++-
->  include/uapi/linux/virtio_balloon.h |    1 
->  3 files changed, 108 insertions(+), 4 deletions(-)
+>  drivers/clk/samsung/clk-exynos5420.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> index 023fc3bc01c6..9cdaccf92c3a 100644
-> --- a/drivers/virtio/Kconfig
-> +++ b/drivers/virtio/Kconfig
-> @@ -47,6 +47,7 @@ config VIRTIO_BALLOON
->  	tristate "Virtio balloon driver"
->  	depends on VIRTIO
->  	select MEMORY_BALLOON
-> +	select AERATION
->  	---help---
->  	 This driver supports increasing and decreasing the amount
->  	 of memory within a KVM guest.
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 44339fc87cc7..91f1e8c9017d 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -18,6 +18,7 @@
->  #include <linux/mm.h>
->  #include <linux/mount.h>
->  #include <linux/magic.h>
-> +#include <linux/memory_aeration.h>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 6164d0ca75e0..c13f34d3d9a1 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -471,7 +471,8 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
+>  			SRC_TOP0, 4, 3),
+>  	MUX(CLK_MOUT_ACLK400_WCORE, "mout_aclk400_wcore", mout_group2_5800_p,
+>  			SRC_TOP0, 16, 3),
+> -	MUX(0, "mout_aclk100_noc", mout_group1_5800_p, SRC_TOP0, 20, 2),
+> +	MUX(CLK_MOUT_ACLK100_NOC, "mout_aclk100_noc", mout_group1_5800_p,
+> +			SRC_TOP0, 20, 2),
+
+Please squash this code to the patch which add the IDs.
+Actually, it is not related to fix the rate range of clock.
+
 >  
->  /*
->   * Balloon device works in 4K page units.  So each page is pointed to by
-> @@ -26,6 +27,7 @@
->   */
->  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
->  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
-> +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
->  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+>  	MUX(0, "mout_aclk333_432_gscl", mout_group6_5800_p, SRC_TOP1, 0, 2),
+>  	MUX(0, "mout_aclk333_432_isp", mout_group6_5800_p, SRC_TOP1, 4, 2),
+> @@ -534,6 +535,8 @@ static const struct samsung_mux_clock exynos5800_mux_clks[] __initconst = {
+>  static const struct samsung_div_clock exynos5800_div_clks[] __initconst = {
+>  	DIV(CLK_DOUT_ACLK400_WCORE, "dout_aclk400_wcore",
+>  			"mout_aclk400_wcore", DIV_TOP0, 16, 3),
+> +	DIV(CLK_DOUT_ACLK100_NOC, "dout_aclk100_noc", "mout_aclk100_noc",
+> +				DIV_TOP0, 20, 4),
+
+>  	DIV(CLK_DOUT_ACLK266_ISP, "dout_aclk266_isp", "mout_aclk266_isp",
+>  				DIV_TOP8, 12, 3),
+>  	DIV(0, "dout_aclk550_cam", "mout_aclk550_cam",
+> @@ -569,7 +572,8 @@ static const struct samsung_mux_clock exynos5420_mux_clks[] __initconst = {
+>  			SRC_TOP0, 4, 2),
+>  	MUX(CLK_MOUT_ACLK400_WCORE, "mout_aclk400_wcore", mout_group1_p,
+>  			SRC_TOP0, 16, 2),
+> -	MUX(0, "mout_aclk100_noc", mout_group1_p, SRC_TOP0, 20, 2),
+> +	MUX(CLK_MOUT_ACLK100_NOC, "mout_aclk100_noc", mout_group1_p,
+> +			SRC_TOP0, 20, 2),
+
+ditto.
+Please squash this code to the patch which add the IDs.
+Actually, it is not related to fix the rate range of clock.
+
 >  
->  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
-> @@ -45,6 +47,7 @@ enum virtio_balloon_vq {
->  	VIRTIO_BALLOON_VQ_DEFLATE,
->  	VIRTIO_BALLOON_VQ_STATS,
->  	VIRTIO_BALLOON_VQ_FREE_PAGE,
-> +	VIRTIO_BALLOON_VQ_HINTING,
->  	VIRTIO_BALLOON_VQ_MAX
+>  	MUX(0, "mout_aclk333_432_gscl", mout_group4_p, SRC_TOP1, 0, 2),
+>  	MUX(0, "mout_aclk333_432_isp", mout_group4_p,
+> @@ -600,6 +604,8 @@ static const struct samsung_mux_clock exynos5420_mux_clks[] __initconst = {
+>  static const struct samsung_div_clock exynos5420_div_clks[] __initconst = {
+>  	DIV(CLK_DOUT_ACLK400_WCORE, "dout_aclk400_wcore",
+>  			"mout_aclk400_wcore", DIV_TOP0, 16, 3),
+> +	DIV(CLK_DOUT_ACLK100_NOC, "dout_aclk100_noc", "mout_aclk100_noc",
+> +			DIV_TOP0, 20, 3),
 >  };
 >  
-> @@ -54,7 +57,8 @@ enum virtio_balloon_config_read {
->  
->  struct virtio_balloon {
->  	struct virtio_device *vdev;
-> -	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq;
-> +	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq,
-> +								*hinting_vq;
->  
->  	/* Balloon's own wq for cpu-intensive work items */
->  	struct workqueue_struct *balloon_wq;
-> @@ -103,9 +107,21 @@ struct virtio_balloon {
->  	/* Synchronize access/update to this struct virtio_balloon elements */
->  	struct mutex balloon_lock;
->  
-> -	/* The array of pfns we tell the Host about. */
-> -	unsigned int num_pfns;
-> -	__virtio32 pfns[VIRTIO_BALLOON_ARRAY_PFNS_MAX];
-> +
-> +	union {
-> +		/* The array of pfns we tell the Host about. */
-> +		struct {
-> +			unsigned int num_pfns;
-> +			__virtio32 pfns[VIRTIO_BALLOON_ARRAY_PFNS_MAX];
-> +		};
-> +		/* The array of physical addresses we are hinting on */
-> +		struct {
-> +			unsigned int num_hints;
-> +			__virtio64 hints[VIRTIO_BALLOON_ARRAY_HINTS_MAX];
-> +		};
-> +	};
-> +
-> +	struct aerator_dev_info a_dev_info;
->  
->  	/* Memory statistics */
->  	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
-> @@ -151,6 +167,68 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
->  
->  }
->  
-> +static u64 page_to_hints_pa_order(struct page *page)
-> +{
-> +	unsigned char order;
-> +	dma_addr_t pa;
-> +
-> +	BUILD_BUG_ON((64 - VIRTIO_BALLOON_PFN_SHIFT) >=
-> +		     (1 << VIRTIO_BALLOON_PFN_SHIFT));
-> +
-> +	/*
-> +	 * Record physical page address combined with page order.
-> +	 * Order will never exceed 64 - VIRTIO_BALLON_PFN_SHIFT
-> +	 * since the size has to fit into a 64b value. So as long
-> +	 * as VIRTIO_BALLOON_SHIFT is greater than this combining
-> +	 * the two values should be safe.
-> +	 */
-> +	pa = page_to_phys(page);
-> +	order = page_private(page) +
-> +		PAGE_SHIFT - VIRTIO_BALLOON_PFN_SHIFT;
-> +
-> +	return (u64)(pa | order);
-> +}
-> +
-> +void virtballoon_aerator_react(struct aerator_dev_info *a_dev_info)
-> +{
-> +	struct virtio_balloon *vb = container_of(a_dev_info,
-> +						struct virtio_balloon,
-> +						a_dev_info);
-> +	struct virtqueue *vq = vb->hinting_vq;
-> +	struct scatterlist sg;
-> +	unsigned int unused;
-> +	struct page *page;
-> +
-> +	mutex_lock(&vb->balloon_lock);
-> +
-> +	vb->num_hints = 0;
-> +
-> +	list_for_each_entry(page, &a_dev_info->batch, lru) {
-> +		vb->hints[vb->num_hints++] =
-> +				cpu_to_virtio64(vb->vdev,
-> +						page_to_hints_pa_order(page));
-> +	}
-> +
-> +	/* We shouldn't have been called if there is nothing to process */
-> +	if (WARN_ON(vb->num_hints == 0))
-> +		goto out;
-> +
-> +	sg_init_one(&sg, vb->hints,
-> +		    sizeof(vb->hints[0]) * vb->num_hints);
-> +
-> +	/*
-> +	 * We should always be able to add one buffer to an
-> +	 * empty queue.
-> +	 */
-> +	virtqueue_add_outbuf(vq, &sg, 1, vb, GFP_KERNEL);
-> +	virtqueue_kick(vq);
-> +
-> +	/* When host has read buffer, this completes via balloon_ack */
-> +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
-> +out:
-> +	mutex_unlock(&vb->balloon_lock);
-> +}
-> +
->  static void set_page_pfns(struct virtio_balloon *vb,
->  			  __virtio32 pfns[], struct page *page)
->  {
-> @@ -475,6 +553,7 @@ static int init_vqs(struct virtio_balloon *vb)
->  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
->  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
->  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-> +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
->  
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
->  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-> @@ -486,11 +565,19 @@ static int init_vqs(struct virtio_balloon *vb)
->  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->  	}
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
-> +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
-> +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
-> +	}
-> +
->  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
->  					 vqs, callbacks, names, NULL, NULL);
->  	if (err)
->  		return err;
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
-> +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
-> +
->  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
->  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-> @@ -929,12 +1016,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
->  		if (err)
->  			goto out_del_balloon_wq;
->  	}
-> +
-> +	vb->a_dev_info.react = virtballoon_aerator_react;
-> +	vb->a_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
-> +		err = aerator_startup(&vb->a_dev_info);
-> +		if (err)
-> +			goto out_unregister_shrinker;
-> +	}
-> +
->  	virtio_device_ready(vdev);
->  
->  	if (towards_target(vb))
->  		virtballoon_changed(vdev);
->  	return 0;
->  
-> +out_unregister_shrinker:
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-> +		virtio_balloon_unregister_shrinker(vb);
->  out_del_balloon_wq:
->  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
->  		destroy_workqueue(vb->balloon_wq);
-> @@ -963,6 +1062,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
->  {
->  	struct virtio_balloon *vb = vdev->priv;
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
-> +		aerator_shutdown();
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
->  		virtio_balloon_unregister_shrinker(vb);
->  	spin_lock_irq(&vb->stop_update_lock);
-> @@ -1032,6 +1133,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
->  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
->  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
->  	VIRTIO_BALLOON_F_PAGE_POISON,
-> +	VIRTIO_BALLOON_F_HINTING,
->  };
->  
->  static struct virtio_driver virtio_balloon_driver = {
-> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-> index a1966cd7b677..2b0f62814e22 100644
-> --- a/include/uapi/linux/virtio_balloon.h
-> +++ b/include/uapi/linux/virtio_balloon.h
-> @@ -36,6 +36,7 @@
->  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
->  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
->  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
->  
->  /* Size of a PFN in the balloon interface. */
->  #define VIRTIO_BALLOON_PFN_SHIFT 12
-
-
-
-The approach here is very close to what on-demand hinting that is
-already upstream does.
-
-This should have resulted in a most of the code being shared
-but this does not seem to happen here.
-
-Can we unify the code in some way?
-It can still use a separate feature flag, but there are things
-I like very much about current hinting code, such as
-using s/g instead of passing PFNs in a buffer.
-
-If this doesn't work could you elaborate on why?
+>  static const struct samsung_gate_clock exynos5420_gate_clks[] __initconst = {
+> @@ -798,8 +804,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
+>  			DIV_TOP0, 8, 3),
+>  	DIV(CLK_DOUT_ACLK200_FSYS2, "dout_aclk200_fsys2", "mout_aclk200_fsys2",
+>  			DIV_TOP0, 12, 3),
+> -	DIV(CLK_DOUT_ACLK100_NOC, "dout_aclk100_noc", "mout_aclk100_noc",
+> -			DIV_TOP0, 20, 3),
+>  	DIV(CLK_DOUT_PCLK200_FSYS, "dout_pclk200_fsys", "mout_pclk200_fsys",
+>  			DIV_TOP0, 24, 3),
+>  	DIV(CLK_DOUT_ACLK200_FSYS, "dout_aclk200_fsys", "mout_aclk200_fsys",
+> 
 
 -- 
-MST
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
