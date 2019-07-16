@@ -2,179 +2,142 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A303C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73FBC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5882064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563317896;
-	bh=d1OeQPUJdeASxkXJhbuVtavZaIFUc48bnqlVnewI5kg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yzfb67aXD8YdYau3hlMR2EWGX09VduKh9lDyqHZaXbjXbRypmwQR4b5+VuddOt9zr
-	 gsPSRp7LJGxdQPYBsfXl2K/JYUA4JW4lMsd/12PhCdKwbow6s03tYEtETtWPwLrVmm
-	 FopVt3rcedfGCegmNiMsqaUi7N4O2vbtuXtrz4iM=
+	by mail.kernel.org (Postfix) with ESMTP id 82E2C217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388925AbfGPW6O (ORCPT
+        id S2388715AbfGPXDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:58:14 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36412 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbfGPW6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:58:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g67so16092849wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:58:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DnTaPvcy0KH7cH1iTW8cw8f8cSszGtQ1CMxkqbquSDQ=;
-        b=JcTtUh3UyN0H1+1xtHih7oZdy0jeBMQDuwMRgHxAJ0Az+HckuhrGL+0KsBCQ8CBnrr
-         E2dLU7l3yhZAO02n/0osX8p29AWcdPqFfmjqgCg3QJj3Dw/57WSeveEmcJoZuuLzZvgb
-         r50XK9Pm64rZhbNkdYbT8JpnS1P5oJx/I7rSmy8CyfSS7XyTbczD0l96/XcTRAxHQZoV
-         03cE/AgRuOXE9AsASBh+Jx/aSYvH2dd5YI77PqL9ObTfaeVxfFAxg+sist6elsYWZkVC
-         l0fAvXkAfaDeWkOsIwleRw1VBrcIgjo10xzIlbSyOprghtLspVbZXQ1dzR+Z3png82oL
-         RcDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DnTaPvcy0KH7cH1iTW8cw8f8cSszGtQ1CMxkqbquSDQ=;
-        b=D+m/0LR9HSesoP3DWsRH89K0qdlOh+Cs1PpLAt8LI5VNXk6WsFg2QldOewvfhxJlFF
-         XOlKRpDZ1FlBQhHWTLYCFsxlmBq95ge8Yh4FgDhaiawware8oN/ssNoKvLPTFpUL0Zc1
-         fK3t1U3bKC/sdarwIbJRWCcHK8RVPXAIknD8r+hZQTwpoiB1LraxrUspNS54u31MQiJz
-         MGf3vYyi9H+BGG1kmVL9ZmmdroB3OwxmVXgo8zuEThIdTHMyQOtjhEttrotZWx7x1ORQ
-         B1RNcs17FDJR+Yx3pFIDV2jMggIEjWA1RBTL3gAt1E1941AjNKz8c/uEC8uhMrHeQmum
-         yISg==
-X-Gm-Message-State: APjAAAXAUxxrFNFWbcGXzEAHNGBfWPf57+2sR7EN5N3XFPy+VE8XQZNf
-        y5MPdceQti9p3/J0euqGbA7TJaCM
-X-Google-Smtp-Source: APXvYqyTAbi/PI1AfOMly+pE6fA0FLxhsNEKujDD8AbQa12uw+wAVxsDogo6v7LYRBl3VsdpNXqfWA==
-X-Received: by 2002:a7b:c215:: with SMTP id x21mr32543226wmi.38.1563317892239;
-        Tue, 16 Jul 2019 15:58:12 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id e19sm30406864wra.71.2019.07.16.15.58.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 15:58:11 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 00:58:09 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
+        Tue, 16 Jul 2019 19:03:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46890 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbfGPXDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 19:03:01 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7CC4D3084242;
+        Tue, 16 Jul 2019 23:03:00 +0000 (UTC)
+Received: from treble (ovpn-123-204.rdu2.redhat.com [10.10.123.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA68F600C7;
+        Tue, 16 Jul 2019 23:02:57 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 18:02:55 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <clark.williams@gmail.com>,
-        Julia Cartwright <julia@ni.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
-Message-ID: <20190716225809.GA50617@gmail.com>
-References: <20190715150402.798499167@linutronix.de>
- <20190715150601.205143057@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH 10/22] bpf: Disable GCC -fgcse optimization for
+ ___bpf_prog_run()
+Message-ID: <20190716230255.2o6w3kj6hk33vpiw@treble>
+References: <cover.1563150885.git.jpoimboe@redhat.com>
+ <1044b4ced755cc3d1d32030cfcf2064f06a9e639.1563150885.git.jpoimboe@redhat.com>
+ <CAKwvOdmUfAg9cP4tHV7tXC8PtcumehZ99+wqdcmkTR5a6LORrw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190715150601.205143057@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdmUfAg9cP4tHV7tXC8PtcumehZ99+wqdcmkTR5a6LORrw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 16 Jul 2019 23:03:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> Add a new entry to the preemption menu which enables the real-time support
-> for the kernel. The choice is only enabled when an architecture supports
-> it.
+On Tue, Jul 16, 2019 at 11:15:54AM -0700, Nick Desaulniers wrote:
+> On Sun, Jul 14, 2019 at 5:37 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On x86-64, with CONFIG_RETPOLINE=n, GCC's "global common subexpression
+> > elimination" optimization results in ___bpf_prog_run()'s jumptable code
+> > changing from this:
+> >
+> >         select_insn:
+> >                 jmp *jumptable(, %rax, 8)
+> >                 ...
+> >         ALU64_ADD_X:
+> >                 ...
+> >                 jmp *jumptable(, %rax, 8)
+> >         ALU_ADD_X:
+> >                 ...
+> >                 jmp *jumptable(, %rax, 8)
+> >
+> > to this:
+> >
+> >         select_insn:
+> >                 mov jumptable, %r12
+> >                 jmp *(%r12, %rax, 8)
+> >                 ...
+> >         ALU64_ADD_X:
+> >                 ...
+> >                 jmp *(%r12, %rax, 8)
+> >         ALU_ADD_X:
+> >                 ...
+> >                 jmp *(%r12, %rax, 8)
+> >
+> > The jumptable address is placed in a register once, at the beginning of
+> > the function.  The function execution can then go through multiple
+> > indirect jumps which rely on that same register value.  This has a few
+> > issues:
+> >
+> > 1) Objtool isn't smart enough to be able to track such a register value
+> >    across multiple recursive indirect jumps through the jump table.
+> >
+> > 2) With CONFIG_RETPOLINE enabled, this optimization actually results in
+> >    a small slowdown.  I measured a ~4.7% slowdown in the test_bpf
+> >    "tcpdump port 22" selftest.
+> >
+> >    This slowdown is actually predicted by the GCC manual:
+> >
+> >      Note: When compiling a program using computed gotos, a GCC
+> >      extension, you may get better run-time performance if you
+> >      disable the global common subexpression elimination pass by
+> >      adding -fno-gcse to the command line.
+> >
+> > So just disable the optimization for this function.
+> >
+> > Fixes: e55a73251da3 ("bpf: Fix ORC unwinding in non-JIT BPF code")
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Acked-by: Alexei Starovoitov <ast@kernel.org>
+> > ---
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > ---
+> >  include/linux/compiler-gcc.h   | 2 ++
+> >  include/linux/compiler_types.h | 4 ++++
+> >  kernel/bpf/core.c              | 2 +-
+> >  3 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> > index e8579412ad21..d7ee4c6bad48 100644
+> > --- a/include/linux/compiler-gcc.h
+> > +++ b/include/linux/compiler-gcc.h
+> > @@ -170,3 +170,5 @@
+> >  #else
+> >  #define __diag_GCC_8(s)
+> >  #endif
+> > +
+> > +#define __no_fgcse __attribute__((optimize("-fno-gcse")))
 > 
-> It selects PREEMPT as the RT features depend on it. To achieve that the
-> existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
-> well.
-> 
-> No functional change.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/Kconfig           |    3 +++
->  kernel/Kconfig.preempt |   25 +++++++++++++++++++++++--
->  2 files changed, 26 insertions(+), 2 deletions(-)
-> 
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -809,6 +809,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
->  config ARCH_NO_PREEMPT
->  	bool
->  
-> +config ARCH_SUPPORTS_RT
-> +	bool
-> +
->  config CPU_NO_EFFICIENT_FFS
->  	def_bool n
->  
-> --- a/kernel/Kconfig.preempt
-> +++ b/kernel/Kconfig.preempt
-> @@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
->  
->  	  Select this if you are building a kernel for a desktop system.
->  
-> -config PREEMPT
-> +config PREEMPT_LL
->  	bool "Preemptible Kernel (Low-Latency Desktop)"
->  	depends on !ARCH_NO_PREEMPT
-> -	select PREEMPT_COUNT
-> +	select PREEMPT
->  	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
->  	help
->  	  This option reduces the latency of the kernel by making
-> @@ -55,7 +55,28 @@ config PREEMPT
->  	  embedded system with latency requirements in the milliseconds
->  	  range.
->  
-> +config PREEMPT_RT
-> +	bool "Fully Preemptible Kernel (Real-Time)"
-> +	depends on EXPERT && ARCH_SUPPORTS_RT
-> +	select PREEMPT
-> +	help
-> +	  This option turns the kernel into a real-time kernel by replacing
-> +	  various locking primitives (spinlocks, rwlocks, etc) with
+> + Miguel, maintainer of compiler_attributes.h
+> I wonder if the optimize attributes can be feature detected?
+> Is -fno-gcse supported all the way back to GCC 4.6?
 
-s/etc/etc.
+Yeah, from snooping in the GCC tree it looks like it's been around
+for 18+ years.
 
-> +	  preemptible priority-inheritance aware variants, enforcing
-> +	  interrupt threading and introducing mechanisms to break up long
-> +	  non-preemtible sections. This makes the kernel, except for very
-
-s/preemtible/preemptible
-
-> +	  low level and critical code pathes (entry code, scheduler, low
-> +	  level interrupt handling) fully preemtible and brings most
-
-s/preemtible/preemptible
-
-> +	  execution contexts under scheduler control.
-> +
-> +	  Select this if you are building a kernel for systems which
-> +	  require real-time guarantees.
-
-Nice to see this getting started! :-)
-
-Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+-- 
+Josh
