@@ -2,132 +2,116 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C335C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B10C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545A52145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563263450;
-	bh=0UmmVZtPcgufX1spbbHJzqSldBTXlWueN2BuCVoZhtg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xg8QwbEP0CYS54w5tdUcipMj+KxB/loS5FLv0/tN7AAQ3+Pl8E6bXXMaKJMAVA6Jt
-	 4AB3RC07Yqmj+X2vc6tD1S7WW5eSry/J7bmEHlMzQMDQJAQMgSw3mGhOMPspfpWAVF
-	 7bp5NLvS7xXCwymvdKB1FoKepzgdobDUVDGRxndw=
+	by mail.kernel.org (Postfix) with ESMTP id 6AC70206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbfGPHut (ORCPT
+        id S1730428AbfGPHwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:50:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfGPHut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:50:49 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 513AA2145D;
-        Tue, 16 Jul 2019 07:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563263447;
-        bh=0UmmVZtPcgufX1spbbHJzqSldBTXlWueN2BuCVoZhtg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vAKN+cInqh6ojQkzRQq0bO8+kPyehMGn002WS4EnWoXBT0lLrqcgOsODAxIsdMTEX
-         B0oip5LHkzjFIkOTr17j8Lr9SFig4G0bXXIf0CpGIiVAgGxd60Fz4EBlyYw8l7oWQ4
-         6uIk2Pue29GdM6v/ptpAoFPNEd8BKeGrZdQFTFfM=
-Received: by mail-lj1-f169.google.com with SMTP id m8so18914968lji.7;
-        Tue, 16 Jul 2019 00:50:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAURItKi/kVpDED7sTjBS2FNKR0TviCPgKXLzHZX1adm2DN5GsLU
-        V9iBN9hu8KcBzrY6T5JGAZfDGpslxitG/CU7WjU=
-X-Google-Smtp-Source: APXvYqwUhOxh8UOJbhBIygKJV/kpgmaRf+P/4G648IT4Cl8zq7T16IkCD7Ahb+VXbSCuPy2+L7Dg1cqNZimdSRobYxU=
-X-Received: by 2002:a2e:50e:: with SMTP id 14mr16875717ljf.5.1563263445565;
- Tue, 16 Jul 2019 00:50:45 -0700 (PDT)
+        Tue, 16 Jul 2019 03:52:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36568 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726420AbfGPHwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 03:52:41 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D4F24C29AFC5FF4B6B7;
+        Tue, 16 Jul 2019 15:52:38 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
+ 15:52:28 +0800
+Subject: Re: [RFC PATCH v2 0/3] Support CPU hotplug for ARM64
+To:     James Morse <james.morse@arm.com>
+CC:     <rjw@rjwysocki.net>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
+        <kvmarm@lists.cs.columbia.edu>
+References: <1561776155-38975-1-git-send-email-wangxiongfeng2@huawei.com>
+ <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <8a8cd9d2-684e-2246-c1f9-5cf21aa2defc@huawei.com>
+Date:   Tue, 16 Jul 2019 15:52:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-References: <20190712141242.4915-1-krzk@kernel.org> <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
-In-Reply-To: <5cbd8bb2-6ecb-7e55-1580-e580e2c340dd@kontron.de>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 16 Jul 2019 09:50:34 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
-Message-ID: <CAJKOXPdq5e1OPmxamicAVf4ZDoSAuD=yvfOgZD04aQD9PtnCEQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2 SoM
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <82879258-46a7-a6e9-ee54-fc3692c1cdc3@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.52.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 at 17:21, Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
->
-> Hi Krzysztof,
->
-> On 12.07.19 16:12, Krzysztof Kozlowski wrote:
-> > Add support for iMX6-UL2 modules from Kontron Electronics GmbH (before
-> > acquisition: Exceet Electronics) and evalkit boards based on it:
-> >
-> > 1. i.MX6 UL System-on-Module, a 25x25 mm solderable module (LGA pads and
-> >     pin castellations) with 256 MB RAM, 1 MB NOR-Flash, 256 MB NAND and
-> >     other interfaces,
-> > 1. UL2 evalkit, w/wo eMMC, without display,
-> > 2. UL2 evalkit with 4.3" display,
-> > 3. UL2 evalkit with 5.0" display.
-> >
-> > This includes device nodes for unsupported displays (Admatec
-> > T043C004800272T2A and T070P133T0S301).
-> >
-> > The work is based on Exceet source code (GPLv2) with numerous changes:
-> > 1. Reorganize files,
-> > 2. Rename Exceet -> Kontron,
-> > 3. Fix coding style errors,
-> > 4. Fix DTC warnings,
-> > 5. Extend compatibles so eval boards inherit the SoM compatible,
-> > 6. Use defines instead of GPIO flag values,
-> > 7. Adjust operating points of CPU0,
-> > 8. Sort nodes alphabetically.
-> >
-> > In downstream BSP the Exceet name still appears in multiple places
-> > therefore I left it in the model names.
->
-> First, thanks for your work. I planned to upstream these boards myself
-> after the FSL QSPI spi-mem driver was merged in 5.1, but didn't have
-> time to finalize and send the patches.
->
-> Meanwhile we came up with a new naming scheme for our boards, that
-> hasn't been implemented yet. But I would like to take this chance to
-> implement the new scheme.
 
-Sure, I see no problem in using different names, matching downstream
-kernel. Just point me to proper names.
 
-> Also there are some more flavors of the SoM (with i.MX6ULL instead of
-> i.MX6UL, with 512MiB instead of 256MiB flash/RAM), that I would like to
-> add and for which common parts of the SoM dtsi would need to be factored
-> out to a separate file.
+On 2019/7/5 18:12, James Morse wrote:
+> Hi guys,
+> 
+> (CC: +kvmarm list)
+> 
+> On 29/06/2019 03:42, Xiongfeng Wang wrote:
+>> This patchset mark all the GICC node in MADT as possible CPUs even though it
+>> is disabled. But only those enabled GICC node are marked as present CPUs.
+>> So that kernel will initialize some CPU related data structure in advance before
+>> the CPU is actually hot added into the system. This patchset also implement 
+>> 'acpi_(un)map_cpu()' and 'arch_(un)register_cpu()' for ARM64. These functions are
+>> needed to enable CPU hotplug.
+>>
+>> To support CPU hotplug, we need to add all the possible GICC node in MADT
+>> including those CPUs that are not present but may be hot added later. Those
+>> CPUs are marked as disabled in GICC nodes.
+> 
+> ... what do you need this for?
+> 
+> (The term cpu-hotplug in the arm world almost never means hot-adding a new package/die to
+> the platform, we usually mean taking CPUs online/offline for power management. e.g.
+> cpuhp_offline_cpu_device())
+> 
+> It looks like you're adding support for hot-adding a new package/die to the platform ...
+> but only for virtualisation.
 
-I have only this one particular flavor so I would prefer to upstream
-only this one. I do not know all the possible combinations or for
-example the most interesting ones. I think after this patchset we can
-refactor the DTS whenever its needed - split common parts, add new
-files.
+I read the GIC driver these days. It is a lot of work to configure the GIC at runtime,
+and this patchset doesn't support this.
+Actually, my original idea is hot-adding cores to the platform, and it is only for virtualisation.
+These cores need to be on the same physical package. The GIC is initialized when
+the kernel boots and GICR is initialized when the core is hot-added and brought up.
 
-> I would prefer to at least apply the naming changes before merging. The
-> additional board flavors could be added before merging or I could send
-> them as follow-up patches. What do you think?
+> 
+> I don't see why this is needed for virtualisation. The in-kernel irqchip needs to know
+> these vcpu exist before you can enter the guest for the first time. You can't create them
+> late. At best you're saving the host scheduling a vcpu that is offline. Is this really a
+> problem?
+> 
+> If we moved PSCI support to user-space, you could avoid creating host vcpu threads until
+> the guest brings the vcpu online, which would solve that problem, and save the host
+> resources for the thread too. (and its acpi/dt agnostic)
+> 
+> I don't see the difference here between booting the guest with 'maxcpus=1', and bringing
+> the vcpu online later. The only real difference seems to be moving the can-be-online
+> policy into the hypervisor/VMM...
+> 
+> 
+> I think physical package/die hotadd is a much bigger, uglier problem than doing the same
+> under virtualisation. Its best to do this on real hardware first so we don't miss
+> something. (cpu-topology, numa, memory, errata, timers?)
+> I'm worried that doing virtualisation first means the firmware-requirements for physical
+> hotadd stuff is "whatever Qemu does".
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> .
+> 
 
-Let's change the naming and add new flavors as follow ups?
-
-Best regards,
-Krzysztof
