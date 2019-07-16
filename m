@@ -2,192 +2,96 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7DBC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8DEC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602C421842
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0C120880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dIeca58Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWz4yv38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387622AbfGPLrI (ORCPT
+        id S2387742AbfGPLrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:47:08 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:35749 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387473AbfGPLrI (ORCPT
+        Tue, 16 Jul 2019 07:47:35 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46483 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728437AbfGPLre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:47:08 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190716114706epoutp04545e2428ca8b3cc0c6f1c6bb66d7709e~x4LfoVgw50371403714epoutp04l
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:47:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190716114706epoutp04545e2428ca8b3cc0c6f1c6bb66d7709e~x4LfoVgw50371403714epoutp04l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563277626;
-        bh=vHHe8ivww0E8RzCAtgBX1w/ZJIJbSM5l1RSGsKNENvY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dIeca58YacVE+PCXhjwGPFHRMjzbp2HvWMrKGkodFKZIm7PjhsYFACJux9NRPZ+wa
-         02ee0FsHvLlxHUROdx96tZetLYTnsjC6F2G1GE8DqU3IBEIb06kkTc43PmZ/KujoxG
-         nEjsIxFQ5uIWer+GAyYXtXyq9KxGPv3yI7M5qqfY=
-Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190716114705epcas1p3c42323ba345d71e1ac5d04bbf0daa9a7~x4LfIwASn2087020870epcas1p3Y;
-        Tue, 16 Jul 2019 11:47:05 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp6.localdomain (Postfix) with ESMTP id 45nzCC2wjnzMqYkX; Tue, 16 Jul
-        2019 11:47:03 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6E.9A.04075.739BD2D5; Tue, 16 Jul 2019 20:47:03 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190716114702epcas1p402685a6ab470532d329b8b0df9cae822~x4LcEXPG21278812788epcas1p4k;
-        Tue, 16 Jul 2019 11:47:02 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190716114702epsmtrp1f57c8c232ca0b2bac8a58860bad65051~x4LcBABx41911419114epsmtrp1L;
-        Tue, 16 Jul 2019 11:47:02 +0000 (GMT)
-X-AuditID: b6c32a36-b49ff70000000feb-45-5d2db937c65e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        08.3D.03638.639BD2D5; Tue, 16 Jul 2019 20:47:02 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716114702epsmtip134a6c94e7ebb3446e6add31a51f7f4a4~x4Lb05Y-N2972529725epsmtip1r;
-        Tue, 16 Jul 2019 11:47:02 +0000 (GMT)
-Subject: Re: [PATCH v4 03/24] PM / devfreq: tegra30: Handle possible
- round-rate error
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <f28470ca-93dc-cdf9-b008-54c7b50cfd83@samsung.com>
-Date:   Tue, 16 Jul 2019 20:50:08 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Tue, 16 Jul 2019 07:47:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c73so8984772pfb.13;
+        Tue, 16 Jul 2019 04:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=qPnqoEfs2c2FJiT2itcjWmfJK1RsKaw7z2dBi7iQTJ8=;
+        b=GWz4yv38B5GHtENqY4vKofVQ91e0o/Wf3To5Ps1dYZG0HD5Ek2EHO2Dc7Ow7eTInF8
+         6V2Ylge8TO9m/bByMpQYgvAJMrZvdG3hSLoe3le3WrAf4DJkafN2xpBGM8XjRxts22Wl
+         fwEiPyHbfrkm6UMLSuHMn/gd7z8YK8aSErG8WB+A5roIC5O0ZPZ/6GMpagTh5qiyB+K7
+         yG6MrQ7ON432Xy90IZVQ3KnMcyWz9iH91bIQQjqhHjYLmAxiZwGFc9kDORakmYFFow9m
+         dvKHxsEKn/ChfEWmG3TrgmHbJEuO1ziKFvpkOF6Z/rwgSAH09LcgUIkZ09KBkugy6xrh
+         5rJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=qPnqoEfs2c2FJiT2itcjWmfJK1RsKaw7z2dBi7iQTJ8=;
+        b=FYjnDJAGC0Fe1sK3mfdTuwoQu6n+wYawoYMDkkDkDTyW4gQfMOMQEPb/r+njILVWZf
+         vGHsIc+W/T8ju1c7ZcR9J7K0smEOQKXfBuHpsa64R7TZFOph9Et6JefZkKH+HUUP0LlY
+         QrwghaDQBKBr+DYW30XnnEYwu+d8h2JxezEDv+lp/+HYIeNs5XMDpyqqPGwaf4HvDia/
+         1BH0jhBseU8mkVoJnxPPR3Bv4hHwpNIkbLXfPUxWQInmUGy1AHOseM9G2rPFBRXAH0Iz
+         4SssO3aB3jLXNRnBSsZA4X5D7QS47U9JebNeR4eZ98KfBuqvEXnH9QshjZEIudgnMegc
+         QRQg==
+X-Gm-Message-State: APjAAAVNVv9FWeTUauqAoZB4Y2UZRN9xXgeoIvtDnUMk0VsYES4wePr/
+        e+643g7tgAg1qVO8NFOUXIQ=
+X-Google-Smtp-Source: APXvYqzHZwrzaDAsguaX2IsIyUiWc2RXpFglPckISYDzHT896XmmxWdI422IRFIGhq+LtZkupLz2ig==
+X-Received: by 2002:a63:60a:: with SMTP id 10mr2299610pgg.381.1563277654138;
+        Tue, 16 Jul 2019 04:47:34 -0700 (PDT)
+Received: from localhost ([203.220.8.141])
+        by smtp.gmail.com with ESMTPSA id t10sm19804313pjr.13.2019.07.16.04.47.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 04:47:33 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 21:47:27 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3 0/5] Add NUMA-awareness to qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>, arnd@arndb.de, bp@alien8.de,
+        guohanjun@huawei.com, hpa@zytor.com, jglauber@marvell.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        longman@redhat.com, mingo@redhat.com, peterz@infradead.org,
+        tglx@linutronix.de, will.deacon@arm.com, x86@kernel.org
+Cc:     daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com, steven.sistare@oracle.com
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+In-Reply-To: <20190715192536.104548-1-alex.kogan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-4-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPJsWRmVeSWpSXmKPExsWy7bCmvq75Tt1Yg333hC1Wf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22V
-        XHwCdN0yc4AOUlIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBboFSfmFpfmpesl
-        5+daGRoYGJkCFSZkZ8z9aVfQJFjxrqufsYHxHG8XIyeHhICJRNObJUwgtpDADkaJYwcjuxi5
-        gOxPjBJrD/9hg3C+MUosubybBaZj/8yzzBCJvYwSP+69YIFw3jNKLOzYwAxSJSwQLvFj41Sw
-        dhGBf4wSnT+b2UASzAKREod3rgZbyCagJbH/xQ2wOL+AosTVH48ZQWxeATuJmXN2gA1iEVCV
-        mHNkIVi9qECExKkj81ggagQlTs58AmZzCphKnDt0hAlivrjErSfzoWx5ieats8FOlRD4zyYx
-        59YqRogfXCS2PdvDDGELS7w6voUdwpaSeNnfBmVXS6w8eYQNormDUWLL/gusEAljif1LJwNt
-        4ADaoCmxfpc+RFhRYufvuYwQi/kk3n3tYQUpkRDglehoE4IoUZa4/OAuE4QtKbG4vZNtAqPS
-        LCTvzELywiwkL8xCWLaAkWUVo1hqQXFuemqxYYERcmxvYgQnVi2zHYyLzvkcYhTgYFTi4VXY
-        rxMrxJpYVlyZe4hRgoNZSYTX9qt2rBBvSmJlVWpRfnxRaU5q8SFGU2BoT2SWEk3OByb9vJJ4
-        Q1MjY2NjCxNDM1NDQyVx3nl/NGOFBNITS1KzU1MLUotg+pg4OKUaGI/N2rDI0PuEkcgk/uPL
-        89KC6mtclRge7foadeSJzJwbTJabztRZr/rwnCnacUm93GG2OE6pyHNuVc5Xgvc+uvnm2eVr
-        qVMevrgidbhKri535pT+M89rp7etNPLkctnztdXGxXN9t6a2pmyNjO3HsnLzMrGChN7mc1cT
-        j31S+NPx7BVD8a9kTyWW4oxEQy3mouJEAN1+oOHCAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnK7ZTt1Ygwnb+SxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgy5v60K2gSrHjX1c/YwHiOt4uRk0NCwERi/8yz
-        zF2MXBxCArsZJS4fW8cMkZCUmHbxKJDNAWQLSxw+XAxR85ZRYtvWA4wgNcIC4RI/Nk5lA0mI
-        CDQxSWzqvcAOkmAWiJTombuFDaJjM6PEwgtvWUASbAJaEvtf3GADsfkFFCWu/ngMNolXwE5i
-        5pwdYJtZBFQl5hxZyARiiwpESEy6tpMFokZQ4uTMJ2A2p4CpxLlDR5gglqlL/Jl3iRnCFpe4
-        9WQ+VFxeonnrbOYJjMKzkLTPQtIyC0nLLCQtCxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al
-        6yXn525iBMeYltYOxhMn4g8xCnAwKvHwntijEyvEmlhWXJl7iFGCg1lJhNf2q3asEG9KYmVV
-        alF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6pBkaN7j9H7nd6b4xzvrVn
-        9Z5Ls1bWhzJfFNy99AJ7hvDDl9W8y0/tLp1jwn7Nem+k77p/O3Yk3VqwONvHOeUiq7HAYsbZ
-        ASbsbLvCpD/0vDxo4fOmUOPsrs/ZJsGpkTJJhy5ufs5maJR3JVDye62uXNiC6uMiv9fYO819
-        Ub/wuMe5b8uqupf1LzyoxFKckWioxVxUnAgA22qbXK0CAAA=
-X-CMS-MailID: 20190716114702epcas1p402685a6ab470532d329b8b0df9cae822
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223726epcas4p1790944443c61b34e6c8dd4d64200a2a2
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223726epcas4p1790944443c61b34e6c8dd4d64200a2a2@epcas4p1.samsung.com>
-        <20190707223303.6755-4-digetx@gmail.com>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1563277166.m9swqogbqb.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> The EMC clock rate rounding technically could fail, hence let's handle
-> the error cases properly.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra30-devfreq.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 5e2b133babdd..5e606ae3f238 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -592,8 +592,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  	struct tegra_devfreq_device *dev;
->  	struct tegra_devfreq *tegra;
->  	struct devfreq *devfreq;
-> -	unsigned long rate;
->  	unsigned int i;
-> +	long rate;
->  	int err;
->  
->  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
-> @@ -650,8 +650,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  
->  	reset_control_deassert(tegra->reset);
->  
-> -	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
-> +	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
-> +	if (rate < 0) {
-> +		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
-> +		return rate;
-> +	}
-> +
->  	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
-> +	tegra->max_freq = rate / KHZ;
->  
->  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
->  		dev = tegra->devices + i;
-> @@ -662,6 +668,13 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
->  		rate = clk_round_rate(tegra->emc_clock, rate);
->  
+Alex Kogan's on July 16, 2019 5:25 am:
+> Our evaluation shows that CNA also improves performance of user=20
+> applications that have hot pthread mutexes. Those mutexes are=20
+> blocking, and waiting threads park and unpark via the futex=20
+> mechanism in the kernel. Given that kernel futex chains, which
+> are hashed by the mutex address, are each protected by a=20
+> chain-specific spin lock, the contention on a user-mode mutex=20
+> translates into contention on a kernel level spinlock.=20
 
-Please remove unneeded blank line.
+What applications are those, what performance numbers? Arguably that's
+much more interesting than microbenchmarks (which are mainly useful to
+help ensure the fast paths are not impacted IMO).
 
-> +		if (rate < 0) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to round clock rate: %ld\n", rate);
-> +			err = rate;
-> +			goto remove_opps;
-> +		}
-
-Also, this patch doesn't contain code which restore the previous
-tegra->cur_freq/max_freq when error happen.
-
-> +
->  		err = dev_pm_opp_add(&pdev->dev, rate, 0);
->  		if (err) {
->  			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks,
+Nick
+=
