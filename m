@@ -2,119 +2,154 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C2CC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB36C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF3B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C0820659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2etgebB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOKrX6o4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388398AbfGPSRP (ORCPT
+        id S2388408AbfGPSSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:17:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34703 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388107AbfGPSRP (ORCPT
+        Tue, 16 Jul 2019 14:18:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46162 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387934AbfGPSSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:17:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so22027404wrm.1;
-        Tue, 16 Jul 2019 11:17:13 -0700 (PDT)
+        Tue, 16 Jul 2019 14:18:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so21949364wru.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Zq7itVI0zgBux6L2SAmb7XsZyE777LsuJ1iUs203KU=;
-        b=H2etgebBES8IPTYVJuASvaWnPKgnCoEYuzO1hbvfJtR7I6SQ6AfW0s1RJQzOFdYIin
-         6WxfdZGsTE6S9Th+Qz2yc0s10kIoacjG3HW9cZm90rfmiI6ST/N+HEgeoq/5dUyyrpjx
-         XevJpCO4Chs/Nq/X4+MFWk6x0dvdfuwLgzYeo8+mS77H7TH/ysoJlmr+f7949ou/AebM
-         XVgeEc4vxQOsVgGIaohM52kobhy39eNdqgioWPYVomG9TXaHfQdsSZnewhxyT1mL871C
-         pw9Syx22dD/CfSRpwwpPOUD6qxgFgn4bTW/02bA0hkdbEp5leUlcGRGOPVa48izgy/FZ
-         rWdA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tFVmE96hZiN7HFPIypSQJMgA2zK7b8H91G9uqg1FHEs=;
+        b=DOKrX6o4spGobtmQUSvLtGjdjPvmkyaEcIN6+s/3r75DYK5AKxdVcU+k5PxjSRV8xy
+         5iOuMps9R+LM74CmLIEd87XsZrdn+OG5XfaQvWuZ7ZpaO0uoJkIDNHmMcqRJHol2mxT9
+         T/sPQT63t4BMrcyfuOYpBCuwdXaqtY9XEqpoYB2SF7CIk3zS/nE7xITKKXRh8ifkUE+C
+         EFWCy0NYShMZaiJpg0gIrxY/1n7yrs9oLnZj7oKK/8XOUOjdslkcLjMvvCY0N8N4cXiV
+         i39JLrIPcmjpUMFuagvy3fYgFbmOQikNOgXUv1VbaJZ+/sNGDUOjnaE3ch6IptOn/PQ4
+         A3JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Zq7itVI0zgBux6L2SAmb7XsZyE777LsuJ1iUs203KU=;
-        b=QdNji/leohHnal6gHrztVYX8Wq9a1ZN+ZKmSYrMwlqYbphN6THcrDmHLCdsIJoKQ9E
-         wCIw3Uq10nCreOmJYf5VOHvAzsytDqb2Q51J+EsbJoODAYTF5xAhudPy8JzKqHEbPh45
-         kzuSUaRYqJEsuwkhzKn0DHECeaYcG2a77sH/+3rgt7r9FQAPhRkoa1mfGJ9/4vls7mIZ
-         fhOuP1JOgYvS6kHMVgLE4YXQNvoHEw7XurXXyFC4NNe+tcav2apHDwwGJWK0BbdVj7Hc
-         KyPpJjMRXx2m158AQ/u/QjAglvaN/a9+DR2u1CRP5zfNcfZsIrxmBeTpqS/AJUxEjqBA
-         4SXA==
-X-Gm-Message-State: APjAAAVu6P2N/66spugTkQS0TC1oF67skyQAo4C9C5V3iNSAyCVoxU6u
-        U78yIQD3cNgi9hZlquMCZaEdrOd1gpc=
-X-Google-Smtp-Source: APXvYqz+32zdEI/E/bW4WadsjPhFzURrHtQ6Al9NPbuRx6vEW3pfWmBfsQueWLlNuMqeFEcrVSB2jA==
-X-Received: by 2002:a5d:668e:: with SMTP id l14mr36359435wru.156.1563301032301;
-        Tue, 16 Jul 2019 11:17:12 -0700 (PDT)
-Received: from localhost (smb-adpcdg1-05.hotspot.hub-one.net. [213.174.99.133])
-        by smtp.gmail.com with ESMTPSA id p3sm19704019wmg.15.2019.07.16.11.17.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jul 2019 11:17:09 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 20:17:06 +0200
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] keyboard: remove set but not used variables 'sts'
-Message-ID: <20190716181706.GA1140@penguin>
-References: <20190716085423.19443-1-maowenan@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tFVmE96hZiN7HFPIypSQJMgA2zK7b8H91G9uqg1FHEs=;
+        b=BQkVttRLuGqlz1dD423EkjTHLT2dkvdPRZgXNnyb4JjqjM7ilkQ7x9jPGd2etcgZu3
+         bvoXoHjIietMIvTyn8yEgVu2rsV+GrjiEYUy3rd5cr3gmzYJKiinkfdnbG80qSqACsV0
+         woziwjw62hhbbvc0w2B+Km0OF/nqZE5w7qJm9P+pWd/Y77NRDPmPEiLcNiWLoOlsErJ3
+         9SAa+hfTlAKOnrW4hace9hY1zNi5AHMy4I4ZjY81RIhaQyxBUBNmWTr3EFz+WQ/WAMd2
+         Ne+oz+qcySml91ZfyiJh3kF80VtjDO1zMI3HcMdcxjLX+4GwdD4uB2uvPQDL6WSrrp8w
+         klRw==
+X-Gm-Message-State: APjAAAUOfxipP8OjMRJKbOlVLl373qzPTGvG3UxDy1VK4ASWCKNM+jAr
+        ly1EL5F+bpKqJ+uKQLuEUKBCgHV5lg4UiP7VZlk=
+X-Google-Smtp-Source: APXvYqyCHu81CG+PlVEBK87dHXvH5rkHK7MX4ndta4/qYTrZXZ/FWuDy2Iub9ZvZrFwYlv5BeuYJpJIqnwV60yzFP2w=
+X-Received: by 2002:a5d:6ccd:: with SMTP id c13mr32875978wrc.4.1563301085015;
+ Tue, 16 Jul 2019 11:18:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716085423.19443-1-maowenan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1563300606-28434-1-git-send-email-kmahlkuc@linux.vnet.ibm.com>
+In-Reply-To: <1563300606-28434-1-git-send-email-kmahlkuc@linux.vnet.ibm.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 16 Jul 2019 14:17:52 -0400
+Message-ID: <CADnq5_NvBrRd61=a5XxvVKMs_+_JgBK8ALh_CgOTiG2ZVCEGKQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: Fix EEH during kexec
+To:     KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+Cc:     Chunming Zhou <David1.Zhou@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 04:54:23PM +0800, Mao Wenan wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/input/keyboard/applespi.c: In function applespi_set_bl_level:
-> drivers/input/keyboard/applespi.c:902:6: warning: variable sts set but not used [-Wunused-but-set-variable]
-> 
-> Fixes: b426ac0452093d ("Input: add Apple SPI keyboard and trackpad driver")
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-
-Applied, thank you.
-
+On Tue, Jul 16, 2019 at 2:15 PM KyleMahlkuch
+<kmahlkuc@linux.vnet.ibm.com> wrote:
+>
+> During kexec some adapters hit an EEH since they are not properly
+> shut down in the radeon_pci_shutdown() function. Adding
+> radeon_suspend_kms() fixes this issue.
+>
+> Since radeon.h is now included in radeon_drv.c radeon_init() needs
+> a new name. I chose radeon_initl(). This can be changed if there is
+> another suggestion for a name.
+>
+> Signed-off-by: Kyle Mahlkuch <Kyle.Mahlkuch at ibm.com>
 > ---
->  drivers/input/keyboard/applespi.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-> index c1a6843..548737e 100644
-> --- a/drivers/input/keyboard/applespi.c
-> +++ b/drivers/input/keyboard/applespi.c
-> @@ -899,7 +899,6 @@ static void applespi_set_bl_level(struct led_classdev *led_cdev,
->  	struct applespi_data *applespi =
->  		container_of(led_cdev, struct applespi_data, backlight_info);
->  	unsigned long flags;
-> -	int sts;
->  
->  	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
->  
-> @@ -916,7 +915,7 @@ static void applespi_set_bl_level(struct led_classdev *led_cdev,
->  			 KBD_BL_LEVEL_MIN);
->  	}
->  
-> -	sts = applespi_send_cmd_msg(applespi);
-> +	applespi_send_cmd_msg(applespi);
->  
->  	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
->  }
-> -- 
-> 2.7.4
-> 
+>  drivers/gpu/drm/radeon/radeon_drv.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+> index 2e96c88..550f9b0 100644
+> --- a/drivers/gpu/drm/radeon/radeon_drv.c
+> +++ b/drivers/gpu/drm/radeon/radeon_drv.c
+> @@ -32,6 +32,7 @@
+>  #include <drm/drmP.h>
+>  #include <drm/radeon_drm.h>
+>  #include "radeon_drv.h"
+> +#include "radeon.h"
+>
+>  #include <drm/drm_pciids.h>
+>  #include <linux/console.h>
+> @@ -344,11 +345,21 @@ static int radeon_pci_probe(struct pci_dev *pdev,
+>  static void
+>  radeon_pci_shutdown(struct pci_dev *pdev)
+>  {
+> +       struct drm_device *ddev = pci_get_drvdata(pdev);
+> +       struct radeon_device *rdev = ddev->dev_private;
+> +
+>         /* if we are running in a VM, make sure the device
+>          * torn down properly on reboot/shutdown
+>          */
+>         if (radeon_device_is_virtual())
+>                 radeon_pci_remove(pdev);
+> +
+> +       /* Some adapters need to be suspended before a
+> +       * shutdown occurs in order to prevent an error
+> +       * during kexec.
+> +       */
+> +       if (rdev->family == CHIP_CAICOS)
 
--- 
-Dmitry
+You really should be suspending for all asics, not just CAICOS,
+otherwise, you may have engines in use.
+
+Alex
+
+> +               radeon_suspend_kms(ddev, true, true, false);
+>  }
+>
+>  static int radeon_pmops_suspend(struct device *dev)
+> @@ -589,7 +600,7 @@ static long radeon_kms_compat_ioctl(struct file *filp, unsigned int cmd, unsigne
+>         .driver.pm = &radeon_pm_ops,
+>  };
+>
+> -static int __init radeon_init(void)
+> +static int __init radeon_initl(void)
+>  {
+>         if (vgacon_text_force() && radeon_modeset == -1) {
+>                 DRM_INFO("VGACON disable radeon kernel modesetting.\n");
+> @@ -621,7 +632,7 @@ static void __exit radeon_exit(void)
+>         radeon_unregister_atpx_handler();
+>  }
+>
+> -module_init(radeon_init);
+> +module_init(radeon_initl);
+>  module_exit(radeon_exit);
+>
+>  MODULE_AUTHOR(DRIVER_AUTHOR);
+> --
+> 1.8.3.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
