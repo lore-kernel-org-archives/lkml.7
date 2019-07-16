@@ -2,124 +2,146 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02793C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76912C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E4620665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF5F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:42:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s+OFL3WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbfGPKky (ORCPT
+        id S2387415AbfGPKmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:40:54 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59101 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732081AbfGPKky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:40:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 03:40:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,498,1557212400"; 
-   d="scan'208";a="158102829"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2019 03:40:51 -0700
-Subject: Re: [PATCH v3] mmc: host: sdhci-sprd: Fix the incorrect soft reset
- operation when runtime resuming
-To:     Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org,
-        zhang.lyra@gmail.com, orsonzhai@gmail.com
-Cc:     vincent.guittot@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <7ab490e5b311f6cb057c4663d69ef7cbe3318dae.1563266066.git.baolin.wang@linaro.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <07e348a0-6a80-e176-d18d-6a1e54313fa6@intel.com>
-Date:   Tue, 16 Jul 2019 13:39:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 06:42:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33942 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732081AbfGPKmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:42:19 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so3019727pgc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 03:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pcaSKUptakKKj3J2cwfnG8UjZ2PIKf/cDSDsIedAL2o=;
+        b=s+OFL3WXkvuRlzxrd5bE1Ngy+XgzRf65DCow2JPQVmoncUwZbVCqMBlaegEFH9OjoE
+         hGCT+agVZt6o7c1dpbisMO2uuxLS4ocd2/ZDN7N4RlgjJBFJVqurL7o3Ajgq9RawIe5i
+         iUUC4MErBeuJi9C5qq1rXWHueETWBI6Hzy/jstfQMgqGCotgu8bx7AIz25MV6uvB/uMd
+         AEZz6pOzM1SLevN2MhBCQnN+Ls0p0A8Ke9oO9L3/oytDbjyhFG4BNaIQGs6zmciV6uIC
+         B6Z1DPnQPaMXlwFS2CsRvlNBpOj4ZTVcwcFW3en9/NlOTRMUXcMVVd3220XqOCAD3ZI0
+         4G+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pcaSKUptakKKj3J2cwfnG8UjZ2PIKf/cDSDsIedAL2o=;
+        b=RzkHfz4wl1kQWpSduwyMgx9+bCzPmafzaSZISgvQsehu2BzUQD7O14RyLbcZ3K7GtK
+         ed4ZT98lF22KoeZWeXI49eFZNNFW6SH5vm/6M5yp9Cn3SKlXjc3zNluTZd5Sy4++tKlg
+         kGJTxVlHmo+8qY0sSfyMPtw+eUkPT29jFHN4QZOzMXeAS2kGOzjP0SY5C29JLBLxiPO5
+         39kAQAoTtWUDqk4injUbLRtrg77ZFCVVbCmqmzWwNWwT/jiZeqiw4hWtsPow57TZ+54R
+         UIp0Z6ur6/nJGf88nvs6y+yPrn4VzsMJTyZES+2KTBpEBWJz4Tsjv6Y8tolKZqb9Cpai
+         pE2w==
+X-Gm-Message-State: APjAAAWDxnu/BC+78tKPrtiQG7cMYq7KuzuP+0DAlmdtNBKrj8lo1yiY
+        adRgPsNAuLL2Kjv+N96MbIBnupdpxNmwyeAD6bu87A==
+X-Google-Smtp-Source: APXvYqxbAU3TJ3lRd6aOUwZ5wuALN9pC6/wjaLV/0rVHNmhI9zipeP18fROsGNN7fnnNJ7wIdpoSB0T+fWzH5C49P+M=
+X-Received: by 2002:a65:4b8b:: with SMTP id t11mr32488026pgq.130.1563273738850;
+ Tue, 16 Jul 2019 03:42:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7ab490e5b311f6cb057c4663d69ef7cbe3318dae.1563266066.git.baolin.wang@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1561386715.git.andreyknvl@google.com> <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
+ <20190624174015.GL29120@arrakis.emea.arm.com> <CAAeHK+y8vE=G_odK6KH=H064nSQcVgkQkNwb2zQD9swXxKSyUQ@mail.gmail.com>
+ <20190715180510.GC4970@ziepe.ca>
+In-Reply-To: <20190715180510.GC4970@ziepe.ca>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 16 Jul 2019 12:42:07 +0200
+Message-ID: <CAAeHK+xPQqJP7p_JFxc4jrx9k7N0TpBWEuB8Px7XHvrfDU1_gw@mail.gmail.com>
+Subject: Re: [PATCH v18 11/15] IB/mlx4: untag user pointers in mlx4_get_umem_mr
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/07/19 11:39 AM, Baolin Wang wrote:
-> In sdhci_runtime_resume_host() function, we will always do software reset
-> for all, which will cause Spreadtrum host controller work abnormally after
-> resuming.
-> 
-> Thus for Spreadtrum platform that do not power down the SD/eMMC card during
-> runtime suspend, we should not do software reset for all. To fix this
-> issue, adding a specific reset operation that add one condition to validate
-> the MMC_CAP_AGGRESSIVE_PM to decide if we can do software reset for all or
-> just reset command and data lines.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v2:
->  - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
-> 
-> Changes from v1:
->  - Add a specific reset operation instead of changing the core to avoid
->  affecting other hardware.
-> ---
->  drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-> index 603a5d9..bc9393c 100644
-> --- a/drivers/mmc/host/sdhci-sprd.c
-> +++ b/drivers/mmc/host/sdhci-sprd.c
-> @@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
->  	return 1 << 31;
->  }
->  
-> +static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	struct mmc_host *mmc = host->mmc;
-> +
-> +	/*
-> +	 * When try to reset controller after runtime suspend, we should not
-> +	 * reset for all if the SD/eMMC card is not power down, just reset
-> +	 * command and data lines instead. Otherwise will meet some strange
-> +	 * behaviors for Spreadtrum host controller.
-> +	 */
-> +	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
-> +	    !(mmc->caps & MMC_CAP_AGGRESSIVE_PM))
+On Mon, Jul 15, 2019 at 8:05 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Mon, Jul 15, 2019 at 06:01:29PM +0200, Andrey Konovalov wrote:
+> > On Mon, Jun 24, 2019 at 7:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > >
+> > > On Mon, Jun 24, 2019 at 04:32:56PM +0200, Andrey Konovalov wrote:
+> > > > This patch is a part of a series that extends kernel ABI to allow to pass
+> > > > tagged user pointers (with the top byte set to something else other than
+> > > > 0x00) as syscall arguments.
+> > > >
+> > > > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
+> > > > only by done with untagged pointers.
+> > > >
+> > > > Untag user pointers in this function.
+> > > >
+> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
+> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > >
+> > > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > >
+> > > This patch also needs an ack from the infiniband maintainers (Jason).
+> >
+> > Hi Jason,
+> >
+> > Could you take a look and give your acked-by?
+>
+> Oh, I think I did this a long time ago. Still looks OK.
 
-MMC_CAP_AGGRESSIVE_PM does not necessarily mean that the card will have been
-runtime suspended.
+Hm, maybe that was we who lost it. Thanks!
 
-What about checking if the card power is on? i.e.
+> You will send it?
 
-	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
-	    mmc->ios.power_mode == MMC_POWER_ON)
+I will resend the patchset once the merge window is closed, if that's
+what you mean.
 
-> +		mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
-> +
-> +	sdhci_reset(host, mask);
-> +}
-> +
->  static struct sdhci_ops sdhci_sprd_ops = {
->  	.read_l = sdhci_sprd_readl,
->  	.write_l = sdhci_sprd_writel,
-> @@ -381,7 +398,7 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
->  	.get_max_clock = sdhci_sprd_get_max_clock,
->  	.get_min_clock = sdhci_sprd_get_min_clock,
->  	.set_bus_width = sdhci_set_bus_width,
-> -	.reset = sdhci_reset,
-> +	.reset = sdhci_sprd_reset,
->  	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
->  	.hw_reset = sdhci_sprd_hw_reset,
->  	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
-> 
-
+>
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>
+> Jason
