@@ -2,116 +2,143 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BBEC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE5AC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2481A2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BAD2173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 11:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhfVgsHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387634AbfGPLKD (ORCPT
+        id S2387576AbfGPLLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 07:10:03 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:37697 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733200AbfGPLKC (ORCPT
+        Tue, 16 Jul 2019 07:11:21 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43793 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733200AbfGPLLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 07:10:02 -0400
-Received: from cpe-2606-a000-111b-405a-0-0-0-162e.dyn6.twc.com ([2606:a000:111b:405a::162e] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hnLL9-0007ym-9m; Tue, 16 Jul 2019 07:09:58 -0400
-Date:   Tue, 16 Jul 2019 07:09:17 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        Tue, 16 Jul 2019 07:11:20 -0400
+Received: by mail-lf1-f66.google.com with SMTP id c19so13396684lfm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 04:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=De8/nFrlZkmJ1Y3LPB15A9cMZ47Zx0HgH86pautMcVU=;
+        b=MhfVgsHKsWQWV+8Cx6DkHX920ij+HAPhqcs/LrfxSWnmUhcZwwObqzXGuH2sYRl9AN
+         iwPdTxgDU9BNifyfjbzo6FeK/XCISN8ezsTqNs3u+GIJ3lhKG+pQTJmQuOD83xC4g0Ic
+         lLW+8JbnEAHxIKLzKd2ifrwLiko0942eLh4/D5+V5u4nf2DHsjtiGII+6s8AA9vCq1YZ
+         5xhMqY8nftd9xW7FikIn+LRybyEglGiHdlkPwuKOmaS9kE2uxv312YGl9Y8dzzmC9TRf
+         YJQ9y8PNnM0Nh8pMom8u5ubKRutmYrih0UEOweKK6LfRjVtpvK4OqKR8HkFLMPoKr9Al
+         8pJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=De8/nFrlZkmJ1Y3LPB15A9cMZ47Zx0HgH86pautMcVU=;
+        b=PAFELwj+kIFXZE9OX9gTcjRZOUSi29e8//65uBwXj7gZkmPqpqR7wU0KifmUNuRa5h
+         rF9unTZ9hqPVNy1zori1hrWDSXIu8u2LzcQaaNTb/WesAVZV7Prwxz7e9G5uAJQ//Li8
+         ddk2r//DFCRPlSOZHcmO4E0dBlZGlEjB/yhGLHRKUkrS9XiPdptzZac9HLvyTSorcgXl
+         FgfNTj+pN6Z3tSZFMs41yUo2p+EjKCNl6eeb48P5jAEPr6AdDBq4nz5QSmQ9kmKlQC/d
+         jeFlLkZo/djhl9mbAjSzjsg7baTAH39Q62TodapcYAtM9wcPdpusVZylZEVleoT5iOaJ
+         KuiA==
+X-Gm-Message-State: APjAAAUBNKFO+iDq14Jrjr/7CYkcOi4ejIKqW0qAzIkp01L+5ovhrE/c
+        mdZlIKdzwxmaoLsUYiAuZKwL4A==
+X-Google-Smtp-Source: APXvYqwF1gNN2bVBA6LW6EiKcvNJYhEY68/e2UyoWg9xYJmBg2oHpiJsfK0RzoLVmYtiAgpJogVh+g==
+X-Received: by 2002:ac2:528e:: with SMTP id q14mr13449179lfm.17.1563275478425;
+        Tue, 16 Jul 2019 04:11:18 -0700 (PDT)
+Received: from centauri (ua-83-226-229-61.bbcust.telenor.se. [83.226.229.61])
+        by smtp.gmail.com with ESMTPSA id t25sm2793658lfg.7.2019.07.16.04.11.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 04:11:17 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 13:11:15 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        sboyd@kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sctp: fix warning "NULL check before some freeing
- functions is not needed"
-Message-ID: <20190716110917.GA1498@hmswarspite.think-freely.org>
-References: <20190716022002.GA19592@hari-Inspiron-1545>
+Subject: Re: [PATCH 04/13] cpufreq: qcom: Refactor the driver to make it
+ easier to extend
+Message-ID: <20190716111115.GA13918@centauri>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-5-niklas.cassel@linaro.org>
+ <20190710063026.7yyoxjsqp2ck3z6n@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716022002.GA19592@hari-Inspiron-1545>
+In-Reply-To: <20190710063026.7yyoxjsqp2ck3z6n@vireshk-i7>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 07:50:02AM +0530, Hariprasad Kelam wrote:
-> This patch removes NULL checks before calling kfree.
+On Wed, Jul 10, 2019 at 12:00:26PM +0530, Viresh Kumar wrote:
+> On 05-07-19, 11:57, Niklas Cassel wrote:
+> > +	drv->opp_tables = kcalloc(num_possible_cpus(), sizeof(*drv->opp_tables),
+> > +				  GFP_KERNEL);
+> > +	if (!drv->opp_tables) {
+> > +		ret = -ENOMEM;
+> > +		goto free_drv;
+> > +	}
+> >  
+> >  	for_each_possible_cpu(cpu) {
+> >  		cpu_dev = get_cpu_device(cpu);
+> > @@ -166,19 +195,23 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+> >  			goto free_opp;
+> >  		}
+> >  
+> > -		opp_tables[cpu] = dev_pm_opp_set_supported_hw(cpu_dev,
+> > -							      &versions, 1);
+> > -		if (IS_ERR(opp_tables[cpu])) {
+> > -			ret = PTR_ERR(opp_tables[cpu]);
+> > -			dev_err(cpu_dev, "Failed to set supported hardware\n");
+> > -			goto free_opp;
+> > +		if (drv->data->get_version) {
 > 
-> fixes below issues reported by coccicheck
-> net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
-> freeing functions is not needed.
-> net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
-> freeing functions is not needed.
-> net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
-> freeing functions is not needed.
-> net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
-> freeing functions is not needed.
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  net/sctp/sm_make_chunk.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-> index ed39396..36bd8a6e 100644
-> --- a/net/sctp/sm_make_chunk.c
-> +++ b/net/sctp/sm_make_chunk.c
-> @@ -2582,8 +2582,7 @@ static int sctp_process_param(struct sctp_association *asoc,
->  	case SCTP_PARAM_STATE_COOKIE:
->  		asoc->peer.cookie_len =
->  			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
-> -		if (asoc->peer.cookie)
-> -			kfree(asoc->peer.cookie);
-> +		kfree(asoc->peer.cookie);
->  		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
->  		if (!asoc->peer.cookie)
->  			retval = 0;
-> @@ -2648,8 +2647,7 @@ static int sctp_process_param(struct sctp_association *asoc,
->  			goto fall_through;
->  
->  		/* Save peer's random parameter */
-> -		if (asoc->peer.peer_random)
-> -			kfree(asoc->peer.peer_random);
-> +		kfree(asoc->peer.peer_random);
->  		asoc->peer.peer_random = kmemdup(param.p,
->  					    ntohs(param.p->length), gfp);
->  		if (!asoc->peer.peer_random) {
-> @@ -2663,8 +2661,7 @@ static int sctp_process_param(struct sctp_association *asoc,
->  			goto fall_through;
->  
->  		/* Save peer's HMAC list */
-> -		if (asoc->peer.peer_hmacs)
-> -			kfree(asoc->peer.peer_hmacs);
-> +		kfree(asoc->peer.peer_hmacs);
->  		asoc->peer.peer_hmacs = kmemdup(param.p,
->  					    ntohs(param.p->length), gfp);
->  		if (!asoc->peer.peer_hmacs) {
-> @@ -2680,8 +2677,7 @@ static int sctp_process_param(struct sctp_association *asoc,
->  		if (!ep->auth_enable)
->  			goto fall_through;
->  
-> -		if (asoc->peer.peer_chunks)
-> -			kfree(asoc->peer.peer_chunks);
-> +		kfree(asoc->peer.peer_chunks);
->  		asoc->peer.peer_chunks = kmemdup(param.p,
->  					    ntohs(param.p->length), gfp);
->  		if (!asoc->peer.peer_chunks)
-> -- 
-> 2.7.4
-> 
-> 
+> Why depend on get_version here ? The OPP table is already allocated
+> unconditionally.
 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Since the reading of the speedbin efuse is now optional,
+it is now inside "if (drv->data->get_version)".
+
+So if I don't also protect "dev_pm_opp_set_supported_hw()"
+with "if (drv->data->get_version)" I get:
+
+[    3.135092] cpu cpu0: _opp_is_supported: failed to read opp-supported-hw property at index 0: -22
+[    3.139364] cpu cpu0: _opp_is_supported: failed to read opp-supported-hw property at index 0: -22
+[    3.148330] cpu cpu0: _opp_is_supported: failed to read opp-supported-hw property at index 0: -22
+
+Probably since drv->versions is initialized to 0,
+and if there is no opp-supported-hw in device tree,
+OPP framework prints failures.
+
+So it feels safest to only call dev_pm_opp_set_supported_hw()
+if we know that we are supposed to parse the speedbin efuse.
+
+
+Kind regards,
+Niklas
+
+> 
+> > +			drv->opp_tables[cpu] =
+> > +				dev_pm_opp_set_supported_hw(cpu_dev,
+> > +							    &drv->versions, 1);
+> > +			if (IS_ERR(drv->opp_tables[cpu])) {
+> > +				ret = PTR_ERR(drv->opp_tables[cpu]);
+> > +				dev_err(cpu_dev,
+> > +					"Failed to set supported hardware\n");
+> > +				goto free_opp;
+> > +			}
+> >  		}
+> >  	}
+> 
+> -- 
+> viresh
