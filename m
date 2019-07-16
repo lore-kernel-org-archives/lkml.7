@@ -2,221 +2,88 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681D9C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78486C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402A52173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414512173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563284544;
+	bh=Vw/idVh7Sc9FkQHJBYJh/radei2L3mJILwWiBzy0SpE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Oc/pB4bMBSjIDyAnlTveT5vSDL2HNKDs00ekW/pbOTnmN6U45JlvR1XBFLFT7K3TW
+	 ScgYRZbOFDPqsZsTRYl+f6wA5WtGXtvgDtucQChnF5OO6fQH11VnyRKlymW8f9saS0
+	 03vbjQGGwVzO9JbekRJwqQAX7cdDhd/M7X07mc8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387636AbfGPNkW convert rfc822-to-8bit (ORCPT
+        id S2387565AbfGPNmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:40:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33094 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGPNkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:40:22 -0400
-Received: from pc-375.home (2a01cb0c88d94a005820d607da339aae.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:88d9:4a00:5820:d607:da33:9aae])
+        Tue, 16 Jul 2019 09:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728004AbfGPNmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:42:22 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D2944260C98;
-        Tue, 16 Jul 2019 14:40:19 +0100 (BST)
-Date:   Tue, 16 Jul 2019 15:40:13 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v4 3/3] iio: imu: st_lsm6dsx: add i3c basic support for
- LSM6DSO and LSM6DSR
-Message-ID: <20190716154013.66fcaeb4@pc-375.home>
-In-Reply-To: <SN6PR12MB2655E375BBEC555BFFBA1B05AECE0@SN6PR12MB2655.namprd12.prod.outlook.com>
-References: <cover.1562931742.git.vitor.soares@synopsys.com>
-        <f239834a6b8bd179094cdc19a3ac5ecaf807cee3.1562931742.git.vitor.soares@synopsys.com>
-        <20190712181332.04f8b3da@linux.home>
-        <SN6PR12MB26553046898233A094DCC952AEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190712184323.28547c44@pc-381.home>
-        <SN6PR12MB2655C68059719693C7EFF05CAEF20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190712220320.50e7cfff@pc-381.home>
-        <SN6PR12MB2655E375BBEC555BFFBA1B05AECE0@SN6PR12MB2655.namprd12.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id C63A22173B;
+        Tue, 16 Jul 2019 13:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563284542;
+        bh=Vw/idVh7Sc9FkQHJBYJh/radei2L3mJILwWiBzy0SpE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uQso73W//C9Bau/8iSPNI4x6+4yOKqR0Ea9YDIlI6KmtykvsLMa/dGZspYWLz3eA1
+         xpiVFHPNBzW3XaeiAm6O3G4vJ8GeNNC7slaTnw6sgm47SFbcGs6mnt4akBFgD7GpQz
+         GhsVrt1fxuhAPbN5KtwPuIIn7j2YJPycBomaPnVQ=
+Date:   Tue, 16 Jul 2019 15:42:20 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/2] perf/hw_breakpoint: Fix breakpoint overcommit issue
+Message-ID: <20190716134219.GB4000@lenoir>
+References: <20190709134821.8027-1-frederic@kernel.org>
+ <20190710140421.GP3402@hirez.programming.kicks-ass.net>
+ <20190710153406.GA18838@lenoir>
+ <20190711105305.GY3402@hirez.programming.kicks-ass.net>
+ <20190715124737.GN3463@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715124737.GN3463@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 13:22:25 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-
-> Hi Boris,
-> 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Fri, Jul 12, 2019 at 21:03:20
-> 
-> > On Fri, 12 Jul 2019 18:40:14 +0000
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > Date: Fri, Jul 12, 2019 at 17:43:23
-> > >   
-> > > > On Fri, 12 Jul 2019 16:28:02 +0000
-> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > >     
-> > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > > Date: Fri, Jul 12, 2019 at 17:14:29
-> > > > >     
-> > > > > > On Fri, 12 Jul 2019 13:53:30 +0200
-> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > > >       
-> > > > > > > For today the st_lsm6dsx driver support LSM6DSO and LSM6DSR sensor only in
-> > > > > > > spi and i2c mode.
-> > > > > > > 
-> > > > > > > The LSM6DSO and LSM6DSR are also i3c capable so lets give i3c support to
-> > > > > > > them.
-> > > > > > > 
-> > > > > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > > > > > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > > > > > ---
-> > > > > > > Changes in v4:
-> > > > > > >   Remove hw_id variable
-> > > > > > > 
-> > > > > > > Changes in v3:
-> > > > > > >   Remove unnecessary st_lsm6dsx_i3c_data table used to hold device name
-> > > > > > >   Use st_lsm6dsx_probe new form
-> > > > > > > 
-> > > > > > > Changes in v2:
-> > > > > > >   Add support for LSM6DSR
-> > > > > > >   Set pm_ops to st_lsm6dsx_pm_ops
-> > > > > > > 
-> > > > > > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
-> > > > > > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
-> > > > > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 58 +++++++++++++++++++++++++++++
-> > > > > > >  3 files changed, 66 insertions(+), 1 deletion(-)
-> > > > > > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > > > > > 
-> > > > > > > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > > > > > index 9e59297..6b5a73c 100644
-> > > > > > > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > > > > > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > > > > > @@ -1,11 +1,12 @@
-> > > > > > >  
-> > > > > > >  config IIO_ST_LSM6DSX
-> > > > > > >  	tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
-> > > > > > > -	depends on (I2C || SPI)
-> > > > > > > +	depends on (I2C || SPI || I3C)
-> > > > > > >  	select IIO_BUFFER
-> > > > > > >  	select IIO_KFIFO_BUF
-> > > > > > >  	select IIO_ST_LSM6DSX_I2C if (I2C)
-> > > > > > >  	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
-> > > > > > > +	select IIO_ST_LSM6DSX_I3C if (I3C)
-> > > > > > >  	help
-> > > > > > >  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
-> > > > > > >  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
-> > > > > > > @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
-> > > > > > >  	tristate
-> > > > > > >  	depends on IIO_ST_LSM6DSX
-> > > > > > >  	select REGMAP_SPI
-> > > > > > > +
-> > > > > > > +config IIO_ST_LSM6DSX_I3C
-> > > > > > > +	tristate
-> > > > > > > +	depends on IIO_ST_LSM6DSX
-> > > > > > > +	select REGMAP_I3C
-> > > > > > > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > > > > > index e5f733c..c676965 100644
-> > > > > > > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > > > > > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > > > > > @@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
-> > > > > > >  obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
-> > > > > > >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
-> > > > > > >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
-> > > > > > > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
-> > > > > > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > > > > > new file mode 100644
-> > > > > > > index 0000000..2e89524
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > > > > > @@ -0,0 +1,58 @@
-> > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > +/*
-> > > > > > > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> > > > > > > + *
-> > > > > > > + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> > > > > > > + */
-> > > > > > > +
-> > > > > > > +#include <linux/kernel.h>
-> > > > > > > +#include <linux/module.h>
-> > > > > > > +#include <linux/i3c/device.h>
-> > > > > > > +#include <linux/i3c/master.h>
-> > > > > > > +#include <linux/slab.h>
-> > > > > > > +#include <linux/of.h>
-> > > > > > > +#include <linux/regmap.h>
-> > > > > > > +
-> > > > > > > +#include "st_lsm6dsx.h"
-> > > > > > > +
-> > > > > > > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
-> > > > > > > +	I3C_DEVICE(0x0104, 0x006C, (void *)ST_LSM6DSO_ID),
-> > > > > > > +	I3C_DEVICE(0x0104, 0x006B, (void *)ST_LSM6DSR_ID),      
-> > > > > > 
-> > > > > > I think you need an uintptr_t cast here:
-> > > > > > 
-> > > > > > 	I3C_DEVICE(0x0104, 0x006C, (void *)(uintptr_t)ST_LSM6DSO_ID),
-> > > > > > 	I3C_DEVICE(0x0104, 0x006B, (void *)(uintptr_t)ST_LSM6DSR_ID),
-> > > > > > 
-> > > > > > otherwise gcc might complain that the integer and pointer do not have
-> > > > > > the same size (on 64-bit architectures).      
-> > > > > 
-> > > > > I don't understand this part. Can you provide or point some background?    
-> > > > 
-> > > > If you don't do that you'll get the following warning:
-> > > > 
-> > > > 	warning: cast to 'void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]    
-> > > 
-> > > I don't get the warning during compilation. Is there any flag to enable 
-> > > or so?  
+On Mon, Jul 15, 2019 at 02:47:37PM +0200, Peter Zijlstra wrote:
+> On Thu, Jul 11, 2019 at 12:53:05PM +0200, Peter Zijlstra wrote:
+> > > I wish we could use event->ctx->task instead but on pmu::init() there
+> > > is no ctx yet (we could pass the task in parameter though) 
 > > 
-> > Nope, nothing specific to enable, just enable this driver on an arm64
-> > config. Note that that gcc doesn't seem to complain about this
-> > int -> void * cast (there's probably some kind of auto-promotion to
-> > pointer size), but it does complains about the following void * -> int
-> > cast:
+> > Right, that should be fairly easy.
 > > 
-> > drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c: In function ‘st_lsm6dsx_i3c_probe’:
-> > drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c:43:43: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-> >    43 |  return st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
-> >       |       
+> > > and on event->destroy() it's TASK_TOMBSTONE and retrieving the task at
+> > > that time would be non trivial.
+> > 
+> > Well, right, we can maybe make TOMBSTONE be the LSB instead of the whole
+> > word, then we can recover the task pointer... *yuck* though.
 > 
-> I fixed the warning by changing:
+> Something like the attached, completely untested patches.
 > 
-> st_lsm6dsx_probe(&i3cdev->dev, 0, (int)id->data, regmap);
+> I didn't do the hw_breakpoint bit, because I got lost in that, but this
+> basically provides what you asked for I think.
 > 
-> to
-> 
-> st_lsm6dsx_probe(&i3cdev->dev, 0, (int)(uintptr_t)id->data, regmap);
 
-The (int) cast is implicit, no need to add it here.
-
-> 
-> But I wonder if it isn't more save to change the following too:
-> 	I3C_DEVICE(0x0104, 0x006C, (void *)(uintptr_t)ST_LSM6DSO_ID),
-> 	I3C_DEVICE(0x0104, 0x006B, (void *)(uintptr_t)ST_LSM6DSR_ID),
-> 
-> What do you think?
-
-I think we're good, we would have a problem if you were defining
-ST_LSM6DSO_ID as an ULL (unsigned long long, AKA u64) and trying to
-cast that value to a void pointer on a 32-bit arch.
+Thanks they look good! I can take them and work on top if you like.
