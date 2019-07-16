@@ -2,302 +2,104 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFBFC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B43C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FA22173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66922145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwuIaRXt"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="a2lu/HLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388884AbfGPVV5 (ORCPT
+        id S2388893AbfGPVWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 17:21:57 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40697 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387762AbfGPVV5 (ORCPT
+        Tue, 16 Jul 2019 17:22:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44515 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728771AbfGPVWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 17:21:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m8so21402386lji.7;
-        Tue, 16 Jul 2019 14:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hv4X6Ol3YLifv+SK/RREQKSIUF2SMhDy2wvcbTI2vmI=;
-        b=cwuIaRXt5ZsoH72c0nDnxZUiEZlMNVh9k5qcltgdXugMKV3lCBZEz3nI83pBQUUvjP
-         UkzbcNBvlSPQUlSCeNrxGzFEOo3tiF83b80F84iDKGeo+j7rBxHl5YnHq2gE8UeRUZQL
-         rD2ViTIO6RGCGssLZKoIfkXll77L7lHVP5gk2QjxKDFrWS3mhqkYKtUyLkYjutVyltK2
-         OeOnZUBIx8vtGvLFfMUvNCDCoHeKvegYVGT0B0drzKyALz9Prxz95Vl40PAVgUq8Kdfo
-         2UmvN5QNGsZ9WfKQ1SZX8HGZ5XKhZlrPzIn2M2ZMJU38mZ+835oHFfyqa1c/G7KExecd
-         7lnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hv4X6Ol3YLifv+SK/RREQKSIUF2SMhDy2wvcbTI2vmI=;
-        b=nSKHUcvmMdV+FdLwU0YfgWR6eLd6edW9fmUEoTsYSjcXsaUY6uFZMAcfNkjJje5oku
-         9rP1igbSOuR0Y+9Xh0OWTl0akl1IHic1eFw2pMj3gpVcaLnsH+JcefNNA6iBC1+vglZX
-         yNwTTn08AV30lW6hp4LQEs2rNDIlLYFazTDNgja2WeLUzS2r1yq2CuMCQ2a8/gphAJms
-         IW4hpQt02HFUb1Oiz/ZZVM/gCGQOdBGNqoqtEk9fHSRCFLWqbWXacovWvxUgsv5HTHTp
-         6s46vh8Jv7ltxm4FPWrwYWKzXyiYchfRqLdInxGTkY2vhnyoAGG2meyIpRHpj4AFxZhn
-         8Tbg==
-X-Gm-Message-State: APjAAAUrF9P8efdayfI5HNq9HGdZ3nr84k5Bi2qtk4cHme8eejOdp7g8
-        Rp/nIztLsyBgeL+czb0NUO1YVf8V
-X-Google-Smtp-Source: APXvYqz/0A6BkFmer4hqZTnRddo9jWZqHU/1ewTEeRt/gRh5qLkpd9fvfni1NVGHJnjHOQWkjPEe0w==
-X-Received: by 2002:a2e:968e:: with SMTP id q14mr17647857lji.195.1563312112386;
-        Tue, 16 Jul 2019 14:21:52 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id s1sm3944371ljd.83.2019.07.16.14.21.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 14:21:51 -0700 (PDT)
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <a9b5c364-52b4-bee1-5881-47197f043950@nvidia.com>
- <e9d4bc0e-fd5d-ae02-2d67-86c7f7c9620f@gmail.com>
- <3938092a-bbc7-b304-641d-31677539598d@nvidia.com>
- <932d4d50-120c-9191-6a9a-23bf9c96633b@nvidia.com>
- <0ee055ad-d397-32e5-60ee-d62c14c6f77b@gmail.com>
- <86fc07d5-ab2e-a52a-a570-b1dfff4c20fe@nvidia.com>
- <20190716083701.225f0fd9@dimatab>
- <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
- <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
- <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
- <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
- <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
- <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
- <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
- <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
- <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
- <ef63f72a-db03-ef28-a371-e578f351c713@nvidia.com>
- <27641e30-fdd1-e53a-206d-71e1f23343fd@gmail.com>
- <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
-Date:   Wed, 17 Jul 2019 00:21:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 17:22:16 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6GLM5NR1230100
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Jul 2019 14:22:05 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6GLM5NR1230100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563312125;
+        bh=FkTg5NkZ7+UyBNo1lwbD1FJFi/V4LU7OKvYpJ8Xzp9w=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=a2lu/HLVSsUR3vJNcnjWiKpv1XI5W/Gsvb5z/IwNEOLt/Gg+E2fDllhHCdhQZbC25
+         amdVDmYkExi6FRbdVEL39z3uyhclLnl+v0lQJNeKWIC/ysooQMNGhRbLFis8t50QJY
+         vsbmr0mqqCPY1b6uLbtPAYNLeGM3UbCtYjsJkZOIEW/ZkRqElj/87Omd4UfBgAyC0j
+         ni+DejIE4HTwV29wtLxw792qcjWHywUjTpI9RSDpLBEIfDDHZyQTkep3MGgKKsSX4g
+         TAJOmoqI0/V6WgzGsXtKGcucU51U3IwyHLPiL1ji+41lvmYPR2WQc1j/N214bOjDPg
+         bITr7qiq075Rw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6GLM5Rk1230097;
+        Tue, 16 Jul 2019 14:22:05 -0700
+Date:   Tue, 16 Jul 2019 14:22:05 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Michel Thierry <tipbot@zytor.com>
+Message-ID: <tip-080ac61bad4a3307880bb982cec48b225912b362@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        mingo@kernel.org, rodrigo.vivi@intel.com, michel.thierry@intel.com,
+        lucas.demarchi@intel.com
+Reply-To: rodrigo.vivi@intel.com, michel.thierry@intel.com,
+          lucas.demarchi@intel.com, hpa@zytor.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <20190712210238.5622-1-lucas.demarchi@intel.com>
+References: <20190712210238.5622-1-lucas.demarchi@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/gpu: Add TGL stolen memory support
+Git-Commit-ID: 080ac61bad4a3307880bb982cec48b225912b362
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.07.2019 0:12, Sowjanya Komatineni пишет:
-> 
-> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
->> 16.07.2019 22:26, Sowjanya Komatineni пишет:
->>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
->>>> 16.07.2019 21:30, Sowjanya Komatineni пишет:
->>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote:
->>>>>> 16.07.2019 21:19, Sowjanya Komatineni пишет:
->>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
->>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
->>>>>>>>> 16.07.2019 11:06, Peter De Schrijver пишет:
->>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph Lo wrote:
->>>>>>>>>>>> OK, Will add to CPUFreq driver...
->>>>>>>>>>>>> The other thing that also need attention is that T124 CPUFreq
->>>>>>>>>>>>> driver
->>>>>>>>>>>>> implicitly relies on DFLL driver to be probed first, which is
->>>>>>>>>>>>> icky.
->>>>>>>>>>>>>
->>>>>>>>>>>> Should I add check for successful dfll clk register
->>>>>>>>>>>> explicitly in
->>>>>>>>>>>> CPUFreq driver probe and defer till dfll clk registers?
->>>>>>>>> Probably you should use the "device links". See [1][2] for the
->>>>>>>>> example.
->>>>>>>>>
->>>>>>>>> [1]
->>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c#L2383
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> [2]
->>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/device_link.html
->>>>>>>>>
->>>>>>>>> Return EPROBE_DEFER instead of EINVAL if device_link_add() fails.
->>>>>>>>> And
->>>>>>>>> use of_find_device_by_node() to get the DFLL's device, see [3].
->>>>>>>>>
->>>>>>>>> [3]
->>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>> Will go thru and add...
->>>>>> Looks like I initially confused this case with getting orphaned
->>>>>> clock.
->>>>>> I'm now seeing that the DFLL driver registers the clock and then
->>>>>> clk_get(dfll) should be returning EPROBE_DEFER until DFLL driver is
->>>>>> probed, hence everything should be fine as-is and there is no real
->>>>>> need
->>>>>> for the 'device link'. Sorry for the confusion!
->>>>>>
->>>>>>>>>>> Sorry, I didn't follow the mail thread. Just regarding the DFLL
->>>>>>>>>>> part.
->>>>>>>>>>>
->>>>>>>>>>> As you know it, the DFLL clock is one of the CPU clock
->>>>>>>>>>> sources and
->>>>>>>>>>> integrated with DVFS control logic with the regulator. We
->>>>>>>>>>> will not
->>>>>>>>>>> switch
->>>>>>>>>>> CPU to other clock sources once we switched to DFLL. Because the
->>>>>>>>>>> CPU has
->>>>>>>>>>> been regulated by the DFLL HW with the DVFS table (CVB or OPP
->>>>>>>>>>> table
->>>>>>>>>>> you see
->>>>>>>>>>> in the driver.). We shouldn't reparent it to other sources with
->>>>>>>>>>> unknew
->>>>>>>>>>> freq/volt pair. That's not guaranteed to work. We allow
->>>>>>>>>>> switching to
->>>>>>>>>>> open-loop mode but different sources.
->>>>>>>>> Okay, then the CPUFreq driver will have to enforce DFLL freq to
->>>>>>>>> PLLP's
->>>>>>>>> rate before switching to PLLP in order to have a proper CPU
->>>>>>>>> voltage.
->>>>>>>> PLLP freq is safe to work for any CPU voltage. So no need to
->>>>>>>> enforce
->>>>>>>> DFLL freq to PLLP rate before changing CCLK_G source to PLLP during
->>>>>>>> suspend
->>>>>>>>
->>>>>>> Sorry, please ignore my above comment. During suspend, need to
->>>>>>> change
->>>>>>> CCLK_G source to PLLP when dfll is in closed loop mode first and
->>>>>>> then
->>>>>>> dfll need to be set to open loop.
->>>>>> Okay.
->>>>>>
->>>>>>>>>>> And I don't exactly understand why we need to switch to PLLP in
->>>>>>>>>>> CPU
->>>>>>>>>>> idle
->>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the time.
->>>>>>>>>>>
->>>>>>>>>>> In SC7 entry, the dfll suspend function moves it the open-loop
->>>>>>>>>>> mode. That's
->>>>>>>>>>> all. The sc7-entryfirmware will handle the rest of the
->>>>>>>>>>> sequence to
->>>>>>>>>>> turn off
->>>>>>>>>>> the CPU power.
->>>>>>>>>>>
->>>>>>>>>>> In SC7 resume, the warmboot code will handle the sequence to
->>>>>>>>>>> turn on
->>>>>>>>>>> regulator and power up the CPU cluster. And leave it on PLL_P.
->>>>>>>>>>> After
->>>>>>>>>>> resuming to the kernel, we re-init DFLL, restore the CPU clock
->>>>>>>>>>> policy (CPU
->>>>>>>>>>> runs on DFLL open-loop mode) and then moving to close-loop mode.
->>>>>>>>> The DFLL is re-inited after switching CCLK to DFLL parent
->>>>>>>>> during of
->>>>>>>>> the
->>>>>>>>> early clocks-state restoring by CaR driver. Hence instead of
->>>>>>>>> having
->>>>>>>>> odd
->>>>>>>>> hacks in the CaR driver, it is much nicer to have a proper
->>>>>>>>> suspend-resume sequencing of the device drivers. In this case
->>>>>>>>> CPUFreq
->>>>>>>>> driver is the driver that enables DFLL and switches CPU to that
->>>>>>>>> clock
->>>>>>>>> source, which means that this driver is also should be
->>>>>>>>> responsible for
->>>>>>>>> management of the DFLL's state during of suspend/resume
->>>>>>>>> process. If
->>>>>>>>> CPUFreq driver disables DFLL during suspend and re-enables it
->>>>>>>>> during
->>>>>>>>> resume, then looks like the CaR driver hacks around DFLL are not
->>>>>>>>> needed.
->>>>>>>>>
->>>>>>>>>>> The DFLL part looks good to me. BTW, change the patch subject to
->>>>>>>>>>> "Add
->>>>>>>>>>> suspend-resume support" seems more appropriate to me.
->>>>>>>>>>>
->>>>>>>>>> To clarify this, the sequences for DFLL use are as follows
->>>>>>>>>> (assuming
->>>>>>>>>> all
->>>>>>>>>> required DFLL hw configuration has been done)
->>>>>>>>>>
->>>>>>>>>> Switch to DFLL:
->>>>>>>>>> 0) Save current parent and frequency
->>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>> 2) Enable DFLL
->>>>>>>>>> 3) Change cclk_g parent to DFLL
->>>>>>>>>> For OVR regulator:
->>>>>>>>>> 4) Change PWM output pin from tristate to output
->>>>>>>>>> 5) Enable DFLL PWM output
->>>>>>>>>> For I2C regulator:
->>>>>>>>>> 4) Enable DFLL I2C output
->>>>>>>>>> 6) Program DFLL to closed loop mode
->>>>>>>>>>
->>>>>>>>>> Switch away from DFLL:
->>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU frequency is ok for
->>>>>>>>>> any
->>>>>>>>>> vdd_cpu voltage
->>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>
->>>>>>> I see during switch away from DFLL (suspend), cclk_g parent is not
->>>>>>> changed to PLLP before changing dfll to open loop mode.
->>>>>>>
->>>>>>> Will add this ...
->>>>>> The CPUFreq driver switches parent to PLLP during the probe, similar
->>>>>> should be done on suspend.
->>>>>>
->>>>>> I'm also wondering if it's always safe to switch to PLLP in the
->>>>>> probe.
->>>>>> If CPU is running on a lower freq than PLLP, then some other more
->>>>>> appropriate intermediate parent should be selected.
->>>>>>
->>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at higher
->>>>> rate
->>>>> so switching to PLL_P during CPUFreq probe prior to dfll clock enable
->>>>> should be safe.
->>>> AFAIK, PLLX could run at ~200MHz. There is also a divided output of
->>>> PLLP
->>>> which CCLKG supports, the PLLP_OUT4.
->>>>
->>>> Probably, realistically, CPU is always running off a fast PLLX during
->>>> boot, but I'm wondering what may happen on KEXEC. I guess ideally
->>>> CPUFreq driver should also have a 'shutdown' callback to teardown DFLL
->>>> on a reboot, but likely that there are other clock-related problems as
->>>> well that may break KEXEC and thus it is not very important at the
->>>> moment.
->>>>
->>>> [snip]
->>> During bootup CPUG sources from PLL_X. By PLL_P source above I meant
->>> PLL_P_OUT4.
->>>
->>> As per clock policies, PLL_X is always used for high freq like >800Mhz
->>> and for low frequency it will be sourced from PLLP.
->> Alright, then please don't forget to pre-initialize PLLP_OUT4 rate to a
->> reasonable value using tegra_clk_init_table or assigned-clocks.
-> 
-> PLLP_OUT4 rate update is not needed as it is safe to run at 408Mhz
-> because it is below fmax @ Vmin
+Commit-ID:  080ac61bad4a3307880bb982cec48b225912b362
+Gitweb:     https://git.kernel.org/tip/080ac61bad4a3307880bb982cec48b225912b362
+Author:     Michel Thierry <michel.thierry@intel.com>
+AuthorDate: Fri, 12 Jul 2019 14:02:39 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Tue, 16 Jul 2019 23:13:49 +0200
 
-So even 204MHz CVB entries are having the same voltage as 408MHz,
-correct? It's not instantly obvious to me from the DFLL driver's code
-where the fmax @ Vmin is defined, I see that there is the min_millivolts
-and frequency entries starting from 204MHZ defined per-table.
+x86/gpu: Add TGL stolen memory support
+
+Reuse Gen11 stolen memory functionality since Tiger Lake uses the same BSM
+register (and format).
+
+Signed-off-by: Michel Thierry <michel.thierry@intel.com>
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Link: https://lkml.kernel.org/r/20190712210238.5622-1-lucas.demarchi@intel.com
+
+---
+ arch/x86/kernel/early-quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 6c4f01540833..6f6b1d04dadf 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -549,6 +549,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
+ 	INTEL_CNL_IDS(&gen9_early_ops),
+ 	INTEL_ICL_11_IDS(&gen11_early_ops),
+ 	INTEL_EHL_IDS(&gen11_early_ops),
++	INTEL_TGL_12_IDS(&gen11_early_ops),
+ };
+ 
+ struct resource intel_graphics_stolen_res __ro_after_init = DEFINE_RES_MEM(0, 0);
