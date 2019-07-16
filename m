@@ -2,91 +2,153 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB8EC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE35C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241FB21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563314451;
-	bh=MZiI+dn9mTuyzIwRcV9Xmn9Ls3mvI60j/scPusuitoY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MApn9CRkVYZdw90l2mwXHZF/QtbkEWCoyF7aaZFyQqyIDw4kMnzmMeWDqiRGKXrje
-	 zRHc/+NDbK2sB9KCmg730mKt/gg9N6TxkhXkUZQwOk2mx9xZUkX7kvk2YHlzVQwBMK
-	 VKnluz7IA6G+7gn65S5AH/uacPpZ1u5MoAl0ldxM=
+	by mail.kernel.org (Postfix) with ESMTP id 7C49E21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Nj4Apsx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387737AbfGPWAu (ORCPT
+        id S2388390AbfGPWCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:00:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbfGPWAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:00:49 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 459DC217D9;
-        Tue, 16 Jul 2019 22:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563314448;
-        bh=MZiI+dn9mTuyzIwRcV9Xmn9Ls3mvI60j/scPusuitoY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XSWiZuBkMQon8Lef5PmzojoSZZ9fRe2jegeNSZnEenhkD8cdTCQlE6EJpSJoBqgjy
-         wUCAz9PwWcsuoV7ZdQqEhoN9Mox91kVFBCk9L9u6wGxpu+qMlGIrkxCGHu/x3UMAnl
-         J8ebYbD6PKGFHh6l70c9iZEJlyazzO5W9LuTVRLw=
-Date:   Tue, 16 Jul 2019 15:00:47 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tue, 16 Jul 2019 18:02:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41401 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728434AbfGPWCI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 18:02:08 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so9765035pff.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2z9KNQXlh1uTspFy4ArQuvTJcR1Rzwr1DildJveu51k=;
+        b=Nj4Apsx7+yF16h8Bgn0/aVZptTaAfrLBte4ocvydTpKDQLn5zJH9m64VOqx0AGgMOA
+         9HALNTV6H66Ed1+hvZ8A79pTZKqASniWSBiSgJO+3qYxy/a0f7aH4C2yghsLt+aKszer
+         Ko+jVULH3Uc8rJuQR+id5tzBt3QHpebPG2tfQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2z9KNQXlh1uTspFy4ArQuvTJcR1Rzwr1DildJveu51k=;
+        b=E8uXR0ib93pstXLYLUaVAhi2VWAlHZUMclR2tGdrzVglloxjloRvDsPDg9D3P3Ckkd
+         nGt7p1yjSABmJdxy6vvZ9lX2qFh5YlbRg8Jokt+T2+Chi7qj1A97/VAsulXB8w/Vl6lZ
+         aWhdzPixK5yYjEwfr2krrhHBrLmkvvcOySlz92ck7BQjP2ABr+z9t1MvdnDVSjKmpcvF
+         EotezR9VQNCxBHuutohNYkoop61YSJeF44/Tr7zGTC5W3kR4AQqDj4xOb+/oHoG0vCBa
+         Mf0OCVaVQ0fAMU/SBex7u6HWRb2NxqxQonPwZFWa3JGWD4wDVKr/7hBLAbLajJiFepe8
+         FTqg==
+X-Gm-Message-State: APjAAAXReMt3wqKI7qXHPcS3WS2ush/a9N7cSHZMJeEX/939qYqddGOV
+        b0QLy2rucqS+TFAkeCj8ieA=
+X-Google-Smtp-Source: APXvYqxaEDRbasy8NySgdX0n0Gtordok4+zLKu64dtBW+xFIbgsDp3e73uVzAdPXDqTAj25BPb/h3Q==
+X-Received: by 2002:a65:500a:: with SMTP id f10mr5773696pgo.105.1563314527534;
+        Tue, 16 Jul 2019 15:02:07 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id z4sm36091350pfg.166.2019.07.16.15.02.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 15:02:06 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 18:02:05 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 0/3] resource: find_next_iomem_res() improvements
-Message-Id: <20190716150047.3c13945decc052c077e9ee1e@linux-foundation.org>
-In-Reply-To: <19C3DCA0-823E-46CB-A758-D5F82C5FA3C8@vmware.com>
-References: <20190613045903.4922-1-namit@vmware.com>
-        <CAPcyv4hpWg5DWRhazS-ftyghiZP-J_M-7Vd5tiUd5UKONOib8g@mail.gmail.com>
-        <9387A285-B768-4B58-B91B-61B70D964E6E@vmware.com>
-        <CAPcyv4hstt+0teXPtAq2nwFQaNb9TujgetgWPVMOnYH8JwqGeA@mail.gmail.com>
-        <19C3DCA0-823E-46CB-A758-D5F82C5FA3C8@vmware.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        peterz@infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH 2/9] rcu: Add support for consolidated-RCU reader
+ checking (v3)
+Message-ID: <20190716220205.GB172157@google.com>
+References: <20190715143705.117908-1-joel@joelfernandes.org>
+ <20190715143705.117908-3-joel@joelfernandes.org>
+ <20190716183833.GD14271@linux.ibm.com>
+ <20190716184649.GA130463@google.com>
+ <20190716185303.GM14271@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716185303.GM14271@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 21:56:43 +0000 Nadav Amit <namit@vmware.com> wrote:
+On Tue, Jul 16, 2019 at 11:53:03AM -0700, Paul E. McKenney wrote:
+[snip]
+> > > A few more things below.
+> > > > ---
+> > > >  include/linux/rculist.h  | 28 ++++++++++++++++++++-----
+> > > >  include/linux/rcupdate.h |  7 +++++++
+> > > >  kernel/rcu/Kconfig.debug | 11 ++++++++++
+> > > >  kernel/rcu/update.c      | 44 ++++++++++++++++++++++++----------------
+> > > >  4 files changed, 67 insertions(+), 23 deletions(-)
+> > > > 
+> > > > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> > > > index e91ec9ddcd30..1048160625bb 100644
+> > > > --- a/include/linux/rculist.h
+> > > > +++ b/include/linux/rculist.h
+> > > > @@ -40,6 +40,20 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+> > > >   */
+> > > >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+> > > >  
+> > > > +/*
+> > > > + * Check during list traversal that we are within an RCU reader
+> > > > + */
+> > > > +
+> > > > +#ifdef CONFIG_PROVE_RCU_LIST
+> > > 
+> > > This new Kconfig option is OK temporarily, but unless there is reason to
+> > > fear malfunction that a few weeks of rcutorture, 0day, and -next won't
+> > > find, it would be better to just use CONFIG_PROVE_RCU.  The overall goal
+> > > is to reduce the number of RCU knobs rather than grow them, must though
+> > > history might lead one to believe otherwise.  :-/
+> > 
+> > If you want, we can try to drop this option and just use PROVE_RCU however I
+> > must say there may be several warnings that need to be fixed in a short
+> > period of time (even a few weeks may be too short) considering the 1000+
+> > uses of RCU lists.
+> Do many people other than me build with CONFIG_PROVE_RCU?  If so, then
+> that would be a good reason for a temporary CONFIG_PROVE_RCU_LIST,
+> as in going away in a release or two once the warnings get fixed.
 
-> > ...and is constant for the life of the device and all subsequent mappings.
-> > 
-> >> Perhaps you want to cache the cachability-mode in vma->vm_page_prot (which I
-> >> see being done in quite a few cases), but I don’t know the code well enough
-> >> to be certain that every vma should have a single protection and that it
-> >> should not change afterwards.
-> > 
-> > No, I'm thinking this would naturally fit as a property hanging off a
-> > 'struct dax_device', and then create a version of vmf_insert_mixed()
-> > and vmf_insert_pfn_pmd() that bypass track_pfn_insert() to insert that
-> > saved value.
+PROVE_RCU is enabled by default with PROVE_LOCKING, so it is used quite
+heavilty.
+
+> > But I don't mind dropping it and it may just accelerate the fixing up of all
+> > callers.
 > 
-> Thanks for the detailed explanation. I’ll give it a try (the moment I find
-> some free time). I still think that patch 2/3 is beneficial, but based on
-> your feedback, patch 3/3 should be dropped.
+> I will let you decide based on the above question.  But if you have
+> CONFIG_PROVE_RCU_LIST, as noted below, it needs to depend on RCU_EXPERT.
 
-It has been a while.  What should we do with
+Ok, will make it depend. But yes for temporary purpose, I will leave it as a
+config and remove it later.
 
-resource-fix-locking-in-find_next_iomem_res.patch
-resource-avoid-unnecessary-lookups-in-find_next_iomem_res.patch
+thanks,
 
-?
+ - Joel
+ 
