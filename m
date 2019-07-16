@@ -2,119 +2,89 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B1FC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A17C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F7120880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C4B20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbfGPHTt convert rfc822-to-8bit (ORCPT
+        id S1730296AbfGPHUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:19:49 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50989 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfGPHTs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:19:48 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 4582860017;
-        Tue, 16 Jul 2019 07:19:34 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 09:19:33 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Ensure child nodes are of type 'object'
-Message-ID: <20190716091933.39db956e@xps13>
-In-Reply-To: <20190715230457.3901-1-robh@kernel.org>
-References: <20190715230457.3901-1-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 16 Jul 2019 03:20:49 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64887 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbfGPHUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 03:20:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 00:20:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,496,1557212400"; 
+   d="scan'208";a="194796175"
+Received: from pipin.fi.intel.com ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jul 2019 00:20:44 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [RFC PATCH 0/5] PTP: add support for Intel's TGPIO controller
+Date:   Tue, 16 Jul 2019 10:20:33 +0300
+Message-Id: <20190716072038.8408-1-felipe.balbi@linux.intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+TGPIO is a new IP which allows for time synchronization between systems
+without any other means of synchronization such as PTP or NTP. The
+driver is implemented as part of the PTP framework since its features
+covered most of what this controller can do.
 
-Rob Herring <robh@kernel.org> wrote on Mon, 15 Jul 2019 17:04:57 -0600:
+There are a few things that made me send this as a RFC, however:
 
-> Properties which are child node definitions need to have an explict
-> type. Otherwise, a matching (DT) property can silently match when an
-> error is desired. Fix this up tree-wide. Once this is fixed, the
-> meta-schema will enforce this on any child node definitions.
-> 
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-spi@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please ack. I will take this via the DT tree.
-> 
-> Rob
-> 
->  .../devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yaml       | 1 +
->  .../devicetree/bindings/mtd/allwinner,sun4i-a10-nand.yaml      | 1 +
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml     | 1 +
->  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          | 3 +++
->  .../devicetree/bindings/spi/allwinner,sun4i-a10-spi.yaml       | 1 +
->  .../devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml       | 1 +
->  6 files changed, 8 insertions(+)
-> 
+(1) This version of the controller lacks an interrupt line. Currently I
+	put a kthread that starts polling the controller whenever its
+	pin is configured as input. Any better ideas for allowing
+	userspace control the polling rate? Perhaps tap into ptp_poll()?
 
-[...]
+(2) ACPI IDs can't be shared at this moment, unfortunately.
 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> index 199ba5ac2a06..d261b7096c69 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -40,6 +40,7 @@ properties:
->  
->  patternProperties:
->    "^nand@[a-f0-9]$":
-> +    type: object
->      properties:
->        reg:
->          description:
+(3) The change in arch/x86/kernel/tsc.c needs to be reviewed at length
+	before going in.
 
-For the mtd .yaml:
+Let me know what you guys think,
+Cheers
 
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Felipe Balbi (5):
+  x86: tsc: add tsc to art helpers
+  PTP: add a callback for counting timestamp events
+  PTP: implement PTP_EVENT_COUNT_TSTAMP ioctl
+  PTP: Add flag for non-periodic output
+  PTP: Add support for Intel PMC Timed GPIO Controller
 
+ arch/x86/include/asm/tsc.h        |   2 +
+ arch/x86/kernel/tsc.c             |  32 +++
+ drivers/ptp/Kconfig               |   8 +
+ drivers/ptp/Makefile              |   1 +
+ drivers/ptp/ptp-intel-pmc-tgpio.c | 378 ++++++++++++++++++++++++++++++
+ drivers/ptp/ptp_chardev.c         |  15 ++
+ include/linux/ptp_clock_kernel.h  |  12 +
+ include/uapi/linux/ptp_clock.h    |   6 +-
+ 8 files changed, 453 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/ptp/ptp-intel-pmc-tgpio.c
 
-Thanks,
-Miquèl
+-- 
+2.22.0
+
