@@ -2,115 +2,89 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D464C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B106C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D182173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:31:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TYIwu/vX"
+	by mail.kernel.org (Postfix) with ESMTP id 3E2D82173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbfGPObT (ORCPT
+        id S2387593AbfGPOeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:31:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55992 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPObS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:31:18 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GESeuB114127;
-        Tue, 16 Jul 2019 14:30:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=N/b6VOTPb74aJOzgxtMHhEZs0/2R4+eOxM9iauY4Cqo=;
- b=TYIwu/vXzDGP10SKtj166MVC8ei7IqLWvnBGRm8foSd5zDykmbm2AQ5DxeMVe0m3G5tG
- jAPcv/h9wMpyhAlKC+y8VqaSykrEo+SPJDAstUtqUbVU+dDsi54IdMSq+nl/9N6Bc+GD
- 6o8yQj2ABHPFYvxrBLJEAMOcsm/BBYjdq/5G5j+EefxsWllZZxLfmu00gJT9MLwjAx8z
- iq6CubmrHZ6mNazgzj+cXgjNjxVsibSPKt1wsgXSqfwpZb6xr6/AWZFGRSdsa/03BmXs
- p5LwhzhwqYaO5nb/1dS8TEzyUiZm5mVzjjxdFkugPoVyj7zAuEJ6jL0wpKmlO+utgS64 XA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2tq7xqvua1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 14:30:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6GES5wd183813;
-        Tue, 16 Jul 2019 14:30:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2tq5bcevaf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jul 2019 14:30:35 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6GEUXUa023587;
-        Tue, 16 Jul 2019 14:30:33 GMT
-Received: from [10.39.235.122] (/10.39.235.122)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Jul 2019 07:30:33 -0700
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <20190716110518.GQ3419@hirez.programming.kicks-ass.net>
-Date:   Tue, 16 Jul 2019 10:30:28 -0400
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FDD00A3A-6938-40DE-B464-A56C641B4634@oracle.com>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
- <20190716110518.GQ3419@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3259)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=879
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907160178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=930 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907160178
+        Tue, 16 Jul 2019 10:34:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:35768 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727849AbfGPOeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:34:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4EA8337;
+        Tue, 16 Jul 2019 07:34:21 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E4163F59C;
+        Tue, 16 Jul 2019 07:34:19 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 15:34:17 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v11 3/5] sched/core: uclamp: Propagate system defaults to
+ root group
+Message-ID: <20190716143417.us3xhksrsaxsl2ok@e110439-lin>
+References: <20190708084357.12944-1-patrick.bellasi@arm.com>
+ <20190708084357.12944-4-patrick.bellasi@arm.com>
+ <20190715164226.GA30262@blackbody.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190715164226.GA30262@blackbody.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15-Jul 18:42, Michal Koutný wrote:
+> On Mon, Jul 08, 2019 at 09:43:55AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> > +static void uclamp_update_root_tg(void)
+> > +{
+> > +	struct task_group *tg = &root_task_group;
+> > +
+> > +	uclamp_se_set(&tg->uclamp_req[UCLAMP_MIN],
+> > +		      sysctl_sched_uclamp_util_min, false);
+> > +	uclamp_se_set(&tg->uclamp_req[UCLAMP_MAX],
+> > +		      sysctl_sched_uclamp_util_max, false);
+> > +
+> > +	cpu_util_update_eff(&root_task_group.css);
+> > +}
+> cpu_util_update_eff internally calls css_for_each_descendant_pre() so
+> this should be protected with rcu_read_lock().
 
-> On Jul 16, 2019, at 7:05 AM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->=20
-> On Mon, Jul 15, 2019 at 03:25:34PM -0400, Alex Kogan wrote:
->> +/**
->> + * find_successor - Scan the main waiting queue looking for the =
-first
->> + * thread running on the same node as the lock holder. If found =
-(call it
->> + * thread T), move all threads in the main queue between the lock =
-holder
->> + * and T to the end of the secondary queue and return T; otherwise, =
-return NULL.
->> + */
->> +static struct cna_node *find_successor(struct mcs_spinlock *me)
->=20
-> Either don't use a kernel doc comment, but if you must, you have to
-> stick to their format, otherwise we'll get endless stupid patches =
-fixing
-> up the stupid comment.
-Will fix that.
+Right, good catch! Will add in v12.
 
-Thanks,
-=E2=80=94 Alex
+Cheers,
+Patrick
 
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
