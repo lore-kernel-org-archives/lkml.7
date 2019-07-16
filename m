@@ -2,216 +2,367 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42798C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D88C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C7C206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7899206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H3xiEqss"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CsxR848o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbfGPIhV (ORCPT
+        id S1731407AbfGPIhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:37:21 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40606 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfGPIhV (ORCPT
+        Tue, 16 Jul 2019 04:37:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46354 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbfGPIhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:37:21 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so18693584eds.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:37:19 -0700 (PDT)
+        Tue, 16 Jul 2019 04:37:47 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c73so8745145pfb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:37:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Lu9sRd1aI6UIpjDrZ2p4aWEktj3PaeleYO2nmBnUknY=;
-        b=H3xiEqssY10pUNcLjsNxN9Rm4cfC3DQa/eWlOx+z0RLGOkodG/TlgyFHhyh+243WbJ
-         K3YHlWKFg1ekYU1GAYI9rd/+yFgfLvc9CO3Pwb8aYVHxukJx61QkEPz2EL3ivkEqxj2S
-         YekSvQpVQ+F4sCLlYsDvgdEfHlSm9ww8S9q0Q=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d5YQlIKKkuDS08glaQtz+2CmlaQCbXhxEEG92fwEkgc=;
+        b=CsxR848oXNv0SGx7lrrmlW/EFOw9d/A77U3g3HqLdnzQXz9W+0cxfMoa8bEYGoXURh
+         m8GxLMkoHCYswLdtdnUJ+iBrvvcKKjZbcU1qvZqr2o95nWV31wYJsJz5Dh6UhD3jgfTf
+         5nivHOcKZtu6NiXtTp/wAzu9i/RSZAOEHLHz80kaXnhboxxZghbC+4Zr/y70MEqCyABV
+         qn0BYsyJyIthL8JHY+XcetgGY+N2MuOwdMCbhswDZ+jUF5W/jWzTTHxbcIVuDRWHC7id
+         KxQb7HGZt+O2zUduFDS/VkICES4vWtb0wGS9znIb2yrTGO5QGHPknE6OPaDWHe8cPkNv
+         JSeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Lu9sRd1aI6UIpjDrZ2p4aWEktj3PaeleYO2nmBnUknY=;
-        b=ZIgh24baSWEV8d/QqphS3+ThtH1VrGS0y6gW/FYDdy6UbL8Isikmu3EhWsp4TQ1f99
-         ivw+L6QU7qRwyUaVz8YUDOecpbSV9mLwJUP8AwyyvdfY8CN4tTLJAJ6g6kvt4fGfsh36
-         p0U+m/uO0iPfZgnZZn1FB7T8qicv/0y7r5x19u8aTdjZ9jj9L0ArmPWrUYNR5XSAWGZ2
-         nwLMARjgK+AQvTFqQYAMmB5wTNhUgOXfdJ1fysFSVJvBZ8N3a7fb3LUACN2MLeX0F8Dk
-         KV9r/2KXr+X9m9r+NHXFY3OVfIJTROTsDT3pxJVFLr4YHZzJnxAmRHeBENSQQBSU5JuN
-         OBLA==
-X-Gm-Message-State: APjAAAVpO6flh6x85WnoF+f2+mN7o4xSuym5iT+Yphsf5xrP8G30F01F
-        UKwpspZpK+3U1zVaF8ztM+c=
-X-Google-Smtp-Source: APXvYqyvJpRvDIT8BzwNR3Iq4s2IMaXRfjqLdxv4drE3X09YwMDQ8fieRUmatyVZSZ3+E01AJkaxtw==
-X-Received: by 2002:a17:906:edcb:: with SMTP id sb11mr24525752ejb.260.1563266239018;
-        Tue, 16 Jul 2019 01:37:19 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id m25sm4283382ejs.85.2019.07.16.01.37.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 01:37:17 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 10:37:15 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
-Message-ID: <20190716083715.GT15868@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
- <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
- <20190711082105.GI15868@phenom.ffwll.local>
- <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d5YQlIKKkuDS08glaQtz+2CmlaQCbXhxEEG92fwEkgc=;
+        b=EI7B4OJEHBATE03xhuVeVdiJNFz16EXfZfchIcKoQCS02QaY38ENh4GbW5LB42ugB8
+         QBCbBSAoCPvl3nfr2u733N4THqnm0+u8zlGKhnARhKSQ4qMMWYHAUuaQSXw6Sb4uNly5
+         zzTi9WyjAB2bbJaOMFQUx6kbHHdzP6uIvomap+IZ31Z1vFs+8GB7BHuCd54ayXTHQnY4
+         Pz8WHBfRr5GBFm39H9Fy77mJaZJQ//Fcnr75HZrgNsNWouKoM5ckW6mLiJonKT89SGWb
+         Ydk8uEG6JOXyAeSSKBjwE4ekEQSYnLg+ODbF70umbEvdILQ9npO1KKt/ejwcONJ2lYQL
+         HboA==
+X-Gm-Message-State: APjAAAV7lNPQokjLFaXDruhKabnuIx5Uj9b2laaok1p/sqDskORwUIZo
+        5lceZcrwEBO9PyYeh8uqXCYBnNaJrnC2sdRs1eSgKA==
+X-Google-Smtp-Source: APXvYqw/pjkOVZaApgOgNLX2yiZ2DSfhsd3LaKVyfBf+7gS0zPt8gXh/9iP62Z9w8bWZyNakENvfhgJaHPTPzm3RyWM=
+X-Received: by 2002:a63:eb51:: with SMTP id b17mr31131916pgk.384.1563266265401;
+ Tue, 16 Jul 2019 01:37:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190712081744.87097-1-brendanhiggins@google.com>
+ <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org>
+ <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+In-Reply-To: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 16 Jul 2019 01:37:34 -0700
+Message-ID: <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 12:14:49AM -0300, Rodrigo Siqueira wrote:
-> On 07/11, Daniel Vetter wrote:
-> > On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
-> > > The compute_crc() function is responsible for calculating the
-> > > framebuffer CRC value; due to the XRGB format, this function has to
-> > > ignore the alpha channel during the CRC computation. Therefore,
-> > > compute_crc() set zero to the alpha channel directly in the input
-> > > framebuffer, which is not a problem since this function receives a copy
-> > > of the original buffer. However, if we want to use this function in a
-> > > context without a buffer copy, it will change the initial value. This
-> > > patch makes compute_crc() calculate the CRC value without modifying the
-> > > input framebuffer.
-> > 
-> > Uh why? For writeback we're writing the output too, so we can write
-> > whatever we want to into the alpha channel. For writeback we should never
-> > accept a pixel format where alpha actually matters, that doesn't make
-> > sense. You can't see through a real screen either, they are all opaque :-)
-> > -Daniel
-> 
-> Hmmm,
-> 
-> I see your point and I agree, but even though we can write whatever we
-> want in the output, don’t you think that is weird to change the
-> framebuffer value in the compute_crc() function?
-
-Not sure what you mean here ... ? From a quick look the memset only sets
-our temporary buffer, so we're not changing the input framebuffer here.
-And we have to somehow get rid of the X bits, since there's no alpha
-value. For CRC computation, all we need is some value which is the same
-for every frame (so that the CRC stays constant for the same visible
-output). For writeback we could write whatever we want (which includes
-whatever is there already). But there's no guarantee and definitely no
-expectation that the X bits survive. Writing 0 is imo the most reasonable
-thing to do. I'm not even sure whether modern gpus can still do channel
-masking (i.e. only write out specific channels, instead of the entire
-color). That was a "feature" of bitop blitters of the 80s/90s :-)
--Daniel
-
-> 
-> Thanks
->  
-> > > 
-> > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-----------
-> > >  1 file changed, 19 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> > > index 51a270514219..8126aa0f968f 100644
-> > > --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> > > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> > > @@ -6,33 +6,40 @@
-> > >  #include <drm/drm_atomic_helper.h>
-> > >  #include <drm/drm_gem_framebuffer_helper.h>
-> > >  
-> > > +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
-> > > +				 const struct vkms_composer *composer)
-> > > +{
-> > > +	int src_offset = composer->offset + (y * composer->pitch)
-> > > +					  + (x * composer->cpp);
+On Tue, Jul 16, 2019 at 12:57 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Mon, Jul 15, 2019 at 3:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Brendan Higgins (2019-07-12 01:17:30)
+> > > diff --git a/include/kunit/kunit-stream.h b/include/kunit/kunit-stream.h
+> > > new file mode 100644
+> > > index 0000000000000..a7b53eabf6be4
+> > > --- /dev/null
+> > > +++ b/include/kunit/kunit-stream.h
+> > > @@ -0,0 +1,81 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * C++ stream style string formatter and printer used in KUnit for outputting
+> > > + * KUnit messages.
+> > > + *
+> > > + * Copyright (C) 2019, Google LLC.
+> > > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > > + */
 > > > +
-> > > +	return *(u32 *)&buffer[src_offset];
+> > > +#ifndef _KUNIT_KUNIT_STREAM_H
+> > > +#define _KUNIT_KUNIT_STREAM_H
+> > > +
+> > > +#include <linux/types.h>
+> > > +#include <kunit/string-stream.h>
+> > > +
+> > > +struct kunit;
+> > > +
+> > > +/**
+> > > + * struct kunit_stream - a std::stream style string builder.
+> > > + *
+> > > + * A std::stream style string builder. Allows messages to be built up and
+> > > + * printed all at once.
+> > > + */
+> > > +struct kunit_stream {
+> > > +       /* private: internal use only. */
+> > > +       struct kunit *test;
+> > > +       const char *level;
+> >
+> > Is the level changed? See my comment below, but I wonder if this whole
+> > struct can go away and the wrappers can just operate on 'struct
+> > string_stream' instead.
+>
+> I was inclined to agree with you when I first read your comment, but
+> then I thought about the case that someone wants to add in a debug
+> message (of which I currently have none). I think under most
+> circumstances a user of kunit_stream would likely want to pick a
+> default verbosity that maybe I should provide, but may still want
+> different verbosity levels.
+>
+> The main reason I want to keep the types separate, string_stream vs.
+> kunit_stream, is that they are intended to be used differently.
+> string_stream is just a generic string builder. If you are using that,
+> you are expecting to see someone building the string at some point and
+> then doing something interesting with it. kunit_stream really tells
+> you specifically that KUnit is putting together a message to
+> communicate something to a user of KUnit. It is really used in a very
+> specific way, and I wouldn't want to generalize its usage beyond how
+> it is currently used. I think in order to preserve the author's
+> intention it adds clarity to keep the types separate regardless of how
+> similar they might be in reality.
+>
+> > > +       struct string_stream *internal_stream;
+> > > +};
+> > > diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
+> > > new file mode 100644
+> > > index 0000000000000..8bea1f22eafb5
+> > > --- /dev/null
+> > > +++ b/kunit/kunit-stream.c
+> > > @@ -0,0 +1,123 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * C++ stream style string formatter and printer used in KUnit for outputting
+> > > + * KUnit messages.
+> > > + *
+> > > + * Copyright (C) 2019, Google LLC.
+> > > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > > + */
+> > > +
+> > > +#include <kunit/test.h>
+> > > +#include <kunit/kunit-stream.h>
+> > > +#include <kunit/string-stream.h>
+> > > +
+> > > +void kunit_stream_add(struct kunit_stream *kstream, const char *fmt, ...)
+> > > +{
+> > > +       va_list args;
+> > > +       struct string_stream *stream = kstream->internal_stream;
+> > > +
+> > > +       va_start(args, fmt);
+> > > +
+> > > +       if (string_stream_vadd(stream, fmt, args) < 0)
+> > > +               kunit_err(kstream->test,
+> > > +                         "Failed to allocate fragment: %s\n",
+> > > +                         fmt);
+> > > +
+> > > +       va_end(args);
 > > > +}
 > > > +
-> > >  /**
-> > >   * compute_crc - Compute CRC value on output frame
-> > >   *
-> > > - * @vaddr_out: address to final framebuffer
-> > > + * @vaddr: address to final framebuffer
-> > >   * @composer: framebuffer's metadata
-> > >   *
-> > >   * returns CRC value computed using crc32 on the visible portion of
-> > >   * the final framebuffer at vaddr_out
-> > >   */
-> > > -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
-> > > +static uint32_t compute_crc(const u8 *vaddr,
-> > > +			    const struct vkms_composer *composer)
+> > > +void kunit_stream_append(struct kunit_stream *kstream,
+> > > +                               struct kunit_stream *other)
+> > > +{
+> > > +       struct string_stream *other_stream = other->internal_stream;
+> > > +       const char *other_content;
+> > > +
+> > > +       other_content = string_stream_get_string(other_stream);
+> > > +
+> > > +       if (!other_content) {
+> > > +               kunit_err(kstream->test,
+> > > +                         "Failed to get string from second argument for appending\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       kunit_stream_add(kstream, other_content);
+> > > +}
+> >
+> > Why can't this function be implemented in the string_stream API? Seems
+> > valid to want to append one stream to another and that isn't
+> > kunit_stream specific.
+>
+> Fair point. Will do.
+>
+> > > +
+> > > +void kunit_stream_clear(struct kunit_stream *kstream)
+> > > +{
+> > > +       string_stream_clear(kstream->internal_stream);
+> > > +}
+> > > +
+> > > +void kunit_stream_commit(struct kunit_stream *kstream)
+> > > +{
+> > > +       struct string_stream *stream = kstream->internal_stream;
+> > > +       struct string_stream_fragment *fragment;
+> > > +       struct kunit *test = kstream->test;
+> > > +       char *buf;
+> > > +
+> > > +       buf = string_stream_get_string(stream);
+> > > +       if (!buf) {
+> > > +               kunit_err(test,
+> > > +                         "Could not allocate buffer, dumping stream:\n");
+> > > +               list_for_each_entry(fragment, &stream->fragments, node) {
+> > > +                       kunit_err(test, fragment->fragment);
+> > > +               }
+> > > +               kunit_err(test, "\n");
+> > > +               goto cleanup;
+> > > +       }
+> > > +
+> > > +       kunit_printk(kstream->level, test, buf);
+> > > +       kfree(buf);
+> > > +
+> > > +cleanup:
+> >
+> > Drop the goto and use an 'else' please.
+>
+> Will do.
+>
+> > > +       kunit_stream_clear(kstream);
+> > > +}
+> > > +
+> > > +static int kunit_stream_init(struct kunit_resource *res, void *context)
+> > > +{
+> > > +       struct kunit *test = context;
+> > > +       struct kunit_stream *stream;
+> > > +
+> > > +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
+> > > +       if (!stream)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       res->allocation = stream;
+> > > +       stream->test = test;
+> > > +       stream->internal_stream = alloc_string_stream(test);
+> > > +
+> > > +       if (!stream->internal_stream)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static void kunit_stream_free(struct kunit_resource *res)
+> > > +{
+> > > +       struct kunit_stream *stream = res->allocation;
+> > > +
+> > > +       if (!string_stream_is_empty(stream->internal_stream)) {
+> > > +               kunit_err(stream->test,
+> > > +                         "End of test case reached with uncommitted stream entries\n");
+> > > +               kunit_stream_commit(stream);
+> > > +       }
+> > > +}
+> > > +
+> >
+> > Nitpick: Drop this extra newline.
+>
+> Oops, nice catch.
+
+Not super important, but I don't want you to think that I am ignoring
+you. I think you must have unintentionally deleted the last function
+in this file, or maybe you are referring to something that I am just
+not seeing, but I don't see the extra newline here.
+
+> > > diff --git a/kunit/test.c b/kunit/test.c
+> > > index f165c9d8e10b0..29edf34a89a37 100644
+> > > --- a/kunit/test.c
+> > > +++ b/kunit/test.c
+> > > @@ -120,6 +120,12 @@ static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> > >                               test_case->name);
+> > >  }
+> > >
+> > > +void kunit_fail(struct kunit *test, struct kunit_stream *stream)
+> >
+> > Why doesn't 'struct kunit' have a 'struct kunit_stream' inside of it? It
+> > seems that the two are highly related, to the point that it might just
+> > make sense to have
+>
+> A `struct kunit_stream` is usually associated with a message that is
+> being built up over time like maybe an expectation; it is meant to
+> capture the idea that we might want to send some information out to
+> the user pertaining to some thing 'X', but we aren't sure that we
+> actually want to send it until 'X' is complete, but do to the nature
+> of 'X' it is easier to start constructing the message before 'X' is
+> complete.
+>
+> Consider a complicated expectation, there might be multiple conditions
+> that satisfy it and multiple conditions which could make it fail. As
+> we start exploring the input to the expectation we gain information
+> that we might want to share back with the user if the expectation were
+> to fail and we might get that information before we are actually sure
+> that the expectation does indeed fail.
+>
+> When we first step into the expectation we immediately know the
+> function name, file name, and line number where we are called and
+> would want to put that information into any message we would send to
+> the user about this expectation. Next, we might want to check a
+> property of the input, it may or may not be enough information on its
+> own for the expectation to fail, but we want to share the result of
+> the property check with the user regardless, BUT only if the
+> expectation as a whole fails.
+>
+> Hence, we can have multiple `struct kunit_stream`s associated with a
+> `struct kunit` active at any given time.
+>
+> >         struct kunit {
+> >                 struct kunit_stream stream;
+> >                 ...
+> >         };
+> >
+> > > +{
+> > > +       kunit_set_failure(test);
+> > > +       kunit_stream_commit(stream);
+> >
+> > And then this function can just take a test and the stream can be
+> > associated with the test directly. Use container_of() to get to the test
+> > when the only pointer in hand is for the stream too.
+>
+> Unfortunately that wouldn't work. See my above explanation.
+>
+> > > +}
+> > > +
+> > >  void kunit_init_test(struct kunit *test, const char *name)
 > > >  {
-> > > -	int i, j, src_offset;
-> > > +	int x, y;
-> > >  	int x_src = composer->src.x1 >> 16;
-> > >  	int y_src = composer->src.y1 >> 16;
-> > >  	int h_src = drm_rect_height(&composer->src) >> 16;
-> > >  	int w_src = drm_rect_width(&composer->src) >> 16;
-> > > -	u32 crc = 0;
-> > > +	u32 crc = 0, pixel = 0;
-> > >  
-> > > -	for (i = y_src; i < y_src + h_src; ++i) {
-> > > -		for (j = x_src; j < x_src + w_src; ++j) {
-> > > -			src_offset = composer->offset
-> > > -				     + (i * composer->pitch)
-> > > -				     + (j * composer->cpp);
-> > > +	for (y = y_src; y < y_src + h_src; ++y) {
-> > > +		for (x = x_src; x < x_src + w_src; ++x) {
-> > >  			/* XRGB format ignores Alpha channel */
-> > > -			memset(vaddr_out + src_offset + 24, 0,  8);
-> > > -			crc = crc32_le(crc, vaddr_out + src_offset,
-> > > -				       sizeof(u32));
-> > > +			pixel = get_pixel_from_buffer(x, y, vaddr, composer);
-> > > +			bitmap_clear((void *)&pixel, 0, 8);
-> > > +			crc = crc32_le(crc, (void *)&pixel, sizeof(u32));
-> > >  		}
-> > >  	}
-> > >  
-> > > -- 
-> > > 2.21.0
-> > 
-> > -- 
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> 
-> -- 
-> Rodrigo Siqueira
-> https://siqueira.tech
-
-
-
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> > >         mutex_init(&test->lock);
+>
+> Thanks!
