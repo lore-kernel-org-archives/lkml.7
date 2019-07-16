@@ -2,141 +2,145 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCE7C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F01C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C187B20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5B02053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dyO6nWGg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nS2o8Fm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfGPE6A (ORCPT
+        id S1730233AbfGPE6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 00:58:00 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:54087 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726463AbfGPE57 (ORCPT
+        Tue, 16 Jul 2019 00:58:30 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44390 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfGPE63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 00:57:59 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id 71BE0581;
-        Tue, 16 Jul 2019 00:57:56 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 16 Jul 2019 00:57:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm3; bh=SuEgE+L8xMm3Mly0DfRGwh3ZCrBzT
-        Wh6utlTQgfTteo=; b=dyO6nWGgGOQD37tisW9PUE+f4G/QSvkiU+Pg+WFSdXglK
-        fekt0cdZ7E88u0z8AO8TqwD85+MSNnfk4fJhwe8Hlf9Ix+0f26Pe5wpReAwE3Gs2
-        ohg9D5f5d2KKTIdJZrLQM12fHGLkDdmYEzaYt/s2MYw8x9bHLu0VomAEkUDr3LZG
-        XrYXYONf2S7CBG1hiNgrWdQPtHs5HnuqhAmtSrYbNecokW9mg53yCE+ph+HQtuMv
-        4YyX/h8b5E4oJNRcui5JSCC4yPnulRKYlhM5aaA8VvdctIK15oxCBNHSLi5IVK4K
-        02cORbbdAhhgu3iGwJ+nd0Y4Vz07uEX0Rq1JEhnRg==
-X-ME-Sender: <xms:U1ktXSoua7xhjOJaXO1-FzH9beo_tsN9ye09MtCF_zVMuXh-8gyXxg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrheelgdekjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkgggtugesthdtredttddtvdenucfhrhhomhepuegvnhhjrghmihhn
-    ucfuhhgvrhhmrghnuceosggvnhhjrghmihhnsegsvghnshhhvghrmhgrnhdrihhoqeenuc
-    fkphepuddvledrudeiuddrvddvledrleeinecurfgrrhgrmhepmhgrihhlfhhrohhmpegs
-    vghnjhgrmhhinhessggvnhhshhgvrhhmrghnrdhiohenucevlhhushhtvghrufhiiigvpe
-    dt
-X-ME-Proxy: <xmx:U1ktXXnBt5R05clrAqJuD-ck_DiTR9rhsov0LfoaAqHL2bEGub1zkA>
-    <xmx:U1ktXcRoi2XpNP7uurWUbaK6eQkgAhQxyeQxn3fwLzBBd-wDn6-yzA>
-    <xmx:U1ktXZDr4S1oTfbvCe2VIZKEIT_o25PMVp7XTs36IRxleGsKkpnm4w>
-    <xmx:VFktXS6CElwKM3ER2q2EeXWfnqGunD8-kLS9t3GDFsZ3thLawkAjPQ>
-Received: from valkyrie-mobile.localdomain (resnet-netreg-351.dynamic.rpi.edu [129.161.229.96])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6C183380087;
-        Tue, 16 Jul 2019 00:57:55 -0400 (EDT)
-Date:   Tue, 16 Jul 2019 00:57:55 -0400
-From:   Benjamin Sherman <benjamin@bensherman.io>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vt6656: change alignment to match parenthesis
-Message-ID: <20190716045754.fivh5n44bybe2uce@valkyrie-mobile.localdomain>
+        Tue, 16 Jul 2019 00:58:29 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p17so19308766wrf.11;
+        Mon, 15 Jul 2019 21:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=DAH6dKwCyAbLlDOpi+3YA8QHS8AaWmvdyvdCSPTEF0Y=;
+        b=nS2o8Fm9M4Qr66Q30/2C6MH1XD+GoJrUGw89RjxqqLMPy/N0vMS4aNGEcaxYAJnIX5
+         SMPnUb15ISTTidfbY8LA1hNqNSHrVaySeORVyNQIozPHNfJbfYm1KmEWWBGaRpMyedso
+         S2zxddiS33osopW5ZauwrcBDxU4V2MLZfCjvABdQ3x5s1cg8fnlKIR3+w30ChaFjxvJP
+         JBW5gE9xk9NHewAXNzvH8+ZLk+mRQ51auejRMC3/N52dzZztGdUrVNlJviAPQJU972ml
+         2+f02WEkshrB/oh97WenpnRP9UJjeamWtgIy1jp0ssFoe7lcA2RDYAy5O4KSpAxPvQ+0
+         3vyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=DAH6dKwCyAbLlDOpi+3YA8QHS8AaWmvdyvdCSPTEF0Y=;
+        b=RmmCjkJkQXEPSLvWCtAXnMTlLyWzDuMqbg1HlZTMRsEnf9TrGmAR+1LGrGHW4fjsZI
+         Z4m8B7aWsK//ba9Mk7/NdcCCn6leFvnoadM6OgbOb1ioy4xKM9sN5VSYwPFu8BZV/Uml
+         vOYAr9eVUEYd22HwMN7Ssv2Ks5DQ+oor0eHfDJrvpcuyDwc/Dcnt7ZxnqGihv9sMgAEf
+         MMAxHpX00xx0n2QoqF2Jp16y+HfJrjmy8kdIR4/deAqIGAZ/vVtj9mVMmft5i16nnzSv
+         lTkjee6+HunwRfMsuH6q/LjClFXiy7MroqPlVDjxh9xile4/jsMXCOm7FMJFQMRrUnQX
+         SB0A==
+X-Gm-Message-State: APjAAAWabuB5yBdhyzp56Ma5nhmz75SLeQWmJatAWWsA9K62v68vS55d
+        zgv5R78DYJwXLIlc8Wbco54=
+X-Google-Smtp-Source: APXvYqzr38ksHGsl/DwWofhZwIvO6atz4K0RW1TCfzVhr13qTsXUsftSgaCT7giy8X8bGABmOvhmgw==
+X-Received: by 2002:a5d:468a:: with SMTP id u10mr33323669wrq.177.1563253107137;
+        Mon, 15 Jul 2019 21:58:27 -0700 (PDT)
+Received: from felia ([2001:16b8:2d8a:7300:3de9:10dd:67c8:ed32])
+        by smtp.gmail.com with ESMTPSA id j10sm32668442wrd.26.2019.07.15.21.58.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 21:58:26 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Tue, 16 Jul 2019 06:58:15 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] PCI: Remove functions not
+ called in include/linux/pci.h
+In-Reply-To: <20190715203416.37547-1-skunberg.kelsey@gmail.com>
+Message-ID: <alpine.DEB.2.21.1907160653150.3426@felia>
+References: <20190715181312.31403-1-skunberg.kelsey@gmail.com> <20190715203416.37547-1-skunberg.kelsey@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change indentation to match parentheses.  This complies with the Linux
-kernel coding style and improves readability.
 
-Signed-off-by: Benjamin Sherman <benjamin@bensherman.io>
----
- drivers/staging/vt6656/rxtx.c    | 10 +++++-----
- drivers/staging/vt6656/usbpipe.c |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/vt6656/rxtx.c b/drivers/staging/vt6656/rxtx.c
-index 9def0748ffee..4e9cfacf75f2 100644
---- a/drivers/staging/vt6656/rxtx.c
-+++ b/drivers/staging/vt6656/rxtx.c
-@@ -287,12 +287,12 @@ static u16 vnt_rxtx_datahead_g(struct vnt_usb_send_context *tx_context,
- 		buf->duration_a = vnt_get_duration_le(priv,
- 						tx_context->pkt_type, need_ack);
- 		buf->duration_b = vnt_get_duration_le(priv,
--							PK_TYPE_11B, need_ack);
-+						      PK_TYPE_11B, need_ack);
- 	}
- 
- 	buf->time_stamp_off_a = vnt_time_stamp_off(priv, rate);
- 	buf->time_stamp_off_b = vnt_time_stamp_off(priv,
--					priv->top_cck_basic_rate);
-+						   priv->top_cck_basic_rate);
- 
- 	tx_context->tx_hdr_size = vnt_mac_hdr_pos(tx_context, &buf->hdr);
- 
-@@ -325,7 +325,7 @@ static u16 vnt_rxtx_datahead_g_fb(struct vnt_usb_send_context *tx_context,
- 
- 	buf->time_stamp_off_a = vnt_time_stamp_off(priv, rate);
- 	buf->time_stamp_off_b = vnt_time_stamp_off(priv,
--						priv->top_cck_basic_rate);
-+						   priv->top_cck_basic_rate);
- 
- 	tx_context->tx_hdr_size = vnt_mac_hdr_pos(tx_context, &buf->hdr);
- 
-@@ -655,7 +655,7 @@ static u16 vnt_rxtx_ab(struct vnt_usb_send_context *tx_context,
- 	u8 need_ack = tx_context->need_ack;
- 
- 	buf->rrv_time = vnt_rxtx_rsvtime_le16(priv, tx_context->pkt_type,
--			frame_len, current_rate, need_ack);
-+					      frame_len, current_rate, need_ack);
- 
- 	if (need_mic)
- 		head = &tx_head->tx_ab.tx.mic.head;
-@@ -1036,7 +1036,7 @@ static int vnt_beacon_xmit(struct vnt_private *priv, struct sk_buff *skb)
- 
- 		/* Get Duration and TimeStampOff */
- 		short_head->duration = vnt_get_duration_le(priv,
--						PK_TYPE_11B, false);
-+							   PK_TYPE_11B, false);
- 		short_head->time_stamp_off =
- 			vnt_time_stamp_off(priv, current_rate);
- 	}
-diff --git a/drivers/staging/vt6656/usbpipe.c b/drivers/staging/vt6656/usbpipe.c
-index ff351a7a0876..d3304df6bd53 100644
---- a/drivers/staging/vt6656/usbpipe.c
-+++ b/drivers/staging/vt6656/usbpipe.c
-@@ -216,7 +216,7 @@ static void vnt_submit_rx_urb_complete(struct urb *urb)
- 		}
- 
- 		urb->transfer_buffer = skb_put(rcb->skb,
--						skb_tailroom(rcb->skb));
-+					       skb_tailroom(rcb->skb));
- 	}
- 
- 	if (usb_submit_urb(urb, GFP_ATOMIC)) {
--- 
-2.22.0
+On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
 
+> Remove the following uncalled functions from include/linux/pci.h:
+> 
+>         pci_block_cfg_access()
+>         pci_block_cfg_access_in_atomic()
+>         pci_unblock_cfg_access()
+> 
+> Functions were added in commit fb51ccbf217c ("PCI: Rework config space
+> blocking services"), though no callers were added. Code continues to be
+> unused and should be removed.
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> ---
+> 
+> Changes since v1:
+>   - Fixed Signed-off-by line to show full name
+> 
+> Changes since v2:
+>   - Change commit message to reference prior commit properly with the
+>     following format:
+> 	commit <12-character sha prefix> ("<commit message>")
+> 
+>  include/linux/pci.h | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index cf380544c700..3c9ba6133bea 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
+>  
+>  static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+>  
+> -static inline void pci_block_cfg_access(struct pci_dev *dev) { }
+> -static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
+> -{ return 0; }
+> -static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
+> -
+>  static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
+>  { return NULL; }
+>  static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
+> -- 
+> 2.20.1
+
+I just checked with elixir on v5.2 that all three identifiers are never 
+referenced beyond its definition in pci.h:
+
+https://elixir.bootlin.com/linux/v5.2/ident/pci_block_cfg_access
+https://elixir.bootlin.com/linux/v5.2/ident/pci_block_cfg_access_in_atomic
+https://elixir.bootlin.com/linux/v5.2/ident/pci_unblock_cfg_access
+
+So, what it is worth:
+
+Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+
+Lukas
+
+> 
+> _______________________________________________
+> Linux-kernel-mentees mailing list
+> Linux-kernel-mentees@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+> 
