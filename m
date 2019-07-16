@@ -2,122 +2,91 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C040DC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B575C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A876F20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D431220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:30:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=duncanthrax.net header.i=@duncanthrax.net header.b="EInCxkcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388637AbfGPTaE (ORCPT
+        id S2388692AbfGPTaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:30:04 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47375 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfGPTaE (ORCPT
+        Tue, 16 Jul 2019 15:30:16 -0400
+Received: from smtp.duncanthrax.net ([89.31.1.170]:49247 "EHLO
+        smtp.duncanthrax.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728858AbfGPTaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:30:04 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 5FE218058B; Tue, 16 Jul 2019 21:29:50 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 21:30:01 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, jacek.anaszewski@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org
-Subject: Re: [PATCH 1/6] leds: apu: drop superseeded apu2/3 led support
-Message-ID: <20190716193001.GG10400@amd>
-References: <1563202653-20994-1-git-send-email-info@metux.net>
- <1563202653-20994-2-git-send-email-info@metux.net>
+        Tue, 16 Jul 2019 15:30:15 -0400
+X-Greylist: delayed 2219 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jul 2019 15:30:13 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=duncanthrax.net; s=dkim; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date;
+        bh=dKHH4h/q3QG6V+WLSyHa/70tf/GFmuqAjtSnkGY7D2U=; b=EInCxkcX8/U7HJUwQX6zQawdSA
+        3En7UuZMxWmfpQQF+KD4KM1ZhQkrsY8ilze4mu+wmEjt4CDQ5zYqbUN3KgJVT6QaszCyuS3hR9bBO
+        qU7MV+VzceEfmsLdf7RLymVUnFZS5OewOtK76S4aHj4tYo94hhMXGfxzrzYwOcQMJw1Y=;
+Received: from [134.3.44.134] (helo=t470p.stackframe.org)
+        by smtp.eurescom.eu with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.86_2)
+        (envelope-from <svens@stackframe.org>)
+        id 1hnSZc-0000Wk-IO; Tue, 16 Jul 2019 20:53:12 +0200
+Date:   Tue, 16 Jul 2019 20:53:10 +0200
+From:   Sven Schnelle <svens@stackframe.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>, mpe@ellerman.id.au
+Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
+Message-ID: <20190716185310.GA12537@t470p.stackframe.org>
+References: <20190714192205.27190-1-christian@brauner.io>
+ <20190714192205.27190-2-christian@brauner.io>
+ <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+ <20190716130631.tohj4ub54md25dys@brauner.io>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="NPukt5Otb9an/u20"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563202653-20994-2-git-send-email-info@metux.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190716130631.tohj4ub54md25dys@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---NPukt5Otb9an/u20
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[Adding Helge to CC list]
 
-On Mon 2019-07-15 16:57:28, Enrico Weigelt, metux IT consult wrote:
-> From: Enrico Weigelt <info@metux.net>
->=20
-> This driver only supports gpio-attached LEDs on apu1/2/3 boards,
-> but neither gpio's themselves, nor other gpio-attached devices
-> (eg. front button).
->=20
-> For apu2+ a newer, more complete driver exists, based on a generic
-> driver for the AMD SOCs gpio-controller, supporting LEDs as well
-> other devices. Therefore these boards don't need legacy support
-> from this driver anymore.
->=20
-> Both drivers claim the same device, so only one driver may exist
-> in a system, putting distros in the position to decide between
-> either apu2+ keys or apu1 led support.
->=20
-> Therefore drop the apu2+ led support from the old driver, solve
-> the conflict and reduce unnecessary code.
->=20
-> Signed-off-by: Enrico Weigelt <info@metux.net>
-> ---
->  drivers/leds/Kconfig    |   5 +-
->  drivers/leds/leds-apu.c | 124 +++---------------------------------------=
-------
->  2 files changed, 10 insertions(+), 119 deletions(-)
->=20
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index b0fdeef..f7a3dd7 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -74,9 +74,12 @@ config LEDS_APU
->  	depends on LEDS_CLASS
->  	depends on X86 && DMI
->  	help
-> -	  This driver makes the PC Engines APU/APU2/APU3 front panel LEDs
-> +	  This driver makes the PC Engines APU1 front panel LEDs
->  	  accessible from userspace programs through the LED subsystem.
-> =20
-> +	  If you're looking for APU2/3, use the pcengines-apu2 driver.
-> +	  (symbol CONFIG_PCENGINES_APU2)
-> +
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called leds-apu.
-> =20
+On Tue, Jul 16, 2019 at 03:06:33PM +0200, Christian Brauner wrote:
+> On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
+> > I think Vasily already has a clone3 patch for s390x with 435. 
+> 
+> A quick follow-up on this. Helge and Michael have asked whether there
+> are any tests for clone3. Yes, there will be and I try to have them
+> ready by the end of the this or next week for review. In the meantime I
+> hope the following minimalistic test program that just verifies very
+> very basic functionality (It's not pretty.) will help you test:
+> [..]
 
-Ok, so I understand the reasons, but people updating from old kernels
-(make oldconfig) will see nothing and their LEDs will stop working.
+On PA-RISC this seems to work fine with Helge's patch to wire up the
+clone3 syscall.
 
-Can we do something to help them?
+root@c3750:/# clonetest
+Parent process received child's pid 84 as return value
+Parent process received child's pidfd 3
+Parent process received child's pid 84 as return argument
+Child process with pid 84
+root@c3750:/# echo $?
+0
 
-Rest is ok.
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---NPukt5Otb9an/u20
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0uJbkACgkQMOfwapXb+vJinQCgwRl5ed75Fdyxo+6W2ijBiMDS
-Pc0An2UzFuvrMmY7nvINhfNApS6FxUXD
-=wc14
------END PGP SIGNATURE-----
-
---NPukt5Otb9an/u20--
+Regards
+Sven
