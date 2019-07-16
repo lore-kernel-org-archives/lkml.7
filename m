@@ -2,71 +2,104 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B59C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501F5C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3327620693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268A420693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:35:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZuO3BM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbfGPNfg (ORCPT
+        id S2387706AbfGPNf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:35:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32872 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726039AbfGPNfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:35:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3FADBAD8A;
-        Tue, 16 Jul 2019 13:35:35 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 15:35:34 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Vincent Whitchurch <rabinv@axis.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] printk: Do not lose last line in kmsg buffer dump
-Message-ID: <20190716133534.oyau67ocjvfegkex@pathway.suse.cz>
-References: <20190711142937.4083-1-vincent.whitchurch@axis.com>
- <20190712091251.or4bitunknzhrigf@pathway.suse.cz>
- <20190712092253.GA7922@jagdpanzerIV>
- <20190712131158.5wgy5wxjtqn6uqly@pathway.suse.cz>
- <20190713060300.GA1038@tigerII.localdomain>
+        Tue, 16 Jul 2019 09:35:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46470 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfGPNfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:35:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so19990126ljg.13;
+        Tue, 16 Jul 2019 06:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JczOqdcOozRgJZn27WRtXECSpKpZWnFeQlOK21NqJTI=;
+        b=QZuO3BM9QL/bCfAs6NU0VAMucHxBgR846CrL/8fvzvPFJghkhO/b+F4hfC9b2MQP/T
+         q/RbyLnXV1oT9Pig6TN97yK4XiMKWQ5CGjc/av1crPmTHVTgBUa40Okg9biU1mvODdD0
+         HSOOb/OtD0UPtu+ovU7PgA6GHz2ewEpSrNk8rDRUca5Rjk9rv8pweR9p5Kde4H5vQZlz
+         nolXdQ6K/r/KFyAPxEj/TX5D3bDgQq0y1mksTC3/7iUr9Bxx/Yi88U5X7hPkdc+yvp9u
+         MWbagDGPuxMZOYBYCQPyLPENalhRxDD4yaxDWriolyR9RJIrmZounSCi1YnRj2soVBpp
+         xpWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JczOqdcOozRgJZn27WRtXECSpKpZWnFeQlOK21NqJTI=;
+        b=gsWOw9caFH0wd5BCzQQoFY/yu5MQvW//9ctU0I6RyMTkgeuQAXMIE6RJXfh8Rj3Svg
+         EtbZHu/xFlRU8XNDduuT7chx6ztjszw667tt7pSMRkcjDDguByPyR7Dbuwxk+FJ4LlSb
+         pbTDAKfsTDdz/xsjuZxS3qiPOvfVm3d24pZhKLi9sNqAj7zm8ZJzkNz01EllnmX++wwE
+         TnMjYyDwA2CCPQwJU8Ka5tbZsTAgJix2TB2lNS5TtyfjBfAJratPUyVF3suEjyj7R43T
+         Filn3S1ylGzPWX+fQpeEjnLBY1vIAPIWzOYt4U9KtAc4yFUapBLVikuzIcTb08sqlInX
+         wINQ==
+X-Gm-Message-State: APjAAAWl9O7SKqq/D5xq4DF80rwrvLhPr650hhogPjQbDQHZu4PPF7m7
+        uUIVAHbgRpVYRk4G/qet7nxWLwEE
+X-Google-Smtp-Source: APXvYqx/xOnw9CBAPawQq8tfPCiKknL+ChvYP0A6lzl+WyHt7N847pLg2hkxymRPmNwV3xygfZMsDg==
+X-Received: by 2002:a2e:b0c4:: with SMTP id g4mr2424477ljl.155.1563284152855;
+        Tue, 16 Jul 2019 06:35:52 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id u18sm3761581ljj.32.2019.07.16.06.35.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 06:35:52 -0700 (PDT)
+Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
+ functions
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190707223303.6755-1-digetx@gmail.com>
+ <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
+ <20190707223303.6755-13-digetx@gmail.com>
+ <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b7da3fa2-00d1-5bd6-408c-202c85be917d@gmail.com>
+Date:   Tue, 16 Jul 2019 16:35:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713060300.GA1038@tigerII.localdomain>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2019-07-13 15:03:00, Sergey Senozhatsky wrote:
-> On (07/12/19 15:11), Petr Mladek wrote:
-> > > Looks correct to me as well.
-> > > 
-> > > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> > 
-> > The patch has been committed into printk.git, branch for-5.3-fixes.
-> > 
-> > I am still a bit undecided whether to send pull request the following
-> > week or wait for 5.4. On one hand, it is very old bug (since 3.5).
-> > On the other hand, I think that it was not reported/fixed earlier
-> > only because it was hard to notice. And loosing the very last message
-> > is quite pity.
+16.07.2019 15:26, Chanwoo Choi пишет:
+> Hi Dmitry,
 > 
-> My call would be - let's wait till next merge window.
+> I'm not sure that it is necessary.
+> As I knew, usally, the 'inline' is used on header file
+> to define the empty functions.
+> 
+> Do we have to change it with 'inline' keyword?
 
-Thanks for your opinion.
+The 'inline' attribute tells compiler that instead of jumping into the
+function, it should take the function's code and replace the function's
+invocation with that code. This is done in order to help compiler
+optimize code properly, please see [1]. There is absolutely no need to
+create a function call into a function that consists of a single
+instruction.
 
-I'll leave it for 5.4 unless there is another urgent fix that would
-trigger earlier pull request.
-
-Best Regards,
-Petr
+[1] https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/Inline.html
