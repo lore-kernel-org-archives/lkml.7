@@ -2,181 +2,139 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A51C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3481C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB51221721
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iq/IVh/f"
+	by mail.kernel.org (Postfix) with ESMTP id 75D6C21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbfGPJY5 (ORCPT
+        id S1732194AbfGPJZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:24:57 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46985 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPJY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:24:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d4so18904968edr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zDo+eWmhtTV8VZruvHAv9SmmLeaVvLllVnL2EEq/1Fw=;
-        b=iq/IVh/fNvRMT2I9A/QNh3+yF9u1UrtSDEE5nlnN+E5wSnoO0g8wujwp5DraAOQj/x
-         q5ZQk9jMRIJtDPWbNs+Izn/+LI6GHhvfmto8XV0lysvrvb8FbU/q8d4q5AGPN8XyAd/u
-         I4HdbEX6UxulgC3MXpsn84QXNdagfDvs/QeV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=zDo+eWmhtTV8VZruvHAv9SmmLeaVvLllVnL2EEq/1Fw=;
-        b=KEKUJT/gox7bgc3k/VHGrKIussKT5zxkEp0NzcDccQfZhMpQ7Id4MLq6rX+RGJ6AVW
-         oVjDBb4+3SBnpVZkAnyRbvZ4h+vp8ts3Du+YMG6f24yDhRFjiBXLGieHEQEQrSmPkk+F
-         sBSFCYrpOpqgyhkhDSS+hRCDGmUkUFw3oaoP2tbS5JgKGddTbBwWd5px215ODpLkEjyz
-         fZikrxTkJQDniQ0viXYB7ggUCstodfeMUoIiQv4ZVhQ8jm9Ilq5HTiQXyibPdeDaMpWC
-         GCzMGgHQEQT5w3SBNdi2IPX6K4d4LRX0e9h5DSqFPblJw/ONIejOHCjZeGDSMemMi9To
-         NaSQ==
-X-Gm-Message-State: APjAAAW8d12FoOdgMCPnCoJJ5XHgV6eX4zgrb90Q6Hm8LdoMgbfsDWJR
-        GlRDPEw8Nt5tqdqLKayp4GU=
-X-Google-Smtp-Source: APXvYqy8TYWGSmoRD93Iah2eYrZZToh7cQL4GAdEZ/YgeilZWr9vJGPiBFDokpEWtB6tW8xCnLaPDQ==
-X-Received: by 2002:a50:9999:: with SMTP id m25mr28327908edb.183.1563269095678;
-        Tue, 16 Jul 2019 02:24:55 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id k8sm5739035edr.31.2019.07.16.02.24.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 02:24:55 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 11:24:53 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Qian Cai <cai@lca.pw>
-Cc:     emil.l.velikov@gmail.com, maarten.lankhorst@linux.intel.com,
-        maxime.ripard@bootlin.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpu/drm: fix a few kernel-doc "/**" mark warnings
-Message-ID: <20190716092453.GA15868@phenom.ffwll.local>
-Mail-Followup-To: Qian Cai <cai@lca.pw>, emil.l.velikov@gmail.com,
-        maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
-        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <1563198173-7317-1-git-send-email-cai@lca.pw>
+        Tue, 16 Jul 2019 05:25:04 -0400
+Received: from mga01.intel.com ([192.55.52.88]:26805 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726997AbfGPJZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:25:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 02:25:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,497,1557212400"; 
+   d="scan'208";a="172490719"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.128.254]) ([10.249.128.254])
+  by orsmga006.jf.intel.com with ESMTP; 16 Jul 2019 02:25:01 -0700
+Subject: Re: [PATCH AUTOSEL 5.2 190/249] cpufreq: Avoid calling
+ cpufreq_verify_current_freq() from handle_update()
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+References: <20190715134655.4076-1-sashal@kernel.org>
+ <20190715134655.4076-190-sashal@kernel.org>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <b43e57ea-c5b8-b4c4-f58f-405e649aada1@intel.com>
+Date:   Tue, 16 Jul 2019 11:25:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563198173-7317-1-git-send-email-cai@lca.pw>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190715134655.4076-190-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 09:42:53AM -0400, Qian Cai wrote:
-> The opening comment mark "/**" is reserved for kernel-doc comments, so
-> it will generate warnings for comments that are not kernel-doc with
-> "make W=1". For example,
-> 
-> drivers/gpu/drm/drm_memory.c:2: warning: Cannot understand  * \file
-> drm_memory.c
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-
-Applied to drm-misc-next for 5.4.
--Daniel
-
+On 7/15/2019 3:45 PM, Sasha Levin wrote:
+> From: Viresh Kumar <viresh.kumar@linaro.org>
+>
+> [ Upstream commit 70a59fde6e69d1d8579f84bf4555bfffb3ce452d ]
+>
+> On some occasions cpufreq_verify_current_freq() schedules a work whose
+> callback is handle_update(), which further calls cpufreq_update_policy()
+> which may end up calling cpufreq_verify_current_freq() again.
+>
+> On the other hand, when cpufreq_update_policy() is called from
+> handle_update(), the pointer to the cpufreq policy is already
+> available, but cpufreq_cpu_acquire() is still called to get it in
+> cpufreq_update_policy(), which should be avoided as well.
+>
+> To fix these issues, create a new helper, refresh_frequency_limits(),
+> and make both handle_update() call it cpufreq_update_policy().
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> [ rjw: Rename reeval_frequency_limits() as refresh_frequency_limits() ]
+> [ rjw: Changelog ]
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/gpu/drm/drm_agpsupport.c  | 2 +-
->  drivers/gpu/drm/drm_dma.c         | 2 +-
->  drivers/gpu/drm/drm_legacy_misc.c | 2 +-
->  drivers/gpu/drm/drm_lock.c        | 2 +-
->  drivers/gpu/drm/drm_memory.c      | 2 +-
->  drivers/gpu/drm/drm_scatter.c     | 2 +-
->  drivers/gpu/drm/drm_vm.c          | 2 +-
->  7 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_agpsupport.c b/drivers/gpu/drm/drm_agpsupport.c
-> index 40fba1c04dfc..ef549c95b0b9 100644
-> --- a/drivers/gpu/drm/drm_agpsupport.c
-> +++ b/drivers/gpu/drm/drm_agpsupport.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_agpsupport.c
->   * DRM support for AGP/GART backend
->   *
-> diff --git a/drivers/gpu/drm/drm_dma.c b/drivers/gpu/drm/drm_dma.c
-> index 3f83e2ca80ad..cbfaa2eaab00 100644
-> --- a/drivers/gpu/drm/drm_dma.c
-> +++ b/drivers/gpu/drm/drm_dma.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_dma.c
->   * DMA IOCTL and function support
->   *
-> diff --git a/drivers/gpu/drm/drm_legacy_misc.c b/drivers/gpu/drm/drm_legacy_misc.c
-> index 2fe786839ca8..745eb9939414 100644
-> --- a/drivers/gpu/drm/drm_legacy_misc.c
-> +++ b/drivers/gpu/drm/drm_legacy_misc.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_legacy_misc.c
->   * Misc legacy support functions.
->   *
-> diff --git a/drivers/gpu/drm/drm_lock.c b/drivers/gpu/drm/drm_lock.c
-> index b70058e77a28..2610bff3d539 100644
-> --- a/drivers/gpu/drm/drm_lock.c
-> +++ b/drivers/gpu/drm/drm_lock.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_lock.c
->   * IOCTLs for locking
->   *
-> diff --git a/drivers/gpu/drm/drm_memory.c b/drivers/gpu/drm/drm_memory.c
-> index 132fef8ff1b6..d92f24c308a1 100644
-> --- a/drivers/gpu/drm/drm_memory.c
-> +++ b/drivers/gpu/drm/drm_memory.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_memory.c
->   * Memory management wrappers for DRM
->   *
-> diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
-> index bb829a115fc6..b6d863699d0f 100644
-> --- a/drivers/gpu/drm/drm_scatter.c
-> +++ b/drivers/gpu/drm/drm_scatter.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_scatter.c
->   * IOCTLs to manage scatter/gather memory
->   *
-> diff --git a/drivers/gpu/drm/drm_vm.c b/drivers/gpu/drm/drm_vm.c
-> index 10cf83d569e1..6c74c68f192a 100644
-> --- a/drivers/gpu/drm/drm_vm.c
-> +++ b/drivers/gpu/drm/drm_vm.c
-> @@ -1,4 +1,4 @@
-> -/**
-> +/*
->   * \file drm_vm.c
->   * Memory mapping for DRM
->   *
-> -- 
-> 1.8.3.1
-> 
+>   drivers/cpufreq/cpufreq.c | 26 ++++++++++++++++----------
+>   1 file changed, 16 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index e84bf0eb7239..876a4cb09de3 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1114,13 +1114,25 @@ static int cpufreq_add_policy_cpu(struct cpufreq_policy *policy, unsigned int cp
+>   	return ret;
+>   }
+>   
+> +static void refresh_frequency_limits(struct cpufreq_policy *policy)
+> +{
+> +	struct cpufreq_policy new_policy = *policy;
+> +
+> +	pr_debug("updating policy for CPU %u\n", policy->cpu);
+> +
+> +	new_policy.min = policy->user_policy.min;
+> +	new_policy.max = policy->user_policy.max;
+> +
+> +	cpufreq_set_policy(policy, &new_policy);
+> +}
+> +
+>   static void handle_update(struct work_struct *work)
+>   {
+>   	struct cpufreq_policy *policy =
+>   		container_of(work, struct cpufreq_policy, update);
+> -	unsigned int cpu = policy->cpu;
+> -	pr_debug("handle_update for cpu %u called\n", cpu);
+> -	cpufreq_update_policy(cpu);
+> +
+> +	pr_debug("handle_update for cpu %u called\n", policy->cpu);
+> +	refresh_frequency_limits(policy);
+>   }
+>   
+>   static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+> @@ -2392,7 +2404,6 @@ int cpufreq_set_policy(struct cpufreq_policy *policy,
+>   void cpufreq_update_policy(unsigned int cpu)
+>   {
+>   	struct cpufreq_policy *policy = cpufreq_cpu_acquire(cpu);
+> -	struct cpufreq_policy new_policy;
+>   
+>   	if (!policy)
+>   		return;
+> @@ -2405,12 +2416,7 @@ void cpufreq_update_policy(unsigned int cpu)
+>   	    (cpufreq_suspended || WARN_ON(!cpufreq_update_current_freq(policy))))
+>   		goto unlock;
+>   
+> -	pr_debug("updating policy for CPU %u\n", cpu);
+> -	memcpy(&new_policy, policy, sizeof(*policy));
+> -	new_policy.min = policy->user_policy.min;
+> -	new_policy.max = policy->user_policy.max;
+> -
+> -	cpufreq_set_policy(policy, &new_policy);
+> +	refresh_frequency_limits(policy);
+>   
+>   unlock:
+>   	cpufreq_cpu_release(policy);
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I don't think this is suitable for -stable.
+
+
