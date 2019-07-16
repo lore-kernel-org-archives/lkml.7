@@ -2,105 +2,118 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF71C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881CAC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B2D217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A2B21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563269784;
+	bh=t88nKdjZ2FTiC4ap6ZpayQlOpvnb1vuZBZTw7pcN/zE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aaSUi2XL1k5tTVAT+nMpAD66dxM+t1rHCfLB0WXkIXGHOy0mHR6FE7UI32/H9lupp
+	 KPFQKedf9ZcSurDwmwrYaQY3MkuOJlv2kLPcRDM8DRCnSGyygWXogHIkWLsnewDqoU
+	 jpaYUYNP3ceqQJNlgaKqmoMksprF8ILON5/9tDXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732395AbfGPJei (ORCPT
+        id S1731849AbfGPJgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:34:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2231 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726536AbfGPJei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:34:38 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D5EECC6AC6050D760B87;
-        Tue, 16 Jul 2019 17:34:36 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 16 Jul 2019 17:34:26 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>
-CC:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <gaoxiang25@huawei.com>,
-        <chao@kernel.org>
-Subject: [PATCH v3] staging: erofs: support bmap
-Date:   Tue, 16 Jul 2019 17:32:56 +0800
-Message-ID: <20190716093256.108791-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 16 Jul 2019 05:36:23 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:47017 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfGPJgX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:36:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so20302602ote.13;
+        Tue, 16 Jul 2019 02:36:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+FC2gEuUssDgT4OS9oZYvaF6YcJNLaJUbd2YY7jMw8g=;
+        b=QmCFoo6VCz8IOkHgPSpcoqQWh+6+c5jLwenSihKGXh6DEUTZnFt0hcwjv8jOZwpdsQ
+         Q72RlhXvSAaWtFv+gGjRiInPP5SRQDTIC2jGAxO9Vpovp+IAoSTjrK68x7KruDRgFDmU
+         Gzcoyin4uJ7sDyh6YMHQDwjTbWvQg+1rNghbfZhAIbmW6iCS9P7wJ1cZQJeKrFytGPQ5
+         IDfm3NhlRpYOQU69brga67tl4mqPpHEIea6Goa4nPB4kLxz9CYMfG6zXggNS4pQgqHQ+
+         A/yrDBZTaNxVkCFTpcNqd7WeXlYg4DFZfH6SydWW+0Oy9yNedH8FebtGK5I5BU/qqWCC
+         FsIQ==
+X-Gm-Message-State: APjAAAV403nWomNA1v/kRJhLsgYh68YEc7xOEpesv22Q1TibDoNw/yT6
+        X5qbTvDMYMLYalPj7+i5o6g0POhUALB5/GmMVvc=
+X-Google-Smtp-Source: APXvYqye2+Yv37nNrcFQcvVln6e3m1X/j98CGzS3EPlCaDhA5GjsKAwkzyxHc/KXubRpuEM050HrcaBQEwoNGF3DgEA=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr18293432oto.167.1563269781832;
+ Tue, 16 Jul 2019 02:36:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <20190715203651.GA7513@kroah.com> <20190715214348.81865-1-trong@android.com>
+ <CAJZ5v0gEzZkbeLFtW5yadwxBryvL3vWcUoQTkUy3VkxiTV+UrA@mail.gmail.com>
+ <20190716021102.GA8310@kroah.com> <CAJZ5v0hxKeK-eDEs1rGP0ZYbbCHa0q5=ZPMVCemYVHGL48Q=pg@mail.gmail.com>
+ <20190716083926.GA2505@kroah.com>
+In-Reply-To: <20190716083926.GA2505@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Jul 2019 11:36:10 +0200
+Message-ID: <CAJZ5v0iHoxWoQF5xbmo2Ry0b_vb_sdh9__8aPwugDwx=q_+RWg@mail.gmail.com>
+Subject: Re: [PATCH v4] PM / wakeup: show wakeup sources stats in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>, sspatil@google.com,
+        kaleshsingh@google.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add erofs_bmap() to support FIBMAP ioctl on flatmode inode.
+On Tue, Jul 16, 2019 at 10:39 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jul 16, 2019 at 10:30:48AM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jul 16, 2019 at 4:13 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Jul 15, 2019 at 11:48:27PM +0200, Rafael J. Wysocki wrote:
+> > > > On Mon, Jul 15, 2019 at 11:44 PM Tri Vo <trong@android.com> wrote:
+> > > > >
+> > > > > Userspace can use wakeup_sources debugfs node to plot history of suspend
+> > > > > blocking wakeup sources over device's boot cycle. This information can
+> > > > > then be used (1) for power-specific bug reporting and (2) towards
+> > > > > attributing battery consumption to specific processes over a period of
+> > > > > time.
+> > > > >
+> > > > > However, debugfs doesn't have stable ABI. For this reason, create a
+> > > > > 'struct device' to expose wakeup sources statistics in sysfs under
+> > > > > /sys/class/wakeup/<name>/.
+> > > > >
+> > > > > Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
+> > > > > source statistics in sysfs.
+> > > >
+> > > > I'm not sure if this is really needed, but I'll let Greg decide.
+> > >
+> > > You are right.  Having zillions of config options is a pain, who is
+> > > going to turn this off?
+> > >
+> > > But we can always remove the option before 5.4-rc1, so I'll take this
+> > > as-is for now :)
+> > >
+> > > > Apart from this
+> > > >
+> > > > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >
+> > > thanks for the review!  I'll wait for 5.3-rc1 to come out before adding
+> > > this to my tree.
+> >
+> > So it occurred to me that maybe it's better if I apply it?  After all,
+> > this is PM material. :-)
+>
+> Heh, true, feel free to add:
+>         Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> to the patch then.
 
-Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v3:
-- use erofs_blk_t instead of unsigned int.
-- simply judgment condition.
- drivers/staging/erofs/data.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/drivers/staging/erofs/data.c b/drivers/staging/erofs/data.c
-index cc31c3e5984c..f73e4720cd3e 100644
---- a/drivers/staging/erofs/data.c
-+++ b/drivers/staging/erofs/data.c
-@@ -392,9 +392,42 @@ static int erofs_raw_access_readpages(struct file *filp,
- 	return 0;
- }
- 
-+static int erofs_get_block(struct inode *inode, sector_t iblock,
-+			   struct buffer_head *bh, int create)
-+{
-+	struct erofs_map_blocks map = {
-+		.m_la = iblock << 9,
-+	};
-+	int err;
-+
-+	err = erofs_map_blocks(inode, &map, EROFS_GET_BLOCKS_RAW);
-+	if (err)
-+		return err;
-+
-+	if (map.m_flags & EROFS_MAP_MAPPED)
-+		bh->b_blocknr = erofs_blknr(map.m_pa);
-+
-+	return err;
-+}
-+
-+static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-+{
-+	struct inode *inode = mapping->host;
-+
-+	if (is_inode_flat_inline(inode)) {
-+		erofs_blk_t blks = i_size_read(inode) >> LOG_BLOCK_SIZE;
-+
-+		if (block >> LOG_SECTORS_PER_BLOCK >= blks)
-+			return 0;
-+	}
-+
-+	return generic_block_bmap(mapping, block, erofs_get_block);
-+}
-+
- /* for uncompressed (aligned) files and raw access for other files */
- const struct address_space_operations erofs_raw_access_aops = {
- 	.readpage = erofs_raw_access_readpage,
- 	.readpages = erofs_raw_access_readpages,
-+	.bmap = erofs_bmap,
- };
- 
--- 
-2.18.0.rc1
-
+I will, thank you!
