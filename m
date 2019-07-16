@@ -6,97 +6,141 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3D9C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F2C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1B6205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6C5206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732614AbfGPQUS (ORCPT
+        id S2387917AbfGPQ0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:20:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55570 "EHLO mx1.redhat.com"
+        Tue, 16 Jul 2019 12:26:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34184 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfGPQUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:20:17 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1725926AbfGPQ0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 12:26:31 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 328AB308FBAF;
-        Tue, 16 Jul 2019 16:20:17 +0000 (UTC)
-Received: from treble (ovpn-123-204.rdu2.redhat.com [10.10.123.204])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6181260A9F;
-        Tue, 16 Jul 2019 16:20:16 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 11:20:14 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Seth Forshee <seth.forshee@canonical.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>, kbuild-all@01.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [kbuild:kbuild 5/19] drivers/atm/eni.o: warning: objtool:
- eni_init_one()+0xe42: indirect call found in RETPOLINE build
-Message-ID: <20190716162014.iu47g6o7ralxhcf5@treble>
-References: <201907160706.9xUSQ36X%lkp@intel.com>
- <CAK7LNATqxQnen2Tzcici8GnJuc-qNeCYcCYisKM2OkNow1FDnQ@mail.gmail.com>
- <20190716124249.GP5418@ubuntu-xps13>
+        by mx1.redhat.com (Postfix) with ESMTPS id 18AB887620;
+        Tue, 16 Jul 2019 16:26:30 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-14.phx2.redhat.com [10.3.112.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A40625C28D;
+        Tue, 16 Jul 2019 16:26:19 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 12:26:16 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Tycho Andersen <tycho@tycho.ws>, nhorman@tuxdriver.com,
+        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+Message-ID: <20190716162616.7kgvqbqxn4icqyb3@madcap2.tricolour.ca>
+References: <20190529222835.GD8959@cisco>
+ <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
+ <20190530170913.GA16722@mail.hallyn.com>
+ <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
+ <20190530212900.GC5739@cisco>
+ <CAHC9VhT5HPt9rCJoDutdvA3r1Y1GOHfpXe2eJ54atNC1=Vd8LA@mail.gmail.com>
+ <20190708181237.5poheliito7zpvmc@madcap2.tricolour.ca>
+ <CAHC9VhT0V+xi_6nAR5TsM2vs34LbgMeO=-W+MS_kqiXRRzneZQ@mail.gmail.com>
+ <20190716153705.xx7dwrhliny5amut@madcap2.tricolour.ca>
+ <CAHC9VhTaLqCo8rmAaySJQB+Pf-580=3mvX1rPmtEeb9o5Uy9Qg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716124249.GP5418@ubuntu-xps13>
+In-Reply-To: <CAHC9VhTaLqCo8rmAaySJQB+Pf-580=3mvX1rPmtEeb9o5Uy9Qg@mail.gmail.com>
 User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 16 Jul 2019 16:20:17 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 16 Jul 2019 16:26:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 07:42:49AM -0500, Seth Forshee wrote:
-> On Tue, Jul 16, 2019 at 03:57:24PM +0900, Masahiro Yamada wrote:
-> > (+ Josh Poimboeuf)
-> > 
-> > On Tue, Jul 16, 2019 at 8:44 AM kbuild test robot <lkp@intel.com> wrote:
+On 2019-07-16 12:08, Paul Moore wrote:
+> On Tue, Jul 16, 2019 at 11:37 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-07-15 17:09, Paul Moore wrote:
+> > > On Mon, Jul 8, 2019 at 2:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > On 2019-05-30 19:26, Paul Moore wrote:
 > > >
-> > > tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git kbuild
-> > > head:   0ff0c3753e06c0420c80dac1b0187a442b372acb
-> > > commit: 2eaf4e87ba258cc3f27e486cdf32d5ba76303c6f [5/19] kbuild: add -fcf-protection=none to retpoline flags
-> > > config: x86_64-randconfig-s2-07160214 (attached as .config)
-> > > compiler: gcc-4.9 (Debian 4.9.4-2) 4.9.4
-> > > reproduce:
-> > >         git checkout 2eaf4e87ba258cc3f27e486cdf32d5ba76303c6f
-> > >         # save the attached .config to linux build tree
-> > >         make ARCH=x86_64
-> > 
-> > 0-day bot reports objtool warnings with the following applied:
-> > https://patchwork.kernel.org/patch/11037379/
-> > 
-> > I have no idea about objtool.
-> > 
-> > Is it better to drop this patch for now?
+> > > ...
+> > >
+> > > > > I like the creativity, but I worry that at some point these
+> > > > > limitations are going to be raised (limits have a funny way of doing
+> > > > > that over time) and we will be in trouble.  I say "trouble" because I
+> > > > > want to be able to quickly do an audit container ID comparison and
+> > > > > we're going to pay a penalty for these larger values (we'll need this
+> > > > > when we add multiple auditd support and the requisite record routing).
+> > > > >
+> > > > > Thinking about this makes me also realize we probably need to think a
+> > > > > bit longer about audit container ID conflicts between orchestrators.
+> > > > > Right now we just take the value that is given to us by the
+> > > > > orchestrator, but if we want to allow multiple container orchestrators
+> > > > > to work without some form of cooperation in userspace (I think we have
+> > > > > to assume the orchestrators will not talk to each other) we likely
+> > > > > need to have some way to block reuse of an audit container ID.  We
+> > > > > would either need to prevent the orchestrator from explicitly setting
+> > > > > an audit container ID to a currently in use value, or instead generate
+> > > > > the audit container ID in the kernel upon an event triggered by the
+> > > > > orchestrator (e.g. a write to a /proc file).  I suspect we should
+> > > > > start looking at the idr code, I think we will need to make use of it.
+> > > >
+> > > > To address this, I'd suggest that it is enforced to only allow the
+> > > > setting of descendants and to maintain a master list of audit container
+> > > > identifiers (with a hash table if necessary later) that includes the
+> > > > container owner.
+> > >
+> > > We're discussing the audit container ID management policy elsewhere in
+> > > this thread so I won't comment on that here, but I did want to say
+> > > that we will likely need something better than a simple list of audit
+> > > container IDs from the start.  It's common for systems to have
+> > > thousands of containers now (or multiple thousands), which tells me
+> > > that a list is a poor choice.  You mentioned a hash table, so I would
+> > > suggest starting with that over the list for the initial patchset.
+> >
+> > I saw that as an internal incremental improvement that did not affect
+> > the API, so I wanted to keep things a bit simpler (as you've requested
+> > in the past) to get this going, and add that enhancement later.
 > 
-> I'm surprised that the change would have any impact on a build with
-> gcc-4.9, since -fcf-protection seems to have been introduced in gcc-8. I
-> guess there's no full build log that would let us see the actual flags
-> passed to the compiler.
+> In general a simple approach is a good way to start when the
+> problem/use-case is not very well understood; in other words, don't
+> spend a lot of time/effort optimizing something you don't yet
+> understand.  In this case we know that people want to deploy a *lot*
+> of containers on a single system so we should design the data
+> structures appropriately.  A list is simply not a good fit here, I
+> believe/hope you know that too.
+
+Yes, I knew that, which is why I alluded to a hash table...
+
+> > I'll start working on it now.  The hash table would simply point to
+> > lists anyways unless you can recommend a better approach.
 > 
-> I'll try to reproduce this result. If you think the patch should be
-> dropped in the meantime, that's fine.
+> I assume when you say "point to lists" you are talking about using
+> lists for the hash buckets?  If so, yes that should be fine at this
+> point.  In general if the per-bucket lists become a bottleneck we can
+> look at the size of the table (or make it tunable) or even use a
+> different approach entirely.  Ultimately the data store is an
+> implementation detail private to the audit subsystem in the kernel so
+> we should be able to change it as necessary without breaking anything.
 
-The problem with this patch is that it's breaking the following check in
-arch/x86/Makefile.  GCC 4.9 doesn't support retpolines, so it's supposed
-to fail with the below error.
+Yes, this is what I had in mind.  It would be tunable either by a macro
+or a config option, so the exact value isn't a critical implementation
+detail that can be easily tuned as we gain experience with it.  And yes,
+the intent was that it was a non-user-perceivable implementation choice
+other than performace metrics.
 
-ifdef CONFIG_RETPOLINE
-ifeq ($(RETPOLINE_CFLAGS),)
-	@echo "You are building kernel with non-retpoline compiler." >&2
-	@echo "Please update your compiler." >&2
-	@false
-endif
-endif
+> paul moore
 
-Maybe the flags should be placed in another variable other than
-RETPOLINE_CFLAGS.
+- RGB
 
--- 
-Josh
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
