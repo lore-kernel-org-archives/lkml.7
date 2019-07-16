@@ -2,142 +2,107 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488D2C76191
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF1AC76191
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF522080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:20:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAoU6nnQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9639920880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388264AbfGPCUK (ORCPT
+        id S1731074AbfGPCln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 22:20:10 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39080 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388235AbfGPCUJ (ORCPT
+        Mon, 15 Jul 2019 22:41:43 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:35228 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729512AbfGPClm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 22:20:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so9268067pls.6;
-        Mon, 15 Jul 2019 19:20:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=VUDuI4pL0Ekx2N2uEollbqzuyx08xmpBeQ/1wJ8aM7M=;
-        b=AAoU6nnQFDoCdjNFvCT51oPpPU3tvRyghfvKLvPrC0RRjA5GA/joOKGMo0jwsKVIkA
-         t2KurV3wAKMmPI87DyaAxtuGG5d9TPdCqoPLZewJD+JJUsqcUMzFvXFV3EZz7QMDe73Q
-         uXKkRBlspKb8aw7jEc68AOA664+/tq2RiMfVFx68ll0Uly5wgLKLBOn2fKEl+IteNQUa
-         aCCbXHUDkmanmoQVucYK1rvTszxEOyV17oMK9GX6RepEpbmgtaM0iJsh5bu+9n0N2TzF
-         LkRJdRoAwBMpEOd8N4MJYwP245fkc9cD8HKW3y4De9d1E87iElvapvfmIcB0p8Ug9k78
-         T80Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VUDuI4pL0Ekx2N2uEollbqzuyx08xmpBeQ/1wJ8aM7M=;
-        b=YXkqFjBZbr6xA//JMSA0KNAJ/LyggrJ4/y0bgQjmtc8XMfmKil/QphzXXAPng21UX5
-         lhOKL0R0eLK1sJy9sT+074Xi+addLmQJtLiq+aooGRmEG1PPes3UlByC6LeRX71BIkUQ
-         UosEUOWjImcg7jBJi88hyVqIAMkYiAWu7jU7bYOYmUo+4AHEHRcugyT1w31wPDHX0WQe
-         AOsF2Ls8GCSESM52iRm9BaXKk6ixaEArP/XKHzWNXv9+A40fvF0iva/YsD2qbx9ASJni
-         rW3GaNORUTLO+ZyTl77aDBZyhHrcThWAfn7QsWerVPTWnZuA6otMgm+uc0yZteCcJBfj
-         sxSA==
-X-Gm-Message-State: APjAAAWXk17SUd7GfHQmJ5XU5yv2foubUzW4GQ5MDcFJe+8GOWqKTEax
-        Z9YkcelGhi9xJaoaYeM/nNP6Rsn8
-X-Google-Smtp-Source: APXvYqyaj/PtxUYGQWhs/mghaR/zwZbR00DCBWCEmjHu0u/6iHSmC4HSbOWjQhenRG98f5R/luQaMg==
-X-Received: by 2002:a17:902:ff11:: with SMTP id f17mr32632981plj.121.1563243609102;
-        Mon, 15 Jul 2019 19:20:09 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id q24sm16908669pjp.14.2019.07.15.19.20.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jul 2019 19:20:08 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 07:50:02 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: sctp: fix warning "NULL check before some freeing
- functions is not needed"
-Message-ID: <20190716022002.GA19592@hari-Inspiron-1545>
+        Mon, 15 Jul 2019 22:41:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TX1EVd9_1563244897;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TX1EVd9_1563244897)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Jul 2019 10:41:37 +0800
+Subject: Re: [PATCH 1/4] numa: introduce per-cgroup numa balancing locality,
+ statistic
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, keescook@chromium.org,
+        hannes@cmpxchg.org, vdavydov.dev@gmail.com, mcgrof@kernel.org,
+        mhocko@kernel.org, linux-mm@kvack.org,
+        Ingo Molnar <mingo@redhat.com>, riel@surriel.com,
+        Mel Gorman <mgorman@suse.de>, cgroups@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com>
+ <3ac9b43a-cc80-01be-0079-df008a71ce4b@linux.alibaba.com>
+ <20190711134754.GD3402@hirez.programming.kicks-ass.net>
+ <b027f9cc-edd2-840c-3829-176a1e298446@linux.alibaba.com>
+ <20190712075815.GN3402@hirez.programming.kicks-ass.net>
+ <37474414-1a54-8e3a-60df-eb7e5e1cc1ed@linux.alibaba.com>
+ <20190712094214.GR3402@hirez.programming.kicks-ass.net>
+ <f8020f92-045e-d515-360b-faf9a149ab80@linux.alibaba.com>
+ <20190715121025.GN9035@blackbody.suse.cz>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <ecd21563-539c-06b1-92f2-26a111163174@linux.alibaba.com>
+Date:   Tue, 16 Jul 2019 10:41:36 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190715121025.GN9035@blackbody.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes NULL checks before calling kfree.
+Hi Michal,
 
-fixes below issues reported by coccicheck
-net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
-freeing functions is not needed.
-net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
-freeing functions is not needed.
-net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
-freeing functions is not needed.
-net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
-freeing functions is not needed.
+Thx for the comments :-)
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- net/sctp/sm_make_chunk.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+On 2019/7/15 下午8:10, Michal Koutný wrote:
+> Hello Yun.
+> 
+> On Fri, Jul 12, 2019 at 06:10:24PM +0800, 王贇  <yun.wang@linux.alibaba.com> wrote:
+>> Forgive me but I have no idea on how to combined this
+>> with memory cgroup's locality hierarchical update...
+>> parent memory cgroup do not have influence on mems_allowed
+>> to it's children, correct?
+> I'd recommend to look at the v2 of the cpuset controller that implements
+> the hierarchical behavior among configured memory node sets.
 
-diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-index ed39396..36bd8a6e 100644
---- a/net/sctp/sm_make_chunk.c
-+++ b/net/sctp/sm_make_chunk.c
-@@ -2582,8 +2582,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 	case SCTP_PARAM_STATE_COOKIE:
- 		asoc->peer.cookie_len =
- 			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
--		if (asoc->peer.cookie)
--			kfree(asoc->peer.cookie);
-+		kfree(asoc->peer.cookie);
- 		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
- 		if (!asoc->peer.cookie)
- 			retval = 0;
-@@ -2648,8 +2647,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 			goto fall_through;
- 
- 		/* Save peer's random parameter */
--		if (asoc->peer.peer_random)
--			kfree(asoc->peer.peer_random);
-+		kfree(asoc->peer.peer_random);
- 		asoc->peer.peer_random = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_random) {
-@@ -2663,8 +2661,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 			goto fall_through;
- 
- 		/* Save peer's HMAC list */
--		if (asoc->peer.peer_hmacs)
--			kfree(asoc->peer.peer_hmacs);
-+		kfree(asoc->peer.peer_hmacs);
- 		asoc->peer.peer_hmacs = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_hmacs) {
-@@ -2680,8 +2677,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 		if (!ep->auth_enable)
- 			goto fall_through;
- 
--		if (asoc->peer.peer_chunks)
--			kfree(asoc->peer.peer_chunks);
-+		kfree(asoc->peer.peer_chunks);
- 		asoc->peer.peer_chunks = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_chunks)
--- 
-2.7.4
+Actually whatever the memory node sets or cpu allow sets is, it will
+take effect on task's behavior regarding memory location and cpu
+location, while the locality only care about the results rather than
+the sets.
 
+For example if we bind tasks to cpus of node 0 and memory allow only
+the node 1, by cgroup controller or madvise, then they will running
+on node 0 with all the memory on node 1, on each PF for numa balancing,
+the task will access page on node 1 from node 0 remotely, so the
+locality will always be 0.
+
+> 
+> (My comment would better fit to 
+>     [PATCH 3/4] numa: introduce numa group per task group
+> IIUC, you could use cpuset controller to constraint memory nodes.)
+> 
+> For the second part (accessing numa statistics, i.e. this patch), I
+> wonder wheter this information wouldn't be better presented under the
+> cpuset controller too.
+
+Yeah, we realized the cpu cgroup could be a better place to hold these
+new statistics, both locality and exectime are task's running behavior,
+related to memory location but not the memory behavior, will apply in
+next version.
+
+Regards,
+Michael Wang
+
+> 
+> HTH,
+> Michal
+> 
