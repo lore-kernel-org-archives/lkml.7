@@ -2,76 +2,101 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAD7C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF1DC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E8D2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791E720880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V9pVJhce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388064AbfGPP64 (ORCPT
+        id S2388093AbfGPP7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:58:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52420 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728121AbfGPP64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:58:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2639DAD05;
-        Tue, 16 Jul 2019 15:58:54 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 17:58:52 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Alessio Balsini <balsini@android.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Paul Turner <pjt@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v11 4/5] sched/core: uclamp: Use TG's clamps to restrict
- TASK's clamps
-Message-ID: <20190716155852.GF32540@blackbody.suse.cz>
-References: <20190708084357.12944-1-patrick.bellasi@arm.com>
- <20190708084357.12944-5-patrick.bellasi@arm.com>
- <20190715164248.GA21982@blackbody.suse.cz>
- <20190716143435.iwwd6fjr3udlqol4@e110439-lin>
+        Tue, 16 Jul 2019 11:59:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33324 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732614AbfGPP66 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 11:58:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YYyF91pSWDXvTsHMtwmg5oamUyTpdIGaRL8uU7pnCSE=; b=V9pVJhceHx83ZZyxGwjssa91Q4
+        ByRiP0irDEglKf3954gGWvHEa9bWqDU1Dubwe/8IGp/xkXsxtkKdlQdLkToFporAmX/6WtVw0xjMo
+        oasv31zxGFzi+t6XINj6Cgz+B38oNS7k3GG1u3pnkhv25UCfb6mDGYR5jmn0YPiWPIl8k/fWKN2mY
+        C2e+D5a+enFYG4KK6cE8PPRHi85az8xyqOumHyLU1zGUywAmX/LU6iSZtGftPjkV8xVlUzeviWDM2
+        GkI3XcMyWs4Kf+mnBjXPLnTPxQtrOl3XHFwux7YizanErQGqjU7nEr7v8wbdmnaAzztzH0N8JvyFI
+        HG/sq0dQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnPqj-0000xJ-1S; Tue, 16 Jul 2019 15:58:41 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 61DFF2059DEA3; Tue, 16 Jul 2019 17:58:39 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 17:58:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v3 2/5] locking/qspinlock: Refactor the qspinlock slow
+ path
+Message-ID: <20190716155839.GF3402@hirez.programming.kicks-ass.net>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-3-alex.kogan@oracle.com>
+ <20190716102034.GN3419@hirez.programming.kicks-ass.net>
+ <9D5B6F33-6003-4CCA-BBE5-998B5A679B9C@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190716143435.iwwd6fjr3udlqol4@e110439-lin>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9D5B6F33-6003-4CCA-BBE5-998B5A679B9C@oracle.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 03:34:35PM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> Am I missing something?
-No, it's rather my misinterpretation of the syscall semantics.
+On Tue, Jul 16, 2019 at 10:53:02AM -0400, Alex Kogan wrote:
+> On Jul 16, 2019, at 6:20 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > On Mon, Jul 15, 2019 at 03:25:33PM -0400, Alex Kogan wrote:
+> > 
+> >> +/*
+> >> + * set_locked_empty_mcs - Try to set the spinlock value to _Q_LOCKED_VAL,
+> >> + * and by doing that unlock the MCS lock when its waiting queue is empty
+> >> + * @lock: Pointer to queued spinlock structure
+> >> + * @val: Current value of the lock
+> >> + * @node: Pointer to the MCS node of the lock holder
+> >> + *
+> >> + * *,*,* -> 0,0,1
+> >> + */
+> >> +static __always_inline bool __set_locked_empty_mcs(struct qspinlock *lock,
+> >> +						   u32 val,
+> >> +						   struct mcs_spinlock *node)
+> >> +{
+> >> +	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
+> >> +}
+> > 
+> > That name is nonsense. It should be something like:
+> > 
+> > static __always_inline bool __try_clear_tail(…)
+> 
+> We already have set_locked(), so I was trying to convey the fact that we are
+> doing the same here, but only when the MCS chain is empty.
+> 
+> I can use __try_clear_tail() instead.
 
-> Otherwise, I think the changelog sentence you quoted is just
-> misleading.
-It certainly mislead me to thinking about the sched_setattr calls as
-requests of utilization being in the given interval (substituting 0 or 1 when
-only one boundary is given, and further constrained by tg's interval).
-
-I see your point, those are actually two (mostly) independent controls.
-Makes sense now.
-
-Thanks,
-Michal
+Thing is, we go into this function with: *,0,1 and are trying to obtain
+0,0,1. IOW, we're trying to clear the tail, while preserving pending and
+locked.
