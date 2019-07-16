@@ -2,109 +2,115 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FCCC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DE0C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CBE20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A2F20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AwPuELhu"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qlBsdqb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388735AbfGPUYj (ORCPT
+        id S2388710AbfGPU21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:24:39 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37653 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728340AbfGPUYj (ORCPT
+        Tue, 16 Jul 2019 16:28:27 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43587 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbfGPU2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:24:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so10695900plr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 13:24:38 -0700 (PDT)
+        Tue, 16 Jul 2019 16:28:25 -0400
+Received: by mail-vs1-f65.google.com with SMTP id j26so14850200vsn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 13:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tlgW7N5665To10UWUQBwQlj7I4LdVat1k1AQkv0K9Pc=;
-        b=AwPuELhuts8lP4/v2w2PqvbmYvehX0wshVXA+4yqs560dvwt/VcjmUPDsGW9NmUrp3
-         Ixiiht508/rfZ52L3VVuAygzyGtjIICJLDo/q9EGqY5+9HtHqZK8FQchWZ0AdUauZxv2
-         SMtL9Erzsb1IXVbnepno+4OdCZ9pwZ4uBfZfq1C6PuMUPOYD/FbFhc/AujXk9HZf672E
-         /vSWTLZUYPDq6jU7hGhgQDAIP8Aa2ptYeYU0T+XGHP9D10XbbGaol/wyeyMFrsq7aLg4
-         Sy2GQuXB6ZtcMXypQxGvFWFdiy5nBMoIrWyHy5z6WGyvAaD0czSqe2MKz7PtjhOCxzZs
-         Trog==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UjTFcdnVd7s1YEwLwLvsfGG9sPlxZRXqbP8Kb8AL9ZQ=;
+        b=qlBsdqb1KQr1ExF9/YzSOXtCovLJ6CtV2qWiLG5wJnwV6nQg/i/H3R52CVt5c8Eqf9
+         B+0hnD2r1zE9RSTzJqiOVJKUZw+0WE9TYUFtaEWwEhnTVO9bSsoplLU0CCfoD+gVwEv+
+         Y6oKIZgbWJJ61IRNuXDVJ0O33dnXn7Y2+FQ+VKXZsQmDvvadhPyoBILBFvw82/Dhd2BR
+         9wQNkdx/4Pu0YNVqj1+tHaUj+F7dFFakpniLUPA4c1L4/3wwTr9QqzJEbdnf6oEN4h4y
+         NbzX9f/M9fQO0j924PX3RRr86L9XAahk1cmcPOeou7pE9t/F76sCsYK29AGBT+cOOSGM
+         Q1CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tlgW7N5665To10UWUQBwQlj7I4LdVat1k1AQkv0K9Pc=;
-        b=r0z2f/BXnKLxi/T+Svrp7H3LlxP9FTPJ/iqp7GxT0WWxkB3GrBfCp2Hh1RSmUFbJFS
-         bzbqTiULwpTOq/6ZzvGpTJM4UxZlI31TrzHBavarb7BLxjX7KjL7eOe5ljGU6qT4Vei9
-         CnScpqU/xrAMwnfeDEs1Pg9bdfkfvqSteTZ1xae/6hSNEuzFLmZ3tMe7nogA9p+7LbnR
-         +Ij0oSOPAV2oF9v221EVdPIWF7K7TMtOVODbfpqoLVZbFeOUePTwx+dpK5KQrr1vDJU5
-         hXBky8DTPamCwfr65T39lswT/gBMFa4QqgSDa2a8gTDiwrxpHOk9P554zU0mw3dELLbI
-         EYgw==
-X-Gm-Message-State: APjAAAUircrZKZwrpgxm2BhryKS0GqvxAGHQmgrIqueQcaQlxAWpWroY
-        ucfRVKajUDZM4bnxbFma9elsyBxCOUrQV3dMIx9wHg==
-X-Google-Smtp-Source: APXvYqxRj/dcOXQ6bzNuxwwngYnNOIRCEWeTsQRemz7Vzu/PiFlwYrBKgqFvsM1vmPNOacFsGJ62gbjVvb1C0oLgRFU=
-X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr36572379pld.119.1563308678079;
- Tue, 16 Jul 2019 13:24:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK8P3a2beBPP+KX4zTfSfFPwo+7ksWZLqZzpP9BJ80iPecg3zA@mail.gmail.com>
- <20190711172621.a7ab7jorolicid3z@treble> <CAK8P3a0iOMpMW-dXUY6g75HGC4mUe3P3=gv447WZOW8jmw2Vgg@mail.gmail.com>
- <CAG48ez3ipuPHLxbqqc50=Kn4QuoNczkd7VqEoLPVd3WWLk2s+Q@mail.gmail.com>
- <CAK8P3a2=SJQp7Jvyf+BX-7XsUr8bh6eBMo6ue2m8FW4aYf=PPw@mail.gmail.com>
- <CAK8P3a1_8kjzamn6_joBbZTO8NeGn0E3O+MZ+bcOQ0HkkRHXRQ@mail.gmail.com>
- <20190712135755.7qa4wxw3bfmwn5rp@treble> <CAK8P3a13QFN59o9xOMce6K64jGnz+Cf=o3R_ORMo7j-65F5i8A@mail.gmail.com>
- <20190712142928.gmt6gibikdjmkppm@treble> <CAKwvOdnOpgo9rEctZZR9Y9rEc60FCthbPtp62UsdMtkGDF5nUg@mail.gmail.com>
- <CAK8P3a0AGpvAOzSfER7iiaz=aLVMbxiVorTsh__yT4xxBOHSyw@mail.gmail.com>
-In-Reply-To: <CAK8P3a0AGpvAOzSfER7iiaz=aLVMbxiVorTsh__yT4xxBOHSyw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 16 Jul 2019 13:24:26 -0700
-Message-ID: <CAKwvOd=o16rtGOVm9DWhhqxed0OEW5NKt4Vt3y_6KCcbdU-dhQ@mail.gmail.com>
-Subject: Re: objtool crashes on clang output (drivers/hwmon/pmbus/adm1275.o)
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UjTFcdnVd7s1YEwLwLvsfGG9sPlxZRXqbP8Kb8AL9ZQ=;
+        b=qIqnQgfwpJ7b5MdRi6GTQp+v5xU8cgxxmMgnIgvyAmyLXiWSzFdcaAkvXG2lx35nkN
+         8C+DjOVf3NIfYxQ5cAOpJpJkGXiBdHrL1YTaKq4x81zdIqD3Ix1bHNnlncUN+KcdEY/X
+         6uIi4a25Rk5J1Y1ZMjvgVAYBnYrbq/1r5pM2PoeI7LC1Z3llpAvqQi+fHatvFglC1Cxr
+         aP2jtOSBmDVdRIf+rvDynjB2A2ZNpBrm7AMediNqh5O3abdxDcV+gvrbKrEScpRkG5/m
+         dkNY91upbKL0nCyDfP+4o6kQHMBrRzECFP9DIZREEKowXV9PBTl5f+HYweygSieQT+0H
+         zUYA==
+X-Gm-Message-State: APjAAAX+370qFLNPlSP0jMQM7jDP4e09jaAtxgFFnqtzIVU7H1tAj3WR
+        9qib40094Vd3sgGnhRHQW0z+Ig==
+X-Google-Smtp-Source: APXvYqx8BSAvMkaR3wy2NivfcuCgXjFmOhNmRIjDK4T8nCSa7DOvd2utZH77Ki+v2aCCiXzIQgMuAA==
+X-Received: by 2002:a67:d39e:: with SMTP id b30mr21307008vsj.212.1563308904667;
+        Tue, 16 Jul 2019 13:28:24 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id g66sm5590218vkh.7.2019.07.16.13.28.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 13:28:23 -0700 (PDT)
+Message-ID: <1563308901.4610.12.camel@lca.pw>
+Subject: Re: [PATCH] Revert "kmemleak: allow to coexist with fault injection"
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, catalin.marinas@arm.com,
+        dvyukov@google.com, rientjes@google.com, willy@infradead.org,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 16 Jul 2019 16:28:21 -0400
+In-Reply-To: <20190716200715.GA14663@dhcp22.suse.cz>
+References: <1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com>
+         <1563301410.4610.8.camel@lca.pw>
+         <a198d00d-d1f4-0d73-8eb8-6667c0bdac04@linux.alibaba.com>
+         <1563304877.4610.10.camel@lca.pw> <20190716200715.GA14663@dhcp22.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 1:41 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Jul 12, 2019 at 6:59 PM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> > > The issue still needs to get fixed in clang regardless.  There are other
-> > > noreturn functions in the kernel and this problem could easily pop back
-> > > up.
-> >
-> > Sure, thanks for the report.  Arnd, can you help us get a more minimal
-> > test case to understand the issue better?
->
-> I reduced it to this testcase:
->
-> int a, b;
-> void __reiserfs_panic(int, ...) __attribute__((noreturn));
-> void balance_internal() {
->   if (a)
->     __reiserfs_panic(0, "", __func__, "", 2, __func__, a);
->   if (b)
->     __reiserfs_panic(0, "", __func__, "", 5, __func__, a, 0);
-> }
->
-> https://godbolt.org/z/Byfvmx
+On Tue, 2019-07-16 at 22:07 +0200, Michal Hocko wrote:
+> On Tue 16-07-19 15:21:17, Qian Cai wrote:
+> [...]
+> > Thanks to this commit, there are allocation with __GFP_DIRECT_RECLAIM that
+> > succeeded would keep trying with __GFP_NOFAIL for kmemleak tracking object
+> > allocations.
+> 
+> Well, not really. Because low order allocations with
+> __GFP_DIRECT_RECLAIM basically never fail (they keep retrying) even
+> without GFP_NOFAIL because that flag is actually to guarantee no
+> failure. And for high order allocations the nofail mode is actively
+> harmful. It completely changes the behavior of a system. A light costly
+> order workload could put the system on knees and completely change the
+> behavior. I am not really convinced this is a good behavior of a
+> debugging feature TBH.
 
-Is this the same issue as Josh pointed out?  IIUC, Josh pointed to a
-jump destination that was past a `push %rbp`, and I don't see it in
-your link.  (Or, did I miss it?)
--- 
-Thanks,
-~Nick Desaulniers
+While I agree your general observation about GFP_NOFAIL, I am afraid the
+discussion here is about "struct kmemleak_object" slab cache from a single call
+site create_object(). 
+
+> 
+> > Otherwise, one kmemleak object allocation failure would kill the
+> > whole kmemleak.
+> 
+> Which is not great but quite likely a better than an unpredictable MM
+> behavior caused by NOFAIL storms. Really, this NOFAIL patch is a
+> completely broken behavior. There shouldn't be much discussion about
+> reverting it. I would even argue it shouldn't have been merged in the
+> first place. It doesn't have any acks nor reviewed-bys while it abuses
+> __GFP_NOFAIL which is generally discouraged to be used.
+
+Again, it seems you are talking about GFP_NOFAIL in general. I don't really see
+much unpredictable MM behavior which would disrupt the testing or generate
+false-positive bug reports when "struct kmemleak_object" allocations with
+GFP_NOFAIL apart from some warnings. All I see is that kmemleak stay alive help
+find real memory leaks.
