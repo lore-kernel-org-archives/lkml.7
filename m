@@ -2,153 +2,97 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519EAC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF498C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266E420665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:55:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Heifp6lP"
+	by mail.kernel.org (Postfix) with ESMTP id C12922173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 20:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563310752;
+	bh=GzbC4HaYjTrPOLHdkN0rJ9H0cVhGLXq4suuub3KQuYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DBLOQ1LRJAIX4tRB4KXDrS/JgKVodkN6SDeSI9ptLtyZ9MbOMNb0dOaDywi5FXjj0
+	 fV7DZAE4sx98aZDynp/7YWswYHqPfyhqIOvyR3xoSWsXVu15dDJcKqW2GtfkH3mSUE
+	 HUnaILncoxsfT8uqYIJpXkiMWl90FVt91/90avIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388800AbfGPUzD (ORCPT
+        id S2388820AbfGPU7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 16:55:03 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35020 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfGPUzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 16:55:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so10730671plp.2;
-        Tue, 16 Jul 2019 13:55:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JyDP2xrY1+vm6sbAE05lGR3/BE8oRL7Tl3eVMst2SbI=;
-        b=Heifp6lPgv05YjnXAE6GeXjzI1GGrmbh6WZginvD1pu6jIKYv7O1u4o8f9ZLo7O43J
-         GWwLegDY3aS6djFvijJkap3lbDOJimy431xQPA/7pF8mRgtYIf8yJJ5kSHFmHqGFMD9x
-         INh3r+mOdj9UsKQ7ufiIpwx5n6odOWCAhM3QyoKrloRRCmePIUR2wDQiYiyoatidc2+j
-         wlSO+pEClBKL6XEp9ULmFfpEXkIz6Q5fKGjZsKJmZnhgj3X7gib9JGp8I+VYCRb28aFt
-         s+SNVfKZW/od80ZoYlLDxP3/p2N4mvQyK1DdeS/Z6TYiE0bX5vfj7dH0cM4Xm0fMMSLb
-         Wjnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JyDP2xrY1+vm6sbAE05lGR3/BE8oRL7Tl3eVMst2SbI=;
-        b=BOGlP2EzSN1OhPZ1/c6MXg+B5NXdKi/2/3HIWJSx5OMWIjx8z+WVAa7k5vkYN5gjp+
-         FoX9+UvosesXzByBBMJ0irRJmPDCnNJ6bKGmcDAtnnWT7HF9mP754RrZfE9rJ3rdBt0M
-         TJhcPZc+5Kjfgq9w2OIxRR21msaLvetkxadFWnMNTV0sIsPsxkMulfjBVxW0o+PMFAOn
-         IUsslIp782k7IjmJ9ZMuL0EE1HFgX+6o/o2d3qjGxCLobgimH4xAFKCJwhWUDu8w8R7/
-         E5Z9q20BjwHnSwKOEtsv2WzqEVxV4wahU4lVkrXxJxSCbmiu8342KuKt53FJmiy19H73
-         yLKw==
-X-Gm-Message-State: APjAAAUaRk1YD1qFzEDcOy8yt7qSOM4M7huyk2REsfcW6ZXan6mPm0AY
-        Dph8aUAeLhM2YjEJJXydlB4=
-X-Google-Smtp-Source: APXvYqzhq/GJvJ6rmN/or6wgrI2tKcjSDWXXI6SiYB/Y6tgHmyzGbm7M/E5KZ5ezy8gEDEWjVLMooQ==
-X-Received: by 2002:a17:902:724a:: with SMTP id c10mr35809877pll.298.1563310501294;
-        Tue, 16 Jul 2019 13:55:01 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::c7d4])
-        by smtp.gmail.com with ESMTPSA id 4sm26151120pfc.92.2019.07.16.13.54.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 13:55:00 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 13:54:57 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        Manali Shukla <manalishukla14@gmail.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matt Mullins <mmullins@fb.com>,
-        Michal Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
-        namhyung@kernel.org, netdev@vger.kernel.org,
-        paul.chaignon@gmail.com, primiano@google.com,
-        Qais Yousef <qais.yousef@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
+        Tue, 16 Jul 2019 16:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728781AbfGPU7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 16:59:11 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D551220665;
+        Tue, 16 Jul 2019 20:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563310750;
+        bh=GzbC4HaYjTrPOLHdkN0rJ9H0cVhGLXq4suuub3KQuYQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ozXYFkp9k7i2LnsFB7XujdrrA0JWPsAE+Flg1q+9Cs+s5Hds/Dg2wWGpL64SrHBRX
+         7yJkxDO9hcGrBB4kU+IeZdrEzzfkb2gvSPBgtbmXD7q31JZthmISbXWUYzz5H7LL9I
+         1Hz+Z62JfFc2JicLtg6gJLmlT3/15/YoJ4Q3Z4QA=
+Date:   Tue, 16 Jul 2019 22:59:07 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     Clark Williams <williams@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
-References: <20190710141548.132193-1-joel@joelfernandes.org>
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <clark.williams@gmail.com>,
+        Julia Cartwright <julia@ni.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
+Message-ID: <20190716205907.GC4000@lenoir>
+References: <20190715150402.798499167@linutronix.de>
+ <20190715150601.205143057@linutronix.de>
+ <20190716151040.04ef9122@torg>
+ <e245e8ac-d55d-89c8-424a-432e0481cd2a@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190710141548.132193-1-joel@joelfernandes.org>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <e245e8ac-d55d-89c8-424a-432e0481cd2a@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 10:15:44AM -0400, Joel Fernandes (Google) wrote:
-> Hi,
-
-why are you cc-ing the whole world for this patch set?
-I'll reply to all as well, but I suspect a bunch of folks consider it spam.
-Please read Documentation/bpf/bpf_devel_QA.rst
-
-Also, I think, netdev@vger rejects emails with 80+ characters in cc as spam,
-so I'm not sure this set reached public mailing lists.
-
-> These patches make it possible to attach BPF programs directly to tracepoints
-> using ftrace (/sys/kernel/debug/tracing) without needing the process doing the
-> attach to be alive. This has the following benefits:
+On Tue, Jul 16, 2019 at 10:18:00PM +0200, Daniel Bristot de Oliveira wrote:
+> On 16/07/2019 22:10, Clark Williams wrote:
+> > Excited to see this Thomas. Now I can start planning to build from a single tree
+> > rather than an RT tree off to the side of RHEL :)
+> > 
+> > Acked-by: Clark Williams <williams@redhat.com>
+> > 
 > 
-> 1. Simplified Security: In Android, we have finer-grained security controls to
-> specific ftrace trace events using SELinux labels. We control precisely who is
-> allowed to enable an ftrace event already. By adding a node to ftrace for
-> attaching BPF programs, we can use the same mechanism to further control who is
-> allowed to attach to a trace event.
+> yeah! We (Red Hat) are committed with maintaining and testing the PREEMPT RT
+> mainstream in the long term. Including the development of more tests and formal
+> verification for it!
+
+AND MY AXE!!! (Suse)
+
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+
 > 
-> 2. Process lifetime: In Android we are adding usecases where a tracing program
-> needs to be attached all the time to a tracepoint, for the full life time of
-> the system. Such as to gather statistics where there no need for a detach for
-> the full system lifetime. With perf or bpf(2)'s BPF_RAW_TRACEPOINT_OPEN, this
-> means keeping a process alive all the time.  However, in Android our BPF loader
-> currently (for hardeneded security) involves just starting a process at boot
-> time, doing the BPF program loading, and then pinning them to /sys/fs/bpf.  We
-> don't keep this process alive all the time. It is more suitable to do a
-> one-shot attach of the program using ftrace and not need to have a process
-> alive all the time anymore for this. Such process also needs elevated
-> privileges since tracepoint program loading currently requires CAP_SYS_ADMIN
-> anyway so by design Android's bpfloader runs once at init and exits.
+> Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 > 
-> This series add a new bpf file to /sys/kernel/debug/tracing/events/X/Y/bpf
-> The following commands can be written into it:
-> attach:<fd>     Attaches BPF prog fd to tracepoint
-> detach:<fd>     Detaches BPF prog fd to tracepoint
-
-Looks like, to detach a program the user needs to read a text file,
-parse bpf prog id from text into binary. Then call fd_from_id bpf syscall,
-get a binary FD, convert it back to text and write as a text back into this file.
-I think this is just a single example why text based apis are not accepted
-in bpf anymore.
-
-Through the patch set you call it ftrace. As far as I can see, this set
-has zero overlap with ftrace. There is no ftrace-bpf connection here at all
-that we discussed in the past Steven. It's all quite confusing.
-
-I suggest android to solve sticky raw_tracepoint problem with user space deamon.
-The reasons, you point out why user daemon cannot be used, sound weak to me.
-Another acceptable solution would be to introduce pinning of raw_tp objects.
-bpf progs and maps can be pinned in bpffs already. Pinning raw_tp would
-be natural extension.
-
+> Thanks!
+> -- Daniel
