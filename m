@@ -2,316 +2,172 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDEEC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 01:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE95C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8598920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 01:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8112171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 02:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfGPBvG (ORCPT
+        id S1730675AbfGPCAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 21:51:06 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38821 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729533AbfGPBvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 21:51:05 -0400
-X-UUID: dab6386b98c046719a209b4ae911a270-20190716
-X-UUID: dab6386b98c046719a209b4ae911a270-20190716
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1242764475; Tue, 16 Jul 2019 09:51:00 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 16 Jul 2019 09:50:52 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 16 Jul 2019 09:50:52 +0800
-Message-ID: <1563241851.796.7.camel@mtksdaap41>
-Subject: Re: [PATCH v6 14/14] arm64: dts: Add power controller device node
- of MT8183
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Weiyi Lu <weiyi.lu@mediatek.com>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Yong Wu <yong.wu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 16 Jul 2019 09:50:51 +0800
-In-Reply-To: <1563181637.6212.1.camel@mtksdaap41>
-References: <1560998286-9189-1-git-send-email-weiyi.lu@mediatek.com>
-         <1560998286-9189-15-git-send-email-weiyi.lu@mediatek.com>
-         <1561971461.12937.8.camel@mtksdaap41> <1563178045.17756.5.camel@mtksdaap41>
-         <1563181637.6212.1.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 15 Jul 2019 22:00:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2229 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729533AbfGPCAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jul 2019 22:00:50 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 951A37DC6F0DD85EDD34;
+        Tue, 16 Jul 2019 10:00:47 +0800 (CST)
+Received: from [127.0.0.1] (10.57.88.168) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
+ 10:00:38 +0800
+Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
+To:     Vasily Averin <vvs@virtuozzo.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
+ <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
+ <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
+ <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
+ <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
+ <20190712140729.GA11583@kroah.com>
+ <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
+ <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <3bbc16ba-953c-a6b6-c5f3-4deaeaa25d10@huawei.com>
+Date:   Tue, 16 Jul 2019 10:00:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-Originating-IP: [10.57.88.168]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Weiyi:
+On 2019/7/15 13:38, Vasily Averin wrote:
+> On 7/14/19 5:45 AM, Xiaoming Ni wrote:
+>> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
+>>> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
+>>>> On 2019/7/11 21:57, Vasily Averin wrote:
+>>>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
+>>>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
+>>>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
+>>>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
+>>>>>>>> list to form a ring or lose other members of the list.
+>>>>>>>
+>>>>>>> I think is not enough to _prevent_ 2nd register attempt,
+>>>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
+>>>>>>>
+>>>>>>
+>>>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
+>>>>>>
+>>>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
+>>>>>>
+>>>>>> Duplicate registration was checked in notifier_chain_register() but only 
+>>>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
+>>>>>> ("kernel/notifier.c: double register detection")
+>>>>>>
+>>>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
+>>>>>>  which triggers an alarm and exits when a duplicate registration is detected.
+>>>>>>
+>>>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
+>>>>>>> and it can lead to host crash in any time: 
+>>>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
+>>>>>>> on the other hand you can never call 2nd unregister at all.
+>>>>>>
+>>>>>> Since the member was not added to the linked list at the time of the second registration, 
+>>>>>> no linked list ring was formed. 
+>>>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
+>>>>>> After patching, the fault has been alleviated
+>>>>>
+>>>>> You are wrong here.
+>>>>> 2nd notifier's registration is a pure bug, this should never happen.
+>>>>> If you know the way to reproduce this situation -- you need to fix it. 
+>>>>>
+>>>>> 2nd registration can happen in 2 cases:
+>>>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
+>>>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
+>>>>> 2) some subsystem is registered twice, for example from  different namespaces.
+>>>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
+>>>>> in second namespace, it also can lead to unexpacted behaviour.
+>>>>>
+>>>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
+>>>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
+>>>> notifier_chain_cond_register() direct exit without triggering WARN() ?
+>>>
+>>> It should recover from this, if it can be detected.  The main point is
+>>> that not all apis have to be this "robust" when used within the kernel
+>>> as we do allow for the callers to know what they are doing :)
+>>>
+>> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
+>>  We can intercept this situation and avoid forming a linked list ring to make the API more rob
+> 
+> Once again -- yes, you CAN prevent list corruption, but you CANNOT recover the host and return it back to safe state.
+> If double register event was detected -- it means you have bug in kernel.
+> 
+> Yes, you can add BUG here and crash the host immediately, but I prefer to use warning in such situations.
+> 
+>>> If this does not cause any additional problems or slow downs, it's
+>>> probably fine to add.
+>>>
+>> Notifier_chain_register() is not a system hotspot function.
+>> At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
+>> It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
+>> At the same time, avoiding the formation of a link ring can make the system more robust.
+> 
+> I disagree, 
+> yes, node will have correct list, but anyway node will work wrong and can crash the host in any time.
 
-On Mon, 2019-07-15 at 17:07 +0800, Weiyi Lu wrote:
-> On Mon, 2019-07-15 at 16:07 +0800, CK Hu wrote:
-> > Hi, Weiyi:
-> > 
-> > On Mon, 2019-07-01 at 16:57 +0800, CK Hu wrote:
-> > > Hi, Weiyi:
-> > > 
-> > > On Thu, 2019-06-20 at 10:38 +0800, Weiyi Lu wrote:
-> > > > Add power controller node and smi-common node for MT8183
-> > > > In scpsys node, it contains clocks and regmapping of
-> > > > infracfg and smi-common for bus protection.
-> > > > 
-> > > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> > > > ---
-> > > >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 62 ++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 62 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > > index 08274bf..75c4881 100644
-> > > > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > > @@ -8,6 +8,7 @@
-> > > >  #include <dt-bindings/clock/mt8183-clk.h>
-> > > >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > >  #include <dt-bindings/interrupt-controller/irq.h>
-> > > > +#include <dt-bindings/power/mt8183-power.h>
-> > > >  
-> > > >  / {
-> > > >  	compatible = "mediatek,mt8183";
-> > > > @@ -196,6 +197,62 @@
-> > > >  			#clock-cells = <1>;
-> > > >  		};
-> > > >  
-> > > > +		scpsys: syscon@10006000 {
-> > > > +			compatible = "mediatek,mt8183-scpsys", "syscon";
-> > > > +			#power-domain-cells = <1>;
-> > > > +			reg = <0 0x10006000 0 0x1000>;
-> > > > +			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
-> > > > +				 <&infracfg CLK_INFRA_AUDIO>,
-> > > > +				 <&infracfg CLK_INFRA_AUDIO_26M_BCLK>,
-> > > > +				 <&topckgen CLK_TOP_MUX_MFG>,
-> > > > +				 <&topckgen CLK_TOP_MUX_MM>,
-> > > > +				 <&topckgen CLK_TOP_MUX_CAM>,
-> > > > +				 <&topckgen CLK_TOP_MUX_IMG>,
-> > > > +				 <&topckgen CLK_TOP_MUX_IPU_IF>,
-> > > > +				 <&topckgen CLK_TOP_MUX_DSP>,
-> > > > +				 <&topckgen CLK_TOP_MUX_DSP1>,
-> > > > +				 <&topckgen CLK_TOP_MUX_DSP2>,
-> > > > +				 <&mmsys CLK_MM_SMI_COMMON>,
-> > > > +				 <&mmsys CLK_MM_SMI_LARB0>,
-> > > > +				 <&mmsys CLK_MM_SMI_LARB1>,
-> > > > +				 <&mmsys CLK_MM_GALS_COMM0>,
-> > > > +				 <&mmsys CLK_MM_GALS_COMM1>,
-> > > > +				 <&mmsys CLK_MM_GALS_CCU2MM>,
-> > > > +				 <&mmsys CLK_MM_GALS_IPU12MM>,
-> > > > +				 <&mmsys CLK_MM_GALS_IMG2MM>,
-> > > > +				 <&mmsys CLK_MM_GALS_CAM2MM>,
-> > > > +				 <&mmsys CLK_MM_GALS_IPU2MM>,
-> > 
-> > I've removed all mmsys clock in scpsys node and display still works, so
-> > I think these subsys clock could be removed from scpsys node. It's
-> > reasonable that subsys clock is controlled by subsys device or the
-> > device use it. In MT2712 [1], the scpsys does not control subsys clock
-> > and it works, so I think you should remove subsys clock in scpsys device
-> > node.
-> > 
-> > [1]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/mediatek/mt2712e.dtsi?h=v5.2
-> > 
-> > Regards,
-> > CK
-> > 
-> 
-> Hello CK,
-> 
-> Sorry, I can't agree with you at all.
-> I thought you just created an environment where the MM (DISP) power
-> domain could not be turned on and off properly.
-> If you delete those mmsys clocks listed, bus protection will not work.
-> These clocks are used for bus protection that I mentioned in patch [2].
-> I guess you are now trying to solve the problem that mmsys blocks are
-> used for probing two drivers. One for the display and another for the
-> clock. Right?
-> In the previous test you mentioned, you have affected the registration
-> of mmsys clock first. This is why you saw the boot failure. I think boot
-> failure is the real problem I should avoid if mmsys clock cannot probe.
-> 
-> [2] https://patchwork.kernel.org/patch/11005747/
-> 
+Sorry, my description is not accurate.
 
-OK, I'll try another way to fix the probe problem, but I still have
-question about bus protection. I'm not sure how bus protection works,
-but I think that what mtk_scpsys_ext_clear_bus_protection() do could be
-moved in mtk_smi_clk_enable(). How do you think?
+My patch feature does not prevent users from repeatedly registering hooks.
+But avoiding the chain ring caused by the user repeatedly registering the hook
 
-Regards,
-CK
+There are no modules for duplicate registration hooks in the current system.
+But considering that not all modules are in the kernel source tree,
+In order to improve the robustness of the kernel API, we should avoid the linked list ring caused by repeated registration.
+Or in order to improve the efficiency of problem location, when the duplicate registration is checked, the system crashes directly.
 
-> > 
-> > > 
-> > > Up to now, MT8183 mmsys has the same resource with another device node:
-> > > 
-> > > 		mmsys: syscon@14000000 {
-> > > 			compatible = "mediatek,mt8183-mmsys", "syscon";
-> > > 			reg = <0 0x14000000 0 0x1000>;
-> > > 			#clock-cells = <1>;
-> > > 		};
-> > > 
-> > > 		display_components: dispsys@14000000 {
-> > > 			compatible = "mediatek,mt8183-display";
-> > > 			reg = <0 0x14000000 0 0x1000>;
-> > > 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> > > 		};
-> > > 
-> > > I think this two node should be merge into one node, so I've try to
-> > > merge them:
-> > > 
-> > > 		mmsys: syscon@14000000 {
-> > > 			compatible = "mediatek,mt8183-mmsys", "syscon";
-> > > 			reg = <0 0x14000000 0 0x1000>;
-> > > 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> > > 			#clock-cells = <1>;
-> > > 		};
-> > > 
-> > > But I got a kernel panic when boot,
-> > > 
-> > > [    3.458523] Unable to handle kernel paging request at virtual address
-> > > fffffffffffffdfb
-> > > [    3.466999] Mem abort info:
-> > > [    3.470116]   ESR = 0x96000005
-> > > [    3.473268]   Exception class = DABT (current EL), IL = 32 bits
-> > > [    3.479375]   SET = 0, FnV = 0
-> > > [    3.482530]   EA = 0, S1PTW = 0
-> > > [    3.485785] Data abort info:
-> > > [    3.488831]   ISV = 0, ISS = 0x00000005
-> > > [    3.493067]   CM = 0, WnR = 0
-> > > [    3.496229] swapper pgtable: 4k pages, 39-bit VAs, pgdp =
-> > > 000000004f8fa26d
-> > > [    3.503214] [fffffffffffffdfb] pgd=0000000000000000,
-> > > pud=0000000000000000
-> > > [    3.510408] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-> > > [    3.515974] Modules linked in:
-> > > [    3.519023] Process kworker/0:3 (pid: 106, stack limit =
-> > > 0x00000000281d0651)
-> > > [    3.526066] CPU: 0 PID: 106 Comm: kworker/0:3 Tainted: G        W
-> > > 4.19.43 #208
-> > > [    3.533974] Hardware name: MediaTek kukui rev1 board (DT)
-> > > [    3.539374] Workqueue: events deferred_probe_work_func
-> > > [    3.544507] pstate: 20000005 (nzCv daif -PAN -UAO)
-> > > [    3.549294] pc : clk_prepare+0x18/0x40
-> > > [    3.553038] lr : scpsys_clk_enable+0x40/0xb4
-> > > [    3.557299] sp : ffffff800855b9e0
-> > > [    3.560606] x29: ffffff800855b9f0 x28: ffffff93e1e5f594
-> > > [    3.565911] x27: 000000000000000f x26: ffffff93e1e5e9b8
-> > > [    3.571217] x25: 000000003b9aca00 x24: ffffff800858530c
-> > > [    3.576522] x23: ffffffffffffffff x22: fffffffffffffdfb
-> > > [    3.581827] x21: 000000000000000a x20: ffffffccb89aafc8
-> > > [    3.587132] x19: fffffffffffffdfb x18: 00005a5c77082016
-> > > [    3.592438] x17: 0000000000000400 x16: 0000000000000001
-> > > [    3.597743] x15: 0000000000000009 x14: ffffff93e271c908
-> > > [    3.603048] x13: 0000000000000b22 x12: 0000000000000008
-> > > [    3.608353] x11: 0000000001d063de x10: 0000000000000008
-> > > [    3.613659] x9 : 00000000ffffffed x8 : 0000000000000000
-> > > [    3.618964] x7 : 736d6c2dff7224fe x6 : 0000008000000000
-> > > [    3.624269] x5 : 0000000000000000 x4 : 0000000080000000
-> > > [    3.629575] x3 : 002f6d6e74000000 x2 : 0000000000000000
-> > > [    3.634880] x1 : 000000000000000a x0 : fffffffffffffdfb
-> > > [    3.640185] Call trace:
-> > > [    3.642625]  clk_prepare+0x18/0x40
-> > > [    3.646019]  scpsys_clk_enable+0x40/0xb4
-> > > [    3.649935]  scpsys_power_on+0x13c/0x304
-> > > [    3.653850]  scpsys_probe+0xe0/0x5fc
-> > > [    3.657419]  platform_drv_probe+0x80/0xb0
-> > > [    3.661420]  really_probe+0x114/0x28c
-> > > [    3.665075]  driver_probe_device+0x64/0xfc
-> > > [    3.669164]  __device_attach_driver+0xb8/0xd0
-> > > [    3.673513]  bus_for_each_drv+0x88/0xd0
-> > > [    3.677341]  __device_attach+0xac/0x130
-> > > [    3.681169]  device_initial_probe+0x20/0x2c
-> > > [    3.685344]  bus_probe_device+0x34/0x90
-> > > [    3.689172]  deferred_probe_work_func+0x74/0xac
-> > > [    3.693698]  process_one_work+0x210/0x420
-> > > [    3.697700]  worker_thread+0x278/0x3e4
-> > > [    3.701443]  kthread+0x11c/0x12c
-> > > [    3.704665]  ret_from_fork+0x10/0x18
-> > > 
-> > > I'm not really understand what happen, but scpsys and mmsys point to
-> > > each other in MT8183. Why these two node point to each other in MT8183?
-> > > If this is really hardware limitation, we need to solve this in driver.
-> > > If this is not a hardware limitation, I would like to re-organize device
-> > > tree to prevent this problem.
-> > > 
-> > > Regards,
-> > > CK
-> > > 
-> > > 
-> > > > +				 <&imgsys CLK_IMG_LARB5>,
-> > > > +				 <&imgsys CLK_IMG_LARB2>,
-> > > > +				 <&camsys CLK_CAM_LARB6>,
-> > > > +				 <&camsys CLK_CAM_LARB3>,
-> > > > +				 <&camsys CLK_CAM_SENINF>,
-> > > > +				 <&camsys CLK_CAM_CAMSV0>,
-> > > > +				 <&camsys CLK_CAM_CAMSV1>,
-> > > > +				 <&camsys CLK_CAM_CAMSV2>,
-> > > > +				 <&camsys CLK_CAM_CCU>,
-> > > > +				 <&ipu_conn CLK_IPU_CONN_IPU>,
-> > > > +				 <&ipu_conn CLK_IPU_CONN_AHB>,
-> > > > +				 <&ipu_conn CLK_IPU_CONN_AXI>,
-> > > > +				 <&ipu_conn CLK_IPU_CONN_ISP>,
-> > > > +				 <&ipu_conn CLK_IPU_CONN_CAM_ADL>,
-> > > > +				 <&ipu_conn CLK_IPU_CONN_IMG_ADL>;
-> > > > +			clock-names = "audio", "audio1", "audio2",
-> > > > +				      "mfg", "mm", "cam",
-> > > > +				      "isp", "vpu", "vpu1",
-> > > > +				      "vpu2", "vpu3", "mm-0",
-> > > > +				      "mm-1", "mm-2", "mm-3",
-> > > > +				      "mm-4", "mm-5", "mm-6",
-> > > > +				      "mm-7", "mm-8", "mm-9",
-> > > > +				      "isp-0", "isp-1", "cam-0",
-> > > > +				      "cam-1", "cam-2", "cam-3",
-> > > > +				      "cam-4", "cam-5", "cam-6",
-> > > > +				      "vpu-0", "vpu-1", "vpu-2",
-> > > > +				      "vpu-3", "vpu-4", "vpu-5";
-> > > > +			infracfg = <&infracfg>;
-> > > > +			smi_comm = <&smi_common>;
-> > > > +		};
-> > > > +
-> > > >  		apmixedsys: syscon@1000c000 {
-> > > >  			compatible = "mediatek,mt8183-apmixedsys", "syscon";
-> > > >  			reg = <0 0x1000c000 0 0x1000>;
-> > > > @@ -260,6 +317,11 @@
-> > > >  			#clock-cells = <1>;
-> > > >  		};
-> > > >  
-> > > > +		smi_common: smi@14019000 {
-> > > > +			compatible = "mediatek,mt8183-smi-common", "syscon";
-> > > > +			reg = <0 0x14019000 0 0x1000>;
-> > > > +		};
-> > > > +
-> > > >  		imgsys: syscon@15020000 {
-> > > >  			compatible = "mediatek,mt8183-imgsys", "syscon";
-> > > >  			reg = <0 0x15020000 0 0x1000>;
-> > > 
-> > 
-> > 
-> 
-> 
+On the other hand, the difference between notifier_chain_register() and notifier_chain_cond_register() for duplicate registrations is confusing:
+Blocking the formation of the linked list ring in notifier_chain_cond_register()
+There is no interception of the linked list ring in notifier_chain_register(), just an alarm.
+Give me the illusion: Isn't notifier_chain_register() allowed to create a linked list ring?
+
+Thanks
+
+xiaoming Ni
+
 
 
