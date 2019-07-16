@@ -2,96 +2,122 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390E2C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A778AC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C67F20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IQjAYIFl"
+	by mail.kernel.org (Postfix) with ESMTP id 8804F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387511AbfGPOLx (ORCPT
+        id S2387823AbfGPOMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:11:53 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46997 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbfGPOLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:11:53 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c73so9169333pfb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 07:11:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7plrCe7cNTS0+Z/xokDsw3l+fNtSeqJL0Jrh4WZePeU=;
-        b=IQjAYIFlhWgS2pmAEDWTEk6uDc/BgtT1FAtmk9N5fRCu1YTn8bGTXAeI7TXX+SW7gs
-         Fvm3uTrVcyNHEBvYpeUWzmPV+fpDZmlqnkNLAMFrQDC4VpEfSkuAv6iyBcm6baW3N66O
-         mcRWK9r/mHsg54EOgJIf7ACPPGIX+g9aoo2NFadFdxquBggUSFe7ZRUtqhDsGUs6PAF5
-         CGbdNCLmirCF4r+w/AXsswWE9fXsuIx3piexaXKy7Qw6hu3xv1RzPtOF2OxicW3LJOON
-         UQm2SSAPGgNN+dKOqpl5ry/6RiUrqu/YhelSbUrql9zR2W+iFxrd+4kBLmcpteFTfAS6
-         pncw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7plrCe7cNTS0+Z/xokDsw3l+fNtSeqJL0Jrh4WZePeU=;
-        b=qPMWW2QRuEjP783QVdGXcrvplvzB1nRTSrnl+6nTZdl+tX7sk0fxCCgiIaJKwKPO/u
-         GPuNqI/misNSr2lOFWVnLXRabDia4GyF2FmRwJj8rnGSHrypk/Fem9+mdC/i6+wAhYH+
-         xY2krHUA53yxkovSxzx7RDT47tvMU9OHwzSLNzxzCTTBJ7Z72FPSbXt+lrbMSsgxQAbK
-         +9MLfF5+tynzzh1GJL8H4gv2Obh/89MYNpscpUjCSj7LP5gFC6D5K0b4kIo3UCD6WgXH
-         xwtpRcjmPZWgXFBuX5MHU9MbksNiOVPaLBDx3qoGGHpjLWHI0B2lCL1zafrpnENF8At9
-         DwaA==
-X-Gm-Message-State: APjAAAX2oq/KIazrdChTHew13N7WFbPi8YRtdEXOycwxO4Hr24I1QsGn
-        gkLO+EMd1p4McCcOEU6nROc=
-X-Google-Smtp-Source: APXvYqxWonvROtYZuFnyeiQD93daARvUGt8q3WqJQ8VqbqRis3eCqaIjCof04P1rEfOgx0NZ/bVz3w==
-X-Received: by 2002:a63:2f44:: with SMTP id v65mr33469693pgv.185.1563286312858;
-        Tue, 16 Jul 2019 07:11:52 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id t7sm10699361pfh.101.2019.07.16.07.11.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 07:11:51 -0700 (PDT)
-Subject: Re: [PATCH BUGFIX IMPROVEMENT V2 0/1] block, bfq: eliminate latency
- regression with fast drives
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name
-References: <20190715105719.20353-1-paolo.valente@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6867cf11-d7f8-cadf-b9ec-85549bb86af3@kernel.dk>
-Date:   Tue, 16 Jul 2019 08:11:49 -0600
+        Tue, 16 Jul 2019 10:12:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33638 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbfGPOMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:12:37 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ED22A3CA1B;
+        Tue, 16 Jul 2019 14:12:36 +0000 (UTC)
+Received: from [10.36.116.218] (ovpn-116-218.ams2.redhat.com [10.36.116.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A126F60638;
+        Tue, 16 Jul 2019 14:12:31 +0000 (UTC)
+Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
+ via hinting
+To:     Dave Hansen <dave.hansen@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+ <20190619223338.1231.52537.stgit@localhost.localdomain>
+ <20190716055017-mutt-send-email-mst@kernel.org>
+ <cad839c0-bbe6-b065-ac32-f32c117cf07e@intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <3f8b2a76-b2ce-fb73-13d4-22a33fc1eb17@redhat.com>
+Date:   Tue, 16 Jul 2019 16:12:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190715105719.20353-1-paolo.valente@linaro.org>
+In-Reply-To: <cad839c0-bbe6-b065-ac32-f32c117cf07e@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 16 Jul 2019 14:12:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 4:57 AM, Paolo Valente wrote:
-> [V2 that should apply cleanly on current HEAD]
+On 16.07.19 16:00, Dave Hansen wrote:
+> On 7/16/19 2:55 AM, Michael S. Tsirkin wrote:
+>> The approach here is very close to what on-demand hinting that is
+>> already upstream does.
 > 
-> Hi Jens,
-> I've spotted a regression on a fast SSD: a loss of I/O-latency control
-> with interactive tasks (such as the application start up I usually
-> test). Details in the commit.
+> Are you referring to the s390 (and powerpc) stuff that is hidden behind
+> arch_free_page()?
 > 
-> I do hope that, after proper review, this commit makes it for 5.3.
 
-If it's a regression, it should have a Fixes: line telling us which
-commit originally introduced the regression. This is important for
-folks doing backports. Can you add that?
+I assume Michael meant "free page reporting".
 
 -- 
-Jens Axboe
 
+Thanks,
+
+David / dhildenb
