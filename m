@@ -2,132 +2,358 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DF2C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97527C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95CF2206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B99A21721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Xq9GjXYz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C4HP24IR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbfGPHzi (ORCPT
+        id S1730443AbfGPH5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:55:38 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:45308 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730429AbfGPHzi (ORCPT
+        Tue, 16 Jul 2019 03:57:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46970 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfGPH5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:55:38 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190716075536euoutp01edd2596b62cabc3b39a00d06c2251172~x1BX_wWtL2472424724euoutp01F
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 07:55:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190716075536euoutp01edd2596b62cabc3b39a00d06c2251172~x1BX_wWtL2472424724euoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563263736;
-        bh=z6y7NH+vNk3T1ssuE0A9cgVBd5PD4K/HolMVUCfpspA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Xq9GjXYzU2yfj9rZyER6r6evZXM52qEju7JwG2JwcBkbWGLRmDckElNQS+reCV8Ar
-         9FR7LBOhYn9gDAdL5aOehLQY/LkmvGM1Xs6/fpuyuPD40w6ad7+9Nx4QOjmrX3MtdI
-         Bk1XxR5/zdLmn8PnFHtIQ8IfQNfMwV0Bq2kwyWBk=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190716075535eucas1p16e3c9bd2c6a81a2d69a01536d3e47b97~x1BXTan9g0611406114eucas1p1t;
-        Tue, 16 Jul 2019 07:55:35 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A5.66.04377.7F28D2D5; Tue, 16
-        Jul 2019 08:55:35 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716075535eucas1p2987295d2e6c1c58d74e63751e4e6186f~x1BWnAEXV0505305053eucas1p25;
-        Tue, 16 Jul 2019 07:55:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190716075534eusmtrp24dd210399b998667f2080efffbf50582~x1BWY6m7w2904429044eusmtrp24;
-        Tue, 16 Jul 2019 07:55:34 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-0f-5d2d82f7e7ec
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id F2.37.04140.6F28D2D5; Tue, 16
-        Jul 2019 08:55:34 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716075534eusmtip2fe32f7e8fda2cf154e39f4210d86b94a~x1BV-Q9qa0506705067eusmtip2D;
-        Tue, 16 Jul 2019 07:55:34 +0000 (GMT)
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: use dev name for debugfs
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <ac6cfa51-8b66-a98d-1a69-710e0d4c552b@samsung.com>
-Date:   Tue, 16 Jul 2019 09:55:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.0
+        Tue, 16 Jul 2019 03:57:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c73so8692210pfb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 00:57:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hj/eyxtCjevB1+PnZR+txqFBPeZmBpgwE/GtSSJfKak=;
+        b=C4HP24IR8lBSiExf/3eblNnl51w3i/GXv6g0d/Ej5rPsntQ1UQeR7zznUPtv769PDQ
+         2XbzVujWNejHQFDRm+ISE10iEvh4oahTqWvJvqDwJgUouIsH+npmqd/ytHwkc89ZlKlz
+         GZ8KAQLfSaOhylWQtFw5Qk5ORxuKjnto8l6AK0EoSTMhLJSgcAUsidGBSw3tIFAL7Nlu
+         Eq0EOGx4ArvrOKXmHmXkdsxURjUiyC7FqwB1cHlSJi7BonYJfZBHkWrKYRMOOX8Seysz
+         GxaRriJmb72xSK0w4Ta+k66Q5WGyM5EDDsfYjuU9UMlvilAzPNioXLTXa6bDoCBKjvlx
+         T3eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hj/eyxtCjevB1+PnZR+txqFBPeZmBpgwE/GtSSJfKak=;
+        b=fRsQ+ix1Q7m5eKhuc6Im7pPoErunNytSLqQ2qml37hAdzQJWxdAKPfts0xYscyTA9a
+         TTsE9JaLdP+HqeRFJTWND+Nr5h+juzOYjwkPEXhVw0iZILt+rLLD0SLBg0vIlbJllwOs
+         MC1Q44uWFlNJK3syXMBtLwjuxgByE3Fop4THvFcIYUib7Y6kFsVRbvk9mqKPA5FHrOTE
+         JE4WeRWf4D870cXcLOl2KyQhiNzta+pFh458GDku5Q4UpHY729TeTD4EnSVDVX+uBZir
+         1JXSe9tNAiF4qWp2tNNbfDoeacrOqSObKMetE+9W0hb3trwbKJ/15zYdk7cmJJ0hzkQc
+         WbtA==
+X-Gm-Message-State: APjAAAUQSCxSn2G+BZVMDKOAa6nv6bmoQmQkZfmruKzplU4GKBVjFkM+
+        mFaPzcwCtmXUQNfGSyNxFTXKoYiqmCrLDUkB9U1ZZQ==
+X-Google-Smtp-Source: APXvYqxRN7k0ohWxf4YsbnJVRW8wqK5xEZVOZfCD9fKAsePqyFDzc1+rDjRXhAo3uNTbJkv3qcZDCMpUOUOZHkLrnvg=
+X-Received: by 2002:a17:90a:ab0d:: with SMTP id m13mr32936932pjq.84.1563263837424;
+ Tue, 16 Jul 2019 00:57:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190706203105.7810-1-robdclark@gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBKsWRmVeSWpSXmKPExsWy7djP87rfm3RjDa70Klv0njvJZPF/20Rm
-        iytf37NZdE5cwm4xcf9ZdovLu+awWVz7+ZjZ4vnCH8wOHB6zGy6yeOz9toDFY+esu+wesztm
-        snps//aA1eN+93Emj8+b5ALYo7hsUlJzMstSi/TtErgyjn9ZzV7wjqli26rIBsblTF2MnBwS
-        AiYSu/esY+li5OIQEljBKPFu7nR2COcLo8TNVfdZQaqEBD4zSnybaQ3TMfXcLSaIouWMEnNf
-        Todqf8socWbCZCCHg0NYwF3izBY9kAYRAReJE5d+s4LUMAs8ZJRoPTKHHSTBJqAp8XfzTTYQ
-        m1fATmJXy02wOIuAqsS/99OYQWxRgTCJnws6oWoEJU7OfMICYnMKWEjMm3gH7AdmAXmJ7W/n
-        MEPY4hK3nswHu05C4BS7xPV1e9khznaRWNk9kRnCFpZ4dXwLVFxG4v/O+dDAqJe4v6KFGaK5
-        g1Fi64adUA3WEoePX2QF+YwZ6Or1u/Qhwo4Sa+7OBwtLCPBJ3HgrCHEDn8SkbdOZIcK8Eh1t
-        QhDVihL3z26FGigusfTCV7YJjEqzkHw2C8k3s5B8Mwth7wJGllWM4qmlxbnpqcVGeanlesWJ
-        ucWleel6yfm5mxiB6en0v+NfdjDu+pN0iFGAg1GJh/fEHp1YIdbEsuLK3EOMEhzMSiK8tl+1
-        Y4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzVjM8iBYSSE8sSc1OTS1ILYLJMnFwSjUwNn1gvvw6
-        5CfDnxvHGlR+7UjY2mubsCuFV/rTDP11EaoG9Vy98UHTEyJXM375LWDEL3pb2Oxw4d+9a4Ru
-        819ZmHQzK6j8aNYV35nPtz05+zY8yuXAX/NVq9pLpGepRNUvrNBwZdmacmbTtC9dCc5zKrfu
-        vFMmyZmlF2yy+KKhoToHv0v9uX/LlFiKMxINtZiLihMBqOtFC0sDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsVy+t/xe7rfmnRjDa7eMrLoPXeSyeL/tonM
-        Fle+vmez6Jy4hN1i4v6z7BaXd81hs7j28zGzxfOFP5gdODxmN1xk8dj7bQGLx85Zd9k9ZnfM
-        ZPXY/u0Bq8f97uNMHp83yQWwR+nZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq
-        6dvZpKTmZJalFunbJehlHP+ymr3gHVPFtlWRDYzLmboYOTkkBEwkpp67BWRzcQgJLGWUuLHj
-        ECNEQlxi9/y3zBC2sMSfa11sILaQwGtGiaUHVbsYOTiEBdwlzmzRAwmLCLhInLj0mxVkDrPA
-        Q0aJSf2b2CGGdjNK/Hu0CKyZTUBT4u/mm2A2r4CdxK6Wm+wgNouAqsS/99OYQYaKCoRJHD2R
-        B1EiKHFy5hMWEJtTwEJi3sQ7YEczC6hL/Jl3iRnClpfY/nYOlC0ucevJfKYJjEKzkLTPQtIy
-        C0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgTG47ZjP7fsYOx6F3yIUYCDUYmH
-        98QenVgh1sSy4srcQ4wSHMxKIry2X7VjhXhTEiurUovy44tKc1KLDzGaAv02kVlKNDkfmCry
-        SuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwXtR6PHPBV9uciTzv
-        ja0j3u02lfm1dx+j2ILvYQ7VOn62lUY2MfvnrOZSOtZ32PDoysCJFp+3bNj+9aeLUThz9UNT
-        UfV/Syz5IoMKX3scfHe/LqJfcu2hLXapj2fu/rfggbLbxdCVxRn/J7Q0iNzJ2sYq9IY9qS14
-        n5doaedf6azQ3+dn/c80UWIpzkg01GIuKk4EABog2tXdAgAA
-X-CMS-MailID: 20190716075535eucas1p2987295d2e6c1c58d74e63751e4e6186f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190706203123epcas2p4094186d4d2d9954d6068c03b99df07a2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190706203123epcas2p4094186d4d2d9954d6068c03b99df07a2
-References: <CGME20190706203123epcas2p4094186d4d2d9954d6068c03b99df07a2@epcas2p4.samsung.com>
-        <20190706203105.7810-1-robdclark@gmail.com>
+References: <20190712081744.87097-1-brendanhiggins@google.com>
+ <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org>
+In-Reply-To: <20190715221554.8417320665@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 16 Jul 2019 00:57:06 -0700
+Message-ID: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.07.2019 22:31, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On Mon, Jul 15, 2019 at 3:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> This should be more future-proof if we ever encounter a device with two
-> of these bridges.
+> Quoting Brendan Higgins (2019-07-12 01:17:30)
+> > diff --git a/include/kunit/kunit-stream.h b/include/kunit/kunit-stream.h
+> > new file mode 100644
+> > index 0000000000000..a7b53eabf6be4
+> > --- /dev/null
+> > +++ b/include/kunit/kunit-stream.h
+> > @@ -0,0 +1,81 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * C++ stream style string formatter and printer used in KUnit for outputting
+> > + * KUnit messages.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#ifndef _KUNIT_KUNIT_STREAM_H
+> > +#define _KUNIT_KUNIT_STREAM_H
+> > +
+> > +#include <linux/types.h>
+> > +#include <kunit/string-stream.h>
+> > +
+> > +struct kunit;
+> > +
+> > +/**
+> > + * struct kunit_stream - a std::stream style string builder.
+> > + *
+> > + * A std::stream style string builder. Allows messages to be built up and
+> > + * printed all at once.
+> > + */
+> > +struct kunit_stream {
+> > +       /* private: internal use only. */
+> > +       struct kunit *test;
+> > +       const char *level;
 >
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Is the level changed? See my comment below, but I wonder if this whole
+> struct can go away and the wrappers can just operate on 'struct
+> string_stream' instead.
 
-Queued to drm-misc-next.
+I was inclined to agree with you when I first read your comment, but
+then I thought about the case that someone wants to add in a debug
+message (of which I currently have none). I think under most
+circumstances a user of kunit_stream would likely want to pick a
+default verbosity that maybe I should provide, but may still want
+different verbosity levels.
 
+The main reason I want to keep the types separate, string_stream vs.
+kunit_stream, is that they are intended to be used differently.
+string_stream is just a generic string builder. If you are using that,
+you are expecting to see someone building the string at some point and
+then doing something interesting with it. kunit_stream really tells
+you specifically that KUnit is putting together a message to
+communicate something to a user of KUnit. It is really used in a very
+specific way, and I wouldn't want to generalize its usage beyond how
+it is currently used. I think in order to preserve the author's
+intention it adds clarity to keep the types separate regardless of how
+similar they might be in reality.
 
-Regards
+> > +       struct string_stream *internal_stream;
+> > +};
+> > diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
+> > new file mode 100644
+> > index 0000000000000..8bea1f22eafb5
+> > --- /dev/null
+> > +++ b/kunit/kunit-stream.c
+> > @@ -0,0 +1,123 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * C++ stream style string formatter and printer used in KUnit for outputting
+> > + * KUnit messages.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#include <kunit/test.h>
+> > +#include <kunit/kunit-stream.h>
+> > +#include <kunit/string-stream.h>
+> > +
+> > +void kunit_stream_add(struct kunit_stream *kstream, const char *fmt, ...)
+> > +{
+> > +       va_list args;
+> > +       struct string_stream *stream = kstream->internal_stream;
+> > +
+> > +       va_start(args, fmt);
+> > +
+> > +       if (string_stream_vadd(stream, fmt, args) < 0)
+> > +               kunit_err(kstream->test,
+> > +                         "Failed to allocate fragment: %s\n",
+> > +                         fmt);
+> > +
+> > +       va_end(args);
+> > +}
+> > +
+> > +void kunit_stream_append(struct kunit_stream *kstream,
+> > +                               struct kunit_stream *other)
+> > +{
+> > +       struct string_stream *other_stream = other->internal_stream;
+> > +       const char *other_content;
+> > +
+> > +       other_content = string_stream_get_string(other_stream);
+> > +
+> > +       if (!other_content) {
+> > +               kunit_err(kstream->test,
+> > +                         "Failed to get string from second argument for appending\n");
+> > +               return;
+> > +       }
+> > +
+> > +       kunit_stream_add(kstream, other_content);
+> > +}
+>
+> Why can't this function be implemented in the string_stream API? Seems
+> valid to want to append one stream to another and that isn't
+> kunit_stream specific.
 
-Andrzej
+Fair point. Will do.
 
+> > +
+> > +void kunit_stream_clear(struct kunit_stream *kstream)
+> > +{
+> > +       string_stream_clear(kstream->internal_stream);
+> > +}
+> > +
+> > +void kunit_stream_commit(struct kunit_stream *kstream)
+> > +{
+> > +       struct string_stream *stream = kstream->internal_stream;
+> > +       struct string_stream_fragment *fragment;
+> > +       struct kunit *test = kstream->test;
+> > +       char *buf;
+> > +
+> > +       buf = string_stream_get_string(stream);
+> > +       if (!buf) {
+> > +               kunit_err(test,
+> > +                         "Could not allocate buffer, dumping stream:\n");
+> > +               list_for_each_entry(fragment, &stream->fragments, node) {
+> > +                       kunit_err(test, fragment->fragment);
+> > +               }
+> > +               kunit_err(test, "\n");
+> > +               goto cleanup;
+> > +       }
+> > +
+> > +       kunit_printk(kstream->level, test, buf);
+> > +       kfree(buf);
+> > +
+> > +cleanup:
+>
+> Drop the goto and use an 'else' please.
 
+Will do.
 
+> > +       kunit_stream_clear(kstream);
+> > +}
+> > +
+> > +static int kunit_stream_init(struct kunit_resource *res, void *context)
+> > +{
+> > +       struct kunit *test = context;
+> > +       struct kunit_stream *stream;
+> > +
+> > +       stream = kzalloc(sizeof(*stream), GFP_KERNEL);
+> > +       if (!stream)
+> > +               return -ENOMEM;
+> > +
+> > +       res->allocation = stream;
+> > +       stream->test = test;
+> > +       stream->internal_stream = alloc_string_stream(test);
+> > +
+> > +       if (!stream->internal_stream)
+> > +               return -ENOMEM;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static void kunit_stream_free(struct kunit_resource *res)
+> > +{
+> > +       struct kunit_stream *stream = res->allocation;
+> > +
+> > +       if (!string_stream_is_empty(stream->internal_stream)) {
+> > +               kunit_err(stream->test,
+> > +                         "End of test case reached with uncommitted stream entries\n");
+> > +               kunit_stream_commit(stream);
+> > +       }
+> > +}
+> > +
+>
+> Nitpick: Drop this extra newline.
+
+Oops, nice catch.
+
+> > diff --git a/kunit/test.c b/kunit/test.c
+> > index f165c9d8e10b0..29edf34a89a37 100644
+> > --- a/kunit/test.c
+> > +++ b/kunit/test.c
+> > @@ -120,6 +120,12 @@ static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> >                               test_case->name);
+> >  }
+> >
+> > +void kunit_fail(struct kunit *test, struct kunit_stream *stream)
+>
+> Why doesn't 'struct kunit' have a 'struct kunit_stream' inside of it? It
+> seems that the two are highly related, to the point that it might just
+> make sense to have
+
+A `struct kunit_stream` is usually associated with a message that is
+being built up over time like maybe an expectation; it is meant to
+capture the idea that we might want to send some information out to
+the user pertaining to some thing 'X', but we aren't sure that we
+actually want to send it until 'X' is complete, but do to the nature
+of 'X' it is easier to start constructing the message before 'X' is
+complete.
+
+Consider a complicated expectation, there might be multiple conditions
+that satisfy it and multiple conditions which could make it fail. As
+we start exploring the input to the expectation we gain information
+that we might want to share back with the user if the expectation were
+to fail and we might get that information before we are actually sure
+that the expectation does indeed fail.
+
+When we first step into the expectation we immediately know the
+function name, file name, and line number where we are called and
+would want to put that information into any message we would send to
+the user about this expectation. Next, we might want to check a
+property of the input, it may or may not be enough information on its
+own for the expectation to fail, but we want to share the result of
+the property check with the user regardless, BUT only if the
+expectation as a whole fails.
+
+Hence, we can have multiple `struct kunit_stream`s associated with a
+`struct kunit` active at any given time.
+
+>         struct kunit {
+>                 struct kunit_stream stream;
+>                 ...
+>         };
+>
+> > +{
+> > +       kunit_set_failure(test);
+> > +       kunit_stream_commit(stream);
+>
+> And then this function can just take a test and the stream can be
+> associated with the test directly. Use container_of() to get to the test
+> when the only pointer in hand is for the stream too.
+
+Unfortunately that wouldn't work. See my above explanation.
+
+> > +}
+> > +
+> >  void kunit_init_test(struct kunit *test, const char *name)
+> >  {
+> >         mutex_init(&test->lock);
+
+Thanks!
