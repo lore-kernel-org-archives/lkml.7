@@ -5,62 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B8EC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2B7C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D91E2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56AF720880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 12:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sNaPnPr5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XJodqTDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732300AbfGPMU6 (ORCPT
+        id S1731855AbfGPMXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 08:20:58 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:60866 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPMU6 (ORCPT
+        Tue, 16 Jul 2019 08:23:11 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:35247 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbfGPMXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 08:20:58 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190716122055epoutp01c8a87c49e3898c5754fe0aabed73b839~x4pBTt4qV2265122651epoutp01H
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:20:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190716122055epoutp01c8a87c49e3898c5754fe0aabed73b839~x4pBTt4qV2265122651epoutp01H
+        Tue, 16 Jul 2019 08:23:10 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190716122307epoutp038be840042567512292c7a496776f7424~x4q9ASa4z0969109691epoutp037
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:23:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190716122307epoutp038be840042567512292c7a496776f7424~x4q9ASa4z0969109691epoutp037
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563279655;
-        bh=xsjneApn5zTmMogv/3sV730QisGaiz0RQiJTq4eeYAQ=;
+        s=mail20170921; t=1563279788;
+        bh=caBujU9xjDMLgE+1hzfA/JTx9d8apYiGmYT2HyxVy6w=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=sNaPnPr5kkHo2nRrr/WnbIi8BB/MYeAVDcEfuvGjOh0TDXgRG1s3EqmrQ7EoIl4a1
-         Pe7EpzL92Z8Po2H27Yt19wmvQfyd16hlzEEezdGnMAD9OuyWQdAGW/cPQST37UhKwq
-         bwFgjWC0a6dfE5Urtk3HyLuBv+c2J1HIwOEOCHKA=
-Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
+        b=XJodqTDho73Knn2dCLspO/AxazlKFmvHYbMUW8Y+WBOI6C1iR2Z5zDY2FbN7LX8vp
+         PD+3mDUGWL6LTVI1WqzdvV9vBe37IpYV2THrupPaVg0/bUhnQM1x0PwDcTPwGZNGpx
+         cC69JUAGnmoRVI4AyzT+yHSfDFu3GbVg/jLSVoOI=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
         epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190716122054epcas1p340989156d883181482e28311e7bd2648~x4pBC3NEj1358913589epcas1p33;
-        Tue, 16 Jul 2019 12:20:54 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp6.localdomain (Postfix) with ESMTP id 45nzyD57qgzMqYkW; Tue, 16 Jul
-        2019 12:20:52 +0000 (GMT)
+        20190716122307epcas1p3f5331e4058955aa48e3fae7a35897901~x4q8khLgA2340023400epcas1p3f;
+        Tue, 16 Jul 2019 12:23:07 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 45p00p014jzMqYkV; Tue, 16 Jul
+        2019 12:23:06 +0000 (GMT)
 Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A5.EF.04160.421CD2D5; Tue, 16 Jul 2019 21:20:52 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190716122052epcas1p150bc214698d343bf2827e2c60be3b127~x4o_v8yVL0839208392epcas1p1P;
-        Tue, 16 Jul 2019 12:20:52 +0000 (GMT)
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        77.8D.04075.9A1CD2D5; Tue, 16 Jul 2019 21:23:05 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190716122305epcas1p4b445490c0133939f2854177e0483f22c~x4q61ebKZ0941709417epcas1p4i;
+        Tue, 16 Jul 2019 12:23:05 +0000 (GMT)
 Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190716122052epsmtrp2e8b34e1ee7ff523b716d9ac15d1b2857~x4o_vOOdG2555525555epsmtrp2g;
-        Tue, 16 Jul 2019 12:20:52 +0000 (GMT)
-X-AuditID: b6c32a38-b4bff70000001040-8a-5d2dc124a582
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190716122305epsmtrp101f1e9c8b34af987717368f143f7bb46~x4q6tzQ0e0761907619epsmtrp1U;
+        Tue, 16 Jul 2019 12:23:05 +0000 (GMT)
+X-AuditID: b6c32a36-b49ff70000000feb-82-5d2dc1a9ac3a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.5E.03638.421CD2D5; Tue, 16 Jul 2019 21:20:52 +0900 (KST)
+        D3.7E.03638.9A1CD2D5; Tue, 16 Jul 2019 21:23:05 +0900 (KST)
 Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190716122052epsmtip2f4b33cee324dd065bcf06a02f8ad8c59~x4o_hfaLH2935229352epsmtip2W;
-        Tue, 16 Jul 2019 12:20:52 +0000 (GMT)
-Subject: Re: [PATCH v4 11/24] PM / devfreq: tegra30: Add debug messages
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190716122305epsmtip12430698e29dba4e261a82c159900cbfc~x4q6gBidJ2151621516epsmtip1F;
+        Tue, 16 Jul 2019 12:23:05 +0000 (GMT)
+Subject: Re: [PATCH v4 12/24] PM / devfreq: tegra30: Inline all one-line
+ functions
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -71,53 +72,53 @@ Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 From:   Chanwoo Choi <cw00.choi@samsung.com>
 Organization: Samsung Electronics
-Message-ID: <c883bdbe-427f-35a1-9e63-5e4953a84286@samsung.com>
-Date:   Tue, 16 Jul 2019 21:23:57 +0900
+Message-ID: <b5634fbe-8bc1-0f04-e13b-6345dfbb5615@samsung.com>
+Date:   Tue, 16 Jul 2019 21:26:11 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-12-digetx@gmail.com>
+In-Reply-To: <20190707223303.6755-13-digetx@gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTNa6fTohbHul0blzK4gSIMpTgodYkEq2JCYmJcgnUCIyBdhpli
-        XD5ki0CjBOVDrIoGl+BCQEADREQoApq44hZNE5OiESEliqi4oG0HIn/nnnvOu8u7CqmqBlcr
-        0i02lrcwJhKfgN1yhoSHzW8NS4oo/bOIvvbZjeh8RwVGP8ztl9PdTWdwevBYO6KLvjpw+m1O
-        JU4PN5VjdHHVM3xNgKHBdREZGh0uueFYngc3FNdfRYbB2rmJsh0ZsWksk8LyGtaSbE1Jt6Tq
-        yU1bjOuMuugIKoyKoZeTGgtjZvVkXEJiWHy6ydsQqdnHmLK8VCIjCGT4qljemmVjNWlWwaYn
-        WS7FxMVwywTGLGRZUpclW80rqIiISJ1XuDsjLedcrox7Tu53Frjk2ahsth0FKICIgq7+x3I7
-        mqBQEQ0IRt4XIDH4gqD1XfVo8A2B83uHZMxiL+tEPqwimhEMPNkviga89nsOv2gqsR5qSiol
-        vsQ0YgRB0XAe7ktIie3gbLzmF+FEKLR8fO3nJxNB8OKH2/+qklgF1b0v/DxGLIC2932YD08n
-        tsGD9nJM1EyB+6d6/DiAiIaqV8NS8f2Z8KbnnETE8yDv5mmprwkg/uLwtbMSE0eIg4f2IamI
-        p8Knznq5iNUw6GnGRXwIrtxvx0VzIYL6licyMaGFlkul3goKb4UQqG4KF+kgaPx1FomFA8Ez
-        dFTmkwChhMIjKlESDN3vXKNbnAUXCorwEkQ6xo3jGDeCY9wIjv/FziPsKprBcoI5lRUoLmr8
-        d9ci/7WG0g3o9qOENkQoEDlJ2XV7aZJKxuwTDpjbECik5DSlfmhJkkqZwhw4yPJWI59lYoU2
-        pPNu+7hUPT3Z6r19i81I6SK1Wi0dRUXrKIqcqSz/HZKkIlIZG5vBshzLj/kkigB1NprTsDT6
-        ZdHGu/EreZtrYXcZp175Q94a2yXj7rkP9S2+WJtbd6svcxfo11qcVaZWd0iZJKfm5OUO1Ift
-        /vm8d+eUw/PtV1a/7ahze4qv3/BwFflzRzZqgxNHzjZez+QCZ3zg91ZpHk8kVQV1tVhCc++N
-        R4vvGIeentiq3iCT9WzeQ2JCGkOFSnmB+Qf2dyInwwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvK7KQd1Yg/27hC1Wf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyGuc3sRZcUao43H6XvYFxhkwXIyeHhICJRNeM
-        44xdjFwcQgK7GSVunV/JDpGQlJh28ShzFyMHkC0scfhwMUTNW0aJhb07mEBqhAXcJTZMWMEE
-        khARaGKS2NR7AayZWSBSomfuFjaIji2MEh23b4Ml2AS0JPa/uMEGYvMLKEpc/fGYEcTmFbCT
-        WP/yKlicRUBV4tDT1ywgtqhAhMSkaztZIGoEJU7OfAJmcwqYSay9/pMZYpm6xJ95l6BscYlb
-        T+YzQdjyEs1bZzNPYBSehaR9FpKWWUhaZiFpWcDIsopRMrWgODc9t9iwwCgvtVyvODG3uDQv
-        XS85P3cTIzjKtLR2MJ44EX+IUYCDUYmH98QenVgh1sSy4srcQ4wSHMxKIry2X7VjhXhTEiur
-        Uovy44tKc1KLDzFKc7AoifPK5x+LFBJITyxJzU5NLUgtgskycXBKNTD26K1W6MxVb/2zqnfm
-        hKKnZhM7E3l9E4O49OfWcL6byra0T5PbROXivgiBts3zDFk4e42vXF970um8hZm3Z9t3sc27
-        t7IfnXBY5oXku1vtD7uvTd5yrftm37mmyztVxTnXe7TOv+U66+R/PuUt8d99TBLEd37PTi3V
-        eFU0LaXbqudU1wvpiWZKLMUZiYZazEXFiQDypbyjrgIAAA==
-X-CMS-MailID: 20190716122052epcas1p150bc214698d343bf2827e2c60be3b127
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRTv2+7u7karz6V52h+1bgRpmV7n5u1hBD0YKSVl9BS7uesD92J3
+        RmZBZaT2sBdE3XJFJZSrjLJwhlgmhoYprUBKRTArpexhT5Vq2zXyv9855/c75/y+71By7S1S
+        R+Xa3bzLzllpUk3cexQVG3PtYUx63JGqRaz3cy9iD4iXCLZ1/3sl6689T7JDRxsRW/pVJNlX
+        +66S7K9aD8GW3XhGLlWZa7quILNP7FKajxYNkuay6kpkHro9PVWxOW9xDs9ZeJeet2c6LLn2
+        7CQ6eV3GsgyjKY6JYRawibTeztn4JHp5SmrMylxrYCFav4Oz5gdSqZwg0LFLFrsc+W5en+MQ
+        3Ek077RYnQuc8wXOJuTbs+dnOmwLmbi4eGOAuC0vx3f9A+Hswjv9/j7lXlSnOYRUFOAE8N5p
+        QoeQmtLiGgRnO2uUUvAFQdmFWpkUfEfwvNxL/pOc+9Idwlpch+DkcYdE+ojg8c9qebAwBadB
+        z9VhRbAQjn8jKP1VFFLI8SZ45PPKgpjE0VD/riOUn4xnwoufvSiINXgJVBV3KIKYwLNBvFEW
+        ahqBN0JLo4eQOGHQfPZ1CKuwCbwD1xVS/0h4+fqCTMIzoOjuOXlwCcB/SPB1npBJFpZDa4U4
+        ZmcKDDyuVkpYB/3HDo7hQrjW3EhK4hIE1fXtCqlggPqKU4FGVGBCFFTVxkrpmeAbKUfS4Ekw
+        +O2IIkgBrIGSg1qJMgv8PV1jK0yDy8Wl5HFEi+PsiOMsiOMsiP+HXUREJZrKOwVbNi8wzvjx
+        330bha412lSDLj1NaUCYQvREjb5+XrpWwe0QCmwNCCg5Ha5J+jY3XauxcAW7eJcjw5Vv5YUG
+        ZAy89gm5LiLTEbh9uzuDMcYbDAY2gTEZGYaO1HhGo9K1OJtz83k87+Rd/3QySqXbi7a+3T0v
+        sXhGx+Gb996pJxT8uZ/VnZy2vi7c0P7kdN7hB0MRhV8vrlU2efiR/pfepi2R96O0WWFZvaoO
+        IrFvp3q4IvLHqrCRN0rPCn+LSaNevcZU0JxCtaWUnPEeG7VsWPesvXvN6NIE2Z4Wdo5u0/bC
+        RW3JfRvKL/enTjxtOfkpeZiiCSGHY6LlLoH7C0rSKLbDAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSnO7Kg7qxBns/SVus/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
+        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBl7FzzlqXgrkDF5ctP2RsY9/J2MXJySAiYSMz+
+        dI+ti5GLQ0hgN6PE06Vn2SESkhLTLh5l7mLkALKFJQ4fLoaoecsocXnaVbAaYYEQiQcrfrGC
+        JEQEmpgkNvVeAEswC0RK9MzdAjV1C6PE9kcH2EASbAJaEvtf3ACz+QUUJa7+eMwIYvMK2Ems
+        b7/BCmKzCKhKzFrbxwxiiwpESEy6tpMFokZQ4uTMJ2A2p4CZxOpXa1ghlqlL/Jl3iRnCFpe4
+        9WQ+E4QtL9G8dTbzBEbhWUjaZyFpmYWkZRaSlgWMLKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz
+        0vWS83M3MYKjTEtrB+OJE/GHGAU4GJV4eE/s0YkVYk0sK67MPcQowcGsJMJr+1U7Vog3JbGy
+        KrUoP76oNCe1+BCjNAeLkjivfP6xSCGB9MSS1OzU1ILUIpgsEwenVANju+nbSVdey05ozr+t
+        3XXaWOjJjmuG/bNE982qiz6g9NpFLdV4r0rs6VkeS/uf/XDrmWu2J+LgxA8Fl25xHbomft4i
+        MWBaXrpztnK4m99fxf1HGNiX/5WQENpyvaTi1uqHr4MC5oouvxQyRTQ59L3igk/Ofvsrbfdf
+        /2qqq35IY9LahQ+fKFzTU2Ipzkg01GIuKk4EAHNk09SuAgAA
+X-CMS-MailID: 20190716122305epcas1p4b445490c0133939f2854177e0483f22c
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223640epcas4p15337f40466342832b731ad6a53be946e
+X-CMS-RootMailID: 20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51
 References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223640epcas4p15337f40466342832b731ad6a53be946e@epcas4p1.samsung.com>
-        <20190707223303.6755-12-digetx@gmail.com>
+        <CGME20190707223633epcas4p3873704f3199126be0e8d5cb7454c7a51@epcas4p3.samsung.com>
+        <20190707223303.6755-13-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -125,119 +126,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Dmitry,
 
-Usually, the kernel log print for all users
-such as changing the frequency, fail or success.
+I'm not sure that it is necessary.
+As I knew, usally, the 'inline' is used on header file
+to define the empty functions.
 
-But, if the log just show the register dump,
-it is not useful for all users. It is just used
-for only specific developer.
-
-I recommend that you better to add more exception handling
-code on many points instead of just showing the register dump.
+Do we have to change it with 'inline' keyword?
 
 On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> Add debug messages to know about what's happening in hardware and how
-> driver reacts.
+> Depending on a kernel's configuration, a single line functions may not be
+> inlined by compiler (like enabled ftracing for example). Let's inline such
+> functions explicitly for consistency.
 > 
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/devfreq/tegra30-devfreq.c | 35 +++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  drivers/devfreq/tegra30-devfreq.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 878c9396bb8c..c6c4a07d3e07 100644
+> index c6c4a07d3e07..1a10df5dbbed 100644
 > --- a/drivers/devfreq/tegra30-devfreq.c
 > +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -41,6 +41,7 @@
->  #define ACTMON_DEV_AVG_UPPER_WMARK				0x10
->  #define ACTMON_DEV_AVG_LOWER_WMARK				0x14
->  #define ACTMON_DEV_COUNT_WEIGHT					0x18
-> +#define ACTMON_DEV_COUNT					0x1c
->  #define ACTMON_DEV_AVG_COUNT					0x20
->  #define ACTMON_DEV_INTR_STATUS					0x24
+> @@ -181,28 +181,29 @@ static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
+>  	{  250000,    100000 },
+>  };
 >  
-> @@ -276,6 +277,9 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
->  					 unsigned long *lower,
->  					 unsigned long *upper)
+> -static u32 actmon_readl(struct tegra_devfreq *tegra, u32 offset)
+> +static inline u32 actmon_readl(struct tegra_devfreq *tegra, u32 offset)
 >  {
-> +	struct device *ddev = tegra->devfreq->dev.parent;
-> +	u32 offset = dev->config->offset;
-> +
->  	/*
->  	 * Memory frequencies are guaranteed to have 1MHz granularity
->  	 * and thus we need this rounding down to get a proper watermarks
-> @@ -288,6 +292,9 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
->  	*lower = tegra_actmon_lower_freq(tegra, target_freq);
->  	*upper = tegra_actmon_upper_freq(tegra, target_freq);
->  
-> +	dev_dbg(ddev, "%03x: target_freq %lu lower freq %lu upper freq %lu\n",
-> +		offset, target_freq, *lower, *upper);
-> +
->  	*lower /= KHZ;
->  	*upper /= KHZ;
->  
-> @@ -367,11 +374,31 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
->  	device_writel(dev, lower + delta, ACTMON_DEV_LOWER_WMARK);
+>  	return readl_relaxed(tegra->regs + offset);
 >  }
 >  
-> +static void actmon_device_debug(struct tegra_devfreq *tegra,
-> +				struct tegra_devfreq_device *dev,
-> +				const char *prefix)
-> +{
-> +	dev_dbg(tegra->devfreq->dev.parent,
-> +		"%03x: %s: 0x%08x 0x%08x a %u %u %u c %u %u %u b %lu cpu %u\n",
-> +		dev->config->offset, prefix,
-> +		device_readl(dev, ACTMON_DEV_INTR_STATUS),
-> +		device_readl(dev, ACTMON_DEV_CTRL),
-> +		device_readl(dev, ACTMON_DEV_AVG_COUNT),
-> +		device_readl(dev, ACTMON_DEV_AVG_LOWER_WMARK),
-> +		device_readl(dev, ACTMON_DEV_AVG_UPPER_WMARK),
-> +		device_readl(dev, ACTMON_DEV_COUNT),
-> +		device_readl(dev, ACTMON_DEV_LOWER_WMARK),
-> +		device_readl(dev, ACTMON_DEV_UPPER_WMARK),
-> +		dev->boost_freq, cpufreq_get(0));
-> +}
-> +
->  static void actmon_isr_device(struct tegra_devfreq *tegra,
->  			      struct tegra_devfreq_device *dev)
+> -static void actmon_writel(struct tegra_devfreq *tegra, u32 val, u32 offset)
+> +static inline void actmon_writel(struct tegra_devfreq *tegra,
+> +				 u32 val, u32 offset)
 >  {
->  	u32 intr_status, dev_ctrl, avg_intr_mask;
->  
-> +	actmon_device_debug(tegra, dev, "isr+");
-> +
->  	dev->avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
->  	intr_status = device_readl(dev, ACTMON_DEV_INTR_STATUS);
->  	dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
-> @@ -422,6 +449,8 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  
->  	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
->  	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
-> +
-> +	actmon_device_debug(tegra, dev, "isr-");
+>  	writel_relaxed(val, tegra->regs + offset);
 >  }
 >  
->  static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
-> @@ -712,6 +741,7 @@ static struct devfreq_dev_profile tegra_devfreq_profile = {
->  static int tegra_governor_get_target(struct devfreq *devfreq,
->  				     unsigned long *freq)
+> -static u32 device_readl(struct tegra_devfreq_device *dev, u32 offset)
+> +static inline u32 device_readl(struct tegra_devfreq_device *dev, u32 offset)
 >  {
-> +	struct device *ddev = devfreq->dev.parent;
->  	struct devfreq_dev_status *stat;
->  	struct tegra_devfreq *tegra;
->  	struct tegra_devfreq_device *dev;
-> @@ -734,6 +764,11 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
->  		dev_target_freq = actmon_update_target(tegra, dev);
+>  	return readl_relaxed(dev->regs + offset);
+>  }
 >  
->  		target_freq = max(target_freq, dev_target_freq);
-> +
-> +		dev_dbg(ddev, "%03x: upd: dev_target_freq %lu\n",
-> +			dev->config->offset, dev_target_freq);
-> +
-> +		actmon_device_debug(tegra, dev, "upd");
->  	}
+> -static void device_writel(struct tegra_devfreq_device *dev, u32 val,
+> -			  u32 offset)
+> +static inline void device_writel(struct tegra_devfreq_device *dev,
+> +				 u32 val, u32 offset)
+>  {
+>  	writel_relaxed(val, dev->regs + offset);
+>  }
 >  
->  	*freq = target_freq * KHZ;
+> -static unsigned long do_percent(unsigned long val, unsigned int pct)
+> +static inline unsigned long do_percent(unsigned long val, unsigned int pct)
+>  {
+>  	return val * pct / 100;
+>  }
 > 
+
 
 -- 
 Best Regards,
