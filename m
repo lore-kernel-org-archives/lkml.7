@@ -2,124 +2,190 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5210EC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210B0C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277AC2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4DA2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 17:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beLR9Kqx"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q4ky4kHD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UohcQSft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388308AbfGPRdH (ORCPT
+        id S2388327AbfGPRdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 13:33:07 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40849 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfGPRdG (ORCPT
+        Tue, 16 Jul 2019 13:33:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47006 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfGPRdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 13:33:06 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so21157338eds.7;
-        Tue, 16 Jul 2019 10:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VusHyKqORprEv2W//SvnJpVjgoQ3gK1EQUfEfAz65B8=;
-        b=beLR9KqxrUn2W2IAXTQVNVySNva+SG+DRTOOUHWbXQ6UUNaq91k8yBcEmlmQG6QEgF
-         8lwvuyNeUbiWScXZRy43O9UK7fQjTQ/DTauibpfQDT9GM3ZlQGtTi1eWmWUtcALl8Vu9
-         9NpfziUw1B6HxiSgRV94h52j+SlCikfk8LBiG4+H6L72p8aYrx2OUhtNVoAxVLJVgCgj
-         YFNE+j1SwyBi1hCz8mrJ5v8zs/knuxdr9L6fbVfu8s+2ONagdqw9pP0VrKsrO2sFSa5V
-         w1DTOyq5W4gUK/oZ8QyesOX8/XHufhwO2GVrHfVLQUVvmFlrV61UurzCqM+J5blvdh6G
-         QE5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VusHyKqORprEv2W//SvnJpVjgoQ3gK1EQUfEfAz65B8=;
-        b=ULhMWwcFzI+5EAbcvhaplV20luBs8WM7L0s58FbqsnsNe3v+BOXQfByfwEz1xPK/Nf
-         t4dFoT4H4PBq8vPAgOAjbQyyQkmCpscDIVLWlBYN/l1ibCP9bc9aNFq+QRXN+5t8nSSC
-         4UnlCUKTO5PB2+IZOH5GOFtdBhMGsrVY1wb76lYm4PoJ0WfkkTQrpNwOE2BCzoNLrtph
-         28XxB2AG186y9tDFNIlTWLF1fXZ8yPxa8S/cnFY7YjIXhykI9vrZirTr0TZT3We6SpqD
-         YgF1gK370qDcq6MjJ7y2M5H/wuSsN91tm11UJiVGOf6PCsJZ6whXGE4WDHZFabOi71Ej
-         hpKg==
-X-Gm-Message-State: APjAAAVM6hMU7SXQkg4r4W6riBM1wawkpVZAS3lJalpjX1TvcuJHYdzE
-        tjPO1UQ+DmCR1vh5gw489MtoGyLfg/TP2qYSaAg=
-X-Google-Smtp-Source: APXvYqznJXXfoPYn9fLxTqvrrV+JpPmw+sOCBa0zE+htMxOwE1xbHQ925eoXBGNcEhJ85Ulss+Sst8IPlgPWaUQ91CA=
-X-Received: by 2002:a50:ec0e:: with SMTP id g14mr30109771edr.210.1563298384806;
- Tue, 16 Jul 2019 10:33:04 -0700 (PDT)
+        Tue, 16 Jul 2019 13:33:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 265C361795; Tue, 16 Jul 2019 17:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563298400;
+        bh=+Imo2mVUwvcbt03J0N9jwlpPEyT65MKGbLzHzRIbFw0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Q4ky4kHD2/NF8AHekYy9TXpk12WZSm0vKe+YV+L48VLVxFeBepC8M/5bMpTfSYIkA
+         SakxsLNlvIdLaDCB58p2OPisQE8BHBuSRvA65fGqNUa4HCbJ4uc5G4UGqeSeHQV0Bh
+         J4XL21aukZKeV6ynKa9OuW+dNw1xqYWjj33tPRtw=
+Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7139C60588;
+        Tue, 16 Jul 2019 17:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563298398;
+        bh=+Imo2mVUwvcbt03J0N9jwlpPEyT65MKGbLzHzRIbFw0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UohcQSftbbO4Z9SAD5IHkJdkvb50ePL45SDqn2lV/cQfc/pEfuapm9qNMKvySxCG0
+         mLf+6QGXQuvsN5iy2+ZAcCCm22Wkfg6AgWliGsaM9CGBBkOKqN/j46fbKAaGCAsmGS
+         kDp7qxkTdv2hx7oogGfD7W5Hk7a78DfEzByNcWJA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7139C60588
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
+To:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        adharmap@codeaurora.org
+References: <20190703011020.151615-1-saravanak@google.com>
+ <20190703011020.151615-3-saravanak@google.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
+Date:   Tue, 16 Jul 2019 23:03:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CGME20190627071745eucas1p1c171dcafd92fe51c99dc102949de6c99@eucas1p1.samsung.com>
- <20190627071726.30467-1-m.szyprowski@samsung.com> <20190627071726.30467-4-m.szyprowski@samsung.com>
-In-Reply-To: <20190627071726.30467-4-m.szyprowski@samsung.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Tue, 16 Jul 2019 23:02:54 +0530
-Message-ID: <CANAwSgT+D_WNFuNdXhxRsQg16Hprn+Gb6TaQGvQM0a3bCerO=A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] usb: dwc3: Remove generic PHY calibrate() calls
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jochen Sprickerhof <jochen@sprickerhof.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190703011020.151615-3-saravanak@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+Hey Saravana,
 
-On Thu, 27 Jun 2019 at 12:47, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->
-> Calls to USB2 generic PHY calibrate() method were added by commit
-> d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for
-> exynos5420/5800"), but it turned out that the mentioned patch worked only
-> by the pure luck and fixed only one use case. To fix the issues with PHY
-> calibration it has been moved to XHCI HCD driver, what allows to perform
-> calibration in the proper time window. This patch removes those calls
-> from DWC3 driver, as they are no longer needed there.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-Please add my tested on XU4 / XU3 using linux next-20190716
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-
-Best Regards
--Anand
-
+On 7/3/19 6:40 AM, Saravana Kannan wrote:
+> Not all devices quantify their performance points in terms of frequency.
+> Devices like interconnects quantify their performance points in terms of
+> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> add support for parsing bandwidth OPPs from DT.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 > ---
->  drivers/usb/dwc3/core.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index baa029ceede9..f62e8442c614 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -168,7 +168,6 @@ static void __dwc3_set_mode(struct work_struct *work)
->                                 otg_set_vbus(dwc->usb2_phy->otg, true);
->                         phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
->                         phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
-> -                       phy_calibrate(dwc->usb2_generic_phy);
->                 }
->                 break;
->         case DWC3_GCTL_PRTCAP_DEVICE:
-> @@ -1166,7 +1165,6 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
->                                 dev_err(dev, "failed to initialize host\n");
->                         return ret;
->                 }
-> -               phy_calibrate(dwc->usb2_generic_phy);
->                 break;
->         case USB_DR_MODE_OTG:
->                 INIT_WORK(&dwc->drd_work, __dwc3_set_mode);
-> --
-> 2.17.1
->
+>   drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
+>   drivers/opp/opp.h |  4 +++-
+>   2 files changed, 35 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index c10c782d15aa..54fa70ed2adc 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+>   }
+>   EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+>   
+> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
+> +{
+> +	int ret;
+> +	u64 rate;
+> +	u32 bw;
+> +
+> +	ret = of_property_read_u64(np, "opp-hz", &rate);
+> +	if (!ret) {
+> +		/*
+> +		 * Rate is defined as an unsigned long in clk API, and so
+> +		 * casting explicitly to its type. Must be fixed once rate is 64
+> +		 * bit guaranteed in clk API.
+> +		 */
+> +		new_opp->rate = (unsigned long)rate
+now that the rate gets set here, please remove the rate assignment in
+_opp_add_static_v2
+
+> +		return 0;
+> +	}
+> +
+> +	ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
+> +	if (ret)
+> +		return ret;
+> +	new_opp->rate = (unsigned long) &bw;
+
+should be bw instead
+
+> +
+> +	ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
+> +	if (!ret)
+> +		new_opp->avg_bw = (unsigned long) &bw;
+
+ditto
+
+> +
+> +	return 0;
+> +}
+> +
+>   /**
+>    * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+>    * @opp_table:	OPP table
+> @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+>   	if (!new_opp)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> -	ret = of_property_read_u64(np, "opp-hz", &rate);
+> +	ret = _read_opp_key(new_opp, np);
+>   	if (ret < 0) {
+>   		/* "opp-hz" is optional for devices like power domains. */
+>   		if (!opp_table->is_genpd) {
+> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
+> +			dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
+> +				__func__);
+
+please remove the else part where rate value will be reset.
+
+>   			goto free_opp;
+>   		}
+>   
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index 569b3525aa67..ead2cdafe957 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
+>    * @turbo:	true if turbo (boost) OPP
+>    * @suspend:	true if suspend OPP
+>    * @pstate: Device's power domain's performance state.
+> - * @rate:	Frequency in hertz
+> + * @rate:	Frequency in hertz OR Peak bandwidth in kilobytes per second
+> + * @avg_bw:	Average bandwidth in kilobytes per second
+>    * @level:	Performance level
+>    * @supplies:	Power supplies voltage/current values
+>    * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+> @@ -81,6 +82,7 @@ struct dev_pm_opp {
+>   	bool suspend;
+>   	unsigned int pstate;
+>   	unsigned long rate;
+> +	unsigned long avg_bw;
+>   	unsigned int level;
+>   
+>   	struct dev_pm_opp_supply *supplies;
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
