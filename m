@@ -2,187 +2,80 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDE3C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1965C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3E720880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FDD20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbfGPKC2 (ORCPT
+        id S1732597AbfGPKFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:02:28 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727849AbfGPKC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:02:28 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C042B4E321EA8CF8BCE8;
-        Tue, 16 Jul 2019 18:02:26 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Jul
- 2019 18:02:23 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
- in image
-From:   Chao Yu <yuchao0@huawei.com>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190424094850.118323-1-yuchao0@huawei.com>
- <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
- <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
- <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
- <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
- <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
-Message-ID: <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
-Date:   Tue, 16 Jul 2019 18:02:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 16 Jul 2019 06:05:06 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:49860 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbfGPKFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:05:06 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnKKN-0002OT-MR; Tue, 16 Jul 2019 18:04:55 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnKKF-0003tz-SN; Tue, 16 Jul 2019 18:04:47 +0800
+Date:   Tue, 16 Jul 2019 18:04:47 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] padata: use smp_mb in padata_reorder to avoid orphaned
+ padata jobs
+Message-ID: <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
+References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
+ <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
+ <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
+ <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
+On Mon, Jul 15, 2019 at 12:10:46PM -0400, Daniel Jordan wrote:
+>
+> I've been wrong before plenty of times, and there's nothing preventing this
+> from being one of those times :) , but in this case I believe what I'm showing
+> is correct.
+> 
+> The padata_do_serial call for a given job ensures padata_reorder runs on the
+> CPU that the job hashed to in padata_do_parallel, which is not necessarily the
+> same CPU as the one that padata_do_parallel itself ran on.
 
-On 2019/5/9 9:15, Chao Yu wrote:
-> On 2019/5/5 10:51, Chao Yu wrote:
->> On 2019/5/1 11:22, Jaegeuk Kim wrote:
->>> On 04/29, Chao Yu wrote:
->>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
->>>>> On 04/24, Chao Yu wrote:
->>>>>> This patch fixes to do sanity with enabled features in image, if
->>>>>> there are features kernel can not recognize, just fail the mount.
->>>>>
->>>>> We need to figure out per-feature-based rejection, since some of them can
->>>>> be set without layout change.
+You're right.  I was taking the comment in the code at face value,
+never trust comments :)
 
-What about adding one field in superblock for compatible features in future?
+While looking at the code in question, I think it is seriously
+broken.  For instance, padata_replace does not deal with async
+crypto at all.  It would fail miserably if the underlying async
+crypto held onto references to the old pd.
 
-sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
-sb.compatible_feature stores compatible features
+So we may have to restrict pcrypt to sync crypto only, which
+would obviously mean that it can no longer use aesni.  Or we
+will have to spend a lot of time to fix this up properly.
 
-If we follow above rule when adding one feature, then, we can fail the mount if
-sb.feature(F2FS_FEATURE_LAST, max] is valid.
-
-Thanks,
-
->>>>
->>>> So any suggestion on how to implement this?
->>>
->>> Which features do we need to disallow? When we introduce new features, they
->>
->> I guess it should be the new features.
->>
->>> didn't hurt the previous flow by checking f2fs_sb_has_###().
->>
->> Yes, but new features may use new disk layout, if old kernel handled it with old
->> disk layout, there must be problematic.
->>
->> e.g. format image with -O extra_attr, and mount it with kernel who don't
->> recognize new inode layout.
-> 
-> Jaegeuk,
-> 
-> Any thoughts?
-> 
-> Thanks,
-> 
->>
->> Thanks,
->>
->>>
->>>>
->>>> Maybe:
->>>>
->>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
->>>> 	check 4.14+ features
->>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
->>>> 	check 4.9+ features
->>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
->>>> 	check 4.4+ features
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>>
->>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>>> ---
->>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
->>>>>>  fs/f2fs/super.c |  9 +++++++++
->>>>>>  2 files changed, 22 insertions(+)
->>>>>>
->>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>>> index f5ffc09705eb..15b640967e12 100644
->>>>>> --- a/fs/f2fs/f2fs.h
->>>>>> +++ b/fs/f2fs/f2fs.h
->>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
->>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
->>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
->>>>>>  
->>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
->>>>>> +				F2FS_FEATURE_BLKZONED |			\
->>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
->>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
->>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
->>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
->>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
->>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
->>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
->>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
->>>>>> +				F2FS_FEATURE_VERITY |			\
->>>>>> +				F2FS_FEATURE_SB_CHKSUM)
->>>>>> +
->>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
->>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
->>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
->>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
->>>>>> --- a/fs/f2fs/super.c
->>>>>> +++ b/fs/f2fs/super.c
->>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
->>>>>>  		return 1;
->>>>>>  	}
->>>>>>  
->>>>>> +	/* check whether kernel supports all features */
->>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
->>>>>> +		f2fs_msg(sb, KERN_INFO,
->>>>>> +			"Unsupported feature:%u: supported:%u",
->>>>>> +			le32_to_cpu(raw_super->feature),
->>>>>> +			F2FS_ALL_FEATURES);
->>>>>> +		return 1;
->>>>>> +	}
->>>>>> +
->>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
->>>>>>  	if (sanity_check_area_boundary(sbi, bh))
->>>>>>  		return 1;
->>>>>> -- 
->>>>>> 2.18.0.rc1
->>> .
->>>
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->> .
->>
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
