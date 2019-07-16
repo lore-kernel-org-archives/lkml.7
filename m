@@ -2,151 +2,124 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E836DC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02793C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72A320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E4620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733241AbfGPKiH (ORCPT
+        id S1733245AbfGPKky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:38:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36028 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732524AbfGPKiG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:38:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id k21so22985679ioj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 03:38:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=oW/HWWjjYHHi5wFF5o9/pG7QsieQMhoWbLKzyHk0u8o=;
-        b=D3Tssp9EQzrF3TkDANV9v01OZH+8Q90Y68LT0vrUFs2mNhsLezdiMFZJgeM7HbKsnM
-         SImFtL3buzaRXvMn8cShGb0RFOe/1RD2ZQFnFOSBCTrs6CzQqD5fLLKFuVhDHrw4Bgpq
-         qTd3N8em+uP5G5kDg7TZNbBfVAtlj7FVlPpKH6XfXSNF6LbIZcUsOyp5KJunvaThMCXM
-         kFO9cXKDe2G0olJofG1fHvFmbQXO7YylpW+xioMdBL2CliBDBpJXVRGvlUXP3KnrNhJu
-         HzC4wPc2XmMkJjsjGY7ymBJdLjhYeKtfozc5Pcwrop7fM5eCZp+4NbbZvlLJf1Uk01Yi
-         1bAw==
-X-Gm-Message-State: APjAAAXFpYNGwbJgGVhlw0vefEhb1JoUiCtvPkgV1MtUAkBYkvb6gA2W
-        /p58VMdLg+3L20HD89FanDd8eUFxkMKqY81QsartJFUiDyjj
-X-Google-Smtp-Source: APXvYqyqmz3/2jnkLJY2+Cc9UahCylxmUvu5/sL8Jh+77UHF8agMxF5fOSvKau9bcWkyeTZ/7TWyPfLGMoHKsrO//vFLTwUHnmzm
+        Tue, 16 Jul 2019 06:40:54 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59101 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732081AbfGPKky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:40:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 03:40:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,498,1557212400"; 
+   d="scan'208";a="158102829"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by orsmga007.jf.intel.com with ESMTP; 16 Jul 2019 03:40:51 -0700
+Subject: Re: [PATCH v3] mmc: host: sdhci-sprd: Fix the incorrect soft reset
+ operation when runtime resuming
+To:     Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Cc:     vincent.guittot@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <7ab490e5b311f6cb057c4663d69ef7cbe3318dae.1563266066.git.baolin.wang@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <07e348a0-6a80-e176-d18d-6a1e54313fa6@intel.com>
+Date:   Tue, 16 Jul 2019 13:39:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a02:9a03:: with SMTP id b3mr34355376jal.0.1563273485901;
- Tue, 16 Jul 2019 03:38:05 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 03:38:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d06dc2058dc9f8f2@google.com>
-Subject: WARNING in shark_write_reg/usb_submit_urb
-From:   syzbot <syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <7ab490e5b311f6cb057c4663d69ef7cbe3318dae.1563266066.git.baolin.wang@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 16/07/19 11:39 AM, Baolin Wang wrote:
+> In sdhci_runtime_resume_host() function, we will always do software reset
+> for all, which will cause Spreadtrum host controller work abnormally after
+> resuming.
+> 
+> Thus for Spreadtrum platform that do not power down the SD/eMMC card during
+> runtime suspend, we should not do software reset for all. To fix this
+> issue, adding a specific reset operation that add one condition to validate
+> the MMC_CAP_AGGRESSIVE_PM to decide if we can do software reset for all or
+> just reset command and data lines.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes from v2:
+>  - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
+> 
+> Changes from v1:
+>  - Add a specific reset operation instead of changing the core to avoid
+>  affecting other hardware.
+> ---
+>  drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> index 603a5d9..bc9393c 100644
+> --- a/drivers/mmc/host/sdhci-sprd.c
+> +++ b/drivers/mmc/host/sdhci-sprd.c
+> @@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+>  	return 1 << 31;
+>  }
+>  
+> +static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	struct mmc_host *mmc = host->mmc;
+> +
+> +	/*
+> +	 * When try to reset controller after runtime suspend, we should not
+> +	 * reset for all if the SD/eMMC card is not power down, just reset
+> +	 * command and data lines instead. Otherwise will meet some strange
+> +	 * behaviors for Spreadtrum host controller.
+> +	 */
+> +	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
+> +	    !(mmc->caps & MMC_CAP_AGGRESSIVE_PM))
 
-syzbot found the following crash on:
+MMC_CAP_AGGRESSIVE_PM does not necessarily mean that the card will have been
+runtime suspended.
 
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=111fc400600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
-dashboard link: https://syzkaller.appspot.com/bug?extid=4b3f8190f6e13b3efd74
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10784148600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d826a4600000
+What about checking if the card power is on? i.e.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com
+	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
+	    mmc->ios.power_mode == MMC_POWER_ON)
 
-usb 1-1: string descriptor 0 read error: -22
-usb 1-1: New USB device found, idVendor=077d, idProduct=627a, bcdDevice=  
-0.10
-usb 1-1: New USB device strings: Mfr=63, Product=5, SerialNumber=1
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 1 PID: 22 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #14
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x292/0x6c9 kernel/panic.c:219
-  __warn.cold+0x20/0x4b kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 c8 69 e8 fd 4c 89 f7 e8 f0 c4 12 ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 60 3a 1a 86 e8 53 2e be fd <0f> 0b e9 20 f4  
-ff ff e8 9c 69 e8 fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d9f96f58 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3f2ddd
-RBP: ffff8881cf557590 R08: ffff8881d9f88000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8881d0c77000 R14: ffff8881d553cd20 R15: ffff8881d5123b00
-  usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
-  usb_bulk_msg+0x228/0x550 drivers/usb/core/message.c:253
-  shark_write_reg+0x1ef/0x2b0 drivers/media/radio/radio-shark2.c:88
-  radio_tea5777_set_freq+0x1ed/0x470 drivers/media/radio/radio-tea5777.c:213
-  radio_tea5777_init+0xb7/0x600 drivers/media/radio/radio-tea5777.c:544
-  usb_shark_probe+0x5b9/0x740 drivers/media/radio/radio-shark2.c:318
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b3d/0x35f0 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+> +		mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
+> +
+> +	sdhci_reset(host, mask);
+> +}
+> +
+>  static struct sdhci_ops sdhci_sprd_ops = {
+>  	.read_l = sdhci_sprd_readl,
+>  	.write_l = sdhci_sprd_writel,
+> @@ -381,7 +398,7 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+>  	.get_max_clock = sdhci_sprd_get_max_clock,
+>  	.get_min_clock = sdhci_sprd_get_min_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
+> -	.reset = sdhci_reset,
+> +	.reset = sdhci_sprd_reset,
+>  	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+>  	.hw_reset = sdhci_sprd_hw_reset,
+>  	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+> 
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
