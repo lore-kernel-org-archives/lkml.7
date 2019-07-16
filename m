@@ -2,341 +2,159 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6291C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEACC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9511D2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563270011;
-	bh=8DwohLaEDxEgS1oQjjXx7A30jUcmngovmOWF5ubvbF0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=iVYpO8CVsE4dorOjktXeDgTVP7S8BctCqEycw/RqBrHfOU79958+yyTdCktQYj6KJ
-	 JunrTS0LHPby02Sp4jA/yhVN9a0VSiP5vujhTF/FTC1mWYK5a14lxK0U1d/sRzIEqN
-	 a/IZIE/tzY8+uL6bozk8V4nuWsTVqFQ64AQJEbv8=
+	by mail.kernel.org (Postfix) with ESMTP id EA7412064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:43:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eAEOpY1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbfGPJkK (ORCPT
+        id S1732077AbfGPJnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfGPJkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:40:09 -0400
-Received: from localhost (unknown [122.178.232.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D90562145D;
-        Tue, 16 Jul 2019 09:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563270007;
-        bh=8DwohLaEDxEgS1oQjjXx7A30jUcmngovmOWF5ubvbF0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XqaQxf04Av0c5JQvhDumOn98Vh5Mt7MaQE00l99xIX2HWslWIX9Hn3x6SX+Q8GI0u
-         K4veKdxrVXQ4GM6rAwHLA7OfY5dZsK2sg14qylTz4C4nvtkcUKjBtPF3QoxgTbHp+w
-         jjJB6hYiJdFMgDeUZEmCj2/LRIPsEOGiv5OkGCRY=
-Date:   Tue, 16 Jul 2019 15:06:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] dmaengine updates for v5.3-rc1
-Message-ID: <20190716093657.GD12733@vkoul-mobl.Dlink>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 16 Jul 2019 05:43:11 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:56824 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730520AbfGPJnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:43:10 -0400
+Received: by mail-vs1-f73.google.com with SMTP id o124so4191571vsc.23
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pGdEsik+1M6jb/HINg07WI5yjzJ1jMxME0W4+2uDrMc=;
+        b=eAEOpY1OH/FnKVljQodIm2gUsxEwhjJezpJfsDh5+L9jGMf2prsNq4n5iGGl8lhFcy
+         3GIJYBh3yNP4rG6hnKRTyj90mHYFk0BHKtIgiGVyRA9kF/uIcjPZdmXbW8ZEQW4EZ5IH
+         SXn4qORJzI5ksZoYb5wqvx7hlnvhT2sxT5FgtaGJr+HG+NjnhSJ69g9xxveqLaNBs89a
+         ktkggSKnDQEOXJdhLHX3eRSCy+Xqa76qSYaf55Id0NRKz4na4h3mnh2/MOGZbY4WN6E8
+         fCBR1frwWPhwmOtJudmJgXI/JrEuT7i8sdsJFK8HYCxGVYzU3slHOExwB171GfmM6DRJ
+         5ZCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pGdEsik+1M6jb/HINg07WI5yjzJ1jMxME0W4+2uDrMc=;
+        b=rSaa4Dus8Mk3b7+291LPPKzqLqiUzuplJxsXJy1Wr+qEuqRqKYHJs6Wbfs5cHNysHM
+         w69xumgLvZ/65DF+BKlJDRqh5+RV1TmyyW/CCGekC2IImjdPl7FIs9bBSbhTvI9+jF8V
+         9P3WUqIXF+mWxGIxUnmuk/KZoSQv4fJsYhemIQDv1lsjdaId4w2g2cfJDG90OCLj1Lsi
+         4FU0FE273XC6sp+RAwMZpnGqRm9nhO9Aayas43WQ3nUHZFmSxM8I1c+IkZxmhKc9/YBt
+         eHv8spU/W9XLQ64VK5kka8TRs0p+XR8RCI6o14GNNdpo7E2mLcD/XMSOaKFEBYxNq62b
+         7JLA==
+X-Gm-Message-State: APjAAAWe5XBknGa90dtAd3TxJC2rKfDZvuuGm4Gg2csoDp6LqprYVaJ/
+        uaDytu5tvD4AN0osOKU0rJEJXRgkJOkXuIfy/MkBbg==
+X-Google-Smtp-Source: APXvYqw3wlXdIHgaqyGI3Fkb5EoQvIKrYD7PYJZvCXqueiq4LTaNvNX4mlOb1gL0HCxxqPqMgE7qX6kvoBg4NaGW2/1i8w==
+X-Received: by 2002:a9f:230c:: with SMTP id 12mr15226541uae.85.1563270188644;
+ Tue, 16 Jul 2019 02:43:08 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 02:42:44 -0700
+Message-Id: <20190716094302.180360-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH v10 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Iurii Zaikin <yzaikin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+## TL;DR
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset addresses comments from Stephen Boyd. Most changes are
+pretty minor, but this does fix a couple of bugs pointed out by Stephen.
 
-Hello Linus,
+I imagine that Stephen will probably have some more comments, but I
+wanted to get this out for him to look at as soon as possible.
 
-Here is the update for v5.3-rc1. Please note there will be trivial
-merge conflict with your tree due to a) SPDX conflicts and
-b) removal of sudmac driver and addition of spdx tags to it.
+## Background
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
 
-are available in the Git repository at:
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
 
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.3-rc1
+### What's so special about unit testing?
 
-for you to fetch changes up to 5c274ca4cfb22a455e880f61536b1894fa29fd17:
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
 
-  dmaengine: Revert "dmaengine: fsl-edma: add i.mx7ulp edma2 version suppor=
-t" (2019-07-08 09:44:45 +0530)
+### Is KUnit trying to replace other testing frameworks for the kernel?
 
-----------------------------------------------------------------
-dmaengine updates for v5.3-rc1
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
 
- - Add support in dmaengine core to do device node checks for DT devices and
-   update bunch of drivers to use that and remove open coding from drivers
- - New driver/driver support for new hardware, namely:
-   - MediaTek UART APDMA
-   - Freescale i.mx7ulp edma2
-   - Synopsys eDMA IP core version 0
-   - Allwinner H6 DMA
- - Updates to axi-dma and support for interleaved cyclic transfers
- - Greg's debugfs return value check removals on drivers
- - Updates to stm32-dma, hsu, dw, pl330, tegra drivers
+### More information on KUnit
 
-----------------------------------------------------------------
-Alexandru Ardelean (7):
-      include: fpga: adi-axi-common.h: add common regs & defs header
-      dmaengine: axi-dmac: assign `copy_align` property
-      dmaengine: axi-dmac: update license header
-      dmaengine: virt-dma: store result on dma descriptor
-      dmaengine: axi-dmac: populate residue info for completed xfers
-      dmaengine: axi-dmac: terminate early DMA transfers after a partial one
-      dmaengine: axi-dmac: add regmap support
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
 
-Amelie Delaunay (1):
-      dmaengine: stm32-dma: Fix redundant call to platform_get_irq
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2/v10 branch.
 
-Andy Shevchenko (3):
-      dmaengine: hsu: Revert "set HSU_CH_MTSR to memory width"
-      dmaengine: dw: Distinguish ->remove() between DW and iDMA 32-bit
-      dmaengine: dw: Enable iDMA 32-bit on Intel Elkhart Lake
+## Changes Since Last Version
 
-Baolin Wang (8):
-      dmaengine: Add matching device node validation in __dma_request_chann=
-el()
-      soc: tegra: fuse: Use dma_request_channel instead of __dma_request_ch=
-annel()
-      dmaengine: imx-sdma: Let the core do the device node validation
-      dmaengine: dma-jz4780: Let the core do the device node validation
-      dmaengine: mmp_tdma: Let the core do the device node validation
-      dmaengine: mxs-dma: Let the core do the device node validation
-      dmaengine: sh: rcar-dmac: Let the core do the device node validation
-      dmaengine: sh: usb-dmac: Let the core do the device node validation
+- Went back to using spinlock in `struct kunit`. Needed for resource
+  management API. Thanks to Stephen for this change.
+- Fixed bug where an init failure may not be recorded as a failure in
+  patch 01/18.
+- Added append method to string_stream as suggested by Stephen.
+- Mostly pretty minor changes after that, which mostly pertain to
+  string_stream and kunit_stream.
 
-Dinh Nguyen (2):
-      dt-bindings: pl330: document the optional resets property
-      dmagengine: pl330: add code to get reset property
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2/v10
 
-Dmitry Osipenko (1):
-      dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT flag is unset
+-- 
+2.22.0.510.g264f2c817a-goog
 
-Dragos Bogdan (1):
-      dmaengine: axi-dmac: Add support for interleaved cyclic transfers
-
-Fabio Estevam (1):
-      dmaengine: Revert "dmaengine: fsl-edma: support little endian for edm=
-a driver"
-
-Geert Uytterhoeven (3):
-      dmaengine: Grammar s/the its/its/, s/need/needs/
-      dmaengine: sh: usb-dmac: Use [] to denote a flexible array member
-      dmaengine: rcar-dmac: Reject zero-length slave DMA requests
-
-Greg Kroah-Hartman (6):
-      dmaengine: amba-pl08x: no need to cast away call to debugfs_create_fi=
-le()
-      dmaengine: bcm-sba-raid: no need to check return value of debugfs_cre=
-ate functions
-      dmaengine: coh901318: no need to cast away call to debugfs_create_fil=
-e()
-      dmaengine: pxa_dma: no need to check return value of debugfs_create f=
-unctions
-      dmaengine: mic_x100_dma: no need to check return value of debugfs_cre=
-ate functions
-      dmaengine: qcom: hidma: no need to check return value of debugfs_crea=
-te functions
-
-Gustavo Pimentel (6):
-      dmaengine: Add Synopsys eDMA IP core driver
-      dmaengine: Add Synopsys eDMA IP version 0 support
-      dmaengine: Add Synopsys eDMA IP version 0 debugfs support
-      PCI: Add Synopsys endpoint EDDA Device ID
-      dmaengine: Add Synopsys eDMA IP PCIe glue-logic
-      MAINTAINERS: Add Synopsys eDMA IP driver maintainer
-
-Hook, Gary (2):
-      dmaengine: dmatest: timeout value of -1 should specify infinite wait
-      Documentation: dmaengine: clean up description of dmatest usage
-
-Jernej Skrabec (5):
-      dt-bindings: arm64: allwinner: h6: Add binding for DMA controller
-      dmaengine: sun6i: Add a quirk for additional mbus clock
-      dmaengine: sun6i: Add a quirk for setting DRQ fields
-      dmaengine: sun6i: Add a quirk for setting mode fields
-      dmaengine: sun6i: Add support for H6 DMA
-
-Lars-Peter Clausen (2):
-      dmaengine: axi-dmac: Sanity check memory mapped interface support
-      dmaengine: axi-dmac: Discover length alignment requirement
-
-Long Cheng (2):
-      dmaengine: mediatek: Add MediaTek UART APDMA support
-      dt-bindings: dma: uart: rename binding
-
-Michael Hennerich (1):
-      dmaengine: axi-dmac: Enable TLAST handling
-
-Paul Cercueil (1):
-      dmaengine: jz4780: Use SPDX license notifier
-
-Peng Ma (3):
-      dmaengine: fsl-qdma: fixed the source/destination descriptor format
-      dmaengine: fsl-qdma: Continue to clear register on error
-      dmaengine: fsl-edma: support little endian for edma driver
-
-Raag Jadav (1):
-      dmaengine: at_xdmac: check for non-empty xfers_list before invoking c=
-allback
-
-Robin Gong (5):
-      dmaengine: fsl-edma: add drvdata for fsl-edma
-      dmaengine: fsl-edma-common: move dmamux register to another single fu=
-nction
-      dmaengine: fsl-edma-common: version check for v2 instead
-      dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
-      dmaengine: fsl-edma: add i.mx7ulp edma2 version support
-
-Sameer Pujar (1):
-      dmaengine: tegra210-adma: remove PM_CLK dependency
-
-Simon Horman (1):
-      dmaengine: sudmac: remove unused driver
-
-Vinod Koul (2):
-      dmaengine: xilinx_dma: Remove set but unused =E2=80=98tail_desc=E2=80=
-=99
-      dmaengine: Revert "dmaengine: fsl-edma: add i.mx7ulp edma2 version su=
-pport"
-
-Weitao Hou (1):
-      dmaengine: stm32: use to_platform_device()
-
-YueHaibing (1):
-      dmaengine: dw-edma: Fix build error without CONFIG_PCI_MSI
-
-kbuild test robot (1):
-      dmaengine: dw-edma: fix semicolon.cocci warnings
-
- .../devicetree/bindings/dma/8250_mtk_dma.txt       |  33 -
- .../devicetree/bindings/dma/arm-pl330.txt          |   3 +
- Documentation/devicetree/bindings/dma/fsl-edma.txt |  44 +-
- .../devicetree/bindings/dma/mtk-uart-apdma.txt     |  54 ++
- .../devicetree/bindings/dma/sun6i-dma.txt          |   9 +-
- Documentation/driver-api/dmaengine/dmatest.rst     |  21 +-
- MAINTAINERS                                        |   7 +
- drivers/dma/Kconfig                                |   5 +-
- drivers/dma/Makefile                               |   1 +
- drivers/dma/amba-pl08x.c                           |   5 +-
- drivers/dma/at_xdmac.c                             |  11 +-
- drivers/dma/bcm-sba-raid.c                         |  13 +-
- drivers/dma/coh901318.c                            |   6 +-
- drivers/dma/dma-axi-dmac.c                         | 204 ++++-
- drivers/dma/dma-jz4780.c                           |  13 +-
- drivers/dma/dmaengine.c                            |  14 +-
- drivers/dma/dmatest.c                              |   6 +-
- drivers/dma/dw-edma/Kconfig                        |  19 +
- drivers/dma/dw-edma/Makefile                       |   7 +
- drivers/dma/dw-edma/dw-edma-core.c                 | 937 +++++++++++++++++=
-++++
- drivers/dma/dw-edma/dw-edma-core.h                 | 165 ++++
- drivers/dma/dw-edma/dw-edma-pcie.c                 | 229 +++++
- drivers/dma/dw-edma/dw-edma-v0-core.c              | 354 ++++++++
- drivers/dma/dw-edma/dw-edma-v0-core.h              |  28 +
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c           | 310 +++++++
- drivers/dma/dw-edma/dw-edma-v0-debugfs.h           |  27 +
- drivers/dma/dw-edma/dw-edma-v0-regs.h              | 158 ++++
- drivers/dma/dw/pci.c                               |  33 +-
- drivers/dma/fsl-edma-common.c                      |  69 +-
- drivers/dma/fsl-edma-common.h                      |  10 +-
- drivers/dma/fsl-edma.c                             |  43 +-
- drivers/dma/fsl-qdma.c                             |  22 +-
- drivers/dma/hsu/hsu.c                              |   4 +-
- drivers/dma/imx-sdma.c                             |   9 +-
- drivers/dma/mcf-edma.c                             |  11 +-
- drivers/dma/mediatek/Kconfig                       |  11 +
- drivers/dma/mediatek/Makefile                      |   1 +
- drivers/dma/mediatek/mtk-uart-apdma.c              | 666 +++++++++++++++
- drivers/dma/mic_x100_dma.c                         |   6 +-
- drivers/dma/mmp_tdma.c                             |  10 +-
- drivers/dma/mxs-dma.c                              |   8 +-
- drivers/dma/of-dma.c                               |   4 +-
- drivers/dma/pl330.c                                |  40 +
- drivers/dma/pxa_dma.c                              |  56 +-
- drivers/dma/qcom/hidma.h                           |   5 +-
- drivers/dma/qcom/hidma_dbg.c                       |  37 +-
- drivers/dma/sh/Kconfig                             |   6 -
- drivers/dma/sh/Makefile                            |   1 -
- drivers/dma/sh/rcar-dmac.c                         |   8 +-
- drivers/dma/sh/sudmac.c                            | 414 ---------
- drivers/dma/sh/usb-dmac.c                          |   8 +-
- drivers/dma/stm32-dma.c                            |   1 -
- drivers/dma/stm32-dmamux.c                         |   6 +-
- drivers/dma/sun6i-dma.c                            | 147 +++-
- drivers/dma/tegra20-apb-dma.c                      |  12 +-
- drivers/dma/virt-dma.c                             |   4 +-
- drivers/dma/virt-dma.h                             |   4 +
- drivers/dma/xilinx/xilinx_dma.c                    |   4 +-
- drivers/misc/pci_endpoint_test.c                   |   2 +-
- drivers/soc/tegra/fuse/fuse-tegra20.c              |   2 +-
- include/linux/dma/edma.h                           |  47 ++
- include/linux/dmaengine.h                          |  12 +-
- include/linux/fpga/adi-axi-common.h                |  19 +
- include/linux/pci_ids.h                            |   1 +
- include/linux/platform_data/dma-imx.h              |   1 -
- include/linux/sudmac.h                             |  52 --
- 66 files changed, 3671 insertions(+), 808 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
- create mode 100644 drivers/dma/dw-edma/Kconfig
- create mode 100644 drivers/dma/dw-edma/Makefile
- create mode 100644 drivers/dma/dw-edma/dw-edma-core.c
- create mode 100644 drivers/dma/dw-edma/dw-edma-core.h
- create mode 100644 drivers/dma/dw-edma/dw-edma-pcie.c
- create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.c
- create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.h
- create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.c
- create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.h
- create mode 100644 drivers/dma/dw-edma/dw-edma-v0-regs.h
- create mode 100644 drivers/dma/mediatek/mtk-uart-apdma.c
- delete mode 100644 drivers/dma/sh/sudmac.c
- create mode 100644 include/linux/dma/edma.h
- create mode 100644 include/linux/fpga/adi-axi-common.h
- delete mode 100644 include/linux/sudmac.h
-
-Thanks
---=20
-~Vinod
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJdLZq5AAoJEHwUBw8lI4NH3LUQAK4T3Qo4aBHz+yOySwfVln8+
-vDJeDiaRdml2SS5AubKlB/Q3V+LVQImuZgG5UfTIWYKGMj0f2efDd4Y2RSQXnToT
-BTDcTcpKxe9Tkv9NymLKQAOSdv8OVJFZYS36WpV/6F3pqazKs2iKr7puhFlR4a+x
-rajE9VbipeQtgiX8/t/XLwdMwN2jsprqRMxBDck1fgOByupeC53pEsug1yk3sBOe
-3lQLzbWWP4KSlP6dCVTSnHM3QkCeEZStK6euC3JF/qaAuSCE9t063qz1AP/HZS0v
-D0TFQggZqRzbdIETqdUw6FnimQvfD7oSq9NiKjH8Xnrfqa1ciF1aFE/iQ2I8K23m
-fSMB/qsbWYwIePVc6UlUeN3Ji36EhEMQuefNOveyBoLJSjFmVPgeWM+KlvrhbTbd
-44ZoZiwQK+FpSonKiZIyn9A8DDrmtjGd2zT8pIU5FBXKau5qlQHXFNUFRby8SFRP
-Vl2U+71JefeMpsWF//2ARLOxeOAJ8+xE1SjIfKqnNtz280xvv/Bcc0oj3scNf6gP
-DyV1pG4j1SfXSwZKVZ+iFnIUT1n85gcy/ru4joh7NcgZ6lxOEHmVcacynjbSLos9
-/BYAPNSZMc4WaMorgeP+0/n7HTkD/Kps7KDoIcVhCou8YG+Ex8Kshp8cGVAwZMWZ
-Gzf3cbrJHRu9ri3tV1Pz
-=pYSb
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
