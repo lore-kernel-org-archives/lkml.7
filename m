@@ -2,120 +2,119 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3DBC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C2CC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4385820693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF3B20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqDSHKiz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H2etgebB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388380AbfGPSRB (ORCPT
+        id S2388398AbfGPSRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:17:01 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41120 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388107AbfGPSRA (ORCPT
+        Tue, 16 Jul 2019 14:17:15 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34703 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388107AbfGPSRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:17:00 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so10477113pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:17:00 -0700 (PDT)
+        Tue, 16 Jul 2019 14:17:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so22027404wrm.1;
+        Tue, 16 Jul 2019 11:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8PCmnEjxa8jVhQ5Y+ipRDtHB/zOes0Ts0DJ57OSlDPs=;
-        b=fqDSHKizju/U6jeZLueR4OQSpF8PEOXMW6z5aFvAgfBV8FvsSQ1CRSEGX9sxBI9Brz
-         4ongTd9rvptHyC60FYEgdRSo/ILx3qBb1lj4WtoGIjVLNEnzJYYgQYPawvR6p1MmkmtA
-         Y3zx6/ghagpymQwtepNA++GQFqNj0NKCskAsSNKLvjH3Ou1//MpP9Xs/IDIeJ73VEaL6
-         kizz9RjXrpfYvhpMxKMZj+aAHvNcjCWY46ojShJ37bHZZUCWDSavp795/oXTSi8PUgVt
-         sFnxRCJpStWDuz/50lzB1/GpWVK2+yLXYlxwkiq5X2STo5p3dSNf1rCLBNWhC0xDbEQr
-         LMEQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4Zq7itVI0zgBux6L2SAmb7XsZyE777LsuJ1iUs203KU=;
+        b=H2etgebBES8IPTYVJuASvaWnPKgnCoEYuzO1hbvfJtR7I6SQ6AfW0s1RJQzOFdYIin
+         6WxfdZGsTE6S9Th+Qz2yc0s10kIoacjG3HW9cZm90rfmiI6ST/N+HEgeoq/5dUyyrpjx
+         XevJpCO4Chs/Nq/X4+MFWk6x0dvdfuwLgzYeo8+mS77H7TH/ysoJlmr+f7949ou/AebM
+         XVgeEc4vxQOsVgGIaohM52kobhy39eNdqgioWPYVomG9TXaHfQdsSZnewhxyT1mL871C
+         pw9Syx22dD/CfSRpwwpPOUD6qxgFgn4bTW/02bA0hkdbEp5leUlcGRGOPVa48izgy/FZ
+         rWdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8PCmnEjxa8jVhQ5Y+ipRDtHB/zOes0Ts0DJ57OSlDPs=;
-        b=tEQsoAoDJoXtyknvETxXZRu5ykVZ2W35rWZyFLnNjN+JHge+GnUA7Bz94FnQfDb2aS
-         xi4Xwn808vlPwLrsN0lmtupflrEwGJSvNZsUNd0KdsdHTTuDzSGFCWlZmhG1pIqO3KN8
-         9kozsn0ceRZzLvzfp3NjJ4oWJ+eITTIzGkLYK0PaNF//Q/X/5Gkir8L48iD4Tvo91Hii
-         iB0bRp0KbXwbAkjDwnDFyXA2/YDO/66iU2qlz4w7ToVqNIgsP00XnkHXtfkr0i6cVays
-         ZaKMSQjym8JhATIm6W6SpQZUCCwW8X9ffRnc+extW6/DZzZNHEpUu2NHp/wFa5sSTb5K
-         klnw==
-X-Gm-Message-State: APjAAAVZH6g0gaqe9VTCImQrPlb3oqryhEHh6FQPki4PUqDhE8AUMdL9
-        SvrzOJtY8HYqgN64p2HXPtyah/2rYRTYEV3ka2De9Q==
-X-Google-Smtp-Source: APXvYqxrM8lA2nuQ1vQH1iFJ9rvDKTJXsBIvDqF1cNARw+aM+/CiHn1w9IDzXcD3maCpqOahaq34RNasQzK8HN1QaSU=
-X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr35998528pld.119.1563301019650;
- Tue, 16 Jul 2019 11:16:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Zq7itVI0zgBux6L2SAmb7XsZyE777LsuJ1iUs203KU=;
+        b=QdNji/leohHnal6gHrztVYX8Wq9a1ZN+ZKmSYrMwlqYbphN6THcrDmHLCdsIJoKQ9E
+         wCIw3Uq10nCreOmJYf5VOHvAzsytDqb2Q51J+EsbJoODAYTF5xAhudPy8JzKqHEbPh45
+         kzuSUaRYqJEsuwkhzKn0DHECeaYcG2a77sH/+3rgt7r9FQAPhRkoa1mfGJ9/4vls7mIZ
+         fhOuP1JOgYvS6kHMVgLE4YXQNvoHEw7XurXXyFC4NNe+tcav2apHDwwGJWK0BbdVj7Hc
+         KyPpJjMRXx2m158AQ/u/QjAglvaN/a9+DR2u1CRP5zfNcfZsIrxmBeTpqS/AJUxEjqBA
+         4SXA==
+X-Gm-Message-State: APjAAAVu6P2N/66spugTkQS0TC1oF67skyQAo4C9C5V3iNSAyCVoxU6u
+        U78yIQD3cNgi9hZlquMCZaEdrOd1gpc=
+X-Google-Smtp-Source: APXvYqz+32zdEI/E/bW4WadsjPhFzURrHtQ6Al9NPbuRx6vEW3pfWmBfsQueWLlNuMqeFEcrVSB2jA==
+X-Received: by 2002:a5d:668e:: with SMTP id l14mr36359435wru.156.1563301032301;
+        Tue, 16 Jul 2019 11:17:12 -0700 (PDT)
+Received: from localhost (smb-adpcdg1-05.hotspot.hub-one.net. [213.174.99.133])
+        by smtp.gmail.com with ESMTPSA id p3sm19704019wmg.15.2019.07.16.11.17.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jul 2019 11:17:09 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 20:17:06 +0200
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] keyboard: remove set but not used variables 'sts'
+Message-ID: <20190716181706.GA1140@penguin>
+References: <20190716085423.19443-1-maowenan@huawei.com>
 MIME-Version: 1.0
-References: <cover.1563150885.git.jpoimboe@redhat.com> <6166ec9ce99e5af2721793eaf4a769aaa881e14d.1563150885.git.jpoimboe@redhat.com>
-In-Reply-To: <6166ec9ce99e5af2721793eaf4a769aaa881e14d.1563150885.git.jpoimboe@redhat.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 16 Jul 2019 11:16:48 -0700
-Message-ID: <CAKwvOdn2ZEe6y=TZ2OyphR7CrC3yJgDEUVtwSX_5fXGtYAQ=bA@mail.gmail.com>
-Subject: Re: [PATCH 07/22] x86/uaccess: Remove ELF function annotation from copy_user_handle_tail()
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716085423.19443-1-maowenan@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 14, 2019 at 5:37 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> After an objtool improvement, it's complaining about the CLAC in
-> copy_user_handle_tail():
->
->   arch/x86/lib/copy_user_64.o: warning: objtool: .altinstr_replacement+0x12: redundant UACCESS disable
->   arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x6: (alt)
->   arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x2: (alt)
->   arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x0: <=== (func)
->
-> copy_user_handle_tail() is incorrectly marked as a callable function, so
-> objtool is rightfully concerned about the CLAC with no corresponding
-> STAC.
->
-> Remove the ELF function annotation.  The copy_user_handle_tail() code
-> path is already verified by objtool because it's jumped to by other
-> callable asm code (which does the corresponding STAC).
+On Tue, Jul 16, 2019 at 04:54:23PM +0800, Mao Wenan wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/input/keyboard/applespi.c: In function applespi_set_bl_level:
+> drivers/input/keyboard/applespi.c:902:6: warning: variable sts set but not used [-Wunused-but-set-variable]
+> 
+> Fixes: b426ac0452093d ("Input: add Apple SPI keyboard and trackpad driver")
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-What is CLAC and STAC?
+Applied, thank you.
 
->
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 > ---
->  arch/x86/lib/copy_user_64.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
-> index 378a1f70ae7d..4fe1601dbc5d 100644
-> --- a/arch/x86/lib/copy_user_64.S
-> +++ b/arch/x86/lib/copy_user_64.S
-> @@ -239,7 +239,7 @@ copy_user_handle_tail:
->         ret
->
->         _ASM_EXTABLE_UA(1b, 2b)
-> -ENDPROC(copy_user_handle_tail)
-> +END(copy_user_handle_tail)
->
->  /*
->   * copy_user_nocache - Uncached memory copy with exception handling
-> --
-> 2.20.1
->
-
+>  drivers/input/keyboard/applespi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+> index c1a6843..548737e 100644
+> --- a/drivers/input/keyboard/applespi.c
+> +++ b/drivers/input/keyboard/applespi.c
+> @@ -899,7 +899,6 @@ static void applespi_set_bl_level(struct led_classdev *led_cdev,
+>  	struct applespi_data *applespi =
+>  		container_of(led_cdev, struct applespi_data, backlight_info);
+>  	unsigned long flags;
+> -	int sts;
+>  
+>  	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
+>  
+> @@ -916,7 +915,7 @@ static void applespi_set_bl_level(struct led_classdev *led_cdev,
+>  			 KBD_BL_LEVEL_MIN);
+>  	}
+>  
+> -	sts = applespi_send_cmd_msg(applespi);
+> +	applespi_send_cmd_msg(applespi);
+>  
+>  	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
+>  }
+> -- 
+> 2.7.4
+> 
 
 -- 
-Thanks,
-~Nick Desaulniers
+Dmitry
