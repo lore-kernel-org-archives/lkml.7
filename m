@@ -2,145 +2,118 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F2C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16978C76196
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6C5206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2ACB206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387917AbfGPQ0b (ORCPT
+        id S2388056AbfGPQ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:26:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34184 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbfGPQ0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:26:31 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 18AB887620;
-        Tue, 16 Jul 2019 16:26:30 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-14.phx2.redhat.com [10.3.112.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A40625C28D;
-        Tue, 16 Jul 2019 16:26:19 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 12:26:16 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>, nhorman@tuxdriver.com,
-        linux-api@vger.kernel.org, containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-Message-ID: <20190716162616.7kgvqbqxn4icqyb3@madcap2.tricolour.ca>
-References: <20190529222835.GD8959@cisco>
- <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
- <20190530170913.GA16722@mail.hallyn.com>
- <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
- <20190530212900.GC5739@cisco>
- <CAHC9VhT5HPt9rCJoDutdvA3r1Y1GOHfpXe2eJ54atNC1=Vd8LA@mail.gmail.com>
- <20190708181237.5poheliito7zpvmc@madcap2.tricolour.ca>
- <CAHC9VhT0V+xi_6nAR5TsM2vs34LbgMeO=-W+MS_kqiXRRzneZQ@mail.gmail.com>
- <20190716153705.xx7dwrhliny5amut@madcap2.tricolour.ca>
- <CAHC9VhTaLqCo8rmAaySJQB+Pf-580=3mvX1rPmtEeb9o5Uy9Qg@mail.gmail.com>
+        Tue, 16 Jul 2019 12:27:16 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:44817 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387958AbfGPQ1Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 12:27:16 -0400
+Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 492423adba02cbe0; Tue, 16 Jul 2019 18:27:13 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E. Box" <david.e.box@linux.intel.com>
+Subject: [PATCH 7/8] PM: sleep: Integrate suspend-to-idle with generig suspend flow
+Date:   Tue, 16 Jul 2019 18:20:44 +0200
+Message-ID: <4251553.8YHTM1NVoD@kreacher>
+In-Reply-To: <71085220.z6FKkvYQPX@kreacher>
+References: <71085220.z6FKkvYQPX@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTaLqCo8rmAaySJQB+Pf-580=3mvX1rPmtEeb9o5Uy9Qg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 16 Jul 2019 16:26:30 +0000 (UTC)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-16 12:08, Paul Moore wrote:
-> On Tue, Jul 16, 2019 at 11:37 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2019-07-15 17:09, Paul Moore wrote:
-> > > On Mon, Jul 8, 2019 at 2:12 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > On 2019-05-30 19:26, Paul Moore wrote:
-> > >
-> > > ...
-> > >
-> > > > > I like the creativity, but I worry that at some point these
-> > > > > limitations are going to be raised (limits have a funny way of doing
-> > > > > that over time) and we will be in trouble.  I say "trouble" because I
-> > > > > want to be able to quickly do an audit container ID comparison and
-> > > > > we're going to pay a penalty for these larger values (we'll need this
-> > > > > when we add multiple auditd support and the requisite record routing).
-> > > > >
-> > > > > Thinking about this makes me also realize we probably need to think a
-> > > > > bit longer about audit container ID conflicts between orchestrators.
-> > > > > Right now we just take the value that is given to us by the
-> > > > > orchestrator, but if we want to allow multiple container orchestrators
-> > > > > to work without some form of cooperation in userspace (I think we have
-> > > > > to assume the orchestrators will not talk to each other) we likely
-> > > > > need to have some way to block reuse of an audit container ID.  We
-> > > > > would either need to prevent the orchestrator from explicitly setting
-> > > > > an audit container ID to a currently in use value, or instead generate
-> > > > > the audit container ID in the kernel upon an event triggered by the
-> > > > > orchestrator (e.g. a write to a /proc file).  I suspect we should
-> > > > > start looking at the idr code, I think we will need to make use of it.
-> > > >
-> > > > To address this, I'd suggest that it is enforced to only allow the
-> > > > setting of descendants and to maintain a master list of audit container
-> > > > identifiers (with a hash table if necessary later) that includes the
-> > > > container owner.
-> > >
-> > > We're discussing the audit container ID management policy elsewhere in
-> > > this thread so I won't comment on that here, but I did want to say
-> > > that we will likely need something better than a simple list of audit
-> > > container IDs from the start.  It's common for systems to have
-> > > thousands of containers now (or multiple thousands), which tells me
-> > > that a list is a poor choice.  You mentioned a hash table, so I would
-> > > suggest starting with that over the list for the initial patchset.
-> >
-> > I saw that as an internal incremental improvement that did not affect
-> > the API, so I wanted to keep things a bit simpler (as you've requested
-> > in the past) to get this going, and add that enhancement later.
-> 
-> In general a simple approach is a good way to start when the
-> problem/use-case is not very well understood; in other words, don't
-> spend a lot of time/effort optimizing something you don't yet
-> understand.  In this case we know that people want to deploy a *lot*
-> of containers on a single system so we should design the data
-> structures appropriately.  A list is simply not a good fit here, I
-> believe/hope you know that too.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Yes, I knew that, which is why I alluded to a hash table...
+After previous changes the suspend-to-idle code flow can be
+integrated more tightly with the generic system suspend code flow
+by making suspend_enter() call s2idle_loop() later and removing
+the direct invocations of dpm_noirq_begin(),
+dpm_noirq_suspend_devices(), dpm_noirq_end(), and
+dpm_noirq_resume_devices() from the latter, so do that.
 
-> > I'll start working on it now.  The hash table would simply point to
-> > lists anyways unless you can recommend a better approach.
-> 
-> I assume when you say "point to lists" you are talking about using
-> lists for the hash buckets?  If so, yes that should be fine at this
-> point.  In general if the per-bucket lists become a bottleneck we can
-> look at the size of the table (or make it tunable) or even use a
-> different approach entirely.  Ultimately the data store is an
-> implementation detail private to the audit subsystem in the kernel so
-> we should be able to change it as necessary without breaking anything.
+This change is not expected to alter functionality.
 
-Yes, this is what I had in mind.  It would be tunable either by a macro
-or a config option, so the exact value isn't a critical implementation
-detail that can be easily tuned as we gain experience with it.  And yes,
-the intent was that it was a non-user-perceivable implementation choice
-other than performace metrics.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ kernel/power/suspend.c |   21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
 
-> paul moore
+Index: linux-pm/kernel/power/suspend.c
+===================================================================
+--- linux-pm.orig/kernel/power/suspend.c
++++ linux-pm/kernel/power/suspend.c
+@@ -119,13 +119,6 @@ static void s2idle_enter(void)
+ 
+ static void s2idle_loop(void)
+ {
+-	int error;
+-
+-	dpm_noirq_begin();
+-	error = dpm_noirq_suspend_devices(PMSG_SUSPEND);
+-	if (error)
+-		goto resume;
+-
+ 	pm_pr_dbg("suspend-to-idle\n");
+ 
+ 	/*
+@@ -150,10 +143,6 @@ static void s2idle_loop(void)
+ 	}
+ 
+ 	pm_pr_dbg("resume from suspend-to-idle\n");
+-
+-resume:
+-	dpm_noirq_resume_devices(PMSG_RESUME);
+-	dpm_noirq_end();
+ }
+ 
+ void s2idle_wake(void)
+@@ -408,11 +397,6 @@ static int suspend_enter(suspend_state_t
+ 	if (error)
+ 		goto Devices_early_resume;
+ 
+-	if (state == PM_SUSPEND_TO_IDLE && pm_test_level != TEST_PLATFORM) {
+-		s2idle_loop();
+-		goto Platform_early_resume;
+-	}
+-
+ 	error = dpm_suspend_noirq(PMSG_SUSPEND);
+ 	if (error) {
+ 		pr_err("noirq suspend of devices failed\n");
+@@ -425,6 +409,11 @@ static int suspend_enter(suspend_state_t
+ 	if (suspend_test(TEST_PLATFORM))
+ 		goto Platform_wake;
+ 
++	if (state == PM_SUSPEND_TO_IDLE) {
++		s2idle_loop();
++		goto Platform_wake;
++	}
++
+ 	error = suspend_disable_secondary_cpus();
+ 	if (error || suspend_test(TEST_CPUS))
+ 		goto Enable_cpus;
 
-- RGB
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+
