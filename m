@@ -2,91 +2,181 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E88BC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A51C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD432173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563268994;
-	bh=PamZH0A4WsEwIpGHaPzQA18kP5r8wzqlzFCVBoiw//U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VDaEemY3oSXKcTAilkeD5T1bNniAHbTH/WZeACotHQBdE0RNCrjdH8eg8ZzQFK2Ar
-	 MoQkYuqZjifsEz29ZA8EJNFQbbqkCuYZinDKTp2gtUtT7moYJnvdYF0XSHx96nDv3M
-	 uQ+pvZ5QM4nF2bDcOcIaEt4mEF2SFGlACTBGsM5E=
+	by mail.kernel.org (Postfix) with ESMTP id DB51221721
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:24:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iq/IVh/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732137AbfGPJXM (ORCPT
+        id S1731692AbfGPJY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:23:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbfGPJXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:23:08 -0400
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502BC2184B;
-        Tue, 16 Jul 2019 09:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563268987;
-        bh=PamZH0A4WsEwIpGHaPzQA18kP5r8wzqlzFCVBoiw//U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xaoSJGSp/bSa/YG2kHH4N9lDRwqjYMC15hNuRbpfjt1PL27vfozjZpg2y/f1MVaI4
-         KoAqZb3ZvVgbb8Rp3lw+u9OBakMWl0TGyeWR7cToC8Ox2gZ7KeRpqxi9qjZw1Sdni0
-         ZEfrxc+ivfEK4XLVW+v2JaQaFsv4vMjqSN/V1bV8=
-Received: by mail-lf1-f54.google.com with SMTP id p197so13144142lfa.2;
-        Tue, 16 Jul 2019 02:23:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAUpRG9BFc6zTcL9dNiHGAizB/GsFybWEHn8Dr8GHNazjbokwmBL
-        a9frjrIOgAzCoPzra7F0uYXMoPoZ4m8/5ayc8QU=
-X-Google-Smtp-Source: APXvYqwMDnsmib1AtItDB/KKKIU5Xhb3gP22wpBTO6Xd7+TU89iu7Eafe6jZHcILHZmz92UTgmXNMvLw4jIxyvWAj04=
-X-Received: by 2002:ac2:4d1c:: with SMTP id r28mr13598688lfi.159.1563268985590;
- Tue, 16 Jul 2019 02:23:05 -0700 (PDT)
+        Tue, 16 Jul 2019 05:24:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46985 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGPJY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:24:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so18904968edr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zDo+eWmhtTV8VZruvHAv9SmmLeaVvLllVnL2EEq/1Fw=;
+        b=iq/IVh/fNvRMT2I9A/QNh3+yF9u1UrtSDEE5nlnN+E5wSnoO0g8wujwp5DraAOQj/x
+         q5ZQk9jMRIJtDPWbNs+Izn/+LI6GHhvfmto8XV0lysvrvb8FbU/q8d4q5AGPN8XyAd/u
+         I4HdbEX6UxulgC3MXpsn84QXNdagfDvs/QeV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=zDo+eWmhtTV8VZruvHAv9SmmLeaVvLllVnL2EEq/1Fw=;
+        b=KEKUJT/gox7bgc3k/VHGrKIussKT5zxkEp0NzcDccQfZhMpQ7Id4MLq6rX+RGJ6AVW
+         oVjDBb4+3SBnpVZkAnyRbvZ4h+vp8ts3Du+YMG6f24yDhRFjiBXLGieHEQEQrSmPkk+F
+         sBSFCYrpOpqgyhkhDSS+hRCDGmUkUFw3oaoP2tbS5JgKGddTbBwWd5px215ODpLkEjyz
+         fZikrxTkJQDniQ0viXYB7ggUCstodfeMUoIiQv4ZVhQ8jm9Ilq5HTiQXyibPdeDaMpWC
+         GCzMGgHQEQT5w3SBNdi2IPX6K4d4LRX0e9h5DSqFPblJw/ONIejOHCjZeGDSMemMi9To
+         NaSQ==
+X-Gm-Message-State: APjAAAW8d12FoOdgMCPnCoJJ5XHgV6eX4zgrb90Q6Hm8LdoMgbfsDWJR
+        GlRDPEw8Nt5tqdqLKayp4GU=
+X-Google-Smtp-Source: APXvYqy8TYWGSmoRD93Iah2eYrZZToh7cQL4GAdEZ/YgeilZWr9vJGPiBFDokpEWtB6tW8xCnLaPDQ==
+X-Received: by 2002:a50:9999:: with SMTP id m25mr28327908edb.183.1563269095678;
+        Tue, 16 Jul 2019 02:24:55 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id k8sm5739035edr.31.2019.07.16.02.24.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 02:24:55 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 11:24:53 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Qian Cai <cai@lca.pw>
+Cc:     emil.l.velikov@gmail.com, maarten.lankhorst@linux.intel.com,
+        maxime.ripard@bootlin.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpu/drm: fix a few kernel-doc "/**" mark warnings
+Message-ID: <20190716092453.GA15868@phenom.ffwll.local>
+Mail-Followup-To: Qian Cai <cai@lca.pw>, emil.l.velikov@gmail.com,
+        maarten.lankhorst@linux.intel.com, maxime.ripard@bootlin.com,
+        sean@poorly.run, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <1563198173-7317-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-References: <CGME20190715120432eucas1p1b32d72d239420b861bf8596d4e8a053d@eucas1p1.samsung.com>
- <20190715120416.3561-1-k.konieczny@partner.samsung.com> <20190715120416.3561-4-k.konieczny@partner.samsung.com>
-In-Reply-To: <20190715120416.3561-4-k.konieczny@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 16 Jul 2019 11:22:54 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd6a5aLf1CEhx9m7khPQOwruSuA22efkJb41BsaWXjM3A@mail.gmail.com>
-Message-ID: <CAJKOXPd6a5aLf1CEhx9m7khPQOwruSuA22efkJb41BsaWXjM3A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: exynos: add initial data for coupled
- regulators for Exynos5422/5800
-To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563198173-7317-1-git-send-email-cai@lca.pw>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jul 2019 at 14:04, Kamil Konieczny
-<k.konieczny@partner.samsung.com> wrote:
->
-> Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
-> bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
-> be in 300mV range.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+On Mon, Jul 15, 2019 at 09:42:53AM -0400, Qian Cai wrote:
+> The opening comment mark "/**" is reserved for kernel-doc comments, so
+> it will generate warnings for comments that are not kernel-doc with
+> "make W=1". For example,
+> 
+> drivers/gpu/drm/drm_memory.c:2: warning: Cannot understand  * \file
+> drm_memory.c
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-This one was previously from Marek, now it is from you. Any changes here?
+Applied to drm-misc-next for 5.4.
+-Daniel
 
-Best regards,
-Krzysztof
+> ---
+>  drivers/gpu/drm/drm_agpsupport.c  | 2 +-
+>  drivers/gpu/drm/drm_dma.c         | 2 +-
+>  drivers/gpu/drm/drm_legacy_misc.c | 2 +-
+>  drivers/gpu/drm/drm_lock.c        | 2 +-
+>  drivers/gpu/drm/drm_memory.c      | 2 +-
+>  drivers/gpu/drm/drm_scatter.c     | 2 +-
+>  drivers/gpu/drm/drm_vm.c          | 2 +-
+>  7 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_agpsupport.c b/drivers/gpu/drm/drm_agpsupport.c
+> index 40fba1c04dfc..ef549c95b0b9 100644
+> --- a/drivers/gpu/drm/drm_agpsupport.c
+> +++ b/drivers/gpu/drm/drm_agpsupport.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_agpsupport.c
+>   * DRM support for AGP/GART backend
+>   *
+> diff --git a/drivers/gpu/drm/drm_dma.c b/drivers/gpu/drm/drm_dma.c
+> index 3f83e2ca80ad..cbfaa2eaab00 100644
+> --- a/drivers/gpu/drm/drm_dma.c
+> +++ b/drivers/gpu/drm/drm_dma.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_dma.c
+>   * DMA IOCTL and function support
+>   *
+> diff --git a/drivers/gpu/drm/drm_legacy_misc.c b/drivers/gpu/drm/drm_legacy_misc.c
+> index 2fe786839ca8..745eb9939414 100644
+> --- a/drivers/gpu/drm/drm_legacy_misc.c
+> +++ b/drivers/gpu/drm/drm_legacy_misc.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_legacy_misc.c
+>   * Misc legacy support functions.
+>   *
+> diff --git a/drivers/gpu/drm/drm_lock.c b/drivers/gpu/drm/drm_lock.c
+> index b70058e77a28..2610bff3d539 100644
+> --- a/drivers/gpu/drm/drm_lock.c
+> +++ b/drivers/gpu/drm/drm_lock.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_lock.c
+>   * IOCTLs for locking
+>   *
+> diff --git a/drivers/gpu/drm/drm_memory.c b/drivers/gpu/drm/drm_memory.c
+> index 132fef8ff1b6..d92f24c308a1 100644
+> --- a/drivers/gpu/drm/drm_memory.c
+> +++ b/drivers/gpu/drm/drm_memory.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_memory.c
+>   * Memory management wrappers for DRM
+>   *
+> diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
+> index bb829a115fc6..b6d863699d0f 100644
+> --- a/drivers/gpu/drm/drm_scatter.c
+> +++ b/drivers/gpu/drm/drm_scatter.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_scatter.c
+>   * IOCTLs to manage scatter/gather memory
+>   *
+> diff --git a/drivers/gpu/drm/drm_vm.c b/drivers/gpu/drm/drm_vm.c
+> index 10cf83d569e1..6c74c68f192a 100644
+> --- a/drivers/gpu/drm/drm_vm.c
+> +++ b/drivers/gpu/drm/drm_vm.c
+> @@ -1,4 +1,4 @@
+> -/**
+> +/*
+>   * \file drm_vm.c
+>   * Memory mapping for DRM
+>   *
+> -- 
+> 1.8.3.1
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
