@@ -2,185 +2,113 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB6BC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987C1C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261DE206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570D9206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 21:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="E/8ikrwA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUmEeelp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388210AbfGPVjd (ORCPT
+        id S2388279AbfGPVkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 17:39:33 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37947 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfGPVjd (ORCPT
+        Tue, 16 Jul 2019 17:40:02 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33841 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbfGPVkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 17:39:33 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h28so14805601lfj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:39:31 -0700 (PDT)
+        Tue, 16 Jul 2019 17:40:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so3852650pgc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 14:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UEoPNCG4kcJsbXvvedTVI/oUGPgfgDGC69R8YkpN0Ls=;
-        b=E/8ikrwAfufbeGPzCfXxpn5EWxAfgLdy6LHVoRbFXYE9RhSrT+fCW/Ym0WBFnLVgpW
-         6eknLnGyCQrub7C+oH2iB/3f89aqw/gEyuWoo9sMXXD1lgoKI/evg2UIhXk69H2wbB8W
-         gBxoGQuij1gb1iyR95rQw/C8tqo7SbwCJcSPs2g6BA53k9qfo3IoqUoApxcsPMMsLYs+
-         fbB5qmrjBhLFCO4IrMKKA++ei7tfjIrtjqwlLB9q9YGyuC3urVN/8I/CF1zxnWHvLmkT
-         JHSkdhSFe+zled5GOpaKiAju6oSKwU0EPnFIWV879EhYNYZt26KZKzjjM+atv4cMxtPQ
-         ZcJg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oew0rHc9LPVEYVoKj5FLWcwETCU8bWgVAiMOY+m8rQs=;
+        b=cUmEeelpLLzt9uU8Kc5mtrmDCofKp6X62YT8kg/ywsuaaY8eOtghanE3divC3APozs
+         zMV9jm3NA63gOSuu1qez7JLtbuX3jNGjtG1WOsP/e15FGrjLeXocrvK2uwbZLoEBTgE2
+         Rzm/RXF2QeCU7EKIKsNnrCjUKiehEqvPsoqntBznIBgG+GAdeBwmIZuXfjiQqJDTMfsC
+         HoWWGDkZx63oyErc2+yq2911qfeYNM4u7m4u01zirPyN0QqnGd9Kg9QyFzDhbPLczZDy
+         ltsboE+bBTErk6of4euwNt+WJMu9sGGruYa+sS9s6DBd8A3MklOaO07qzZWB60JrUjkt
+         pkIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UEoPNCG4kcJsbXvvedTVI/oUGPgfgDGC69R8YkpN0Ls=;
-        b=i2/4cAYImNKB+TeeycDlzpwpYLqEx38iO9Nfbis1eHGppXxtclSL5mw06g60C0IQZm
-         58gcUzNxU8w6FM67KjhK6t0F8cKUYY10Ouj3f7z9URlMh76nNHJpFsFs0eMWLC6oaYMc
-         TIbwlLytnkpgHCxNTBCPtZrD/kIaLvPwZSaGkAMBZR37jH/bV3wgDL+ZY5HCGEUcmZF1
-         mgOYn5q2JPPDKdP7DxK04PnisxzGcOxEi88LGy+L/XYx0cRm44ztdnpynO+hm78jAC2k
-         rT6+5c0lfePn9CnJ2VUib3MqACeRnpR2OYJeiMpdJscGiRHgi03RNvm3wbf6uYxdhzIp
-         t7tg==
-X-Gm-Message-State: APjAAAU4+AsiYnxtO+PPrTqh/3eZ0REtFiT7MWxrcNKqReM/BUKdDrV2
-        qjM9aP7jmHmnYfCgu8tH0kud+h/x+LYdnRnRSw==
-X-Google-Smtp-Source: APXvYqxVWwwG619v+YKQRDGT+YX+qm23m31n4KUpCUeLscpXJaA+UAUtNCEiDZTilTsw6kcSugeGwveeG28ePWlfYQw=
-X-Received: by 2002:a19:8093:: with SMTP id b141mr16328818lfd.137.1563313170619;
- Tue, 16 Jul 2019 14:39:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oew0rHc9LPVEYVoKj5FLWcwETCU8bWgVAiMOY+m8rQs=;
+        b=ijCpNly1VZKzw/jH97mV51hQGVFLgB7BsGg2+o7SY33o8YHPUVd5SuicXpuSM5hqOR
+         5RuiUKthW+IfmDhkumyrrc8PtnpOou6WCk+npe+niYsDVQIclO5Cs3eKdS1BqH9+FVdR
+         WxzVDISEmduMF1nvA8B4Ewp+hwzq7rJ4eXH13rIh2VfGbYS4its1CNn8/4aO/xyzs9Yy
+         Wpr2ge7z3BZG0Z6IBo3hyYOGHhYR1MXP/av8PAh56ILcltCyekiFiF22IKYVCqV4JQsI
+         Ssmph7hnaHi0kZdw2TXxxzECVsa+WStcxAXGsVzkmcpzVPfmeFWLDZE35A4KddWRqkQ9
+         /UAg==
+X-Gm-Message-State: APjAAAVFDY48o9LHp5qKaidTlzuA/zoQmVXDuOsOt73ySDh737u2jgBg
+        P8pvmHNbuwX4nRXWbd/U4wY=
+X-Google-Smtp-Source: APXvYqx+31ux3AoWLdoZRzOA2Sk4B6TvHUXDsOvZ3wbk2EHT9+znE5RnV6rR626W6uSBer+MHEIXzw==
+X-Received: by 2002:a63:c1c:: with SMTP id b28mr4522700pgl.354.1563313200857;
+        Tue, 16 Jul 2019 14:40:00 -0700 (PDT)
+Received: from localhost ([100.118.89.203])
+        by smtp.gmail.com with ESMTPSA id o95sm18933486pjb.4.2019.07.16.14.39.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 14:40:00 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/3] drm/gem: don't force writecombine mmap'ing
+Date:   Tue, 16 Jul 2019 14:37:40 -0700
+Message-Id: <20190716213746.4670-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <cover.1554732921.git.rgb@redhat.com> <9edad39c40671fb53f28d76862304cc2647029c6.1554732921.git.rgb@redhat.com>
- <20190529145742.GA8959@cisco> <CAHC9VhR4fudQanvZGYWMvCf7k2CU3q7e7n1Pi7hzC3v_zpVEdw@mail.gmail.com>
- <20190708175105.7zb6mikjw2wmnwln@madcap2.tricolour.ca> <CAHC9VhRFeCFSCn=m6wgDK2tXBN1euc2+bw8o=CfNwptk8t=j7A@mail.gmail.com>
- <20190716193828.xvm67iv5jyypvvxp@madcap2.tricolour.ca>
-In-Reply-To: <20190716193828.xvm67iv5jyypvvxp@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 16 Jul 2019 17:39:19 -0400
-Message-ID: <CAHC9VhTFW44gMMey8NnJzAeVxObwKhTgXcnt09q-7DtkFUiMCA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 3:38 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-07-15 16:38, Paul Moore wrote:
-> > On Mon, Jul 8, 2019 at 1:51 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2019-05-29 11:29, Paul Moore wrote:
-> >
-> > ...
-> >
-> > > > The idea is that only container orchestrators should be able to
-> > > > set/modify the audit container ID, and since setting the audit
-> > > > container ID can have a significant effect on the records captured
-> > > > (and their routing to multiple daemons when we get there) modifying
-> > > > the audit container ID is akin to modifying the audit configuration
-> > > > which is why it is gated by CAP_AUDIT_CONTROL.  The current thinking
-> > > > is that you would only change the audit container ID from one
-> > > > set/inherited value to another if you were nesting containers, in
-> > > > which case the nested container orchestrator would need to be granted
-> > > > CAP_AUDIT_CONTROL (which everyone to date seems to agree is a workable
-> > > > compromise).  We did consider allowing for a chain of nested audit
-> > > > container IDs, but the implications of doing so are significant
-> > > > (implementation mess, runtime cost, etc.) so we are leaving that out
-> > > > of this effort.
-> > >
-> > > We had previously discussed the idea of restricting
-> > > orchestrators/engines from only being able to set the audit container
-> > > identifier on their own descendants, but it was discarded.  I've added a
-> > > check to ensure this is now enforced.
-> >
-> > When we weren't allowing nested orchestrators it wasn't necessary, but
-> > with the move to support nesting I believe this will be a requirement.
-> > We might also need/want to restrict audit container ID changes if a
-> > descendant is acting as a container orchestrator and managing one or
-> > more audit container IDs; although I'm less certain of the need for
-> > this.
->
-> I was of the opinion it was necessary before with single-layer parallel
-> orchestrators/engines.
+From: Rob Clark <robdclark@chromium.org>
 
-One of the many things we've disagreed on, but it doesn't really
-matter at this point.
+The driver should be in control of this.
 
-> > > I've also added a check to ensure that a process can't set its own audit
-> > > container identifier ...
-> >
-> > What does this protect against, or what problem does this solve?
-> > Considering how easy it is to fork/exec, it seems like this could be
-> > trivially bypassed.
->
-> Well, for starters, it would remove one layer of nesting.  It would
-> separate the functional layers of processes.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+It is possible that this was masking bugs (ie. not setting appropriate
+pgprot) in drivers.  I don't have a particularly good idea for tracking
+those down (since I don't have the hw for most drivers).  Unless someone
+has a better idea, maybe land this and let driver maintainers fix any
+potential fallout in their drivers?
 
-This doesn't seem like something we need to protect against, what's
-the harm?  My opinion at this point is that we should only add
-restrictions to protect against problematic or dangerous situations; I
-don't believe one extra layer of nesting counts as either.
+This is necessary for the last patch to fix VGEM brokenness on arm.
 
-Perhaps the container folks on the To/CC line can comment on this?  If
-there is a valid reason for this restriction, great, let's do it,
-otherwise it seems like an unnecessary hard coded policy to me.
+v3: rebased on drm-tip
 
-> Other than that, it seems
-> like a gut feeling that it is just wrong to allow it.  It seems like a
-> layer violation that one container orchestrator/engine could set its own
-> audit container identifier and then set its children as well.  It would
-> be its own parent.
+ drivers/gpu/drm/drm_gem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I suspect you are right that the current crop of container engines
-won't do this, but who knows what we'll be doing with "containers" 5,
-or even 10, years from now.  With that in mind, let me ask the
-question again: is allowing an orchestrator the ability to set its own
-audit container ID problematic and/or dangerous?
-
-> It would make it harder to verify adherance to descendancy and inheritance rules.
-
-The audit log should contain all the information needed to track that,
-right?  If it doesn't, then I think we have a problem with the
-information we are logging.  Right?
-
-> > > ... and that if the identifier is already set, then the
-> > > orchestrator/engine must be in a descendant user namespace from the
-> > > orchestrator that set the previously inherited audit container
-> > > identifier.
-> >
-> > You lost me here ... although I don't like the idea of relying on X
-> > namespace inheritance for a hard coded policy on setting the audit
-> > container ID; we've worked hard to keep this independent of any
-> > definition of a "container" and it would sadden me greatly if we had
-> > to go back on that.
->
-> This would seem to be the one concession I'm reluctantly making to try
-> to solve this nested container orchestrator/engine challenge.
-
-As I said, you lost me on this - how does this help?  A more detailed
-explanation of how this helps resolve the nesting problem would be
-useful.
-
-> Would backing off on that descendant user namespace requirement and only
-> require that a nested audit container identifier only be permitted on a
-> descendant task be sufficient?  It may for this use case, but I suspect
-> not for additional audit daemons (we're not there yet) and message
-> routing to those daemons.
->
-> The one difference here is that it does not depend on this if the audit
-> container identifier has not already been set.
-
+diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+index e6c12c6ec728..84689ccae885 100644
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -1109,7 +1109,7 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
+ 
+ 	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+ 	vma->vm_private_data = obj;
+-	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
++	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+ 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+ 
+ 	/* Take a ref for this mapping of the object, so that the fault
 -- 
-paul moore
-www.paul-moore.com
+2.21.0
+
