@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE7AC76198
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98C5C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428D821743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CF121743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbfGPQ1S (ORCPT
+        id S2388251AbfGPQ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:27:18 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43340 "EHLO
+        Tue, 16 Jul 2019 12:27:45 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:54735 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387977AbfGPQ1Q (ORCPT
+        with ESMTP id S1728573AbfGPQ1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jul 2019 12:27:16 -0400
 Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 73767e2c92a2ce24; Tue, 16 Jul 2019 18:27:15 +0200
+ id b0f0202333839c8a; Tue, 16 Jul 2019 18:27:12 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
@@ -32,9 +32,9 @@ Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
         "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH 5/8] ACPI: PM: Set s2idle_wakeup earlier and clear it later
-Date:   Tue, 16 Jul 2019 18:15:57 +0200
-Message-ID: <5118596.pkUOanpXUM@kreacher>
+Subject: [PATCH 8/8] PM: sleep: Drop dpm_noirq_begin() and dpm_noirq_end()
+Date:   Tue, 16 Jul 2019 18:21:40 +0200
+Message-ID: <4184131.FIsGukcAIl@kreacher>
 In-Reply-To: <71085220.z6FKkvYQPX@kreacher>
 References: <71085220.z6FKkvYQPX@kreacher>
 MIME-Version: 1.0
@@ -47,60 +47,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The role of the s2idle_wakeup variable is to cause
-acpi_pm_wakeup_event() and acpi_pm_notify_handler() to
-increment pm_abort_suspend and trigger a wakeup from
-suspend-to-idle in case the ACPI SCI wakeup was canceled
-by acpi_s2idle_wake().
+Note that after previous changes dpm_noirq_begin() and
+dpm_noirq_end() each have only one caller, so move the code from
+them to their respective callers and drop them.
 
-However, for this purpose it need not be set in acpi_s2idle_wake()
-and cleared in acpi_s2idle_sync(), respectively.  In fact, it
-may be set as early as in acpi_s2idle_prepare() and cleared as
-late as in acpi_s2idle_restore(), so do that to allow subsequent
-changes to be simpler.
+Also note that dpm_noirq_resume_devices() and
+dpm_noirq_suspend_devices() need not be exported any more, so make
+them both static.
 
 This change is not expected to alter functionality.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/sleep.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/base/power/main.c |   30 ++++++++++++------------------
+ include/linux/pm.h        |    4 ----
+ 2 files changed, 12 insertions(+), 22 deletions(-)
 
-Index: linux-pm/drivers/acpi/sleep.c
+Index: linux-pm/drivers/base/power/main.c
 ===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -972,6 +972,8 @@ static int acpi_s2idle_prepare(void)
- 	/* Change the configuration of GPEs to avoid spurious wakeup. */
- 	acpi_enable_all_wakeup_gpes();
- 	acpi_os_wait_events_complete();
-+
-+	s2idle_wakeup = true;
- 	return 0;
+--- linux-pm.orig/drivers/base/power/main.c
++++ linux-pm/drivers/base/power/main.c
+@@ -716,7 +716,7 @@ static void async_resume_noirq(void *dat
+ 	put_device(dev);
  }
  
-@@ -991,7 +993,6 @@ static void acpi_s2idle_wake(void)
- 	if (acpi_sci_irq_valid() &&
- 	    !irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq))) {
- 		pm_system_cancel_wakeup();
--		s2idle_wakeup = true;
- 		/*
- 		 * On some platforms with the LPS0 _DSM device noirq resume
- 		 * takes too much time for EC wakeup events to survive, so look
-@@ -1012,11 +1013,12 @@ static void acpi_s2idle_sync(void)
- 	acpi_os_wait_events_complete();	/* synchronize SCI IRQ handling */
- 	acpi_ec_flush_work();
- 	acpi_os_wait_events_complete();	/* synchronize Notify handling */
--	s2idle_wakeup = false;
- }
- 
- static void acpi_s2idle_restore(void)
+-void dpm_noirq_resume_devices(pm_message_t state)
++static void dpm_noirq_resume_devices(pm_message_t state)
  {
-+	s2idle_wakeup = false;
-+
- 	acpi_enable_all_runtime_gpes();
+ 	struct device *dev;
+ 	ktime_t starttime = ktime_get();
+@@ -760,13 +760,6 @@ void dpm_noirq_resume_devices(pm_message
+ 	trace_suspend_resume(TPS("dpm_resume_noirq"), state.event, false);
+ }
  
- 	acpi_disable_wakeup_devices(ACPI_STATE_S0);
+-void dpm_noirq_end(void)
+-{
+-	resume_device_irqs();
+-	device_wakeup_disarm_wake_irqs();
+-	cpuidle_resume();
+-}
+-
+ /**
+  * dpm_resume_noirq - Execute "noirq resume" callbacks for all devices.
+  * @state: PM transition of the system being carried out.
+@@ -777,7 +770,11 @@ void dpm_noirq_end(void)
+ void dpm_resume_noirq(pm_message_t state)
+ {
+ 	dpm_noirq_resume_devices(state);
+-	dpm_noirq_end();
++
++	resume_device_irqs();
++	device_wakeup_disarm_wake_irqs();
++
++	cpuidle_resume();
+ }
+ 
+ static pm_callback_t dpm_subsys_resume_early_cb(struct device *dev,
+@@ -1357,14 +1354,7 @@ static int device_suspend_noirq(struct d
+ 	return __device_suspend_noirq(dev, pm_transition, false);
+ }
+ 
+-void dpm_noirq_begin(void)
+-{
+-	cpuidle_pause();
+-	device_wakeup_arm_wake_irqs();
+-	suspend_device_irqs();
+-}
+-
+-int dpm_noirq_suspend_devices(pm_message_t state)
++static int dpm_noirq_suspend_devices(pm_message_t state)
+ {
+ 	ktime_t starttime = ktime_get();
+ 	int error = 0;
+@@ -1421,7 +1411,11 @@ int dpm_suspend_noirq(pm_message_t state
+ {
+ 	int ret;
+ 
+-	dpm_noirq_begin();
++	cpuidle_pause();
++
++	device_wakeup_arm_wake_irqs();
++	suspend_device_irqs();
++
+ 	ret = dpm_noirq_suspend_devices(state);
+ 	if (ret)
+ 		dpm_resume_noirq(resume_event(state));
+Index: linux-pm/include/linux/pm.h
+===================================================================
+--- linux-pm.orig/include/linux/pm.h
++++ linux-pm/include/linux/pm.h
+@@ -712,8 +712,6 @@ struct dev_pm_domain {
+ extern void device_pm_lock(void);
+ extern void dpm_resume_start(pm_message_t state);
+ extern void dpm_resume_end(pm_message_t state);
+-extern void dpm_noirq_resume_devices(pm_message_t state);
+-extern void dpm_noirq_end(void);
+ extern void dpm_resume_noirq(pm_message_t state);
+ extern void dpm_resume_early(pm_message_t state);
+ extern void dpm_resume(pm_message_t state);
+@@ -722,8 +720,6 @@ extern void dpm_complete(pm_message_t st
+ extern void device_pm_unlock(void);
+ extern int dpm_suspend_end(pm_message_t state);
+ extern int dpm_suspend_start(pm_message_t state);
+-extern void dpm_noirq_begin(void);
+-extern int dpm_noirq_suspend_devices(pm_message_t state);
+ extern int dpm_suspend_noirq(pm_message_t state);
+ extern int dpm_suspend_late(pm_message_t state);
+ extern int dpm_suspend(pm_message_t state);
 
 
 
