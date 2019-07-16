@@ -2,96 +2,198 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC4EC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EEBC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F6F2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D908F2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZaJ+yy0/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sb9m+NYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388563AbfGPSrE (ORCPT
+        id S2388485AbfGPSrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:47:04 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]:42739 "EHLO
-        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbfGPSrD (ORCPT
+        Tue, 16 Jul 2019 14:47:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38018 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728535AbfGPSrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:47:03 -0400
-Received: by mail-qk1-f169.google.com with SMTP id 201so15423978qkm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 11:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8eLxe9nuAUyuK3sgh1JtwqJtoQfJeodSg1/HcJI7MtM=;
-        b=ZaJ+yy0/mMtkS3qf6FfVSGhgruGcMCae5R0XJLmL5sZRH6j6Bw+NFyi0VPxO1HcAnH
-         gyVhNH8yzt6Q7Uj6aQ/nFM1Bj4sYLeTwBZuInyz9CYOvSk1/pBBXVqIIueshjXcWsQGs
-         kHUGp0lpCAhG2CIqNwU4x/xSKrjeW+SwkLnY672LUJ1S19/+AQDTqoEtsv4FPuIsTfHP
-         LjsR3E5lfNbvCChoEhWncpe6ww3lELIvnrkKWHS4aTVwQh4DV0pPDOWhaTBadGvoS5w1
-         Np8/qMLhliKAiAuBOx2NkfMt4wQ2LNFL+VAsczW3UqQT6U+fakiUN13oEguuMt6008Gw
-         K7nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8eLxe9nuAUyuK3sgh1JtwqJtoQfJeodSg1/HcJI7MtM=;
-        b=UIQ3JnLycDoYwYHLe8uJ35AD2Dgj0oIGHK3Rl6wkVFoJkG4XdeDScV4KR2ldG8AcOs
-         a8zSnAx3mUEQ6nbwXHXIri+XfQMqvEbjkd7zAa7HaWfd55uZZ1ZgAmW9se7va711APRi
-         HSGK78qziUk+sPrnKNMNh54NI5ZhmxwXCqNvECo8vbp39V5JwzwDRUTvbCy7ozesTebq
-         va/D4OtPmCMjQFH+i7olktGz5OiZFbuG97r1ier3PP2cgFkQQ1+OgqaQiZCdeTS2hzxs
-         OymeYUf5FPIsnLunMW8YsS5fjUEf6KfeNLFJspyVu5rXlKUaBay1Ap1rxWNJnQYGgtMV
-         1FUg==
-X-Gm-Message-State: APjAAAVBwIOmAPU1LOvmd299LVHdAQ6bA9++RmiVpGreRWfX7Wo7PeoI
-        GuQ0Ef785iW2IB18FJNGhJE=
-X-Google-Smtp-Source: APXvYqyuEpsGi3FEumZWkzujz4MACbziM0rCA56Q4h4kZPPtatUWEQKsckBUsmHdB58YGMu+ajVayA==
-X-Received: by 2002:a37:9d15:: with SMTP id g21mr21356362qke.343.1563302822857;
-        Tue, 16 Jul 2019 11:47:02 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id f20sm8622395qkh.15.2019.07.16.11.47.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 11:47:02 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 957FE40340; Tue, 16 Jul 2019 15:46:58 -0300 (-03)
-Date:   Tue, 16 Jul 2019 15:46:58 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     David Carrillo-Cisneros <davidcc@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] perf tools: Fix proper buffer size for feature processing
-Message-ID: <20190716184658.GE3624@kernel.org>
-References: <20190715140426.32509-1-jolsa@kernel.org>
+        Tue, 16 Jul 2019 14:47:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TH423U7y6Z75QhJH8PiB7CHr/1mwkjTj4HpgJeLb9g4=; b=sb9m+NYWEUo7o1/ucqtNUmK+us
+        ViZnz5BPdmwHa/ybMD/mUUYz8772Ly24mMCsq385nMzSe2l+s9buOKq5JX4oeztKcE98hrqaE0rPp
+        AWVFZhnMCrhUp/5PeTHd140xJq+Q3exgexRM2/536MdT8S8R3N5+PajN+c62FDmGJymJMe2MQP9XV
+        0h7EXTvIrGuU8wbosiUNNxcUshViAUAmSuYG2BERCbsKrnROaE37r2S01vRyd5T4scZNM2JzbKvH7
+        4UaaNClSLl4u1bujy1ysaeGW3Ko4XiE0RpuTueVCZ1qXy43i4BUeBZs+VZQtjSEozCp5G/8iOeZYi
+        ZYe8FRLg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnSU2-0001lF-KP; Tue, 16 Jul 2019 18:47:27 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 10F9D202173EA; Tue, 16 Jul 2019 20:47:24 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 20:47:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20190716184724.GH3402@hirez.programming.kicks-ass.net>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-4-alex.kogan@oracle.com>
+ <20190716155022.GR3419@hirez.programming.kicks-ass.net>
+ <193BBB31-F376-451F-BDE1-D4807140EB51@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190715140426.32509-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <193BBB31-F376-451F-BDE1-D4807140EB51@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jul 15, 2019 at 04:04:26PM +0200, Jiri Olsa escreveu:
-> After Song Liu's segfault fix for pipe mode, Arnaldo reported
-> following error:
-> 
->   # perf record -o - | perf script
->   0x514 [0x1ac]: failed to process type: 80
+On Tue, Jul 16, 2019 at 01:19:16PM -0400, Alex Kogan wrote:
+> > On Jul 16, 2019, at 11:50 AM, Peter Zijlstra <peterz@infradead.org> wrote:
 
-Thanks, tested and applied.
+> > static void cna_move(struct cna_node *cn, struct cna_node *cni)
+> > {
+> > 	struct cna_node *head, *tail;
+> > 
+> > 	/* remove @cni */
+> > 	WRITE_ONCE(cn->mcs.next, cni->mcs.next);
+> > 
+> > 	/* stick @cni on the 'other' list tail */
+> > 	cni->mcs.next = NULL;
+> > 
+> > 	if (cn->mcs.locked <= 1) {
+> > 		/* head = tail = cni */
+> > 		head = cni;
+> > 		head->tail = cni;
+> > 		cn->mcs.locked = head->encoded_tail;
+> > 	} else {
+> > 		/* add to tail */
+> > 		head = (struct cna_node *)decode_tail(cn->mcs.locked);
+> > 		tail = tail->tail;
+> > 		tail->next = cni;
+> > 	}
+> > }
+> > 
+> > static struct cna_node *cna_find_next(struct mcs_spinlock *node)
+> > {
+> > 	struct cna_node *cni, *cn = (struct cna_node *)node;
+> > 
+> > 	while ((cni = (struct cna_node *)READ_ONCE(cn->mcs.next))) {
+> > 		if (likely(cni->node == cn->node))
+> > 			break;
+> > 
+> > 		cna_move(cn, cni);
+> > 	}
+> > 
+> > 	return cni;
+> > }
+> But then you move nodes from the main list to the ‘other’ list one-by-one.
+> I’m afraid this would be unnecessary expensive.
+> Plus, all this extra work is wasted if you do not find a thread on the same 
+> NUMA node (you move everyone to the ‘other’ list only to move them back in 
+> cna_mcs_pass_lock()).
 
-- Arnaldo
+My primary concern was readability; I find the above suggestion much
+more readable. Maybe it can be written differently; you'll have to play
+around a bit.
+
+> >> +static inline bool cna_set_locked_empty_mcs(struct qspinlock *lock, u32 val,
+> >> +					struct mcs_spinlock *node)
+> >> +{
+> >> +	/* Check whether the secondary queue is empty. */
+> >> +	if (node->locked <= 1) {
+> >> +		if (atomic_try_cmpxchg_relaxed(&lock->val, &val,
+> >> +				_Q_LOCKED_VAL))
+> >> +			return true; /* No contention */
+> >> +	} else {
+> >> +		/*
+> >> +		 * Pass the lock to the first thread in the secondary
+> >> +		 * queue, but first try to update the queue's tail to
+> >> +		 * point to the last node in the secondary queue.
+> > 
+> > 
+> > That comment doesn't make sense; there's at least one conditional
+> > missing.
+> In CNA, we cannot just clear the tail when the MCS chain is empty, as 
+> there might be nodes in the ‘other’ chain. In that case (this is the “else” part),
+> we want to pass the lock to the first node in the ‘other’ chain, but 
+> first we need to put the last node from that chain into the tail. Perhaps the
+> comment should read “…  but first try to update the *primary* queue's tail …”, 
+> if that makes more sense.
+
+It is 'try and pass the lock' at best. It is not a
+definite/unconditional thing we're doing.
+
+> >> +		 */
+> >> +		struct cna_node *succ = CNA_NODE(node->locked);
+> >> +		u32 new = succ->tail->encoded_tail + _Q_LOCKED_VAL;
+> >> +
+> >> +		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, new)) {
+> >> +			arch_mcs_spin_unlock_contended(&succ->mcs.locked, 1);
+> >> +			return true;
+> >> +		}
+> >> +	}
+> >> +
+> >> +	return false;
+> >> +}
+
+> >> +static inline void cna_pass_mcs_lock(struct mcs_spinlock *node,
+> >> +				     struct mcs_spinlock *next)
+> >> +{
+> >> +	struct cna_node *succ = NULL;
+> >> +	u64 *var = &next->locked;
+> >> +	u64 val = 1;
+> >> +
+> >> +	succ = find_successor(node);
+> >> +
+> >> +	if (succ) {
+> >> +		var = &succ->mcs.locked;
+> >> +		/*
+> >> +		 * We unlock a successor by passing a non-zero value,
+> >> +		 * so set @val to 1 iff @locked is 0, which will happen
+> >> +		 * if we acquired the MCS lock when its queue was empty
+> >> +		 */
+> >> +		val = node->locked + (node->locked == 0);
+> >> +	} else if (node->locked > 1) { /* if the secondary queue is not empty */
+> >> +		/* pass the lock to the first node in that queue */
+> >> +		succ = CNA_NODE(node->locked);
+> >> +		succ->tail->mcs.next = next;
+> >> +		var = &succ->mcs.locked;
+> > 
+> >> +	}	/*
+> >> +		 * Otherwise, pass the lock to the immediate successor
+> >> +		 * in the main queue.
+> >> +		 */
+> > 
+> > I don't think this mis-indented comment can happen. The call-site
+> > guarantees @next is non-null.
+> > 
+> > Therefore, cna_find_next() will either return it, or place it on the
+> > secondary list. If it (cna_find_next) returns NULL, we must have a
+> > non-empty secondary list.
+> > 
+> > In no case do I see this tertiary condition being possible.
+> find_successor() will return NULL if it does not find a thread running on the 
+> same NUMA node. And the secondary queue might be empty at that time.
+
+See; I couldn't untangle that case from the code. Means readablilty
+needs improving.
