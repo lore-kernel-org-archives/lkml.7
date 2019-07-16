@@ -2,105 +2,170 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F73C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E29C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8A220693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8552173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 19:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSA1pWuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfGPTJw (ORCPT
+        id S2388294AbfGPTLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 15:09:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39016 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbfGPTJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 15:09:52 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 617DBC024AFA;
-        Tue, 16 Jul 2019 19:09:52 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-180.rdu2.redhat.com [10.10.122.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DAFF60C4C;
-        Tue, 16 Jul 2019 19:09:51 +0000 (UTC)
-Subject: Re: [PATCH] locking/rwsem: use read_acquire in read_slowpath exit
- when queue is empty
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jan Stancek <jstancek@redhat.com>, linux-kernel@vger.kernel.org,
-        dbueso@suse.de, will@kernel.org, mingo@redhat.com
-References: <ea7ef295bc438c9d403087943c82ced56730e6e0.1563292737.git.jstancek@redhat.com>
- <4ef66a01-7937-1eb7-c58b-0992a0142c92@redhat.com>
- <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <0ebcd9ef-d39a-604f-004e-2697d8bf25f5@redhat.com>
-Date:   Tue, 16 Jul 2019 15:09:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 16 Jul 2019 15:11:12 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:32861 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728781AbfGPTLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 15:11:11 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q20so22280741otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 12:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3H0cienAlZ+Zv0tFhkXjnmPbMEeRYyOryne9l976TMI=;
+        b=XSA1pWuhJTplykTcj9mU38IbFHPceiRxCZ+WTBXEDymwQlb9JFzlHwDnUcIRwawIS2
+         wH7ENYinK78KzmH4WXncBa0vPz3op3gMZ5Urp49G6PZQXtppUDNCsmLJfPRPF07IJHpU
+         xcdbjaqOmbsEImPcjGV1E2PMWj4FmJzFFvgrcg/PS8jMNwpvOuiJ7pE8WvL6qO3GESAk
+         JAqkQlI6RlcjO8h30vGF2DxLzr1lkXOYiSR5dAHYxCoVMPlkLpgirUpSb5uK7Tqvf0cq
+         h5Fsi8v9UAH8Rjo9ppO+2uE7z8c0N4vu0Ty4O5YdvsWygBOtacLw74jewcLXY7+EMHXn
+         BW4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3H0cienAlZ+Zv0tFhkXjnmPbMEeRYyOryne9l976TMI=;
+        b=p+ZShliSRHWTuD0T8ZPAvRCRlbFVagGmnXHcSMfq9mqh6lAzq6boXnwLqxFugHtEr/
+         eJAzOdmb9joN8wWNz5/kGbfhJ7bMlByDigvdbA+smQBeZBDUfOWIfZ1XuiVi3XmhcfyB
+         ruywlliuIXlYWlSVKy/BML6McpQFfbDdCYqnONphGlyVDbovenm9oJNYg3N2SulDU8Hv
+         L1YgwVfn6CwejxREbiH86K3Mh03mT+mVOjfZZRt8KCfbjWVs+1R6kA3HPMxhaZGWyZX0
+         HCCXYKabvK3n1mHcCSNMsJuJaQuyf2y/hUbwHFytGGaRo82/GSyRvKy0Y+r0pnjCgRPp
+         zjAw==
+X-Gm-Message-State: APjAAAU3gZZtXQadNbZR2sCdBqOzjuUHiflYmC/RXK89LdgCxPbt388I
+        yhZ0s8wmJjuLFP06My6DWG564budvcl8lTUYoAIoiA==
+X-Google-Smtp-Source: APXvYqzvfCt6sCR4T4XqzPAhOtvsYyVOWwVzg9O4IjGSyx0lFEbqjlUxvAZG44/eRFQK9LAUMu2c8h6yjV3U3zwUQ8U=
+X-Received: by 2002:a9d:6201:: with SMTP id g1mr26712811otj.195.1563304270351;
+ Tue, 16 Jul 2019 12:11:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 16 Jul 2019 19:09:52 +0000 (UTC)
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
+ <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
+In-Reply-To: <5dd35be3-fd03-c9cc-1eed-ce4bc1433363@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 16 Jul 2019 12:10:34 -0700
+Message-ID: <CAGETcx9NpYY4OmXdjHHCjqN7eZ4=7H9TdGZvw2Qr0K9Aq==ENg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        adharmap@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 2:58 PM, Peter Zijlstra wrote:
-> On Tue, Jul 16, 2019 at 12:53:14PM -0400, Waiman Long wrote:
->> On 7/16/19 12:04 PM, Jan Stancek wrote:
-> Fixes: 4b486b535c33 ("locking/rwsem: Exit read lock slowpath if queue empty & no writer")
-> Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Davidlohr Bueso <dbueso@suse.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> ---
->  kernel/locking/rwsem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jul 16, 2019 at 10:33 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> index 37524a47f002..757b198d7a5b 100644
-> --- a/kernel/locking/rwsem.c
-> +++ b/kernel/locking/rwsem.c
-> @@ -1030,7 +1030,7 @@ static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
->  		 * exit the slowpath and return immediately as its
->  		 * RWSEM_READER_BIAS has already been set in the count.
->  		 */
-> -		if (adjustment && !(atomic_long_read(&sem->count) &
-> +		if (adjustment && !(atomic_long_read_acquire(&sem->count) &
->  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
->  			raw_spin_unlock_irq(&sem->wait_lock);
->  			rwsem_set_reader_owned(sem);
->> The chance of taking this path is not that high. So instead of
->> increasing the cost of the test by adding an acquire barrier, how about
->> just adding smp_mb__after_spinlock() before spin_unlock_irq(). This
->> should have the same effect of making sure that no stale data will be
->> used in the read-lock critical section.
-> That's actually more expensive on something like ARM64 I expect.
+> Hey Saravana,
 >
-> The far cheaper alternative is smp_acquire__after_ctrl_dep(), however in
-> general Will seems to prefer using load-acquire over separate barriers,
-> and for x86 it doesn't matter anyway. For PowerPC these two are a wash,
-> both end up with LWSYNC (over SYNC for your alternative).
+> On 7/3/19 6:40 AM, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of frequency.
+> > Devices like interconnects quantify their performance points in terms of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >   drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
+> >   drivers/opp/opp.h |  4 +++-
+> >   2 files changed, 35 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index c10c782d15aa..54fa70ed2adc 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> >   }
+> >   EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate
+> now that the rate gets set here, please remove the rate assignment in
+> _opp_add_static_v2
+>
+> > +             return 0;
+> > +     }
+> > +
+> > +     ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
+> > +     if (ret)
+> > +             return ret;
+> > +     new_opp->rate = (unsigned long) &bw;
+>
+> should be bw instead
 
-With lock event counting turned on, my experience with this code path
-was that it got hit very infrequently. It is even less frequent with the
-latest reader optimistic spinning patch. That is why I prefer making it
-a bit more costly when the condition is true without incurring a cost at
-all when the condition is false which is the majority of the cases.
-Anyway, this additional cost is for arm64 only, but it is still more
-than compensated by all skipping all the waiting list manipulation and
-waking up itself code.
+Good catch. Thanks!
 
-Cheers,
-Longman
+>
+> > +
+> > +     ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
+> > +     if (!ret)
+> > +             new_opp->avg_bw = (unsigned long) &bw;
+>
+> ditto
+>
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >   /**
+> >    * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> >    * @opp_table:      OPP table
+> > @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     ret = _read_opp_key(new_opp, np);
+> >       if (ret < 0) {
+> >               /* "opp-hz" is optional for devices like power domains. */
+> >               if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > +                     dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
+> > +                             __func__);
+>
+> please remove the else part where rate value will be reset.
 
+Ah! I flipped the meaning of the "if" check in my head. Thanks!
+
+-Saravana
