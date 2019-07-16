@@ -2,89 +2,139 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F21C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04DCC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C552064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:51:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="clvfScQf"
+	by mail.kernel.org (Postfix) with ESMTP id A2FA42173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 18:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbfGPSvv (ORCPT
+        id S2388506AbfGPSwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 14:51:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38474 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbfGPSvv (ORCPT
+        Tue, 16 Jul 2019 14:52:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33422 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728190AbfGPSv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 14:51:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AklfcGpttAaMDlPGy9MDf7QZbGtYSMLGsNdmyHrq1v8=; b=clvfScQfZKrAWDOiWdrg94BuS
-        703Zy08rHK7baU88WuzfEvvxoCD58JIjVwENhVhmWpk++chYfcJypf6W0nGByPsSE4oKuq4SQN9WS
-        bjonGM77iJL5ysRUGSSmDdvL5LPRNABAHG2yeUhltlBLN8QDA3Pe3iMFT5wy0VCs7ue/w28UEZYPi
-        IeKxliRmzj9SQ9BUatdJu41dGD/V8ZjrEU11pCQ3mkDJaUkLEX5uPAzv/+ybFjjSEz9M/b9gCnSnb
-        qUKtJhZdhC2Xna4ousqlp+QgNTh/ivjuDRnunuSq+uG+5AlapBdblNDrBITu9L4TrKQSR1elv+w3I
-        yGp01/AUg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnSYE-0003Qd-F4; Tue, 16 Jul 2019 18:51:46 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CA7AC20B15D60; Tue, 16 Jul 2019 20:51:44 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 20:51:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 07/22] x86/uaccess: Remove ELF function annotation from
- copy_user_handle_tail()
-Message-ID: <20190716185144.GI3402@hirez.programming.kicks-ass.net>
-References: <cover.1563150885.git.jpoimboe@redhat.com>
- <6166ec9ce99e5af2721793eaf4a769aaa881e14d.1563150885.git.jpoimboe@redhat.com>
- <CAKwvOdn2ZEe6y=TZ2OyphR7CrC3yJgDEUVtwSX_5fXGtYAQ=bA@mail.gmail.com>
+        Tue, 16 Jul 2019 14:51:59 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GIlNTt044569;
+        Tue, 16 Jul 2019 14:50:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tshucnx7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 14:50:20 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6GIlOPo044688;
+        Tue, 16 Jul 2019 14:50:19 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tshucnx60-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 14:50:19 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6GIoFHR005702;
+        Tue, 16 Jul 2019 18:50:17 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x61abh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 18:50:17 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GIoHCZ52494808
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 18:50:17 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E16E7B206E;
+        Tue, 16 Jul 2019 18:50:16 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A925BB2075;
+        Tue, 16 Jul 2019 18:50:01 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jul 2019 18:50:01 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9820C16C905B; Tue, 16 Jul 2019 11:50:01 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 11:50:01 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
+        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
+        kernel-hardening@lists.openwall.com, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neilb@suse.com, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        peterz@infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+Subject: Re: [PATCH v2 2/9] rcu: Add support for consolidated-RCU reader
+ checking
+Message-ID: <20190716185001.GL14271@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190712170024.111093-1-joel@joelfernandes.org>
+ <20190712170024.111093-3-joel@joelfernandes.org>
+ <20190716182237.GA22819@linux.ibm.com>
+ <20190716183517.GA129705@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdn2ZEe6y=TZ2OyphR7CrC3yJgDEUVtwSX_5fXGtYAQ=bA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716183517.GA129705@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160230
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:16:48AM -0700, Nick Desaulniers wrote:
-> On Sun, Jul 14, 2019 at 5:37 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > After an objtool improvement, it's complaining about the CLAC in
-> > copy_user_handle_tail():
-> >
-> >   arch/x86/lib/copy_user_64.o: warning: objtool: .altinstr_replacement+0x12: redundant UACCESS disable
-> >   arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x6: (alt)
-> >   arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x2: (alt)
-> >   arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x0: <=== (func)
-> >
-> > copy_user_handle_tail() is incorrectly marked as a callable function, so
-> > objtool is rightfully concerned about the CLAC with no corresponding
-> > STAC.
-> >
-> > Remove the ELF function annotation.  The copy_user_handle_tail() code
-> > path is already verified by objtool because it's jumped to by other
-> > callable asm code (which does the corresponding STAC).
+On Tue, Jul 16, 2019 at 02:35:17PM -0400, Joel Fernandes wrote:
+> On Tue, Jul 16, 2019 at 11:22:37AM -0700, Paul E. McKenney wrote:
+> > On Fri, Jul 12, 2019 at 01:00:17PM -0400, Joel Fernandes (Google) wrote:
+> > > This patch adds support for checking RCU reader sections in list
+> > > traversal macros. Optionally, if the list macro is called under SRCU or
+> > > other lock/mutex protection, then appropriate lockdep expressions can be
+> > > passed to make the checks pass.
+> > > 
+> > > Existing list_for_each_entry_rcu() invocations don't need to pass the
+> > > optional fourth argument (cond) unless they are under some non-RCU
+> > > protection and needs to make lockdep check pass.
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > If you fold in the checks for extra parameters, I will take this
+> > one and also 1/9.
 > 
-> What is CLAC and STAC?
+> I folded the checks in and also threw in the rcu-sync with Oleg's ack:
+> 
+> Could you pull into /dev branch?
+> 
+> git pull https://github.com/joelagnel/linux-kernel.git list-first-three
+> (Based on your dev branch)
 
-CLear AC flag and SeT AC flag, SMAP repurposed the EFLAGS.AC for CPL0.
+Given that I am going to have to rebase these a few times, please
+email a v4.
 
-Also see commit: ea24213d8088 ("objtool: Add UACCESS validation")
+							Thanx, Paul
