@@ -2,144 +2,138 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAC7C76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089BFC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E12921743
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D493721743
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 22:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZI1yhSOd"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JLLiS5SQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389142AbfGPWqO (ORCPT
+        id S2389161AbfGPWqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 18:46:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33739 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389083AbfGPWqK (ORCPT
+        Tue, 16 Jul 2019 18:46:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43823 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389121AbfGPWqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 18:46:10 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so10840768plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 15:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZSafqs3dk1A2a56ZSTzxAgkROhKDh2sVg3+f4ANr2sM=;
-        b=ZI1yhSOdixGSXYRM8nMQJMpxZPSxUBBqzzBaw5lkJo+7fde9KlpWC1LQ+fhLtq7daw
-         HbJErpZtJFQJXqsBg50w3Vo2QMjtDAoaDiO2ph/vkhiE0yfB7y9COm360VK5tiWw4+8b
-         0JhZeVsAGRo4FXaSTlItAM+r4mOxe19m1R3iY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZSafqs3dk1A2a56ZSTzxAgkROhKDh2sVg3+f4ANr2sM=;
-        b=PZA1AO2oSVQwYh3stLtFKySEdJWykbGBtAyrYmmBXkW7m4TRJzihpCefTRYE3G8TTl
-         TdpTUjlaFxwp9m/Tk6W87ZUZkOxlGSMyOjUCgkp3hjAyMHfMehi+HP8U3RGGKbIVs6aU
-         k4JKDTDpn+NhuRAY0E+eTU12o1JxsRzvgOapAwo63m2CthBK0UZem2IkTNJ+UkyYtsP2
-         8qt2AJi3PSY8x3PXXCg8AkG6VO5HVSYyr0PSJcMV7UlQ3hvMXMjU/KWTB9eNlqCRMJfg
-         lS3aSIMNcsyHqXT0FhkzGX27uCZElllnZ7hmfuRkLOM5XASb98eC254EYdWECCNd7lPX
-         Yvgg==
-X-Gm-Message-State: APjAAAWjx20GejeOMM+CDNuenhUU70sSyPXrefHTIm3TjAkAOf82OGsE
-        0NH3RIDgVMlkkcrar0w13bE=
-X-Google-Smtp-Source: APXvYqxij2sUThKpOtvWAWoIKdsG3JOc5TE+Ahn71mXU5vgaa8CsZm7ykBAnbyP8GihU+4dX5jCRMA==
-X-Received: by 2002:a17:902:a409:: with SMTP id p9mr39200676plq.218.1563317169245;
-        Tue, 16 Jul 2019 15:46:09 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id bo20sm16582204pjb.23.2019.07.16.15.46.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 15:46:08 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 18:46:06 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        Manali Shukla <manalishukla14@gmail.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matt Mullins <mmullins@fb.com>,
-        Michal Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
-        namhyung@kernel.org, netdev@vger.kernel.org,
-        paul.chaignon@gmail.com, primiano@google.com,
-        Qais Yousef <qais.yousef@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190716224606.GD172157@google.com>
-References: <20190710141548.132193-1-joel@joelfernandes.org>
- <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
- <20190716213050.GA161922@google.com>
- <20190716183117.77b3ed49@gandalf.local.home>
+        Tue, 16 Jul 2019 18:46:13 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6GMk3O01257486
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Jul 2019 15:46:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6GMk3O01257486
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563317163;
+        bh=h/BoJLRwBdQRWlDTWpUGhDBM0wjQPpz92au9Y4MOr/Q=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=JLLiS5SQd/0uD5lsuvohpo/bsQzP9PGylCUQtMtrCOon6f23AJAGnRGoSVNFvuFMM
+         VTKJaL9yzk4rWInpsv4xRlggluxwycHoJil1zQrqAXeS+BIpfNzNmZdEEVb7zGyFRo
+         /Kp4n9+F883Ww45WQ1B60q0C6DLcvvrpwvGAs5edsO0o6egO1vy0UV/9kF1Km6bWrn
+         fo5AesvKhXXP1A93o6+8Id1KdYdEb5T1X046x3kQS0U+Vy0oHKbVrXPLxnvlWcorAK
+         liYwvAFELjkTvpz+0waf+IFH8+yMbylJXSCq9zukWeLukofg3fjwhUuFnKYJVtvVyb
+         z95urGN9klVqg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6GMk2xF1257482;
+        Tue, 16 Jul 2019 15:46:02 -0700
+Date:   Tue, 16 Jul 2019 15:46:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Arnd Bergmann <tipbot@zytor.com>
+Message-ID: <tip-29e7e9664aec17b94a9c8c5a75f8d216a206aa3a@git.kernel.org>
+Cc:     arnd@arndb.de, mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
+          tglx@linutronix.de, arnd@arndb.de
+In-Reply-To: <20190712090816.350668-1-arnd@arndb.de>
+References: <20190712090816.350668-1-arnd@arndb.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86: math-emu: Hide clang warnings for 16-bit
+ overflow
+Git-Commit-ID: 29e7e9664aec17b94a9c8c5a75f8d216a206aa3a
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190716183117.77b3ed49@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:31:17PM -0400, Steven Rostedt wrote:
-> On Tue, 16 Jul 2019 17:30:50 -0400
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> > I don't see why a new bpf node for a trace event is a bad idea, really.
-> > tracefs is how we deal with trace events on Android. We do it in production
-> > systems. This is a natural extension to that and fits with the security model
-> > well.
-> 
-> What I would like to see is a way to have BPF inject data into the
-> ftrace ring buffer directly. There's a bpf_trace_printk() that I find a
-> bit of a hack (especially since it hooks into trace_printk() which is
-> only for debugging purposes). Have a dedicated bpf ftrace ring
-> buffer event that can be triggered is what I am looking for. Then comes
-> the issue of what ring buffer to place it in, as ftrace can have
-> multiple ring buffer instances. But these instances are defined by the
-> tracefs instances directory. Having a way to associate a bpf program to
-> a specific event in a specific tracefs directory could allow for ways to
-> trigger writing into the correct ftrace buffer.
+Commit-ID:  29e7e9664aec17b94a9c8c5a75f8d216a206aa3a
+Gitweb:     https://git.kernel.org/tip/29e7e9664aec17b94a9c8c5a75f8d216a206aa3a
+Author:     Arnd Bergmann <arnd@arndb.de>
+AuthorDate: Fri, 12 Jul 2019 11:08:05 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 17 Jul 2019 00:42:26 +0200
 
-But his problem is with doing the association of a BPF program with tracefs
-itself. How would you attach a BPF program with tracefs without doing a text
-based approach? His problem is with the text based approach per his last
-email.
+x86: math-emu: Hide clang warnings for 16-bit overflow
 
-> But looking over the patches, I see what Alexei means that there's no
-> overlap with ftrace and these patches except for the tracefs directory
-> itself (which is part of the ftrace infrastructure). And the trace
-> events are technically part of the ftrace infrastructure too. I see the
-> tracefs interface being used, but I don't see how the bpf programs
-> being added affect the ftrace ring buffer or other parts of ftrace. And
-> I'm guessing that's what is confusing Alexei.
+clang warns about a few parts of the math-emu implementation
+where a 16-bit integer becomes negative during assignment:
 
-In a follow-up patch which I am still writing, I am using the trace ring
-buffer as temporary storage since I am formatting the trace event into it.
-This patch you are replying to is just for raw tracepoint and yes, I agree
-this one does not use the ring buffer, but a future addition to it does. So
-I don't think the association of this patch series with ftrace is going to be
-an issue IMO.
+arch/x86/math-emu/poly_tan.c:88:35: error: implicit conversion from 'int' to 'short' changes value from 49216 to -16320 [-Werror,-Wconstant-conversion]
+                                      (0x41 + EXTENDED_Ebias) | SIGN_Negative);
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+arch/x86/math-emu/fpu_emu.h:180:58: note: expanded from macro 'setexponent16'
+ #define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
+                                                      ~  ^
+arch/x86/math-emu/reg_constant.c:37:32: error: implicit conversion from 'int' to 'short' changes value from 49085 to -16451 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_PI2extra = MAKE_REG(NEG, -66,
+                               ^~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:48:28: error: implicit conversion from 'int' to 'short' changes value from 65535 to -1 [-Werror,-Wconstant-conversion]
+FPU_REG const CONST_QNaN = MAKE_REG(NEG, EXP_OVER, 0x00000000, 0xC0000000);
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_constant.c:21:25: note: expanded from macro 'MAKE_REG'
+                ((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-thanks,
+The code is correct as is, so add a typecast to shut up the warnings.
 
- - Joel
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190712090816.350668-1-arnd@arndb.de
 
 
+---
+ arch/x86/math-emu/fpu_emu.h      | 2 +-
+ arch/x86/math-emu/reg_constant.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/math-emu/fpu_emu.h b/arch/x86/math-emu/fpu_emu.h
+index a5a41ec58072..0c122226ca56 100644
+--- a/arch/x86/math-emu/fpu_emu.h
++++ b/arch/x86/math-emu/fpu_emu.h
+@@ -177,7 +177,7 @@ static inline void reg_copy(FPU_REG const *x, FPU_REG *y)
+ #define setexponentpos(x,y) { (*(short *)&((x)->exp)) = \
+   ((y) + EXTENDED_Ebias) & 0x7fff; }
+ #define exponent16(x)         (*(short *)&((x)->exp))
+-#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (y); }
++#define setexponent16(x,y)  { (*(short *)&((x)->exp)) = (u16)(y); }
+ #define addexponent(x,y)    { (*(short *)&((x)->exp)) += (y); }
+ #define stdexp(x)           { (*(short *)&((x)->exp)) += EXTENDED_Ebias; }
+ 
+diff --git a/arch/x86/math-emu/reg_constant.c b/arch/x86/math-emu/reg_constant.c
+index 8dc9095bab22..742619e94bdf 100644
+--- a/arch/x86/math-emu/reg_constant.c
++++ b/arch/x86/math-emu/reg_constant.c
+@@ -18,7 +18,7 @@
+ #include "control_w.h"
+ 
+ #define MAKE_REG(s, e, l, h) { l, h, \
+-		((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
++		(u16)((EXTENDED_Ebias+(e)) | ((SIGN_##s != 0)*0x8000)) }
+ 
+ FPU_REG const CONST_1 = MAKE_REG(POS, 0, 0x00000000, 0x80000000);
+ #if 0
