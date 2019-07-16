@@ -2,57 +2,57 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28274C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C76FC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F301F2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1232020880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 16:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DyI11kWo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="irjFbOPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388082AbfGPQmp (ORCPT
+        id S2388170AbfGPQmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 12:42:45 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36447 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfGPQmo (ORCPT
+        Tue, 16 Jul 2019 12:42:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45508 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388102AbfGPQmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 12:42:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so9388241pfl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:42:44 -0700 (PDT)
+        Tue, 16 Jul 2019 12:42:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o13so9697452pgp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rFrcYB/60blHV4ScsnDSvK5cMMWLsotfbMwia5Gcc8k=;
-        b=DyI11kWox6JsLKIlcyqdfrru7WLeAjEZfzWOOlYwSwRvRrrtxNQXcagDcScn3b/zkJ
-         6qeb5qOMbH0HpGabX1URiV16BzvdQtfnKnWBsSiNLegrfq6WivZAh203sdQN0iTrUsH2
-         I3kIxfLxmMyZYPNx7SdrAVkXTHsw5DE1NM4Es=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=G0ynwreDQx55Cdn2k1+KVcd1p88/D0r6svcv1QlBO3o=;
+        b=irjFbOPzoCsmoIZq13YOds5hccWx9OiE071z79slMWaKwUnr0Gw8NqkCvXGuxofvkE
+         b2DbVQ8khrwbZ1fgtJzGUdLN3xC5o1VqML1rE0tFczdIs5fX+WoRn0m64ZSj09uLaKp8
+         W4JTJ5GuZwoocTLDXiTmbxT27wq8MYbdfM4/8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rFrcYB/60blHV4ScsnDSvK5cMMWLsotfbMwia5Gcc8k=;
-        b=thooWiVP2urHOn7yurKuGs5YTOsqOg/KydF3ZzTBLGkufGmrGU+JVDvotOB/kd1eSU
-         gCCt604OnRjH+GP1VeKb/81mc5BO83gaiOXhgab6eKLW05LYehycdJXgF54wrM7rnOoM
-         bUrEjSO5jpLB5qKn6VLs9x7OSpkRQBHjFLHKe1xILFIjLtBIbvjDaXcj2zNAY4UP1iz3
-         3qXygqGfvYCtd72SjdO7/cASSMHJ89ibKInGcbzlUxjQ0aJvAneJmSj6ObCnzg9ClF1j
-         xLYHo3S7RV8DWV6JDkb9CXVpJ5GPStE4wEI/BgUKi8iqTfj9PehwafqgvHhgru+ySf8b
-         y5jw==
-X-Gm-Message-State: APjAAAUNAFZSZe3T1ClTx7kCeqZWT4UmLfldQMsvkNwkq+YvEL8lP6K8
-        ZYCW99Ee8dcMFgC+pYxcAB/MOQ==
-X-Google-Smtp-Source: APXvYqyotogvaupNvsmdlWCgKksQmr27uYysrL39mM8+jMRkbsXyPl5BHWP6AbsslubGKoB/gfDKKA==
-X-Received: by 2002:a63:db45:: with SMTP id x5mr23385800pgi.293.1563295363884;
-        Tue, 16 Jul 2019 09:42:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=G0ynwreDQx55Cdn2k1+KVcd1p88/D0r6svcv1QlBO3o=;
+        b=QWAna5qY0OEp3ZUT/t2OfU9W2qHTksn9LOqWByipRxxTy77WFYAL4/NKBRsu3BYDZG
+         ZNQSdNyzddsdGnkCeEh9SuK5osh0PoAbZap+0w2WWouKUN/qJaosMIUcUgstK1GlYL7L
+         toptQCR0tKSWEhslxQrcsU95nB5sT+Wa5H8VAgRpLG/MHikQOGhsZAP636KSX8cVHIoD
+         Z1E3NrbTMTWeRhqOKzF22Z/f6PfEjUcHADcrJtD8LYubPlG7GHQ9MJDEVzoYowXjKZSV
+         zA7pfUU/+3PftCusUxc446Us9kdckRIg1IEIgURAWIPV1g7KS0/Fu/sl42V0/7qSpdWR
+         jisA==
+X-Gm-Message-State: APjAAAXOMnIi8WVh0FKZ8B1tIJC/HzwuvvYygCzXDWNZbSZ0M+c43L0P
+        tYiHUMHp5yTHN/GHgZTMR4ATCw==
+X-Google-Smtp-Source: APXvYqxTvrAricfH4zSCJjfNseyILhC1mVPFZVt33bDXH1vSrEY0L19EpCl6w3rTFJO8Jdf66uAxVQ==
+X-Received: by 2002:a17:90a:cf8f:: with SMTP id i15mr36366127pju.110.1563295366371;
+        Tue, 16 Jul 2019 09:42:46 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id r1sm25456468pfq.100.2019.07.16.09.42.42
+        by smtp.gmail.com with ESMTPSA id r1sm25456468pfq.100.2019.07.16.09.42.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 09:42:43 -0700 (PDT)
+        Tue, 16 Jul 2019 09:42:45 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Kalle Valo <kvalo@codeaurora.org>,
@@ -67,16 +67,13 @@ Cc:     Ganapathi Bhat <gbhat@marvell.com>, linux-wireless@vger.kernel.org,
         linux-mmc@vger.kernel.org, davem@davemloft.net,
         Xinming Hu <huxinming820@gmail.com>,
         Douglas Anderson <dianders@chromium.org>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 0/2] mmc: core: Fix Marvell WiFi reset by adding SDIO API to replug card
-Date:   Tue, 16 Jul 2019 09:42:07 -0700
-Message-Id: <20190716164209.62320-1-dianders@chromium.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] mwifiex: Make use of the new sdio_trigger_replug() API to reset
+Date:   Tue, 16 Jul 2019 09:42:09 -0700
+Message-Id: <20190716164209.62320-3-dianders@chromium.org>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+In-Reply-To: <20190716164209.62320-1-dianders@chromium.org>
+References: <20190716164209.62320-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,78 +81,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As talked about in the thread at:
+As described in the patch ("mmc: core: Add sdio_trigger_replug()
+API"), the current mwifiex_sdio_card_reset() is broken in the cases
+where we're running Bluetooth on a second SDIO func on the same card
+as WiFi.  The problem goes away if we just use the
+sdio_trigger_replug() API call.
 
-http://lkml.kernel.org/r/CAD=FV=X7P2F1k_zwHc0mbtfk55-rucTz_GoDH=PL6zWqKYcpuw@mail.gmail.com
+NOTE: Even though with this new solution there is less of a reason to
+do our work from a workqueue (the unplug / plug mechanism we're using
+is possible for a human to perform at any time so the stack is
+supposed to handle it without it needing to be called from a special
+context), we still need a workqueue because the Marvell reset function
+could called from a context where sleeping is invalid and thus we
+can't claim the host.  One example is Marvell's wakeup_timer_fn().
 
-...when the Marvell WiFi card tries to reset itself it kills
-Bluetooth.  It was observed that we could re-init the card properly by
-unbinding / rebinding the host controller.  It was also observed that
-in the downstream Chrome OS codebase the solution used was
-mmc_remove_host() / mmc_add_host(), which is similar to the solution
-in this series.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-So far I've only done testing of this series using the reset test
-source that can be simulated via sysfs.  Specifically I ran this test:
+ drivers/net/wireless/marvell/mwifiex/sdio.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-for i in $(seq 1000); do
-  echo "LOOP $i --------"
-  echo 1 > /sys/kernel/debug/mwifiex/mlan0/reset
-
-  while true; do
-    if ! ping -w15 -c1 "${GW}" >/dev/null 2>&1; then
-      fail=$(( fail + 1 ))
-      echo "Fail WiFi ${fail}"
-      if [[ ${fail} == 3 ]]; then
-        exit 1
-      fi
-    else
-      fail=0
-      break
-    fi
-  done
-
-  hciconfig hci0 down
-  sleep 1
-  if ! hciconfig hci0 up; then
-    echo "Fail BT"
-    exit 1
-  fi
-done
-
-I ran this several times and got several hundred iterations each
-before a failure.  When I saw failures:
-
-* Once I saw a "Fail BT"; manually resetting the card again fixed it.
-  I didn't give it time to see if it would have detected this
-  automatically.
-* Once I saw the ping fail because (for some reason) my device only
-  got an IPv6 address from my router and the IPv4 ping failed.  I
-  changed my script to use 'ping6' to see if that would help.
-* Once I saw the ping fail because the higher level network stack
-  ("shill" in my case) seemed to crash.  A few minutes later the
-  system recovered itself automatically.  https://crbug.com/984593 if
-  you want more details.
-* Sometimes while I was testing I saw "Fail WiFi 1" indicating a
-  transitory failure.  Usually this was an association failure, but in
-  one case I saw the device do "Firmware wakeup failed" after I
-  triggered the reset.  This caused the driver to trigger a re-reset
-  of itself which eventually recovered things.  This was good because
-  it was an actual test of the normal reset flow (not the one
-  triggered via sysfs).
-
-
-Douglas Anderson (2):
-  mmc: core: Add sdio_trigger_replug() API
-  mwifiex: Make use of the new sdio_trigger_replug() API to reset
-
- drivers/mmc/core/core.c                     | 28 +++++++++++++++++++--
- drivers/mmc/core/sdio_io.c                  | 20 +++++++++++++++
- drivers/net/wireless/marvell/mwifiex/sdio.c | 14 +++--------
- include/linux/mmc/host.h                    | 15 ++++++++++-
- include/linux/mmc/sdio_func.h               |  2 ++
- 5 files changed, 65 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/net/wireless/marvell/mwifiex/sdio.c
+index 24c041dad9f6..f77ad2615f08 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sdio.c
++++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
+@@ -2218,14 +2218,6 @@ static void mwifiex_sdio_card_reset_work(struct mwifiex_adapter *adapter)
+ {
+ 	struct sdio_mmc_card *card = adapter->card;
+ 	struct sdio_func *func = card->func;
+-	int ret;
+-
+-	mwifiex_shutdown_sw(adapter);
+-
+-	/* power cycle the adapter */
+-	sdio_claim_host(func);
+-	mmc_hw_reset(func->card->host);
+-	sdio_release_host(func);
+ 
+ 	/* Previous save_adapter won't be valid after this. We will cancel
+ 	 * pending work requests.
+@@ -2233,9 +2225,9 @@ static void mwifiex_sdio_card_reset_work(struct mwifiex_adapter *adapter)
+ 	clear_bit(MWIFIEX_IFACE_WORK_DEVICE_DUMP, &card->work_flags);
+ 	clear_bit(MWIFIEX_IFACE_WORK_CARD_RESET, &card->work_flags);
+ 
+-	ret = mwifiex_reinit_sw(adapter);
+-	if (ret)
+-		dev_err(&func->dev, "reinit failed: %d\n", ret);
++	sdio_claim_host(func);
++	sdio_trigger_replug(func);
++	sdio_release_host(func);
+ }
+ 
+ /* This function read/write firmware */
 -- 
 2.22.0.510.g264f2c817a-goog
 
