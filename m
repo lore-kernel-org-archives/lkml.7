@@ -2,100 +2,161 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5E9C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFFEC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA3520449
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF252173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="KlbniZ/7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHXFcCg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbfGPKn2 (ORCPT
+        id S2387468AbfGPKoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:43:28 -0400
-Received: from mail-eopbgr140129.outbound.protection.outlook.com ([40.107.14.129]:56900
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732081AbfGPKn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:43:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dJzI5KVM2sKekvtHFBmjlZh6S/C8Fji6yNWHBZrZt/JQ4L8xbNbTaONjkUfft2+klyIJomrdYgS9oeMIMr5Z+a2DSc8uOQp6vW+DKbMUaFPsejpupNJMiPTkCb+UuF6CANZGfceWun9qsu/yIMGknagMP87cQK1szVCEbiUhQoMyOXDCgbLDCD16V5vgF9NmC43/RO7YRJNO6/07mWZc4IhlcsoEV9+oksqDjdKxZtLsny376oU3Oi+tNBbOagz2zluqPCS577Cq7x3c/mX91ZRfyhVHh8xxtr6W5HvlPxBHVF4hG3QbNA7JasRNwwDXzvVK98NkHj7IIk0dRWce0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pJWn23Q9cmSdZoNPNTv5fLV7w5UUXTsDCpqPLXxUePs=;
- b=MBIGLeHrbAP5iZlvMvvbV5XxAa8FbofOHGmjZ3XFpPCRJX+MwLybh23DcRwdfrhLv0g3moO3wRyOHqCQI4OSKLMUW6xpgdvPF43R8rP0k2m06L9iTbg/tc68Z2K46++LxNStMnkY4TthFnDH50GTPEf+kzJUagkywjMTIFztECYxb/FJLsHB0lg/902IuvdlccJVLAYUQSiBpkDFNORny7lr6qo27SqTy/1y8Y1AF/yxCZ/BFvRyXLGnoyn8WTcCVRbkeVujDx1JfBZlxejI4d1g6gXCmXw95TW9ej4irW9KbfL3Dul3ZOEbfWObvIpIbkRfA0yPrzSmOHnKyatGbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=habana.ai;dmarc=pass action=none
- header.from=habana.ai;dkim=pass header.d=habana.ai;arc=none
+        Tue, 16 Jul 2019 06:44:00 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38606 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733198AbfGPKn7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:43:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r9so19423174ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 03:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pJWn23Q9cmSdZoNPNTv5fLV7w5UUXTsDCpqPLXxUePs=;
- b=KlbniZ/72rn8iba694FXzQ54ORdPG0zA0NHBFkdUDORQwxa7Xx7s41UdY/FZFpIx3TNdfbLdYz/l335Yy3YBiO7Pydke/rSQFKaog8gFdB8ya/I1hoTK/uzBuUPC5j/C9jTvIb8j45BcacfDD5HZKFAbHRuohJhMXeEekMoOhzc=
-Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com (52.133.8.16) by
- AM6PR0202MB3383.eurprd02.prod.outlook.com (52.133.10.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Tue, 16 Jul 2019 10:43:25 +0000
-Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com
- ([fe80::e15d:fa52:74f0:9e1d]) by AM6PR0202MB3382.eurprd02.prod.outlook.com
- ([fe80::e15d:fa52:74f0:9e1d%3]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 10:43:25 +0000
-From:   Omer Shpigelman <oshpigelman@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomer Tayar <ttayar@habana.ai>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH] habanalabs: add comments on INFO IOCTL
-Thread-Topic: [PATCH] habanalabs: add comments on INFO IOCTL
-Thread-Index: AQHVO7Uut7QnutRiTEep8X2SDeMSeabNDfcQ
-Date:   Tue, 16 Jul 2019 10:43:25 +0000
-Message-ID: <AM6PR0202MB33826EC6FC45EDD9299165E9B8CE0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
-References: <20190716090218.12379-1-oded.gabbay@gmail.com>
-In-Reply-To: <20190716090218.12379-1-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oshpigelman@habana.ai; 
-x-originating-ip: [31.154.181.186]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 52e27f9e-da1d-4799-101d-08d709da6e54
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR0202MB3383;
-x-ms-traffictypediagnostic: AM6PR0202MB3383:
-x-microsoft-antispam-prvs: <AM6PR0202MB338383727C2FF577BECC4F1DB8CE0@AM6PR0202MB3383.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(39840400004)(396003)(346002)(136003)(189003)(199004)(7736002)(66066001)(486006)(76176011)(25786009)(99286004)(3846002)(6116002)(7696005)(5660300002)(229853002)(33656002)(2501003)(2906002)(186003)(26005)(6636002)(11346002)(446003)(478600001)(102836004)(14454004)(476003)(8936002)(6506007)(316002)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(55016002)(558084003)(68736007)(6436002)(53936002)(74316002)(8676002)(110136005)(71190400001)(71200400001)(52536014)(256004)(86362001)(9686003)(305945005)(81166006)(4326008)(81156014)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3383;H:AM6PR0202MB3382.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HAXqcr7KYOzjXmjt4znU4jDeznUf0sbpbtz/vNoz1m3TGhEfwAFtnOxEsBijdGFZSmpAUTfUrJIUOX6SuVGNHAvjG3A3ZmnMA5wvcwkTHWiUrjp7wMR386lpK8MPZeGmNJ0SHKYlENsiUUOGjevD3RdOOW/dVH+xr3YG2HUkT5bdVeKaTwlrGkloCcKdBarwT5dtPsftGyNc45W2+Mov6xTPVOifNFfYvZhoYMGqMY2bzD0M1rY7IQp3u1Mc0i29cbMCTW1NZIWAAxSK0OmwaOhNBL8KM1RVhsNSU7z1uTkoB5feXc63dzEzSIVgivfslxezLjq0ng4M/o+M7OxCVnbbMai3yhqWisi77K9OSsvSbR3PPS4fHm04I8dtXKxpShU2LUlhhZH85WTlv6xJb7UfIG7jc4gykX+FE2vEvX4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FnTfXGgjsLntS6jMo62yzl6Vn1EtGc1DavczK9ylaTg=;
+        b=jHXFcCg5eMxU9fvvATy+HY8vK6OGkZoncERbEqWIX438Er7GL7G1sc7wTc9eC0T/7y
+         tKNUGVP5SaCTkDkhNlhY2rfVXSDClMj9GcCJXTPyIgwUF3pdtizk9Ufe3c4sbdIdUtOD
+         EOrgMCId1bCsWIe0H/zFann9m1M7rTbV+cgxnrs6T1UiDMLXwqeigxLHvHHLgLpmpHF3
+         +xJ7As78LQoPBGkZ0hv2qrsBVTRdzcniNI3fjTmn7XHgZLF5sFeFYYRM9o1wk7kUmNjS
+         Zcy9DLu2qcM3WYEHgx4gQ3VMRKpDPjJzrI7Mi0n4lfZ0mKr0Skc0ZHvyrUISPmzZvaF8
+         jR3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FnTfXGgjsLntS6jMo62yzl6Vn1EtGc1DavczK9ylaTg=;
+        b=ncmHaZRMHW7Uu5J1r6VxMpl6Bu2D46ppT+z6JuZ4fSDFcMbJm54ZOOtLhs3f5B6jpo
+         oDpt4LbJSkpQmbGMTIWoGTXIu1k7m8zWg5sizWS6+SkDVW5qwZyLamCdUQ4AAzmTayTY
+         IWcNJ6z1prQLtvfTYBDwrKking+XOV63cuKQoF5paxJTMe24cxEpj2kvuQPLURA6CuaM
+         H1g1a6z214IkCieZMn5lzbxXJCncjWOEPvL0mgODRNlmtP3iy8SFGR4jOfy7xz4+3olq
+         EwC0ed6btC240qUkrpIH2utMMj1HaWiAVURCL6I7vF275ZssDySfa6w3NlkuuOhzCEaQ
+         H7yg==
+X-Gm-Message-State: APjAAAVObL+49ReyrjM5egMR+aldF+SyGMQTFs5nvn8mkgPKOHGPa7L8
+        LJGCSsR5K//mg1lIf2VoF8lADQ==
+X-Google-Smtp-Source: APXvYqwrjsaHjjWEhxg9mvVXCnV8LgsPfXPdkWh4OMeVg0WuJU792Pm3t0xS4HUeqUeuo3TGp+m9xw==
+X-Received: by 2002:a2e:6348:: with SMTP id x69mr17264128ljb.186.1563273836873;
+        Tue, 16 Jul 2019 03:43:56 -0700 (PDT)
+Received: from centauri (ua-83-226-229-61.bbcust.telenor.se. [83.226.229.61])
+        by smtp.gmail.com with ESMTPSA id b192sm2748745lfg.75.2019.07.16.03.43.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 03:43:56 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 12:43:54 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] opp: Return genpd virtual devices from
+ dev_pm_opp_attach_genpd()
+Message-ID: <20190716104354.GA13780@centauri>
+References: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52e27f9e-da1d-4799-101d-08d709da6e54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 10:43:25.3588
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oshpigelman@habana.ai
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3383
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogT2RlZCBHYWJiYXkgPG9kZWQuZ2FiYmF5QGdtYWlsLmNvbT4NClNlbnQ6IFR1ZXNkYXks
-IDE2IEp1bHkgMjAxOSAxMjowMg0KDQo+IFRoaXMgcGF0Y2ggYWRkcyBzb21lIGluLWNvZGUgZG9j
-dW1lbnRhdGlvbiBvbiB0aGUgZGlmZmVyZW50IG9wY29kZXMgb2YNCj4gdGhlIElORk8gSU9DVEwu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBPZGVkIEdhYmJheSA8b2RlZC5nYWJiYXlAZ21haWwuY29t
-Pg0KDQpSZXZpZXdlZC1ieTogT21lciBTaHBpZ2VsbWFuIDxvc2hwaWdlbG1hbkBoYWJhbmEuYWk+
-DQo=
+On Mon, Jul 08, 2019 at 11:30:11AM +0530, Viresh Kumar wrote:
+> The cpufreq drivers don't need to do runtime PM operations on the
+> virtual devices returned by dev_pm_domain_attach_by_name() and so the
+> virtual devices weren't shared with the callers of
+> dev_pm_opp_attach_genpd() earlier.
+> 
+> But the IO device drivers would want to do that. This patch updates the
+> prototype of dev_pm_opp_attach_genpd() to accept another argument to
+> return the pointer to the array of genpd virtual devices.
+> 
+> Reported-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> @Rajendra: Can you please test this one ? I have only compile tested it.
+> 
+>  drivers/opp/core.c     | 5 ++++-
+>  include/linux/pm_opp.h | 4 ++--
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 2958cc7bbb58..07b6f1187b3b 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1775,6 +1775,7 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>   * dev_pm_opp_attach_genpd - Attach genpd(s) for the device and save virtual device pointer
+>   * @dev: Consumer device for which the genpd is getting attached.
+>   * @names: Null terminated array of pointers containing names of genpd to attach.
+> + * @virt_devs: Pointer to return the array of virtual devices.
+>   *
+>   * Multiple generic power domains for a device are supported with the help of
+>   * virtual genpd devices, which are created for each consumer device - genpd
+> @@ -1789,7 +1790,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>   * This helper needs to be called once with a list of all genpd to attach.
+>   * Otherwise the original device structure will be used instead by the OPP core.
+>   */
+> -struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
+> +struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+> +		const char **names, struct device ***virt_devs)
+>  {
+>  	struct opp_table *opp_table;
+>  	struct device *virt_dev;
+> @@ -1850,6 +1852,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+>  		name++;
+>  	}
+>  
+> +	*virt_devs = opp_table->genpd_virt_devs;
+
+Could we perhaps only do this if (virt_devs), that way callers can send in
+NULL if they don't care about the genpd virtual devices.
+
+Kind regards,
+Niklas
+
+>  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
+>  
+>  	return opp_table;
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index be570761b77a..7c2fe2952f40 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -131,7 +131,7 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char * name);
+>  void dev_pm_opp_put_clkname(struct opp_table *opp_table);
+>  struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev, int (*set_opp)(struct dev_pm_set_opp_data *data));
+>  void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
+> -struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names);
+> +struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs);
+>  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+>  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+>  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+> @@ -295,7 +295,7 @@ static inline struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const
+>  
+>  static inline void dev_pm_opp_put_clkname(struct opp_table *opp_table) {}
+>  
+> -static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names)
+> +static inline struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names, struct device ***virt_devs)
+>  {
+>  	return ERR_PTR(-ENOTSUPP);
+>  }
+> -- 
+> 2.21.0.rc0.269.g1a574e7a288b
+> 
