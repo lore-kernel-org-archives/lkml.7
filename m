@@ -2,77 +2,118 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9284BC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9D7C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679D32173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4C420880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733285AbfGPNJr (ORCPT
+        id S1733288AbfGPNLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:09:47 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59006 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfGPNJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:09:46 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hnND3-0005Sp-AS; Tue, 16 Jul 2019 21:09:33 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hnNCy-0001uZ-ES; Tue, 16 Jul 2019 21:09:28 +0800
-Date:   Tue, 16 Jul 2019 21:09:28 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        paulmck@linux.ibm.com, peterz@infradead.org,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: Use RCU when fetching pd from do_serial
-Message-ID: <20190716130928.ga4acvxipsdzyzlp@gondor.apana.org.au>
-References: <20190711221205.29889-1-daniel.m.jordan@oracle.com>
- <20190712100636.mqdr567p7ozanlyl@gondor.apana.org.au>
- <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
- <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
- <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
- <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
- <20190716111410.GN17989@gauss3.secunet.de>
- <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
+        Tue, 16 Jul 2019 09:11:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26250 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726997AbfGPNLt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:11:49 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GCwEip012006
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:11:48 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tset09esm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 09:11:47 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 16 Jul 2019 14:11:45 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Jul 2019 14:11:42 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GDBeDN42336360
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 13:11:40 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8704CAE045;
+        Tue, 16 Jul 2019 13:11:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33210AE055;
+        Tue, 16 Jul 2019 13:11:40 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.110])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jul 2019 13:11:40 +0000 (GMT)
+Date:   Tue, 16 Jul 2019 15:11:38 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Petr Tesarik <PTesarik@suse.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Raymund Will <rw@suse.com>
+Subject: Re: [PATCH] s390: enable detection of kernel version from bzImage
+References: <your-ad-here.call-01563228330-ext-8076@work.hours>
+ <patch.git-94e9726bbfe5.your-ad-here.call-01563228538-ext-5706@work.hours>
+ <20190716123006.2d426ec8@ezekiel.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190716123006.2d426ec8@ezekiel.suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 19071613-0016-0000-0000-0000029304B3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071613-0017-0000-0000-000032F0D5A3
+Message-Id: <your-ad-here.call-01563282698-ext-9575@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=869 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 08:57:04PM +0800, Herbert Xu wrote:
->
-> How about using RCU?
+On Tue, Jul 16, 2019 at 10:30:14AM +0000, Petr Tesarik wrote:
+> On Tue, 16 Jul 2019 00:12:19 +0200
+> Vasily Gorbik <gor@linux.ibm.com> wrote:
 > 
-> We still need to fix up the refcnt if it's supposed to limit the
-> overall number of outstanding requests.
+> > Extend "parmarea" to include an offset of the version string, which is
+> > stored as 8-byte big endian value.
+> > 
+> > To retrieve version string from bzImage reliably, one should check the
+> > presence of "S390EP" ascii string at 0x10008 (available since v3.2),
+> > then read the version string offset from 0x10428 (which has been 0
+> > since v3.2 up to now). The string is null terminated.
+> > 
+> > Could be retrieved with the following "file" command magic (requires
+> > file v5.34):
+> > 8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390
+> > >0x10008       string          S390EP  
+> > >>0x10428      bequad          >0  
+> > >>>(0x10428.Q) string          >\0             \b, version %s  
+> > 
+> > Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> 
+> This looks great! Much cleaner than the original approach.
+> 
+> Thank you,
+> Petr T
 
-Hmm, it doesn't work because the refcnt is attached to the old
-pd.  That shouldn't be a problem though as we could simply ignore
-the refcnt in padata_flush_queue.
+Then I'll add
+Reported-by: Petr Tesarik <ptesarik@suse.com>
+Suggested-by: Petr Tesarik <ptesarik@suse.com>
+if you don't mind and try to queue that for 5.3.
 
-However, I think this leads to another bug in that pcrypt doesn't
-support dm-crypt properly.  It never does the backlog stuff and
-therefore can't guarantee reliable processing which dm-crypt requires.
-
-Is it intentional to only allow pcrypt for IPsec?
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
