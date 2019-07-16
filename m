@@ -2,75 +2,139 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C34C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187DBC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47E220880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F3D217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 14:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387833AbfGPOmu (ORCPT
+        id S2387849AbfGPOoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 10:42:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2272 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726997AbfGPOmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 10:42:50 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 4F6B45DA6E3F00D60366;
-        Tue, 16 Jul 2019 22:42:47 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
- 22:42:37 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kvalo@codeaurora.org>, <davem@davemloft.net>, <lkundrak@v3.sk>,
-        <derosier@cal-sierra.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] libertas_tf: Use correct channel range in lbtf_geo_init
-Date:   Tue, 16 Jul 2019 22:42:18 +0800
-Message-ID: <20190716144218.20608-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 16 Jul 2019 10:44:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58884 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726997AbfGPOoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 10:44:10 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 14A2E85546;
+        Tue, 16 Jul 2019 14:44:10 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-180.rdu2.redhat.com [10.10.122.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 457726013A;
+        Tue, 16 Jul 2019 14:44:07 +0000 (UTC)
+Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-4-alex.kogan@oracle.com>
+ <77bba626-f3e6-45a8-aae8-43b945d0fab9@redhat.com>
+ <32DD898E-0F5E-4A63-9795-F78411B77A98@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8ceec931-2921-6ee6-2642-476b4a12281e@redhat.com>
+Date:   Tue, 16 Jul 2019 10:44:06 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <32DD898E-0F5E-4A63-9795-F78411B77A98@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 16 Jul 2019 14:44:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems we should use 'range' instead of 'priv->range'
-in lbtf_geo_init(), because 'range' is the corret one
-related to current regioncode.
+On 7/16/19 10:26 AM, Alex Kogan wrote:
+>> On Jul 15, 2019, at 5:30 PM, Waiman Long <longman@redhat.com> wrote:
+>>
+>> On 7/15/19 3:25 PM, Alex Kogan wrote:
+>>
+>>> /*
+>>> - * On 64-bit architectures, the mcs_spinlock structure will be 16 bytes in
+>>> - * size and four of them will fit nicely in one 64-byte cacheline. For
+>>> - * pvqspinlock, however, we need more space for extra data. To accommodate
+>>> - * that, we insert two more long words to pad it up to 32 bytes. IOW, only
+>>> - * two of them can fit in a cacheline in this case. That is OK as it is rare
+>>> - * to have more than 2 levels of slowpath nesting in actual use. We don't
+>>> - * want to penalize pvqspinlocks to optimize for a rare case in native
+>>> - * qspinlocks.
+>>> + * On 64-bit architectures, the mcs_spinlock structure will be 20 bytes in
+>>> + * size. For pvqspinlock or the NUMA-aware variant, however, we need more
+>>> + * space for extra data. To accommodate that, we insert two more long words
+>>> + * to pad it up to 36 bytes.
+>>>  */
+>> The 20 bytes figure is wrong. It is actually 24 bytes for 64-bit as the
+>> mcs_spinlock structure is 8-byte aligned. For better cacheline
+>> alignment, I will like to keep mcs_spinlock to 16 bytes as before.
+>> Instead, you can use encode_tail() to store the CNA node pointer in
+>> "locked". For instance, use (encode_tail() << 1) in locked to
+>> distinguish it from the regular locked=1 value.
+> I think this can work.
+> decode_tail() will get the actual node pointer from the encoded value.
+> And that would keep the size of mcs_spinlock intact.
+> Good idea, thanks!
+>
+> BTW, maybe better change those function names to encode_node() / decode_node() then?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: fix compile error
----
- drivers/net/wireless/marvell/libertas_tf/cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The names look good to me.
 
-diff --git a/drivers/net/wireless/marvell/libertas_tf/cmd.c b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-index 1eacca0..a333172 100644
---- a/drivers/net/wireless/marvell/libertas_tf/cmd.c
-+++ b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-@@ -65,7 +65,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
- 			break;
- 		}
- 
--	for (ch = priv->range.start; ch < priv->range.end; ch++)
-+	for (ch = range->start; ch < range->end; ch++)
- 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
- }
- 
--- 
-2.7.4
 
+>
+>>> s
+>>> +
+>>> +static void cna_init_node(struct mcs_spinlock *node)
+>>> +{
+>>> +	struct cna_node *cn = CNA_NODE(node);
+>>> +	struct mcs_spinlock *base_node;
+>>> +	int cpuid;
+>>> +
+>>> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
+>>> +	/* we store a pointer in the node's @locked field */
+>>> +	BUILD_BUG_ON(sizeof(uintptr_t) > sizeof_field(struct mcs_spinlock, locked));
+>>> +
+>>> +	cpuid = smp_processor_id();
+>>> +	cn->numa_node = cpu_to_node(cpuid);
+>>> +
+>>> +	base_node = this_cpu_ptr(&qnodes[0].mcs);
+>>> +	cn->encoded_tail = encode_tail(cpuid, base_node->count - 1);
+>>> +}
+>>
+>> I think you can use an early_init call to initialize the numa_node and
+>> encoded_tail values for all the per-cpu CNA nodes instead of doing it
+>> every time a node is used. If it turns out that pv_qspinlock is used,
+>> the pv_node_init() will properly re-initialize it.
+> Yes, this should work. Thanks.
+>
+> BTW, should not we initialize `cpu` in pv_init_node() that same way?
+
+We would also initialize cpu this way in pv_init_node. The
+smp_processor_id() call is relatively cheap, but the initialization done
+here is more expensive.
+
+
+>> The only thing left
+>> to do here is perhaps setting tail to NULL.
+> There is no need to initialize cna_node.tail — we never access it unless
+> the node is at the head of the secondary queue, and in that case we 
+> initialize it before placing the node at the head of that queue 
+> (see find_successor()).
+
+OK.
+
+-Longman
 
