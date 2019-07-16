@@ -2,132 +2,153 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F0CC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A67BC76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE7F2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:55:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="r0lm8+cF"
+	by mail.kernel.org (Postfix) with ESMTP id 5D4412184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 23:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388976AbfGPXzD (ORCPT
+        id S2388994AbfGPX6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 19:55:03 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33060 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfGPXzD (ORCPT
+        Tue, 16 Jul 2019 19:58:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42383 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbfGPX6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 19:55:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so10913520plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NzEY+r09HUC2z4C48p6M8ATkm0m6ysiYYqTSVqgt1QE=;
-        b=r0lm8+cFAneRrgEcwxzxGfTvtvluOpA3ESey7YY64X8gt3fRQhUMF/tPGTeEI67+VC
-         8dZ3Mx6k0ebH9dAJeaWK9NCo0+7z8Si0r/ZCwwpT7MvCl2SzhYn+Kmzs/kv9C4uppEJF
-         FDMOvZ1hgzELkujjJhQMnxXnkHe5FUeIpiuII=
+        Tue, 16 Jul 2019 19:58:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id f22so25130747ioj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:58:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NzEY+r09HUC2z4C48p6M8ATkm0m6ysiYYqTSVqgt1QE=;
-        b=LoulgV5eP9IanNoYEncuG7KOcirc763tkAxgT3d5JBHVox8aY0moIstJCEluPhyp5P
-         vHyaEFEo5TC1wd/VJIiD0f06haBESucqrCbEvSDhre2Y6UrqWXkjJgS34rwojKmBv09w
-         8IGfcy+JH/3ajtjMxGTBwp3rcQ102Mmi9Tmsxl6E+CYMFdADwh5OtzmbNY/CPhglOQKg
-         ylhCyvR12NJIdZtvASkJtimwxf92PUNzZeanMVRpRQi/XYy3X7prMsNsE8tCjj/a1Xjp
-         URc5md1MinxXszPnHmL2sd61QMvwH5xFD3QjTLy3dUG1QBq/RR8p7thLBT0YZg80ZOXq
-         Y7Eg==
-X-Gm-Message-State: APjAAAXGnUIs6ecc9s8Wm+LjYUsVNQwskkcRYZzK6uTk2GREtJ+LG2bO
-        P9O2oSGUSsW1zz9gINEfWsM=
-X-Google-Smtp-Source: APXvYqwmCIcDYzjgLG0aaoMoodqVucYHLpTnPwPRge5tf+/2LiAcL4ZBidohGTpKLJGf1fMad/8jwg==
-X-Received: by 2002:a17:902:7448:: with SMTP id e8mr39106404plt.85.1563321302615;
-        Tue, 16 Jul 2019 16:55:02 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p67sm26885092pfg.124.2019.07.16.16.55.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 16:55:01 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 19:55:00 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        Manali Shukla <manalishukla14@gmail.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matt Mullins <mmullins@fb.com>,
-        Michal Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
-        namhyung@kernel.org, netdev@vger.kernel.org,
-        paul.chaignon@gmail.com, primiano@google.com,
-        Qais Yousef <qais.yousef@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190716235500.GA199237@google.com>
-References: <20190710141548.132193-1-joel@joelfernandes.org>
- <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
- <20190716213050.GA161922@google.com>
- <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
- <20190716224150.GC172157@google.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=04Wvxtoj12TF+6z0qf7a2JYPiNoTFIelyWa5q9OcB9o=;
+        b=AiTvLMEN9RxUc7eStDMa0y4Y/2TAvfv7vojf7EL4FA5Zc92yYOJ/XDgbyW352i071t
+         o3q6jwy/xkR5e5rd6xgXLxoo/Gu5wyqT5np3qWvq+vm7BdRPUgCR8O1LGQXaAiOmnFbq
+         wUkQjlFfLA3TedqavBfKrSDxn1x1gVNrRGr7I7Skqojj2PMZGq2r1Hb674yYBrzjCfdj
+         2gCLPYuOFAaX1PW8d17MlgLv+xveQpz3YMr5MI78NiLvV64h80HHLpQsJgRlr9xvWhj+
+         RPXhfgommXJhODWD5VWsg8wim4Nnn/guwt69YKxRgd0PwnxiH3r/TtD1bUJc9oHL00ej
+         QDhQ==
+X-Gm-Message-State: APjAAAVWjMJYVmf20Xfe/AUL7gZ7Mot7nh2kiky0VpJrP3axbAhVF6wX
+        6joMqzC5b8su50ZiQU61E5vNG48NwTi/gO6wxO2OSvFPdYmr
+X-Google-Smtp-Source: APXvYqw6MgjkP1Q8lzpCier7Y6bbnZmvhg7ZXpdamqk8o0lRzBL5g64lhJuw4rb4lHslSmi5QKmbMocp+2fQuPy7mw0MK4ok9G8w
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716224150.GC172157@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5d:9957:: with SMTP id v23mr32648760ios.117.1563321486085;
+ Tue, 16 Jul 2019 16:58:06 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 16:58:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d917f4058dd525cf@google.com>
+Subject: general protection fault in tls_setsockopt
+From:   syzbot <syzbot+23d9570edec63669d890@syzkaller.appspotmail.com>
+To:     ast@kernel.org, aviadye@mellanox.com,
+        bhole_prashant_q7@lab.ntt.co.jp, borisp@mellanox.com,
+        daniel@iogearbox.net, davejwatson@fb.com, davem@davemloft.net,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        shuah@kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:41:50PM -0400, Joel Fernandes wrote:
-> On Tue, Jul 16, 2019 at 03:26:52PM -0700, Alexei Starovoitov wrote:
-> > On Tue, Jul 16, 2019 at 05:30:50PM -0400, Joel Fernandes wrote:
-> > > 
-> > > I also thought about the pinning idea before, but we also want to add support
-> > > for not just raw tracepoints, but also regular tracepoints (events if you
-> > > will). I am hesitant to add a new BPF API just for creating regular
-> > > tracepoints and then pinning those as well.
-> > 
-> > and they should be done through the pinning as well.
-> 
-> Hmm ok, I will give it some more thought.
+Hello,
 
-I think I can make the new BPF API + pinning approach work, I will try to
-work on something like this and post it soon.
+syzbot found the following crash on:
 
-Also, I had a question below if you don't mind taking a look:
+HEAD commit:    a131c2bf Merge tag 'acpi-5.3-rc1-2' of git://git.kernel.or..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1603e9c0600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8bff73c5ba9e876
+dashboard link: https://syzkaller.appspot.com/bug?extid=23d9570edec63669d890
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13560870600000
 
-thanks Alexei!
+The bug was bisected to:
 
-> > > I don't see why a new bpf node for a trace event is a bad idea, really.
-> > 
-> > See the patches for kprobe/uprobe FD-based api and the reasons behind it.
-> > tldr: text is racy, doesn't scale, poor security, etc.
-> 
-> Is it possible to use perf without CAP_SYS_ADMIN and control security at the
-> per-event level? We are selective about who can access which event, using
-> selinux. That's how our ftrace-based tracers work. Its fine grained per-event
-> control. That's where I was going with the tracefs approach since we get that
-> granularity using the file system.
-> 
-> Thanks.
-> 
+commit 7c85c448e7d74c4ddd759440a2141eab663567cf
+Author: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
+Date:   Tue Oct 9 01:04:54 2018 +0000
+
+     selftests/bpf: test_verifier, check bpf_map_lookup_elem access in bpf  
+prog
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17000114600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14800114600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10800114600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+23d9570edec63669d890@syzkaller.appspotmail.com
+Fixes: 7c85c448e7d7 ("selftests/bpf: test_verifier, check  
+bpf_map_lookup_elem access in bpf prog")
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9098 Comm: syz-executor.2 Not tainted 5.2.0+ #65
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:tls_setsockopt+0x87/0x8c0 net/tls/tls_main.c:592
+Code: 80 3c 02 00 0f 85 a5 07 00 00 49 8b 84 24 b0 06 00 00 48 ba 00 00 00  
+00 00 fc ff df 48 8d b8 88 00 00 00 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f  
+85 85 07 00 00 41 89 d8 4c 89 f1 44 89 ea 44 89 fe
+RSP: 0018:ffff88809b2e7d30 EFLAGS: 00010206
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000011
+RDX: dffffc0000000000 RSI: ffffffff86186a84 RDI: 0000000000000088
+RBP: ffff88809b2e7d80 R08: ffff888098896480 R09: ffff888098896d08
+R10: ffffed1015d06c83 R11: ffff8880ae83641b R12: ffff888099d86d00
+R13: 000000000000001f R14: 0000000020000340 R15: 0000000000000006
+FS:  00007f29b1f6b700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffb5492d518 CR3: 00000000a49ea000 CR4: 00000000001406f0
+Call Trace:
+  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3130
+  __sys_setsockopt+0x253/0x4b0 net/socket.c:2080
+  __do_sys_setsockopt net/socket.c:2096 [inline]
+  __se_sys_setsockopt net/socket.c:2093 [inline]
+  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2093
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459819
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f29b1f6ac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000459819
+RDX: 000000000000001f RSI: 0000000000000006 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000004 R09: 0000000000000000
+R10: 0000000020000340 R11: 0000000000000246 R12: 00007f29b1f6b6d4
+R13: 00000000004c7cb9 R14: 00000000004dd878 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 1e30f09ab6b57d8c ]---
+RIP: 0010:tls_setsockopt+0x87/0x8c0 net/tls/tls_main.c:592
+Code: 80 3c 02 00 0f 85 a5 07 00 00 49 8b 84 24 b0 06 00 00 48 ba 00 00 00  
+00 00 fc ff df 48 8d b8 88 00 00 00 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f  
+85 85 07 00 00 41 89 d8 4c 89 f1 44 89 ea 44 89 fe
+RSP: 0018:ffff88809b2e7d30 EFLAGS: 00010206
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000011
+RDX: dffffc0000000000 RSI: ffffffff86186a84 RDI: 0000000000000088
+RBP: ffff88809b2e7d80 R08: ffff888098896480 R09: ffff888098896d08
+R10: ffffed1015d06c83 R11: ffff8880ae83641b R12: ffff888099d86d00
+R13: 000000000000001f R14: 0000000020000340 R15: 0000000000000006
+FS:  00007f29b1f6b700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000007126b4 CR3: 00000000a49ea000 CR4: 00000000001406f0
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
