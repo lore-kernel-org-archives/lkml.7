@@ -2,118 +2,77 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60F7C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB5AC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F0620880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Pnlxllme"
+	by mail.kernel.org (Postfix) with ESMTP id 3FE7420880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 07:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfGPHPV (ORCPT
+        id S1729640AbfGPHQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 03:15:21 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:45493 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfGPHPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 03:15:21 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6G7FBNZ010098
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 16:15:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6G7FBNZ010098
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563261313;
-        bh=QcVnV9OLob7IvgKHrnhoRO7gO5UasK9/m6KCahUPQwk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PnlxllmeJqxxA6vs4lAjBUgs+Anv5Eb756kryUMe+Wzm6rIjk8nZSInxbfdscQOdG
-         as+UaeR/Cz0lQ4tlEB1hHgm1svWpEl/MlJF7F0WgohHeAlb6iX8mhuMnW5X4qOke76
-         X+gg+nSWOB0hf5JrJdpHdgXPlmofJrExLOipgLUIQmWjqlzX4b+AEqUiRtDPIRNhDq
-         X1CvBKsXsRyHhdg+d/g6+qPQXuBsPBxTI85pxwNvej/0uNDPEsKXXA70sKdlcHjbgh
-         ZGbOGqjtual2KueHxPUzSixgn0Q6rXMoOVgWVsvpjc1a9qX+/Ei08llwP74ALYoP+C
-         zAMrJLT/W81/w==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id a186so11574943vsd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 00:15:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAXxIZzuzF+p0i7Ddsn1cysYXVcEsbyZHkeiaZGNK7M+1HoG73Dh
-        7TTaq42YedrH6NtUx97VvDJZ2vGqi45jUEjGIWk=
-X-Google-Smtp-Source: APXvYqyBAqZZbdQlYRd1vuBlPVWO5Kp2SMReNtvXaXAGRBCPnqL3qX+XdDbFkUD6YV7WD97X/AQvx6I32sekRxU8udI=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr18947906vsq.179.1563261310985;
- Tue, 16 Jul 2019 00:15:10 -0700 (PDT)
+        Tue, 16 Jul 2019 03:16:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2269 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726385AbfGPHQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 03:16:30 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 053F02014B24A30DB212;
+        Tue, 16 Jul 2019 15:16:28 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 16 Jul 2019
+ 15:16:21 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jhs@mojatatu.com>, <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] net/sched: Make NET_ACT_CT depends on NF_NAT
+Date:   Tue, 16 Jul 2019 15:16:02 +0800
+Message-ID: <20190716071602.27276-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190713032106.8509-1-yamada.masahiro@socionext.com>
- <20190713124744.GS14074@gate.crashing.org> <20190713131642.GU14074@gate.crashing.org>
- <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com>
- <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au>
- <20190715072959.GB20882@gate.crashing.org> <CAK7LNATGEK9wxz87J3sTNOYPdtAFXaegQU9EctEBGULQL-ZC4w@mail.gmail.com>
- <20190715181618.GG20882@gate.crashing.org>
-In-Reply-To: <20190715181618.GG20882@gate.crashing.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 16 Jul 2019 16:14:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQfzoHu8VvvdkNnwak5ZuP0zmJdvxMSPYGB2YsoUw59jw@mail.gmail.com>
-Message-ID: <CAK7LNAQfzoHu8VvvdkNnwak5ZuP0zmJdvxMSPYGB2YsoUw59jw@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 3:16 AM Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
->
-> On Mon, Jul 15, 2019 at 09:03:46PM +0900, Masahiro Yamada wrote:
-> > On Mon, Jul 15, 2019 at 4:30 PM Segher Boessenkool
-> > <segher@kernel.crashing.org> wrote:
-> > >
-> > > On Mon, Jul 15, 2019 at 05:05:34PM +1000, Michael Ellerman wrote:
-> > > > Segher Boessenkool <segher@kernel.crashing.org> writes:
-> > > > > Yes, that is why I used the environment variable, all binutils work
-> > > > > with that.  There was no --target option in GNU ar before 2.22.
-> >
-> > I use binutils 2.30
-> > It does not understand --target option.
-> >
-> > $ powerpc-linux-ar --version
-> > GNU ar (GNU Binutils) 2.30
-> > Copyright (C) 2018 Free Software Foundation, Inc.
-> > This program is free software; you may redistribute it under the terms of
-> > the GNU General Public License version 3 or (at your option) any later version.
-> > This program has absolutely no warranty.
-> >
-> > If I give --target=elf$(BITS)-$(GNUTARGET) option, I see this:
-> > powerpc-linux-ar: -t: No such file or directory
->
-> You need to provide a valid command line, like
->
-> $ powerpc-linux-ar tv smth.a --target=elf32-powerpc
->
-> ar is a bit weird.
+If NF_NAT is m and NET_ACT_CT is y, build fails:
+
+net/sched/act_ct.o: In function `tcf_ct_act':
+act_ct.c:(.text+0x21ac): undefined reference to `nf_ct_nat_ext_add'
+act_ct.c:(.text+0x229a): undefined reference to `nf_nat_icmp_reply_translation'
+act_ct.c:(.text+0x233a): undefined reference to `nf_nat_setup_info'
+act_ct.c:(.text+0x234a): undefined reference to `nf_nat_alloc_null_binding'
+act_ct.c:(.text+0x237c): undefined reference to `nf_nat_packet'
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/sched/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sched/Kconfig b/net/sched/Kconfig
+index dd55b9a..afd2ba1 100644
+--- a/net/sched/Kconfig
++++ b/net/sched/Kconfig
+@@ -942,7 +942,7 @@ config NET_ACT_TUNNEL_KEY
+ 
+ config NET_ACT_CT
+         tristate "connection tracking tc action"
+-        depends on NET_CLS_ACT && NF_CONNTRACK
++        depends on NET_CLS_ACT && NF_CONNTRACK && NF_NAT
+         help
+ 	  Say Y here to allow sending the packets to conntrack module.
+ 
+-- 
+2.7.4
 
 
-Ah, I see!
-
-I had missed the space being required.
-
-Since I cannot test old binutils,
-I will leave this to ppc people.
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
