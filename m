@@ -2,145 +2,151 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F01C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6C0C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5B02053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 04:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADF32173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 05:00:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nS2o8Fm9"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MxOixC4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfGPE6a (ORCPT
+        id S1726713AbfGPFAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 00:58:30 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44390 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfGPE63 (ORCPT
+        Tue, 16 Jul 2019 01:00:34 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:58743 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfGPFAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 00:58:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p17so19308766wrf.11;
-        Mon, 15 Jul 2019 21:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=DAH6dKwCyAbLlDOpi+3YA8QHS8AaWmvdyvdCSPTEF0Y=;
-        b=nS2o8Fm9M4Qr66Q30/2C6MH1XD+GoJrUGw89RjxqqLMPy/N0vMS4aNGEcaxYAJnIX5
-         SMPnUb15ISTTidfbY8LA1hNqNSHrVaySeORVyNQIozPHNfJbfYm1KmEWWBGaRpMyedso
-         S2zxddiS33osopW5ZauwrcBDxU4V2MLZfCjvABdQ3x5s1cg8fnlKIR3+w30ChaFjxvJP
-         JBW5gE9xk9NHewAXNzvH8+ZLk+mRQ51auejRMC3/N52dzZztGdUrVNlJviAPQJU972ml
-         2+f02WEkshrB/oh97WenpnRP9UJjeamWtgIy1jp0ssFoe7lcA2RDYAy5O4KSpAxPvQ+0
-         3vyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=DAH6dKwCyAbLlDOpi+3YA8QHS8AaWmvdyvdCSPTEF0Y=;
-        b=RmmCjkJkQXEPSLvWCtAXnMTlLyWzDuMqbg1HlZTMRsEnf9TrGmAR+1LGrGHW4fjsZI
-         Z4m8B7aWsK//ba9Mk7/NdcCCn6leFvnoadM6OgbOb1ioy4xKM9sN5VSYwPFu8BZV/Uml
-         vOYAr9eVUEYd22HwMN7Ssv2Ks5DQ+oor0eHfDJrvpcuyDwc/Dcnt7ZxnqGihv9sMgAEf
-         MMAxHpX00xx0n2QoqF2Jp16y+HfJrjmy8kdIR4/deAqIGAZ/vVtj9mVMmft5i16nnzSv
-         lTkjee6+HunwRfMsuH6q/LjClFXiy7MroqPlVDjxh9xile4/jsMXCOm7FMJFQMRrUnQX
-         SB0A==
-X-Gm-Message-State: APjAAAWabuB5yBdhyzp56Ma5nhmz75SLeQWmJatAWWsA9K62v68vS55d
-        zgv5R78DYJwXLIlc8Wbco54=
-X-Google-Smtp-Source: APXvYqzr38ksHGsl/DwWofhZwIvO6atz4K0RW1TCfzVhr13qTsXUsftSgaCT7giy8X8bGABmOvhmgw==
-X-Received: by 2002:a5d:468a:: with SMTP id u10mr33323669wrq.177.1563253107137;
-        Mon, 15 Jul 2019 21:58:27 -0700 (PDT)
-Received: from felia ([2001:16b8:2d8a:7300:3de9:10dd:67c8:ed32])
-        by smtp.gmail.com with ESMTPSA id j10sm32668442wrd.26.2019.07.15.21.58.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Jul 2019 21:58:26 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Tue, 16 Jul 2019 06:58:15 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] PCI: Remove functions not
- called in include/linux/pci.h
-In-Reply-To: <20190715203416.37547-1-skunberg.kelsey@gmail.com>
-Message-ID: <alpine.DEB.2.21.1907160653150.3426@felia>
-References: <20190715181312.31403-1-skunberg.kelsey@gmail.com> <20190715203416.37547-1-skunberg.kelsey@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 16 Jul 2019 01:00:33 -0400
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x6G50Sjd002379;
+        Tue, 16 Jul 2019 14:00:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6G50Sjd002379
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563253230;
+        bh=FPGAGm8ESlaP4ztyHEngsuJk8vAGn0UUpSZ7pP90xF4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MxOixC4EJW207dx9+ev/BxpkmmNyG0UfllLJ3WAMV8KqU4mBHpw7r+qcd9Q63ldxs
+         rlHmjqjlxggei5abnX3rnpiQH+uAhr6pOO2K2mj3w64lJ6/PooWANy1GUaKEJqnRXh
+         fKGpc+MrZISbc93qq/IEbKJn5im3U197nY+8cAEBB/MjCrw+bURnsi5281tbbdUe1A
+         VOLBuSw2m9nsRI5Mq2LUE8WLsdI8tjhBGJ+t8BrVeZy16oCsoBO0ZCC34dJFjh0ltU
+         9tJL9NxDO0j3nhncrrvsrgSWRVV8la/hGcEIjeFvuJ+oH6X/nI5IR+QC2NLE9GYpqk
+         Gvram8jCKv++A==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id m17so3925083vkl.2;
+        Mon, 15 Jul 2019 22:00:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAWQ8f0fFAiPleNpxHB+pK8JnZ9ot7QF4WhvGOFTBguqPaE2R8Kk
+        WahTvNwqgDaE4FKaabNweEGestSeFFhqAmA3aqA=
+X-Google-Smtp-Source: APXvYqwhI6A4AGx+YbJO1T+XUz24WZMm5wmOj6YH1tsONEqhJesi8+5zwcvdIlMbW4BzLhtU2nMdNzxrKYrfA4HekDk=
+X-Received: by 2002:a1f:ac1:: with SMTP id 184mr11722686vkk.0.1563253227758;
+ Mon, 15 Jul 2019 22:00:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190716143121.3027ef58@canb.auug.org.au>
+In-Reply-To: <20190716143121.3027ef58@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 16 Jul 2019 13:59:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASwwOo13p+GgVZ7txiNH4fpb7himmsDHHoQnfnraPZxHw@mail.gmail.com>
+Message-ID: <CAK7LNASwwOo13p+GgVZ7txiNH4fpb7himmsDHHoQnfnraPZxHw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the kbuild tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
+
+On Tue, Jul 16, 2019 at 1:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the kbuild tree, today's linux-next build (x86_64
+> allnoconfig) failed like this:
+>
+> make[1]: *** No rule to make target 'modules.order', needed by 'autoksyms_recursive'.  Stop.
+>
+> Starting with commit
+>
+>   656c0ac3cb4b ("kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod")
+>
+> i.e. after reverting just:
+>
+> 25a55e249bc0 Revert "kbuild: create *.mod with full directory path and remove MODVERDIR"
+> 15657d9eceb6 Revert "kbuild: remove the first line of *.mod files"
+> 8c21f4122839 Revert "kbuild: remove 'prepare1' target"
+> 35bc41d44d2d Revert "kbuild: split out *.mod out of {single,multi}-used-m rules"
+>
+> I get
+>
+> cat: modules.order: No such file or directory
+>
+> near the end of the allnoconfig build (but it does not fail).
+>
+> and when I remove 25a55e249bc0 i.e. stop reverting
+>
+>   0539f970a842 ("kbuild: create *.mod with full directory path and remove MODVERDIR")
+>
+> the build fails.
+>
+> So, for today I have reverted these 4 commits:
+>
+>   56dce8121e97 ("kbuild: split out *.mod out of {single,multi}-used-m rules")
+>   fbe0b5eb7890 ("kbuild: remove 'prepare1' target")
+>   008fa222d268 ("kbuild: remove the first line of *.mod files")
+>   0539f970a842 ("kbuild: create *.mod with full directory path and remove MODVERDIR")
+>
 
 
-On Mon, 15 Jul 2019, Kelsey Skunberg wrote:
+Ugh, sorry for the breakage.
 
-> Remove the following uncalled functions from include/linux/pci.h:
-> 
->         pci_block_cfg_access()
->         pci_block_cfg_access_in_atomic()
->         pci_unblock_cfg_access()
-> 
-> Functions were added in commit fb51ccbf217c ("PCI: Rework config space
-> blocking services"), though no callers were added. Code continues to be
-> unused and should be removed.
-> 
-> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> ---
-> 
-> Changes since v1:
->   - Fixed Signed-off-by line to show full name
-> 
-> Changes since v2:
->   - Change commit message to reference prior commit properly with the
->     following format:
-> 	commit <12-character sha prefix> ("<commit message>")
-> 
->  include/linux/pci.h | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cf380544c700..3c9ba6133bea 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1656,11 +1656,6 @@ static inline void pci_release_regions(struct pci_dev *dev) { }
->  
->  static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
->  
-> -static inline void pci_block_cfg_access(struct pci_dev *dev) { }
-> -static inline int pci_block_cfg_access_in_atomic(struct pci_dev *dev)
-> -{ return 0; }
-> -static inline void pci_unblock_cfg_access(struct pci_dev *dev) { }
-> -
->  static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
->  { return NULL; }
->  static inline struct pci_dev *pci_get_slot(struct pci_bus *bus,
-> -- 
-> 2.20.1
 
-I just checked with elixir on v5.2 that all three identifiers are never 
-referenced beyond its definition in pci.h:
+For the build error, I will fix it as follows for tomorrow's linux-next:
 
-https://elixir.bootlin.com/linux/v5.2/ident/pci_block_cfg_access
-https://elixir.bootlin.com/linux/v5.2/ident/pci_block_cfg_access_in_atomic
-https://elixir.bootlin.com/linux/v5.2/ident/pci_unblock_cfg_access
+diff --git a/Makefile b/Makefile
+index bfb08cc647f8..5f3daca90862 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1028,8 +1028,8 @@ vmlinux-deps := $(KBUILD_LDS)
+$(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)
 
-So, what it is worth:
+ # Recurse until adjust_autoksyms.sh is satisfied
+ PHONY += autoksyms_recursive
+-autoksyms_recursive: $(vmlinux-deps) modules.order
+ ifdef CONFIG_TRIM_UNUSED_KSYMS
++autoksyms_recursive: $(vmlinux-deps) modules.order
+        $(Q)$(CONFIG_SHELL) $(srctree)/scripts/adjust_autoksyms.sh \
+          "$(MAKE) -f $(srctree)/Makefile vmlinux"
+ endif
 
-Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Lukas
 
-> 
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
-> 
+For the warning, I will fix it as follows for tomorrow's linux-next:
+
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 3e229d4f4d72..6b19c1a4eae5 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -64,7 +64,9 @@ modulesymfile := $(firstword $(KBUILD_EXTMOD))/Module.symvers
+ modorder := $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)modules.order
+
+ # Step 1), find all modules listed in modules.order
++ifdef CONFIG_MODULES
+ modules := $(sort $(shell cat $(modorder)))
++endif
+
+ # Stop after building .o files if NOFINAL is set. Makes compile tests quicker
+ _modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
+
+
+Thanks!
+
+-- 
+Best Regards
+Masahiro Yamada
