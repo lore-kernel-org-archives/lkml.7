@@ -2,186 +2,150 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D689DC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABDBC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFC92173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6436120880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:09:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="b8dhUBZS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u78n1t2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733210AbfGPNGr (ORCPT
+        id S1732565AbfGPNJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:06:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38562 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfGPNGq (ORCPT
+        Tue, 16 Jul 2019 09:09:26 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46917 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfGPNJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:06:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f5so593996pgu.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 06:06:45 -0700 (PDT)
+        Tue, 16 Jul 2019 09:09:26 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so9383929lfh.13;
+        Tue, 16 Jul 2019 06:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HndzIrwk0eloZ/VKZJ3ivaH1s8315qlKpsro16xZw70=;
-        b=b8dhUBZSz3RGMnHXa2eQUBcpb0Fr1c6vhDDwn4sy14RwoF3LeMqo4GwVei/eUCKLfN
-         2ysAKK0S6zo65plaT8Lmyu1cdKbX5vv5C3GPTJPIInad+mBHinkOAREnbCNuxmpL9VDG
-         fvZUIwNFnzQNqEmzHkL0RRQ1MQkDpVZLaNNcaAVC/zAYUxremZf5+M3FMQbomiyN3wH4
-         zc2zC/xff3jM5dpplZUlTKdEFImIprhxsju27ez6MU1i0OsgFNq72UzfzJW9Togr4CqO
-         YkkRxSa2wlAwsL/E0oFuYOap/7lvKcKnsDSBvmk5MITFO2BYwQSiCBv4/QcWtaXdxpFP
-         2++g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Aro7keGuhkcq5L8X8QU6tiy3pifRBQgLd9LgfbCkFEk=;
+        b=u78n1t2AEOwncDi6eVNAylRaa5RC9vxyKN/OLrZMqQW8rzT7unYb7sMR+KQc7bgVEG
+         iSoSnKA+XMXXzWugYzWfNsT7y1ILHLxIK2b74WTuv/NRQNfO6vbeFF11w2CvVsHB8ksN
+         fIOmHfGECZchGjDE8kxAYu6yh6IgqKs4GRc5Te/tFTL6cccrn+Ne8SlDn9mXmIR/+F57
+         h+sbK0lieuJ8s+TJ31DPb4Sd4r0vak3CxD5Mr9Vq4ApP/no9CyG2lWNr/XRrhKVEOfOh
+         5h6/2G1/xw495q1kfdZJQwvk/1D11whNiMT1O3Wth4BgeA2rULMLksUtsVNggjJHvwVJ
+         jwmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HndzIrwk0eloZ/VKZJ3ivaH1s8315qlKpsro16xZw70=;
-        b=qL7J3eYNcLJm9/okvW/l1f4r665DCVc0QP5HN52g3jMJSTQTc9AU5Uj8tDT5fQSiAc
-         OWio8B4VdStpbhXrTCdEMBwtYgziS5PBrWBviyft9wWxEpOcDKJOLwYPBD4AEOqqxt1g
-         D6M00J6pvlDp2yAE0654IgmhVrO+5GWxAdJafL5PEVJ81Z2uhcP9dpOP21VX9mfscMyO
-         lIG8oe1LMfJytjkXWBNfEdTg1g8lMozhgF3JhUYoYCWj77eo97fX7NItUfzoal6QEac4
-         mulu4nUrW36tjESFjykW0jqy4hYnvASTjerHnmqzqPvVtlbET+D/+iY0AkucUz/5kb/B
-         wRRg==
-X-Gm-Message-State: APjAAAX0kYm8t0CIGoKtYAg+ZKBSYHRzb/8M9qWBkCInspc5woso54GX
-        M0gdAyFVCzMMClcH4fGAziE=
-X-Google-Smtp-Source: APXvYqxc7HGOD0D5gu8WnhNrsT1I3LmFfpI6lWg9smWBUfjHYlbiTNFFnqhLddSt9tTLEeru8OLm5Q==
-X-Received: by 2002:a63:b1d:: with SMTP id 29mr33615344pgl.103.1563282405436;
-        Tue, 16 Jul 2019 06:06:45 -0700 (PDT)
-Received: from brauner.io ([172.58.30.188])
-        by smtp.gmail.com with ESMTPSA id a12sm42618252pje.3.2019.07.16.06.06.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 06:06:44 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 15:06:33 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, mpe@ellerman.id.au
-Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
-Message-ID: <20190716130631.tohj4ub54md25dys@brauner.io>
-References: <20190714192205.27190-1-christian@brauner.io>
- <20190714192205.27190-2-christian@brauner.io>
- <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Aro7keGuhkcq5L8X8QU6tiy3pifRBQgLd9LgfbCkFEk=;
+        b=DftOBhVnSuIpb3cFTBcfOwU4LyOz9ZrsohE/Ip8yRBpDTjhLqNivwPN1C4sSOF3re6
+         dVJwI0oTx5JFqwexUVaSthQj8lCvbqEO2hCz9WfU6yko2XhQhUJoYQ8D2TyKoeN9EtPW
+         8bXslriSBLG4sT9Qh0gua5FjO0OU5cXrcQrJuj+5b64N+QdJwFlGbX2XJHu4RwN2S+2V
+         nLBS3f0tpGmWnQQgbaeT/VV7C8dDPpl4t2A+aiKZkKdXHsFaQKySkB//jYuzodbqSe6d
+         ygrS2oVALaX5tuILmtIIYz9OZZpO3r8V4lNgirP3J7ZO0Fkgg3RrjCIF1jvTj2EVY0yE
+         fbYg==
+X-Gm-Message-State: APjAAAUQm8YMXpYWjI8I2NG3Scj8os6zrf64Oyr0OHh+sOVHyh/x5BFH
+        94xk6b85kktzxvx2geKWJUiDiyck
+X-Google-Smtp-Source: APXvYqx922/pQmKDf7f5m8sRlMn6H2+6fwa3vtgS3KF+9hqyw3/Mm9LAzAVe9fvK+4Ua8bArfBHOEg==
+X-Received: by 2002:a19:ca1e:: with SMTP id a30mr14407487lfg.163.1563282563642;
+        Tue, 16 Jul 2019 06:09:23 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id i9sm2830924lfl.10.2019.07.16.06.09.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 06:09:23 -0700 (PDT)
+Subject: Re: [PATCH v4 03/24] PM / devfreq: tegra30: Handle possible
+ round-rate error
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190707223303.6755-1-digetx@gmail.com>
+ <CGME20190707223726epcas4p1790944443c61b34e6c8dd4d64200a2a2@epcas4p1.samsung.com>
+ <20190707223303.6755-4-digetx@gmail.com>
+ <f28470ca-93dc-cdf9-b008-54c7b50cfd83@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e9fd7f68-8ad1-058f-7c87-ccd280ba0b0e@gmail.com>
+Date:   Tue, 16 Jul 2019 16:09:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <f28470ca-93dc-cdf9-b008-54c7b50cfd83@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
-> I think Vasily already has a clone3 patch for s390x with 435. 
+16.07.2019 14:50, Chanwoo Choi пишет:
+> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+>> The EMC clock rate rounding technically could fail, hence let's handle
+>> the error cases properly.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 17 +++++++++++++++--
+>>  1 file changed, 15 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index 5e2b133babdd..5e606ae3f238 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -592,8 +592,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  	struct tegra_devfreq_device *dev;
+>>  	struct tegra_devfreq *tegra;
+>>  	struct devfreq *devfreq;
+>> -	unsigned long rate;
+>>  	unsigned int i;
+>> +	long rate;
+>>  	int err;
+>>  
+>>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+>> @@ -650,8 +650,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  
+>>  	reset_control_deassert(tegra->reset);
+>>  
+>> -	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
+>> +	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+>> +	if (rate < 0) {
+>> +		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
+>> +		return rate;
+>> +	}
+>> +
+>>  	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
+>> +	tegra->max_freq = rate / KHZ;
+>>  
+>>  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+>>  		dev = tegra->devices + i;
+>> @@ -662,6 +668,13 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>  	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+>>  		rate = clk_round_rate(tegra->emc_clock, rate);
+>>  
+> 
+> Please remove unneeded blank line.
 
-A quick follow-up on this. Helge and Michael have asked whether there
-are any tests for clone3. Yes, there will be and I try to have them
-ready by the end of the this or next week for review. In the meantime I
-hope the following minimalistic test program that just verifies very
-very basic functionality (It's not pretty.) will help you test:
+I can remove it, but it was added specifically to ease reading of the code.
 
-#define _GNU_SOURCE
-#include <err.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <linux/sched.h>
-#include <linux/types.h>
-#include <sched.h>
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mount.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
-#include <sys/sysmacros.h>
-#include <sys/types.h>
-#include <sys/un.h>
-#include <sys/wait.h>
-#include <unistd.h>
+>> +		if (rate < 0) {
+>> +			dev_err(&pdev->dev,
+>> +				"Failed to round clock rate: %ld\n", rate);
+>> +			err = rate;
+>> +			goto remove_opps;
+>> +		}
+> 
+> Also, this patch doesn't contain code which restore the previous
+> tegra->cur_freq/max_freq when error happen.
 
-#ifndef CLONE_PIDFD
-#define CLONE_PIDFD 0x00001000
-#endif
-
-#ifndef __NR_clone3
-#define __NR_clone3 -1
-#endif
-
-static pid_t sys_clone3(struct clone_args *args)
-{
-	return syscall(__NR_clone3, args, sizeof(struct clone_args));
-}
-
-static int wait_for_pid(pid_t pid)
-{
-	int status, ret;
-
-again:
-	ret = waitpid(pid, &status, 0);
-	if (ret == -1) {
-		if (errno == EINTR)
-			goto again;
-
-		return -1;
-	}
-
-	if (ret != pid)
-		goto again;
-
-	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-		return -1;
-
-	return 0;
-}
-
-#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-
-int main(int argc, char *argv[])
-{
-	int pidfd = -1;
-	pid_t parent_tid = -1, pid = -1;
-	struct clone_args args = {0};
-
-	args.parent_tid = ptr_to_u64(&parent_tid); /* CLONE_PARENT_SETTID */
-	args.pidfd = ptr_to_u64(&pidfd); /* CLONE_PIDFD */
-	args.flags = CLONE_PIDFD | CLONE_PARENT_SETTID;
-	args.exit_signal = SIGCHLD;
-
-	pid = sys_clone3(&args);
-	if (pid < 0) {
-		fprintf(stderr, "%s - Failed to create new process\n", strerror(errno));
-		exit(EXIT_FAILURE);
-	}
-
-	if (pid == 0) {
-		printf("Child process with pid %d\n", getpid());
-		exit(EXIT_SUCCESS);
-	}
-
-	printf("Parent process received child's pid %d as return value\n", pid);
-	printf("Parent process received child's pidfd %d\n", *(int *)args.pidfd);
-	printf("Parent process received child's pid %d as return argument\n",
-	       *(pid_t *)args.parent_tid);
-
-	if (wait_for_pid(pid))
-		exit(EXIT_FAILURE);
-
-	if (pid != *(pid_t *)args.parent_tid)
-		exit(EXIT_FAILURE);
-
-	close(pidfd);
-
-	return 0;
-}
+The error here results in abortion of the driver's probing, hence
+nothing need to be restored in that case because nothing was changed at
+this point yet.
