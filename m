@@ -2,371 +2,140 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E20FC76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D5EC76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F9220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563270492;
-	bh=EzqVw9kpLAhkRr4eBfArHTiE/LCcjaWz+TfLD8GZXfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QnEjbPjAevoZBpYoN0Mavlh/LQUuKf1IxPTtU9KpMNAJhRSwZ0jKuAmBlT0963ByL
-	 6XKt0HlXM1QJdx7ho2kmm3RT5pAiw3210IvQOf5YZ0om5Z84IU4hLP7slmfFcGbxzI
-	 iNSw6F8x1jMU16QV0Madn300ryaKI3l/2AaaolXs=
+	by mail.kernel.org (Postfix) with ESMTP id AF28220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 09:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EpO9lcJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732695AbfGPJsL (ORCPT
+        id S1732421AbfGPJtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 05:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfGPJsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 05:48:10 -0400
-Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 929EB2064B;
-        Tue, 16 Jul 2019 09:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563270489;
-        bh=EzqVw9kpLAhkRr4eBfArHTiE/LCcjaWz+TfLD8GZXfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LPTOe36qookTMo14Ivqws+PhVTIZIj8BaboxvcSF2/4f68cZu967n3qayjLTckvTM
-         im4p3Xz6DqMcReQJc+FrDHyanq+n3pGZkVx+PltyuuWZaSsWUgN94FPidOCBolYl8r
-         eQuPhYiC585VzFv5ubiID0MxaTnnqed5C2BOt0/A=
-Date:   Tue, 16 Jul 2019 11:48:03 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 2/3] iio: imu: st_lsm6dsx: add support for accel/gyro
- unit of lsm9sd1
-Message-ID: <20190716094803.GD13440@localhost.localdomain>
-References: <20190716093325.7683-1-martin.kepplinger@puri.sm>
- <20190716093325.7683-2-martin.kepplinger@puri.sm>
+        Tue, 16 Jul 2019 05:49:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35753 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfGPJtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 05:49:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so8863759pfn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 02:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vOxxYg1gkl1a/ysoqs6BZ37K9CF/kS15FrSEdYGMrcE=;
+        b=EpO9lcJJCleKXGgnbBcmT0vu4HaYAgr9cMkeEXTp7CyyD4yV+yFnl1mxqPgDrOOQFv
+         uX4IGgyhvlC0Ycx0OgWkLzAlykS9IJaLFR2yukDVSE+KIOS23muUiLalQLQa03Wse+/Y
+         FIaNNN0uwHO6LUKp+rICHDSjzUm8mrleslaGLlOHrsYK0tU9PucY0BVtOnLOBG1WYHJT
+         Y41fadi2cSZHeYEnTHQY9LiafFF2DeAdHLwZ6m+FmkVnzFZMM3swsG+hfik7+0CzsULk
+         CfxvI0eWRu5hr0QvUkVSUcvOiO4XnmJcvSFY/IXMPQ2Dp5U1QyJgJ6fT0ADilqS/soWL
+         b0iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vOxxYg1gkl1a/ysoqs6BZ37K9CF/kS15FrSEdYGMrcE=;
+        b=YI/L7tzJOHHZGY5lgG5xgG7fN91Ewz9g4CUPlSLQy8PTHnADxjIzVDfEXAOLtuOq7E
+         MrXtUHT0te1Pa4DBoStj9cPoxlNxpFcoHdrcWCmO6e3DPH6QN8TRX7+rJ8vPwYjBJ16M
+         zm3ci3Kwzjx2YhrTlW50wGWEEmGgwbSXWOsRtHchSgnED5hCWDM+INMEfqRsaa3+q9Zy
+         937uCjHq9bRKyw1X7dmXD++NSwc6Tl7SVmzmI1r/8ts+tzP5k6v6hFNyPAH7jCc2KjcW
+         RLFML4+LkYz+Y7Qz0p6kDpfmc9mr+gmgNTPh/vjBg2VMmDbYmK2lz28TA6liXsVr1EfW
+         p+RA==
+X-Gm-Message-State: APjAAAVZQm2P8yG7DdOhAE13n11ujJdqi1QOfPdCxjKM+Xzcf7Ksv2Wg
+        htF3c0Aba+qYmEKMT5QMFT+HpQ==
+X-Google-Smtp-Source: APXvYqw5SKHgwSs1ZhYtTM+f2bW5/Eb88H6yQX28Ko/X85JMot8sov7jCBSAQXBcHVwxNzo9et7lnA==
+X-Received: by 2002:a65:4189:: with SMTP id a9mr7021968pgq.399.1563270563855;
+        Tue, 16 Jul 2019 02:49:23 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id c69sm22793150pje.6.2019.07.16.02.49.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 02:49:23 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>, devel@acpica.org,
+        dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 00/10] cpufreq: Migrate users of policy notifiers to QoS requests
+Date:   Tue, 16 Jul 2019 15:18:56 +0530
+Message-Id: <cover.1563269894.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
-Content-Disposition: inline
-In-Reply-To: <20190716093325.7683-2-martin.kepplinger@puri.sm>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---Hf61M2y+wYpnELGG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Now that cpufreq core supports taking QoS requests for min/max cpu
+frequencies, lets migrate rest of the users to using them instead of the
+policy notifiers.
 
-> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separ=
-ately
-> supported in iio/magnetometer/st_magn*) are located on a separate i2c add=
-resses
-> on the bus.
->=20
-> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.p=
-df
->=20
-> Treat it just like the LSM6* devices and, despite it's name, hook it up
-> to the st_lsm6dsx driver, using it's basic functionality.
+The CPUFREQ_NOTIFY and CPUFREQ_ADJUST events of the policy notifiers are
+removed as a result, but we have to add CPUFREQ_CREATE_POLICY and
+CPUFREQ_REMOVE_POLICY events to it for the acpi stuff specifically. So
+the policy notifiers aren't completely removed.
 
-I think LSM9DS1 relies on LSM6DS0 for acc and gyro part so I guess we can u=
-se
-this name here, what do you think?
+Boot tested on my x86 PC and ARM hikey board. Nothing looked broken :)
 
->=20
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> ---
->=20
->=20
-> This is already based on Lorenzo's recent changes:
-> https://lore.kernel.org/linux-iio/853f216a-7814-cb79-180b-078ac5e8a359@pu=
-ri.sm/T/#u
-> https://lore.kernel.org/linux-iio/501b0db9-63cb-905c-c09b-682eb73f1ff3@pu=
-ri.sm/T/#u
->=20
-> revision history:
-> v2: overall further simplification
->=20
-> thanks
->                        martin
->=20
->=20
->=20
->  drivers/iio/imu/st_lsm6dsx/Kconfig           |  1 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 94 +++++++++++++++++++-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |  5 ++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |  5 ++
->  5 files changed, 104 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6=
-dsx/Kconfig
-> index 2d8b2e1edfce..4a57bfb3c12e 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> @@ -11,6 +11,7 @@ config IIO_ST_LSM6DSX
->  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
->  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
->  	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c
-> +	  and the accelerometer/gyroscope of lsm9ds1.
-> =20
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called st_lsm6dsx.
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st=
-_lsm6dsx/st_lsm6dsx.h
-> index 3c47f5d27d30..9a30cc717de2 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -23,6 +23,7 @@
->  #define ST_LSM6DSOX_DEV_NAME	"lsm6dsox"
->  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
->  #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
-> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
-> =20
->  enum st_lsm6dsx_hw_id {
->  	ST_LSM6DS3_ID,
-> @@ -35,6 +36,7 @@ enum st_lsm6dsx_hw_id {
->  	ST_LSM6DSOX_ID,
->  	ST_LSM6DSR_ID,
->  	ST_LSM6DS3TRC_ID,
-> +	ST_LSM9DS1_ID,
->  	ST_LSM6DSX_MAX_ID,
->  };
-> =20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
-mu/st_lsm6dsx/st_lsm6dsx_core.c
-> index e0d2149625cc..2f3d2bf25646 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -10,6 +10,8 @@
->   * +-125/+-245/+-500/+-1000/+-2000 dps
->   * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
->   * allowing dynamic batching of sensor data.
-> + * LSM9DSx series is similar but includes an additional magnetometer, ha=
-ndled
-> + * by a different driver.
->   *
->   * Supported sensors:
->   * - LSM6DS3:
-> @@ -30,6 +32,13 @@
->   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-=
-2000
->   *   - FIFO size: 3KB
->   *
-> + * - LSM9DS1:
-> + *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
-> + *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-> + *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
-> + *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
-> + *   - FIFO size: 32
-> + *
->   * Copyright 2016 STMicroelectronics Inc.
->   *
->   * Lorenzo Bianconi <lorenzo.bianconi@st.com>
-> @@ -64,7 +73,72 @@
->  #define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
->  #define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
-> =20
-> +#define ST_LSM9DSX_REG_GYRO_OUT_X_L_ADDR	0x18
-> +#define ST_LSM9DSX_REG_GYRO_OUT_Y_L_ADDR	0x1a
-> +#define ST_LSM9DSX_REG_GYRO_OUT_Z_L_ADDR	0x1c
-> +
->  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] =3D=
- {
-> +	{
-> +		.wai =3D 0x68,
-> +		.int1_addr =3D 0x0c,
-> +		.int2_addr =3D 0x0d,
-> +		.reset_addr =3D 0x22,
-> +		.max_fifo_size =3D 32,
-> +		.id =3D {
-> +			{
-> +				.hw_id =3D ST_LSM9DS1_ID,
-> +				.name =3D ST_LSM9DS1_DEV_NAME,
-> +			},
-> +		},
-> +		.odr_table =3D {
-> +			[ST_LSM6DSX_ID_ACC] =3D {
-> +				.reg =3D {
-> +					.addr =3D 0x20,
-> +					.mask =3D GENMASK(7, 5),
-> +				},
-> +				.odr_avl[0] =3D {  10, 0x01 },
-> +				.odr_avl[1] =3D {  50, 0x02 },
-> +				.odr_avl[2] =3D { 119, 0x03 },
-> +				.odr_avl[3] =3D { 238, 0x04 },
-> +				.odr_avl[4] =3D { 476, 0x05 },
-> +				.odr_avl[5] =3D { 952, 0x06 },
-> +			},
-> +			[ST_LSM6DSX_ID_GYRO] =3D {
-> +				.reg =3D {
-> +					.addr =3D 0x10,
-> +					.mask =3D GENMASK(7, 5),
-> +				},
-> +				.odr_avl[0] =3D {  15, 0x01 },
-> +				.odr_avl[1] =3D {  60, 0x02 },
-> +				.odr_avl[2] =3D { 119, 0x03 },
-> +				.odr_avl[3] =3D { 238, 0x04 },
-> +				.odr_avl[4] =3D { 476, 0x05 },
-> +				.odr_avl[5] =3D { 952, 0x06 },
-> +			},
-> +		},
-> +		.fs_table =3D {
-> +			[ST_LSM6DSX_ID_ACC] =3D {
-> +				.reg =3D {
-> +					.addr =3D 0x20,
-> +					.mask =3D GENMASK(4, 3),
-> +				},
-> +				.fs_avl[0] =3D {  599, 0x0 },
-> +				.fs_avl[1] =3D { 1197, 0x2 },
-> +				.fs_avl[2] =3D { 2394, 0x3 },
-> +				.fs_avl[3] =3D { 4788, 0x1 },
-> +			},
-> +			[ST_LSM6DSX_ID_GYRO] =3D {
-> +				.reg =3D {
-> +					.addr =3D 0x10,
-> +					.mask =3D GENMASK(4, 3),
-> +				},
-> +				.fs_avl[0] =3D { IIO_DEGREE_TO_RAD(245), 0x0 },
-> +				.fs_avl[1] =3D { IIO_DEGREE_TO_RAD(500), 0x1 },
-> +				.fs_avl[2] =3D { IIO_DEGREE_TO_RAD(0), 0x2 },
-> +				.fs_avl[3] =3D { IIO_DEGREE_TO_RAD(2000), 0x3 },
-> +			},
-> +		},
-> +	},
->  	{
->  		.wai =3D 0x69,
->  		.int1_addr =3D 0x0d,
-> @@ -733,6 +807,16 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_ch=
-annels[] =3D {
->  	IIO_CHAN_SOFT_TIMESTAMP(3),
->  };
-> =20
-> +static const struct iio_chan_spec st_lsm9dsx_gyro_channels[] =3D {
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_X_L_ADDR,
-> +			   IIO_MOD_X, 0),
+This has already gone through build bot for a few days now.
 
-I guess you can use 0x18, 0x1a and 0x1c here and remove the definitions
+--
+viresh
 
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_Y_L_ADDR,
-> +			   IIO_MOD_Y, 1),
-> +	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, ST_LSM9DSX_REG_GYRO_OUT_Z_L_ADDR,
-> +			   IIO_MOD_Z, 2),
-> +	IIO_CHAN_SOFT_TIMESTAMP(3),
-> +};
-> +
->  int st_lsm6dsx_set_page(struct st_lsm6dsx_hw *hw, bool enable)
->  {
->  	const struct st_lsm6dsx_shub_settings *hub_settings;
-> @@ -1278,7 +1362,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
-> =20
->  static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
->  					       enum st_lsm6dsx_sensor_id id,
-> -					       const char *name)
-> +					       const char *name, int hw_id)
->  {
->  	struct st_lsm6dsx_sensor *sensor;
->  	struct iio_dev *iio_dev;
-> @@ -1308,7 +1392,11 @@ static struct iio_dev *st_lsm6dsx_alloc_iiodev(str=
-uct st_lsm6dsx_hw *hw,
->  			  name);
->  		break;
->  	case ST_LSM6DSX_ID_GYRO:
-> -		iio_dev->channels =3D st_lsm6dsx_gyro_channels;
-> +		if (hw_id =3D=3D ST_LSM9DS1_ID)
-> +			iio_dev->channels =3D st_lsm9dsx_gyro_channels;
-> +		else
-> +			iio_dev->channels =3D st_lsm6dsx_gyro_channels;
-> +
->  		iio_dev->num_channels =3D ARRAY_SIZE(st_lsm6dsx_gyro_channels);
->  		iio_dev->info =3D &st_lsm6dsx_gyro_info;
-> =20
-> @@ -1354,7 +1442,7 @@ int st_lsm6dsx_probe(struct device *dev, int irq, i=
-nt hw_id,
->  		return err;
-> =20
->  	for (i =3D 0; i < ST_LSM6DSX_ID_EXT0; i++) {
-> -		hw->iio_devs[i] =3D st_lsm6dsx_alloc_iiodev(hw, i, name);
-> +		hw->iio_devs[i] =3D st_lsm6dsx_alloc_iiodev(hw, i, name, hw_id);
->  		if (!hw->iio_devs[i])
->  			return -ENOMEM;
->  	}
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/im=
-u/st_lsm6dsx/st_lsm6dsx_i2c.c
-> index 28581eb0532c..c36a057c36ee 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-> @@ -79,6 +79,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_mat=
-ch[] =3D {
->  		.compatible =3D "st,lsm6ds3tr-c",
->  		.data =3D (void *)ST_LSM6DS3TRC_ID,
->  	},
-> +	{
-> +		.compatible =3D "st,lsm9ds1",
-> +		.data =3D (void *)ST_LSM9DS1_ID,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-> @@ -94,6 +98,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_tab=
-le[] =3D {
->  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
->  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
->  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
-> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/im=
-u/st_lsm6dsx/st_lsm6dsx_spi.c
-> index 0371e8b94a3e..138e3b985865 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-> @@ -79,6 +79,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_mat=
-ch[] =3D {
->  		.compatible =3D "st,lsm6ds3tr-c",
->  		.data =3D (void *)ST_LSM6DS3TRC_ID,
->  	},
-> +	{
-> +		.compatible =3D "st,lsm9ds1",
-> +		.data =3D (void *)ST_LSM9DS1_ID,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-> @@ -94,6 +98,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_tab=
-le[] =3D {
->  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
->  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
->  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
-> +	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
-> --=20
-> 2.20.1
->=20
+Viresh Kumar (10):
+  cpufreq: Add policy create/remove notifiers
+  video: sa1100fb: Remove cpufreq policy notifier
+  video: pxafb: Remove cpufreq policy notifier
+  arch_topology: Use CPUFREQ_CREATE_POLICY instead of CPUFREQ_NOTIFY
+  thermal: cpu_cooling: Switch to QoS requests instead of cpufreq
+    notifier
+  powerpc: macintosh: Switch to QoS requests instead of cpufreq notifier
+  cpufreq: powerpc_cbe: Switch to QoS requests instead of cpufreq
+    notifier
+  ACPI: cpufreq: Switch to QoS requests instead of cpufreq notifier
+  cpufreq: Remove CPUFREQ_ADJUST and CPUFREQ_NOTIFY policy notifier
+    events
+  Documentation: cpufreq: Update policy notifier documentation
 
---Hf61M2y+wYpnELGG
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/cpu-freq/core.txt            |  16 +--
+ drivers/acpi/processor_driver.c            |  44 ++++++++-
+ drivers/acpi/processor_perflib.c           | 106 +++++++++-----------
+ drivers/acpi/processor_thermal.c           |  81 ++++++++-------
+ drivers/base/arch_topology.c               |   2 +-
+ drivers/cpufreq/cpufreq.c                  |  51 ++++------
+ drivers/cpufreq/ppc_cbe_cpufreq.c          |  19 +++-
+ drivers/cpufreq/ppc_cbe_cpufreq.h          |   8 ++
+ drivers/cpufreq/ppc_cbe_cpufreq_pmi.c      |  96 +++++++++++-------
+ drivers/macintosh/windfarm_cpufreq_clamp.c |  77 ++++++++++-----
+ drivers/thermal/cpu_cooling.c              | 110 +++++----------------
+ drivers/video/fbdev/pxafb.c                |  21 ----
+ drivers/video/fbdev/pxafb.h                |   1 -
+ drivers/video/fbdev/sa1100fb.c             |  27 -----
+ drivers/video/fbdev/sa1100fb.h             |   1 -
+ include/acpi/processor.h                   |  22 +++--
+ include/linux/cpufreq.h                    |   4 +-
+ 17 files changed, 327 insertions(+), 359 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.21.0.rc0.269.g1a574e7a288b
 
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXS2dUQAKCRA6cBh0uS2t
-rOj5AP9OOv82J4Zego70/iF6IsEichJMRn2iFmBHmgtsN62qawEAtmQBpaQGtBS0
-Lb9LhTQIB1KJn1ZuXP8igBJtOn4cPA8=
-=SVQf
------END PGP SIGNATURE-----
-
---Hf61M2y+wYpnELGG--
