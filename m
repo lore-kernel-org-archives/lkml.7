@@ -2,122 +2,65 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350ABC76192
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5803C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F252020880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FZ2B+Fcq"
+	by mail.kernel.org (Postfix) with ESMTP id 96668217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 15:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388109AbfGPP7Q (ORCPT
+        id S2388127AbfGPP7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 11:59:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34340 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732614AbfGPP7Q (ORCPT
+        Tue, 16 Jul 2019 11:59:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50689 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfGPP7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jul 2019 11:59:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HKURHM7m5zXsi/GOJrSkjBrQT5KBLSbh/yuqng7TVWQ=; b=FZ2B+Fcqy5zrXkeMmMwqudKix
-        0MId/49v5zj7hvExkwzR406w9qiPdWWNN8orfzbsU2+IvDK5dUb6AVNQr9RbtfbmLJE1iNFTgA/N3
-        lgVh2CR+iocUKXmxSyJm93Fw9p0m8+L5OAuKoXp/gn5R1iDQOWybaJpWKjBFxSES9APhYZ+h09hOO
-        d0UoLArUQk6RZQgNkISbxzZZqQYTr/YTiCc5gEo658bZfh8IIs6cdggGTBbfpvsKhjPMD2qCCRtzV
-        RG+EM/IvdXAWSKosY1wbLpsfnSdSU+S/nuMhbs6htPFUw8AbyNSYU5xJn/VrzYla7hqJVbpqGfG9Q
-        d/pDbtEcw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnPr4-00015I-B2; Tue, 16 Jul 2019 15:59:02 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B55F12059DEA3; Tue, 16 Jul 2019 17:59:00 +0200 (CEST)
-Date:   Tue, 16 Jul 2019 17:59:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v3 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20190716155900.GS3419@hirez.programming.kicks-ass.net>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-5-alex.kogan@oracle.com>
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnPrE-0002Iv-32; Tue, 16 Jul 2019 17:59:12 +0200
+Date:   Tue, 16 Jul 2019 17:59:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ingo Molnar <mingo@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Subject: Re: kbuild: Fail if gold linker is detected
+In-Reply-To: <20190716144034.GA36330@gmail.com>
+Message-ID: <alpine.DEB.2.21.1907161757490.1767@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716144034.GA36330@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715192536.104548-5-alex.kogan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:25:35PM -0400, Alex Kogan wrote:
+On Tue, 16 Jul 2019, Ingo Molnar wrote:
 
-> @@ -36,6 +37,33 @@ struct cna_node {
->  
->  #define CNA_NODE(ptr) ((struct cna_node *)(ptr))
->  
-> +/* Per-CPU pseudo-random number seed */
-> +static DEFINE_PER_CPU(u32, seed);
-> +
-> +/*
-> + * Controls the probability for intra-node lock hand-off. It can be
-> + * tuned and depend, e.g., on the number of CPUs per node. For now,
-> + * choose a value that provides reasonable long-term fairness without
-> + * sacrificing performance compared to a version that does not have any
-> + * fairness guarantees.
-> + */
-> +#define INTRA_NODE_HANDOFF_PROB_ARG 0x10000
-> +
-> +/*
-> + * Return false with probability 1 / @range.
-> + * @range must be a power of 2.
-> + */
-> +static bool probably(unsigned int range)
-> +{
-> +	u32 s;
-> +
-> +	s = this_cpu_read(seed);
-> +	s = next_pseudo_random32(s);
-> +	this_cpu_write(seed, s);
-> +
-> +	return s & (range - 1);
+> 
+> * Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> > The gold linker has known issues of failing the build in random and
+> > predictible ways. H.J. stated:
+> 
+> s/predictable/unpredictable?
 
-This is fragile, better to take a number of bits as argument.
+No. It fails randomly, but also predictable. Enable X32 support on 64bit
+and it fails the VDSO build. That's been the case for years.
 
-> +}
-> +
->  static void cna_init_node(struct mcs_spinlock *node)
->  {
->  	struct cna_node *cn = CNA_NODE(node);
-> @@ -140,7 +168,13 @@ static inline void cna_pass_mcs_lock(struct mcs_spinlock *node,
->  	u64 *var = &next->locked;
->  	u64 val = 1;
->  
-> -	succ = find_successor(node);
-> +	/*
-> +	 * Try to pass the lock to a thread running on the same node.
-> +	 * For long-term fairness, search for such a thread with high
-> +	 * probability rather than always.
-> +	 */
-> +	if (probably(INTRA_NODE_HANDOFF_PROB_ARG))
-> +		succ = find_successor(node);
->  
->  	if (succ) {
->  		var = &succ->mcs.locked;
+Thanks,
 
-And this is where that tertiary condition comes from.. I think.
-
+	tglx
