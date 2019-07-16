@@ -2,118 +2,192 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A70BC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8158C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DBA2173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563266383;
-	bh=M/lqVVPiWZwgAYL4LGiADH8CqNdvW8sCBgca7ffnYDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J14tBlf3f3zudFwVsE9RaF3K9fgugoS4PSrWPqDdkbOQeqlYbFm88w98K2Mn/TWpe
-	 xNfDa4K2iWffpT1BNIgTqqFvTPcHqzVGC31UZOMyZaDLMQj78U04mvZhafx91sza9f
-	 uJBTsVT6Xmay9Ciw+Lbn6cRILexMIBgDkzmGvjNc=
+	by mail.kernel.org (Postfix) with ESMTP id 97896206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 08:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lowJ6to+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbfGPIjm (ORCPT
+        id S1731580AbfGPIko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 04:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfGPIjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:39:41 -0400
-Received: from localhost (unknown [113.157.217.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F2321721;
-        Tue, 16 Jul 2019 08:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563266380;
-        bh=M/lqVVPiWZwgAYL4LGiADH8CqNdvW8sCBgca7ffnYDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ignF/XJSPof7phYqp5604uR5utOVu63j0eZlOTnf2OaptycLIcZ/w1bKjQnfvWS+S
-         fD7YgyS78PNy2HYjl3JkK/oC3kGS/toRShRF9BMhp/Gmrt/hGIvSgzu1t+fxeJKKdr
-         pXKcybiEIp6m+eJDgLi4xBTgBvti7ClNjZRNQ2vs=
-Date:   Tue, 16 Jul 2019 17:39:26 +0900
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>, sspatil@google.com,
-        kaleshsingh@google.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [PATCH v4] PM / wakeup: show wakeup sources stats in sysfs
-Message-ID: <20190716083926.GA2505@kroah.com>
-References: <20190715203651.GA7513@kroah.com>
- <20190715214348.81865-1-trong@android.com>
- <CAJZ5v0gEzZkbeLFtW5yadwxBryvL3vWcUoQTkUy3VkxiTV+UrA@mail.gmail.com>
- <20190716021102.GA8310@kroah.com>
- <CAJZ5v0hxKeK-eDEs1rGP0ZYbbCHa0q5=ZPMVCemYVHGL48Q=pg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hxKeK-eDEs1rGP0ZYbbCHa0q5=ZPMVCemYVHGL48Q=pg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 16 Jul 2019 04:40:44 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39344 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727105AbfGPIko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:40:44 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so9744906pls.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 01:40:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kGFpGBaBujywG/+yNdtKwAUVS9nMgcc92lBSyKZrI68=;
+        b=lowJ6to+9duq7wnyIimDqrrCBXEtL+JDfQ0dGTtoxIWPEs6jpOpziacWlDUYg2gkS8
+         Kt9l7Z7Z9AJEL3xamalmyXQoFIqpOE2pQghsORT4QqKH8MNlOWp84J8ne77mGTALCUoT
+         6nHfwMPUFSB4jjG2ShDvzgMtJWHNGORtdNhwwFms6+wa+cIbDP9KRqM1JmDHCV2p7Czt
+         68AthgLox89BpC8HfEQ0jfe88zPjaFi5qy5LVsddszCRF31bMOAXjPqDCiCApi2IDOHF
+         0M/OI7iuQKDIOsfs6OavUUzOAH8tNlvdB1j9VoLnAhvSzcQz5XLHd4NsXIW8kgc3vJIU
+         BypQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kGFpGBaBujywG/+yNdtKwAUVS9nMgcc92lBSyKZrI68=;
+        b=HnupoAVckJD9wghTr2Ae83WgOtcU2SBY0pnGvwLOwDOdSxGk5Ad0o0t2Hsi+LyqQkr
+         rkYLQT13zlKxMljr9a2RmQaOHxYVjtowb16IrruCWIjrbl6GI8FRtQH2uS+4N+H0Kxcf
+         5637cqXHs36q3tlRXSSHEloLGvuMqWnBhfRjpR7nrWlc+uqDGVye7LUqxsKofdXS8SEU
+         9St7JSuJX6auVxuwOkCbKExT1qwF9d4SxCtuQli7gFLSyaaeyxJwndsx7SyBDkTaORl/
+         PC9Sc0Z4AvnQKnjThYrqil4mA4EN9ee7SgNzy3s42OX+dxoInaNvh6/RhgaQJxcnFi/I
+         s4tQ==
+X-Gm-Message-State: APjAAAXSWJ88aVBcvm4v4k+8UMgm70buwCgRp0bFeDXA6xiAsfkXbZAL
+        GAu4AIIiGlgC+Ruo+jFqTQ==
+X-Google-Smtp-Source: APXvYqyvAUbT1ctstMdEC7Ci7T7CEcd1SkAbsTKqkql67MyXZde1wmDZ902+qygPsYaamzjsOsP8DQ==
+X-Received: by 2002:a17:902:1081:: with SMTP id c1mr34218710pla.200.1563266443274;
+        Tue, 16 Jul 2019 01:40:43 -0700 (PDT)
+Received: from mylaptop.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id 185sm24689857pfa.170.2019.07.16.01.40.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 01:40:42 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     x86@kernel.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Len Brown <len.brown@intel.com>, Pu Wen <puwen@hygon.cn>,
+        Nicolai Stange <nstange@suse.de>,
+        Hui Wang <john.wanghui@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/realmode: remove trampoline_status flag
+Date:   Tue, 16 Jul 2019 16:40:24 +0800
+Message-Id: <1563266424-3472-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:30:48AM +0200, Rafael J. Wysocki wrote:
-> On Tue, Jul 16, 2019 at 4:13 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 15, 2019 at 11:48:27PM +0200, Rafael J. Wysocki wrote:
-> > > On Mon, Jul 15, 2019 at 11:44 PM Tri Vo <trong@android.com> wrote:
-> > > >
-> > > > Userspace can use wakeup_sources debugfs node to plot history of suspend
-> > > > blocking wakeup sources over device's boot cycle. This information can
-> > > > then be used (1) for power-specific bug reporting and (2) towards
-> > > > attributing battery consumption to specific processes over a period of
-> > > > time.
-> > > >
-> > > > However, debugfs doesn't have stable ABI. For this reason, create a
-> > > > 'struct device' to expose wakeup sources statistics in sysfs under
-> > > > /sys/class/wakeup/<name>/.
-> > > >
-> > > > Introduce CONFIG_PM_SLEEP_STATS that enables/disables showing wakeup
-> > > > source statistics in sysfs.
-> > >
-> > > I'm not sure if this is really needed, but I'll let Greg decide.
-> >
-> > You are right.  Having zillions of config options is a pain, who is
-> > going to turn this off?
-> >
-> > But we can always remove the option before 5.4-rc1, so I'll take this
-> > as-is for now :)
-> >
-> > > Apart from this
-> > >
-> > > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > thanks for the review!  I'll wait for 5.3-rc1 to come out before adding
-> > this to my tree.
-> 
-> So it occurred to me that maybe it's better if I apply it?  After all,
-> this is PM material. :-)
+In current code, there is no reader of trampoline_status. It turns out that
+after commit ce4b1b16502b ("x86/smpboot: Initialize secondary CPU only if
+master CPU will wait for it"), trampoline_status is not needed any more.
 
-Heh, true, feel free to add:
-	Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-to the patch then.
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Matteo Croce <mcroce@redhat.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Hui Wang <john.wanghui@huawei.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/include/asm/realmode.h          | 1 -
+ arch/x86/kernel/smpboot.c                | 5 -----
+ arch/x86/realmode/rm/header.S            | 1 -
+ arch/x86/realmode/rm/trampoline_32.S     | 3 ---
+ arch/x86/realmode/rm/trampoline_64.S     | 3 ---
+ arch/x86/realmode/rm/trampoline_common.S | 4 ----
+ 6 files changed, 17 deletions(-)
 
-> It is fine by me either way, but then I'm not sure if you want to get
-> future bug reports related to this if any ...
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index c536823..09ecc32 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -20,7 +20,6 @@ struct real_mode_header {
+ 	u32	ro_end;
+ 	/* SMP trampoline */
+ 	u32	trampoline_start;
+-	u32	trampoline_status;
+ 	u32	trampoline_header;
+ #ifdef CONFIG_X86_64
+ 	u32	trampoline_pgd;
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 362dd89..2ef10d9 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -965,8 +965,6 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
+ 		       int *cpu0_nmi_registered)
+ {
+-	volatile u32 *trampoline_status =
+-		(volatile u32 *) __va(real_mode_header->trampoline_status);
+ 	/* start_ip had better be page-aligned! */
+ 	unsigned long start_ip = real_mode_header->trampoline_start;
+ 
+@@ -1058,9 +1056,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
+ 		}
+ 	}
+ 
+-	/* mark "stuck" area as not stuck */
+-	*trampoline_status = 0;
+-
+ 	if (x86_platform.legacy.warm_reset) {
+ 		/*
+ 		 * Cleanup possible dangling ends...
+diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
+index 30b0d30..6363761 100644
+--- a/arch/x86/realmode/rm/header.S
++++ b/arch/x86/realmode/rm/header.S
+@@ -19,7 +19,6 @@ GLOBAL(real_mode_header)
+ 	.long	pa_ro_end
+ 	/* SMP trampoline */
+ 	.long	pa_trampoline_start
+-	.long	pa_trampoline_status
+ 	.long	pa_trampoline_header
+ #ifdef CONFIG_X86_64
+ 	.long	pa_trampoline_pgd;
+diff --git a/arch/x86/realmode/rm/trampoline_32.S b/arch/x86/realmode/rm/trampoline_32.S
+index 2dd866c..1868b15 100644
+--- a/arch/x86/realmode/rm/trampoline_32.S
++++ b/arch/x86/realmode/rm/trampoline_32.S
+@@ -41,9 +41,6 @@ ENTRY(trampoline_start)
+ 
+ 	movl	tr_start, %eax	# where we need to go
+ 
+-	movl	$0xA5A5A5A5, trampoline_status
+-				# write marker for master knows we're running
+-
+ 	/*
+ 	 * GDT tables in non default location kernel can be beyond 16MB and
+ 	 * lgdt will not be able to load the address as in real mode default
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index 24bb759..aee2b45 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -49,9 +49,6 @@ ENTRY(trampoline_start)
+ 	mov	%ax, %es
+ 	mov	%ax, %ss
+ 
+-	movl	$0xA5A5A5A5, trampoline_status
+-	# write marker for master knows we're running
+-
+ 	# Setup stack
+ 	movl	$rm_stack_end, %esp
+ 
+diff --git a/arch/x86/realmode/rm/trampoline_common.S b/arch/x86/realmode/rm/trampoline_common.S
+index 7c70677..8d8208d 100644
+--- a/arch/x86/realmode/rm/trampoline_common.S
++++ b/arch/x86/realmode/rm/trampoline_common.S
+@@ -2,7 +2,3 @@
+ 	.section ".rodata","a"
+ 	.balign	16
+ tr_idt: .fill 1, 6, 0
+-
+-	.bss
+-	.balign	4
+-GLOBAL(trampoline_status)	.space	4
+-- 
+2.7.5
 
-I get enough emails as it is, no need to ask for more :)
-
-thanks,
-
-greg k-h
