@@ -2,90 +2,170 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0752C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF00C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92C5206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9797B206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 06:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ikjoWOSW"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="IJqFn+H8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfGPGmR (ORCPT
+        id S1726631AbfGPGp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 02:42:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37691 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfGPGmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 02:42:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45nrRV1Ym4z9sDB;
-        Tue, 16 Jul 2019 16:42:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563259334;
-        bh=nKEQ7e6O/+0WA2v8gOVeMzIpIdbbdwt5phCY55pYV40=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ikjoWOSWALlOGyQzQsVa2fZcmcQ5uHuNr8xcK/GhrVRC8P+JMHt3JKEQK5nd9uTkM
-         fjpg3lZSIiRfxnC9dZHhEGqe3E09VlshM1Zrj4hEydnBVprfZDL9iohETUn740evDn
-         wmX0uckmZl68cjtff9Yyq1VnHCzTpLVmXnGiTpkO0Difyjm7b7e+jXr5dFXaBjANqy
-         a39CMUWlWAJleyjz/vbBMb4a+VyL3bIX4zrWn0lEwooDSNOoCykI1kiqgh3S5k5/lX
-         Fq+Du1ckG8lzvPpvEKSHQmg6dtAPccv9yiYlgBa8rPMqn+JBzZ8huvSPW0QfTH4VtS
-         DEKB9xvAWL/qg==
-Date:   Tue, 16 Jul 2019 16:42:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the kbuild tree
-Message-ID: <20190716164213.2a4be42a@canb.auug.org.au>
-In-Reply-To: <CAK7LNASwwOo13p+GgVZ7txiNH4fpb7himmsDHHoQnfnraPZxHw@mail.gmail.com>
-References: <20190716143121.3027ef58@canb.auug.org.au>
-        <CAK7LNASwwOo13p+GgVZ7txiNH4fpb7himmsDHHoQnfnraPZxHw@mail.gmail.com>
+        Tue, 16 Jul 2019 02:45:27 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:38678 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfGPGp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 02:45:27 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x6G6j0tB024139;
+        Tue, 16 Jul 2019 15:45:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6G6j0tB024139
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563259501;
+        bh=wyBqa/xowQ1dS9M9LftizJwIfclbEFgIfLTYLfJB+M8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IJqFn+H8zgVOweDNuHmiFrR2maGFtzYYOBvnTsV0ib4Of48hOxzUfCurvHTJqiI5n
+         wT66VhUccaFzHUs6wo0aepQc3zn8O4GGcsZI5OBWS536oA5i0IoKYAkFDLOLAWuROC
+         lqWkfLPVma/N3H5wgIuKerRlt4RVu8Qtzi5iXpW1jZzTEQIeI/k3AzRcIsHUg72Xmd
+         gqjoaWyyZ0eJhDsF2bDQNDnxk77lHm0eWCZzEYN4DJKI2mGKSTJti71kBer5WZ1HDn
+         rGiKNPALEUtbHF4sNHHQHf0CxXyeRRgGftdTr5RMP6U7Iy4KoqUG9LNLn1FqpPWKDy
+         DgUWwOMPLyiRg==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id y16so13149139vsc.3;
+        Mon, 15 Jul 2019 23:45:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAVnlfjfppALUh6dxLucoujKdo+yYpZDZ8JCDKWXrRG47CioUcgW
+        msKP/MWU/rfETbzlz8/16QJZYCya6NvQ1/lled4=
+X-Google-Smtp-Source: APXvYqyva5i1c3JLpOzDL6mI/p6SmANdobabSGbkoOHR30w+QyJIHzQbyt0XY5Hl4LVK4zRwz4VCYNAKeUs/k2lnARY=
+X-Received: by 2002:a67:f495:: with SMTP id o21mr18799846vsn.54.1563259499952;
+ Mon, 15 Jul 2019 23:44:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/iDoR2uuX4KeLgbWaBYs1DdL"; protocol="application/pgp-signature"
+References: <20190715144848.4cc41e07@canb.auug.org.au> <ccb5b818-c191-2d9e-311f-b2c79b7f6823@infradead.org>
+ <CAF90-WirEMg7arNOTmo+tyJ20rt_zeN=nr0OO6Qk0Ss8J4QrUA@mail.gmail.com>
+ <20190715173341.zth4na7zekjsesaa@salvia> <CAK7LNAS0rX_SRXqb=N=Td-DFNWd=PytDFje12gYh2pYNRBVAJA@mail.gmail.com>
+ <20190715180905.rytaht5kslpbatcy@salvia>
+In-Reply-To: <20190715180905.rytaht5kslpbatcy@salvia>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 16 Jul 2019 15:44:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATBkx5vH4mgb7GYjOquye0nTRR2+VVJ=y=kk=GyoVVuUw@mail.gmail.com>
+Message-ID: <CAK7LNATBkx5vH4mgb7GYjOquye0nTRR2+VVJ=y=kk=GyoVVuUw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Jul 15 (HEADERS_TEST w/ netfilter tables offload)
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     Laura Garcia <nevola@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Netfilter Development Mailing list 
+        <netfilter-devel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iDoR2uuX4KeLgbWaBYs1DdL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Masahiro,
-
-On Tue, 16 Jul 2019 13:59:51 +0900 Masahiro Yamada <yamada.masahiro@socione=
-xt.com> wrote:
+On Tue, Jul 16, 2019 at 3:09 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
 >
-> For the build error, I will fix it as follows for tomorrow's linux-next:
+> On Tue, Jul 16, 2019 at 02:56:09AM +0900, Masahiro Yamada wrote:
+> > On Tue, Jul 16, 2019 at 2:33 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+> > >
+> > > On Mon, Jul 15, 2019 at 07:28:04PM +0200, Laura Garcia wrote:
+> > > > CC'ing netfilter.
+> > > >
+> > > > On Mon, Jul 15, 2019 at 6:45 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > > > >
+> > > > > On 7/14/19 9:48 PM, Stephen Rothwell wrote:
+> > > > > > Hi all,
+> > > > > >
+> > > > > > Please do not add v5.4 material to your linux-next included branches
+> > > > > > until after v5.3-rc1 has been released.
+> > > > > >
+> > > > > > Changes since 20190712:
+> > > > > >
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > I am seeing these build errors from HEADERS_TEST (or KERNEL_HEADERS_TEST)
+> > > > > for include/net/netfilter/nf_tables_offload.h.s:
+> > > > >
+> > > > >   CC      include/net/netfilter/nf_tables_offload.h.s
+> > > [...]
+> > > > > Should this header file not be tested?
+> >
+> > This means you must endlessly exclude
+> > headers that include nf_tables.h
+> >
+> >
+> > > Yes, it should indeed be added.
+> >
+> > Adding 'header-test-' is the last resort.
+>
+> OK, so policy now is that all internal headers should compile
+> standalone, right?
 
-Thanks for the quick response.
+I would not say that.
+I just want to put as much code as possible into the test-coverage.
 
---=20
-Cheers,
-Stephen Rothwell
+If there is a good reason to opt out of the header-test, that is OK.
+We should take a look at the cause of the error
+before blindly adding it into the blacklist.
 
---Sig_/iDoR2uuX4KeLgbWaBYs1DdL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+For this particular case, I just thought some functions
+could be localized in net/netfilter/, and would be cleaner.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0tccUACgkQAVBC80lX
-0GwBOQf/a85zHE2KpLllV6MYBhyOWH4NwV1ztDZKkUkiFoGsh9x8jERQ+5Ccj/Hc
-mhLux10CMPExt07NgBlTKzDeFHtVeXYSb6HKo5v7f0zusbEPuXGUkGbnaN6rBNkS
-/Ds0Hght8q+86SQtyEg1gBcZmUQ/G13wrTdmKUO3MBHrMzs0gt2nk5EcL4ihAVjI
-DRIxlJSLwAKAEmnPPtOT7GltuI+nAVWJay3XF9YO3wUHIk3g875RrW1cTI1Opzf7
-J1oyUJc70K1ghkJjZjUcRXypwn2CQ4zAEQcbTHXuZYl4KW4q+XR70HM/4AlRarIr
-vjzWctTONz9T7+uHSDI3gpLSO+HDzw==
-=DJrj
------END PGP SIGNATURE-----
+Having said that, I am not familiar enough with
+the netfilter subsystem.
+So, this should be reviewed by the experts in the area.
 
---Sig_/iDoR2uuX4KeLgbWaBYs1DdL--
+
+Anyway, CONFIG_NF_TABLES seems mandatory to compile
+include/net/netfilter/nf_tables_*.h
+
+So, I will queue the following patch
+to suppress the error for now.
+
+diff --git a/include/Kbuild b/include/Kbuild
+index 7e9f1acb9dd5..e59605243bca 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -905,10 +905,11 @@ header-test-                      +=
+net/netfilter/nf_nat_redirect.h
+ header-test-                   += net/netfilter/nf_queue.h
+ header-test-                   += net/netfilter/nf_reject.h
+ header-test-                   += net/netfilter/nf_synproxy.h
+-header-test-                   += net/netfilter/nf_tables.h
+-header-test-                   += net/netfilter/nf_tables_core.h
+-header-test-                   += net/netfilter/nf_tables_ipv4.h
++header-test-$(CONFIG_NF_TABLES)        += net/netfilter/nf_tables.h
++header-test-$(CONFIG_NF_TABLES)        += net/netfilter/nf_tables_core.h
++header-test-$(CONFIG_NF_TABLES)        += net/netfilter/nf_tables_ipv4.h
+ header-test-                   += net/netfilter/nf_tables_ipv6.h
++header-test-$(CONFIG_NF_TABLES)        += net/netfilter/nf_tables_offload.h
+ header-test-                   += net/netfilter/nft_fib.h
+ header-test-                   += net/netfilter/nft_meta.h
+ header-test-                   += net/netfilter/nft_reject.h
+
+
+
+This test just landed in upstream,
+and will take some time to iron out the issues.
+
+If I am disturbing people too much,
+I perhaps need to loosen the policy.
+Sorry if this test is too annoying.
+
+
+Thanks.
+
+
+--
+Best Regards
+Masahiro Yamada
