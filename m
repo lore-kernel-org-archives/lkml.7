@@ -2,173 +2,101 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EF8C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06F4C76192
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638B2206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3377206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 10:21:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1FCCrHiw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732923AbfGPKUq (ORCPT
+        id S1733113AbfGPKVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 06:20:46 -0400
-Received: from relay.sw.ru ([185.231.240.75]:45958 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbfGPKUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 06:20:45 -0400
-Received: from [172.16.24.21]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1hnKZU-0007vg-Tc; Tue, 16 Jul 2019 13:20:32 +0300
-Subject: Re: [PATCH v3 0/3] kernel/notifier.c: avoid duplicate registration
-To:     Xiaoming Ni <nixiaoming@huawei.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "arjan@linux.intel.com" <arjan@linux.intel.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
-        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
-        "semen.protsenko@linaro.org" <semen.protsenko@linaro.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
-        Dailei <dylix.dailei@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <1562728147-30251-1-git-send-email-nixiaoming@huawei.com>
- <f628ff03-eb47-62f3-465b-fe4ed046b30c@virtuozzo.com>
- <E490CD805F7529488761C40FD9D26EF12AC9D068@dggemm507-mbx.china.huawei.com>
- <d70ba831-85c7-d5a3-670a-144fa4d139cc@virtuozzo.com>
- <8ee6f763-ccce-ab58-3d96-21f5e1622916@huawei.com>
- <20190712140729.GA11583@kroah.com>
- <65f50cf2-3051-ab55-078f-30930fe0c9bc@huawei.com>
- <5521e5a4-66d9-aaf8-3a12-3999bfc6be8b@virtuozzo.com>
- <3bbc16ba-953c-a6b6-c5f3-4deaeaa25d10@huawei.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <e4753c70-de7c-063a-dc49-0edc7520ccd2@virtuozzo.com>
-Date:   Tue, 16 Jul 2019 13:20:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 06:21:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56740 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731401AbfGPKVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:21:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+jPmiLFoLFkErQnsFP18srbHMWPmmDSQUv0S0HNnLWo=; b=1FCCrHiw6wHWzTKNNLJJ628q3
+        sfZxcu4lXp8UOSjklMM84EEttE7cH/rxMVbAXKhQFu/3gZ+10G+GnD+QOGbggR+a4ntTcNNLYXw6j
+        HQwYBI7Ip3s3jo0xYu5aAhxsO3PdiOkRFEk7AC6tY7L756h2yeZid6XR7FOoEIDs4wrGIKWBypx6+
+        29+ITIL/Aw/WCMapng0MkEzqtfJq2WfLPttOSGcTayXz12kmjfnqKQ1/O4cinbNjMouqSZ1YNkODG
+        xCHWvcC8YQP8U9hwBoJRuKV0DN2nezJlsVl3CsaH//S3ws6GsMrkZoCA9+TfD1jPwDtslYWwL3NIq
+        t5kPYIzrg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnKZX-0005uN-La; Tue, 16 Jul 2019 10:20:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 58FB52021C301; Tue, 16 Jul 2019 12:20:34 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 12:20:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v3 2/5] locking/qspinlock: Refactor the qspinlock slow
+ path
+Message-ID: <20190716102034.GN3419@hirez.programming.kicks-ass.net>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-3-alex.kogan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <3bbc16ba-953c-a6b6-c5f3-4deaeaa25d10@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715192536.104548-3-alex.kogan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 5:00 AM, Xiaoming Ni wrote:
-> On 2019/7/15 13:38, Vasily Averin wrote:
->> On 7/14/19 5:45 AM, Xiaoming Ni wrote:
->>> On 2019/7/12 22:07, gregkh@linuxfoundation.org wrote:
->>>> On Fri, Jul 12, 2019 at 09:11:57PM +0800, Xiaoming Ni wrote:
->>>>> On 2019/7/11 21:57, Vasily Averin wrote:
->>>>>> On 7/11/19 4:55 AM, Nixiaoming wrote:
->>>>>>> On Wed, July 10, 2019 1:49 PM Vasily Averin wrote:
->>>>>>>> On 7/10/19 6:09 AM, Xiaoming Ni wrote:
->>>>>>>>> Registering the same notifier to a hook repeatedly can cause the hook
->>>>>>>>> list to form a ring or lose other members of the list.
->>>>>>>>
->>>>>>>> I think is not enough to _prevent_ 2nd register attempt,
->>>>>>>> it's enough to detect just attempt and generate warning to mark host in bad state.
->>>>>>>>
->>>>>>>
->>>>>>> Duplicate registration is prevented in my patch, not just "mark host in bad state"
->>>>>>>
->>>>>>> Duplicate registration is checked and exited in notifier_chain_cond_register()
->>>>>>>
->>>>>>> Duplicate registration was checked in notifier_chain_register() but only 
->>>>>>> the alarm was triggered without exiting. added by commit 831246570d34692e 
->>>>>>> ("kernel/notifier.c: double register detection")
->>>>>>>
->>>>>>> My patch is like a combination of 831246570d34692e and notifier_chain_cond_register(),
->>>>>>>  which triggers an alarm and exits when a duplicate registration is detected.
->>>>>>>
->>>>>>>> Unexpected 2nd register of the same hook most likely will lead to 2nd unregister,
->>>>>>>> and it can lead to host crash in any time: 
->>>>>>>> you can unregister notifier on first attempt it can be too early, it can be still in use.
->>>>>>>> on the other hand you can never call 2nd unregister at all.
->>>>>>>
->>>>>>> Since the member was not added to the linked list at the time of the second registration, 
->>>>>>> no linked list ring was formed. 
->>>>>>> The member is released on the first unregistration and -ENOENT on the second unregistration.
->>>>>>> After patching, the fault has been alleviated
->>>>>>
->>>>>> You are wrong here.
->>>>>> 2nd notifier's registration is a pure bug, this should never happen.
->>>>>> If you know the way to reproduce this situation -- you need to fix it. 
->>>>>>
->>>>>> 2nd registration can happen in 2 cases:
->>>>>> 1) missed rollback, when someone forget to call unregister after successfull registration, 
->>>>>> and then tried to call register again. It can lead to crash for example when according module will be unloaded.
->>>>>> 2) some subsystem is registered twice, for example from  different namespaces.
->>>>>> in this case unregister called during sybsystem cleanup in first namespace will incorrectly remove notifier used 
->>>>>> in second namespace, it also can lead to unexpacted behaviour.
->>>>>>
->>>>> So in these two cases, is it more reasonable to trigger BUG() directly when checking for duplicate registration ?
->>>>> But why does current notifier_chain_register() just trigger WARN() without exiting ?
->>>>> notifier_chain_cond_register() direct exit without triggering WARN() ?
->>>>
->>>> It should recover from this, if it can be detected.  The main point is
->>>> that not all apis have to be this "robust" when used within the kernel
->>>> as we do allow for the callers to know what they are doing :)
->>>>
->>> In the notifier_chain_register(), the condition ( (*nl) == n) is the same registration of the same hook.
->>>  We can intercept this situation and avoid forming a linked list ring to make the API more rob
->>
->> Once again -- yes, you CAN prevent list corruption, but you CANNOT recover the host and return it back to safe state.
->> If double register event was detected -- it means you have bug in kernel.
->>
->> Yes, you can add BUG here and crash the host immediately, but I prefer to use warning in such situations.
->>
->>>> If this does not cause any additional problems or slow downs, it's
->>>> probably fine to add.
->>>>
->>> Notifier_chain_register() is not a system hotspot function.
->>> At the same time, there is already a WARN_ONCE judgment. There is no new judgment in the new patch.
->>> It only changes the processing under the condition of (*nl) == n, which will not cause performance problems.
->>> At the same time, avoiding the formation of a link ring can make the system more robust.
->>
->> I disagree, 
->> yes, node will have correct list, but anyway node will work wrong and can crash the host in any time.
-> 
-> Sorry, my description is not accurate.
-> 
-> My patch feature does not prevent users from repeatedly registering hooks.
-> But avoiding the chain ring caused by the user repeatedly registering the hook
-> 
-> There are no modules for duplicate registration hooks in the current system.
-> But considering that not all modules are in the kernel source tree,
-> In order to improve the robustness of the kernel API, we should avoid the linked list ring caused by repeated registration.
-> Or in order to improve the efficiency of problem location, when the duplicate registration is checked, the system crashes directly.
+On Mon, Jul 15, 2019 at 03:25:33PM -0400, Alex Kogan wrote:
 
-Detect of duplicate registration means an unrecoverable error,
-from this point of view it makes sense to replace WARN_ONCE by BUG_ON.
- 
-> On the other hand, the difference between notifier_chain_register() and notifier_chain_cond_register() for duplicate registrations is confusing:
-> Blocking the formation of the linked list ring in notifier_chain_cond_register()
-> There is no interception of the linked list ring in notifier_chain_register(), just an alarm.
-> Give me the illusion: Isn't notifier_chain_register() allowed to create a linked list ring?
+> +/*
+> + * set_locked_empty_mcs - Try to set the spinlock value to _Q_LOCKED_VAL,
+> + * and by doing that unlock the MCS lock when its waiting queue is empty
+> + * @lock: Pointer to queued spinlock structure
+> + * @val: Current value of the lock
+> + * @node: Pointer to the MCS node of the lock holder
+> + *
+> + * *,*,* -> 0,0,1
+> + */
+> +static __always_inline bool __set_locked_empty_mcs(struct qspinlock *lock,
+> +						   u32 val,
+> +						   struct mcs_spinlock *node)
+> +{
+> +	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
+> +}
 
-I'm not sure that I understood your question correctly but will try to answer.
-As far as I see all callers of notifier_chain_cond_register checks return value, expect possible failure and handle it somehow.
-On the other hand callers of notifier_chain_register() in many cases do not check return value and always expect success.
-The goal of original WARN_ONCE -- to detect possible misuse of notifiers and it seems for me it correctly handles this task.
+That name is nonsense. It should be something like:
 
+static __always_inline bool __try_clear_tail(...)
+
+
+> +/*
+> + * pass_mcs_lock - pass the MCS lock to the next waiter
+> + * @node: Pointer to the MCS node of the lock holder
+> + * @next: Pointer to the MCS node of the first waiter in the MCS queue
+> + */
+> +static __always_inline void __pass_mcs_lock(struct mcs_spinlock *node,
+> +					    struct mcs_spinlock *next)
+> +{
+> +	arch_mcs_spin_unlock_contended(&next->locked, 1);
+> +}
+
+I'm not entirely happy with that name either; but it's not horrible like
+the other one. Why not mcs_spin_unlock_contended() ?
