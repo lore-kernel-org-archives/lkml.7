@@ -2,117 +2,158 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40205C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B83C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1890720880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B292080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 00:10:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r/N2p4ZH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X/lLfEmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbfGPAF0 (ORCPT
+        id S1732839AbfGPAKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jul 2019 20:05:26 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:54407 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730888AbfGPAF0 (ORCPT
+        Mon, 15 Jul 2019 20:10:48 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37780 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731522AbfGPAKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jul 2019 20:05:26 -0400
-Received: by mail-vk1-f202.google.com with SMTP id w137so9105840vkd.21
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 17:05:25 -0700 (PDT)
+        Mon, 15 Jul 2019 20:10:47 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w13so17140759eds.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jul 2019 17:10:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bM16Cxlynj/iYFnBhEVrgD674cLfvqLU43B4Z5mZd8I=;
-        b=r/N2p4ZHJhSkKWCbefj7oLG94wDUQjVPvpVsO2bZgKuDB6odzuwkhgqvbFRar5HUSM
-         F0Uee5JIrhmDjcjHNCYqP0u8lHTYYSn3P5mPCGUqXgaEfFm0vlsGVxLj41XRkh4JassI
-         T55j3gjAdlSg1uZ8LLEGxKrPlRyotdJfmag6H/o9kkWnFeHryKqaCuOkKEDMzD7SCS18
-         64inrAv4F0E2JBmU86ETFJNPwo7XAlMBkS+jTgXic46jJcC/gfZFvRu2rZuCrPBU/+DD
-         UWyMrmLLTGyjqm4yYyaofcm9Nw3LgJzqsQ+8xMf57fKGz/XDrayl8zrfMiG8bQejHqWU
-         TV2A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4TuRNoOkVfCigw2Wuxe3UI/VXS3zxgaiTK+rQEL9mkw=;
+        b=X/lLfEmtOPhgzR9DUEsjJjuG5SasTk1hdZSopvddMrr6Vcm9O8K8p7MrHX42jSHP8I
+         Rx/Dz3masCIvmwkN0lqgILNwGErRuEgGdySqyRkXWvOptFRMuQlYczwmrv6x8l9FsLrn
+         jeVytrwjfkWoYAhOjvEQq1Cghv3JWsinNOb4fHC/YVMwiLkU0+tRq+zSnSLanJsRM/Iu
+         vzhL25p9JSKEeFDa9fWyu1Zc0IdiRFh8TBDQT+MQwu+AZ+smN8mpE2Ewqa5Y3t8VZoJ1
+         ZSTTE4XITYetKccfa/zD40BA4iEyKgTzpaHb4c1Jx/ojjt7dWSqTLWN4gU6CBGwkm5kk
+         sj5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bM16Cxlynj/iYFnBhEVrgD674cLfvqLU43B4Z5mZd8I=;
-        b=q8VJ3IiCXd1OyspFgsscK+k1hP4ZtCI9n3eAKbzxhDr0fDxsximaZ9ODCoiH7E3A5T
-         8C23Tvlhbzg7uwAcIBQWNOMW1PD308nYOLg8df3hUGutrus3uq9KexUlMiYjGmh5yL0s
-         Mv8tqYphUxLYqOBROPVq4dJbtJ3L8HUBZC5M00u3i8czF7sqMrZL2HFsko8pULf1q4jb
-         CWZ9Z11x/jGBgRGmhBYJijfDHT/mcDiqiIr467AAQgRHQ2I7f8dRaHT2RPwmErfGXL1u
-         Gyj4Eae3y7duxZI4iFECwNc1tcZ0P8FPwFPDveJiuGcIiIHsoBu/Jz/GmO9iw6x+BuXc
-         Ab7w==
-X-Gm-Message-State: APjAAAXrEVqxql4P9OhdvtgsDoShbo4gRjSTxr0OiPBuuM/420KQL6Ig
-        tI22z3iKNWLBi8OFHvZgwMCOZHMQy0Cjr/kP
-X-Google-Smtp-Source: APXvYqyKghXqh+hUwmcq39WhjGsA7PEfDV7IUtnSHADGYoM5Fvn2cKgA8Y0Zc4zvh5r1tKWM+7vjLynajC+dIAJ5
-X-Received: by 2002:a1f:dec7:: with SMTP id v190mr11423849vkg.39.1563235525244;
- Mon, 15 Jul 2019 17:05:25 -0700 (PDT)
-Date:   Mon, 15 Jul 2019 17:05:20 -0700
-Message-Id: <20190716000520.230595-1-henryburns@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-Subject: [PATCH v2] mm/z3fold.c: Reinitialize zhdr structs after migration
-From:   Henry Burns <henryburns@google.com>
-To:     Vitaly Vul <vitaly.vul@sony.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4TuRNoOkVfCigw2Wuxe3UI/VXS3zxgaiTK+rQEL9mkw=;
+        b=F5PrUzUHwhSuXznBe7IP2/QBWGLwyjkA3a9XGtlq80lZupS9Kg9WZ1pXJqwFd74RUC
+         AbO6bIQQ1xbEYa/SWtrBu8THy//MoYBy3q+z7za5gGkI7jr2rNww/Hm4ZqNnafqiLcgU
+         U/T5dahn8eh2KcjBOcaYAZEMQrhmLG7fjaUNwy8FTrzXYvFJsZVsZ8Gj8zvI2PI0kdB7
+         bwKZz5VTqpE8hUEPB1jBPBLVi+7gcNk7afIqQfAQVP0ouKdrEUrd5JJBAb4E6OvjcMIc
+         6yckukDNL8Xu/J7A78wcNynDiYReXQ9vHQfIxZhX4ghmGx4eNaDhtPFWGUfirh5hDIgI
+         Z0CA==
+X-Gm-Message-State: APjAAAVf5CKOK88KWzJkrwiBFkjilItv4xY/WBlqxZpQL5DJIZhUdcBT
+        kxTPVYAQr3oARJ6gA21X4qsjKMkiE/bC7W6DYskqKQ==
+X-Google-Smtp-Source: APXvYqx/gW5mUFTFQ2dxFq7BZJg+MSLr0owyUAdpNjN8J5d0UL6/bimFkuLU5MbxXB1DVPLAD3VhWbGpUg1L4udN49E=
+X-Received: by 2002:a17:906:d7ab:: with SMTP id pk11mr22960862ejb.216.1563235845844;
+ Mon, 15 Jul 2019 17:10:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com>
+ <5D27FE26.1050002@intel.com>
+In-Reply-To: <5D27FE26.1050002@intel.com>
+From:   Eric Hankland <ehankland@google.com>
+Date:   Mon, 15 Jul 2019 17:10:34 -0700
+Message-ID: <CAOyeoRV5=6pR7=sFZ+gU68L4rORjRaYDLxQrZb1enaWO=d_zpA@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: x86: PMU Event Filter
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-z3fold_page_migration() calls memcpy(new_zhdr, zhdr, PAGE_SIZE).
-However, zhdr contains fields that can't be directly coppied over (ex:
-list_head, a circular linked list). We only need to initialize the
-linked lists in new_zhdr, as z3fold_isolate_page() already ensures
-that these lists are empty
+> I think just disabling guest cpuid might not be enough, since guest
+> could write to the msr without checking the cpuid.
+>
+> Why not just add a bitmap for fixed counter?
+> e.g. fixed_counter_reject_bitmap
+>
+> At the beginning of reprogram_fixed_counter, we could add the check:
+>
+> if (test_bit(idx, &kvm->arch.fixed_counter_reject_bitmap))
+>      return -EACCES;
+>
+> (Please test with your old guest and see if they have issues if we
+> inject #GP when
+> they try to set the fixed_ctrl msr. If there is, we could drop -EACCESS
+> above)
+>
+> The bitmap could be set at kvm_vm_ioctl_set_pmu_event_filter.
 
-Additionally it is possible that zhdr->work has been placed in a
-workqueue. In this case we shouldn't migrate the page, as zhdr->work
-references zhdr as opposed to new_zhdr.
+intel_pmu_refresh() checks the guest cpuid and sets the number of
+fixed counters according to that:
+pmu->nr_arch_fixed_counters = min_t(int, edx.split.num_counters_fixed,
+INTEL_PMC_MAX_FIXED);
 
-Fixes: bba4c5f96ce4 ("mm/z3fold.c: support page migration")
-Signed-off-by: Henry Burns <henryburns@google.com>
----
- Changelog since v1:
- - Made comments explicityly refer to new_zhdr->buddy.
+and reprogram_fixed_counters()/get_fixed_pmc() respect this so the
+guest can't just ignore the cpuid.
 
- mm/z3fold.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Adding a bitmap does let you do things like disable the first counter
+but keep the second and third, but given that there are only three and
+the events are likely to be on a whitelist anyway, it seemed like
+adding the bitmap wasn't worth it. If you still feel the same way even
+though we can disable them via the cpuid, I can add this in.
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 42ef9955117c..f4b2283b19a3 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -1352,12 +1352,22 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
- 		z3fold_page_unlock(zhdr);
- 		return -EBUSY;
- 	}
-+	if (work_pending(&zhdr->work)) {
-+		z3fold_page_unlock(zhdr);
-+		return -EAGAIN;
-+	}
- 	new_zhdr = page_address(newpage);
- 	memcpy(new_zhdr, zhdr, PAGE_SIZE);
- 	newpage->private = page->private;
- 	page->private = 0;
- 	z3fold_page_unlock(zhdr);
- 	spin_lock_init(&new_zhdr->page_lock);
-+	INIT_WORK(&new_zhdr->work, compact_page_work);
-+	/*
-+	 * z3fold_page_isolate() ensures that new_zhdr->buddy is empty,
-+	 * so we only have to reinitialize it.
-+	 */
-+	INIT_LIST_HEAD(&new_zhdr->buddy);
- 	new_mapping = page_mapping(page);
- 	__ClearPageMovable(page);
- 	ClearPagePrivate(page);
--- 
-2.22.0.510.g264f2c817a-goog
+> I think it would be better to add more, please see below:
+>
+> enum kvm_pmu_action_type {
+>      KVM_PMU_EVENT_ACTION_NONE = 0,
+>      KVM_PMU_EVENT_ACTION_ACCEPT = 1,
+>      KVM_PMU_EVENT_ACTION_REJECT = 2,
+>      KVM_PMU_EVENT_ACTION_MAX
+> };
+>
+> and do a check in kvm_vm_ioctl_set_pmu_event_filter()
+>      if (filter->action >= KVM_PMU_EVENT_ACTION_MAX)
+>          return -EINVAL;
+>
+> This is for detecting the case that we add a new action in
+> userspace, while the kvm hasn't been updated to support that.
+>
+> KVM_PMU_EVENT_ACTION_NONE is for userspace to remove
+> the filter after they set it.
 
+We can achieve the same result by using a reject action with an empty
+set of events - is there some advantage to "none" over that? I can add
+that check for valid actions.
+
+> > +#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
+>
+> Why is this limit needed?
+
+Serves to keep the filters on the smaller side and ensures the size
+calculation can't overflow if users attempt to. Keeping the filter
+under 4k is nicer for allocation - also, if we want really large
+filters we might want to do something smarter than a linear traversal
+of the filter when guests program counters.
+
+> I think it looks tidier to wrap the changes above into a function:
+>
+>      if (kvm_pmu_filter_event(kvm, eventsel & AMD64_RAW_EVENT_MASK_NB))
+>          return;
+
+Okay - I can do that.
+
+> > +       kvfree(filter);
+>
+> Probably better to have it conditionally?
+>
+> if (filter) {
+>      synchronize_srcu();
+>      kfree(filter)
+> }
+>
+> You may want to factor it out, so that kvm_pmu_destroy could reuse.
+
+Do you mean kvm_arch_destroy_vm? It looks like that's where kvm_arch
+members are freed. I can do that.
+
+Eric
