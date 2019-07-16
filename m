@@ -2,203 +2,186 @@ Return-Path: <SRS0=jE6e=VN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E715C76195
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D689DC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2692173B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFC92173B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jul 2019 13:06:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVVr+tkD"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="b8dhUBZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbfGPNDx (ORCPT
+        id S1733210AbfGPNGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 09:03:53 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37005 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfGPNDx (ORCPT
+        Tue, 16 Jul 2019 09:06:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38562 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfGPNGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 09:03:53 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c9so13647229lfh.4;
-        Tue, 16 Jul 2019 06:03:50 -0700 (PDT)
+        Tue, 16 Jul 2019 09:06:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f5so593996pgu.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 06:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7vUO+aDmSixtQf+Kmq7Y+cEBs2LRiHU953G0lMx12po=;
-        b=iVVr+tkDz3DW6fmqGZxulh2q0YXBNHNQqidJwx6q3Icc0lPfC2OQ16wPu1Qb+Cmx5s
-         HMrx9enixZ9w2dOm8whNg53xjNH4yxUcl0MVqrEBHXtbH8YIR3CcL0zlup40XXyWy0R9
-         3CG89hssZ8tv8R5AjtSyo2KYWm89YogOqTCVc+7B9Xd7HnqZ47plvo/Llg9rKTicwl/7
-         2n6839/mJsMlRXygX6aj0crB4DWGiPAD2slB6246tepDrfC1k6iwl3WvpPg+ghzgNEGY
-         TjUoClyhFZWZkibX+XlV/oKgbckNUHXZEgnFCTqRewV3Ekk17e9SnjtxDOQpSZmHpqP5
-         P7xA==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HndzIrwk0eloZ/VKZJ3ivaH1s8315qlKpsro16xZw70=;
+        b=b8dhUBZSz3RGMnHXa2eQUBcpb0Fr1c6vhDDwn4sy14RwoF3LeMqo4GwVei/eUCKLfN
+         2ysAKK0S6zo65plaT8Lmyu1cdKbX5vv5C3GPTJPIInad+mBHinkOAREnbCNuxmpL9VDG
+         fvZUIwNFnzQNqEmzHkL0RRQ1MQkDpVZLaNNcaAVC/zAYUxremZf5+M3FMQbomiyN3wH4
+         zc2zC/xff3jM5dpplZUlTKdEFImIprhxsju27ez6MU1i0OsgFNq72UzfzJW9Togr4CqO
+         YkkRxSa2wlAwsL/E0oFuYOap/7lvKcKnsDSBvmk5MITFO2BYwQSiCBv4/QcWtaXdxpFP
+         2++g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7vUO+aDmSixtQf+Kmq7Y+cEBs2LRiHU953G0lMx12po=;
-        b=rud66sy/mEVTNP4Z/CjIFBCL0paqHpxfFPfEBYXg9S4DexDzcc8WuDXczMzX8BUeib
-         WCrN4+H/xNkGWx/v4nYFFyXYDdVIpeafI/205YlTVHhLhf9V3fy+K6o8OAmod4NZcIOK
-         uZICCws02VzTyAhcgth3Q45Y3MMLhPjtK1tj079qtewfkayvB6MLHGQc/agBu37uXYKo
-         RSJae5gYNzvU2tcdT8DLV+qtm6SeiBrQbgeyg2OxA/zrF/fj061QWC4xmIDKV8By+VAt
-         dwk6gS6125CrQTJOJ2O1vSQbgEvSt1KX2MK5EFLoVYDiKYN0UHLlku895LNggoWOy5DN
-         TJrg==
-X-Gm-Message-State: APjAAAXE+l5z76qti1bOXJbv84+CHgzbh4fXoakW4+kdDlk/hTVpqCIS
-        82bWf8z6CHkUzo4njm+Z1GaokWd0
-X-Google-Smtp-Source: APXvYqwbRrvti+Refi6Ehi7FHXGu7SjxzedeBfvEcIL34RpbqoIXYIQUzl7wtB3t15yETESjAhGvRA==
-X-Received: by 2002:a19:4f4a:: with SMTP id a10mr14589699lfk.30.1563282229851;
-        Tue, 16 Jul 2019 06:03:49 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id x18sm2841896lfe.42.2019.07.16.06.03.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 06:03:47 -0700 (PDT)
-Subject: Re: [PATCH v4 02/24] PM / devfreq: tegra30: Keep interrupt disabled
- while governor is stopped
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223724epcas4p2d82cecc2969fecddca67192417843418@epcas4p2.samsung.com>
- <20190707223303.6755-3-digetx@gmail.com>
- <f691a845-18f3-a6fb-302c-a8a3fc13e5bf@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6c517d04-cf99-f907-e74d-9fba99405a53@gmail.com>
-Date:   Tue, 16 Jul 2019 16:03:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HndzIrwk0eloZ/VKZJ3ivaH1s8315qlKpsro16xZw70=;
+        b=qL7J3eYNcLJm9/okvW/l1f4r665DCVc0QP5HN52g3jMJSTQTc9AU5Uj8tDT5fQSiAc
+         OWio8B4VdStpbhXrTCdEMBwtYgziS5PBrWBviyft9wWxEpOcDKJOLwYPBD4AEOqqxt1g
+         D6M00J6pvlDp2yAE0654IgmhVrO+5GWxAdJafL5PEVJ81Z2uhcP9dpOP21VX9mfscMyO
+         lIG8oe1LMfJytjkXWBNfEdTg1g8lMozhgF3JhUYoYCWj77eo97fX7NItUfzoal6QEac4
+         mulu4nUrW36tjESFjykW0jqy4hYnvASTjerHnmqzqPvVtlbET+D/+iY0AkucUz/5kb/B
+         wRRg==
+X-Gm-Message-State: APjAAAX0kYm8t0CIGoKtYAg+ZKBSYHRzb/8M9qWBkCInspc5woso54GX
+        M0gdAyFVCzMMClcH4fGAziE=
+X-Google-Smtp-Source: APXvYqxc7HGOD0D5gu8WnhNrsT1I3LmFfpI6lWg9smWBUfjHYlbiTNFFnqhLddSt9tTLEeru8OLm5Q==
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr33615344pgl.103.1563282405436;
+        Tue, 16 Jul 2019 06:06:45 -0700 (PDT)
+Received: from brauner.io ([172.58.30.188])
+        by smtp.gmail.com with ESMTPSA id a12sm42618252pje.3.2019.07.16.06.06.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 06:06:44 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 15:06:33 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>, mpe@ellerman.id.au
+Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
+Message-ID: <20190716130631.tohj4ub54md25dys@brauner.io>
+References: <20190714192205.27190-1-christian@brauner.io>
+ <20190714192205.27190-2-christian@brauner.io>
+ <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <f691a845-18f3-a6fb-302c-a8a3fc13e5bf@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.07.2019 14:47, Chanwoo Choi пишет:
-> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
->> There is no real need to keep interrupt always-enabled, will be nicer
->> to keep it disabled while governor is inactive.
->>
->> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra30-devfreq.c | 43 ++++++++++++++++---------------
->>  1 file changed, 22 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index a27300f40b0b..5e2b133babdd 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -11,6 +11,7 @@
->>  #include <linux/devfreq.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/io.h>
->> +#include <linux/irq.h>
->>  #include <linux/module.h>
->>  #include <linux/mod_devicetable.h>
->>  #include <linux/platform_device.h>
->> @@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
->>  {
->>  	unsigned int i;
->>  
->> -	disable_irq(tegra->irq);
->> -
->>  	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
->>  		      ACTMON_GLB_PERIOD_CTRL);
->>  
->> @@ -442,8 +441,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->>  	}
->>  
->>  	actmon_write_barrier(tegra);
->> -
->> -	enable_irq(tegra->irq);
->>  }
->>  
->>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
->> @@ -552,6 +549,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->>  {
->>  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
->>  
->> +	/*
->> +	 * Couple device with the governor early as it is needed at
->> +	 * the moment of governor's start (used by ISR).
->> +	 */
->> +	tegra->devfreq = devfreq;
-> 
-> I'm not sure it is necessary. Almost devfreq device get
-> the devfreq instance on probe timing through devfreq_add_device directly.
+On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
+> I think Vasily already has a clone3 patch for s390x with 435. 
 
-This is necessary because this assignment is for the "governor" and not
-the "device". Governor is started during of devfreq_add_device(), hence
-there is no better way to assign device to the driver's governor.
+A quick follow-up on this. Helge and Michael have asked whether there
+are any tests for clone3. Yes, there will be and I try to have them
+ready by the end of the this or next week for review. In the meantime I
+hope the following minimalistic test program that just verifies very
+very basic functionality (It's not pretty.) will help you test:
 
->> +
->>  	switch (event) {
->>  	case DEVFREQ_GOV_START:
->>  		devfreq_monitor_start(devfreq);
->> @@ -586,10 +589,11 @@ static struct devfreq_governor tegra_devfreq_governor = {
->>  
->>  static int tegra_devfreq_probe(struct platform_device *pdev)
->>  {
->> -	struct tegra_devfreq *tegra;
->>  	struct tegra_devfreq_device *dev;
->> -	unsigned int i;
->> +	struct tegra_devfreq *tegra;
->> +	struct devfreq *devfreq;
->>  	unsigned long rate;
->> +	unsigned int i;
->>  	int err;
->>  
->>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->> @@ -625,6 +629,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  	}
->>  	tegra->irq = err;
->>  
->> +	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
->> +
->> +	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
->> +					actmon_thread_isr, IRQF_ONESHOT,
->> +					"tegra-devfreq", tegra);
->> +	if (err) {
->> +		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
->> +		return err;
->> +	}
->> +
->>  	reset_control_assert(tegra->reset);
->>  
->>  	err = clk_prepare_enable(tegra->clock);
->> @@ -672,28 +686,15 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
->> -	tegra->devfreq = devfreq_add_device(&pdev->dev,
->> -					    &tegra_devfreq_profile,
->> -					    "tegra_actmon",
->> -					    NULL);
->> +	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
->> +				     "tegra_actmon", NULL);
->>  	if (IS_ERR(tegra->devfreq)) {
-> 
-> Have to check 'devfreq' instead of 'tegra->devfreq'.
-> Did you test it? It might be failed because 'tegra->devfreq is NULL.
+#define _GNU_SOURCE
+#include <err.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <linux/sched.h>
+#include <linux/types.h>
+#include <sched.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mount.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/sysmacros.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
-That's a good catch! Thank you very much.
+#ifndef CLONE_PIDFD
+#define CLONE_PIDFD 0x00001000
+#endif
 
->>  		err = PTR_ERR(tegra->devfreq);
-> 
-> ditto.
+#ifndef __NR_clone3
+#define __NR_clone3 -1
+#endif
 
-Ok
+static pid_t sys_clone3(struct clone_args *args)
+{
+	return syscall(__NR_clone3, args, sizeof(struct clone_args));
+}
+
+static int wait_for_pid(pid_t pid)
+{
+	int status, ret;
+
+again:
+	ret = waitpid(pid, &status, 0);
+	if (ret == -1) {
+		if (errno == EINTR)
+			goto again;
+
+		return -1;
+	}
+
+	if (ret != pid)
+		goto again;
+
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		return -1;
+
+	return 0;
+}
+
+#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+
+int main(int argc, char *argv[])
+{
+	int pidfd = -1;
+	pid_t parent_tid = -1, pid = -1;
+	struct clone_args args = {0};
+
+	args.parent_tid = ptr_to_u64(&parent_tid); /* CLONE_PARENT_SETTID */
+	args.pidfd = ptr_to_u64(&pidfd); /* CLONE_PIDFD */
+	args.flags = CLONE_PIDFD | CLONE_PARENT_SETTID;
+	args.exit_signal = SIGCHLD;
+
+	pid = sys_clone3(&args);
+	if (pid < 0) {
+		fprintf(stderr, "%s - Failed to create new process\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0) {
+		printf("Child process with pid %d\n", getpid());
+		exit(EXIT_SUCCESS);
+	}
+
+	printf("Parent process received child's pid %d as return value\n", pid);
+	printf("Parent process received child's pidfd %d\n", *(int *)args.pidfd);
+	printf("Parent process received child's pid %d as return argument\n",
+	       *(pid_t *)args.parent_tid);
+
+	if (wait_for_pid(pid))
+		exit(EXIT_FAILURE);
+
+	if (pid != *(pid_t *)args.parent_tid)
+		exit(EXIT_FAILURE);
+
+	close(pidfd);
+
+	return 0;
+}
