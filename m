@@ -2,199 +2,430 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1623AC76196
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6F7C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2F4218B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1CB21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V+41nzxS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M7Eoj/iM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfGQToe (ORCPT
+        id S1727625AbfGQT5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:44:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41582 "EHLO
+        Wed, 17 Jul 2019 15:57:37 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38288 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfGQToe (ORCPT
+        with ESMTP id S1727147AbfGQT5g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:44:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so12452024pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 12:44:33 -0700 (PDT)
+        Wed, 17 Jul 2019 15:57:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id az7so12518797plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 12:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=gvjPZWoufoHncj5iyWeqiWRKnFrwf8zGjNBYtpZ6tKQ=;
-        b=V+41nzxSMtHHtuKjjlYe2GfJUL8OkwTW54lqpP4dzM4zgY3shyyLaX0K65MjCbgkMA
-         JbEoFVMktVLB3yjSnRHiCY/QGDeT/Ry1EtepMiiQZBtORT4LcsanPu+wmDHPU5A8ImJZ
-         ldVpzOO2iZ7YzyDbWT2fLzrjfofjjisJtzT8oJ+LheNWez/iuEh8rIrXccIbc6wOmENU
-         bymQc2QANDdpuvEugqEqUY33+9C5zNaq8aNQvWYnJfl2VIYp+NDrL1dmaf/yoMoe+wia
-         PQa0y1K4sc3F7Xf58nEjx6tNNBQQWv75mlgYI1ha4k6Jhx5wCMoMPtZyRCR9AsEli8l9
-         8+aw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=iwMpxTkjgL83FuKyw0WPsr67HOgXM4S+LDsS5kZmLLo=;
+        b=M7Eoj/iMSIVk2mNbrcYDLaWmudhOh0RUGc74CLcSo2ePzN09gO7c2bXhuWtrYfW4rF
+         FTrFi1WjGsgVbbL6peDa1PTqIntcIHNpUDzeMmdRO1gxal/TNse/6/szcEM63gCQMnWy
+         vgdHj6UR7+M5YiKeCK8syfa504zKM6plz3c4M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=gvjPZWoufoHncj5iyWeqiWRKnFrwf8zGjNBYtpZ6tKQ=;
-        b=JTas0zq+PDTkv8X8qXf881rjYKIvKC95jEuHmDQPsnSaXSzab9FlGZpQAIXU30Jxqx
-         LL9JNyZnRe77A5k8Hf+dDXUJSnzhIrRm5RlaxP8HicV3Ux7iqhiRKM7azpSQU20sVQ+F
-         q99IOLbOxRjxT+ej5bVpmLMhhYBGG4GLMZBAjszK3jDyqud5xCNVc3LetTN861rURg3D
-         9ldka5jxc7kgSOch1qz1FQMuae1Q6n8j9jg4ppSJSOeTqbBDsDN6t7rT6brlLPM7fmzQ
-         L1/u07A0VotsL3/3Ujmp+fOeHqo9r+Qg9HEBRuJ37sqLj1H6kBLMsjRCIp1o3p5BQJZZ
-         LIRg==
-X-Gm-Message-State: APjAAAWWTjMwsidL/USsLb39hOGH+Yal716Vcs7JBBB+IuQC3esL2BDU
-        8UIuZO04upkqks9hbkEm2QYBfQ==
-X-Google-Smtp-Source: APXvYqxyIhVLV3+xZdZyruXl0Q+nykHdkO769WGjExr3291Arvp8ld8l1OClYHmZUBHqkGiwRJjaKw==
-X-Received: by 2002:a17:902:9041:: with SMTP id w1mr46275249plz.132.1563392672552;
-        Wed, 17 Jul 2019 12:44:32 -0700 (PDT)
-Received: from [100.112.64.100] ([104.133.8.100])
-        by smtp.gmail.com with ESMTPSA id 14sm24016805pfy.40.2019.07.17.12.44.31
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Jul 2019 12:44:31 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 12:44:30 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP
- eligibility
-In-Reply-To: <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.1907171243400.1177@eggly.anvils>
-References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com> <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=iwMpxTkjgL83FuKyw0WPsr67HOgXM4S+LDsS5kZmLLo=;
+        b=jHTepcdcXrFUPLyBmemKoJtrP680Jdhwp+iWPJu2cJ+KqaACCQXwImnN1bQaRRqv6F
+         mu7+oSkBKqK6U9/U++KOfTM69G3q25+RWKScFdWQ6ivk/D8yur0XPsV7+LBsZnNlfb0D
+         6kGIg7EACDZMOHigtRNP0gBWKSgh0g4+5apLQz2pkBMowymkyrSSLsb2rVi76Q4a8Vqn
+         K67WXjxW4sFoFmvJ0neiAdtrhJmS0lFhKaDK1ZEBkH2QGQbAuxhQUWO10P6Opbj++Bya
+         DHGg8vVfLDimkj3jMTViuFVksekFhevuIjWTATHsDDyRQ9uMvdTKau4jF3giwgxN5I0k
+         86Xw==
+X-Gm-Message-State: APjAAAXnRdWnUWo1IQ3/DF/+WpiG9tntVfM9sn26FWeCeppDBcSeuinP
+        IUIzAkIZDa4yajwYKa+2504gcQ==
+X-Google-Smtp-Source: APXvYqwGahtqb6kGKiT7txRKFiysfsH/p6967e4udDMdMn72x+jJ8diX/QO5PCjuF9Wpw4wWR74dJg==
+X-Received: by 2002:a17:902:b944:: with SMTP id h4mr44442955pls.179.1563393456071;
+        Wed, 17 Jul 2019 12:57:36 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id l189sm29098491pfl.7.2019.07.17.12.57.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 12:57:35 -0700 (PDT)
+Message-ID: <5d2f7daf.1c69fb81.c0b13.c3d4@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com>
+References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-6-swboyd@chromium.org> <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com>
+Subject: Re: [PATCH v2 5/6] tpm: add driver for cr50 on SPI
+To:     Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>
+Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 17 Jul 2019 12:57:34 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019, Yang Shi wrote:
+Quoting Alexander Steffen (2019-07-17 05:00:06)
+> On 17.07.2019 00:45, Stephen Boyd wrote:
+> > From: Andrey Pronin <apronin@chromium.org>
+> >=20
+> > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> > firmware. The firmware running on the currently supported H1
+> > Secure Microcontroller requires a special driver to handle its
+> > specifics:
+> >   - need to ensure a certain delay between spi transactions, or else
+> >     the chip may miss some part of the next transaction;
+> >   - if there is no spi activity for some time, it may go to sleep,
+> >     and needs to be waken up before sending further commands;
+> >   - access to vendor-specific registers.
+> >=20
+> > Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> > [swboyd@chromium.org: Replace boilerplate with SPDX tag, drop
+> > suspended bit and remove ifdef checks in cr50.h, push tpm.h
+> > include into cr50.c]
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
-> vma") introduced THPeligible bit for processes' smaps. But, when checking
-> the eligibility for shmem vma, __transparent_hugepage_enabled() is
-> called to override the result from shmem_huge_enabled().  It may result
-> in the anonymous vma's THP flag override shmem's.  For example, running a
-> simple test which create THP for shmem, but with anonymous THP disabled,
-> when reading the process's smaps, it may show:
-> 
-> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
-> Size:               4096 kB
-> ...
-> [snip]
-> ...
-> ShmemPmdMapped:     4096 kB
-> ...
-> [snip]
-> ...
-> THPeligible:    0
-> 
-> And, /proc/meminfo does show THP allocated and PMD mapped too:
-> 
-> ShmemHugePages:     4096 kB
-> ShmemPmdMapped:     4096 kB
-> 
-> This doesn't make too much sense.  The shmem objects should be treated
-> separately from anonymous THP.  Calling shmem_huge_enabled() with checking
-> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
-> dax vma check since we already checked if the vma is shmem already.
-> 
-> Also check if vma is suitable for THP by calling
-> transhuge_vma_suitable().
-> 
-> And minor fix to smaps output format and documentation.
-> 
-> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
-> Cc: Hugh Dickins <hughd@google.com>
+> > diff --git a/drivers/char/tpm/cr50_spi.c b/drivers/char/tpm/cr50_spi.c
+> > new file mode 100644
+> > index 000000000000..3c1b472297ad
+> > --- /dev/null
+> > +++ b/drivers/char/tpm/cr50_spi.c
+> > @@ -0,0 +1,450 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2016 Google, Inc
+> > + *
+> > + * This device driver implements a TCG PTP FIFO interface over SPI for=
+ chips
+> > + * with Cr50 firmware.
+> > + * It is based on tpm_tis_spi driver by Peter Huewe and Christophe Ric=
+ard.
+> > + */
+> > +
+> > +#include <linux/init.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/pm.h>
+> > +#include <linux/spi/spi.h>
+> > +#include <linux/wait.h>
+> > +#include "cr50.h"
+> > +#include "tpm_tis_core.h"
+> > +
+> > +/*
+> > + * Cr50 timing constants:
+> > + * - can go to sleep not earlier than after CR50_SLEEP_DELAY_MSEC.
+> > + * - needs up to CR50_WAKE_START_DELAY_MSEC to wake after sleep.
+> > + * - requires waiting for "ready" IRQ, if supported; or waiting for at=
+ least
+> > + *   CR50_NOIRQ_ACCESS_DELAY_MSEC between transactions, if IRQ is not =
+supported.
+> > + * - waits for up to CR50_FLOW_CONTROL_MSEC for flow control 'ready' i=
+ndication.
+> > + */
+> > +#define CR50_SLEEP_DELAY_MSEC                        1000
+> > +#define CR50_WAKE_START_DELAY_MSEC           1
+> > +#define CR50_NOIRQ_ACCESS_DELAY_MSEC         2
+> > +#define CR50_READY_IRQ_TIMEOUT_MSEC          TPM2_TIMEOUT_A
+> > +#define CR50_FLOW_CONTROL_MSEC                       TPM2_TIMEOUT_A
+> > +#define MAX_IRQ_CONFIRMATION_ATTEMPTS                3
+> > +
+> > +#define MAX_SPI_FRAMESIZE                    64
+> > +
+> > +#define TPM_CR50_FW_VER(l)                   (0x0F90 | ((l) << 12))
+> > +#define TPM_CR50_MAX_FW_VER_LEN                      64
+> > +
+> > +static unsigned short rng_quality =3D 1022;
+> > +module_param(rng_quality, ushort, 0644);
+> > +MODULE_PARM_DESC(rng_quality,
+> > +              "Estimation of true entropy, in bits per 1024 bits.");
+>=20
+> What is the purpose of this parameter? None of the other TPM drivers=20
+> have it.
 
-Thanks,
-Acked-by: Hugh Dickins <hughd@google.com>
+I think the idea is to let users override the quality if they decide
+that they don't want to use the default value specified in the driver.
 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: David Rientjes <rientjes@google.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  Documentation/filesystems/proc.txt | 4 ++--
->  fs/proc/task_mmu.c                 | 3 ++-
->  mm/huge_memory.c                   | 9 +++++++--
->  mm/shmem.c                         | 3 +++
->  4 files changed, 14 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> index 66cad5c..b0ded06 100644
-> --- a/Documentation/filesystems/proc.txt
-> +++ b/Documentation/filesystems/proc.txt
-> @@ -477,8 +477,8 @@ replaced by copy-on-write) part of the underlying shmem object out on swap.
->  "SwapPss" shows proportional swap share of this mapping. Unlike "Swap", this
->  does not take into account swapped out page of underlying shmem objects.
->  "Locked" indicates whether the mapping is locked in memory or not.
-> -"THPeligible" indicates whether the mapping is eligible for THP pages - 1 if
-> -true, 0 otherwise.
-> +"THPeligible" indicates whether the mapping is eligible for allocating THP
-> +pages - 1 if true, 0 otherwise. It just shows the current status.
->  
->  "VmFlags" field deserves a separate description. This member represents the kernel
->  flags associated with the particular virtual memory area in two letter encoded
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 01d4eb0..6a13882 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
->  
->  	__show_smap(m, &mss);
->  
-> -	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
-> +	seq_printf(m, "THPeligible:		%d\n",
-> +		   transparent_hugepage_enabled(vma));
->  
->  	if (arch_pkeys_enabled())
->  		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 4bc2552..36f0225 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -65,10 +65,15 @@
->  
->  bool transparent_hugepage_enabled(struct vm_area_struct *vma)
->  {
-> +	/* The addr is used to check if the vma size fits */
-> +	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
-> +
-> +	if (!transhuge_vma_suitable(vma, addr))
-> +		return false;
->  	if (vma_is_anonymous(vma))
->  		return __transparent_hugepage_enabled(vma);
-> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
-> -		return __transparent_hugepage_enabled(vma);
-> +	if (vma_is_shmem(vma))
-> +		return shmem_huge_enabled(vma);
->  
->  	return false;
->  }
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 1bb3b8d..a807712 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
->  	loff_t i_size;
->  	pgoff_t off;
->  
-> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
-> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
-> +		return false;
->  	if (shmem_huge == SHMEM_HUGE_FORCE)
->  		return true;
->  	if (shmem_huge == SHMEM_HUGE_DENY)
-> -- 
-> 1.8.3.1
+>=20
+> > +
+> > +struct cr50_spi_phy {
+> > +     struct tpm_tis_data priv;
+> > +     struct spi_device *spi_device;
+> > +
+> > +     struct mutex time_track_mutex;
+> > +     unsigned long last_access_jiffies;
+> > +     unsigned long wake_after_jiffies;
+> > +
+> > +     unsigned long access_delay_jiffies;
+> > +     unsigned long sleep_delay_jiffies;
+> > +     unsigned int wake_start_delay_msec;
+> > +
+> > +     struct completion tpm_ready;
+> > +
+> > +     unsigned int irq_confirmation_attempt;
+> > +     bool irq_needs_confirmation;
+> > +     bool irq_confirmed;
+> > +
+> > +     u8 tx_buf[MAX_SPI_FRAMESIZE] ____cacheline_aligned;
+> > +     u8 rx_buf[MAX_SPI_FRAMESIZE] ____cacheline_aligned;
+> > +};
+> > +
+> > +static struct cr50_spi_phy *to_cr50_spi_phy(struct tpm_tis_data *data)
+> > +{
+> > +     return container_of(data, struct cr50_spi_phy, priv);
+> > +}
+> > +
+> > +/*
+> > + * The cr50 interrupt handler just signals waiting threads that the
+> > + * interrupt was asserted.  It does not do any processing triggered
+> > + * by interrupts but is instead used to avoid fixed delays.
+> > + */
+> > +static irqreturn_t cr50_spi_irq_handler(int dummy, void *dev_id)
+> > +{
+> > +     struct cr50_spi_phy *phy =3D dev_id;
+> > +
+> > +     phy->irq_confirmed =3D true;
+> > +     complete(&phy->tpm_ready);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+> > +
+> > +/*
+> > + * Cr50 needs to have at least some delay between consecutive
+> > + * transactions. Make sure we wait.
+> > + */
+> > +static void cr50_ensure_access_delay(struct cr50_spi_phy *phy)
+> > +{
+> > +     /*
+> > +      * Note: There is a small chance, if Cr50 is not accessed in a fe=
+w days,
+> > +      * that time_in_range will not provide the correct result after t=
+he wrap
+> > +      * around for jiffies. In this case, we'll have an unneeded short=
+ delay,
+> > +      * which is fine.
+> > +      */
+> > +     unsigned long allowed_access =3D
+> > +             phy->last_access_jiffies + phy->access_delay_jiffies;
+> > +     unsigned long time_now =3D jiffies;
+> > +
+> > +     if (time_in_range_open(time_now,
+> > +                            phy->last_access_jiffies, allowed_access))=
+ {
+> > +             unsigned long remaining =3D
+> > +                     wait_for_completion_timeout(&phy->tpm_ready,
+> > +                                                 allowed_access - time=
+_now);
+> > +             if (remaining =3D=3D 0 && phy->irq_confirmed) {
+> > +                     dev_warn(&phy->spi_device->dev,
+> > +                              "Timeout waiting for TPM ready IRQ\n");
+> > +             }
+> > +     }
+> > +     if (phy->irq_needs_confirmation) {
+> > +             if (phy->irq_confirmed) {
+> > +                     phy->irq_needs_confirmation =3D false;
+> > +                     phy->access_delay_jiffies =3D
+> > +                             msecs_to_jiffies(CR50_READY_IRQ_TIMEOUT_M=
+SEC);
+> > +                     dev_info(&phy->spi_device->dev,
+> > +                              "TPM ready IRQ confirmed on attempt %u\n=
+",
+> > +                              phy->irq_confirmation_attempt);
+> > +             } else if (++phy->irq_confirmation_attempt >
+> > +                        MAX_IRQ_CONFIRMATION_ATTEMPTS) {
+> > +                     phy->irq_needs_confirmation =3D false;
+> > +                     dev_warn(&phy->spi_device->dev,
+> > +                              "IRQ not confirmed - will use delays\n");
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +/*
+> > + * Cr50 might go to sleep if there is no SPI activity for some time and
+> > + * miss the first few bits/bytes on the bus. In such case, wake it up
+> > + * by asserting CS and give it time to start up.
+> > + */
+> > +static bool cr50_needs_waking(struct cr50_spi_phy *phy)
+> > +{
+> > +     /*
+> > +      * Note: There is a small chance, if Cr50 is not accessed in a fe=
+w days,
+> > +      * that time_in_range will not provide the correct result after t=
+he wrap
+> > +      * around for jiffies. In this case, we'll probably timeout or re=
+ad
+> > +      * incorrect value from TPM_STS and just retry the operation.
+> > +      */
+> > +     return !time_in_range_open(jiffies,
+> > +                                phy->last_access_jiffies,
+> > +                                phy->wake_after_jiffies);
+> > +}
+> > +
+> > +static void cr50_wake_if_needed(struct cr50_spi_phy *phy)
+> > +{
+> > +     if (cr50_needs_waking(phy)) {
+> > +             /* Assert CS, wait 1 msec, deassert CS */
+> > +             struct spi_transfer spi_cs_wake =3D { .delay_usecs =3D 10=
+00 };
+> > +
+> > +             spi_sync_transfer(phy->spi_device, &spi_cs_wake, 1);
+> > +             /* Wait for it to fully wake */
+> > +             msleep(phy->wake_start_delay_msec);
+>=20
+> wake_start_delay_msec is always 1, isn't it? (Why is that a variable at=20
+> all? I see only one place that ever sets it.) Then msleep is not the=20
+> best function to use, since it will usually sleep much longer. Use=20
+> usleep_range instead. See Documentation/timers/timers-howto.txt.
+
+Thanks. Will fix to be 1ms to 2ms range.
+
+>=20
+> > +     }
+> > +     /* Reset the time when we need to wake Cr50 again */
+> > +     phy->wake_after_jiffies =3D jiffies + phy->sleep_delay_jiffies;
+> > +}
+> > +
+> > +/*
+> > + * Flow control: clock the bus and wait for cr50 to set LSB before
+> > + * sending/receiving data. TCG PTP spec allows it to happen during
+> > + * the last byte of header, but cr50 never does that in practice,
+> > + * and earlier versions had a bug when it was set too early, so don't
+> > + * check for it during header transfer.
+> > + */
+> > +static int cr50_spi_flow_control(struct cr50_spi_phy *phy)
+> > +{
+> > +     unsigned long timeout_jiffies =3D
+> > +             jiffies + msecs_to_jiffies(CR50_FLOW_CONTROL_MSEC);
+> > +     struct spi_message m;
+> > +     int ret;
+> > +     struct spi_transfer spi_xfer =3D {
+> > +             .rx_buf =3D phy->rx_buf,
+> > +             .len =3D 1,
+> > +             .cs_change =3D 1,
+> > +     };
+> > +
+> > +     do {
+> > +             spi_message_init(&m);
+> > +             spi_message_add_tail(&spi_xfer, &m);
+> > +             ret =3D spi_sync_locked(phy->spi_device, &m);
+> > +             if (ret < 0)
+> > +                     return ret;
+> > +             if (time_after(jiffies, timeout_jiffies)) {
+> > +                     dev_warn(&phy->spi_device->dev,
+> > +                              "Timeout during flow control\n");
+> > +                     return -EBUSY;
+> > +             }
+> > +     } while (!(phy->rx_buf[0] & 0x01));
+> > +     return 0;
+> > +}
+> > +
+> > +static int cr50_spi_xfer_bytes(struct tpm_tis_data *data, u32 addr,
+> > +                            u16 len, const u8 *tx, u8 *rx)
+> > +{
+> > +     struct cr50_spi_phy *phy =3D to_cr50_spi_phy(data);
+> > +     struct spi_message m;
+> > +     struct spi_transfer spi_xfer =3D {
+> > +             .tx_buf =3D phy->tx_buf,
+> > +             .rx_buf =3D phy->rx_buf,
+> > +             .len =3D 4,
+> > +             .cs_change =3D 1,
+> > +     };
+> > +     int ret;
+> > +
+> > +     if (len > MAX_SPI_FRAMESIZE)
+> > +             return -EINVAL;
+> > +
+> > +     /*
+> > +      * Do this outside of spi_bus_lock in case cr50 is not the
+> > +      * only device on that spi bus.
+> > +      */
+> > +     mutex_lock(&phy->time_track_mutex);
+> > +     cr50_ensure_access_delay(phy);
+> > +     cr50_wake_if_needed(phy);
+> > +
+> > +     phy->tx_buf[0] =3D (tx ? 0x00 : 0x80) | (len - 1);
+> > +     phy->tx_buf[1] =3D 0xD4;
+> > +     phy->tx_buf[2] =3D (addr >> 8) & 0xFF;
+> > +     phy->tx_buf[3] =3D addr & 0xFF;
+> > +
+> > +     spi_message_init(&m);
+> > +     spi_message_add_tail(&spi_xfer, &m);
+> > +
+> > +     spi_bus_lock(phy->spi_device->master);
+> > +     ret =3D spi_sync_locked(phy->spi_device, &m);
+> > +     if (ret < 0)
+> > +             goto exit;
+> > +
+> > +     ret =3D cr50_spi_flow_control(phy);
+> > +     if (ret < 0)
+> > +             goto exit;
+> > +
+> > +     spi_xfer.cs_change =3D 0;
+> > +     spi_xfer.len =3D len;
+> > +     if (tx) {
+> > +             memcpy(phy->tx_buf, tx, len);
+> > +             spi_xfer.rx_buf =3D NULL;
+> > +     } else {
+> > +             spi_xfer.tx_buf =3D NULL;
+> > +     }
+> > +
+> > +     spi_message_init(&m);
+> > +     spi_message_add_tail(&spi_xfer, &m);
+> > +     reinit_completion(&phy->tpm_ready);
+> > +     ret =3D spi_sync_locked(phy->spi_device, &m);
+> > +     if (rx)
+> > +             memcpy(rx, phy->rx_buf, len);
+> > +
+> > +exit:
+> > +     spi_bus_unlock(phy->spi_device->master);
+> > +     phy->last_access_jiffies =3D jiffies;
+> > +     mutex_unlock(&phy->time_track_mutex);
+> > +
+> > +     return ret;
+> > +}
+>=20
+> This copies a lot of code from tpm_tis_spi, but then slightly changes=20
+> some things, without really explaining why.
+
+The commit text has some explanations. Here's the copy/paste from above:
+
+> >   - need to ensure a certain delay between spi transactions, or else
+> >     the chip may miss some part of the next transaction;
+> >   - if there is no spi activity for some time, it may go to sleep,
+> >     and needs to be waken up before sending further commands;
+> >   - access to vendor-specific registers.
+
+Do you want me to describe something further?
+
+> For example, struct=20
+> cr50_spi_phy contains both tx_buf and rx_buf, whereas tpm_tis_spi uses a =
+
+> single iobuf, that is allocated via devm_kmalloc instead of being part=20
+> of the struct. Maybe the difference matters, maybe not, who knows?
+
+Ok. Are you asking if this is a full-duplex SPI device?
+
+>=20
+> Can't the code be shared more explicitly, e.g. by cr50_spi wrapping=20
+> tpm_tis_spi, so that it can intercept the calls, execute the additional=20
+> actions (like waking up the device), but then let tpm_tis_spi do the=20
+> common work?
+>=20
+
+I suppose the read{16,32} and write32 functions could be reused. I'm not
+sure how great it will be if we combine these two drivers, but I can
+give it a try today and see how it looks.
+
