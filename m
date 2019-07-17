@@ -2,88 +2,77 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6565C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE3AC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66E92182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE1621743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfGQO2g (ORCPT
+        id S1727772AbfGQO2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:28:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:53713 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfGQO2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:28:35 -0400
-Received: from [192.168.1.110] ([77.7.13.186]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mft3h-1iP0Y13Lp3-00gJ2U; Wed, 17 Jul 2019 16:28:28 +0200
-Subject: Re: [PATCH 1/6] leds: apu: drop superseeded apu2/3 led support
-To:     Pavel Machek <pavel@ucw.cz>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, jacek.anaszewski@gmail.com,
-        dmurphy@ti.com, linux-leds@vger.kernel.org
-References: <1563202653-20994-1-git-send-email-info@metux.net>
- <1563202653-20994-2-git-send-email-info@metux.net>
- <20190716193001.GG10400@amd>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <da2dccb7-f2f5-42b5-2549-ba67ecd568cb@metux.net>
-Date:   Wed, 17 Jul 2019 16:28:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Jul 2019 10:28:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:20591 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbfGQO2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 10:28:52 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C24C6308FBAC;
+        Wed, 17 Jul 2019 14:28:52 +0000 (UTC)
+Received: from redhat.com (ovpn-125-71.rdu2.redhat.com [10.10.125.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0320719C68;
+        Wed, 17 Jul 2019 14:28:45 +0000 (UTC)
+Date:   Wed, 17 Jul 2019 10:28:35 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jfreimann@redhat.com, tiwei.bie@intel.com,
+        maxime.coquelin@redhat.com
+Subject: Re: [PATCH V3 00/15] Packed virtqueue support for vhost
+Message-ID: <20190717102824-mutt-send-email-mst@kernel.org>
+References: <20190717105255.63488-1-jasowang@redhat.com>
+ <20190717070100-mutt-send-email-mst@kernel.org>
+ <af066030-96f1-4a8d-4864-7b6b903477a6@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190716193001.GG10400@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:asNcSCjsSQlPQRlhr2kK3hVhHWkPu38vhyLc1asPVC9P6y0E/6d
- oqFgJ2u0kx+H/mBFhe8TqkvmA+8527ZZY25HBiSEnJNHXu9waBOO1f76A3ZEJ73ah3JKA5y
- uv5rCeYymDoigVAvf1AEiiNruycRrzP4bvRwnu0AVLyqGXS3RE5ZHB5Z1sba1CG3JFHK9gq
- eUf6pS5oWuY3SsOgupEgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HLh0PyKECs0=:+0B0JXf2JTUwwIKrRE6J6c
- eiZ0oJTqlEZ1+EW6jLjMzVyjrvKa+5ekuw4fmloTeIjIJ1YgEe1LdpzI0pqotPKZsSj6CCTA1
- L6r+4dONEu+c6kpdKJE/UmaoUwRg7i7PqXQH5P2CGsqYfKhf/cIuMYmuYmooRNpN7zKfHYJn9
- KLg1Q0IlQesvDmMwwiloK+gjRAbuLrhx9WxpY2RTVv1H0SivRALXqAoFSjKUXGd+f/S3YPoxb
- mnafjgnpys/YU97AnCwlUsaVo+wryGbQUAd45/rPiIqUWJtoylbNtuJQ9ziJQlbVWZjg4j5k7
- AtLn8J2mbHe1mRS5zjYt3eKPyWMhzv4NOMkfH9/3DQft2jq2xF27j/iAZzbYacgipNKdNOvuJ
- OamdA4dterKHxBvAtYCsrUgHTvhXxHJH7Gib5/4Vb6PH8FD5RQbgZgNFTFEb3aiu0Jz15ysnC
- xJv8WIUU6yCzNWjNM+/UFs+2uusw18Nermy5kHI6/B5OsdV6ldJUZ6hYfmMysf95vjM/oLR/E
- 0CCbh/hy6XSAgNT4dCnQiERptOGL3UhIUCXJ2Bd+R1f6rK66hGWickyQZ4QrWzWG5fqsykVq1
- cE8uLrfFgjhuzgDyk+u+TskIRhlmBZGPlqZl3PGWemwqdXkpr0nj5HwJS0neriuKhX7hruY8t
- R2lmQi8sfNUELMseXV+grzPNvmfuyk3MGvqWo2LjCZzSrd6EdsfELZ6CG9Yo2X2ZA9YdNb9ZM
- A4SFTUOgZYT/8uMC4bl+QE5epDFz2U7hkMbul72QYAv3QNkaVYRyZSW6leA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <af066030-96f1-4a8d-4864-7b6b903477a6@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 17 Jul 2019 14:28:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.07.19 21:30, Pavel Machek wrote:
-
-Hi,
-
-> Ok, so I understand the reasons, but people updating from old kernels
-> (make oldconfig) will see nothing and their LEDs will stop working.
+On Wed, Jul 17, 2019 at 08:27:28PM +0800, Jason Wang wrote:
 > 
-> Can we do something to help them?
+> On 2019/7/17 下午7:02, Michael S. Tsirkin wrote:
+> > On Wed, Jul 17, 2019 at 06:52:40AM -0400, Jason Wang wrote:
+> > > Hi all:
+> > > 
+> > > This series implements packed virtqueues which were described
+> > > at [1]. In this version we try to address the performance regression
+> > > saw by V2. The root cause is packed virtqueue need more times of
+> > > userspace memory accesssing which turns out to be very
+> > > expensive. Thanks to the help of 7f466032dc9e ("vhost: access vq
+> > > metadata through kernel virtual address"), such overhead cold be
+> > > eliminated. So in this version, we can see about 2% improvement for
+> > > packed virtqueue on PPS.
+> > Great job, thanks!
+> > Pls allow a bit more review time than usual as this is a big patchset.
+> > Should be done by Tuesday.
+> > -next material anyway.
+> 
+> 
+> Sure, just to confirm, I think this should go for your vhost tree?.
+> 
+> Thanks
 
-I could announce that in pcengines forum. There've been several
-discussions on this matter, replying there should give the participants
-an automatic mail.
-
-So far, I haven't seen any distro that enabled the old driver, so I
-guess the actual users all compiled the kernel on their own and should
-notice the change early enough.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+I think this makes sense, yes.
