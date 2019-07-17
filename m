@@ -2,558 +2,182 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7802C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB10C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C84E2186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD602184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edsd2MH6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BIgpOWEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfGQRAz (ORCPT
+        id S1729320AbfGQRCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:00:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42099 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfGQRAy (ORCPT
+        Wed, 17 Jul 2019 13:02:25 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:36411 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfGQRCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:00:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so12288376plb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:00:54 -0700 (PDT)
+        Wed, 17 Jul 2019 13:02:25 -0400
+Received: by mail-yb1-f196.google.com with SMTP id d9so3528878ybf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5u+EzLr3m2dLf4+3JG8VhnrFPF71nmp+9+eNA54KPSg=;
-        b=edsd2MH6ydIrhIRtMBulwe3kHyXVSk3Hi6rqerj1JfFYlSD1cfrTAst0V7zvZbBjrJ
-         h9eQP7zjBx3zcybbpVQZ2N9Ncxz8wJbvDEjSncgmHQXI4kY2XhmYCgrmyFCSoU9mQ9D5
-         8LIzDHyBPJduVn9YUF4rbuqHROyFioD1rFcRP7ERxWf9TXXuyge/ef3hL2BBqXA2p4km
-         zvpN4L/wQi3IYoqoib5D9qWCqXcN4H4o4EIm75238MmV/kkoa7EXj9U/iIO1symJwWe0
-         xCAQ0LP+VQZHmx0EljRBZC95hQvtNCoTJA9J4TB+vRH/90lxlShw5UUu5Lzf5FYKPGVG
-         F7eQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BgLO7AOlxApfrZ8As7HxY8L1byop/yjZk5edDlBCjHc=;
+        b=BIgpOWELXYgjF12yzOPDUoGbuLq1zi1FwFQmt9xkcQGc5AVH1aQ1fmd7au9DmtxE77
+         SY+UU54YPYCG1nAZxTVSGzseRtCjafwhDZ4sq+T155nDh5SQweIb9Kv9bmYkXEF0rBAi
+         Jce01AB+F19yWiKmos650B41EbFmKiIZJwLInUaHQalp7zYlU1jxlVWD9vhSa/fRuu6a
+         b7nzcGo609oS8EbLaA+IMQnzkmWt+L0RtcEdtpSxuAl99/rSV6wMPBnSXbct22f0l89n
+         1tIqPXgR2BPMAU6RK7mybiSNYzP5Ck/ztcB15ywooaPz0qniKKdifZmb+u3kc6V6fdgA
+         eNUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5u+EzLr3m2dLf4+3JG8VhnrFPF71nmp+9+eNA54KPSg=;
-        b=JO7Qgutk3HOpCcx9PLBt68te2TppGG/f/UIuFnER3LD7BQlu6PiRo4Tf0sTxfwm9n8
-         bqRfW5DfOg2CQgEQBw9Z3nPFyF8SV9S9LTcTjQ6BUKWhW2hUxRztHcfUOgJ9M+RxmvKb
-         krMXg9xicAxemDvaD6E4jgColuTHshdF7mt/JnxYEkl7L1Sd5M6peGJQFh6J2o++vSun
-         lTw36dKrWfP3A4j28duDNM5p3iP99BbU40G6R5PxEWghJlNq4mPu7mBq3ZgutS9h5/Qv
-         Ijb16tQpLsCnB5GDAfQdNPLEB8NnabdBJQh6Rw0R/NJUfAXm0Uq2Tm43JsvqXqM74dO7
-         8DLg==
-X-Gm-Message-State: APjAAAV8b2PQZtDTUlhg9vhRnCd6j5pSzxKgKaua/i72ttFLlhjqgKQs
-        Lu3/kMPcHvPH9TJ1L8sezUj8/g==
-X-Google-Smtp-Source: APXvYqyVZk8bivS/DMbAu2CfzWva/LHErLO8WbRbxDYLntMHGgq5983H3x2+3E6iAW1b1A5IJiarwg==
-X-Received: by 2002:a17:902:2ae8:: with SMTP id j95mr40966269plb.276.1563382853656;
-        Wed, 17 Jul 2019 10:00:53 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id r6sm17192938pgl.74.2019.07.17.10.00.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jul 2019 10:00:53 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 11:00:50 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Re: [PATCHv8 3/5] arm64: dts: qcom: msm8996: Add Coresight support
-Message-ID: <20190717170050.GB4271@xps15>
-References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
- <2fa725fbc09306f1a95befc62715a708b4c0fad0.1562940244.git.saiprakash.ranjan@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BgLO7AOlxApfrZ8As7HxY8L1byop/yjZk5edDlBCjHc=;
+        b=hiR0EMwrmveXKvbRiFEgX+MmfNj0LPeLR4PyPKPb82PeS5BztataQRZMPIruDg5rGK
+         w0wJEBToxShoPJWoCPStxI7ebk1mkyWORmmYGIRBHdPlcSQa9WRVx8aKv9UJavSlpjau
+         RFbOZ7zMNWfv0myz+iaAVtpTcuO8LFw34Gel4OSw8w/XltuWvx6nTXOKBX1/WpAFIKDz
+         Sc0czHMXwoxaggCBOaijbRG7QKVUNm/MJX84pKki3ZdNC7aw0bnzEyIfdThk1vH5JkQ0
+         FTv/If8nbHfUeY0x2nKKfNj3EKzVy6+k9NICyDQkbNxrYUrwimgSaJ6f9yWHiXohMQd3
+         zUMw==
+X-Gm-Message-State: APjAAAWS02rgV1/Mr8gHkNiVmgIlgw/eyg0Z/y7sYvduSVnVT4Bvv0wF
+        Z1eFIGzBVpCoBeV6BE5SRGTisNfVhenJUaB7J3WuhA==
+X-Google-Smtp-Source: APXvYqyzz4GHd+f0tyqhFDhqf2xn/zwFnrM7OEtFPR5C7USenjzkjt+qzoGBfAeU/vHGi6p5DKvh/u3O85iL5H8T2SE=
+X-Received: by 2002:a25:6412:: with SMTP id y18mr13200161ybb.100.1563382943463;
+ Wed, 17 Jul 2019 10:02:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2fa725fbc09306f1a95befc62715a708b4c0fad0.1562940244.git.saiprakash.ranjan@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1562795006.8510.19.camel@lca.pw> <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
+ <1562879229.8510.24.camel@lca.pw> <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
+ <1563225798.4610.5.camel@lca.pw> <5c853e6e-6367-d83c-bb97-97cd67320126@linux.alibaba.com>
+ <8A64D551-FF5B-4068-853E-9E31AF323517@lca.pw> <e5aa1f5b-b955-5b8e-f502-7ac5deb141a7@linux.alibaba.com>
+ <CALvZod7+ComCUROSBaj==r0VmCczs=npP4u6C9LuJWNWdfB0Pg@mail.gmail.com> <50f57bf8-a71a-c61f-74f7-31fb7bfe3253@linux.alibaba.com>
+In-Reply-To: <50f57bf8-a71a-c61f-74f7-31fb7bfe3253@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 17 Jul 2019 10:02:11 -0700
+Message-ID: <CALvZod7Je+gekSGR61LMeHdYoC_PJune_0qGNiDfNH2=oNeOgw@mail.gmail.com>
+Subject: Re: list corruption in deferred_split_scan()
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Qian Cai <cai@lca.pw>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 07:46:25PM +0530, Sai Prakash Ranjan wrote:
-> From: Vivek Gautam <vivek.gautam@codeaurora.org>
-> 
-> Enable coresight support by adding device nodes for the
-> available source, sinks and channel blocks on msm8996.
-> 
-> This also adds coresight cpu debug nodes.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 434 ++++++++++++++++++++++++++
->  1 file changed, 434 insertions(+)
-> 
+On Tue, Jul 16, 2019 at 5:12 PM Yang Shi <yang.shi@linux.alibaba.com> wrote=
+:
+>
+>
+>
+> On 7/16/19 4:36 PM, Shakeel Butt wrote:
+> > Adding related people.
+> >
+> > The thread starts at:
+> > http://lkml.kernel.org/r/1562795006.8510.19.camel@lca.pw
+> >
+> > On Mon, Jul 15, 2019 at 8:01 PM Yang Shi <yang.shi@linux.alibaba.com> w=
+rote:
+> >>
+> >>
+> >> On 7/15/19 6:36 PM, Qian Cai wrote:
+> >>>> On Jul 15, 2019, at 8:22 PM, Yang Shi <yang.shi@linux.alibaba.com> w=
+rote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 7/15/19 2:23 PM, Qian Cai wrote:
+> >>>>> On Fri, 2019-07-12 at 12:12 -0700, Yang Shi wrote:
+> >>>>>>> Another possible lead is that without reverting the those commits=
+ below,
+> >>>>>>> kdump
+> >>>>>>> kernel would always also crash in shrink_slab_memcg() at this lin=
+e,
+> >>>>>>>
+> >>>>>>> map =3D rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_=
+map, true);
+> >>>>>> This looks a little bit weird. It seems nodeinfo[nid] is NULL? I d=
+idn't
+> >>>>>> think of where nodeinfo was freed but memcg was still online. Mayb=
+e a
+> >>>>>> check is needed:
+> >>>>> Actually, "memcg" is NULL.
+> >>>> It sounds weird. shrink_slab() is called in mem_cgroup_iter which do=
+es pin the memcg. So, the memcg should not go away.
+> >>> Well, the commit =E2=80=9Cmm: shrinker: make shrinker not depend on m=
+emcg kmem=E2=80=9D changed this line in shrink_slab_memcg(),
+> >>>
+> >>> -     if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
+> >>> +     if (!mem_cgroup_online(memcg))
+> >>>                return 0;
+> >>>
+> >>> Since the kdump kernel has the parameter =E2=80=9Ccgroup_disable=3Dme=
+mory=E2=80=9D, shrink_slab_memcg() will no longer be able to handle NULL me=
+mcg from mem_cgroup_iter() as,
+> >>>
+> >>> if (mem_cgroup_disabled())
+> >>>        return NULL;
+> >> Aha, yes. memcg_kmem_enabled() implicitly checks !mem_cgroup_disabled(=
+).
+> >> Thanks for figuring this out. I think we need add mem_cgroup_dsiabled(=
+)
+> >> check before calling shrink_slab_memcg() as below:
+> >>
+> >> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> >> index a0301ed..2f03c61 100644
+> >> --- a/mm/vmscan.c
+> >> +++ b/mm/vmscan.c
+> >> @@ -701,7 +701,7 @@ static unsigned long shrink_slab(gfp_t gfp_mask, i=
+nt
+> >> nid,
+> >>           unsigned long ret, freed =3D 0;
+> >>           struct shrinker *shrinker;
+> >>
+> >> -       if (!mem_cgroup_is_root(memcg))
+> >> +       if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+> >>                   return shrink_slab_memcg(gfp_mask, nid, memcg, prior=
+ity);
+> >>
+> >>           if (!down_read_trylock(&shrinker_rwsem))
+> >>
+> > We were seeing unneeded oom-kills on kernels with
+> > "cgroup_disabled=3Dmemory" and Yang's patch series basically expose the
+> > bug to crash. I think the commit aeed1d325d42 ("mm/vmscan.c:
+> > generalize shrink_slab() calls in shrink_node()") missed the case for
+> > "cgroup_disabled=3Dmemory". However I am surprised that root_mem_cgroup
+> > is allocated even for "cgroup_disabled=3Dmemory" and it seems like
+> > css_alloc() is called even before checking if the corresponding
+> > controller is disabled.
+>
+> I'm surprised too. A quick test with drgn shows root memcg is definitely
+> allocated:
+>
+>  >>> prog['root_mem_cgroup']
+> *(struct mem_cgroup *)0xffff8902cf058000 =3D {
+> [snip]
+>
+> But, isn't this a bug?
 
-We've gone trhough 8 iteration of this set and I'm still finding checkpatch
-problems, and I'm not referring to lines over 80 characters.
+It can be treated as a bug as this is not expected but we can discuss
+and take care of it later. I think we need your patch urgently as
+memory reclaim and /proc/sys/vm/drop_caches is broken for
+"cgroup_disabled=3Dmemory" kernel. So, please send your patch asap.
 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 96c0a481f454..8968431e772c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -633,6 +633,440 @@
->  			reg = <0x300000 0x90000>;
->  		};
->  
-> +		stm@3002000 {
-> +			compatible = "arm,coresight-stm", "arm,primecell";
-> +			reg = <0x3002000 0x1000>,
-> +			      <0x8280000 0x180000>;
-> +			reg-names = "stm-base", "stm-stimulus-base";
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			out-ports {
-> +				port {
-> +					stm_out: endpoint {
-> +						remote-endpoint =
-> +						  <&funnel0_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tpiu@3020000 {
-> +			compatible = "arm,coresight-tpiu", "arm,primecell";
-> +			reg = <0x3020000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				port {
-> +					tpiu_in: endpoint {
-> +						remote-endpoint =
-> +						  <&replicator_out1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@3021000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0x3021000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				port {
-> +					funnel0_in: endpoint {
-> +						remote-endpoint =
-> +						  <&stm_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					funnel0_out: endpoint {
-> +						remote-endpoint =
-> +						  <&merge_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@3022000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0x3022000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				port {
-> +					funnel1_in: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_merge_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					funnel1_out: endpoint {
-> +						remote-endpoint =
-> +						  <&merge_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@3025000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0x3025000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					merge_funnel_in0: endpoint {
-> +						remote-endpoint =
-> +						  <&funnel0_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					merge_funnel_in1: endpoint {
-> +						remote-endpoint =
-> +						  <&funnel1_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					merge_funnel_out: endpoint {
-> +						remote-endpoint =
-> +						  <&etf_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		replicator@3026000 {
-> +			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
-> +			reg = <0x3026000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				port {
-> +					replicator_in: endpoint {
-> +						remote-endpoint =
-> +						  <&etf_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					replicator_out0: endpoint {
-> +						remote-endpoint =
-> +						  <&etr_in>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					replicator_out1: endpoint {
-> +						remote-endpoint =
-> +						  <&tpiu_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@3027000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0x3027000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				port {
-> +					etf_in: endpoint {
-> +						remote-endpoint =
-> +						  <&merge_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					etf_out: endpoint {
-> +						remote-endpoint =
-> +						  <&replicator_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etr@3028000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0x3028000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +			arm,scatter-gather;
-> +
-> +			in-ports {
-> +				port {
-> +					etr_in: endpoint {
-> +						remote-endpoint =
-> +						  <&replicator_out0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		debug@3810000 {
-> +			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-> +			reg = <0x3810000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&CPU0>;
-> +		};
-> +
-> +		etm@3840000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0x3840000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			cpu = <&CPU0>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm0_out: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_funnel0_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		debug@3910000 {
-> +			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-> +			reg = <0x3910000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&CPU1>;
-> +		};
-> +
-> +		etm@3940000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0x3940000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			cpu = <&CPU1>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm1_out: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_funnel0_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@39b0000 { /* APSS Funnel 0 */
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0x39b0000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					apss_funnel0_in0: endpoint {
-> +						remote-endpoint = <&etm0_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					apss_funnel0_in1: endpoint {
-> +						remote-endpoint = <&etm1_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					apss_funnel0_out: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_merge_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		debug@3a10000 {
-> +			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-> +			reg = <0x3a10000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&CPU2>;
-> +		};
-> +
-> +		etm@3a40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0x3a40000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			cpu = <&CPU2>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm2_out: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_funnel1_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		debug@3b10000 {
-> +			compatible = "arm,coresight-cpu-debug", "arm,primecell";
-> +			reg = <0x3b10000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			cpu = <&CPU3>;
-> +		};
-> +
-> +		etm@3b40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0x3b40000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			cpu = <&CPU3>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm3_out: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_funnel1_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@3bb0000 { /* APSS Funnel 1 */
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0x3bb0000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					apss_funnel1_in0: endpoint {
-> +						remote-endpoint = <&etm2_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					apss_funnel1_in1: endpoint {
-> +						remote-endpoint = <&etm3_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					apss_funnel1_out: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_merge_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@3bc0000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0x3bc0000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					apss_merge_funnel_in0: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_funnel0_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					apss_merge_funnel_in1: endpoint {
-> +						remote-endpoint =
-> +						  <&apss_funnel1_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					apss_merge_funnel_out: endpoint {
-> +						remote-endpoint =
-> +						  <&funnel1_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
->  		kryocc: clock-controller@6400000 {
->  			compatible = "qcom,apcc-msm8996";
->  			reg = <0x6400000 0x90000>;
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+thanks,
+Shakeel
