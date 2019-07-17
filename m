@@ -2,105 +2,112 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294AFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82DC76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69732077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FA72077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dy2fEZZc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="ljc+WDQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbfGQIE3 (ORCPT
+        id S1726909AbfGQIHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:04:29 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49131 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfGQIE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:04:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pVCt0PSTz9s3Z;
-        Wed, 17 Jul 2019 18:04:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563350666;
-        bh=a/uLJPoZ87Fx3PgnBNv0eSPgO1nYx3akKRZuuGtEZ4w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dy2fEZZcIJo2wBbj48S2iAkFUtNWMBRzr2Qk5c31yIes15jKezc0d19Yn2/nRunzV
-         T1+S0H7OR7aHrKKKfbAOEZM2j9tzSMuDCIAzKPvxAZKfzsiMCFMHk4HObiMN90K8N+
-         S8Uu9ixLhg6VfIcwPaPs9hID7D1mng/bMyfjmUF50Q/4MF5SRul/Ql70xwsXlxrMUN
-         pXuNzIErv4teLLvuAL79D7vCZf08q837HJVZ56KudCeDZWAl9UxX4SGlMni0xO391k
-         NX51YN+3PNwSo2vBOl3v7z/Ti6wP/C7Std+ngJLmUAHSm68Lr+BQtueMxk9Xcqc9JM
-         PbRWBpf7N/1dg==
-Date:   Wed, 17 Jul 2019 18:04:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject: Re: mmotm 2019-07-16-17-14 uploaded
-Message-ID: <20190717180424.320fecea@canb.auug.org.au>
-In-Reply-To: <072ca048-493c-a079-f931-17517663bc09@infradead.org>
-References: <20190717001534.83sL1%akpm@linux-foundation.org>
-        <8165e113-6da1-c4c0-69eb-37b2d63ceed9@infradead.org>
-        <20190717143830.7f7c3097@canb.auug.org.au>
-        <a9d0f937-ef61-1d25-f539-96a20b7f8037@infradead.org>
-        <072ca048-493c-a079-f931-17517663bc09@infradead.org>
+        Wed, 17 Jul 2019 04:07:15 -0400
+Received: from smtp11.infineon.com ([217.10.52.105]:52686 "EHLO
+        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGQIHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1563350834; x=1594886834;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=4z8rxvDFgVBdoxBzX19X1thxGhp4/RCT8vCaBQ2HjL4=;
+  b=ljc+WDQOcA2UhEbHr5rorNGC3DJD/0xDeMSSRtkEey+fT64LXfG0cog4
+   udRK/4YdA/fYktxi9A1sVpoOC6C57FgFqdQ6l1HWa6QazwaDFuouch7Eh
+   wyx0tj2UNHwHPEkAKQ/eEjpGt5qmLtT/cGi81GU+lCDV+qdZgIA5TiGf2
+   w=;
+IronPort-SDR: mcBktrLRJoHDdVZv9GPazml1hMWVNYSfuqiIsCjRKVtImCc0b1m2JqHtkJ3ZVDppWMbcZWEY3S
+ pHsDC3CyCj49pYxQ0xfdNOnrSAVLob2r+wXUvid8wKYgjXEwBvaHabON+mqJVvFnZTX5v3SFRk
+ XDcU05JRi1TbLTmy5nN2Pj6lwqt6mdEU7q6NiTmy2hWF6kHB8EzM8E7LyAzp4I/IGC7DcEVRLg
+ 0CwVSzw8TjI3TR3j5A+wOaUZKpdpIdi9ifGCPyDNOWwSPTaQgK5yjYNx2TRKTAGFfxzs1JhmFq
+ o6I=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9320"; a="128087258"
+X-IronPort-AV: E=Sophos;i="5.64,273,1559512800"; 
+   d="scan'208";a="128087258"
+Received: from unknown (HELO mucxv003.muc.infineon.com) ([172.23.11.20])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 10:07:13 +0200
+Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
+        by mucxv003.muc.infineon.com (Postfix) with ESMTPS;
+        Wed, 17 Jul 2019 10:07:12 +0200 (CEST)
+Received: from [10.154.32.63] (172.23.8.247) by MUCSE708.infineon.com
+ (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1591.10; Wed, 17
+ Jul 2019 10:07:12 +0200
+Subject: Re: [PATCH v2 3/6] tpm_tis_spi: add max xfer size
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC:     Andrey Pronin <apronin@chromium.org>,
+        <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-integrity@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>
+References: <20190716224518.62556-1-swboyd@chromium.org>
+ <20190716224518.62556-4-swboyd@chromium.org>
+From:   Alexander Steffen <Alexander.Steffen@infineon.com>
+Message-ID: <7daa4875-eddd-518d-2622-754ccfbfc421@infineon.com>
+Date:   Wed, 17 Jul 2019 10:07:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/0xDDOA42emBhMWNDZGG8_SB"; protocol="application/pgp-signature"
+In-Reply-To: <20190716224518.62556-4-swboyd@chromium.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.8.247]
+X-ClientProxiedBy: MUCSE714.infineon.com (172.23.7.94) To
+ MUCSE708.infineon.com (172.23.7.82)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0xDDOA42emBhMWNDZGG8_SB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 17.07.2019 00:45, Stephen Boyd wrote:
+> From: Andrey Pronin <apronin@chromium.org>
+> 
+> Reject burstcounts larger than 64 bytes reported by tpm.
 
-Hi Randy,
+This is not the correct thing to do here. To quote the specification:
 
-On Tue, 16 Jul 2019 23:21:48 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> drivers/dma-buf/dma-buf.c:
-> <<<<<<< HEAD
-> =3D=3D=3D=3D=3D=3D=3D
-> #include <linux/pseudo_fs.h>
-> >>>>>>> linux-next/akpm-base =20
+"burstCount is defined as the number of bytes that can be written to or 
+read from the data FIFO by the software without incurring a wait state."
+(https://trustedcomputinggroup.org/wp-content/uploads/TCG_PC_Client_Platform_TPM_Profile_PTP_2.0_r1.03_v22.pdf 
+Page 84)
 
-I can't imagine what went wrong, but you can stop now :-)
+If the FIFO contains 1k of data, it is completely valid for the TPM to 
+report that as its burstCount, there is no need to arbitrarily limit it.
 
-$ grep '<<< HEAD' linux-next.patch | wc -l
-1473
+Also, burstCount is a property of the high-level TIS protocol, that 
+should not really care whether the low-level transfers are done via LPC 
+or SPI (or I2C). Since tpm_tis_spi can only transfer 64 bytes at a time, 
+it is its job to split larger transfers (which it does perfectly fine). 
+This also has the advantage that burstCount needs only to be read once, 
+and then we can do 16 SPI transfers in a row to read that 1k of data. 
+With your change, it will read 64 bytes, then read burstCount again, 
+before reading the next 64 bytes and so on. This unnecessarily limits 
+performance.
 
-I must try to find the emails where Andrew and I discussed the
-methodology used to produce the linux-next.patch from a previous
-linux-next tree.
---=20
-Cheers,
-Stephen Rothwell
+Maybe you can describe the problem you're trying to solve in more 
+detail, so that a better solution can be found, since this is clearly 
+something not intended by the spec.
 
---Sig_/0xDDOA42emBhMWNDZGG8_SB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0u1ogACgkQAVBC80lX
-0GxzaggAoE9HdBJS5ZBRVSngMC4N2eSP3jr4MoEmIdRyK55EvCn9XYaNbFiKAQ5D
-Tj17ooVhZnrDecRYnpn/weZ1Q2y7s4mzOAhwdsOeFdNuuMk9R5u1igEo/7vgW0Wm
-4ea+V5cvGhW6ZDIx14oz/pa/YpY2DXf4SC8wxMJZwTccK44jtc5gYsA2QK1vBI5O
-tQwdkr+jRUswKGosxoKxsXEX27PZXThwrxyjdrEDlyb+Y9Ef6MxNTiEOo/qkYMQM
-M2hPMNpQ14lIt7jiTQpmlSaWIqPFN2AnyEkLNuEFDVAIaw6tUcK1mApYTsSWbh3o
-LeNHaYdOMs6PRoyrsie0Kl1GSM52cQ==
-=PNdR
------END PGP SIGNATURE-----
-
---Sig_/0xDDOA42emBhMWNDZGG8_SB--
+Alexander
