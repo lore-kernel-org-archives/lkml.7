@@ -2,210 +2,292 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22345C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91E7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E428D20880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:38:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HD+1a0DD"
+	by mail.kernel.org (Postfix) with ESMTP id 9DC4020880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfGQJh7 (ORCPT
+        id S1727743AbfGQJjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:37:59 -0400
-Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:60037
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Wed, 17 Jul 2019 05:39:13 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38356 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726189AbfGQJh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 05:37:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QykhyQ/TNzLan8qYAezpy8K7buFsWCLa+2WAlN2Fe4vb8o/lJz5jsgdRh3tCWxnZG/+il3S1Mw1CpsmmQUIQ7+ncJrnoIl58+qufp9p3lFeixLUG15OqK3LfSkkJ31cNEmzgX2jrMzDPnDBs7vvEKfHIxlJx/CUJqwz7nZJkVUnuRP8IorxnBeZSYMIaOAdcJKFfJhNUOJsM0bc0bV01MNkAKPPSTJC1Nyrn78WvhMDu0xmJFbEke8EluNTixUj3wbjPqVH1i+IiDuhdcc+umZdJtvNvX0V9fnO+RX8aiKRFvUQMUrJN5fsx8oaH5L3zzgsgobmpMY5o0vcZu8rC+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gMbbOjqAsft46QCBdzdq591lDuJqq/BG1HUgUNAPOhI=;
- b=jFqKAHC3Q/3SjpsquE+kU3LPN+6T0fE0Gsx7aEzLRjH2K7JLc7bBv8jLDQU25XVRCpnftoLjs4G75b1HNVLCrOisWCCNJHx1xIODnV9m2aVKNCgcKrKct1cew5srXL/cCDtb6kinA+xqC8rGIN28XvmDMGPGR7tilYxYUI//rDREJGnEeWVDYNI5vG3/gd8CzfClbQM/Ghs+mCDBJJ4Xp2DXEshO/Rz1K5RbUBsJv9pRiLU0YtVGliVtfVmUfh3Bq2MndfenyYhNfps92ul5Pf4Ow41JsTvn24Iyb6fNkkYdUYdA8+NqM/nuN5oCO8xhF3msbuisOEYJ9QoDmanQSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gMbbOjqAsft46QCBdzdq591lDuJqq/BG1HUgUNAPOhI=;
- b=HD+1a0DDTfFOPBvM0SwWbUJV9w6RDeEE3ccI6J4vPkzH1jS2omhOffr9uoGY9R/7lgf7BTOyfgR17a4pD/4+3PItmpqCOj15+7Zp9Xw1KsrDgkltbkNlSt9J9pcajA2EKdYerFgUURD1Sxz3xYriWk7vW8lW8w5stnQhqY960F0=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB4249.eurprd04.prod.outlook.com (52.134.108.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 09:37:53 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::413e:84ea:f3bb:40bd]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::413e:84ea:f3bb:40bd%5]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 09:37:53 +0000
-From:   Biwen Li <biwen.li@nxp.com>
-To:     Leo Li <leoyang.li@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-Thread-Topic: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
- alarm driver
-Thread-Index: AQHVO8Dr35T1g9Ay0kmBOJl4h91+pKbNs0GAgADbmkA=
-Date:   Wed, 17 Jul 2019 09:37:53 +0000
-Message-ID: <DB7PR04MB449083E19DCF1A68254AEC298FC90@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190716101655.47418-1-biwen.li@nxp.com>
- <20190716101655.47418-2-biwen.li@nxp.com>
- <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB668718A642D1E521BF5F3F198FCE0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=biwen.li@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d4e143f-bd86-4c64-598e-08d70a9a7120
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4249;
-x-ms-traffictypediagnostic: DB7PR04MB4249:
-x-microsoft-antispam-prvs: <DB7PR04MB42493459D4C0857EBA579AD58FC90@DB7PR04MB4249.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(199004)(189003)(14454004)(6246003)(486006)(64756008)(76116006)(66446008)(66556008)(52536014)(3846002)(44832011)(256004)(66946007)(66476007)(7696005)(6116002)(5660300002)(6506007)(11346002)(53546011)(76176011)(476003)(4326008)(66066001)(26005)(2201001)(81156014)(9686003)(8936002)(71200400001)(55016002)(53936002)(446003)(99286004)(71190400001)(316002)(81166006)(102836004)(478600001)(229853002)(6436002)(86362001)(8676002)(305945005)(74316002)(7736002)(68736007)(186003)(33656002)(2906002)(2501003)(110136005)(54906003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4249;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YJGucL/yj/QmhgWbsP9EFZdmQPuq2Ub7ZvVpekOKSb5PdkFW9a0H8e2rpykj+/M5qtCqoIK3lH+6hNSjhvxCHc33beaNNV/sD3+AZCqVfV2JI0u82bEg8p1q1MSrMXk0v60bLqamLOYFTMyjruGj7CS49dMF141ORKxApBk3CjDm6hh5oDoxTQaSB27pT/gTgb0YN2rxBXZCflxyPyClxp9DocjtcMH3P5ElJnI9Xnv70U77vU75uZED6khYpnABn2YZY/u725BaXDRRajynCtbPz2xvlxbLM6bB7gtiTQTIb91HcTWz+JHvwJr3AAtFknYov8tdUzm/oHhco+BIVFzkk3RNFdL+fWyO6AmqlkeJqupyebhhHP5J13FPjtHJuNM2J28QBv2dYS3Xb+WlcHrg+yK870M0lzEK0u8PpjA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725890AbfGQJjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 05:39:13 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C4BB120A60E0232F5525;
+        Wed, 17 Jul 2019 17:39:09 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 17 Jul
+ 2019 17:39:09 +0800
+Subject: Re: [PATCH v2 1/2] f2fs: include charset encoding information in the
+ superblock
+To:     Daniel Rosenberg <drosen@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <kernel-team@android.com>
+References: <20190717031408.114104-1-drosen@google.com>
+ <20190717031408.114104-2-drosen@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <201eff19-869d-1d9f-018a-e2a60fbe1943@huawei.com>
+Date:   Wed, 17 Jul 2019 17:39:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d4e143f-bd86-4c64-598e-08d70a9a7120
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 09:37:53.4012
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: biwen.li@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4249
+In-Reply-To: <20190717031408.114104-2-drosen@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > From: Biwen Li <biwen.li@nxp.com>
-> > Sent: Tuesday, July 16, 2019 5:17 AM
-> > To: a.zummo@towertech.it; alexandre.belloni@bootlin.com; Leo Li
-> > <leoyang.li@nxp.com>; robh+dt@kernel.org
-> > Cc: linux-rtc@vger.kernel.org; linux-kernel@vger.kernel.org; Xiaobo
-> > Xie <xiaobo.xie@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>; Ran Wang
-> > <ran.wang_1@nxp.com>; mark.rutland@arm.com;
-> > devicetree@vger.kernel.org; Biwen Li <biwen.li@nxp.com>
-> > Subject: [v5,2/2] Documentation: dt: binding: rtc: add binding for ftm
-> > alarm driver
-> >
-> > The patch adds binding for ftm alarm driver
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v5:
-> >     - None
-> >
-> > Change in v4:
-> >     - add note about dts and kernel options
-> >     - add aliases in example
-> >
-> > Change in v3:
-> > 	- remove reg-names property
-> > 	- correct cells number
-> >
-> > Change in v2:
-> > 	- replace ls1043a with ls1088a as example
-> > 	- add rcpm node and fsl,rcpm-wakeup property
-> >
-> >
-> >  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-
-> > alarm.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > new file mode 100644
-> > index 000000000000..fb018065406c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > @@ -0,0 +1,49 @@
-> > +Freescale FlexTimer Module (FTM) Alarm
-> > +
-> > +Note:
-> > +- The driver depends on RCPM driver
-> > +  to wake up system in sleep.
-> > +- Need stop using RTC_HCTOSYS or use the DT aliases
-> > +  to ensure the driver is not used as the primary RTC.
-> > +  (Select DT aliases defaultly)
-> > +
-> > +Required properties:
-> > +- compatible : Should be "fsl,<chip>-ftm-alarm", the
-> > +	       supported chips include
-> > +	       "fsl,ls1012a-ftm-alarm"
-> > +	       "fsl,ls1021a-ftm-alarm"
-> > +	       "fsl,ls1028a-ftm-alarm"
-> > +	       "fsl,ls1043a-ftm-alarm"
-> > +	       "fsl,ls1046a-ftm-alarm"
-> > +	       "fsl,ls1088a-ftm-alarm"
-> > +	       "fsl,ls208xa-ftm-alarm"
-> > +- reg : Specifies base physical address and size of the register sets
-> > +for the
-> > +  FlexTimer Module and base physical address of IP Powerdown
-> > +Exception
-> > Control
-> > +  Register.
->=20
-> You removed the IP Powerdown exception register in the examples, but not
-> here.
-Ok,I will remove it in v6.
->=20
-> > +- interrupts : Should be the FlexTimer Module interrupt.
-> > +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> > +	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > +
-> > +Optional properties:
-> > +- big-endian: If the host controller is big-endian mode, specify this =
-property.
-> > +  The default endian mode is little-endian.
-> > +
-> > +Example:
-> > +aliases {
-> > +	...
-> > +	rtc1 =3D ftm_alarm0; /* Use flextimer alarm driver as /dev/rtc1 */
-> > +	...
-> > +};
-> > +
-> > +rcpm: rcpm@1e34040 {
-> > +	compatible =3D "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> > +	reg =3D <0x0 0x1e34040 0x0 0x18>;
-> > +	fsl,#rcpm-wakeup-cells =3D <6>;
-> > +};
-> > +
-> > +ftm_alarm0: timer@2800000 {
-> > +	compatible =3D "fsl,ls1088a-ftm-alarm";
-> > +	reg =3D <0x0 0x2800000 0x0 0x10000>;
-> > +	fsl,rcpm-wakeup =3D <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-> > +	interrupts =3D <0 44 4>;
-> > +};
-> > --
-> > 2.17.1
+On 2019/7/17 11:14, Daniel Rosenberg wrote:
+> Add charset encoding to f2fs to support casefolding. It is modeled after
+> the same feature introduced in commit c83ad55eaa91 ("ext4: include charset
+> encoding information in the superblock")
+> 
+> Currently this is not compatible with encryption, similar to the current
+> ext4 imlpementation. This will change in the future.
+> 
+>>From the ext4 patch:
+> """
+> The s_encoding field stores a magic number indicating the encoding
+> format and version used globally by file and directory names in the
+> filesystem.  The s_encoding_flags defines policies for using the charset
+> encoding, like how to handle invalid sequences.  The magic number is
+> mapped to the exact charset table, but the mapping is specific to ext4.
+> Since we don't have any commitment to support old encodings, the only
+> encoding I am supporting right now is utf8-12.1.0.
+> 
+> The current implementation prevents the user from enabling encoding and
+> per-directory encryption on the same filesystem at the same time.  The
+> incompatibility between these features lies in how we do efficient
+> directory searches when we cannot be sure the encryption of the user
+> provided fname will match the actual hash stored in the disk without
+> decrypting every directory entry, because of normalization cases.  My
+> quickest solution is to simply block the concurrent use of these
+> features for now, and enable it later, once we have a better solution.
+> """
+> 
+> Signed-off-by: Daniel Rosenberg <drosen@google.com>
+> ---
+>  fs/f2fs/f2fs.h          |  6 +++
+>  fs/f2fs/super.c         | 81 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/f2fs_fs.h |  9 ++++-
+>  3 files changed, 95 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 17382da7f0bd9..c6c7904572d0d 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -153,6 +153,7 @@ struct f2fs_mount_info {
+>  #define F2FS_FEATURE_LOST_FOUND		0x0200
+>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+> +#define F2FS_FEATURE_CASEFOLD		0x1000
+>  
+>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+> @@ -1169,6 +1170,10 @@ struct f2fs_sb_info {
+>  	int valid_super_block;			/* valid super block no */
+>  	unsigned long s_flag;				/* flags for sbi */
+>  	struct mutex writepages;		/* mutex for writepages() */
+> +#ifdef CONFIG_UNICODE
+> +	struct unicode_map *s_encoding;
+> +	__u16 s_encoding_flags;
+> +#endif
+>  
+>  #ifdef CONFIG_BLK_DEV_ZONED
+>  	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
+> @@ -3562,6 +3567,7 @@ F2FS_FEATURE_FUNCS(quota_ino, QUOTA_INO);
+>  F2FS_FEATURE_FUNCS(inode_crtime, INODE_CRTIME);
+>  F2FS_FEATURE_FUNCS(lost_found, LOST_FOUND);
+>  F2FS_FEATURE_FUNCS(sb_chksum, SB_CHKSUM);
+> +F2FS_FEATURE_FUNCS(casefold, CASEFOLD);
 
+It needs to change sysfs.c like we did for other features, you can refer to
+d440c52d3151 ("f2fs: support superblock checksum").
+
+>  
+>  #ifdef CONFIG_BLK_DEV_ZONED
+>  static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 6de6cda440315..7927071ef5e95 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/f2fs_fs.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/quota.h>
+> +#include <linux/unicode.h>
+>  
+>  #include "f2fs.h"
+>  #include "node.h"
+> @@ -222,6 +223,36 @@ void f2fs_printk(struct f2fs_sb_info *sbi, const char *fmt, ...)
+>  	va_end(args);
+>  }
+>  
+> +#ifdef CONFIG_UNICODE
+> +static const struct f2fs_sb_encodings {
+> +	__u16 magic;
+> +	char *name;
+> +	char *version;
+> +} f2fs_sb_encoding_map[] = {
+> +	{F2FS_ENC_UTF8_12_1, "utf8", "12.1.0"},
+> +};
+> +
+> +static int f2fs_sb_read_encoding(const struct f2fs_super_block *sb,
+> +				 const struct f2fs_sb_encodings **encoding,
+> +				 __u16 *flags)
+> +{
+> +	__u16 magic = le16_to_cpu(sb->s_encoding);
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(f2fs_sb_encoding_map); i++)
+> +		if (magic == f2fs_sb_encoding_map[i].magic)
+> +			break;
+> +
+> +	if (i >= ARRAY_SIZE(f2fs_sb_encoding_map))
+> +		return -EINVAL;
+> +
+> +	*encoding = &f2fs_sb_encoding_map[i];
+> +	*flags = le16_to_cpu(sb->s_encoding_flags);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static inline void limit_reserve_root(struct f2fs_sb_info *sbi)
+>  {
+>  	block_t limit = min((sbi->user_block_count << 1) / 1000,
+> @@ -798,6 +829,13 @@ static int parse_options(struct super_block *sb, char *options)
+>  		return -EINVAL;
+>  	}
+>  #endif
+> +#ifndef CONFIG_UNICODE
+> +	if (f2fs_sb_has_casefold(sbi)) {
+> +		f2fs_err(sbi,
+> +			"Filesystem with casefold feature cannot be mounted without CONFIG_UNICODE");
+> +		return -EINVAL;
+> +	}
+> +#endif
+>  
+>  	if (F2FS_IO_SIZE_BITS(sbi) && !test_opt(sbi, LFS)) {
+>  		f2fs_err(sbi, "Should set mode=lfs with %uKB-sized IO",
+> @@ -1089,6 +1127,9 @@ static void f2fs_put_super(struct super_block *sb)
+>  	destroy_percpu_info(sbi);
+>  	for (i = 0; i < NR_PAGE_TYPE; i++)
+>  		kvfree(sbi->write_io[i]);
+> +#ifdef CONFIG_UNICODE
+> +	utf8_unload(sbi->s_encoding);
+> +#endif
+>  	kvfree(sbi);
+>  }
+>  
+> @@ -3126,6 +3167,42 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  	sb->s_maxbytes = sbi->max_file_blocks <<
+>  				le32_to_cpu(raw_super->log_blocksize);
+>  	sb->s_max_links = F2FS_LINK_MAX;
+> +#ifdef CONFIG_UNICODE
+> +	if (f2fs_sb_has_casefold(sbi) && !sbi->s_encoding) {
+> +		const struct f2fs_sb_encodings *encoding_info;
+> +		struct unicode_map *encoding;
+> +		__u16 encoding_flags;
+> +
+> +		if (f2fs_sb_has_encrypt(sbi)) {
+> +			f2fs_err(sbi,
+> +				"Can't mount with encoding and encryption");
+
+Should set error number.
+
+> +			goto free_options;
+> +		}
+> +
+> +		if (f2fs_sb_read_encoding(raw_super, &encoding_info,
+> +					  &encoding_flags)) {
+> +			f2fs_err(sbi,
+> +				 "Encoding requested by superblock is unknown");
+
+Ditto
+
+> +			goto free_options;
+> +		}
+> +
+> +		encoding = utf8_load(encoding_info->version);
+> +		if (IS_ERR(encoding)) {
+> +			f2fs_err(sbi,
+> +				 "can't mount with superblock charset: %s-%s "
+> +				 "not supported by the kernel. flags: 0x%x.",
+> +				 encoding_info->name, encoding_info->version,
+> +				 encoding_flags);
+
+Ditto
+
+> +			goto free_options;
+> +		}
+> +		f2fs_info(sbi, "Using encoding defined by superblock: "
+> +			 "%s-%s with flags 0x%hx", encoding_info->name,
+> +			 encoding_info->version?:"\b", encoding_flags);
+> +
+> +		sbi->s_encoding = encoding;
+> +		sbi->s_encoding_flags = encoding_flags;
+> +	}
+> +#endif
+
+How about wrapping these codes into function?
+
+Thanks,
+
+>  
+>  #ifdef CONFIG_QUOTA
+>  	sb->dq_op = &f2fs_quota_operations;
+> @@ -3477,6 +3554,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  free_bio_info:
+>  	for (i = 0; i < NR_PAGE_TYPE; i++)
+>  		kvfree(sbi->write_io[i]);
+> +
+> +#ifdef CONFIG_UNICODE
+> +	utf8_unload(sbi->s_encoding);
+> +#endif
+>  free_options:
+>  #ifdef CONFIG_QUOTA
+>  	for (i = 0; i < MAXQUOTAS; i++)
+> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+> index 65559900d4d76..b7c9c7f721339 100644
+> --- a/include/linux/f2fs_fs.h
+> +++ b/include/linux/f2fs_fs.h
+> @@ -36,6 +36,11 @@
+>  
+>  #define F2FS_MAX_QUOTAS		3
+>  
+> +#define F2FS_ENC_UTF8_12_1	1
+> +#define F2FS_ENC_STRICT_MODE_FL	(1 << 0)
+> +#define f2fs_has_strict_mode(sbi) \
+> +	(sbi->s_encoding_flags & F2FS_ENC_STRICT_MODE_FL)
+> +
+>  #define F2FS_IO_SIZE(sbi)	(1 << F2FS_OPTION(sbi).write_io_size_bits) /* Blocks */
+>  #define F2FS_IO_SIZE_KB(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 2)) /* KB */
+>  #define F2FS_IO_SIZE_BYTES(sbi)	(1 << (F2FS_OPTION(sbi).write_io_size_bits + 12)) /* B */
+> @@ -109,7 +114,9 @@ struct f2fs_super_block {
+>  	struct f2fs_device devs[MAX_DEVICES];	/* device list */
+>  	__le32 qf_ino[F2FS_MAX_QUOTAS];	/* quota inode numbers */
+>  	__u8 hot_ext_count;		/* # of hot file extension */
+> -	__u8 reserved[310];		/* valid reserved region */
+> +	__le16  s_encoding;		/* Filename charset encoding */
+> +	__le16  s_encoding_flags;	/* Filename charset encoding flags */
+> +	__u8 reserved[306];		/* valid reserved region */
+>  	__le32 crc;			/* checksum of superblock */
+>  } __packed;
+>  
+> 
