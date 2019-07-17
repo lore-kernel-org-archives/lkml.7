@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82766C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C52C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EC721743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025F20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qKceRlqp"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iDak+bFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfGQGSe (ORCPT
+        id S1727109AbfGQGSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:18:34 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:62967 "EHLO
+        Wed, 17 Jul 2019 02:18:32 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:62965 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfGQGS1 (ORCPT
+        with ESMTP id S1725856AbfGQGS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:18:27 -0400
+        Wed, 17 Jul 2019 02:18:26 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x6H6I5Oe009435;
-        Wed, 17 Jul 2019 15:18:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6H6I5Oe009435
+        by conuserg-10.nifty.com with ESMTP id x6H6I5Om009435;
+        Wed, 17 Jul 2019 15:18:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6H6I5Om009435
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563344288;
-        bh=bW9MlR9anEqZaRsV/yNzhOtgPvYfSH+v4L1uzgSzinY=;
+        s=dec2015msa; t=1563344293;
+        bh=B9SttnFocZkaw85nY/WsYdTlcQPEuOC6fxc7lk7URcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKceRlqpHWlnG3IVZ+0qQxJKx6Vv2a8liDbA/6tI8y/ScyIs3FffSd/TyCpkfCHZS
-         V0nrbWf+wwgDU8ztwIJLhxk2xSPVRplD0CZKx3X4Cwtq+U1gKRgxSJOTlKP3/TRApD
-         Zmrpts4pxfjvlJ8WdP2EPmJ3JeUkIFrU3l5VjdhijKMjQE4XFmC5qcKyoNui+GsVbJ
-         zxZaZ+3Z4+uM17uOxSguQDFP5aNi5O6ADeXz+7Kn8ajhrS8rBHAVLqFWfzoAJq7P6J
-         etOVAQKcpMGFYgMnX7lMfY+qcZ3UpmBwqRSOvple/qcSY+t1bJLuTVatwny1P4d9wa
-         DNM2WS+BW2aiA==
+        b=iDak+bFRPZmHuYZvEyyq/s/hPKNCDZedK7pJo9U8iUjoysVU9yiTm4HIVB9aZjg5g
+         6fAC+dm0kH79vQLtcROucgJCIHL4OxLTZk+J4YwadfCJ0j+jSN0GPC+31Fo53IeMZF
+         M2wVHGBEsDUnpvdj89gfrAB8NLvAku+copGimnfe0AnbST5ebrf1Z3mjUfRuvZmn/m
+         vtb8I/MIobOMwhbcg/K7DodmX3jOMIpxr/qaPeS6KRl1OBWyUyKIPYm+EC0qUQF5ez
+         lyheVWA/O8qLXfycNNI/JFiq/3Ba00j6WvyFc0PHmBAkPlSPk139PKwycdVmRA9EO8
+         x95UeKoBzPSuA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/12] kbuild: get rid of kernel/ prefix from in-tree modules.{order,builtin}
-Date:   Wed, 17 Jul 2019 15:17:50 +0900
-Message-Id: <20190717061800.10018-3-yamada.masahiro@socionext.com>
+Subject: [PATCH v3 10/12] kbuild: remove the first line of *.mod files
+Date:   Wed, 17 Jul 2019 15:17:58 +0900
+Message-Id: <20190717061800.10018-11-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190717061800.10018-1-yamada.masahiro@socionext.com>
 References: <20190717061800.10018-1-yamada.masahiro@socionext.com>
@@ -55,26 +55,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing the 'kernel/' prefix will make our life easier because we can
-simply do 'cat modules.order' to get all built modules with full paths.
+The current format of *.mod is like this:
 
-Currently, we parse the first line of '*.mod' files in $(MODVERDIR).
-Since we have duplicated functionality here, I plan to remove MODVERDIR
-entirely.
+  line 1: directory path to the .ko file
+  line 2: a list of objects linked into this module
+  line 3: unresolved symbols (only when CONFIG_TRIM_UNUSED_KSYMS=y)
 
-In fact, modules.order is generated also for external modules in a
-broken format. It adds the 'kernel/' prefix to the absolute path of
-the module, like this:
+Now that *.mod and *.ko are created in the same directory, the line 1
+provides no valuable information. It can be derived by replacing the
+extension .mod with .ko. In fact, nobody uses the first line any more.
 
-  kernel//path/to/your/external/module/foo.ko
-
-This is fine for now since modules.order is not used for external
-modules. However, I want to sanitize the format everywhere towards
-the goal of removing MODVERDIR.
-
-We cannot change the format of installed module.{order,builtin}.
-So, 'make modules_install' will add the 'kernel/' prefix while copying
-them to $(MODLIB)/.
+Cut down the first line.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
@@ -82,66 +73,83 @@ Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Changes in v3: None
 Changes in v2: None
 
- Makefile                    | 4 ++--
- scripts/Makefile.build      | 2 +-
- scripts/Makefile.modbuiltin | 2 +-
- scripts/modules-check.sh    | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ scripts/Makefile.build      | 4 ++--
+ scripts/adjust_autoksyms.sh | 4 ++--
+ scripts/mod/sumversion.c    | 9 ++-------
+ 3 files changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index b74a6e9cefc8..396cd5e525d1 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1329,8 +1329,8 @@ _modinst_:
- 		rm -f $(MODLIB)/build ; \
- 		ln -s $(CURDIR) $(MODLIB)/build ; \
- 	fi
--	@cp -f $(objtree)/modules.order $(MODLIB)/
--	@cp -f $(objtree)/modules.builtin $(MODLIB)/
-+	@sed 's:^:kernel/:' modules.order > $(MODLIB)/modules.order
-+	@sed 's:^:kernel/:' modules.builtin > $(MODLIB)/modules.builtin
- 	@cp -f $(objtree)/modules.builtin.modinfo $(MODLIB)/
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
- 
 diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 631bb89524de..10e92a27ec20 100644
+index c6dfcc028f56..9f37f203882f 100644
 --- a/scripts/Makefile.build
 +++ b/scripts/Makefile.build
-@@ -426,7 +426,7 @@ endif # builtin-target
- modorder-cmds =						\
- 	$(foreach m, $(modorder),			\
- 		$(if $(filter %/modules.order, $m),	\
--			cat $m;, echo kernel/$m;))
-+			cat $m;, echo $m;))
+@@ -274,7 +274,7 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ $(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) FORCE
+ 	$(call cmd,force_checksrc)
+ 	$(call if_changed_rule,cc_o_c)
+-	@{ echo $(@:.o=.ko); echo $@; \
++	@{ echo $@; \
+ 	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
  
- $(modorder-target): $(subdir-ym) FORCE
- 	$(Q)(cat /dev/null; $(modorder-cmds)) > $@
-diff --git a/scripts/Makefile.modbuiltin b/scripts/Makefile.modbuiltin
-index 50a9990760f3..7d4711b88656 100644
---- a/scripts/Makefile.modbuiltin
-+++ b/scripts/Makefile.modbuiltin
-@@ -40,7 +40,7 @@ __modbuiltin: $(modbuiltin-target) $(subdir-ym)
- 	@:
+ quiet_cmd_cc_lst_c = MKLST   $@
+@@ -456,7 +456,7 @@ quiet_cmd_link_multi-m = LD [M]  $@
  
- $(modbuiltin-target): $(subdir-ym) FORCE
--	$(Q)(for m in $(modbuiltin-mods); do echo kernel/$$m; done;	\
-+	$(Q)(for m in $(modbuiltin-mods); do echo $$m; done;	\
- 	cat /dev/null $(modbuiltin-subdirs)) > $@
+ $(multi-used-m): FORCE
+ 	$(call if_changed,link_multi-m)
+-	@{ echo $(@:.o=.ko); echo $(filter %.o,$^); \
++	@{ echo $(filter %.o,$^); \
+ 	   $(cmd_undef_syms); } > $(patsubst %.o,%.mod,$@)
+ $(call multi_depend, $(multi-used-m), .o, -objs -y -m)
  
- PHONY += FORCE
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-index 39e8cb36ba19..f51f446707b8 100755
---- a/scripts/modules-check.sh
-+++ b/scripts/modules-check.sh
-@@ -9,7 +9,7 @@ check_same_name_modules()
- 	for m in $(sed 's:.*/::' modules.order | sort | uniq -d)
- 	do
- 		echo "warning: same module names found:" >&2
--		sed -n "/\/$m/s:^kernel/:  :p" modules.order >&2
-+		sed -n "/\/$m/s:^:  :p" modules.order >&2
- 	done
- }
+diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+index 2e4a7320bfb4..a904bf1f5e67 100755
+--- a/scripts/adjust_autoksyms.sh
++++ b/scripts/adjust_autoksyms.sh
+@@ -8,7 +8,7 @@
+ #
  
+ # Create/update the include/generated/autoksyms.h file from the list
+-# of all module's needed symbols as recorded on the third line of *.mod files.
++# of all module's needed symbols as recorded on the second line of *.mod files.
+ #
+ # For each symbol being added or removed, the corresponding dependency
+ # file's timestamp is updated to force a rebuild of the affected source
+@@ -47,7 +47,7 @@ cat > "$new_ksyms_file" << EOT
+ 
+ EOT
+ sed 's/ko$/mod/' modules.order |
+-xargs -n1 sed -n -e '3{s/ /\n/g;/^$/!p;}' -- |
++xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
+ sort -u |
+ sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+ 
+diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
+index 166f3fa247a9..63062024ce0e 100644
+--- a/scripts/mod/sumversion.c
++++ b/scripts/mod/sumversion.c
+@@ -398,7 +398,7 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen)
+ 	char *sources, *end, *fname;
+ 	char filelist[PATH_MAX + 1];
+ 
+-	/* objects for a module are listed in the second line of *.mod file. */
++	/* objects for a module are listed in the first line of *.mod file. */
+ 	snprintf(filelist, sizeof(filelist), "%.*smod",
+ 		 (int)strlen(modname) - 1, modname);
+ 
+@@ -407,13 +407,8 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen)
+ 		/* not a module or .mod file missing - ignore */
+ 		return;
+ 
+-	sources = strchr(file, '\n');
+-	if (!sources) {
+-		warn("malformed versions file for %s\n", modname);
+-		goto release;
+-	}
++	sources = file;
+ 
+-	sources++;
+ 	end = strchr(sources, '\n');
+ 	if (!end) {
+ 		warn("bad ending versions file for %s\n", modname);
 -- 
 2.17.1
 
