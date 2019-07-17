@@ -2,473 +2,880 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AC3C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46976205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6DA2182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5fj6ip4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="IlVNf6V7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfGQPSI (ORCPT
+        id S1727384AbfGQPTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:18:08 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36524 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfGQPSH (ORCPT
+        Wed, 17 Jul 2019 11:19:24 -0400
+Received: from smtp11.infineon.com ([217.10.52.105]:60795 "EHLO
+        smtp11.infineon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfGQPTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:18:07 -0400
-Received: by mail-lj1-f195.google.com with SMTP id i21so24038307ljj.3;
-        Wed, 17 Jul 2019 08:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ys9qT2aavEZUfN9E2ZXgsutUYT66O1lrl1/0UUKg11A=;
-        b=Z5fj6ip4vq15LlWhc/2RSEk1GjucjrkHj1UjB6m8kTlEewUVNW542T7yVv8zupzB+m
-         OFL8YD5smqla55N7ck1DSDB7zeHJ0m9+2JVgulHlgTtc7aadKdXkwfW2/kuC0qmbbHLz
-         1Y7Q0hNdm1NYif1m46jBki2uw/vxoEE+efBadqG4gJk3w8p8E9dQBwratLrOekh7vrWP
-         fngLWSz4NUZFuwgfOBJfTjUGMiCxmCQYdbXogo7/1COfX9DJil1p678DP8rtkmNWTOK2
-         jAyumaaJ1O+XAKLYI5z7Pmp3lAxlZb0/s9rYoiklJuUkEbv0aPq4OUD7joywWEaXz+P+
-         kstg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ys9qT2aavEZUfN9E2ZXgsutUYT66O1lrl1/0UUKg11A=;
-        b=RpmWVlyyjhah6nn0PvFikT0fs/6R8f7z035CF/PtIxgyn1Z9aJlGyjcj4yJvAhV9Ft
-         YxwN/ghrhWnGrn6f9URLb2aJXNyjTzXJuUFnNme9vlrKIIT7MTytv02RIBCn/nrDAEfT
-         qxRkb0/A99tFVr5MuNre8X02Pl5iKiCqIMLzDUCnjiZl/1WAU5N5N/KpIzsHF5J7zIHw
-         Vt77fmy5+0I0WdQvtPW4hIKhJ0c7jZos74yDsF5zLVHDpBGXKB1A50IDpmr8d0HVL8Ze
-         e0Taa3FDkEyH/mfcsiYs/FR2cKEjmAouGRAu0Vu8RF/90fOHXr1a8giZaaLfJJJGI744
-         ZZ0w==
-X-Gm-Message-State: APjAAAVHSt/8GojBH0KEpr1iywsiZj3QwjL205VmHbo6bMh+o4EuuJ51
-        RwLjx3bWx5BM3UCt1nTRicxiso0/
-X-Google-Smtp-Source: APXvYqyU5UB+4qm0/bA3h/UO4crU/taqw2/DS7hyIscjx1I6+MglAyulIZGVUFUxalgWYOI6kvUL5Q==
-X-Received: by 2002:a2e:88d3:: with SMTP id a19mr21539956ljk.32.1563376682862;
-        Wed, 17 Jul 2019 08:18:02 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id s24sm4512304lje.58.2019.07.17.08.18.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 08:18:01 -0700 (PDT)
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
- <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
- <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
- <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
- <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
- <ef63f72a-db03-ef28-a371-e578f351c713@nvidia.com>
- <27641e30-fdd1-e53a-206d-71e1f23343fd@gmail.com>
- <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
- <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
- <0ee06d1a-310d-59f7-0aa6-b688b33447f5@nvidia.com>
- <cedfafd0-4114-0821-0c4b-efc17c213449@gmail.com>
- <707c4679-fde6-1714-ced0-dcf7ca8380a9@nvidia.com>
- <c6c0a205-c083-fd46-361c-175bd8840c6e@nvidia.com>
- <055457fd-621b-6c93-b671-d5e5380698c6@nvidia.com>
- <20190717071105.3750a021@dimatab>
- <77df234f-aa40-0319-a593-f1f19f0f1c2a@nvidia.com>
- <20190717084221.2e9af56c@dimatab>
- <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
- <20190717093317.70fefb27@dimatab>
- <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
-Date:   Wed, 17 Jul 2019 18:17:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 17 Jul 2019 11:19:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1563376762; x=1594912762;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=UKX50UWYnnQyqksfuHlH3rW3cC/sTas/6FqtPxBoZ0o=;
+  b=IlVNf6V7lLw9XvoOvWY9JTkq227cLejvOceO1M4C9hNnc0saVELrYlYV
+   zCAxueJCBwpIo8xlGSvXCVOxbISgdbRPk10CDehV6TvqtZEPi4n/f2QH2
+   U/qokrdIcepHawwMQGgPd0mPlwQLs5o3YXtbzdzKpfwANW7tkmp+emn1B
+   c=;
+IronPort-SDR: f95y7huKy/tuAcNsqKuajC4UX0JbQ8CxcoTNvOodBNQ71BUhALbC5Mztk+pbTYu4b27DOYO6TP
+ 1zWc91iNJWQSw+BfpSrfPW5fsXvmkFye6qN2DcqQI9wszxkI5RrY4VgYdySwYa8pLJUuvNcEjD
+ abRCezzctZ3gPiL8qqnMAmfbBn5btyeml4i/q4yIGy20MU10VCYLoqp6Qo6MwFTUwPdNw9uEWV
+ 08GJf+KCHa5WPn2k7s0SCnnf6GPnFbCQTm83u9+hKp5AOX6NuIXrQd8G9jZEVG4KBPvL0vXfvS
+ 6T4=
+X-SBRS: None
+X-IronPort-AV: E=McAfee;i="6000,8403,9320"; a="128132221"
+X-IronPort-AV: E=Sophos;i="5.64,274,1559512800"; 
+   d="scan'208";a="128132221"
+Received: from unknown (HELO mucxv001.muc.infineon.com) ([172.23.11.16])
+  by smtp11.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 17:19:20 +0200
+Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
+        by mucxv001.muc.infineon.com (Postfix) with ESMTPS;
+        Wed, 17 Jul 2019 17:19:20 +0200 (CEST)
+Received: from [10.154.32.63] (172.23.8.247) by MUCSE708.infineon.com
+ (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1591.10; Wed, 17
+ Jul 2019 17:19:20 +0200
+Subject: Re: [PATCH v2 6/6] tpm: Add driver for cr50 on I2C
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+CC:     Duncan Laurie <dlaurie@chromium.org>,
+        <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-integrity@vger.kernel.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20190716224518.62556-1-swboyd@chromium.org>
+ <20190716224518.62556-7-swboyd@chromium.org>
+From:   Alexander Steffen <Alexander.Steffen@infineon.com>
+Message-ID: <04c0f028-308d-2dae-5067-8c239acaa3bf@infineon.com>
+Date:   Wed, 17 Jul 2019 17:19:19 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190716224518.62556-7-swboyd@chromium.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.8.247]
+X-ClientProxiedBy: MUCSE703.infineon.com (172.23.7.73) To
+ MUCSE708.infineon.com (172.23.7.82)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.07.2019 9:36, Sowjanya Komatineni пишет:
+On 17.07.2019 00:45, Stephen Boyd wrote:
+> From: Duncan Laurie <dlaurie@chromium.org>
 > 
-> On 7/16/19 11:33 PM, Dmitry Osipenko wrote:
->> В Tue, 16 Jul 2019 22:55:52 -0700
->> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
->>
->>> On 7/16/19 10:42 PM, Dmitry Osipenko wrote:
->>>> В Tue, 16 Jul 2019 22:25:25 -0700
->>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
->>>>  
->>>>> On 7/16/19 9:11 PM, Dmitry Osipenko wrote:
->>>>>> В Tue, 16 Jul 2019 19:35:49 -0700
->>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
->>>>>>     
->>>>>>> On 7/16/19 7:18 PM, Sowjanya Komatineni wrote:
->>>>>>>> On 7/16/19 3:06 PM, Sowjanya Komatineni wrote:
->>>>>>>>> On 7/16/19 3:00 PM, Dmitry Osipenko wrote:
->>>>>>>>>> 17.07.2019 0:35, Sowjanya Komatineni пишет:
->>>>>>>>>>> On 7/16/19 2:21 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>> 17.07.2019 0:12, Sowjanya Komatineni пишет:
->>>>>>>>>>>>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>> 16.07.2019 22:26, Sowjanya Komatineni пишет:
->>>>>>>>>>>>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>> 16.07.2019 21:30, Sowjanya Komatineni пишет:
->>>>>>>>>>>>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni пишет:
->>>>>>>>>>>>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver пишет:
->>>>>>>>>>>>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph
->>>>>>>>>>>>>>>>>>>>>> Lo wrote:
->>>>>>>>>>>>>>>>>>>>>>>> OK, Will add to CPUFreq driver...
->>>>>>>>>>>>>>>>>>>>>>>>> The other thing that also need attention is
->>>>>>>>>>>>>>>>>>>>>>>>> that T124 CPUFreq
->>>>>>>>>>>>>>>>>>>>>>>>> driver
->>>>>>>>>>>>>>>>>>>>>>>>> implicitly relies on DFLL driver to be probed
->>>>>>>>>>>>>>>>>>>>>>>>> first, which is
->>>>>>>>>>>>>>>>>>>>>>>>> icky.
->>>>>>>>>>>>>>>>>>>>>>>>>         
->>>>>>>>>>>>>>>>>>>>>>>> Should I add check for successful dfll clk
->>>>>>>>>>>>>>>>>>>>>>>> register explicitly in
->>>>>>>>>>>>>>>>>>>>>>>> CPUFreq driver probe and defer till dfll clk
->>>>>>>>>>>>>>>>>>>>>>>> registers?
->>>>>>>>>>>>>>>>>>>>> Probably you should use the "device links". See
->>>>>>>>>>>>>>>>>>>>> [1][2] for the
->>>>>>>>>>>>>>>>>>>>> example.
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>> [1]
->>>>>>>>>>>>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c#L2383
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>> [2]
->>>>>>>>>>>>>>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/device_link.html
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>> Return EPROBE_DEFER instead of EINVAL if
->>>>>>>>>>>>>>>>>>>>> device_link_add() fails.
->>>>>>>>>>>>>>>>>>>>> And
->>>>>>>>>>>>>>>>>>>>> use of_find_device_by_node() to get the DFLL's
->>>>>>>>>>>>>>>>>>>>> device, see [3].
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>> [3]
->>>>>>>>>>>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>         
->>>>>>>>>>>>>>>>>>>> Will go thru and add...
->>>>>>>>>>>>>>>>>> Looks like I initially confused this case with getting
->>>>>>>>>>>>>>>>>> orphaned clock.
->>>>>>>>>>>>>>>>>> I'm now seeing that the DFLL driver registers the
->>>>>>>>>>>>>>>>>> clock and then
->>>>>>>>>>>>>>>>>> clk_get(dfll) should be returning EPROBE_DEFER until
->>>>>>>>>>>>>>>>>> DFLL driver is
->>>>>>>>>>>>>>>>>> probed, hence everything should be fine as-is and
->>>>>>>>>>>>>>>>>> there is no real
->>>>>>>>>>>>>>>>>> need
->>>>>>>>>>>>>>>>>> for the 'device link'. Sorry for the confusion!
->>>>>>>>>>>>>>>>>>        
->>>>>>>>>>>>>>>>>>>>>>> Sorry, I didn't follow the mail thread. Just
->>>>>>>>>>>>>>>>>>>>>>> regarding the DFLL
->>>>>>>>>>>>>>>>>>>>>>> part.
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> As you know it, the DFLL clock is one of the CPU
->>>>>>>>>>>>>>>>>>>>>>> clock sources and
->>>>>>>>>>>>>>>>>>>>>>> integrated with DVFS control logic with the
->>>>>>>>>>>>>>>>>>>>>>> regulator. We will not
->>>>>>>>>>>>>>>>>>>>>>> switch
->>>>>>>>>>>>>>>>>>>>>>> CPU to other clock sources once we switched to
->>>>>>>>>>>>>>>>>>>>>>> DFLL. Because the
->>>>>>>>>>>>>>>>>>>>>>> CPU has
->>>>>>>>>>>>>>>>>>>>>>> been regulated by the DFLL HW with the DVFS table
->>>>>>>>>>>>>>>>>>>>>>> (CVB or OPP
->>>>>>>>>>>>>>>>>>>>>>> table
->>>>>>>>>>>>>>>>>>>>>>> you see
->>>>>>>>>>>>>>>>>>>>>>> in the driver.). We shouldn't reparent it to
->>>>>>>>>>>>>>>>>>>>>>> other sources with
->>>>>>>>>>>>>>>>>>>>>>> unknew
->>>>>>>>>>>>>>>>>>>>>>> freq/volt pair. That's not guaranteed to work. We
->>>>>>>>>>>>>>>>>>>>>>> allow switching to
->>>>>>>>>>>>>>>>>>>>>>> open-loop mode but different sources.
->>>>>>>>>>>>>>>>>>>>> Okay, then the CPUFreq driver will have to enforce
->>>>>>>>>>>>>>>>>>>>> DFLL freq to
->>>>>>>>>>>>>>>>>>>>> PLLP's
->>>>>>>>>>>>>>>>>>>>> rate before switching to PLLP in order to have a
->>>>>>>>>>>>>>>>>>>>> proper CPU voltage.
->>>>>>>>>>>>>>>>>>>> PLLP freq is safe to work for any CPU voltage. So no
->>>>>>>>>>>>>>>>>>>> need to enforce
->>>>>>>>>>>>>>>>>>>> DFLL freq to PLLP rate before changing CCLK_G source
->>>>>>>>>>>>>>>>>>>> to PLLP during
->>>>>>>>>>>>>>>>>>>> suspend
->>>>>>>>>>>>>>>>>>>>         
->>>>>>>>>>>>>>>>>>> Sorry, please ignore my above comment. During
->>>>>>>>>>>>>>>>>>> suspend, need to change
->>>>>>>>>>>>>>>>>>> CCLK_G source to PLLP when dfll is in closed loop
->>>>>>>>>>>>>>>>>>> mode first and
->>>>>>>>>>>>>>>>>>> then
->>>>>>>>>>>>>>>>>>> dfll need to be set to open loop.
->>>>>>>>>>>>>>>>>> Okay.
->>>>>>>>>>>>>>>>>>        
->>>>>>>>>>>>>>>>>>>>>>> And I don't exactly understand why we need to
->>>>>>>>>>>>>>>>>>>>>>> switch to PLLP in
->>>>>>>>>>>>>>>>>>>>>>> CPU
->>>>>>>>>>>>>>>>>>>>>>> idle
->>>>>>>>>>>>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the
->>>>>>>>>>>>>>>>>>>>>>> time.
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> In SC7 entry, the dfll suspend function moves it
->>>>>>>>>>>>>>>>>>>>>>> the open-loop
->>>>>>>>>>>>>>>>>>>>>>> mode. That's
->>>>>>>>>>>>>>>>>>>>>>> all. The sc7-entryfirmware will handle the rest
->>>>>>>>>>>>>>>>>>>>>>> of the sequence to
->>>>>>>>>>>>>>>>>>>>>>> turn off
->>>>>>>>>>>>>>>>>>>>>>> the CPU power.
->>>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>>> In SC7 resume, the warmboot code will handle the
->>>>>>>>>>>>>>>>>>>>>>> sequence to
->>>>>>>>>>>>>>>>>>>>>>> turn on
->>>>>>>>>>>>>>>>>>>>>>> regulator and power up the CPU cluster. And leave
->>>>>>>>>>>>>>>>>>>>>>> it on PLL_P.
->>>>>>>>>>>>>>>>>>>>>>> After
->>>>>>>>>>>>>>>>>>>>>>> resuming to the kernel, we re-init DFLL, restore
->>>>>>>>>>>>>>>>>>>>>>> the CPU clock
->>>>>>>>>>>>>>>>>>>>>>> policy (CPU
->>>>>>>>>>>>>>>>>>>>>>> runs on DFLL open-loop mode) and then moving to
->>>>>>>>>>>>>>>>>>>>>>> close-loop mode.
->>>>>>>>>>>>>>>>>>>>> The DFLL is re-inited after switching CCLK to DFLL
->>>>>>>>>>>>>>>>>>>>> parent during of
->>>>>>>>>>>>>>>>>>>>> the
->>>>>>>>>>>>>>>>>>>>> early clocks-state restoring by CaR driver. Hence
->>>>>>>>>>>>>>>>>>>>> instead of having
->>>>>>>>>>>>>>>>>>>>> odd
->>>>>>>>>>>>>>>>>>>>> hacks in the CaR driver, it is much nicer to have a
->>>>>>>>>>>>>>>>>>>>> proper suspend-resume sequencing of the device
->>>>>>>>>>>>>>>>>>>>> drivers. In this case
->>>>>>>>>>>>>>>>>>>>> CPUFreq
->>>>>>>>>>>>>>>>>>>>> driver is the driver that enables DFLL and switches
->>>>>>>>>>>>>>>>>>>>> CPU to that
->>>>>>>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>>>>>>> source, which means that this driver is also should
->>>>>>>>>>>>>>>>>>>>> be responsible for
->>>>>>>>>>>>>>>>>>>>> management of the DFLL's state during of
->>>>>>>>>>>>>>>>>>>>> suspend/resume process. If
->>>>>>>>>>>>>>>>>>>>> CPUFreq driver disables DFLL during suspend and
->>>>>>>>>>>>>>>>>>>>> re-enables it
->>>>>>>>>>>>>>>>>>>>> during
->>>>>>>>>>>>>>>>>>>>> resume, then looks like the CaR driver hacks around
->>>>>>>>>>>>>>>>>>>>> DFLL are not
->>>>>>>>>>>>>>>>>>>>> needed.
->>>>>>>>>>>>>>>>>>>>>        
->>>>>>>>>>>>>>>>>>>>>>> The DFLL part looks good to me. BTW, change the
->>>>>>>>>>>>>>>>>>>>>>> patch subject to
->>>>>>>>>>>>>>>>>>>>>>> "Add
->>>>>>>>>>>>>>>>>>>>>>> suspend-resume support" seems more appropriate to
->>>>>>>>>>>>>>>>>>>>>>> me.
->>>>>>>>>>>>>>>>>>>>>> To clarify this, the sequences for DFLL use are as
->>>>>>>>>>>>>>>>>>>>>> follows (assuming
->>>>>>>>>>>>>>>>>>>>>> all
->>>>>>>>>>>>>>>>>>>>>> required DFLL hw configuration has been done)
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> Switch to DFLL:
->>>>>>>>>>>>>>>>>>>>>> 0) Save current parent and frequency
->>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>>>>>>>>>>>>> 2) Enable DFLL
->>>>>>>>>>>>>>>>>>>>>> 3) Change cclk_g parent to DFLL
->>>>>>>>>>>>>>>>>>>>>> For OVR regulator:
->>>>>>>>>>>>>>>>>>>>>> 4) Change PWM output pin from tristate to output
->>>>>>>>>>>>>>>>>>>>>> 5) Enable DFLL PWM output
->>>>>>>>>>>>>>>>>>>>>> For I2C regulator:
->>>>>>>>>>>>>>>>>>>>>> 4) Enable DFLL I2C output
->>>>>>>>>>>>>>>>>>>>>> 6) Program DFLL to closed loop mode
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> Switch away from DFLL:
->>>>>>>>>>>>>>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU
->>>>>>>>>>>>>>>>>>>>>> frequency is ok for
->>>>>>>>>>>>>>>>>>>>>> any
->>>>>>>>>>>>>>>>>>>>>> vdd_cpu voltage
->>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
->>>>>>>>>>>>>>>>>>>>>>         
->>>>>>>>>>>>>>>>>>> I see during switch away from DFLL (suspend), cclk_g
->>>>>>>>>>>>>>>>>>> parent is not
->>>>>>>>>>>>>>>>>>> changed to PLLP before changing dfll to open loop
->>>>>>>>>>>>>>>>>>> mode.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> Will add this ...
->>>>>>>>>>>>>>>>>> The CPUFreq driver switches parent to PLLP during the
->>>>>>>>>>>>>>>>>> probe, similar
->>>>>>>>>>>>>>>>>> should be done on suspend.
->>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> I'm also wondering if it's always safe to switch to
->>>>>>>>>>>>>>>>>> PLLP in the probe.
->>>>>>>>>>>>>>>>>> If CPU is running on a lower freq than PLLP, then some
->>>>>>>>>>>>>>>>>> other more
->>>>>>>>>>>>>>>>>> appropriate intermediate parent should be selected.
->>>>>>>>>>>>>>>>>>         
->>>>>>>>>>>>>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always
->>>>>>>>>>>>>>>>> runs at higher
->>>>>>>>>>>>>>>>> rate
->>>>>>>>>>>>>>>>> so switching to PLL_P during CPUFreq probe prior to
->>>>>>>>>>>>>>>>> dfll clock enable
->>>>>>>>>>>>>>>>> should be safe.
->>>>>>>>>>>>>>>> AFAIK, PLLX could run at ~200MHz. There is also a
->>>>>>>>>>>>>>>> divided output of
->>>>>>>>>>>>>>>> PLLP
->>>>>>>>>>>>>>>> which CCLKG supports, the PLLP_OUT4.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Probably, realistically, CPU is always running off a
->>>>>>>>>>>>>>>> fast PLLX during
->>>>>>>>>>>>>>>> boot, but I'm wondering what may happen on KEXEC. I
->>>>>>>>>>>>>>>> guess ideally CPUFreq driver should also have a
->>>>>>>>>>>>>>>> 'shutdown' callback to teardown DFLL
->>>>>>>>>>>>>>>> on a reboot, but likely that there are other
->>>>>>>>>>>>>>>> clock-related problems as
->>>>>>>>>>>>>>>> well that may break KEXEC and thus it is not very
->>>>>>>>>>>>>>>> important at the
->>>>>>>>>>>>>>>> moment.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> [snip]
->>>>>>>>>>>>>>> During bootup CPUG sources from PLL_X. By PLL_P source
->>>>>>>>>>>>>>> above I meant
->>>>>>>>>>>>>>> PLL_P_OUT4.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> As per clock policies, PLL_X is always used for high freq
->>>>>>>>>>>>>>> like
->>>>>>>>>>>>>>>> 800Mhz
->>>>>>>>>>>>>>> and for low frequency it will be sourced from PLLP.
->>>>>>>>>>>>>> Alright, then please don't forget to pre-initialize
->>>>>>>>>>>>>> PLLP_OUT4 rate to a
->>>>>>>>>>>>>> reasonable value using tegra_clk_init_table or
->>>>>>>>>>>>>> assigned-clocks.
->>>>>>>>>>>>> PLLP_OUT4 rate update is not needed as it is safe to run at
->>>>>>>>>>>>> 408Mhz because it is below fmax @ Vmin
->>>>>>>>>>>> So even 204MHz CVB entries are having the same voltage as
->>>>>>>>>>>> 408MHz, correct? It's not instantly obvious to me from the
->>>>>>>>>>>> DFLL driver's code where the fmax @ Vmin is defined, I see
->>>>>>>>>>>> that there is the min_millivolts
->>>>>>>>>>>> and frequency entries starting from 204MHZ defined
->>>>>>>>>>>> per-table.
->>>>>>>>>>> Yes at Vmin CPU Fmax is ~800Mhz. So anything below that will
->>>>>>>>>>> work at Vmin voltage and PLLP max is 408Mhz.
->>>>>>>>>> Thank you for the clarification. It would be good to have that
->>>>>>>>>> commented
->>>>>>>>>> in the code as well.
->>>>>>>>> OK, Will add...
->>>>>>>> Regarding, adding suspend/resume to CPUFreq, CPUFreq suspend
->>>>>>>> happens very early even before disabling non-boot CPUs and also
->>>>>>>> need to export clock driver APIs to CPUFreq.
->>>>>>>>
->>>>>>>> Was thinking of below way of implementing this...
->>>>>>>>
->>>>>>>>
->>>>>>>> Clock DFLL driver Suspend:
->>>>>>>>
->>>>>>>>            - Save CPU clock policy registers, and Perform dfll
->>>>>>>> suspend which sets in open loop mode
->>>>>>>>
->>>>>>>> CPU Freq driver Suspend: does nothing
->>>>>>>>
->>>>>>>>
->>>>>>>> Clock DFLL driver Resume:
->>>>>>>>
->>>>>>>>            - Re-init DFLL, Set in Open-Loop mode, restore CPU
->>>>>>>> Clock policy registers which actually sets source to DFLL along
->>>>>>>> with other CPU Policy register restore.
->>>>>>>>
->>>>>>>> CPU Freq driver Resume:
->>>>>>>>
->>>>>>>>            - do clk_prepare_enable which acutally sets DFLL in
->>>>>>>> Closed loop mode
->>>>>>>>
->>>>>>>>
->>>>>>>> Adding one more note: Switching CPU Clock to PLLP is not needed
->>>>>>>> as CPU CLock can be from dfll in open-loop mode as DFLL is not
->>>>>>>> disabled anywhere throught the suspend/resume path and SC7 entry
->>>>>>>> FW and Warm boot code will switch CPU source to PLLP.
->>>>>> Since CPU resumes on PLLP, it will be cleaner to suspend it on
->>>>>> PLLP as well. And besides, seems that currently disabling DFLL
->>>>>> clock will disable DFLL completely and then you'd want to re-init
->>>>>> the DFLL on resume any ways. So better to just disable DFLL
->>>>>> completely on suspend, which should happen on clk_disable(dfll).
->>>>> Will switch to PLLP during CPUFreq suspend. With decision of using
->>>>> clk_disable during suspend, its mandatory to switch to PLLP as DFLL
->>>>> is completely disabled.
->>>>>
->>>>> My earlier concern was on restoring CPU policy as we can't do that
->>>>> from CPUFreq driver and need export from clock driver.
->>>>>
->>>>> Clear now and will do CPU clock policy restore in after dfll
->>>>> re-init.
->>>> Why the policy can't be saved/restored by the CaR driver as a
->>>> context of any other clock?
->>> restoring cpu clock policy involves programming source and
->>> super_cclkg_divider.
->>>
->>> cclk_g is registered as clk_super_mux and it doesn't use frac_div ops
->>> to do save/restore its divider.
->> That can be changed of course and I guess it also could be as simple as
->> saving and restoring of two raw u32 values of the policy/divider
->> registers.
->>
->>> Also, during clock context we cant restore cclk_g as cclk_g source
->>> will be dfll and dfll will not be resumed/re-initialized by the time
->>> clk_super_mux save/restore happens.
->>>
->>> we can't use save/restore context for dfll clk_ops because
->>> dfllCPU_out parent to CCLK_G is first in the clock tree and dfll_ref
->>> and dfll_soc peripheral clocks are not restored by the time dfll
->>> restore happens. Also dfll peripheral clock enables need to be
->>> restored before dfll restore happens which involves programming dfll
->>> controller for re-initialization.
->>>
->>> So dfll resume/re-init is done in clk-tegra210 at end of all clocks
->>> restore in V5 series but instead of in clk-tegra210 driver I moved
->>> now to dfll-fcpu driver pm_ops as all dfll dependencies will be
->>> restored thru clk_restore_context by then. This will be in V6.
->> Since DFLL is now guaranteed to be disabled across CaR suspend/resume
->> (hence it has nothing to do in regards to CCLK) and given that PLLs
->> state is restored before the rest of the clocks, I don't see why not to
->> implement CCLK save/restore in a generic fasion. CPU policy wull be
->> restored to either PLLP or PLLX (if CPUFreq driver is disabled).
->>
-> CCLK_G save/restore should happen in clk_super_mux ops save/context and
-> clk_super_mux save/restore happens very early as cclk_g is first in the
-> clock tree and save/restore traverses through the tree top-bottom order.
+> Add TPM 2.0 compatible I2C interface for chips with cr50 firmware.
+> 
+> The firmware running on the currently supported H1 MCU requires a
+> special driver to handle its specific protocol, and this makes it
+> unsuitable to use tpm_tis_core_* and instead it must implement the
+> underlying TPM protocol similar to the other I2C TPM drivers.
+> 
+> - All 4 byes of status register must be read/written at once.
+> - FIFO and burst count is limited to 63 and must be drained by AP.
+> - Provides an interrupt to indicate when read response data is ready
+> and when the TPM is finished processing write data.
 
-If CCLK_G is restored before the PLLs, then just change the clocks order
-such that it won't happen.
+And why does this prevent using the existing tpm_tis_core 
+infrastructure? Taking the status register as an example, you could just 
+teach read_bytes to look at the requested address, and if it lies 
+between 0x18 and 0x1b read the whole status register and then return 
+only the subset that has been requested originally.
 
-> DFLL enable thru CPUFreq resume happens after all clk_restore_context
-> happens. So during clk_restore_context, dfll re-init doesnt happen and
-> doing cpu clock policy restore during super_mux clk_ops will crash as
-> DFLL is not initialized and its clock is not enabled but CPU clock
-> restore sets source to DFLL if we restore during super_clk_mux
+Both approaches might not be pretty, but I'd prefer having shared code 
+with explicit code paths for the differences instead of having two 
+copies of mostly the same algorithm where a simple diff will print out a 
+lot more than just the crucial differences.
 
-If CPU was suspended on PLLP, then it will be restored on PLLP by CaR. I
-don't understand what DFLL has to do with the CCLK in that case during
-the clocks restore.
+> This driver is based on the existing infineon I2C TPM driver, which
+> most closely matches the cr50 i2c protocol behavior.  The driver is
+> intentionally kept very similar in structure and style to the
+> corresponding drivers in coreboot and depthcharge.
+> 
+> Signed-off-by: Duncan Laurie <dlaurie@chromium.org>
+> [swboyd@chromium.org: Depend on i2c even if it's a module, replace
+> boilier plate with SPDX tag, drop asm/byteorder.h include, simplify
+> return from probe]
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>   drivers/char/tpm/Kconfig    |  10 +
+>   drivers/char/tpm/Makefile   |   1 +
+>   drivers/char/tpm/cr50_i2c.c | 705 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 716 insertions(+)
+>   create mode 100644 drivers/char/tpm/cr50_i2c.c
+> 
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index b7028bfa6f87..57a8c3540265 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -119,6 +119,16 @@ config TCG_CR50
+>   	---help---
+>   	  Common routines shared by drivers for Cr50-based devices.
+>   
+> +config TCG_CR50_I2C
+> +	tristate "Cr50 I2C Interface"
+> +	depends on I2C
+> +	select TCG_CR50
+> +	---help---
+> +	  If you have a H1 secure module running Cr50 firmware on I2C bus,
+> +	  say Yes and it will be accessible from within Linux. To compile
+> +	  this driver as a module, choose M here; the module will be called
+> +	  cr50_i2c.
+> +
+>   config TCG_CR50_SPI
+>   	tristate "Cr50 SPI Interface"
+>   	depends on SPI
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 4e89538c73c8..3ac3448c21fa 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_TCG_NSC) += tpm_nsc.o
+>   obj-$(CONFIG_TCG_ATMEL) += tpm_atmel.o
+>   obj-$(CONFIG_TCG_CR50) += cr50.o
+>   obj-$(CONFIG_TCG_CR50_SPI) += cr50_spi.o
+> +obj-$(CONFIG_TCG_CR50_I2C) += cr50_i2c.o
+>   obj-$(CONFIG_TCG_INFINEON) += tpm_infineon.o
+>   obj-$(CONFIG_TCG_IBMVTPM) += tpm_ibmvtpm.o
+>   obj-$(CONFIG_TCG_TIS_ST33ZP24) += st33zp24/
+> diff --git a/drivers/char/tpm/cr50_i2c.c b/drivers/char/tpm/cr50_i2c.c
+> new file mode 100644
+> index 000000000000..25934c038b9b
+> --- /dev/null
+> +++ b/drivers/char/tpm/cr50_i2c.c
+> @@ -0,0 +1,705 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2016 Google Inc.
+> + *
+> + * Based on Linux Kernel TPM driver by
+> + * Peter Huewe <peter.huewe@infineon.com>
+> + * Copyright (C) 2011 Infineon Technologies
+> + */
+> +
+> +/*
+> + * cr50 is a firmware for H1 secure modules that requires special
+> + * handling for the I2C interface.
+> + *
+> + * - Use an interrupt for transaction status instead of hardcoded delays
+> + * - Must use write+wait+read read protocol
+> + * - All 4 bytes of status register must be read/written at once
+> + * - Burst count max is 63 bytes, and burst count behaves
+> + *   slightly differently than other I2C TPMs
+> + * - When reading from FIFO the full burstcnt must be read
+> + *   instead of just reading header and determining the remainder
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/completion.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/pm.h>
+> +#include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/wait.h>
+> +#include "cr50.h"
+> +#include "tpm.h"
+> +
+> +#define CR50_MAX_BUFSIZE	63
+> +#define CR50_TIMEOUT_SHORT_MS	2	/* Short timeout during transactions */
+> +#define CR50_TIMEOUT_NOIRQ_MS	20	/* Timeout for TPM ready without IRQ */
+> +#define CR50_I2C_DID_VID	0x00281ae0L
+> +#define CR50_I2C_MAX_RETRIES	3	/* Max retries due to I2C errors */
+> +#define CR50_I2C_RETRY_DELAY_LO	55	/* Min usecs between retries on I2C */
+> +#define CR50_I2C_RETRY_DELAY_HI	65	/* Max usecs between retries on I2C */
+> +
+> +static unsigned short rng_quality = 1022;
+> +
+> +module_param(rng_quality, ushort, 0644);
+> +MODULE_PARM_DESC(rng_quality,
+> +		 "Estimation of true entropy, in bits per 1024 bits.");
+> +
+> +struct priv_data {
+> +	int irq;
+> +	int locality;
+> +	struct completion tpm_ready;
+> +	u8 buf[CR50_MAX_BUFSIZE + sizeof(u8)];
+> +};
+> +
+> +/*
+> + * The cr50 interrupt handler just signals waiting threads that the
+> + * interrupt was asserted.  It does not do any processing triggered
+> + * by interrupts but is instead used to avoid fixed delays.
+> + */
+> +static irqreturn_t cr50_i2c_int_handler(int dummy, void *dev_id)
+> +{
+> +	struct tpm_chip *chip = dev_id;
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +
+> +	complete(&priv->tpm_ready);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/*
+> + * Wait for completion interrupt if available, otherwise use a fixed
+> + * delay for the TPM to be ready.
+> + *
+> + * Returns negative number for error, positive number for success.
+> + */
+> +static int cr50_i2c_wait_tpm_ready(struct tpm_chip *chip)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	long rc;
+> +
+> +	/* Use a safe fixed delay if interrupt is not supported */
+> +	if (priv->irq <= 0) {
+> +		msleep(CR50_TIMEOUT_NOIRQ_MS);
+> +		return 1;
+> +	}
+> +
+> +	/* Wait for interrupt to indicate TPM is ready to respond */
+> +	rc = wait_for_completion_timeout(&priv->tpm_ready,
+> +		msecs_to_jiffies(chip->timeout_a));
+> +
+> +	if (rc == 0)
+> +		dev_warn(&chip->dev, "Timeout waiting for TPM ready\n");
+> +
+> +	return rc;
+> +}
+> +
+> +static void cr50_i2c_enable_tpm_irq(struct tpm_chip *chip)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +
+> +	if (priv->irq > 0) {
+> +		reinit_completion(&priv->tpm_ready);
+> +		enable_irq(priv->irq);
+> +	}
+> +}
+> +
+> +static void cr50_i2c_disable_tpm_irq(struct tpm_chip *chip)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +
+> +	if (priv->irq > 0)
+> +		disable_irq(priv->irq);
+> +}
+> +
+> +/*
+> + * cr50_i2c_transfer - transfer messages over i2c
+> + *
+> + * @adapter: i2c adapter
+> + * @msgs: array of messages to transfer
+> + * @num: number of messages in the array
+> + *
+> + * Call unlocked i2c transfer routine with the provided parameters and retry
+> + * in case of bus errors. Returns the number of transferred messages.
+> + */
+
+Documentation is nice, why is it only present for some of the functions? 
+Also, the dev parameter is missing in the list of parameters above.
+
+> +static int cr50_i2c_transfer(struct device *dev, struct i2c_adapter *adapter,
+> +			     struct i2c_msg *msgs, int num)
+> +{
+> +	int rc, try;
+> +
+> +	for (try = 0; try < CR50_I2C_MAX_RETRIES; try++) {
+> +		rc = __i2c_transfer(adapter, msgs, num);
+> +		if (rc > 0)
+> +			break;
+> +		if (try)
+> +			dev_warn(dev, "i2c transfer failed (attempt %d/%d): %d\n",
+> +				 try+1, CR50_I2C_MAX_RETRIES, rc);
+
+Why does this not generate a message when the first attempt fails?
+
+> +		usleep_range(CR50_I2C_RETRY_DELAY_LO, CR50_I2C_RETRY_DELAY_HI);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +/*
+> + * cr50_i2c_read() - read from TPM register
+> + *
+> + * @chip: TPM chip information
+> + * @addr: register address to read from
+> + * @buffer: provided by caller
+> + * @len: number of bytes to read
+> + *
+> + * 1) send register address byte 'addr' to the TPM
+> + * 2) wait for TPM to indicate it is ready
+> + * 3) read 'len' bytes of TPM response into the provided 'buffer'
+> + *
+> + * Returns negative number for error, 0 for success.
+> + */
+> +static int cr50_i2c_read(struct tpm_chip *chip, u8 addr, u8 *buffer, size_t len)
+> +{
+> +	struct i2c_client *client = to_i2c_client(chip->dev.parent);
+> +	struct i2c_msg msg1 = {
+> +		.addr = client->addr,
+> +		.len = 1,
+> +		.buf = &addr
+> +	};
+> +	struct i2c_msg msg2 = {
+> +		.addr = client->addr,
+> +		.flags = I2C_M_RD,
+> +		.len = len,
+> +		.buf = buffer
+> +	};
+> +	int rc;
+> +
+> +	i2c_lock_bus(client->adapter, I2C_LOCK_SEGMENT);
+> +
+> +	/* Prepare for completion interrupt */
+> +	cr50_i2c_enable_tpm_irq(chip);
+> +
+> +	/* Send the register address byte to the TPM */
+> +	rc = cr50_i2c_transfer(&chip->dev, client->adapter, &msg1, 1);
+> +	if (rc <= 0)
+> +		goto out;
+> +
+> +	/* Wait for TPM to be ready with response data */
+> +	rc = cr50_i2c_wait_tpm_ready(chip);
+> +	if (rc < 0)
+> +		goto out;
+> +
+> +	/* Read response data from the TPM */
+> +	rc = cr50_i2c_transfer(&chip->dev, client->adapter, &msg2, 1);
+> +
+> +out:
+> +	cr50_i2c_disable_tpm_irq(chip);
+> +	i2c_unlock_bus(client->adapter, I2C_LOCK_SEGMENT);
+> +
+> +	if (rc < 0)
+> +		return rc;
+> +	if (rc == 0)
+> +		return -EIO; /* No i2c segments transferred */
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * cr50_i2c_write() - write to TPM register
+> + *
+> + * @chip: TPM chip information
+> + * @addr: register address to write to
+> + * @buffer: data to write
+> + * @len: number of bytes to write
+> + *
+> + * 1) prepend the provided address to the provided data
+> + * 2) send the address+data to the TPM
+> + * 3) wait for TPM to indicate it is done writing
+> + *
+> + * Returns negative number for error, 0 for success.
+> + */
+> +static int cr50_i2c_write(struct tpm_chip *chip, u8 addr, u8 *buffer,
+> +			  size_t len)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	struct i2c_client *client = to_i2c_client(chip->dev.parent);
+> +	struct i2c_msg msg1 = {
+> +		.addr = client->addr,
+> +		.len = len + 1,
+> +		.buf = priv->buf
+> +	};
+> +	int rc;
+> +
+> +	if (len > CR50_MAX_BUFSIZE)
+> +		return -EINVAL;
+> +
+> +	i2c_lock_bus(client->adapter, I2C_LOCK_SEGMENT);
+> +
+> +	/* Prepend the 'register address' to the buffer */
+> +	priv->buf[0] = addr;
+> +	memcpy(priv->buf + 1, buffer, len);
+> +
+> +	/* Prepare for completion interrupt */
+> +	cr50_i2c_enable_tpm_irq(chip);
+> +
+> +	/* Send write request buffer with address */
+> +	rc = cr50_i2c_transfer(&chip->dev, client->adapter, &msg1, 1);
+> +	if (rc <= 0)
+> +		goto out;
+> +
+> +	/* Wait for TPM to be ready, ignore timeout */
+> +	cr50_i2c_wait_tpm_ready(chip);
+> +
+> +out:
+> +	cr50_i2c_disable_tpm_irq(chip);
+> +	i2c_unlock_bus(client->adapter, I2C_LOCK_SEGMENT);
+> +
+> +	if (rc < 0)
+> +		return rc;
+> +	if (rc == 0)
+> +		return -EIO; /* No i2c segments transferred */
+> +
+> +	return 0;
+> +}
+> +
+> +enum tis_access {
+> +	TPM_ACCESS_VALID = 0x80,
+> +	TPM_ACCESS_ACTIVE_LOCALITY = 0x20,
+> +	TPM_ACCESS_REQUEST_PENDING = 0x04,
+> +	TPM_ACCESS_REQUEST_USE = 0x02,
+> +};
+> +
+> +enum tis_status {
+> +	TPM_STS_VALID = 0x80,
+> +	TPM_STS_COMMAND_READY = 0x40,
+> +	TPM_STS_GO = 0x20,
+> +	TPM_STS_DATA_AVAIL = 0x10,
+> +	TPM_STS_DATA_EXPECT = 0x08,
+> +};
+> +
+> +enum tis_defaults {
+> +	TIS_SHORT_TIMEOUT = 750,	/* ms */
+> +	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
+> +};
+
+This is already defined in tpm_tis_core.h. Do you really need to 
+redefine it here?
+
+> +
+> +#define	TPM_ACCESS(l)			(0x0000 | ((l) << 4))
+> +#define	TPM_STS(l)			(0x0001 | ((l) << 4))
+> +#define	TPM_DATA_FIFO(l)		(0x0005 | ((l) << 4))
+> +#define	TPM_DID_VID(l)			(0x0006 | ((l) << 4))
+> +
+> +static int check_locality(struct tpm_chip *chip, int loc)
+> +{
+> +	u8 mask = TPM_ACCESS_VALID | TPM_ACCESS_ACTIVE_LOCALITY;
+> +	u8 buf;
+> +	int rc;
+> +
+> +	rc = cr50_i2c_read(chip, TPM_ACCESS(loc), &buf, 1);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	if ((buf & mask) == mask)
+> +		return loc;
+> +
+> +	return -EIO;
+> +}
+> +
+> +static void release_locality(struct tpm_chip *chip, int force)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	u8 mask = TPM_ACCESS_VALID | TPM_ACCESS_REQUEST_PENDING;
+> +	u8 addr = TPM_ACCESS(priv->locality);
+> +	u8 buf;
+> +
+> +	if (cr50_i2c_read(chip, addr, &buf, 1) < 0)
+> +		return;
+> +
+> +	if (force || (buf & mask) == mask) {
+> +		buf = TPM_ACCESS_ACTIVE_LOCALITY;
+> +		cr50_i2c_write(chip, addr, &buf, 1);
+> +	}
+> +
+> +	priv->locality = 0;
+> +}
+> +
+> +static int request_locality(struct tpm_chip *chip, int loc)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	u8 buf = TPM_ACCESS_REQUEST_USE;
+> +	unsigned long stop;
+> +	int rc;
+> +
+> +	if (check_locality(chip, loc) == loc)
+> +		return loc;
+> +
+> +	rc = cr50_i2c_write(chip, TPM_ACCESS(loc), &buf, 1);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	stop = jiffies + chip->timeout_a;
+> +	do {
+> +		if (check_locality(chip, loc) == loc) {
+> +			priv->locality = loc;
+> +			return loc;
+> +		}
+> +		msleep(CR50_TIMEOUT_SHORT_MS);
+> +	} while (time_before(jiffies, stop));
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +/* cr50 requires all 4 bytes of status register to be read */
+> +static u8 cr50_i2c_tis_status(struct tpm_chip *chip)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	u8 buf[4];
+> +
+> +	if (cr50_i2c_read(chip, TPM_STS(priv->locality), buf, sizeof(buf)) < 0)
+> +		return 0;
+> +	return buf[0];
+> +}
+> +
+> +/* cr50 requires all 4 bytes of status register to be written */
+> +static void cr50_i2c_tis_ready(struct tpm_chip *chip)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	u8 buf[4] = { TPM_STS_COMMAND_READY };
+> +
+> +	cr50_i2c_write(chip, TPM_STS(priv->locality), buf, sizeof(buf));
+> +	msleep(CR50_TIMEOUT_SHORT_MS);
+> +}
+> +
+> +/*
+> + * cr50 uses bytes 3:2 of status register for burst count and
+> + * all 4 bytes must be read
+> + */
+> +static int cr50_i2c_wait_burststs(struct tpm_chip *chip, u8 mask,
+> +				  size_t *burst, int *status)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	unsigned long stop;
+> +	u8 buf[4];
+> +
+> +	/* wait for burstcount */
+> +	stop = jiffies + chip->timeout_b;
+> +	do {
+> +		if (cr50_i2c_read(chip, TPM_STS(priv->locality),
+> +				  (u8 *)&buf, sizeof(buf)) < 0) {
+> +			msleep(CR50_TIMEOUT_SHORT_MS);
+> +			continue;
+> +		}
+> +
+> +		*status = *buf;
+> +		*burst = le16_to_cpup((__le16 *)(buf + 1));
+> +
+> +		if ((*status & mask) == mask &&
+> +		    *burst > 0 && *burst <= CR50_MAX_BUFSIZE)
+> +			return 0;
+> +
+> +		msleep(CR50_TIMEOUT_SHORT_MS);
+> +	} while (time_before(jiffies, stop));
+> +
+> +	dev_err(&chip->dev, "Timeout reading burst and status\n");
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int cr50_i2c_tis_recv(struct tpm_chip *chip, u8 *buf, size_t buf_len)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	int status, rc;
+> +	size_t burstcnt, cur, len, expected;
+> +	u8 addr = TPM_DATA_FIFO(priv->locality);
+> +	u8 mask = TPM_STS_VALID | TPM_STS_DATA_AVAIL;
+> +
+> +	if (buf_len < TPM_HEADER_SIZE)
+> +		return -EINVAL;
+> +
+> +	rc = cr50_i2c_wait_burststs(chip, mask, &burstcnt, &status);
+> +	if (rc < 0)
+> +		goto out_err;
+> +
+> +	if (burstcnt > buf_len || burstcnt < TPM_HEADER_SIZE) {
+> +		dev_err(&chip->dev,
+> +			"Unexpected burstcnt: %zu (max=%zu, min=%d)\n",
+> +			burstcnt, buf_len, TPM_HEADER_SIZE);
+> +		rc = -EIO;
+> +		goto out_err;
+> +	}
+> +
+> +	/* Read first chunk of burstcnt bytes */
+> +	rc = cr50_i2c_read(chip, addr, buf, burstcnt);
+> +	if (rc < 0) {
+> +		dev_err(&chip->dev, "Read of first chunk failed\n");
+> +		goto out_err;
+> +	}
+> +
+> +	/* Determine expected data in the return buffer */
+> +	expected = be32_to_cpup((__be32 *)(buf + 2));
+> +	if (expected > buf_len) {
+> +		dev_err(&chip->dev, "Too much data in FIFO\n");
+> +		goto out_err;
+> +	}
+> +
+> +	/* Now read the rest of the data */
+> +	cur = burstcnt;
+> +	while (cur < expected) {
+> +		/* Read updated burst count and check status */
+> +		rc = cr50_i2c_wait_burststs(chip, mask, &burstcnt, &status);
+> +		if (rc < 0)
+> +			goto out_err;
+> +
+> +		len = min_t(size_t, burstcnt, expected - cur);
+> +		rc = cr50_i2c_read(chip, addr, buf + cur, len);
+> +		if (rc < 0) {
+> +			dev_err(&chip->dev, "Read failed\n");
+> +			goto out_err;
+> +		}
+> +
+> +		cur += len;
+> +	}
+> +
+> +	/* Ensure TPM is done reading data */
+> +	rc = cr50_i2c_wait_burststs(chip, TPM_STS_VALID, &burstcnt, &status);
+> +	if (rc < 0)
+> +		goto out_err;
+> +	if (status & TPM_STS_DATA_AVAIL) {
+> +		dev_err(&chip->dev, "Data still available\n");
+> +		rc = -EIO;
+> +		goto out_err;
+> +	}
+> +
+> +	release_locality(chip, 0);
+> +	return cur;
+> +
+> +out_err:
+> +	/* Abort current transaction if still pending */
+> +	if (cr50_i2c_tis_status(chip) & TPM_STS_COMMAND_READY)
+> +		cr50_i2c_tis_ready(chip);
+> +
+> +	release_locality(chip, 0);
+> +	return rc;
+> +}
+> +
+> +static int cr50_i2c_tis_send(struct tpm_chip *chip, u8 *buf, size_t len)
+> +{
+> +	struct priv_data *priv = dev_get_drvdata(&chip->dev);
+> +	int rc, status;
+> +	size_t burstcnt, limit, sent = 0;
+> +	u8 tpm_go[4] = { TPM_STS_GO };
+> +	unsigned long stop;
+> +
+> +	rc = request_locality(chip, 0);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	/* Wait until TPM is ready for a command */
+> +	stop = jiffies + chip->timeout_b;
+> +	while (!(cr50_i2c_tis_status(chip) & TPM_STS_COMMAND_READY)) {
+> +		if (time_after(jiffies, stop)) {
+> +			rc = -ETIMEDOUT;
+> +			goto out_err;
+> +		}
+> +
+> +		cr50_i2c_tis_ready(chip);
+> +	}
+> +
+> +	while (len > 0) {
+> +		u8 mask = TPM_STS_VALID;
+> +
+> +		/* Wait for data if this is not the first chunk */
+> +		if (sent > 0)
+> +			mask |= TPM_STS_DATA_EXPECT;
+> +
+> +		/* Read burst count and check status */
+> +		rc = cr50_i2c_wait_burststs(chip, mask, &burstcnt, &status);
+> +		if (rc < 0)
+> +			goto out_err;
+> +
+> +		/*
+> +		 * Use burstcnt - 1 to account for the address byte
+> +		 * that is inserted by cr50_i2c_write()
+> +		 */
+> +		limit = min_t(size_t, burstcnt - 1, len);
+> +		rc = cr50_i2c_write(chip, TPM_DATA_FIFO(priv->locality),
+> +				    &buf[sent], limit);
+> +		if (rc < 0) {
+> +			dev_err(&chip->dev, "Write failed\n");
+> +			goto out_err;
+> +		}
+> +
+> +		sent += limit;
+> +		len -= limit;
+> +	}
+> +
+> +	/* Ensure TPM is not expecting more data */
+> +	rc = cr50_i2c_wait_burststs(chip, TPM_STS_VALID, &burstcnt, &status);
+> +	if (rc < 0)
+> +		goto out_err;
+> +	if (status & TPM_STS_DATA_EXPECT) {
+> +		dev_err(&chip->dev, "Data still expected\n");
+> +		rc = -EIO;
+> +		goto out_err;
+> +	}
+> +
+> +	/* Start the TPM command */
+> +	rc = cr50_i2c_write(chip, TPM_STS(priv->locality), tpm_go,
+> +			    sizeof(tpm_go));
+> +	if (rc < 0) {
+> +		dev_err(&chip->dev, "Start command failed\n");
+> +		goto out_err;
+> +	}
+> +	return 0;
+> +
+> +out_err:
+> +	/* Abort current transaction if still pending */
+> +	if (cr50_i2c_tis_status(chip) & TPM_STS_COMMAND_READY)
+> +		cr50_i2c_tis_ready(chip);
+> +
+> +	release_locality(chip, 0);
+> +	return rc;
+> +}
+> +
+> +static bool cr50_i2c_req_canceled(struct tpm_chip *chip, u8 status)
+> +{
+> +	return (status == TPM_STS_COMMAND_READY);
+> +}
+> +
+> +static const struct tpm_class_ops cr50_i2c = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+> +	.status = &cr50_i2c_tis_status,
+> +	.recv = &cr50_i2c_tis_recv,
+> +	.send = &cr50_i2c_tis_send,
+> +	.cancel = &cr50_i2c_tis_ready,
+> +	.req_complete_mask = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> +	.req_complete_val = TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> +	.req_canceled = &cr50_i2c_req_canceled,
+> +};
+> +
+> +static int cr50_i2c_init(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct tpm_chip *chip;
+> +	struct priv_data *priv;
+> +	u8 buf[4];
+> +	u32 vendor;
+> +	int rc;
+> +
+> +	chip = tpmm_chip_alloc(dev, &cr50_i2c);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/* cr50 is a TPM 2.0 chip */
+> +	chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +
+> +	/* Default timeouts */
+> +	chip->timeout_a = msecs_to_jiffies(TIS_SHORT_TIMEOUT);
+> +	chip->timeout_b = msecs_to_jiffies(TIS_LONG_TIMEOUT);
+> +	chip->timeout_c = msecs_to_jiffies(TIS_SHORT_TIMEOUT);
+> +	chip->timeout_d = msecs_to_jiffies(TIS_SHORT_TIMEOUT);
+> +
+> +	dev_set_drvdata(&chip->dev, priv);
+> +	init_completion(&priv->tpm_ready);
+> +
+> +	if (client->irq > 0) {
+> +		rc = devm_request_irq(dev, client->irq, cr50_i2c_int_handler,
+> +				      IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +				      dev->driver->name, chip);
+> +		if (rc < 0) {
+> +			dev_err(dev, "Failed to probe IRQ %d\n", client->irq);
+> +			return rc;
+> +		}
+> +
+> +		disable_irq(client->irq);
+> +		priv->irq = client->irq;
+> +	} else {
+> +		dev_warn(dev, "No IRQ, will use %ums delay for TPM ready\n",
+> +			 CR50_TIMEOUT_NOIRQ_MS);
+> +	}
+> +
+> +	rc = request_locality(chip, 0);
+> +	if (rc < 0) {
+> +		dev_err(dev, "Could not request locality\n");
+> +		return rc;
+> +	}
+> +
+> +	/* Read four bytes from DID_VID register */
+> +	rc = cr50_i2c_read(chip, TPM_DID_VID(0), buf, sizeof(buf));
+> +	if (rc < 0) {
+> +		dev_err(dev, "Could not read vendor id\n");
+> +		release_locality(chip, 1);
+> +		return rc;
+> +	}
+> +
+> +	vendor = le32_to_cpup((__le32 *)buf);
+> +	if (vendor != CR50_I2C_DID_VID) {
+> +		dev_err(dev, "Vendor ID did not match! ID was %08x\n", vendor);
+> +		release_locality(chip, 1);
+> +		return -ENODEV;
+> +	}
+> +
+> +	dev_info(dev, "cr50 TPM 2.0 (i2c 0x%02x irq %d id 0x%x)\n",
+> +		 client->addr, client->irq, vendor >> 16);
+> +
+> +	chip->hwrng.quality = rng_quality;
+> +
+> +	return tpm_chip_register(chip);
+> +}
+> +
+> +static const struct i2c_device_id cr50_i2c_table[] = {
+> +	{"cr50_i2c", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, cr50_i2c_table);
+> +
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id cr50_i2c_acpi_id[] = {
+> +	{ "GOOG0005", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, cr50_i2c_acpi_id);
+> +#endif
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_cr50_i2c_match[] = {
+> +	{ .compatible = "google,cr50", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_cr50_i2c_match);
+> +#endif
+> +
+> +static int cr50_i2c_probe(struct i2c_client *client,
+> +			  const struct i2c_device_id *id)
+> +{
+> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+> +		return -ENODEV;
+> +
+> +	return cr50_i2c_init(client);
+> +}
+> +
+> +static int cr50_i2c_remove(struct i2c_client *client)
+> +{
+> +	struct tpm_chip *chip = i2c_get_clientdata(client);
+> +
+> +	tpm_chip_unregister(chip);
+> +	release_locality(chip, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(cr50_i2c_pm, cr50_suspend, cr50_resume);
+> +
+> +static struct i2c_driver cr50_i2c_driver = {
+> +	.id_table = cr50_i2c_table,
+> +	.probe = cr50_i2c_probe,
+> +	.remove = cr50_i2c_remove,
+> +	.driver = {
+> +		.name = "cr50_i2c",
+> +		.pm = &cr50_i2c_pm,
+> +		.acpi_match_table = ACPI_PTR(cr50_i2c_acpi_id),
+> +		.of_match_table = of_match_ptr(of_cr50_i2c_match),
+> +	},
+> +};
+> +
+> +module_i2c_driver(cr50_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("cr50 TPM I2C Driver");
+> +MODULE_LICENSE("GPL")
