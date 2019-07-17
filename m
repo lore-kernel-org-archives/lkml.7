@@ -2,100 +2,80 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777A1C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD72FC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD862077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jn5ZE20X"
+	by mail.kernel.org (Postfix) with ESMTP id 8FF602077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbfGQIVJ (ORCPT
+        id S1727631AbfGQIVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:21:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40094 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfGQIVI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:21:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so11549160pla.7;
-        Wed, 17 Jul 2019 01:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ukX3X8BRlmR//HwESuIDPD9A7bwWL5k5RN/PdnrF+7c=;
-        b=jn5ZE20XLizqfHuZvh1GR/0Vb7SWdayObV9Htzl/BkbTOqbg0W+7QFoJIZxyA8oisf
-         ub7IPEkAXW9Ms/q6+wmNHjyyin7WDdVgXlvk01urEO2GPm0PCaJCPEoKkQFPc91QuVPP
-         muiDZ7Hs9RVNqa2AU+GQ6ljzTFzuOV8zVOjnUNcPzoT9xmaErPuPEJiQ9aqNSmxc64q0
-         SpJSTaCCwzye9fBQkUiJ6gjxCmbC8tXBKAfGuhGfEyNImJSP0W7IbKlfNrtpTlLbAaok
-         qg/AeW7/L67AqbmG8nUaLwtTTUCF1zt7ZqU6gpOYHO0b1GA3C3POtuTvQM0kynxMXrUk
-         iBHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ukX3X8BRlmR//HwESuIDPD9A7bwWL5k5RN/PdnrF+7c=;
-        b=nen97rZI7sTDszVHwl6ef05wzhJR12+V8Te6Z0tlGHxwzJijZePENV2Rb3v5jOsYVy
-         JMOwjSUCHMnFZW7vxMvXzmTux3FYrkzGp8bJz5TebCGrC3njKscYBFii9moUcR0RgT4x
-         X0Tn08ozcqElt4NVJadnkNuj2FTG5ZC1ppUkNgwXkN8uOOXaW4SNTRjpc555Ka8aLhcp
-         +HtzCit5orMtnMiNYygTy+Nwh3UcuslmYj+V12SCV1Wr460SQDcgeBpq8rR+EalJik78
-         2P6+y9QOJ4rOarHD8xdQMWnNt9VgCEzg0vH6YhMQR9Wof/NN+IaiBnAXDtu8ylM8WrOk
-         mKYQ==
-X-Gm-Message-State: APjAAAUSTj8BBAbo6Ch2bzC9nU9kMgloZZXEo6+zr6sreqiHFRRBmPWS
-        7WRtgt5RzmRIPEEEiViBpwrMkO/5eBY=
-X-Google-Smtp-Source: APXvYqykTSlhQOSKNw5mHZfzwq6N10owDSgGGDbZSWEvVhka6bdL8xOstcLiMbxvuo3Sai44hpxjHA==
-X-Received: by 2002:a17:902:b186:: with SMTP id s6mr41487960plr.343.1563351667968;
-        Wed, 17 Jul 2019 01:21:07 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id p187sm34516844pfg.89.2019.07.17.01.21.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 01:21:07 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] IB/mlx5: Replace kfree with kvfree
-Date:   Wed, 17 Jul 2019 16:21:01 +0800
-Message-Id: <20190717082101.14196-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 17 Jul 2019 04:21:35 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39664 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbfGQIVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:21:34 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 46905200099;
+        Wed, 17 Jul 2019 10:21:33 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 31C9B20024E;
+        Wed, 17 Jul 2019 10:21:30 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 041B2402C3;
+        Wed, 17 Jul 2019 16:21:25 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] rtc: mxc_v2: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 17 Jul 2019 16:12:17 +0800
+Message-Id: <20190717081217.30518-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variable allocated by kvzalloc should not be freed by kfree.
-Because it may be allocated by vmalloc.
-So replace kfree with kvfree here.
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Use the new helper devm_platform_ioremap_resource() which wraps the
+platform_get_resource() and devm_ioremap_resource() together, to
+simplify the code.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/infiniband/hw/mlx5/odp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-mxc_v2.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
-index 5b642d81e617..ea4b41b260b3 100644
---- a/drivers/infiniband/hw/mlx5/odp.c
-+++ b/drivers/infiniband/hw/mlx5/odp.c
-@@ -1813,7 +1813,7 @@ int mlx5_ib_advise_mr_prefetch(struct ib_pd *pd,
- 	if (valid_req)
- 		queue_work(system_unbound_wq, &work->work);
- 	else
--		kfree(work);
-+		kvfree(work);
+diff --git a/drivers/rtc/rtc-mxc_v2.c b/drivers/rtc/rtc-mxc_v2.c
+index 5b970a8..9153456 100644
+--- a/drivers/rtc/rtc-mxc_v2.c
++++ b/drivers/rtc/rtc-mxc_v2.c
+@@ -279,7 +279,6 @@ static int mxc_rtc_wait_for_flag(void __iomem *ioaddr, int flag)
+ static int mxc_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct mxc_rtc_data *pdata;
+-	struct resource *res;
+ 	void __iomem *ioaddr;
+ 	int ret = 0;
  
- 	srcu_read_unlock(&dev->mr_srcu, srcu_key);
+@@ -287,8 +286,7 @@ static int mxc_rtc_probe(struct platform_device *pdev)
+ 	if (!pdata)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pdata->ioaddr = devm_ioremap_resource(&pdev->dev, res);
++	pdata->ioaddr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdata->ioaddr))
+ 		return PTR_ERR(pdata->ioaddr);
  
 -- 
-2.20.1
+2.7.4
 
