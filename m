@@ -2,187 +2,138 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3D1C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17126C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94EA20880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563394410;
-	bh=OESj9GZ0OXpMmohEHzH7DGk0qr7u6wuJQJQ0LuliQSw=;
-	h=In-Reply-To:References:Subject:To:From:Date:List-ID:From;
-	b=lUsE6IRyzgcZvzY7Pg+ZHD17gfk2luP115vTbTY3CT2i/lSshEbjqINjnOdmbKVea
-	 65eQ15WF1xkzS9YAwvk1wRFGmISost38iVnsfQlU5x/ZacNvjzfuPMdSXB8PWqxEh0
-	 kyl++5kqcUsOMH5/HytMgiBYEXTvCysWhX1ZNfUc=
+	by mail.kernel.org (Postfix) with ESMTP id E434021849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5g8BUNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbfGQUN2 (ORCPT
+        id S1727428AbfGQURd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:13:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbfGQUN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:13:28 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCEB520880;
-        Wed, 17 Jul 2019 20:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563394407;
-        bh=OESj9GZ0OXpMmohEHzH7DGk0qr7u6wuJQJQ0LuliQSw=;
-        h=In-Reply-To:References:Subject:To:From:Date:From;
-        b=VTLrt/Wddbda5e3atGarJZ1accoS0idhs5NItQk1iNdWwq0YssGxK6d6eXhh5gv0T
-         UiQr3SqihUMvQ6C/dzqRZLNB4z4upkfdpfvkYKcRaD+Vql/wL7TYAyEE2P1WcwtCwV
-         CKIVjQyCKC22t1MdKTmScv1kvCpK3FZdHfsbyWrg=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 17 Jul 2019 16:17:33 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34894 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfGQURd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 16:17:33 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l2so23387736wmg.0;
+        Wed, 17 Jul 2019 13:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jDSjE56feL4M57HMVhhU1D7CrADaIyXAujaY2b7p0Rs=;
+        b=h5g8BUNGvMProBfMdpTh+q7hvyw/nnXkMstQBN2l2v0wVMu9JjnNFLf8G8UBbs8VVJ
+         ZK1iHpAE+DvFSamesInpnEeoVI7xvalKz1Gr9FkCem95LcYk+5ODLi/XzMcjGid6sc8C
+         pfG2Z66DSfSavp1cmi6zv6zOx7BuBuZbevyK4SKIOAgNp8oueRhPqcaoS0ZdE6CvUW7d
+         n7GO8Ye+0B1LccBd5UAITT+B1QMYYalCoox9TW0MC1y9eG5iGRKYKj1n91/3N9VLJPwU
+         mXp7GJRKEKpnMrR5jvH6/JMvGAIHZj5mS0z2YZ6N6pSWA0C+f3B2Xrhtt5JBsIJ6ESqR
+         esww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jDSjE56feL4M57HMVhhU1D7CrADaIyXAujaY2b7p0Rs=;
+        b=MfD0TSgf9bD5elKxGlPNsVnC/kCNiO6o+2yVj3PuJtX9ymls4hJ9rRIiu06AY5Cnod
+         xoi2csMYg1lN46nD6era4WD7+zC27M6L+guC81MsSC0ABFELa2dzShUH8AxznHZospKr
+         jPfa12ufAvlWy3aeoNMWXqC+cmO+BUTvovBHXiNgZzk60Z6mgCySWwgRRldJD1weBy2a
+         DWFdsmgf3U5nSdq5UtxFOfaweFFEpufBsscOacfTQltB7cXBESaqXeO5JkViiHyBcJeo
+         1LWe6mncJOo0HBt47cqVdDvRd6rbni+3ITUkowHzgf/Nq4RIHTSh2SjINXZtc+M3Fybn
+         xAkg==
+X-Gm-Message-State: APjAAAXc7TznpNMV4nHjCGKc9YKyvMCvSDkITYKQDHUmpOd7rNy24Q1R
+        RDgcHrV9HvAel9lMDuZ4Vjv+R24nnHv0tgUKyu4=
+X-Google-Smtp-Source: APXvYqxJ1bxS+Q8Df3UVfk+sVuMPo1SAEUkpQeAGT7wfV8seECEYiuw8rjMehNQ1vuSUoRjtsWP7h6JvJ5NmHMiYEWw=
+X-Received: by 2002:a1c:96c7:: with SMTP id y190mr35132650wmd.87.1563394650383;
+ Wed, 17 Jul 2019 13:17:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
-References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org> <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
-Subject: Re: [PATCH 12/12] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org, devicetree@vger.kernel.org,
-        gokulsri@codeaurora.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
-        robh+dt@kernel.org, sricharan@codeaurora.org
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 17 Jul 2019 13:13:26 -0700
-Message-Id: <20190717201326.DCEB520880@mail.kernel.org>
+References: <20190702152007.12190-1-daniel.baluta@nxp.com>
+In-Reply-To: <20190702152007.12190-1-daniel.baluta@nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 17 Jul 2019 23:17:19 +0300
+Message-ID: <CAEnQRZB23GLVXp459+JieeqQdAKXBRyeTc=hxnovFZwje-tgCw@mail.gmail.com>
+Subject: Re: [PATCH] clk: imx8: Add DSP related clocks
+To:     Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>, weiyongjun1@huawei.com,
+        linux-clk@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Gokul Sriram Palanisamy (2019-07-11 08:41:08)
-> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/=
-qcom/ipq8074.dtsi
-> index 6a61a63..c24e3f6 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-> @@ -10,6 +10,22 @@
->         model =3D "Qualcomm Technologies, Inc. IPQ8074";
->         compatible =3D "qcom,ipq8074";
-> =20
-> +       reserved-memory {
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <2>;
-> +               ranges;
-> +
-> +               smem_region:smem@4ab00000 {
+Aisheng/Jacky,
 
-Put a space between the colon and the node name. Also, just call it
-memory@4ab00000.
+Can you help with review on this?
 
-		smem_region: memory@4ab00000 {
-
-> +                       no-map;
-> +                       reg =3D <0x0 0x4ab00000 0x0 0x00100000>;
-> +               };
+On Tue, Jul 2, 2019 at 6:22 PM Daniel Baluta <daniel.baluta@nxp.com> wrote:
+>
+> i.MX8QXP contains Hifi4 DSP. There are four clocks
+> associated with DSP:
+>   * dsp_lpcg_core_clk
+>   * dsp_lpcg_ipg_clk
+>   * dsp_lpcg_adb_aclk
+>   * ocram_lpcg_ipg_clk
+>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  drivers/clk/imx/clk-imx8qxp-lpcg.c     | 5 +++++
+>  include/dt-bindings/clock/imx8-clock.h | 6 +++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/imx/clk-imx8qxp-lpcg.c b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+> index fb6edf1b8aa2..c0aff7ca6374 100644
+> --- a/drivers/clk/imx/clk-imx8qxp-lpcg.c
+> +++ b/drivers/clk/imx/clk-imx8qxp-lpcg.c
+> @@ -72,6 +72,11 @@ static const struct imx8qxp_lpcg_data imx8qxp_lpcg_adma[] = {
+>         { IMX_ADMA_LPCG_I2C2_CLK, "i2c2_lpcg_clk", "i2c2_clk", 0, ADMA_LPI2C_2_LPCG, 0, 0, },
+>         { IMX_ADMA_LPCG_I2C3_IPG_CLK, "i2c3_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_LPI2C_3_LPCG, 16, 0, },
+>         { IMX_ADMA_LPCG_I2C3_CLK, "i2c3_lpcg_clk", "i2c3_clk", 0, ADMA_LPI2C_3_LPCG, 0, 0, },
 > +
-> +               q6_region: q6@4b000000 {
-
-memory@
-
-> +                       no-map;
-> +                       reg =3D <0x0 0x4b000000 0x0 0x05f00000>;
-> +               };
-> +       };
-> +
->         firmware {
->                 scm {
->                         compatible =3D "qcom,scm-ipq8074", "qcom,scm";
-> @@ -431,6 +447,115 @@
->                                       "axi_m_sticky";
->                         status =3D "disabled";
->                 };
-> +               apcs: syscon@b111000 {
-
-Add a newline between nodes please.
-
-> +                       compatible =3D "syscon";
-> +                       reg =3D <0x0B111000 0x1000>;
-> +               };
-> +
-> +               wcss: smp2p-wcss {
-
-This node should be outside the soc node because it doesn't have a reg
-property
-
-> +                       compatible =3D "qcom,smp2p";
-> +                       qcom,smem =3D <435>, <428>;
-> +
-> +                       interrupt-parent =3D <&intc>;
-> +                       interrupts =3D <0 322 1>;
-> +
-> +                       qcom,ipc =3D <&apcs 8 9>;
-> +
-> +                       qcom,local-pid =3D <0>;
-> +                       qcom,remote-pid =3D <1>;
-> +
-> +                       wcss_smp2p_out: master-kernel {
-> +                               qcom,entry-name =3D "master-kernel";
-> +                               qcom,smp2p-feature-ssr-ack;
-> +                               #qcom,smem-state-cells =3D <1>;
-> +                       };
-> +
-> +                       wcss_smp2p_in: slave-kernel {
-> +                               qcom,entry-name =3D "slave-kernel";
-> +
-> +                               interrupt-controller;
-> +                               #interrupt-cells =3D <2>;
-> +                       };
-> +               };
-> +
-> +               tcsr_q6_block: syscon@1945000 {
-
-Do you really need _block in these aliases?
-
-> +                       compatible =3D "syscon";
-> +                       reg =3D <0x1945000 0xE000>;
-> +               };
-> +
-> +               tcsr_mutex_block: syscon@193d000 {
-> +                       compatible =3D "syscon";
-> +                       reg =3D <0x1905000 0x8000>;
-> +               };
-> +
-> +               tcsr_mutex: hwlock@193d000 {
-> +                       compatible =3D "qcom,tcsr-mutex";
-> +                       syscon =3D <&tcsr_mutex_block 0 0x80>;
-> +                       #hwlock-cells =3D <1>;
-> +               };
-> +
-> +               smem: qcom,smem@4AB00000 {
-
-lowercase please. And just 'smem' I guess.
-
-> +                       compatible =3D "qcom,smem";
-> +                       memory-region =3D <&smem_region>;
-> +                       hwlocks =3D <&tcsr_mutex 0>;
-> +               };
-> +
-> +               apcs_glb: mailbox@b111000 {
-> +                       compatible =3D "qcom,ipq8074-apcs-apps-global";
-> +                       reg =3D <0xb111000 0x1000>;
-
-These addresses should be padded out to 8 digits for the address part
-(not the size).
-
-> +
-> +                       #mbox-cells =3D <1>;
-> +               };
-> +
-> +               q6v5_wcss: q6v5_wcss@CD00000 {
-
-lowercase.
-
-> +                       compatible =3D "qcom,ipq8074-wcss-pil";
-> +                       reg =3D <0xCD00000 0x4040>,
-> +                             <0x4AB000 0x20>;
+> +       { IMX_ADMA_LPCG_DSP_CORE_CLK, "dsp_lpcg_core_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 28, 0, },
+> +       { IMX_ADMA_LPCG_DSP_IPG_CLK, "dsp_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 20, 0, },
+> +       { IMX_ADMA_LPCG_DSP_ADB_CLK, "dsp_lpcg_adb_clk", "dma_ipg_clk_root", 0, ADMA_HIFI_LPCG, 16, 0, },
+> +       { IMX_ADMA_LPCG_OCRAM_IPG_CLK, "ocram_lpcg_ipg_clk", "dma_ipg_clk_root", 0, ADMA_OCRAM_LPCG, 16, 0, },
+>  };
+>
+>  static const struct imx8qxp_ss_lpcg imx8qxp_ss_adma = {
+> diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
+> index 4236818e3be5..673a8c662340 100644
+> --- a/include/dt-bindings/clock/imx8-clock.h
+> +++ b/include/dt-bindings/clock/imx8-clock.h
+> @@ -283,7 +283,11 @@
+>  #define IMX_ADMA_LPCG_PWM_IPG_CLK                      38
+>  #define IMX_ADMA_LPCG_LCD_PIX_CLK                      39
+>  #define IMX_ADMA_LPCG_LCD_APB_CLK                      40
+> +#define IMX_ADMA_LPCG_DSP_ADB_CLK                      41
+> +#define IMX_ADMA_LPCG_DSP_IPG_CLK                      42
+> +#define IMX_ADMA_LPCG_DSP_CORE_CLK                     43
+> +#define IMX_ADMA_LPCG_OCRAM_IPG_CLK                    44
+>
+> -#define IMX_ADMA_LPCG_CLK_END                          41
+> +#define IMX_ADMA_LPCG_CLK_END                          45
+>
+>  #endif /* __DT_BINDINGS_CLOCK_IMX_H */
+> --
+> 2.17.1
+>
