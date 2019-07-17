@@ -2,227 +2,215 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B689C76197
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE38C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB272182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F6E2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9rg5oP+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWrcoX9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbfGQLrF (ORCPT
+        id S1731237AbfGQLsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:47:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46866 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730718AbfGQLrE (ORCPT
+        Wed, 17 Jul 2019 07:48:45 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40152 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfGQLso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:47:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so11815110plz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:47:03 -0700 (PDT)
+        Wed, 17 Jul 2019 07:48:44 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so11046987pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:48:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XH7pgHFzkwihJR5psn/ZNzGH7d1Hcpwg4ypt2aGmLUk=;
-        b=q9rg5oP+7QfRryee4CQfI+zTuO8vcNkAU+Zb8S/XX5gbQKX1OYbsUUbB3B8KK9hFmU
-         UHgvh4Mz+Kyv0D5E5zvwH3nJNYoE2P1kzcK2Rg1yMoExsViP4+PURLjfYPF2WZhrd0MF
-         a+zGI8yxCxdvE8nZGITXCK8/RaYQDCnkR7z8XELwz+GgVBZndcqvcfCaF4ihTHl0HyVo
-         bFY7Esho++ViErb2avPSuS/M58xcsz7oUebcD6xLNGIpCphqGpuQ31GuhoMHpSqGmldC
-         ZKZZNvAff0cBNn4NnOvQXzgW64bJR2BOmy7dIGzstZ5vq+Xgsj3OiBdAV2LIo/WRsiLm
-         aMOQ==
+        bh=IX1oEKhWMcbZ3ftDa5lhCYFdP6n0csBetOxwFU3RYp8=;
+        b=FWrcoX9tCqnjF6fms56lVrS+b6oK2EEjPMoGVMBlr7D4Q099BprcDD2PDRq/l13OR3
+         zBU1baA2oyQbtWYUkxzvNgePX8rqn8sO7Ngyl+ukSJXLzzJC7vKT4R2uCa+2ZThJxJx2
+         q/u3ReCF6FVVuNxtfn63IszRerJn/XFhKyrd9aJqigBc/7wjAdAp0IifB/rGyU/g3rAa
+         AjGPsmWeuumoOrvyZ/Xm0SSK8lekd293oy7+lOJuJ8Uf2TmxD2pH/Kn2QhI0zORpGzRY
+         1y4GfXKYWKd8Cu+O+Mt1eIHOthNyS8bIJp9uTWOH4UdjxJ3CdfXuQ6aNeodmdS7ZQw2w
+         WjZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XH7pgHFzkwihJR5psn/ZNzGH7d1Hcpwg4ypt2aGmLUk=;
-        b=YACM4GSbDHY5UC/Xe3S1Mp/bZGbgnUPIFC4iGxIFhwBGuLuipiXc9EsM/oVErqlVWk
-         ujMk91FuXlnnJ5NOuTUH82OliYpjMEbI5C86mPTiSPRSLP/+R0X7y/hLISNFOgX0BOyw
-         7JCEgQWMjxo4Nyk4wYU14WhrvFfowZCkibYTaWakUoWPaRyPbNmJ2A/T2l3gQerfr7nl
-         2Mu/63oHdYDz/L9SC8xK3j//yG2CjfQhnJut5baIA/uWRdi5QIhJ4mtl3XJqlYOQ3P04
-         urVUq4yqIBaYTrUbY3LfryNhplCKPGUnjEVPNQCo8xVS3lzfpySw/IWEHKMJ1A01qTqj
-         k60A==
-X-Gm-Message-State: APjAAAVE9e2AzOcIfirITlhSgaYw7gD/B+wJ4q//gUsozO+l7zwpTlca
-        3Cv7rFyIa/hWFctX7nbILzjJJrvwSH4RiQ72EBI0IZuT8Qw=
-X-Google-Smtp-Source: APXvYqz8S3jyPxed+oPtsIDmi9g4NsD5ItlfcVysZ7+qze2pU/edo+3e3aBEztJRj4XnLTpHjY2eNg/431rKCehxHqk=
-X-Received: by 2002:a17:902:8689:: with SMTP id g9mr39736837plo.252.1563364023206;
- Wed, 17 Jul 2019 04:47:03 -0700 (PDT)
+        bh=IX1oEKhWMcbZ3ftDa5lhCYFdP6n0csBetOxwFU3RYp8=;
+        b=ZpSG6TX4in3jtJIIgzpiMm0HvkccVOD+1vdpRkIQfrdTKRWz1MX4c21q7SCsOwQe0p
+         IYcIN7dKtoO4zBF1cY7wos/82nqhuvZ2PJsiIE6JNt2cvwkHeKBnoJje5iuvbqJash16
+         /+njtpIv6WvA5bpMAJytMiXkuE7hMGsgXlb8WQ2v9RA7WG84oeFG1PZTZaefNHPfLTL1
+         7AP7d59P5teYCfwqb1WeTS2xvbQRF9Y2k9MbQmUJYmSG8/sLbF6f787UsRC5m+UoFmax
+         moU33TS0D7TDUwVbw0Q08Q8Wagi2S6E+MdNuiUFghaOYNon/BotgzUlohul3MzfOJuPu
+         BFSw==
+X-Gm-Message-State: APjAAAXAd5eghnarkrigui895lV9WaVAett3PQBjyw/MxI5c/IBeJ58A
+        26vCx16FpsFM8WdOjdhuCkMVlAS0jz+79igofTp//A==
+X-Google-Smtp-Source: APXvYqzm84uaNKukWdMrxaNW5HMVvKm5YJnrbNb8pYtDjKLTdFo76TKc18tucDMSzlTHxjR2vxi9m+SoB7VXfMmFtsw=
+X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr43106787pjp.47.1563364123675;
+ Wed, 17 Jul 2019 04:48:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1561386715.git.andreyknvl@google.com> <d8e3b9a819e98d6527e506027b173b128a148d3c.1561386715.git.andreyknvl@google.com>
- <20190624175120.GN29120@arrakis.emea.arm.com> <20190717110910.GA12017@rapoport-lnx>
-In-Reply-To: <20190717110910.GA12017@rapoport-lnx>
+References: <000000000000a55d7d058d51ad4f@google.com> <CACRpkdYbuJ_yJ+UKtvWrkmBCbQzfk-1mn1-A836dkNMrmTtZow@mail.gmail.com>
+ <20190717091621.GC16694@localhost>
+In-Reply-To: <20190717091621.GC16694@localhost>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 17 Jul 2019 13:46:52 +0200
-Message-ID: <CAAeHK+yB=d_oXOVZ2TuVe2UkBAx-GM_f+mu88JeVWqPO95xVHQ@mail.gmail.com>
-Subject: Re: [PATCH v18 08/15] userfaultfd: untag user pointers
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 17 Jul 2019 13:48:32 +0200
+Message-ID: <CAAeHK+x4KAy2koonjij26iowtPuj67F=Mx+g0kYF968Zr-h8xg@mail.gmail.com>
+Subject: Re: WARNING in gpio_to_desc
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        syzbot <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com>,
+        Vincent Cuissard <cuissard@marvell.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: multipart/mixed; boundary="0000000000003f9b95058ddf1388"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 1:09 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+--0000000000003f9b95058ddf1388
+Content-Type: text/plain; charset="UTF-8"
+
+On Wed, Jul 17, 2019 at 11:16 AM Johan Hovold <johan@kernel.org> wrote:
 >
-> On Mon, Jun 24, 2019 at 06:51:21PM +0100, Catalin Marinas wrote:
-> > On Mon, Jun 24, 2019 at 04:32:53PM +0200, Andrey Konovalov wrote:
-> > > This patch is a part of a series that extends kernel ABI to allow to pass
-> > > tagged user pointers (with the top byte set to something else other than
-> > > 0x00) as syscall arguments.
-> > >
-> > > userfaultfd code use provided user pointers for vma lookups, which can
-> > > only by done with untagged pointers.
-> > >
-> > > Untag user pointers in validate_range().
-> > >
-> > > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > ---
-> > >  fs/userfaultfd.c | 22 ++++++++++++----------
-> > >  1 file changed, 12 insertions(+), 10 deletions(-)
+> On Tue, Jul 16, 2019 at 11:52:19PM +0200, Linus Walleij wrote:
+> > On Wed, Jul 10, 2019 at 1:07 PM syzbot
+> > <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com> wrote:
 > >
-> > Same here, it needs an ack from Al Viro.
+> > > HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+> > (...)
+> > >   __gpio_set_value include/asm-generic/gpio.h:104 [inline]
+> > >   gpio_set_value include/linux/gpio.h:71 [inline]
+> > >   nfcmrvl_chip_halt+0x4e/0x70 drivers/nfc/nfcmrvl/main.c:259
+> > >   nfcmrvl_nci_register_dev+0x2d4/0x378 drivers/nfc/nfcmrvl/main.c:176
+> > >   nfcmrvl_probe+0x4e9/0x5e0 drivers/nfc/nfcmrvl/usb.c:344
+> >
+> > This bug is somewhere in the drivers/nfc/nfcmrvl* code handling
+> > GPIOs.
 >
-> The userfault patches usually go via -mm tree, not sure if Al looks at them :)
+> Right, and it's my bug.
+>
+> > It should be converted to GPIO descriptors and fixed up, see
+> > drivers/gpio/TODO for details on how to do this.
+>
+> Conversion will have to wait, let's fix the regression first. :)
+>
+> > Johan/Vincent, tell me if you want me to forward the full fuzzing
+> > robot crash dump.
+>
+> No need, thanks. I got it the report.
+>
+> Something like the below compiles and should fix it. Vacation starts
+> today so I'll revisit and send a proper patch in a couple of weeks.
+>
+> Perhaps someone can feed it to the bot meanwhile (no time to play with
+> it right now).
 
-Ah, OK, I guess than Andrew will take a look at them when merging.
+#syz test: https://github.com/google/kasan.git usb-fuzzer
 
 >
-> FWIW, you can add
+> Note that this issue has been there since 4.12, so guess no one uses
+> these devices...
 >
-> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-
-I will, thanks!
-
+> Johan
 >
-> > > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> > > index ae0b8b5f69e6..c2be36a168ca 100644
-> > > --- a/fs/userfaultfd.c
-> > > +++ b/fs/userfaultfd.c
-> > > @@ -1261,21 +1261,23 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
-> > >  }
-> > >
-> > >  static __always_inline int validate_range(struct mm_struct *mm,
-> > > -                                     __u64 start, __u64 len)
-> > > +                                     __u64 *start, __u64 len)
-> > >  {
-> > >     __u64 task_size = mm->task_size;
-> > >
-> > > -   if (start & ~PAGE_MASK)
-> > > +   *start = untagged_addr(*start);
-> > > +
-> > > +   if (*start & ~PAGE_MASK)
-> > >             return -EINVAL;
-> > >     if (len & ~PAGE_MASK)
-> > >             return -EINVAL;
-> > >     if (!len)
-> > >             return -EINVAL;
-> > > -   if (start < mmap_min_addr)
-> > > +   if (*start < mmap_min_addr)
-> > >             return -EINVAL;
-> > > -   if (start >= task_size)
-> > > +   if (*start >= task_size)
-> > >             return -EINVAL;
-> > > -   if (len > task_size - start)
-> > > +   if (len > task_size - *start)
-> > >             return -EINVAL;
-> > >     return 0;
-> > >  }
-> > > @@ -1325,7 +1327,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
-> > >             goto out;
-> > >     }
-> > >
-> > > -   ret = validate_range(mm, uffdio_register.range.start,
-> > > +   ret = validate_range(mm, &uffdio_register.range.start,
-> > >                          uffdio_register.range.len);
-> > >     if (ret)
-> > >             goto out;
-> > > @@ -1514,7 +1516,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
-> > >     if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
-> > >             goto out;
-> > >
-> > > -   ret = validate_range(mm, uffdio_unregister.start,
-> > > +   ret = validate_range(mm, &uffdio_unregister.start,
-> > >                          uffdio_unregister.len);
-> > >     if (ret)
-> > >             goto out;
-> > > @@ -1665,7 +1667,7 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
-> > >     if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
-> > >             goto out;
-> > >
-> > > -   ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
-> > > +   ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
-> > >     if (ret)
-> > >             goto out;
-> > >
-> > > @@ -1705,7 +1707,7 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
-> > >                        sizeof(uffdio_copy)-sizeof(__s64)))
-> > >             goto out;
-> > >
-> > > -   ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
-> > > +   ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
-> > >     if (ret)
-> > >             goto out;
-> > >     /*
-> > > @@ -1761,7 +1763,7 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
-> > >                        sizeof(uffdio_zeropage)-sizeof(__s64)))
-> > >             goto out;
-> > >
-> > > -   ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
-> > > +   ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
-> > >                          uffdio_zeropage.range.len);
-> > >     if (ret)
-> > >             goto out;
-> > > --
-> > > 2.22.0.410.gd8fdbe21b5-goog
+>
+> From e9d9d0ef5ffd6b306cffb2f4e2514f503aa626a5 Mon Sep 17 00:00:00 2001
+> From: Johan Hovold <johan@kernel.org>
+> Date: Wed, 17 Jul 2019 11:07:13 +0200
+> Subject: [PATCH] NFC: nfcmrvl: fix gpio-handling regression
+>
+> FIXME
+>
+> Fixes: e33a3f84f88f ("NFC: nfcmrvl: allow gpio 0 for reset signalling")
+> Not-Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/nfc/nfcmrvl/main.c | 4 ++--
+>  drivers/nfc/nfcmrvl/usb.c  | 1 +
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
+> index e65d027b91fa..529be35ac178 100644
+> --- a/drivers/nfc/nfcmrvl/main.c
+> +++ b/drivers/nfc/nfcmrvl/main.c
+> @@ -244,7 +244,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
+>         /* Reset possible fault of previous session */
+>         clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
+>
+> -       if (priv->config.reset_n_io) {
+> +       if (gpio_is_valid(priv->config.reset_n_io)) {
+>                 nfc_info(priv->dev, "reset the chip\n");
+>                 gpio_set_value(priv->config.reset_n_io, 0);
+>                 usleep_range(5000, 10000);
+> @@ -255,7 +255,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
+>
+>  void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
+>  {
+> -       if (priv->config.reset_n_io)
+> +       if (gpio_is_valid(priv->config.reset_n_io))
+>                 gpio_set_value(priv->config.reset_n_io, 0);
+>  }
+>
+> diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
+> index 945cc903d8f1..888e298f610b 100644
+> --- a/drivers/nfc/nfcmrvl/usb.c
+> +++ b/drivers/nfc/nfcmrvl/usb.c
+> @@ -305,6 +305,7 @@ static int nfcmrvl_probe(struct usb_interface *intf,
+>
+>         /* No configuration for USB */
+>         memset(&config, 0, sizeof(config));
+> +       config.reset_n_io = -EINVAL;
+>
+>         nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
 >
 > --
-> Sincerely yours,
-> Mike.
+> 2.22.0
 >
+
+--0000000000003f9b95058ddf1388
+Content-Type: text/x-patch; charset="US-ASCII"; name="usb-gpio.patch"
+Content-Disposition: attachment; filename="usb-gpio.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jy76mgo90>
+X-Attachment-Id: f_jy76mgo90
+
+RnJvbSBlOWQ5ZDBlZjVmZmQ2YjMwNmNmZmIyZjRlMjUxNGY1MDNhYTYyNmE1IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBKb2hhbiBIb3ZvbGQgPGpvaGFuQGtlcm5lbC5vcmc+CkRhdGU6
+IFdlZCwgMTcgSnVsIDIwMTkgMTE6MDc6MTMgKzAyMDAKU3ViamVjdDogW1BBVENIXSBORkM6IG5m
+Y21ydmw6IGZpeCBncGlvLWhhbmRsaW5nIHJlZ3Jlc3Npb24KCkZJWE1FCgpGaXhlczogZTMzYTNm
+ODRmODhmICgiTkZDOiBuZmNtcnZsOiBhbGxvdyBncGlvIDAgZm9yIHJlc2V0IHNpZ25hbGxpbmci
+KQpOb3QtU2lnbmVkLW9mZi1ieTogSm9oYW4gSG92b2xkIDxqb2hhbkBrZXJuZWwub3JnPgotLS0K
+IGRyaXZlcnMvbmZjL25mY21ydmwvbWFpbi5jIHwgNCArKy0tCiBkcml2ZXJzL25mYy9uZmNtcnZs
+L3VzYi5jICB8IDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZmMvbmZjbXJ2bC9tYWluLmMgYi9kcml2ZXJz
+L25mYy9uZmNtcnZsL21haW4uYwppbmRleCBlNjVkMDI3YjkxZmEuLjUyOWJlMzVhYzE3OCAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9uZmMvbmZjbXJ2bC9tYWluLmMKKysrIGIvZHJpdmVycy9uZmMvbmZj
+bXJ2bC9tYWluLmMKQEAgLTI0NCw3ICsyNDQsNyBAQCB2b2lkIG5mY21ydmxfY2hpcF9yZXNldChz
+dHJ1Y3QgbmZjbXJ2bF9wcml2YXRlICpwcml2KQogCS8qIFJlc2V0IHBvc3NpYmxlIGZhdWx0IG9m
+IHByZXZpb3VzIHNlc3Npb24gKi8KIAljbGVhcl9iaXQoTkZDTVJWTF9QSFlfRVJST1IsICZwcml2
+LT5mbGFncyk7CiAKLQlpZiAocHJpdi0+Y29uZmlnLnJlc2V0X25faW8pIHsKKwlpZiAoZ3Bpb19p
+c192YWxpZChwcml2LT5jb25maWcucmVzZXRfbl9pbykpIHsKIAkJbmZjX2luZm8ocHJpdi0+ZGV2
+LCAicmVzZXQgdGhlIGNoaXBcbiIpOwogCQlncGlvX3NldF92YWx1ZShwcml2LT5jb25maWcucmVz
+ZXRfbl9pbywgMCk7CiAJCXVzbGVlcF9yYW5nZSg1MDAwLCAxMDAwMCk7CkBAIC0yNTUsNyArMjU1
+LDcgQEAgdm9pZCBuZmNtcnZsX2NoaXBfcmVzZXQoc3RydWN0IG5mY21ydmxfcHJpdmF0ZSAqcHJp
+dikKIAogdm9pZCBuZmNtcnZsX2NoaXBfaGFsdChzdHJ1Y3QgbmZjbXJ2bF9wcml2YXRlICpwcml2
+KQogewotCWlmIChwcml2LT5jb25maWcucmVzZXRfbl9pbykKKwlpZiAoZ3Bpb19pc192YWxpZChw
+cml2LT5jb25maWcucmVzZXRfbl9pbykpCiAJCWdwaW9fc2V0X3ZhbHVlKHByaXYtPmNvbmZpZy5y
+ZXNldF9uX2lvLCAwKTsKIH0KIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZmMvbmZjbXJ2bC91c2Iu
+YyBiL2RyaXZlcnMvbmZjL25mY21ydmwvdXNiLmMKaW5kZXggOTQ1Y2M5MDNkOGYxLi44ODhlMjk4
+ZjYxMGIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmZjL25mY21ydmwvdXNiLmMKKysrIGIvZHJpdmVy
+cy9uZmMvbmZjbXJ2bC91c2IuYwpAQCAtMzA1LDYgKzMwNSw3IEBAIHN0YXRpYyBpbnQgbmZjbXJ2
+bF9wcm9iZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwKIAogCS8qIE5vIGNvbmZpZ3VyYXRp
+b24gZm9yIFVTQiAqLwogCW1lbXNldCgmY29uZmlnLCAwLCBzaXplb2YoY29uZmlnKSk7CisJY29u
+ZmlnLnJlc2V0X25faW8gPSAtRUlOVkFMOwogCiAJbmZjX2luZm8oJnVkZXYtPmRldiwgImludGYg
+JXAgaWQgJXBcbiIsIGludGYsIGlkKTsKIAotLSAKMi4yMi4wCg==
+--0000000000003f9b95058ddf1388--
