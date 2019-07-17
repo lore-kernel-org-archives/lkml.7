@@ -2,122 +2,67 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA7BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3EAC76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7879621852
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:12:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Trvb+2uN"
+	by mail.kernel.org (Postfix) with ESMTP id 44E5720651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563383706;
+	bh=yYu+DMhid3avako9NRl33IEIsp58mDkbHa3Fppdi55M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=hwMLMadGpfGG4CDWSKbfZpTE27gpv/urZ7Rp9sdXu8G7TXN+DbosnePWKD39NXyQh
+	 2z2xKiR8HCsW4pGclsZYppbZZQIRCCLb5TqW9AkUJQU2rxkWQYOiXa7TiL68F5aW1N
+	 GjL5vPEcPBJ8BquEybaBY/QddqmI0KrEZP4vFKgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfGQRMT (ORCPT
+        id S2387651AbfGQRPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:12:19 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42702 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfGQRMS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:12:18 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h18so24128708qtm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uAyGJcxa2faLDz1zX3L+P9YEdREk6KdL2GiO7sRiFjw=;
-        b=Trvb+2uNj8vUbkEDC3SxTfLCURptQdoVKewLFrm6bk4jdt1cokRy738aVJ4XYmbgD+
-         92Rez/4Po6ykm+mwW4H9lcRVbz/bdZLJ2r5ndntgzbvpotRndpSTq7cVWnGV5YSMnx2X
-         STt4ARBuT9edfepQWgh456AuI6rUiua8N9b43Owwed484efiXh53kNaWGNyPOuqc7Myb
-         lGG38nU4hDH1vKxu5NTcYG6GknjLZbHAMd3n+ULBpgxK6V/Zd0Jds/jJTMUKGQRfv8aV
-         54sYco2Vagjp8d238KCbmTo/Ura8lLPnGyAiR5M3anbFENJLsArucdJau+g9y2oVsAU9
-         Izww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uAyGJcxa2faLDz1zX3L+P9YEdREk6KdL2GiO7sRiFjw=;
-        b=Q5Lw6RdzDX+8XWCrBTXuiP+6sRZLzdE09X3ysDr5HsMY26sUgcUcgBns3YEKuX2YqW
-         65LdyooShTqsnoJbslI5QGKhNPxr9+lN12UsGo8FZIQaqQ1IY8pz6iHYTEKBEMJMJ+wb
-         ZhWJQFopgTp0YFIl8a4SfY/c0kXps4WkE9DVkbxqG+4YylQ7emrDzTbcfCeg6OU20EMA
-         +OxInUpFaloeNeh25qeCWpdV1cFXLWQ9uaWIOfImtM9TBNXN8MqcAJcWTK7ngKKHzMTT
-         9btuqObkzp0NSQRuFecc34PhKPQ+5S/VDNFRAcCWZ/AMbVA4cpTY2CaT3IZ+jJ7wa+5X
-         ZWbA==
-X-Gm-Message-State: APjAAAWhcLlpMFQZ9R3ByETr5Vc+BFCgAXXIfAeUNwDyD0wwZSS0Jl5o
-        2E9yIwjpsX51YhaJhs+Ka0N8DQ==
-X-Google-Smtp-Source: APXvYqxSNZusUeIhA/bqMoyaHlDfaJ2nmzyv/KRTgT11+OmhlLB8ElQiMzjoCvSSZkAdDzdww5gBxg==
-X-Received: by 2002:ac8:3233:: with SMTP id x48mr29415342qta.159.1563383537619;
-        Wed, 17 Jul 2019 10:12:17 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id s127sm11093085qkd.107.2019.07.17.10.12.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jul 2019 10:12:17 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hnnTU-0006Lc-Is; Wed, 17 Jul 2019 14:12:16 -0300
-Date:   Wed, 17 Jul 2019 14:12:16 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH v2 5/6] tpm: add driver for cr50 on SPI
-Message-ID: <20190717171216.GK12119@ziepe.ca>
-References: <20190716224518.62556-1-swboyd@chromium.org>
- <20190716224518.62556-6-swboyd@chromium.org>
- <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com>
- <20190717122558.GF12119@ziepe.ca>
- <5d2f51a7.1c69fb81.6495.fbe8@mx.google.com>
- <20190717165628.GJ12119@ziepe.ca>
- <5d2f5570.1c69fb81.f3832.3c3f@mx.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d2f5570.1c69fb81.f3832.3c3f@mx.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 17 Jul 2019 13:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387455AbfGQRPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:15:05 -0400
+Subject: Re: [GIT PULL] RTC for 5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563383704;
+        bh=yYu+DMhid3avako9NRl33IEIsp58mDkbHa3Fppdi55M=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=PrwZcwGmcmz9+nZ0mPAcr+EF2GEocOx1dDR2nntj+CF6FW1VuP0zEm/yyL1PKbRG0
+         ezxppyE8Olqbb1eDvnaZaZNZj1z0C9oCNIFbCsoOwf65Epx3R9Zpvm7wplZ8lgI7L/
+         ZMKBWmA22EWcfGj3VTBsEwjNAh7yBjvNwZ8TeDYY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190716095405.GA2449@piout.net>
+References: <20190716095405.GA2449@piout.net>
+X-PR-Tracked-List-Id: <linux-rtc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190716095405.GA2449@piout.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.3
+X-PR-Tracked-Commit-Id: f0162d21cc8025c828fafe56ee25801f770f41da
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: edafb6fe42cfa98f4abf8c63acc5f4db011ed7b9
+Message-Id: <156338370440.30487.16542124068787249386.pr-tracker-bot@kernel.org>
+Date:   Wed, 17 Jul 2019 17:15:04 +0000
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:05:52AM -0700, Stephen Boyd wrote:
-> Quoting Jason Gunthorpe (2019-07-17 09:56:28)
-> > On Wed, Jul 17, 2019 at 09:49:42AM -0700, Stephen Boyd wrote:
-> > > Quoting Jason Gunthorpe (2019-07-17 05:25:58)
-> > > > On Wed, Jul 17, 2019 at 02:00:06PM +0200, Alexander Steffen wrote:
-> > > > > On 17.07.2019 00:45, Stephen Boyd wrote:
-> > > > 
-> > > > But overall, it might be better to just double link the little helper:
-> > > > 
-> > > > obj-$(CONFIG_TCG_CR50_SPI) += cr50.o cr50_spi.o
-> > > > obj-$(CONFIG_TCG_CR50_I2C) += cr50.o cr50_i2c.o
-> > > > 
-> > > > As we don't actually ever expect to load both modules into the same
-> > > > system
-> > > > 
-> > > 
-> > > Sometimes we have both drivers built-in. To maintain the tiny space
-> > > savings I'd prefer to just leave this as helpless and tristate.
-> > 
-> > If it is builtin you only get one copy of cr50.o anyhow. The only
-> > differences is for modules, then the two modules will both be a bit
-> > bigger instead of a 3rd module being created
-> > 
-> 
-> Yes. The space savings comes from having the extra module 'cr50.ko' that
-> holds almost nothing at all when the two drivers are modules.
+The pull request you sent on Tue, 16 Jul 2019 11:54:05 +0200:
 
-I'm not sure it is an actual savings, there is alot of minimum
-overhead and alignment to have a module in the first place.
+> git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.3
 
-Jason
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/edafb6fe42cfa98f4abf8c63acc5f4db011ed7b9
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
