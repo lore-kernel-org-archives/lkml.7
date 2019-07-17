@@ -2,78 +2,200 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E117C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0467C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44492205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9TV4HIA"
+	by mail.kernel.org (Postfix) with ESMTP id A54742173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfGQMsg (ORCPT
+        id S1726980AbfGQMyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 08:48:36 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42280 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfGQMsf (ORCPT
+        Wed, 17 Jul 2019 08:54:47 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20099 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725873AbfGQMyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 08:48:35 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so24847769otn.9;
-        Wed, 17 Jul 2019 05:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3cjnf5mDvntbDLfr4kFNWjMA0+fz/aHDOQecU3QEnwU=;
-        b=a9TV4HIAa7fZN8NvhxNSke/CKtEoj6SCyg7ZMnVBNf7ZgKDIXDjj1MoYCOk+8AGCN6
-         T7iJou5FKyCg4VqcNNnHKYoOqWyZx0UIBP8OGoAFMJ6g7aOyXIwtTJ2cYRvFsvBb4tDd
-         L31lOSLSDSDI9YbD/TqoBZihPpm/NcE49iOxUPGHgqIcRXR46vuJwDrBQVk/LwL3MD7Z
-         IX6Yzwqw7ZREJTwUjVw5J9dBTG6HnY3573QW5icZCBX6wNa4b/tP6yos5/tTLmobvM8j
-         gPOGpSS/ApIPKwvyY/eAocAzRkVCiy2foYKrlVjFNNdD/58anWRcQ0+waBqnJlw6n5xN
-         J2GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3cjnf5mDvntbDLfr4kFNWjMA0+fz/aHDOQecU3QEnwU=;
-        b=hC9mJ0mLd6VDjzd0nij9LsiokuScHlY+kb24ZcBP/Ep4pKLvGyVhRYAEiOjX57VBFm
-         AkJZjvdFumNnAaqwHToHcbfV7nRTZi4QRm+Vp4lQxxn6zDI5AHMnKy+03IdNxtS/Y+s+
-         eSZVFlnvY7yv+AU16palZZd4QCZ6rb7TOuALS8By4mo1ml5prDxg0Kf1g4KUvYNUaXGy
-         lyc2ASPkv4lVOWgrenHiJGLLmoLN4Ufagy+zTd28YRec0U9jBlGFp55OPXSw4fOYYvHa
-         EtJpSaqtHE8CDU+B4Mhtv4LxY3/+lT1NFQ4BP5e4PeItDDe3eVbZpv3v34R7siPVUXcY
-         Mcag==
-X-Gm-Message-State: APjAAAXfqYv/GQWqX8IHLUxznZSGKuptQqN0a2xJEmRe+iHeFqs/bX4g
-        q3C71tyPBLX7K6P/1NvYkwviP4lVxsWVpHyQbJYvpw==
-X-Google-Smtp-Source: APXvYqy7iwcYpkGRx81TZ0XfHsJWqYWeTxefJJs90LGoNvKOAyqCCVpTUKFomvIz6ScZ1VV1Al/OWmp+7A7/Bn4bRvw=
-X-Received: by 2002:a05:6830:c9:: with SMTP id x9mr21792319oto.332.1563367714664;
- Wed, 17 Jul 2019 05:48:34 -0700 (PDT)
+        Wed, 17 Jul 2019 08:54:47 -0400
+X-UUID: 1bd4ee1fab2d47dd858a01cd016cad59-20190717
+X-UUID: 1bd4ee1fab2d47dd858a01cd016cad59-20190717
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <changqi.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 896351659; Wed, 17 Jul 2019 20:54:44 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 17 Jul 2019 20:54:43 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 17 Jul 2019 20:54:42 +0800
+From:   Changqi Hu <changqi.hu@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Changqi Hu <changqi.hu@mediatek.com>,
+        Peter Shih <pihsun@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: [PATCH] modify mtk uart power and clock management
+Date:   Wed, 17 Jul 2019 20:54:39 +0800
+Message-ID: <1563368079-29684-1-git-send-email-changqi.hu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <20190715210512.15823-1-TheSven73@gmail.com> <VI1PR0402MB36009E99D7361583702B84DDFFCE0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CAGngYiUb5==QSM1-oa4bSeqhGyoaTw_dWjygLo=0X60eX=wQhQ@mail.gmail.com> <VI1PR0402MB36009A9893832F89BB932E09FFC90@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB36009A9893832F89BB932E09FFC90@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Wed, 17 Jul 2019 08:48:23 -0400
-Message-ID: <CAGngYiU7B4uuqSAawNE6RFsjGPzbj5gzK9S299H+Qy+CWFjaAg@mail.gmail.com>
-Subject: Re: [EXT] [PATCH v1] net: fec: optionally reset PHY via a reset-controller
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 9:32 PM Andy Duan <fugang.duan@nxp.com> wrote:
->
-> Yes, so the old legacy code is kept there. But it is better to clean up all if
-> there have enough boards to verify them.
+modify mtk uart runtime interface, add uart clock use count.
 
-Would it make sense to print a warning message to the log whenever
-someone tries to use the legacy phy reset on the fec?
+Signed-off-by: Changqi Hu <changqi.hu@mediatek.com>
+---
+ drivers/tty/serial/8250/8250_mtk.c | 65 ++++++++++++++++++++++++--------------
+ 1 file changed, 42 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+index f470ded..b0113d1 100644
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -31,6 +31,7 @@
+ #define MTK_UART_RXTRI_AD	0x14	/* RX Trigger address */
+ #define MTK_UART_FRACDIV_L	0x15	/* Fractional divider LSB address */
+ #define MTK_UART_FRACDIV_M	0x16	/* Fractional divider MSB address */
++#define MTK_UART_DEBUG0	0x18
+ #define MTK_UART_IER_XOFFI	0x20	/* Enable XOFF character interrupt */
+ #define MTK_UART_IER_RTSI	0x40	/* Enable RTS Modem status interrupt */
+ #define MTK_UART_IER_CTSI	0x80	/* Enable CTS Modem status interrupt */
+@@ -386,9 +387,18 @@ static void mtk8250_set_flow_ctrl(struct uart_8250_port *up, int mode)
+ static int __maybe_unused mtk8250_runtime_suspend(struct device *dev)
+ {
+ 	struct mtk8250_data *data = dev_get_drvdata(dev);
++	struct uart_8250_port *up = serial8250_get_port(data->line);
+ 
+-	clk_disable_unprepare(data->uart_clk);
+-	clk_disable_unprepare(data->bus_clk);
++	/*wait until UART in idle status*/
++	while
++		(serial_in(up, MTK_UART_DEBUG0));
++
++	if (data->clk_count == 0U) {
++		dev_dbg(dev, "%s clock count is 0\n", __func__);
++	} else {
++		clk_disable_unprepare(data->bus_clk);
++		data->clk_count--;
++	}
+ 
+ 	return 0;
+ }
+@@ -398,16 +408,16 @@ static int __maybe_unused mtk8250_runtime_resume(struct device *dev)
+ 	struct mtk8250_data *data = dev_get_drvdata(dev);
+ 	int err;
+ 
+-	err = clk_prepare_enable(data->uart_clk);
+-	if (err) {
+-		dev_warn(dev, "Can't enable clock\n");
+-		return err;
+-	}
+-
+-	err = clk_prepare_enable(data->bus_clk);
+-	if (err) {
+-		dev_warn(dev, "Can't enable bus clock\n");
+-		return err;
++	if (data->clk_count > 0U) {
++		dev_dbg(dev, "%s clock count is %d\n", __func__,
++			data->clk_count);
++	} else {
++		err = clk_prepare_enable(data->bus_clk);
++		if (err) {
++			dev_warn(dev, "Can't enable bus clock\n");
++			return err;
++		}
++		data->clk_count++;
+ 	}
+ 
+ 	return 0;
+@@ -416,13 +426,23 @@ static int __maybe_unused mtk8250_runtime_resume(struct device *dev)
+ static void
+ mtk8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
+ {
+-	if (!state)
+-		pm_runtime_get_sync(port->dev);
++	struct uart_8250_port *up = up_to_u8250p(port);
++
++	if (!state) {
++		if (!(up->capabilities & UART_CAP_RPM))
++			mtk8250_runtime_resume(port->dev);
++		else
++			pm_runtime_get_sync(port->dev);
++	}
+ 
+ 	serial8250_do_pm(port, state, old);
+ 
+-	if (state)
+-		pm_runtime_put_sync_suspend(port->dev);
++	if (state) {
++		if (!(up->capabilities & UART_CAP_RPM))
++			mtk8250_runtime_suspend(port->dev);
++		else
++			pm_runtime_put_sync_suspend(port->dev);
++	}
+ }
+ 
+ #ifdef CONFIG_SERIAL_8250_DMA
+@@ -499,6 +519,8 @@ static int mtk8250_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	data->clk_count = 0;
++
+ 	if (pdev->dev.of_node) {
+ 		err = mtk8250_probe_of(pdev, &uart.port, data);
+ 		if (err)
+@@ -531,17 +553,12 @@ static int mtk8250_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, data);
+ 
+-	err = mtk8250_runtime_resume(&pdev->dev);
+-	if (err)
+-		return err;
++	pm_runtime_enable(&pdev->dev);
+ 
+ 	data->line = serial8250_register_8250_port(&uart);
+ 	if (data->line < 0)
+ 		return data->line;
+ 
+-	pm_runtime_set_active(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+@@ -552,11 +569,13 @@ static int mtk8250_remove(struct platform_device *pdev)
+ 	pm_runtime_get_sync(&pdev->dev);
+ 
+ 	serial8250_unregister_port(data->line);
+-	mtk8250_runtime_suspend(&pdev->dev);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 
++	if (!pm_runtime_status_suspended(&pdev->dev))
++		mtk8250_runtime_suspend(&pdev->dev);
++
+ 	return 0;
+ }
+ 
+-- 
+1.8.1.1.dirty
+
