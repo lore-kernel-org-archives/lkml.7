@@ -2,86 +2,169 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F265AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60719C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84CC2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C732173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RSvPQjSp"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FRemP7Mf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfGQG26 (ORCPT
+        id S1726987AbfGQG3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:28:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55876 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfGQG25 (ORCPT
+        Wed, 17 Jul 2019 02:29:43 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:32864 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfGQG3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:28:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9sLFqm6EWS2DIiGZAHNJ+/pU7r3k2LOQS5hHJSocQUk=; b=RSvPQjSpGEK8mDDZsLOQ3MgJx
-        Ooj90M7o4gvCf/4/Gh4dFJ3QZr1eT/LiJZHPVztRwImmqFyObu37DTJ2lCKdQN2MvT+anttLzL/yR
-        cTF8g9chJP6JLkx/hJQTO1/Ma5fwosGgqD1+iKUrdqP8VsibzIBiSXNzr7rqqbnf+Pb9y0UPaN8Bz
-        t1O4j/RAUpTUahDXI4KIydVqTs/dTawjFRY8HyAL/Ozi2OjeqZP0BYfi+UCtHKiIEzUxY0dP9COGa
-        Lx6EGEPHiqjH4l7jaVgiOOy5koCstgInlg+khvK/WRUd7zy0uHGQcdBXNguAgyKkAsACqCFwv/AsH
-        ITxWM/6lw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hndQv-00043w-6R; Wed, 17 Jul 2019 06:28:57 +0000
-Subject: Re: Correct use of DMA api (Some newbie questions)
-To:     Nikolai Zhubr <n-a-zhubr@yandex.ru>, linux-kernel@vger.kernel.org
-References: <5D2B6126.7080700@yandex.ru>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e3d16703-3d16-30f0-32cc-9511664224c5@infradead.org>
-Date:   Tue, 16 Jul 2019 23:28:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <5D2B6126.7080700@yandex.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Jul 2019 02:29:43 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6H6TEhF019338;
+        Wed, 17 Jul 2019 15:29:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6H6TEhF019338
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563344955;
+        bh=KcHQBUXdsKArHIJm3xcxgFJariXFB0ZgqeLvjtXjwps=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FRemP7Mf5jJVbRUlIyN9Sv5IOxqT7BOM2WGsoQ7QGl0JiBhti7F9vSC/ajjR3ozfH
+         FIofFSkkp5e3q91Mrkukv2c/FkM1at5YqLwhNd0XjB/Cpfn5p8rSgwT9bW5823hO8w
+         EnhQXegunluc+SZh1LvoD6oOef1RHgaGrHMCXNJ8x2T+j4XjyGfqYh6hWla/1ZO7xq
+         4oENZnhRy0dYVqumiHmNHf6Q2flA3ZLfpr12AV1NHienqpIolaX229VU39YTuD3U4t
+         sdQhDHsyKpk8nU/aI8DfSobdURI46ymYMnysA4Xy15ONDzZrGSm/hZxZtbcfhxE0g+
+         ue6ZZ60ajE+jw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: update compile-test headers for v5.3-rc1
+Date:   Wed, 17 Jul 2019 15:29:13 +0900
+Message-Id: <20190717062913.11437-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/14/19 10:06 AM, Nikolai Zhubr wrote:
-> Hi all,
-> 
-> After reading some (apparently contradictory) revisions of DMA api references in Documentation/DMA-*.txt, some (contradictory) discussions thereof, and even digging through the in-tree drivers in search for a good enlightening example, still I have to ask for advice.
-> 
-> I'm crafting a tiny driver (or rather, a kernel-mode helper) for a very special PCIe device. And actually it does work already, but performs differenly on different kernels. I'm targeting x86 (i686) only (although preferrably the driver should stay platform-neutral) and I need to support kernels 4.9+. Due to how the device is designed and used, very little has to be done in kernel space. The device has large internal memory, which accumulates some measurement data, and it is capable of transferring it to the host using DMA (with at least 32-bit address space available). Arranging memory for DMA is pretty much the only thing that userspace can not reasonably do, so this needs to be in the driver. So my currenly attempted layout is as follows:
-> 
-> 1. In the (kernel-mode) driver, allocate large contiguous block of physical memory to do DMA into. It will be later reused several times. This block does not need to have a kernel-mode virtual address because it will never be accessed from the driver directly. The block size is typically 128M and I use CMA=256M. Currently I use dma_alloc_coherent(), but I'm not convinced it really needs to be a strictly coherent memory, for performance reasons, see below. Also, AFAICS on x86 dma_alloc_coherent() always creates a kernel address mapping anyway, so maybe I'd better simply kalloc() with subsequent dma_map_single()?
-> 
-> 2. Upon DMA completion (from device to host), some sort of barrier/synchronization might be necessary (to be safe WRT speculative loads, cache, etc), like dma_cache_sync() or dma_sync_single_for_cpu(), however the latter looks like a nop for x86 AFAICS, and the former is apparently flush_write_buffers() which is not very involved either (asm lock; nop) and does not look usefull for my case. Currentlly, I do not use any, and it seems like OK, maybe by pure luck. So, is it so trivially simple on x86 or am I just missing something horribly big here?
-> 
-> 3. mmap this buffer for userspace. Reading from it should be as fast as possible, therefore this block AFAICS should be cacheble (and prefetchable and whatever else for better performance), at least from userspace context. It is not quite clear if such properties would depend on block allocation method (in step 1 above) or just on remapping attributes only. Currently, for mmap I employ dma_mmap_coherent(), but it seems also possible to use remap_pfn_range(), and also change vm_page_prot somewhat. I've already found that e.g. pgprot_noncached hurts performance quite a lot, but supposedly without it some DMA barrier (step 2 above) seems still necessary?
-> 
-> Any hints greatly appreciated,
-> 
-> Regards,
-> Nikolai
+- Some headers graduated from the blacklist
 
-Hi,
+- hyperv_timer.h joined the header-test when CONFIG_X86=y
 
-I suggest that you try some mailing list(s) besides linux-kernel.
-The MAINTAINERS file has these possibilities:
+- nf_tables*.h joined the header-test when CONFIG_NF_TABLES is
+  enabled.
 
-dmaengine@vger.kernel.org
-iommu@lists.linux-foundation.org
+- The entry for nf_tables_offload.h was added to fix build error for
+  the combination of CONFIG_NF_TABLES=n and CONFIG_KERNEL_HEADER_TEST=y.
 
-or just try linux-mm@vger.kernel.org
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+Changes in v2:
+  - Remove rdma_counter.h from the exclude list
+
+ include/Kbuild       | 13 +++++--------
+ usr/include/Makefile |  8 --------
+ 2 files changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/include/Kbuild b/include/Kbuild
+index 7e9f1acb9dd5..8c71f906d322 100644
+--- a/include/Kbuild
++++ b/include/Kbuild
+@@ -31,7 +31,7 @@ header-test-			+= acpi/platform/acintel.h
+ header-test-			+= acpi/platform/aclinux.h
+ header-test-			+= acpi/platform/aclinuxex.h
+ header-test-			+= acpi/processor.h
+-header-test-			+= clocksource/hyperv_timer.h
++header-test-$(CONFIG_X86)	+= clocksource/hyperv_timer.h
+ header-test-			+= clocksource/timer-sp804.h
+ header-test-			+= crypto/cast_common.h
+ header-test-			+= crypto/internal/cryptouser.h
+@@ -454,9 +454,6 @@ header-test-			+= linux/phy/omap_control_phy.h
+ header-test-			+= linux/phy/tegra/xusb.h
+ header-test-			+= linux/phy/ulpi_phy.h
+ header-test-			+= linux/phy_fixed.h
+-header-test-			+= linux/pinctrl/pinconf-generic.h
+-header-test-			+= linux/pinctrl/pinconf.h
+-header-test-			+= linux/pinctrl/pinctrl.h
+ header-test-			+= linux/pipe_fs_i.h
+ header-test-			+= linux/pktcdvd.h
+ header-test-			+= linux/pl320-ipc.h
+@@ -905,10 +902,11 @@ header-test-			+= net/netfilter/nf_nat_redirect.h
+ header-test-			+= net/netfilter/nf_queue.h
+ header-test-			+= net/netfilter/nf_reject.h
+ header-test-			+= net/netfilter/nf_synproxy.h
+-header-test-			+= net/netfilter/nf_tables.h
+-header-test-			+= net/netfilter/nf_tables_core.h
+-header-test-			+= net/netfilter/nf_tables_ipv4.h
++header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables.h
++header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables_core.h
++header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables_ipv4.h
+ header-test-			+= net/netfilter/nf_tables_ipv6.h
++header-test-$(CONFIG_NF_TABLES)	+= net/netfilter/nf_tables_offload.h
+ header-test-			+= net/netfilter/nft_fib.h
+ header-test-			+= net/netfilter/nft_meta.h
+ header-test-			+= net/netfilter/nft_reject.h
+@@ -949,7 +947,6 @@ header-test-			+= pcmcia/ds.h
+ header-test-			+= rdma/ib.h
+ header-test-			+= rdma/iw_portmap.h
+ header-test-			+= rdma/opa_port_info.h
+-header-test-			+= rdma/rdma_counter.h
+ header-test-			+= rdma/rdmavt_cq.h
+ header-test-			+= rdma/restrack.h
+ header-test-			+= rdma/signature.h
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index cd8daa20d487..aa316d99e035 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -30,8 +30,6 @@ header-test-$(CONFIG_CPU_BIG_ENDIAN) += linux/byteorder/big_endian.h
+ header-test-$(CONFIG_CPU_LITTLE_ENDIAN) += linux/byteorder/little_endian.h
+ header-test- += linux/coda.h
+ header-test- += linux/coda_psdev.h
+-header-test- += linux/dvb/audio.h
+-header-test- += linux/dvb/osd.h
+ header-test- += linux/elfcore.h
+ header-test- += linux/errqueue.h
+ header-test- += linux/fsmap.h
+@@ -44,7 +42,6 @@ header-test- += linux/netfilter_bridge/ebtables.h
+ header-test- += linux/netfilter_ipv4/ipt_LOG.h
+ header-test- += linux/netfilter_ipv6/ip6t_LOG.h
+ header-test- += linux/nfc.h
+-header-test- += linux/nilfs2_ondisk.h
+ header-test- += linux/omap3isp.h
+ header-test- += linux/omapfb.h
+ header-test- += linux/patchkey.h
+@@ -59,9 +56,6 @@ header-test- += linux/v4l2-mediabus.h
+ header-test- += linux/v4l2-subdev.h
+ header-test- += linux/videodev2.h
+ header-test- += linux/vm_sockets.h
+-header-test- += misc/ocxl.h
+-header-test- += mtd/mtd-abi.h
+-header-test- += mtd/mtd-user.h
+ header-test- += scsi/scsi_bsg_fc.h
+ header-test- += scsi/scsi_netlink.h
+ header-test- += scsi/scsi_netlink_fc.h
+@@ -108,7 +102,6 @@ header-test- += linux/bpf_perf_event.h
+ endif
+ 
+ ifeq ($(SRCARCH),s390)
+-header-test- += asm/runtime_instr.h
+ header-test- += asm/zcrypt.h
+ endif
+ 
+@@ -116,7 +109,6 @@ ifeq ($(SRCARCH),sparc)
+ header-test- += asm/stat.h
+ header-test- += asm/uctx.h
+ header-test- += asm/fbio.h
+-header-test- += asm/openpromio.h
+ endif
+ 
+ # asm-generic/*.h is used by asm/*.h, and should not be included directly
 -- 
-~Randy
+2.17.1
+
