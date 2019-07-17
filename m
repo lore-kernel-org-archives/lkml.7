@@ -2,144 +2,109 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC23DC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E564C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976072182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFAC221852
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="CLr9FFrm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gGwLB/cq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfGQQeN (ORCPT
+        id S1727215AbfGQQgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 12:34:13 -0400
-Received: from mail-eopbgr80094.outbound.protection.outlook.com ([40.107.8.94]:32835
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726081AbfGQQeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 12:34:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TY8eI7G9088GTqNwTC3zsYzOey1AtNrFLl4dJ8hThLU5jcbd6Ig+5DrqG8ytcT7aJUBU4HLwDidOzI2aU6NYkbWEh9siLq4CJPfLxQUqUFNoSvt56mjqi7s/WR0COC2omeA7yJHEuYcyKnnqP4SkrA/lwUB7I/ptqESvWmaRWwGg8j+nXf3oA5TgStZKEk5zbFuvhZ48Tg1/4YaP/eQI2q0AXEy+p4hZfiGJtEzwG0MJhVPVLumgo0ItOQUjGMWKbbeb7MoPJ+iqr8pvgNYdypl3Gh5KkvC2UfOCU/Olhg2dcjQDTb4pktkV4qCQfK5iB3JdEiGbSb6xVigJxQ4Yqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1HPaioCU5g0v0CP21C4IyFRIIZC3dnl0YpvRLHxllok=;
- b=OAfxn1dcPqQDcH5YWZnefaupM54xsQsa21TXcoqdUG1mxNt41pdSf4BiHRIAX4dl+pi8GV/4NI92EwanovZ10TK8y74ULCQa4I4VtUwhAusxzYqkjXlbISe+khQHHczv7I3VtUEkdfuiV7H7AZccXDyQHHzT4JSQptTBKOdele1fKrDJijtmqwXWEzb25CIdP3lD3QNw8L5RIh4MDWlWoVz9lnqrYFZ13jGlVt7evQbxXAH61Clf9YRkDRWu6tPnBsbgDbS8gxMf1WC4ZE0JmK26vOxpGTclwp+hopYAZwIBQzEwsAEXO2JmRxO9p4aIid9MCzpZyIbnH2SLj5nl2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=toradex.com;dmarc=pass action=none
- header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1HPaioCU5g0v0CP21C4IyFRIIZC3dnl0YpvRLHxllok=;
- b=CLr9FFrmn3DHPJY1+ifLPTh+A1L+hZB0o2ltM7Vz/LJnSWAXMyR0C8YIaWz9I5mV/vwg2tJDdp3oNYiSW/NkHUvx8SfRWFbzoSE2GbqlQyUFU4keedci+Q41ZCIz8r8tK4Ai1/CrUUqHXFBBfQWjDAgDwRszpmrysmuxX9yIZsI=
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.16) by
- AM6PR05MB5523.eurprd05.prod.outlook.com (20.177.189.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 16:34:09 +0000
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::c860:b386:22a:8ec9]) by AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::c860:b386:22a:8ec9%6]) with mapi id 15.20.2094.011; Wed, 17 Jul 2019
- 16:34:09 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH v3 0/6] VAG power control improvement for sgtl5000 codec
-Thread-Topic: [PATCH v3 0/6] VAG power control improvement for sgtl5000 codec
-Thread-Index: AQHVOMHqURHnTs/AN0OjdnZhj0q7OabMD26AgAL5beU=
-Date:   Wed, 17 Jul 2019 16:34:09 +0000
-Message-ID: <AM6PR05MB6535DC29316E859AFF3699C4F9C90@AM6PR05MB6535.eurprd05.prod.outlook.com>
-References: <20190712145550.27500-1-oleksandr.suvorov@toradex.com>,<CAOMZO5B00XRb5GqtYhyg==sVek_uWhLRDQeSStN1AzfKRnV+Dw@mail.gmail.com>
-In-Reply-To: <CAOMZO5B00XRb5GqtYhyg==sVek_uWhLRDQeSStN1AzfKRnV+Dw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-originating-ip: [194.105.145.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7c52cd09-7591-4386-ef6f-08d70ad497f1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR05MB5523;
-x-ms-traffictypediagnostic: AM6PR05MB5523:
-x-microsoft-antispam-prvs: <AM6PR05MB55230011A52CFB471B52440AF9C90@AM6PR05MB5523.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(366004)(396003)(346002)(136003)(376002)(189003)(199004)(102836004)(14454004)(33656002)(25786009)(81156014)(229853002)(4326008)(68736007)(5660300002)(486006)(478600001)(81166006)(2906002)(71190400001)(44832011)(99286004)(74316002)(26005)(6916009)(8936002)(66066001)(3846002)(6116002)(6246003)(316002)(53936002)(7696005)(7736002)(55016002)(76176011)(54906003)(1411001)(9686003)(66476007)(64756008)(186003)(305945005)(66446008)(8676002)(66556008)(6506007)(53546011)(6436002)(71200400001)(476003)(66946007)(76116006)(52536014)(11346002)(256004)(446003)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB5523;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wfM5fp119eBGe3TqRRGuAvYwz8rBh7Qd+9DcbzdbFlIqNx/OFoETEjnqfyo66PT48EZxVKsymkgUAgHzRvDVQtoOiojLHq497IEXHs9mUR+hUbaL2konEXTH5WA/jY0mPFtJ4tkZ2xw9dDEvE262L4KbgHT7n9AoUohm9uy+qYn2kbsWI0W8qvlZ83w/gdo29ySbrVllWgOfSBb1FEFtpdGjj/7FnpBI2KLTTR7bBhz5RYT7bTDwh932kS0gFGA4fIjQ3uw4xYZ0jWe57nHXIcK3Y5yaEfcKMD0z3HGudLNVsRNQFUD5cEl3RIjKakAwyAzniI9Z+JsKZVEfJlmk0AOWoBScpp7PbUpRorVoUaCZaWPVoqO6/nV/CNDlHvoK8LesThGc7GMtMlmbVnbKLQO7LwRJwigfRHaYOskyRhs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 17 Jul 2019 12:36:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46310 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfGQQgP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 12:36:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i8so11402824pgm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 09:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=N0IoPmcNnKM1kJS4mNJCWU46BnLTmxMTIU2UXP3rmdY=;
+        b=gGwLB/cqZp7GUACZiJefpZ+436oxp6o5vUK/UHpTJEZ5ybBSbWRkxVyrBlO51X/pRO
+         Y0GIwnOit9Apb0qPbP6NQUg6vB075BQmAQGmJnuCtgd4AnW6yh/gM7ZXu1xosrCcpCDx
+         OYwQPO5XWGEmJndS2NTvsC9uByZIT26cMlTxg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=N0IoPmcNnKM1kJS4mNJCWU46BnLTmxMTIU2UXP3rmdY=;
+        b=djldbw83cJhYfK6gk1hix1EsWIxDIEdiebzw7ZbME3ujRXGG5aHBRRDhUF+ClWXulw
+         WoQde/FjcvR6kR171GWIK2/gSWY8TUyXz14s4R8DKxPehjR7GI27YuhVFqQT0GhkWUIW
+         J/WSX82xLAtFti1qZyexuDAq/IAO6nNMTGBaaB4P32LFLsX3tHDZaqqTsrkzs4o28Zy2
+         U20ET3fNWySJGz+v7/UVezRiepWh2Ek5qcse5DRbr9T19N0Pv6ApCQL/VJ/sqnu6dlVf
+         7z5xJWHo+rvjMS5pOmXR5vDPSH4sOGlb/hEn4oHoRD5Lx4FWNHBYPpax0RAJs8sUA1yV
+         AbaA==
+X-Gm-Message-State: APjAAAWqnox/aN5m5rGcDjj8ZSfh5+kc29T6ir8auS8Ow2Fm6gKRD7mU
+        V6BItMM9tWaQt6jEWhjLhRpfeQ==
+X-Google-Smtp-Source: APXvYqzPufMfZtIVtI7KWAsUsFBG9Ul/hFXQVV9hNpvbfysqLMXz+uKIFTGNmcwAXONITnFmYlYZEQ==
+X-Received: by 2002:a65:690f:: with SMTP id s15mr37742190pgq.432.1563381374496;
+        Wed, 17 Jul 2019 09:36:14 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b30sm36977484pfr.117.2019.07.17.09.36.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 09:36:14 -0700 (PDT)
+Message-ID: <5d2f4e7e.1c69fb81.a9a8c.a3d2@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c52cd09-7591-4386-ef6f-08d70ad497f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 16:34:09.3814
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oleksandr.suvorov@toradex.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5523
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190717014359.5xcnubpmazl3vqg5@gondor.apana.org.au>
+References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-2-swboyd@chromium.org> <20190717014359.5xcnubpmazl3vqg5@gondor.apana.org.au>
+Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 17 Jul 2019 09:36:13 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Herbert Xu (2019-07-16 18:43:59)
+> On Tue, Jul 16, 2019 at 03:45:13PM -0700, Stephen Boyd wrote:
+> > The hwrng_fill() function can run while devices are suspending and
+> > resuming. If the hwrng is behind a bus such as i2c or SPI and that bus
+> > is suspended, the hwrng may hang the bus while attempting to add some
+> > randomness. It's been observed on ChromeOS devices with suspend-to-idle
+> > (s2idle) and an i2c based hwrng that this kthread may run and ask the
+> > hwrng device for randomness before the i2c bus has been resumed.
+> >=20
+> > Let's make this kthread freezable so that we don't try to touch the
+> > hwrng during suspend/resume. This ensures that we can't cause the hwrng
+> > backing driver to get into a bad state because the device is guaranteed
+> > to be resumed before the hwrng kthread is thawed.
+> >=20
+> > Cc: Andrey Pronin <apronin@chromium.org>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: Duncan Laurie <dlaurie@chromium.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  drivers/char/hw_random/core.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> Do you want this to go through the crypto tree? If so you need
+> to cc the linux-crypto mailing list.
+>=20
 
-Hello Fabio,
+Sure. I'll resend just this one Cced to the linux-crypto list and to
+you.
 
-Thank you for your feedback! I've prepared and sent a fixed patchset v4.
-
---
-R&D Engineer
-Oleksandr Suvorov
-
-Toradex AG
-
-________________________________________
-From: Fabio Estevam <festevam@gmail.com>
-Sent: Monday, July 15, 2019 10:06:57 PM
-To: Oleksandr Suvorov
-Cc: linux-kernel@vger.kernel.org; alsa-devel@alsa-project.org; Marcel Ziswi=
-ler; Igor Opaniuk; Jaroslav Kysela; Mark Brown; Takashi Iwai; Liam Girdwood
-Subject: Re: [PATCH v3 0/6] VAG power control improvement for sgtl5000 code=
-c
-
-Hi Oleksandr,
-
-Your series looks good, thanks.
-
-I only have one suggestion.
-
-On Fri, Jul 12, 2019 at 11:56 AM Oleksandr Suvorov
-<oleksandr.suvorov@toradex.com> wrote:
->
->
-> VAG power control is improved to fit the manual [1]. This patchset fixes =
-as
-> minimum one bug: if customer muxes Headphone to Line-In right after boot,
-> the VAG power remains off that leads to poor sound quality from line-in.
->
-> I.e. after boot:
-> - Connect sound source to Line-In jack;
-> - Connect headphone to HP jack;
-> - Run following commands:
-> $ amixer set 'Headphone' 80%
-> $ amixer set 'Headphone Mux' LINE_IN
-
-Could you please make the bug fix patch to appear as the first one in
-the series with a Fixes tag and Cc stable?
-
-This way the bug fix can be applied to the linux stable tree.
