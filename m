@@ -2,105 +2,78 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D56C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1072C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE27217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7661C20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RILUrEmX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gQEbcXoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfGQHpX (ORCPT
+        id S1726818AbfGQHri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:45:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37671 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfGQHpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 03:45:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pTnp5rQhz9s8m;
-        Wed, 17 Jul 2019 17:45:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563349519;
-        bh=bl60vOig14zWA2evz/r+S3XrkL3DivP5HljgKsG8JkI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RILUrEmX+/fB7xdTBBla9ngVqWnAEGA/VeV/IHLrWkyXdKaZMoVRRSqGAKAOUXsQ9
-         nXPcLYlI2hci/BUCO9tifKs4WKvTVZl/Voq5Wi2L9qXYKDy+AHItse4rb0x2eut4rS
-         P0m0WTR6nxnCecyNc2EZLeciFlPW4MmQ9NFAbL21Hr6y19tAEoB3byEe4Qp/cGmks7
-         mlzEiwGFTc2rneo2xYn1Fh/mErGSN8w600aFIJytsglcz0NWtDY2DJHVCbNLOpiy89
-         eWk3TkA5LTvs+kbPVPNLQTAqiW6IUh4IB5MEYhw9GhL7RRBmk1nO97ZT2CgDOyGK6L
-         hlfkru4tdaH0g==
-Date:   Wed, 17 Jul 2019 17:45:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Majd Dibbiny <majd@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rdma tree
-Message-ID: <20190717174511.67e64609@canb.auug.org.au>
-In-Reply-To: <CAK7LNARZqi-QcGaTEaoTEASbnBaGzYchgDoWeuthR+G8jxQHMg@mail.gmail.com>
-References: <20190709133019.25a8cd27@canb.auug.org.au>
-        <ba1dd3e2-3091-816c-c308-2f9dd4385596@mellanox.com>
-        <20190709071758.GI7034@mtr-leonro.mtl.com>
-        <20190709124631.GG3436@mellanox.com>
-        <20190710110443.002220c8@canb.auug.org.au>
-        <20190710143036.1582c79d@canb.auug.org.au>
-        <20190717092801.77037015@canb.auug.org.au>
-        <CAK7LNARZqi-QcGaTEaoTEASbnBaGzYchgDoWeuthR+G8jxQHMg@mail.gmail.com>
+        Wed, 17 Jul 2019 03:47:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34946 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfGQHri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 03:47:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=137oFZdIMwQeknQ338SRCTrIfINUInCNQV8/ADqzoZQ=; b=gQEbcXoCLBv5bror+grY2I1qL
+        OpkcQCC8KyTxHYUIde8PkDqM7Svzc+XcFme1M192nKJDvk9KOfRVWFGYXaTmpSC8x3fkYiIkHELMs
+        J6okvQSea68X9nAdF0YRfve1pTpsTz6fiNLdXtfYYvsV7HOTSkvHwyZ084toVr2LJXjxAq114YOtn
+        OGdwEEAiyAY2z3+oRkTlhyJVMJmX2xqteiZU586Rq2+TujCBQh8xR16ZRyXsP79EQA9yuFWKzyqno
+        eymQbOfVY2I7Ur2Rt6qWjzFFEITgkqG3I/1rbX7uEyrcLRqycRgD/t72qFZMFyZAg6zu2EVd9oeYY
+        rTXrK2UnQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hneef-0008PA-Qo; Wed, 17 Jul 2019 07:47:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 877B12059DEA3; Wed, 17 Jul 2019 09:47:12 +0200 (CEST)
+Date:   Wed, 17 Jul 2019 09:47:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux_lkml_grp@oracle.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
+Subject: Re: [PATCH v3 0/6] Tracing vs CR2
+Message-ID: <20190717074712.GV3419@hirez.programming.kicks-ass.net>
+References: <20190711114054.406765395@infradead.org>
+ <4c71e14d-3a32-c3bb-8e3b-6e5100853192@oracle.com>
+ <97cdd0af-95cc-2583-dc19-129b20809110@oracle.com>
+ <CALCETrVisJsLk10WY6hgkqAJ7UsJCr4hHcdtrcUkMaPNOGNYLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/wuxKlRL/Cq6k9EEPfnjU2QV"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVisJsLk10WY6hgkqAJ7UsJCr4hHcdtrcUkMaPNOGNYLg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wuxKlRL/Cq6k9EEPfnjU2QV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 16, 2019 at 06:02:33PM -0700, Andy Lutomirski wrote:
 
-Hi Masahiro,
+> On a different thread, Peter and I decided that the last patch in this
+> series (the one that removes the _DEBUG stuff) is wrong.  Can you see
+> if these are reproducible with that patch removed?
 
-On Wed, 17 Jul 2019 15:33:28 +0900 Masahiro Yamada <yamada.masahiro@socione=
-xt.com> wrote:
->
-> Yes, this is just a one-liner fix-up,
-> so I'd like to fold it into this:
->=20
-> https://patchwork.kernel.org/patch/11047283/
-
-Fine by me.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wuxKlRL/Cq6k9EEPfnjU2QV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0u0gcACgkQAVBC80lX
-0GwWQQgAjcYWFWotF20wXVads8YJF5lZpSVBWK2za6mGL6y3PMs6sNetT/N7Nvt8
-gYriTJ5znXShX/htF+P+HlWX+ZAPRull/2E+vXjHlH6VZIYWHoC6wq/u7g4xnxav
-/090YXWwXqbWv7T0rv0fNliSfbIfu9bZgF60scgFObF2Y0/CwmFgmw1cqN2hySLN
-oNQd8iCGNpkIcmjx3CMK/DeVovLi44YnPbNx3pA5JHbyWtI2CnPvc9ep//veYviW
-62wLK8Fz4c/cbVat4f9DzEBmBfmEdGP9WZbYCOQN2OgWDLonQuhdVfL4nh2kt124
-pm1mQh4lFmEz1IKdakRNUhsvHwC+Hg==
-=HsqA
------END PGP SIGNATURE-----
-
---Sig_/wuxKlRL/Cq6k9EEPfnjU2QV--
+Wrong is maybe the wrong word :-), premature maybe, we definitely want to
+get there, but the #DB crud needs a wee bit of work first.
