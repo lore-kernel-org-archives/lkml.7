@@ -2,71 +2,88 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D56C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52B7C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09CF52173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9C82173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfGQGtH (ORCPT
+        id S1727492AbfGQGtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:49:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58480 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbfGQGtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:49:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E867EACAE;
-        Wed, 17 Jul 2019 06:49:05 +0000 (UTC)
-Subject: Re: [PATCH v8 4/5] x86/paravirt: Remove const mark from
- x86_hyper_xen_hvm variable
-To:     Joe Perches <joe@perches.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bp@alien8.de, sstabellini@kernel.org, x86@kernel.org,
-        tglx@linutronix.de, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com, mingo@redhat.com
-References: <1563251169-30740-1-git-send-email-zhenzhong.duan@oracle.com>
- <9791d12717bba784f24f35c29ddfaab9ccb78965.camel@perches.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <d4be507a-aa31-9ba3-9bf0-c8b60ec3f93a@suse.com>
-Date:   Wed, 17 Jul 2019 08:49:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 17 Jul 2019 02:49:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34318 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfGQGtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 02:49:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 23:49:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,273,1559545200"; 
+   d="scan'208";a="167877158"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jul 2019 23:49:14 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 4/5] PTP: Add flag for non-periodic output
+In-Reply-To: <20190716163927.GA2125@localhost>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-5-felipe.balbi@linux.intel.com> <20190716163927.GA2125@localhost>
+Date:   Wed, 17 Jul 2019 09:49:13 +0300
+Message-ID: <87k1ch2m1i.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <9791d12717bba784f24f35c29ddfaab9ccb78965.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.07.19 08:46, Joe Perches wrote:
-> On Tue, 2019-07-16 at 12:26 +0800, Zhenzhong Duan wrote:
->> .. as "nopv" support needs it to be changeable at boot up stage.
->>
->> Checkpatch reports warning, so move variable declarations from
->> hypervisor.c to hypervisor.h
-> []
->> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-> []
->> @@ -259,7 +259,7 @@ static __init void xen_hvm_guest_late_init(void)
->>   #endif
->>   }
->>   
->> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
->> +struct hypervisor_x86 x86_hyper_xen_hvm __initdata = {
-> 
-> static?
 
-It is being referenced from arch/x86/kernel/cpu/hypervisor.c
+Hi Richard,
 
+Richard Cochran <richardcochran@gmail.com> writes:
 
-Juergen
+> On Tue, Jul 16, 2019 at 10:20:37AM +0300, Felipe Balbi wrote:
+>> When this new flag is set, we can use single-shot output.
+>> 
+>> Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+>> ---
+>>  include/uapi/linux/ptp_clock.h | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/include/uapi/linux/ptp_clock.h b/include/uapi/linux/ptp_clock.h
+>> index 674db7de64f3..439cbdfc3d9b 100644
+>> --- a/include/uapi/linux/ptp_clock.h
+>> +++ b/include/uapi/linux/ptp_clock.h
+>> @@ -67,7 +67,9 @@ struct ptp_perout_request {
+>>  	struct ptp_clock_time start;  /* Absolute start time. */
+>>  	struct ptp_clock_time period; /* Desired period, zero means disable. */
+>>  	unsigned int index;           /* Which channel to configure. */
+>> -	unsigned int flags;           /* Reserved for future use. */
+>> +
+>> +#define PTP_PEROUT_ONE_SHOT BIT(0)
+>> +	unsigned int flags;           /* Bit 0 -> oneshot output. */
+>>  	unsigned int rsv[4];          /* Reserved for future use. */
+>
+> Unfortunately, the code never checked that .flags and .rsv are zero,
+> and so the de-facto ABI makes extending these fields impossible.  That
+> was my mistake from the beginning.
+>
+> In order to actually support extensions, you will first have to
+> introduce a new ioctl.
+
+No worries, I'll work on this after vacations (I'll off for 2 weeks
+starting next week). I thought about adding a new IOCTL until I saw that
+rsv field. Oh well :-)
+
+-- 
+balbi
