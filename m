@@ -2,68 +2,200 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B32C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB03C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80037217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563329120;
-	bh=r2biLWcV/MUJfDx+umyXdZL9idi3RpzmDneI8QG2YYg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2A+fIdH7LVPKdXTz8t91TXK5eVOx5wwnuSb3EHOVOlsRq0u25oJr7wzsGHjCB5xfS
-	 D+eUFUyAgTVEVHWIuGrwCPais9vsAaSlTK0W+EoQ4CBFjwAr/ugNUCGwFVoi7pjbCp
-	 W6XXgvZtMI9rFJgVgUyGMaV2GLHQWivuNN5iMOJg=
+	by mail.kernel.org (Postfix) with ESMTP id 52999217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COaxmAt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbfGQCFT (ORCPT
+        id S1727909AbfGQCFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfGQCFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:05:19 -0400
-Subject: Re: [GIT PULL] Btrfs updates for 5.3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563329118;
-        bh=r2biLWcV/MUJfDx+umyXdZL9idi3RpzmDneI8QG2YYg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1S4HfSYYdGBDgvf52xiAHbLOY1lwen94g2zA7uvaBMTmtbg0fmwWAEL5LMwRTVLOW
-         43NQYSHqnyMvcH0Bpw5XhhiFO5B9H7gCwBRBA7z1ff7ycGSrwz5Yn8viMvHp/pIqAf
-         M0wYxoZS+nqJBhTdtLIYKyqiLSa4BypW2F13U8mc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1563178381.git.dsterba@suse.com>
-References: <cover.1563178381.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1563178381.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-tag
-X-PR-Tracked-Commit-Id: e02d48eaaed77f6c36916a7aa65c451e1f9d9aab
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a18f8775419d3df282dd83efdb51c5a64d092f31
-Message-Id: <156332911856.16657.15152227893053261337.pr-tracker-bot@kernel.org>
-Date:   Wed, 17 Jul 2019 02:05:18 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        clm@fb.com, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Tue, 16 Jul 2019 22:05:35 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34288 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfGQCFe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 22:05:34 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so11098343plt.1;
+        Tue, 16 Jul 2019 19:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yyCnAAqk50QuA4BIBmrwpAsydgjX7XlHlK6JOx65DDw=;
+        b=COaxmAt/1rYE2V0bO3fOwcy9AOu6ZItqgt7z0yJFcIToBFN7WR2IOKBaEsRG6f2oV/
+         7jNihXSPC/Fgw3SAM+JpTFvKs8bUzW1JTgrMg8ahJpn79fg0NFLde9ksQvOYv03GOK//
+         10h6wtCrDCWCTzVAhxYF3KdL2If6V9oWyNGLZclYY7CGLUMTXWn8GO4X/BCuA8p/49fM
+         MTfmesbcmL+rT90NrxCsfXB1Y9qszpcKWR5lC/DIE8lFbyG/wtHvQR4w9LGq2Z+aCjAG
+         cfxsXiWv9R9VmHxxeTAu4PFIG12pNt/eGwEhzTpiE2Wqx3kFeCGJXPlv/bg1j9/Wg+Zz
+         QGDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yyCnAAqk50QuA4BIBmrwpAsydgjX7XlHlK6JOx65DDw=;
+        b=pGXtlOISGzvLhNDBC9wiJTXK3qL2ah3hVMuOVgyFE/0kNMnNWZjDb2+tEB2yMuE+2R
+         x7rcCsy9M0HIjH1JwiFTs1Hoa9zc326FNYDDIKolaOsbtVp7XfULPTaX8DajbwOgPIhM
+         2u2N1l9NTy8E8M7x2gb+w/2kt1hzr6Q2uoiMH5fAn4RMZ2qiUjhrD5D/2jNYgnqfNvj8
+         ryNhWgQMiROdrT339ivp4CPmITNJ9o63oRTPBei91H2KKTXgZ0xeYgFM8qcoKdAoK3++
+         eV6AZxR2hTUXS8lJviVJEasScZBd7GCjJsjQTBXq5vCeEW+AzPYggvxvedxxyXHcLkGz
+         dVGA==
+X-Gm-Message-State: APjAAAWZBSWiBmZ012X+2g+uo7Osr2R8tBfwgYWtY3W8LT8fbDApjxMR
+        OdjcD/EdAeyKUf1OTbmqnLU=
+X-Google-Smtp-Source: APXvYqziOjUBLqVm7Ljn+gX0qv1m7k7hAhtfNX3S6c2+q6+5FyjgHUQz2dLeQN/U+ijm7WsOVtPlsQ==
+X-Received: by 2002:a17:902:f089:: with SMTP id go9mr39500527plb.81.1563329134078;
+        Tue, 16 Jul 2019 19:05:34 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id g2sm29161025pfb.95.2019.07.16.19.05.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 19:05:33 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Catherine Sullivan <csully@google.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] gve: replace kfree with kvfree
+Date:   Wed, 17 Jul 2019 10:05:11 +0800
+Message-Id: <20190717020510.4548-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 15 Jul 2019 10:57:01 +0200:
+Variables allocated by kvzalloc should not be freed by kfree.
+Because they may be allocated by vmalloc.
+So we replace kfree with kvfree here.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-tag
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/ethernet/google/gve/gve_main.c | 22 +++++++++++-----------
+ drivers/net/ethernet/google/gve/gve_rx.c   |  4 ++--
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a18f8775419d3df282dd83efdb51c5a64d092f31
-
-Thank you!
-
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 24f16e3368cd..10b8e9720c32 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -232,7 +232,7 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
+ abort_with_msix_enabled:
+ 	pci_disable_msix(priv->pdev);
+ abort_with_msix_vectors:
+-	kfree(priv->msix_vectors);
++	kvfree(priv->msix_vectors);
+ 	priv->msix_vectors = NULL;
+ 	return err;
+ }
+@@ -256,7 +256,7 @@ static void gve_free_notify_blocks(struct gve_priv *priv)
+ 	priv->ntfy_blocks = NULL;
+ 	free_irq(priv->msix_vectors[priv->mgmt_msix_idx].vector, priv);
+ 	pci_disable_msix(priv->pdev);
+-	kfree(priv->msix_vectors);
++	kvfree(priv->msix_vectors);
+ 	priv->msix_vectors = NULL;
+ }
+ 
+@@ -445,12 +445,12 @@ static int gve_alloc_rings(struct gve_priv *priv)
+ 	return 0;
+ 
+ free_rx:
+-	kfree(priv->rx);
++	kvfree(priv->rx);
+ 	priv->rx = NULL;
+ free_tx_queue:
+ 	gve_tx_free_rings(priv);
+ free_tx:
+-	kfree(priv->tx);
++	kvfree(priv->tx);
+ 	priv->tx = NULL;
+ 	return err;
+ }
+@@ -500,7 +500,7 @@ static void gve_free_rings(struct gve_priv *priv)
+ 			gve_remove_napi(priv, ntfy_idx);
+ 		}
+ 		gve_tx_free_rings(priv);
+-		kfree(priv->tx);
++		kvfree(priv->tx);
+ 		priv->tx = NULL;
+ 	}
+ 	if (priv->rx) {
+@@ -509,7 +509,7 @@ static void gve_free_rings(struct gve_priv *priv)
+ 			gve_remove_napi(priv, ntfy_idx);
+ 		}
+ 		gve_rx_free_rings(priv);
+-		kfree(priv->rx);
++		kvfree(priv->rx);
+ 		priv->rx = NULL;
+ 	}
+ }
+@@ -592,9 +592,9 @@ static void gve_free_queue_page_list(struct gve_priv *priv,
+ 		gve_free_page(&priv->pdev->dev, qpl->pages[i],
+ 			      qpl->page_buses[i], gve_qpl_dma_dir(priv, id));
+ 
+-	kfree(qpl->page_buses);
++	kvfree(qpl->page_buses);
+ free_pages:
+-	kfree(qpl->pages);
++	kvfree(qpl->pages);
+ 	priv->num_registered_pages -= qpl->num_entries;
+ }
+ 
+@@ -635,7 +635,7 @@ static int gve_alloc_qpls(struct gve_priv *priv)
+ free_qpls:
+ 	for (j = 0; j <= i; j++)
+ 		gve_free_queue_page_list(priv, j);
+-	kfree(priv->qpls);
++	kvfree(priv->qpls);
+ 	return err;
+ }
+ 
+@@ -644,12 +644,12 @@ static void gve_free_qpls(struct gve_priv *priv)
+ 	int num_qpls = gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv);
+ 	int i;
+ 
+-	kfree(priv->qpl_cfg.qpl_id_map);
++	kvfree(priv->qpl_cfg.qpl_id_map);
+ 
+ 	for (i = 0; i < num_qpls; i++)
+ 		gve_free_queue_page_list(priv, i);
+ 
+-	kfree(priv->qpls);
++	kvfree(priv->qpls);
+ }
+ 
+ /* Use this to schedule a reset when the device is capable of continuing
+diff --git a/drivers/net/ethernet/google/gve/gve_rx.c b/drivers/net/ethernet/google/gve/gve_rx.c
+index c1aeabd1c594..1914b8350da7 100644
+--- a/drivers/net/ethernet/google/gve/gve_rx.c
++++ b/drivers/net/ethernet/google/gve/gve_rx.c
+@@ -35,7 +35,7 @@ static void gve_rx_free_ring(struct gve_priv *priv, int idx)
+ 
+ 	gve_unassign_qpl(priv, rx->data.qpl->id);
+ 	rx->data.qpl = NULL;
+-	kfree(rx->data.page_info);
++	kvfree(rx->data.page_info);
+ 
+ 	slots = rx->data.mask + 1;
+ 	bytes = sizeof(*rx->data.data_ring) * slots;
+@@ -168,7 +168,7 @@ static int gve_rx_alloc_ring(struct gve_priv *priv, int idx)
+ 			  rx->q_resources, rx->q_resources_bus);
+ 	rx->q_resources = NULL;
+ abort_filled:
+-	kfree(rx->data.page_info);
++	kvfree(rx->data.page_info);
+ abort_with_slots:
+ 	bytes = sizeof(*rx->data.data_ring) * slots;
+ 	dma_free_coherent(hdev, bytes, rx->data.data_ring, rx->data.data_bus);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
