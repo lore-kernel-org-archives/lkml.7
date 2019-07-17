@@ -2,141 +2,146 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD1DC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BF2C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7674221743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="JUQJVM1v"
+	by mail.kernel.org (Postfix) with ESMTP id 5AB212184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbfGQR5e (ORCPT
+        id S2388805AbfGQR6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:57:34 -0400
-Received: from vern.gendns.com ([98.142.107.122]:46798 "EHLO vern.gendns.com"
+        Wed, 17 Jul 2019 13:58:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56418 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfGQR5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:57:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kBCqv/tlrCEB7BtFXFOJV8+OGPJGlXhO5dquLsunvpA=; b=JUQJVM1vwnZ1tOfW05WU4K8sS2
-        nnbTCmMPTP6+9fc5yWMZ2iP7WFyv+sU+yUiKL1DeKN/yCiRIE+Oto8digXX58a8eUQcBIUjgvV5ua
-        UUEToaMClhulA2UtFibfORrN/XoiIcY5QyuGKr4nURytgYQdCx1zHnUwobNvlsf4rYZtKS8eLKntU
-        0ae9SntXkf+cQxpG/F5LwfkqQUhKWFbuOjJ1CaXASbnjl7ETaDflMcn00WrHPcJDN6Mkqgvl98ftq
-        vrDMN8nLWRDAkIxmQSEwZcQKwNYHitsoXyA5TWcLf+IJp3Qye49SsOvgyhEeOzOC8pjnmAiBXx067
-        t3rfX8Dg==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:48454 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hnoBG-007dWK-Hb; Wed, 17 Jul 2019 13:57:30 -0400
-Subject: Re: [PATCH 4/6] irqchip/irq-pruss-intc: Add helper functions to
- configure internal mapping
-To:     Suman Anna <s-anna@ti.com>, Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Cc:     Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-5-s-anna@ti.com>
- <9aa5acd8-81bf-10dc-5a86-cea2acd1132b@lechnology.com>
- <23ae1767-3531-ea57-2c82-f2657baa123f@ti.com>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <22825f06-d968-03a7-585b-8cbf4123915c@lechnology.com>
-Date:   Wed, 17 Jul 2019 12:57:29 -0500
+        id S1726085AbfGQR6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:58:46 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 43EDD307D933;
+        Wed, 17 Jul 2019 17:58:45 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 576405B689;
+        Wed, 17 Jul 2019 17:58:41 +0000 (UTC)
+Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-4-alex.kogan@oracle.com>
+ <77bba626-f3e6-45a8-aae8-43b945d0fab9@redhat.com>
+ <aa73b86d-902a-bb6f-d372-8645c8299a6d@redhat.com>
+ <C1C55A40-FDB1-43B5-B551-F9B8BE776DF8@oracle.com>
+ <2a7a3ea8-7a94-52d4-b8ef-581de28e0063@redhat.com>
+ <10197432-47E5-49D7-AD68-8A412782012B@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <76d70284-dd6b-009c-710c-cc97bac8146f@redhat.com>
+Date:   Wed, 17 Jul 2019 13:58:40 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <23ae1767-3531-ea57-2c82-f2657baa123f@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <10197432-47E5-49D7-AD68-8A412782012B@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 17 Jul 2019 17:58:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 6:29 PM, Suman Anna wrote:
-> Hi David,
-> 
-> On 7/10/19 10:10 PM, David Lechner wrote:
->> On 7/7/19 10:52 PM, Suman Anna wrote:
->>> The PRUSS INTC receives a number of system input interrupt source events
->>> and supports individual control configuration and hardware
->>> prioritization.
->>> These input events can be mapped to some output host interrupts through 2
->>> levels of many-to-one mapping i.e. events to channel mapping and channels
->>> to host interrupts.
+On 7/17/19 1:44 PM, Alex Kogan wrote:
+>> On Jul 16, 2019, at 10:50 AM, Waiman Long <longman@redhat.com> wrote:
+>>
+>> On 7/16/19 10:29 AM, Alex Kogan wrote:
+>>>> On Jul 15, 2019, at 7:22 PM, Waiman Long <longman@redhat.com
+>>>> <mailto:longman@redhat.com>> wrote:
+>>>>
+>>>> On 7/15/19 5:30 PM, Waiman Long wrote:
+>>>>>> -#ifndef _GEN_PV_LOCK_SLOWPATH
+>>>>>> +#if !defined(_GEN_PV_LOCK_SLOWPATH) && !defined(_GEN_CNA_LOCK_SLOWPATH)
+>>>>>>
+>>>>>> #include <linux/smp.h>
+>>>>>> #include <linux/bug.h>
+>>>>>> @@ -77,18 +77,14 @@
+>>>>>> #define MAX_NODES	4
+>>>>>>
+>>>>>> /*
+>>>>>> - * On 64-bit architectures, the mcs_spinlock structure will be 16 bytes in
+>>>>>> - * size and four of them will fit nicely in one 64-byte cacheline. For
+>>>>>> - * pvqspinlock, however, we need more space for extra data. To accommodate
+>>>>>> - * that, we insert two more long words to pad it up to 32 bytes. IOW, only
+>>>>>> - * two of them can fit in a cacheline in this case. That is OK as it is rare
+>>>>>> - * to have more than 2 levels of slowpath nesting in actual use. We don't
+>>>>>> - * want to penalize pvqspinlocks to optimize for a rare case in native
+>>>>>> - * qspinlocks.
+>>>>>> + * On 64-bit architectures, the mcs_spinlock structure will be 20 bytes in
+>>>>>> + * size. For pvqspinlock or the NUMA-aware variant, however, we need more
+>>>>>> + * space for extra data. To accommodate that, we insert two more long words
+>>>>>> + * to pad it up to 36 bytes.
+>>>>>> */
+>>>>> The 20 bytes figure is wrong. It is actually 24 bytes for 64-bit as the
+>>>>> mcs_spinlock structure is 8-byte aligned. For better cacheline
+>>>>> alignment, I will like to keep mcs_spinlock to 16 bytes as before.
+>>>>> Instead, you can use encode_tail() to store the CNA node pointer in
+>>>>> "locked". For instance, use (encode_tail() << 1) in locked to
+>>>>> distinguish it from the regular locked=1 value.
+>>>> Actually, the encoded tail value is already shift left either 16 bits
+>>>> or 9 bits. So there is no need to shift it. You can assigned it directly:
+>>>>
+>>>> mcs->locked = cna->encoded_tail;
+>>>>
+>>>> You do need to change the type of locked to "unsigned int", though,
+>>>> for proper comparison with "1".
+>>>>
+>>> Got it, thanks.
 >>>
->>> This mapping information is provided through the PRU firmware that is
->>> loaded onto a PRU core/s or through the device tree node of the PRU
->>
-> 
-> Thanks for the thorough review and alternate solutions/suggestions.
-> 
->> What will the device tree bindings for this look like?
-> 
-> They would be as in the below patch you already figured.
+>> I forgot to mention that I would like to see a boot command line option
+>> to force off and maybe on as well the numa qspinlock code. This can help
+>> in testing as you don't need to build 2 separate kernels, one with
+>> NUMA_AWARE_SPINLOCKS on and one with it off.
+> IIUC it should be easy to add a boot option to force off the NUMA-aware spinlock 
+> even if it is enabled though config, but the other way around would require 
+> compiling in the NUMA-aware spinlock stuff even if the config option is disabled.
+> Is that ok?
 
-Ah, makes sense now: the mapping is defined in the remoteproc node
-rather than in the interrupt controller node.
+That is not what I am looking for. If the config option is disabled, the
+boot command line option is disabled also. For the on case, one possible
+usage scenario is with a VM guest where all the vcpus are pinned to a
+physical CPUs with no over-commit and correct numa information. In that
+case, one may want to use numa-qspinlock instead of pv-qspinlock.
 
-> 
->>
->> Looking back at Rob's comment on the initial series [1], I still think
->> that increasing the #interrupt-cells sounds like a reasonable solution.
->>
->> [1]: https://patchwork.kernel.org/patch/10697705/#22375155
-> 
-> So, there are couple of reasons why I did not use an extended
-> #interrupt-cells:
-> 
-> 1. There is only one irq descriptor associated with each event, and the
-> usage of events is typically per application. And the descriptor mapping
-> is done once. We can have two different applications use the same event
-> with different mappings. So we want this programming done at
-> application's usage of PRU (so done when a consumer driver acquires a
-> PRU processor(s) which are treated as an exclusive resource). All the
-> different application properties that you saw in [1] are configured at
-> the time of acquiring a PRU and reset when they release a PRU.
-> 
-> 2. The configuration is performed by Linux for all host interrupts and
-> channels, and this was primarily done to save the very limited IRAM
-> space for those needed by the PRUs. From firmware's point of view, this
-> was offloaded to the ARM OS driver/infrastructure, but in general it is
-> a design by contract between a PRU client driver and its firmware. Also,
-> the DT binding semantics using interrupts property and request_irq()
-> typically limits these to interrupts only being requested by MPU, and so
-> will leave out those needed by PRUs.
-> 
+> Also, what should the option name be?
+> "numa_spinlock=on/off” if we want both ways, or “no_numa_spinlock" if we want just the “force off” option?
 
-Hmm... case 1. is a tricky one indeed. If there are going to be times where
-an event requires multiple mappings, I agree that this doesn't seem to fit
-into any existing device tree bindings.
+I think "numa_spinlock=on/off" will be good. The default is "auto" where
+it will be turned on when there is more than one numa nodes in the system.
+
+>> For small 2-socket systems,
+>> numa qspinlock may not help much.
+> It actually helps quite a bit (e.g., speedup of up to 42-57% for will-it-scale on a dual-socket x86 system).
+> We have numbers and plots in our paper on arxiv.
+
+I am talking about older 2-socket systems where each socket may have
+just a few cpus. Also some Intel CPU can be configured to have 2 numa
+nodes per socket. For AMD EPYC, it can be configured to have 4 numa
+nodes per socket.
+
+Cheers,
+Longman
 
 
