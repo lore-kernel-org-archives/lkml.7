@@ -2,287 +2,130 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D70C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02040C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB7D2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D336821743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfGQTVl (ORCPT
+        id S1727426AbfGQTWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:21:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46724 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727372AbfGQTVl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:21:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id E354728A8A3
-From:   Helen Koike <helen.koike@collabora.com>
-To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Cc:     kernel@collabora.com, mcasas@google.com, zhenyu.z.wang@intel.com,
-        airlied@linux.ie, daniel.vetter@ffwll.ch,
-        joonas.lahtinen@linux.intel.com, linux-kernel@vger.kernel.org,
-        jani.nikula@linux.intel.com, tfiga@chromium.org,
-        gustavo.padovan@collabora.com, rodrigo.vivi@intel.com,
-        enric.balletbo@collabora.com, tina.zhang@intel.com,
-        ville.syrjala@linux.intel.com,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v10 2/2] drm/i915: update cursors asynchronously through atomic
-Date:   Wed, 17 Jul 2019 16:21:13 -0300
-Message-Id: <20190717192114.21855-2-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190717192114.21855-1-helen.koike@collabora.com>
-References: <20190717192114.21855-1-helen.koike@collabora.com>
+        Wed, 17 Jul 2019 15:22:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfGQTWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 15:22:07 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DFA2830842B2;
+        Wed, 17 Jul 2019 19:22:06 +0000 (UTC)
+Received: from dustball.usersys.redhat.com (unknown [10.43.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 758C810027BE;
+        Wed, 17 Jul 2019 19:22:03 +0000 (UTC)
+Date:   Wed, 17 Jul 2019 21:22:00 +0200
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        dbueso@suse.de, peterz@infradead.org, mingo@redhat.com,
+        jstancek@redhat.com
+Subject: Re: [PATCH v2] locking/rwsem: add acquire barrier to read_slowpath
+ exit when queue is empty
+Message-ID: <20190717192200.GA17687@dustball.usersys.redhat.com>
+References: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
+ <a524cf95ab0dbdd1eb65e9decb9283e73d416b1d.1563352912.git.jstancek@redhat.com>
+ <20190717131335.b2ry43t2ov7ba4t4@willie-the-truck>
+ <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 17 Jul 2019 19:22:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Padovan <gustavo.padovan@collabora.com>
+On Wed, Jul 17, 2019 at 10:19:04AM -0400, Waiman Long wrote:
+>> If you add a comment to the code outlining the issue (preferably as a litmus
+>> test involving sem->count and some shared data which happens to be
+>> vmacache_seqnum in your test)), then:
+>>
+>> Reviewed-by: Will Deacon <will@kernel.org>
+>>
+>> Thanks,
+>>
+>> Will
+>
+>Agreed. A comment just above smp_acquire__after_ctrl_dep() on why this
+>is needed will be great.
+>
+>Other than that,
+>
+>Acked-by: Waiman Long <longman@redhat.com>
+>
 
-Replace the legacy cursor implementation by the async callbacks
+litmus test looks a bit long, would following be acceptable?
 
-Signed-off-by: Gustavo Padovan <gustavo.padovan@collabora.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 37524a47f002..d9c96651bfc7 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -1032,6 +1032,13 @@ static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
+  		 */
+  		if (adjustment && !(atomic_long_read(&sem->count) &
+  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
++			/*
++			 * down_read() issued ACQUIRE on enter, but we can race
++			 * with writer who did RELEASE only after us.
++			 * ACQUIRE here makes sure reader operations happen only
++			 * after all writer ones.
++			 */
++			smp_acquire__after_ctrl_dep();
+  			raw_spin_unlock_irq(&sem->wait_lock);
+  			rwsem_set_reader_owned(sem);
+  			lockevent_inc(rwsem_rlock_fast);
 
----
 
-Changes in v10: None
-Changes in v9:
- - v8: https://patchwork.kernel.org/patch/10843397/
- - rebased and fixed conflicts on top of drm-tip
+with litmus test in commit log:
+----------------------------------- 8< ------------------------------------
+C rwsem
 
-Changes in v8:
- - v7: https://lkml.org/lkml/2018/6/8/168
- - v7 was splited in two, one that adds the async callbacks and another
- that updates the cursor.
- - Update comment in intel_pm.c that was referencing
- intel_plane_atomic_async_update()
+{
+	atomic_t rwsem_count = ATOMIC_INIT(1);
+	int vmacache_seqnum = 10;
+}
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
+P0(int *vmacache_seqnum, atomic_t *rwsem_count)
+{
+	r0 = READ_ONCE(*vmacache_seqnum);
+	WRITE_ONCE(*vmacache_seqnum, r0 + 1);
+	/* downgrade_write */
+	r1 = atomic_fetch_add_release(-1+256, rwsem_count);
+}
 
- drivers/gpu/drm/i915/display/intel_display.c | 165 +------------------
- drivers/gpu/drm/i915/intel_pm.c              |   2 +-
- 2 files changed, 6 insertions(+), 161 deletions(-)
+P1(int *vmacache_seqnum, atomic_t *rwsem_count, spinlock_t *sem_wait_lock)
+{
+	/* rwsem_read_trylock */
+	r0 = atomic_add_return_acquire(256, rwsem_count);
+	/* rwsem_down_read_slowpath */
+	spin_lock(sem_wait_lock);
+	r0 = atomic_read(rwsem_count);
+	if ((r0 & 1) == 0) {
+		// BUG: needs barrier
+		spin_unlock(sem_wait_lock);
+		r1 = READ_ONCE(*vmacache_seqnum);
+	}
+}
+exists (1:r1=10)
+----------------------------------- 8< ------------------------------------
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-index acfb9b7939e2..619916f63c4f 100644
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -13662,6 +13662,10 @@ static int intel_atomic_check(struct drm_device *dev,
- 	if (ret)
- 		goto fail;
- 
-+	if (_state->legacy_cursor_update)
-+		_state->async_update = !drm_atomic_helper_async_check(dev,
-+								     _state);
-+
- 	intel_fbc_choose_crtc(dev_priv, state);
- 	ret = calc_watermark_data(state);
- 	if (ret)
-@@ -14158,34 +14162,6 @@ static int intel_atomic_commit(struct drm_device *dev,
- 
- 	drm_atomic_state_get(&state->base);
- 
--	/*
--	 * The intel_legacy_cursor_update() fast path takes care
--	 * of avoiding the vblank waits for simple cursor
--	 * movement and flips. For cursor on/off and size changes,
--	 * we want to perform the vblank waits so that watermark
--	 * updates happen during the correct frames. Gen9+ have
--	 * double buffered watermarks and so shouldn't need this.
--	 *
--	 * Unset state->legacy_cursor_update before the call to
--	 * drm_atomic_helper_setup_commit() because otherwise
--	 * drm_atomic_helper_wait_for_flip_done() is a noop and
--	 * we get FIFO underruns because we didn't wait
--	 * for vblank.
--	 *
--	 * FIXME doing watermarks and fb cleanup from a vblank worker
--	 * (assuming we had any) would solve these problems.
--	 */
--	if (INTEL_GEN(dev_priv) < 9 && state->base.legacy_cursor_update) {
--		struct intel_crtc_state *new_crtc_state;
--		struct intel_crtc *crtc;
--		int i;
--
--		for_each_new_intel_crtc_in_state(state, crtc, new_crtc_state, i)
--			if (new_crtc_state->wm.need_postvbl_update ||
--			    new_crtc_state->update_wm_post)
--				state->base.legacy_cursor_update = false;
--	}
--
- 	ret = intel_atomic_prepare_commit(state);
- 	if (ret) {
- 		DRM_DEBUG_ATOMIC("Preparing state failed with %i\n", ret);
-@@ -14677,139 +14653,8 @@ static const struct drm_plane_funcs i8xx_plane_funcs = {
- 	.format_mod_supported = i8xx_plane_format_mod_supported,
- };
- 
--static int
--intel_legacy_cursor_update(struct drm_plane *plane,
--			   struct drm_crtc *crtc,
--			   struct drm_framebuffer *fb,
--			   int crtc_x, int crtc_y,
--			   unsigned int crtc_w, unsigned int crtc_h,
--			   u32 src_x, u32 src_y,
--			   u32 src_w, u32 src_h,
--			   struct drm_modeset_acquire_ctx *ctx)
--{
--	struct drm_i915_private *dev_priv = to_i915(crtc->dev);
--	int ret;
--	struct drm_plane_state *old_plane_state, *new_plane_state;
--	struct intel_plane *intel_plane = to_intel_plane(plane);
--	struct drm_framebuffer *old_fb;
--	struct intel_crtc_state *crtc_state =
--		to_intel_crtc_state(crtc->state);
--	struct intel_crtc_state *new_crtc_state;
--
--	/*
--	 * When crtc is inactive or there is a modeset pending,
--	 * wait for it to complete in the slowpath
--	 */
--	if (!crtc_state->base.active || needs_modeset(crtc_state) ||
--	    crtc_state->update_pipe)
--		goto slow;
--
--	old_plane_state = plane->state;
--	/*
--	 * Don't do an async update if there is an outstanding commit modifying
--	 * the plane.  This prevents our async update's changes from getting
--	 * overridden by a previous synchronous update's state.
--	 */
--	if (old_plane_state->commit &&
--	    !try_wait_for_completion(&old_plane_state->commit->hw_done))
--		goto slow;
--
--	/*
--	 * If any parameters change that may affect watermarks,
--	 * take the slowpath. Only changing fb or position should be
--	 * in the fastpath.
--	 */
--	if (old_plane_state->crtc != crtc ||
--	    old_plane_state->src_w != src_w ||
--	    old_plane_state->src_h != src_h ||
--	    old_plane_state->crtc_w != crtc_w ||
--	    old_plane_state->crtc_h != crtc_h ||
--	    !old_plane_state->fb != !fb)
--		goto slow;
--
--	new_plane_state = intel_plane_duplicate_state(plane);
--	if (!new_plane_state)
--		return -ENOMEM;
--
--	new_crtc_state = to_intel_crtc_state(intel_crtc_duplicate_state(crtc));
--	if (!new_crtc_state) {
--		ret = -ENOMEM;
--		goto out_free;
--	}
--
--	drm_atomic_set_fb_for_plane(new_plane_state, fb);
--
--	new_plane_state->src_x = src_x;
--	new_plane_state->src_y = src_y;
--	new_plane_state->src_w = src_w;
--	new_plane_state->src_h = src_h;
--	new_plane_state->crtc_x = crtc_x;
--	new_plane_state->crtc_y = crtc_y;
--	new_plane_state->crtc_w = crtc_w;
--	new_plane_state->crtc_h = crtc_h;
--
--	ret = intel_plane_atomic_check_with_state(crtc_state, new_crtc_state,
--						  to_intel_plane_state(old_plane_state),
--						  to_intel_plane_state(new_plane_state));
--	if (ret)
--		goto out_free;
--
--	ret = mutex_lock_interruptible(&dev_priv->drm.struct_mutex);
--	if (ret)
--		goto out_free;
--
--	ret = intel_plane_pin_fb(to_intel_plane_state(new_plane_state));
--	if (ret)
--		goto out_unlock;
--
--	intel_fb_obj_flush(intel_fb_obj(fb), ORIGIN_FLIP);
--
--	old_fb = old_plane_state->fb;
--	i915_gem_track_fb(intel_fb_obj(old_fb), intel_fb_obj(fb),
--			  intel_plane->frontbuffer_bit);
--
--	/* Swap plane state */
--	plane->state = new_plane_state;
--
--	/*
--	 * We cannot swap crtc_state as it may be in use by an atomic commit or
--	 * page flip that's running simultaneously. If we swap crtc_state and
--	 * destroy the old state, we will cause a use-after-free there.
--	 *
--	 * Only update active_planes, which is needed for our internal
--	 * bookkeeping. Either value will do the right thing when updating
--	 * planes atomically. If the cursor was part of the atomic update then
--	 * we would have taken the slowpath.
--	 */
--	crtc_state->active_planes = new_crtc_state->active_planes;
--
--	if (plane->state->visible)
--		intel_update_plane(intel_plane, crtc_state,
--				   to_intel_plane_state(plane->state));
--	else
--		intel_disable_plane(intel_plane, crtc_state);
--
--	intel_plane_unpin_fb(to_intel_plane_state(old_plane_state));
--
--out_unlock:
--	mutex_unlock(&dev_priv->drm.struct_mutex);
--out_free:
--	if (new_crtc_state)
--		intel_crtc_destroy_state(crtc, &new_crtc_state->base);
--	if (ret)
--		intel_plane_destroy_state(plane, new_plane_state);
--	else
--		intel_plane_destroy_state(plane, old_plane_state);
--	return ret;
--
--slow:
--	return drm_atomic_helper_update_plane(plane, crtc, fb,
--					      crtc_x, crtc_y, crtc_w, crtc_h,
--					      src_x, src_y, src_w, src_h, ctx);
--}
--
- static const struct drm_plane_funcs intel_cursor_plane_funcs = {
--	.update_plane = intel_legacy_cursor_update,
-+	.update_plane = drm_atomic_helper_update_plane,
- 	.disable_plane = drm_atomic_helper_disable_plane,
- 	.destroy = intel_plane_destroy,
- 	.atomic_duplicate_state = intel_plane_duplicate_state,
-diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-index 22472f2bd31b..d8f7ba0f8d84 100644
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -825,7 +825,7 @@ static bool intel_wm_plane_visible(const struct intel_crtc_state *crtc_state,
- 	 * can happen faster than the vrefresh rate, and the current
- 	 * watermark code doesn't handle that correctly. Cursor updates
- 	 * which set/clear the fb or change the cursor size are going
--	 * to get throttled by intel_legacy_cursor_update() to work
-+	 * to get throttled by intel_plane_atomic_async_update() to work
- 	 * around this problem with the watermark code.
- 	 */
- 	if (plane->id == PLANE_CURSOR)
--- 
-2.22.0
+Thanks,
+Jan
 
