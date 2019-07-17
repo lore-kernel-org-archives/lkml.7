@@ -2,182 +2,133 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB10C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01435C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD602184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D219D20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BIgpOWEL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ciGRSY1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfGQRCZ (ORCPT
+        id S1729369AbfGQRDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:02:25 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36411 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfGQRCZ (ORCPT
+        Wed, 17 Jul 2019 13:03:24 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45663 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbfGQRDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:02:25 -0400
-Received: by mail-yb1-f196.google.com with SMTP id d9so3528878ybf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:02:24 -0700 (PDT)
+        Wed, 17 Jul 2019 13:03:24 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so12280362plr.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BgLO7AOlxApfrZ8As7HxY8L1byop/yjZk5edDlBCjHc=;
-        b=BIgpOWELXYgjF12yzOPDUoGbuLq1zi1FwFQmt9xkcQGc5AVH1aQ1fmd7au9DmtxE77
-         SY+UU54YPYCG1nAZxTVSGzseRtCjafwhDZ4sq+T155nDh5SQweIb9Kv9bmYkXEF0rBAi
-         Jce01AB+F19yWiKmos650B41EbFmKiIZJwLInUaHQalp7zYlU1jxlVWD9vhSa/fRuu6a
-         b7nzcGo609oS8EbLaA+IMQnzkmWt+L0RtcEdtpSxuAl99/rSV6wMPBnSXbct22f0l89n
-         1tIqPXgR2BPMAU6RK7mybiSNYzP5Ck/ztcB15ywooaPz0qniKKdifZmb+u3kc6V6fdgA
-         eNUg==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=ll2TSZ+W14CatTO8QRYSJ95wycJRxflDCU2uIe5dMkI=;
+        b=ciGRSY1ZqcR6eJAPXpERbUYACi50bfefsD8fNzBg1S5TkrWq1RcE3GU9SORWbHPE5+
+         OjM4k2u5WNvcf0DSpE9lq+6SzrVQiBmlr3JT6O16nLc80g/tE+m/SIAndxzcWVOFFuFW
+         +F9rlCqWqdjCm18Opce4dg0x4VyDRToTYlSJU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BgLO7AOlxApfrZ8As7HxY8L1byop/yjZk5edDlBCjHc=;
-        b=hiR0EMwrmveXKvbRiFEgX+MmfNj0LPeLR4PyPKPb82PeS5BztataQRZMPIruDg5rGK
-         w0wJEBToxShoPJWoCPStxI7ebk1mkyWORmmYGIRBHdPlcSQa9WRVx8aKv9UJavSlpjau
-         RFbOZ7zMNWfv0myz+iaAVtpTcuO8LFw34Gel4OSw8w/XltuWvx6nTXOKBX1/WpAFIKDz
-         Sc0czHMXwoxaggCBOaijbRG7QKVUNm/MJX84pKki3ZdNC7aw0bnzEyIfdThk1vH5JkQ0
-         FTv/If8nbHfUeY0x2nKKfNj3EKzVy6+k9NICyDQkbNxrYUrwimgSaJ6f9yWHiXohMQd3
-         zUMw==
-X-Gm-Message-State: APjAAAWS02rgV1/Mr8gHkNiVmgIlgw/eyg0Z/y7sYvduSVnVT4Bvv0wF
-        Z1eFIGzBVpCoBeV6BE5SRGTisNfVhenJUaB7J3WuhA==
-X-Google-Smtp-Source: APXvYqyzz4GHd+f0tyqhFDhqf2xn/zwFnrM7OEtFPR5C7USenjzkjt+qzoGBfAeU/vHGi6p5DKvh/u3O85iL5H8T2SE=
-X-Received: by 2002:a25:6412:: with SMTP id y18mr13200161ybb.100.1563382943463;
- Wed, 17 Jul 2019 10:02:23 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=ll2TSZ+W14CatTO8QRYSJ95wycJRxflDCU2uIe5dMkI=;
+        b=Ss5ikoeBL5jnYzlORr2IPR+hNXQkh+uyl2Zt7F+VRvXwP4VCEoKZZZ0jg92/b+p1Fx
+         m0fYcd5f4VvVQPegzHw0cDm4bNt1bN2H3Y45xZ5MtB22d3oVXeYO0He/98tHzninI8Yl
+         Kitlc9gMWJB3dThRQ010aponsWFZFAQkTik4aIph5ACKH6QFKARCBnwZ1o4hLvvaY7X7
+         j8D2ZBwuV+onjwIkf9P/hXtT7sep2snEyxsVY7HlEpFdPUwBYIG5hwCejs36uUUJIjEv
+         eOItgzwCZqOi5DE+DznXHa5PSnSRA61is4UTcW6U9UrtUakhMidlDytd8d8qpSF5xCw1
+         823g==
+X-Gm-Message-State: APjAAAVtGlLTEk/sRf7CnfAfRiYfsvigA+/UOkX4gNRoD6e5WgoiaSOR
+        VYdHBnYAe5ZFdXuGZMZfhhHXyw==
+X-Google-Smtp-Source: APXvYqyyyG+wEJYC3gU+xCNnKRVoo7ENtTDPU9F1+sXkjHH6JtJdJulTMcO4/9LyCab7adJ9E3zY2g==
+X-Received: by 2002:a17:902:f204:: with SMTP id gn4mr44952272plb.3.1563383003657;
+        Wed, 17 Jul 2019 10:03:23 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u69sm31655275pgu.77.2019.07.17.10.03.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 10:03:23 -0700 (PDT)
+Message-ID: <5d2f54db.1c69fb81.5720c.dc05@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1562795006.8510.19.camel@lca.pw> <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
- <1562879229.8510.24.camel@lca.pw> <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
- <1563225798.4610.5.camel@lca.pw> <5c853e6e-6367-d83c-bb97-97cd67320126@linux.alibaba.com>
- <8A64D551-FF5B-4068-853E-9E31AF323517@lca.pw> <e5aa1f5b-b955-5b8e-f502-7ac5deb141a7@linux.alibaba.com>
- <CALvZod7+ComCUROSBaj==r0VmCczs=npP4u6C9LuJWNWdfB0Pg@mail.gmail.com> <50f57bf8-a71a-c61f-74f7-31fb7bfe3253@linux.alibaba.com>
-In-Reply-To: <50f57bf8-a71a-c61f-74f7-31fb7bfe3253@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 17 Jul 2019 10:02:11 -0700
-Message-ID: <CALvZod7Je+gekSGR61LMeHdYoC_PJune_0qGNiDfNH2=oNeOgw@mail.gmail.com>
-Subject: Re: list corruption in deferred_split_scan()
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Qian Cai <cai@lca.pw>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190717165011.GI12119@ziepe.ca>
+References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-2-swboyd@chromium.org> <20190717113956.GA12119@ziepe.ca> <5d2f4ff9.1c69fb81.3c314.ab00@mx.google.com> <20190717165011.GI12119@ziepe.ca>
+Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 17 Jul 2019 10:03:22 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 5:12 PM Yang Shi <yang.shi@linux.alibaba.com> wrote=
-:
->
->
->
-> On 7/16/19 4:36 PM, Shakeel Butt wrote:
-> > Adding related people.
-> >
-> > The thread starts at:
-> > http://lkml.kernel.org/r/1562795006.8510.19.camel@lca.pw
-> >
-> > On Mon, Jul 15, 2019 at 8:01 PM Yang Shi <yang.shi@linux.alibaba.com> w=
-rote:
-> >>
-> >>
-> >> On 7/15/19 6:36 PM, Qian Cai wrote:
-> >>>> On Jul 15, 2019, at 8:22 PM, Yang Shi <yang.shi@linux.alibaba.com> w=
-rote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 7/15/19 2:23 PM, Qian Cai wrote:
-> >>>>> On Fri, 2019-07-12 at 12:12 -0700, Yang Shi wrote:
-> >>>>>>> Another possible lead is that without reverting the those commits=
- below,
-> >>>>>>> kdump
-> >>>>>>> kernel would always also crash in shrink_slab_memcg() at this lin=
-e,
-> >>>>>>>
-> >>>>>>> map =3D rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_=
-map, true);
-> >>>>>> This looks a little bit weird. It seems nodeinfo[nid] is NULL? I d=
-idn't
-> >>>>>> think of where nodeinfo was freed but memcg was still online. Mayb=
-e a
-> >>>>>> check is needed:
-> >>>>> Actually, "memcg" is NULL.
-> >>>> It sounds weird. shrink_slab() is called in mem_cgroup_iter which do=
-es pin the memcg. So, the memcg should not go away.
-> >>> Well, the commit =E2=80=9Cmm: shrinker: make shrinker not depend on m=
-emcg kmem=E2=80=9D changed this line in shrink_slab_memcg(),
-> >>>
-> >>> -     if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
-> >>> +     if (!mem_cgroup_online(memcg))
-> >>>                return 0;
-> >>>
-> >>> Since the kdump kernel has the parameter =E2=80=9Ccgroup_disable=3Dme=
-mory=E2=80=9D, shrink_slab_memcg() will no longer be able to handle NULL me=
-mcg from mem_cgroup_iter() as,
-> >>>
-> >>> if (mem_cgroup_disabled())
-> >>>        return NULL;
-> >> Aha, yes. memcg_kmem_enabled() implicitly checks !mem_cgroup_disabled(=
-).
-> >> Thanks for figuring this out. I think we need add mem_cgroup_dsiabled(=
-)
-> >> check before calling shrink_slab_memcg() as below:
-> >>
-> >> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> >> index a0301ed..2f03c61 100644
-> >> --- a/mm/vmscan.c
-> >> +++ b/mm/vmscan.c
-> >> @@ -701,7 +701,7 @@ static unsigned long shrink_slab(gfp_t gfp_mask, i=
-nt
-> >> nid,
-> >>           unsigned long ret, freed =3D 0;
-> >>           struct shrinker *shrinker;
-> >>
-> >> -       if (!mem_cgroup_is_root(memcg))
-> >> +       if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
-> >>                   return shrink_slab_memcg(gfp_mask, nid, memcg, prior=
-ity);
-> >>
-> >>           if (!down_read_trylock(&shrinker_rwsem))
-> >>
-> > We were seeing unneeded oom-kills on kernels with
-> > "cgroup_disabled=3Dmemory" and Yang's patch series basically expose the
-> > bug to crash. I think the commit aeed1d325d42 ("mm/vmscan.c:
-> > generalize shrink_slab() calls in shrink_node()") missed the case for
-> > "cgroup_disabled=3Dmemory". However I am surprised that root_mem_cgroup
-> > is allocated even for "cgroup_disabled=3Dmemory" and it seems like
-> > css_alloc() is called even before checking if the corresponding
-> > controller is disabled.
->
-> I'm surprised too. A quick test with drgn shows root memcg is definitely
-> allocated:
->
->  >>> prog['root_mem_cgroup']
-> *(struct mem_cgroup *)0xffff8902cf058000 =3D {
-> [snip]
->
-> But, isn't this a bug?
+Quoting Jason Gunthorpe (2019-07-17 09:50:11)
+> On Wed, Jul 17, 2019 at 09:42:32AM -0700, Stephen Boyd wrote:
+> > Quoting Jason Gunthorpe (2019-07-17 04:39:56)
+> > > On Tue, Jul 16, 2019 at 03:45:13PM -0700, Stephen Boyd wrote:
+> > > > The hwrng_fill() function can run while devices are suspending and
+> > > > resuming. If the hwrng is behind a bus such as i2c or SPI and that =
+bus
+> > > > is suspended, the hwrng may hang the bus while attempting to add so=
+me
+> > > > randomness. It's been observed on ChromeOS devices with suspend-to-=
+idle
+> > > > (s2idle) and an i2c based hwrng that this kthread may run and ask t=
+he
+> > > > hwrng device for randomness before the i2c bus has been resumed.
+> > >=20
+> > > You mean the TPM here right?
+> >=20
+> > In my case yes, but in general it isn't the TPM.
+> >=20
+> > >=20
+> > > Should we be more careful in the TPM code to check if the TPM is
+> > > suspended before trying to use it, rather than muck up callers?
+> > >=20
+> >=20
+> > Given that it's not just a TPM issue I don't see how checking in the TPM
+> > is going to fix this problem. It's better to not try to get random bytes
+> > from the hwrng when the device could be suspended.
+>=20
+> I think the same comment would apply to all the other suspend capable
+> hwrngs...
 
-It can be treated as a bug as this is not expected but we can discuss
-and take care of it later. I think we need your patch urgently as
-memory reclaim and /proc/sys/vm/drop_caches is broken for
-"cgroup_disabled=3Dmemory" kernel. So, please send your patch asap.
+Yes. That's exactly my point. A hwrng that's suspended will fail here
+and it's better to just not try until it's guaranteed to have resumed.
 
-thanks,
-Shakeel
+>=20
+> It just seems weird to do this, what about all the other tpm API
+> users? Do they have a racy problem with suspend too?
+
+I haven't looked at them. Are they being called from suspend/resume
+paths? I don't think anything for the userspace API can be a problem
+because those tasks are all frozen. The only problem would be some
+kernel internal API that TPM API exposes. I did a quick grep and I see
+things like IMA or the trusted keys APIs that might need a closer look.
+
+Either way, trying to hold off a TPM operation from the TPM API when
+we're suspended isn't really possible. If something like IMA needs to
+get TPM data from deep suspend path and it fails because the device is
+suspended, all we can do is return an error from TPM APIs and hope the
+caller can recover. The fix is probably going to be to change the code
+to not call into the TPM API until the hardware has resumed by avoiding
+doing anything with the TPM until resume is over. So we're at best able
+to make same sort of band-aid here in the TPM API where all we can do is
+say -EAGAIN but we can't tell the caller when to try again.
+
