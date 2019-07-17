@@ -2,86 +2,171 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE58C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1852C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10710217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1A32077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563354986;
+	bh=DiJ+coDtTSWNasSNcBDqMoOKSDE8uFPkJQ94jEaVBMA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZWyVvzuN0sSfZJKM0ut3U1go20/bp/Mam19dbb7eRcyyA7Vthhr+TAxKZ0ph7zXdF
+	 bqhqrG2dJABaLGAebJ6Pps971dPyPeeffxBzsZUnoORAxeEbKOPdO+zwwZ2Yn7xViL
+	 aXrevRCg64QlwWbVw6x44RKh/06on66R5o+eYQ0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfGQJOK (ORCPT
+        id S1729452AbfGQJQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:14:10 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:56192 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfGQJOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 05:14:06 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B9973200360;
-        Wed, 17 Jul 2019 11:14:05 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8360D2000A5;
-        Wed, 17 Jul 2019 11:13:57 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6008C402A4;
-        Wed, 17 Jul 2019 17:13:47 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        rfontana@redhat.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] char: hw_random: mxc-rnga: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 17 Jul 2019 17:04:38 +0800
-Message-Id: <20190717090438.31522-2-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190717090438.31522-1-Anson.Huang@nxp.com>
-References: <20190717090438.31522-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 17 Jul 2019 05:16:25 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33044 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGQJQZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 05:16:25 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h10so22889638ljg.0;
+        Wed, 17 Jul 2019 02:16:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rPah5Qpv5P0JRwz088t4Ysl3stEYDPS6P+J+WjV7Sf4=;
+        b=GN12OzSbEqkvl8H4gTw+/y0fraiRutEjxuekhhpuPy4G/YvxE93ztxKWuLhvUm5h3t
+         IS+/xizzRzHNl1SmOBTpK9bq0Jg9A+95vej8amq4DFxd6C67D4RLzoaVq1wbD2HM+kdP
+         aSJ0bsftBtZi97s+1CxoDGHvupsNSIvSHqlNLz4TKGElkXvGPIVFMOnie2t/S0mj5aBu
+         aDYPH67ex5+cAHMitm+WRXm0b9XEG+x8djVsy/C0/K0hgwr57Ks87l+KRSVjG4SLxkDf
+         F16wNdi/U2j6oH0+UTgoT3sYIiYhK5wwbHmL73ZoW0GHoafN8w8VDgU+HdUioYNivEnO
+         XlxQ==
+X-Gm-Message-State: APjAAAVeaNvvNpKK1skjExrFUbcKBlA0ukTLKVkE43wSiAIfo37DAkbJ
+        BXYHPKw1qlS72bdE/lBGYyM=
+X-Google-Smtp-Source: APXvYqzxDjM6kiTgHolhJTGqH1ygByQkQ7SS/tOO9TW4F/owWJscMGcGhNgkD2g8HwgS7ftZ+rmMuw==
+X-Received: by 2002:a2e:4b12:: with SMTP id y18mr19583499lja.238.1563354983092;
+        Wed, 17 Jul 2019 02:16:23 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id j3sm3344403lfp.34.2019.07.17.02.16.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 02:16:21 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92)
+        (envelope-from <johan@kernel.org>)
+        id 1hng2v-0003l5-9H; Wed, 17 Jul 2019 11:16:22 +0200
+Date:   Wed, 17 Jul 2019 11:16:21 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     syzbot <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Vincent Cuissard <cuissard@marvell.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: WARNING in gpio_to_desc
+Message-ID: <20190717091621.GC16694@localhost>
+References: <000000000000a55d7d058d51ad4f@google.com>
+ <CACRpkdYbuJ_yJ+UKtvWrkmBCbQzfk-1mn1-A836dkNMrmTtZow@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYbuJ_yJ+UKtvWrkmBCbQzfk-1mn1-A836dkNMrmTtZow@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Jul 16, 2019 at 11:52:19PM +0200, Linus Walleij wrote:
+> On Wed, Jul 10, 2019 at 1:07 PM syzbot
+> <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com> wrote:
+> 
+> > HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+> (...)
+> >   __gpio_set_value include/asm-generic/gpio.h:104 [inline]
+> >   gpio_set_value include/linux/gpio.h:71 [inline]
+> >   nfcmrvl_chip_halt+0x4e/0x70 drivers/nfc/nfcmrvl/main.c:259
+> >   nfcmrvl_nci_register_dev+0x2d4/0x378 drivers/nfc/nfcmrvl/main.c:176
+> >   nfcmrvl_probe+0x4e9/0x5e0 drivers/nfc/nfcmrvl/usb.c:344
+> 
+> This bug is somewhere in the drivers/nfc/nfcmrvl* code handling
+> GPIOs.
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+Right, and it's my bug.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> It should be converted to GPIO descriptors and fixed up, see
+> drivers/gpio/TODO for details on how to do this.
+
+Conversion will have to wait, let's fix the regression first. :)
+
+> Johan/Vincent, tell me if you want me to forward the full fuzzing
+> robot crash dump.
+
+No need, thanks. I got it the report.
+
+Something like the below compiles and should fix it. Vacation starts
+today so I'll revisit and send a proper patch in a couple of weeks.
+
+Perhaps someone can feed it to the bot meanwhile (no time to play with
+it right now).
+
+Note that this issue has been there since 4.12, so guess no one uses
+these devices...
+
+Johan
+
+
+From e9d9d0ef5ffd6b306cffb2f4e2514f503aa626a5 Mon Sep 17 00:00:00 2001
+From: Johan Hovold <johan@kernel.org>
+Date: Wed, 17 Jul 2019 11:07:13 +0200
+Subject: [PATCH] NFC: nfcmrvl: fix gpio-handling regression
+
+FIXME
+
+Fixes: e33a3f84f88f ("NFC: nfcmrvl: allow gpio 0 for reset signalling")
+Not-Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/char/hw_random/mxc-rnga.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/nfc/nfcmrvl/main.c | 4 ++--
+ drivers/nfc/nfcmrvl/usb.c  | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hw_random/mxc-rnga.c b/drivers/char/hw_random/mxc-rnga.c
-index ea2bf18..025083c 100644
---- a/drivers/char/hw_random/mxc-rnga.c
-+++ b/drivers/char/hw_random/mxc-rnga.c
-@@ -134,7 +134,6 @@ static void mxc_rnga_cleanup(struct hwrng *rng)
- static int __init mxc_rnga_probe(struct platform_device *pdev)
+diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
+index e65d027b91fa..529be35ac178 100644
+--- a/drivers/nfc/nfcmrvl/main.c
++++ b/drivers/nfc/nfcmrvl/main.c
+@@ -244,7 +244,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
+ 	/* Reset possible fault of previous session */
+ 	clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
+ 
+-	if (priv->config.reset_n_io) {
++	if (gpio_is_valid(priv->config.reset_n_io)) {
+ 		nfc_info(priv->dev, "reset the chip\n");
+ 		gpio_set_value(priv->config.reset_n_io, 0);
+ 		usleep_range(5000, 10000);
+@@ -255,7 +255,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
+ 
+ void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
  {
- 	int err;
--	struct resource *res;
- 	struct mxc_rng *mxc_rng;
+-	if (priv->config.reset_n_io)
++	if (gpio_is_valid(priv->config.reset_n_io))
+ 		gpio_set_value(priv->config.reset_n_io, 0);
+ }
  
- 	mxc_rng = devm_kzalloc(&pdev->dev, sizeof(*mxc_rng), GFP_KERNEL);
-@@ -158,8 +157,7 @@ static int __init mxc_rnga_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
+diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
+index 945cc903d8f1..888e298f610b 100644
+--- a/drivers/nfc/nfcmrvl/usb.c
++++ b/drivers/nfc/nfcmrvl/usb.c
+@@ -305,6 +305,7 @@ static int nfcmrvl_probe(struct usb_interface *intf,
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mxc_rng->mem = devm_ioremap_resource(&pdev->dev, res);
-+	mxc_rng->mem = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mxc_rng->mem)) {
- 		err = PTR_ERR(mxc_rng->mem);
- 		goto err_ioremap;
+ 	/* No configuration for USB */
+ 	memset(&config, 0, sizeof(config));
++	config.reset_n_io = -EINVAL;
+ 
+ 	nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
+ 
 -- 
-2.7.4
+2.22.0
 
