@@ -2,114 +2,72 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449FEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24ECEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B79420818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:55:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TEceMaLQ"
+	by mail.kernel.org (Postfix) with ESMTP id CD2DF20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfGQGzf (ORCPT
+        id S1726901AbfGQG6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:55:35 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:20473 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfGQGzf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:55:35 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6H6tO50030501;
-        Wed, 17 Jul 2019 15:55:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6H6tO50030501
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563346525;
-        bh=DgvFg/PvmkUqzBOA3LWysbbyKsyxr/rzbPQxUzumKDw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TEceMaLQ5cu0tGpqcOWAN+VpoUmoHF56DWywqHL4BqtRMRH8yZiDIcnW2aChUZtFk
-         FKmQFVpx5rtYHm8VH+hDO4m7ITgFw7GxEECodvMFGy2zflzyMpzJC/oXuy/H4nuWYc
-         LShHH3NSMfDlRWjtu1FFO6fsDSBBJlOCRO+c42nYqg+i8Hj3NncmHh2kgTtCaXAAFY
-         8u6oalskaRMYcDBKp9t0zkYO40o3PyCw7n069NxSXH48nyH3LbO/gBagF0Tbka2D5f
-         +Xz7ABcFzQgclalcPoRfu6VB5qAKWRRjKEMRC09nS4+FNRUXJSxWhpiWS37KXxEAE4
-         6Wpzz/dwC0DQw==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id a186so14086876vsd.7;
-        Tue, 16 Jul 2019 23:55:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAX/3/HOSWKlyyzaYY9Q/baGY+3Z4Wfp5MaixzxpGsg38hlxb68O
-        0rXWnyLBkcEl9TSh03PONWQotxeaey/TJ4wIvPg=
-X-Google-Smtp-Source: APXvYqyUI+81HuyA1Sg+kwLwpyTPzFweh3HUSTtZo2olVYVMKG4rx5J93T3cLKGpmXkX4ZQzCuZBNKZ8ypIyLzgXbB4=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr23322373vsq.179.1563346524244;
- Tue, 16 Jul 2019 23:55:24 -0700 (PDT)
+        Wed, 17 Jul 2019 02:58:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2275 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725936AbfGQG6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 02:58:15 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 878B3B2BD220132AE72E;
+        Wed, 17 Jul 2019 14:57:57 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
+ 14:57:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dri-devel@lists.freedesktop.org>, <bskeggs@redhat.com>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>, <keescook@chromium.org>
+CC:     <linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] drm/nouveau/secboot: Make acr_r352_ls_gpccs_func static
+Date:   Wed, 17 Jul 2019 14:56:26 +0800
+Message-ID: <20190717065626.42016-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
- <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 17 Jul 2019 15:54:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
-Message-ID: <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Mike Lothian <mike@fireburn.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 4:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The gold linker has known issues of failing the build both in random and in
-> predictible ways:
->
->  - The x86/X32 VDSO build fails with:
->
->    arch/x86/entry/vdso/vclock_gettime-x32.o:vclock_gettime.c:function do_hres:
->    error: relocation overflow: reference to 'hvclock_page'
->
->    That's a known issue for years and the usual workaround is to disable
->    CONFIG_X86_32
->
->  - A recent build failure is caused by turning a relocation into an
->    absolute one for unknown reasons. See link below.
->
->  - There are a couple of gold workarounds applied already, but reports
->    about broken builds with ld.gold keep coming in on a regular base and in
->    most cases the root cause is unclear.
->
-> In context of the most recent fail H.J. stated:
->
->   "Since building a workable kernel for different kernel configurations
->    isn't a requirement for gold, I don't recommend gold for kernel."
->
-> So instead of dealing with attempts to duct tape gold support without
-> understanding the root cause and without support from the gold folks, fail
-> the build when gold is detected.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
-> ---
+Fix sparse warning:
 
-The code looks OK in the build system point of view.
+drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c:1092:1:
+ warning: symbol 'acr_r352_ls_gpccs_func' was not declared. Should it be static?
 
-Please let me confirm this, just in case:
-For now, we give up all architectures, not only x86, right?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have not not heard much from other arch maintainers.
-
-
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c
+index 4fd4cfe..7af971d 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/acr_r352.c
+@@ -1088,7 +1088,7 @@ acr_r352_ls_gpccs_func_0 = {
+ 	.lhdr_flags = LSF_FLAG_FORCE_PRIV_LOAD,
+ };
+ 
+-const struct acr_r352_ls_func
++static const struct acr_r352_ls_func
+ acr_r352_ls_gpccs_func = {
+ 	.load = acr_ls_ucode_load_gpccs,
+ 	.version_max = 0,
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
+
