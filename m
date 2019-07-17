@@ -2,129 +2,100 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC88C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9610C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD2521743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="l71DlfSI"
+	by mail.kernel.org (Postfix) with ESMTP id B8C2A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfGQP6P (ORCPT
+        id S1727127AbfGQQHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:58:15 -0400
-Received: from mail-eopbgr810114.outbound.protection.outlook.com ([40.107.81.114]:48256
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726085AbfGQP6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:58:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PmeBpg4p4WvNsa9wejoNJZ1cGQa6X3flrs6l4lyJswmppgz2RJUt17nBHTpUSOY20Cx1RyAv3tnMb/X7fa/4ERGuhyYP1Gl4SQEr9WNBxcGVY72pUOkajzL6+mn/vAe7sjexhaloOpD8AnVEHAIqlnsVKybnnG32Yvrg4Ykigl2pDMTGENFkNGfMcDo4/4j7SIt2ln4XFrIfrW2czJ88FSOFtsGXy1HXCDFwQ/tfJqgQ6LdujGVqO4mWK6irE2lCqxYvKQu/oCJcsp6ni7ucz6+08PI0Grlkzos2ADX+P5gTk9gdL51VozM6g22y6V3fSZet0B7U/qaUC91lLBGn6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ntu3DnAJnYRssmnEGXKxszb4pX0ppqiCrtWTPkPNakA=;
- b=jT9gGKPpiUS0iJkMGOnjgNi5UYVUlKSIHe9CRLYZUnv7qyG9lOIu4D8s0Jm97X/Km0I3nm6zIzhSm4QV586fg7nVDYUeii7cpraCWfuoKbs6ez58uSSrweb12jzDtfBYe9dSSYeV0CLalznyhzkFW0xwnpz6NPK60oZWzIte9pFMOF0p0cHuIufAstSt7JcsNu1mTvz8F0UF3NdY6JXdNq3rynCzX04VVaC9qIX1wn9h6AGuF+xUYjiAhLo7/uVhpxOQtF6+FajRHnfmF1qgMD9cSO3nU+ao68wvlyeOZ1cdOxt8zl1FpmboDZWCwgk04bc723gjoqtodxBv2t34pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ntu3DnAJnYRssmnEGXKxszb4pX0ppqiCrtWTPkPNakA=;
- b=l71DlfSIyNyjPXpo/vO+1E6Qdj4nLOZE/udFI+jOt7pArAVWfOjpHaUq4Y0PTnn0x1TJs3DDe4dPduc/7gWdA8ekzPWPI3Gafg4m7RrwCfeNRRcdEx/lglOXu2w8ARRUBtagAhHmlXZT66EppZAz7w/c9DOEC+otjZrFzsWSxOU=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1182.namprd22.prod.outlook.com (10.174.169.158) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.13; Wed, 17 Jul 2019 15:58:10 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::746d:883d:31:522e]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::746d:883d:31:522e%5]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 15:58:10 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] mips: fix cacheinfo
-Thread-Topic: [PATCH] mips: fix cacheinfo
-Thread-Index: AQHVO6lDkTC8sdb3XkmqC6T/u/Yn+6bO+YiA
-Date:   Wed, 17 Jul 2019 15:58:10 +0000
-Message-ID: <MWHPR2201MB1277B5AFF0A7D2CAB84D39B6C1C90@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190716073656.24924-1-vladimir.kondratiev@linux.intel.com>
-In-Reply-To: <20190716073656.24924-1-vladimir.kondratiev@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0048.namprd07.prod.outlook.com
- (2603:10b6:a03:60::25) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e87c0d94-3f1e-4864-9c4e-08d70acf910c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1182;
-x-ms-traffictypediagnostic: MWHPR2201MB1182:
-x-microsoft-antispam-prvs: <MWHPR2201MB118292B3DC5F8305B34B8452C1C90@MWHPR2201MB1182.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39840400004)(396003)(366004)(376002)(136003)(189003)(199004)(54906003)(4744005)(5660300002)(52536014)(186003)(99286004)(14454004)(3846002)(8936002)(2906002)(386003)(102836004)(26005)(4326008)(71200400001)(11346002)(66066001)(42882007)(71190400001)(6506007)(229853002)(66476007)(66446008)(66556008)(64756008)(66946007)(316002)(478600001)(446003)(74316002)(7736002)(476003)(6436002)(305945005)(68736007)(53936002)(14444005)(33656002)(81156014)(81166006)(8676002)(7696005)(52116002)(76176011)(6246003)(6916009)(25786009)(486006)(44832011)(6116002)(9686003)(256004)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1182;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: htsRWTueWK+PckpJDzLzlriqEMTx9B2+8i+fPE/GAYQlf6xY+LVpq/fBhHU2+lggTSTKQZjZWOfXQeQIXhULRIDL/d50pukMAHXzSvn30lPXIuSR6fzHcdIUBVpavis3ouZSh6qbnSvSvjovv4HdLixBfo44bSq0iV7bsX0JaeL/Aokk1JYbHTcALTnh8zNKf63R89XyNsH23AYYsF1Dek3ARcRiOCUq+0D38AR0JboDJ8DThUglWSoekfAIF8WL6wp5omazx1Hlx0oe9Vk1EurRY1CuZ4RyMhozHVfE4VYvsLFXlAPUHYPKnTVuZc3wk5meMo7tIimuxMGAkknzLAbxTSOAtGgAdrtIZRfkGHRFzanoJv0j0HqajFZOiqnRgFJH1NLEHJ1/dArxRS3aAw7z16oHi2R0uq3E90iDmFc=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 17 Jul 2019 12:07:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33647 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfGQQHk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 12:07:40 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <seth.forshee@canonical.com>)
+        id 1hnmRp-0001kR-Bn
+        for linux-kernel@vger.kernel.org; Wed, 17 Jul 2019 16:06:29 +0000
+Received: by mail-io1-f71.google.com with SMTP id v3so27614706ios.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 09:06:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ObxAaTqUw3sBO2ywY0jCPLtrtzU2IECjcL3XtvnRiSM=;
+        b=EcdUfBzm89cTNHkkTOYnGNa/4SXyvemOWnBfDDnVR+xUqAd4STXmFtiYEwUSku1c1D
+         m7ui85jPfQnJL4JxcbvSabrotfVlwy9YYVMNuxQDCdN4O6sMU4q3Y0Th2nGCTZNX9q1e
+         X7Y7p8Sl0NQiPesGifD1EoyqsI0QYBZnovh0cw7b5v6yvNa7hpbzvdODl/i1damZG0yU
+         MnamCj58hsYWCSsjkFqf3TzX5gMzq4eUhlgG/tHxIYEe/9IVzP+VRv3WGRwRb8Ocm2c+
+         Ayevi7S+3cUqAM+TU1SULx1rNNqg0ruuax/vndnTo3z+DTqLSgNJ9LzC6Iu9XzbxfVMZ
+         VrkQ==
+X-Gm-Message-State: APjAAAVPCkPBrxVTb+GTJHELnTli+6gz5wfRvaY+IH0zPgXoQjUlNEp8
+        TMI2Xmf5I57fE/wQPknbKbpd1QgdUQOWACzSh3BnZkx+2XKM+j6SHkzYbH0zUxMmnqdd7gziIew
+        uJz75iZQQpbr68bUz7y1oLb/Qbz97BTnpunQAo5mBcg==
+X-Received: by 2002:a02:528a:: with SMTP id d132mr40218809jab.68.1563379588303;
+        Wed, 17 Jul 2019 09:06:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzBuJDwsdyIv42Ja0H/JR0OavxWZsQpl28VV7R8Rn30XEDFhWtft8Tow/C3eQQxbsOze1vNEA==
+X-Received: by 2002:a02:528a:: with SMTP id d132mr40218777jab.68.1563379588038;
+        Wed, 17 Jul 2019 09:06:28 -0700 (PDT)
+Received: from localhost ([2605:a601:ac2:fb20:31dd:dc66:96d:f1eb])
+        by smtp.gmail.com with ESMTPSA id p3sm24812022iom.7.2019.07.17.09.06.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 09:06:27 -0700 (PDT)
+From:   Seth Forshee <seth.forshee@canonical.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kbuild: add -fcf-protection=none when using retpoline flags
+Date:   Wed, 17 Jul 2019 11:06:26 -0500
+Message-Id: <20190717160626.26293-1-seth.forshee@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e87c0d94-3f1e-4864-9c4e-08d70acf910c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 15:58:10.5696
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1182
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The gcc -fcf-protection=branch option is not compatible with
+-mindirect-branch=thunk-extern. The latter is used when
+CONFIG_RETPOLINE is selected, and this will fail to build with
+a gcc which has -fcf-protection=branch enabled by default. Adding
+-fcf-protection=none when building with retpoline enabled
+prevents such build failures.
 
-Vladimir Kondratiev wrote:
-> Because CONFIG_OF defined for MIPS, cacheinfo attempts to fill informatio=
-n
-> from DT, ignoring data filled by architecture routine. This leads to erro=
-r
-> reported
->=20
-> cacheinfo: Unable to detect cache hierarchy for CPU 0
->=20
-> Way to fix this provided in
-> commit fac51482577d ("drivers: base: cacheinfo: fix x86 with
-> CONFIG_OF enabled")
->=20
-> Utilize same mechanism to report that cacheinfo set by architecture
-> specific function
->=20
-> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+---
+ Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Applied to mips-fixes.
+diff --git a/Makefile b/Makefile
+index 3e4868a6498b..73a94d1db2b6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -878,6 +878,12 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
+ # change __FILE__ to the relative path from the srctree
+ KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ 
++# ensure -fcf-protection is disabled when using retpoline as it is
++# incompatible with -mindirect-branch=thunk-extern
++ifdef CONFIG_RETPOLINE
++KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none,)
++endif
++
+ # use the deterministic mode of AR if available
+ KBUILD_ARFLAGS := $(call ar-option,D)
+ 
+-- 
+2.20.1
 
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
