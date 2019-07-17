@@ -2,83 +2,81 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461EFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B2EC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF3C2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157FE2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfGQJCY (ORCPT
+        id S1726529AbfGQJEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:02:24 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49520 "EHLO inva020.nxp.com"
+        Wed, 17 Jul 2019 05:04:02 -0400
+Received: from elvis.franken.de ([193.175.24.41]:38560 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQJCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 05:02:24 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D3741A0174;
-        Wed, 17 Jul 2019 11:02:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 79D371A00FF;
-        Wed, 17 Jul 2019 11:02:15 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F0931402D5;
-        Wed, 17 Jul 2019 17:02:06 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     ulf.hansson@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linus.walleij@linaro.org, stefan.wahren@i2se.com,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1725941AbfGQJEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 05:04:02 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1hnfqw-0005ZZ-00; Wed, 17 Jul 2019 11:03:58 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id A00ADC12B1; Wed, 17 Jul 2019 11:03:22 +0200 (CEST)
+Date:   Wed, 17 Jul 2019 11:03:22 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] mmc: mxs: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 17 Jul 2019 16:52:59 +0800
-Message-Id: <20190717085259.31235-1-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH] MIPS: kernel: only use i8253 clocksource with periodic
+ clockevent
+Message-ID: <20190717090322.GA8585@alpha.franken.de>
+References: <20190513114725.17823-1-tbogendoerfer@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513114725.17823-1-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Mon, May 13, 2019 at 01:47:25PM +0200, Thomas Bogendoerfer wrote:
+> i8253 clocksource needs a free running timer. This could only
+> be used, if i8253 clockevent is set up as periodic.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
+>  arch/mips/kernel/i8253.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/kernel/i8253.c b/arch/mips/kernel/i8253.c
+> index 5f209f111e59..df7ddd246eaa 100644
+> --- a/arch/mips/kernel/i8253.c
+> +++ b/arch/mips/kernel/i8253.c
+> @@ -32,7 +32,8 @@ void __init setup_pit_timer(void)
+>  
+>  static int __init init_pit_clocksource(void)
+>  {
+> -	if (num_possible_cpus() > 1) /* PIT does not scale! */
+> +	if (num_possible_cpus() > 1 || /* PIT does not scale! */
+> +	    !clockevent_state_periodic(&i8253_clockevent))
+>  		return 0;
+>  
+>  	return clocksource_i8253_init();
+> -- 
+> 2.13.7
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+Paul,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/mmc/host/mxs-mmc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+can you take it into 5.3 ? This fixes a boot ang on mips/jazz and
+is the same as x86 does for quite some time.
 
-diff --git a/drivers/mmc/host/mxs-mmc.c b/drivers/mmc/host/mxs-mmc.c
-index b334e81..78e7e35 100644
---- a/drivers/mmc/host/mxs-mmc.c
-+++ b/drivers/mmc/host/mxs-mmc.c
-@@ -571,7 +571,6 @@ static int mxs_mmc_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mxs_mmc_host *host;
- 	struct mmc_host *mmc;
--	struct resource *iores;
- 	int ret = 0, irq_err;
- 	struct regulator *reg_vmmc;
- 	struct mxs_ssp *ssp;
-@@ -587,8 +586,7 @@ static int mxs_mmc_probe(struct platform_device *pdev)
- 	host = mmc_priv(mmc);
- 	ssp = &host->ssp;
- 	ssp->dev = &pdev->dev;
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ssp->base = devm_ioremap_resource(&pdev->dev, iores);
-+	ssp->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ssp->base)) {
- 		ret = PTR_ERR(ssp->base);
- 		goto out_mmc_free;
+Thomas.
+
 -- 
-2.7.4
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
