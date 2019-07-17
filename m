@@ -2,104 +2,105 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CADC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D56C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB04120818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE27217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YbNCb/0g"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RILUrEmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbfGQHpG (ORCPT
+        id S1726539AbfGQHpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:45:06 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34856 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfGQHpF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 03:45:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a+w5j6eHYvJzioLr+1nRU4VPj/HkjhXiSU4Y9J8b7R8=; b=YbNCb/0gjQZL0XpBqEiPAwf+A9
-        3CgD9+vHlITW3ap2VMwt3sgVkwTzhRuRP/kgyZkGXM4XSu0z6A6ofUZh7f//Sux0TTeqwycROgOyW
-        mLxn1uh9uXpCSJnqhfhbJdGj+v0bNg1lHzvz/yqDdsRlq+uKC9Ugrjw8MjS6FdMQsWpzu6XKr18uv
-        WaT+N+4woH/KJYWFG573iBJIz5dq7RZjKNF11vp/WY7jPjvztxxaroPXOZPOogzOFYZazsr/lMDfq
-        Cr6oTbCR8umH6TQpwxREIHsW/uUlzeCDHYQiMnCyPBHR0Af3bvNHEZk/DterF+Yju8ZMnXLDyTUoc
-        J3NLOz9A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnec8-0008Nx-I5; Wed, 17 Jul 2019 07:44:36 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 148B02059DEA3; Wed, 17 Jul 2019 09:44:35 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 09:44:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, steven.sistare@oracle.com,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20190717074435.GU3419@hirez.programming.kicks-ass.net>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
- <9fa54e98-0b9b-0931-db32-c6bd6ccfe75b@redhat.com>
+        Wed, 17 Jul 2019 03:45:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37671 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfGQHpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 03:45:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pTnp5rQhz9s8m;
+        Wed, 17 Jul 2019 17:45:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563349519;
+        bh=bl60vOig14zWA2evz/r+S3XrkL3DivP5HljgKsG8JkI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RILUrEmX+/fB7xdTBBla9ngVqWnAEGA/VeV/IHLrWkyXdKaZMoVRRSqGAKAOUXsQ9
+         nXPcLYlI2hci/BUCO9tifKs4WKvTVZl/Voq5Wi2L9qXYKDy+AHItse4rb0x2eut4rS
+         P0m0WTR6nxnCecyNc2EZLeciFlPW4MmQ9NFAbL21Hr6y19tAEoB3byEe4Qp/cGmks7
+         mlzEiwGFTc2rneo2xYn1Fh/mErGSN8w600aFIJytsglcz0NWtDY2DJHVCbNLOpiy89
+         eWk3TkA5LTvs+kbPVPNLQTAqiW6IUh4IB5MEYhw9GhL7RRBmk1nO97ZT2CgDOyGK6L
+         hlfkru4tdaH0g==
+Date:   Wed, 17 Jul 2019 17:45:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Mark Zhang <markz@mellanox.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Majd Dibbiny <majd@mellanox.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rdma tree
+Message-ID: <20190717174511.67e64609@canb.auug.org.au>
+In-Reply-To: <CAK7LNARZqi-QcGaTEaoTEASbnBaGzYchgDoWeuthR+G8jxQHMg@mail.gmail.com>
+References: <20190709133019.25a8cd27@canb.auug.org.au>
+        <ba1dd3e2-3091-816c-c308-2f9dd4385596@mellanox.com>
+        <20190709071758.GI7034@mtr-leonro.mtl.com>
+        <20190709124631.GG3436@mellanox.com>
+        <20190710110443.002220c8@canb.auug.org.au>
+        <20190710143036.1582c79d@canb.auug.org.au>
+        <20190717092801.77037015@canb.auug.org.au>
+        <CAK7LNARZqi-QcGaTEaoTEASbnBaGzYchgDoWeuthR+G8jxQHMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9fa54e98-0b9b-0931-db32-c6bd6ccfe75b@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/wuxKlRL/Cq6k9EEPfnjU2QV"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:16:29PM -0400, Waiman Long wrote:
->  A simple graphic to illustrate those queues will help too, for example
+--Sig_/wuxKlRL/Cq6k9EEPfnjU2QV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Very much yes!
+Hi Masahiro,
 
-> /*
->  * MCS lock holder
->  * ===============
->  *    mcs_node
->  *   +--------+      +----+         +----+
->  *   | next   | ---> |next| -> ...  |next| -> NULL  [Main queue]
->  *   | locked | -+   +----+         +----+
->  *   +--------+  |
->  *               |   +----+         +----+
->  *               +-> |next| -> ...  |next| -> X     [Secondary queue]
->  *    cna_node       +----+         +----+
->  *   +--------*                       ^
->  *   | tail   | ----------------------+
->  *   +--------*   
+On Wed, 17 Jul 2019 15:33:28 +0900 Masahiro Yamada <yamada.masahiro@socione=
+xt.com> wrote:
+>
+> Yes, this is just a one-liner fix-up,
+> so I'd like to fold it into this:
+>=20
+> https://patchwork.kernel.org/patch/11047283/
 
-Almost; IIUC that cna_node is the same as the one from locked, so you
-end up with something like:
+Fine by me.
 
->  *    mcs_node
->  *   +--------+      +----+         +----+
->  *   | next   | ---> |next| -> ...  |next| -> NULL  [Main queue]
->  *   | locked | -+   +----+         +----+
->  *   +--------+  |
->  *               |   +---------+         +----+
->  *               +-> |mcs::next| -> ...  |next| -> NULL     [Secondary queue]
->  *                   |cna::tail| -+      +----+
->  *                   +---------+  |        ^
->  *                                +--------+
->  *
->  * N.B. locked = 1 if secondary queue is absent.
->  */
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wuxKlRL/Cq6k9EEPfnjU2QV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0u0gcACgkQAVBC80lX
+0GwWQQgAjcYWFWotF20wXVads8YJF5lZpSVBWK2za6mGL6y3PMs6sNetT/N7Nvt8
+gYriTJ5znXShX/htF+P+HlWX+ZAPRull/2E+vXjHlH6VZIYWHoC6wq/u7g4xnxav
+/090YXWwXqbWv7T0rv0fNliSfbIfu9bZgF60scgFObF2Y0/CwmFgmw1cqN2hySLN
+oNQd8iCGNpkIcmjx3CMK/DeVovLi44YnPbNx3pA5JHbyWtI2CnPvc9ep//veYviW
+62wLK8Fz4c/cbVat4f9DzEBmBfmEdGP9WZbYCOQN2OgWDLonQuhdVfL4nh2kt124
+pm1mQh4lFmEz1IKdakRNUhsvHwC+Hg==
+=HsqA
+-----END PGP SIGNATURE-----
+
+--Sig_/wuxKlRL/Cq6k9EEPfnjU2QV--
