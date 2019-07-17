@@ -2,112 +2,120 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24A9C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0993C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C626F2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:14:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G9skQ3aR"
+	by mail.kernel.org (Postfix) with ESMTP id 790C02077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:14:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfGQIOD (ORCPT
+        id S1727389AbfGQIOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:14:03 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38792 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfGQIOD (ORCPT
+        Wed, 17 Jul 2019 04:14:53 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:56252 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfGQIOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:14:03 -0400
-Received: by mail-vs1-f68.google.com with SMTP id k9so15850634vso.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 01:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mOxb5tg5seSjtQqIorgKM+Di7ixuS6uqfAgdFu5RpzA=;
-        b=G9skQ3aRbgwXpozrH+1DO97KndwvPNLHeERqMmQDZWWaONNCADEoaOMvPkA0sFj53o
-         phoK8JUmNVcvN1zKr+0kawyF+mSilxU7i4gtAoMto3xyO9TQG5uMPuI/UfH3wukUoDOc
-         j6XhR7QyCsO7y931Q57UTyK2rbsj1P5my0hS0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mOxb5tg5seSjtQqIorgKM+Di7ixuS6uqfAgdFu5RpzA=;
-        b=A8Y5Dr5vYYFiPbzNgCPwHLAlX4yRz98rFTvCHjAm1KXarkl2LM2UkiPP7pPNlVfxOP
-         1Pb6b9W5EXvssNL5YlhzwBVJro2EG2LtlKSqHPfyFW0CrojB8BUGe9QJCWHz5pSRWyd4
-         vdAMKr3mkkOgGnrG3k/peAN2JZfl7Hb84GYfMmFuTHaXbrQ2VL188UCZr1ZXFfcDwJ4C
-         ggr9E33s2Ccg2IHHeSiTtA36JAAmY8yo0PyoKdhGVB3mce9cfVsK+LZe6cMQUhdKVUKL
-         juK9/XuUfpwPmECB817wlaYshpxZqFGGDVpLyY0e1Ow0UWT1kWVSuWuLINWbfFqTmi6Y
-         WuHQ==
-X-Gm-Message-State: APjAAAXPtr7krIAOZcdkppcBao24cSULI2u0Z2b2/bSQl4o7uLGGStID
-        I/TXpCe2cMb65lOKivo5zMsw5RLxzQFdAAp7jZ17iw==
-X-Google-Smtp-Source: APXvYqwumLX15i5KhdhsUxIfW0Chce/ceicYE3QuO3Xntx39jQED40S5LxMsWwDhbGTmvCiWV49cMhif6dAhO+pZRnI=
-X-Received: by 2002:a67:eb12:: with SMTP id a18mr1522512vso.119.1563351241789;
- Wed, 17 Jul 2019 01:14:01 -0700 (PDT)
+        Wed, 17 Jul 2019 04:14:53 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45pVRt2k85z1rGS0;
+        Wed, 17 Jul 2019 10:14:50 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45pVRt1kBzz1qqkk;
+        Wed, 17 Jul 2019 10:14:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id cfRaDSPSiOvS; Wed, 17 Jul 2019 10:14:49 +0200 (CEST)
+X-Auth-Info: lP8M1pVH1EEMoEyWbfzPY7ufAStRmZpSaEBHcUjyzIs=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 17 Jul 2019 10:14:49 +0200 (CEST)
+Date:   Wed, 17 Jul 2019 10:14:43 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] input: touchscreen mc13xxx: Make platform data
+ optional
+Message-ID: <20190717101443.332d0156@jawa>
+In-Reply-To: <20190717033559.GB621@penguin>
+References: <20190716221929.3782-1-lukma@denx.de>
+        <20190716221929.3782-3-lukma@denx.de>
+        <20190717033559.GB621@penguin>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190716115725.66558-1-cychiang@chromium.org> <20190716115725.66558-6-cychiang@chromium.org>
- <CA+Px+wXK9gJKZwzsG8BXh1gmoEyscxtMzB_VCrHz-nenBEL9AQ@mail.gmail.com>
-In-Reply-To: <CA+Px+wXK9gJKZwzsG8BXh1gmoEyscxtMzB_VCrHz-nenBEL9AQ@mail.gmail.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Wed, 17 Jul 2019 16:13:35 +0800
-Message-ID: <CAFv8NwKJ4SEbN34EyS7wA33z9+bCCM2mzQRUBfDLr9Vg5CP9jQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] ASoC: rockchip_max98090: Add HDMI jack support
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ZX0WSg5BJI1.eQaW17WNKKw"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:16 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
->
-> On Tue, Jul 16, 2019 at 7:58 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> >
-> > diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
-> > index c82948e383da..c81c4acda917 100644
-> > --- a/sound/soc/rockchip/rockchip_max98090.c
-> > +++ b/sound/soc/rockchip/rockchip_max98090.c
-> > +static struct snd_soc_jack rk_hdmi_jack;
-> > +
-> > +static int rk_hdmi_init(struct snd_soc_pcm_runtime *runtime)
-> > +{
-> > +       struct snd_soc_card *card = runtime->card;
-> > +       struct snd_soc_component *component = runtime->codec_dai->component;
-> > +       int ret;
-> > +
-> > +       /* enable jack detection */
-> > +       ret = snd_soc_card_jack_new(card, "HDMI Jack", SND_JACK_LINEOUT,
-> > +                                   &rk_hdmi_jack, NULL, 0);
-> > +       if (ret) {
-> > +               dev_err(card->dev, "Can't new HDMI Jack %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       return hdmi_codec_set_jack_detect(component, &rk_hdmi_jack);
-> > +}
-> In the patch, you should select SND_SOC_HDMI_CODEC, because the patch
-> uses hdmi_codec_set_jack_detect which depends on hdmi-codec.c.
-Thanks! I'll fix in v5.
+--Sig_/ZX0WSg5BJI1.eQaW17WNKKw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Dmitry,
+
+> On Wed, Jul 17, 2019 at 12:19:28AM +0200, Lukasz Majewski wrote:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> >=20
+> > The platform data once was optional, make it optional again. This
+> > is a first step towards device tree support for the mc13xxx
+> > touchscreen driver.
+> >=20
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>=20
+> I suppose it will go together with the 1st patch through Lee's MFD
+> tree?
+
+I suppose that this would be the easiest way to proceed.
+
+>=20
+> Thanks.
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/ZX0WSg5BJI1.eQaW17WNKKw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl0u2PMACgkQAR8vZIA0
+zr1ASwgA5Y7nw/6M0mO9CcIRGZqginnHm61SLf6SErvyx5n/+F6DtcQ6z78K1swd
+8y67xNJaQTy5Xv1rTe+dKhy+HoBSic4vruFXuqcqmogooJGsmL6pBc8TsJGH0QnK
+b7ZbE+RBaZfM+fSytN/ECel1qNeEenqC1Q7/t1MMh3Aw0+wd04NPc1OwyvS2kYnl
+HJb935RqIMfcZlL0Oj7/ST/QJeCNTwOpqKBuMKMZDZNr8Oc3Pska6z8UNzmpvcAT
+JPgkg0cNPXCe6729SLjSN62c0gRCCKleuiWWy0W+P/gyW837WaI5sXE0G8Aja6/T
+Dl2LKzV1Tpfbc7bC7qUNBfp80tSi9Q==
+=SAyq
+-----END PGP SIGNATURE-----
+
+--Sig_/ZX0WSg5BJI1.eQaW17WNKKw--
