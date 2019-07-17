@@ -2,232 +2,336 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C96C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FF4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD9521743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z99Wfl0e"
+	by mail.kernel.org (Postfix) with ESMTP id C85D920818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfGQHuC (ORCPT
+        id S1730387AbfGQHuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:50:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60484 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfGQHt0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 03:50:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2669 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727984AbfGQHt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jul 2019 03:49:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H7hwmc119706;
-        Wed, 17 Jul 2019 07:48:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=OrJvKxRwwYXFXus0lT1vSh2dbIKM3XOiNJCVKb9uv9o=;
- b=z99Wfl0evKOcLYS4AZ/6O5vSEQBfY+qAxda5oovUKw9P2jjtVuVtcAogTz3+RgSFnYdk
- T09tEccswm8kIILPj4gF28Xyb3YQAo8G2adklHqAHXSY2XMBf6n/q13mnYWk1LNF/2R6
- 3Khsz4IX6PvheoFW2PrTQd51Hy8dwOZEWZJ2zZMAm/f9CBGWdteg0YHusu/X3zU3GBSm
- l0vbhkXEwytnpDMCnPT9JGX4iwGYEe8rEzuNMRMJP4NRNUHM3ColDq26XW1NnK5g/nTl
- l7+jJgfEwHXcd+YPdbM8wN6lW2yKvGmBKspd92+sgWjcNf9dR9axbrEWLZjLpEcBqSBn pA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2tq7xr0txh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 07:48:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H7hRR9036435;
-        Wed, 17 Jul 2019 07:48:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2tsmcc86wn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 07:48:12 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6H7mA2p024689;
-        Wed, 17 Jul 2019 07:48:10 GMT
-Received: from [10.175.27.185] (/10.175.27.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 07:48:09 +0000
-Subject: Re: [PATCH v3 0/6] Tracing vs CR2
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux_lkml_grp@oracle.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Joel Fernandes <joel@joelfernandes.org>, devel@etsukata.com
-References: <20190711114054.406765395@infradead.org>
- <4c71e14d-3a32-c3bb-8e3b-6e5100853192@oracle.com>
- <97cdd0af-95cc-2583-dc19-129b20809110@oracle.com>
- <CALCETrVisJsLk10WY6hgkqAJ7UsJCr4hHcdtrcUkMaPNOGNYLg@mail.gmail.com>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <c2f775d7-93e5-1109-25f4-2b077d2c70e1@oracle.com>
-Date:   Wed, 17 Jul 2019 09:46:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 01135EDC4AD0670728E9;
+        Wed, 17 Jul 2019 15:49:24 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
+ 15:49:16 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>
+Subject: [RFC PATCH 06/10] powerpc/fsl_booke/32: implement KASLR infrastructure
+Date:   Wed, 17 Jul 2019 16:06:17 +0800
+Message-ID: <20190717080621.40424-7-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190717080621.40424-1-yanaijie@huawei.com>
+References: <20190717080621.40424-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrVisJsLk10WY6hgkqAJ7UsJCr4hHcdtrcUkMaPNOGNYLg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170092
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch add support to boot kernel from places other than KERNELBASE.
+Since CONFIG_RELOCATABLE has already supported, what we need to do is
+map or copy kernel to a proper place and relocate. Freescale Book-E
+parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
+entries are not suitable to map the kernel directly in a randomized
+region, so we chose to copy the kernel to a proper place and restart to
+relocate.
 
-On 7/17/19 3:02 AM, Andy Lutomirski wrote:
-> On Tue, Jul 16, 2019 at 2:53 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
->>
->>
->> On 7/16/19 9:33 PM, Vegard Nossum wrote:
->>>
->>> On 7/11/19 1:40 PM, Peter Zijlstra wrote:
->>>> Hi,
->>>>
->>>> Here's the latest (and hopefully final) set of tracing vs CR2 patches.
->>>>
->>>> They are basically the same as v2, with only minor edits and tags
->>>> collected
->>>> from the last review.
->>>>
->>>> Please consider.
->>>>
->>>
->>> Hi,
->>>
->>> I ran my own battery of tests on your patch set on top of
->>> 5ad18b2e60b75c7297a998dea702451d33a052ed and ran into this:
->>>
-> 
-> On a different thread, Peter and I decided that the last patch in this
-> series (the one that removes the _DEBUG stuff) is wrong.  Can you see
-> if these are reproducible with that patch removed?
+The offset of the kernel was not randomized yet(a fixed 64M is set). We
+will randomize it in the next patch.
 
-Yes, without the last patch I still get this:
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Cc: Diana Craciun <diana.craciun@nxp.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+---
+ arch/powerpc/Kconfig                          | 11 +++
+ arch/powerpc/kernel/Makefile                  |  1 +
+ arch/powerpc/kernel/early_32.c                |  2 +-
+ arch/powerpc/kernel/fsl_booke_entry_mapping.S | 13 ++-
+ arch/powerpc/kernel/head_fsl_booke.S          | 15 +++-
+ arch/powerpc/kernel/kaslr_booke.c             | 83 +++++++++++++++++++
+ arch/powerpc/mm/mmu_decl.h                    |  6 ++
+ arch/powerpc/mm/nohash/fsl_booke.c            |  7 +-
+ 8 files changed, 125 insertions(+), 13 deletions(-)
+ create mode 100644 arch/powerpc/kernel/kaslr_booke.c
 
-Run /init as init process
-init[711]: segfault at 40000000 ip 000000004000000a sp 0000000040000ff8 
-error 7
-------------[ cut here ]------------
-General protection fault in user access. Non-canonical address?
-WARNING: CPU: 0 PID: 711 at arch/x86/mm/extable.c:126 
-ex_handler_uaccess+0x5d/0x70
-CPU: 0 PID: 711 Comm: init Not tainted 5.2.0+ #125
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 
-Ubuntu-1.8.2-1ubuntu1 04/01/2014
-init[716]: segfault at 40000000 ip 000000004000000a sp 0000000040000ff8 
-error 7
-RIP: 0010:ex_handler_uaccess+0x5d/0x70
-Code: 5d 41 5c c3 e8 c4 8e 0e 00 80 3d e5 74 1e 01 00 75 d3 e8 b6 8e 0e 
-00 48 c7 c7 10 a7 fb 81 c6 05 d0 74 1e 01 01 e8 d1 43 01 00 <0f> 0b eb 
-b7 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
-RSP: 0000:ffffc9000065fa18 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: ffffffff81c07dac RCX: ffffffff811a887c
-init[714]: segfault at 40000000 ip 000000004000000a sp 0000000040000ff8 
-error 7
-RDX: 0000000000000000 RSI: ffffffff8289f05f RDI: 0000000000000093
-RBP: ffffc9000065fa88 R08: 000000002e80b265 R09: 000000000000003f
-init[718]: segfault at 40000000 ip 000000004000000a sp 0000000040000ff8 
-error 7
-R10: 0000000000000000 R11: 0000000000000000 R12: 000000000000000d
-R13: 000000000000000d R14: 0000000000000000 R15: 0000000000000000
-FS:  00000000006ce880(0000) GS:ffff88803ec00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000003fffffe0 CR3: 000000003d2f6004 CR4: 00000000003606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-Code: Bad RIP value.
-  fixup_exception+0x50/0x6a
-  do_general_protection+0x40/0x160
-  general_protection+0x2d/0x40
-RIP: 0010:arch_stack_walk_user+0x71/0x100
-Code: 00 48 83 e8 10 49 39 c4 77 45 4c 8b 04 24 4c 89 e3 4d 89 fd 4c 89 
-fd 41 83 87 98 0a 00 00 01 0f 01 cb 0f ae e8 31 c0 4c 89 e2 <4c> 8b 33 
-4d 89 f4 85 c0 75 7a 48 8b 73 08 0f 01 ca 85 c0 74 1f 65
-[...]
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index f516796dd819..3742df54bdc8 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -547,6 +547,17 @@ config RELOCATABLE
+ 	  setting can still be useful to bootwrappers that need to know the
+ 	  load address of the kernel (eg. u-boot/mkimage).
+ 
++config RANDOMIZE_BASE
++	bool "Randomize the address of the kernel image"
++	depends on (FSL_BOOKE && FLATMEM && PPC32)
++	select RELOCATABLE
++	help
++	  Randomizes the virtual address at which the kernel image is
++	  loaded, as a security feature that deters exploit attempts
++	  relying on knowledge of the location of kernel internals.
++
++	  If unsure, say N.
++
+ config RELOCATABLE_TEST
+ 	bool "Test relocatable kernel"
+ 	depends on (PPC64 && RELOCATABLE)
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index 56dfa7a2a6f2..cf87a0921db4 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -105,6 +105,7 @@ extra-$(CONFIG_PPC_8xx)		:= head_8xx.o
+ extra-y				+= vmlinux.lds
+ 
+ obj-$(CONFIG_RELOCATABLE)	+= reloc_$(BITS).o
++obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr_booke.o
+ 
+ obj-$(CONFIG_PPC32)		+= entry_32.o setup_32.o early_32.o
+ obj-$(CONFIG_PPC64)		+= dma-iommu.o iommu.o
+diff --git a/arch/powerpc/kernel/early_32.c b/arch/powerpc/kernel/early_32.c
+index 3482118ffe76..fe8347cdc07d 100644
+--- a/arch/powerpc/kernel/early_32.c
++++ b/arch/powerpc/kernel/early_32.c
+@@ -32,5 +32,5 @@ notrace unsigned long __init early_init(unsigned long dt_ptr)
+ 
+ 	apply_feature_fixups();
+ 
+-	return KERNELBASE + offset;
++	return kimage_vaddr + offset;
+ }
+diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
+index de0980945510..6d2967673ac7 100644
+--- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
++++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
+@@ -161,17 +161,16 @@ skpinv:	addi	r6,r6,1				/* Increment */
+ 	lis	r6,(MAS1_VALID|MAS1_IPROT)@h
+ 	ori	r6,r6,(MAS1_TSIZE(BOOK3E_PAGESZ_64M))@l
+ 	mtspr	SPRN_MAS1,r6
+-	lis	r6,MAS2_VAL(PAGE_OFFSET, BOOK3E_PAGESZ_64M, M_IF_NEEDED)@h
+-	ori	r6,r6,MAS2_VAL(PAGE_OFFSET, BOOK3E_PAGESZ_64M, M_IF_NEEDED)@l
+-	mtspr	SPRN_MAS2,r6
++	lis     r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@h
++	ori     r6,r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@l
++	and     r6,r6,r20
++	ori	r6,r6,M_IF_NEEDED@l
++	mtspr   SPRN_MAS2,r6
+ 	mtspr	SPRN_MAS3,r8
+ 	tlbwe
+ 
+ /* 7. Jump to KERNELBASE mapping */
+-	lis	r6,(KERNELBASE & ~0xfff)@h
+-	ori	r6,r6,(KERNELBASE & ~0xfff)@l
+-	rlwinm	r7,r25,0,0x03ffffff
+-	add	r6,r7,r6
++	mr	r6,r20
+ 
+ #elif defined(ENTRY_MAPPING_KEXEC_SETUP)
+ /*
+diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+index ce40f96dae20..d34933b0745a 100644
+--- a/arch/powerpc/kernel/head_fsl_booke.S
++++ b/arch/powerpc/kernel/head_fsl_booke.S
+@@ -155,6 +155,8 @@ _ENTRY(_start);
+  */
+ 
+ _ENTRY(__early_start)
++	LOAD_REG_ADDR_PIC(r20, kimage_vaddr)
++	lwz     r20,0(r20)
+ 
+ #define ENTRY_MAPPING_BOOT_SETUP
+ #include "fsl_booke_entry_mapping.S"
+@@ -277,8 +279,8 @@ set_ivor:
+ 	ori	r6, r6, swapper_pg_dir@l
+ 	lis	r5, abatron_pteptrs@h
+ 	ori	r5, r5, abatron_pteptrs@l
+-	lis	r4, KERNELBASE@h
+-	ori	r4, r4, KERNELBASE@l
++	lis     r3, kimage_vaddr@ha
++	lwz     r4, kimage_vaddr@l(r3)
+ 	stw	r5, 0(r4)	/* Save abatron_pteptrs at a fixed location */
+ 	stw	r6, 0(r5)
+ 
+@@ -1067,7 +1069,14 @@ __secondary_start:
+ 	mr	r5,r25		/* phys kernel start */
+ 	rlwinm	r5,r5,0,~0x3ffffff	/* aligned 64M */
+ 	subf	r4,r5,r4	/* memstart_addr - phys kernel start */
+-	li	r5,0		/* no device tree */
++#ifdef CONFIG_RANDOMIZE_BASE
++	lis	r7,KERNELBASE@h
++	ori	r7,r7,KERNELBASE@l
++	cmpw	r20,r7		/* if kimage_vaddr != KERNELBASE, randomized */
++	beq	2f
++	li	r4,0
++#endif
++2:	li	r5,0		/* no device tree */
+ 	li	r6,0		/* not boot cpu */
+ 	bl	restore_to_as0
+ 
+diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
+new file mode 100644
+index 000000000000..72d8e9432048
+--- /dev/null
++++ b/arch/powerpc/kernel/kaslr_booke.c
+@@ -0,0 +1,83 @@
++/*
++ * Copyright (C) 2019 Jason Yan <yanaijie@huawei.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/signal.h>
++#include <linux/sched.h>
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/string.h>
++#include <linux/types.h>
++#include <linux/ptrace.h>
++#include <linux/mman.h>
++#include <linux/mm.h>
++#include <linux/swap.h>
++#include <linux/stddef.h>
++#include <linux/vmalloc.h>
++#include <linux/init.h>
++#include <linux/delay.h>
++#include <linux/highmem.h>
++#include <linux/memblock.h>
++#include <asm/pgalloc.h>
++#include <asm/prom.h>
++#include <asm/io.h>
++#include <asm/mmu_context.h>
++#include <asm/pgtable.h>
++#include <asm/mmu.h>
++#include <linux/uaccess.h>
++#include <asm/smp.h>
++#include <asm/machdep.h>
++#include <asm/setup.h>
++#include <asm/paca.h>
++#include <mm/mmu_decl.h>
++
++extern int is_second_reloc;
++
++static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
++					unsigned long kernel_sz)
++{
++	/* return a fixed offset of 64M for now */
++	return 0x4000000;
++}
++
++/*
++ * To see if we need to relocate the kernel to a random offset
++ * void *dt_ptr - address of the device tree
++ * phys_addr_t size - size of the first memory block
++ */
++notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
++{
++	unsigned long tlb_virt;
++	phys_addr_t tlb_phys;
++	unsigned long offset;
++	unsigned long kernel_sz;
++
++	kernel_sz = (unsigned long)_end - KERNELBASE;
++
++	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
++
++	if (offset == 0)
++		return;
++
++	kimage_vaddr += offset;
++	kernstart_addr += offset;
++
++	is_second_reloc = 1;
++
++	if (offset >= SZ_64M) {
++		tlb_virt = round_down(kimage_vaddr, SZ_64M);
++		tlb_phys = round_down(kernstart_addr, SZ_64M);
++
++		/* Create kernel map to relocate in */
++		create_tlb_entry(tlb_phys, tlb_virt, 1);
++	}
++
++	/* Copy the kernel to it's new location and run */
++	memcpy((void *)kimage_vaddr, (void *)KERNELBASE, kernel_sz);
++
++	reloc_kernel_entry(dt_ptr, kimage_vaddr);
++}
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index dae8e9177574..754ae1e69f92 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -148,6 +148,12 @@ extern void reloc_kernel_entry(void *fdt, int addr);
+ extern void loadcam_entry(unsigned int index);
+ extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+ 
++#ifdef CONFIG_RANDOMIZE_BASE
++extern void kaslr_early_init(void *dt_ptr, phys_addr_t size);
++#else
++static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
++#endif
++
+ struct tlbcam {
+ 	u32	MAS0;
+ 	u32	MAS1;
+diff --git a/arch/powerpc/mm/nohash/fsl_booke.c b/arch/powerpc/mm/nohash/fsl_booke.c
+index 556e3cd52a35..8d25a8dc965f 100644
+--- a/arch/powerpc/mm/nohash/fsl_booke.c
++++ b/arch/powerpc/mm/nohash/fsl_booke.c
+@@ -263,7 +263,8 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
+ int __initdata is_second_reloc;
+ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
+ {
+-	unsigned long base = KERNELBASE;
++	unsigned long base = kimage_vaddr;
++	phys_addr_t size;
+ 
+ 	kernstart_addr = start;
+ 	if (is_second_reloc) {
+@@ -291,7 +292,7 @@ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
+ 	start &= ~0x3ffffff;
+ 	base &= ~0x3ffffff;
+ 	virt_phys_offset = base - start;
+-	early_get_first_memblock_info(__va(dt_ptr), NULL);
++	early_get_first_memblock_info(__va(dt_ptr), &size);
+ 	/*
+ 	 * We now get the memstart_addr, then we should check if this
+ 	 * address is the same as what the PAGE_OFFSET map to now. If
+@@ -316,6 +317,8 @@ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
+ 		/* We should never reach here */
+ 		panic("Relocation error");
+ 	}
++
++	kaslr_early_init(__va(dt_ptr), size);
+ }
+ #endif
+ #endif
+-- 
+2.17.2
 
-This is my reproducer (as init):
-
-#include <fcntl.h>
-#include <sched.h>
-#include <sys/mman.h>
-#include <sys/mount.h>
-#include <sys/stat.h>
-#include <sys/user.h>
-#include <unistd.h>
-#include <wait.h>
-
-struct child_data {
-   (*code)();
-};
-
-child_fn(void *arg)
-{
-   child_data *data = arg;
-   mprotect(data->code, PAGE_SIZE, PROT_EXEC);
-   data->code();
-}
-
-int main()
-{
-   mkdir("/sys", 7);
-   mount("nodev", "/sys", "sysfs", 0, "");
-   mount("nodev", "/sys/kernel/tracing", "tracefs", 0, "");
-
-   int tracing_options_userstacktrace = 
-open("/sys/kernel/tracing/options/userstacktrace", O_RDWR);
-   write(tracing_options_userstacktrace, "1\n", 2);
-
-   int tracing_events_preemptirq_irq_disable = 
-open("/sys/kernel/tracing/events/preemptirq/irq_disable/enable", O_RDWR);
-   write(tracing_events_preemptirq_irq_disable, "1\n", 2);
-
-   void *code = mmap(0, PAGE_SIZE, PROT_WRITE, MAP_PRIVATE | 
-MAP_ANONYMOUS | MAP_32BIT, 1, 0);
-   {
-     unsigned char *output = code;
-
-     *output++ = 72;
-     *output++ = 189;
-     for (int i = 0; i < 8; ++i)
-       *output++ = i;
-   }
-
-   void *child_stack = mmap(0, PAGE_SIZE, PROT_WRITE, MAP_PRIVATE | 
-MAP_ANONYMOUS | MAP_32BIT, 1, 0);
-
-   while (1) {
-     child_data data = { code };
-     clone(child_fn, child_stack, SIGCHLD, &data);
-   }
-}
-
-Compiled with -static and booted with "norandmaps" (for some reason that
-makes a difference), this is 100% reproducible for me, although the
-reproducer is somewhat sensitive to small changes that I don't quite
-understand.
-
-
-Vegard
