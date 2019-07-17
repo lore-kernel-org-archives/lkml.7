@@ -2,131 +2,201 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14629C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856FBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83682077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKc7/n9j"
+	by mail.kernel.org (Postfix) with ESMTP id 642A12077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfGQIxp (ORCPT
+        id S1727121AbfGQIzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:53:45 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34034 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfGQIxo (ORCPT
+        Wed, 17 Jul 2019 04:55:05 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51575 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725941AbfGQIzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:53:44 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p17so22828978ljg.1;
-        Wed, 17 Jul 2019 01:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QcbKPxVwtatmJY3AjWYhH7cBiQwwWyAzrWPhCcC06hs=;
-        b=mKc7/n9j44bgxhAFUB6RMzVoM7wReNc/CXUxq7NMCHtIOyeRfxN21HqKuoESCXewIe
-         qnc5nAsWRLlJffUeCN8NDp6kXJhTTIUA/zoi8wouTsPQOdKoIuciZpt6IE2HpgxNcImK
-         +USTvtiwp/KvlciNssCTZGrSWbnIvLWNuM9nEp/3XOKFaTslIEXxHqRlN0GSscLjiJEW
-         tHgNq4CV81E3/L3oas1463yagLrBztLQuQ6TGi2ptNcPZI5d1WKLdR/bjVrgiKXm6n8h
-         cA0dCs0n0cffiBLGXRQmXXfU6NluJBYGz9t21fenVZaZOX/hcHMH3mxTwaYBD97mc8lV
-         opRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QcbKPxVwtatmJY3AjWYhH7cBiQwwWyAzrWPhCcC06hs=;
-        b=evEwfk3euPma+nWQt6CGGHkDbguk1B3V7m8zupezWYWgWOPd8awDZgwVn1Oov3yL1t
-         ouqKbY1V5ukpoJnnSN2kvO60HYF8ECZ4UqP8IOt4q8n7y5+rMz04P1jzz5NnZmujkrZU
-         QLqB+dfHTop7ZglgqopoAlHbYreVcbTXkf7UTY62LOgdJAW08x9aWASnx66768BGT6WO
-         O5RKZ54sbNVw2hHaxVr1c8LSyIL4R9yibx+o6nfNQdqfPubHQBFoLEV7+wGdhbGQeLDS
-         X+J4RUl0k7nE43zPN9SdC+DgzniJZi2TdVqHdgMN06Ww0wiZE3IOflXeqc8FynAvzXLn
-         gZzA==
-X-Gm-Message-State: APjAAAVEj5/aVvvDs8WS/3w7wXHP5gJxD4nbazL258j5ea0sxul6w2/i
-        8rM6XwAWIgXTsd//Ed0C7ykbv6rn8vQ=
-X-Google-Smtp-Source: APXvYqyKL3ejFcIvM1Z95+BRfMICIJyTzccMrtIq+j9NWcL70es2LK6VfpjCcDIb7BtFCwWrZzeL/A==
-X-Received: by 2002:a2e:93c8:: with SMTP id p8mr19997872ljh.6.1563353621760;
-        Wed, 17 Jul 2019 01:53:41 -0700 (PDT)
-Received: from localhost ([188.170.223.67])
-        by smtp.gmail.com with ESMTPSA id e12sm3287047lfb.66.2019.07.17.01.53.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jul 2019 01:53:41 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 11:53:38 +0300
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Lukasz Majewski <lukma@denx.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] input: touchscreen mc13xxx: Add mc34708 support
-Message-ID: <20190717085338.GA581@penguin>
-References: <20190716221929.3782-1-lukma@denx.de>
- <20190716221929.3782-4-lukma@denx.de>
- <20190717033655.GC621@penguin>
- <20190717101704.2ff4d877@jawa>
+        Wed, 17 Jul 2019 04:55:04 -0400
+X-UUID: 61bf587d772d4c1ea6bcef6c4f5c4285-20190717
+X-UUID: 61bf587d772d4c1ea6bcef6c4f5c4285-20190717
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 860153521; Wed, 17 Jul 2019 16:54:57 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n2.mediatek.inc
+ (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 17 Jul
+ 2019 16:54:55 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 17 Jul 2019 16:54:54 +0800
+Message-ID: <1563353694.19945.33.camel@mhfsdcap03>
+Subject: Re: [PATCH 2/3] rtc: Add support for the MediaTek MT2712 RTC
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "Mark Rutland" <mark.rutland@arm.com>, <linux-rtc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        "Flora Fu" <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Date:   Wed, 17 Jul 2019 16:54:54 +0800
+In-Reply-To: <20190713211231.GD4732@piout.net>
+References: <20190702032120.16539-1-ran.bi@mediatek.com>
+         <20190702032120.16539-3-ran.bi@mediatek.com>
+         <20190713211231.GD4732@piout.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717101704.2ff4d877@jawa>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: E81E13F116E4248978BEE1A56221D66CD0A4F944914214DEE6C47B20D48F8A212000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+Hi Belloni,
 
-On Wed, Jul 17, 2019 at 10:17:04AM +0200, Lukasz Majewski wrote:
-> Hi Dmitry,
+On Sat, 2019-07-13 at 23:12 +0200, Alexandre Belloni wrote:
+
+> > +#define RTC_BBPU		0x0000
+> > +#define RTC_BBPU_CLRPKY		(1U << 4)
 > 
-> > On Wed, Jul 17, 2019 at 12:19:29AM +0200, Lukasz Majewski wrote:
-> > > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > > 
-> > > The mc34708 has a different bit to enable pen detection. This
-> > > adds the driver data and devtype necessary to probe the device
-> > > and to distinguish between the mc13783 and the mc34708.
-> > > 
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > 
-> > > ---
-> > > Changes for v3:
-> > > - Replace forward declaration of mc13xxx_driver_data with
-> > >   structure definition
-> > > - Rename mc13xxx_driver_data with mc13xxx_chip
-> > > - Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
-> > >   closer to ID table
-> > > - Do not check mc13xxx device type  
-> > 
-> > You do not even need to define or store the type. Once it is dropped
-> > please feel free to add
+> Please use BIT(). Also, I don't feel that the RTC prefix is adding any
+> value. MT2712 would be a better choice here.
 > 
-> Ok. I will remove the type definition.
+
+Will change to MT2712 at next patch.
+
+> > +
+> > +/* we map HW YEAR 0 to 1968 not 1970 because 2000 is the leap year */
+> > +#define RTC_MIN_YEAR		1968
+> > +#define RTC_BASE_YEAR		1900
+> > +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
 > 
-> > 
-> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > and merge with the other 2 patches.
-> > 
+> Do not do that. If this RTC range starts in 200, ths is what the driver
+> has to support, you should not care about dates before 2000. Note that
+> the RTC core can still properly shift the range if it is absolutely
+> necessary.
 > 
-> Ok. I will squash those three patches into a single one, add your
-> Acked-by and wait for Lee to pull this single patch to his MFD tree.
 
-Sorry, it looks like there is misunderstanding. I did not ask to squash
-together the 3 patches, I meant that they can all go together through
-the same tree (MFD). That is what I meant by them being merged together.
+Do we need to care about default alarm date 1970-01-01? Or can I just
+set it to 2000-01-01?
 
-Sorry for being unclear.
+> > +
+> > +static inline u32 rtc_readl(struct mt2712_rtc *rtc, u32 reg)
+> 
+> Please use a more descriptive prefix than just rtc_.
+> 
 
-Thanks.
+Do you mean it's better to use prefix "mt2712_rtc_"?
 
--- 
-Dmitry
+> > +		mutex_lock(&rtc->lock);
+> 
+> You should take rtc->rtc_dev->ops_lock. This would remove the need for
+> rtc->lock.
+> 
+
+Will change it at next patch.
+
+> > +	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+> > +
+> 
+> As stated before, do not do that, simply add 100.
+> 
+
+Will change it at next patch.
+
+> > +	/* rtc_tm_to_time64 convert Gregorian date to seconds since
+> > +	 * 01-01-1970 00:00:00, and this date is Thursday
+> > +	 */
+> > +	time = rtc_tm_to_time64(tm);
+> > +	days = div_s64(time, 86400);
+> > +	tm->tm_wday = (days + 4) % 7;
+> > +
+> 
+> This is not necessary, nobody cares about tm_wday, if you don't have it,
+> do not set it.
+> 
+
+Will remove this part at next patch.
+
+> > +	dev_info(rtc->dev, "set al time = %04d-%02d-%02d %02d:%02d:%02d (%d)\n",
+> 
+> Do not use dev_info, dev_dbg is probably what you want here. Also, use
+> %ptR.
+> 
+
+Will change it at next patch.
+
+> > +	mutex_lock(&rtc->lock);
+> 
+> You probably need to disable the alarm before starting to modify the
+> registers.
+> 
+
+Will change it at next patch.
+
+> > +static bool valid_rtc_time(struct mt2712_rtc *rtc)
+> 
+> This function is not necessary, see later.
+> 
+
+Will change it at next patch.
+
+> > +	rtc_writel(rtc, RTC_IRQ_EN,  0);
+> 
+> Are you sure you want to disable interrupts every time you reboot? I
+> guess the RTC has its own power domain and may be used across reboots.
+> 
+
+Will remove this at next patch.
+
+> > +	dev_info(rtc->dev, "%s rtc p1 is %x, p2 is %x!\n", __func__, p1, p2);
+> 
+> This debug message has to be removed.
+> 
+
+Will remove this at next patch.
+
+> > +
+> > +	/*
+> > +	 * register status was not correct,
+> > +	 * need set time and alarm to default
+> > +	 */
+> > +	if (p1 != RTC_POWERKEY1_KEY || p2 != RTC_POWERKEY2_KEY
+> > +	    || !valid_rtc_time(rtc)) {
+> > +		reset_rtc_time(rtc);
+> 
+> Do not do that. This is valuable information. If the time is invalid,
+> report it as such in read_time and read_alarm. Resetting the time here
+> will lead to more issues later (i.e. userspace is not able to know
+> whether the time is set correctly or not).
+> 
+
+When RTC's power run out, RTC will lost it's registers value and time
+data at next boot up. We even cannot know what the date and time it
+shows. We want to check this state here and set a default RTC date. Do
+you think it's no need here and the date should be set by system?
+
+> > +	ret = request_threaded_irq(rtc->irq, NULL,
+> 
+> devm_request_threaded_irq would remove the need for out_free_irq and
+> mtk_rtc_remove().
+> 
+
+Will change it at next patch. And will remove mtk_rtc_remove() function.
+
+--
+Ran Bi, MediaTek
+
+
