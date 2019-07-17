@@ -6,63 +6,69 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BCEC76192
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF8EC7618F
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6002189F
+	by mail.kernel.org (Postfix) with ESMTP id 3DDEA2189D
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1563393630;
-	bh=sGAbsa4zJ1MTP4jiSF9JknkD1pQyq1NakdV9LUCf1a4=;
+	bh=knhfaFZd0TqXne+8pNDBzyf7X4NQ0jrDNN7luHAxe9I=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lDigC42sjP0jN1Pp8poaejArdERLCGpvOnICAYfFQQGZMHeYgCs/m/nKL81eIu/VV
-	 4AbfrHVcbHZCi5s/wXGDSnQ1UUFue/k6KJwHyw+2EZUngN1GhDh+sD5tIeqmpq691w
-	 60+NLvpjH7mc7Vzp55KCm4z9GhUKgJBAnSf/bIIo=
+	b=eCZfuxHJN7SfhQyT1es6mdR+/717svqARtyhkKU+nLbrZxW31zg1QN3NqQw7dZjTo
+	 nxm5SfNrxF+jr1iK2rmYI9nClxiwafHFQeKM/Yw+kxzQR2NNxIkhwwAhXaWEtSkWqV
+	 dsBEOmPkIcP9dnMF7c9zbkVvieTxbsGd/Laao8rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfGQUAX (ORCPT
+        id S1727480AbfGQUAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfGQUAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jul 2019 16:00:20 -0400
-Subject: Re: [GIT PULL] hwspinlock updates for v5.3
+Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727235AbfGQUAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 16:00:19 -0400
+Subject: Re: [GIT PULL] remoteproc updates for v5.3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563393619;
-        bh=sGAbsa4zJ1MTP4jiSF9JknkD1pQyq1NakdV9LUCf1a4=;
+        s=default; t=1563393618;
+        bh=knhfaFZd0TqXne+8pNDBzyf7X4NQ0jrDNN7luHAxe9I=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=TQRTE+Asfj+M0t3rnlATWDNlWOZQQNvyKLgPxjMpbDpTN3IWSWSMoOymSZbr/dL3M
-         eJDR2w9azwgf3uX3rFKPsuk1ZWbqt4SpGIQf9k/YHQ0fTLzhEk7mxB0ZGXEENLFNDh
-         VB7rfQjYeIiAM6c+fM5xZeb4gwxRVZiWeMFOCHSs=
+        b=G8yooQ74FCyJAGjZgbVRhCZqAVY11HdyQkvf6PtmVw0hmEtMDNPWJjuI/zx7/tJ6X
+         1YrgKe23PdY0sFls/Vtsqlrobv8f8v8lDq07rqRIvrSVwIToMTUyYEXZj5k05uXCpy
+         aCG/GhF+U7MZcMtMWnFGeBOauLKMX2rOsJ/2p/uE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190716190153.GC8572@tuxbook-pro>
-References: <20190716190153.GC8572@tuxbook-pro>
+In-Reply-To: <20190716190129.GB8572@tuxbook-pro>
+References: <20190716190129.GB8572@tuxbook-pro>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190716190153.GC8572@tuxbook-pro>
-X-PR-Tracked-Remote: git://github.com/andersson/remoteproc tags/hwlock-v5.3
-X-PR-Tracked-Commit-Id: 360aa640a59f269b784848c0b2d6d462952750d9
+X-PR-Tracked-Message-Id: <20190716190129.GB8572@tuxbook-pro>
+X-PR-Tracked-Remote: git://github.com/andersson/remoteproc tags/rproc-v5.3
+X-PR-Tracked-Commit-Id: 93f1d3e4b59cf2e7ef31eaf1131480897b040e97
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 57ab5f740202babe93c8796013c5cfdfd6d08d7d
-Message-Id: <156339361931.17916.16714713395709914592.pr-tracker-bot@kernel.org>
-Date:   Wed, 17 Jul 2019 20:00:19 +0000
+X-PR-Merge-Commit-Id: fdcec00405fae0befdd7bbcbe738b7325e5746fb
+Message-Id: <156339361817.17916.10568508783957541563.pr-tracker-bot@kernel.org>
+Date:   Wed, 17 Jul 2019 20:00:18 +0000
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Ohad Ben-Cohen <ohad@wizery.com>,
         linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Fabien Dessenne <fabien.dessenne@st.com>,
-        Suman Anna <s-anna@ti.com>
+        Clement Leger <cleger@kalray.eu>,
+        Fabio Estevam <festevam@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Robert P. J. Day" <rpjday@crashcourse.ca>,
+        YueHaibing <yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 16 Jul 2019 12:01:53 -0700:
+The pull request you sent on Tue, 16 Jul 2019 12:01:29 -0700:
 
-> git://github.com/andersson/remoteproc tags/hwlock-v5.3
+> git://github.com/andersson/remoteproc tags/rproc-v5.3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/57ab5f740202babe93c8796013c5cfdfd6d08d7d
+https://git.kernel.org/torvalds/c/fdcec00405fae0befdd7bbcbe738b7325e5746fb
 
 Thank you!
 
