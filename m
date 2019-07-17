@@ -2,147 +2,123 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CBEC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458A9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63D821871
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF6D2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR2GArgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388953AbfGQAMy (ORCPT
+        id S2389040AbfGQANX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 20:12:54 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:44118 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728848AbfGQAMx (ORCPT
+        Tue, 16 Jul 2019 20:13:23 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44627 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbfGQANX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 20:12:53 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TX5-mrd_1563322365;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX5-mrd_1563322365)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 17 Jul 2019 08:12:49 +0800
-Subject: Re: list corruption in deferred_split_scan()
-To:     Shakeel Butt <shakeelb@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>
-Cc:     Qian Cai <cai@lca.pw>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1562795006.8510.19.camel@lca.pw>
- <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
- <1562879229.8510.24.camel@lca.pw>
- <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
- <1563225798.4610.5.camel@lca.pw>
- <5c853e6e-6367-d83c-bb97-97cd67320126@linux.alibaba.com>
- <8A64D551-FF5B-4068-853E-9E31AF323517@lca.pw>
- <e5aa1f5b-b955-5b8e-f502-7ac5deb141a7@linux.alibaba.com>
- <CALvZod7+ComCUROSBaj==r0VmCczs=npP4u6C9LuJWNWdfB0Pg@mail.gmail.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <50f57bf8-a71a-c61f-74f7-31fb7bfe3253@linux.alibaba.com>
-Date:   Tue, 16 Jul 2019 17:12:45 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 16 Jul 2019 20:13:23 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k8so22640127edr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 17:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D/eYjZgozPvgUajffWeA6V7Zmj+rx5wYX1ns8tvrFbI=;
+        b=RR2GArgAq8SesCevWMlZ5weS7j9gS98QGvXopun5L+UMHZUEPYDRk7AR/hrFKt2KFl
+         3VNfgodCd8uXhPrO4XxCDQ2MG29ysjEOy6uPp3vv7bF74W6m+oPGR90Ourw+MKZJUzM5
+         8pBDtTwWh8prYLzslqKOH0QEA+7njMI9z7kGUAlir6GHXr3ybP+rkZ4huzQ8QbY0SGeX
+         xr4/4LAMBS2Q9OrUarPlsFPMDTnBlWfaFlS64HCXZuoSW7kDHtLF6p7oEHH4yMSkYRaV
+         E7LC/1VEvDBR4r8tN4TmUxj4B3rZ8rH4z+5Z5EkYlH18TOM0uSrtrVcHxt5ZUl6bT15Z
+         abeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D/eYjZgozPvgUajffWeA6V7Zmj+rx5wYX1ns8tvrFbI=;
+        b=bDDzlbmg1Cl5XZNYTmrXYWNe5WM3npdZt4Jpup5NhlmggPZWS091CS61BCe150II81
+         edjUPG498k+CPO8r+gItRXavqfdRm8g8aY3/Jcr9tw6JZ4kyVrS4oSdVmQBV0lwEjINu
+         +eWPKNMUFzUNaBE9s1yMX2E0DnBjs8ooCBZWU6TfngUu9C3t8ZV4j/aCQhIfImGZp38M
+         nLMZwGttox2Xp4Xcz5S021FXW+7KEKJ9xci0j+29UcdCK9CAimoXQKZeZ7obwhhL5znB
+         JhqvBiJgCFfN+X0PZ4ZZ/1C+ooRxOZPP0ZI8V7WlkG6i0V/VVpW3d5MG+E/r7S5dohvr
+         jFNg==
+X-Gm-Message-State: APjAAAV21CIWCjs2LT22+bbcIjhKsxRKQUhuJ6fIUN4Rv3U9kssWcvAf
+        j6S3A0I/IaVXX0JoXqGrV9kzc9dcA1FULzbeFdg=
+X-Google-Smtp-Source: APXvYqyHiCjJpxSGuBP6Fd33Qm/rC+RvBui769ELlk9BhgppASdcNbXIsf9BRgWPqBi8iO1wrRc2+n1oZ0BSQTOT0ls=
+X-Received: by 2002:a50:9177:: with SMTP id f52mr32148765eda.294.1563322401427;
+ Tue, 16 Jul 2019 17:13:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALvZod7+ComCUROSBaj==r0VmCczs=npP4u6C9LuJWNWdfB0Pg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190716213746.4670-1-robdclark@gmail.com> <20190716213746.4670-3-robdclark@gmail.com>
+ <87lfwxh7mo.fsf@anholt.net>
+In-Reply-To: <87lfwxh7mo.fsf@anholt.net>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 16 Jul 2019 17:13:10 -0700
+Message-ID: <CAF6AEGsrJu8r+t35zWxbq8KXFSoyPSJ_3+MjTii00Pb=YOMxHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] drm/vgem: use normal cached mmap'ings
+To:     Eric Anholt <eric@anholt.net>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Deepak Sharma <deepak.sharma@amd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/16/19 4:36 PM, Shakeel Butt wrote:
-> Adding related people.
+On Tue, Jul 16, 2019 at 4:39 PM Eric Anholt <eric@anholt.net> wrote:
 >
-> The thread starts at:
-> http://lkml.kernel.org/r/1562795006.8510.19.camel@lca.pw
+> Rob Clark <robdclark@gmail.com> writes:
 >
-> On Mon, Jul 15, 2019 at 8:01 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>
->>
->> On 7/15/19 6:36 PM, Qian Cai wrote:
->>>> On Jul 15, 2019, at 8:22 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>>>
->>>>
->>>>
->>>> On 7/15/19 2:23 PM, Qian Cai wrote:
->>>>> On Fri, 2019-07-12 at 12:12 -0700, Yang Shi wrote:
->>>>>>> Another possible lead is that without reverting the those commits below,
->>>>>>> kdump
->>>>>>> kernel would always also crash in shrink_slab_memcg() at this line,
->>>>>>>
->>>>>>> map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map, true);
->>>>>> This looks a little bit weird. It seems nodeinfo[nid] is NULL? I didn't
->>>>>> think of where nodeinfo was freed but memcg was still online. Maybe a
->>>>>> check is needed:
->>>>> Actually, "memcg" is NULL.
->>>> It sounds weird. shrink_slab() is called in mem_cgroup_iter which does pin the memcg. So, the memcg should not go away.
->>> Well, the commit “mm: shrinker: make shrinker not depend on memcg kmem” changed this line in shrink_slab_memcg(),
->>>
->>> -     if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
->>> +     if (!mem_cgroup_online(memcg))
->>>                return 0;
->>>
->>> Since the kdump kernel has the parameter “cgroup_disable=memory”, shrink_slab_memcg() will no longer be able to handle NULL memcg from mem_cgroup_iter() as,
->>>
->>> if (mem_cgroup_disabled())
->>>        return NULL;
->> Aha, yes. memcg_kmem_enabled() implicitly checks !mem_cgroup_disabled().
->> Thanks for figuring this out. I think we need add mem_cgroup_dsiabled()
->> check before calling shrink_slab_memcg() as below:
->>
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index a0301ed..2f03c61 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -701,7 +701,7 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int
->> nid,
->>           unsigned long ret, freed = 0;
->>           struct shrinker *shrinker;
->>
->> -       if (!mem_cgroup_is_root(memcg))
->> +       if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
->>                   return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
->>
->>           if (!down_read_trylock(&shrinker_rwsem))
->>
-> We were seeing unneeded oom-kills on kernels with
-> "cgroup_disabled=memory" and Yang's patch series basically expose the
-> bug to crash. I think the commit aeed1d325d42 ("mm/vmscan.c:
-> generalize shrink_slab() calls in shrink_node()") missed the case for
-> "cgroup_disabled=memory". However I am surprised that root_mem_cgroup
-> is allocated even for "cgroup_disabled=memory" and it seems like
-> css_alloc() is called even before checking if the corresponding
-> controller is disabled.
-
-I'm surprised too. A quick test with drgn shows root memcg is definitely 
-allocated:
-
- >>> prog['root_mem_cgroup']
-*(struct mem_cgroup *)0xffff8902cf058000 = {
-[snip]
-
-But, isn't this a bug?
-
-Thanks,
-Yang
-
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Since there is no real device associated with VGEM, it is impossible to
+> > end up with appropriate dev->dma_ops, meaning that we have no way to
+> > invalidate the shmem pages allocated by VGEM.  So, at least on platforms
+> > without drm_cflush_pages(), we end up with corruption when cache lines
+> > from previous usage of VGEM bo pages get evicted to memory.
+> >
+> > The only sane option is to use cached mappings.
 >
-> Yang, can you please send the above change with signed-off and CC to
-> stable as well?
+> This may be an improvement, but...
 >
-> thanks,
-> Shakeel
+> pin/unpin is only on attaching/closing the dma-buf, right?  So, great,
+> you flushed the cached map once after exporting the vgem dma-buf to the
+> actual GPU device, but from then on you still have no interface for
+> getting coherent access through VGEM's mapping again, which still
+> exists.
 
+In *theory* one would detach before doing further CPU access to
+buffer, and then re-attach when passing back to GPU.
+
+Ofc that isn't how actual drivers do things.  But maybe it is enough
+for vgem to serve it's purpose (ie. test code).
+
+> I feel like this is papering over something that's really just broken,
+> and we should stop providing VGEM just because someone wants to write
+> dma-buf test code without driver-specific BO alloc ioctl code.
+
+yup, it is vgem that is fundamentally broken (or maybe more
+specifically doesn't fit in w/ dma-mappings view of how to do cache
+maint), and I'm just papering over it because people and CI systems
+want to be able to use it to do some dma-buf tests ;-)
+
+I'm kinda wondering, at least for arm/dt based systems, if there is a
+way (other than in early boot) that we can inject a vgem device node
+into the dtb.  That isn't a thing drivers should normally do, but (if
+possible) since vgem is really just test infrastructure, it could be a
+way to make dma-mapping happily think vgem is a real device.
+
+BR,
+-R
