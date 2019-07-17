@@ -2,157 +2,174 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE9DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8A5C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95DB2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C6A21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RX5Dcqig"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WsXmWAFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfGQLyd (ORCPT
+        id S1726908AbfGQL6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:54:33 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39027 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfGQLyd (ORCPT
+        Wed, 17 Jul 2019 07:58:31 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39168 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfGQL6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:54:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so11868576pls.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:54:33 -0700 (PDT)
+        Wed, 17 Jul 2019 07:58:31 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l9so22973861qtu.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:58:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ftsA6SziUzB7mZMqtb+NPTOifNieeCki+4HWoD26B1Y=;
-        b=RX5DcqigpBS6JXUlYNzu9cmNMAC2grNOXp9WsR0aK0MCsioAXFeMRSMQHJR2oP1DOv
-         uTQp8odiUnxv/zpgKZZn/q9NJ/sGzWV3xfils+WM1YL69MBfwixBwgD5PQl6G+DEDe9p
-         AfLe1ruR/2eWKLQBC8yp5Y8mQ5//Z0Cz9PAjMzaXclRWCXSxAKI0xugHegeT/bJ5DFXT
-         83h5pYuhgK9CBpf+24Qr3WIsTvlaPdSR84jq7tYki4PP8woT1zPumXvGelaTRPWM6CRJ
-         aXeFOZKK+gKOnX7gpveGdh00ggAnBKZqVirZmWkPpls9LytJZ4yFtoNnohPTOHgNMMnv
-         9msg==
+        bh=CtIW38CyixiEAESJE2x/hR6vvP9ZY7lyz3jE6erJEA4=;
+        b=WsXmWAFNLS9Y5gyPmjyVBufuKshUnoz9oYQO3m2Kyy2wMtQLDRqxhz084Ma4sggKxA
+         VrwuLzOtiAy8rszSQKzE18fvnWZV7M1q7YnEAmJigLzdicTLpZGoNiZ3Gar/CFdANUGQ
+         +gt0fDflhj1oNluiZIVGuibWAh1JTcQepAsHP/YRP7PCiQsEbkufbX49wfrYCtAj9p/q
+         ZpOMd9vVDGljJ+MPyoKgDKJFbWpQx34cZ14/YkYB9E0gHWhEQolXuspRkMtBiWOO9Km7
+         Ew1EzqQInlJf4dxI+ivorIznpDm2P9V/p9lWf5oiX205bEqIkGxkVFU6X6xClAOP44Zp
+         QzPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ftsA6SziUzB7mZMqtb+NPTOifNieeCki+4HWoD26B1Y=;
-        b=pLgOqFlIoCU2QsyCZYy1Mbikc0rXzwLv5ZCt+hQnC9dMwIflDE8bTHwvfotWQG2xaF
-         AOlmUHMsjCj2pG9zFu+1K10y74Z8Nv7J7he2TjKvkGZ7oRc0lapMws65zuabv8xkNoyQ
-         RoQvLqEyzc5hYWbj96NiqWlTrYbdM1f63D20uSt09wscBv4qVwAMeSuQEmSJRDv+gUJb
-         xlEHzF9yof3eEhD8OK5rhhHoHq3/s/KwD7Z5Om5mP28YKqNHAcbQnSmGc4tKdQUsIXja
-         teiNrddfxRm1affxH2GVXDHurVcg4/rxMa2aHSAwFcRp/HZXdlnxPWsHWvI6mkWxneff
-         mOrA==
-X-Gm-Message-State: APjAAAVAnviKfk5ocTCFvCpbHyWf3q8I3jI0z+piHOuQfJmvVUA8wf0I
-        WT31KcX5GjykbhhceOMDTm4fFVdQfaw=
-X-Google-Smtp-Source: APXvYqzO02oaG99jKfNVRblZVE5ffaRzjKmORg3MYGOu0u9fYxYJwDy/w8tVgyvu/Y2NMOte7qvNvw==
-X-Received: by 2002:a17:902:ea:: with SMTP id a97mr42227799pla.182.1563364472811;
-        Wed, 17 Jul 2019 04:54:32 -0700 (PDT)
-Received: from localhost ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id k8sm24242905pgm.14.2019.07.17.04.54.31
+        bh=CtIW38CyixiEAESJE2x/hR6vvP9ZY7lyz3jE6erJEA4=;
+        b=MTBTurkfsSE5zT9shrHljVfuyzWZsaL+FFgSn/7wPvewff6oFgbgoxYtGGLyl7L6T0
+         18t39BsJ38d1l6Vfdi5XFSbLDL03SfBL6MfgRrQbrT3nfW3zomGD+UcCgQNreQTVRxv0
+         Dq7yZpiYjgyFs0Oj8uC7UYWimikHGl5oWPkj7/KXKxYl6R9SeF3c3M4FkFLfWhfDxZ15
+         nu7Hg1oIs9XgEsQodDG/9HQnTvDdWrewcPO2VktaFI3fFiFvWbDQRwVXzmPesRmiW0WC
+         GxuEeBaWkQXvZ4hAoMJzsNBwptwjfaFGq/oWsxb7QHnwZGHIeT48ApXXd/j3WynG+VBy
+         0hNQ==
+X-Gm-Message-State: APjAAAUxXo5zfGXIhn/zFYjFnC1IpgnK8cbPVZMAqxOix3eaxtZrmmol
+        VeZIUgcVVXSaWcpHHYXZ6G0nvA==
+X-Google-Smtp-Source: APXvYqx+j7x9Tmvjx0AtdL0JLRa2IEARVY42fsMnhsZXPsgl7xwQHvLdp4tWEgHcwSJhOki+ORlGpQ==
+X-Received: by 2002:ac8:394b:: with SMTP id t11mr26922427qtb.286.1563364709720;
+        Wed, 17 Jul 2019 04:58:29 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id n18sm10459998qtr.28.2019.07.17.04.58.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jul 2019 04:54:32 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 20:54:29 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH v2 3/3] nvme-pci: Add support for Apple 2018+ models
-Message-ID: <20190717115429.GC10495@minwoo-desktop>
-References: <20190717004527.30363-1-benh@kernel.crashing.org>
- <20190717004527.30363-3-benh@kernel.crashing.org>
+        Wed, 17 Jul 2019 04:58:29 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hniZo-0003Vz-Og; Wed, 17 Jul 2019 08:58:28 -0300
+Date:   Wed, 17 Jul 2019 08:58:28 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v18 11/15] IB/mlx4: untag user pointers in
+ mlx4_get_umem_mr
+Message-ID: <20190717115828.GE12119@ziepe.ca>
+References: <cover.1561386715.git.andreyknvl@google.com>
+ <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
+ <20190624174015.GL29120@arrakis.emea.arm.com>
+ <CAAeHK+y8vE=G_odK6KH=H064nSQcVgkQkNwb2zQD9swXxKSyUQ@mail.gmail.com>
+ <20190715180510.GC4970@ziepe.ca>
+ <CAAeHK+xPQqJP7p_JFxc4jrx9k7N0TpBWEuB8Px7XHvrfDU1_gw@mail.gmail.com>
+ <20190716120624.GA29727@ziepe.ca>
+ <CAAeHK+xPPQ9QjAksbfWG-Zmnawt-cdw9eO_6GVxjEYcaDGvaRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190717004527.30363-3-benh@kernel.crashing.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAAeHK+xPPQ9QjAksbfWG-Zmnawt-cdw9eO_6GVxjEYcaDGvaRA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-07-17 10:45:27, Benjamin Herrenschmidt wrote:
-> Based on reverse engineering and original patch by
+On Wed, Jul 17, 2019 at 01:44:07PM +0200, Andrey Konovalov wrote:
+> On Tue, Jul 16, 2019 at 2:06 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Tue, Jul 16, 2019 at 12:42:07PM +0200, Andrey Konovalov wrote:
+> > > On Mon, Jul 15, 2019 at 8:05 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Mon, Jul 15, 2019 at 06:01:29PM +0200, Andrey Konovalov wrote:
+> > > > > On Mon, Jun 24, 2019 at 7:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > > >
+> > > > > > On Mon, Jun 24, 2019 at 04:32:56PM +0200, Andrey Konovalov wrote:
+> > > > > > > This patch is a part of a series that extends kernel ABI to allow to pass
+> > > > > > > tagged user pointers (with the top byte set to something else other than
+> > > > > > > 0x00) as syscall arguments.
+> > > > > > >
+> > > > > > > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
+> > > > > > > only by done with untagged pointers.
+> > > > > > >
+> > > > > > > Untag user pointers in this function.
+> > > > > > >
+> > > > > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > > > > >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
+> > > > > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > > > >
+> > > > > > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > > > > >
+> > > > > > This patch also needs an ack from the infiniband maintainers (Jason).
+> > > > >
+> > > > > Hi Jason,
+> > > > >
+> > > > > Could you take a look and give your acked-by?
+> > > >
+> > > > Oh, I think I did this a long time ago. Still looks OK.
+> > >
+> > > Hm, maybe that was we who lost it. Thanks!
+> > >
+> > > > You will send it?
+> > >
+> > > I will resend the patchset once the merge window is closed, if that's
+> > > what you mean.
+> >
+> > No.. I mean who send it to Linus's tree? ie do you want me to take
+> > this patch into rdma?
 > 
-> Paul Pawlowski <paul@mrarm.io>
-> 
-> This adds support for Apple weird implementation of NVME in their
-> 2018 or later machines. It accounts for the twice-as-big SQ entries
-> for the IO queues, and the fact that only interrupt vector 0 appears
-> to function properly.
-> 
-> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> 
-> # Conflicts:
-> #	drivers/nvme/host/core.c
-> ---
->  drivers/nvme/host/nvme.h | 10 ++++++++++
->  drivers/nvme/host/pci.c  | 21 ++++++++++++++++++++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-> index 716a876119c8..ced0e0a7e039 100644
-> --- a/drivers/nvme/host/nvme.h
-> +++ b/drivers/nvme/host/nvme.h
-> @@ -92,6 +92,16 @@ enum nvme_quirks {
->  	 * Broken Write Zeroes.
->  	 */
->  	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
-> +
-> +	/*
-> +	 * Use only one interrupt vector for all queues
-> +	 */
-> +	NVME_QUIRK_SINGLE_VECTOR		= (1 << 10),
-> +
-> +	/*
-> +	 * Use non-standard 128 bytes SQEs.
-> +	 */
-> +	NVME_QUIRK_128_BYTES_SQES		= (1 << 11),
->  };
->  
->  /*
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 1637677afb78..7088971d4c42 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -2081,6 +2081,13 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
->  	dev->io_queues[HCTX_TYPE_DEFAULT] = 1;
->  	dev->io_queues[HCTX_TYPE_READ] = 0;
->  
-> +	/*
-> +	 * Some Apple controllers require all queues to use the
-> +	 * first vector.
-> +	 */
-> +	if (dev->ctrl.quirks & NVME_QUIRK_SINGLE_VECTOR)
-> +		irq_queues = 1;
-> +
->  	return pci_alloc_irq_vectors_affinity(pdev, 1, irq_queues,
->  			      PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY, &affd);
->  }
-> @@ -2322,7 +2329,16 @@ static int nvme_pci_enable(struct nvme_dev *dev)
->  				io_queue_depth);
->  	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
->  	dev->dbs = dev->bar + 4096;
-> -	dev->io_sqes = NVME_NVM_IOSQES;
-> +
-> +	/*
-> +	 * Some Apple controllers require a non-standard SQE size.
-> +	 * Interestingly they also seem to ignore the CC:IOSQES register
-> +	 * so we don't bother updating it here.
-> +	 */
+> I think the plan was to merge the whole series through the mm tree.
+> But I don't mind if you want to take this patch into your tree. It's
+> just that this patch doesn't make much sense without the rest of the
+> series.
 
-That is really interesting.
+Generally I prefer if subsystem changes stay in subsystem trees. If
+the patch is good standalone, and the untag API has already been
+merged, this is a better strategy.
 
-This also looks good to me.
-
-Reviewed-by: Minwoo Im <minwoo.im.dev@gmail.com>
-
-Thanks,
+Jason
