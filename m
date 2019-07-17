@@ -2,102 +2,140 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A1BC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117B8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6599A20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E700221848
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfGQNft (ORCPT
+        id S1727373AbfGQNgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:35:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54742 "EHLO mx1.redhat.com"
+        Wed, 17 Jul 2019 09:36:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36148 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbfGQNft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:35:49 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EFE3159465;
-        Wed, 17 Jul 2019 13:35:48 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 85BC65DA34;
-        Wed, 17 Jul 2019 13:35:46 +0000 (UTC)
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, steven.sistare@oracle.com,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
- <9fa54e98-0b9b-0931-db32-c6bd6ccfe75b@redhat.com>
- <20190717074435.GU3419@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <378093ad-46cc-7ecb-5a06-1e22ee5ce4a1@redhat.com>
-Date:   Wed, 17 Jul 2019 09:35:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190717074435.GU3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 17 Jul 2019 13:35:49 +0000 (UTC)
+        id S1726880AbfGQNgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:36:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 06:36:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
+   d="scan'208";a="191261813"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 06:36:31 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com
+Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v4 0/9] Enable Sub-page Write Protection Support
+Date:   Wed, 17 Jul 2019 21:37:42 +0800
+Message-Id: <20190717133751.12910-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/19 3:44 AM, Peter Zijlstra wrote:
-> On Tue, Jul 16, 2019 at 10:16:29PM -0400, Waiman Long wrote:
->>  A simple graphic to illustrate those queues will help too, for example
-> Very much yes!
->
->> /*
->>  * MCS lock holder
->>  * ===============
->>  *    mcs_node
->>  *   +--------+      +----+         +----+
->>  *   | next   | ---> |next| -> ...  |next| -> NULL  [Main queue]
->>  *   | locked | -+   +----+         +----+
->>  *   +--------+  |
->>  *               |   +----+         +----+
->>  *               +-> |next| -> ...  |next| -> X     [Secondary queue]
->>  *    cna_node       +----+         +----+
->>  *   +--------*                       ^
->>  *   | tail   | ----------------------+
->>  *   +--------*   
-> Almost; IIUC that cna_node is the same as the one from locked, so you
-> end up with something like:
->
->>  *    mcs_node
->>  *   +--------+      +----+         +----+
->>  *   | next   | ---> |next| -> ...  |next| -> NULL  [Main queue]
->>  *   | locked | -+   +----+         +----+
->>  *   +--------+  |
->>  *               |   +---------+         +----+
->>  *               +-> |mcs::next| -> ...  |next| -> NULL     [Secondary queue]
->>  *                   |cna::tail| -+      +----+
->>  *                   +---------+  |        ^
->>  *                                +--------+
->>  *
->>  * N.B. locked = 1 if secondary queue is absent.
->>  */
+EPT-Based Sub-Page write Protection(SPP)is a HW capability which allows
+Virtual Machine Monitor(VMM) to specify write-permission for guest
+physical memory at a sub-page(128 byte) granularity. When this
+capability is enabled, the CPU enforces write-access check for sub-pages
+within a 4KB page.
 
-Yes, you are right. Thanks for the correction.
+The feature is targeted to provide fine-grained memory protection for
+usages such as device virtualization, memory check-point and VM
+introspection etc.
 
-Cheers,
-Longman
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), SPPT is referenced via a 64-bit control field
+called Sub-Page Permission Table Pointer (SPPTP) which contains a
+4K-aligned physical address.
+
+Right now, only 4KB physical pages are supported for SPP. To enable SPP
+for certain physical page, we need to first make the physical page
+write-protected, then set bit 61 of the corresponding EPT leaf entry. 
+While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
+physical address to find out the sub-page permissions at the leaf entry.
+If the corresponding bit is set, write to sub-page is permitted,
+otherwise, SPP induced EPT vilation is generated.
+
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Previous patch:
+https://lkml.org/lkml/2019/6/6/695
+
+Patch 1: Introduction to SPP.
+Patch 2: Add SPP related flags and control bits.
+Patch 3: Functions for SPPT setup.
+Patch 4: Add SPP access bitmaps for memslots.
+Patch 5: Low level implementation of SPP operations.
+Patch 6: Implement User space access IOCTLs.
+Patch 7: Handle SPP induced VMExit and EPT violation.
+Patch 8: Enable lazy mode SPPT setup.
+Patch 9: Handle memory remapping and reclaim.
+
+
+Change logs:
+
+V3 -> v4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+V2 -> V3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+V2 -> V1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+
+Yang Weijiang (9):
+  Documentation: Introduce EPT based Subpage Protection
+  KVM: VMX: Add control flags for SPP enabling
+  KVM: VMX: Implement functions for SPPT paging setup
+  KVM: VMX: Introduce SPP access bitmap and operation functions
+  KVM: VMX: Add init/set/get functions for SPP
+  KVM: VMX: Introduce SPP user-space IOCTLs
+  KVM: VMX: Handle SPP induced vmexit and page fault
+  KVM: MMU: Enable Lazy mode SPPT setup
+  KVM: MMU: Handle host memory remapping and reclaim
+
+ Documentation/virtual/kvm/spp_kvm.txt | 173 ++++++++++
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/kvm_host.h       |  26 +-
+ arch/x86/include/asm/vmx.h            |  10 +
+ arch/x86/include/uapi/asm/vmx.h       |   2 +
+ arch/x86/kernel/cpu/intel.c           |   4 +
+ arch/x86/kvm/mmu.c                    | 480 ++++++++++++++++++++++++++
+ arch/x86/kvm/mmu.h                    |   1 +
+ arch/x86/kvm/vmx/capabilities.h       |   5 +
+ arch/x86/kvm/vmx/vmx.c                | 129 +++++++
+ arch/x86/kvm/x86.c                    | 141 ++++++++
+ include/linux/kvm_host.h              |   9 +
+ include/uapi/linux/kvm.h              |  17 +
+ 13 files changed, 997 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+
+-- 
+2.17.2
 
