@@ -2,139 +2,97 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36481C76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F37C76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F4B20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h+yY1PAE"
+	by mail.kernel.org (Postfix) with ESMTP id DF1DF20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbfGQDDK (ORCPT
+        id S1728713AbfGQDDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 23:03:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53590 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfGQDDK (ORCPT
+        Tue, 16 Jul 2019 23:03:17 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52610 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728541AbfGQDDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 23:03:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H305bL187745;
-        Wed, 17 Jul 2019 03:01:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=Zcf8XHNH6AKcoMzW8D9TJdHEYqPx5ohKeQB8GKEQW18=;
- b=h+yY1PAE9k5doutiH94Vaf/FFmar9UmVwy9FcjfKXj0S4EALW5C+lqHO1/2n0mY9872P
- DIk7X/lTSbYl3a3odydBtKUCazX2I5qg82rwNKr2P0CYZnNCEJSoOv4SnYumB+LBx9ep
- pK//VNQjubti3+AuomTLwVQghrVkozNmq49NEJOBo5k/sUaZOHyCR0rJHQo31okSmRsH
- 9W0R/pO/vTr7U52PQi+3fAe92sNgTQWfBS2/O7MgpaZYmRqN6AWrnqKuA97dvVFy+nQQ
- /m2ff5pMRb+gu02sS2u1egFw5jpLj6ZXDo8GjEIrRVwpPx6Vz/zcMkmHYB5q3awhPTgy vg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tq78pqts2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 03:01:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H2vLIl112827;
-        Wed, 17 Jul 2019 03:01:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tsmcc57d4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 03:01:34 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6H31W4Z006981;
-        Wed, 17 Jul 2019 03:01:33 GMT
-Received: from Subhras-MacBook-Pro.local (/103.87.143.145)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 03:01:32 +0000
-Subject: Re: [RFC PATCH 2/3] sched: change scheduler to give preference to
- soft affinity CPUs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        prakash.sangappa@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, Paul Turner <pjt@google.com>
-References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
- <20190626224718.21973-3-subhra.mazumdar@oracle.com>
- <20190702172851.GA3436@hirez.programming.kicks-ass.net>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <a91c09ce-aec1-eaa1-4daf-70024cebf360@oracle.com>
-Date:   Wed, 17 Jul 2019 08:31:25 +0530
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Tue, 16 Jul 2019 23:03:16 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnaDa-0008R1-HC; Wed, 17 Jul 2019 03:02:58 +0000
+Date:   Wed, 17 Jul 2019 04:02:58 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Rich Felker <dalias@libc.org>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+        tony.luck@intel.com, fenghua.yu@intel.com, geert@linux-m68k.org,
+        monstr@monstr.eu, ralf@linux-mips.org, paul.burton@mips.com,
+        jhogan@kernel.org, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        davem@davemloft.net, luto@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        peterz@infradead.org, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, dhowells@redhat.com, firoz.khan@linaro.org,
+        stefan@agner.ch, schwidefsky@de.ibm.com, axboe@kernel.dk,
+        christian@brauner.io, hare@suse.com, deepa.kernel@gmail.com,
+        tycho@tycho.ws, kim.phillips@arm.com, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 2/4] Add fchmodat4(), a new syscall
+Message-ID: <20190717030258.GT17978@ZenIV.linux.org.uk>
+References: <20190717012719.5524-1-palmer@sifive.com>
+ <20190717012719.5524-3-palmer@sifive.com>
+ <20190717024046.GI1506@brightrain.aerifal.cx>
 MIME-Version: 1.0
-In-Reply-To: <20190702172851.GA3436@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170035
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170035
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717024046.GI1506@brightrain.aerifal.cx>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 16, 2019 at 10:40:46PM -0400, Rich Felker wrote:
+> On Tue, Jul 16, 2019 at 06:27:17PM -0700, Palmer Dabbelt wrote:
+> > man 3p says that fchmodat() takes a flags argument, but the Linux
+> > syscall does not.  There doesn't appear to be a good userspace
+> > workaround for this issue but the implementation in the kernel is pretty
+> > straight-forward.  The specific use case where the missing flags came up
+> > was WRT a fuse filesystem implemenation, but the functionality is pretty
+> > generic so I'm assuming there would be other use cases.
+> 
+> Note that we do have a workaround in musl libc with O_PATH and
+> /proc/self/fd, but a syscall that allows a proper fix with the ugly
+> workaround only in the fallback path for old kernels will be much
+> appreciated!
+> 
+> What about also doing a new SYS_faccessat4 with working AT_EACCESS
+> flag? The workaround we have to do for it is far worse.
 
-On 7/2/19 10:58 PM, Peter Zijlstra wrote:
-> On Wed, Jun 26, 2019 at 03:47:17PM -0700, subhra mazumdar wrote:
->> The soft affinity CPUs present in the cpumask cpus_preferred is used by the
->> scheduler in two levels of search. First is in determining wake affine
->> which choses the LLC domain and secondly while searching for idle CPUs in
->> LLC domain. In the first level it uses cpus_preferred to prune out the
->> search space. In the second level it first searches the cpus_preferred and
->> then cpus_allowed. Using affinity_unequal flag it breaks early to avoid
->> any overhead in the scheduler fast path when soft affinity is not used.
->> This only changes the wake up path of the scheduler, the idle balancing
->> is unchanged; together they achieve the "softness" of scheduling.
-> I really dislike this implementation.
->
-> I thought the idea was to remain work conserving (in so far as that
-> we're that anyway), so changing select_idle_sibling() doesn't make sense
-> to me. If there is idle, we use it.
->
-> Same for newidle; which you already retained.
-The scheduler is already not work conserving in many ways. Soft affinity is
-only for those who want to use it and has no side effects when not used.
-Also the way scheduler is implemented in the first level of search it may
-not be possible to do it in a work conserving way, I am open to ideas.
->
-> This then leaves regular balancing, and for that we can fudge with
-> can_migrate_task() and nr_balance_failed or something.
-Possibly but I don't know if similar performance behavior can be achieved
-by the periodic load balancer. Do you want a performance comparison of the
-two approaches?
->
-> And I also really don't want a second utilization tipping point; we
-> already have the overloaded thing.
-The numbers in the cover letter show that a static tipping point will not
-work for all workloads. What soft affinity is doing is essentially trading
-off cache coherence for more CPU. The optimum tradeoff point will vary
-from workload to workload and the system metrics of coherence overhead etc.
-If we just use the domain overload that becomes a static definition of
-tipping point, we need something tunable that captures this tradeoff. The
-ratio of CPU util seemed to work well and capture that.
->
-> I also still dislike how you never looked into the numa balancer, which
-> already has peferred_nid stuff.
-Not sure if you mean using the existing NUMA balancer or enhancing it. If
-the former, I have numbers in the cover letter that show NUMA balancer is
-not making any difference. I allocated memory of each DB instance to one
-NUMA node using numactl, but NUMA balancer still migrated pages, so numactl
-only seems to control the initial allocation. Secondly even though NUMA
-balancer migrated pages it had no performance benefit as compared to
-disabling it.
+Umm...  That's doable, but getting into the "don't switch creds unless
+needed" territory.  I'll need to play with that a bit and see what
+gives a tolerable variant...
+
+What of this part wrt AT_EACCESS?
+        if (!issecure(SECURE_NO_SETUID_FIXUP)) {
+                /* Clear the capabilities if we switch to a non-root user */
+                kuid_t root_uid = make_kuid(override_cred->user_ns, 0);
+                if (!uid_eq(override_cred->uid, root_uid))
+                        cap_clear(override_cred->cap_effective);
+                else
+                        override_cred->cap_effective =
+                                override_cred->cap_permitted;
+        }
