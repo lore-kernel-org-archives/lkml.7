@@ -2,71 +2,82 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC13C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E766C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFDF2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E9721743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563358231;
+	bh=B0vq7TI9wkTFGGzN7Fq0OAUyk2GFb1jaW2T4WnkVxnQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yNqd8o0vTs+wFPkc//sfMFs7f/OVDycoNJxnnVUAPmFPYOnZde0ugRDsRZUrJc9y9
+	 mmzPNzDaw/671wbWWrTvPvTNZL95QHW3G4uNQxkg6oPX/FJyQfR1ndafiGXwjV4TDu
+	 wCvwWmBqng52oY/TgsCD0RVbKRsXjtcFrImaT8d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfGQKGC (ORCPT
+        id S1726418AbfGQKK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:06:02 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2358 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfGQKGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:06:02 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5d2ef2f86a5-87972; Wed, 17 Jul 2019 18:05:45 +0800 (CST)
-X-RM-TRANSID: 2eea5d2ef2f86a5-87972
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.105.0.243])
-        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85d2ef2f8faa-a5075;
-        Wed, 17 Jul 2019 18:05:45 +0800 (CST)
-X-RM-TRANSID: 2ee85d2ef2f8faa-a5075
-From:   Ding Xiang <dingxiang@cmss.chinamobile.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: remove redundant put_device
-Date:   Wed, 17 Jul 2019 18:05:44 +0800
-Message-Id: <1563357944-24496-1-git-send-email-dingxiang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 17 Jul 2019 06:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfGQKK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:10:28 -0400
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F9FF217F9;
+        Wed, 17 Jul 2019 10:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563358227;
+        bh=B0vq7TI9wkTFGGzN7Fq0OAUyk2GFb1jaW2T4WnkVxnQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tp7xDM+4dkXRzBqwbE1lKYdrAdg5NwLhC8eFDtVrZvxXTDyL5dwf6v6gjNQxhDB0L
+         qRNRjh47HKL0vo/a/EUMT6J5yKajlEm5DvlZqm+AhrabbsKft7mjMXYziTteokCttO
+         rB0ATQ4npW3uhufNJFEKmz9CTP2zwVCOUG9wZzRg=
+Received: by mail-lj1-f180.google.com with SMTP id d24so23033423ljg.8;
+        Wed, 17 Jul 2019 03:10:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAUtUU+tqLdYmEAZVc/i8CB+qWuva48PryOQHWKKFt/dkDaSOBsn
+        5fjg0CI5awQ/XzJwyBSFuxn8plh/imWjnvlrUgY=
+X-Google-Smtp-Source: APXvYqzIxuLAR32Jvbkflkn1R9vuEUkDOd5VMPMZ6u/awTTp1I0u14ioknFtuK1fwk0oxvu4ENFvuA7wgfhcvBVlZh4=
+X-Received: by 2002:a2e:50e:: with SMTP id 14mr20662249ljf.5.1563358225560;
+ Wed, 17 Jul 2019 03:10:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <CGME20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c@eucas1p1.samsung.com>
+ <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-27-l.luba@partner.samsung.com>
+In-Reply-To: <20190715124417.4787-27-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 17 Jul 2019 12:10:13 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
+Message-ID: <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
+Subject: Re: [PATCH v1 26/50] ARM: dts: exynos: align NOC100 bus OPPs in Exynos5420
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_unregister will call put_device,
-so remove the redundant put_device
+On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> The NOC100 has a parent which clock rate is set tot 400MHz. The OPPs which
+> are not possible to set are removed and new one is added.
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
----
- drivers/spi/spi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I think it is just NOC bus... or are there more of such and this is 100 MHz one?
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 75ac046..d753689 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2133,11 +2133,9 @@ static ssize_t spi_slave_store(struct device *dev,
- 		return -EINVAL;
- 
- 	child = device_find_child(&ctlr->dev, NULL, match_true);
--	if (child) {
-+	if (child)
- 		/* Remove registered slave */
- 		device_unregister(child);
--		put_device(child);
--	}
- 
- 	if (strcmp(name, "(null)")) {
- 		/* Register new slave */
--- 
-1.9.1
-
-
-
+Best regards,
+Krzysztof
