@@ -2,37 +2,42 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388ADC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F74C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176DC21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1695821743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfGQT0c (ORCPT
+        id S1727415AbfGQT0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:26:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:50250 "EHLO foss.arm.com"
+        Wed, 17 Jul 2019 15:26:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:50264 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQT0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:26:32 -0400
+        id S1725873AbfGQT0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 15:26:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9491B337;
-        Wed, 17 Jul 2019 12:26:31 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE170337;
+        Wed, 17 Jul 2019 12:26:35 -0700 (PDT)
 Received: from tuskha01.cambridge.arm.com (tuskha01.cambridge.arm.com [10.1.196.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A1B6D3F71A;
-        Wed, 17 Jul 2019 12:26:30 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 58D6C3F71A;
+        Wed, 17 Jul 2019 12:26:34 -0700 (PDT)
 From:   Tushar Khandelwal <tushar.khandelwal@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     tushar.2nov@gmail.com, morten_bp@live.dk, jassisinghbrar@gmail.com,
-        nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>
-Subject: [PATCH 0/4] Arm MHUv2 Mailbox Controller Driver
-Date:   Wed, 17 Jul 2019 20:26:12 +0100
-Message-Id: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+        nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>,
+        Tushar Khandelwal <tushar.khandelwal@arm.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+Date:   Wed, 17 Jul 2019 20:26:13 +0100
+Message-Id: <20190717192616.1731-2-tushar.khandelwal@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -40,125 +45,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Morten Borup Petersen <morten.petersen@arm.com>
 
-This patch series adds a driver for the Arm MHU v2 device, with support for the
-2.1 minor hardware revision.
+This patch adds device tree binding for Message Handling Unit
+controller version 2 from Arm.
 
-The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller which
-facilitate unidirectional communication between processing element(s).
-
-Unidirectionality
-=================
-Given the unidirectional nature of the device, an MHUv2 mailbox may only be
-written to or read from. If a pair of MHU devices is implemented between two
-processing elements to provide bidirectional communication, these must be
-specified as two separate mailboxes. This stands in contrast to the arm_mhu
-driver, which assumes that MHU (v1) devices always come in pairs and thus may
-be grouped into a single mailbox (and device tree entry).
-While it is expected that MHUv2 devices in most cases will be provided in pairs,
-this is _not_ a requirement, and thus the driver must be able to handle such
-cases.
-
-Transport Protocols
-===================
-As opposed to the MHUv1 driver, MHUv2 adds support for three distinct transport
-protocols. Transport protocols define the method of which information is
-transmitted through the device, in terms of how hardware resources (channel
-windows) are used. The transport protocol determines how many mailbox channels
-the mailbox controller will allocate.
-
-- Single Word:	In single-word mode, the mailbox controller will provide a
-		mailbox for each channel window available in the MHU device.
-		Transmitting and receiving data through the mailbox framework in
-		single-word mode is done through a struct arm_mbox_msg.
-- Multi Word:	In multi word mode, the mailbox controller will provide a
-		_single_ mailbox. It is required that the MHU device has at
-		least 2 channel windows available for the MHU to function in
-		multi word mode.
-- Doorbell:	In doorbell mode, the mailbox controller will provide a mailbox
-		for each flag bit available in the combined number of channel
-		windows available within the MHU device.
-
-
-Combined Interrupt (v2.1)
-=========================
-The driver adds support for the combined receiver interrupt, introduced in the
-2.1 hardware revision.
-The combined interrupt status registers are used when in single-word and
-doorbell transport protocol mode, to more quickly identify a channel window
-containing non-zero data.
-The combined interrupt status registers are not used in multi word mode,
-given that only a single channel window may raise a receiver interrupt in this
-mode.
-
-
-Device Tree Changes
-===================
-Compared to the device tree entry for an MHUv1 device, the following changes
-exists for an MHUv2 device:
-- Frame type:	A device tree node for an Arm MHUv2 device must specify either a
-		receiver frame or a sender frame, indicating which end of the
-		unidirectional MHU device which the device node entry describes.
-- Transport protocol:	While the transport protocol for an MHU is software
-			defined, transport protocol configuration is static and
-			should be specified in the device tree.
-- reg:		Given the unidirectional nature of the device, MHUv2 mandates
-		that only a single reg entry is provided. This is a change from
-		MHUv1, which specified two reg entries for tx and rx
-		respectively.
-- irq:		The MHUv2 driver adds support for a single interrupt for
-		receiver frames. Thus, no irq property should be specified for
-		sender frames.
-
-
-struct arm_mbox_msg
-===================
-The MHUv2 driver differs significantly in terms of its integration with the
-common mailbox framework compared to MHUv1.
-The common mailbox framework provides a void* to pass data between a mailbox
-client and controller, when sending and receiving data. In MHUv1, given that
-it only provided an implementation of the single-word message protocol, this
-void* was used to pass the actual data which was to be transmitted. This was
-possible given that the size of the STAT register within the MHU is 4 bytes,
-identical to the size of a void* on 32-bit systems.
-Given the introduction of different transport protocols - mainly multi-word -
-this method of passing data between client and controller is insufficient. This
-is given that multi-word makes sense when a higher bandwidth is desired, at
-the sacrifice of mailbox channels.
-To utilize this bandwidth, it should therefore be possible to pass a notion
-of data length to the mailbox controller, which may then utilize its available
-resources to efficiently transmit the message.
-
-The arm_mbox_msg structure is provided, which is used to pass data- and length
-information between a mailbox client and mailbox controller, through the
-provided void* of the common mailbox frameworks send- and receive APIs.
-No message protocol is enforced through this structure - a utilizing mailbox
-client driver shall implement its own message protocol, which may then be
-transmitted through an arm_mbox_msg.
-
-Testing
-=======
-The driver has been tested using an Arm fixed virtual platform (FVP).
-The driver has not been tested on hardware.
-
-========
-Cheers, Morten
-
-Morten Borup Petersen (4):
-  mailbox: arm_mhuv2: add device tree binding documentation
-  mailbox: arm_mhuv2: add arm mhuv2 driver
-  mailbox: arm_mhuv2: add doorbell transport protocol operations
-  mailbox: arm_mhuv2: add multi word transport protocol operations
-
- .../devicetree/bindings/mailbox/arm,mhuv2.txt |  108 ++
- drivers/mailbox/Kconfig                       |    7 +
- drivers/mailbox/Makefile                      |    2 +
- drivers/mailbox/arm_mhu_v2.c                  | 1068 +++++++++++++++++
- include/linux/mailbox/arm-mbox-message.h      |   37 +
- 5 files changed, 1222 insertions(+)
+Signed-off-by: Morten Borup Petersen <morten.petersen@arm.com>
+Signed-off-by: Tushar Khandelwal <tushar.khandelwal@arm.com>
+Cc: robh+dt@kernel.org
+Cc: mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org
+Cc: jassisinghbrar@gmail.com
+---
+ .../devicetree/bindings/mailbox/arm,mhuv2.txt | 108 ++++++++++++++++++
+ 1 file changed, 108 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
- create mode 100644 drivers/mailbox/arm_mhu_v2.c
- create mode 100644 include/linux/mailbox/arm-mbox-message.h
 
+diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+new file mode 100644
+index 000000000000..3a05593414bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+@@ -0,0 +1,108 @@
++Arm MHUv2 Mailbox Driver
++========================
++
++The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
++between 1 and 124 channel windows to provide unidirectional communication with
++remote processor(s).
++
++Given the unidirectional nature of the device, an MHUv2 mailbox may only be
++written to or read from. If a pair of MHU devices is implemented between two
++processing elements to provide bidirectional communication, these must be
++specified as two separate mailboxes.
++
++A device tree node for an Arm MHUv2 device must specify either a receiver frame
++or a sender frame, indicating which end of the unidirectional MHU device which
++the device node entry describes.
++
++An MHU device must be specified with a transport protocol. The transport
++protocol of an MHU device determines the method of data transmission as well as
++the number of provided mailboxes.
++Following are the possible transport protocol types:
++- Single-word:	An MHU device implements as many mailboxes as it
++		provides channel windows. Data is transmitted through
++		the MHU registers.
++- Multi-word:	An MHU device implements a single mailbox. All channel windows
++		will be used during transmission. Data is transmitted through
++		the MHU registers.
++- Doorbell:	An MHU device implements as many mailboxes as there are flag
++		bits available in its channel windows. Optionally, data may
++		be transmitted through a shared memory region, wherein the MHU
++		is used strictly as an interrupt generation mechanism.
++
++Mailbox Device Node:
++====================
++
++Required properties:
++--------------------
++- compatible:	Shall be "arm,mhuv2" & "arm,primecell"
++- reg:		Contains the mailbox register address range (base
++		address and length)
++- #mbox-cells	Shall be 1 - the index of the channel needed.
++- mhu-frame	Frame type of the device.
++		Shall be either "sender" or "receiver"
++- mhu-protocol	Transport protocol of the device. Shall be one of the
++		following: "single-word", "multi-word", "doorbell"
++
++Required properties (receiver frame):
++-------------------------------------
++- interrupts:	Contains the interrupt information corresponding to the
++		combined interrupt of the receiver frame
++
++Example:
++--------
++
++	mbox_mw_tx: mhu@10000000 {
++		compatible = "arm,mhuv2","arm,primecell";
++		reg = <0x10000000 0x1000>;
++		clocks = <&refclk100mhz>;
++		clock-names = "apb_pclk";
++		#mbox-cells = <1>;
++		mhu-protocol = "multi-word";
++		mhu-frame = "sender";
++	};
++
++	mbox_sw_tx: mhu@10000000 {
++		compatible = "arm,mhuv2","arm,primecell";
++		reg = <0x11000000 0x1000>;
++		clocks = <&refclk100mhz>;
++		clock-names = "apb_pclk";
++		#mbox-cells = <1>;
++		mhu-protocol = "single-word";
++		mhu-frame = "sender";
++	};
++
++	mbox_db_rx: mhu@10000000 {
++		compatible = "arm,mhuv2","arm,primecell";
++		reg = <0x12000000 0x1000>;
++		clocks = <&refclk100mhz>;
++		clock-names = "apb_pclk";
++		#mbox-cells = <1>;
++		interrupts = <0 45 4>;
++		interrupt-names = "mhu_rx";
++		mhu-protocol = "doorbell";
++		mhu-frame = "receiver";
++	};
++
++	mhu_client: scb@2e000000 {
++	compatible = "fujitsu,mb86s70-scb-1.0";
++	reg = <0 0x2e000000 0x4000>;
++	mboxes =
++		// For multi-word frames, client may only instantiate a single
++		// mailbox for a mailbox controller
++		<&mbox_mw_tx 0>,
++
++		// For single-word frames, client may instantiate as many
++		// mailboxes as there are channel windows in the MHU
++		 <&mbox_sw_tx 0>,
++		 <&mbox_sw_tx 1>,
++		 <&mbox_sw_tx 2>,
++		 <&mbox_sw_tx 3>,
++
++		// For doorbell frames, client may instantiate as many mailboxes
++		// as there are bits available in the combined number of channel
++		// windows ((channel windows * 32) mailboxes)
++		 <mbox_db_rx 0>,
++		 <mbox_db_rx 1>,
++		 ...
++		 <mbox_db_rx 17>;
++	};
+\ No newline at end of file
 -- 
 2.17.1
 
