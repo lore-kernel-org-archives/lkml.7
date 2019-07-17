@@ -2,339 +2,246 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF69C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7643C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51E421851
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B1B21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="hu+EC6WZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jnj4k5BM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbfGQUgh (ORCPT
+        id S1728122AbfGQUjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:36:37 -0400
-Received: from www.linux-watchdog.org ([185.87.125.42]:38490 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfGQUgh (ORCPT
+        Wed, 17 Jul 2019 16:39:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36760 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfGQUjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:36:37 -0400
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id 244FB4095E; Wed, 17 Jul 2019 21:58:29 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 244FB4095E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1563393509;
-        bh=iKxcO+1p2J0b9cU8Eqh3XVt9fxA1J24Ufjda3Mh2hQA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hu+EC6WZPrGEX4heX+jkjdK1h7P3/ZmQmMHlWo5/pTVBfC2aS6Vx9R/19HXJtOvJe
-         itMWrQahrtkP5tn+WIATIISriit2yt+S41DyXnaDD9r5cJ1UbKIEkIr49JTHBgiTa+
-         vRYBfl3QiTkLMVzZSHOj/gXOrr+PFpgDqJRH871g=
-Date:   Wed, 17 Jul 2019 21:58:28 +0200
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hoan Nguyen An <na-hoan@jinso.co.jp>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Ken Sloat <ksloat@aampglobal.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [GIT PULL REQUEST] watchdog - v5.3 Merge window
-Message-ID: <20190717195828.GA25283@www.linux-watchdog.org>
+        Wed, 17 Jul 2019 16:39:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r6so26535634oti.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 13:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0K1Cw37rD1IppCvNdmCb2NpomqfVXYIhsQh1IU/oD2M=;
+        b=Jnj4k5BM3xdiZRNmRqlyaKTnna2ulN3efYQBqtjmKrFAOpRKBAV/7EbN4RAPJR64bP
+         1KqZwGzq5BmvEteASkiZGDMDvrNKXVjeFqSV/ncsLvyd5UBGT12hIcxtERkhXz9tv+JK
+         /muM4PIGh9XGPPYSs/mXTGUz33bv6Ez/Sqrz84Q27vbif83tkb4XjLRowRmYiZu8asLW
+         P28qCttABLTlHbPfOMoj1wAeLEBbIpTOk8hfNVtdF2zpsWqOIeR3Siao6oFkPv1XyymJ
+         hyNV5y55WaXoRsbycsAAcDeAlq9/e3YodSjd7CPo2al5kIPYwimksm4VFuTdDQMC+VkG
+         UDGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0K1Cw37rD1IppCvNdmCb2NpomqfVXYIhsQh1IU/oD2M=;
+        b=ddgYYgUnlIOUqUTOv0payumO6uqaBUDcubSHPnm+2r1JjYi2T6brbCAzFk1bm1FGdX
+         xaCJBq142OUHjkoa2z9UqhpHYrHsv91bOPuCLMqAXjzZsncCtFPiGnBITfaVz71ZO8K7
+         ndfTzNUyYPko10ksu8ps4PHAWbFg6IXQE70v09fAJxWZYmNCEkXoJ5PTr+swaVdasQHy
+         lFYF1n8/qRpHyfodr8MNtFmfdppV0L7kvPJZ7K4owmOGf7WB4x+sA/Kc3AIc+Tgzueih
+         7Qsz1Q8qezUkEgav5x8rOsE097VcqEhQQFMBnw6npWjxAZzIBJdY2VSIvtvRbRa+PQ2h
+         N14w==
+X-Gm-Message-State: APjAAAUODo6j0kGymQgprplUae4ERWGSW9xhjKjg1pUe0vF6oKF4E6w7
+        RPW/kQHmqlCXjp4zv3FLqQv6Sp1s6HtNziXvyarPKQ==
+X-Google-Smtp-Source: APXvYqzFAC0LjXRhmyx9k4jlXBUbQVZEKJtk559kQPLl7p8CQdRDxk3cRJQhRe9stTHVLrBWi0pGfW3EmOjr8T4fM4Y=
+X-Received: by 2002:a9d:6256:: with SMTP id i22mr9218922otk.139.1563395949553;
+ Wed, 17 Jul 2019 13:39:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.20 (2009-12-10)
+References: <20190712235245.202558-1-saravanak@google.com> <20190712235245.202558-3-saravanak@google.com>
+ <CAL_JsqJEmC5cttFavGH4iMh=3z2K4r4kjG44AFJCpxQZ9hPwQA@mail.gmail.com>
+ <CAGETcx-5ykD=9X1Lo2-G+T5uokFncbY2FmiJM8eZrgQ9JaBgxw@mail.gmail.com> <CAL_Jsq+Dfm8ng1OVcB+1N2ack05v8+u1VydfxM4Ukefqd9XK2w@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+Dfm8ng1OVcB+1N2ack05v8+u1VydfxM4Ukefqd9XK2w@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 17 Jul 2019 13:38:33 -0700
+Message-ID: <CAGETcx9AuGtWh_nFb4SbkdYRbNmDK07yKF+jDDPScN+Bdp7a9w@mail.gmail.com>
+Subject: Re: [PATCH v5 02/11] of/platform: Add functional dependency link from
+ DT bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Jul 17, 2019 at 7:35 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Jul 16, 2019 at 5:54 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Tue, Jul 16, 2019 at 4:43 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Fri, Jul 12, 2019 at 5:52 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > Add device-links after the devices are created (but before they are
+> > > > probed) by looking at common DT bindings like clocks and
+> > > > interconnects.
+> > > >
+> > > > Automatically adding device-links for functional dependencies at the
+> > > > framework level provides the following benefits:
+> > > >
+> > > > - Optimizes device probe order and avoids the useless work of
+> > > >   attempting probes of devices that will not probe successfully
+> > > >   (because their suppliers aren't present or haven't probed yet).
+> > > >
+> > > >   For example, in a commonly available mobile SoC, registering just
+> > > >   one consumer device's driver at an initcall level earlier than the
+> > > >   supplier device's driver causes 11 failed probe attempts before the
+> > > >   consumer device probes successfully. This was with a kernel with all
+> > > >   the drivers statically compiled in. This problem gets a lot worse if
+> > > >   all the drivers are loaded as modules without direct symbol
+> > > >   dependencies.
+> > > >
+> > > > - Supplier devices like clock providers, interconnect providers, etc
+> > > >   need to keep the resources they provide active and at a particular
+> > > >   state(s) during boot up even if their current set of consumers don't
+> > > >   request the resource to be active. This is because the rest of the
+> > > >   consumers might not have probed yet and turning off the resource
+> > > >   before all the consumers have probed could lead to a hang or
+> > > >   undesired user experience.
+> > > >
+> > > >   Some frameworks (Eg: regulator) handle this today by turning off
+> > > >   "unused" resources at late_initcall_sync and hoping all the devices
+> > > >   have probed by then. This is not a valid assumption for systems with
+> > > >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> > > >   this due to the lack of a clear signal for when they can turn off
+> > > >   resources. This leads to downstream hacks to handle cases like this
+> > > >   that can easily be solved in the upstream kernel.
+> > > >
+> > > >   By linking devices before they are probed, we give suppliers a clear
+> > > >   count of the number of dependent consumers. Once all of the
+> > > >   consumers are active, the suppliers can turn off the unused
+> > > >   resources without making assumptions about the number of consumers.
+> > > >
+> > > > By default we just add device-links to track "driver presence" (probe
+> > > > succeeded) of the supplier device. If any other functionality provided
+> > > > by device-links are needed, it is left to the consumer/supplier
+> > > > devices to change the link when they probe.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  .../admin-guide/kernel-parameters.txt         |  5 ++
+> > > >  drivers/of/platform.c                         | 57 +++++++++++++++++++
+> > > >  2 files changed, 62 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > > index 138f6664b2e2..109b4310844f 100644
+> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > > @@ -3141,6 +3141,11 @@
+> > > >                         This can be set from sysctl after boot.
+> > > >                         See Documentation/sysctl/vm.txt for details.
+> > > >
+> > > > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
+> > > > +                       for optimizing probe order and making sure resources
+> > > > +                       aren't turned off before the consumer devices have
+> > > > +                       probed.
+> > > > +
+> > > >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> > > >                         See Documentation/debugging-via-ohci1394.txt for more
+> > > >                         info.
+> > > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > > index 04ad312fd85b..0930f9f89571 100644
+> > > > --- a/drivers/of/platform.c
+> > > > +++ b/drivers/of/platform.c
+> > > > @@ -509,6 +509,62 @@ int of_platform_default_populate(struct device_node *root,
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> > > >
+> > > > +static int of_link_binding(struct device *dev,
+> > > > +                          const char *binding, const char *cell)
+> > > > +{
+> > > > +       struct of_phandle_args sup_args;
+> > > > +       struct platform_device *sup_dev;
+> > > > +       unsigned int i = 0, links = 0;
+> > > > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> > > > +
+> > > > +       while (!of_parse_phandle_with_args(dev->of_node, binding, cell, i,
+> > > > +                                          &sup_args)) {
+> > > > +               i++;
+> > > > +               sup_dev = of_find_device_by_node(sup_args.np);
+> > > > +               of_node_put(sup_args.np);
+> > > > +               if (!sup_dev)
+> > > > +                       continue;
+> > > > +               if (device_link_add(dev, &sup_dev->dev, dl_flags))
+> > > > +                       links++;
+> > > > +               put_device(&sup_dev->dev);
+> > > > +       }
+> > > > +       if (links < i)
+> > > > +               return -ENODEV;
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static bool of_devlink;
+> > > > +core_param(of_devlink, of_devlink, bool, 0);
+> > > > +
+> > > > +/*
+> > > > + * List of bindings and their cell names (use NULL if no cell names) from which
+> > > > + * device links need to be created.
+> > > > + */
+> > > > +static const char * const link_bindings[] = {
+> > > > +       "clocks", "#clock-cells",
+> > > > +       "interconnects", "#interconnect-cells",
+> > > > +};
+> > > > +
+> > > > +static int of_link_to_suppliers(struct device *dev)
+> > > > +{
+> > > > +       unsigned int i = 0;
+> > > > +       bool done = true;
+> > > > +
+> > > > +       if (!of_devlink)
+> > > > +               return 0;
+> > > > +       if (unlikely(!dev->of_node))
+> > > > +               return 0;
+> > > > +
+> > > > +       for (i = 0; i < ARRAY_SIZE(link_bindings) / 2; i++)
+> > > > +               if (of_link_binding(dev, link_bindings[i * 2],
+> > > > +                                       link_bindings[i * 2 + 1]))
+> > > > +                       done = false;
+> > >
+> > > Given the pending addition of regulators I think this should be
+> > > structured a bit differently so that we abstract out the matching and
+> > > phandle look-up so there's a clean separation of binding specifics.
+> > > It's kind of messy with 2 patterns to parse already and if we added a
+> > > 3rd? I would iterate over the properties as you do for regulators in
+> > > both cases and for each property call a binding specific match
+> > > function. The common pattern can of course be a common function. Let
+> > > me know if that makes sense. If not I can try to flesh it out some
+> > > more.
+> >
+> > I've added regulator support in this series and I've refactored this
+> > code as I went along. I fully expect to squash some of the refactors
+> > once the final result of the series is acceptable.
+>
+> It would be easier to review the final result than incremental changes
+> which change the prior patches especially if the latter patches are
+> ultimately required.
+>
+> > It's not clear to me if you got to the end of the series and still
+> > think the final result needs to be refactored. Let me know what you
+> > think about this towards the end of the series and I can clean it up
+> > if you still think it needs some clean up.
+>
+> I probably should have replied on the regulator addition, but yes,
+> looking at that is what prompted my concerns here.
 
-Please pull the watchdog changes for the v5.3 release cycle.
+Sounds good. Let me refactor the series and send it out again. Btw, if
+you have other issues you noticed, I'd be happy to fix those too
+before sending out the v6 of the series again.
 
-This series contains:
-* add Allwinner H6 watchdog
-* drop warning after registering device patches
-* hpwdt improvements
-* gpio: add support for nowayout option
-* introduce CONFIG_WATCHDOG_OPEN_TIMEOUT
-* convert remaining drivers to use SPDX license identifier
-* Fixes and improvements on several watchdog device drivers
-
-Stephen resolved the following 2 conflicts in linux-next:
-1) Documentation/watchdog/hpwdt.rst
-Documentation/watchdog/watchdog-parameters.rst
-
-between commit: cc2a2d19f896 ("docs: watchdog: convert docs to ReST and rename to *.rst") from the jc_docs tree 
-and commit: 74665686f0e2 ("docs: watchdog: convert docs to ReST and rename to *.rst") from the watchdog tree.
-These are the same patch with only a coouple of differences.
-
-2) Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-
-between commit: 8c21ead3ea5d ("dt-bindings: watchdog: move i.MX system controller watchdog binding to SCU") from the watchdog tree 
-and commit: c2a6ea23a401 ("dt-bindings: fsl: scu: add ocotp binding") from the char-misc tree.
-
-
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit 46713c3d2f8da5e3d8ddd2249bcb1d9974fb5d28:
-
-  Merge tag 'for-linus-20190706' of git://git.kernel.dk/linux-block (2019-07-06 11:48:39 -0700)
-
-are available in the git repository at:
-
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.3-rc1
-
-for you to fetch changes up to 7fb832ae72949c883da52d6316ff08f03c75d300:
-
-  watchdog: digicolor_wdt: Remove unused variable in dc_wdt_probe (2019-07-15 08:49:11 +0200)
-
-----------------------------------------------------------------
-linux-watchdog 5.3-rc1 tag
-
-----------------------------------------------------------------
-Anson Huang (2):
-      watchdog: imx_sc: Add pretimeout support
-      dt-bindings: watchdog: move i.MX system controller watchdog binding to SCU
-
-Clément Péron (1):
-      dt-bindings: watchdog: add Allwinner H6 watchdog
-
-Eugen Hristev (1):
-      watchdog: sama5d4: fix WDD value to be always set to max
-
-Greg Kroah-Hartman (2):
-      watchdog: bcm_kona_wdt: no need to check return value of debugfs_create functions
-      watchdog: mei_wdt: no need to check return value of debugfs_create functions
-
-Guenter Roeck (1):
-      watchdog: convert remaining drivers to use SPDX license identifier
-
-Hoan Nguyen An (1):
-      watchdog: renesas_wdt: Use 'dev' instead of dereferencing it repeatedly
-
-Jerry Hoemann (7):
-      watchdog/hpwdt: Stop hpwdt on unregister.
-      watchdog/hpwdt: Advertize max_hw_heartbeat_ms
-      watchdog/hpwdt: Have core ping watchdog.
-      watchdog/hpwdt: Add module parameter kdumptimeout.
-      watchdog/hpwdt: Update documentation
-      watchdog/hpwdt: Reflect changes
-      docs: watchdog: Fix build error.
-
-Ken Sloat (1):
-      watchdog: atmel: atmel-sama5d4-wdt: Disable watchdog on system suspend
-
-Mans Rullgard (1):
-      watchdog: gpio: add support for nowayout option
-
-Mauro Carvalho Chehab (1):
-      docs: watchdog: convert docs to ReST and rename to *.rst
-
-Nathan Chancellor (1):
-      watchdog: digicolor_wdt: Remove unused variable in dc_wdt_probe
-
-Paul Cercueil (2):
-      watchdog: jz4740: Use register names from <linux/mfd/ingenic-tcu.h>
-      watchdog: jz4740: Avoid starting watchdog in set_timeout
-
-Rasmus Villemoes (3):
-      watchdog: introduce watchdog.open_timeout commandline parameter
-      watchdog: introduce CONFIG_WATCHDOG_OPEN_TIMEOUT
-      watchdog: make the device time out at open_deadline when open_timeout is used
-
-Sebastian Andrzej Siewior (1):
-      watchdog: ie6xx_wdt: Use spinlock_t instead of struct spinlock
-
-Simon Horman (1):
-      dt-bindings: watchdog: Rename bindings documentation file
-
-Stefan Wahren (1):
-      watchdog: bcm2835_wdt: Fix module autoload
-
-Wolfram Sang (46):
-      watchdog: make watchdog_deferred_registration_add() void
-      watchdog: let core print error message when registering device fails
-      watchdog: aspeed_wdt: drop warning after registering device
-      watchdog: bcm2835_wdt: drop warning after registering device
-      watchdog: bcm7038_wdt: drop warning after registering device
-      watchdog: bcm_kona_wdt: drop warning after registering device
-      watchdog: cadence_wdt: drop warning after registering device
-      watchdog: da9052_wdt: drop warning after registering device
-      watchdog: da9062_wdt: drop warning after registering device
-      watchdog: davinci_wdt: drop warning after registering device
-      watchdog: digicolor_wdt: drop warning after registering device
-      watchdog: ftwdt010_wdt: drop warning after registering device
-      watchdog: hpwdt: drop warning after registering device
-      watchdog: i6300esb: drop warning after registering device
-      watchdog: ie6xx_wdt: drop warning after registering device
-      watchdog: imx2_wdt: drop warning after registering device
-      watchdog: imx_sc_wdt: drop warning after registering device
-      watchdog: intel-mid_wdt: drop warning after registering device
-      watchdog: jz4740_wdt: drop warning after registering device
-      watchdog: loongson1_wdt: drop warning after registering device
-      watchdog: max77620_wdt: drop warning after registering device
-      watchdog: mei_wdt: drop warning after registering device
-      watchdog: mena21_wdt: drop warning after registering device
-      watchdog: menf21bmc_wdt: drop warning after registering device
-      watchdog: mpc8xxx_wdt: drop warning after registering device
-      watchdog: ni903x_wdt: drop warning after registering device
-      watchdog: nic7018_wdt: drop warning after registering device
-      watchdog: npcm_wdt: drop warning after registering device
-      watchdog: of_xilinx_wdt: drop warning after registering device
-      watchdog: pic32-dmt: drop warning after registering device
-      watchdog: pic32-wdt: drop warning after registering device
-      watchdog: pnx4008_wdt: drop warning after registering device
-      watchdog: qcom-wdt: drop warning after registering device
-      watchdog: rave-sp-wdt: drop warning after registering device
-      watchdog: s3c2410_wdt: drop warning after registering device
-      watchdog: sama5d4_wdt: drop warning after registering device
-      watchdog: sp5100_tco: drop warning after registering device
-      watchdog: sp805_wdt: drop warning after registering device
-      watchdog: sprd_wdt: drop warning after registering device
-      watchdog: st_lpc_wdt: drop warning after registering device
-      watchdog: stm32_iwdg: drop warning after registering device
-      watchdog: stmp3xxx_rtc_wdt: drop warning after registering device
-      watchdog: tegra_wdt: drop warning after registering device
-      watchdog: ts4800_wdt: drop warning after registering device
-      watchdog: wm831x_wdt: drop warning after registering device
-      watchdog: xen_wdt: drop warning after registering device
-
-Yoshihiro Shimoda (1):
-      watchdog: renesas_wdt: Add a few cycles delay
-
- Documentation/admin-guide/kernel-parameters.txt    |   2 +-
- .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  15 +
- .../bindings/watchdog/fsl-imx-sc-wdt.txt           |  24 -
- .../watchdog/{renesas-wdt.txt => renesas,wdt.txt}  |   0
- .../devicetree/bindings/watchdog/sunxi-wdt.txt     |   1 +
- Documentation/kernel-per-CPU-kthreads.txt          |   2 +-
- ...l_api.txt => convert_drivers_to_kernel_api.rst} | 109 +--
- Documentation/watchdog/{hpwdt.txt => hpwdt.rst}    |  29 +-
- Documentation/watchdog/index.rst                   |  25 +
- .../watchdog/{mlx-wdt.txt => mlx-wdt.rst}          |  24 +-
- .../{pcwd-watchdog.txt => pcwd-watchdog.rst}       |  13 +-
- .../{watchdog-api.txt => watchdog-api.rst}         |  76 ++-
- ...hdog-kernel-api.txt => watchdog-kernel-api.rst} |  91 ++-
- Documentation/watchdog/watchdog-parameters.rst     | 747 +++++++++++++++++++++
- Documentation/watchdog/watchdog-parameters.txt     | 410 -----------
- .../watchdog/{watchdog-pm.txt => watchdog-pm.rst}  |   3 +
- Documentation/watchdog/{wdt.txt => wdt.rst}        |  31 +-
- MAINTAINERS                                        |   2 +-
- drivers/watchdog/Kconfig                           |  16 +-
- drivers/watchdog/acquirewdt.c                      |   6 +-
- drivers/watchdog/advantechwdt.c                    |   6 +-
- drivers/watchdog/aspeed_wdt.c                      |   8 +-
- drivers/watchdog/bcm2835_wdt.c                     |   5 +-
- drivers/watchdog/bcm7038_wdt.c                     |   4 +-
- drivers/watchdog/bcm_kona_wdt.c                    |  18 +-
- drivers/watchdog/cadence_wdt.c                     |   4 +-
- drivers/watchdog/da9052_wdt.c                      |   9 +-
- drivers/watchdog/da9062_wdt.c                      |   5 +-
- drivers/watchdog/davinci_wdt.c                     |  14 +-
- drivers/watchdog/digicolor_wdt.c                   |   9 +-
- drivers/watchdog/ebc-c384_wdt.c                    |   9 -
- drivers/watchdog/eurotechwdt.c                     |   6 +-
- drivers/watchdog/ftwdt010_wdt.c                    |   4 +-
- drivers/watchdog/gpio_wdt.c                        |   7 +
- drivers/watchdog/hpwdt.c                           |  59 +-
- drivers/watchdog/i6300esb.c                        |   5 +-
- drivers/watchdog/iTCO_vendor_support.c             |   7 +-
- drivers/watchdog/iTCO_wdt.c                        |   6 +-
- drivers/watchdog/ib700wdt.c                        |   6 +-
- drivers/watchdog/ie6xx_wdt.c                       |   8 +-
- drivers/watchdog/imx2_wdt.c                        |   4 +-
- drivers/watchdog/imx_sc_wdt.c                      | 123 +++-
- drivers/watchdog/intel-mid_wdt.c                   |   4 +-
- drivers/watchdog/jz4740_wdt.c                      |  57 +-
- drivers/watchdog/loongson1_wdt.c                   |   4 +-
- drivers/watchdog/max77620_wdt.c                    |   8 +-
- drivers/watchdog/mei_wdt.c                         |  34 +-
- drivers/watchdog/mena21_wdt.c                      |   4 +-
- drivers/watchdog/menf21bmc_wdt.c                   |   4 +-
- drivers/watchdog/mpc8xxx_wdt.c                     |   5 +-
- drivers/watchdog/mv64x60_wdt.c                     |   6 +-
- drivers/watchdog/ni903x_wdt.c                      |   4 +-
- drivers/watchdog/nic7018_wdt.c                     |   1 -
- drivers/watchdog/npcm_wdt.c                        |   4 +-
- drivers/watchdog/nv_tco.h                          |   6 +-
- drivers/watchdog/octeon-wdt-main.c                 |  11 +-
- drivers/watchdog/of_xilinx_wdt.c                   |   4 +-
- drivers/watchdog/omap_wdt.c                        |   6 +-
- drivers/watchdog/omap_wdt.h                        |  21 +-
- drivers/watchdog/pc87413_wdt.c                     |   6 +-
- drivers/watchdog/pcwd_pci.c                        |   6 +-
- drivers/watchdog/pcwd_usb.c                        |   6 +-
- drivers/watchdog/pic32-dmt.c                       |   4 +-
- drivers/watchdog/pic32-wdt.c                       |   4 +-
- drivers/watchdog/pnx4008_wdt.c                     |   9 +-
- drivers/watchdog/qcom-wdt.c                        |   4 +-
- drivers/watchdog/rave-sp-wdt.c                     |   1 -
- drivers/watchdog/renesas_wdt.c                     |  35 +-
- drivers/watchdog/retu_wdt.c                        |  10 +-
- drivers/watchdog/s3c2410_wdt.c                     |   4 +-
- drivers/watchdog/sa1100_wdt.c                      |   6 +-
- drivers/watchdog/sama5d4_wdt.c                     |  29 +-
- drivers/watchdog/sbc7240_wdt.c                     |  11 +-
- drivers/watchdog/sbc8360.c                         |   6 +-
- drivers/watchdog/sch311x_wdt.c                     |   6 +-
- drivers/watchdog/smsc37b787_wdt.c                  |   2 +-
- drivers/watchdog/softdog.c                         |   6 +-
- drivers/watchdog/sp5100_tco.c                      |   4 +-
- drivers/watchdog/sp805_wdt.c                       |   5 +-
- drivers/watchdog/sprd_wdt.c                        |   1 -
- drivers/watchdog/st_lpc_wdt.c                      |   4 +-
- drivers/watchdog/stm32_iwdg.c                      |   4 +-
- drivers/watchdog/stmp3xxx_rtc_wdt.c                |   4 +-
- drivers/watchdog/tegra_wdt.c                       |   4 +-
- drivers/watchdog/ts4800_wdt.c                      |   4 +-
- drivers/watchdog/w83627hf_wdt.c                    |   6 +-
- drivers/watchdog/wafer5823wdt.c                    |   6 +-
- drivers/watchdog/watchdog_core.c                   |  22 +-
- drivers/watchdog/watchdog_core.h                   |   6 +-
- drivers/watchdog/watchdog_dev.c                    |  54 +-
- drivers/watchdog/wd501p.h                          |   6 +-
- drivers/watchdog/wdt.c                             |   6 +-
- drivers/watchdog/wdt_pci.c                         |   6 +-
- drivers/watchdog/wm831x_wdt.c                      |   9 +-
- drivers/watchdog/xen_wdt.c                         |   4 +-
- 95 files changed, 1406 insertions(+), 1039 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
- rename Documentation/devicetree/bindings/watchdog/{renesas-wdt.txt => renesas,wdt.txt} (100%)
- rename Documentation/watchdog/{convert_drivers_to_kernel_api.txt => convert_drivers_to_kernel_api.rst} (75%)
- rename Documentation/watchdog/{hpwdt.txt => hpwdt.rst} (73%)
- create mode 100644 Documentation/watchdog/index.rst
- rename Documentation/watchdog/{mlx-wdt.txt => mlx-wdt.rst} (78%)
- rename Documentation/watchdog/{pcwd-watchdog.txt => pcwd-watchdog.rst} (89%)
- rename Documentation/watchdog/{watchdog-api.txt => watchdog-api.rst} (80%)
- rename Documentation/watchdog/{watchdog-kernel-api.txt => watchdog-kernel-api.rst} (90%)
- create mode 100644 Documentation/watchdog/watchdog-parameters.rst
- delete mode 100644 Documentation/watchdog/watchdog-parameters.txt
- rename Documentation/watchdog/{watchdog-pm.txt => watchdog-pm.rst} (92%)
- rename Documentation/watchdog/{wdt.txt => wdt.rst} (68%)
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
-
+-Saravana
