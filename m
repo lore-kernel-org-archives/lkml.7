@@ -2,153 +2,100 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D23C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777A1C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAD52077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563351490;
-	bh=5GNQoM7T3OZ2EwjYuZ7fJtx8Y6qQF3hP9lT0ttHPpvQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wgld/sAAe3PIZdB1lfK/tfAHCLTkH8ufZpLoKwRs4Kpa4DVHuQfXeLWqwTAH4eGaC
-	 Zc3v2Lql0EuDAkusKfpMf0pwEfnHpIbGXwYO8XruA4A+ZapRC+bdKbkAcK3wgPOnb2
-	 dmlU3HRSDIMNHyfHNBN/oEEd/GicLCL2PeOFhk60=
+	by mail.kernel.org (Postfix) with ESMTP id 4FD862077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jn5ZE20X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfGQISJ (ORCPT
+        id S1726166AbfGQIVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfGQISJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:18:09 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A60142173B;
-        Wed, 17 Jul 2019 08:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563351488;
-        bh=5GNQoM7T3OZ2EwjYuZ7fJtx8Y6qQF3hP9lT0ttHPpvQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BMk82FbNEX+ScgsGCO0TrFEo5sKOIUbK5ki+a7Wp3dBgcRxNpGjwSOStaJ8QPCblm
-         KAKapKaVZTat/7/27NdE3ZLBc2oBo1+69lm3o387UzZc5uNX5PEPq7pqZHF0/lmGFM
-         OoSvbBOnZkfov7Tz20pMcQ1yN75tnvNVZPksyyuk=
-Received: by mail-lj1-f169.google.com with SMTP id p17so22723185ljg.1;
-        Wed, 17 Jul 2019 01:18:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAUt7rdp+AVb1gC6sjNHwoY+sJ/Ic54JLXlXhIhtbSPn12qekBFS
-        4FiumNToRDC+zhhd5vAPglvRl4dyJjMPC/hWwZo=
-X-Google-Smtp-Source: APXvYqylYz7gNmzlXqUoO2oJVnfuYOhDlPlxB7yrdES0wr8vBhhh8uj9yF8LJHi/hEx9u2UnvjdI9FfTGNOF6wdZ8Fc=
-X-Received: by 2002:a2e:3008:: with SMTP id w8mr20519868ljw.13.1563351485856;
- Wed, 17 Jul 2019 01:18:05 -0700 (PDT)
+        Wed, 17 Jul 2019 04:21:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40094 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQIVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:21:08 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so11549160pla.7;
+        Wed, 17 Jul 2019 01:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ukX3X8BRlmR//HwESuIDPD9A7bwWL5k5RN/PdnrF+7c=;
+        b=jn5ZE20XLizqfHuZvh1GR/0Vb7SWdayObV9Htzl/BkbTOqbg0W+7QFoJIZxyA8oisf
+         ub7IPEkAXW9Ms/q6+wmNHjyyin7WDdVgXlvk01urEO2GPm0PCaJCPEoKkQFPc91QuVPP
+         muiDZ7Hs9RVNqa2AU+GQ6ljzTFzuOV8zVOjnUNcPzoT9xmaErPuPEJiQ9aqNSmxc64q0
+         SpJSTaCCwzye9fBQkUiJ6gjxCmbC8tXBKAfGuhGfEyNImJSP0W7IbKlfNrtpTlLbAaok
+         qg/AeW7/L67AqbmG8nUaLwtTTUCF1zt7ZqU6gpOYHO0b1GA3C3POtuTvQM0kynxMXrUk
+         iBHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ukX3X8BRlmR//HwESuIDPD9A7bwWL5k5RN/PdnrF+7c=;
+        b=nen97rZI7sTDszVHwl6ef05wzhJR12+V8Te6Z0tlGHxwzJijZePENV2Rb3v5jOsYVy
+         JMOwjSUCHMnFZW7vxMvXzmTux3FYrkzGp8bJz5TebCGrC3njKscYBFii9moUcR0RgT4x
+         X0Tn08ozcqElt4NVJadnkNuj2FTG5ZC1ppUkNgwXkN8uOOXaW4SNTRjpc555Ka8aLhcp
+         +HtzCit5orMtnMiNYygTy+Nwh3UcuslmYj+V12SCV1Wr460SQDcgeBpq8rR+EalJik78
+         2P6+y9QOJ4rOarHD8xdQMWnNt9VgCEzg0vH6YhMQR9Wof/NN+IaiBnAXDtu8ylM8WrOk
+         mKYQ==
+X-Gm-Message-State: APjAAAUSTj8BBAbo6Ch2bzC9nU9kMgloZZXEo6+zr6sreqiHFRRBmPWS
+        7WRtgt5RzmRIPEEEiViBpwrMkO/5eBY=
+X-Google-Smtp-Source: APXvYqykTSlhQOSKNw5mHZfzwq6N10owDSgGGDbZSWEvVhka6bdL8xOstcLiMbxvuo3Sai44hpxjHA==
+X-Received: by 2002:a17:902:b186:: with SMTP id s6mr41487960plr.343.1563351667968;
+        Wed, 17 Jul 2019 01:21:07 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id p187sm34516844pfg.89.2019.07.17.01.21.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 01:21:07 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] IB/mlx5: Replace kfree with kvfree
+Date:   Wed, 17 Jul 2019 16:21:01 +0800
+Message-Id: <20190717082101.14196-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190712141242.4915-1-krzk@kernel.org> <cde6f251-4b15-a4f0-57ed-ca2ed014b511@kontron.de>
-In-Reply-To: <cde6f251-4b15-a4f0-57ed-ca2ed014b511@kontron.de>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 17 Jul 2019 10:17:54 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcLdfo6XCc--HneYjCHOYKdKgWDBDSVjxQBR+pc+1mcfg@mail.gmail.com>
-Message-ID: <CAJKOXPcLdfo6XCc--HneYjCHOYKdKgWDBDSVjxQBR+pc+1mcfg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2 SoM
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 at 17:38, Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
->
-> Hi Krzysztof,
->
-> On 12.07.19 16:12, Krzysztof Kozlowski wrote:
-> > Add support for iMX6-UL2 modules from Kontron Electronics GmbH (before
-> > acquisition: Exceet Electronics) and evalkit boards based on it:
-> >
-> > 1. i.MX6 UL System-on-Module, a 25x25 mm solderable module (LGA pads and
-> >     pin castellations) with 256 MB RAM, 1 MB NOR-Flash, 256 MB NAND and
-> >     other interfaces,
-> > 1. UL2 evalkit, w/wo eMMC, without display,
-> > 2. UL2 evalkit with 4.3" display,
-> > 3. UL2 evalkit with 5.0" display.
->
-> We will use a new naming scheme for these and other boards. The new
-> names would be:
->
-> 1. Kontron N6310 SOM    (i.MX6UL SoM with 256MB RAM/NAND)
-> 2. Kontron N6310 S      (Evalkit with SoM)
-> 3. Kontron N6310 S 43   (Evalkit with SoM and 4.3" display)
-> 4. Kontron N6310 S 50   (Evalkit with SoM and 5.0" display)
+Variable allocated by kvzalloc should not be freed by kfree.
+Because it may be allocated by vmalloc.
+So replace kfree with kvfree here.
 
-OK (and OK for all other comments which I will skip below).
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/infiniband/hw/mlx5/odp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-(...)
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 5b642d81e617..ea4b41b260b3 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -1813,7 +1813,7 @@ int mlx5_ib_advise_mr_prefetch(struct ib_pd *pd,
+ 	if (valid_req)
+ 		queue_work(system_unbound_wq, &work->work);
+ 	else
+-		kfree(work);
++		kvfree(work);
+ 
+ 	srcu_read_unlock(&dev->mr_srcu, srcu_key);
+ 
+-- 
+2.20.1
 
-> > +
-> > +     memory@80000000 {
-> > +             reg = <0x80000000 0x10000000>;
-> > +     };
-> > +};
-> > +
-> > +&cpu0 {
-> > +     clock-frequency = <528000000>;
-> > +     operating-points = <
-> > +             /* kHz  uV */
-> > +             528000  1175000
-> > +             396000  1025000
-> > +             198000  950000
-> > +     >;
-> > +     fsl,soc-operating-points = <
-> > +             /* KHz  uV */
-> > +             528000  1175000
-> > +             396000  1175000
-> > +             198000  1175000
-> > +     >;
-> > +};
->
-> What's the reason behind overwriting the operating-points and setting
-> clock-frequency? Doesn't imx6q-cpufreq.c already read the speed grades
-> from the hardware and adjust the operating-points accordingly?
-
-Good point. From the driver point of view overwriting of opps is not
-needed. As you said, the driver will adjust the speed to the reported
-grade. This could have meaning for the completeness of hardware
-description however I see that there are no even bindings for CPU and
-other boards do not overwrite it. I'll skip it then.
-
-(...)
-
-> > +
-> > +     regulators {
-> > +             compatible = "simple-bus";
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
->
-> We copied this from some other devicetree and I'm not sure in what case
-> we should really group the regulators in a simple-bus, or what's the
-> reason behind this. But others do it like this, so it's probably not so
-> wrong.
-
-Either simple-bus with regulator@address or unique regulator node
-names (regulator-1, no unit address). Both are popular but I think in
-recent submissions and comments Rob Herring was proposing the second
-option - unique regulator names without addresses. I can use such
-approach (unless DTC complains).
-
-Thanks for review and feedback!
-
-Best regards,
-Krzysztof
