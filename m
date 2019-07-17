@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ECDC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E22C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909902145D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CD1217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:25:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HLU4n9Oo"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gLZ3gPix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbfGQVZL (ORCPT
+        id S1729133AbfGQVZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 17:25:11 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47769 "EHLO
+        Wed, 17 Jul 2019 17:25:43 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40301 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbfGQVZL (ORCPT
+        with ESMTP id S1727106AbfGQVZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 17:25:11 -0400
+        Wed, 17 Jul 2019 17:25:42 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HLOTqG1695596
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HLPFgo1695719
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 14:24:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HLOTqG1695596
+        Wed, 17 Jul 2019 14:25:15 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HLPFgo1695719
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563398670;
-        bh=SQHpuDf8cR6chiT2CewpSIM0+r0chrhuO4zppzGcQ5w=;
+        s=2019061801; t=1563398716;
+        bh=fhvasD3ub/xpN9kaf9j0SNbPN0spouR0F9llQrkMpMA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=HLU4n9OoFSMpU99+eQPgILGx4SDdHM+AcqXkubYMF7Z1Muq3AxRePB/diqBYc50BT
-         LAfP4Qt8X4IUlwM7VE31hs2q1yixAGrgkxQxepvpotC3Sd8bLy3UtUR9DDBzcM1iyb
-         rAsJO9vnr+eCQQTCJ56cB6xgj9CU8WhWLs7kXbVxkFgztEFstEar1OvNABSacyZWFr
-         ICBNOt62X6EJ4hnkzmu8z5olMvc8qtPqYq7iThmOGjpKTv0vdzqlyTTvYTQ8uGjhFp
-         IKjgap39tTrVacEYfFZ4SU229S8BOU+lABp3XE2qnSwzdHHEjqKajAMxvEyIo3/v7W
-         Ghirn6Wqa9daw==
+        b=gLZ3gPixva02oyOdr+UNN66I7gzbeJ1rrpeTfUvlaNiHdyJzaNUSJY6bSZdZGQYV2
+         MRWuar18fxpF7mwrCh27+46gCAZPaWhLpEIKXYCyVcY1fqsyUpzHs9TU1u/Zo4ql9t
+         KHbR/Ljbb4QFZe/hhJla1UBPIOoeitA/gJgg1aKJ5Go0EbCkm/c90Hendxc4mRgCJl
+         Lp8NGZZRc5jt14jZ47gFlavmHXbz0ihKRhn+TWGeo9rWvXIuDvgPyPibQGpJHbcZXK
+         xkMWO//c01qI+MQkVIVg8Gxyvbd0A/ug418LO3qNjceXF4JLoAaCSSqKVgZMSjyKaD
+         CTxU8B54dxyAQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HLOS961695588;
-        Wed, 17 Jul 2019 14:24:28 -0700
-Date:   Wed, 17 Jul 2019 14:24:28 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HLPFA11695710;
+        Wed, 17 Jul 2019 14:25:15 -0700
+Date:   Wed, 17 Jul 2019 14:25:15 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-2fd37912cfb019228bf246215938e6f7619516a2@git.kernel.org>
-Cc:     tglx@linutronix.de, rostedt@goodmis.org, luto@kernel.org,
-        hpa@zytor.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org
-Reply-To: mingo@kernel.org, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          rostedt@goodmis.org, luto@kernel.org, hpa@zytor.com
-In-Reply-To: <20190711114336.002429503@infradead.org>
-References: <20190711114336.002429503@infradead.org>
+Message-ID: <tip-4234653e882740cbf6625eeee294e388b3176583@git.kernel.org>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        mingo@kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
+        luto@kernel.org
+Reply-To: tglx@linutronix.de, rostedt@goodmis.org, mingo@kernel.org,
+          hpa@zytor.com, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, luto@kernel.org
+In-Reply-To: <20190711114336.059780563@infradead.org>
+References: <20190711114336.059780563@infradead.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/entry/64: Simplify idtentry a little
-Git-Commit-ID: 2fd37912cfb019228bf246215938e6f7619516a2
+Subject: [tip:x86/urgent] x86/entry/64: Update comments and sanity tests for
+ create_gap
+Git-Commit-ID: 4234653e882740cbf6625eeee294e388b3176583
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,19 +70,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2fd37912cfb019228bf246215938e6f7619516a2
-Gitweb:     https://git.kernel.org/tip/2fd37912cfb019228bf246215938e6f7619516a2
+Commit-ID:  4234653e882740cbf6625eeee294e388b3176583
+Gitweb:     https://git.kernel.org/tip/4234653e882740cbf6625eeee294e388b3176583
 Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Thu, 11 Jul 2019 13:40:57 +0200
+AuthorDate: Thu, 11 Jul 2019 13:40:58 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 17 Jul 2019 23:17:37 +0200
+CommitDate: Wed, 17 Jul 2019 23:17:38 +0200
 
-x86/entry/64: Simplify idtentry a little
+x86/entry/64: Update comments and sanity tests for create_gap
 
-There's a bunch of duplication in idtentry, namely the
-.Lfrom_usermode_switch_stack is a paranoid=0 copy of the normal flow.
-
-Make this explicit by creating a idtentry_part helper macro.
+Commit 2700fefdb2d9 ("x86_64: Add gap to int3 to allow for call
+emulation") forgot to update the comment, do so now.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -95,138 +94,51 @@ Cc: jgross@suse.com
 Cc: zhe.he@windriver.com
 Cc: joel@joelfernandes.org
 Cc: devel@etsukata.com
-Link: https://lkml.kernel.org/r/20190711114336.002429503@infradead.org
+Link: https://lkml.kernel.org/r/20190711114336.059780563@infradead.org
 
 ---
- arch/x86/entry/entry_64.S | 102 ++++++++++++++++++++++------------------------
- 1 file changed, 48 insertions(+), 54 deletions(-)
+ arch/x86/entry/entry_64.S | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 0ea4831a72a4..3db5fede743b 100644
+index 3db5fede743b..95ae05f0edf2 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -864,6 +864,52 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
-  */
- #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
- 
-+.macro idtentry_part do_sym, has_error_code:req, paranoid:req, shift_ist=-1, ist_offset=0
-+
-+	.if \paranoid
-+	call	paranoid_entry
-+	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
-+	.else
-+	call	error_entry
-+	.endif
-+	UNWIND_HINT_REGS
-+
-+	.if \paranoid
-+	.if \shift_ist != -1
-+	TRACE_IRQS_OFF_DEBUG			/* reload IDT in case of recursion */
-+	.else
-+	TRACE_IRQS_OFF
-+	.endif
-+	.endif
-+
-+	movq	%rsp, %rdi			/* pt_regs pointer */
-+
-+	.if \has_error_code
-+	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
-+	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
-+	.else
-+	xorl	%esi, %esi			/* no error code */
-+	.endif
-+
-+	.if \shift_ist != -1
-+	subq	$\ist_offset, CPU_TSS_IST(\shift_ist)
-+	.endif
-+
-+	call	\do_sym
-+
-+	.if \shift_ist != -1
-+	addq	$\ist_offset, CPU_TSS_IST(\shift_ist)
-+	.endif
-+
-+	.if \paranoid
-+	/* this procedure expect "no swapgs" flag in ebx */
-+	jmp	paranoid_exit
-+	.else
-+	jmp	error_exit
-+	.endif
-+
-+.endm
-+
+@@ -913,15 +913,16 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
  /**
   * idtentry - Generate an IDT entry stub
   * @sym:		Name of the generated entry point
-@@ -934,47 +980,7 @@ ENTRY(\sym)
- .Lfrom_usermode_no_gap_\@:
+- * @do_sym: 		C function to be called
+- * @has_error_code: 	True if this IDT vector has an error code on the stack
+- * @paranoid: 		non-zero means that this vector may be invoked from
++ * @do_sym:		C function to be called
++ * @has_error_code:	True if this IDT vector has an error code on the stack
++ * @paranoid:		non-zero means that this vector may be invoked from
+  *			kernel mode with user GSBASE and/or user CR3.
+  *			2 is special -- see below.
+  * @shift_ist:		Set to an IST index if entries from kernel mode should
+- *             		decrement the IST stack so that nested entries get a
++ *			decrement the IST stack so that nested entries get a
+  *			fresh stack.  (This is for #DB, which has a nasty habit
+- *             		of recursing.)
++ *			of recursing.)
++ * @create_gap:		create a 6-word stack gap when coming from kernel mode.
+  *
+  * idtentry generates an IDT stub that sets up a usable kernel context,
+  * creates struct pt_regs, and calls @do_sym.  The stub has the following
+@@ -951,10 +952,14 @@ ENTRY(\sym)
+ 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+ 
+ 	/* Sanity check */
+-	.if \shift_ist != -1 && \paranoid == 0
++	.if \shift_ist != -1 && \paranoid != 1
+ 	.error "using shift_ist requires paranoid=1"
  	.endif
  
--	.if \paranoid
--	call	paranoid_entry
--	.else
--	call	error_entry
--	.endif
--	UNWIND_HINT_REGS
--	/* returned flag: ebx=0: need swapgs on exit, ebx=1: don't need it */
--
--	.if \paranoid
--	.if \shift_ist != -1
--	TRACE_IRQS_OFF_DEBUG			/* reload IDT in case of recursion */
--	.else
--	TRACE_IRQS_OFF
--	.endif
--	.endif
--
--	movq	%rsp, %rdi			/* pt_regs pointer */
--
--	.if \has_error_code
--	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
--	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
--	.else
--	xorl	%esi, %esi			/* no error code */
--	.endif
--
--	.if \shift_ist != -1
--	subq	$\ist_offset, CPU_TSS_IST(\shift_ist)
--	.endif
--
--	call	\do_sym
--
--	.if \shift_ist != -1
--	addq	$\ist_offset, CPU_TSS_IST(\shift_ist)
--	.endif
--
--	/* these procedures expect "no swapgs" flag in ebx */
--	.if \paranoid
--	jmp	paranoid_exit
--	.else
--	jmp	error_exit
--	.endif
-+	idtentry_part \do_sym, \has_error_code, \paranoid, \shift_ist, \ist_offset
++	.if \create_gap && \paranoid
++	.error "using create_gap requires paranoid=0"
++	.endif
++
+ 	ASM_CLAC
  
- 	.if \paranoid == 1
- 	/*
-@@ -983,21 +989,9 @@ ENTRY(\sym)
- 	 * run in real process context if user_mode(regs).
- 	 */
- .Lfrom_usermode_switch_stack_\@:
--	call	error_entry
--
--	movq	%rsp, %rdi			/* pt_regs pointer */
--
--	.if \has_error_code
--	movq	ORIG_RAX(%rsp), %rsi		/* get error code */
--	movq	$-1, ORIG_RAX(%rsp)		/* no syscall to restart */
--	.else
--	xorl	%esi, %esi			/* no error code */
-+	idtentry_part \do_sym, \has_error_code, paranoid=0
- 	.endif
- 
--	call	\do_sym
--
--	jmp	error_exit
--	.endif
- _ASM_NOKPROBE(\sym)
- END(\sym)
- .endm
+ 	.if \has_error_code == 0
