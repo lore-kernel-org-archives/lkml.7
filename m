@@ -2,92 +2,209 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11434C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E531BC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5802173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEozaRqs"
+	by mail.kernel.org (Postfix) with ESMTP id BCA922173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfGQOxi (ORCPT
+        id S1727786AbfGQOzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:53:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40556 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfGQOxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:53:38 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so46152370iom.7;
-        Wed, 17 Jul 2019 07:53:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nkqgY/elZbcrJEMnIsIBOH0HseeBLn/T4w9IKlfYq8Y=;
-        b=XEozaRqs7Uajdgr3NQ1IIYrWTIE83AO95ql+NN0hJoyTzD+cJyxBwZE3t73a//jkoo
-         LwOXPYfNIr9riusqzu19AqgwTREIN76Kew4Fu1ju0mVgnZt42+QOY5Yn3cWg/0sZhS9U
-         Khd3kEGk4DnNumniQp+1+S3pvHMy78mmcO1skmfjTwbsdWqGE6g35bYZI58wgnOrnisl
-         BHB1nhfKXh8mu0gONA32axzYhb43w6RTS7Qk1SBQKPDoInaHLO52wz25zR6SpgwAJ77L
-         dyiO6FT3Q1GNg+WHopZb/fPPsOdNg0sMtyzeLyftAPVSWN/+nFPGPiLJYyuwpDRxyTiL
-         ZHyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nkqgY/elZbcrJEMnIsIBOH0HseeBLn/T4w9IKlfYq8Y=;
-        b=g4VKaO0TFXbkEZ8rvQcwrsHYcswJdHOIErCqkDZYAK/zC2Wo+0hJlXQkjzs1R/nm4n
-         59BIKYgY0uu064Hko8OV3NxcdcsF18MCcRF7aM4jt2ZNd6U+XnkfJ6CHPdgqd6gf+CiY
-         4avcfa+TiPRa7vnIX4qAk/ouS3OW0Xwd9yaLfRO1zELuNjASKwcwTRtt85U/VWtP1+Dc
-         y1Tw7yJT/twpyGfq9HLzgI35hPKWFI7kMREnnp/uFXcqFaeLGvrpHINc1xis00jiWie3
-         i9B6FJ/je+9vChFCVdWId5KKWCcg8ynaMJe547abSiNOyJT3256aIL2Q1Hsv66NdZ3xX
-         chig==
-X-Gm-Message-State: APjAAAWoWAjC3PtxcBNoVUyG3sFn6V8LJWMLghP5Crds2QLc0iX0QRg1
-        FLr+4i2GN90ki4WfOEYg2982Qw/EjUMxNS7Xm3s=
-X-Google-Smtp-Source: APXvYqxfCwsmngHDQfK0eX07zlB+QOFZIleWDGPT05DkjS5sQwnRqY7EYnuaZbUlciWr5oGxk+PiXaA3zpBgo5mQDLs=
-X-Received: by 2002:a6b:f607:: with SMTP id n7mr37896951ioh.263.1563375217187;
- Wed, 17 Jul 2019 07:53:37 -0700 (PDT)
+        Wed, 17 Jul 2019 10:55:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56520 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfGQOzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 10:55:04 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6C68460CC;
+        Wed, 17 Jul 2019 14:55:03 +0000 (UTC)
+Received: from redhat.com (ovpn-125-71.rdu2.redhat.com [10.10.125.71])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D977360920;
+        Wed, 17 Jul 2019 14:54:58 +0000 (UTC)
+Date:   Wed, 17 Jul 2019 10:54:57 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] vhost/vsock: split packets to send using multiple
+ buffers
+Message-ID: <20190717105336-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-5-sgarzare@redhat.com>
 MIME-Version: 1.0
-References: <20190715201234.13556-1-andrew.smirnov@gmail.com> <20190715220043.55E8A20665@mail.kernel.org>
-In-Reply-To: <20190715220043.55E8A20665@mail.kernel.org>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 17 Jul 2019 07:53:26 -0700
-Message-ID: <CAHQ1cqHCbObjpD4p-WVQmoP3Jth=j3ap-qCjuETj416rCBtjLg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] clk: Sync prototypes for clk_bulk_enable()
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Chris Healy <cphealy@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-5-sgarzare@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 17 Jul 2019 14:55:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 3:00 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Andrey Smirnov (2019-07-15 13:12:29)
-> > No-op version of clk_bulk_enable() should have the same protoype as
-> > the real implementation, so constify the last argument to make it so.
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
->
-> No cover letter, but I'm inclined to squash these all together into one
-> patch instead of 6. I'm not sure why each function gets a different
-> patch.
->
+On Wed, Jul 17, 2019 at 01:30:29PM +0200, Stefano Garzarella wrote:
+> If the packets to sent to the guest are bigger than the buffer
+> available, we can split them, using multiple buffers and fixing
+> the length in the packet header.
+> This is safe since virtio-vsock supports only stream sockets.
+> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Sure, will squash all in v2.
+So how does it work right now? If an app
+does sendmsg with a 64K buffer and the other
+side publishes 4K buffers - does it just stall?
 
-Thanks,
-Andrey Smirnov
+
+> ---
+>  drivers/vhost/vsock.c                   | 66 ++++++++++++++++++-------
+>  net/vmw_vsock/virtio_transport_common.c | 15 ++++--
+>  2 files changed, 60 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> index 6c8390a2af52..9f57736fe15e 100644
+> --- a/drivers/vhost/vsock.c
+> +++ b/drivers/vhost/vsock.c
+> @@ -102,7 +102,7 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+>  		struct iov_iter iov_iter;
+>  		unsigned out, in;
+>  		size_t nbytes;
+> -		size_t len;
+> +		size_t iov_len, payload_len;
+>  		int head;
+>  
+>  		spin_lock_bh(&vsock->send_pkt_list_lock);
+> @@ -147,8 +147,24 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+>  			break;
+>  		}
+>  
+> -		len = iov_length(&vq->iov[out], in);
+> -		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, len);
+> +		iov_len = iov_length(&vq->iov[out], in);
+> +		if (iov_len < sizeof(pkt->hdr)) {
+> +			virtio_transport_free_pkt(pkt);
+> +			vq_err(vq, "Buffer len [%zu] too small\n", iov_len);
+> +			break;
+> +		}
+> +
+> +		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, iov_len);
+> +		payload_len = pkt->len - pkt->off;
+> +
+> +		/* If the packet is greater than the space available in the
+> +		 * buffer, we split it using multiple buffers.
+> +		 */
+> +		if (payload_len > iov_len - sizeof(pkt->hdr))
+> +			payload_len = iov_len - sizeof(pkt->hdr);
+> +
+> +		/* Set the correct length in the header */
+> +		pkt->hdr.len = cpu_to_le32(payload_len);
+>  
+>  		nbytes = copy_to_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
+>  		if (nbytes != sizeof(pkt->hdr)) {
+> @@ -157,33 +173,47 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+>  			break;
+>  		}
+>  
+> -		nbytes = copy_to_iter(pkt->buf, pkt->len, &iov_iter);
+> -		if (nbytes != pkt->len) {
+> +		nbytes = copy_to_iter(pkt->buf + pkt->off, payload_len,
+> +				      &iov_iter);
+> +		if (nbytes != payload_len) {
+>  			virtio_transport_free_pkt(pkt);
+>  			vq_err(vq, "Faulted on copying pkt buf\n");
+>  			break;
+>  		}
+>  
+> -		vhost_add_used(vq, head, sizeof(pkt->hdr) + pkt->len);
+> +		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+>  		added = true;
+>  
+> -		if (pkt->reply) {
+> -			int val;
+> -
+> -			val = atomic_dec_return(&vsock->queued_replies);
+> -
+> -			/* Do we have resources to resume tx processing? */
+> -			if (val + 1 == tx_vq->num)
+> -				restart_tx = true;
+> -		}
+> -
+>  		/* Deliver to monitoring devices all correctly transmitted
+>  		 * packets.
+>  		 */
+>  		virtio_transport_deliver_tap_pkt(pkt);
+>  
+> -		total_len += pkt->len;
+> -		virtio_transport_free_pkt(pkt);
+> +		pkt->off += payload_len;
+> +		total_len += payload_len;
+> +
+> +		/* If we didn't send all the payload we can requeue the packet
+> +		 * to send it with the next available buffer.
+> +		 */
+> +		if (pkt->off < pkt->len) {
+> +			spin_lock_bh(&vsock->send_pkt_list_lock);
+> +			list_add(&pkt->list, &vsock->send_pkt_list);
+> +			spin_unlock_bh(&vsock->send_pkt_list_lock);
+> +		} else {
+> +			if (pkt->reply) {
+> +				int val;
+> +
+> +				val = atomic_dec_return(&vsock->queued_replies);
+> +
+> +				/* Do we have resources to resume tx
+> +				 * processing?
+> +				 */
+> +				if (val + 1 == tx_vq->num)
+> +					restart_tx = true;
+> +			}
+> +
+> +			virtio_transport_free_pkt(pkt);
+> +		}
+>  	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
+>  	if (added)
+>  		vhost_signal(&vsock->dev, vq);
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 34a2b42313b7..56fab3f03d0e 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -97,8 +97,17 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
+>  	struct virtio_vsock_pkt *pkt = opaque;
+>  	struct af_vsockmon_hdr *hdr;
+>  	struct sk_buff *skb;
+> +	size_t payload_len;
+> +	void *payload_buf;
+>  
+> -	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + pkt->len,
+> +	/* A packet could be split to fit the RX buffer, so we can retrieve
+> +	 * the payload length from the header and the buffer pointer taking
+> +	 * care of the offset in the original packet.
+> +	 */
+> +	payload_len = le32_to_cpu(pkt->hdr.len);
+> +	payload_buf = pkt->buf + pkt->off;
+> +
+> +	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + payload_len,
+>  			GFP_ATOMIC);
+>  	if (!skb)
+>  		return NULL;
+> @@ -138,8 +147,8 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
+>  
+>  	skb_put_data(skb, &pkt->hdr, sizeof(pkt->hdr));
+>  
+> -	if (pkt->len) {
+> -		skb_put_data(skb, pkt->buf, pkt->len);
+> +	if (payload_len) {
+> +		skb_put_data(skb, payload_buf, payload_len);
+>  	}
+>  
+>  	return skb;
+> -- 
+> 2.20.1
