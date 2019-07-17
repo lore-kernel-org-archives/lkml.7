@@ -2,87 +2,68 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1058FC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59941C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B6921850
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V38Ojkmx"
+	by mail.kernel.org (Postfix) with ESMTP id 329DF21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563382220;
+	bh=SU6raH3/FUvVwY7V8GkrbIe7n02f3DAgoo2kaOjNTcc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=qx7Ytim72VVc8Yjir5yL2pDgWdxs8NsibX8SKhrLPg+Abjt3J8mAgdb0XYp7H0op7
+	 J8waW9yAeVxZtQJ05NN9PV/pk7tNPGeoni7scUNFv8ADYrkyHQOPPnjgU9ILnTsIrl
+	 YByFbda8Wd5Z8dBq4kH22UX11vgDIlXMkfxnsvUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbfGQQuQ (ORCPT
+        id S1729746AbfGQQuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 12:50:16 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:45064 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbfGQQuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 12:50:15 -0400
-Received: by mail-lf1-f53.google.com with SMTP id u10so16999931lfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 09:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wNAXEfmmabkDqnE/Fk/8mS9Vl1MA/WibJg8QIkwtN7A=;
-        b=V38Ojkmxy8ffF/ZvBefbuc8hq37BA7KyDFHi0jL11iWRUAAMPX8Ghao9zSC/X7qsb/
-         DGCrw1iMx9WTCA1TfZUhUqwPe6NQSwUbESwrtsfUigLoP33R5aQCKgyVB8dKsJ4+xq9s
-         +oL7Fg7w17YPfRIzjkSBRhMy7JD1qATIr4L4mhWOSkY5ODU2QU5TocCN8GbWJtf8ZtIl
-         yxYqVcuKdtiFZmmTT0SyjucLEdhT0yTdVyCujqSLSd9GTRStNu8KQgrobjC5YokCZJBj
-         TUw9uo2RN+kgzoyGYaOHo1XKWp6lo+xdf8SCstUpI673KkP9SPp+r0dRrlmYESjAW4Ud
-         1ABw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wNAXEfmmabkDqnE/Fk/8mS9Vl1MA/WibJg8QIkwtN7A=;
-        b=n0BFLJkApzeLmLQhFh4YNhmwQpPQSenF4gqJO78n4gK8CqyGQZ3A6eU4P7smUQ0soY
-         er1LggwOQUVOItjNDAkefOBcL+yRe4gJlFEbxOMQ6U+vMcAWrDaO0ft1wV4iGP9Kz4bL
-         WbpM3iOMcuJK1Q7YMzXpF1dopvoqOGoRMxX7oXNm5xjpA/IvUqsr/+Uu9GqP7X5IVaeU
-         zyAK5GJ2634LQd15mql9CdWkXEfz8WofSvNGdvI1zTkDuY9L2Nwg5OmpNnhSQqcGmD+k
-         CDhOBnj/dGFUsluXFg0qrYxQqkCZPmcYIaaZRcdwqQvE0QyQ+bKaXmIRZy5N9+84jnFe
-         io0Q==
-X-Gm-Message-State: APjAAAUXUSBYpNE7YC1efCqU/8g/WbsXG7U6+OCf98TuGpD7lyD8ktKe
-        e3Kfbw3MjBOxS6pa+KmaR/p2oc6zpnQiqV1kIoc=
-X-Google-Smtp-Source: APXvYqwehLVFid82yMKj2mL9bSbFAxO2VNayn/RZivwipwvShdidziMWPYRoLWtd4JixmgXj/1mgQyy5AS+oHjq+vDQ=
-X-Received: by 2002:a19:cbd3:: with SMTP id b202mr18741578lfg.185.1563382213570;
- Wed, 17 Jul 2019 09:50:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190717163014.429-1-oleksandr.suvorov@toradex.com> <20190717163014.429-7-oleksandr.suvorov@toradex.com>
-In-Reply-To: <20190717163014.429-7-oleksandr.suvorov@toradex.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 17 Jul 2019 13:50:02 -0300
-Message-ID: <CAOMZO5Bqf-mWxsvgVYg1+xk=hvGRNocfhRH1F39HBD7q_UY2uw@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] ASoC: sgtl5000: Fix charge pump source assignment
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 17 Jul 2019 12:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728234AbfGQQuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 12:50:17 -0400
+Subject: Re: [GIT PULL] arch/sh update
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563382216;
+        bh=SU6raH3/FUvVwY7V8GkrbIe7n02f3DAgoo2kaOjNTcc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=xKrxLSsu7l+ufM+3WGbtn4OBBlfc+TNM0DziBC/BZWlhrppsUC/S+4ikH5obCUR5Q
+         PcdlyUCSD0Pm5wKQ+WdAw+o7DHTpXOZ+jLj5pNCTj9chxC25MSMQHOQyywboh5+oFf
+         EDByaZM2rMRR021uPYL21lDBuLiQRELjotuop02I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <87zhldp03a.wl-ysato@users.sourceforge.jp>
+References: <87zhldp03a.wl-ysato@users.sourceforge.jp>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87zhldp03a.wl-ysato@users.sourceforge.jp>
+X-PR-Tracked-Remote: git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git
+ tags/for-linus-20190617
+X-PR-Tracked-Commit-Id: d3023897b4370bbf7f289806667a2380576d13dd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 415bfd9cdb175cf870fb173ae9d3958862de2c97
+Message-Id: <156338221686.6265.7605811848098125155.pr-tracker-bot@kernel.org>
+Date:   Wed, 17 Jul 2019 16:50:16 +0000
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 1:30 PM Oleksandr Suvorov
-<oleksandr.suvorov@toradex.com> wrote:
->
-> If VDDA != VDDIO and any of them is greater than 3.1V, charge pump
-> source can be assigned automatically [1].
->
-> [1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
->
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+The pull request you sent on Wed, 17 Jul 2019 16:54:49 +0900:
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git tags/for-linus-20190617
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/415bfd9cdb175cf870fb173ae9d3958862de2c97
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
