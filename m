@@ -2,108 +2,114 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2B1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449FEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C149020818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B79420818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:55:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TEceMaLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfGQGzJ (ORCPT
+        id S1727502AbfGQGzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:55:09 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:59306 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727012AbfGQGzH (ORCPT
+        Wed, 17 Jul 2019 02:55:35 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:20473 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfGQGzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:55:07 -0400
-X-UUID: 9f1c975c797c4aa99fc512c38799216e-20190717
-X-UUID: 9f1c975c797c4aa99fc512c38799216e-20190717
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1132981241; Wed, 17 Jul 2019 14:55:03 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Jul 2019 14:55:01 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Jul 2019 14:55:01 +0800
-Message-ID: <1563346501.29169.25.camel@mtksdaap41>
-Subject: Re: [PATCH v4, 24/33] drm/mediatek: distinguish ovl and ovl_2l by
- layer_nr
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 17 Jul 2019 14:55:01 +0800
-In-Reply-To: <1562625253-29254-25-git-send-email-yongqiang.niu@mediatek.com>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1562625253-29254-25-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Jul 2019 02:55:35 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6H6tO50030501;
+        Wed, 17 Jul 2019 15:55:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6H6tO50030501
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563346525;
+        bh=DgvFg/PvmkUqzBOA3LWysbbyKsyxr/rzbPQxUzumKDw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TEceMaLQ5cu0tGpqcOWAN+VpoUmoHF56DWywqHL4BqtRMRH8yZiDIcnW2aChUZtFk
+         FKmQFVpx5rtYHm8VH+hDO4m7ITgFw7GxEECodvMFGy2zflzyMpzJC/oXuy/H4nuWYc
+         LShHH3NSMfDlRWjtu1FFO6fsDSBBJlOCRO+c42nYqg+i8Hj3NncmHh2kgTtCaXAAFY
+         8u6oalskaRMYcDBKp9t0zkYO40o3PyCw7n069NxSXH48nyH3LbO/gBagF0Tbka2D5f
+         +Xz7ABcFzQgclalcPoRfu6VB5qAKWRRjKEMRC09nS4+FNRUXJSxWhpiWS37KXxEAE4
+         6Wpzz/dwC0DQw==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id a186so14086876vsd.7;
+        Tue, 16 Jul 2019 23:55:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAX/3/HOSWKlyyzaYY9Q/baGY+3Z4Wfp5MaixzxpGsg38hlxb68O
+        0rXWnyLBkcEl9TSh03PONWQotxeaey/TJ4wIvPg=
+X-Google-Smtp-Source: APXvYqyUI+81HuyA1Sg+kwLwpyTPzFweh3HUSTtZo2olVYVMKG4rx5J93T3cLKGpmXkX4ZQzCuZBNKZ8ypIyLzgXbB4=
+X-Received: by 2002:a67:fc45:: with SMTP id p5mr23322373vsq.179.1563346524244;
+ Tue, 16 Jul 2019 23:55:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 11F1DE6BD2C0561D80B2B9B084DC8B4CE48F7F7536BCB170DD002279A4AB79AD2000:8
-X-MTK:  N
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
+ <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 17 Jul 2019 15:54:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
+Message-ID: <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Mike Lothian <mike@fireburn.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Tue, 2019-07-09 at 06:34 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> distinguish ovl and ovl_2l by layer_nr when get comp
-> id
-> 
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Wed, Jul 17, 2019 at 4:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> The gold linker has known issues of failing the build both in random and in
+> predictible ways:
+>
+>  - The x86/X32 VDSO build fails with:
+>
+>    arch/x86/entry/vdso/vclock_gettime-x32.o:vclock_gettime.c:function do_hres:
+>    error: relocation overflow: reference to 'hvclock_page'
+>
+>    That's a known issue for years and the usual workaround is to disable
+>    CONFIG_X86_32
+>
+>  - A recent build failure is caused by turning a relocation into an
+>    absolute one for unknown reasons. See link below.
+>
+>  - There are a couple of gold workarounds applied already, but reports
+>    about broken builds with ld.gold keep coming in on a regular base and in
+>    most cases the root cause is unclear.
+>
+> In context of the most recent fail H.J. stated:
+>
+>   "Since building a workable kernel for different kernel configurations
+>    isn't a requirement for gold, I don't recommend gold for kernel."
+>
+> So instead of dealing with attempts to duct tape gold support without
+> understanding the root cause and without support from the gold folks, fail
+> the build when gold is detected.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com
 > ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> index 8ca4965..7e99827 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -326,7 +326,12 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
->  	if (irq < 0)
->  		return irq;
->  
-> -	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DISP_OVL);
-> +	priv->data = of_device_get_match_data(dev);
-> +
-> +	comp_id = mtk_ddp_comp_get_id(dev->of_node,
-> +				      priv->data->layer_nr == 4 ?
-> +				      MTK_DISP_OVL :
-> +				      MTK_DISP_OVL_2L);
->  	if (comp_id < 0) {
->  		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
->  		return comp_id;
-> @@ -339,8 +344,6 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	priv->data = of_device_get_match_data(dev);
-> -
->  	platform_set_drvdata(pdev, priv);
->  
->  	ret = devm_request_irq(dev, irq, mtk_disp_ovl_irq_handler,
+
+The code looks OK in the build system point of view.
+
+Please let me confirm this, just in case:
+For now, we give up all architectures, not only x86, right?
+
+I have not not heard much from other arch maintainers.
 
 
+-- 
+Best Regards
+Masahiro Yamada
