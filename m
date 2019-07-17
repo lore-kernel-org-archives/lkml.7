@@ -2,26 +2,26 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFC4C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8D9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702BA21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E12D2186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbfGQJHb (ORCPT
+        id S1730489AbfGQJHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:07:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47462 "EHLO mx1.suse.de"
+        Wed, 17 Jul 2019 05:07:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47454 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726106AbfGQJHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725873AbfGQJHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jul 2019 05:07:30 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 62F82AF40;
+        by mx1.suse.de (Postfix) with ESMTP id 394AAAF47;
         Wed, 17 Jul 2019 09:07:29 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     akpm@linux-foundation.org
@@ -29,66 +29,48 @@ Cc:     dan.j.williams@intel.com, david@redhat.com,
         pasha.tatashin@soleen.com, mhocko@suse.com,
         aneesh.kumar@linux.ibm.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2 1/2] mm,sparse: Fix deactivate_section for early sections
-Date:   Wed, 17 Jul 2019 11:07:24 +0200
-Message-Id: <20190717090725.23618-2-osalvador@suse.de>
+Subject: [PATCH v2 0/2] Fixes for sub-section hotplug
+Date:   Wed, 17 Jul 2019 11:07:23 +0200
+Message-Id: <20190717090725.23618-1-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190717090725.23618-1-osalvador@suse.de>
-References: <20190717090725.23618-1-osalvador@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-deactivate_section checks whether a section is early or not
-in order to either call free_map_bootmem() or depopulate_section_memmap().
-Being the former for sections added at boot time, and the latter for
-sections hotplugged.
+v2 -> v1: Go the easy way and just adapt the check (Dan/Aneesh)
 
-The problem is that we zero section_mem_map, so the last early_section()
-will always report false and the section will not be removed.
+Hi all,
 
-Fix this checking whether a section is early or not at function
-entry.
+these two patches address a couple of issues I found while working on my
+vmemmap-patchset.
+The issues are:
 
-Fixes: mmotm ("mm/sparsemem: Support sub-section hotplug")
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Dan Williams <dan.j.wiliams@intel.com>
----
- mm/sparse.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+        1) section_deactivate mistakenly zeroes ms->section_mem_map and then
+           tries to check whether the section is an early section, but since
+           section_mem_map might have been zeroed, we will return false
+           when it is really an early section.
+           In order to fix this, let us check whether the section is early
+           at function entry, so we do not neet check it again later.
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 3267c4001c6d..1e224149aab6 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -738,6 +738,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
- 	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
- 	struct mem_section *ms = __pfn_to_section(pfn);
-+	bool section_is_early = early_section(ms);
- 	struct page *memmap = NULL;
- 	unsigned long *subsection_map = ms->usage
- 		? &ms->usage->subsection_map[0] : NULL;
-@@ -772,7 +773,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
- 		unsigned long section_nr = pfn_to_section_nr(pfn);
- 
--		if (!early_section(ms)) {
-+		if (!section_is_early) {
- 			kfree(ms->usage);
- 			ms->usage = NULL;
- 		}
-@@ -780,7 +781,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
- 	}
- 
--	if (early_section(ms) && memmap)
-+	if (section_is_early && memmap)
- 		free_map_bootmem(memmap);
- 	else
- 		depopulate_section_memmap(pfn, nr_pages, altmap);
+        2) shrink_{node,zone}_span work on sub-section granularity now.
+           The problem is that since deactivation of the section occurs later
+           on in sparse_remove_section, so the pfn_valid()->pfn_section_valid()
+           check will always return true for every sub-section chunk.
+           In order to avoid that, let us adapt the check and skip the whole
+           range to be removed.
+           The user visible effect of this is that we are always left with,
+           at least, PAGES_PER_SECTION spanned, even if we got to remove all
+           memory linked to a zone/node
+
+Oscar Salvador (2):
+  mm,sparse: Fix deactivate_section for early sections
+  mm,memory_hotplug: Fix shrink_{zone,node}_span
+
+ mm/memory_hotplug.c | 8 ++++----
+ mm/sparse.c         | 5 +++--
+ 2 files changed, 7 insertions(+), 6 deletions(-)
+
 -- 
 2.12.3
 
