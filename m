@@ -6,106 +6,138 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C47FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175B9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0F720818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE88220818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbfGQHt0 (ORCPT
+        id S1729458AbfGQHtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:49:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2279 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727753AbfGQHtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 03:49:25 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DB25CE1F6348E98241FB;
-        Wed, 17 Jul 2019 15:49:23 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
- 15:49:15 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>
-Subject: [RFC PATCH 05/10] powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
-Date:   Wed, 17 Jul 2019 16:06:16 +0800
-Message-ID: <20190717080621.40424-6-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190717080621.40424-1-yanaijie@huawei.com>
-References: <20190717080621.40424-1-yanaijie@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+        Wed, 17 Jul 2019 03:49:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49711 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbfGQHth (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 03:49:37 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hnegv-00033E-Hg; Wed, 17 Jul 2019 07:49:34 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     johannes.berg@intel.com, emmanuel.grumbach@intel.com,
+        luciano.coelho@intel.com, marcel@holtmann.org,
+        johan.hedberg@gmail.com
+Cc:     linuxwifi@intel.com, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2 1/3] Bluetooth: btintel: Add firmware lock function
+Date:   Wed, 17 Jul 2019 15:49:18 +0800
+Message-Id: <20190717074920.21624-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new helper reloc_kernel_entry() to jump back to the start of the
-new kernel. After we put the new kernel in a randomized place we can use
-this new helper to enter the kernel and begin to relocate again.
+When Intel 8260 starts to load Bluetooth firmware and WiFi firmware, by
+calling btintel_download_firmware() and iwl_pcie_load_given_ucode_8000()
+respectively, the Bluetooth btintel_download_firmware() aborts half way:
+[   11.950216] Bluetooth: hci0: Failed to send firmware data (-38)
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
+Let btusb and iwlwifi load firmwares exclusively can avoid the issue, so
+introduce a lock to use in btusb and iwlwifi.
+
+This issue still occurs with latest WiFi and Bluetooth firmwares.
+
+BugLink: https://bugs.launchpad.net/bugs/1832988
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- arch/powerpc/kernel/head_fsl_booke.S | 16 ++++++++++++++++
- arch/powerpc/mm/mmu_decl.h           |  1 +
- 2 files changed, 17 insertions(+)
+v2:
+ - Add bug report link.
+ - Rebase on latest wireless-next.
 
-diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index a57d44638031..ce40f96dae20 100644
---- a/arch/powerpc/kernel/head_fsl_booke.S
-+++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -1144,6 +1144,22 @@ _GLOBAL(create_tlb_entry)
- 	sync
- 	blr
+ drivers/bluetooth/btintel.c   | 14 ++++++++++++++
+ drivers/bluetooth/btintel.h   | 10 ++++++++++
+ include/linux/intel-wifi-bt.h |  8 ++++++++
+ 3 files changed, 32 insertions(+)
+ create mode 100644 include/linux/intel-wifi-bt.h
+
+diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
+index bb99c8653aab..93ab18d6ddad 100644
+--- a/drivers/bluetooth/btintel.c
++++ b/drivers/bluetooth/btintel.c
+@@ -20,6 +20,8 @@
  
-+/*
-+ * Return to the start of the relocated kernel and run again
-+ * r3 - virtual address of fdt
-+ * r4 - entry of the kernel
-+ */
-+_GLOBAL(reloc_kernel_entry)
-+	mfmsr	r7
-+	li	r8,(MSR_IS | MSR_DS)
-+	andc	r7,r7,r8
+ #define BDADDR_INTEL (&(bdaddr_t) {{0x00, 0x8b, 0x9e, 0x19, 0x03, 0x00}})
+ 
++static DEFINE_MUTEX(firmware_lock);
 +
-+	mtspr	SPRN_SRR0,r4
-+	mtspr	SPRN_SRR1,r7
-+	isync
-+	sync
-+	rfi
+ int btintel_check_bdaddr(struct hci_dev *hdev)
+ {
+ 	struct hci_rp_read_bd_addr *bda;
+@@ -709,6 +711,18 @@ int btintel_download_firmware(struct hci_dev *hdev, const struct firmware *fw,
+ }
+ EXPORT_SYMBOL_GPL(btintel_download_firmware);
+ 
++void btintel_firmware_lock(void)
++{
++	mutex_lock(&firmware_lock);
++}
++EXPORT_SYMBOL_GPL(btintel_firmware_lock);
 +
- /*
-  * Create a tlb entry with the same effective and physical address as
-  * the tlb entry used by the current running code. But set the TS to 1.
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index d7737cf97cee..dae8e9177574 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
- extern int switch_to_as1(void);
- extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
- extern void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
-+extern void reloc_kernel_entry(void *fdt, int addr);
++void btintel_firmware_unlock(void)
++{
++	mutex_unlock(&firmware_lock);
++}
++EXPORT_SYMBOL_GPL(btintel_firmware_unlock);
++
+ MODULE_AUTHOR("Marcel Holtmann <marcel@holtmann.org>");
+ MODULE_DESCRIPTION("Bluetooth support for Intel devices ver " VERSION);
+ MODULE_VERSION(VERSION);
+diff --git a/drivers/bluetooth/btintel.h b/drivers/bluetooth/btintel.h
+index 3d846190f2bf..b3682d27d2ee 100644
+--- a/drivers/bluetooth/btintel.h
++++ b/drivers/bluetooth/btintel.h
+@@ -87,6 +87,8 @@ int btintel_read_boot_params(struct hci_dev *hdev,
+ 			     struct intel_boot_params *params);
+ int btintel_download_firmware(struct hci_dev *dev, const struct firmware *fw,
+ 			      u32 *boot_param);
++void btintel_firmware_lock(void);
++void btintel_firmware_unlock(void);
+ #else
+ 
+ static inline int btintel_check_bdaddr(struct hci_dev *hdev)
+@@ -181,4 +183,12 @@ static inline int btintel_download_firmware(struct hci_dev *dev,
+ {
+ 	return -EOPNOTSUPP;
+ }
++
++static inline void btintel_firmware_lock(void)
++{
++}
++
++static inline void btintel_firmware_unlock(void)
++{
++}
  #endif
- extern void loadcam_entry(unsigned int index);
- extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+diff --git a/include/linux/intel-wifi-bt.h b/include/linux/intel-wifi-bt.h
+new file mode 100644
+index 000000000000..260ed628d19b
+--- /dev/null
++++ b/include/linux/intel-wifi-bt.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __INTEL_WIFI_BT_H__
++#define __INTEL_WIFI_BT_H__
++
++void btintel_firmware_lock(void);
++void btintel_firmware_unlock(void);
++
++#endif
 -- 
-2.17.2
+2.17.1
 
