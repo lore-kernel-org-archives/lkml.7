@@ -2,126 +2,169 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB3AC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8D3C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25E320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF47621848
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WO09GKZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbfGQBRb (ORCPT
+        id S1726138AbfGQBU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 21:17:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48554 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfGQBRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 21:17:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 18:17:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,272,1559545200"; 
-   d="scan'208";a="366853507"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.165]) ([10.239.196.165])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2019 18:17:28 -0700
-Subject: Re: [PATCH v7 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Eduardo Habkost <ehabkost@redhat.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        xiaoyao.li@linux.intel.com, jingqi.liu@intel.com
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-3-tao3.xu@intel.com>
- <20190716160358.GE26800@habkost.net>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <ec13a518-6dcb-fc87-36e6-31befd62281e@intel.com>
-Date:   Wed, 17 Jul 2019 09:17:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 16 Jul 2019 21:20:28 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19484 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfGQBU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 21:20:28 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2e77db0000>; Tue, 16 Jul 2019 18:20:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 16 Jul 2019 18:20:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 16 Jul 2019 18:20:27 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
+ 2019 01:20:24 +0000
+Subject: Re: [PATCH 1/3] mm: document zone device struct page reserved fields
+To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190717001446.12351-1-rcampbell@nvidia.com>
+ <20190717001446.12351-2-rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <26a47482-c736-22c4-c21b-eb5f82186363@nvidia.com>
+Date:   Tue, 16 Jul 2019 18:20:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190716160358.GE26800@habkost.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190717001446.12351-2-rcampbell@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563326427; bh=Vyc38CvrMI+IuIuIo5NTAipNHSrHTq4RP4d6/FH8/Ss=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WO09GKZipFxahEW5auLlDTfWxasD4caJ5DWx+kkRN+SKTnZgpslwxIm1aMHk+NDM5
+         oNro819e/6ny7tzneXhd7c3oFzjSAfCUAoyg+4fgYv94zvnDGpVTnEH8JC0Fs8u7i+
+         lQFDuRTd/mCIaObX6wuhRGeGlJh0q0TTi2K7OSbNLS61IcAvpK7XcAWEuW9NNbCZtC
+         UVULswtoe3nVubu594nPb/vsUveh4uHeRbIdotQnPxCVYRhb6saCW2Rv6oSuZtwhTa
+         yF2goo651+RXsGS6KJKvH/SqVF2bnh+pTJ8e85MDItskjDETciEas0UvsrqFTt/u9Z
+         UFW14TArW4Q/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/2019 12:03 AM, Eduardo Habkost wrote:
-> On Fri, Jul 12, 2019 at 04:29:06PM +0800, Tao Xu wrote:
->> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
->> to determines the maximum time in TSC-quanta that the processor can reside
->> in either C0.1 or C0.2.
->>
->> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
->> IA32_UMWAIT_CONTROL between host and guest. The variable
->> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
->> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
->>
->> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
->> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
->> Signed-off-by: Tao Xu <tao3.xu@intel.com>
->> ---
-> [...]
->> +static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
->> +{
->> +	if (!vmx_has_waitpkg(vmx))
->> +		return;
->> +
->> +	if (vmx->msr_ia32_umwait_control != umwait_control_cached)
->> +		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
->> +			vmx->msr_ia32_umwait_control,
->> +			umwait_control_cached, false);
-> 
-> How exactly do we ensure NR_AUTOLOAD_MSRS (8) is still large enough?
-> 
-> I see 3 existing add_atomic_switch_msr() calls, but the one at
-> atomic_switch_perf_msrs() is in a loop.  Are we absolutely sure
-> that perf_guest_get_msrs() will never return more than 5 MSRs?
-> 
+On 7/16/19 5:14 PM, Ralph Campbell wrote:
+> Struct page for ZONE_DEVICE private pages uses the reserved fields when
+> anonymous pages are migrated to device private memory. This is so
+> the page->mapping and page->index fields are preserved and the page can
+> be migrated back to system memory.
+> Document this in comments so it is more clear.
+>=20
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: Matthew Wilcox <mawilcox@microsoft.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> ---
+>  include/linux/mm_types.h | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 3a37a89eb7a7..d6ea74e20306 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -159,7 +159,14 @@ struct page {
+>  			/** @pgmap: Points to the hosting device page map. */
+>  			struct dev_pagemap *pgmap;
+>  			void *zone_device_data;
+> -			unsigned long _zd_pad_1;	/* uses mapping */
+> +			/*
+> +			 * The following fields are used to hold the source
+> +			 * page anonymous mapping information while it is
+> +			 * migrated to device memory. See migrate_page().
+> +			 */
+> +			unsigned long _zd_pad_1;	/* aliases mapping */
+> +			unsigned long _zd_pad_2;	/* aliases index */
+> +			unsigned long _zd_pad_3;	/* aliases private */
 
-Quote the code of intel_guest_get_msrs:
+Actually, I do think this helps. It's hard to document these fields, and
+the ZONE_DEVICE pages have a really complicated situation during migration
+to a device.=20
 
-static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr)
-{
-[...]
-	arr[0].msr = MSR_CORE_PERF_GLOBAL_CTRL;
-	arr[0].host = x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_guest_mask;
-	arr[0].guest = x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_host_mask;
-	if (x86_pmu.flags & PMU_FL_PEBS_ALL)
-		arr[0].guest &= ~cpuc->pebs_enabled;
-	else
-		arr[0].guest &= ~(cpuc->pebs_enabled & PEBS_COUNTER_MASK);
-	*nr = 1;
+Additionally, I'm not sure, but should we go even further, and do this on t=
+he=20
+other side of the alias:
 
-	if (x86_pmu.pebs && x86_pmu.pebs_no_isolation) {
-[...]
-		arr[1].msr = MSR_IA32_PEBS_ENABLE;
-		arr[1].host = cpuc->pebs_enabled;
-		arr[1].guest = 0;
-		*nr = 2;
-[...]
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index d6ea74e20306..c5ce5989d8a8 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -83,7 +83,12 @@ struct page {
+                         * by the page owner.
+                         */
+                        struct list_head lru;
+-                       /* See page-flags.h for PAGE_MAPPING_FLAGS */
++                       /*
++                        * See page-flags.h for PAGE_MAPPING_FLAGS.
++                        *
++                        * Also: the next three fields (mapping, index and
++                        * private) are all used by ZONE_DEVICE pages.
++                        */
+                        struct address_space *mapping;
+                        pgoff_t index;          /* Our offset within mappin=
+g. */
+                        /**
 
-There are most 2 msrs now. By default umwait is disabled in KVM. So by 
-default there is no MSR_IA32_UMWAIT_CONTROL added into 
-add_atomic_switch_msr().
+?
 
-Thanks.
-> 
->> +	else
->> +		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
->> +}
->> +
->>   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->>   {
->>   	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> [...]
-> 
-> 
+Either way, you can add:
 
+    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
