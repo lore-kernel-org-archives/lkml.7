@@ -2,127 +2,118 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79811C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E68C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5890121743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA16D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="DWfblLhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfGQPyM (ORCPT
+        id S1727163AbfGQP6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:54:12 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62552 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbfGQPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:54:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 08:54:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
-   d="scan'208";a="191305404"
-Received: from hongfuwa-mobl.ccr.corp.intel.com ([10.249.175.161])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 08:54:10 -0700
-Message-ID: <1563378848.2363.17.camel@intel.com>
-Subject: [GIT PULL] Thermal management updates for v5.3-rc1
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>
-Date:   Wed, 17 Jul 2019 23:54:08 +0800
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Jul 2019 11:58:09 -0400
+Received: from mail-eopbgr810119.outbound.protection.outlook.com ([40.107.81.119]:47840
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbfGQP6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 11:58:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PYL9kVFA1LPJV6FTa+Hq6kLpw5N/vU3Qm0QJx0bg01t4aBN9/fXA32cEbZsMqLr48+D2RGhOoCTlQlqG0XgC/Pt5sWZefJvuiKTr1f6GXE64/UyraDZJPDSPBATn9NYlINeNoyzfhk+JwG7YI7bRsEGd7Ev2fgjdcLqwVc14s7bYs/pkJvup/I1ZbyWDdZqODcNbwzDCB1gdx65SRQYjEl1ttgaAFCnS247WqHBvYu0TS6/1W+zkBIIOro6y7WbTyENrlWMJcje5x92+UsZd073eaZBiFdIP9zIgFNiAHcoFfiHvIsfqielP3ZaILGAsfl4oC6fjh/JtJPKs8sENsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GhscU7L2rvp66zHyLIjDKzmnOFZOw7I6gIoyXCgRAYA=;
+ b=QV62e0+PTrHTO+mFcxgtTAVyZsFkyD9eiG7nrgUdmHfEUNkMRkmkQrYHa+9ifJv9dq/k1S9KoqcM/+K/X1vexOKOvYZzoylXD8MtBgrig9lRrEtQLCIwOlpVAG2H144wGrtH+vjSC64jgJ1W4TOY/Ee4K7VsFRERezRt9vKEEmx2390eqDKS2IrBZS77PRdmppJDTCDCxD0/jeSAslmF1wngE5j9/83XYoBfZDpGvMMo8MZ6h6XVAmhQTdHwVH0ncdYEcdt722IPI8BkbwZK630E3c12wRqEvIcIKOrUc8zP2y2NRyzTN5HnQ+ttBSAS9fPvBF6FLVqtAKppflW8Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GhscU7L2rvp66zHyLIjDKzmnOFZOw7I6gIoyXCgRAYA=;
+ b=DWfblLheofL6j5yw+vRGQ2C1ZodsTqYbBGONsh4oECy0BgQY/nDniytPP8ZasoEIQmkOpVT5PBc+QgRO26HbmaDWjhsE4gLVNQgbztByO3cPSSoL7ubHPEvhSlyqDwg4yyQeLX8n8myq5ZLk9nchGboVRYXbfAsaO0RgQbcmo38=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1182.namprd22.prod.outlook.com (10.174.169.158) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.13; Wed, 17 Jul 2019 15:58:05 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::746d:883d:31:522e]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::746d:883d:31:522e%5]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
+ 15:58:04 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: kernel: only use i8253 clocksource with periodic
+  clockevent
+Thread-Topic: [PATCH] MIPS: kernel: only use i8253 clocksource with periodic
+  clockevent
+Thread-Index: AQHVPLhql2QLqBjpuEG6GdBdno1n+A==
+Date:   Wed, 17 Jul 2019 15:58:04 +0000
+Message-ID: <MWHPR2201MB1277B6A6EB020E4E38329373C1C90@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190513114725.17823-1-tbogendoerfer@suse.de>
+In-Reply-To: <20190513114725.17823-1-tbogendoerfer@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::21) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 63aad368-eb16-4bf2-58bf-08d70acf8d50
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1182;
+x-ms-traffictypediagnostic: MWHPR2201MB1182:
+x-microsoft-antispam-prvs: <MWHPR2201MB118269E273C6BC3EBECF993EC1C90@MWHPR2201MB1182.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 01018CB5B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39840400004)(396003)(366004)(376002)(136003)(189003)(199004)(54906003)(4744005)(5660300002)(52536014)(186003)(99286004)(14454004)(3846002)(8936002)(2906002)(386003)(102836004)(26005)(4326008)(71200400001)(11346002)(66066001)(42882007)(71190400001)(6506007)(229853002)(66476007)(66446008)(66556008)(64756008)(66946007)(316002)(478600001)(446003)(74316002)(7736002)(476003)(6436002)(305945005)(68736007)(53936002)(33656002)(81156014)(81166006)(8676002)(7696005)(52116002)(76176011)(6246003)(6916009)(25786009)(486006)(44832011)(6116002)(9686003)(256004)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1182;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2Jal0is0LDVUzo00jywJDKFEmW5aP/Mgfcr+SWIb1Nef5yVoHuA1Xg3oy7MfElqB1/r0EQZsBdFtl1uwcPzl+ScLN2pqSojuzCFIcGyWb+z6BFUQJoIF4twv6VI4JUa2rUq3MZpXx48tODMnpPH47Hn15q+7Jx9VscLAk7tlk09BxWpxfcgJJeE+BULgagSlWCLBbeFaIxTDTNJHX74wdQI5cgdJ2YxvkFPQpsnM+zjOrbEnXXz0sSN25i+oYZ62JvIqBOvXxK74GZRJdWiYfl00qHBgx6+bmpNBo0Nv5IdfWygdtCeUN2mBuyYk5IVmaIswyoC7PIfKO6jGQClhT8FtTI3/ZuXeassgJtMHgZFZIEF8E7SuFAtUo1D97ldWgC/l9ABFtaJ8505B2pNmMKlanj5EmnqyI0XfLJWUHOA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63aad368-eb16-4bf2-58bf-08d70acf8d50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 15:58:04.3086
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Linus,
+Hello,
 
-Please pull from
-  git://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git next
+Thomas Bogendoerfer wrote:
+> i8253 clocksource needs a free running timer. This could only
+> be used, if i8253 clockevent is set up as periodic.
+>=20
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-to receive the latest Thermal Management updates for v5.3-rc1 with
-top-most commit 6c395f66e98c895cf3ebf87c0b2fc63b6a57a196:
+Applied to mips-fixes.
 
-  drivers: thermal: processor_thermal_device: Fix build warning (2019-
-07-09 21:19:12 +0800)
+Thanks,
+    Paul
 
-on top of commit 4b972a01a7da614b4796475f933094751a295a2f:
-
-  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
-
-Specifics:
- - Covert thermal documents to ReST. (Mauro Carvalho Chehab)
- - Fix a cyclic depedency in between thermal core and governors.
-(Daniel Lezcano)
- - Fix processor_thermal_device driver to re-evaluate power limits
-after resume. (Srinivas Pandruvada, Zhang Rui)
-
-thanks,
-rui
-
-
-----------------------------------------------------------------
-Daniel Lezcano (2):
-      thermal/drivers/core: Add init section table for self-
-encapsulation
-      thermal/drivers/core: Use governor table to initialize
-
-Mauro Carvalho Chehab (1):
-      docs: thermal: convert to ReST
-
-Srinivas Pandruvada (1):
-      drivers: thermal: processor_thermal: Read PPCC on resume
-
-Zhang Rui (2):
-      Merge branches 'thermal-core' and 'thermal-intel' into next
-      drivers: thermal: processor_thermal_device: Fix build warning
-
- .../{cpu-cooling-api.txt => cpu-cooling-api.rst}   |  39 +-
- .../thermal/{exynos_thermal => exynos_thermal.rst} |  47 +-
- Documentation/thermal/exynos_thermal_emulation     |  53 ---
- Documentation/thermal/exynos_thermal_emulation.rst |  61 +++
- Documentation/thermal/index.rst                    |  18 +
- .../{intel_powerclamp.txt => intel_powerclamp.rst} | 183 ++++----
- .../{nouveau_thermal => nouveau_thermal.rst}       |  54 ++-
- .../{power_allocator.txt => power_allocator.rst}   | 144 +++---
- .../thermal/{sysfs-api.txt => sysfs-api.rst}       | 488
-++++++++++++++-------
- ...ure_thermal => x86_pkg_temperature_thermal.rst} |  28 +-
- MAINTAINERS                                        |   2 +-
- drivers/thermal/fair_share.c                       |  12 +-
- drivers/thermal/gov_bang_bang.c                    |  11 +-
- .../int340x_thermal/processor_thermal_device.c     |  18 +
- drivers/thermal/power_allocator.c                  |  11 +-
- drivers/thermal/step_wise.c                        |  11 +-
- drivers/thermal/thermal_core.c                     |  52 ++-
- drivers/thermal/thermal_core.h                     |  55 +--
- drivers/thermal/user_space.c                       |  12 +-
- include/asm-generic/vmlinux.lds.h                  |  11 +
- include/linux/thermal.h                            |   4 +-
- 21 files changed, 771 insertions(+), 543 deletions(-)
- rename Documentation/thermal/{cpu-cooling-api.txt => cpu-cooling-
-api.rst} (82%)
- rename Documentation/thermal/{exynos_thermal => exynos_thermal.rst}
-(67%)
- delete mode 100644 Documentation/thermal/exynos_thermal_emulation
- create mode 100644 Documentation/thermal/exynos_thermal_emulation.rst
- create mode 100644 Documentation/thermal/index.rst
- rename Documentation/thermal/{intel_powerclamp.txt =>
-intel_powerclamp.rst} (76%)
- rename Documentation/thermal/{nouveau_thermal => nouveau_thermal.rst}
-(64%)
- rename Documentation/thermal/{power_allocator.txt =>
-power_allocator.rst} (74%)
- rename Documentation/thermal/{sysfs-api.txt => sysfs-api.rst} (66%)
- rename Documentation/thermal/{x86_pkg_temperature_thermal =>
-x86_pkg_temperature_thermal.rst} (80%)
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
