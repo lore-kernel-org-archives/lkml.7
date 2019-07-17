@@ -2,106 +2,113 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AD2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCC7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C019220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4078421743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:08:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a+R0a19f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfGQHCP (ORCPT
+        id S1726072AbfGQHIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:02:15 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:46470 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725873AbfGQHCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 03:02:15 -0400
-X-UUID: 178f1f2683724f59a40625aed9c447b8-20190717
-X-UUID: 178f1f2683724f59a40625aed9c447b8-20190717
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1071939593; Wed, 17 Jul 2019 15:01:50 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Jul 2019 15:01:48 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Jul 2019 15:01:48 +0800
-Message-ID: <1563346908.29169.28.camel@mtksdaap41>
-Subject: Re: [PATCH v4, 25/33] drm/mediatek: add clock property check before
- get it
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 17 Jul 2019 15:01:48 +0800
-In-Reply-To: <1562625253-29254-26-git-send-email-yongqiang.niu@mediatek.com>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1562625253-29254-26-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Jul 2019 03:08:18 -0400
+Received: from mail-eopbgr40057.outbound.protection.outlook.com ([40.107.4.57]:19526
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725873AbfGQHIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 03:08:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vNj5DRa/6byCVqNEw946F0vmTvwVcfwy1fxFz+uRmto=;
+ b=a+R0a19f6KCTKuFeOJzXkR9Cw3IGRMwOQchlWXWrKBCB7MWzxk/bYhpq36VIgUQATUcz2X8J2YcOTchacObjYdOyXBTWw9fz+Sq3PsDfCgVCa0ZxhQDv7txXKq5LJqECziFW1zkcuZR60CngGq5oKCT/UvUKHh8WxvMQUHfW650=
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
+ VI1PR04MB4686.eurprd04.prod.outlook.com (20.177.56.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.19; Wed, 17 Jul 2019 07:08:15 +0000
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::90da:d60:f39b:14ac]) by VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::90da:d60:f39b:14ac%3]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
+ 07:08:15 +0000
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 02/14] crypto: caam - simplfy clock initialization
+Thread-Topic: [PATCH v5 02/14] crypto: caam - simplfy clock initialization
+Thread-Index: AQHVO0rFDbdaRxn10E6ZpXPILy0l2g==
+Date:   Wed, 17 Jul 2019 07:08:15 +0000
+Message-ID: <VI1PR04MB444576A86254A175874EE4158CC90@VI1PR04MB4445.eurprd04.prod.outlook.com>
+References: <20190715201942.17309-1-andrew.smirnov@gmail.com>
+ <20190715201942.17309-3-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=iuliana.prodan@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 366bdba8-5a0a-408a-59ec-08d70a8589a9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4686;
+x-ms-traffictypediagnostic: VI1PR04MB4686:
+x-microsoft-antispam-prvs: <VI1PR04MB4686A32752A6B647E64CD66A8CC90@VI1PR04MB4686.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1013;
+x-forefront-prvs: 01018CB5B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(199004)(189003)(76176011)(2501003)(68736007)(7696005)(3846002)(14454004)(6116002)(33656002)(66066001)(54906003)(110136005)(186003)(2906002)(26005)(316002)(74316002)(99286004)(6506007)(102836004)(53546011)(6246003)(4326008)(55016002)(256004)(305945005)(7736002)(71190400001)(86362001)(478600001)(9686003)(53936002)(446003)(6436002)(76116006)(44832011)(8676002)(66556008)(64756008)(91956017)(66946007)(66446008)(66476007)(8936002)(52536014)(25786009)(476003)(4744005)(81166006)(81156014)(5660300002)(486006)(229853002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4686;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UUtdAZwFQwtA8tEvocE8xoPXKi1Juf9b6S3UjOZJRcvPkzkZFE19WBPyd8hwHLg/vpDag2McjQsKMsyu7mSAskGeUzMkeQoVOR52kVk1AVTMC0nroCqtzFFSz1qQSUoE/kHDsjlh9JEyasxf6KyTanaR9v/ylBQtwdTaCjsATV8IrN4cFPStvBQEpCc7nNDYJbclIM7lAqKr+lr3c2uKgZToUDeOu+eckrN4YYt+HFCb0jWkbmgWGdLD879RKptGSuZRMkzMTMtPjfa6boLH4BpSEb0IIHA8fhBjNHq5wRoP5FvQ0MKE2cf6hurKQCJzgApeuBlUp+kp7FMrk30TKZi2k8gJQptpvzkodWyHoTiB4P3QMlJfnIV7klG18QgLQ9UQEVehqmIluO0xt1DHDKQ0+SN0z/QKf88++rssuTU=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: DBE8AFB5AD53D33AE2D0AB8EF4693F5CD67E9E7F3DEEF7454E41BD6BB0BDA92E2000:8
-X-MTK:  N
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 366bdba8-5a0a-408a-59ec-08d70a8589a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 07:08:15.1370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iuliana.prodan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4686
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Tue, 2019-07-09 at 06:34 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add clock property check before get it
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index c57e7ab..a9d3e27 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -668,10 +668,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  	for (i = 0; i < 10; i++)
->  		ddp->mutex[i].id = i;
->  
-> -	ddp->clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(ddp->clk)) {
-> -		dev_err(dev, "Failed to get clock\n");
-> -		return PTR_ERR(ddp->clk);
-> +	if (of_find_property(dev->of_node, "clocks", &i)) {
-> +		ddp->clk = devm_clk_get(dev, NULL);
-> +		if (IS_ERR(ddp->clk)) {
-> +			dev_err(dev, "Failed to get clock\n");
-> +			return PTR_ERR(ddp->clk);
-> +		}
-
-Only "mediatek,mt8133-disp-mutex" has no clock property. For other SoC,
-clock property is required. So I think this exception is just for
-mt8183.
-
-Regards,
-CK
-
->  	}
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-
+On 7/15/2019 11:20 PM, Andrey Smirnov wrote:=0A=
+> Simplify clock initialization code by converting it to use clk-bulk,=0A=
+> devres and soc_device_match() match table. No functional change=0A=
+> intended.=0A=
+> =0A=
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+> Cc: Chris Spencer <christopher.spencer@sea.co.uk>=0A=
+> Cc: Cory Tusar <cory.tusar@zii.aero>=0A=
+> Cc: Chris Healy <cphealy@gmail.com>=0A=
+> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
+> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
+> Cc: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: linux-kernel@vger.kernel.org=0A=
+> ---=0A=
+=0A=
+Tested-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Iulia=0A=
