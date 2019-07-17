@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42164C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13495C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA2920818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2F920818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tm2mbZg6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzYceC2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfGQGLD (ORCPT
+        id S1726943AbfGQGLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:11:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43848 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfGQGLC (ORCPT
+        Wed, 17 Jul 2019 02:11:09 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:40540 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfGQGLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:11:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so10606398pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 23:11:02 -0700 (PDT)
+        Wed, 17 Jul 2019 02:11:09 -0400
+Received: by mail-pf1-f169.google.com with SMTP id p184so10284127pfp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 23:11:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vN79lmOQ+vzumU1jDpqE7NFEQZL1EfXi0bwxGYdVrVI=;
-        b=tm2mbZg6hha+q1G9c4kaetRiZMsb6+GMeXdyEK9s+xiCXMjwjzqAlHeOQ/fMUbeD0W
-         wu7s49zatRRw/wpRb1aXNDxc0go3LI4pFc7EDAr6aM+ulHogSDI/U80Bnl/r/zzHe3j2
-         YGhGdP/d2w6s6BKVDvRX2pMu5/XTHZuOy2cancQoj++vMHTsxfSETaYjfCDUD2zEcUCL
-         VobPZkRq+xDb3YPUowTi6AtLYK5IEkI5VpIhbW8rp6z09XXJti3sX1sIaYOm6g43B3kQ
-         z5SCDiQBfNbgcduk5aiGCI8fxY64zdLYmaZxU75GDSfo7WoosRucOGlfddt9WvHeTrMF
-         5+Aw==
+        bh=rxjGrJMP1hpxMB6zVTeQy9AZszZ72B624ErR+RAbbCM=;
+        b=ZzYceC2OChsPGS2vpmrexEdklm5EoB5tf1aBMFg6jA2ot+XYQR7urjAGkuAjghzku4
+         65l51zAlox2SI6SdyenABJDJC8LgCqAUD49JhfC7t7bH9/fKLZIKabhoq9fUct10LV9O
+         97AibNE35b4hi9WjZPrDjXnqlYDf67IJPaKvF+L8L8oryM81dk12ebnqyZXJ4FaQs2pj
+         SqVIjwlXHiljM9WLoPAApn09WwzojHRNWlGmc36mo9gLQ8wooCOUy1kRBa+00iVDYqpC
+         vvbKTPaa0/WVu+Lcl3owMVpKHxUInduj7w6jbB5B9YY0M9CJpcRpLkY883dFgb+cHgSy
+         2q7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=vN79lmOQ+vzumU1jDpqE7NFEQZL1EfXi0bwxGYdVrVI=;
-        b=dRIrRa4RAjR4i5Hgy0yEcRPxCLVycxpQZUYRmo3+RxuiXBB7LqXN++mJk5dZ3BlVF9
-         I1JLM3yv5gIH5hpI3CSNvOmq9jvyLJSL/tN+HixIwS9sihi2QPcx86CowMZo6mJSpMa1
-         OIejwpa4l069feKi4r8WAz6cY7qjMZNIK644AeMDDtCMZ/U5aW7+xuOVDMuP+eZZIk5I
-         EcVorIXEF9pymeHYf5IUF6pouZBTTE/BQnfgh97BAcoRpZEdacRZPcL8RW4Q6wRxbjMH
-         8NTlYKwAyT2zF/ExvAOZRho9Uth1AvMMkoxTAppeOK5HuJuAODWMHU83EOJ+L1b+wfk1
-         tG1g==
-X-Gm-Message-State: APjAAAXrJiPV99lKQTxy1/go8gQaCUCIykF67lb/QWmM7W+gKdZ2ViTy
-        Xzz+peLmqq8Ch+je7aTbcTTSX6hEyA==
-X-Google-Smtp-Source: APXvYqzsCsoCU0LtZpW6aTjrP7Q95hULw+ZhlXOavzCScJo+T+BGRa+MK/t5qSfF8EgwqbbRpxPRkg==
-X-Received: by 2002:a65:458d:: with SMTP id o13mr38583589pgq.34.1563343861778;
-        Tue, 16 Jul 2019 23:11:01 -0700 (PDT)
+        bh=rxjGrJMP1hpxMB6zVTeQy9AZszZ72B624ErR+RAbbCM=;
+        b=fsSK4lrR9TNHzVqPp0JSkvJXmg2YpI2rqZQYB3rvWkYq11VhgIpqdiDShF35W/30Gm
+         RAtau4RZmdnZyGgYcmY72QZt69Wo2zuFN19NEz9zzz0/u9OgSbHfvpGwiHbVnwr0ns0q
+         b+2blaCVihlt2tcBQRcgxO7Ydf8LfPPyOYys4fye7YVQvx3CpuWMNQiE8FnAsJJuMjvp
+         8aWJEpQZJmkiLQAdXLqWbrSZTwnSrKVedyAHNioyWQx10KoQF25iLHlvbKMuDZgAobFI
+         x6HQzOCdNS+0is8Ofv9X6Wp3pSZ2wfVZ9xCBrPcNAKcIZoShKAiPMXVwrpBgLxP0hblN
+         BXkQ==
+X-Gm-Message-State: APjAAAUtJzs7yvggi7qqNrvbc9XOYf2aVDSeYa0prvP2veJ+rleZ7ACl
+        o8LMgbJaiORDSY70nFOe2w+XPFvjZQ==
+X-Google-Smtp-Source: APXvYqzXP8tcS4UU5zL6p3U9o3cY9LFJ9E45fr8SnzhLehnihIs217ic/N+BCZP+YeattNw8ToK/Yw==
+X-Received: by 2002:a63:4185:: with SMTP id o127mr1301569pga.82.1563343868160;
+        Tue, 16 Jul 2019 23:11:08 -0700 (PDT)
 Received: from localhost.localdomain ([2405:204:7301:59e6:f493:40df:9c8a:5041])
-        by smtp.gmail.com with ESMTPSA id r27sm25993313pgn.25.2019.07.16.23.10.55
+        by smtp.gmail.com with ESMTPSA id r27sm25993313pgn.25.2019.07.16.23.11.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 23:11:01 -0700 (PDT)
+        Tue, 16 Jul 2019 23:11:07 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
 Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
@@ -62,9 +62,9 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org, Darshak.Patel@einfochips.com,
         kinjan.patel@einfochips.com, prajose.john@einfochips.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/3] dt-bindings: Add Vendor prefix for Einfochips
-Date:   Wed, 17 Jul 2019 11:40:37 +0530
-Message-Id: <20190717061039.9271-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 2/3] dt-bindings: arm: Document i.MX8QXP AI_ML board binding
+Date:   Wed, 17 Jul 2019 11:40:38 +0530
+Message-Id: <20190717061039.9271-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
 References: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
@@ -73,27 +73,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree vendor prefix for Einfochips.
-https://www.einfochips.com/
+Document devicetree binding of i.MX8QXP AI_ML board from Einfochips.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 1acf806b62bf..9b74c4de5676 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -255,6 +255,8 @@ patternProperties:
-     description: Emerging Display Technologies
-   "^eeti,.*":
-     description: eGalax_eMPIA Technology Inc
-+  "^einfochips,.*":
-+    description: Einfochips
-   "^elan,.*":
-     description: Elan Microelectronic Corp.
-   "^elgin,.*":
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 407138ebc0d0..8e9209a75478 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -180,6 +180,7 @@ properties:
+       - description: i.MX8QXP based Boards
+         items:
+           - enum:
++              - einfochips,imx8qxp-ai_ml  # i.MX8QXP AI_ML Board
+               - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
+           - const: fsl,imx8qxp
+ 
 -- 
 2.17.1
 
