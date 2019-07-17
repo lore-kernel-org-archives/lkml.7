@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0395DC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261F8C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40E0217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1941217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IWT/wP9g"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="kUEQ3Ahn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfGQWvG (ORCPT
+        id S1730921AbfGQWv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:51:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44291 "EHLO
+        Wed, 17 Jul 2019 18:51:28 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59017 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfGQWvG (ORCPT
+        with ESMTP id S1727653AbfGQWv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:51:06 -0400
+        Wed, 17 Jul 2019 18:51:28 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HMoaRg1721355
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HMpJxH1721653
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 15:50:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HMoaRg1721355
+        Wed, 17 Jul 2019 15:51:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HMpJxH1721653
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563403837;
-        bh=YYHgzK0ZkcZPLXRZ6HIUDbV8W6wpK5J3a7+zN8gT+Xo=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=IWT/wP9gyY/pW0FIuVxH8dAZfZaXU7X7tqHpkV8QqiZzMoz3KiLg/013I1aDQjsY7
-         Up6ASPjk1lIqcdE5vgxIm9wPyGC8kB2QcIABtDTeKdoXZB4j1HgIGV1+xEKPmFgO2v
-         FbMO9ORKWEEt2UJ55/Aul3hElQnU+r+wA5Pjmdm4GLV+77FPOyv41KuSCCAh1K1X4e
-         6l/o5uTneODb76a0m1Lan3ZDRwXZA/o9Vp7VPuWXXOjTt8GxxW3G3T1mRQjgmRMzTL
-         e96R0qSu2tEFPbQNmTbFSBwYAxFAf+fSwGYRe9V2lejFfAlwu+xUy75WQhALeXSHUA
-         WuZgIsXCjXitw==
+        s=2019061801; t=1563403880;
+        bh=GOQBT3w4J5fnpemQq/iIKrsLm4ko8CH0jRenLgLzJcQ=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=kUEQ3AhnWFSnG6+nt7/AqwcaPrjMerja+t04FQLLqh1rXFhbTD7BTH47auaDz/6Yi
+         5Z/WpEjVB9agjns9zcPiZNhh4KVvzYH9NfweM9cPhZ36K18K1i/TRCVXKjfZZ5ZAX/
+         1wwthpzflk4+CTdLWFR76vnRfIjhfbc+xtdPFzy2Pj0Lq2xTc0xq/hkEGd/faNfXCl
+         oxMWENSEVVy9xtR5Wi0+RctREdKL4j3tuKhtPRgY2vmtD0vwbkLiEWPC2FWcJt2Wo1
+         kMeV9fPcDKpTag37E786gh5/KMifLTsXasmmKfMBZEoSqkA4ef05Oj4UD6GLZ+d27Y
+         dkoV/liPjBD1w==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HMoaVW1721352;
-        Wed, 17 Jul 2019 15:50:36 -0700
-Date:   Wed, 17 Jul 2019 15:50:36 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HMpIH81721650;
+        Wed, 17 Jul 2019 15:51:18 -0700
+Date:   Wed, 17 Jul 2019 15:51:18 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-j6f2ioa6hj9dinzpjvlhcjoc@git.kernel.org>
-Cc:     hpa@zytor.com, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, daniel@iogearbox.net,
-        mingo@kernel.org, ast@kernel.org, tglx@linutronix.de,
-        jolsa@kernel.org, namhyung@kernel.org, acme@redhat.com
-Reply-To: daniel@iogearbox.net, mingo@kernel.org, ast@kernel.org,
-          hpa@zytor.com, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org, jolsa@kernel.org,
-          namhyung@kernel.org, acme@redhat.com, tglx@linutronix.de
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-fead24e52383c3f8eb25b5426d52b430b84a8194@git.kernel.org>
+Cc:     adrian.hunter@intel.com, acme@redhat.com, namhyung@kernel.org,
+        hpa@zytor.com, mingo@kernel.org, tglx@linutronix.de,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org
+Reply-To: adrian.hunter@intel.com, acme@redhat.com, hpa@zytor.com,
+          jolsa@redhat.com, mingo@kernel.org, tglx@linutronix.de,
+          namhyung@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190710085810.1650-2-adrian.hunter@intel.com>
+References: <20190710085810.1650-2-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf trace: Auto bump rlimit(MEMLOCK) for eBPF
- maps sake
-Git-Commit-ID: c3e78a3403dabcb7115c2fb7b538a1095d168cd5
+Subject: [tip:perf/urgent] perf db-export: Get rid of db_export__deferred()
+Git-Commit-ID: fead24e52383c3f8eb25b5426d52b430b84a8194
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,99 +69,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c3e78a3403dabcb7115c2fb7b538a1095d168cd5
-Gitweb:     https://git.kernel.org/tip/c3e78a3403dabcb7115c2fb7b538a1095d168cd5
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 9 Jul 2019 16:36:45 -0300
+Commit-ID:  fead24e52383c3f8eb25b5426d52b430b84a8194
+Gitweb:     https://git.kernel.org/tip/fead24e52383c3f8eb25b5426d52b430b84a8194
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Wed, 10 Jul 2019 11:57:50 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 9 Jul 2019 16:36:45 -0300
+CommitDate: Wed, 10 Jul 2019 12:07:40 -0300
 
-perf trace: Auto bump rlimit(MEMLOCK) for eBPF maps sake
+perf db-export: Get rid of db_export__deferred()
 
-Circa v5.2 this started to fail:
+db_export__deferred() deferred the export of comms if the comm string
+had not been "set" (changed from :<pid>) however that problem was fixed
+a long time ago by commit e803cf97a4f9 ("perf record: Synthesize COMM
+event for a command line workload"), so get rid of
+db_export__deferred().
 
-  # perf trace -e /wb/augmented_raw_syscalls.o
-  event syntax error: '/wb/augmented_raw_syscalls.o'
-                       \___ Operation not permitted
-
-  (add -v to see detail)
-  Run 'perf list' for a list of valid events
-
-   Usage: perf trace [<options>] [<command>]
-      or: perf trace [<options>] -- <command> [<options>]
-      or: perf trace record [<options>] [<command>]
-      or: perf trace record [<options>] -- <command> [<options>]
-
-      -e, --event <event>   event/syscall selector. use 'perf list' to list available events
-  #
-
-In verbose mode we some -EPERM when creating a BPF map:
-
-  # perf trace -v -e /wb/augmented_raw_syscalls.o
-  <SNIP>
-  libbpf: failed to create map (name: '__augmented_syscalls__'): Operation not permitted
-  libbpf: failed to load object '/wb/augmented_raw_syscalls.o'
-  bpf: load objects failed: err=-1: (Operation not permitted)
-  event syntax error: '/wb/augmented_raw_syscalls.o'
-                       \___ Operation not permitted
-
-  (add -v to see detail)
-  Run 'perf list' for a list of valid events
-
-   Usage: perf trace [<options>] [<command>]
-      or: perf trace [<options>] -- <command> [<options>]
-      or: perf trace record [<options>] [<command>]
-      or: perf trace record [<options>] -- <command> [<options>]
-
-      -e, --event <event>   event/syscall selector. use 'perf list' to list available events
-  #
-
-If we bumped 'ulimit -l 128' to get it from the 64k default to double that, it
-worked, so use the recently added rlimit__bump_memlock() helper:
-
-  # perf trace -e /wb/augmented_raw_syscalls.o -e open*,*sleep sleep 1
-       0.000 ( 0.007 ms): sleep/28042 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
-       0.022 ( 0.004 ms): sleep/28042 openat(dfd: CWD, filename: "/lib64/libc.so.6", flags: RDONLY|CLOEXEC) = 3
-       0.201 ( 0.007 ms): sleep/28042 openat(dfd: CWD, filename: "", flags: RDONLY|CLOEXEC)                 = 3
-       0.241 (1000.421 ms): sleep/28042 nanosleep(rqtp: 0x7ffd6c3e6ed0)                                       = 0
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-j6f2ioa6hj9dinzpjvlhcjoc@git.kernel.org
+Link: http://lkml.kernel.org/r/20190710085810.1650-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/perf/util/db-export.c                        | 61 +---------------------
+ tools/perf/util/db-export.h                        |  2 -
+ .../util/scripting-engines/trace-event-python.c    |  4 +-
+ 3 files changed, 2 insertions(+), 65 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1aa2ed096f65..4f0bbffee05f 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -19,6 +19,7 @@
- #include <api/fs/tracing_path.h>
- #include <bpf/bpf.h>
- #include "util/bpf_map.h"
-+#include "util/rlimit.h"
- #include "builtin.h"
- #include "util/cgroup.h"
- #include "util/color.h"
-@@ -3864,6 +3865,15 @@ int cmd_trace(int argc, const char **argv)
- 		goto out;
- 	}
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index 2394c7506abe..34cf197fe74f 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -20,70 +20,14 @@
+ #include "db-export.h"
+ #include <linux/zalloc.h>
  
-+	/*
-+	 * Parsing .perfconfig may entail creating a BPF event, that may need
-+	 * to create BPF maps, so bump RLIM_MEMLOCK as the default 64K setting
-+	 * is too small. This affects just this process, not touching the
-+	 * global setting. If it fails we'll get something in 'perf trace -v'
-+	 * to help diagnose the problem.
-+	 */
-+	rlimit__bump_memlock();
-+
- 	err = perf_config(trace__config, &trace);
- 	if (err)
- 		goto out;
+-struct deferred_export {
+-	struct list_head node;
+-	struct comm *comm;
+-};
+-
+-static int db_export__deferred(struct db_export *dbe)
+-{
+-	struct deferred_export *de;
+-	int err;
+-
+-	while (!list_empty(&dbe->deferred)) {
+-		de = list_entry(dbe->deferred.next, struct deferred_export,
+-				node);
+-		err = dbe->export_comm(dbe, de->comm);
+-		list_del_init(&de->node);
+-		free(de);
+-		if (err)
+-			return err;
+-	}
+-
+-	return 0;
+-}
+-
+-static void db_export__free_deferred(struct db_export *dbe)
+-{
+-	struct deferred_export *de;
+-
+-	while (!list_empty(&dbe->deferred)) {
+-		de = list_entry(dbe->deferred.next, struct deferred_export,
+-				node);
+-		list_del_init(&de->node);
+-		free(de);
+-	}
+-}
+-
+-static int db_export__defer_comm(struct db_export *dbe, struct comm *comm)
+-{
+-	struct deferred_export *de;
+-
+-	de = zalloc(sizeof(struct deferred_export));
+-	if (!de)
+-		return -ENOMEM;
+-
+-	de->comm = comm;
+-	list_add_tail(&de->node, &dbe->deferred);
+-
+-	return 0;
+-}
+-
+ int db_export__init(struct db_export *dbe)
+ {
+ 	memset(dbe, 0, sizeof(struct db_export));
+-	INIT_LIST_HEAD(&dbe->deferred);
+ 	return 0;
+ }
+ 
+-int db_export__flush(struct db_export *dbe)
+-{
+-	return db_export__deferred(dbe);
+-}
+-
+ void db_export__exit(struct db_export *dbe)
+ {
+-	db_export__free_deferred(dbe);
+ 	call_return_processor__free(dbe->crp);
+ 	dbe->crp = NULL;
+ }
+@@ -172,10 +116,7 @@ int db_export__comm(struct db_export *dbe, struct comm *comm,
+ 	comm->db_id = ++dbe->comm_last_db_id;
+ 
+ 	if (dbe->export_comm) {
+-		if (main_thread->comm_set)
+-			err = dbe->export_comm(dbe, comm);
+-		else
+-			err = db_export__defer_comm(dbe, comm);
++		err = dbe->export_comm(dbe, comm);
+ 		if (err)
+ 			return err;
+ 	}
+diff --git a/tools/perf/util/db-export.h b/tools/perf/util/db-export.h
+index e8a64028a386..261cfece8dee 100644
+--- a/tools/perf/util/db-export.h
++++ b/tools/perf/util/db-export.h
+@@ -68,11 +68,9 @@ struct db_export {
+ 	u64 sample_last_db_id;
+ 	u64 call_path_last_db_id;
+ 	u64 call_return_last_db_id;
+-	struct list_head deferred;
+ };
+ 
+ int db_export__init(struct db_export *dbe);
+-int db_export__flush(struct db_export *dbe);
+ void db_export__exit(struct db_export *dbe);
+ int db_export__evsel(struct db_export *dbe, struct perf_evsel *evsel);
+ int db_export__machine(struct db_export *dbe, struct machine *machine);
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 112bed65232f..c9837f0f0fd6 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1620,9 +1620,7 @@ error:
+ 
+ static int python_flush_script(void)
+ {
+-	struct tables *tables = &tables_global;
+-
+-	return db_export__flush(&tables->dbe);
++	return 0;
+ }
+ 
+ /*
