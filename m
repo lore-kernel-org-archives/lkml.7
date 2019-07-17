@@ -2,121 +2,101 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E34C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E51C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F10820818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FL+rfY1t"
+	by mail.kernel.org (Postfix) with ESMTP id E760320818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfGQOP3 (ORCPT
+        id S1727348AbfGQOQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:15:29 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49622 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfGQOP3 (ORCPT
+        Wed, 17 Jul 2019 10:16:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:58329 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfGQOQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:15:29 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HEFJVe036361;
-        Wed, 17 Jul 2019 09:15:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563372919;
-        bh=wmbVRRCj0IguumeyCLY5alwgve2QCszThM26fNaNT+Y=;
-        h=From:To:CC:Subject:Date;
-        b=FL+rfY1tSw0CRmepUeFIGKWqbgEIkpZ8eJccIH74o24uxCCleH9Zj51c4aCuwdP2Q
-         uFDEUT4yOz8UC6L7x43DFU1HhdEs4ABUw2ArnBm3Qj2hcgltu8QBmD3z7wfQekmEiE
-         GmAp5CHpQv0munbNjwly3GORfeXCHvNCtHsaBsIk=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HEFJTe075585
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jul 2019 09:15:19 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Jul 2019 09:15:18 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Jul 2019 09:15:18 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HEFISC094769;
-        Wed, 17 Jul 2019 09:15:18 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ti.com>, Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v4 0/4] Add a generic driver for LED-based backlight
-Date:   Wed, 17 Jul 2019 16:15:10 +0200
-Message-ID: <20190717141514.21171-1-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jul 2019 10:16:59 -0400
+Received: from [192.168.1.110] ([77.7.13.186]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MkHEH-1iBlku1J9t-00kfCy; Wed, 17 Jul 2019 16:16:41 +0200
+Subject: Re: [PATCH 4/4] debian: add generic rule file
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <1562664759-16009-1-git-send-email-info@metux.net>
+ <1562664759-16009-4-git-send-email-info@metux.net>
+ <CAK7LNAR1N-bwVWm0LXky2-d2GfvRuRrEWeo5CGm3Z2Lp_s0WEw@mail.gmail.com>
+ <5af9db32-2cf5-10ba-261c-e08852d0814f@metux.net>
+ <20190715191245.GD3068@mit.edu>
+ <CAK7LNASps6JBAvtJshjMbqMk8QaSrMaH8pm-wHsEySTRJzu0Kw@mail.gmail.com>
+ <20190716123431.GB2999@mit.edu>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <77f82ca2-f89b-e8e2-507a-c37bce1343a5@metux.net>
+Date:   Wed, 17 Jul 2019 16:16:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190716123431.GB2999@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:8HnEQhX5qC0lbl/5iJtYcFfeJ0Kw333zWG878y65QFvMazOMKER
+ WHM/m1Ezx3M1tX80++6gg/P7sJ7xS69gwKfMLSzdNgGCYvFya0T3VZQCHM0U1inFUEri+a8
+ GiOVyeW37SZ681d9hkRJZMu5QQNf3BowK45qR2u42VZ9o2aJuzXyxDzcKeLaHoj211cD2MN
+ KLPjrLUbq3j+8tC7yAiSg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iqJCQL2Ve+M=:eLA7MM/kzThA5XWvEsiQfx
+ FqCpQSrv85qNdT1iaOWhC8bCBMiQV1vf6FOlR+R/KY9pj2ve5MZZ128EYsKNlSlpo4283aJpJ
+ Iu00EI+e7IC9m7PqrJ7cGHqpM1KGM1J0ZY3ouApUNbuF9ILgTxJIzQwV5c4hKCNCUNaxikERj
+ 7HeT0CEW5VyzpzS1S0Scg4ELM8yVakZ5wHqzQHQ+6OT8UVR12sPfySw+WVum8Jax5mvx6cqx6
+ igNAtoAVdttDEuX4Am5DZp2/hIL4y5SYKp2ZWj8OtjqYaZ7DbjV9rHYbSJQwdddqkCDy6FiJ6
+ DTms95X+fwEa0o1nfxKExtIyQgghHOkGFoHfhLJZGiMLOoGN8Y6E1r2RQSJyLS5zPTrtDp+Rv
+ GXZlicSwpoZXzWYH4ROm0XC7uqVMk5QHStfGDpNYuYCIWl3E0+fbcseAhcdzJh9jbmIyhnwhg
+ 5gPNg3WAxaXTW/trnRdCBG0MB01BJC+Z/lhBymKXyGX3BqLQbRfCmDH8ZXMluG/Bp2twCYo5M
+ Ck27fR1WA5kNyM6BbMt6PG1+w14CTgPapAbmo8dpSfux7kh5JhgcInF2cjDJERPW009OgxiAC
+ HzljwX2k+bxfyzUkE7RO97wjJQdua0RlMJMQ9mp0tHkvL9N4PkwyOtfibYge2Orb4bkaZ5SLt
+ AKjqjN/xTd3cgVGyuHWI1nzbvYs/7zO6HmJuqVaAqof3ug9dTR7DF9ZWJ+DXxBrBKWsnJT77D
+ 9te7Li0DfCy067+cxIpEtAUS11vbfdPe0wz2XBP9M4lZhoQBwxDrmg5hGAc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series aims to add a led-backlight driver, similar to pwm-backlight,
-but using a LED class device underneath.
+On 16.07.19 14:34, Theodore Y. Ts'o wrote:
 
-A few years ago (2015), Tomi Valkeinen posted a series implementing a
-backlight driver on top of a LED device:
-https://patchwork.kernel.org/patch/7293991/
-https://patchwork.kernel.org/patch/7294001/
-https://patchwork.kernel.org/patch/7293981/
+Hi,
 
-The discussion stopped because Tomi lacked the time to work on it.
+> In practice, that's not going to be a problem for most distributions.
+> The traditional way Debian-derived systems have done builds is
+> completely outside of git.  So there will be a linux_5.2.orig.tar.gz
+> and a linux_5.2-1.debian.tar.xz.  dpkg_source -x will first unpackage
+> the orig.tar.gz, and then the debian.tar.xz, and if the second
+> overwrites the first, it's no big deal.
 
-changes in v4:
-- fix dev_err() messages and commit logs following the advices of Pavel
-- cosmetic changes (indents, getting rid of  "? 1 : 0" in
-  led_match_led_node())
+ACK. IIRC they already filter out debian/ directories when generating
+upstream tarballs - other upstreams already provide their debian/
+stuff, too.
 
-changes in v3:
-- dt binding: don't limit the brightness range to 0-255. Use the range of
-  the underlying LEDs. as a side-effect, all LEDs must now have the same
-  range
-- driver: Adapt to dt binding update.
-- driver: rework probe() for clarity and remove the remaining goto.
+> First, once it's checked in, I expect changes to the default
+> debian/rules file will be relatively rare.  
 
-changes in v2:
-- handle more than one LED.
-- don't make the backlight device a child of the LED controller.
-- make brightness-levels and default-brightness-level optional
-- removed the option to use a GPIO enable.
-- removed the option to use a regulator. It should be handled by the LED
-  core
-- don't make any change to the LED core (not needed anymore)
+ACK. I currently don't see much reasons for future changes. If anybody
+sees something missing, just let me know, and I'll take it up for the
+next review round.
 
-Jean-Jacques Hiblot (2):
-  leds: Add managed API to get a LED from a device driver
-  dt-bindings: backlight: Add led-backlight binding
-
-Tomi Valkeinen (2):
-  leds: Add of_led_get() and led_put()
-  backlight: add led-backlight driver
-
- .../bindings/leds/backlight/led-backlight.txt |  28 ++
- drivers/leds/led-class.c                      |  92 ++++++
- drivers/video/backlight/Kconfig               |   7 +
- drivers/video/backlight/Makefile              |   1 +
- drivers/video/backlight/led_bl.c              | 268 ++++++++++++++++++
- include/linux/leds.h                          |   6 +
- 6 files changed, 402 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
- create mode 100644 drivers/video/backlight/led_bl.c
+--mtx
 
 -- 
-2.17.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
