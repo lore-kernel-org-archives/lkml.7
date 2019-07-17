@@ -2,209 +2,91 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E531BC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E95FC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA922173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521082184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PHYffguA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfGQOzE (ORCPT
+        id S1727870AbfGQO4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:55:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfGQOzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:55:04 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C68460CC;
-        Wed, 17 Jul 2019 14:55:03 +0000 (UTC)
-Received: from redhat.com (ovpn-125-71.rdu2.redhat.com [10.10.125.71])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D977360920;
-        Wed, 17 Jul 2019 14:54:58 +0000 (UTC)
-Date:   Wed, 17 Jul 2019 10:54:57 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] vhost/vsock: split packets to send using multiple
- buffers
-Message-ID: <20190717105336-mutt-send-email-mst@kernel.org>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-5-sgarzare@redhat.com>
+        Wed, 17 Jul 2019 10:56:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45824 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfGQO4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 10:56:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Hqyv4zXqfJWvsDUEBnkw44GnKu9JuXe0Tjma2P25hIA=; b=PHYffguA8Do4AfdhPOYF0/QtR
+        EBq7JI6/Gk9l93jsR/Cf9s2z+BbMdIBQ8GHui9bYZGDTSOqKeEPo/kvRMc4XhyPbZg2VeZDfN0uuq
+        foSMg9eo7rjoTJo418aje2TXH7SjtLzXIp0/024YtEiakXEukBeaFPEnJuwj6ksU8Uy4EjPlMD80D
+        10Yefa9I8t2ANsgEGs7aA+mZbNIoVtd1UaJV1sHNPVep8F7ZoTA2S8w8riTU21Nv3hQZMregOi8uN
+        KYjnbu21XWjjfu/mQuFe0rj+2NdprGxL/TaghcjCuL/dek6+vevJsl/qY6XeyUxY0yxdGeIopMHvg
+        K3FHAlAig==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnlLb-0006dc-4A; Wed, 17 Jul 2019 14:55:59 +0000
+Subject: Re: mmotm 2019-07-16-17-14 uploaded
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
+        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        mm-commits@vger.kernel.org
+References: <20190717001534.83sL1%akpm@linux-foundation.org>
+ <8165e113-6da1-c4c0-69eb-37b2d63ceed9@infradead.org>
+ <20190717143830.7f7c3097@canb.auug.org.au>
+ <a9d0f937-ef61-1d25-f539-96a20b7f8037@infradead.org>
+ <072ca048-493c-a079-f931-17517663bc09@infradead.org>
+ <20190717180424.320fecea@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a1179bac-204d-110e-327f-845e9b09a7ab@infradead.org>
+Date:   Wed, 17 Jul 2019 07:55:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717113030.163499-5-sgarzare@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 17 Jul 2019 14:55:03 +0000 (UTC)
+In-Reply-To: <20190717180424.320fecea@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 01:30:29PM +0200, Stefano Garzarella wrote:
-> If the packets to sent to the guest are bigger than the buffer
-> available, we can split them, using multiple buffers and fixing
-> the length in the packet header.
-> This is safe since virtio-vsock supports only stream sockets.
+On 7/17/19 1:04 AM, Stephen Rothwell wrote:
+> Hi Randy,
 > 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-
-So how does it work right now? If an app
-does sendmsg with a 64K buffer and the other
-side publishes 4K buffers - does it just stall?
-
-
-> ---
->  drivers/vhost/vsock.c                   | 66 ++++++++++++++++++-------
->  net/vmw_vsock/virtio_transport_common.c | 15 ++++--
->  2 files changed, 60 insertions(+), 21 deletions(-)
+> On Tue, 16 Jul 2019 23:21:48 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> drivers/dma-buf/dma-buf.c:
+>> <<<<<<< HEAD
+>> =======
+>> #include <linux/pseudo_fs.h>
+>>>>>>>>> linux-next/akpm-base  
 > 
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index 6c8390a2af52..9f57736fe15e 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -102,7 +102,7 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  		struct iov_iter iov_iter;
->  		unsigned out, in;
->  		size_t nbytes;
-> -		size_t len;
-> +		size_t iov_len, payload_len;
->  		int head;
->  
->  		spin_lock_bh(&vsock->send_pkt_list_lock);
-> @@ -147,8 +147,24 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  			break;
->  		}
->  
-> -		len = iov_length(&vq->iov[out], in);
-> -		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, len);
-> +		iov_len = iov_length(&vq->iov[out], in);
-> +		if (iov_len < sizeof(pkt->hdr)) {
-> +			virtio_transport_free_pkt(pkt);
-> +			vq_err(vq, "Buffer len [%zu] too small\n", iov_len);
-> +			break;
-> +		}
-> +
-> +		iov_iter_init(&iov_iter, READ, &vq->iov[out], in, iov_len);
-> +		payload_len = pkt->len - pkt->off;
-> +
-> +		/* If the packet is greater than the space available in the
-> +		 * buffer, we split it using multiple buffers.
-> +		 */
-> +		if (payload_len > iov_len - sizeof(pkt->hdr))
-> +			payload_len = iov_len - sizeof(pkt->hdr);
-> +
-> +		/* Set the correct length in the header */
-> +		pkt->hdr.len = cpu_to_le32(payload_len);
->  
->  		nbytes = copy_to_iter(&pkt->hdr, sizeof(pkt->hdr), &iov_iter);
->  		if (nbytes != sizeof(pkt->hdr)) {
-> @@ -157,33 +173,47 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  			break;
->  		}
->  
-> -		nbytes = copy_to_iter(pkt->buf, pkt->len, &iov_iter);
-> -		if (nbytes != pkt->len) {
-> +		nbytes = copy_to_iter(pkt->buf + pkt->off, payload_len,
-> +				      &iov_iter);
-> +		if (nbytes != payload_len) {
->  			virtio_transport_free_pkt(pkt);
->  			vq_err(vq, "Faulted on copying pkt buf\n");
->  			break;
->  		}
->  
-> -		vhost_add_used(vq, head, sizeof(pkt->hdr) + pkt->len);
-> +		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
->  		added = true;
->  
-> -		if (pkt->reply) {
-> -			int val;
-> -
-> -			val = atomic_dec_return(&vsock->queued_replies);
-> -
-> -			/* Do we have resources to resume tx processing? */
-> -			if (val + 1 == tx_vq->num)
-> -				restart_tx = true;
-> -		}
-> -
->  		/* Deliver to monitoring devices all correctly transmitted
->  		 * packets.
->  		 */
->  		virtio_transport_deliver_tap_pkt(pkt);
->  
-> -		total_len += pkt->len;
-> -		virtio_transport_free_pkt(pkt);
-> +		pkt->off += payload_len;
-> +		total_len += payload_len;
-> +
-> +		/* If we didn't send all the payload we can requeue the packet
-> +		 * to send it with the next available buffer.
-> +		 */
-> +		if (pkt->off < pkt->len) {
-> +			spin_lock_bh(&vsock->send_pkt_list_lock);
-> +			list_add(&pkt->list, &vsock->send_pkt_list);
-> +			spin_unlock_bh(&vsock->send_pkt_list_lock);
-> +		} else {
-> +			if (pkt->reply) {
-> +				int val;
-> +
-> +				val = atomic_dec_return(&vsock->queued_replies);
-> +
-> +				/* Do we have resources to resume tx
-> +				 * processing?
-> +				 */
-> +				if (val + 1 == tx_vq->num)
-> +					restart_tx = true;
-> +			}
-> +
-> +			virtio_transport_free_pkt(pkt);
-> +		}
->  	} while(likely(!vhost_exceeds_weight(vq, ++pkts, total_len)));
->  	if (added)
->  		vhost_signal(&vsock->dev, vq);
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> index 34a2b42313b7..56fab3f03d0e 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -97,8 +97,17 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
->  	struct virtio_vsock_pkt *pkt = opaque;
->  	struct af_vsockmon_hdr *hdr;
->  	struct sk_buff *skb;
-> +	size_t payload_len;
-> +	void *payload_buf;
->  
-> -	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + pkt->len,
-> +	/* A packet could be split to fit the RX buffer, so we can retrieve
-> +	 * the payload length from the header and the buffer pointer taking
-> +	 * care of the offset in the original packet.
-> +	 */
-> +	payload_len = le32_to_cpu(pkt->hdr.len);
-> +	payload_buf = pkt->buf + pkt->off;
-> +
-> +	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + payload_len,
->  			GFP_ATOMIC);
->  	if (!skb)
->  		return NULL;
-> @@ -138,8 +147,8 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
->  
->  	skb_put_data(skb, &pkt->hdr, sizeof(pkt->hdr));
->  
-> -	if (pkt->len) {
-> -		skb_put_data(skb, pkt->buf, pkt->len);
-> +	if (payload_len) {
-> +		skb_put_data(skb, payload_buf, payload_len);
->  	}
->  
->  	return skb;
-> -- 
-> 2.20.1
+> I can't imagine what went wrong, but you can stop now :-)
+> 
+> $ grep '<<< HEAD' linux-next.patch | wc -l
+> 1473
+
+Yes, I did the grep also, decided to give up.
+
+> I must try to find the emails where Andrew and I discussed the
+> methodology used to produce the linux-next.patch from a previous
+> linux-next tree.
+
+
+
+-- 
+~Randy
