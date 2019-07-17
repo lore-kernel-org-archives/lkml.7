@@ -2,223 +2,151 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFCAC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56236C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E552173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF3A2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563361899;
+	bh=S+zz2te9bgVDNvvPDBj9cd9KNHESF6XIWx165fsWXKs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QPcAlUmWuwSsgfwbSF9ZsjRgz5cvGFIZToIWYdFQOMNl8QrpORpiEtbPP2e0KJPUV
+	 azaCkB60hkYo5N76FN29Lfmq76uEueThQxdgOnmtQH66X5xDHQ6ev86on3XcoV6NcN
+	 XqsCSK0xc91ezPV9Kpm9szie3TH5Bzm+Po0lhCm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfGQLJe (ORCPT
+        id S1730633AbfGQLLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:09:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48856 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726298AbfGQLJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:09:34 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6HB5DrD144774
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 07:09:32 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tt0tr50fb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 07:09:32 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 17 Jul 2019 12:09:29 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 17 Jul 2019 12:09:19 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6HB9I7C39190742
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 11:09:18 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C29152063;
-        Wed, 17 Jul 2019 11:09:18 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.168])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 366B052050;
-        Wed, 17 Jul 2019 11:09:15 +0000 (GMT)
-Date:   Wed, 17 Jul 2019 14:09:13 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v18 08/15] userfaultfd: untag user pointers
-References: <cover.1561386715.git.andreyknvl@google.com>
- <d8e3b9a819e98d6527e506027b173b128a148d3c.1561386715.git.andreyknvl@google.com>
- <20190624175120.GN29120@arrakis.emea.arm.com>
+        Wed, 17 Jul 2019 07:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfGQLLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 07:11:37 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA8972173B;
+        Wed, 17 Jul 2019 11:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563361896;
+        bh=S+zz2te9bgVDNvvPDBj9cd9KNHESF6XIWx165fsWXKs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SPDEn+XMeskc4LwiBwImwxEarlR2o2Jl8Nrijnk7aK2bRxzh9bVoTr7B3m+SUXK6a
+         d8XK/tLtoJ0th/XxsfYz9L1EJLw7fQcYRdOVuDzgLz15pgtE1GBJiIkh3CyDCslpQU
+         ZxK2ZmPbMbTZ7hFhEqQk3KgRsRjbc2Xu3Z0vWI44=
+Received: by mail-lj1-f171.google.com with SMTP id d24so23205877ljg.8;
+        Wed, 17 Jul 2019 04:11:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAUf8vArrr8NSMWW93aTWA544GHYD1yPYLhvbYC5AUa2CrAtuoYH
+        ZEPaCelwTJlqKvx84nf+XZuUehfX4joRC3KHRnk=
+X-Google-Smtp-Source: APXvYqy+wB5Py8UKuQnvHerPK6HtAXuBZ1HjpDkxUA2U6kmM++5iJrx97dB39dcvHvv6RLVbDgvFtdBpKcNBAb8qo7g=
+X-Received: by 2002:a2e:124b:: with SMTP id t72mr20875095lje.143.1563361894145;
+ Wed, 17 Jul 2019 04:11:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624175120.GN29120@arrakis.emea.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19071711-0020-0000-0000-00000354AA32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071711-0021-0000-0000-000021A87C56
-Message-Id: <20190717110910.GA12017@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907170135
+References: <CGME20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf@eucas1p1.samsung.com>
+ <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-38-l.luba@partner.samsung.com>
+ <CAJKOXPfrGgAczQ-=1aE453RpJ9BN10ZDmFcrEMPkNyF6GcGtNA@mail.gmail.com>
+ <2fe2e840-f4b2-773b-7d92-4ffb8502d4e6@partner.samsung.com>
+ <CAJKOXPd3gm7no-0TnPmgFg+X3FgdiM6ov5rtzFSM6hKEdEzRCg@mail.gmail.com> <518c26ca-4254-056c-d6d0-ae1b4b63709c@partner.samsung.com>
+In-Reply-To: <518c26ca-4254-056c-d6d0-ae1b4b63709c@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 17 Jul 2019 13:11:22 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
+Message-ID: <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
+Subject: Re: [PATCH v1 37/50] ARM: dts: exynos: change parent and rate of
+ bus_fsys in Exynos5422
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 06:51:21PM +0100, Catalin Marinas wrote:
-> On Mon, Jun 24, 2019 at 04:32:53PM +0200, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends kernel ABI to allow to pass
-> > tagged user pointers (with the top byte set to something else other than
-> > 0x00) as syscall arguments.
-> > 
-> > userfaultfd code use provided user pointers for vma lookups, which can
-> > only by done with untagged pointers.
-> > 
-> > Untag user pointers in validate_range().
-> > 
-> > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >  fs/userfaultfd.c | 22 ++++++++++++----------
-> >  1 file changed, 12 insertions(+), 10 deletions(-)
-> 
-> Same here, it needs an ack from Al Viro.
+On Wed, 17 Jul 2019 at 13:06, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+>
+>
+> On 7/17/19 12:45 PM, Krzysztof Kozlowski wrote:
+> > On Wed, 17 Jul 2019 at 12:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+> >>>>
+> >>>>    &bus_fsys {
+> >>>>           devfreq = <&bus_wcore>;
+> >>>> +       assigned-clocks = <&clock CLK_MOUT_ACLK200_FSYS>,
+> >>>> +                         <&clock CLK_DOUT_ACLK200_FSYS>,
+> >>>> +                         <&clock CLK_FOUT_DPLL>;
+> >>>> +       assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>;
+> >>>> +       assigned-clock-rates = <0>, <240000000>,<1200000000>;
+> >>>
+> >>> Here and in all other patches:
+> >>> I am not entirely sure that this should be here. It looks like
+> >>> property of the SoC. Do we expect that buses will be configured to
+> >>> different clock rates between different boards? Since the OPP tables
+> >>> are shared (they are property of the SoC, not board) then I would
+> >>> assume that default frequency is shared as well.
+> >> These clocks they all relay on some bootloader configuration. It depends
+> >> which version of the bootloader you have, then you might get different
+> >> default configuration in the clocks.
+> >
+> > I do not agree here. This configuration is not dependent on
+> > bootloader. Although one bootloader might set the clocks to X and
+> > other to Y, but still you provide here valid configuration setting
+> > them, e.g. to Y (or to Z). What bootloader set before does not matter
+> > because you always override it.
+> This exactly the patch set is aim to do: overwrite any bootloader
+> configuration which could be wrong set after boot.
+> I don't know for how long it is left in such
+> 'bootloader-default-clock-settings' but it is not accurate
+> configuration. The pattern in the DT to change the clock rates is
+> there.
 
-The userfault patches usually go via -mm tree, not sure if Al looks at them :) 
- 
-FWIW, you can add 
+Still it is not the answer to my concerns and questions.
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> >> The pattern of changing the parent
+> >> or even rate is known in the DT files (or I am missing something).
+> >> When you grep for it, you get 168 hits (38 for exynos*):
+> >> git grep -n "assigned-clock-rates" ./arch/arm/boot/dts/ | wc -l
+> >
+> > Yeah, and if you grep per type you got:
+> > DTSI: 114
+> > DTS: 54
+> > so what do you want to say?
+> Thus, It could be changed in DT.
 
-> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> > index ae0b8b5f69e6..c2be36a168ca 100644
-> > --- a/fs/userfaultfd.c
-> > +++ b/fs/userfaultfd.c
-> > @@ -1261,21 +1261,23 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
-> >  }
-> >  
-> >  static __always_inline int validate_range(struct mm_struct *mm,
-> > -					  __u64 start, __u64 len)
-> > +					  __u64 *start, __u64 len)
-> >  {
-> >  	__u64 task_size = mm->task_size;
-> >  
-> > -	if (start & ~PAGE_MASK)
-> > +	*start = untagged_addr(*start);
-> > +
-> > +	if (*start & ~PAGE_MASK)
-> >  		return -EINVAL;
-> >  	if (len & ~PAGE_MASK)
-> >  		return -EINVAL;
-> >  	if (!len)
-> >  		return -EINVAL;
-> > -	if (start < mmap_min_addr)
-> > +	if (*start < mmap_min_addr)
-> >  		return -EINVAL;
-> > -	if (start >= task_size)
-> > +	if (*start >= task_size)
-> >  		return -EINVAL;
-> > -	if (len > task_size - start)
-> > +	if (len > task_size - *start)
-> >  		return -EINVAL;
-> >  	return 0;
-> >  }
-> > @@ -1325,7 +1327,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
-> >  		goto out;
-> >  	}
-> >  
-> > -	ret = validate_range(mm, uffdio_register.range.start,
-> > +	ret = validate_range(mm, &uffdio_register.range.start,
-> >  			     uffdio_register.range.len);
-> >  	if (ret)
-> >  		goto out;
-> > @@ -1514,7 +1516,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
-> >  	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
-> >  		goto out;
-> >  
-> > -	ret = validate_range(mm, uffdio_unregister.start,
-> > +	ret = validate_range(mm, &uffdio_unregister.start,
-> >  			     uffdio_unregister.len);
-> >  	if (ret)
-> >  		goto out;
-> > @@ -1665,7 +1667,7 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
-> >  	if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
-> >  		goto out;
-> >  
-> > -	ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
-> > +	ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
-> >  	if (ret)
-> >  		goto out;
-> >  
-> > @@ -1705,7 +1707,7 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
-> >  			   sizeof(uffdio_copy)-sizeof(__s64)))
-> >  		goto out;
-> >  
-> > -	ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
-> > +	ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
-> >  	if (ret)
-> >  		goto out;
-> >  	/*
-> > @@ -1761,7 +1763,7 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
-> >  			   sizeof(uffdio_zeropage)-sizeof(__s64)))
-> >  		goto out;
-> >  
-> > -	ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
-> > +	ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
-> >  			     uffdio_zeropage.range.len);
-> >  	if (ret)
-> >  		goto out;
-> > -- 
-> > 2.22.0.410.gd8fdbe21b5-goog
+Of course, why not. But how this relevant to my question?
 
--- 
-Sincerely yours,
-Mike.
+> > My thinking is that all the boards have buses configured to the same
+> > initial frequency. I am not questioning the use of
+> > assigned-clock-rates at all. Just the place...
+> It is not only 'initial frequency' as you name it. It has three changes:
+> - re-parent to proper PLL
+> - changing this PLL rate
+> - change the OPPs frequency values to integer values derived from PLL
+>
+> The initial frequencies will be changed by devfreq governor using OPP
+> tables and the load after the whole system boots.
 
+I simplified with "initial frequency" but it does not matter. Let me
+try to raise my concerns again, different wording:
+All this looks like property of the SoC, not the board, because:
+1. the OPPs are already properties of the SoC, not the board (XU3 Lite
+is kind of exception but in fact it uses different flavor of
+Exynos5422 SoC which we do not model here as separate DTSI),
+2. I expect all boards to have the same properties.
+
+Best regards,
+Krzysztof
