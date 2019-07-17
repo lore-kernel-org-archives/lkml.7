@@ -2,135 +2,68 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752F9C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B32C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566CC217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80037217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563329120;
+	bh=r2biLWcV/MUJfDx+umyXdZL9idi3RpzmDneI8QG2YYg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=2A+fIdH7LVPKdXTz8t91TXK5eVOx5wwnuSb3EHOVOlsRq0u25oJr7wzsGHjCB5xfS
+	 D+eUFUyAgTVEVHWIuGrwCPais9vsAaSlTK0W+EoQ4CBFjwAr/ugNUCGwFVoi7pjbCp
+	 W6XXgvZtMI9rFJgVgUyGMaV2GLHQWivuNN5iMOJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfGQCDb (ORCPT
+        id S1727799AbfGQCFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:03:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45638 "EHLO mga06.intel.com"
+        Tue, 16 Jul 2019 22:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbfGQCDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:03:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 19:03:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,272,1559545200"; 
-   d="scan'208";a="366860947"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.165]) ([10.239.196.165])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2019 19:03:28 -0700
-Subject: Re: [PATCH v7 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-From:   Tao Xu <tao3.xu@intel.com>
-To:     Eduardo Habkost <ehabkost@redhat.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        xiaoyao.li@linux.intel.com, jingqi.liu@intel.com
-References: <20190712082907.29137-1-tao3.xu@intel.com>
- <20190712082907.29137-3-tao3.xu@intel.com>
- <20190716160358.GE26800@habkost.net>
- <ec13a518-6dcb-fc87-36e6-31befd62281e@intel.com>
-Message-ID: <bcc75abe-44a8-acd8-570b-4dbc0ad97c09@intel.com>
-Date:   Wed, 17 Jul 2019 10:03:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <ec13a518-6dcb-fc87-36e6-31befd62281e@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726561AbfGQCFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 22:05:19 -0400
+Subject: Re: [GIT PULL] Btrfs updates for 5.3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563329118;
+        bh=r2biLWcV/MUJfDx+umyXdZL9idi3RpzmDneI8QG2YYg=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=1S4HfSYYdGBDgvf52xiAHbLOY1lwen94g2zA7uvaBMTmtbg0fmwWAEL5LMwRTVLOW
+         43NQYSHqnyMvcH0Bpw5XhhiFO5B9H7gCwBRBA7z1ff7ycGSrwz5Yn8viMvHp/pIqAf
+         M0wYxoZS+nqJBhTdtLIYKyqiLSa4BypW2F13U8mc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1563178381.git.dsterba@suse.com>
+References: <cover.1563178381.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1563178381.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-tag
+X-PR-Tracked-Commit-Id: e02d48eaaed77f6c36916a7aa65c451e1f9d9aab
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a18f8775419d3df282dd83efdb51c5a64d092f31
+Message-Id: <156332911856.16657.15152227893053261337.pr-tracker-bot@kernel.org>
+Date:   Wed, 17 Jul 2019 02:05:18 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        clm@fb.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/2019 9:17 AM, Tao Xu wrote:
-> On 7/17/2019 12:03 AM, Eduardo Habkost wrote:
->> On Fri, Jul 12, 2019 at 04:29:06PM +0800, Tao Xu wrote:
->>> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
->>> to determines the maximum time in TSC-quanta that the processor can 
->>> reside
->>> in either C0.1 or C0.2.
->>>
->>> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
->>> IA32_UMWAIT_CONTROL between host and guest. The variable
->>> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
->>> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
->>>
->>> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
->>> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
->>> Signed-off-by: Tao Xu <tao3.xu@intel.com>
->>> ---
->> [...]
->>> +static void atomic_switch_umwait_control_msr(struct vcpu_vmx *vmx)
->>> +{
->>> +    if (!vmx_has_waitpkg(vmx))
->>> +        return;
->>> +
->>> +    if (vmx->msr_ia32_umwait_control != umwait_control_cached)
->>> +        add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
->>> +            vmx->msr_ia32_umwait_control,
->>> +            umwait_control_cached, false);
->>
->> How exactly do we ensure NR_AUTOLOAD_MSRS (8) is still large enough?
->>
->> I see 3 existing add_atomic_switch_msr() calls, but the one at
->> atomic_switch_perf_msrs() is in a loop.  Are we absolutely sure
->> that perf_guest_get_msrs() will never return more than 5 MSRs?
->>
-> 
-> Quote the code of intel_guest_get_msrs:
-> 
-> static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr)
-> {
-> [...]
->      arr[0].msr = MSR_CORE_PERF_GLOBAL_CTRL;
->      arr[0].host = x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_guest_mask;
->      arr[0].guest = x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_host_mask;
->      if (x86_pmu.flags & PMU_FL_PEBS_ALL)
->          arr[0].guest &= ~cpuc->pebs_enabled;
->      else
->          arr[0].guest &= ~(cpuc->pebs_enabled & PEBS_COUNTER_MASK);
->      *nr = 1;
-> 
->      if (x86_pmu.pebs && x86_pmu.pebs_no_isolation) {
-> [...]
->          arr[1].msr = MSR_IA32_PEBS_ENABLE;
->          arr[1].host = cpuc->pebs_enabled;
->          arr[1].guest = 0;
->          *nr = 2;
-> [...]
-> 
-> There are most 2 msrs now. By default umwait is disabled in KVM. So by 
-> default there is no MSR_IA32_UMWAIT_CONTROL added into 
-> add_atomic_switch_msr().
-> 
-> Thanks.
+The pull request you sent on Mon, 15 Jul 2019 10:57:01 +0200:
 
-And for old hardware, kvm use core_guest_get_msrs, but umwait is for now 
-hardware, and if hardware in host doesn't have the cpuid, there is no 
-MSR_IA32_UMWAIT_CONTROL in kvm as well.
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.3-tag
 
->>
->>> +    else
->>> +        clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
->>> +}
->>> +
->>>   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->>>   {
->>>       vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
->> [...]
->>
->>
-> 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a18f8775419d3df282dd83efdb51c5a64d092f31
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
