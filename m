@@ -2,153 +2,201 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7609EC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6CCC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E3E21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E851321873
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bHCNywbz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTU141rS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfGQTkY (ORCPT
+        id S1728576AbfGQTng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:40:24 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37335 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbfGQTkX (ORCPT
+        Wed, 17 Jul 2019 15:43:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33099 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbfGQTng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:40:23 -0400
-Received: by mail-io1-f68.google.com with SMTP id q22so47659811iog.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 12:40:23 -0700 (PDT)
+        Wed, 17 Jul 2019 15:43:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so11356641pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 12:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XAQtje3xVN6zZLKy6FtX6fqxZEG02C3KM1K/siGiaSA=;
-        b=bHCNywbzSvGNmK04BmApUcFx7AMqaedW7Zel4ghELj6QbEmXuXzUChsPH+QxBVfA3z
-         olV9YcAX8TDIJ33/HFEQ/AeQECmLX0mC2NuJqR3HMRpVb/P+blQWSVkljvUfxM/ESu31
-         +WIOCxWFbnGp0f3ZpPfenEr6bIllItN/1AdCU=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=B4KkASSByiIr8GwQ9SOJWtTimb9yBfYMRGwI3wSnBvU=;
+        b=pTU141rSxqpEpOL4UTml41bJC99Bbi08614VBV9iACXfdQBYQMGLsTxyZ5eWCJAsxp
+         PkmS856N30EwaXjbhF/ogszdHLt5Y16oU9gI/Webo0Vzi3aLl7HBczJU2vNPyd+qTCEu
+         Q3maXbuUy2yk1XlmTAlUbOmk1w6cqlSqw4Gt8BjP7ChFlly+n1AVNH7KVan6v6f2Elvx
+         g4XUKTtvMIwVBZ0eeC13hoMhs+oVB4chrRXX80ycgTxXu0xYpRCAz4p4g4Z2ttJIctMO
+         D5r4iEMm9pJU+QauaDTSBBFfvWV9kONhJqPiCSKskg6RibNRsS9fk61AKXSnuBtq18le
+         smkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XAQtje3xVN6zZLKy6FtX6fqxZEG02C3KM1K/siGiaSA=;
-        b=YZiVzs3LidiH0ilkT7+l0qtHQK+n+YxPrKcBIcDcuOenearc7KUohtjA9/0SoH6bit
-         Vr1Lzz8CV9q9ah3sUhI/nWfXyyCyeDk8R0mcXpvD7y+ueUDYq9MN3FR3zCd6JHqzMupD
-         ISS2ffSWV5zTIwDMZGZ6mt3U2Av4PmB5pioCR5OjComsIFS0MyVUHh4801BKuj76MZ/P
-         LOudeXESBCW5xMVlImI2usLfrRodEdumqtVXeacAxmYsJxI8iYi3CYJurGb0hs1kV706
-         FAyU7qd9GnbZ6q93zpI2PpAtL528nnaA8c/X7uopvLuLasEzSnihhjPC4vDMpuYoAcG1
-         hACQ==
-X-Gm-Message-State: APjAAAVAun4JzRPgV3ltJrLElgViu76I1pM2to0Z3V/ns78hapk5jcsr
-        ePWjRsqJZNJdnVVYqZdIv9biRBhRsfFuEHXQjVmKQA==
-X-Google-Smtp-Source: APXvYqyjDPl3xH2m/vy5MHs017WL9LKrLi9X2Vr7A+i01ezmewOVfT/T2pB5x6sJCSYSDHSqRWBRFjDax+BbijY5fms=
-X-Received: by 2002:a6b:f816:: with SMTP id o22mr12316181ioh.166.1563392423109;
- Wed, 17 Jul 2019 12:40:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=B4KkASSByiIr8GwQ9SOJWtTimb9yBfYMRGwI3wSnBvU=;
+        b=HKtYDpBNZ/koz0F5ZnZ/uzdKcSL7ARGQSfYsayWrCNsjm/gv3xd78xsWxEf2S7DMxK
+         Eop4xvbEFF6gIhBE/f5QA2PQYs47dBoemQm5GUqNrOkpo9rVKpINf5KRTT9Dx7B4JSG9
+         6tqplhKmO0OudPLLcR5DXFpWXxdshgoYRfkqVxhZ8nKf7WIL/fBUO3YjiNquIYhQl8xU
+         rm7zH3BpI6WrSDz8rAHnm2C7z7hyfFWbAF2EQBTyTlFuetIf1dTXdhvI9HQG0LZ6ADoA
+         dpXiEXV11upN4OdOHXc0NuB0FhbiT2Jx3/4LPdiGzqw0Ugge4mIU6Ik7Rk0XX1ct+PNv
+         F3bw==
+X-Gm-Message-State: APjAAAVjpRvWO/JWj+YKViFULUZITbE8O7qcUERpnIYFXOkPVjhHJV4o
+        l65C+qwkYDP5p0beJMg7VyvrAg==
+X-Google-Smtp-Source: APXvYqzKGlDmY51u8++gkpOHjmKk/bWpr+ftMMYT73CajTWO+QPVJd5fQMfIA9xY+GncnpV3QweYkw==
+X-Received: by 2002:a63:d944:: with SMTP id e4mr42815562pgj.261.1563392614248;
+        Wed, 17 Jul 2019 12:43:34 -0700 (PDT)
+Received: from [100.112.64.100] ([104.133.8.100])
+        by smtp.gmail.com with ESMTPSA id r75sm27194536pfc.18.2019.07.17.12.43.33
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Jul 2019 12:43:33 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 12:43:16 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+cc:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v3 PATCH 1/2] mm: thp: make transhuge_vma_suitable available
+ for anonymous THP
+In-Reply-To: <1560401041-32207-2-git-send-email-yang.shi@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.1907171207080.1177@eggly.anvils>
+References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com> <1560401041-32207-2-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-References: <CAJ-EccPGqp4PmRkFk505QhDKHWn-ajxS0__Nk9VS32jV_+3Y2A@mail.gmail.com>
- <CAHk-=whY1J-LFvTa8ihiPNRSv1dwxPk9ycPCEhdcjsk7c=tGAw@mail.gmail.com>
-In-Reply-To: <CAHk-=whY1J-LFvTa8ihiPNRSv1dwxPk9ycPCEhdcjsk7c=tGAw@mail.gmail.com>
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Wed, 17 Jul 2019 12:40:12 -0700
-Message-ID: <CAJ-EccNhiVk9RHvPTo7shBBE6XZqPuHi=EMwYEoXdXWhXELOzw@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for 5.3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:06 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Jul 15, 2019 at 9:05 AM Micah Morton <mortonm@chromium.org> wrote:
-> >
-> > I'm maintaining the new SafeSetID LSM and was told to set up my own
-> > tree for sending pull requests rather than sending my changes through
-> > James Morris and the security subsystem tree.
->
-> Yes. It would be good if you also added yourself to the MAINTAINERS
-> file. Right now there's no entry for security/safesetid at all.
+On Thu, 13 Jun 2019, Yang Shi wrote:
 
-Yes, I have a patch for this but was told it would be better to send
-the patch through my tree rather than the security tree. I can send a
-pull request for that.
+> The transhuge_vma_suitable() was only available for shmem THP, but
+> anonymous THP has the same check except pgoff check.  And, it will be
+> used for THP eligible check in the later patch, so make it available for
+> all kind of THPs.  This also helps reduce code duplication slightly.
+> 
+> Since anonymous THP doesn't have to check pgoff, so make pgoff check
+> shmem vma only.
 
->
-> > This is my first time doing one of these pull requests so hopefully I
-> > didn't screw something up.
->
-> So a couple of notes:
->
->  - *please* don't rebase your work in the day before
+Yes, I think you are right to avoid the pgoff check on anonymous.
+I had originally thought that it would work out okay even with the
+pgoff check on anonymous, and usually it would: but could give the
+wrong answer on an mremap-moved anonymous area.
 
-Got it.
+> 
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: David Rientjes <rientjes@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
->
->    Was this in linux-next? was this tested at all? Hard to tell, since
-> it was rebased recently, so for all I know it's all completely new
+Almost Acked-by me, but there's one nit I'd much prefer to change:
+sorry for being such a late nuisance...
 
-This was not in linux-next, but was tested by Jann on a Chrome OS
-device. There's also the selftest for this code. But I can send
-non-trivial stuff to linux-next first next time.
+> ---
+>  mm/huge_memory.c |  2 +-
+>  mm/internal.h    | 25 +++++++++++++++++++++++++
+>  mm/memory.c      | 13 -------------
+>  3 files changed, 26 insertions(+), 14 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 9f8bce9..4bc2552 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -691,7 +691,7 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>  	struct page *page;
+>  	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+>  
+> -	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
+> +	if (!transhuge_vma_suitable(vma, haddr))
+>  		return VM_FAULT_FALLBACK;
+>  	if (unlikely(anon_vma_prepare(vma)))
+>  		return VM_FAULT_OOM;
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 9eeaf2b..7f096ba 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -555,4 +555,29 @@ static inline bool is_migrate_highatomic_page(struct page *page)
+>  
+>  void setup_zone_pageset(struct zone *zone);
+>  extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
+> +
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +#define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
+> +static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
+> +		unsigned long haddr)
+> +{
+> +	/* Don't have to check pgoff for anonymous vma */
+> +	if (!vma_is_anonymous(vma)) {
+> +		if (((vma->vm_start >> PAGE_SHIFT) & HPAGE_CACHE_INDEX_MASK) !=
+> +			(vma->vm_pgoff & HPAGE_CACHE_INDEX_MASK))
+> +			return false;
+> +	}
+> +
+> +	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
+> +		return false;
+> +	return true;
+> +}
+> +#else
+> +static inline bool transhuge_vma_suitable(struct vma_area_struct *vma,
+> +		unsigned long haddr)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  #endif	/* __MM_INTERNAL_H */
 
->
->  - don't use a random kernel-of-the-day as the base for development
+... maybe I'm just not much of a fan of mm/internal.h (where at last you
+find odd bits and pieces which you had expected to find elsewhere), and
+maybe others will disagree: but I'd say transhuge_vma_suitable() surely
+belongs in include/linux/huge_mm.h, near __transparent_hugepage_enabled().
 
-Got it.
+But then your correct use of vma_is_anonymous() gets more complicated:
+because that declaration is over in include/linux/mm.h; and although
+linux/mm.h includes linux/huge_mm.h, vma_is_anonymous() comes lower down.
 
->
->    This is related to the rebasing issue, but is true even if you
-> don't rebase. There is no way that it was a good idea to pick my
-> random - possibly completely broken - kernel from Sunday afternoon in
-> the middle of a merge window as a base for development.
->
->    If you start development, or if you have to rebase (for some *good*
-> reason) you need to do so on a good stable base, not on the quick-sand
-> that is "random kernel of the day during the busiest merge activity".
+However... linux/mm.h's definition of vma_set_anonymous() comes higher
+up, and it would make perfect sense to move vma_is_anonymous up to just
+after vma_set_anonymous(), wouldn't it?  Should vma_is_shmem() and
+vma_is_stack_for_current() declarations move with it? Probably yes:
+they make more sense near vma_is_anonymous() than where they were.
 
-Makes sense. The development was not actually done on that kernel, I
-just grabbed that random kernel for committing the changes on top of
-(these changes were developed a little while ago, but they're all self
-contained to the SafeSetID LSM), but I'll pick a stable one next time.
+Hugh
 
->
->  - Please use the "git pull-request" format and then add any extra
-> notes you feel are necessary
->
->    Yes, your pull request is *almost* git pull-request, but you seem
-> to have actively removed whitespace making it almost illegible. It's
-> really hard to pick out the line that has the actual git repository
-> address, because it's basically hidden inside one big blob of text.
->
-> I've pulled this as-is since it's the first time, but I expect better next time.
->
-> There are various resources on some cleanliness issues, and people
-> fairly recently tried to combine it under
->
->    Documentation/maintainer/rebasing-and-merging.rst
->
-> which covers at least the basics on why not to rebase etc.
-
-Thanks for the pointer. I had not seen that yet.
-
->
-> And if you *do* end up rebasing, consider the end result "untested",
-> so then it should have been done before the merge window even started,
-> and the rebased branch should have been in linux-next. And not sent to
-> me the very next day.
-
-Yep, makes sense.
-
->
->                    Linus
-
-Thanks!
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 96f1d47..2286424 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3205,19 +3205,6 @@ static vm_fault_t pte_alloc_one_map(struct vm_fault *vmf)
+>  }
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGE_PAGECACHE
+> -
+> -#define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
+> -static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
+> -		unsigned long haddr)
+> -{
+> -	if (((vma->vm_start >> PAGE_SHIFT) & HPAGE_CACHE_INDEX_MASK) !=
+> -			(vma->vm_pgoff & HPAGE_CACHE_INDEX_MASK))
+> -		return false;
+> -	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
+> -		return false;
+> -	return true;
+> -}
+> -
+>  static void deposit_prealloc_pte(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> -- 
+> 1.8.3.1
