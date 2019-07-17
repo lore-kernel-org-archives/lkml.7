@@ -2,159 +2,115 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C573DC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AC3C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB322173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oQntnTM7"
+	by mail.kernel.org (Postfix) with ESMTP id 6467F208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfGQFrS (ORCPT
+        id S1726795AbfGQFyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 01:47:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35894 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfGQFrR (ORCPT
+        Wed, 17 Jul 2019 01:54:01 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:20499 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725294AbfGQFyA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 01:47:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so10588406pgm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 22:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FtZ0UgdNHJWDVHHoxzF6IAqcb8s3MALQMghduEE8rY4=;
-        b=oQntnTM77gszwZAh+WwmoqmvQ7CACqNjN326diAE1Fe0GO7JzQDYUxX37i2S+nc82J
-         U4EZGqkd+98Dsjku3puKP9lIBAE0jCTKDHs0/XwA4/zqWJxEtdGXLocUHR/zTBxKAdFq
-         fXXO8IdoXolGB4stPKIPuz5lEuvqF2lu63KfXhQ2ll7Upu5cN+BxgJDHd1mqj0p8RIC5
-         9OdIj1Uh9qJ8BJHmZcB+6RYGPSuZlW4y4BN6W34rSBheaLOdWB057Dh3iqsLsZa+ZluU
-         MEkZrAROptBjWXTKMKXWhg/Pp/oiCoITMI+fhr5u01IYYpGaG6wWuOijL+IwVaAm1Ita
-         XPWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FtZ0UgdNHJWDVHHoxzF6IAqcb8s3MALQMghduEE8rY4=;
-        b=X25V72OTbaCHyeSO9SAegz5EEWM4/bmduOJQwROKQorcvQTLQ3KptPxq52V37Q5myT
-         N0JJyWaeiDeIemoXgQqhGdGjI0/ZaCiNgk9LteIZEQwWlLHkrYiJYCyX12Ql6AnNDvK2
-         lzl+yG1Od14AX5Hqr2CPQNlz11j76cok28RRxZihztOOttQEn5vXg/X2ZokjHvKChZj5
-         yBEs7eS4/uEl65SFusDBNIAE/cVx/tu1NO0sMY3NAxIWfXphCMq6w5sLLNxCIlO2Zsdj
-         NZ6UnN8Gwcn0iLCgBm58PUbKxweasApPE57mlnHxZSVQI4jEflSN81YzrKzPsD1bLfLT
-         6aoQ==
-X-Gm-Message-State: APjAAAXKDqzxluUPvxBnjifL1JJJUtheye0jukAgq9pkLhC6yFwYHZF5
-        HUWubvkcukqvvSFf9az0jXQQXCRvjb4=
-X-Google-Smtp-Source: APXvYqxT3LdyBnPGX8def6EOLQvEhKwYdEp10ZmFFPutwAzP8gjxeqXrIKbG/dDV5XFVnvALjbQElQ==
-X-Received: by 2002:a63:1046:: with SMTP id 6mr40084422pgq.111.1563342436937;
-        Tue, 16 Jul 2019 22:47:16 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id w14sm24599914pfn.47.2019.07.16.22.47.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jul 2019 22:47:15 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 11:17:13 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] opp: Return genpd virtual devices from
- dev_pm_opp_attach_genpd()
-Message-ID: <20190717054713.vn65cfiqebhzdvjq@vireshk-i7>
-References: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
- <2ed7993d-523b-270a-2be9-83ad2426e946@codeaurora.org>
+        Wed, 17 Jul 2019 01:54:00 -0400
+X-UUID: 6abfcd68318c4ea9953d429e360fc308-20190717
+X-UUID: 6abfcd68318c4ea9953d429e360fc308-20190717
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2052319071; Wed, 17 Jul 2019 13:53:50 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 17 Jul 2019 13:53:48 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 17 Jul 2019 13:53:48 +0800
+Message-ID: <1563342828.29169.18.camel@mtksdaap41>
+Subject: Re: [PATCH v4, 21/33] drm/mediatek: add function to background
+ color input select for ovl/ovl_2l direct link
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 17 Jul 2019 13:53:48 +0800
+In-Reply-To: <1562625253-29254-22-git-send-email-yongqiang.niu@mediatek.com>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1562625253-29254-22-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ed7993d-523b-270a-2be9-83ad2426e946@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: C256F03D4194D5B33990FFB01DF1B7245E0181B5106E7E4F3FA6FAEC21AA3B8C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-07-19, 15:09, Rajendra Nayak wrote:
-> Sorry for the delay
+Hi, Yongqiang:
 
-Same here :)
-
-> I seem to have completely missed this patch.
-> I just gave this a try and here are some observations,
+On Tue, 2019-07-09 at 06:34 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> I have a case where I have one device with 2 power domains, one of them
-> is scale-able (supports perf state) and the other one supports only being
-> turned on and off.
+> This patch add function to background color input select for ovl/ovl_2l direct link
+> for ovl/ovl_2l direct link usecase, we need set background color
+> input select for these hardware.
+> this is preparation patch for ovl/ovl_2l usecase
 > 
-> 1. In the driver I now need to use dev_pm_domain_attach_by_name/id to attach the
-> power domain which supports only on/off and then use dev_pm_opp_attach_genpd()
-> for the one which supports perf states.
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> 2. My OPP table has only 1 required_opps, so the required_opp_count for the OPP table is 1.
-> Now if my device tree has my scale-able powerdomain at index 1 (it works if its at index 0)
-> then I end up with this error
-> 
-> [    2.858628] ufshcd-qcom 1d84000.ufshc: Index can't be greater than required-opp-count - 1, rpmh_pd (1 : 1)
-> 
-> so it looks like a lot of the OPP core today just assumes that if a device has multiple power domains,
-> all of them are scale-able which isn't necessarily true.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index a0ea8c9..ec6f329a 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -92,6 +92,8 @@ struct mtk_ddp_comp_funcs {
+>  			     struct mtk_plane_state *state);
+>  	void (*gamma_set)(struct mtk_ddp_comp *comp,
+>  			  struct drm_crtc_state *state);
+> +	void (*bgclr_in_on)(struct mtk_ddp_comp *comp);
+> +	void (*bgclr_in_off)(struct mtk_ddp_comp *comp);
+>  };
+>  
+>  struct mtk_ddp_comp {
+> @@ -172,6 +174,18 @@ static inline void mtk_ddp_gamma_set(struct mtk_ddp_comp *comp,
+>  		comp->funcs->gamma_set(comp, state);
+>  }
+>  
+> +static inline void mtk_ddp_comp_bgclr_in_on(struct mtk_ddp_comp *comp)
+> +{
+> +	if (comp->funcs && comp->funcs->bgclr_in_on)
+> +		comp->funcs->bgclr_in_on(comp);
+> +}
+> +
+> +static inline void mtk_ddp_comp_bgclr_in_off(struct mtk_ddp_comp *comp)
+> +{
+> +	if (comp->funcs && comp->funcs->bgclr_in_off)
+> +		comp->funcs->bgclr_in_off(comp);
+> +}
+> +
+>  int mtk_ddp_comp_get_id(struct device_node *node,
+>  			enum mtk_ddp_comp_type comp_type);
+>  int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
 
-I don't think a lot of OPP core has these problems, but maybe only
-this place. I was taking care of this since the beginning just forgot
-it now.
 
-What about this over this commit:
-
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index d76ead4eff4c..1f11f8c92337 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1789,13 +1789,16 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
-  *
-  * This helper needs to be called once with a list of all genpd to attach.
-  * Otherwise the original device structure will be used instead by the OPP core.
-+ *
-+ * The order of entries in the names array must match the order in which
-+ * "required-opps" are added in DT.
-  */
- struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
-                const char **names, struct device ***virt_devs)
- {
-        struct opp_table *opp_table;
-        struct device *virt_dev;
--       int index, ret = -EINVAL;
-+       int index = 0, ret = -EINVAL;
-        const char **name = names;
- 
-        opp_table = dev_pm_opp_get_opp_table(dev);
-@@ -1821,14 +1824,6 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
-                goto unlock;
- 
-        while (*name) {
--               index = of_property_match_string(dev->of_node,
--                                                "power-domain-names", *name);
--               if (index < 0) {
--                       dev_err(dev, "Failed to find power domain: %s (%d)\n",
--                               *name, index);
--                       goto err;
--               }
--
-                if (index >= opp_table->required_opp_count) {
-                        dev_err(dev, "Index can't be greater than required-opp-count - 1, %s (%d : %d)\n",
-                                *name, opp_table->required_opp_count, index);
-@@ -1849,6 +1844,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
-                }
- 
-                opp_table->genpd_virt_devs[index] = virt_dev;
-+               index++;
-                name++;
-        }
- 
-
--- 
-viresh
