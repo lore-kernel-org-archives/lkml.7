@@ -2,134 +2,187 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F048EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3D1C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F84E21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94EA20880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563394410;
+	bh=OESj9GZ0OXpMmohEHzH7DGk0qr7u6wuJQJQ0LuliQSw=;
+	h=In-Reply-To:References:Subject:To:From:Date:List-ID:From;
+	b=lUsE6IRyzgcZvzY7Pg+ZHD17gfk2luP115vTbTY3CT2i/lSshEbjqINjnOdmbKVea
+	 65eQ15WF1xkzS9YAwvk1wRFGmISost38iVnsfQlU5x/ZacNvjzfuPMdSXB8PWqxEh0
+	 kyl++5kqcUsOMH5/HytMgiBYEXTvCysWhX1ZNfUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfGQUML (ORCPT
+        id S1728613AbfGQUN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:12:11 -0400
-Received: from atlmailgw2.ami.com ([63.147.10.42]:54996 "EHLO
-        atlmailgw2.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbfGQUML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:12:11 -0400
-X-AuditID: ac10606f-d11ff70000003324-a1-5d2f811a4366
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw2.ami.com (Symantec Messaging Gateway) with SMTP id D3.B5.13092.A118F2D5; Wed, 17 Jul 2019 16:12:10 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 17 Jul 2019 16:12:09 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <devicetree@vger.kernel.org>
-CC:     Hongwei Zhang <hongweiz@ami.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: [PATCH 2/3 v4] dt-bindings: gpio: aspeed: Add SGPIO support
-Date:   Wed, 17 Jul 2019 16:12:05 -0400
-Message-ID: <1563394325-15941-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 17 Jul 2019 16:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbfGQUN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 16:13:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCEB520880;
+        Wed, 17 Jul 2019 20:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563394407;
+        bh=OESj9GZ0OXpMmohEHzH7DGk0qr7u6wuJQJQ0LuliQSw=;
+        h=In-Reply-To:References:Subject:To:From:Date:From;
+        b=VTLrt/Wddbda5e3atGarJZ1accoS0idhs5NItQk1iNdWwq0YssGxK6d6eXhh5gv0T
+         UiQr3SqihUMvQ6C/dzqRZLNB4z4upkfdpfvkYKcRaD+Vql/wL7TYAyEE2P1WcwtCwV
+         CKIVjQyCKC22t1MdKTmScv1kvCpK3FZdHfsbyWrg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWyRiBhgq5Uo36swcx1aha7LnNYfJl7isVi
-        /pFzrBa/z/9ltpjyZzmTxabH11gtmlefY7bYPP8Po8XlXXPYLJZev8hk0br3CLsDt8fV9l3s
-        HmvmrWH0eH+jld3j4sdjzB6bVnWyedy5tofNY/OSeo/zMxYyenzeJBfAGcVlk5Kak1mWWqRv
-        l8CVsX7LcpaCuSIVX2YaNDDuF+hi5OSQEDCRuHHnOFMXIxeHkMAuJonNa/awQDiHGSUWX9jA
-        DFLFJqAmsXfzHLAqEYFeRomFXxeDOcwCq5kk2jccZwepEhZwkVhxux3MZhFQleh/tZ8RxOYV
-        cJC4sAKkG2SfnMTNc53MEHFBiZMzn7CA2MwCEhIHX7wAiwsJyErcOvQYql5B4nnfY5YJjHyz
-        kLTMQtKygJFpFaNQYklObmJmTnq5kV5ibqZecn7uJkZImOfvYPz40fwQIxMH4yFGCQ5mJRFe
-        26/asUK8KYmVValF+fFFpTmpxYcYpTlYlMR5V635FiMkkJ5YkpqdmlqQWgSTZeLglGpgNHx4
-        p+L9a5nanOj3n0K4mmcyfF00T5F5wvG9EhOW2/M921nz07xVsnBSBmP4mUOhio8Dnp1dyrD3
-        lc9Spv5Mrhmu3JGiXqJ2G568dXktv/f8lCSGaT2XHnPKfuP6tZ5flunhJOG0ecnP2r7JJc1K
-        nHn+dDj/17O5K+axaSXpd7dsXyJ4hGkvvxJLcUaioRZzUXEiANmQldVhAgAA
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
+References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org> <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
+Subject: Re: [PATCH 12/12] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        david.brown@linaro.org, devicetree@vger.kernel.org,
+        gokulsri@codeaurora.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 17 Jul 2019 13:13:26 -0700
+Message-Id: <20190717201326.DCEB520880@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings to support SGPIO on AST2400 or AST2500.
+Quoting Gokul Sriram Palanisamy (2019-07-11 08:41:08)
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/=
+qcom/ipq8074.dtsi
+> index 6a61a63..c24e3f6 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -10,6 +10,22 @@
+>         model =3D "Qualcomm Technologies, Inc. IPQ8074";
+>         compatible =3D "qcom,ipq8074";
+> =20
+> +       reserved-memory {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <2>;
+> +               ranges;
+> +
+> +               smem_region:smem@4ab00000 {
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+Put a space between the colon and the node name. Also, just call it
+memory@4ab00000.
 
-diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-new file mode 100644
-index 0000000..2d6305e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-@@ -0,0 +1,55 @@
-+Aspeed SGPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 full 
-+featured Serial GPIOs. Each of the Serial GPIO pins can be programmed to 
-+support the following options:
-+- Support interrupt option for each input port and various interrupt 
-+  sensitivity option (level-high, level-low, edge-high, edge-low)
-+- Support reset tolerance option for each output port
-+- Directly connected to APB bus and its shift clock is from APB bus clock
-+  divided by a programmable value.
-+- Co-work with external signal-chained TTL components (74LV165/74LV595)
-+
-+
-+Required properties:
-+
-+- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-+
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+
-+- reg			: Address and length of the register set for the device
-+- gpio-controller	: Marks the device node as a GPIO controller
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+
-+- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
-+
-+- nr-gpios		: number of GPIO pins to serialise. 
-+			  (should be multiple of 8, up to 80 pins)
-+
-+- clocks                : A phandle to the APB clock for SGPM clock division
-+
-+- bus-frequency		: SGPM CLK frequency
-+
-+
-+The sgpio and interrupt properties are further described in their respective bindings documentation:
-+
-+- Documentation/devicetree/bindings/sgpio/gpio.txt
-+- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+  Example:
-+	sgpio: sgpio@1e780200 {
-+		#gpio-cells = <2>;
-+		compatible = "aspeed,ast2500-sgpio";
-+		gpio-controller;
-+		interrupts = <40>;
-+		reg = <0x1e780200 0x0100>;
-+		clocks = <&syscon ASPEED_CLK_APB>;
-+		interrupt-controller;
-+		nr-gpios = <8>;
-+		bus-frequency = <12000000>;
-+	};
--- 
-2.7.4
+		smem_region: memory@4ab00000 {
 
+> +                       no-map;
+> +                       reg =3D <0x0 0x4ab00000 0x0 0x00100000>;
+> +               };
+> +
+> +               q6_region: q6@4b000000 {
+
+memory@
+
+> +                       no-map;
+> +                       reg =3D <0x0 0x4b000000 0x0 0x05f00000>;
+> +               };
+> +       };
+> +
+>         firmware {
+>                 scm {
+>                         compatible =3D "qcom,scm-ipq8074", "qcom,scm";
+> @@ -431,6 +447,115 @@
+>                                       "axi_m_sticky";
+>                         status =3D "disabled";
+>                 };
+> +               apcs: syscon@b111000 {
+
+Add a newline between nodes please.
+
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x0B111000 0x1000>;
+> +               };
+> +
+> +               wcss: smp2p-wcss {
+
+This node should be outside the soc node because it doesn't have a reg
+property
+
+> +                       compatible =3D "qcom,smp2p";
+> +                       qcom,smem =3D <435>, <428>;
+> +
+> +                       interrupt-parent =3D <&intc>;
+> +                       interrupts =3D <0 322 1>;
+> +
+> +                       qcom,ipc =3D <&apcs 8 9>;
+> +
+> +                       qcom,local-pid =3D <0>;
+> +                       qcom,remote-pid =3D <1>;
+> +
+> +                       wcss_smp2p_out: master-kernel {
+> +                               qcom,entry-name =3D "master-kernel";
+> +                               qcom,smp2p-feature-ssr-ack;
+> +                               #qcom,smem-state-cells =3D <1>;
+> +                       };
+> +
+> +                       wcss_smp2p_in: slave-kernel {
+> +                               qcom,entry-name =3D "slave-kernel";
+> +
+> +                               interrupt-controller;
+> +                               #interrupt-cells =3D <2>;
+> +                       };
+> +               };
+> +
+> +               tcsr_q6_block: syscon@1945000 {
+
+Do you really need _block in these aliases?
+
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x1945000 0xE000>;
+> +               };
+> +
+> +               tcsr_mutex_block: syscon@193d000 {
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x1905000 0x8000>;
+> +               };
+> +
+> +               tcsr_mutex: hwlock@193d000 {
+> +                       compatible =3D "qcom,tcsr-mutex";
+> +                       syscon =3D <&tcsr_mutex_block 0 0x80>;
+> +                       #hwlock-cells =3D <1>;
+> +               };
+> +
+> +               smem: qcom,smem@4AB00000 {
+
+lowercase please. And just 'smem' I guess.
+
+> +                       compatible =3D "qcom,smem";
+> +                       memory-region =3D <&smem_region>;
+> +                       hwlocks =3D <&tcsr_mutex 0>;
+> +               };
+> +
+> +               apcs_glb: mailbox@b111000 {
+> +                       compatible =3D "qcom,ipq8074-apcs-apps-global";
+> +                       reg =3D <0xb111000 0x1000>;
+
+These addresses should be padded out to 8 digits for the address part
+(not the size).
+
+> +
+> +                       #mbox-cells =3D <1>;
+> +               };
+> +
+> +               q6v5_wcss: q6v5_wcss@CD00000 {
+
+lowercase.
+
+> +                       compatible =3D "qcom,ipq8074-wcss-pil";
+> +                       reg =3D <0xCD00000 0x4040>,
+> +                             <0x4AB000 0x20>;
