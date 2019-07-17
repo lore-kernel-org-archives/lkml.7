@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F2C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782DFC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A55221019
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B5E21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="xVg1dDny"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f31SK2iB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfGQXCu (ORCPT
+        id S1731067AbfGQXDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 19:02:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44473 "EHLO
+        Wed, 17 Jul 2019 19:03:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:34009 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfGQXCt (ORCPT
+        with ESMTP id S1727468AbfGQXDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 19:02:49 -0400
+        Wed, 17 Jul 2019 19:03:33 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HN2fb81723479
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HN3NhL1723774
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 16:02:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HN2fb81723479
+        Wed, 17 Jul 2019 16:03:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HN3NhL1723774
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563404561;
-        bh=wPcCAoWm2doK7gpHCiEd/1x7HQmt4DFRB1WvyWFTVk4=;
+        s=2019061801; t=1563404604;
+        bh=uPAOdwprJAFOepW0GMIgklqSirBQC831nu83XqfJjj0=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=xVg1dDnypaOrkf2KdAljrCDhQRLU3g8NrHpUDZkYw51Tt+IyPDJfbwowFCOV6cQ2g
-         EiUMUsB1yqXi359l8wYbyTWW74PWTMxElyyk4fcdE127UJOA4STk4+IRPtU1cwz8p4
-         MOu+56AjXPVx0OMZYbQFt+AL5fQD07EcvGH9ju1Lzy3C3oBaEXb5Osk2iZgpJ7CPPI
-         tjHGzAGanenHIkLNnRgVT8pquo8KaNQwsx4/blAetQAPHfSdSVSdGLtRKxySHE3l7g
-         wEnhEsy7YI9ib5+MoKx+YqYCYM5KxbPav5yT617AeOUCHPcBboJLc4puWzUcvNb87B
-         dXTqDvC6szhRQ==
+        b=f31SK2iBz2htFZIpJuQQl4mRwUPQ0ppnkPboOQ0WTSnOIQ1YBU7aAAFczA+t7H134
+         CVCG/eejXn0Jh4lS5wgOFerwcE1QPj28ezYoQXojEu2AbdxY7agRGN32DoIMav7wo0
+         lb4T7ifoahtZ0rQh+ZvaJTJU7LLiW3kI8l1cXys4N5e9Xmy0gKJGRtWVPDVsOIrrX9
+         hfuep7zHtpRbWKPlzbMT4ZShjW3mPwmN9z3cQC8ogCeftyAM3SURH2d7PvRSpr1lSm
+         f8NG8VyjLjdBrciKDhDcuzeGG+vkoJmSZoD0LHed+EsUlCBzAgYnjTMvUq4CyYGvr5
+         O/MH93TXiehjA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HN2eLb1723476;
-        Wed, 17 Jul 2019 16:02:40 -0700
-Date:   Wed, 17 Jul 2019 16:02:40 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HN3MaR1723771;
+        Wed, 17 Jul 2019 16:03:22 -0700
+Date:   Wed, 17 Jul 2019 16:03:22 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-5bf83c29a0ad2e78683c318b607539dbadbf7a3b@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, acme@redhat.com, jolsa@redhat.com,
-        hpa@zytor.com, tglx@linutronix.de, adrian.hunter@intel.com,
-        mingo@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          adrian.hunter@intel.com, acme@redhat.com, jolsa@redhat.com,
-          hpa@zytor.com, mingo@kernel.org
-In-Reply-To: <20190710085810.1650-18-adrian.hunter@intel.com>
-References: <20190710085810.1650-18-adrian.hunter@intel.com>
+Message-ID: <tip-b3694e6c0a05383891546c6e3cdef8659d50b653@git.kernel.org>
+Cc:     adrian.hunter@intel.com, mingo@kernel.org, acme@redhat.com,
+        hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com
+Reply-To: adrian.hunter@intel.com, mingo@kernel.org, hpa@zytor.com,
+          acme@redhat.com, jolsa@redhat.com, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190710085810.1650-19-adrian.hunter@intel.com>
+References: <20190710085810.1650-19-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf script: Add scripting operation
- process_switch()
-Git-Commit-ID: 5bf83c29a0ad2e78683c318b607539dbadbf7a3b
+Subject: [tip:perf/urgent] perf db-export: Factor out db_export__threads()
+Git-Commit-ID: b3694e6c0a05383891546c6e3cdef8659d50b653
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,63 +69,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5bf83c29a0ad2e78683c318b607539dbadbf7a3b
-Gitweb:     https://git.kernel.org/tip/5bf83c29a0ad2e78683c318b607539dbadbf7a3b
+Commit-ID:  b3694e6c0a05383891546c6e3cdef8659d50b653
+Gitweb:     https://git.kernel.org/tip/b3694e6c0a05383891546c6e3cdef8659d50b653
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Wed, 10 Jul 2019 11:58:06 +0300
+AuthorDate: Wed, 10 Jul 2019 11:58:07 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 10 Jul 2019 12:34:09 -0300
+CommitDate: Wed, 10 Jul 2019 12:35:18 -0300
 
-perf script: Add scripting operation process_switch()
+perf db-export: Factor out db_export__threads()
 
-Add scripting operation process_switch() to process switch events.
+In preparation for exporting switch events, factor out
+db_export__threads().
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-18-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190710085810.1650-19-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c   | 8 +++++++-
- tools/perf/util/trace-event.h | 3 +++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ tools/perf/util/db-export.c | 82 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 48 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 79367087bd18..8f24865596af 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2289,6 +2289,12 @@ static int process_switch_event(struct perf_tool *tool,
- 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
- 		return -1;
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index 5057fdd7f62d..e6a9c450133e 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -286,50 +286,32 @@ int db_export__branch_type(struct db_export *dbe, u32 branch_type,
+ 	return 0;
+ }
  
-+	if (scripting_ops && scripting_ops->process_switch)
-+		scripting_ops->process_switch(event, sample, machine);
-+
-+	if (!script->show_switch_events)
-+		return 0;
-+
- 	thread = machine__findnew_thread(machine, sample->pid,
- 					 sample->tid);
- 	if (thread == NULL) {
-@@ -2467,7 +2473,7 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.mmap = process_mmap_event;
- 		script->tool.mmap2 = process_mmap2_event;
+-int db_export__sample(struct db_export *dbe, union perf_event *event,
+-		      struct perf_sample *sample, struct perf_evsel *evsel,
+-		      struct addr_location *al)
++static int db_export__threads(struct db_export *dbe, struct thread *thread,
++			      struct thread *main_thread,
++			      struct machine *machine, struct comm **comm_ptr)
+ {
+-	struct thread *thread = al->thread;
+-	struct export_sample es = {
+-		.event = event,
+-		.sample = sample,
+-		.evsel = evsel,
+-		.al = al,
+-	};
+-	struct thread *main_thread;
+ 	struct comm *comm = NULL;
+ 	struct comm *curr_comm;
+ 	int err;
+ 
+-	err = db_export__evsel(dbe, evsel);
+-	if (err)
+-		return err;
+-
+-	err = db_export__machine(dbe, al->machine);
+-	if (err)
+-		return err;
+-
+-	main_thread = thread__main_thread(al->machine, thread);
+ 	if (main_thread) {
+ 		/*
+ 		 * A thread has a reference to the main thread, so export the
+ 		 * main thread first.
+ 		 */
+-		err = db_export__thread(dbe, main_thread, al->machine,
+-					main_thread);
++		err = db_export__thread(dbe, main_thread, machine, main_thread);
+ 		if (err)
+-			goto out_put;
++			return err;
+ 		/*
+ 		 * Export comm before exporting the non-main thread because
+ 		 * db_export__comm_thread() can be called further below.
+ 		 */
+-		comm = machine__thread_exec_comm(al->machine, main_thread);
++		comm = machine__thread_exec_comm(machine, main_thread);
+ 		if (comm) {
+ 			err = db_export__exec_comm(dbe, comm, main_thread);
+ 			if (err)
+-				goto out_put;
+-			es.comm_db_id = comm->db_id;
++				return err;
++			*comm_ptr = comm;
+ 		}
  	}
--	if (script->show_switch_events)
-+	if (script->show_switch_events || (scripting_ops && scripting_ops->process_switch))
- 		script->tool.context_switch = process_switch_event;
- 	if (script->show_namespace_events)
- 		script->tool.namespaces = process_namespaces_event;
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index d9b0a942090a..c7002fe11673 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -81,6 +81,9 @@ struct scripting_ops {
- 			       struct perf_sample *sample,
- 			       struct perf_evsel *evsel,
- 			       struct addr_location *al);
-+	void (*process_switch)(union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct machine *machine);
- 	void (*process_stat)(struct perf_stat_config *config,
- 			     struct perf_evsel *evsel, u64 tstamp);
- 	void (*process_stat_interval)(u64 tstamp);
+ 
+@@ -340,23 +322,55 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 		 */
+ 		bool export_comm_thread = comm && !thread->db_id;
+ 
+-		err = db_export__thread(dbe, thread, al->machine, main_thread);
++		err = db_export__thread(dbe, thread, machine, main_thread);
+ 		if (err)
+-			goto out_put;
++			return err;
+ 
+ 		if (export_comm_thread) {
+ 			err = db_export__comm_thread(dbe, comm, thread);
+ 			if (err)
+-				goto out_put;
++				return err;
+ 		}
+ 	}
+ 
+ 	curr_comm = thread__comm(thread);
+-	if (curr_comm) {
+-		err = db_export__comm(dbe, curr_comm, thread);
+-		if (err)
+-			goto out_put;
+-	}
++	if (curr_comm)
++		return db_export__comm(dbe, curr_comm, thread);
++
++	return 0;
++}
++
++int db_export__sample(struct db_export *dbe, union perf_event *event,
++		      struct perf_sample *sample, struct perf_evsel *evsel,
++		      struct addr_location *al)
++{
++	struct thread *thread = al->thread;
++	struct export_sample es = {
++		.event = event,
++		.sample = sample,
++		.evsel = evsel,
++		.al = al,
++	};
++	struct thread *main_thread;
++	struct comm *comm = NULL;
++	int err;
++
++	err = db_export__evsel(dbe, evsel);
++	if (err)
++		return err;
++
++	err = db_export__machine(dbe, al->machine);
++	if (err)
++		return err;
++
++	main_thread = thread__main_thread(al->machine, thread);
++
++	err = db_export__threads(dbe, thread, main_thread, al->machine, &comm);
++	if (err)
++		goto out_put;
++
++	if (comm)
++		es.comm_db_id = comm->db_id;
+ 
+ 	es.db_id = ++dbe->sample_last_db_id;
+ 
