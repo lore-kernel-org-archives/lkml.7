@@ -2,257 +2,98 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FD4C76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137FCC76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71ED620818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA89720818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUqM3qYM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lSPyRFAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfGQCac (ORCPT
+        id S1727832AbfGQCdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:30:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35344 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfGQCab (ORCPT
+        Tue, 16 Jul 2019 22:33:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38116 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfGQCdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:30:31 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so21822458qto.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 19:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YA8lAAAs8QKJaZT6FgrXTDQyRFELqwwXAnvE6DYcrwo=;
-        b=jUqM3qYMZZMW9/ukdmhyypFlzErDXK17HLvVFp30vzHZdthvv+iO0s9lyIV/rGVPqr
-         JBM0uE5gctX59YzlfaoaOCLumfIyAEOUemNySjDWg1k0Q+ciyd/Uar+SuWXLLZWACU23
-         agMYZ59E7FL/gYr7PynzaiVjKQfGs8OO9PmVOOFsNXMCPspk9518riVDU+icSptb+gAt
-         jmhw/TrMfvKtydIt85yWi5vp3jJKjq61iXH56JcSSYGbNPF4KK6/RxoiihadMJ0TYPY1
-         M0dYmJrF3c3ZXkW8nyrczl/w10EIh8Bh2djARwzspOpQVzTJoBQuxvTUyRkXAg7uOiLj
-         gYxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YA8lAAAs8QKJaZT6FgrXTDQyRFELqwwXAnvE6DYcrwo=;
-        b=uk/EvfRBGKYNO20lidP1lXht+3+Eiby7xYmU/BiZ1IrK7wIhz2Ws7Wc/Eax0dOFm6P
-         VyRPvf/vOPBsviP5UEAr53gxfBrFdIxflmiRgsSDqnwxuWCeHwhd3CgulUdNzgvpG3MR
-         wcxxQQSxXA3As2ma/e0WRrrjOKLHdt0KXpKPG9ZH1jrP+vgTmIrsFXl5OTFnwaZ07LrQ
-         OxJhIeZn8QhbjX5c18o77JSIi3sg710biAVr1l1+u9zgJTncvw16wXB6yMOIGK+mX+ql
-         SctdRBmOBgGBQcmem2GfcVwr+ZzSGvwmY++2x0sSguwMj98nQkQhm2cXS0MoqM3bxTJ7
-         5k/A==
-X-Gm-Message-State: APjAAAVsdFckFPwwlCFv5UHYHkajbnKNV7Gkz7Oi/+e53vLPfw8up6YJ
-        sFLA3t9O+bY1u2+3knCkwA8=
-X-Google-Smtp-Source: APXvYqxx50eEWuRi6UIQAIJ2BOEUS8tFyRQsai0lR4punJyDFOH1UVjLXqxBvxYFGT6YNKkSRT1MBw==
-X-Received: by 2002:a0c:8a76:: with SMTP id 51mr26976107qvu.210.1563330630560;
-        Tue, 16 Jul 2019 19:30:30 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.22])
-        by smtp.gmail.com with ESMTPSA id b202sm10257728qkg.83.2019.07.16.19.30.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 19:30:29 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 23:30:24 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
-Message-ID: <20190717023024.svpgfbzgund2awfw@smtp.gmail.com>
-References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
- <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
- <20190711082105.GI15868@phenom.ffwll.local>
- <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
- <20190716083715.GT15868@phenom.ffwll.local>
+        Tue, 16 Jul 2019 22:33:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H2Tii0077151;
+        Wed, 17 Jul 2019 02:33:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=xvyqFU2Fdei8ljgzaJQFc1lnw/+9F3y2gxI3eTRxaxw=;
+ b=lSPyRFAQSJnyKBSBT4kBXWcpoXoJEAggEpsYrk0UykTkqR/ilWfg+ti2gv181mXCOOxP
+ t6ybED2Yi9+p8fn1CBdhG1ls/bB5HuDU9CehXwtj1burgOF+d77kfs5yanpM+C0Z3Y1C
+ 6TfdKx3Rcp0nVKNiPIOzlak5tOlzG4CrsFr3YlrNnbPI4zzJuPJukwSRkqUdcj1HJj77
+ qPxo+l1VR07CePlLx0cqZ5PTmn5yUcvdLU23DFxf8/ZiQrVIQI0dDRxilkIRo6JzTLDa
+ al8PRKFK0OOuScczWB2O08/LczipkLpolwfHu11f4MOJMRm7OCfAOhNsrEfgz8yDTHHh /Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtqv7g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 02:33:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6H2RgRV181553;
+        Wed, 17 Jul 2019 02:33:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2tq4du8f7x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 02:33:01 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6H2Wxil003297;
+        Wed, 17 Jul 2019 02:32:59 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jul 2019 02:32:59 +0000
+To:     Colin King <colin.king@canonical.com>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: libfc: fix null pointer dereference on a null lport
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190702091835.13629-1-colin.king@canonical.com>
+Date:   Tue, 16 Jul 2019 22:32:57 -0400
+In-Reply-To: <20190702091835.13629-1-colin.king@canonical.com> (Colin King's
+        message of "Tue, 2 Jul 2019 10:18:35 +0100")
+Message-ID: <yq1o91tz8yu.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qp4bmywubblpnone"
-Content-Disposition: inline
-In-Reply-To: <20190716083715.GT15868@phenom.ffwll.local>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=819
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907170029
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=888 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907170029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---qp4bmywubblpnone
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Colin,
 
-On 07/16, Daniel Vetter wrote:
-> On Fri, Jul 12, 2019 at 12:14:49AM -0300, Rodrigo Siqueira wrote:
-> > On 07/11, Daniel Vetter wrote:
-> > > On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
-> > > > The compute_crc() function is responsible for calculating the
-> > > > framebuffer CRC value; due to the XRGB format, this function has to
-> > > > ignore the alpha channel during the CRC computation. Therefore,
-> > > > compute_crc() set zero to the alpha channel directly in the input
-> > > > framebuffer, which is not a problem since this function receives a =
-copy
-> > > > of the original buffer. However, if we want to use this function in=
- a
-> > > > context without a buffer copy, it will change the initial value. Th=
-is
-> > > > patch makes compute_crc() calculate the CRC value without modifying=
- the
-> > > > input framebuffer.
-> > >=20
-> > > Uh why? For writeback we're writing the output too, so we can write
-> > > whatever we want to into the alpha channel. For writeback we should n=
-ever
-> > > accept a pixel format where alpha actually matters, that doesn't make
-> > > sense. You can't see through a real screen either, they are all opaqu=
-e :-)
-> > > -Daniel
-> >=20
-> > Hmmm,
-> >=20
-> > I see your point and I agree, but even though we can write whatever we
-> > want in the output, don=E2=80=99t you think that is weird to change the
-> > framebuffer value in the compute_crc() function?
->=20
-> Not sure what you mean here ... ? From a quick look the memset only sets
-> our temporary buffer, so we're not changing the input framebuffer here.
-> And we have to somehow get rid of the X bits, since there's no alpha
-> value. For CRC computation, all we need is some value which is the same
-> for every frame (so that the CRC stays constant for the same visible
-> output). For writeback we could write whatever we want (which includes
-> whatever is there already). But there's no guarantee and definitely no
-> expectation that the X bits survive. Writing 0 is imo the most reasonable
-> thing to do. I'm not even sure whether modern gpus can still do channel
-> masking (i.e. only write out specific channels, instead of the entire
-> color). That was a "feature" of bitop blitters of the 80s/90s :-)
-> -Daniel
+> Currently if lport is null then the null lport pointer is dereference
+> when printing out debug via the FC_LPORT_DB macro. Fix this by using
+> the more generic FC_LIBFC_DBG debug macro instead that does not use
+> lport.
 
-Ahhh, now I can see that my mindset was in the 90s :)
+Applied to 5.3/scsi-fixes, thanks!
 
-Thanks
-=20
-> >=20
-> > Thanks
-> > =20
-> > > >=20
-> > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > > > ---
-> > > >  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-------=
-----
-> > > >  1 file changed, 19 insertions(+), 12 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm=
-/vkms/vkms_composer.c
-> > > > index 51a270514219..8126aa0f968f 100644
-> > > > --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> > > > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> > > > @@ -6,33 +6,40 @@
-> > > >  #include <drm/drm_atomic_helper.h>
-> > > >  #include <drm/drm_gem_framebuffer_helper.h>
-> > > > =20
-> > > > +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
-> > > > +				 const struct vkms_composer *composer)
-> > > > +{
-> > > > +	int src_offset =3D composer->offset + (y * composer->pitch)
-> > > > +					  + (x * composer->cpp);
-> > > > +
-> > > > +	return *(u32 *)&buffer[src_offset];
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * compute_crc - Compute CRC value on output frame
-> > > >   *
-> > > > - * @vaddr_out: address to final framebuffer
-> > > > + * @vaddr: address to final framebuffer
-> > > >   * @composer: framebuffer's metadata
-> > > >   *
-> > > >   * returns CRC value computed using crc32 on the visible portion of
-> > > >   * the final framebuffer at vaddr_out
-> > > >   */
-> > > > -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer =
-*composer)
-> > > > +static uint32_t compute_crc(const u8 *vaddr,
-> > > > +			    const struct vkms_composer *composer)
-> > > >  {
-> > > > -	int i, j, src_offset;
-> > > > +	int x, y;
-> > > >  	int x_src =3D composer->src.x1 >> 16;
-> > > >  	int y_src =3D composer->src.y1 >> 16;
-> > > >  	int h_src =3D drm_rect_height(&composer->src) >> 16;
-> > > >  	int w_src =3D drm_rect_width(&composer->src) >> 16;
-> > > > -	u32 crc =3D 0;
-> > > > +	u32 crc =3D 0, pixel =3D 0;
-> > > > =20
-> > > > -	for (i =3D y_src; i < y_src + h_src; ++i) {
-> > > > -		for (j =3D x_src; j < x_src + w_src; ++j) {
-> > > > -			src_offset =3D composer->offset
-> > > > -				     + (i * composer->pitch)
-> > > > -				     + (j * composer->cpp);
-> > > > +	for (y =3D y_src; y < y_src + h_src; ++y) {
-> > > > +		for (x =3D x_src; x < x_src + w_src; ++x) {
-> > > >  			/* XRGB format ignores Alpha channel */
-> > > > -			memset(vaddr_out + src_offset + 24, 0,  8);
-> > > > -			crc =3D crc32_le(crc, vaddr_out + src_offset,
-> > > > -				       sizeof(u32));
-> > > > +			pixel =3D get_pixel_from_buffer(x, y, vaddr, composer);
-> > > > +			bitmap_clear((void *)&pixel, 0, 8);
-> > > > +			crc =3D crc32_le(crc, (void *)&pixel, sizeof(u32));
-> > > >  		}
-> > > >  	}
-> > > > =20
-> > > > --=20
-> > > > 2.21.0
-> > >=20
-> > > --=20
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> >=20
-> > --=20
-> > Rodrigo Siqueira
-> > https://siqueira.tech
->=20
->=20
->=20
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
->=20
-> --=20
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
---=20
-Rodrigo Siqueira
-https://siqueira.tech
-
---qp4bmywubblpnone
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0uiEAACgkQWJzP/com
-vP8X0xAAxp4KZSRHIF9p/L79o4+j8/J2PBMeibgeeQsw2NFfff6rbip2bM4sfccv
-mjdtxPGJHMUWr/vdeRvokp9kg9QWE/ZOxmX+u07c+/x+qxPhB1/p3uogpNpRvsZ+
-SF2xG8riCOmTuKetflJUh7chAm/RDPM/TaajZfUGIIwY9gQm1/C0WyumBp85izpU
-Nk1dk6Dj/xplD8d+19P7uKgUDc+d3P4ogRbUQKW5NqvgrXyXxa4Zzv1W40BKwsIS
-jx5xQAqrcQUCkOdPRJyzVMLKBe0kagIEhXMHfSlyn+Nlp47AXYUjMlUV4TuY5980
-HsWPGAs98tNpCM+jj1bWxym5F0LnKxyxMqHg62gGQLOWQBVdhWLmYtdCf7bI8A0I
-95stQVF6CqWxNzcYJ6ffw6ZFNXKVba6uzrPIAWVwYTvX/JmULM9JzZVMG33vbeYH
-Yd8grYgJLvRU8k5pc1g5LjXC0+9im1Jr10mmywgUhipErbMxXOfhMuIe2/2lsx5v
-zkMk/UTlVZQrXxJOw4NUXeb0wDXelrTR3/5cSDT0uMWjSU84AFQLvd5767YxqD+h
-odiOohM4xAEkB7478GVvwsyjUMf9Tn1QGeWX/m2lsZgv2qYmT5zgVkG1H7jzSEO7
-mRzB0k/z3o9M40wzDebVg5TRcyNOdn3+8xKFumWmvmNXuGYMOAU=
-=ajCg
------END PGP SIGNATURE-----
-
---qp4bmywubblpnone--
+-- 
+Martin K. Petersen	Oracle Linux Engineering
