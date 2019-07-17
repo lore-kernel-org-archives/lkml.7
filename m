@@ -2,112 +2,110 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CE1C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1075C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75CD20880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:22:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a7inERjp"
+	by mail.kernel.org (Postfix) with ESMTP id 8ABED20880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbfGQKWi (ORCPT
+        id S1729570AbfGQKXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:22:38 -0400
-Received: from mail-eopbgr00057.outbound.protection.outlook.com ([40.107.0.57]:5748
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfGQKWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:22:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=faBuWjAqIAuwu87RAWlH+R0f/uXJe8ggIER4zIYp/jsDIhAl7HoKgiLAeqPrLMUl4fGEpDVbIOaBtDNBoLYWITteUgW54G4Pp4iCNangmig0i6RgOx8axDz5c6OPgFeLP1ICfOdcQAUjfJ6OUcI5dkipQ1foUOf0jqVgGgXFOShZoxvon2nNyIMVTCBJNIoxC7LQTqOS/Umv6StaXx5gm1CEnUuVf+OxgIhEvDeix/gEGF2AlzP5WlCU6emOv3zIkDnb4uxP6qHheAeumNSF2US35qw5xQv6auqjiDFwpZPY/VTLT6HeqcU0145chvTTu+U0wrE4SzejAqHXnZcLJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FlxCALpKAX/PPHwiaGuoBS9kB0Pnkf2POu8sgiQF3Q4=;
- b=TvGY9vkxH5CucL6/8i6fY0wFG8yvtSN+lC0eGQLeKDkx0qGZs5218R9bS5QZvZk1w4SLomaaaze2iwf7tFtHrsVk11vLscxN2VjNoF7mxs304Ty60b3PqpkR1PKEUkOFUPTrgAq6jEtvIpREtgwPUg6j1+SRVT/B5spHVy7DHS2O+LqfN9AXrA90scLfOu9kATcE+4E+HZkdTzVQ3Q+uu2YGT0aLawfBmocwpv2ukszh+sSUemn8cGd1zC99B+5OYyV9tS5LUZHQrJTkTWs4WC+xI7Tb53bSJMR2YzXAaaOkxn3ZtUan9hNXLU8nWDwhd6wuhsZYzMNkr8aLoKLJHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FlxCALpKAX/PPHwiaGuoBS9kB0Pnkf2POu8sgiQF3Q4=;
- b=a7inERjp53kaWixbm/n5pfOAKwdO9g2ftylYnWcJjI3ipTfzwRHG+1wHroMkxXX11w5gYV0cs7NYjiWvNx5P83Pp9+8YvCsNAbBnb/NzjIMFR+g2Gwn+kB5qUF2Kh2Tjbdx/BqmNaMwvLXMo8O2BQXH+cXcikJ6SvTbogYV7ovU=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB5604.eurprd04.prod.outlook.com (20.178.203.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 10:22:35 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 10:22:35 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/2] i2c: imx-lpi2c: use devm_platform_ioremap_resource()
- to simplify code
-Thread-Topic: [PATCH 2/2] i2c: imx-lpi2c: use devm_platform_ioremap_resource()
- to simplify code
-Thread-Index: AQHVPHyR7JsrX+SniEe/wrvwOi8WYabOmevw
-Date:   Wed, 17 Jul 2019 10:22:35 +0000
-Message-ID: <AM0PR04MB42112856FEC15C74AE18824980C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190717084017.30987-1-Anson.Huang@nxp.com>
- <20190717084017.30987-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190717084017.30987-2-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8439905d-0381-4253-27c0-08d70aa0af98
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5604;
-x-ms-traffictypediagnostic: AM0PR04MB5604:
-x-microsoft-antispam-prvs: <AM0PR04MB5604F47B9CB43A45C45A4EE380C90@AM0PR04MB5604.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(199004)(189003)(8936002)(6506007)(53936002)(102836004)(71190400001)(44832011)(7696005)(2201001)(81156014)(76176011)(66446008)(66556008)(66476007)(76116006)(64756008)(71200400001)(5660300002)(2906002)(99286004)(305945005)(2501003)(66946007)(52536014)(229853002)(26005)(8676002)(6436002)(66066001)(6246003)(476003)(446003)(55016002)(11346002)(478600001)(86362001)(3846002)(186003)(110136005)(6116002)(25786009)(68736007)(33656002)(316002)(256004)(4326008)(74316002)(558084003)(14454004)(486006)(7736002)(81166006)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5604;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nQtfigxX2aK8BuAJ9zv30HtFXq8AzZ841w2sJfp4oJZnnhFwR0SCN4ebRGwqSHfSzAgJpMCvYD0PON1f19vS4g8MZt/iMAf5vwjs2Tc6UwwaLeic2VZBv2JVY12JxfN+Ey7gNRoOZr2vKO4XAHyoLgZAQzPRP99UQGBfx7LhE/Vfh+9WRG2cOEMbpXjj5XfWmI9EO172bnunf5l3EKOfhJ9aj56m71MhLNCzZ08p1rERQ+tKi2T5CzEzqA4WWPCnEPlefK067mVwIk0KJsXUkT+w36f4OEZMAELOXYaCWC+x6iBbtEmO54a1Titdwi7T0QOenNBt3a8GOPWxGKtDg2uy7PbAJSUYj4Kd/UDdbgQiZ+HvudYHPLWSRdJHYOF6VV/B7x84KCAvG18DL8eYufbSY7h6YzBbZseQmSUHDIc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 17 Jul 2019 06:23:31 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43909 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfGQKXb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:23:31 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p13so24153883wru.10
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 03:23:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OgDJWdqKExQDn29jdefxbq2X4b+zlsDENGAuQ8C2S/0=;
+        b=YmWlUbrCibszo4fUeAuBOgHQSi5mc/fx7KKR1j/jndMJJUOuzDaAFNIVUTRgDqPb3o
+         XZup5p/S1+g4KKOjLWRdsgi7fGOB4ubckaU73qIV6rKBdaDoRHe9IreB3yFSiWzJ3bqs
+         NPY8fGiQ6VWUF0suDdR4FfkAftA47KO5WDagZFYEv9Ubn98LO0R2ifK8Mn7da3LARXgb
+         HixTNdSwxG9UYg9j6lTXdSNS0y4RbKEQmgR7kfXQHkABuQWikD0a3pHUm5/jPlYXMjBs
+         yIHjPbuyi47w7sGRDqbV8NoUQbQf8OxE7N4HASnzrS2nsbOPdYR2STzZqxiFjdU+ksjB
+         8hzA==
+X-Gm-Message-State: APjAAAV6oSnSF4HMH4cDV4fl2io+kx+ui6JNRHjne0D8AzY1BlkXyN5s
+        9C30MIngUdKGIsT3qvR8jMn8LminD50EDw==
+X-Google-Smtp-Source: APXvYqwr7wStccjcUL3kS2LjSeL9qna9HUuZyfa6OlP+sb0srZC6+du92eULywd0hzhEbzXZw6cr5g==
+X-Received: by 2002:a05:6000:187:: with SMTP id p7mr39272926wrx.189.1563359008856;
+        Wed, 17 Jul 2019 03:23:28 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
+        by smtp.gmail.com with ESMTPSA id t24sm21805289wmj.14.2019.07.17.03.23.28
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 03:23:28 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86/vPMU: reset pmc->counter to 0 for pmu
+ fixed_counters
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     wehuang@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190717025118.16783-1-like.xu@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <20682ae6-5699-3963-318e-55a177ccd57f@redhat.com>
+Date:   Wed, 17 Jul 2019 12:23:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8439905d-0381-4253-27c0-08d70aa0af98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 10:22:35.2034
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5604
+In-Reply-To: <20190717025118.16783-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
-OiBXZWRuZXNkYXksIEp1bHkgMTcsIDIwMTkgNDo0MCBQTQ0KPiANCj4gVXNlIHRoZSBuZXcgaGVs
-cGVyIGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZSgpIHdoaWNoIHdyYXBzIHRoZQ0KPiBw
-bGF0Zm9ybV9nZXRfcmVzb3VyY2UoKSBhbmQgZGV2bV9pb3JlbWFwX3Jlc291cmNlKCkgdG9nZXRo
-ZXIsIHRvIHNpbXBsaWZ5DQo+IHRoZSBjb2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQoNCkFja2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFp
-c2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
+On 17/07/19 04:51, Like Xu wrote:
+> To avoid semantic inconsistency, the fixed_counters in Intel vPMU
+> need to be reset to 0 in intel_pmu_reset() as gp_counters does.
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>  arch/x86/kvm/vmx/pmu_intel.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 68d231d49c7a..4dea0e0e7e39 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -337,17 +337,22 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+>  static void intel_pmu_reset(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	struct kvm_pmc *pmc = NULL;
+>  	int i;
+>  
+>  	for (i = 0; i < INTEL_PMC_MAX_GENERIC; i++) {
+> -		struct kvm_pmc *pmc = &pmu->gp_counters[i];
+> +		pmc = &pmu->gp_counters[i];
+>  
+>  		pmc_stop_counter(pmc);
+>  		pmc->counter = pmc->eventsel = 0;
+>  	}
+>  
+> -	for (i = 0; i < INTEL_PMC_MAX_FIXED; i++)
+> -		pmc_stop_counter(&pmu->fixed_counters[i]);
+> +	for (i = 0; i < INTEL_PMC_MAX_FIXED; i++) {
+> +		pmc = &pmu->fixed_counters[i];
+> +
+> +		pmc_stop_counter(pmc);
+> +		pmc->counter = 0;
+> +	}
+>  
+>  	pmu->fixed_ctr_ctrl = pmu->global_ctrl = pmu->global_status =
+>  		pmu->global_ovf_ctrl = 0;
+> 
+
+Queued, thanks.
+
+Paolo
