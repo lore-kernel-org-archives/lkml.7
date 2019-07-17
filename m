@@ -2,210 +2,144 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C2BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9666FC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79C32173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714BA2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:30:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EWeObjoF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyR3sxcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfGQB3O (ORCPT
+        id S1726728AbfGQBar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 21:29:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36300 "EHLO
+        Tue, 16 Jul 2019 21:30:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46958 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfGQB3M (ORCPT
+        with ESMTP id S1725850AbfGQBaq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 21:29:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so9980890pfl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 18:29:11 -0700 (PDT)
+        Tue, 16 Jul 2019 21:30:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c73so9963638pfb.13;
+        Tue, 16 Jul 2019 18:30:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
-         :from:to;
-        bh=lCAdtmytrwTdW3zlJMsL7BH9HcOHIdUFUev907eAt/A=;
-        b=EWeObjoFmWq4Omx3n/Vk5ieecW6ME7Q+UElx0hnCrcAOTTwfJ8WA/Sx8n3WY/vKhA0
-         w6DxbQo2seu7BVmNL69pGIK8MrLb9SGxQw0ZhHDA/oLivg3XTYry1Jl/HOn/8ds0c/xl
-         O9ThCZWa11yjixEiKl5hzy4Eccujt0+y1RLNUSrPKnvavkdRx+ydohJ0NNiQpiV3Ozvx
-         aK7noJb1AfREOkm/Jo45bQYJsqD5CIa30MNowi++lgOE2CEfnJvHQKtzGzh+WEvqD0ri
-         qekgiFl3gec+0sTohyesxiSbunkhOiFPrtSd5l3tnJD2fwW7uxBVPSQs3Dbrtim5XVys
-         eqYw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=neITER+zvrYjuYhibRCAZ2mUIZDBc7bmWlN6HB6gcKI=;
+        b=TyR3sxcqDcPBUFP6dAEFu9mdfp2q7bo/1ysGD6URAEn7Ok+LEneWbbq2jIFJ7jO6xr
+         E80POzx+7wBoYrK+X/onpGbJxavYHEluy/+nuA6UekMJncvOnLcGGk7xJXM85z3VdET/
+         M1l/sNuRZeipKzRNofXoiBhKLviWcFlNhyxXyXm2JrIMNmyYT++TDaBqft9CQBEOcLe1
+         7bbMoqeJ1uxJ9X6yyW4NmhpoAC9pMBfqCM2wRUK+3Dr2l6sLk9CzFJQIAddJuZ7Dz017
+         EGcQf3BHBW6sy/c6ubaAvYZMmP2mYdmmRdQ0Ux5XUF0wSQ0mhDAVP2EKJqnvZMFzOe9z
+         K+kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:message-id:mime-version
-         :content-transfer-encoding:cc:from:to;
-        bh=lCAdtmytrwTdW3zlJMsL7BH9HcOHIdUFUev907eAt/A=;
-        b=hzrYkfAPfMKU4SDs4RFja53v54kDpb62fA3tjbgjFTqmLcUz8PkZh3/D9TDrz0n92w
-         aHvbRrI1TAXt4t7hU9BG8ebglUC8qVZ5hFSBF/h1nsG6mAYr4hxq5Yq7nO9lH50sLYYd
-         qzrn5xYCKisVkUmfHPK5p6/7ymeyB8x1+Ufsj00r4am/rpfSZ0NjR1HSBNHSOkeOMX2t
-         Cxv0JyheGUaAUX17h35JQnXIrtzO9otQCKXEnPgvfRo0SrwRVR+h3lM2OpVpDPsseYuP
-         o98GMl6Snq8F9/MjVEsem1t83Y9TYxEzf/nANlHPZJoYSsjobguM2rjUW/XZDjLBhmaS
-         7Ymw==
-X-Gm-Message-State: APjAAAVFa6MXVlHeMnYNi4/lxtytaDFwyPJB5Ry0sFfIqBjAlZD6kZjz
-        3v3lah5K0oTdbQY0PwXxhRuSRg==
-X-Google-Smtp-Source: APXvYqxD+A8D1A0efvs/gHSpa51lIoBZYiXr5jNYG6C1/J/dqptdfkqKaxchYfNokKm4TbgakH+Oxw==
-X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr39334563pjb.120.1563326951272;
-        Tue, 16 Jul 2019 18:29:11 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id r61sm32564152pjb.7.2019.07.16.18.29.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 18:29:10 -0700 (PDT)
-Subject: Add a new fchmodat4() syscall, v2
-Date:   Tue, 16 Jul 2019 18:27:15 -0700
-Message-Id: <20190717012719.5524-1-palmer@sifive.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=neITER+zvrYjuYhibRCAZ2mUIZDBc7bmWlN6HB6gcKI=;
+        b=DxqM7HdcrHTf7+UlvfXs4oMwYg/8H6gFD7b8ecCDG5A6d7Fi7PWKECF6mCCj1KSUGU
+         idi0tLV3ssgHSANClX2ccy2VTiii3jtTkcICaTVf4ydFD2N11UL5MNWJILXWuEnreutZ
+         qjvAXxQuJGLhbVSdSt0WHyTVZzlMbgyaVJpVjS94/Tc4pMEXChxfjT6wVADblZiZ//HI
+         BUhETGvzD9j9IoL/w+rNx5UJ4yLZD+OyJhlrp5Ag2mIO573d8isWNSA4s97lpg2eq81/
+         xszX4ZkwP969UeMA/pSb7z7iBiOjCuUeRrO1H/H2NsHF1M57VnG6Oh9gsh+1EPsG1z4O
+         NMuw==
+X-Gm-Message-State: APjAAAVMcS3ztg9/3VqV3Pk53Gej1vMw0z2B1eKmdLcVTPvqxd/4z+qg
+        9AuYzaCXRY078XjLufYs+f4=
+X-Google-Smtp-Source: APXvYqxteJxMDlwlCNvvq4SuGqWoZbP7NjOqGn0uk70RZ1WP54WvJSTMSu99Enj+T2+HriAe3TQQ9Q==
+X-Received: by 2002:a63:5964:: with SMTP id j36mr37012010pgm.428.1563327046011;
+        Tue, 16 Jul 2019 18:30:46 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::b82a])
+        by smtp.gmail.com with ESMTPSA id a3sm23436067pfi.63.2019.07.16.18.30.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 18:30:44 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 18:30:42 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        Manali Shukla <manalishukla14@gmail.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matt Mullins <mmullins@fb.com>,
+        Michal Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
+        namhyung@kernel.org, netdev@vger.kernel.org,
+        paul.chaignon@gmail.com, primiano@google.com,
+        Qais Yousef <qais.yousef@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190717013041.53sbn3tgfhtxgyb3@ast-mbp.dhcp.thefacebook.com>
+References: <20190710141548.132193-1-joel@joelfernandes.org>
+ <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+ <20190716213050.GA161922@google.com>
+ <20190716183117.77b3ed49@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        tony.luck@intel.com, fenghua.yu@intel.com, geert@linux-m68k.org,
-        monstr@monstr.eu, ralf@linux-mips.org, paul.burton@mips.com,
-        jhogan@kernel.org, James.Bottomley@HansenPartnership.com,
-        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        peterz@infradead.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, Palmer Dabbelt <palmer@sifive.com>,
-        dhowells@redhat.com, firoz.khan@linaro.org, stefan@agner.ch,
-        schwidefsky@de.ibm.com, axboe@kernel.dk, christian@brauner.io,
-        hare@suse.com, deepa.kernel@gmail.com, tycho@tycho.ws,
-        kim.phillips@arm.com, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716183117.77b3ed49@gandalf.local.home>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds fchmodat4(), a new syscall. The actual
-implementation is super simple: essentially it's just the same as
-fchmodat(), but LOOKUP_FOLLOW is conditionally set based on the flags.
-I've attempted to make this match "man 2 fchmodat" as closely as
-possible, which says EINVAL is returned for invalid flags (as opposed to
-ENOTSUPP, which is currently returned by glibc for AT_SYMLINK_NOFOLLOW).
-I have a sketch of a glibc patch that I haven't even compiled yet, but
-seems fairly straight-forward:
+On Tue, Jul 16, 2019 at 06:31:17PM -0400, Steven Rostedt wrote:
+> On Tue, 16 Jul 2019 17:30:50 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > I don't see why a new bpf node for a trace event is a bad idea, really.
+> > tracefs is how we deal with trace events on Android. We do it in production
+> > systems. This is a natural extension to that and fits with the security model
+> > well.
+> 
+> What I would like to see is a way to have BPF inject data into the
+> ftrace ring buffer directly. There's a bpf_trace_printk() that I find a
+> bit of a hack (especially since it hooks into trace_printk() which is
+> only for debugging purposes). Have a dedicated bpf ftrace ring
+> buffer event that can be triggered is what I am looking for. Then comes
+> the issue of what ring buffer to place it in, as ftrace can have
+> multiple ring buffer instances. But these instances are defined by the
+> tracefs instances directory. Having a way to associate a bpf program to
+> a specific event in a specific tracefs directory could allow for ways to
+> trigger writing into the correct ftrace buffer.
 
-    diff --git a/sysdeps/unix/sysv/linux/fchmodat.c b/sysdeps/unix/sysv/linux/fchmodat.c
-    index 6d9cbc1ce9e0..b1beab76d56c 100644
-    --- a/sysdeps/unix/sysv/linux/fchmodat.c
-    +++ b/sysdeps/unix/sysv/linux/fchmodat.c
-    @@ -29,12 +29,36 @@
-     int
-     fchmodat (int fd, const char *file, mode_t mode, int flag)
-     {
-    -  if (flag & ~AT_SYMLINK_NOFOLLOW)
-    -    return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-    -#ifndef __NR_lchmod		/* Linux so far has no lchmod syscall.  */
-    +  /* There are four paths through this code:
-    +      - The flags are zero.  In this case it's fine to call fchmodat.
-    +      - The flags are non-zero and glibc doesn't have access to
-    +	__NR_fchmodat4.  In this case all we can do is emulate the error codes
-    +	defined by the glibc interface from userspace.
-    +      - The flags are non-zero, glibc has __NR_fchmodat4, and the kernel has
-    +	fchmodat4.  This is the simplest case, as the fchmodat4 syscall exactly
-    +	matches glibc's library interface so it can be called directly.
-    +      - The flags are non-zero, glibc has __NR_fchmodat4, but the kernel does
-    +	not.  In this case we must respect the error codes defined by the glibc
-    +	interface instead of returning ENOSYS.
-    +    The intent here is to ensure that the kernel is called at most once per
-    +    library call, and that the error types defined by glibc are always
-    +    respected.  */
-    +
-    +#ifdef __NR_fchmodat4
-    +  long result;
-    +#endif
-    +
-    +  if (flag == 0)
-    +    return INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
-    +
-    +#ifdef __NR_fchmodat4
-    +  result = INLINE_SYSCALL (fchmodat4, 4, fd, file, mode, flag);
-    +  if (result == 0 || errno != ENOSYS)
-    +    return result;
-    +#endif
-    +
-       if (flag & AT_SYMLINK_NOFOLLOW)
-         return INLINE_SYSCALL_ERROR_RETURN_VALUE (ENOTSUP);
-    -#endif
+bpf can write anything (including full skb) into perf ring buffer.
+I don't think there is a use case yet to write into ftrace ring buffer.
+But I can be convinced otherwise :)
 
-    -  return INLINE_SYSCALL (fchmodat, 3, fd, file, mode);
-    +  return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
-     }
+> But looking over the patches, I see what Alexei means that there's no
+> overlap with ftrace and these patches except for the tracefs directory
+> itself (which is part of the ftrace infrastructure). And the trace
+> events are technically part of the ftrace infrastructure too. I see the
+> tracefs interface being used, but I don't see how the bpf programs
+> being added affect the ftrace ring buffer or other parts of ftrace. And
+> I'm guessing that's what is confusing Alexei.
 
-I've never added a new syscall before so I'm not really sure what the
-proper procedure to follow is.  Based on the feedback from my v1 patch
-set it seems this is somewhat uncontroversial.  At this point I don't
-think there's anything I'm missing, though note that I haven't gotten
-around to testing it this time because the diff from v1 is trivial for
-any platform I could reasonably test on.  The v1 patches suggest a
-simple test case, but I didn't re-run it because I don't want to reboot
-my laptop.
-
-    $ touch test-file
-    $ ln -s test-file test-link
-    $ cat > test.c
-    #include <fcntl.h>
-    #include <stdio.h>
-    #include <unistd.h>
-
-    int main(int argc, char **argv)
-    {
-            long out;
-
-            out = syscall(434, AT_FDCWD, "test-file", 0x888, AT_SYMLINK_NOFOLLOW);
-            printf("fchmodat4(AT_FDCWD, \"test-file\", 0x888, AT_SYMLINK_NOFOLLOW): %ld\n", out);
-
-            out = syscall(434, AT_FDCWD, "test-file", 0x888, 0);
-            printf("fchmodat4(AT_FDCWD, \"test-file\", 0x888, 0): %ld\n", out);
-
-            out = syscall(268, AT_FDCWD, "test-file", 0x888);
-            printf("fchmodat(AT_FDCWD, \"test-file\", 0x888): %ld\n", out);
-
-            out = syscall(434, AT_FDCWD, "test-link", 0x888, AT_SYMLINK_NOFOLLOW);
-            printf("fchmodat4(AT_FDCWD, \"test-link\", 0x888, AT_SYMLINK_NOFOLLOW): %ld\n", out);
-
-            out = syscall(434, AT_FDCWD, "test-link", 0x888, 0);
-            printf("fchmodat4(AT_FDCWD, \"test-link\", 0x888, 0): %ld\n", out);
-
-            out = syscall(268, AT_FDCWD, "test-link", 0x888);
-            printf("fchmodat(AT_FDCWD, \"test-link\", 0x888): %ld\n", out);
-
-            return 0;
-    }
-    $ gcc test.c -o test
-    $ ./test
-    fchmodat4(AT_FDCWD, "test-file", 0x888, AT_SYMLINK_NOFOLLOW): 0
-    fchmodat4(AT_FDCWD, "test-file", 0x888, 0): 0
-    fchmodat(AT_FDCWD, "test-file", 0x888): 0
-    fchmodat4(AT_FDCWD, "test-link", 0x888, AT_SYMLINK_NOFOLLOW): -1
-    fchmodat4(AT_FDCWD, "test-link", 0x888, 0): 0
-    fchmodat(AT_FDCWD, "test-link", 0x888): 0
-
-I've only built this on 64-bit x86.
-
-Changes since v1 [20190531191204.4044-1-palmer@sifive.com]:
-
-* All architectures are now supported, which support squashed into a
-  single patch.
-* The do_fchmodat() helper function has been removed, in favor of directly
-  calling do_fchmodat4().
-* The patches are based on 5.2 instead of 5.1.
-
+yep.
+What I really like to see some day is proper integration of real ftrace
+and bpf. So that bpf progs can be invoked from some of the ftrace machinery.
+And the other way around.
+Like I'd love to be able to start ftracing all functions from bpf
+and stop it from bpf.
+The use case is kernel debugging. I'd like to examine a bunch of condition
+and start ftracing the execution. Then later decide wether this collection
+of ip addresses is interesting to analyze and post process it quickly
+while still inside bpf program.
