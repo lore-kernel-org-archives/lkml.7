@@ -2,132 +2,107 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305DFC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD58C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB352173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26712184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:24:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krxIjMge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389003AbfGQSXY (ORCPT
+        id S2389047AbfGQSYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:23:24 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:48141 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727434AbfGQSXY (ORCPT
+        Wed, 17 Jul 2019 14:24:10 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46299 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727428AbfGQSYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:23:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TX8swo._1563387797;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX8swo._1563387797)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 18 Jul 2019 02:23:19 +0800
-Subject: Re: [v2 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
- mapped correctly in mbind
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     Vlastimil Babka <vbabka@suse.cz>, mhocko@kernel.org,
-        mgorman@techsingularity.net, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
- <1561162809-59140-3-git-send-email-yang.shi@linux.alibaba.com>
- <0cbc99f6-76a9-7357-efa7-a2d551b3cd12@suse.cz>
- <9defdc16-c825-05b7-b394-abdf39000220@linux.alibaba.com>
-Message-ID: <3197a7df-c7bc-2bac-3d40-dbfc97d4a909@linux.alibaba.com>
-Date:   Wed, 17 Jul 2019 11:23:16 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 17 Jul 2019 14:24:09 -0400
+Received: by mail-io1-f65.google.com with SMTP id i10so47213949iol.13;
+        Wed, 17 Jul 2019 11:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uf/4ZxPFIqOD9RapY4uAy1qNJPgc//Sy2DxkMi0wzxE=;
+        b=krxIjMge1Y/jwdgZJHPkKyCSOJdzOmEuGKBdQQQYSbNN8g639+uD17I60myNgM1NkW
+         uNRY8Fi3Z5Qm8QM6XSj8EVum+XYgVEQOU9fETb7V785PjvfjkkZrbvQsSxXnsH7Djjws
+         zXa++cJNY6JAPFMPvNn0irdUscSgPInop2C48o+NJh6+Wr24Nd1xGVxhxUjNqbXJNYuo
+         xovtXmnd+dgXPCFK4Pk9AK47Y6oDsOXeWph2KqSqsvs+SNBv2KD+pIJbMBUuKgRGlBlO
+         tEUujRP120KzOKDdXf5I6MvcvTgfXxToWlr+RKxNNCBOjzEy0ekyQ6XRtshw/ffORFYV
+         cJbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uf/4ZxPFIqOD9RapY4uAy1qNJPgc//Sy2DxkMi0wzxE=;
+        b=s67WJiy19AQyn0DgDyAtqw2B3xVBwRCgtbGQEfp3ocJhUlihNjUSqtLM6EOOawpSrj
+         teEg5gNfBZfqnq8wU8Lcfde9RtNNSTUCdenIfJ/D9m5FsRCBfMSfTiarpDNAGBqNAuXq
+         cQhBRD+iosCUT4b/tE0KeUPXQh5Dy1vPx3tCCuYgeEYCNz6adjEHu04vO8EEZ7WgPGjA
+         t8D4Hfnti0j+RFhPLrbqCl22PcXoXaL6Z8gfNTFQSSOBz/VJz9hK5ksOfqqk4MtON+eo
+         Vu+9IWcjcXl/SISSFFx0aeWwmIbNh3jpaoTAyb5KeqaptqMIQ8yIBCFC58NIPb3B+LEk
+         sVjg==
+X-Gm-Message-State: APjAAAW8fbYFUf/EAybni+hX+2/qcfcLbxn3fBd/O1uSm3kii83ENSww
+        z1Z6D/GwRcGuJLgv1kVlYwCoatgCgCBKnQ==
+X-Google-Smtp-Source: APXvYqznMC3iKe3XsH51sI6EGKGJn4bbRxG7UsYc3XMuM2UVX6IXm13XQJAw2HEQSq9ouiNQzj7yHw==
+X-Received: by 2002:a02:2245:: with SMTP id o66mr12383247jao.53.1563387848779;
+        Wed, 17 Jul 2019 11:24:08 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id p10sm41190115iob.54.2019.07.17.11.24.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 11:24:07 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skunberg.kelsey@gmail.com
+Subject: [PATCH] PCI: Remove unused EXPORT_SYMBOL()s from drivers/pci/bus.c
+Date:   Wed, 17 Jul 2019 12:23:53 -0600
+Message-Id: <20190717182353.45557-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <9defdc16-c825-05b7-b394-abdf39000220@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pci_bus_get() and pci_bus_put() are not used by a loadable kernel module
+and do not need to be exported. Remove lines exporting pci_bus_get() and
+pci_bus_put().
 
+Functions were exported in commit fe830ef62ac6 ("PCI: Introduce
+pci_bus_{get|put}() to manage PCI bus reference count"). No found history
+of functions being used by a loadable kernel module.
 
-On 7/16/19 10:28 AM, Yang Shi wrote:
->
->
-> On 7/16/19 5:07 AM, Vlastimil Babka wrote:
->> On 6/22/19 2:20 AM, Yang Shi wrote:
->>> @@ -969,10 +975,21 @@ static long do_get_mempolicy(int *policy, 
->>> nodemask_t *nmask,
->>>   /*
->>>    * page migration, thp tail pages can be passed.
->>>    */
->>> -static void migrate_page_add(struct page *page, struct list_head 
->>> *pagelist,
->>> +static int migrate_page_add(struct page *page, struct list_head 
->>> *pagelist,
->>>                   unsigned long flags)
->>>   {
->>>       struct page *head = compound_head(page);
->>> +
->>> +    /*
->>> +     * Non-movable page may reach here.  And, there may be
->>> +     * temporaty off LRU pages or non-LRU movable pages.
->>> +     * Treat them as unmovable pages since they can't be
->>> +     * isolated, so they can't be moved at the moment.  It
->>> +     * should return -EIO for this case too.
->>> +     */
->>> +    if (!PageLRU(head) && (flags & MPOL_MF_STRICT))
->>> +        return -EIO;
->>> +
->> Hm but !PageLRU() is not the only way why queueing for migration can
->> fail, as can be seen from the rest of the function. Shouldn't all cases
->> be reported?
->
-> Do you mean the shared pages and isolation failed pages? I'm not sure 
-> whether we should consider these cases break the semantics or not, so 
-> I leave them as they are. But, strictly speaking they should be 
-> reported too, at least for the isolation failed page.
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+---
+ drivers/pci/bus.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-By reading mbind man page, it says:
-
-If MPOL_MF_MOVE is specified in flags, then the kernel will attempt to 
-move all the existing pages in the memory range so that they follow the 
-policy.  Pages that are shared with other processes will not be moved.  
-If MPOL_MF_STRICT is also specified, then the call fails with the error 
-EIO if some pages could not be moved.
-
-It looks the code already handles shared page correctly, we just need 
-return -EIO for isolation failed page if MPOL_MF_STRICT is specified.
-
->
-> Thanks,
-> Yang
->
->>
->>>       /*
->>>        * Avoid migrating a page that is shared with others.
->>>        */
->>> @@ -984,6 +1001,8 @@ static void migrate_page_add(struct page *page, 
->>> struct list_head *pagelist,
->>>                   hpage_nr_pages(head));
->>>           }
->>>       }
->>> +
->>> +    return 0;
->>>   }
->>>     /* page allocation callback for NUMA node migration */
->>> @@ -1186,9 +1205,10 @@ static struct page *new_page(struct page 
->>> *page, unsigned long start)
->>>   }
->>>   #else
->>>   -static void migrate_page_add(struct page *page, struct list_head 
->>> *pagelist,
->>> +static int migrate_page_add(struct page *page, struct list_head 
->>> *pagelist,
->>>                   unsigned long flags)
->>>   {
->>> +    return -EIO;
->>>   }
->>>     int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
->>>
->
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 495059d923f7..8e40b3e6da77 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -417,11 +417,9 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus)
+ 		get_device(&bus->dev);
+ 	return bus;
+ }
+-EXPORT_SYMBOL(pci_bus_get);
+ 
+ void pci_bus_put(struct pci_bus *bus)
+ {
+ 	if (bus)
+ 		put_device(&bus->dev);
+ }
+-EXPORT_SYMBOL(pci_bus_put);
+-- 
+2.20.1
 
