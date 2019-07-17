@@ -2,122 +2,163 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4DC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA4C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B16820818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563357785;
-	bh=NCz+/qyUYefzxnwUGAYv3ttjqTH35P9ZY0JImQSzg+k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hgdtWtSfLwfpr9MBXhb69qQIDEwKfYi/qCF7WCZHxiifusBrzRcAPsjPrEsVIsBEA
-	 U4BR7xThyntNFlf5tIpkN080MENxRBpB63UQDJ2v3JxVVu+Gu8ivhfSbFbZiQIqHzX
-	 +EtUOP32rgjKYYp85gxgo0/tZXfAPrS80G1sUUHI=
+	by mail.kernel.org (Postfix) with ESMTP id 504DF217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Vhdf4GXn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Uue7bb9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfGQKDC (ORCPT
+        id S1726276AbfGQKEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfGQKDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:03:02 -0400
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        Wed, 17 Jul 2019 06:04:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49180 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGQKEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:04:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6715F60F3C; Wed, 17 Jul 2019 10:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563357883;
+        bh=PxqQnALfKSRdsnAJ3hzHy40Hd+Z0/yk/Ea0ZEWLH41g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Vhdf4GXnTQEAR0KzBN6zGiFb/kbnxtOGH/4amg98ErC/wcoXHPko/lo5wnbvtVuSV
+         zV010JS17rU8lkWqclcn7QeIH0RuuxrPin3k87tBsaL16zUwIxrSEju1/smWgnfiN7
+         /pd9E0HwrCVY0QwIogxEx7ld/bRl8wj+1yR+6OUY=
+Received: from [10.79.43.141] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE43421841;
-        Wed, 17 Jul 2019 10:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563357781;
-        bh=NCz+/qyUYefzxnwUGAYv3ttjqTH35P9ZY0JImQSzg+k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sOofdmjAyc3VxH7un9C/GsVWaOAuRKhoZen/6U8N0nnxZcKOoQa7R8eX0+vRiTxTB
-         tXXHlEd9es9CZNRR7G3eSkRRnXbiOSWpNQJ49Sftyyh9PdcN9ivmwWP+lJTNJy7mtg
-         Qe40JNLJi0cJ4RvUdWSdBUkm82nwZxugeHZLcwOo=
-Received: by mail-lf1-f52.google.com with SMTP id h28so15967258lfj.5;
-        Wed, 17 Jul 2019 03:03:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAU+xZbR3UzKAChNuBdWh+7GWqAW72Ee8QJzX1rdQW3ePUbZAfZT
-        oto7wnJ2S3W5HkBIlOkQjf+rH91W57lDefIU0M4=
-X-Google-Smtp-Source: APXvYqyfLXa1g6BfJ5mBA85Kb0T2X5T4F2Y48Ege4Izqj7dAHq+EW8Ogwx/5Kmpks+6IYktMG7J9ZoO5iZ63myk+05Q=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr17980541lfc.60.1563357779221;
- Wed, 17 Jul 2019 03:02:59 -0700 (PDT)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 888C9602F5;
+        Wed, 17 Jul 2019 10:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563357882;
+        bh=PxqQnALfKSRdsnAJ3hzHy40Hd+Z0/yk/Ea0ZEWLH41g=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Uue7bb9uJIbE++aHtPXX5xa5bSSGXOUdICkpkvXjc9+N9GVN2UcPUFc4B/+0bOD/S
+         XPg6wUyVkBjQEtAdc7sNuQpcoORSHwLeSi3YuWiMbDTbkeQ56nXc6ontjBVufuAM2Q
+         GcZ5lICxbfDZ2hPh5hhLX1bmmzlQ6XiC2z0FNxxw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 888C9602F5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH] opp: Return genpd virtual devices from
+ dev_pm_opp_attach_genpd()
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+References: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
+ <2ed7993d-523b-270a-2be9-83ad2426e946@codeaurora.org>
+ <20190717054713.vn65cfiqebhzdvjq@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <2fbfc0fc-7d61-bf8c-67de-28183d03e26a@codeaurora.org>
+Date:   Wed, 17 Jul 2019 15:34:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CGME20190715124509eucas1p1f2e44af951158fbef1a245467956ef93@eucas1p1.samsung.com>
- <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-44-l.luba@partner.samsung.com>
-In-Reply-To: <20190715124417.4787-44-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 17 Jul 2019 12:02:47 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcsH9YRzLOA1P5xc0Y3Zqh9+5o0RSxP-JcYOVEm7eO0Sw@mail.gmail.com>
-Message-ID: <CAJKOXPcsH9YRzLOA1P5xc0Y3Zqh9+5o0RSxP-JcYOVEm7eO0Sw@mail.gmail.com>
-Subject: Re: [PATCH v1 43/50] ARM: dts: exynos: add bus_isp in Exynos5422
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190717054713.vn65cfiqebhzdvjq@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jul 2019 at 14:45, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Add bus_isp which changes ACLK400_ISP clock speed according to the bus
-> documentation in the documentation. The bus_isp OPP table has been
-> aligned to the new parent rate.
 
-Title and msg needs fixing.
 
-Please squash it with patch 18.
+On 7/17/2019 11:17 AM, Viresh Kumar wrote:
+> On 11-07-19, 15:09, Rajendra Nayak wrote:
+>> Sorry for the delay
+> 
+> Same here :)
+> 
+>> I seem to have completely missed this patch.
+>> I just gave this a try and here are some observations,
+>>
+>> I have a case where I have one device with 2 power domains, one of them
+>> is scale-able (supports perf state) and the other one supports only being
+>> turned on and off.
+>>
+>> 1. In the driver I now need to use dev_pm_domain_attach_by_name/id to attach the
+>> power domain which supports only on/off and then use dev_pm_opp_attach_genpd()
+>> for the one which supports perf states.
+>>
+>> 2. My OPP table has only 1 required_opps, so the required_opp_count for the OPP table is 1.
+>> Now if my device tree has my scale-able powerdomain at index 1 (it works if its at index 0)
+>> then I end up with this error
+>>
+>> [    2.858628] ufshcd-qcom 1d84000.ufshc: Index can't be greater than required-opp-count - 1, rpmh_pd (1 : 1)
+>>
+>> so it looks like a lot of the OPP core today just assumes that if a device has multiple power domains,
+>> all of them are scale-able which isn't necessarily true.
+> 
+> I don't think a lot of OPP core has these problems, but maybe only
+> this place. I was taking care of this since the beginning just forgot
+> it now.
+> 
+> What about this over this commit:
 
-Best regards,
-Krzysztof
+Yes, this does seem to fix my concern mentioned in 2. above.
 
-> This patch sets the proper parent and
-> picks the init frequency before the devfreq governor starts working.
-> It sets also parent rate (DPLL to 1200MHz).
->
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> index 990fe03fce75..852cb3dd495d 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> @@ -166,6 +166,18 @@
->         status = "okay";
->  };
->
-> +&bus_isp {
-> +       devfreq = <&bus_wcore>;
-> +       assigned-clocks = <&clock CLK_MOUT_ACLK400_ISP>,
-> +                         <&clock CLK_MOUT_SW_ACLK400_ISP>,
-> +                         <&clock CLK_DOUT_ACLK400_ISP>,
-> +                         <&clock CLK_FOUT_DPLL>;
-> +       assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>,
-> +                                <&clock CLK_DOUT_ACLK400_ISP>;
-> +       assigned-clock-rates = <0>, <0>, <400000000>, <1200000000>;
-> +       status = "okay";
-> +};
-> +
->  &cpu0 {
->         cpu-supply = <&buck6_reg>;
->  };
-> --
-> 2.17.1
->
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index d76ead4eff4c..1f11f8c92337 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1789,13 +1789,16 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>    *
+>    * This helper needs to be called once with a list of all genpd to attach.
+>    * Otherwise the original device structure will be used instead by the OPP core.
+> + *
+> + * The order of entries in the names array must match the order in which
+> + * "required-opps" are added in DT.
+>    */
+>   struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>                  const char **names, struct device ***virt_devs)
+>   {
+>          struct opp_table *opp_table;
+>          struct device *virt_dev;
+> -       int index, ret = -EINVAL;
+> +       int index = 0, ret = -EINVAL;
+>          const char **name = names;
+>   
+>          opp_table = dev_pm_opp_get_opp_table(dev);
+> @@ -1821,14 +1824,6 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>                  goto unlock;
+>   
+>          while (*name) {
+> -               index = of_property_match_string(dev->of_node,
+> -                                                "power-domain-names", *name);
+> -               if (index < 0) {
+> -                       dev_err(dev, "Failed to find power domain: %s (%d)\n",
+> -                               *name, index);
+> -                       goto err;
+> -               }
+> -
+>                  if (index >= opp_table->required_opp_count) {
+>                          dev_err(dev, "Index can't be greater than required-opp-count - 1, %s (%d : %d)\n",
+>                                  *name, opp_table->required_opp_count, index);
+> @@ -1849,6 +1844,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>                  }
+>   
+>                  opp_table->genpd_virt_devs[index] = virt_dev;
+> +               index++;
+>                  name++;
+>          }
+>   
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
