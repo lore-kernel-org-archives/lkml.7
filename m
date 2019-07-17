@@ -2,88 +2,122 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2FFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 04:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0565EC76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 04:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DA120818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 04:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D147E20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 04:49:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PmXILe8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbfGQEqR (ORCPT
+        id S1726426AbfGQEt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 00:46:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49436 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725799AbfGQEqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 00:46:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DA049ACD8;
-        Wed, 17 Jul 2019 04:46:15 +0000 (UTC)
-Subject: Re: [Xen-devel][PATCH v3] xen/pv: Fix a boot up hang revealed by int3
- self test
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bp@alien8.de, Andrew Cooper <andrew.cooper3@citrix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, sstabellini@kernel.org,
-        x86@kernel.org, tglx@linutronix.de, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com, mingo@redhat.com
-References: <1563095732-16700-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <26a6f7a0-3c3a-c333-ff9f-6669fa1101e4@suse.com>
-Date:   Wed, 17 Jul 2019 06:46:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 17 Jul 2019 00:49:28 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42964 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQEt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 00:49:27 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so11273364plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 21:49:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O04V+mnqaZZSFIQWw8Fuzbne8J4qoFLTWcKpTxEH+P4=;
+        b=PmXILe8OGM0O744zqLu+hX0av+bvqIsNEcGWGbVedAXnUNeXg92pbZFI5Isnxl8Riu
+         o5Fi07TzEwaherJbHgIj3g/NFiB7kulMNPTla4EGXbVPg0ZJrPxxWvkY9dzFHSan5GGy
+         Lqzl8Nd8pp94VtmeP+5NIOuCewluem5U/c7nqIhJm1wnelU657sNeuEmLYUye8/5L3Pg
+         JdPVfPROpeU7N370X+4gnYAwy1AhsPpebl63BbcdD/K1esDBp+wpv+l1Qd+d34/drH4p
+         1LbXMZvSUFsnPgZW8umAm8IajXp48gmXPZzwQIvfi7gFBJfapwk0ubfwwr7gIn1a9hUA
+         XIIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O04V+mnqaZZSFIQWw8Fuzbne8J4qoFLTWcKpTxEH+P4=;
+        b=oHUyHEh+3M6xlMVlz9Jc1N9VhAlloD/eemGyaRXneb+4A/xACuFUZb9Adznmh6Wwbp
+         jvJ+H0xe4/lxuSUCcQ6SHYnYMwzZEDKDb4YxNI4kTk60kNsRBlzVu4KcSUFqPmRpwsak
+         nMGrVkNrLAd48sSFYPQwh2qecuZwaK1MfDxfBCFpscIhuUbGYymlWOa1W4Oo2NmSQdBK
+         jkF9scupFQAiFgV7MdKpwbnteBQsHueMyuLg118S32RKZwy2T8R54n8rAjV3IiDNFMpz
+         FSuLXs5Hp/1HC8yYyT7sl9P/LjuhBmen7nic/3jALmS9Fj2n2j++54MhJAQ+qUhAj8vg
+         kLQA==
+X-Gm-Message-State: APjAAAUgq0XjiSlLWbrWoeTLROQjyMNoOXaqIbcFTqLmY5//yoHOwXQU
+        SLu1ZjajYhG+tpykP/PP9rgQDg==
+X-Google-Smtp-Source: APXvYqzTTzcC9YVvGck2+rC0LotBtZoeaU5GmW1J+4869Y2H5VlRHIkIklvo5om68n0sh1xfHuleCQ==
+X-Received: by 2002:a17:902:42d:: with SMTP id 42mr38815911ple.228.1563338967066;
+        Tue, 16 Jul 2019 21:49:27 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id g9sm17146851pgs.78.2019.07.16.21.49.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 21:49:25 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 10:19:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org,
+        vireshk@kernel.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/13] arm64: dts: qcom: qcs404: Add CPR and populate OPP
+ table
+Message-ID: <20190717044923.ccmebeewbinlslkm@vireshk-i7>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-12-niklas.cassel@linaro.org>
+ <20190710090303.tb5ue3wq6r7ofyev@vireshk-i7>
+ <20190715132405.GA5040@centauri>
+ <20190716103436.az5rdk6f3yoa3apz@vireshk-i7>
+ <20190716105318.GA26592@centauri>
 MIME-Version: 1.0
-In-Reply-To: <1563095732-16700-1-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716105318.GA26592@centauri>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.07.19 11:15, Zhenzhong Duan wrote:
-> Commit 7457c0da024b ("x86/alternatives: Add int3_emulate_call()
-> selftest") is used to ensure there is a gap setup in int3 exception stack
-> which could be used for inserting call return address.
+On 16-07-19, 12:53, Niklas Cassel wrote:
+> Here I cheated and simply used get_cpu_device(0).
 > 
-> This gap is missed in XEN PV int3 exception entry path, then below panic
-> triggered:
+> Since I cheated, I used get_cpu_device(0) always,
+> so even when CPU1,CPU2,CPU3 is attached, dev_pm_opp_get_opp_count(cpu0) is
+> still 0.
 > 
-> [    0.772876] general protection fault: 0000 [#1] SMP NOPTI
-> [    0.772886] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #11
-> [    0.772893] RIP: e030:int3_magic+0x0/0x7
-> [    0.772905] RSP: 3507:ffffffff82203e98 EFLAGS: 00000246
-> [    0.773334] Call Trace:
-> [    0.773334]  alternative_instructions+0x3d/0x12e
-> [    0.773334]  check_bugs+0x7c9/0x887
-> [    0.773334]  ? __get_locked_pte+0x178/0x1f0
-> [    0.773334]  start_kernel+0x4ff/0x535
-> [    0.773334]  ? set_init_arg+0x55/0x55
-> [    0.773334]  xen_start_kernel+0x571/0x57a
+> I added a print in
+> [    3.836533] cpr_set_performance: number of OPPs for dev: cpu0: 3
 > 
-> For 64bit PV guests, Xen's ABI enters the kernel with using SYSRET, with
-> %rcx/%r11 on the stack. To convert back to "normal" looking exceptions,
-> the xen thunks do 'xen_*: pop %rcx; pop %r11; jmp *'.
+> And there I can see that OPP count is 3, so it appears that with the
+> current code, we need to wait until cpufreq-dt.c:cpufreq_init()
+> has been called, maybe dev_pm_opp_of_cpumask_add_table() needs
+> to be called before dev_pm_opp_get_opp_count(cpu0) actually returns 3.
 > 
-> E.g. Extracting 'xen_pv_trap xenint3' we have:
-> xen_xenint3:
->   pop %rcx;
->   pop %r11;
->   jmp xenint3
+> cpufreq_init() is called by platform_device_register_simple("cpufreq-dt", -1,
+>                                                           NULL, 0);
+> which is called after dev_pm_opp_attach_genpd().
 > 
-> As xenint3 and int3 entry code are same except xenint3 doesn't generate
-> a gap, we can fix it by using int3 and drop useless xenint3.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> What I don't understand is that dev_pm_opp_attach_genpd() actually returns
+> a OPP table. So why do we need to wait for dev_pm_opp_of_cpumask_add_table(),
+> before either dev_pm_opp_get_opp_count(cpu0) or
+> dev_pm_opp_get_opp_count(genpd_virtdev_for_cpu0) returns 3?
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Ah, I see the problems now. No, cpufreq table can't be available at
+this point of time and we aren't going to change that. It is the right
+thing to do.
 
+Now, even if the kernel isn't written in a way which works for you, it
+isn't right to put more things in DT than required. DT is (should be)
+very much independent of the Linux kernel.
 
-Juergen
+So we have to parse DT to find highest frequency for each
+required-opp. Best is to put that code in the OPP core and use it from
+your driver.
+
+-- 
+viresh
