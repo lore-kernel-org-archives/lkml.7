@@ -2,306 +2,113 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2578C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D07C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CCB2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D39221743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:28:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2Pmx6In"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfGQT0s (ORCPT
+        id S1727331AbfGQT2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:26:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:50296 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727270AbfGQT0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:26:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BD6F337;
-        Wed, 17 Jul 2019 12:26:46 -0700 (PDT)
-Received: from tuskha01.cambridge.arm.com (tuskha01.cambridge.arm.com [10.1.196.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F10953F71A;
-        Wed, 17 Jul 2019 12:26:44 -0700 (PDT)
-From:   Tushar Khandelwal <tushar.khandelwal@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tushar.2nov@gmail.com, morten_bp@live.dk, jassisinghbrar@gmail.com,
-        nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>,
-        Tushar Khandelwal <tushar.khandelwal@arm.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 4/4] mailbox: arm_mhuv2: add multi word transport protocol operations
-Date:   Wed, 17 Jul 2019 20:26:16 +0100
-Message-Id: <20190717192616.1731-5-tushar.khandelwal@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190717192616.1731-1-tushar.khandelwal@arm.com>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+        Wed, 17 Jul 2019 15:28:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43468 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfGQT2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 15:28:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so47571209ios.10;
+        Wed, 17 Jul 2019 12:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WHgmdNdTahHJLMVtZuPGqZpMg+t7cvLI9kSEgTL6Hoc=;
+        b=C2Pmx6IniMXlfmCpO6ZSNlEZ/p7i68e11dMcX7VD9qbaYXTebPPCoMYa2c4xILK+MO
+         4sGJ27M43TBIzp6u+9MXQk3wputYlYjwPyzD89qF9CkNZvykAGp5kjUsnPILvL0bXLur
+         el0YS578T+Zxp/4OeyXvOAFxuKgdMQrn3L3ZBcLsyU2Nx5AA0aQcm74uoQ92Co2wnjr1
+         yTjvEBLjtJycmc3i41aMqDCZvI6XhnOmQ2gUNGn28gNfv8jAf8BVN+CmGP7x+4qfPF+h
+         K8zL4RDa50bW4D2pZksmMvSko1Ug7JcNt7YcUoZ+bPWClRw2djvQoARF1B/dxOG7N57n
+         hmMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WHgmdNdTahHJLMVtZuPGqZpMg+t7cvLI9kSEgTL6Hoc=;
+        b=XPJsCrYPv9V0MjafztU/YhKFNOT46PREY4JOt9TlmArc5BNA9tyCW7kZeePXniSz8t
+         bR+DHF7yIt4MG2bAeY4613OvKd9Ptq6KeBy8/AcR/RlL4aGcvlrD4LTARBzwV/RKJlHS
+         Afe7RrpxRdRDPLZtYG8lp9tTIzzxUAm7zaJ2n9w0JBRFURwPIOgxxAQQCDFl/KZGMOV7
+         UKVHTQeGEY6gzX/qXapW28bfWRC9/4uDJiXllFgcAXltnDGHXL8EaMIhCgQO6/Z4+k5m
+         fk3ui8d7ZAE7GRaIyfzrmh/QQqgdwxInUDfz//wDPBt0hFHF6sjqT0dxTkOQug+1AU56
+         6k8Q==
+X-Gm-Message-State: APjAAAVX4qH0gjUEroPSbPd7s8gjbCEG5yfGjwyqEPh9ZR+/VtKuezPt
+        c7VY9RXja9vyj3FZevZljXs=
+X-Google-Smtp-Source: APXvYqx+y7HdX4W/yTvbrWPLGTYpFO+4CtEITlD1gV1KgXOQoOcSgbqo6i06bk9TshbYf//fNRogqw==
+X-Received: by 2002:a6b:f203:: with SMTP id q3mr39191375ioh.208.1563391723106;
+        Wed, 17 Jul 2019 12:28:43 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id n7sm18927080ioo.79.2019.07.17.12.28.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 12:28:41 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     skunberg.kelsey@gmail.com, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, rjw@rjwysocki.net
+Subject: [PATCH] thermal: intel: int340x_thermal: Remove unnecessary acpi_has_method() uses
+Date:   Wed, 17 Jul 2019 13:26:39 -0600
+Message-Id: <20190717192639.90092-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Morten Borup Petersen <morten.petersen@arm.com>
+acpi_evaluate_object() will already return in error if the method does not
+exist. Checking if the method is absent before the acpi_evaluate_object()
+call is not needed. Remove acpi_has_method() calls to avoid additional
+work.
 
-When in multi-word mode, the mailbox controller will provide a single
-mailbox. It is required that the MHU device has at least 2 channel windows
-available for the MHU to function in multi-word mode.
-
-Transmitting and receiving data through the mailbox framework in
-multi-word mode is done through a struct arm_mbox_msg.
-
-Signed-off-by: Morten Borup Petersen <morten.petersen@arm.com>
-Signed-off-by: Tushar Khandelwal <tushar.khandelwal@arm.com>
-Cc: jassisinghbrar@gmail.com
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- drivers/mailbox/arm_mhu_v2.c | 225 +++++++++++++++++++++++++++++++++++
- 1 file changed, 225 insertions(+)
+ drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/mailbox/arm_mhu_v2.c b/drivers/mailbox/arm_mhu_v2.c
-index 0e3fa5917925..324b19bdb28a 100644
---- a/drivers/mailbox/arm_mhu_v2.c
-+++ b/drivers/mailbox/arm_mhu_v2.c
-@@ -430,6 +430,228 @@ static const struct mhuv2_ops mhuv2_single_word_ops = {
- };
- /* ========================================================================== */
+diff --git a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+index 9716bc3abaf9..7130e90773ed 100644
+--- a/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
++++ b/drivers/thermal/intel/int340x_thermal/acpi_thermal_rel.c
+@@ -77,9 +77,6 @@ int acpi_parse_trt(acpi_handle handle, int *trt_count, struct trt **trtp,
+ 	struct acpi_buffer element = { 0, NULL };
+ 	struct acpi_buffer trt_format = { sizeof("RRNNNNNN"), "RRNNNNNN" };
  
-+/* ================ Multi word transport protocol operations ================ */
-+static inline int mhuv2_read_data_multi_word(struct arm_mhuv2 *mhuv2,
-+					     struct mbox_chan *chan,
-+					     struct arm_mbox_msg *msg)
-+{
-+	int ch;
-+	const int channels =
-+		readl_relaxed_bitfield(&mhuv2->reg.recv->MHU_CFG, NUM_CH);
-+
-+	msg->data = kzalloc(MHUV2_STAT_BYTES * channels, GFP_KERNEL);
-+
-+	for (ch = 0; ch < channels; ch++) {
-+		/*
-+		 * Messages are expected to be received in order of most
-+		 * significant word to least significant word.
-+		 * (see mhuv2_send_data_multi_word)
-+		 */
-+		const mhuv2_stat_reg_t word =
-+			readl_relaxed(&mhuv2->reg.recv->channel[ch].STAT);
-+		((mhuv2_stat_reg_t *)msg->data)[channels - 1 - ch] = word;
-+	}
-+
-+	msg->len = channels * MHUV2_STAT_BYTES;
-+	return 0;
-+}
-+
-+static inline int mhuv2_clear_data_multi_word(struct arm_mhuv2 *mhuv2,
-+					      struct mbox_chan *chan,
-+					      struct arm_mbox_msg *msg)
-+{
-+	int ch;
-+	const int channels =
-+		readl_relaxed_bitfield(&mhuv2->reg.recv->MHU_CFG, NUM_CH);
-+
-+	for (ch = 0; ch < channels; ch++) {
-+		/*
-+		 * Last channel window must be cleared as the final operation.
-+		 * Upon clearing the last channel window register, which is
-+		 * unmasked in multi-word mode, the interrupt is deasserted.
-+		 */
-+		writel_relaxed(
-+			readl_relaxed(&mhuv2->reg.recv->channel[ch].STAT),
-+			&mhuv2->reg.recv->channel[ch].STAT_CLEAR);
-+	}
-+	return 0;
-+}
-+
-+static inline int __mhuv2_mw_bytes_to_send(const int bytes_in_round,
-+					    const int bytes_left)
-+{
-+	/*
-+	 * Bytes to send on the current channel will always be MHUV2_STAT_BYTES
-+	 * unless in the last round and
-+	 *	msg->len % MHUV2_STAT_BYTES != 0
-+	 */
-+	if (bytes_in_round % MHUV2_STAT_BYTES != 0) {
-+		const int bts = bytes_left % MHUV2_STAT_BYTES;
-+		return bts == 0 ? MHUV2_STAT_BYTES : bts;
-+	} else {
-+		return MHUV2_STAT_BYTES;
-+	}
-+}
-+
-+static inline int mhuv2_send_data_multi_word(struct arm_mhuv2 *mhuv2,
-+					     struct mbox_chan *chan,
-+					     const struct arm_mbox_msg *msg)
-+{
-+	/*
-+	 * Message will be transmitted from most significant to least
-+	 * significant word. This is to allow for messages shorter than
-+	 * $channels to still trigger the receiver interrupt which gets
-+	 * activated when the last STAT register is written. As an example, a
-+	 * 6-word message is to be written on a 4-channel MHU connection:
-+	 * Registers marked with '*' are masked, and will not generate an
-+	 * interrupt on the receiver side once written.
-+	 *
-+	 * uint32_t *data = [0x00000001],[0x00000002],[0x00000003],[0x00000004],
-+	 *		    [0x00000005], [0x00000006]
-+	 *
-+	 *  ROUND 1:
-+	 *   STAT reg      To write    Write sequence
-+	 *  [ STAT 3 ] <- [0x00000001]       4 <- triggers interrupt on receiver
-+	 * *[ STAT 2 ] <- [0x00000002]       3
-+	 * *[ STAT 1 ] <- [0x00000003]       2
-+	 * *[ STAT 0 ] <- [0x00000004]       1
-+	 *
-+	 *  data += 4 // Increment data pointer by number of STAT regs
-+	 *
-+	 *  ROUND 2:
-+	 *   STAT reg      To write    Write sequence
-+	 *  [ STAT 3 ] <- [0x00000005]       2 <- triggers interrupt on receiver
-+	 * *[ STAT 2 ] <- [0x00000006]       1
-+	 * *[ STAT 1 ] <- [0x00000000]
-+	 * *[ STAT 0 ] <- [0x00000000]
-+	 */
-+	int bytes_left, bytes_to_send, i, ch_idx;
-+	const int ch_windows =
-+		readl_relaxed_bitfield(&mhuv2->reg.recv->MHU_CFG, NUM_CH);
-+	const size_t round_capacity = ch_windows * MHUV2_STAT_BYTES;
-+
-+	bytes_left = msg->len;
-+	mhuv2_stat_reg_t *data = msg->data;
-+
-+	while (bytes_left > 0) {
-+		/* Note: Each entry of this loop indicates a new ROUND */
-+		if (*(u32 *)data == 0) {
-+			dev_err(mhuv2->dev,
-+				"values in *data aligned on NUM_STAT boundaries must not be zero to ensure that receiver interrupt is triggered\n",
-+				ch_windows);
-+			return -EINVAL;
-+		}
-+
-+		const int bytes_in_round = bytes_left > round_capacity ?
-+						   round_capacity :
-+						   bytes_left;
-+
-+		for (i = (ch_windows - 1); i >= 0; i--) {
-+			ch_idx = ch_windows - 1 - i;
-+			/*
-+			 * Check whether data should be transmitted in register
-+			 * of index 'ch'.
-+			 */
-+			if (bytes_in_round > (i * MHUV2_STAT_BYTES)) {
-+				mhuv2_stat_reg_t word = data[i];
-+
-+				bytes_to_send = __mhuv2_mw_bytes_to_send(
-+					bytes_in_round, bytes_left);
-+
-+				if (bytes_to_send != MHUV2_STAT_BYTES) {
-+					word &= LSB_MASK(bytes_to_send *
-+							 __CHAR_BIT__);
-+				}
-+				while (readl_relaxed(
-+					       &mhuv2->reg.send->channel[ch_idx]
-+							.STAT) != 0)
-+					continue;
-+
-+				writel_relaxed(
-+				    word,
-+				    &mhuv2->reg.send->channel[ch_idx].STAT_SET);
-+				bytes_left -= bytes_to_send;
-+			}
-+		}
-+
-+		data += ch_windows;
-+
-+		for (ch_idx = 0; ch_idx < ch_windows; ch_idx++) {
-+			while (readl_relaxed(
-+				   &mhuv2->reg.send->channel[ch_idx].STAT) != 0)
-+				continue;
-+		}
-+	}
-+	return 0;
-+}
-+
-+
-+static inline int mhuv2_last_tx_done_multi_word(struct arm_mhuv2 *mhuv2,
-+						struct mbox_chan *chan)
-+{
-+	int ch_idx;
-+	bool tx_done = true;
-+
-+	for (ch_idx = 0;
-+	     ch_idx < readl_relaxed_bitfield(&mhuv2->reg.send->MHU_CFG, NUM_CH);
-+	     ch_idx++) {
-+		tx_done &= readl_relaxed(
-+				   &mhuv2->reg.send->channel[ch_idx].STAT) == 0;
-+	}
-+	return tx_done;
-+}
-+
-+static inline int mhuv2_setup_multi_word(struct arm_mhuv2 *mhuv2)
-+{
-+	int ret, i;
-+
-+	const u32 channel_windows =
-+		readl_relaxed_bitfield(mhuv2->frame == RECEIVER_FRAME ?
-+					       &mhuv2->reg.recv->MHU_CFG :
-+					       &mhuv2->reg.send->MHU_CFG,
-+				       NUM_CH);
-+	if (channel_windows < 2) {
-+		dev_err(mhuv2->dev,
-+			"Error: at least 2 MHU channel windows are required for using the multi-word transfer protocol");
-+		return -ENODEV;
-+	}
-+
-+	if (mhuv2->frame == RECEIVER_FRAME) {
-+		/*
-+		 * The multi-word transport protocol mandates that all but
-+		 * the last status register must be masked.
-+		 */
-+		for (i = 0; i < (channel_windows - 1); i++) {
-+			writel_relaxed(-1,
-+				       &mhuv2->reg.recv->channel[i].MASK_SET);
-+		}
-+	}
-+
-+	mhuv2->mbox.num_chans = 1;
-+	mhuv2->mbox.chans =
-+		devm_kzalloc(mhuv2->dev,
-+			     mhuv2->mbox.num_chans * sizeof(struct mbox_chan),
-+			     GFP_KERNEL);
-+
-+	return 0;
-+}
-+
-+static inline struct mbox_chan *
-+	mhuv2_get_active_mbox_chan_multi_word(struct arm_mhuv2 *mhuv2)
-+{
-+	return &mhuv2->mbox.chans[0];
-+}
-+
-+static const struct mhuv2_ops mhuv2_multi_word_ops = {
-+	.read_data = mhuv2_read_data_multi_word,
-+	.clear_data = mhuv2_clear_data_multi_word,
-+	.send_data = mhuv2_send_data_multi_word,
-+	.setup = mhuv2_setup_multi_word,
-+	.last_tx_done = mhuv2_last_tx_done_multi_word,
-+	.get_active_mbox_chan = mhuv2_get_active_mbox_chan_multi_word,
-+};
-+/* ========================================================================== */
-+
- /* =================== Doorbell transport protocol operations =============== */
+-	if (!acpi_has_method(handle, "_TRT"))
+-		return -ENODEV;
+-
+ 	status = acpi_evaluate_object(handle, "_TRT", NULL, &buffer);
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
+@@ -158,9 +155,6 @@ int acpi_parse_art(acpi_handle handle, int *art_count, struct art **artp,
+ 	struct acpi_buffer art_format =	{
+ 		sizeof("RRNNNNNNNNNNN"), "RRNNNNNNNNNNN" };
  
- static inline int mhuv2_read_data_doorbell(struct arm_mhuv2 *mhuv2,
-@@ -740,6 +962,9 @@ static int mhuv2_probe(struct amba_device *adev, const struct amba_id *id)
- 
- 	/* Assign transport protocol-specific operations */
- 	switch (mhuv2->protocol) {
-+	case MULTI_WORD:
-+		mhuv2->ops = &mhuv2_multi_word_ops;
-+		break;
- 	case SINGLE_WORD:
- 		mhuv2->ops = &mhuv2_single_word_ops;
- 		break;
+-	if (!acpi_has_method(handle, "_ART"))
+-		return -ENODEV;
+-
+ 	status = acpi_evaluate_object(handle, "_ART", NULL, &buffer);
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
 -- 
-2.17.1
+2.20.1
 
