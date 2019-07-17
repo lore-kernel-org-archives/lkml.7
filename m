@@ -2,155 +2,93 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82C0C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFC4C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B235217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702BA21849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfGQJHU (ORCPT
+        id S1730341AbfGQJHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:07:20 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:45351 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfGQJHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 05:07:19 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45pWcN21Jdz1rTYF;
-        Wed, 17 Jul 2019 11:07:16 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45pWcN17bSz1qqkk;
-        Wed, 17 Jul 2019 11:07:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id bUafEv2oczDA; Wed, 17 Jul 2019 11:07:14 +0200 (CEST)
-X-Auth-Info: l2cC+iloM8OXQmKRxGRUhZ6HveFajU/YblcV1LyHQzY=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 17 Jul 2019 11:07:14 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 11:07:09 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] input: touchscreen mc13xxx: Add mc34708 support
-Message-ID: <20190717110709.7ae3c9f3@jawa>
-In-Reply-To: <20190717085338.GA581@penguin>
-References: <20190716221929.3782-1-lukma@denx.de>
-        <20190716221929.3782-4-lukma@denx.de>
-        <20190717033655.GC621@penguin>
-        <20190717101704.2ff4d877@jawa>
-        <20190717085338.GA581@penguin>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/J3YSRAFC6/++9p0DylGe61+"; protocol="application/pgp-signature"
+        Wed, 17 Jul 2019 05:07:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47462 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726106AbfGQJHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 05:07:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 62F82AF40;
+        Wed, 17 Jul 2019 09:07:29 +0000 (UTC)
+From:   Oscar Salvador <osalvador@suse.de>
+To:     akpm@linux-foundation.org
+Cc:     dan.j.williams@intel.com, david@redhat.com,
+        pasha.tatashin@soleen.com, mhocko@suse.com,
+        aneesh.kumar@linux.ibm.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2 1/2] mm,sparse: Fix deactivate_section for early sections
+Date:   Wed, 17 Jul 2019 11:07:24 +0200
+Message-Id: <20190717090725.23618-2-osalvador@suse.de>
+X-Mailer: git-send-email 2.13.7
+In-Reply-To: <20190717090725.23618-1-osalvador@suse.de>
+References: <20190717090725.23618-1-osalvador@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/J3YSRAFC6/++9p0DylGe61+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+deactivate_section checks whether a section is early or not
+in order to either call free_map_bootmem() or depopulate_section_memmap().
+Being the former for sections added at boot time, and the latter for
+sections hotplugged.
 
-Hi Dmitry,
+The problem is that we zero section_mem_map, so the last early_section()
+will always report false and the section will not be removed.
 
-> Hi Lukasz,
->=20
-> On Wed, Jul 17, 2019 at 10:17:04AM +0200, Lukasz Majewski wrote:
-> > Hi Dmitry,
-> >  =20
-> > > On Wed, Jul 17, 2019 at 12:19:29AM +0200, Lukasz Majewski wrote: =20
-> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > > >=20
-> > > > The mc34708 has a different bit to enable pen detection. This
-> > > > adds the driver data and devtype necessary to probe the device
-> > > > and to distinguish between the mc13783 and the mc34708.
-> > > >=20
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > >=20
-> > > > ---
-> > > > Changes for v3:
-> > > > - Replace forward declaration of mc13xxx_driver_data with
-> > > >   structure definition
-> > > > - Rename mc13xxx_driver_data with mc13xxx_chip
-> > > > - Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
-> > > >   closer to ID table
-> > > > - Do not check mc13xxx device type   =20
-> > >=20
-> > > You do not even need to define or store the type. Once it is
-> > > dropped please feel free to add =20
-> >=20
-> > Ok. I will remove the type definition.
-> >  =20
-> > >=20
-> > > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > >=20
-> > > and merge with the other 2 patches.
-> > >  =20
-> >=20
-> > Ok. I will squash those three patches into a single one, add your
-> > Acked-by and wait for Lee to pull this single patch to his MFD
-> > tree. =20
->=20
-> Sorry, it looks like there is misunderstanding. I did not ask to
-> squash together the 3 patches, I meant that they can all go together
-> through the same tree (MFD). That is what I meant by them being
-> merged together.
->=20
+Fix this checking whether a section is early or not at function
+entry.
 
-Thanks for the explanation.
+Fixes: mmotm ("mm/sparsemem: Support sub-section hotplug")
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Dan Williams <dan.j.wiliams@intel.com>
+---
+ mm/sparse.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> Sorry for being unclear.
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 3267c4001c6d..1e224149aab6 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -738,6 +738,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+ 	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+ 	struct mem_section *ms = __pfn_to_section(pfn);
++	bool section_is_early = early_section(ms);
+ 	struct page *memmap = NULL;
+ 	unsigned long *subsection_map = ms->usage
+ 		? &ms->usage->subsection_map[0] : NULL;
+@@ -772,7 +773,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
+ 		unsigned long section_nr = pfn_to_section_nr(pfn);
+ 
+-		if (!early_section(ms)) {
++		if (!section_is_early) {
+ 			kfree(ms->usage);
+ 			ms->usage = NULL;
+ 		}
+@@ -780,7 +781,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
+ 	}
+ 
+-	if (early_section(ms) && memmap)
++	if (section_is_early && memmap)
+ 		free_map_bootmem(memmap);
+ 	else
+ 		depopulate_section_memmap(pfn, nr_pages, altmap);
+-- 
+2.12.3
 
-No problem - big thanks for very prompt review.
-
->=20
-> Thanks.
->=20
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/J3YSRAFC6/++9p0DylGe61+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl0u5T0ACgkQAR8vZIA0
-zr0FkAf/byAxKc6UDdbwve8hkqfG9u3wRAtzDy75Lu+JDBEJbDSFcq5hzKd2dyqD
-1eAvwzGUidwNktfvq5mA/a66/PCssfjmkIDiigdYsuACclmw/1jo1+Em25YRes/n
-NfF72JfaMO4K/m71rZGWSPnQQsl00VY96rsY0dkV2M3dgy+VoB3UVRfQz8lNN8bS
-6j+T/CEVzcGmbLIrLDs3r0FwHvGq5MN2fHMCd6ja3OWJfJ+0MsQuVX/tT14l5Quj
-sJp6WdgaIpdRBwPCIoi69lyPz4EuBNK11XfjybN+I0Np/V6HDA8nNzxMMBpWsq2s
-UxCG35VrFVyjk/p0z4MUNp+xHZd33Q==
-=ldUl
------END PGP SIGNATURE-----
-
---Sig_/J3YSRAFC6/++9p0DylGe61+--
