@@ -2,303 +2,167 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6476C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A797BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA2A2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785B92077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y77N3nWX"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="bqxtEDSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfGQLvF (ORCPT
+        id S1731745AbfGQLvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:51:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33515 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfGQLvE (ORCPT
+        Wed, 17 Jul 2019 07:51:43 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:14112 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbfGQLvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:51:04 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so10736899pfq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:51:04 -0700 (PDT)
+        Wed, 17 Jul 2019 07:51:42 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6HBmHEP030988;
+        Wed, 17 Jul 2019 07:51:35 -0400
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2054.outbound.protection.outlook.com [104.47.33.54])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2tsf0g3hw1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jul 2019 07:51:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JQv5mw7mEJf/1ju9Vcb37GP+LVisiOWPpKI/4mRXw5sgGsoFYkOT+SIucbJq4gHeJ8lcdgZWqmvdU+k0RQuDhQWLrPevGVtlbEW88/GaRmi2pnK2Vffa8gLRi72L1GT41f4jp9DFDyH+CV0sEhz/eqOwpeBsIPCgLyIx/F2gqq9QWNSHI8W+tSsApEVePNfS/RgAyh3HHN0VB8f/96JS6erZ0s5RwCsJw21fop5W3GAgEz6rXH/7MPmIc4MfRcMSP7Koftk3Bbqzvl19gb6iA+Wsz8zCouFunJlRdhaszlxUdzi+ZCKt3FdrOFKhKjjYVkd9gaP0Xz8BNztUu+i2sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/cbABiRLotvwW8RNQ2kZxxoW3rjOrmOls2L9Ug1iQj4=;
+ b=hBogeBf0CpNtgmUZbjqLp+njVo9Y9z0rkjI5fAkS3+BvwshmYXO1k95n+l0NW8BrmRLm2Nq5Jo5Fzq4/KmRZsTXiLq/vOo+1BrqCW+RxymOyUeDrzJWht0TLrRm23fpnrq31iOgxRpOO2fU01GsM01xffncWxQ9Tgvp+aoy9JINdcpZShqH2RqB3fjF8vC5KEY4sVuHbSn+TnyARKpdH/uA1oVH2NcSqoyxqGe90o48VWlTFyLScIa7AvG7x35UBcMyZUrOrNUL6/pn3icSjF0ojH/MVmNnzycIS4ykxfwB4eWLYlVBFjS9U7xnvddLMWkJZJXspk8FKj0m8i3YyjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
+ header.from=analog.com;dkim=none (message not signed);arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BT3GMkq4GIjy027YHLDtJdq+Rfg7/G7Q187ry/Wlyhg=;
-        b=Y77N3nWXhja+UsOPgMcVd7MhrNHtJUgZUpGEBMUH7f70Xb00PuFFJ586QBvk4MAr15
-         jk3Z9Q6t5Wq956KWm0PXVUuRjuRc1HM6AmSDY6w/A8R9ws7/QUWWKURiPSP9lkHfiSnv
-         iWG0ueOWObAeLwglNHb5XZzVL+Y12HELvolEReuRvbpn94ZhxcHzuV7bz4TorNrjSumL
-         +Zj122E2SsWqjg/L3JTzKcZ7WwSNo72GlHK1HiQ45bsCy1gi3H4UF7QNap2mjD1mH81q
-         pzo7p4Aswi0WzpqZoN3iNwKzUYi+JW8pMYgTB4+qqmLAx0lTq5HPagvDV54JsfAvk4ba
-         x6lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BT3GMkq4GIjy027YHLDtJdq+Rfg7/G7Q187ry/Wlyhg=;
-        b=h4Ij2bldaZCIhrf8mSkxxvPDQnb3xpleZJswpFKJN9xMTzDV1tIcANh29NjqZ4lY95
-         JHsgfYPys+ABwqwn47AFBGSITgn6G4tc8b3wqQPz8wj6JDZmHhS0HRSyD6x23J2lNQ2R
-         iGDJm7ORpamhe0yPDtyTKdbRJXZnaJUesNpmwm2HKhpvFbKQEQBETdezTHp4PsTKtYLP
-         soi7+q61XQsLCz+8ERntC+zNOb64iKQNBdF/qlPRUtVTJ1Vd1BTwWJ7bvb1guQIaVXNP
-         b04VtDy82a6UeV3YBW/4L14r4ybY3GUpm7JY8BmIjT6tIijiISdrBQjdZsfnT5w4HdQn
-         MJJw==
-X-Gm-Message-State: APjAAAU26JFDZjy/APTSdx4LK0N4jqQkXa4lGIZL1VDWVD9FRTBbLLUK
-        QW5egHG26uLVHiuXNMlzEmWD6N2jmR6dgaLX2CepZg==
-X-Google-Smtp-Source: APXvYqyPoKfFzoxmu8FLTIEyyLVq7NQy+peU8ZfyeP+M7Yyn8Yimphae8KkPOHTDfv1lUahfT0+wvX7W4bamIkUkCQc=
-X-Received: by 2002:a63:f312:: with SMTP id l18mr41065583pgh.440.1563364263465;
- Wed, 17 Jul 2019 04:51:03 -0700 (PDT)
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/cbABiRLotvwW8RNQ2kZxxoW3rjOrmOls2L9Ug1iQj4=;
+ b=bqxtEDSW/HMdygyi8o8rinftb6ZqgNbPzOCTXFXUF6fNj7F0zf5iESo4Tff1geBmXuz6RkXUOlsgxFUlULMyZskwSUtlJYspDlhTGbM8PPemLCpIsEGn0q4hdomBvMRshlIJKwQkRWfWBmpt2BRy/Mm8cXtQ85MpXbt65sv5FCo=
+Received: from BN6PR03CA0101.namprd03.prod.outlook.com (2603:10b6:404:10::15)
+ by DM5PR03MB3274.namprd03.prod.outlook.com (2603:10b6:4:42::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2073.14; Wed, 17 Jul
+ 2019 11:51:32 +0000
+Received: from SN1NAM02FT026.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by BN6PR03CA0101.outlook.office365.com
+ (2603:10b6:404:10::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2073.10 via Frontend
+ Transport; Wed, 17 Jul 2019 11:51:32 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT026.mail.protection.outlook.com (10.152.72.97) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2052.25
+ via Frontend Transport; Wed, 17 Jul 2019 11:51:31 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x6HBpVSS003229
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 17 Jul 2019 04:51:31 -0700
+Received: from saturn.ad.analog.com (10.48.65.145) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 17 Jul 2019 07:51:30 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <broonie@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 0/4][V2] iio: imu: Add support for the ADIS16460 IMU
+Date:   Wed, 17 Jul 2019 14:51:05 +0300
+Message-ID: <20190717115109.15168-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <000000000000717347058d56dcc2@google.com>
-In-Reply-To: <000000000000717347058d56dcc2@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 17 Jul 2019 13:50:52 +0200
-Message-ID: <CAAeHK+zPDgvDr_Bao9dz_7hGEg+Ud6-tj7pZaihKeYHJ8M386Q@mail.gmail.com>
-Subject: Re: KASAN: global-out-of-bounds Read in dvb_pll_attach
-To:     syzbot <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com>,
-        bnvandana@gmail.com
-Cc:     allison@lohutok.net, hverkuil-cisco@xs4all.nl,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        rfontana@redhat.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>, tskd08@gmail.com
-Content-Type: multipart/mixed; boundary="00000000000094a173058ddf1b3a"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(136003)(39860400002)(2980300002)(189003)(199004)(54534003)(106002)(7696005)(305945005)(336012)(51416003)(50466002)(48376002)(4326008)(2906002)(2616005)(50226002)(2201001)(186003)(2870700001)(476003)(7636002)(486006)(8936002)(1076003)(36756003)(426003)(8676002)(356004)(14444005)(110136005)(6666004)(86362001)(70586007)(246002)(70206006)(47776003)(107886003)(44832011)(126002)(478600001)(316002)(5660300002)(26005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB3274;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 46778ec4-e16c-42a5-5718-08d70aad1c7a
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR03MB3274;
+X-MS-TrafficTypeDiagnostic: DM5PR03MB3274:
+X-Microsoft-Antispam-PRVS: <DM5PR03MB3274671558B5128E2F821F7FF9C90@DM5PR03MB3274.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 01018CB5B3
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: dO/EtZPyJfCiHHvLDiUU4QyVAqbzETrisY53mwksFXTUdXUwqueckNJTi07i9Q8D1XAMhglbA/hSxaHlVh8IH+8+2R+rpvqB8ZCSKgH7Zm2+qzfi44BFiSzkGUw5jBuS4wKyjLuflN8b78BwP+7Ia1NP/5Dp+N+UGMPwdauciA0A/zFSAazrZJegxamdLMGkKUWTZFGv5OuSQNENZN8Q2lA1Mv1yyRt6n0m9HfGO5dXs0ZLnSvRGTFY632khL9BTDvVgh5azOym+xXIDOIfrtpbd0TvzL9htfGDhHuEx0Tyjy0e25FoPZhZVKMkRVhoYFkgJG/K5W36APl338RN1NNIjWt9B9bukkpcqn9cXjunfUgG+ikwWA8gjY96sp7lh/zJhJH6NnvA6r3hWmBW4pgahEOwYuSK4dyKh7kaJUtM=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2019 11:51:31.5721
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46778ec4-e16c-42a5-5718-08d70aad1c7a
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3274
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907170145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000094a173058ddf1b3a
-Content-Type: text/plain; charset="UTF-8"
+This changeset adds support for the ADIS16460.
 
-On Wed, Jul 10, 2019 at 7:18 PM syzbot
-<syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=150f8c47a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8a8f48672560c8ca59dd
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16384e27a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16056038600000
+Support for this chip, requires changes in both IIO & SPI, in order to
+support configurable/longer CS change delays.
 
-You need to keep the bot in the recipients and also USB bugs can only
-be tested on the usb-fuzzer tree.
+The default CS change delay is 10 uS, while the ADIS16460 requires a
+minimum of 16 uS. In order to accomodate this, the SPI transfer struct
+requires a `cs_change_delay_usecs` parameter that is used when `cs_change`
+is set.
 
-#syz test: https://github.com/google/kasan.git usb-fuzzer
+The ADIS library also requires a small update to support the new SPI
+`cs_change_delay_usecs`, and after that, support for ADIS16460 is added,
+since all the required parts for operating the chip are in the kernel.
 
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
->
-> usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
-> software demuxer
-> dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
-> usb 1-1: media controller created
-> dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
-> tc90522 0-0018: Toshiba TC90522 attached.
-> usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
-> module)...
-> dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
-> module' registered.
-> ==================================================================
-> BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
-> drivers/media/dvb-frontends/dvb-pll.c:798
-> Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
->
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x67/0x231 mm/kasan/report.c:188
->   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
->   kasan_report+0xe/0x20 mm/kasan/common.c:614
->   dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
->   dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
->   i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
->   really_probe+0x281/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2111
->   i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
->   i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
->   dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
->   friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
->   dvb_usbv2_adapter_frontend_init
-> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
->   dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
-> [inline]
->   dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
->   dvb_usbv2_probe.cold+0x24dc/0x255d
-> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2111
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2111
->   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
->   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
->   process_scheduled_works kernel/workqueue.c:2331 [inline]
->   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
->   kthread+0x30b/0x410 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the variable:
->   id+0x100/0x120
->
-> Memory state around the buggy address:
->   ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
->   ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
->                                                         ^
->   ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
->   ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Changelog v1 -> v2:
+* for SPI:
+  * renamed `cs_change_stall_delay_us` -> `cs_change_delay_usecs`
+    initial recommendation was `cs_change_delay`, but decided to name this
+    `cs_change_delay_usecs`, since the convention for these delays seems
+    to add the `_usecs` suffix
+* for ADIS lib:
+  * renamed `stall_delay` -> `cs_change_delay`
+  * removed some assignments of `cs_change_delay`
+    where `cs_change` is not set
+* for ADIS16460 driver:
+  * fixed license
+  * adjusted to new `cs_change_delay[_usecs]`
 
---00000000000094a173058ddf1b3a
-Content-Type: text/x-patch; charset="US-ASCII"; name="usb-dvb.patch"
-Content-Disposition: attachment; filename="usb-dvb.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jy76ow6t0>
-X-Attachment-Id: f_jy76ow6t0
+Alexandru Ardelean (4):
+  drivers: spi: core: Add optional stall delay between cs_change
+    transfers
+  iio: imu: adis: Add support for SPI transfer cs_change_stall_delay_us
+  iio: imu: Add support for the ADIS16460 IMU
+  dt-bindings: iio: imu: add bindings for ADIS16460
 
-RnJvbSBlOWY5MmYyNjdmMGM2ODI0ZGQxMjlkNjg4YWM3ZDFlNjlhNmQ2ZTMyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiB2YW5kYW5hYm4gPGJudmFuZGFuYUBnbWFpbC5jb20+CkRhdGU6
-IFdlZCwgMTcgSnVsIDIwMTkgMDE6MzQ6MjcgKzA1MzAKU3ViamVjdDogW1BBVENIXSBtZWRpYTpk
-dmItZnJvbnRlbmQ6IGZpeCBzeXpib3QgZ2xvYmFsIG91dCBvZiBib3VuZHMgaXNzdWUuCgpSZXBv
-cnRlZC1ieTogc3l6Ym90KzhhOGY0ODY3MjU2MGM4Y2E1OWRkQHN5emthbGxlci5hcHBzcG90bWFp
-bC5jb20KCnVzYiAxLTE6IGR2Yl91c2JfdjI6IHdpbGwgcGFzcyB0aGUgY29tcGxldGUgTVBFRzIg
-dHJhbnNwb3J0IHN0cmVhbSB0byB0aGUKc29mdHdhcmUgZGVtdXhlcgpkdmJkZXY6IERWQjogcmVn
-aXN0ZXJpbmcgbmV3IGFkYXB0ZXIgKDc3NCBGcmlpbyBXaGl0ZSBJU0RCLVQgVVNCMi4wKQp1c2Ig
-MS0xOiBtZWRpYSBjb250cm9sbGVyIGNyZWF0ZWQKZHZiZGV2OiBkdmJfY3JlYXRlX21lZGlhX2Vu
-dGl0eTogbWVkaWEgZW50aXR5ICdkdmItZGVtdXgnIHJlZ2lzdGVyZWQuCnRjOTA1MjIgMC0wMDE4
-OiBUb3NoaWJhIFRDOTA1MjIgYXR0YWNoZWQuCnVzYiAxLTE6IERWQjogcmVnaXN0ZXJpbmcgYWRh
-cHRlciAwIGZyb250ZW5kIDAgKFRvc2hpYmEgVEM5MDUyMiBJU0RCLVQKbW9kdWxlKS4uLgpkdmJk
-ZXY6IGR2Yl9jcmVhdGVfbWVkaWFfZW50aXR5OiBtZWRpYSBlbnRpdHkgJ1Rvc2hpYmEgVEM5MDUy
-MiBJU0RCLVQKbW9kdWxlJyByZWdpc3RlcmVkLgo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KQlVHOiBLQVNBTjogZ2xvYmFs
-LW91dC1vZi1ib3VuZHMgaW4gZHZiX3BsbF9hdHRhY2grMHg2YzUvMHg4MzAKZHJpdmVycy9tZWRp
-YS9kdmItZnJvbnRlbmRzL2R2Yi1wbGwuYzo3OTgKUmVhZCBvZiBzaXplIDQgYXQgYWRkciBmZmZm
-ZmZmZjg5YzllNWUwIGJ5IHRhc2sga3dvcmtlci8wOjEvMTIKCkNQVTogMCBQSUQ6IDEyIENvbW06
-IGt3b3JrZXIvMDoxIE5vdCB0YWludGVkIDUuMi4wLXJjNisgIzEzCkhhcmR3YXJlIG5hbWU6IEdv
-b2dsZSBHb29nbGUgQ29tcHV0ZSBFbmdpbmUvR29vZ2xlIENvbXB1dGUgRW5naW5lLCBCSU9TCkdv
-b2dsZSAwMS8wMS8yMDExCldvcmtxdWV1ZTogdXNiX2h1Yl93cSBodWJfZXZlbnQKQ2FsbCBUcmFj
-ZToKICBfX2R1bXBfc3RhY2sgbGliL2R1bXBfc3RhY2suYzo3NyBbaW5saW5lXQogIGR1bXBfc3Rh
-Y2srMHhjYS8weDEzZSBsaWIvZHVtcF9zdGFjay5jOjExMwogIHByaW50X2FkZHJlc3NfZGVzY3Jp
-cHRpb24rMHg2Ny8weDIzMSBtbS9rYXNhbi9yZXBvcnQuYzoxODgKICBfX2thc2FuX3JlcG9ydC5j
-b2xkKzB4MWEvMHgzMiBtbS9rYXNhbi9yZXBvcnQuYzozMTcKICBrYXNhbl9yZXBvcnQrMHhlLzB4
-MjAgbW0va2FzYW4vY29tbW9uLmM6NjE0CiAgZHZiX3BsbF9hdHRhY2grMHg2YzUvMHg4MzAgZHJp
-dmVycy9tZWRpYS9kdmItZnJvbnRlbmRzL2R2Yi1wbGwuYzo3OTgKICBkdmJfcGxsX3Byb2JlKzB4
-ZmUvMHgxNzQgZHJpdmVycy9tZWRpYS9kdmItZnJvbnRlbmRzL2R2Yi1wbGwuYzo4NzcKICBpMmNf
-ZGV2aWNlX3Byb2JlKzB4NzkwLzB4YWEwIGRyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYzozODkK
-ICByZWFsbHlfcHJvYmUrMHgyODEvMHg2NjAgZHJpdmVycy9iYXNlL2RkLmM6NTA5CiAgZHJpdmVy
-X3Byb2JlX2RldmljZSsweDEwNC8weDIxMCBkcml2ZXJzL2Jhc2UvZGQuYzo2NzAKICBfX2Rldmlj
-ZV9hdHRhY2hfZHJpdmVyKzB4MWMyLzB4MjIwIGRyaXZlcnMvYmFzZS9kZC5jOjc3NwogIGJ1c19m
-b3JfZWFjaF9kcnYrMHgxNWMvMHgxZTAgZHJpdmVycy9iYXNlL2J1cy5jOjQ1NAogIF9fZGV2aWNl
-X2F0dGFjaCsweDIxNy8weDM2MCBkcml2ZXJzL2Jhc2UvZGQuYzo4NDMKICBidXNfcHJvYmVfZGV2
-aWNlKzB4MWU0LzB4MjkwIGRyaXZlcnMvYmFzZS9idXMuYzo1MTQKICBkZXZpY2VfYWRkKzB4YWU2
-LzB4MTZmMCBkcml2ZXJzL2Jhc2UvY29yZS5jOjIxMTEKICBpMmNfbmV3X2NsaWVudF9kZXZpY2Ur
-MHg1YjMvMHhjNDAgZHJpdmVycy9pMmMvaTJjLWNvcmUtYmFzZS5jOjc3OAogIGkyY19uZXdfZGV2
-aWNlKzB4MTkvMHg1MCBkcml2ZXJzL2kyYy9pMmMtY29yZS1iYXNlLmM6ODIxCiAgZHZiX21vZHVs
-ZV9wcm9iZSsweGY5LzB4MjIwIGRyaXZlcnMvbWVkaWEvZHZiLWNvcmUvZHZiZGV2LmM6OTg1CiAg
-ZnJpaW9fdHVuZXJfYXR0YWNoKzB4MTI1LzB4MWQwIGRyaXZlcnMvbWVkaWEvdXNiL2R2Yi11c2It
-djIvZ2w4NjEuYzo1MzYKICBkdmJfdXNidjJfYWRhcHRlcl9mcm9udGVuZF9pbml0CmRyaXZlcnMv
-bWVkaWEvdXNiL2R2Yi11c2ItdjIvZHZiX3VzYl9jb3JlLmM6Njc1IFtpbmxpbmVdCiAgZHZiX3Vz
-YnYyX2FkYXB0ZXJfaW5pdCBkcml2ZXJzL21lZGlhL3VzYi9kdmItdXNiLXYyL2R2Yl91c2JfY29y
-ZS5jOjgwNApbaW5saW5lXQogIGR2Yl91c2J2Ml9pbml0IGRyaXZlcnMvbWVkaWEvdXNiL2R2Yi11
-c2ItdjIvZHZiX3VzYl9jb3JlLmM6ODY1IFtpbmxpbmVdCiAgZHZiX3VzYnYyX3Byb2JlLmNvbGQr
-MHgyNGRjLzB4MjU1ZApkcml2ZXJzL21lZGlhL3VzYi9kdmItdXNiLXYyL2R2Yl91c2JfY29yZS5j
-Ojk4MAogIHVzYl9wcm9iZV9pbnRlcmZhY2UrMHgzMDUvMHg3YTAgZHJpdmVycy91c2IvY29yZS9k
-cml2ZXIuYzozNjEKICByZWFsbHlfcHJvYmUrMHgyODEvMHg2NjAgZHJpdmVycy9iYXNlL2RkLmM6
-NTA5CiAgZHJpdmVyX3Byb2JlX2RldmljZSsweDEwNC8weDIxMCBkcml2ZXJzL2Jhc2UvZGQuYzo2
-NzAKICBfX2RldmljZV9hdHRhY2hfZHJpdmVyKzB4MWMyLzB4MjIwIGRyaXZlcnMvYmFzZS9kZC5j
-Ojc3NwogIGJ1c19mb3JfZWFjaF9kcnYrMHgxNWMvMHgxZTAgZHJpdmVycy9iYXNlL2J1cy5jOjQ1
-NAogIF9fZGV2aWNlX2F0dGFjaCsweDIxNy8weDM2MCBkcml2ZXJzL2Jhc2UvZGQuYzo4NDMKICBi
-dXNfcHJvYmVfZGV2aWNlKzB4MWU0LzB4MjkwIGRyaXZlcnMvYmFzZS9idXMuYzo1MTQKICBkZXZp
-Y2VfYWRkKzB4YWU2LzB4MTZmMCBkcml2ZXJzL2Jhc2UvY29yZS5jOjIxMTEKICB1c2Jfc2V0X2Nv
-bmZpZ3VyYXRpb24rMHhkZjYvMHgxNjcwIGRyaXZlcnMvdXNiL2NvcmUvbWVzc2FnZS5jOjIwMjMK
-ICBnZW5lcmljX3Byb2JlKzB4OWQvMHhkNSBkcml2ZXJzL3VzYi9jb3JlL2dlbmVyaWMuYzoyMTAK
-ICB1c2JfcHJvYmVfZGV2aWNlKzB4OTkvMHgxMDAgZHJpdmVycy91c2IvY29yZS9kcml2ZXIuYzoy
-NjYKICByZWFsbHlfcHJvYmUrMHgyODEvMHg2NjAgZHJpdmVycy9iYXNlL2RkLmM6NTA5CiAgZHJp
-dmVyX3Byb2JlX2RldmljZSsweDEwNC8weDIxMCBkcml2ZXJzL2Jhc2UvZGQuYzo2NzAKICBfX2Rl
-dmljZV9hdHRhY2hfZHJpdmVyKzB4MWMyLzB4MjIwIGRyaXZlcnMvYmFzZS9kZC5jOjc3NwogIGJ1
-c19mb3JfZWFjaF9kcnYrMHgxNWMvMHgxZTAgZHJpdmVycy9iYXNlL2J1cy5jOjQ1NAogIF9fZGV2
-aWNlX2F0dGFjaCsweDIxNy8weDM2MCBkcml2ZXJzL2Jhc2UvZGQuYzo4NDMKICBidXNfcHJvYmVf
-ZGV2aWNlKzB4MWU0LzB4MjkwIGRyaXZlcnMvYmFzZS9idXMuYzo1MTQKICBkZXZpY2VfYWRkKzB4
-YWU2LzB4MTZmMCBkcml2ZXJzL2Jhc2UvY29yZS5jOjIxMTEKICB1c2JfbmV3X2RldmljZS5jb2xk
-KzB4OGMxLzB4MTAxNiBkcml2ZXJzL3VzYi9jb3JlL2h1Yi5jOjI1MzQKICBodWJfcG9ydF9jb25u
-ZWN0IGRyaXZlcnMvdXNiL2NvcmUvaHViLmM6NTA4OSBbaW5saW5lXQogIGh1Yl9wb3J0X2Nvbm5l
-Y3RfY2hhbmdlIGRyaXZlcnMvdXNiL2NvcmUvaHViLmM6NTIwNCBbaW5saW5lXQogIHBvcnRfZXZl
-bnQgZHJpdmVycy91c2IvY29yZS9odWIuYzo1MzUwIFtpbmxpbmVdCiAgaHViX2V2ZW50KzB4MWFk
-YS8weDM1OTAgZHJpdmVycy91c2IvY29yZS9odWIuYzo1NDMyCiAgcHJvY2Vzc19vbmVfd29yaysw
-eDkwNS8weDE1NzAga2VybmVsL3dvcmtxdWV1ZS5jOjIyNjkKICBwcm9jZXNzX3NjaGVkdWxlZF93
-b3JrcyBrZXJuZWwvd29ya3F1ZXVlLmM6MjMzMSBbaW5saW5lXQogIHdvcmtlcl90aHJlYWQrMHg3
-YWIvMHhlMjAga2VybmVsL3dvcmtxdWV1ZS5jOjI0MTcKICBrdGhyZWFkKzB4MzBiLzB4NDEwIGtl
-cm5lbC9rdGhyZWFkLmM6MjU1CiAgcmV0X2Zyb21fZm9yaysweDI0LzB4MzAgYXJjaC94ODYvZW50
-cnkvZW50cnlfNjQuUzozNTIKClRoZSBidWdneSBhZGRyZXNzIGJlbG9uZ3MgdG8gdGhlIHZhcmlh
-YmxlOgogIGlkKzB4MTAwLzB4MTIwCgpNZW1vcnkgc3RhdGUgYXJvdW5kIHRoZSBidWdneSBhZGRy
-ZXNzOgogIGZmZmZmZmZmODljOWU0ODA6IGZhIGZhIGZhIGZhIDAwIDAwIGZhIGZhIGZhIGZhIGZh
-IGZhIDAwIDAwIDAwIDAwCiAgZmZmZmZmZmY4OWM5ZTUwMDogMDAgMDAgMDAgMDAgMDAgMDAgMDAg
-MDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAKPiBmZmZmZmZmZjg5YzllNTgwOiAwMCAwMCAwMCAw
-MCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCBmYSBmYSBmYSBmYQogICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4KICBmZmZmZmZmZjg5YzllNjAw
-OiAwNCBmYSBmYSBmYSBmYSBmYSBmYSBmYSAwNCBmYSBmYSBmYSBmYSBmYSBmYSBmYQogIGZmZmZm
-ZmZmODljOWU2ODA6IDA0IGZhIGZhIGZhIGZhIGZhIGZhIGZhIDA0IGZhIGZhIGZhIGZhIGZhIGZh
-IGZhCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQotLS0KIGRyaXZlcnMvbWVkaWEvZHZiLWZyb250ZW5kcy9kdmItcGxsLmMg
-fCAzICsrKwogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbWVkaWEvZHZiLWZyb250ZW5kcy9kdmItcGxsLmMgYi9kcml2ZXJzL21lZGlhL2R2Yi1m
-cm9udGVuZHMvZHZiLXBsbC5jCmluZGV4IGJhMGM0OTEwN2JkMjhiLi4wMzJmMWIyYzJlM2FhZiAx
-MDA2NDQKLS0tIGEvZHJpdmVycy9tZWRpYS9kdmItZnJvbnRlbmRzL2R2Yi1wbGwuYworKysgYi9k
-cml2ZXJzL21lZGlhL2R2Yi1mcm9udGVuZHMvZHZiLXBsbC5jCkBAIC03ODcsNiArNzg3LDkgQEAg
-c3RydWN0IGR2Yl9mcm9udGVuZCAqZHZiX3BsbF9hdHRhY2goc3RydWN0IGR2Yl9mcm9udGVuZCAq
-ZmUsIGludCBwbGxfYWRkciwKIAlzdHJ1Y3QgZHZiX3BsbF9wcml2ICpwcml2ID0gTlVMTDsKIAlp
-bnQgcmV0OwogCWNvbnN0IHN0cnVjdCBkdmJfcGxsX2Rlc2MgKmRlc2M7CisJCisgICAgICAgIGlm
-IChkdmJfcGxsX2RldmNvdW50ID4gRFZCX1BMTF9NQVgtMSkKKyAgICAgICAgICAgICAgICByZXR1
-cm4gTlVMTDsKIAogCWIxID0ga21hbGxvYygxLCBHRlBfS0VSTkVMKTsKIAlpZiAoIWIxKQo=
---00000000000094a173058ddf1b3a--
+ .../bindings/iio/imu/adi,adis16460.yaml       |  53 ++
+ MAINTAINERS                                   |   8 +
+ drivers/iio/imu/Kconfig                       |  12 +
+ drivers/iio/imu/Makefile                      |   1 +
+ drivers/iio/imu/adis.c                        |   6 +
+ drivers/iio/imu/adis16460.c                   | 489 ++++++++++++++++++
+ drivers/spi/spi.c                             |   3 +-
+ include/linux/iio/imu/adis.h                  |   2 +
+ include/linux/spi/spi.h                       |   3 +
+ 9 files changed, 576 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
+ create mode 100644 drivers/iio/imu/adis16460.c
+
+-- 
+2.20.1
+
