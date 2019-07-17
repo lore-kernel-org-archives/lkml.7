@@ -2,175 +2,136 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE066C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C609EC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18A321849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872D721849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbfGRAwH (ORCPT
+        id S1728494AbfGRA7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:52:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49296 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727557AbfGRAwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:52:06 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D39253179B56;
-        Thu, 18 Jul 2019 00:52:00 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-14.phx2.redhat.com [10.3.112.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CCA60544F3;
-        Thu, 18 Jul 2019 00:51:48 +0000 (UTC)
-Date:   Wed, 17 Jul 2019 20:51:45 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        ebiederm@xmission.com, nhorman@tuxdriver.com
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-Message-ID: <20190718005145.eshekqfr3navqqiy@madcap2.tricolour.ca>
-References: <20190529153427.GB8959@cisco>
- <CAHC9VhSF3AjErX37+eeusJ7+XRw8yuPsmqBTRwc9EVoRBh_3Tw@mail.gmail.com>
- <20190529222835.GD8959@cisco>
- <CAHC9VhRS66VGtug3fq3RTGHDvfGmBJG6yRJ+iMxm3cxnNF-zJw@mail.gmail.com>
- <20190530170913.GA16722@mail.hallyn.com>
- <CAHC9VhThLiQzGYRUWmSuVfOC6QCDmA75BDB7Eg7V8HX4x7ymQg@mail.gmail.com>
- <20190708180558.5bar6ripag3sdadl@madcap2.tricolour.ca>
- <CAHC9VhRTT7JWqNnynvK04wKerjc-3UJ6R1uPtjCAPVr_tW-7MA@mail.gmail.com>
- <20190716220320.sotbfqplgdructg7@madcap2.tricolour.ca>
- <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhScHizB2r5q3T5s0P3jkYdvzBPPudDksosYFp_TO7W9-Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Jul 2019 00:52:06 +0000 (UTC)
+        Wed, 17 Jul 2019 20:59:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7542 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727658AbfGRA7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 20:59:02 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I0vF3F104787;
+        Wed, 17 Jul 2019 20:58:51 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttcq7kkay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jul 2019 20:58:51 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6I0ub5c021234;
+        Thu, 18 Jul 2019 00:58:50 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 2tq6x7kqsj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 00:58:50 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I0wmJS46858604
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 00:58:48 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4D916A04F;
+        Thu, 18 Jul 2019 00:58:48 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 348C76A04D;
+        Thu, 18 Jul 2019 00:58:48 +0000 (GMT)
+Received: from linux-xej6.aus.stglabs.ibm.com (unknown [9.40.195.184])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jul 2019 00:58:48 +0000 (GMT)
+From:   Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+To:     james.bottomley@hansenpartnership.com
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        brking@linux.vnet.ibm.com, abdhalee@linux.vnet.ibm.com,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Subject: [PATCH] ibmvfc: fix WARN_ON during event pool release
+Date:   Wed, 17 Jul 2019 14:48:27 -0500
+Message-Id: <20190717194827.12514-1-tyreld@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.12.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=249 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-16 19:30, Paul Moore wrote:
-> On Tue, Jul 16, 2019 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2019-07-15 17:04, Paul Moore wrote:
-> > > On Mon, Jul 8, 2019 at 2:06 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> 
-> ...
-> 
-> > > > If we can't trust ns_capable() then why are we passing on
-> > > > CAP_AUDIT_CONTROL?  It is being passed down and not stripped purposely
-> > > > by the orchestrator/engine.  If ns_capable() isn't inherited how is it
-> > > > gained otherwise?  Can it be inserted by cotainer image?  I think the
-> > > > answer is "no".  Either we trust ns_capable() or we have audit
-> > > > namespaces (recommend based on user namespace) (or both).
-> > >
-> > > My thinking is that since ns_capable() checks the credentials with
-> > > respect to the current user namespace we can't rely on it to control
-> > > access since it would be possible for a privileged process running
-> > > inside an unprivileged container to manipulate the audit container ID
-> > > (containerized process has CAP_AUDIT_CONTROL, e.g. running as root in
-> > > the container, while the container itself does not).
-> >
-> > What makes an unprivileged container unprivileged?  "root", or "CAP_*"?
-> 
-> My understanding is that when most people refer to an unprivileged
-> container they are referring to a container run without capabilities
-> or a container run by a user other than root.  I'm sure there are
-> better definitions out there, by folks much smarter than me on these
-> things, but that's my working definition.
+While removing an ibmvfc client adapter a WARN_ON like the following WARN_ON
+is seen in the kernel log:
 
-Close enough to my understanding...
+WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
+ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
+CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
+NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
+REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
+MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
+CFAR: c00000000036e408 SOFTE: 1
+GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
+GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
+GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
+GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
+GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
+GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
+GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
+GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
+NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
+LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
+Call Trace:
+[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
+[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
+[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
+[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
+[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
+[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
+[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
+[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
+[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
+[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
+[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
+Instruction dump:
+e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
+2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
 
-> > If CAP_AUDIT_CONTROL is granted, does "root" matter?
-> 
-> Our discussions here have been about capabilities, not UIDs.  The only
-> reason root might matter is that it generally has the full capability
-> set.
+This is tripped as a result of irqs being disabled during the call to
+dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
+we have quiesced the adapter and its overly paranoid anyways to be holding the
+host lock.
 
-Good, that's my understanding.
+Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+---
+ drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Does it matter what user namespace it is in?
-> 
-> What likely matters is what check is called: capable() or
-> ns_capable().  Those can yield very different results.
+diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
+index acd16e0d52cf..8cdbac076a1b 100644
+--- a/drivers/scsi/ibmvscsi/ibmvfc.c
++++ b/drivers/scsi/ibmvscsi/ibmvfc.c
+@@ -4864,8 +4864,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
+ 
+ 	spin_lock_irqsave(vhost->host->host_lock, flags);
+ 	ibmvfc_purge_requests(vhost, DID_ERROR);
+-	ibmvfc_free_event_pool(vhost);
+ 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
++	ibmvfc_free_event_pool(vhost);
+ 
+ 	ibmvfc_free_mem(vhost);
+ 	spin_lock(&ibmvfc_driver_lock);
+-- 
+2.12.3
 
-Ok, I finally found what I was looking for to better understand the
-challenge with trusting ns_capable().  Sorry for being so dense and slow
-on this one.  I thought I had gone through the code carefully enough,
-but this time I finally found it.  set_cred_user_ns() sets a full set of
-capabilities rather than inheriting them from the parent user_ns, called
-from userns_install() or create_userns().  Even if the container
-orchestrator/engine restricts those capabilities on its own containers,
-they could easily unshare a userns and get a full set unless it also
-restricted CAP_SYS_ADMIN, which is used too many other places to be
-practical to restrict.
-
-> > I understand that root is *gained* in an
-> > unprivileged user namespace, but capabilities are inherited or permitted
-> > and that process either has it or it doesn't and an unprivileged user
-> > namespace can't gain a capability that has been rescinded.  Different
-> > subsystems use the userid or capabilities or both to determine
-> > privileges.
-> 
-> Once again, I believe the important thing to focus on here is
-> capable() vs ns_capable().  We can't safely rely on ns_capable() for
-> the audit container ID policy since that is easily met inside the
-> container regardless of the process' creds which started the
-> container.
-
-Agreed.
-
-> > In this case, is the userid relevant?
-> 
-> We don't do UID checks, we do capability checks, so yes, the UID is irrelevant.
-
-Agreed.
-
-> > > > At this point I would say we are at an impasse unless we trust
-> > > > ns_capable() or we implement audit namespaces.
-> > >
-> > > I'm not sure how we can trust ns_capable(), but if you can think of a
-> > > way I would love to hear it.  I'm also not sure how namespacing audit
-> > > is helpful (see my above comments), but if you think it is please
-> > > explain.
-> >
-> > So if we are not namespacing, why do we not trust capabilities?
-> 
-> We can trust capable(CAP_AUDIT_CONTROL) for enforcing audit container
-> ID policy, we can not trust ns_capable(CAP_AUDIT_CONTROL).
-
-Ok.  So does a process in a non-init user namespace have two (or more)
-sets of capabilities stored in creds, one in the init_user_ns, and one
-in current_user_ns?  Or does it get stripped of all its capabilities in
-init_user_ns once it has its own set in current_user_ns?  If the former,
-then we can use capable().  If the latter, we need another mechanism, as
-you have suggested might be needed.
-
-If some random unprivileged user wants to fire up a container
-orchestrator/engine in his own user namespace, then audit needs to be
-namespaced.  Can we safely discard this scenario for now?  That user can
-use a VM.
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
