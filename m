@@ -2,103 +2,234 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B6EC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68752173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA832173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b54ZgPLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfGQMzk (ORCPT
+        id S1727150AbfGQM4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 08:55:40 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:64509 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725873AbfGQMzk (ORCPT
+        Wed, 17 Jul 2019 08:56:00 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44058 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfGQMz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 08:55:40 -0400
-X-UUID: e22df362dd87439ba66bb9b9ee25cbcf-20190717
-X-UUID: e22df362dd87439ba66bb9b9ee25cbcf-20190717
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1220891826; Wed, 17 Jul 2019 20:55:23 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 17 Jul
- 2019 20:55:21 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Jul 2019 20:55:21 +0800
-Message-ID: <1563368121.16970.7.camel@mhfsdcap03>
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <matthias.bgg@gmail.com>, <robh+dt@kernel.org>
-Date:   Wed, 17 Jul 2019 20:55:21 +0800
-In-Reply-To: <20190626133941.GL801@ninjato>
-References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
-         <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
-         <20190626133941.GL801@ninjato>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Jul 2019 08:55:59 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190717125557euoutp02701c8fc7113b319573d9c552aa8a4d7c~yMw5_tPzC0207702077euoutp02Z
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 12:55:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190717125557euoutp02701c8fc7113b319573d9c552aa8a4d7c~yMw5_tPzC0207702077euoutp02Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563368158;
+        bh=Pyn39ljLoe2TXoiUtMo/+jv8HgmCe4hW5kgEZQJmjKo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=b54ZgPLywJDb+7Wru1kXVxqHQKEtowoN5rf2nA+63Oxddi2aPPKnm6iXjY6NPp+56
+         AnRdf9IcW/GEAlzQH3I4zDASf3J0j7GusluC94YpSMWuNAO+Yk1T938yTPe9NomMqO
+         7O4y39KCmQCAkkB2PHCZBmnVzepPKbDbTwfHtmqU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190717125557eucas1p1a270d9c2660feb0a4be022e93a66c786~yMw5QgV7s2076120761eucas1p1d;
+        Wed, 17 Jul 2019 12:55:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 35.59.04325.CDA1F2D5; Wed, 17
+        Jul 2019 13:55:56 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190717125556eucas1p2d36e446f5a5def293b979854bcd497ec~yMw4aCg431675416754eucas1p2B;
+        Wed, 17 Jul 2019 12:55:56 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190717125556eusmtrp18952f3ae296d8cad61f8e718184bb943~yMw4LKels2815428154eusmtrp1P;
+        Wed, 17 Jul 2019 12:55:56 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-98-5d2f1adc9daa
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 15.1E.04146.BDA1F2D5; Wed, 17
+        Jul 2019 13:55:56 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190717125555eusmtip190b8f69b8237686d25636da30ebc5e4a~yMw3dqLYC1016810168eusmtip1b;
+        Wed, 17 Jul 2019 12:55:55 +0000 (GMT)
+Subject: Re: [PATCH v1 37/50] ARM: dts: exynos: change parent and rate of
+ bus_fsys in Exynos5422
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <7ad899c5-347d-546e-a2e9-d96f0203210c@partner.samsung.com>
+Date:   Wed, 17 Jul 2019 14:55:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: B257EECAC12F9671783A098BEBB779091CBD86B878109E3D551FAA2FD10A1FD32000:8
-X-MTK:  N
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEKsWRmVeSWpSXmKPExsWy7djPc7p3pPRjDa4usLS4te4cq8XGGetZ
+        La5/ec5qMf8IkNv/+DWzxfnzG9gtzja9YbfY9Pgaq8XHnnusFpd3zWGzmHF+H5PF2iN32S2W
+        Xr/IZHHxlKvF7cYVbBate4+wWxx+085q8e/aRhYHIY8189Ywery/0crusWlVJ5vH5iX1Hn1b
+        VjF6fN4kF8AWxWWTkpqTWZZapG+XwJXRefMsa0GTSsXVqXfYGxh3y3QxcnJICJhI/HmynqWL
+        kYtDSGAFo8TFS1sZIZwvjBL7Z15kg3A+M0pcmviCCabl66KTrBCJ5YwS/3tXQDlvGSW2r3/P
+        AlIlLJAkcWrPa2YQW0RAU+L63+9gRcwCV1kkftz/DlTEwcEmoCexY1VhFyM7B6+Am8R7sGoW
+        AVWJHcvbwGxRgQiJy1t2MYLYvAKCEidnPgGbzikQKLFty1d2EJtZQFzi1pP5TBC2vMT2t3OY
+        QTZJCPRySBw5sZ4F4mgXiWOXD7ND2MISr45vgbJlJE5P7oGqKZZo6F3ICGHXSDzunwtVYy1x
+        +PhFVpCLmYFeWb9LHyLsKDH1wnOwsIQAn8SNt4IQJ/BJTNo2nRkizCvR0SYEUa0hsaXnAjQE
+        xSSWr5nGPoFRaRaSx2YheWYWkmdmIexdwMiyilE8tbQ4Nz212DgvtVyvODG3uDQvXS85P3cT
+        IzDlnf53/OsOxn1/kg4xCnAwKvHwehzWjRViTSwrrsw9xCjBwawkwmv7VTtWiDclsbIqtSg/
+        vqg0J7X4EKM0B4uSOG81w4NoIYH0xJLU7NTUgtQimCwTB6dUA+O5AOcOi13SUxMXMuroB0dP
+        cHyZm/SeV7DeOvM9w8lZh9/ecnrVlBf1dM7K+edzr/qfckh7xVqVuFI+fMHb7RUxGX//JOgt
+        vHDN++htl22ygQ99RFhYNIwOJJ9ybi1blnmtnTvjd42U0beIdcc9lzYd/VsrfdCIq13dp+6V
+        /VnLzxcnuKhEhCuxFGckGmoxFxUnAgDlgYu1dQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKIsWRmVeSWpSXmKPExsVy+t/xu7p3pPRjDU48YrS4te4cq8XGGetZ
+        La5/ec5qMf8IkNv/+DWzxfnzG9gtzja9YbfY9Pgaq8XHnnusFpd3zWGzmHF+H5PF2iN32S2W
+        Xr/IZHHxlKvF7cYVbBate4+wWxx+085q8e/aRhYHIY8189Ywery/0crusWlVJ5vH5iX1Hn1b
+        VjF6fN4kF8AWpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZa
+        pG+XoJfRefMsa0GTSsXVqXfYGxh3y3QxcnJICJhIfF10khXEFhJYyihxZK08RFxMYtK+7ewQ
+        trDEn2tdbF2MXEA1rxklpn1YwQySEBZIkji15zWYLSKgKXH973dWkCJmgassElNebWSH6JjO
+        IvHx6lWmLkYODjYBPYkdqwq7GNk5eAXcJN6DtbIIqErsWN4GZosKREj0tc1mA7F5BQQlTs58
+        wgJicwoESmzb8hXsHmYBM4l5mx8yQ9jiEreezGeCsOUltr+dwzyBUWgWkvZZSFpmIWmZhaRl
+        ASPLKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMAo33bs5+YdjJc2Bh9iFOBgVOLh9TisGyvE
+        mlhWXJl7iFGCg1lJhNf2q3asEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDE1BeSbyhqaG5
+        haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGUcfHc+r1GL/PUa8NWSo2L0I0
+        8RK36lrZz1tktvOYeZXKKZzvTvic7MZxj0G36PKD+kt7Lm5p/HDrs2PDEZnqrxznfmowaswL
+        iV1ZXee/V9466/qtxasfWu0P03QzWVPdlCol98RdoXjDzDWb2/0m+0ncX91TpvRs3ZRo5olV
+        r2f/DPpT+vmEEktxRqKhFnNRcSIA9W4TWggDAAA=
+X-CMS-MailID: 20190717125556eucas1p2d36e446f5a5def293b979854bcd497ec
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf
+References: <CGME20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf@eucas1p1.samsung.com>
+        <20190715124417.4787-1-l.luba@partner.samsung.com>
+        <20190715124417.4787-38-l.luba@partner.samsung.com>
+        <CAJKOXPfrGgAczQ-=1aE453RpJ9BN10ZDmFcrEMPkNyF6GcGtNA@mail.gmail.com>
+        <2fe2e840-f4b2-773b-7d92-4ffb8502d4e6@partner.samsung.com>
+        <CAJKOXPd3gm7no-0TnPmgFg+X3FgdiM6ov5rtzFSM6hKEdEzRCg@mail.gmail.com>
+        <518c26ca-4254-056c-d6d0-ae1b4b63709c@partner.samsung.com>
+        <CAJKOXPfDX06s7eMctbnPabxho2EaWcTM4xAGKCd_+O6jCCDcRQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 15:39 +0200, Wolfram Sang wrote:
-> Hi,
-> 
-> On Tue, Jun 11, 2019 at 04:11:54PM +0800, Qii Wang wrote:
-> > Add i2c AC timing binding to binding file. It can give the AC
-> > timing parameters to meet I2C specification at different speed.
-> > 
-> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> 
-> I think this is a too specific 1:1 mapping of your register set into DT
-> world. We already have these generic parameters:
-> 
-> - clock-frequency
->         frequency of bus clock in Hz.
-> 
-> - i2c-scl-falling-time-ns
->         Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
->         specification.
-> 
-> - i2c-scl-internal-delay-ns
->         Number of nanoseconds the IP core additionally needs to setup SCL.
-> 
-> - i2c-scl-rising-time-ns
->         Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
->         specification.
-> 
-> - i2c-sda-falling-time-ns
->         Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
->         specification.
-> 
-> (check Documentation/devicetree/bindings/i2c/i2c.txt)
-> 
-> Can't you use those to derive your values from that? Which ones are you missing
-> if not?
-> 
-> Regards,
-> 
->    Wolfram
 
-I have take a little time to develop a new patch which based on your
-suggestions, and it tested OK. Thanks for your suggestions, I will
-update the patch after I test it fully.
+On 7/17/19 1:11 PM, Krzysztof Kozlowski wrote:
+> On Wed, 17 Jul 2019 at 13:06, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>>
+>>
+>> On 7/17/19 12:45 PM, Krzysztof Kozlowski wrote:
+>>> On Wed, 17 Jul 2019 at 12:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>>>>
+>>>>>>     &bus_fsys {
+>>>>>>            devfreq = <&bus_wcore>;
+>>>>>> +       assigned-clocks = <&clock CLK_MOUT_ACLK200_FSYS>,
+>>>>>> +                         <&clock CLK_DOUT_ACLK200_FSYS>,
+>>>>>> +                         <&clock CLK_FOUT_DPLL>;
+>>>>>> +       assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>;
+>>>>>> +       assigned-clock-rates = <0>, <240000000>,<1200000000>;
+>>>>>
+>>>>> Here and in all other patches:
+>>>>> I am not entirely sure that this should be here. It looks like
+>>>>> property of the SoC. Do we expect that buses will be configured to
+>>>>> different clock rates between different boards?
+This is the board file for Exynos5420/5422/5800 which enables buses.
+Thus, I have change them here. Patch 49/50 adds these buses to
+Exynos5800 (Peach Pi). In Exynos5420 there is no clock tree for
+bus_isp266. The parents for different devices could be also different.
+It is because i.e. in 5420 there is 2 bit in the WCORE 1st mux while in
+5422 there is 3 bits (6 parents possible).
+That's why I have picked exynos5422-odroid-core.dtsi to reference
+the bus devices and pinned them into proper parent and changed rate.
+When you check patch 49/50 for 5800 not all the parents are the same.
 
+(1) I could create a dedicated files like: exynos5422-bus.dtsi,
+exynos5420-bus.dtsi, exynos5800-bus.dtsi which would include some
+base file with the basic &bus_X and set the right parent, rate.
+Then these files would be included into proper board file like:
+exynos5800-peach-pi.dts.
+Is this something that you would like to see?
+  Since the OPP tables
+>>>>> are shared (they are property of the SoC, not board) then I would
+>>>>> assume that default frequency is shared as well.
+>>>> These clocks they all relay on some bootloader configuration. It depends
+>>>> which version of the bootloader you have, then you might get different
+>>>> default configuration in the clocks.
+>>>
+>>> I do not agree here. This configuration is not dependent on
+>>> bootloader. Although one bootloader might set the clocks to X and
+>>> other to Y, but still you provide here valid configuration setting
+>>> them, e.g. to Y (or to Z). What bootloader set before does not matter
+>>> because you always override it.
+>> This exactly the patch set is aim to do: overwrite any bootloader
+>> configuration which could be wrong set after boot.
+>> I don't know for how long it is left in such
+>> 'bootloader-default-clock-settings' but it is not accurate
+>> configuration. The pattern in the DT to change the clock rates is
+>> there.
+> 
+> Still it is not the answer to my concerns and questions.
+Please look at my answer above.
+> 
+>>>
+>>>> The pattern of changing the parent
+>>>> or even rate is known in the DT files (or I am missing something).
+>>>> When you grep for it, you get 168 hits (38 for exynos*):
+>>>> git grep -n "assigned-clock-rates" ./arch/arm/boot/dts/ | wc -l
+>>>
+>>> Yeah, and if you grep per type you got:
+>>> DTSI: 114
+>>> DTS: 54
+>>> so what do you want to say?
+>> Thus, It could be changed in DT.
+> 
+> Of course, why not. But how this relevant to my question?
+Please see above.
+> 
+>>> My thinking is that all the boards have buses configured to the same
+>>> initial frequency. I am not questioning the use of
+>>> assigned-clock-rates at all. Just the place...
+>> It is not only 'initial frequency' as you name it. It has three changes:
+>> - re-parent to proper PLL
+>> - changing this PLL rate
+>> - change the OPPs frequency values to integer values derived from PLL
+>>
+>> The initial frequencies will be changed by devfreq governor using OPP
+>> tables and the load after the whole system boots.
+> 
+> I simplified with "initial frequency" but it does not matter. Let me
+> try to raise my concerns again, different wording:
+> All this looks like property of the SoC, not the board, because:
+> 1. the OPPs are already properties of the SoC, not the board (XU3 Lite
+> is kind of exception but in fact it uses different flavor of
+> Exynos5422 SoC which we do not model here as separate DTSI),
+Please see above at (1).
+> 2. I expect all boards to have the same properties.
+All boards which have the same SoC, i.e. Exysno5422 <- then I agree.
 
+Thank you for the comments.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
