@@ -2,1114 +2,121 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF63C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C47C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9FB21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYaPq+PO"
+	by mail.kernel.org (Postfix) with ESMTP id 43B212077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfGQGE5 (ORCPT
+        id S1726883AbfGQGIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:04:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44373 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfGQGE5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:04:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so43835618iob.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 23:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+hPZCKRnboD8brFc8h4sL+iN60iw4PETyRuXZQlmTz4=;
-        b=jYaPq+PO6n+kOC5rDvs0atSuv1rCLn22JREespQ2yTPKIN/AWl/hWsseh1iN5B/cs2
-         dPBgK8s73kZqnDKXox2GjnDnnkh0I9x7gNQN8jadSlcqn9uZ8IB820WzLl87sfCYUnts
-         HEY7ACCD2k0nOeIHl8x/sXnRhFQEWnmHuffBCbFZ6wQ6GwgbpFoylUMLF7eMDITbKI4i
-         hEbZ2O4kk/eOQUDyf7nBQtxnekkhR1DmLtW7ZV/SSNyIXNh7UE+nvUxfwzX/zkOud+2m
-         NqgIK3eh0iHfGzerMPL16asZB7iZeiBSHi4OPJ5LLm1pDucQCYt0qBqzEn1oJMw0/A/a
-         V93A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+hPZCKRnboD8brFc8h4sL+iN60iw4PETyRuXZQlmTz4=;
-        b=KId57InSpCP7A9q2TmKydTcpYst1d+Lc3SDXQj+Gd8NZsjzUM/i6C3g/x5CDBNdLho
-         QTQje3AfLWOg+LCvpbWAr4Spdm7XUhJj9f0/52JSXDR5EA18y+JqeuoWSWF4D67/khSo
-         vtlXtth+/ybKaXKYGx2oEd/7c/3KFXBA6Gpu0FRv0o4NDqxmUH79XZuEUcRQhQMTxeUi
-         c9Eh6LZpGURzmGk3Bhbaaks+KbT9SgVsPxwUanxwk3rtsbt1+7BvT83h+E+0O0omE/DU
-         Y0klQnLON4HkPMhkazVLjg+XrVDO+wj2LbLMCRiODuu+DD95fu51IHBBo7sC6q/DFQ75
-         9uqQ==
-X-Gm-Message-State: APjAAAUd+upqNzpuLwG6GReIj7MRfFqUv6JVAxdxegEyKyyH+YO3Ou6U
-        PfRkGpXSgnQkK7O7UevAOWFpG3PArYfOsHiTAmk=
-X-Google-Smtp-Source: APXvYqwEP6qSN52Ehza7zRp/kLtPYhLqcxxTaE/e76rPv+wuIa2schvaNYMs8dMg0ujEnMCQKggoxN2HozCHsYrXS8U=
-X-Received: by 2002:a02:c492:: with SMTP id t18mr39633644jam.67.1563343494825;
- Tue, 16 Jul 2019 23:04:54 -0700 (PDT)
+        Wed, 17 Jul 2019 02:08:24 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1203 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbfGQGIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 02:08:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jul 2019 23:08:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,273,1559545200"; 
+   d="scan'208";a="170154892"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by orsmga003.jf.intel.com with ESMTP; 16 Jul 2019 23:08:20 -0700
+Subject: Re: [PATCH v4] mmc: host: sdhci-sprd: Fix the incorrect soft reset
+ operation when runtime resuming
+To:     Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Cc:     vincent.guittot@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <89c3ef495c367d58ca3abe99a1f82c48f8c08705.1563274904.git.baolin.wang@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <66eb3053-ca2d-e2f0-edf0-9227f75a5693@intel.com>
+Date:   Wed, 17 Jul 2019 09:07:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190702141903.1131-1-kraxel@redhat.com> <20190702141903.1131-12-kraxel@redhat.com>
-In-Reply-To: <20190702141903.1131-12-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Tue, 16 Jul 2019 23:04:43 -0700
-Message-ID: <CAPaKu7QQFzj-N2q_O5trbtUO2tmBCT23N1SMerG81fs5W=r4Yw@mail.gmail.com>
-Subject: Re: [PATCH v6 11/18] drm/virtio: switch from ttm to gem shmem helpers
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <89c3ef495c367d58ca3abe99a1f82c48f8c08705.1563274904.git.baolin.wang@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 2, 2019 at 7:19 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> virtio-gpu basically needs a sg_table for the bo, to tell the host where
-> the backing pages for the object are.  So the gem shmem helpers are a
-> perfect fit.  Some drm_gem_object_funcs need thin wrappers to update the
-> host state, but otherwise the helpers handle everything just fine.
->
-> Once the fencing was sorted the switch was surprisingly easy and for the
-> most part just removing the ttm code.
->
-> v4: fix drm_gem_object_funcs name.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.h    |  52 +---
->  drivers/gpu/drm/virtio/virtgpu_drv.c    |  20 +-
->  drivers/gpu/drm/virtio/virtgpu_gem.c    |  16 +-
->  drivers/gpu/drm/virtio/virtgpu_ioctl.c  |  19 +-
->  drivers/gpu/drm/virtio/virtgpu_kms.c    |   9 -
->  drivers/gpu/drm/virtio/virtgpu_object.c | 146 ++++--------
->  drivers/gpu/drm/virtio/virtgpu_prime.c  |  37 ---
->  drivers/gpu/drm/virtio/virtgpu_ttm.c    | 304 ------------------------
->  drivers/gpu/drm/virtio/virtgpu_vq.c     |  24 +-
->  drivers/gpu/drm/virtio/Kconfig          |   2 +-
->  drivers/gpu/drm/virtio/Makefile         |   2 +-
->  11 files changed, 82 insertions(+), 549 deletions(-)
->  delete mode 100644 drivers/gpu/drm/virtio/virtgpu_ttm.c
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> index 12168067a874..f8a586029400 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -33,14 +33,11 @@
->
->  #include <drm/drmP.h>
->  #include <drm/drm_gem.h>
-> +#include <drm/drm_gem_shmem_helper.h>
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_encoder.h>
->  #include <drm/drm_fb_helper.h>
->  #include <drm/drm_probe_helper.h>
-> -#include <drm/ttm/ttm_bo_api.h>
-> -#include <drm/ttm/ttm_bo_driver.h>
-> -#include <drm/ttm/ttm_placement.h>
-> -#include <drm/ttm/ttm_module.h>
->
->  #define DRIVER_NAME "virtio_gpu"
->  #define DRIVER_DESC "virtio GPU"
-> @@ -68,21 +65,16 @@ struct virtio_gpu_object_params {
->  };
->
->  struct virtio_gpu_object {
-> -       struct drm_gem_object gem_base;
-> +       struct drm_gem_shmem_object base;
->         uint32_t hw_res_handle;
->
->         struct sg_table *pages;
->         uint32_t mapped;
-> -       void *vmap;
->         bool dumb;
-> -       struct ttm_place                placement_code;
-> -       struct ttm_placement            placement;
-> -       struct ttm_buffer_object        tbo;
-> -       struct ttm_bo_kmap_obj          kmap;
->         bool created;
->  };
->  #define gem_to_virtio_gpu_obj(gobj) \
-> -       container_of((gobj), struct virtio_gpu_object, gem_base)
-> +       container_of((gobj), struct virtio_gpu_object, base.base)
->
->  struct virtio_gpu_object_array {
->         struct ww_acquire_ctx ticket;
-> @@ -153,10 +145,6 @@ struct virtio_gpu_framebuffer {
->  #define to_virtio_gpu_framebuffer(x) \
->         container_of(x, struct virtio_gpu_framebuffer, base)
->
-> -struct virtio_gpu_mman {
-> -       struct ttm_bo_device            bdev;
-> -};
-> -
->  struct virtio_gpu_queue {
->         struct virtqueue *vq;
->         spinlock_t qlock;
-> @@ -185,8 +173,6 @@ struct virtio_gpu_device {
->
->         struct virtio_device *vdev;
->
-> -       struct virtio_gpu_mman mman;
-> -
->         struct virtio_gpu_output outputs[VIRTIO_GPU_MAX_SCANOUTS];
->         uint32_t num_scanouts;
->
-> @@ -357,11 +343,6 @@ struct drm_plane *virtio_gpu_plane_init(struct virtio_gpu_device *vgdev,
->                                         enum drm_plane_type type,
->                                         int index);
->
-> -/* virtio_gpu_ttm.c */
-> -int virtio_gpu_ttm_init(struct virtio_gpu_device *vgdev);
-> -void virtio_gpu_ttm_fini(struct virtio_gpu_device *vgdev);
-> -int virtio_gpu_mmap(struct file *filp, struct vm_area_struct *vma);
-> -
->  /* virtio_gpu_fence.c */
->  bool virtio_fence_signaled(struct dma_fence *f);
->  struct virtio_gpu_fence *virtio_gpu_fence_alloc(
-> @@ -373,58 +354,47 @@ void virtio_gpu_fence_event_process(struct virtio_gpu_device *vdev,
->                                     u64 last_seq);
->
->  /* virtio_gpu_object */
-> +struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
-> +                                               size_t size);
->  int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->                              struct virtio_gpu_object_params *params,
->                              struct virtio_gpu_object **bo_ptr,
->                              struct virtio_gpu_fence *fence);
-> -void virtio_gpu_object_kunmap(struct virtio_gpu_object *bo);
-> -int virtio_gpu_object_kmap(struct virtio_gpu_object *bo);
-> -int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
-> -                                  struct virtio_gpu_object *bo);
-> -void virtio_gpu_object_free_sg_table(struct virtio_gpu_object *bo);
->
->  /* virtgpu_prime.c */
-> -struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj);
->  struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
->         struct drm_device *dev, struct dma_buf_attachment *attach,
->         struct sg_table *sgt);
-> -void *virtgpu_gem_prime_vmap(struct drm_gem_object *obj);
-> -void virtgpu_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr);
-> -int virtgpu_gem_prime_mmap(struct drm_gem_object *obj,
-> -                          struct vm_area_struct *vma);
->
->  static inline struct virtio_gpu_object*
->  virtio_gpu_object_ref(struct virtio_gpu_object *bo)
->  {
-> -       ttm_bo_get(&bo->tbo);
-> +       drm_gem_object_get(&bo->base.base);
->         return bo;
->  }
->
->  static inline void virtio_gpu_object_unref(struct virtio_gpu_object **bo)
->  {
-> -       struct ttm_buffer_object *tbo;
-> -
->         if ((*bo) == NULL)
->                 return;
-> -       tbo = &((*bo)->tbo);
-> -       ttm_bo_put(tbo);
-> +       drm_gem_object_put(&(*bo)->base.base);
->         *bo = NULL;
->  }
->
->  static inline u64 virtio_gpu_object_mmap_offset(struct virtio_gpu_object *bo)
->  {
-> -       return drm_vma_node_offset_addr(&bo->tbo.vma_node);
-> +       return drm_vma_node_offset_addr(&bo->base.base.vma_node);
->  }
->
->  static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo)
->  {
->         int r;
->
-> -       r = reservation_object_lock_interruptible(bo->gem_base.resv, NULL);
-> +       r = reservation_object_lock_interruptible(bo->base.base.resv, NULL);
->         if (unlikely(r != 0)) {
->                 if (r != -EINTR) {
->                         struct virtio_gpu_device *qdev =
-> -                               bo->gem_base.dev->dev_private;
-> +                               bo->base.base.dev->dev_private;
->                         dev_err(qdev->dev, "%p reserve failed\n", bo);
->                 }
->                 return r;
-> @@ -434,7 +404,7 @@ static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo)
->
->  static inline void virtio_gpu_object_unreserve(struct virtio_gpu_object *bo)
->  {
-> -       reservation_object_unlock(bo->gem_base.resv);
-> +       reservation_object_unlock(bo->base.base.resv);
->  }
->
->  /* virgl debufs */
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> index 99bcd290f1fb..8ce193e2800b 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> @@ -182,17 +182,7 @@ MODULE_AUTHOR("Dave Airlie <airlied@redhat.com>");
->  MODULE_AUTHOR("Gerd Hoffmann <kraxel@redhat.com>");
->  MODULE_AUTHOR("Alon Levy");
->
-> -static const struct file_operations virtio_gpu_driver_fops = {
-> -       .owner = THIS_MODULE,
-> -       .open = drm_open,
-> -       .mmap = virtio_gpu_mmap,
-> -       .poll = drm_poll,
-> -       .read = drm_read,
-> -       .unlocked_ioctl = drm_ioctl,
-> -       .release = drm_release,
-> -       .compat_ioctl = drm_compat_ioctl,
-> -       .llseek = noop_llseek,
-> -};
-> +DEFINE_DRM_GEM_SHMEM_FOPS(virtio_gpu_driver_fops);
-We used to have TTM_PL_FLAG_CACHED.  With this, it seems mmap now
-calls drm_gem_mmap_obj indirectly and sets the memory type to
-writecombine.
+On 17/07/19 5:28 AM, Baolin Wang wrote:
+> In sdhci_runtime_resume_host() function, we will always do software reset
+> for all, which will cause Spreadtrum host controller work abnormally after
+> resuming.
+> 
+> Thus for Spreadtrum platform that will not power down the SD/eMMC card during
+> runtime suspend, we should not do software reset for all. To fix this
+> issue, adding a specific reset operation that adds one condition to validate
+> the power mode to decide if we can do software reset for all or just reset
+> command and data lines.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
->
->  static struct drm_driver driver = {
->         .driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_RENDER | DRIVER_ATOMIC,
-> @@ -207,15 +197,9 @@ static struct drm_driver driver = {
->  #endif
->         .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
->         .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-> -       .gem_prime_get_sg_table = virtgpu_gem_prime_get_sg_table,
->         .gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
-> -       .gem_prime_vmap = virtgpu_gem_prime_vmap,
-> -       .gem_prime_vunmap = virtgpu_gem_prime_vunmap,
-> -       .gem_prime_mmap = virtgpu_gem_prime_mmap,
->
-> -       .gem_free_object_unlocked = virtio_gpu_gem_free_object,
-> -       .gem_open_object = virtio_gpu_gem_object_open,
-> -       .gem_close_object = virtio_gpu_gem_object_close,
-> +       .gem_create_object = virtio_gpu_create_object,
->         .fops = &virtio_gpu_driver_fops,
->
->         .ioctls = virtio_gpu_ioctls,
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
-> index e88df5e06d06..8a95864404ca 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_gem.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
-> @@ -26,14 +26,6 @@
->  #include <drm/drmP.h>
->  #include "virtgpu_drv.h"
->
-> -void virtio_gpu_gem_free_object(struct drm_gem_object *gem_obj)
-> -{
-> -       struct virtio_gpu_object *obj = gem_to_virtio_gpu_obj(gem_obj);
-> -
-> -       if (obj)
-> -               virtio_gpu_object_unref(&obj);
-> -}
-> -
->  struct virtio_gpu_object*
->  virtio_gpu_alloc_object(struct drm_device *dev,
->                         struct virtio_gpu_object_params *params,
-> @@ -64,16 +56,16 @@ int virtio_gpu_gem_create(struct drm_file *file,
->         if (IS_ERR(obj))
->                 return PTR_ERR(obj);
->
-> -       ret = drm_gem_handle_create(file, &obj->gem_base, &handle);
-> +       ret = drm_gem_handle_create(file, &obj->base.base, &handle);
->         if (ret) {
-> -               drm_gem_object_release(&obj->gem_base);
-> +               drm_gem_object_release(&obj->base.base);
->                 return ret;
->         }
->
-> -       *obj_p = &obj->gem_base;
-> +       *obj_p = &obj->base.base;
->
->         /* drop reference from allocate - handle holds it now */
-> -       drm_gem_object_put_unlocked(&obj->gem_base);
-> +       drm_gem_object_put_unlocked(&obj->base.base);
->
->         *handle_p = handle;
->         return 0;
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> index 1fa8aa91d590..107057816e1f 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> @@ -27,7 +27,6 @@
->
->  #include <drm/drmP.h>
->  #include <drm/virtgpu_drm.h>
-> -#include <drm/ttm/ttm_execbuf_util.h>
->  #include <linux/sync_file.h>
->
->  #include "virtgpu_drv.h"
-> @@ -259,7 +258,7 @@ static int virtio_gpu_resource_create_ioctl(struct drm_device *dev, void *data,
->         dma_fence_put(&fence->f);
->         if (IS_ERR(qobj))
->                 return PTR_ERR(qobj);
-> -       obj = &qobj->gem_base;
-> +       obj = &qobj->base.base;
->
->         ret = drm_gem_handle_create(file_priv, obj, &handle);
->         if (ret) {
-> @@ -286,7 +285,7 @@ static int virtio_gpu_resource_info_ioctl(struct drm_device *dev, void *data,
->
->         qobj = gem_to_virtio_gpu_obj(gobj);
->
-> -       ri->size = qobj->gem_base.size;
-> +       ri->size = qobj->base.base.size;
->         ri->res_handle = qobj->hw_res_handle;
->         drm_gem_object_put_unlocked(gobj);
->         return 0;
-> @@ -299,7 +298,6 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
->         struct virtio_gpu_device *vgdev = dev->dev_private;
->         struct virtio_gpu_fpriv *vfpriv = file->driver_priv;
->         struct drm_virtgpu_3d_transfer_from_host *args = data;
-> -       struct ttm_operation_ctx ctx = { true, false };
->         struct drm_gem_object *gobj = NULL;
->         struct virtio_gpu_object *qobj = NULL;
->         struct virtio_gpu_fence *fence;
-> @@ -320,10 +318,6 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
->         if (ret)
->                 goto out;
->
-> -       ret = ttm_bo_validate(&qobj->tbo, &qobj->placement, &ctx);
-> -       if (unlikely(ret))
-> -               goto out_unres;
-> -
->         convert_to_hw_box(&box, &args->box);
->
->         fence = virtio_gpu_fence_alloc(vgdev);
-> @@ -335,7 +329,7 @@ static int virtio_gpu_transfer_from_host_ioctl(struct drm_device *dev,
->                 (vgdev, qobj->hw_res_handle,
->                  vfpriv->ctx_id, offset, args->level,
->                  &box, fence);
-> -       reservation_object_add_excl_fence(qobj->tbo.resv,
-> +       reservation_object_add_excl_fence(qobj->base.base.resv,
->                                           &fence->f);
->
->         dma_fence_put(&fence->f);
-> @@ -352,7 +346,6 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
->         struct virtio_gpu_device *vgdev = dev->dev_private;
->         struct virtio_gpu_fpriv *vfpriv = file->driver_priv;
->         struct drm_virtgpu_3d_transfer_to_host *args = data;
-> -       struct ttm_operation_ctx ctx = { true, false };
->         struct drm_gem_object *gobj = NULL;
->         struct virtio_gpu_object *qobj = NULL;
->         struct virtio_gpu_fence *fence;
-> @@ -370,10 +363,6 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
->         if (ret)
->                 goto out;
->
-> -       ret = ttm_bo_validate(&qobj->tbo, &qobj->placement, &ctx);
-> -       if (unlikely(ret))
-> -               goto out_unres;
-> -
->         convert_to_hw_box(&box, &args->box);
->         if (!vgdev->has_virgl_3d) {
->                 virtio_gpu_cmd_transfer_to_host_2d
-> @@ -389,7 +378,7 @@ static int virtio_gpu_transfer_to_host_ioctl(struct drm_device *dev, void *data,
->                         (vgdev, qobj,
->                          vfpriv ? vfpriv->ctx_id : 0, offset,
->                          args->level, &box, fence);
-> -               reservation_object_add_excl_fence(qobj->tbo.resv,
-> +               reservation_object_add_excl_fence(qobj->base.base.resv,
->                                                   &fence->f);
->                 dma_fence_put(&fence->f);
->         }
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> index 84b6a6bf00c6..0bc6abaeafca 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> @@ -171,12 +171,6 @@ int virtio_gpu_init(struct drm_device *dev)
->                 goto err_vbufs;
->         }
->
-> -       ret = virtio_gpu_ttm_init(vgdev);
-> -       if (ret) {
-> -               DRM_ERROR("failed to init ttm %d\n", ret);
-> -               goto err_ttm;
-> -       }
-> -
->         /* get display info */
->         virtio_cread(vgdev->vdev, struct virtio_gpu_config,
->                      num_scanouts, &num_scanouts);
-> @@ -208,8 +202,6 @@ int virtio_gpu_init(struct drm_device *dev)
->         return 0;
->
->  err_scanouts:
-> -       virtio_gpu_ttm_fini(vgdev);
-> -err_ttm:
->         virtio_gpu_free_vbufs(vgdev);
->  err_vbufs:
->         vgdev->vdev->config->del_vqs(vgdev->vdev);
-> @@ -240,7 +232,6 @@ void virtio_gpu_deinit(struct drm_device *dev)
->         vgdev->vdev->config->del_vqs(vgdev->vdev);
->
->         virtio_gpu_modeset_fini(vgdev);
-> -       virtio_gpu_ttm_fini(vgdev);
->         virtio_gpu_free_vbufs(vgdev);
->         virtio_gpu_cleanup_cap_cache(vgdev);
->         kfree(vgdev->capsets);
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index 2902487f051a..fb9d05a68f4c 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -23,8 +23,6 @@
->   * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
->   */
->
-> -#include <drm/ttm/ttm_execbuf_util.h>
-> -
->  #include "virtgpu_drv.h"
->
->  static int virtio_gpu_resource_id_get(struct virtio_gpu_device *vgdev,
-> @@ -57,39 +55,45 @@ static void virtio_gpu_resource_id_put(struct virtio_gpu_device *vgdev, uint32_t
->  #endif
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+> Changess from v3:
+>  - Use ios.power_mode to validate if the card is power down or not.
+> 
+> Changes from v2:
+>  - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
+> 
+> Changes from v1:
+>  - Add a specific reset operation instead of changing the core to avoid
+>  affecting other hardware.
+> ---
+>  drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> index 603a5d9..94f9726 100644
+> --- a/drivers/mmc/host/sdhci-sprd.c
+> +++ b/drivers/mmc/host/sdhci-sprd.c
+> @@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+>  	return 1 << 31;
 >  }
->
-> -static void virtio_gpu_ttm_bo_destroy(struct ttm_buffer_object *tbo)
-> +static void virtio_gpu_free_object(struct drm_gem_object *obj)
->  {
-> -       struct virtio_gpu_object *bo;
-> -       struct virtio_gpu_device *vgdev;
-> -
-> -       bo = container_of(tbo, struct virtio_gpu_object, tbo);
-> -       vgdev = (struct virtio_gpu_device *)bo->gem_base.dev->dev_private;
-> +       struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-> +       struct virtio_gpu_device *vgdev = bo->base.base.dev->dev_private;
->
-> +       if (bo->pages)
-> +               virtio_gpu_object_detach(vgdev, bo);
->         if (bo->created)
->                 virtio_gpu_cmd_unref_resource(vgdev, bo->hw_res_handle);
-> -       if (bo->pages)
-> -               virtio_gpu_object_free_sg_table(bo);
-> -       if (bo->vmap)
-> -               virtio_gpu_object_kunmap(bo);
-> -       drm_gem_object_release(&bo->gem_base);
->         virtio_gpu_resource_id_put(vgdev, bo->hw_res_handle);
-> -       kfree(bo);
+>  
+> +static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	struct mmc_host *mmc = host->mmc;
 > +
-> +       drm_gem_shmem_free_object(obj);
->  }
->
-> -static void virtio_gpu_init_ttm_placement(struct virtio_gpu_object *vgbo)
-> +static const struct drm_gem_object_funcs virtio_gpu_gem_funcs = {
-> +       .free = virtio_gpu_free_object,
-> +       .open = virtio_gpu_gem_object_open,
-> +       .close = virtio_gpu_gem_object_close,
+> +	/*
+> +	 * When try to reset controller after runtime suspend, we should not
+> +	 * reset for all if the SD/eMMC card is not power down, just reset
+> +	 * command and data lines instead. Otherwise will meet some strange
+> +	 * behaviors for Spreadtrum host controller.
+> +	 */
+> +	if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
+> +	    mmc->ios.power_mode == MMC_POWER_ON)
+> +		mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
 > +
-> +       .print_info = drm_gem_shmem_print_info,
-> +       .pin = drm_gem_shmem_pin,
-> +       .unpin = drm_gem_shmem_unpin,
-> +       .get_sg_table = drm_gem_shmem_get_sg_table,
-> +       .vmap = drm_gem_shmem_vmap,
-> +       .vunmap = drm_gem_shmem_vunmap,
-> +       .vm_ops = &drm_gem_shmem_vm_ops,
-> +};
+> +	sdhci_reset(host, mask);
+> +}
 > +
-> +struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
-> +                                               size_t size)
->  {
-> -       u32 c = 1;
-> +       struct virtio_gpu_object *bo;
->
-> -       vgbo->placement.placement = &vgbo->placement_code;
-> -       vgbo->placement.busy_placement = &vgbo->placement_code;
-> -       vgbo->placement_code.fpfn = 0;
-> -       vgbo->placement_code.lpfn = 0;
-> -       vgbo->placement_code.flags =
-> -               TTM_PL_MASK_CACHING | TTM_PL_FLAG_TT |
-> -               TTM_PL_FLAG_NO_EVICT;
-> -       vgbo->placement.num_placement = c;
-> -       vgbo->placement.num_busy_placement = c;
-> +       bo = kzalloc(sizeof(*bo), GFP_KERNEL);
-> +       if (!bo)
-> +               return NULL;
->
-> +       bo->base.base.funcs = &virtio_gpu_gem_funcs;
-> +       return &bo->base.base;
->  }
->
->  int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
-> @@ -98,27 +102,22 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->                              struct virtio_gpu_fence *fence)
->  {
->         struct virtio_gpu_object_array *objs = NULL;
-> +       struct drm_gem_shmem_object *shmem_obj;
->         struct virtio_gpu_object *bo;
-> -       size_t acc_size;
->         int ret;
->
->         *bo_ptr = NULL;
->
-> -       acc_size = ttm_bo_dma_acc_size(&vgdev->mman.bdev, params->size,
-> -                                      sizeof(struct virtio_gpu_object));
-> +       params->size = roundup(params->size, PAGE_SIZE);
-> +       shmem_obj = drm_gem_shmem_create(vgdev->ddev, params->size);
-> +       if (IS_ERR(shmem_obj))
-> +               return PTR_ERR(shmem_obj);
-> +       bo = gem_to_virtio_gpu_obj(&shmem_obj->base);
->
-> -       bo = kzalloc(sizeof(struct virtio_gpu_object), GFP_KERNEL);
-> -       if (bo == NULL)
-> -               return -ENOMEM;
->         ret = virtio_gpu_resource_id_get(vgdev, &bo->hw_res_handle);
->         if (ret < 0)
->                 goto err_free_gem;
->
-> -       params->size = roundup(params->size, PAGE_SIZE);
-> -       ret = drm_gem_object_init(vgdev->ddev, &bo->gem_base, params->size);
-> -       if (ret != 0)
-> -               goto err_put_id;
-> -
->         bo->dumb = params->dumb;
->
->         if (fence) {
-> @@ -126,7 +125,7 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->                 objs = virtio_gpu_array_alloc(1);
->                 if (!objs)
->                         goto err_put_id;
-> -               virtio_gpu_array_add_obj(objs, &bo->gem_base);
-> +               virtio_gpu_array_add_obj(objs, &bo->base.base);
->
->                 ret = virtio_gpu_array_lock_resv(objs);
->                 if (ret != 0)
-> @@ -141,15 +140,11 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->                                                objs, fence);
->         }
->
-> -       virtio_gpu_init_ttm_placement(bo);
-> -       ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
-> -                         ttm_bo_type_device, &bo->placement, 0,
-> -                         true, acc_size, NULL,
-> -                         bo->gem_base.resv,
-> -                         &virtio_gpu_ttm_bo_destroy);
-> -       /* ttm_bo_init failure will call the destroy */
-> -       if (ret != 0)
-> +       ret = virtio_gpu_object_attach(vgdev, bo, NULL);
-> +       if (ret != 0) {
-> +               virtio_gpu_free_object(&shmem_obj->base);
->                 return ret;
-> +       }
->
->         *bo_ptr = bo;
->         return 0;
-> @@ -159,65 +154,6 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
->  err_put_id:
->         virtio_gpu_resource_id_put(vgdev, bo->hw_res_handle);
->  err_free_gem:
-> -       kfree(bo);
-> +       drm_gem_shmem_free_object(&shmem_obj->base);
->         return ret;
->  }
-> -
-> -void virtio_gpu_object_kunmap(struct virtio_gpu_object *bo)
-> -{
-> -       bo->vmap = NULL;
-> -       ttm_bo_kunmap(&bo->kmap);
-> -}
-> -
-> -int virtio_gpu_object_kmap(struct virtio_gpu_object *bo)
-> -{
-> -       bool is_iomem;
-> -       int r;
-> -
-> -       WARN_ON(bo->vmap);
-> -
-> -       r = ttm_bo_kmap(&bo->tbo, 0, bo->tbo.num_pages, &bo->kmap);
-> -       if (r)
-> -               return r;
-> -       bo->vmap = ttm_kmap_obj_virtual(&bo->kmap, &is_iomem);
-> -       return 0;
-> -}
-> -
-> -int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
-> -                                  struct virtio_gpu_object *bo)
-> -{
-> -       int ret;
-> -       struct page **pages = bo->tbo.ttm->pages;
-> -       int nr_pages = bo->tbo.num_pages;
-> -       struct ttm_operation_ctx ctx = {
-> -               .interruptible = false,
-> -               .no_wait_gpu = false
-> -       };
-> -
-> -       /* wtf swapping */
-> -       if (bo->pages)
-> -               return 0;
-> -
-> -       if (bo->tbo.ttm->state == tt_unpopulated)
-> -               bo->tbo.ttm->bdev->driver->ttm_tt_populate(bo->tbo.ttm, &ctx);
-> -       bo->pages = kmalloc(sizeof(struct sg_table), GFP_KERNEL);
-> -       if (!bo->pages)
-> -               goto out;
-> -
-> -       ret = sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
-> -                                       nr_pages << PAGE_SHIFT, GFP_KERNEL);
-> -       if (ret)
-> -               goto out;
-> -       return 0;
-> -out:
-> -       kfree(bo->pages);
-> -       bo->pages = NULL;
-> -       return -ENOMEM;
-> -}
-> -
-> -void virtio_gpu_object_free_sg_table(struct virtio_gpu_object *bo)
-> -{
-> -       sg_free_table(bo->pages);
-> -       kfree(bo->pages);
-> -       bo->pages = NULL;
-> -}
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-> index 8fbf71bd0c5e..18a155cd08d5 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-> @@ -28,46 +28,9 @@
->   * device that might share buffers with virtgpu
->   */
->
-> -struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
-> -{
-> -       struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-> -
-> -       if (!bo->tbo.ttm->pages || !bo->tbo.ttm->num_pages)
-> -               /* should not happen */
-> -               return ERR_PTR(-EINVAL);
-> -
-> -       return drm_prime_pages_to_sg(bo->tbo.ttm->pages,
-> -                                    bo->tbo.ttm->num_pages);
-> -}
-> -
->  struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
->         struct drm_device *dev, struct dma_buf_attachment *attach,
->         struct sg_table *table)
->  {
->         return ERR_PTR(-ENODEV);
->  }
-> -
-> -void *virtgpu_gem_prime_vmap(struct drm_gem_object *obj)
-> -{
-> -       struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-> -       int ret;
-> -
-> -       ret = virtio_gpu_object_kmap(bo);
-> -       if (ret)
-> -               return NULL;
-> -       return bo->vmap;
-> -}
-> -
-> -void virtgpu_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr)
-> -{
-> -       virtio_gpu_object_kunmap(gem_to_virtio_gpu_obj(obj));
-> -}
-> -
-> -int virtgpu_gem_prime_mmap(struct drm_gem_object *obj,
-> -                          struct vm_area_struct *vma)
-> -{
-> -       struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-> -
-> -       bo->gem_base.vma_node.vm_node.start = bo->tbo.vma_node.vm_node.start;
-> -       return drm_gem_prime_mmap(obj, vma);
-> -}
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_ttm.c b/drivers/gpu/drm/virtio/virtgpu_ttm.c
-> deleted file mode 100644
-> index 300ef3a83538..000000000000
-> --- a/drivers/gpu/drm/virtio/virtgpu_ttm.c
-> +++ /dev/null
-> @@ -1,304 +0,0 @@
-> -/*
-> - * Copyright (C) 2015 Red Hat, Inc.
-> - * All Rights Reserved.
-> - *
-> - * Authors:
-> - *    Dave Airlie
-> - *    Alon Levy
-> - *
-> - * Permission is hereby granted, free of charge, to any person obtaining a
-> - * copy of this software and associated documentation files (the "Software"),
-> - * to deal in the Software without restriction, including without limitation
-> - * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-> - * and/or sell copies of the Software, and to permit persons to whom the
-> - * Software is furnished to do so, subject to the following conditions:
-> - *
-> - * The above copyright notice and this permission notice shall be included in
-> - * all copies or substantial portions of the Software.
-> - *
-> - * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> - * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> - * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-> - * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
-> - * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-> - * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> - * OTHER DEALINGS IN THE SOFTWARE.
-> - */
-> -
-> -#include <drm/ttm/ttm_bo_api.h>
-> -#include <drm/ttm/ttm_bo_driver.h>
-> -#include <drm/ttm/ttm_placement.h>
-> -#include <drm/ttm/ttm_page_alloc.h>
-> -#include <drm/ttm/ttm_module.h>
-> -#include <drm/drmP.h>
-> -#include <drm/drm.h>
-> -#include <drm/virtgpu_drm.h>
-> -#include "virtgpu_drv.h"
-> -
-> -#include <linux/delay.h>
-> -
-> -static struct
-> -virtio_gpu_device *virtio_gpu_get_vgdev(struct ttm_bo_device *bdev)
-> -{
-> -       struct virtio_gpu_mman *mman;
-> -       struct virtio_gpu_device *vgdev;
-> -
-> -       mman = container_of(bdev, struct virtio_gpu_mman, bdev);
-> -       vgdev = container_of(mman, struct virtio_gpu_device, mman);
-> -       return vgdev;
-> -}
-> -
-> -int virtio_gpu_mmap(struct file *filp, struct vm_area_struct *vma)
-> -{
-> -       struct drm_file *file_priv;
-> -       struct virtio_gpu_device *vgdev;
-> -       int r;
-> -
-> -       file_priv = filp->private_data;
-> -       vgdev = file_priv->minor->dev->dev_private;
-> -       if (vgdev == NULL) {
-> -               DRM_ERROR(
-> -                "filp->private_data->minor->dev->dev_private == NULL\n");
-> -               return -EINVAL;
-> -       }
-> -       r = ttm_bo_mmap(filp, vma, &vgdev->mman.bdev);
-> -
-> -       return r;
-> -}
-> -
-> -static int virtio_gpu_invalidate_caches(struct ttm_bo_device *bdev,
-> -                                       uint32_t flags)
-> -{
-> -       return 0;
-> -}
-> -
-> -static int ttm_bo_man_get_node(struct ttm_mem_type_manager *man,
-> -                              struct ttm_buffer_object *bo,
-> -                              const struct ttm_place *place,
-> -                              struct ttm_mem_reg *mem)
-> -{
-> -       mem->mm_node = (void *)1;
-> -       return 0;
-> -}
-> -
-> -static void ttm_bo_man_put_node(struct ttm_mem_type_manager *man,
-> -                               struct ttm_mem_reg *mem)
-> -{
-> -       mem->mm_node = (void *)NULL;
-> -}
-> -
-> -static int ttm_bo_man_init(struct ttm_mem_type_manager *man,
-> -                          unsigned long p_size)
-> -{
-> -       return 0;
-> -}
-> -
-> -static int ttm_bo_man_takedown(struct ttm_mem_type_manager *man)
-> -{
-> -       return 0;
-> -}
-> -
-> -static void ttm_bo_man_debug(struct ttm_mem_type_manager *man,
-> -                            struct drm_printer *printer)
-> -{
-> -}
-> -
-> -static const struct ttm_mem_type_manager_func virtio_gpu_bo_manager_func = {
-> -       .init = ttm_bo_man_init,
-> -       .takedown = ttm_bo_man_takedown,
-> -       .get_node = ttm_bo_man_get_node,
-> -       .put_node = ttm_bo_man_put_node,
-> -       .debug = ttm_bo_man_debug
-> -};
-> -
-> -static int virtio_gpu_init_mem_type(struct ttm_bo_device *bdev, uint32_t type,
-> -                                   struct ttm_mem_type_manager *man)
-> -{
-> -       switch (type) {
-> -       case TTM_PL_SYSTEM:
-> -               /* System memory */
-> -               man->flags = TTM_MEMTYPE_FLAG_MAPPABLE;
-> -               man->available_caching = TTM_PL_MASK_CACHING;
-> -               man->default_caching = TTM_PL_FLAG_CACHED;
-> -               break;
-> -       case TTM_PL_TT:
-> -               man->func = &virtio_gpu_bo_manager_func;
-> -               man->flags = TTM_MEMTYPE_FLAG_MAPPABLE;
-> -               man->available_caching = TTM_PL_MASK_CACHING;
-> -               man->default_caching = TTM_PL_FLAG_CACHED;
-> -               break;
-> -       default:
-> -               DRM_ERROR("Unsupported memory type %u\n", (unsigned int)type);
-> -               return -EINVAL;
-> -       }
-> -       return 0;
-> -}
-> -
-> -static void virtio_gpu_evict_flags(struct ttm_buffer_object *bo,
-> -                               struct ttm_placement *placement)
-> -{
-> -       static const struct ttm_place placements = {
-> -               .fpfn  = 0,
-> -               .lpfn  = 0,
-> -               .flags = TTM_PL_MASK_CACHING | TTM_PL_FLAG_SYSTEM,
-> -       };
-> -
-> -       placement->placement = &placements;
-> -       placement->busy_placement = &placements;
-> -       placement->num_placement = 1;
-> -       placement->num_busy_placement = 1;
-> -}
-> -
-> -static int virtio_gpu_verify_access(struct ttm_buffer_object *bo,
-> -                                   struct file *filp)
-> -{
-> -       return 0;
-> -}
-> -
-> -static int virtio_gpu_ttm_io_mem_reserve(struct ttm_bo_device *bdev,
-> -                                        struct ttm_mem_reg *mem)
-> -{
-> -       struct ttm_mem_type_manager *man = &bdev->man[mem->mem_type];
-> -
-> -       mem->bus.addr = NULL;
-> -       mem->bus.offset = 0;
-> -       mem->bus.size = mem->num_pages << PAGE_SHIFT;
-> -       mem->bus.base = 0;
-> -       mem->bus.is_iomem = false;
-> -       if (!(man->flags & TTM_MEMTYPE_FLAG_MAPPABLE))
-> -               return -EINVAL;
-> -       switch (mem->mem_type) {
-> -       case TTM_PL_SYSTEM:
-> -       case TTM_PL_TT:
-> -               /* system memory */
-> -               return 0;
-> -       default:
-> -               return -EINVAL;
-> -       }
-> -       return 0;
-> -}
-> -
-> -static void virtio_gpu_ttm_io_mem_free(struct ttm_bo_device *bdev,
-> -                                      struct ttm_mem_reg *mem)
-> -{
-> -}
-> -
-> -/*
-> - * TTM backend functions.
-> - */
-> -struct virtio_gpu_ttm_tt {
-> -       struct ttm_dma_tt               ttm;
-> -       struct virtio_gpu_object        *obj;
-> -};
-> -
-> -static int virtio_gpu_ttm_tt_bind(struct ttm_tt *ttm,
-> -                                 struct ttm_mem_reg *bo_mem)
-> -{
-> -       struct virtio_gpu_ttm_tt *gtt =
-> -               container_of(ttm, struct virtio_gpu_ttm_tt, ttm.ttm);
-> -       struct virtio_gpu_device *vgdev =
-> -               virtio_gpu_get_vgdev(gtt->obj->tbo.bdev);
-> -
-> -       virtio_gpu_object_attach(vgdev, gtt->obj, NULL);
-> -       return 0;
-> -}
-> -
-> -static int virtio_gpu_ttm_tt_unbind(struct ttm_tt *ttm)
-> -{
-> -       struct virtio_gpu_ttm_tt *gtt =
-> -               container_of(ttm, struct virtio_gpu_ttm_tt, ttm.ttm);
-> -       struct virtio_gpu_device *vgdev =
-> -               virtio_gpu_get_vgdev(gtt->obj->tbo.bdev);
-> -
-> -       virtio_gpu_object_detach(vgdev, gtt->obj);
-> -       return 0;
-> -}
-> -
-> -static void virtio_gpu_ttm_tt_destroy(struct ttm_tt *ttm)
-> -{
-> -       struct virtio_gpu_ttm_tt *gtt =
-> -               container_of(ttm, struct virtio_gpu_ttm_tt, ttm.ttm);
-> -
-> -       ttm_dma_tt_fini(&gtt->ttm);
-> -       kfree(gtt);
-> -}
-> -
-> -static struct ttm_backend_func virtio_gpu_tt_func = {
-> -       .bind = &virtio_gpu_ttm_tt_bind,
-> -       .unbind = &virtio_gpu_ttm_tt_unbind,
-> -       .destroy = &virtio_gpu_ttm_tt_destroy,
-> -};
-> -
-> -static struct ttm_tt *virtio_gpu_ttm_tt_create(struct ttm_buffer_object *bo,
-> -                                              uint32_t page_flags)
-> -{
-> -       struct virtio_gpu_device *vgdev;
-> -       struct virtio_gpu_ttm_tt *gtt;
-> -
-> -       vgdev = virtio_gpu_get_vgdev(bo->bdev);
-> -       gtt = kzalloc(sizeof(struct virtio_gpu_ttm_tt), GFP_KERNEL);
-> -       if (gtt == NULL)
-> -               return NULL;
-> -       gtt->ttm.ttm.func = &virtio_gpu_tt_func;
-> -       gtt->obj = container_of(bo, struct virtio_gpu_object, tbo);
-> -       if (ttm_dma_tt_init(&gtt->ttm, bo, page_flags)) {
-> -               kfree(gtt);
-> -               return NULL;
-> -       }
-> -       return &gtt->ttm.ttm;
-> -}
-> -
-> -static void virtio_gpu_bo_swap_notify(struct ttm_buffer_object *tbo)
-> -{
-> -       struct virtio_gpu_object *bo;
-> -
-> -       bo = container_of(tbo, struct virtio_gpu_object, tbo);
-> -
-> -       if (bo->pages)
-> -               virtio_gpu_object_free_sg_table(bo);
-> -}
-> -
-> -static struct ttm_bo_driver virtio_gpu_bo_driver = {
-> -       .ttm_tt_create = &virtio_gpu_ttm_tt_create,
-> -       .invalidate_caches = &virtio_gpu_invalidate_caches,
-> -       .init_mem_type = &virtio_gpu_init_mem_type,
-> -       .eviction_valuable = ttm_bo_eviction_valuable,
-> -       .evict_flags = &virtio_gpu_evict_flags,
-> -       .verify_access = &virtio_gpu_verify_access,
-> -       .io_mem_reserve = &virtio_gpu_ttm_io_mem_reserve,
-> -       .io_mem_free = &virtio_gpu_ttm_io_mem_free,
-> -       .swap_notify = &virtio_gpu_bo_swap_notify,
-> -};
-> -
-> -int virtio_gpu_ttm_init(struct virtio_gpu_device *vgdev)
-> -{
-> -       int r;
-> -
-> -       /* No others user of address space so set it to 0 */
-> -       r = ttm_bo_device_init(&vgdev->mman.bdev,
-> -                              &virtio_gpu_bo_driver,
-> -                              vgdev->ddev->anon_inode->i_mapping,
-> -                              false);
-> -       if (r) {
-> -               DRM_ERROR("failed initializing buffer object driver(%d).\n", r);
-> -               goto err_dev_init;
-> -       }
-> -
-> -       r = ttm_bo_init_mm(&vgdev->mman.bdev, TTM_PL_TT, 0);
-> -       if (r) {
-> -               DRM_ERROR("Failed initializing GTT heap.\n");
-> -               goto err_mm_init;
-> -       }
-> -       return 0;
-> -
-> -err_mm_init:
-> -       ttm_bo_device_release(&vgdev->mman.bdev);
-> -err_dev_init:
-> -       return r;
-> -}
-> -
-> -void virtio_gpu_ttm_fini(struct virtio_gpu_device *vgdev)
-> -{
-> -       ttm_bo_device_release(&vgdev->mman.bdev);
-> -       DRM_INFO("virtio_gpu: ttm finalized\n");
-> -}
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 03b7e0845d98..fc908d5cb217 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -979,17 +979,21 @@ int virtio_gpu_object_attach(struct virtio_gpu_device *vgdev,
->         bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
->         struct virtio_gpu_mem_entry *ents;
->         struct scatterlist *sg;
-> -       int si, nents;
-> +       int si, nents, ret;
->
->         if (WARN_ON_ONCE(!obj->created))
->                 return -EINVAL;
-> +       if (WARN_ON_ONCE(obj->pages))
-> +               return -EINVAL;
->
-> -       if (!obj->pages) {
-> -               int ret;
-> +       ret = drm_gem_shmem_pin(&obj->base.base);
-> +       if (ret < 0)
-> +               return -EINVAL;
->
-> -               ret = virtio_gpu_object_get_sg_table(vgdev, obj);
-> -               if (ret)
-> -                       return ret;
-> +       obj->pages = drm_gem_shmem_get_sg_table(&obj->base.base);
-> +       if (obj->pages == NULL) {
-> +               drm_gem_shmem_unpin(&obj->base.base);
-> +               return -EINVAL;
->         }
->
->         if (use_dma_api) {
-> @@ -1028,6 +1032,9 @@ void virtio_gpu_object_detach(struct virtio_gpu_device *vgdev,
->  {
->         bool use_dma_api = !virtio_has_iommu_quirk(vgdev->vdev);
->
-> +       if (WARN_ON_ONCE(!obj->pages))
-> +               return;
-> +
->         if (use_dma_api && obj->mapped) {
->                 struct virtio_gpu_fence *fence = virtio_gpu_fence_alloc(vgdev);
->                 /* detach backing and wait for the host process it ... */
-> @@ -1043,6 +1050,11 @@ void virtio_gpu_object_detach(struct virtio_gpu_device *vgdev,
->         } else {
->                 virtio_gpu_cmd_resource_inval_backing(vgdev, obj->hw_res_handle, NULL);
->         }
-> +
-> +       sg_free_table(obj->pages);
-> +       obj->pages = NULL;
-> +
-> +       drm_gem_shmem_unpin(&obj->base.base);
->  }
->
->  void virtio_gpu_cursor_ping(struct virtio_gpu_device *vgdev,
-> diff --git a/drivers/gpu/drm/virtio/Kconfig b/drivers/gpu/drm/virtio/Kconfig
-> index ba36e933bb49..eff3047052d4 100644
-> --- a/drivers/gpu/drm/virtio/Kconfig
-> +++ b/drivers/gpu/drm/virtio/Kconfig
-> @@ -3,7 +3,7 @@ config DRM_VIRTIO_GPU
->         tristate "Virtio GPU driver"
->         depends on DRM && VIRTIO && MMU
->         select DRM_KMS_HELPER
-> -       select DRM_TTM
-> +       select DRM_GEM_SHMEM_HELPER
->         help
->            This is the virtual GPU driver for virtio.  It can be used with
->            QEMU based VMMs (like KVM or Xen).
-> diff --git a/drivers/gpu/drm/virtio/Makefile b/drivers/gpu/drm/virtio/Makefile
-> index 458e606a936f..92aa2b3d349d 100644
-> --- a/drivers/gpu/drm/virtio/Makefile
-> +++ b/drivers/gpu/drm/virtio/Makefile
-> @@ -4,7 +4,7 @@
->  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
->
->  virtio-gpu-y := virtgpu_drv.o virtgpu_kms.o virtgpu_gem.o \
-> -       virtgpu_display.o virtgpu_vq.o virtgpu_ttm.o \
-> +       virtgpu_display.o virtgpu_vq.o \
->         virtgpu_fence.o virtgpu_object.o virtgpu_debugfs.o virtgpu_plane.o \
->         virtgpu_ioctl.o virtgpu_prime.o virtgpu_trace_points.o
->
-> --
-> 2.18.1
->
+>  static struct sdhci_ops sdhci_sprd_ops = {
+>  	.read_l = sdhci_sprd_readl,
+>  	.write_l = sdhci_sprd_writel,
+> @@ -381,7 +398,7 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+>  	.get_max_clock = sdhci_sprd_get_max_clock,
+>  	.get_min_clock = sdhci_sprd_get_min_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
+> -	.reset = sdhci_reset,
+> +	.reset = sdhci_sprd_reset,
+>  	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+>  	.hw_reset = sdhci_sprd_hw_reset,
+>  	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+> 
+
