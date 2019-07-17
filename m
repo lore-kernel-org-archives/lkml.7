@@ -2,177 +2,257 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04517C76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FD4C76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D2820818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71ED620818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="IlHYoGDp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUqM3qYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfGQC3I (ORCPT
+        id S1727974AbfGQCac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:29:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43158 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727072AbfGQC3H (ORCPT
+        Tue, 16 Jul 2019 22:30:32 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35344 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfGQCab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:29:07 -0400
-Received: by mail-ot1-f67.google.com with SMTP id h59so19459503otb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 19:29:06 -0700 (PDT)
+        Tue, 16 Jul 2019 22:30:31 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so21822458qto.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 19:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xha1gnu4k9Oy72ln0mL+F+SQtEp2dX0Dej1VFn9Byxc=;
-        b=IlHYoGDprQ1xOzWMqON3a05nzYhFYMAfYY+PzndVmhk+L5azjE63rLAzWHCaDuwu8R
-         Of4UQD6V2fJDBr9UCq/ZdnKPYgszELTUmF3dTGaKdC3LSbIfV2C/1F2jg8QUJMTvVQ2k
-         PgTpQkgwGckGmJQvv+25I++JVfaO/COZAuj6W2UV5YeHvst26QRmfYJ79mYf0NjZKieV
-         ovsu2HS+gICuc4kfGK5XDCcJI3pCe8z5+0QrXrt93xDSOIcUTlxxoCstyUToYXmtsDro
-         662tsiQbhTYvFUo4yuYzMaURJwgFGLUf3W4Hv2qzgg/iIGG1omBV0rG5wK2641XjyzjH
-         rWsw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YA8lAAAs8QKJaZT6FgrXTDQyRFELqwwXAnvE6DYcrwo=;
+        b=jUqM3qYMZZMW9/ukdmhyypFlzErDXK17HLvVFp30vzHZdthvv+iO0s9lyIV/rGVPqr
+         JBM0uE5gctX59YzlfaoaOCLumfIyAEOUemNySjDWg1k0Q+ciyd/Uar+SuWXLLZWACU23
+         agMYZ59E7FL/gYr7PynzaiVjKQfGs8OO9PmVOOFsNXMCPspk9518riVDU+icSptb+gAt
+         jmhw/TrMfvKtydIt85yWi5vp3jJKjq61iXH56JcSSYGbNPF4KK6/RxoiihadMJ0TYPY1
+         M0dYmJrF3c3ZXkW8nyrczl/w10EIh8Bh2djARwzspOpQVzTJoBQuxvTUyRkXAg7uOiLj
+         gYxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xha1gnu4k9Oy72ln0mL+F+SQtEp2dX0Dej1VFn9Byxc=;
-        b=ML0UNf2STjvyaBQ9W6d4tqxTabki66Mm+lDVlS9vI5FvYZ4xF6RFBRgOfLiqOtuU40
-         EEvFvk5fTa11879GVrkBD21t+KbF9H3xiTjlQbGjwIeQPmTQfHjaXAcjvLb7Ol0GXvZh
-         KwshEHstAkO7qadn5aLwyucv59Lzid5X2TIgYGMfVRX2NvQ0m7q5fBqnVelK5l5qZfpS
-         Me399v1El9CqBqMGfML8fG8ZJ//BdasQJ2R3yF+ZTr9lxmQ9x8N98nZ33vZu0gBVGC+D
-         /TCPgsIf8B/j8IT7JW3XuhYv8GxFQ598RqJJEDHl1lAUCvTQxN4xmk9EckT/UTN2gxZH
-         fEUw==
-X-Gm-Message-State: APjAAAXw4BnWQ9Ub5D5XWN9BGvD+gjpsp9A5QEDIRrfuzEt+N45l4/vW
-        mIincQFr3NbmvIebfvGHIM1A42Lod5wo25l6XpfMwA==
-X-Google-Smtp-Source: APXvYqxMaFQwJqNDONSbr/N/VaB8L20422JmTVZPiPqGIb8xJFeJh37HfCl+fOz5CxTOl3NTc8LlU1vZPBemm3j1mKI=
-X-Received: by 2002:a9d:470d:: with SMTP id a13mr26898798otf.126.1563330546010;
- Tue, 16 Jul 2019 19:29:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YA8lAAAs8QKJaZT6FgrXTDQyRFELqwwXAnvE6DYcrwo=;
+        b=uk/EvfRBGKYNO20lidP1lXht+3+Eiby7xYmU/BiZ1IrK7wIhz2Ws7Wc/Eax0dOFm6P
+         VyRPvf/vOPBsviP5UEAr53gxfBrFdIxflmiRgsSDqnwxuWCeHwhd3CgulUdNzgvpG3MR
+         wcxxQQSxXA3As2ma/e0WRrrjOKLHdt0KXpKPG9ZH1jrP+vgTmIrsFXl5OTFnwaZ07LrQ
+         OxJhIeZn8QhbjX5c18o77JSIi3sg710biAVr1l1+u9zgJTncvw16wXB6yMOIGK+mX+ql
+         SctdRBmOBgGBQcmem2GfcVwr+ZzSGvwmY++2x0sSguwMj98nQkQhm2cXS0MoqM3bxTJ7
+         5k/A==
+X-Gm-Message-State: APjAAAVsdFckFPwwlCFv5UHYHkajbnKNV7Gkz7Oi/+e53vLPfw8up6YJ
+        sFLA3t9O+bY1u2+3knCkwA8=
+X-Google-Smtp-Source: APXvYqxx50eEWuRi6UIQAIJ2BOEUS8tFyRQsai0lR4punJyDFOH1UVjLXqxBvxYFGT6YNKkSRT1MBw==
+X-Received: by 2002:a0c:8a76:: with SMTP id 51mr26976107qvu.210.1563330630560;
+        Tue, 16 Jul 2019 19:30:30 -0700 (PDT)
+Received: from smtp.gmail.com ([187.121.151.22])
+        by smtp.gmail.com with ESMTPSA id b202sm10257728qkg.83.2019.07.16.19.30.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Jul 2019 19:30:29 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 23:30:24 -0300
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
+Message-ID: <20190717023024.svpgfbzgund2awfw@smtp.gmail.com>
+References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
+ <20190711082105.GI15868@phenom.ffwll.local>
+ <20190712031449.3pmeimkcde2hrxxh@smtp.gmail.com>
+ <20190716083715.GT15868@phenom.ffwll.local>
 MIME-Version: 1.0
-References: <20190715081549.32577-1-osalvador@suse.de> <20190715081549.32577-3-osalvador@suse.de>
- <87tvbne0rd.fsf@linux.ibm.com> <1563225851.3143.24.camel@suse.de>
-In-Reply-To: <1563225851.3143.24.camel@suse.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Jul 2019 19:28:54 -0700
-Message-ID: <CAPcyv4gp18-CRADqrqAbR0SnjKBoPaTyL_oaEyyNPJOeLybayg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: Fix shrink_{zone,node}_span
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qp4bmywubblpnone"
+Content-Disposition: inline
+In-Reply-To: <20190716083715.GT15868@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 2:24 PM Oscar Salvador <osalvador@suse.de> wrote:
->
-> On Mon, 2019-07-15 at 21:41 +0530, Aneesh Kumar K.V wrote:
-> > Oscar Salvador <osalvador@suse.de> writes:
-> >
-> > > Since [1], shrink_{zone,node}_span work on PAGES_PER_SUBSECTION
-> > > granularity.
-> > > The problem is that deactivation of the section occurs later on in
-> > > sparse_remove_section, so pfn_valid()->pfn_section_valid() will
-> > > always return
-> > > true before we deactivate the {sub}section.
-> >
-> > Can you explain this more? The patch doesn't update section_mem_map
-> > update sequence. So what changed? What is the problem in finding
-> > pfn_valid() return true there?
->
-> I realized that the changelog was quite modest, so a better explanation
->  will follow.
->
-> Let us analize what shrink_{zone,node}_span does.
-> We have to remember that shrink_zone_span gets called every time a
-> section is to be removed.
->
-> There can be three possibilites:
->
-> 1) section to be removed is the first one of the zone
-> 2) section to be removed is the last one of the zone
-> 3) section to be removed falls in the middle
->
-> For 1) and 2) cases, we will try to find the next section from
-> bottom/top, and in the third case we will check whether the section
-> contains only holes.
->
-> Now, let us take the example where a ZONE contains only 1 section, and
-> we remove it.
-> The last loop of shrink_zone_span, will check for {start_pfn,end_pfn]
-> PAGES_PER_SECTION block the following:
->
-> - section is valid
-> - pfn relates to the current zone/nid
-> - section is not the section to be removed
->
-> Since we only got 1 section here, the check "start_pfn == pfn" will make us to continue the loop and then we are done.
->
-> Now, what happens after the patch?
->
-> We increment pfn on subsection basis, since "start_pfn == pfn", we jump
-> to the next sub-section (pfn+512), and call pfn_valid()-
-> >pfn_section_valid().
-> Since section has not been yet deactivded, pfn_section_valid() will
-> return true, and we will repeat this until the end of the loop.
->
-> What should happen instead is:
->
-> - we deactivate the {sub}-section before calling
-> shirnk_{zone,node}_span
-> - calls to pfn_valid() will now return false for the sections that have
-> been deactivated, and so we will get the pfn from the next activaded
-> sub-section, or nothing if the section is empty (section do not contain
-> active sub-sections).
->
-> The example relates to the last loop in shrink_zone_span, but the same
-> applies to find_{smalles,biggest}_section.
->
-> Please, note that we could probably do some hack like replacing:
->
-> start_pfn == pfn
->
-> with
->
-> pfn < end_pfn
->
-> But the way to fix this is to 1) deactivate {sub}-section and 2) let
-> shrink_{node,zone}_span find the next active {sub-section}.
->
-> I hope this makes it more clear.
 
-This makes it more clear that the problem is with the "start_pfn ==
-pfn" check relative to subsections, but it does not clarify why it
-needs to clear pfn_valid() before calling shrink_zone_span().
-Sections were not invalidated prior to shrink_zone_span() in the
-pre-subsection implementation and it seems all we need is to keep the
-same semantic. I.e. skip the range that is currently being removed:
+--qp4bmywubblpnone
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 37d49579ac15..b69832db442b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -422,8 +422,8 @@ static void shrink_zone_span(struct zone *zone,
-unsigned long start_pfn,
-                if (page_zone(pfn_to_page(pfn)) != zone)
-                        continue;
+On 07/16, Daniel Vetter wrote:
+> On Fri, Jul 12, 2019 at 12:14:49AM -0300, Rodrigo Siqueira wrote:
+> > On 07/11, Daniel Vetter wrote:
+> > > On Tue, Jun 25, 2019 at 10:38:31PM -0300, Rodrigo Siqueira wrote:
+> > > > The compute_crc() function is responsible for calculating the
+> > > > framebuffer CRC value; due to the XRGB format, this function has to
+> > > > ignore the alpha channel during the CRC computation. Therefore,
+> > > > compute_crc() set zero to the alpha channel directly in the input
+> > > > framebuffer, which is not a problem since this function receives a =
+copy
+> > > > of the original buffer. However, if we want to use this function in=
+ a
+> > > > context without a buffer copy, it will change the initial value. Th=
+is
+> > > > patch makes compute_crc() calculate the CRC value without modifying=
+ the
+> > > > input framebuffer.
+> > >=20
+> > > Uh why? For writeback we're writing the output too, so we can write
+> > > whatever we want to into the alpha channel. For writeback we should n=
+ever
+> > > accept a pixel format where alpha actually matters, that doesn't make
+> > > sense. You can't see through a real screen either, they are all opaqu=
+e :-)
+> > > -Daniel
+> >=20
+> > Hmmm,
+> >=20
+> > I see your point and I agree, but even though we can write whatever we
+> > want in the output, don=E2=80=99t you think that is weird to change the
+> > framebuffer value in the compute_crc() function?
+>=20
+> Not sure what you mean here ... ? From a quick look the memset only sets
+> our temporary buffer, so we're not changing the input framebuffer here.
+> And we have to somehow get rid of the X bits, since there's no alpha
+> value. For CRC computation, all we need is some value which is the same
+> for every frame (so that the CRC stays constant for the same visible
+> output). For writeback we could write whatever we want (which includes
+> whatever is there already). But there's no guarantee and definitely no
+> expectation that the X bits survive. Writing 0 is imo the most reasonable
+> thing to do. I'm not even sure whether modern gpus can still do channel
+> masking (i.e. only write out specific channels, instead of the entire
+> color). That was a "feature" of bitop blitters of the 80s/90s :-)
+> -Daniel
 
--                /* If the section is current section, it continues the loop */
--               if (start_pfn == pfn)
-+                /* If the sub-section is current span being removed, skip */
-+               if (pfn >= start_pfn && pfn < end_pfn)
-                        continue;
+Ahhh, now I can see that my mindset was in the 90s :)
 
-                /* If we find valid section, we have nothing to do */
+Thanks
+=20
+> >=20
+> > Thanks
+> > =20
+> > > >=20
+> > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-------=
+----
+> > > >  1 file changed, 19 insertions(+), 12 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm=
+/vkms/vkms_composer.c
+> > > > index 51a270514219..8126aa0f968f 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > @@ -6,33 +6,40 @@
+> > > >  #include <drm/drm_atomic_helper.h>
+> > > >  #include <drm/drm_gem_framebuffer_helper.h>
+> > > > =20
+> > > > +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
+> > > > +				 const struct vkms_composer *composer)
+> > > > +{
+> > > > +	int src_offset =3D composer->offset + (y * composer->pitch)
+> > > > +					  + (x * composer->cpp);
+> > > > +
+> > > > +	return *(u32 *)&buffer[src_offset];
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * compute_crc - Compute CRC value on output frame
+> > > >   *
+> > > > - * @vaddr_out: address to final framebuffer
+> > > > + * @vaddr: address to final framebuffer
+> > > >   * @composer: framebuffer's metadata
+> > > >   *
+> > > >   * returns CRC value computed using crc32 on the visible portion of
+> > > >   * the final framebuffer at vaddr_out
+> > > >   */
+> > > > -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer =
+*composer)
+> > > > +static uint32_t compute_crc(const u8 *vaddr,
+> > > > +			    const struct vkms_composer *composer)
+> > > >  {
+> > > > -	int i, j, src_offset;
+> > > > +	int x, y;
+> > > >  	int x_src =3D composer->src.x1 >> 16;
+> > > >  	int y_src =3D composer->src.y1 >> 16;
+> > > >  	int h_src =3D drm_rect_height(&composer->src) >> 16;
+> > > >  	int w_src =3D drm_rect_width(&composer->src) >> 16;
+> > > > -	u32 crc =3D 0;
+> > > > +	u32 crc =3D 0, pixel =3D 0;
+> > > > =20
+> > > > -	for (i =3D y_src; i < y_src + h_src; ++i) {
+> > > > -		for (j =3D x_src; j < x_src + w_src; ++j) {
+> > > > -			src_offset =3D composer->offset
+> > > > -				     + (i * composer->pitch)
+> > > > -				     + (j * composer->cpp);
+> > > > +	for (y =3D y_src; y < y_src + h_src; ++y) {
+> > > > +		for (x =3D x_src; x < x_src + w_src; ++x) {
+> > > >  			/* XRGB format ignores Alpha channel */
+> > > > -			memset(vaddr_out + src_offset + 24, 0,  8);
+> > > > -			crc =3D crc32_le(crc, vaddr_out + src_offset,
+> > > > -				       sizeof(u32));
+> > > > +			pixel =3D get_pixel_from_buffer(x, y, vaddr, composer);
+> > > > +			bitmap_clear((void *)&pixel, 0, 8);
+> > > > +			crc =3D crc32_le(crc, (void *)&pixel, sizeof(u32));
+> > > >  		}
+> > > >  	}
+> > > > =20
+> > > > --=20
+> > > > 2.21.0
+> > >=20
+> > > --=20
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+> >=20
+> > --=20
+> > Rodrigo Siqueira
+> > https://siqueira.tech
+>=20
+>=20
+>=20
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+>=20
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
 
-I otherwise don't follow why we would need to deactivate prior to
-__remove_zone().
+--qp4bmywubblpnone
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0uiEAACgkQWJzP/com
+vP8X0xAAxp4KZSRHIF9p/L79o4+j8/J2PBMeibgeeQsw2NFfff6rbip2bM4sfccv
+mjdtxPGJHMUWr/vdeRvokp9kg9QWE/ZOxmX+u07c+/x+qxPhB1/p3uogpNpRvsZ+
+SF2xG8riCOmTuKetflJUh7chAm/RDPM/TaajZfUGIIwY9gQm1/C0WyumBp85izpU
+Nk1dk6Dj/xplD8d+19P7uKgUDc+d3P4ogRbUQKW5NqvgrXyXxa4Zzv1W40BKwsIS
+jx5xQAqrcQUCkOdPRJyzVMLKBe0kagIEhXMHfSlyn+Nlp47AXYUjMlUV4TuY5980
+HsWPGAs98tNpCM+jj1bWxym5F0LnKxyxMqHg62gGQLOWQBVdhWLmYtdCf7bI8A0I
+95stQVF6CqWxNzcYJ6ffw6ZFNXKVba6uzrPIAWVwYTvX/JmULM9JzZVMG33vbeYH
+Yd8grYgJLvRU8k5pc1g5LjXC0+9im1Jr10mmywgUhipErbMxXOfhMuIe2/2lsx5v
+zkMk/UTlVZQrXxJOw4NUXeb0wDXelrTR3/5cSDT0uMWjSU84AFQLvd5767YxqD+h
+odiOohM4xAEkB7478GVvwsyjUMf9Tn1QGeWX/m2lsZgv2qYmT5zgVkG1H7jzSEO7
+mRzB0k/z3o9M40wzDebVg5TRcyNOdn3+8xKFumWmvmNXuGYMOAU=
+=ajCg
+-----END PGP SIGNATURE-----
+
+--qp4bmywubblpnone--
