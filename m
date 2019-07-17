@@ -2,130 +2,189 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043E1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1120C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C878E21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:54:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wiewj6GE"
+	by mail.kernel.org (Postfix) with ESMTP id AD61521841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbfGQKyL (ORCPT
+        id S1725951AbfGQK4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:54:11 -0400
-Received: from mail-eopbgr150059.outbound.protection.outlook.com ([40.107.15.59]:11357
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Wed, 17 Jul 2019 06:56:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58292 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732444AbfGQKyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:54:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TVBoi0Y6U6xpmbWrzryyv5RDxm6xOeSBhOAm2AjkkQXRtTAg7RGNokQ/QvFpudGz/qfjDR7gs0JIspCrMLnTZ3xFGiNq91lGx+LmbyXqKo/Gvn8OLxIupEVlvWgV1ncmt1Iut1zuVzuBkn5DgkE9v5XzySaZZIDCdGeVvOluuvD5Dt9zR8AVbG+mky2AVPQ5J1h6GuUBcOVFuYyG2nxJBrIL7qLh0IeiFLaswtFT2l0q4dny8HZf+fUzaldkvqGOGdk6gIoAZZTDoUm7G21Nw3yTUg97vPxDbPZNARY8riYIc3vIHcOC2hnFqBzAA04sWtRxs7Jl50feq5zm45CnNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qkzfKilvvJBKmzjwz1nIiNeWacGq6WRZTFbyPuYikrg=;
- b=jvn347VaIoVyyTjgRHHoYniHZ+c0T/fxE0S951Q/jekDBFtCkR/iNjSFYjtLER3cCqstBGheCDGY7lHpS049qhRnHUFV0DB3azkvgb6B7Jb+8j/IF8mcFaQ1cWju3cubqwE3p3ePetZLLDWAH+KGefQ98HAnR/Yyhfx3mD7h3XQADk5dqXZHOsN6YpJqtFbVkkca9uDcuOt0nYIJ+vgLpCn2aKpP6bKPnPe4hn1LelSsKTXGHCYpERFGKGCydncTtrvRBsvCN/qXTa9VRiSc2n3R412146UXRjYzeCF9p1xH5v8prFW6vRMq7AQbOtJxuneJ4RMPPvj2T9KcbCQevQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qkzfKilvvJBKmzjwz1nIiNeWacGq6WRZTFbyPuYikrg=;
- b=Wiewj6GEzEQ66yZx8R2kOPZI5lwbqIKXIQI47ABWpgY9ujLvj3koNd7b+Uhu5UByRJ8ZSXYL1uP/svr/F4yVwpYEeZV7jXnqAAPQ4X6o38vTISB7clVpdrIj3sB/b2k8lPtnPXJHPeklRTuO+dSJ7CqRYREbrbW0MOPv92pV5CI=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB4449.eurprd04.prod.outlook.com (52.135.148.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 10:54:07 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 10:54:07 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] rtc: snvs: fix possible race condition
-Thread-Topic: [PATCH] rtc: snvs: fix possible race condition
-Thread-Index: AQHVO6gHMxHdHnXuaUKbGcyVjkrm8qbOo7lw
-Date:   Wed, 17 Jul 2019 10:54:06 +0000
-Message-ID: <AM0PR04MB421167283C950557E231181480C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190716071858.36750-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190716071858.36750-1-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 343873ac-6183-4993-e644-08d70aa51724
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4449;
-x-ms-traffictypediagnostic: AM0PR04MB4449:
-x-microsoft-antispam-prvs: <AM0PR04MB44494D10ED00B27E3FADC24480C90@AM0PR04MB4449.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(189003)(199004)(9686003)(55016002)(316002)(110136005)(71190400001)(33656002)(25786009)(71200400001)(478600001)(52536014)(256004)(186003)(99286004)(6246003)(102836004)(26005)(6116002)(81166006)(53936002)(3846002)(7696005)(6436002)(14454004)(66476007)(66946007)(76116006)(8676002)(2501003)(66556008)(446003)(66446008)(44832011)(74316002)(486006)(305945005)(7736002)(11346002)(2906002)(86362001)(64756008)(68736007)(476003)(66066001)(76176011)(229853002)(5660300002)(4326008)(8936002)(6506007)(81156014)(2201001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4449;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +vbuo+o7N413FoGwsc32gq6hj/z8ljjp+XaTXm1QVyJLGIm9dhu550PRIEY781YL4VmdVbWMeS7f4zldXSb3WECbQp7uOxXEqe8Lp6pJcMcZJJi41jrT2WdkhvY/Nw56K1Xc4vO2z5/lK/mPsfbBd5EN8DTSSnCVdvik6AggZFWS6qY+UjiQbx455AL8ExZvFJXSTBhd7WEufkNpscN1BxnH50YiU/9oEN7MCeAOQk0JKzthr0c2UfyiHGdWFxsoGE5RkSQqHsvykZipzhgGmPi1AEdDiNr5S3I0KV61ohARObBoDhh0VyY0tsq/uTcZBomYVmCtK9nA/+HvQk90XKsx+0Z6/CKGFbB98mnhjoD/kE4MOEcIC9gh5VNL9mMstJjnmt4l/20nvGDydj32OdvfFf8RgD0oZ1v9sRYiKok=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725932AbfGQK4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:56:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 75F31B048;
+        Wed, 17 Jul 2019 10:56:00 +0000 (UTC)
+Subject: Re: [v2 PATCH 1/2] mm: mempolicy: make the behavior consistent when
+ MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
+To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@kernel.org,
+        mgorman@techsingularity.net, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1561162809-59140-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com>
+ <fb74d657-90cd-6667-f253-162c951f1b05@suse.cz>
+ <efe90132-6832-d61a-5d55-d2cc134c7087@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7806e608-ffcb-fd56-2e0f-a20bea127f40@suse.cz>
+Date:   Wed, 17 Jul 2019 12:55:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 343873ac-6183-4993-e644-08d70aa51724
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 10:54:06.8371
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4449
+In-Reply-To: <efe90132-6832-d61a-5d55-d2cc134c7087@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
-OiBUdWVzZGF5LCBKdWx5IDE2LCAyMDE5IDM6MTkgUE0NCj4gDQo+IFRoZSBSVEMgSVJRIGlzIHJl
-cXVlc3RlZCBiZWZvcmUgdGhlIHN0cnVjdCBydGNfZGV2aWNlIGlzIGFsbG9jYXRlZCwgdGhpcyBt
-YXkNCj4gbGVhZCB0byBhIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBpbiBJUlEgaGFuZGxlci4N
-Cj4gDQo+IFRvIGZpeCB0aGlzIGlzc3VlLCBhbGxvY2F0aW5nIHRoZSBydGNfZGV2aWNlIHN0cnVj
-dCBiZWZvcmUgcmVxdWVzdGluZyB0aGUgUlRDIElSUQ0KPiB1c2luZyBkZXZtX3J0Y19hbGxvY2F0
-ZV9kZXZpY2UsIGFuZCB1c2UgcnRjX3JlZ2lzdGVyX2RldmljZSB0byByZWdpc3RlciB0aGUNCj4g
-UlRDIGRldmljZS4NCj4gDQoNCkkgc2F3IG90aGVyIHJ0YyBkcml2ZXJzIGRpZCB0aGUgc2FtZSB3
-YXkgYXMgdXMsIHNvIHRoaXMgbG9va3MgbGlrZSBhIGNvbW1vbiBwcm9ibGVtLg0KTXkgcXVlc3Rp
-b24gaXMgaWYgd2UgY2FuIGNsZWFyIGludGVycnVwdCBzdGF0dXMgYmVmb3JlIHJlZ2lzdGVyIHRv
-IGF2b2lkIHRoaXMgaXNzdWUgYXMNCm90aGVyIHJ0YyBkcml2ZXJzPw0KDQpSZWdhcmRzDQpBaXNo
-ZW5nDQoNCj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
-DQo+IC0tLQ0KPiAgZHJpdmVycy9ydGMvcnRjLXNudnMuYyB8IDExICsrKysrKystLS0tDQo+ICAx
-IGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1zbnZzLmMgYi9kcml2ZXJzL3J0Yy9ydGMtc252cy5j
-IGluZGV4DQo+IDdlZTY3M2EyLi40ZjlhMTA3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3J0Yy9y
-dGMtc252cy5jDQo+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1zbnZzLmMNCj4gQEAgLTI3OSw2ICsy
-NzksMTAgQEAgc3RhdGljIGludCBzbnZzX3J0Y19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-DQo+ICpwZGV2KQ0KPiAgCWlmICghZGF0YSkNCj4gIAkJcmV0dXJuIC1FTk9NRU07DQo+IA0KPiAr
-CWRhdGEtPnJ0YyA9IGRldm1fcnRjX2FsbG9jYXRlX2RldmljZSgmcGRldi0+ZGV2KTsNCj4gKwlp
-ZiAoSVNfRVJSKGRhdGEtPnJ0YykpDQo+ICsJCXJldHVybiBQVFJfRVJSKGRhdGEtPnJ0Yyk7DQo+
-ICsNCj4gIAlkYXRhLT5yZWdtYXAgPSBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKHBk
-ZXYtPmRldi5vZl9ub2RlLA0KPiAicmVnbWFwIik7DQo+IA0KPiAgCWlmIChJU19FUlIoZGF0YS0+
-cmVnbWFwKSkgew0KPiBAQCAtMzQzLDEwICszNDcsOSBAQCBzdGF0aWMgaW50IHNudnNfcnRjX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ICAJCWdvdG8gZXJyb3JfcnRj
-X2RldmljZV9yZWdpc3RlcjsNCj4gIAl9DQo+IA0KPiAtCWRhdGEtPnJ0YyA9IGRldm1fcnRjX2Rl
-dmljZV9yZWdpc3RlcigmcGRldi0+ZGV2LCBwZGV2LT5uYW1lLA0KPiAtCQkJCQkmc252c19ydGNf
-b3BzLCBUSElTX01PRFVMRSk7DQo+IC0JaWYgKElTX0VSUihkYXRhLT5ydGMpKSB7DQo+IC0JCXJl
-dCA9IFBUUl9FUlIoZGF0YS0+cnRjKTsNCj4gKwlkYXRhLT5ydGMtPm9wcyA9ICZzbnZzX3J0Y19v
-cHM7DQo+ICsJcmV0ID0gcnRjX3JlZ2lzdGVyX2RldmljZShkYXRhLT5ydGMpOw0KPiArCWlmIChy
-ZXQpIHsNCj4gIAkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIHJ0Yzog
-JWRcbiIsIHJldCk7DQo+ICAJCWdvdG8gZXJyb3JfcnRjX2RldmljZV9yZWdpc3RlcjsNCj4gIAl9
-DQo+IC0tDQo+IDIuNy40DQoNCg==
+On 7/16/19 7:18 PM, Yang Shi wrote:
+>> I think after your patch, you miss putback_movable_pages() in cases
+>> where some were queued, and later the walk returned -EIO. The previous
+>> code doesn't miss it, but it's also not obvious due to the multiple if
+>> (!err) checks. I would rewrite it some thing like this:
+>>
+>> if (ret < 0) {
+>>      putback_movable_pages(&pagelist);
+>>      err = ret;
+>>      goto mmap_out; // a new label above up_write()
+>> }
+> 
+> Yes, the old code had putback_movable_pages called when !err. But, I 
+> think that is for error handling of mbind_range() if I understand it 
+> correctly since if queue_pages_range() returns -EIO (only MPOL_MF_STRICT 
+> was specified and there was misplaced page) that page list should be 
+> empty . The old code should checked whether that list is empty or not.
+
+Hm I guess you're right, returning with EIO means nothing was queued.
+> So, in the new code I just removed that.
+> 
+>>
+>> The rest can have reduced identation now.
+> 
+> Yes, the goto does eliminate the extra indentation.
+> 
+>>
+>>> +	else {
+>>> +		err = mbind_range(mm, start, end, new);
+>>>   
+>>> -		if (nr_failed && (flags & MPOL_MF_STRICT))
+>>> -			err = -EIO;
+>>> -	} else
+>>> -		putback_movable_pages(&pagelist);
+>>> +		if (!err) {
+>>> +			int nr_failed = 0;
+>>> +
+>>> +			if (!list_empty(&pagelist)) {
+>>> +				WARN_ON_ONCE(flags & MPOL_MF_LAZY);
+>>> +				nr_failed = migrate_pages(&pagelist, new_page,
+>>> +					NULL, start, MIGRATE_SYNC,
+>>> +					MR_MEMPOLICY_MBIND);
+>>> +				if (nr_failed)
+>>> +					putback_movable_pages(&pagelist);
+>>> +			}
+>>> +
+>>> +			if ((ret > 0) ||
+>>> +			    (nr_failed && (flags & MPOL_MF_STRICT)))
+>>> +				err = -EIO;
+>>> +		} else
+>>> +			putback_movable_pages(&pagelist);
+>> While at it, IIRC the kernel style says that when the 'if' part uses
+>> '{ }' then the 'else' part should as well, and it shouldn't be mixed.
+> 
+> Really? The old code doesn't have '{ }' for else, and checkpatch doesn't 
+> report any error or warning.
+
+Checkpatch probably doesn't catch it, nor did the reviewers of the older
+code. But coding-style.rst says:
+
+Do not unnecessarily use braces where a single statement will do.
+
+...
+
+This does not apply if only one branch of a conditional statement is a
+single
+statement; in the latter case use braces in both branches:
+
+.. code-block:: c
+
+        if (condition) {
+                do_this();
+                do_that();
+        } else {
+                otherwise();
+        }
+
+
+Thanks,
+Vlastimil
