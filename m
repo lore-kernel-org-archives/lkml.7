@@ -2,119 +2,394 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADF2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BB3C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1DA217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B7A20880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZS3ZHe4Q"
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="bI9vVuT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbfGQKYs (ORCPT
+        id S1730526AbfGQKYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 17 Jul 2019 06:24:48 -0400
-Received: from mail-eopbgr00041.outbound.protection.outlook.com ([40.107.0.41]:12545
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725948AbfGQKYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:24:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KRAlDqn+Mi2mdDkdyDAyyL4dIh2yFBn4Zt9Kb/d/6LrhFKsLQa1wTfmoY82CdLDL5XF2Ua7xRyT046c+IAtIpC9clcKAKjii2YwdWXsdi4ShijV3CY6taa6U2318HmYOuGTfiATftyKt6uFx+If91w8G8KUGeXP/FiY3fT7PTZ7mHz+zGO8ONRcf51y6qDbrv1hAVAm6N0tqpZciXOjK9pFfddqYeAy2ZtpEBxa0Np/QYxSNsHZgoRMJy7ZIizlQxDoq+1xUOV4CSVm0DweYuUjnB53fkDj4tCLe1p0xc5F1UHBvlWU/tochROVLr9+nA7/TM/j48ENtctVDQCnVZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DPaPT2czoME/hYVRz4ZLl0n89PINpuSoCKA/T7QGlF4=;
- b=MPVq5yILoTfMjDR0AteqDYPrx4snc0kUHN5kRVHL3eGfHm25YoYavj0o7Hov8GxEQ03nzpfVm739ANePGWL4lBM+uf+1+ak45M3upLC7UR+5DO4e8i/F3/8B/RSuVBjtNCI6mzMQbrpLlaweBfybX8d3jN6nBX/z4OuNIeg+3AYUaWCKZY/3G7mhAgUQy+0OvMUVFH2Ucw3WkwVbzQs4XxPpqBIFTM1jYJbS7Pc669koyBLL9Fva3he3xB8L3boXOMq8cigxhijNm05V3DKuNV/LGvj9GGcPb6sSkxyFkUClJ5Gami8tDUzJi323kTucW8kjMMFxfjgFEerMTDUxQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DPaPT2czoME/hYVRz4ZLl0n89PINpuSoCKA/T7QGlF4=;
- b=ZS3ZHe4Qy2UDElGOCAgwU2CEo8qkZt6a0YZJNZvKT/IUpK3oJMNFdFW2Dl2+mlXczfo/szWAUVEOCyNQS7MdMuSKHILs5kK+3QHZxoYpgcQlStoc7U40aEEekFG1nQyGwDdetc8rXlhEVp4UmqztybvHvQ43IajRLg7AfKU1Ajs=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB5604.eurprd04.prod.outlook.com (20.178.203.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 10:24:44 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 10:24:44 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "mpm@selenic.com" <mpm@selenic.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "rfontana@redhat.com" <rfontana@redhat.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/2] char: hw_random: mxc-rnga: use
- devm_platform_ioremap_resource() to simplify code
-Thread-Topic: [PATCH 2/2] char: hw_random: mxc-rnga: use
- devm_platform_ioremap_resource() to simplify code
-Thread-Index: AQHVPH/8+IsxXD8FhUCRO+/vflUVhqbOmptw
-Date:   Wed, 17 Jul 2019 10:24:44 +0000
-Message-ID: <AM0PR04MB42113B130EF5F03C0AF1801A80C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190717090438.31522-1-Anson.Huang@nxp.com>
- <20190717090438.31522-2-Anson.Huang@nxp.com>
-In-Reply-To: <20190717090438.31522-2-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b07ef63-8af8-411a-95d2-08d70aa0fc8d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5604;
-x-ms-traffictypediagnostic: AM0PR04MB5604:
-x-microsoft-antispam-prvs: <AM0PR04MB56043F92844E560614CEAF5680C90@AM0PR04MB5604.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(199004)(189003)(8936002)(6506007)(53936002)(102836004)(71190400001)(44832011)(7696005)(2201001)(81156014)(76176011)(66446008)(66556008)(66476007)(76116006)(64756008)(71200400001)(5660300002)(2906002)(99286004)(305945005)(2501003)(66946007)(52536014)(229853002)(26005)(8676002)(6436002)(66066001)(6246003)(476003)(446003)(55016002)(11346002)(478600001)(86362001)(3846002)(186003)(110136005)(6116002)(25786009)(68736007)(33656002)(316002)(256004)(4326008)(74316002)(558084003)(14454004)(486006)(7416002)(7736002)(81166006)(9686003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5604;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kopargwr+xnTBicKRrzy37X/5hnuGPmbGu3/tvOg0a9W7HFW9jj5Au98Ie7PkrL7JM8rKkhvqQL4MaBF6SPu71sx7DskS2FErurmGWNmiReDZ4ZZbUdxYYq9IyMbeJ5p/dFm3jHlGn/3O5bxuCf4Fc92lOF0poQ0SvnVHZxjdrtzE9tFQtdukFTx6g24UBObFrnpkVdt54AJ0xNv45EVMfQgeyn6MTtHm01GXHiecvalSmdiL2jgnvyWomr0MpfDFPbV3Bsrl5jsC7VMtCXOuUOxeqHilbvqojgHPhZEnuluOrqmc3A4vOt/sII7Yh0U2AWs2C5LXZa4Q6Rrkv7DgE05F+wDK08LOIHvEvWhFaSvTxIVnwQsEJdRUDuP0vi/xEKjkAJJYW83TmeOe6Tar5dZw68zar4dYMCabBX5eQQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from chill.innovation.ch ([216.218.245.220]:53104 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfGQKYr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:24:47 -0400
+Date:   Wed, 17 Jul 2019 03:24:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 15B3E6401B4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1563359087;
+        bh=OIi2y8DJM1QpzkNPf58qu6SO8gCiBNYE4u+h1NdvTrQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bI9vVuT2Nefftswj9uxaYncp0AXCxPqRLKvz7KZQMKOfblNqqnkfSRtpzQMfdNfhe
+         2cDxtaFLoEIBb6hWvDjbHmrj3S/daw4F58W/CQ0t3osJene6T3a7/VYGgOt1TVyQVp
+         fYfKEpTgS2z6KlTKmF0RyHDFUXpVAa44PZtJTwBgiXns4i+Kjj2kZPD8HPa2r7wWEx
+         QsG7Cw/Km4L00WR2ch8oAAdxt4vxwxxYaGB1IwVKfccADMOvU9AZaRTYrlgfSDIZKq
+         8xyBIVLakdIPKPnw/3MB7OEGfbBD+Ahbzw03viupmtyZcBliJKTlc6DgzochaTa7i6
+         Lxsp/Mi3UH09w==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] Input: add Apple SPI keyboard and trackpad driver.
+Message-ID: <20190717102447.GA16737@innovation.ch>
+References: <20190419081926.13567-1-ronald@innovation.ch>
+ <20190419081926.13567-3-ronald@innovation.ch>
+ <20190716184744.GC1140@penguin>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b07ef63-8af8-411a-95d2-08d70aa0fc8d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 10:24:44.3877
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5604
+Content-Type: multipart/mixed; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190716184744.GC1140@penguin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
-OiBXZWRuZXNkYXksIEp1bHkgMTcsIDIwMTkgNTowNSBQTQ0KPiANCj4gVXNlIHRoZSBuZXcgaGVs
-cGVyIGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZSgpIHdoaWNoIHdyYXBzIHRoZQ0KPiBw
-bGF0Zm9ybV9nZXRfcmVzb3VyY2UoKSBhbmQgZGV2bV9pb3JlbWFwX3Jlc291cmNlKCkgdG9nZXRo
-ZXIsIHRvIHNpbXBsaWZ5DQo+IHRoZSBjb2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcg
-PGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
+
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+
+  Hi Dmitry,
+
+thanks for taking a look at this!
+
+On Tue, Jul 16, 2019 at 08:47:44PM +0200, Dmitry Torokhov wrote:
+> Hi Ronald,
+> 
+> On Fri, Apr 19, 2019 at 01:19:26AM -0700, Ronald Tschalär wrote:
+> > The keyboard and trackpad on recent MacBook's (since 8,1) and
+> > MacBookPro's (13,* and 14,*) are attached to an SPI controller instead
+> > of USB, as previously. The higher level protocol is not publicly
+> > documented and hence has been reverse engineered. As a consequence there
+> > are still a number of unknown fields and commands. However, the known
+> > parts have been working well and received extensive testing and use.
+> > 
+> > In order for this driver to work, the proper SPI drivers need to be
+> > loaded too; for MB8,1 these are spi_pxa2xx_platform and spi_pxa2xx_pci;
+> > for all others they are spi_pxa2xx_platform and intel_lpss_pci. For this
+> > reason enabling this driver in the config implies enabling the above
+> > drivers.
+> 
+> I applied the patch (but changed __u8 to u8 as that's preferred form for
+> inside the kernel, and added error handling for input_mt_init_slots) but
+> we need to do some more work on the driver.
+
+Looks good.
+
+> My main issue is with registering touchpad device asynchronously,
+> independent from the probe() function. This means (as far as I can tell)
+> that any error is not really appropriately handled (as by that time it
+> is too late to signal errors from probe()) and devm functions are not
+> going to be called, leaving remnants of the resources in memory on
+> driver unload. It also brings in issues with suspend/resume (what
+> happens if you suspend really quickly while device is not registered
+> yet?), etc, etc.
+
+Yes, the lack of error propagation also bothered me a bit when I
+introduced the dev-info command, but I thought doing synchronous
+I/O operations in a probe function wasn't kosher. Happy to rectify
+that though.
+
+> Can we switch to calling DEV_INFO command synchronously from probe()? If
+> we are concerned about it taking relatively long time we can always
+> annotate the driver as having probe_type = PROBE_PREFER_ASYNCHRONOUS so
+> that other devices can be probed simultaneously with applespi.
+
+Normally the dev-info retrieval takes about 15ms - I presume that's
+fast enough?
+
+Attached is a patch that does this now (on top of your changes above).
+The cancelling of outstanding spi requests in the error case is a bit
+ugly (I wish there were an exported spi-flush/spi-wait-for-queue-empty
+function or similar), but otherwise it's fairly straightforward.
+
+
+  Cheers,
+
+  Ronald
+
+
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: attachment; filename="0001-Input-applespi-register-touchpad-device-synchronousl.patch"
+Content-Transfer-Encoding: 8bit
+
+From a03a7b42ac6ea0707165c8beba04c722984064be Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
+Date: Wed, 17 Jul 2019 02:46:57 -0700
+Subject: [PATCH] Input: applespi - register touchpad device synchronously in
+ probe.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This allows errors during registration to properly fail the probe
+function.
+
+Doing this requires waiting for a response from the device inside the
+probe function. While this generally takes about 15ms, in case of errors
+it could be arbitrarily long, and hence a 3 second timeout is used.
+
+This also adds 3 second timeouts to the drain functions to avoid the
+potential for suspend or remove hanging forever.
+
+Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+---
+ drivers/input/keyboard/applespi.c | 125 ++++++++++++++++++++++++------
+ 1 file changed, 100 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+index 548737e7aeda..81a733a6ba1a 100644
+--- a/drivers/input/keyboard/applespi.c
++++ b/drivers/input/keyboard/applespi.c
+@@ -48,12 +48,12 @@
+ #include <linux/efi.h>
+ #include <linux/input.h>
+ #include <linux/input/mt.h>
++#include <linux/jiffies.h>
+ #include <linux/leds.h>
+ #include <linux/module.h>
+ #include <linux/spinlock.h>
+ #include <linux/spi/spi.h>
+ #include <linux/wait.h>
+-#include <linux/workqueue.h>
+ 
+ #include <asm/barrier.h>
+ #include <asm/unaligned.h>
+@@ -411,7 +411,13 @@ struct applespi_data {
+ 	bool				read_active;
+ 	bool				write_active;
+ 
+-	struct work_struct		work;
++	struct applespi_complete_info {
++		void				(*complete)(void *context);
++		struct applespi_data		*applespi;
++	}				spi_complete[2];
++	bool				cancel_spi;
++
++	wait_queue_head_t		tp_info_complete;
+ 	struct touchpad_info_protocol	rcvd_tp_info;
+ 
+ 	struct dentry			*debugfs_root;
+@@ -593,13 +599,61 @@ static void applespi_setup_write_txfrs(struct applespi_data *applespi)
+ 	spi_message_add_tail(st_t, msg);
+ }
+ 
++static bool applespi_async_outstanding(struct applespi_data *applespi)
++{
++	return applespi->spi_complete[0].complete ||
++	       applespi->spi_complete[1].complete;
++}
++
++static void applespi_async_complete(void *context)
++{
++	struct applespi_complete_info *info = context;
++	struct applespi_data *applespi = info->applespi;
++	unsigned long flags;
++
++	info->complete(applespi);
++
++	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
++
++	info->complete = NULL;
++
++	if (applespi->cancel_spi && !applespi_async_outstanding(applespi))
++		wake_up_all(&applespi->drain_complete);
++
++	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
++}
++
+ static int applespi_async(struct applespi_data *applespi,
+ 			  struct spi_message *message, void (*complete)(void *))
+ {
+-	message->complete = complete;
+-	message->context = applespi;
++	struct applespi_complete_info *info;
++	int sts;
++
++	if (applespi->cancel_spi) {
++		if (!applespi_async_outstanding(applespi))
++			wake_up_all(&applespi->drain_complete);
++		return -ESHUTDOWN;
++	}
++
++	/*
++	 * There can only be at max 2 spi requests in flight, one for "reads"
++	 * and one for "writes".
++	 */
++	if (!applespi->spi_complete[0].complete)
++		info = &applespi->spi_complete[0];
++	else
++		info = &applespi->spi_complete[1];
++	info->complete = complete;
++	info->applespi = applespi;
++
++	message->complete = applespi_async_complete;
++	message->context = info;
++
++	sts = spi_async(applespi->spi, message);
++	if (sts)
++		info->complete = NULL;
+ 
+-	return spi_async(applespi->spi, message);
++	return sts;
+ }
+ 
+ static inline bool applespi_check_write_status(struct applespi_data *applespi,
+@@ -664,6 +718,7 @@ static int applespi_setup_spi(struct applespi_data *applespi)
+ 
+ 	spin_lock_init(&applespi->cmd_msg_lock);
+ 	init_waitqueue_head(&applespi->drain_complete);
++	init_waitqueue_head(&applespi->tp_info_complete);
+ 
+ 	return 0;
+ }
+@@ -1011,7 +1066,7 @@ static void report_tp_state(struct applespi_data *applespi,
+ 	const struct applespi_tp_info *tp_info = &applespi->tp_info;
+ 	int i, n;
+ 
+-	/* touchpad_input_dev is set async in worker */
++	/* touchpad_input_dev is set async in probe */
+ 	input = smp_load_acquire(&applespi->touchpad_input_dev);
+ 	if (!input)
+ 		return;	/* touchpad isn't initialized yet */
+@@ -1315,26 +1370,14 @@ applespi_register_touchpad_device(struct applespi_data *applespi,
+ 	return 0;
+ }
+ 
+-static void applespi_worker(struct work_struct *work)
+-{
+-	struct applespi_data *applespi =
+-		container_of(work, struct applespi_data, work);
+-
+-	applespi_register_touchpad_device(applespi, &applespi->rcvd_tp_info);
+-}
+-
+ static void applespi_handle_cmd_response(struct applespi_data *applespi,
+ 					 struct spi_packet *packet,
+ 					 struct message *message)
+ {
+ 	if (packet->device == PACKET_DEV_INFO &&
+ 	    le16_to_cpu(message->type) == 0x1020) {
+-		/*
+-		 * We're not allowed to sleep here, but registering an input
+-		 * device can sleep.
+-		 */
+ 		applespi->rcvd_tp_info = message->tp_info;
+-		schedule_work(&applespi->work);
++		wake_up_all(&applespi->tp_info_complete);
+ 		return;
+ 	}
+ 
+@@ -1623,6 +1666,7 @@ static int applespi_probe(struct spi_device *spi)
+ 	struct applespi_data *applespi;
+ 	acpi_handle spi_handle = ACPI_HANDLE(&spi->dev);
+ 	acpi_status acpi_sts;
++	unsigned long flags;
+ 	int sts, i;
+ 	unsigned long long gpe, usb_status;
+ 
+@@ -1641,8 +1685,6 @@ static int applespi_probe(struct spi_device *spi)
+ 
+ 	applespi->spi = spi;
+ 
+-	INIT_WORK(&applespi->work, applespi_worker);
+-
+ 	/* store the driver data */
+ 	spi_set_drvdata(spi, applespi);
+ 
+@@ -1770,6 +1812,22 @@ static int applespi_probe(struct spi_device *spi)
+ 	/* trigger touchpad setup */
+ 	applespi_init(applespi, false);
+ 
++	/* set up the touchpad as a separate input device */
++	sts = wait_event_timeout(applespi->tp_info_complete,
++				 applespi->rcvd_tp_info.model_no,
++				 msecs_to_jiffies(3000));
++	if (!sts) {
++		dev_err(&applespi->spi->dev,
++			"Timed out waiting for device info\n");
++		sts = -ETIMEDOUT;
++		goto cancel_spi;
++	}
++
++	sts = applespi_register_touchpad_device(applespi,
++						&applespi->rcvd_tp_info);
++	if (sts)
++		goto cancel_spi;
++
+ 	/*
+ 	 * By default this device is not enabled for wakeup; but USB keyboards
+ 	 * generally are, so the expectation is that by default the keyboard
+@@ -1820,6 +1878,19 @@ static int applespi_probe(struct spi_device *spi)
+ 	}
+ 
+ 	return 0;
++
++cancel_spi:
++	acpi_disable_gpe(NULL, applespi->gpe);
++	acpi_remove_gpe_handler(NULL, applespi->gpe, applespi_notify);
++
++	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
++	applespi->cancel_spi = true;
++	wait_event_lock_irq(applespi->drain_complete,
++			    !applespi_async_outstanding(applespi),
++			    applespi->cmd_msg_lock);
++	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
++
++	return sts;
+ }
+ 
+ static void applespi_drain_writes(struct applespi_data *applespi)
+@@ -1829,8 +1900,10 @@ static void applespi_drain_writes(struct applespi_data *applespi)
+ 	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
+ 
+ 	applespi->drain = true;
+-	wait_event_lock_irq(applespi->drain_complete, !applespi->write_active,
+-			    applespi->cmd_msg_lock);
++	wait_event_lock_irq_timeout(applespi->drain_complete,
++				    !applespi->write_active,
++				    applespi->cmd_msg_lock,
++				    msecs_to_jiffies(3000));
+ 
+ 	spin_unlock_irqrestore(&applespi->cmd_msg_lock, flags);
+ }
+@@ -1841,8 +1914,10 @@ static void applespi_drain_reads(struct applespi_data *applespi)
+ 
+ 	spin_lock_irqsave(&applespi->cmd_msg_lock, flags);
+ 
+-	wait_event_lock_irq(applespi->drain_complete, !applespi->read_active,
+-			    applespi->cmd_msg_lock);
++	wait_event_lock_irq_timeout(applespi->drain_complete,
++				    !applespi->read_active,
++				    applespi->cmd_msg_lock,
++				    msecs_to_jiffies(3000));
+ 
+ 	applespi->suspended = true;
+ 
+-- 
+2.21.0
+
+
+--qDbXVdCdHGoSgWSk--
