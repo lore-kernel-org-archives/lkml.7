@@ -2,76 +2,77 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C06CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E380C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C2C20880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3817820880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfGQM1k (ORCPT
+        id S1730647AbfGQM3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 08:27:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfGQM1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 08:27:39 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CA9753DE0F;
-        Wed, 17 Jul 2019 12:27:39 +0000 (UTC)
-Received: from [10.72.12.61] (ovpn-12-61.pek2.redhat.com [10.72.12.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B2E12600C8;
-        Wed, 17 Jul 2019 12:27:30 +0000 (UTC)
-Subject: Re: [PATCH V3 00/15] Packed virtqueue support for vhost
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jfreimann@redhat.com, tiwei.bie@intel.com,
-        maxime.coquelin@redhat.com
-References: <20190717105255.63488-1-jasowang@redhat.com>
- <20190717070100-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <af066030-96f1-4a8d-4864-7b6b903477a6@redhat.com>
-Date:   Wed, 17 Jul 2019 20:27:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 17 Jul 2019 08:29:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:46708 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfGQM3C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 08:29:02 -0400
+Received: by mail-io1-f69.google.com with SMTP id s83so26939735iod.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 05:29:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=AByShyV8MxugdrVAP52bTC11/zp2agBi1wk+fUcF/g8=;
+        b=unkCs5dn8cylSpufM4CmCsfsRh4aVyseCllFHs1WKp7sDcgyjjBFsgikFX0Eudhro7
+         jV9eTYb/K6VE0sJIS67LQ1+F9aNmotmQwWnOjt3RVZdsLAUXdNhDN6HDKfP/cefTKth7
+         O15PiFVTzrZ2fdKP1tJtHg8FJ9CDZzH6g1LUi4WopsMsGDN54eGUeUmUry6xFvoQNQn3
+         s0A1f3d342LmRhcWdH0llzyd9Wli+3goPKSu20ZiZl/oXs36oxrycgNRO70636swKcmj
+         QFx6ymKwLEVixEqOd51WDkkoKieJ7ADSR5/fawIUhuP2PAxLob/9zvCHBoFeMmCMVjRZ
+         9uKg==
+X-Gm-Message-State: APjAAAX9gnhhzcndrhwxuBgJH1D1nkeje9OSBaZTJM+6cedGMACMV9wK
+        tQTRV3H1nox2y77om17C5ls/ekZQg9w3YCyvUdRAqUCX4tcQ
+X-Google-Smtp-Source: APXvYqxoVSLYclq8vROH6mYIXxVdmTx0TM+Zs7tz/C19ac1rQJfL74aTHycQ78ufw/LQNLLowRXhr3VuOu/dGV+La6CLKhQSGzQp
 MIME-Version: 1.0
-In-Reply-To: <20190717070100-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 17 Jul 2019 12:27:39 +0000 (UTC)
+X-Received: by 2002:a6b:90c1:: with SMTP id s184mr1909577iod.244.1563366541028;
+ Wed, 17 Jul 2019 05:29:01 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 05:29:01 -0700
+In-Reply-To: <CAAeHK+zPDgvDr_Bao9dz_7hGEg+Ud6-tj7pZaihKeYHJ8M386Q@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000054f8bd058ddfa341@google.com>
+Subject: Re: KASAN: global-out-of-bounds Read in dvb_pll_attach
+From:   syzbot <syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, andreyknvl@google.com, bnvandana@gmail.com,
+        hverkuil-cisco@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        mchehab@kernel.org, rfontana@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tskd08@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 2019/7/17 下午7:02, Michael S. Tsirkin wrote:
-> On Wed, Jul 17, 2019 at 06:52:40AM -0400, Jason Wang wrote:
->> Hi all:
->>
->> This series implements packed virtqueues which were described
->> at [1]. In this version we try to address the performance regression
->> saw by V2. The root cause is packed virtqueue need more times of
->> userspace memory accesssing which turns out to be very
->> expensive. Thanks to the help of 7f466032dc9e ("vhost: access vq
->> metadata through kernel virtual address"), such overhead cold be
->> eliminated. So in this version, we can see about 2% improvement for
->> packed virtqueue on PPS.
-> Great job, thanks!
-> Pls allow a bit more review time than usual as this is a big patchset.
-> Should be done by Tuesday.
-> -next material anyway.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
+Reported-and-tested-by:  
+syzbot+8a8f48672560c8ca59dd@syzkaller.appspotmail.com
 
-Sure, just to confirm, I think this should go for your vhost tree?.
+Tested on:
 
-Thanks
+commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1454f4d0600000
 
+Note: testing is done by a robot and is best-effort only.
