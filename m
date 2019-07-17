@@ -4,92 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8181C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C296C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876A62173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE7F2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbfGQJcv (ORCPT
+        id S1726541AbfGQJdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:32:51 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:19411 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726075AbfGQJcv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 05:32:51 -0400
-X-UUID: 1c3d93526d5547248bd5914bc764d675-20190717
-X-UUID: 1c3d93526d5547248bd5914bc764d675-20190717
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2021189479; Wed, 17 Jul 2019 17:32:29 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Jul 2019 17:32:28 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Jul 2019 17:32:27 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH 5/5] arm: dts: add jpeg enc device tree node
-Date:   Wed, 17 Jul 2019 17:30:34 +0800
-Message-ID: <20190717093034.22826-6-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190717093034.22826-1-xia.jiang@mediatek.com>
-References: <20190717093034.22826-1-xia.jiang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Wed, 17 Jul 2019 05:33:14 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53564 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfGQJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 05:33:14 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BD3682000A5;
+        Wed, 17 Jul 2019 11:33:11 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 04A6520005C;
+        Wed, 17 Jul 2019 11:33:07 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2D2F1402D5;
+        Wed, 17 Jul 2019 17:33:01 +0800 (SGT)
+From:   Wen He <wen.he_1@nxp.com>
+To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        liviu.dudau@arm.com, brian.starkey@arm.com, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
+Subject: [PATCH] drm/arm/mali-dp: Add display QoS interface configuration
+Date:   Wed, 17 Jul 2019 17:23:53 +0800
+Message-Id: <20190717092353.43386-1-wen.he_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add jpeg enc device tree node
+Configure the display Quality of service (QoS) levels to high priority
+if the level is defined as high as in DTS. The ARQOS for DP500 is driven
+from the "RQOS" register, needed to program the RQOS register value < 7
+for the 4k resolution flicker to disappear on the LS1028A platform.
 
-Change-Id: I901602f04540d619a490746ed61c8cd8b420b051
-Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- arch/arm/boot/dts/mt2701.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+change in v2:
+        - add new implementation for 4k flicker issue on the LS1028A
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 51e1305c6471..560f27fd9d9e 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -569,6 +569,18 @@
- 			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
- 	};
+ drivers/gpu/drm/arm/malidp_drv.c  |  5 +++++
+ drivers/gpu/drm/arm/malidp_hw.c   | 13 +++++++++++++
+ drivers/gpu/drm/arm/malidp_hw.h   |  3 +++
+ drivers/gpu/drm/arm/malidp_regs.h | 12 ++++++++++++
+ 4 files changed, 33 insertions(+)
+
+diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
+index f25ec4382277..d2b2cf52ac87 100644
+--- a/drivers/gpu/drm/arm/malidp_drv.c
++++ b/drivers/gpu/drm/arm/malidp_drv.c
+@@ -818,6 +818,11 @@ static int malidp_bind(struct device *dev)
  
-+	jpegenc: jpegenc@1500a000 {
-+		compatible = "mediatek,mt2701-jpgenc", "mediatek,mtk-jpgenc";
-+		reg = <0 0x1500a000 0 0x1000>;
-+		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-+		clocks =  <&imgsys CLK_IMG_VENC>;
-+		clock-names = "jpgenc";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+		mediatek,larb = <&larb2>;
-+		iommus = <&iommu MT2701_M4U_PORT_JPGENC_RDMA>,
-+			<&iommu MT2701_M4U_PORT_JPGENC_BSDMA>;
-+	};
+ 	malidp->core_id = version;
+ 
++	hwdev->arqos_high_level = false;
 +
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt2701-vdecsys", "syscon";
- 		reg = <0 0x16000000 0 0x1000>;
++	hwdev->arqos_high_level = of_property_read_bool(dev->of_node,
++					"arm,malidp-arqos-high-level");
++
+ 	/* set the number of lines used for output of RGB data */
+ 	ret = of_property_read_u8_array(dev->of_node,
+ 					"arm,malidp-output-port-lines",
+diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
+index 50af399d7f6f..eaa1658cd86b 100644
+--- a/drivers/gpu/drm/arm/malidp_hw.c
++++ b/drivers/gpu/drm/arm/malidp_hw.c
+@@ -374,6 +374,19 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
+ 		malidp_hw_setbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
+ 	else
+ 		malidp_hw_clearbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
++
++	/*
++	 *  Program the RQoS register to increasing QoS levels for
++	 *  the 4k resolution flicker to disappear on the LS1028A.
++	 */
++	if (hwdev->arqos_high_level) {
++		val = RED_ARQOS_VALUE | GREEN_ARQOS_VALUE;
++
++		if (mode->pixelclock == 594000000)
++			malidp_hw_setbits(hwdev, val, MALIDP500_RQOS_QUALITY);
++		else
++			malidp_hw_clearbits(hwdev, val, MALIDP500_RQOS_QUALITY);
++	}
+ }
+ 
+ int malidp_format_get_bpp(u32 fmt)
+diff --git a/drivers/gpu/drm/arm/malidp_hw.h b/drivers/gpu/drm/arm/malidp_hw.h
+index 968a65eed371..b8baba60508a 100644
+--- a/drivers/gpu/drm/arm/malidp_hw.h
++++ b/drivers/gpu/drm/arm/malidp_hw.h
+@@ -251,6 +251,9 @@ struct malidp_hw_device {
+ 
+ 	/* size of memory used for rotating layers, up to two banks available */
+ 	u32 rotation_memory[2];
++
++	/* priority level of RQOS register used for driven the ARQOS signal */
++	bool arqos_high_level;
+ };
+ 
+ static inline u32 malidp_hw_read(struct malidp_hw_device *hwdev, u32 reg)
+diff --git a/drivers/gpu/drm/arm/malidp_regs.h b/drivers/gpu/drm/arm/malidp_regs.h
+index 993031542fa1..08842142b3b2 100644
+--- a/drivers/gpu/drm/arm/malidp_regs.h
++++ b/drivers/gpu/drm/arm/malidp_regs.h
+@@ -210,6 +210,18 @@
+ #define MALIDP500_CONFIG_VALID		0x00f00
+ #define MALIDP500_CONFIG_ID		0x00fd4
+ 
++/*
++ * The quality of service (QoS) register on the DP500. RQOS register values
++ * are driven by the ARQOS signal, using AXI transacations, dependent on the
++ * FIFO input level.
++ * The RQOS register can also set QoS levels for:
++ *    - RED_ARQOS   @ A 4-bit signal value for close to underflow conditions
++ *    - GREEN_ARQOS @ A 4-bit signal value for normal conditions
++ */
++#define MALIDP500_RQOS_QUALITY          0x00500
++#define RED_ARQOS_VALUE                 (0xd << 12)
++#define GREEN_ARQOS_VALUE               (0xd << 28)
++
+ /* register offsets and bits specific to DP550/DP650 */
+ #define MALIDP550_ADDR_SPACE_SIZE	0x10000
+ #define MALIDP550_DE_CONTROL		0x00010
 -- 
-2.18.0
+2.17.1
 
