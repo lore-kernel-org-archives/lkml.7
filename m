@@ -2,83 +2,91 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A958BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18485C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBE221743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E611221743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfGQItl (ORCPT
+        id S1729360AbfGQIu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:49:41 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52696 "EHLO inva021.nxp.com"
+        Wed, 17 Jul 2019 04:50:29 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:55338 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfGQItj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:49:39 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F593200352;
-        Wed, 17 Jul 2019 10:49:38 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DD4EF2000A5;
-        Wed, 17 Jul 2019 10:49:32 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ED985402D5;
-        Wed, 17 Jul 2019 16:49:25 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     aisheng.dong@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        wsa+renesas@sang-engineering.com, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] i2c: imx-lpi2c: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 17 Jul 2019 16:40:17 +0800
-Message-Id: <20190717084017.30987-2-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190717084017.30987-1-Anson.Huang@nxp.com>
-References: <20190717084017.30987-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726186AbfGQIu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:50:28 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnfdc-00018b-0A; Wed, 17 Jul 2019 16:50:12 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnfdb-0002f9-S4; Wed, 17 Jul 2019 16:50:11 +0800
+Date:   Wed, 17 Jul 2019 16:50:11 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
+        paulmck@linux.ibm.com, peterz@infradead.org,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] padata: Use RCU when fetching pd from do_serial
+Message-ID: <20190717085011.hpihksnhrqt2vilo@gondor.apana.org.au>
+References: <20190712101012.GW14601@gauss3.secunet.de>
+ <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
+ <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
+ <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
+ <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
+ <20190716111410.GN17989@gauss3.secunet.de>
+ <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
+ <20190716130928.ga4acvxipsdzyzlp@gondor.apana.org.au>
+ <20190716132345.ujj2v3kqra2lbi75@gondor.apana.org.au>
+ <20190717083641.GQ17989@gauss3.secunet.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717083641.GQ17989@gauss3.secunet.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Wed, Jul 17, 2019 at 10:36:41AM +0200, Steffen Klassert wrote:
+>
+> > This patch fixes it by using RCU just as we do in padata_do_parallel.
+> 
+> RCU alone won't help because if some object is queued for async
+> crypto, we left the RCU protected aera. I think padata_do_serial
+> needs to do RCU and should free 'parallel_data' if the flag
+> PADATA_RESET is set and the refcount goes to zero. padata_replace
+> should do the same then.
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+Yes this patch doesn't work because you can't just switch over to
+the new pd as the old pd will then get stuck due to the missing
+entry.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/i2c/busses/i2c-imx-lpi2c.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> > index 5d13d25da2c8..ce51555cb86c 100644
+> > @@ -367,7 +367,7 @@ void padata_do_serial(struct padata_priv *padata)
+> >  	struct parallel_data *pd;
+> >  	int reorder_via_wq = 0;
+> >  
+> > -	pd = padata->pd;
+> > +	pd = rcu_dereference_bh(padata->inst->pd);
+> 
+> Why not just
+> 
+> pd = rcu_dereference_bh(padata->pd);
 
-diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
-index dc00fab..c92b564 100644
---- a/drivers/i2c/busses/i2c-imx-lpi2c.c
-+++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
-@@ -545,7 +545,6 @@ MODULE_DEVICE_TABLE(of, lpi2c_imx_of_match);
- static int lpi2c_imx_probe(struct platform_device *pdev)
- {
- 	struct lpi2c_imx_struct *lpi2c_imx;
--	struct resource *res;
- 	unsigned int temp;
- 	int irq, ret;
- 
-@@ -553,8 +552,7 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
- 	if (!lpi2c_imx)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	lpi2c_imx->base = devm_ioremap_resource(&pdev->dev, res);
-+	lpi2c_imx->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(lpi2c_imx->base))
- 		return PTR_ERR(lpi2c_imx->base);
- 
+I was trying to get the new pd which could only come from the inst.
+In any case the whole RCU idea doesn't work so we'll probably do the
+refcount idea that you suggested.
+
+Cheers,
 -- 
-2.7.4
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
