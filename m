@@ -2,118 +2,88 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E074C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69A9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A8E2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1B32182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OvNb5yTx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8RkSqE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389143AbfGQAPv (ORCPT
+        id S2389045AbfGQAaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 20:15:51 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11612 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728597AbfGQAPr (ORCPT
+        Tue, 16 Jul 2019 20:30:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39785 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfGQAaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 20:15:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2e68b90000>; Tue, 16 Jul 2019 17:15:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Jul 2019 17:15:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Jul 2019 17:15:46 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
- 2019 00:15:43 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 17 Jul 2019 00:15:43 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d2e68af0000>; Tue, 16 Jul 2019 17:15:43 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>, <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 3/3] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
-Date:   Tue, 16 Jul 2019 17:14:46 -0700
-Message-ID: <20190717001446.12351-4-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190717001446.12351-1-rcampbell@nvidia.com>
-References: <20190717001446.12351-1-rcampbell@nvidia.com>
+        Tue, 16 Jul 2019 20:30:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r21so17067007otq.6;
+        Tue, 16 Jul 2019 17:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MCQzjwUfSJg8bVO8ghpSoCJiKJHXzfZqPvw/ahHwNPw=;
+        b=r8RkSqE+qR7LaYol52hD5Dvfbz30XMK7h8IO7ZYcUatnZjYqDyYB9knIneCuG34u0u
+         Q+tnanwGyUBGo30K0/kfsaOThbM8D2oERf9Gb+h5rZ9M7LhehsO4yPxSRVWJRxgtxGnN
+         h9N6G/3dfhWNIHvqwdM+VgQKZHBGB4DP1LC1uU5DbGDm0V+X7xegwK7R9uLvsOtQVprn
+         Ew1cclbTrx528p9yWGPAZoZrH/vJOphp9OMpEES0kZFY6b1eO2GKJkjDkpsGor/B5L/L
+         1XNdnHmga/qB1T/PZbAMMfT7gLKrShkpzMj5CL7/a99AI1lDIXBGuedjDN5tA7BXRNK5
+         S5Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MCQzjwUfSJg8bVO8ghpSoCJiKJHXzfZqPvw/ahHwNPw=;
+        b=sk2tuUJtJzF3qKgzLw4IU8bikJUALF4dCKQnsn9wQF3VtA2vg6tbsTZgiZh0bWorvd
+         ifaRhsO+Nr5lm6wqgSzalsgYOXBUYFtiNzRGqfLbqMjpvxLS3rFMdOmfqGHrzTVmvy2n
+         XpuEzJRR0em3eMvhnkw7W3a2h8aE4/exq3xMl29hV2/rTedg26YStwTp3kL06fr9+OO2
+         YA22HUwP3mmXnPIfE3LWE+AaoBi25lkphzCXgUhiotU6iFdyCwU85SgIzPSbp+tX2a+p
+         jqlqIRwN5gJvZM76grvuWp1xqB44sOLcrcRuoZi8itGmf/8Whi5R8Yal4mJiD6Zjo2ou
+         HZog==
+X-Gm-Message-State: APjAAAUpAJBgRTdDpuAcCwEFXJyxsw1gkV2efuWntW40x/JTJqWeQbBG
+        82IrDW8iea95JzuSbg5pL10vJYzvbC8kitVuQNoJEEz8
+X-Google-Smtp-Source: APXvYqwQuNZFZzhUZbkicKvWjEpcwSqJAVFAEJ9MRYLTYpXpNAERa2KheVR2ATM+eFC1fFJ24NlNJK8RLN6Zt/a/5BY=
+X-Received: by 2002:a9d:2c47:: with SMTP id f65mr27751467otb.185.1563323413251;
+ Tue, 16 Jul 2019 17:30:13 -0700 (PDT)
 MIME-Version: 1.0
-X-NVConfidentiality: public
+References: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
+ <TY2PR02MB41600B4C6B9FF4A9F8CD957880F30@TY2PR02MB4160.apcprd02.prod.outlook.com>
+ <0e05bac0-af49-996a-c5fd-f6c61782ae4f@redhat.com>
+In-Reply-To: <0e05bac0-af49-996a-c5fd-f6c61782ae4f@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 17 Jul 2019 08:30:07 +0800
+Message-ID: <CANRm+Cwi33d5LCNu0JTRkf1W5dSVUOOfqo+QGYe=pd0i=vRXzw@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] KVM: LAPIC: Implement Exitless Timer
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <wanpeng.li@hotmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563322553; bh=dQvYVBMTRYc3SjF1PkfCIGikt9DQJqiS5LuvPJGyR14=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=OvNb5yTxS0yQJ/QFCE+O4SUPLwvoCMYAUHOjDwGSxYfeA1s4J/mA35mjyGpfefFUp
-         073C33WyN1TcgFCRmljuxkv/yP/G7JpuRxl+7h3pCLo8uhRNryeGc3ILxOMvxAZYqI
-         MsZ1qQWuqITEjYO9PQUmuc7GegYK+3RR6Rm1IMpon66Mk9LNCVjhy0crsVH35ow5X8
-         PwWlDzE+p3qI1hdOSLU0ZhwcMc1aBC865suP4f+l7DrrSh23BlRaZ2I8dLfTO8rR5Z
-         eOYvJA2qp1GRRBUkEmlbC4RJH3BuFWJIbrA8MKrcUq1TC22VYponvU4B+FIrlUKCv8
-         I2xExWbJO+Kww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When migrating an anonymous private page to a ZONE_DEVICE private page,
-the source page->mapping and page->index fields are copied to the
-destination ZONE_DEVICE struct page and the page_mapcount() is increased.
-This is so rmap_walk() can be used to unmap and migrate the page back to
-system memory. However, try_to_unmap_one() computes the subpage pointer
-from a swap pte which computes an invalid page pointer and a kernel panic
-results such as:
+On Thu, 11 Jul 2019 at 22:05, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 11/07/19 15:50, Wanpeng Li wrote:
+> > kindly ping=EF=BC=8C
+>
+> Sorry, I need more time to review this.  It's basically the only
+> remaining item for the 5.3 merge window, even though it won't be part of
+> the first pull request to Linus.
 
-BUG: unable to handle page fault for address: ffffea1fffffffc8
+Thank you! Hope finally we will not miss it. :)
 
-Currently, only single pages can be migrated to device private memory so
-no subpage computation is needed and it can be set to "page".
-
-Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE page=
- in migration")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
- mm/rmap.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/rmap.c b/mm/rmap.c
-index e5dfe2ae6b0d..ec1af8b60423 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1476,6 +1476,7 @@ static bool try_to_unmap_one(struct page *page, struc=
-t vm_area_struct *vma,
- 			 * No need to invalidate here it will synchronize on
- 			 * against the special swap migration pte.
- 			 */
-+			subpage =3D page;
- 			goto discard;
- 		}
-=20
---=20
-2.20.1
-
+Regards,
+Wanpeng Li
