@@ -2,39 +2,57 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1CBC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBD9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B3D2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453652173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfGQP3V (ORCPT
+        id S1727201AbfGQPab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 11:30:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:31551 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfGQP3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:29:21 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2852173B;
-        Wed, 17 Jul 2019 15:29:19 +0000 (UTC)
-Date:   Wed, 17 Jul 2019 11:29:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] tracing: Changes for 5.3
-Message-ID: <20190717112918.06d934dd@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725993AbfGQPab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 11:30:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 08:30:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
+   d="scan'208";a="172898749"
+Received: from szrederp-mobl.amr.corp.intel.com (HELO [10.252.199.30]) ([10.252.199.30])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jul 2019 08:30:27 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: Atom: read timestamp moved to
+ period_elapsed
+To:     Curtis Malainey <cujomalainey@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Alex Levin <levinale@chromium.org>
+References: <20190709040147.111927-1-levinale@chromium.org>
+ <20190709114519.GW9224@smile.fi.intel.com>
+ <CAOReqxirZdKJQ59Z4789wT5Cxh2fyQrUcuB1pm9AidYLiPEs1A@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <029bc013-608b-031b-780e-c48486fd9c15@linux.intel.com>
+Date:   Wed, 17 Jul 2019 10:30:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAOReqxirZdKJQ59Z4789wT5Cxh2fyQrUcuB1pm9AidYLiPEs1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -42,105 +60,118 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Linus,
 
-The main changes in this release include:
+On 7/10/19 6:15 PM, Curtis Malainey wrote:
+> On Tue, Jul 9, 2019 at 4:45 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>>
+>> On Mon, Jul 08, 2019 at 09:01:47PM -0700, Alex Levin wrote:
+>>> sst_platform_pcm_pointer is called from both snd_pcm_period_elapsed and
+>>> from snd_pcm_ioctl. Calling read timestamp results in recalculating
+>>> pcm_delay and buffer_ptr (sst_calc_tstamp) which consumes buffers in a
+>>> faster rate than intended.
+>>> In a tested BSW system with chtrt5650, for a rate of 48000, the
+>>> measured rate was sometimes 10 times more than that.
+>>> After moving the timestamp read to period elapsed, buffer consumption is
+>>> as expected.
+>>
+>>  From code prospective it looks good. You may take mine
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>
+>> Though I'm not an expert in the area, Pierre and / or Liam should give
+>> their blessing.
+>>
+> Agreed, Liam or Pierre should also give their ok since this is one of
+> the closed source firmware drivers.
+> 
+> Reviewed-by: Curtis Malainey <cujomalainey@chromium.org>
 
- - Add user space specific memory reading for kprobes
- - Allow kprobes to be executed earlier in boot
+Humm, this first review after my Summer break isn't straightforward.
 
-The rest are mostly just various clean ups and small fixes.
+By moving the timestamp update to the period elapsed event, don't you 
+prevent the use of this driver in no-interrupt mode - which I understood 
+as the baseline for Chrome?
 
-
-Please pull the latest trace-v5.3 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.3
-
-Tag SHA1: 93f8024308e2b5e3df59cd89ab776e3236cb69e5
-Head SHA1: 0aeb1def44169cbe7119f26cf10b974a2046142e
+And I also don't get how this timestamp might lead to 10x speed issues, 
+this driver has been around for a number of years and that specific 
+error was never seen. What is different in this platform and can this be 
+seen e.g. on a Cyan device?
 
 
-Cheng Jian (1):
-      ftrace: Enable trampoline when rec count returns back to one
-
-Cong Wang (3):
-      tracing: Pass type into tracing_generic_entry_update()
-      tracing: Let filter_assign_type() detect FILTER_PTR_STRING
-      tracing: Make trace_get_fields() global
-
-Gustavo A. R. Silva (1):
-      tracepoint: Use struct_size() in kmalloc()
-
-Masami Hiramatsu (20):
-      x86/uaccess: Allow access_ok() in irq context if pagefault_disabled
-      uaccess: Add non-pagefault user-space read functions
-      tracing/probe: Add ustring type for user-space string
-      tracing/probe: Support user-space dereference
-      selftests/ftrace: Add user-memory access syntax testcase
-      perf-probe: Add user memory access attribute support
-      uaccess: Add a prototype of non-static __probe_user_read()
-      tracing/kprobe: Cast user-space address correctly
-      kprobes: Initialize kprobes at postcore_initcall
-      tracing/kprobe: Add kprobe_event= boot parameter
-      kprobes: Fix to init kprobes in subsys_initcall
-      tracing/kprobe: Set print format right after parsed command
-      tracing/uprobe: Set print format when parsing command
-      tracing/probe: Add trace_probe init and free functions
-      tracing/probe: Add trace_event_call register API for trace_probe
-      tracing/probe: Add trace_event_file access APIs for trace_probe
-      tracing/probe: Add trace flag access APIs for trace_probe
-      tracing/probe: Add probe event name and group name accesses APIs
-      tracing/probe: Add trace_event_call accesses APIs
-      tracing/kprobe: Check registered state using kprobe
-
-Matthias Kaehlcke (1):
-      tracing: Use correct function name in trace_filter_add_remove_task() comment
-
-Steven Rostedt (VMware) (7):
-      ftrace: Make enable and update parameters bool when applicable
-      x86/ftrace: Make enable parameter bool where applicable
-      tracing: Make a separate config for trace event self tests
-      tracing/kprobe: Do not run kprobe boot tests if kprobe_event is on cmdline
-      ring-buffer: Remove HAVE_64BIT_ALIGNED_ACCESS
-      ftrace/selftests: Return the skip code when tracing directory not configured in kernel
-      ftrace/selftest: Test if set_event/ftrace_pid exists before writing
-
-----
- Documentation/admin-guide/kernel-parameters.txt    |  13 +
- Documentation/trace/kprobetrace.rst                |  42 ++-
- Documentation/trace/uprobetracer.rst               |  10 +-
- arch/Kconfig                                       |  16 -
- arch/x86/include/asm/uaccess.h                     |   4 +-
- arch/x86/kernel/ftrace.c                           |   6 +-
- include/linux/ftrace.h                             |   4 +-
- include/linux/trace_events.h                       |   9 +
- include/linux/uaccess.h                            |  20 +-
- kernel/kprobes.c                                   |   3 +-
- kernel/trace/Kconfig                               |  12 +-
- kernel/trace/ftrace.c                              |  48 +--
- kernel/trace/ring_buffer.c                         |  17 +-
- kernel/trace/trace.c                               |  17 +-
- kernel/trace/trace_event_perf.c                    |   3 +-
- kernel/trace/trace_events.c                        |  10 +-
- kernel/trace/trace_events_filter.c                 |   3 +
- kernel/trace/trace_kprobe.c                        | 357 ++++++++++++---------
- kernel/trace/trace_probe.c                         | 142 +++++++-
- kernel/trace/trace_probe.h                         |  77 ++++-
- kernel/trace/trace_probe_tmpl.h                    |  36 ++-
- kernel/trace/trace_uprobe.c                        | 180 ++++-------
- kernel/tracepoint.c                                |   4 +-
- mm/maccess.c                                       | 122 ++++++-
- tools/perf/Documentation/perf-probe.txt            |   3 +-
- tools/perf/util/probe-event.c                      |  11 +
- tools/perf/util/probe-event.h                      |   2 +
- tools/perf/util/probe-file.c                       |   7 +
- tools/perf/util/probe-file.h                       |   1 +
- tools/perf/util/probe-finder.c                     |  19 +-
- tools/testing/selftests/ftrace/ftracetest          |  38 ++-
- tools/testing/selftests/ftrace/test.d/functions    |   4 +-
- .../ftrace/test.d/kprobe/kprobe_args_user.tc       |  32 ++
- 33 files changed, 861 insertions(+), 411 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
----------------------------
+>>>
+>>> Signed-off-by: Alex Levin <levinale@chromium.org>
+>>> ---
+>>>   sound/soc/intel/atom/sst-mfld-platform-pcm.c | 23 +++++++++++++-------
+>>>   1 file changed, 15 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+>>> index 0e8b1c5eec88..196af0b30b41 100644
+>>> --- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+>>> +++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+>>> @@ -265,16 +265,28 @@ static void sst_period_elapsed(void *arg)
+>>>   {
+>>>        struct snd_pcm_substream *substream = arg;
+>>>        struct sst_runtime_stream *stream;
+>>> -     int status;
+>>> +     struct snd_soc_pcm_runtime *rtd;
+>>> +     int status, ret_val;
+>>>
+>>>        if (!substream || !substream->runtime)
+>>>                return;
+>>>        stream = substream->runtime->private_data;
+>>>        if (!stream)
+>>>                return;
+>>> +
+>>> +     rtd = substream->private_data;
+>>> +     if (!rtd)
+>>> +             return;
+>>> +
+>>>        status = sst_get_stream_status(stream);
+>>>        if (status != SST_PLATFORM_RUNNING)
+>>>                return;
+>>> +
+>>> +     ret_val = stream->ops->stream_read_tstamp(sst->dev, &stream->stream_info);
+>>> +     if (ret_val) {
+>>> +             dev_err(rtd->dev, "stream_read_tstamp err code = %d\n", ret_val);
+>>> +             return;
+>>> +     }
+>>>        snd_pcm_period_elapsed(substream);
+>>>   }
+>>>
+>>> @@ -658,20 +670,15 @@ static snd_pcm_uframes_t sst_platform_pcm_pointer
+>>>                        (struct snd_pcm_substream *substream)
+>>>   {
+>>>        struct sst_runtime_stream *stream;
+>>> -     int ret_val, status;
+>>> +     int status;
+>>>        struct pcm_stream_info *str_info;
+>>> -     struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>>>
+>>>        stream = substream->runtime->private_data;
+>>>        status = sst_get_stream_status(stream);
+>>>        if (status == SST_PLATFORM_INIT)
+>>>                return 0;
+>>> +
+>>>        str_info = &stream->stream_info;
+>>> -     ret_val = stream->ops->stream_read_tstamp(sst->dev, str_info);
+>>> -     if (ret_val) {
+>>> -             dev_err(rtd->dev, "sst: error code = %d\n", ret_val);
+>>> -             return ret_val;
+>>> -     }
+>>>        substream->runtime->delay = str_info->pcm_delay;
+>>>        return str_info->buffer_ptr;
+>>>   }
+>>> --
+>>> 2.22.0.410.gd8fdbe21b5-goog
+>>>
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> 
