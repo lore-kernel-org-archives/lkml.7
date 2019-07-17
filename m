@@ -2,87 +2,80 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3984EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7E7C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C21D2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895B621743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="n0O2kljS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387974AbfGQRWm (ORCPT
+        id S2388126AbfGQRXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:22:42 -0400
-Received: from smtprelay0006.hostedemail.com ([216.40.44.6]:53567 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727260AbfGQRWl (ORCPT
+        Wed, 17 Jul 2019 13:23:06 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:53606 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727260AbfGQRXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:22:41 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id C9C23181D33FC;
-        Wed, 17 Jul 2019 17:22:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cream96_17037daa23b2d
-X-Filterd-Recvd-Size: 2239
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 17 Jul 2019 17:22:37 +0000 (UTC)
-Message-ID: <18469f4c80f3dbf04eda5415f4bcf1c8fa655370.camel@perches.com>
-Subject: Re: [PATCH v8 4/5] x86/paravirt: Remove const mark from
- x86_hyper_xen_hvm variable
-From:   Joe Perches <joe@perches.com>
-To:     Juergen Gross <jgross@suse.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bp@alien8.de, sstabellini@kernel.org, x86@kernel.org,
-        tglx@linutronix.de, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com, mingo@redhat.com
-Date:   Wed, 17 Jul 2019 10:22:36 -0700
-In-Reply-To: <d4be507a-aa31-9ba3-9bf0-c8b60ec3f93a@suse.com>
-References: <1563251169-30740-1-git-send-email-zhenzhong.duan@oracle.com>
-         <9791d12717bba784f24f35c29ddfaab9ccb78965.camel@perches.com>
-         <d4be507a-aa31-9ba3-9bf0-c8b60ec3f93a@suse.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 17 Jul 2019 13:23:06 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x6HHMcFN026464;
+        Thu, 18 Jul 2019 02:22:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x6HHMcFN026464
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563384159;
+        bh=IvZ7SC20dxc7X+546O7iFUVvinUcZEEQvyGPucg162c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n0O2kljSpN7bM4J5jb8zs4bblEKtEnYD34Gp/o9ZrEMhEn+MKk8R0uoXaTI7/NB1E
+         gx5ISUq9jBxzokoLXkBf73il0+32ldOzlyT631daenzjotVIQ0NC3Tm3uELTpmkYVN
+         8dFVfASt4Xp+Jym9uksnoVfhyOAjTD40M6VSz2yDdGsBwVuahnmCd+56ejybyVK0gU
+         4juLOd0XljlHOv9+JRXoScYjON+ar5v67ql/nfTS2nOmNwRhkDpyzRNA9UMaWq1Za/
+         vpcezvPmThp5vTYmzFOyXgusvtMd0XEtyMZEXcwEaBFC73fVqYpjPIXO9RzGzruoRR
+         dcywYNazrfCOw==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id v6so17057989vsq.4;
+        Wed, 17 Jul 2019 10:22:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAWQfVpkL0kLwiAHRjsqlQ6MCCv1L9Ds7NKes6F73tiWpbJeVPsP
+        86qRpRQewLCEL9BexKv1GGuRwN58Z2dFSSQWYiI=
+X-Google-Smtp-Source: APXvYqw9jEx7hbtW9LzvI1Jj9HtHNLv1zygWCUdwJHeZD6RgBkfmF4ytMTb7w/QiSf5lovPyIfYE1Q4SMaHviUe6NR4=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr2283107vsd.215.1563384157905;
+ Wed, 17 Jul 2019 10:22:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190717160626.26293-1-seth.forshee@canonical.com>
+In-Reply-To: <20190717160626.26293-1-seth.forshee@canonical.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 18 Jul 2019 02:22:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASPqp6eK_3bx2PPQ6nUyh=7RBhABNxNY0Yw7vqdn=Ej1g@mail.gmail.com>
+Message-ID: <CAK7LNASPqp6eK_3bx2PPQ6nUyh=7RBhABNxNY0Yw7vqdn=Ej1g@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: add -fcf-protection=none when using retpoline flags
+To:     Seth Forshee <seth.forshee@canonical.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-17 at 08:49 +0200, Juergen Gross wrote:
-> On 17.07.19 08:46, Joe Perches wrote:
-> > On Tue, 2019-07-16 at 12:26 +0800, Zhenzhong Duan wrote:
-> > > .. as "nopv" support needs it to be changeable at boot up stage.
-> > > 
-> > > Checkpatch reports warning, so move variable declarations from
-> > > hypervisor.c to hypervisor.h
-> > []
-> > > diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-> > []
-> > > @@ -259,7 +259,7 @@ static __init void xen_hvm_guest_late_init(void)
-> > >   #endif
-> > >   }
-> > >   
-> > > -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
-> > > +struct hypervisor_x86 x86_hyper_xen_hvm __initdata = {
-> > 
-> > static?
-> 
-> It is being referenced from arch/x86/kernel/cpu/hypervisor.c
+On Thu, Jul 18, 2019 at 1:07 AM Seth Forshee <seth.forshee@canonical.com> wrote:
+>
+> The gcc -fcf-protection=branch option is not compatible with
+> -mindirect-branch=thunk-extern. The latter is used when
+> CONFIG_RETPOLINE is selected, and this will fail to build with
+> a gcc which has -fcf-protection=branch enabled by default. Adding
+> -fcf-protection=none when building with retpoline enabled
+> prevents such build failures.
+>
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
 
-But wasn't it also removed from the list of externs?
+Applied to linux-kbuild. Thanks.
 
-Rereading the .h file, no it wasn't.  I missed that.
-
-Perhaps the extern list could be reordered to move this
-x86_hyper_xen_hvm to be next to x86_hyper_type.
-
-I also suggest that "extern bool nopv" might be a bit
-non-specific and could use a longer identifier.
-
-
+-- 
+Best Regards
+Masahiro Yamada
