@@ -2,200 +2,296 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB03C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D281C76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52999217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB5C2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COaxmAt/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QduOLZsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfGQCFf (ORCPT
+        id S1727651AbfGQCHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:05:35 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34288 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfGQCFe (ORCPT
+        Tue, 16 Jul 2019 22:07:42 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40566 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfGQCHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:05:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id i2so11098343plt.1;
-        Tue, 16 Jul 2019 19:05:34 -0700 (PDT)
+        Tue, 16 Jul 2019 22:07:42 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s145so16249908qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 19:07:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yyCnAAqk50QuA4BIBmrwpAsydgjX7XlHlK6JOx65DDw=;
-        b=COaxmAt/1rYE2V0bO3fOwcy9AOu6ZItqgt7z0yJFcIToBFN7WR2IOKBaEsRG6f2oV/
-         7jNihXSPC/Fgw3SAM+JpTFvKs8bUzW1JTgrMg8ahJpn79fg0NFLde9ksQvOYv03GOK//
-         10h6wtCrDCWCTzVAhxYF3KdL2If6V9oWyNGLZclYY7CGLUMTXWn8GO4X/BCuA8p/49fM
-         MTfmesbcmL+rT90NrxCsfXB1Y9qszpcKWR5lC/DIE8lFbyG/wtHvQR4w9LGq2Z+aCjAG
-         cfxsXiWv9R9VmHxxeTAu4PFIG12pNt/eGwEhzTpiE2Wqx3kFeCGJXPlv/bg1j9/Wg+Zz
-         QGDQ==
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IP2uVEPbIAzpGypWmMwZYQMjWgXBZrIwHeY5kTSzUnI=;
+        b=QduOLZsrNp0z6hne15BBhmgcbZc0yNFvihobCtsn7/Tlf9116Wd1UfbQP3H1pGpbUv
+         /2gml2kbhUt5y2KOplxKzcXdUGs2MJA7/cykVzJBm5oaYeHrNtFh3fbom6OxYu892o7z
+         GokTxnEUcwZuwdpmR8dssn4IBq+bIheL97qADs4G1UUvCnq7yasCRdvRSU5DHk1MP1W8
+         nWysr2BRTlJnb9wzAb+U1FkBGltEahmJVCaiBZqLfyfDvu+cmEIQx1H4H1m0o5TvU1LB
+         WN6O6d9AbTiFhjxc+61dg4Unl/XA/xu1s7kcKBnRFpLt76LuGlLNdsX0Tetzg8TM/mwi
+         /BuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yyCnAAqk50QuA4BIBmrwpAsydgjX7XlHlK6JOx65DDw=;
-        b=pGXtlOISGzvLhNDBC9wiJTXK3qL2ah3hVMuOVgyFE/0kNMnNWZjDb2+tEB2yMuE+2R
-         x7rcCsy9M0HIjH1JwiFTs1Hoa9zc326FNYDDIKolaOsbtVp7XfULPTaX8DajbwOgPIhM
-         2u2N1l9NTy8E8M7x2gb+w/2kt1hzr6Q2uoiMH5fAn4RMZ2qiUjhrD5D/2jNYgnqfNvj8
-         ryNhWgQMiROdrT339ivp4CPmITNJ9o63oRTPBei91H2KKTXgZ0xeYgFM8qcoKdAoK3++
-         eV6AZxR2hTUXS8lJviVJEasScZBd7GCjJsjQTBXq5vCeEW+AzPYggvxvedxxyXHcLkGz
-         dVGA==
-X-Gm-Message-State: APjAAAWZBSWiBmZ012X+2g+uo7Osr2R8tBfwgYWtY3W8LT8fbDApjxMR
-        OdjcD/EdAeyKUf1OTbmqnLU=
-X-Google-Smtp-Source: APXvYqziOjUBLqVm7Ljn+gX0qv1m7k7hAhtfNX3S6c2+q6+5FyjgHUQz2dLeQN/U+ijm7WsOVtPlsQ==
-X-Received: by 2002:a17:902:f089:: with SMTP id go9mr39500527plb.81.1563329134078;
-        Tue, 16 Jul 2019 19:05:34 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id g2sm29161025pfb.95.2019.07.16.19.05.31
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IP2uVEPbIAzpGypWmMwZYQMjWgXBZrIwHeY5kTSzUnI=;
+        b=hYYPOcwrFc0T/zsHvjIj2yPE1w9AT+mXEwVqhFi8Bh43pwvjZIjDsxQejRVGCsy7Kb
+         WjdICsAJJsx4v2JWMSbUMWB9FDuLapCVDd0W5EumF80bkHbp05gYuG5BW+WRkMpwnw0m
+         vQG3NEBaajrl9PoC4eo+cnJDCRIBxrL5y2J8DOeORCu9/ul8j6WXhLKL1/vl6JqmKA8Q
+         RWqM/sTTf9Hf1hCQu8+DMSFckAlEDh43ebMxDXUjdfGrhg7HT6trc+a/2zUqC4Xrs2Ii
+         kGAPZyAUWfCZMSZZorxCsVQlAKdliDnT5DkOKqCe0KRa5B567krTEIsME3XpScLWtEzz
+         hflw==
+X-Gm-Message-State: APjAAAXm9QQ0MnauvFUFod/tRq4ZjaMd5joj+2OFNG9caDqA6ng5PqmR
+        LS7f3/PfFWMUvSwgh7kJzq3CBufQ1fQ=
+X-Google-Smtp-Source: APXvYqwfs67gIsEgSMn9ao9dkNWeVyQRe9zLOKH4bwrfNlAqh1g5Zvyh7UcvSZEZS0E5T/kEtWoJyw==
+X-Received: by 2002:a05:620a:142e:: with SMTP id k14mr24078298qkj.336.1563329261678;
+        Tue, 16 Jul 2019 19:07:41 -0700 (PDT)
+Received: from smtp.gmail.com ([187.121.151.22])
+        by smtp.gmail.com with ESMTPSA id z18sm10659315qka.12.2019.07.16.19.07.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 19:05:33 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Catherine Sullivan <csully@google.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] gve: replace kfree with kvfree
-Date:   Wed, 17 Jul 2019 10:05:11 +0800
-Message-Id: <20190717020510.4548-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 16 Jul 2019 19:07:41 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 23:07:37 -0300
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Simon Ser <contact@emersion.fr>,
+        Oleg Vasilev <oleg.vasilev@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] drm/vkms: Add support for vkms work without vblank
+Message-ID: <20190717020737.z2mu64s3lfyt7pl7@smtp.gmail.com>
+References: <20190710015514.42anrmx3r2ijaomz@smtp.gmail.com>
+ <20190710164036.GZ15868@phenom.ffwll.local>
+ <20190712025718.wdlafaujpxhpupj7@smtp.gmail.com>
+ <20190716090345.GX15868@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wy4ejomefpiiq7cz"
+Content-Disposition: inline
+In-Reply-To: <20190716090345.GX15868@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variables allocated by kvzalloc should not be freed by kfree.
-Because they may be allocated by vmalloc.
-So we replace kfree with kvfree here.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/net/ethernet/google/gve/gve_main.c | 22 +++++++++++-----------
- drivers/net/ethernet/google/gve/gve_rx.c   |  4 ++--
- 2 files changed, 13 insertions(+), 13 deletions(-)
+--wy4ejomefpiiq7cz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
-index 24f16e3368cd..10b8e9720c32 100644
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -232,7 +232,7 @@ static int gve_alloc_notify_blocks(struct gve_priv *priv)
- abort_with_msix_enabled:
- 	pci_disable_msix(priv->pdev);
- abort_with_msix_vectors:
--	kfree(priv->msix_vectors);
-+	kvfree(priv->msix_vectors);
- 	priv->msix_vectors = NULL;
- 	return err;
- }
-@@ -256,7 +256,7 @@ static void gve_free_notify_blocks(struct gve_priv *priv)
- 	priv->ntfy_blocks = NULL;
- 	free_irq(priv->msix_vectors[priv->mgmt_msix_idx].vector, priv);
- 	pci_disable_msix(priv->pdev);
--	kfree(priv->msix_vectors);
-+	kvfree(priv->msix_vectors);
- 	priv->msix_vectors = NULL;
- }
- 
-@@ -445,12 +445,12 @@ static int gve_alloc_rings(struct gve_priv *priv)
- 	return 0;
- 
- free_rx:
--	kfree(priv->rx);
-+	kvfree(priv->rx);
- 	priv->rx = NULL;
- free_tx_queue:
- 	gve_tx_free_rings(priv);
- free_tx:
--	kfree(priv->tx);
-+	kvfree(priv->tx);
- 	priv->tx = NULL;
- 	return err;
- }
-@@ -500,7 +500,7 @@ static void gve_free_rings(struct gve_priv *priv)
- 			gve_remove_napi(priv, ntfy_idx);
- 		}
- 		gve_tx_free_rings(priv);
--		kfree(priv->tx);
-+		kvfree(priv->tx);
- 		priv->tx = NULL;
- 	}
- 	if (priv->rx) {
-@@ -509,7 +509,7 @@ static void gve_free_rings(struct gve_priv *priv)
- 			gve_remove_napi(priv, ntfy_idx);
- 		}
- 		gve_rx_free_rings(priv);
--		kfree(priv->rx);
-+		kvfree(priv->rx);
- 		priv->rx = NULL;
- 	}
- }
-@@ -592,9 +592,9 @@ static void gve_free_queue_page_list(struct gve_priv *priv,
- 		gve_free_page(&priv->pdev->dev, qpl->pages[i],
- 			      qpl->page_buses[i], gve_qpl_dma_dir(priv, id));
- 
--	kfree(qpl->page_buses);
-+	kvfree(qpl->page_buses);
- free_pages:
--	kfree(qpl->pages);
-+	kvfree(qpl->pages);
- 	priv->num_registered_pages -= qpl->num_entries;
- }
- 
-@@ -635,7 +635,7 @@ static int gve_alloc_qpls(struct gve_priv *priv)
- free_qpls:
- 	for (j = 0; j <= i; j++)
- 		gve_free_queue_page_list(priv, j);
--	kfree(priv->qpls);
-+	kvfree(priv->qpls);
- 	return err;
- }
- 
-@@ -644,12 +644,12 @@ static void gve_free_qpls(struct gve_priv *priv)
- 	int num_qpls = gve_num_tx_qpls(priv) + gve_num_rx_qpls(priv);
- 	int i;
- 
--	kfree(priv->qpl_cfg.qpl_id_map);
-+	kvfree(priv->qpl_cfg.qpl_id_map);
- 
- 	for (i = 0; i < num_qpls; i++)
- 		gve_free_queue_page_list(priv, i);
- 
--	kfree(priv->qpls);
-+	kvfree(priv->qpls);
- }
- 
- /* Use this to schedule a reset when the device is capable of continuing
-diff --git a/drivers/net/ethernet/google/gve/gve_rx.c b/drivers/net/ethernet/google/gve/gve_rx.c
-index c1aeabd1c594..1914b8350da7 100644
---- a/drivers/net/ethernet/google/gve/gve_rx.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx.c
-@@ -35,7 +35,7 @@ static void gve_rx_free_ring(struct gve_priv *priv, int idx)
- 
- 	gve_unassign_qpl(priv, rx->data.qpl->id);
- 	rx->data.qpl = NULL;
--	kfree(rx->data.page_info);
-+	kvfree(rx->data.page_info);
- 
- 	slots = rx->data.mask + 1;
- 	bytes = sizeof(*rx->data.data_ring) * slots;
-@@ -168,7 +168,7 @@ static int gve_rx_alloc_ring(struct gve_priv *priv, int idx)
- 			  rx->q_resources, rx->q_resources_bus);
- 	rx->q_resources = NULL;
- abort_filled:
--	kfree(rx->data.page_info);
-+	kvfree(rx->data.page_info);
- abort_with_slots:
- 	bytes = sizeof(*rx->data.data_ring) * slots;
- 	dma_free_coherent(hdev, bytes, rx->data.data_ring, rx->data.data_bus);
--- 
-2.20.1
+On 07/16, Daniel Vetter wrote:
+> On Thu, Jul 11, 2019 at 11:57:18PM -0300, Rodrigo Siqueira wrote:
+> > On 07/10, Daniel Vetter wrote:
+> > > On Tue, Jul 09, 2019 at 10:55:14PM -0300, Rodrigo Siqueira wrote:
+> > > > Currently, vkms only work with enabled VBlank. This patch adds anot=
+her
+> > > > operation model that allows vkms to work without VBlank support. In=
+ this
+> > > > scenario, vblank signaling is faked by calling drm_send_vblank_even=
+t()
+> > > > in vkms_crtc_atomic_flush(); this approach works due to the
+> > > > drm_vblank_get() =3D=3D 0 checking.
+> > > >=20
+> > > > Changes since V2:
+> > > >  - Rebase
+> > > >=20
+> > > > Changes since V1:
+> > > >   Daniel Vetter:
+> > > >   - Change module parameter name from disablevblank to virtual_hw
+> > > >   - Improve parameter description
+> > > >   - Improve commit message
+> > > >=20
+> > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 10 ++++++++++
+> > > >  drivers/gpu/drm/vkms/vkms_drv.c  | 13 +++++++++++--
+> > > >  drivers/gpu/drm/vkms/vkms_drv.h  |  2 ++
+> > > >  3 files changed, 23 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkm=
+s/vkms_crtc.c
+> > > > index 49a8ec2cb1c1..a0c75b8c4335 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > @@ -207,12 +207,22 @@ static int vkms_crtc_atomic_check(struct drm_=
+crtc *crtc,
+> > > >  static void vkms_crtc_atomic_enable(struct drm_crtc *crtc,
+> > > >  				    struct drm_crtc_state *old_state)
+> > > >  {
+> > > > +	struct vkms_output *vkms_out =3D drm_crtc_to_vkms_output(crtc);
+> > > > +
+> > > > +	if (vkms_out->disable_vblank)
+> > > > +		return;
+> > > > +
+> > > >  	drm_crtc_vblank_on(crtc);
+> > > >  }
+> > > > =20
+> > > >  static void vkms_crtc_atomic_disable(struct drm_crtc *crtc,
+> > > >  				     struct drm_crtc_state *old_state)
+> > > >  {
+> > > > +	struct vkms_output *vkms_out =3D drm_crtc_to_vkms_output(crtc);
+> > > > +
+> > > > +	if (vkms_out->disable_vblank)
+> > > > +		return;
+> > > > +
+> > > >  	drm_crtc_vblank_off(crtc);
+> > > >  }
+> > > > =20
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms=
+/vkms_drv.c
+> > > > index 152d7de24a76..542a002ef9d5 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> > > > @@ -34,6 +34,11 @@ bool enable_writeback;
+> > > >  module_param_named(enable_writeback, enable_writeback, bool, 0444);
+> > > >  MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback conne=
+ctor");
+> > > > =20
+> > > > +bool virtual_hw;
+> > >=20
+> > > Can be static, you only use this in vkms_drv.c.
+> > >=20
+> > > > +module_param_named(virtual_hw, virtual_hw, bool, 0444);
+> > > > +MODULE_PARM_DESC(virtual_hw,
+> > > > +		 "Enable virtual hardware mode (disables vblanks and immediately=
+ completes flips)");
+> > > > +
+> > > >  static const struct file_operations vkms_driver_fops =3D {
+> > > >  	.owner		=3D THIS_MODULE,
+> > > >  	.open		=3D drm_open,
+> > > > @@ -154,9 +159,13 @@ static int __init vkms_init(void)
+> > > >  	if (ret)
+> > > >  		goto out_unregister;
+> > > > =20
+> > > > -	vkms_device->drm.irq_enabled =3D true;
+> > > > +	vkms_device->output.disable_vblank =3D virtual_hw;
+> > > > +	vkms_device->drm.irq_enabled =3D !virtual_hw;
+> > > > +
+> > > > +	if (virtual_hw)
+> > > > +		DRM_INFO("Virtual hardware mode enabled");
+> > > > =20
+> > > > -	ret =3D drm_vblank_init(&vkms_device->drm, 1);
+> > > > +	ret =3D (virtual_hw) ? 0 : drm_vblank_init(&vkms_device->drm, 1);
+> > > >  	if (ret) {
+> > > >  		DRM_ERROR("Failed to vblank\n");
+> > > >  		goto out_fini;
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms=
+/vkms_drv.h
+> > > > index 9ff2cd4ebf81..256e5e65c947 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> > > > @@ -21,6 +21,7 @@
+> > > > =20
+> > > >  extern bool enable_cursor;
+> > > >  extern bool enable_writeback;
+> > > > +extern bool virtual_hw;
+> > > > =20
+> > > >  struct vkms_composer {
+> > > >  	struct drm_framebuffer fb;
+> > > > @@ -69,6 +70,7 @@ struct vkms_output {
+> > > >  	struct drm_connector connector;
+> > > >  	struct drm_writeback_connector wb_connector;
+> > > >  	struct hrtimer vblank_hrtimer;
+> > > > +	bool disable_vblank;
+> > > >  	ktime_t period_ns;
+> > > >  	struct drm_pending_vblank_event *event;
+> > > >  	/* ordered wq for composer_work */
+> > >=20
+> > > I'm kinda wondering how this works at all ... does writeback/crc still
+> > > work if you set virtual mode? Writeback since this seems based on the
+> > > writeback series ...
+> >=20
+> > Hi,
+> >=20
+> > I tested this patch with kms_flip with the "drm/drm_vblank: Change
+> > EINVAL by the correct errno" patch [1]. However, you=E2=80=99re right a=
+bout the
+> > writeback/crc tests, they does not pass because this patch disables
+> > vblank which in turn does not invoke "vkms_vblank_simulate()".
+> >=20
+> > In this sense, I=E2=80=99m a little bit confused about how should I han=
+dle this
+> > issue. If I correctly understood, without vblank support we have to
+> > trigger vkms_composer_worker() when the userspace invoke
+> > drmModePageFlip(), am I right?  If so, an approach could add page_flip()
+> > callback to vkms and invoke vkms_composer_worker(); however, the
+> > documentation says that page_flip is a legacy entry point. Do you have a
+> > suggestion?
+>=20
+> We need this in atomic, for everyone. So instead of launching a vblank and
+> letting the vblank simulation kick off the crc/writeback work,
+> atomic_flush needs to also kick of the crc/vblank work. And make sure that
+> we feed the same vblank frame count values to the generated vblank even as
+> to the crc work (or maybe those are hardcoded to 0 for vblank-less, not
+> sure).
+> -Daniel
 
+Just for checking if I correctly understood... the idea is reworking
+vkms_vblank_simulate() a little bit in order to decouple the kick of
+crc/writeback to atomic_flush(). Right?
+=20
+> >=20
+> > 1. https://patchwork.freedesktop.org/patch/314399/?series=3D50697&rev=
+=3D7
+> >=20
+> > Thanks
+> > =20
+> > > btw if you send out patches that need other patches, point at that ot=
+her
+> > > series in the cover letter or patch. Gets confusing fast otherwise.
+> > > -Daniel
+> > > --=20
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+> >=20
+> > --=20
+> > Rodrigo Siqueira
+> > https://siqueira.tech
+>=20
+>=20
+>=20
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+>=20
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
+
+--wy4ejomefpiiq7cz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0ugugACgkQWJzP/com
+vP/+aA/9EP5Fdxa15qHv0znCbXQ1doJyn/FqSXV5T4w3fTgRZM8+GIEvS6xHEN1J
+sswU8lpuPzAmoFnwXhNY503JENCAMVp50sr1OQIJPwGja1jLAYqpGedKUKLrXMwm
+QTX7EjaQWNysRy4oy22XFTga2ozCAMWOhlGOjLyij+3nzZ4kWJKajpvMoy5NeL3U
+SiFlEFQ34uEv5/rKqGyMZRQOojdW1T2ityHdzscJf0eGC+FS5AQtBHev9O6tTPQd
+QTiQXPL4SE7a79dEuDSWCp2F/F2Lfy0p+8f2Q0kbJrfxNhTouifhRVJAZZQTXfcJ
+JWjBKjXUpkCuy2LGdxZmpt3dTLtawys4KtyJCRL3HU/dWJ1pEUDpIrvNzUdTFdHt
+6qlB1dn6aoUp8XhNt3s6BTV99/021KxZR+lLhL6+tWxIg4/pdn+SpZnCkxC2eloP
+VjuH+DCgWc5wtZAFOaCq+7qeebqYmfIjIDzeeim6TLoAaNx4zz75Zjpz4zDifxtK
+46eSygog5AHoqKtYWN31wJQOWeDZtwf1I2/Kio2VgJEdICKGv9I/7aRgab+2pvj1
+3FWalEoKnaDm8kRVHJVw8/NZrL6ui0rwMjm/VUBgRjGOvBXxarVbtGXQjDuwEdrN
+hnqtY3ynwYQsyIbc+7IVwrSwNiWKQJsM31TlBP5mzUBWmwitCpk=
+=Rsi1
+-----END PGP SIGNATURE-----
+
+--wy4ejomefpiiq7cz--
