@@ -2,131 +2,140 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4A8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC5CC76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB9621743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lGia3dcz"
+	by mail.kernel.org (Postfix) with ESMTP id E9A3E2182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563369682;
+	bh=cU+ZOTGMZmhAI1DZC8HHXC75JkDy+oI7nGSc2naIlPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RQl9KW/qpARFJ91YMPlaWablNOkSA8JxzXTOBzB4YxIhQ9JHTq3byYDXEeS3WEp2P
+	 gSHLXrY69o+jajRrxQUOLjWT4npbScyweomZuyTomB0dL/wAyCsyNas/yqGphC+ptb
+	 NE5AOc8Zfw0Am3jwDubDwaUu1VvnxNYvEK2wQi50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfGQNQs (ORCPT
+        id S1727120AbfGQNVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:16:48 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34838 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfGQNQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:16:48 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDDtDc093407;
-        Wed, 17 Jul 2019 13:16:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=MJEwO54lmmPvXRI8FYtOyTN+c7zUXuOQr44nzf5sm7Y=;
- b=lGia3dczEYc+Jx5Sud5AixQImtoAKnVWZsB+O63uURD8NR7O6afwJpcZlZsBI4awEVR6
- Goc+nlf9G+mPfIQz6OV8XUichp3IsXX8r6GV/DwuA9RM/661uFUygonIO+rXca0CmWHG
- jaMZgGUL59XSKEH4B2YOJ0KezaWEBWy6Z+u5eNde7huk6JHIvFykbOTCFlosVRIHs0xq
- bbyHz+kEBaAJKruJNxeKjDFKjkOMUQiNR+cAzhpfj+0gKE7NR75J9srbzC4HDjsNY60H
- qWHs3y3tzt0bPMUXKHk5xp9JERh8t71zeQTxFAzdRiW7CEZpF7spoMTbYB6tCo5sh+E1 VA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2tq78ptjp5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 13:16:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDCl2G074511;
-        Wed, 17 Jul 2019 13:14:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2tq5bd088x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 13:14:23 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6HDEMeT007829;
-        Wed, 17 Jul 2019 13:14:22 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 13:14:22 +0000
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] x86, boot: Remove multiple copy of static function sanitize_boot_params()
-Date:   Tue, 16 Jul 2019 21:18:12 +0800
-Message-Id: <1563283092-1189-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170161
+        Wed, 17 Jul 2019 09:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfGQNVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:21:20 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 995A221743;
+        Wed, 17 Jul 2019 13:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563369679;
+        bh=cU+ZOTGMZmhAI1DZC8HHXC75JkDy+oI7nGSc2naIlPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yaWf7Qbc10OEEYlxruvGmV9OX9wT/f6lVvOuktx1OVoc5klrwhvlWrClC7ILrHCPi
+         2d5zjXynjEnnQ1QR1+DuPJuAMHrUDxCYFtutV8em79vVjO5kpFBkymxCaOQNrj/idc
+         DIbe/nOQ+J5zxQaxzLdnrCH+ix+hARzs35PAipJc=
+Date:   Wed, 17 Jul 2019 15:21:16 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Lindroth <thomas.lindroth@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] cpuidle: Always stop scheduler tick on adaptive-tick CPUs
+Message-ID: <20190717132115.GB8345@lenoir>
+References: <6254683.2O5gIZElE2@kreacher>
+ <20190716214024.GA8345@lenoir>
+ <CAJZ5v0gB0AHTebjpp87YKA1wmE+tCw5V=eaRE2XDM3nyQYndnA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gB0AHTebjpp87YKA1wmE+tCw5V=eaRE2XDM3nyQYndnA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel build reporting warnings:
- 'sanitize_boot_params' defined but not used [-Wunused-function]
+On Wed, Jul 17, 2019 at 09:55:08AM +0200, Rafael J. Wysocki wrote:
+> On Tue, Jul 16, 2019 at 11:40 PM Frederic Weisbecker
+> <frederic@kernel.org> wrote:
+> >
+> > On Tue, Jul 16, 2019 at 05:25:10PM +0200, Rafael J. Wysocki wrote:
+> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >
+> > > Running the scheduler tick on idle adaptive-tick CPUs is not useful
+> >
+> > Judging by the below change, you mean full dynticks, right?
+> 
+> Right.
+> 
+> > > and it may also be not expected by users (as reported by Thomas), so
+> > > add a check to cpuidle_idle_call() to always stop the tick on them
+> > > regardless of the idle duration predicted by the governor.
+> > >
+> > > Fixes: 554c8aa8ecad ("sched: idle: Select idle state before stopping the tick")
+> > > Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
+> > > Tested-by: Thomas Lindroth <thomas.lindroth@gmail.com>
+> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > ---
+> > >  kernel/sched/idle.c |    3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > Index: linux-pm/kernel/sched/idle.c
+> > > ===================================================================
+> > > --- linux-pm.orig/kernel/sched/idle.c
+> > > +++ linux-pm/kernel/sched/idle.c
+> > > @@ -191,7 +191,8 @@ static void cpuidle_idle_call(void)
+> > >                */
+> > >               next_state = cpuidle_select(drv, dev, &stop_tick);
+> > >
+> > > -             if (stop_tick || tick_nohz_tick_stopped())
+> > > +             if (stop_tick || tick_nohz_tick_stopped() ||
+> > > +                 !housekeeping_cpu(dev->cpu, HK_FLAG_TICK))
+> >
+> > But tick_nohz_tick_stopped() also works on full dynticks CPUs. If the
+> > tick isn't stopped on a full dynticks CPU by the time we reach this path,
+> > it means that the conditions for the tick to be stopped are not met anyway
+> > (eg: more than one task and sched tick is needed, perf event requires the tick,
+> > posix CPU timer, etc...)
+> 
+> First of all, according to Thomas, the patch does make a difference,
+> so evidently on his system(s) the full dynticks CPUs enter the idle
+> loop with running tick.
+> 
+> This means that, indeed, the conditions for the tick to be stopped
+> have not been met up to that point, but if the (full dynticks) CPU
+> becomes idle, that's because it has been made idle on purpose
+> (presumably by a user-space "orchestrator" or the sysadmin), so the
+> kernel can assume that it will remain idle indefinitely.  That, in
+> turn, is when the tick would be stopped on it regardless of everything
+> else (even if it wasn't a full dynticks CPU).
 
-at below files:
-arch/x86/boot/compressed/cmdline.c
-arch/x86/boot/compressed/error.c
-arch/x86/boot/compressed/early_serial_console.c
-arch/x86/boot/compressed/acpi.c
+Well I think we disagree on that assumption that if a nohz_full CPU is put
+idle, it will remain there indefinitely. Nohz_full CPUs aren't really special
+in this regard, they can sleep on an IO, wait for a short event just like
+any other CPU.
 
-That's due to they each include misc.h which includes a definition
-of sanitize_boot_params().
+The only difference with other CPUs is that they _might_ enter the idle loop
+with the tick already stopped. Ok that should be the case most of the time
+with regular full dynticks usecases, but there can be initialization work
+or stuff that make the CPU run with periodic tick for some time.
 
-Remove the inclusion from misc.h and have the c file including
-bootparam_utils.h directly.
+Thanks.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
----
- arch/x86/boot/compressed/misc.c | 1 +
- arch/x86/boot/compressed/misc.h | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 24e65a0..53ac0cb 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -17,6 +17,7 @@
- #include "pgtable.h"
- #include "../string.h"
- #include "../voffset.h"
-+#include <asm/bootparam_utils.h>
- 
- /*
-  * WARNING!!
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index d2f1841..c818139 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -23,7 +23,6 @@
- #include <asm/page.h>
- #include <asm/boot.h>
- #include <asm/bootparam.h>
--#include <asm/bootparam_utils.h>
- 
- #define BOOT_CTYPE_H
- #include <linux/acpi.h>
--- 
-1.8.3.1
-
+> 
+> I guess I should add the above to the changelog.
+> 
+> > Or am I missing something else?
+> 
+> Well, if full dynticks CPUs are expected to always enter the idle loop
+> with stopped tick, then something appears to be amiss, but I'm not
+> sure if that expectation is entirely realistic.
+> 
+> Cheers!
