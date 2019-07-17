@@ -2,125 +2,66 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1398C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C659C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D8021873
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kOui65Ll"
+	by mail.kernel.org (Postfix) with ESMTP id 3D98421849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfGQS7D (ORCPT
+        id S1727304AbfGQTBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:59:03 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10790 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfGQS7D (ORCPT
+        Wed, 17 Jul 2019 15:01:33 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40850 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfGQTBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:59:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2f6ff80000>; Wed, 17 Jul 2019 11:59:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 17 Jul 2019 11:59:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 17 Jul 2019 11:59:02 -0700
-Received: from [10.26.11.185] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
- 2019 18:58:55 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
-Date:   Wed, 17 Jul 2019 19:58:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Wed, 17 Jul 2019 15:01:32 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E52A11264E7C3;
+        Wed, 17 Jul 2019 12:01:31 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 12:01:31 -0700 (PDT)
+Message-Id: <20190717.120131.1614957687610581259.davem@davemloft.net>
+To:     hariprasad.kelam@gmail.com
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sctp: fix warning "NULL check before some freeing
+ functions is not needed"
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190716022002.GA19592@hari-Inspiron-1545>
+References: <20190716022002.GA19592@hari-Inspiron-1545>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563389948; bh=z75CQwjX2xRi5gGhwHjg8Pb0vqIzhGv/Pngd7H+0mq4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kOui65LlUHDKPSoenvOQqNo6CMaBFq9txXXL4myoyRD7rw0ct2r+IZeTekYGEXl4a
-         Swjz4fIrhSaKyYdejDvhZN0XvC1ZIFzxHgoigM4nZUbo6G1MBlfhSqrLI+42Yss3hP
-         MdzKnB3tWewVJLVhq654EIg0FdmU6BYz1dirOoQSemuh6mI/5fSnEsTDmzTsSYf2dU
-         lNIieLby+qlnTCt4wV6VVgT93iR1qszonlhNTmUEPRSgxFZW+PR01+St079CSK+U7u
-         ltRfKYaBMjeF6H0+A8vk1f/D+qDsZZpMP8cW6N48RpqcI+pw+XJD/WWOK+z4EeGVEY
-         KEcbpDQQj+KvA==
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 17 Jul 2019 12:01:32 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Date: Tue, 16 Jul 2019 07:50:02 +0530
 
-On 03/07/2019 11:37, Jose Abreu wrote:
-> Mapping and unmapping DMA region is an high bottleneck in stmmac driver,
-> specially in the RX path.
+> This patch removes NULL checks before calling kfree.
 > 
-> This commit introduces support for Page Pool API and uses it in all RX
-> queues. With this change, we get more stable troughput and some increase
-> of banwidth with iperf:
-> 	- MAC1000 - 950 Mbps
-> 	- XGMAC: 9.22 Gbps
-I am seeing a boot regression on one of our Tegra boards with both
-mainline and -next. Bisecting is pointing to this commit and reverting
-this commit on top of mainline fixes the problem. Unfortunately, there
-is not much of a backtrace but what I have captured is below. 
+> fixes below issues reported by coccicheck
+> net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
+> freeing functions is not needed.
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-Please note that this is seen on a system that is using NFS to mount
-the rootfs and the crash occurs right around the point the rootfs is
-mounted.
-
-Let me know if you have any thoughts.
-
-Cheers
-Jon 
-
-[   12.221843] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-[   12.229485] CPU: 5 PID: 1 Comm: init Tainted: G S                5.2.0-11500-g916f562fb28a #18
-[   12.238076] Hardware name: NVIDIA Tegra186 P2771-0000 Development Board (DT)
-[   12.245105] Call trace:
-[   12.247548]  dump_backtrace+0x0/0x150
-[   12.251199]  show_stack+0x14/0x20
-[   12.254505]  dump_stack+0x9c/0xc4
-[   12.257809]  panic+0x13c/0x32c
-[   12.260853]  complete_and_exit+0x0/0x20
-[   12.264676]  do_group_exit+0x34/0x98
-[   12.268241]  get_signal+0x104/0x668
-[   12.271718]  do_notify_resume+0x2ac/0x380
-[   12.275716]  work_pending+0x8/0x10
-[   12.279109] SMP: stopping secondary CPUs
-[   12.283025] Kernel Offset: disabled
-[   12.286502] CPU features: 0x0002,20806000
-[   12.290499] Memory Limit: none
-[   12.293548] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
-
--- 
-nvpublic
+Applied.
