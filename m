@@ -3,165 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51496C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CBEC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5F521871
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63D821871
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389025AbfGQAKN (ORCPT
+        id S2388953AbfGQAMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 20:10:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46304 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728597AbfGQAKM (ORCPT
+        Tue, 16 Jul 2019 20:12:54 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:44118 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728848AbfGQAMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 20:10:12 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6H07KiH124292;
-        Tue, 16 Jul 2019 20:08:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tsnmnejq4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 20:07:59 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6H07OI6125043;
-        Tue, 16 Jul 2019 20:07:59 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tsnmnejpc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jul 2019 20:07:59 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6H06MZU032508;
-        Wed, 17 Jul 2019 00:07:57 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x63b2y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jul 2019 00:07:57 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6H07vFM39780686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 00:07:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A3E4B2065;
-        Wed, 17 Jul 2019 00:07:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0D28B206E;
-        Wed, 17 Jul 2019 00:07:56 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.225.134])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Jul 2019 00:07:56 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 30CFA16C8E9B; Tue, 16 Jul 2019 17:07:57 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 17:07:57 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, c0d1n61at3@gmail.com,
-        "David S. Miller" <davem@davemloft.net>, edumazet@google.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neilb@suse.com, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        peterz@infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, will@kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 2/9] rcu: Add support for consolidated-RCU reader
- checking (v3)
-Message-ID: <20190717000757.GQ14271@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190715143705.117908-1-joel@joelfernandes.org>
- <20190715143705.117908-3-joel@joelfernandes.org>
- <20190716183833.GD14271@linux.ibm.com>
- <20190716184649.GA130463@google.com>
- <20190716185303.GM14271@linux.ibm.com>
- <20190716220205.GB172157@google.com>
+        Tue, 16 Jul 2019 20:12:53 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TX5-mrd_1563322365;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TX5-mrd_1563322365)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 17 Jul 2019 08:12:49 +0800
+Subject: Re: list corruption in deferred_split_scan()
+To:     Shakeel Butt <shakeelb@google.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>
+Cc:     Qian Cai <cai@lca.pw>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <1562795006.8510.19.camel@lca.pw>
+ <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
+ <1562879229.8510.24.camel@lca.pw>
+ <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
+ <1563225798.4610.5.camel@lca.pw>
+ <5c853e6e-6367-d83c-bb97-97cd67320126@linux.alibaba.com>
+ <8A64D551-FF5B-4068-853E-9E31AF323517@lca.pw>
+ <e5aa1f5b-b955-5b8e-f502-7ac5deb141a7@linux.alibaba.com>
+ <CALvZod7+ComCUROSBaj==r0VmCczs=npP4u6C9LuJWNWdfB0Pg@mail.gmail.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <50f57bf8-a71a-c61f-74f7-31fb7bfe3253@linux.alibaba.com>
+Date:   Tue, 16 Jul 2019 17:12:45 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716220205.GB172157@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907160263
+In-Reply-To: <CALvZod7+ComCUROSBaj==r0VmCczs=npP4u6C9LuJWNWdfB0Pg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:02:05PM -0400, Joel Fernandes wrote:
-> On Tue, Jul 16, 2019 at 11:53:03AM -0700, Paul E. McKenney wrote:
-> [snip]
-> > > > A few more things below.
-> > > > > ---
-> > > > >  include/linux/rculist.h  | 28 ++++++++++++++++++++-----
-> > > > >  include/linux/rcupdate.h |  7 +++++++
-> > > > >  kernel/rcu/Kconfig.debug | 11 ++++++++++
-> > > > >  kernel/rcu/update.c      | 44 ++++++++++++++++++++++++----------------
-> > > > >  4 files changed, 67 insertions(+), 23 deletions(-)
-> > > > > 
-> > > > > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> > > > > index e91ec9ddcd30..1048160625bb 100644
-> > > > > --- a/include/linux/rculist.h
-> > > > > +++ b/include/linux/rculist.h
-> > > > > @@ -40,6 +40,20 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-> > > > >   */
-> > > > >  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
-> > > > >  
-> > > > > +/*
-> > > > > + * Check during list traversal that we are within an RCU reader
-> > > > > + */
-> > > > > +
-> > > > > +#ifdef CONFIG_PROVE_RCU_LIST
-> > > > 
-> > > > This new Kconfig option is OK temporarily, but unless there is reason to
-> > > > fear malfunction that a few weeks of rcutorture, 0day, and -next won't
-> > > > find, it would be better to just use CONFIG_PROVE_RCU.  The overall goal
-> > > > is to reduce the number of RCU knobs rather than grow them, must though
-> > > > history might lead one to believe otherwise.  :-/
-> > > 
-> > > If you want, we can try to drop this option and just use PROVE_RCU however I
-> > > must say there may be several warnings that need to be fixed in a short
-> > > period of time (even a few weeks may be too short) considering the 1000+
-> > > uses of RCU lists.
-> > Do many people other than me build with CONFIG_PROVE_RCU?  If so, then
-> > that would be a good reason for a temporary CONFIG_PROVE_RCU_LIST,
-> > as in going away in a release or two once the warnings get fixed.
-> 
-> PROVE_RCU is enabled by default with PROVE_LOCKING, so it is used quite
-> heavilty.
-> 
-> > > But I don't mind dropping it and it may just accelerate the fixing up of all
-> > > callers.
-> > 
-> > I will let you decide based on the above question.  But if you have
-> > CONFIG_PROVE_RCU_LIST, as noted below, it needs to depend on RCU_EXPERT.
-> 
-> Ok, will make it depend. But yes for temporary purpose, I will leave it as a
-> config and remove it later.
 
-Very good, thank you!  Plus you got another ack.  ;-)
 
-							Thanx, Paul
+On 7/16/19 4:36 PM, Shakeel Butt wrote:
+> Adding related people.
+>
+> The thread starts at:
+> http://lkml.kernel.org/r/1562795006.8510.19.camel@lca.pw
+>
+> On Mon, Jul 15, 2019 at 8:01 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>>
+>>
+>> On 7/15/19 6:36 PM, Qian Cai wrote:
+>>>> On Jul 15, 2019, at 8:22 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 7/15/19 2:23 PM, Qian Cai wrote:
+>>>>> On Fri, 2019-07-12 at 12:12 -0700, Yang Shi wrote:
+>>>>>>> Another possible lead is that without reverting the those commits below,
+>>>>>>> kdump
+>>>>>>> kernel would always also crash in shrink_slab_memcg() at this line,
+>>>>>>>
+>>>>>>> map = rcu_dereference_protected(memcg->nodeinfo[nid]->shrinker_map, true);
+>>>>>> This looks a little bit weird. It seems nodeinfo[nid] is NULL? I didn't
+>>>>>> think of where nodeinfo was freed but memcg was still online. Maybe a
+>>>>>> check is needed:
+>>>>> Actually, "memcg" is NULL.
+>>>> It sounds weird. shrink_slab() is called in mem_cgroup_iter which does pin the memcg. So, the memcg should not go away.
+>>> Well, the commit “mm: shrinker: make shrinker not depend on memcg kmem” changed this line in shrink_slab_memcg(),
+>>>
+>>> -     if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
+>>> +     if (!mem_cgroup_online(memcg))
+>>>                return 0;
+>>>
+>>> Since the kdump kernel has the parameter “cgroup_disable=memory”, shrink_slab_memcg() will no longer be able to handle NULL memcg from mem_cgroup_iter() as,
+>>>
+>>> if (mem_cgroup_disabled())
+>>>        return NULL;
+>> Aha, yes. memcg_kmem_enabled() implicitly checks !mem_cgroup_disabled().
+>> Thanks for figuring this out. I think we need add mem_cgroup_dsiabled()
+>> check before calling shrink_slab_memcg() as below:
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index a0301ed..2f03c61 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -701,7 +701,7 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int
+>> nid,
+>>           unsigned long ret, freed = 0;
+>>           struct shrinker *shrinker;
+>>
+>> -       if (!mem_cgroup_is_root(memcg))
+>> +       if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+>>                   return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+>>
+>>           if (!down_read_trylock(&shrinker_rwsem))
+>>
+> We were seeing unneeded oom-kills on kernels with
+> "cgroup_disabled=memory" and Yang's patch series basically expose the
+> bug to crash. I think the commit aeed1d325d42 ("mm/vmscan.c:
+> generalize shrink_slab() calls in shrink_node()") missed the case for
+> "cgroup_disabled=memory". However I am surprised that root_mem_cgroup
+> is allocated even for "cgroup_disabled=memory" and it seems like
+> css_alloc() is called even before checking if the corresponding
+> controller is disabled.
+
+I'm surprised too. A quick test with drgn shows root memcg is definitely 
+allocated:
+
+ >>> prog['root_mem_cgroup']
+*(struct mem_cgroup *)0xffff8902cf058000 = {
+[snip]
+
+But, isn't this a bug?
+
+Thanks,
+Yang
+
+>
+> Yang, can you please send the above change with signed-off and CC to
+> stable as well?
+>
+> thanks,
+> Shakeel
+
