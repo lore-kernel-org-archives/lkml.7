@@ -4,78 +4,190 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD72FC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137ECC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF602077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50A72077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfGQIVf (ORCPT
+        id S1728543AbfGQIVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:21:35 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39664 "EHLO inva021.nxp.com"
+        Wed, 17 Jul 2019 04:21:48 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:54000 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbfGQIVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:21:34 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 46905200099;
-        Wed, 17 Jul 2019 10:21:33 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 31C9B20024E;
-        Wed, 17 Jul 2019 10:21:30 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 041B2402C3;
-        Wed, 17 Jul 2019 16:21:25 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] rtc: mxc_v2: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 17 Jul 2019 16:12:17 +0800
-Message-Id: <20190717081217.30518-1-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726188AbfGQIVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:21:48 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x6H8JWvY014382
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Wed, 17 Jul 2019 01:19:43 -0700
+Received: from pek-jsun4-d1.corp.ad.wrs.com (128.224.155.112) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+ 14.3.468.0; Wed, 17 Jul 2019 01:19:21 -0700
+From:   Jiwei Sun <jiwei.sun@windriver.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <arnaldo.melo@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] perf record: Add support for limit perf output file size
+Date:   Wed, 17 Jul 2019 16:19:18 +0800
+Message-ID: <20190717081918.8235-1-jiwei.sun@windriver.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+The patch adds a new option to limit the output file size, then based
+on it, we can create a wrapper of the perf command that uses the option
+to avoid exhausting the disk space by the unconscious user.
 
-Use the new helper devm_platform_ioremap_resource() which wraps the
-platform_get_resource() and devm_ioremap_resource() together, to
-simplify the code.
+In order to make the perf.data parsable, we just limit the sample data
+size, since the perf.data consists of many headers and sample data and
+other data, the actual size of the recorded file will bigger than the
+setting value.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Testing it:
+
+ # ./perf record -a -g --max-size=10M
+Couldn't synthesize bpf events.
+WARNING: The perf data has already reached the limit, stop recording!
+[ perf record: Woken up 30 times to write data ]
+[ perf record: Captured and wrote 10.233 MB perf.data (175650 samples) ]
+Terminated
+
+ # ls -lh perf.data
+-rw------- 1 root root 11M Jul 17 14:01 perf.data
+
+ # ./perf record -a -g --max-size=10K
+WARNING: The perf data has already reached the limit, stop recording!
+Couldn't synthesize bpf events.
+[ perf record: Woken up 0 times to write data ]
+[ perf record: Captured and wrote 1.824 MB perf.data (67 samples) ]
+Terminated
+
+ # ls -lh perf.data
+-rw------- 1 root root 1.9M Jul 17 14:05 perf.data
+
+Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
 ---
- drivers/rtc/rtc-mxc_v2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+v4 changes:
+  - Just show one WARNING message after reached the limit.
 
-diff --git a/drivers/rtc/rtc-mxc_v2.c b/drivers/rtc/rtc-mxc_v2.c
-index 5b970a8..9153456 100644
---- a/drivers/rtc/rtc-mxc_v2.c
-+++ b/drivers/rtc/rtc-mxc_v2.c
-@@ -279,7 +279,6 @@ static int mxc_rtc_wait_for_flag(void __iomem *ioaddr, int flag)
- static int mxc_rtc_probe(struct platform_device *pdev)
+v3 changes:
+  - add a test result
+  - add the new option to tools/perf/Documentation/perf-record.txt
+
+v2 changes:
+  - make patch based on latest Arnaldo's perf/core,
+  - display warning message when reached the limit.
+---
+ tools/perf/Documentation/perf-record.txt |  4 +++
+ tools/perf/builtin-record.c              | 42 ++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 15e0fa87241b..918a0844cbcf 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -564,6 +564,10 @@ config terms. For example: 'cycles/overwrite/' and 'instructions/no-overwrite/'.
+ 
+ Implies --tail-synthesize.
+ 
++--max-size=<size>::
++Limit the sample data max size, <size> is expected to be a number with
++appended unit character - B/K/M/G
++
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 8779cee58185..8c49dce3abd8 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -86,6 +86,7 @@ struct record {
+ 	struct switch_output	switch_output;
+ 	unsigned long long	samples;
+ 	cpu_set_t		affinity_mask;
++	unsigned long		output_max_size;	/* = 0: unlimited */
+ };
+ 
+ static volatile int auxtrace_record__snapshot_started;
+@@ -115,6 +116,12 @@ static bool switch_output_time(struct record *rec)
+ 	       trigger_is_ready(&switch_output_trigger);
+ }
+ 
++static bool record__output_max_size_exceeded(struct record *rec)
++{
++	return (rec->output_max_size &&
++	       rec->bytes_written >= rec->output_max_size);
++}
++
+ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unused,
+ 			 void *bf, size_t size)
  {
- 	struct mxc_rtc_data *pdata;
--	struct resource *res;
- 	void __iomem *ioaddr;
- 	int ret = 0;
+@@ -127,6 +134,12 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
  
-@@ -287,8 +286,7 @@ static int mxc_rtc_probe(struct platform_device *pdev)
- 	if (!pdata)
- 		return -ENOMEM;
+ 	rec->bytes_written += size;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pdata->ioaddr = devm_ioremap_resource(&pdev->dev, res);
-+	pdata->ioaddr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pdata->ioaddr))
- 		return PTR_ERR(pdata->ioaddr);
++	if (record__output_max_size_exceeded(rec)) {
++		WARN_ONCE(1, "WARNING: The perf data has already reached "
++			     "the limit, stop recording!\n");
++		raise(SIGTERM);
++	}
++
+ 	if (switch_output_size(rec))
+ 		trigger_hit(&switch_output_trigger);
+ 
+@@ -1902,6 +1915,33 @@ static int record__parse_affinity(const struct option *opt, const char *str, int
+ 	return 0;
+ }
+ 
++static int parse_output_max_size(const struct option *opt,
++				 const char *str, int unset)
++{
++	unsigned long *s = (unsigned long *)opt->value;
++	static struct parse_tag tags_size[] = {
++		{ .tag  = 'B', .mult = 1       },
++		{ .tag  = 'K', .mult = 1 << 10 },
++		{ .tag  = 'M', .mult = 1 << 20 },
++		{ .tag  = 'G', .mult = 1 << 30 },
++		{ .tag  = 0 },
++	};
++	unsigned long val;
++
++	if (unset) {
++		*s = 0;
++		return 0;
++	}
++
++	val = parse_tag_value(str, tags_size);
++	if (val != (unsigned long) -1) {
++		*s = val;
++		return 0;
++	}
++
++	return -1;
++}
++
+ static int record__parse_mmap_pages(const struct option *opt,
+ 				    const char *str,
+ 				    int unset __maybe_unused)
+@@ -2228,6 +2268,8 @@ static struct option __record_options[] = {
+ 			    "n", "Compressed records using specified level (default: 1 - fastest compression, 22 - greatest compression)",
+ 			    record__parse_comp_level),
+ #endif
++	OPT_CALLBACK(0, "max-size", &record.output_max_size,
++		     "size", "Limit the maximum size of the output file", parse_output_max_size),
+ 	OPT_END()
+ };
  
 -- 
-2.7.4
+2.20.1
 
