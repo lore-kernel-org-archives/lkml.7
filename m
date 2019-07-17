@@ -2,191 +2,143 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489A9C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1732EC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071C82184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836592184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SHZqsjk2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="AOGDzevZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eEW5GRpi";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="XcogKFpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389115AbfGQSfZ (ORCPT
+        id S2389162AbfGQSf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:35:25 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:37986 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727377AbfGQSfZ (ORCPT
+        Wed, 17 Jul 2019 14:35:27 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:12040 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbfGQSf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:35:25 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CAE42C2962;
-        Wed, 17 Jul 2019 18:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563388524; bh=prrW1Ndm7Bdq3WM62kogpc9GH1kqMmi6FD47AxwU2nE=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=SHZqsjk2x+Bnuymsx/kt+qURLS9X39vmjXdsYu9zXkazQDuep/wU2/t7X5zkn8ghL
-         SzfEMGQVcF5fo/AGm57jNsMdcbSHY3RdzZYONL+wGwaoMPJL1+R3Kg27VhPLLepcBd
-         mVfadtWdXtRs78CFWqFiCw1W3qD/oM6ic4LwSp1kV2oJLfdohT3sTdJbrcxcukqdzB
-         YxXAy/0aa0dwFYb+dktgx+vqJ7vvEGbQHou7fAp6f75pk1I2QOznFcYXvD5bzZZCII
-         hjUYEllMIQu2y2MVRWAQv2u/p2l03OM6cLysBK1YqX3+DKf9ZQ374nx8hE34wjQ1b6
-         Ct7zBIKy/LuEw==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id BB80DA009F;
-        Wed, 17 Jul 2019 18:35:20 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 17 Jul 2019 11:35:07 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 17 Jul 2019 11:35:07 -0700
+        Wed, 17 Jul 2019 14:35:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1563388525; x=1594924525;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=npA5ARj+GwXWJpeyBmWB7akT7BrpCPGMHSQgfAAUmDg=;
+  b=eEW5GRpiBw7LbkI1s2lWU0uXCBT1NNXZGFSZRnCcoMpsJ/QABAej9Ymb
+   FOxchBN5NigHZI9JnuRrC4IP1G9uFfr0dMJsb2cNJwH48UVmPE+VJ4NN8
+   znfr/YHup1N4c/F9pcO8rn4/W4r8ZAmVOeEYknFTOEkoQIn+dq1YcDaeK
+   3Yt8upPTbYVqY7LrQ5E2bHJx/PLAjBTBQfhk21E+f9RnUQl4NGgxA+A5H
+   vjT1BE6uc3CXAtr212zRkniUMr/WAOK17/sjgzuxVLg5m5sjkZEu7GcaB
+   oAtaXK9xGHvDZw4ho6FGp01V5UGhcQNyrmD2mPxB886UGcFj6sHnt2VA7
+   Q==;
+IronPort-SDR: mxhRoaSH9F/33v1ROF1+kpVhJRy8MwXt9lAO0/GbY6sEFRvCTTlp6G72uFGL13mnc9oNAvfypK
+ zfGy08YzX+cUYP6u6CAfZJGrqIwdmxdaGMyMae/XFGzDLc8wRurZBQZu+o/AfGdQiDI/VsQQ5g
+ X0y2KegfFJebyhb0uqVVIYWhj25LDUmE919458DBTc2gAECRjWsSNud51drdyVNjTh7mxiBGol
+ dLK6zZpIcItkUXBz8iQxbihfg5AUadT9ReroVjIUfOkXlBjgx2Nf4XHdyhk6BfFwj2uf7byMRC
+ 8gE=
+X-IronPort-AV: E=Sophos;i="5.64,275,1559491200"; 
+   d="scan'208";a="219753321"
+Received: from mail-bl2nam02lp2059.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.59])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jul 2019 02:35:23 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bVWw5xiE5yqUH4k/FT1GQIKnAPYBJWTL4e15VcCuLW9RVr4s3pKYHQqYwFhzr4dUgbPEk8W/zHZvi8CVWdmsws08A+fuUoFPBilBd6NlgzzA+uALf6osIgBGw8rGPD0oYuPw5R0H/fM/OhX4Bt1mt3la9y2up3Yd5ik9iB+G21f41UZC9da9Klg5iT9f8gIJKiX3hG4bYVjzrwOCgf8xpICd87+/I4ofCdSql+cmf/A4cfq0yIgsChhfA3QZRQkTp5SFy2Df8cBdGsTl456VQWYdiKz4briZnqB+LSoX09FXdAS5AkYRGsh3ufR2XlvTMJHX8aPv4xSKwCetr5MowA==
+ b=L8pT8vZRLTeak2VCpboknKgj7N0MaOPN9Sn0LigWUY+cZuz1rhA/fXQIIvGxGWQRWJozHLycZDC1J6elY/3KNIzjiC1Bn6OBhydfLxPCYQwYZK9qBNayeBKN2gMETFs3DOB2nLKCbEWSeRxVzflPK2C1prxA+SAY3lD2dtcKfwpUpviE+HUs80khbBmzS0clIUghxvvCqk1OFeY1jEUUKeVhuh3Uw41dhuzOZJenVydKP6DtS/rqjOXCgYqKVBLzosFyx0tZo5XAJcJRAayHj6v0SGgBziLhYlU1p829FG/vgdaWdjuAVVCMU8Dt5hI8E9CePgQfRhYctJD+qQMdCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3mNfbxTclfRCoJ5x4d8zRoFCRBS7pDYJ86mL5d4ivw=;
- b=BFgXWg0EGGgIAFrWRNblJV2S4tLnAKrjFreRvjcOT8qiwmdOhkwO+a/W0BgctSa3s0LTLdtvaNqpmRqB1TPkYqVOoS8J/QVpKbIaIt9oe5PTrAul56BlRO7gmBNwgckyfcqJAY7jFfDCMGtbUYzb1NRxNGtDswXHUYsjA5F4XCID496lcibyLH/1JzN+Ptzc2dtM+sh6FicpNJ34WmE2r9cgL2jUKV1w+UlHUcGGId6767iMVM7DwZkv2338Id+wWx9lI6b7jFJM4S3yxtHT4uUR1/k4VWJOLHDwBckHbyIfiWH5M20Dysz/xpD2d78aDU5OJvZASLF+PL84qBfyPg==
+ bh=npA5ARj+GwXWJpeyBmWB7akT7BrpCPGMHSQgfAAUmDg=;
+ b=MA3AcBFx1+m89u9zrEMw70JxFLhvBfoDbwGuetAqBghKoaeHvrH0kMMTkfieMe8bnBLjPl7w0K+cdObGL+doJr2pJiXser3uQawDyvRuh+J5hZZbP63fSbQLLYyLrHn31mBPOc18rmls+ge5I85ieqIof7gFiex0z2hQijtVqb7uF74WS3vtoqcbP5w2AwWjlSNuf17HVYWrlSKwsI0YaA9085KqwpRCF9/9OihxY3FNnkinxY10GwC8kSOeDoZowAXCGs0vdglbaHf1U3ODCkzuF8EbV4g5oOeamGH9Sep+64IJz9p7U77+z8pa+QBcBt+kuyoWxlD78DLnmdZTkw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3mNfbxTclfRCoJ5x4d8zRoFCRBS7pDYJ86mL5d4ivw=;
- b=AOGDzevZBKA/BExTnUBMKelyDAPZq5MHnieakHMMmvXP6lj6ndHI1hsFyOGiqZSoUOq3EJAwumDj+g0ivk0BUky/paetwKA1Z6Xxpfm6hbEpsx3vs3E0cqvNPmTjl31eKJN/GKJ14xWaGw0Navz8fWU73eTGIQlDOSQ39/vB3oA=
-Received: from BN6PR1201MB0035.namprd12.prod.outlook.com (10.174.238.140) by
- BN6PR1201MB0241.namprd12.prod.outlook.com (10.174.116.18) with Microsoft SMTP
+ bh=npA5ARj+GwXWJpeyBmWB7akT7BrpCPGMHSQgfAAUmDg=;
+ b=XcogKFpg3m0IySu8Zj2EXRM9B4u2zc0k2FiivxwYu1hDJp34LWyPURH0LPYhQQtgkIT0EeW5MmfFlPreu18Ik1EMxHImKlEFeXFFWppFssXlLTaMK7mKsBRBi/fjZP/Lisq/oNNvcy5K848ju3Ih7f2okU+D73rZZGbT3/RZB40=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.58.26) by
+ BYAPR04MB4775.namprd04.prod.outlook.com (52.135.240.82) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 18:35:03 +0000
-Received: from BN6PR1201MB0035.namprd12.prod.outlook.com
- ([fe80::24a0:9726:b1f7:fb3c]) by BN6PR1201MB0035.namprd12.prod.outlook.com
- ([fe80::24a0:9726:b1f7:fb3c%11]) with mapi id 15.20.2073.012; Wed, 17 Jul
- 2019 18:35:03 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+ 15.20.2073.14; Wed, 17 Jul 2019 18:35:23 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::8025:ccea:a0e6:9078]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::8025:ccea:a0e6:9078%5]) with mapi id 15.20.2094.011; Wed, 17 Jul 2019
+ 18:35:23 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARCv2: Don't pretend we may set U & DE bits in STATUS32
- with kflag
-Thread-Topic: [PATCH] ARCv2: Don't pretend we may set U & DE bits in STATUS32
- with kflag
-Thread-Index: AQHVPBg5vQNhnF2iB0aHFOZdtIGHIA==
-Date:   Wed, 17 Jul 2019 18:35:02 +0000
-Message-ID: <BN6PR1201MB003505F72EBBE443FADBC23CB6C90@BN6PR1201MB0035.namprd12.prod.outlook.com>
-References: <20190716205034.42466-1-abrodkin@synopsys.com>
+CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
+Subject: Re: [PATCH v2] nvmet-file: fix nvmet_file_flush() always returning an
+ error
+Thread-Topic: [PATCH v2] nvmet-file: fix nvmet_file_flush() always returning
+ an error
+Thread-Index: AQHVO1sRlL6YpeqcQEOD+On3jfJuog==
+Date:   Wed, 17 Jul 2019 18:35:22 +0000
+Message-ID: <BYAPR04MB57492E5376FAAF29B70A46F786C90@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20190715221707.3265-1-logang@deltatee.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [198.182.56.5]
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.63]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d4c85b62-7026-4f0f-0189-08d70ae57b65
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR1201MB0241;
-x-ms-traffictypediagnostic: BN6PR1201MB0241:
-x-microsoft-antispam-prvs: <BN6PR1201MB0241EFC111FFADA987022383B6C90@BN6PR1201MB0241.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: f552c421-7704-4c59-f8f4-08d70ae5874e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4775;
+x-ms-traffictypediagnostic: BYAPR04MB4775:
+x-microsoft-antispam-prvs: <BYAPR04MB4775149D2B214656FC84FC2A86C90@BYAPR04MB4775.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(396003)(136003)(366004)(376002)(54534003)(189003)(199004)(476003)(6246003)(6506007)(53546011)(53936002)(2906002)(81166006)(81156014)(8936002)(7736002)(25786009)(74316002)(305945005)(66946007)(86362001)(256004)(66476007)(66556008)(64756008)(66446008)(76116006)(76176011)(8676002)(99286004)(54906003)(110136005)(14444005)(52536014)(4326008)(5660300002)(7696005)(66066001)(91956017)(33656002)(71200400001)(71190400001)(14454004)(102836004)(6116002)(3846002)(26005)(68736007)(55016002)(9686003)(186003)(478600001)(229853002)(486006)(6436002)(2501003)(446003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR1201MB0241;H:BN6PR1201MB0035.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(376002)(136003)(396003)(366004)(51914003)(199004)(189003)(6116002)(5660300002)(14454004)(3846002)(66476007)(66066001)(305945005)(25786009)(7736002)(4744005)(68736007)(74316002)(256004)(14444005)(7696005)(76116006)(316002)(6506007)(76176011)(66946007)(446003)(53546011)(110136005)(66556008)(66446008)(486006)(33656002)(229853002)(64756008)(102836004)(54906003)(99286004)(52536014)(186003)(26005)(9686003)(53936002)(81156014)(8936002)(71190400001)(55016002)(71200400001)(2906002)(81166006)(478600001)(2501003)(4326008)(6246003)(476003)(8676002)(86362001)(6436002)(2201001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4775;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xBhBhKXgPywXpgn5xjNL4MO7W125ZaBwJGmesSYuiW3nd677DD8qR9R7FBLeIMZsae3o5MfClpytHgmfxV4+VnJtTWgmpfRg/XDAbqkcoYJMxrd+2V1Noibhy/1ZpRnAJokadsrAhvYCPHps0Kzph+3kVZNva/WVhUtHU/yWRedPiKj5Xfma0KpEfV1gvbVoIAQvTDdYIvvOgvLc9V5eMWwBI7ZdcqylbLIFMmpWtOKJDnuxr1nWA4g9v7t6hgnSIhBSfWSz4cOUjKlZDlZZpfW6tDVakv4UnfN5zQFHwPQD7XhNTe7ZMrIicLOZspq6oQiJZDZYKOl6d90athfH6CfL+JzN+vMDGJElJNFhwHJz44hq0/t9iYbvwLvL8p7Hjf7ASMCXfSwzjJwJbmUH9rtw2zrPxG9gKZX0ua1y2Sg=
+x-microsoft-antispam-message-info: gX7mnHsTLOD2jvm8sCU56K0XveoHIXpVN68Gi91jPGbh5mFXT/SzRrGWJh2/oy1rpSEJwnkdUDBAbSH1JclV5+OZw3QZroKX9mLd1qvgK2bpH7C5jr1xusve8RMdse4w6/iJyc05wa72aoj+8ULcCumZtrkMYYhnV0FIvDo3OyrLE72JCpfgBY2rS51IRZ6YTcC8ahL68wB8v9u5jFy8hk8P7ZGNUd1gumAR/kv/xkSR0qbBpNIuUXvffwdAVcpm26EZKq0VVQZVPKw3wJs4iVNkZZtgo5sBTMqM6ESb3ttdi9kJtf6lXjlDyneZlHYPSnKBFiV7sQQbS1sMN0eyK+ycYVF56fQkHemr0f4Wun5PY6+ycKt5O8ZRmhOy8jiVO5XmlVOxJ0rs2ZHjh42zuk6kxov7lYME22RwEgW4EOg=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4c85b62-7026-4f0f-0189-08d70ae57b65
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 18:35:02.9040
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f552c421-7704-4c59-f8f4-08d70ae5874e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 18:35:22.9113
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vgupta@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0241
-X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-userprincipalname: Chaitanya.Kulkarni@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4775
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 1:51 PM, Alexey Brodkin wrote:=0A=
-> As per PRM "kflag" instruction doesn't change state of=0A=
-> DE-flag ("Delayed branch is pending") and U-flag ("User mode")=0A=
-> in STATUS32 register so let's not act as if we can affect those bits.=0A=
+On 07/15/2019 03:17 PM, Logan Gunthorpe wrote:=0A=
+> Presently, nvmet_file_flush() always returns a call to=0A=
+> errno_to_nvme_status() but that helper doesn't take into account the=0A=
+> case when errno=3D0. So nvmet_file_flush() always returns an error code.=
 =0A=
-I understand the motivation and indeed bits not writable by kflag should be=
-=0A=
-removed. But what if we do need to clear those bits out from status32 (assu=
-ming=0A=
-they exist there in first place) and that kflag might not be the right inst=
-ruction=0A=
-to do that.=0A=
-So the question to ask is do we need to clear U and DE bits from status32 a=
-nd=0A=
-answer from reading the PRM is no, we don't have to, as those are cleared a=
-lready=0A=
-when an exception is taken.=0A=
-=0A=
-The likely reason this code is because back in arc700 days we used to have =
-a=0A=
-different version of this macro which atleast in original code relied on us=
-ing the=0A=
-pre-exception status32 (in pt_regs) - and that could easily have U and/or D=
-E set=0A=
-based hence needed clearing.=0A=
-=0A=
-.macro FAKE_RET_FROM_EXCPN  reg=0A=
-=0A=
-    ld  \reg, [sp, PT_status32]=0A=
-    and \reg, \reg, ~(STATUS_U_MASK|STATUS_DE_MASK)=0A=
-    or  \reg, \reg, STATUS_L_MASK=0A=
-    sr  \reg, [erstatus]=0A=
-    mov \reg, 55f=0A=
-    sr  \reg, [eret]=0A=
-=0A=
-    rtie=0A=
-55:=0A=
-.endm=0A=
-=0A=
-This is not needed (even in arc700) if we are using the current "in-excepti=
-on"=0A=
-status32 for doing the early return.=0A=
-=0A=
-Long story short, your patch is correct but we need to explain better why i=
-t is.=0A=
-I've applied it locally with slight tweak to changelog to that effect.=0A=
-=0A=
-=0A=
-> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>=0A=
-> ---=0A=
->  arch/arc/include/asm/entry-arcv2.h | 2 +-=0A=
->  1 file changed, 1 insertion(+), 1 deletion(-)=0A=
 >=0A=
-> diff --git a/arch/arc/include/asm/entry-arcv2.h b/arch/arc/include/asm/en=
-try-arcv2.h=0A=
-> index 225e7df2d8ed..6558e2edb583 100644=0A=
-> --- a/arch/arc/include/asm/entry-arcv2.h=0A=
-> +++ b/arch/arc/include/asm/entry-arcv2.h=0A=
-> @@ -237,7 +237,7 @@=0A=
->  =0A=
->  .macro FAKE_RET_FROM_EXCPN=0A=
->  	lr      r9, [status32]=0A=
-> -	bic     r9, r9, (STATUS_U_MASK|STATUS_DE_MASK|STATUS_AE_MASK)=0A=
-> +	bic     r9, r9, STATUS_AE_MASK=0A=
->  	or      r9, r9, STATUS_IE_MASK=0A=
->  	kflag   r9=0A=
->  .endm=0A=
+> All other callers of errno_to_nvme_status() check for success before=0A=
+> calling it.=0A=
+>=0A=
+> To fix this, ensure errno_to_nvme_status() returns success if the=0A=
+> errno is zero. This should prevent future mistakes like this from=0A=
+> happening.=0A=
+>=0A=
+> Fixes: c6aa3542e010 ("nvmet: add error log support for file backend")=0A=
+> Signed-off-by: Logan Gunthorpe<logang@deltatee.com>=0A=
+> Cc: Chaitanya Kulkarni<chaitanya.kulkarni@wdc.com>=0A=
 =0A=
+Thanks for the fix Logan, errno_to_nvme_status() needs to be only called =
+=0A=
+in the case of error. Clearly bad example of calling function withing =0A=
+function.=0A=
+=0A=
+Looks good to me.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
