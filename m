@@ -2,105 +2,150 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B40BC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C355C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FCF217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="avRws9aS"
+	by mail.kernel.org (Postfix) with ESMTP id 6858C20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfGQHsG (ORCPT
+        id S1727616AbfGQHtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:48:06 -0400
-Received: from mail.dice.at ([217.10.52.18]:48619 "EHLO smtp2.infineon.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfGQHsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 03:48:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1563349685; x=1594885685;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=jLjRAVqSTndz5dE6IWJsxuPEGZffP354eiHvBjyHn60=;
-  b=avRws9aS+PBEzH0udYw4KuxPTCpQ6xRWzXpNLbhC9+FVc18hmg9MLigw
-   6YkDbk3ATtE4d/1cQu1UiJ1j4omja+rNu8myaGz98BUBUN5nSpcsw9l1L
-   RFrjiIKb7mv67fKEE/BBGDR/9b2CekIyFs9XflPb3+EJWt7ns62i/omaZ
-   Y=;
-IronPort-SDR: 0RGylmZ7q/+cpH2mZauRiES1hBIz41p8bF2nW1YB4JTnC/l8OARGfVjKX8yMHZXJDYRe/3Ldg5
- OwlU/xuq9lmg==
-X-SBRS: None
-X-IronPort-AV: E=McAfee;i="6000,8403,9320"; a="6748731"
-X-IronPort-AV: E=Sophos;i="5.64,273,1559512800"; 
-   d="scan'208";a="6748731"
-Received: from unknown (HELO mucxv001.muc.infineon.com) ([172.23.11.16])
-  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 09:48:03 +0200
-Received: from MUCSE708.infineon.com (MUCSE708.infineon.com [172.23.7.82])
-        by mucxv001.muc.infineon.com (Postfix) with ESMTPS;
-        Wed, 17 Jul 2019 09:48:03 +0200 (CEST)
-Received: from [10.154.32.63] (172.23.8.247) by MUCSE708.infineon.com
- (172.23.7.82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.1591.10; Wed, 17
- Jul 2019 09:48:03 +0200
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-To:     Tomer Maimon <tmaimon77@gmail.com>,
-        Oshri Alkobi <oshrialkoby85@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <peterhuewe@gmx.de>,
-        <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        AP MS30 Linux Kernel community 
-        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-        <gcwilson@us.ibm.com>, <kgoldman@us.ibm.com>,
-        <nayna@linux.vnet.ibm.com>, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
-        <eyal.cohen@nuvoton.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
- <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com>
- <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
- <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
- <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com>
- <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
-From:   Alexander Steffen <Alexander.Steffen@infineon.com>
-Message-ID: <bccd2ebf-75b1-d02f-9283-4ffd7aa36616@infineon.com>
-Date:   Wed, 17 Jul 2019 09:48:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 17 Jul 2019 03:49:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37718 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725873AbfGQHtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 03:49:22 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D1CF81AA459E5CF7EB43;
+        Wed, 17 Jul 2019 15:49:18 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
+ 15:49:12 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
+        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>
+Subject: [RFC PATCH 01/10] powerpc: unify definition of M_IF_NEEDED
+Date:   Wed, 17 Jul 2019 16:06:12 +0800
+Message-ID: <20190717080621.40424-2-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190717080621.40424-1-yanaijie@huawei.com>
+References: <20190717080621.40424-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.8.247]
-X-ClientProxiedBy: MUCSE708.infineon.com (172.23.7.82) To
- MUCSE708.infineon.com (172.23.7.82)
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.2019 10:08, Tomer Maimon wrote:
-> Hi Jarkko and All,
-> 
-> Thanks for your feedback and sorry for the late response.
-> 
-> 
-> Due to the amount of work required to handle this technical feedback and 
-> project constraints we need to put this task on hold for the near future.
-> 
-> In the meantime, anyone from the community is welcome to take over this 
-> code and handle the re-design for the benefit of the entire TPM community.
+M_IF_NEEDED is defined too many times. Move it to a common place.
 
-Too bad you lack the time to finish this.
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Cc: Diana Craciun <diana.craciun@nxp.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+---
+ arch/powerpc/include/asm/nohash/mmu-book3e.h  | 10 ++++++++++
+ arch/powerpc/kernel/exceptions-64e.S          | 10 ----------
+ arch/powerpc/kernel/fsl_booke_entry_mapping.S | 10 ----------
+ arch/powerpc/kernel/misc_64.S                 |  5 -----
+ 4 files changed, 10 insertions(+), 25 deletions(-)
 
-If somebody else were to pick it up, would it be possible for you to 
-provide a couple of TPMs that implement this protocol, so that it can be 
-properly tested?
+diff --git a/arch/powerpc/include/asm/nohash/mmu-book3e.h b/arch/powerpc/include/asm/nohash/mmu-book3e.h
+index 4c9777d256fb..0877362e48fa 100644
+--- a/arch/powerpc/include/asm/nohash/mmu-book3e.h
++++ b/arch/powerpc/include/asm/nohash/mmu-book3e.h
+@@ -221,6 +221,16 @@
+ #define TLBILX_T_CLASS2			6
+ #define TLBILX_T_CLASS3			7
+ 
++/*
++ * The mapping only needs to be cache-coherent on SMP, except on
++ * Freescale e500mc derivatives where it's also needed for coherent DMA.
++ */
++#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
++#define M_IF_NEEDED	MAS2_M
++#else
++#define M_IF_NEEDED	0
++#endif
++
+ #ifndef __ASSEMBLY__
+ #include <asm/bug.h>
+ 
+diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
+index 1cfb3da4a84a..fd49ec07ce4a 100644
+--- a/arch/powerpc/kernel/exceptions-64e.S
++++ b/arch/powerpc/kernel/exceptions-64e.S
+@@ -1342,16 +1342,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
+ 	sync
+ 	isync
+ 
+-/*
+- * The mapping only needs to be cache-coherent on SMP, except on
+- * Freescale e500mc derivatives where it's also needed for coherent DMA.
+- */
+-#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
+-#define M_IF_NEEDED	MAS2_M
+-#else
+-#define M_IF_NEEDED	0
+-#endif
+-
+ /* 6. Setup KERNELBASE mapping in TLB[0]
+  *
+  * r3 = MAS0 w/TLBSEL & ESEL for the entry we started in
+diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
+index ea065282b303..de0980945510 100644
+--- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
++++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
+@@ -153,16 +153,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
+ 	tlbivax 0,r9
+ 	TLBSYNC
+ 
+-/*
+- * The mapping only needs to be cache-coherent on SMP, except on
+- * Freescale e500mc derivatives where it's also needed for coherent DMA.
+- */
+-#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
+-#define M_IF_NEEDED	MAS2_M
+-#else
+-#define M_IF_NEEDED	0
+-#endif
+-
+ #if defined(ENTRY_MAPPING_BOOT_SETUP)
+ 
+ /* 6. Setup KERNELBASE mapping in TLB1[0] */
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index b55a7b4cb543..26074f92d4bc 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -432,11 +432,6 @@ kexec_create_tlb:
+ 	rlwimi	r9,r10,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r9) */
+ 
+ /* Set up a temp identity mapping v:0 to p:0 and return to it. */
+-#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
+-#define M_IF_NEEDED	MAS2_M
+-#else
+-#define M_IF_NEEDED	0
+-#endif
+ 	mtspr	SPRN_MAS0,r9
+ 
+ 	lis	r9,(MAS1_VALID|MAS1_IPROT)@h
+-- 
+2.17.2
 
-Alexander
