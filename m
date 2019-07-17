@@ -2,108 +2,193 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC1EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375C5C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1717D21852
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AF22173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pOqupyCB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXI3hn+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGQOAD (ORCPT
+        id S1727295AbfGQOEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:00:03 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60592 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727333AbfGQOAC (ORCPT
+        Wed, 17 Jul 2019 10:04:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41047 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfGQOEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:00:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HDxuJ5109675;
-        Wed, 17 Jul 2019 08:59:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563371996;
-        bh=xIc3z2d+5D/rJ8xZOe9QZOEhKhuuTTaa43KvfS4jeRo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pOqupyCBGjnrz0nJQNTrCs64BdkxnLHnn3JpNanz6a5oPZ8AxmEwq9FR9RlN5UoDZ
-         xEgMq9JTNgsb60B9QtC/qwX0nYnziUB0val5vBdYeSw89/t/hUxqxVVoQkP2y5Vohb
-         uFxTafJq1ABnruwPhbY9fLj3pxsvNCaqa4hMGbZc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HDxuB6055077
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jul 2019 08:59:56 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Jul 2019 08:59:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Jul 2019 08:59:56 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HDxtpw016885;
-        Wed, 17 Jul 2019 08:59:55 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v3 3/3] leds: Make led_set_brightness_sync() also use __led_set_brightness()
-Date:   Wed, 17 Jul 2019 15:59:48 +0200
-Message-ID: <20190717135948.19340-4-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190717135948.19340-1-jjhiblot@ti.com>
-References: <20190717135948.19340-1-jjhiblot@ti.com>
+        Wed, 17 Jul 2019 10:04:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so21769798wrm.8;
+        Wed, 17 Jul 2019 07:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZznUD/3Doukl7awZznF628Vg6/9V6wzQqJQaI/2mctw=;
+        b=LXI3hn+8n+V+6M8Q47325XdmRfkVNVfYLcd+e1GHj2TtXbZBiNh1fwFhgQoQrYcVZG
+         UKIzpZnomSpzeOvsRwgz8S1YD2FNizYVlsW6noHnfRTSqQGamq10fCEyxHxg3loqYkrU
+         nxdKO2LGO144u7GLuhmHbFHl/jheY/bhvflyOzi2Oj/dfONYGufdifrbhHjcZtSY6+hJ
+         QiI7nZFkH71dQbVIoGhk6kV1sSVq06jXG94aB7IxUoi7qBC3Fte3Z+yV4XD3y3I8UaAX
+         BnO4ZSLi3RApiAzB6KuD02WUdNIleg98kwZc+8APi+T5PEyKk+9P0SSh6atW8vthCjrw
+         McJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZznUD/3Doukl7awZznF628Vg6/9V6wzQqJQaI/2mctw=;
+        b=twJT7BntRAHIg4ckwhj5GeVyRwqrXZhS7LCOWw3KmmPfBK4nwTD8bCWmVdHKmc+pMI
+         27gWfh7wCeNHSDrI77HLUO4D6OpQtGuyz2oHrskNYxfw1EGvUXvMbCbGSdxUChz5T8DZ
+         grjxgtoqs3LuNZg6dius+oT79JGoaG0luXCAN0QPR5Lu4yyxBD4lVWfi4Os81TVk/AaH
+         Of98/RPHNuHbEgDXIItymX8MYitgH4i5OR4OnzlXfm7Q4NWfUyofTuabdmcM3QFRfSCH
+         X9weNidDg3F3f3hZDL3fSnQSClIRJDK0StIgEoHU0BjglfRYaCD5WAi0jzRvI6aIIRVr
+         oFSw==
+X-Gm-Message-State: APjAAAXle3HGaBJndhHR8Z99efmjsEMXBqARS+f6aZj0odT9DG35HjtH
+        BJxlIPpoVO5H3fWginyX+25IaoRay6OSr4p9hh4=
+X-Google-Smtp-Source: APXvYqzpP960/74duT8ltae4WRae9+c2tEyndB2cDroFKwAvE4YQsyVSRFcoFAD1nYGVeU/h2sY49bvQ9GPuyk8AvC4=
+X-Received: by 2002:adf:f450:: with SMTP id f16mr12451048wrp.335.1563372252370;
+ Wed, 17 Jul 2019 07:04:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190702132353.18632-1-andradanciu1997@gmail.com>
+ <9ea5109f8645c3f27a9e350c5f9b2d4c@www.akkea.ca> <CAEnQRZDCpPju7xBBY9=e0dWt=A9c3t3g88pEw+teoZmmOiiKXQ@mail.gmail.com>
+ <9e196ce51eac9ce9c327198c4a2911a8@www.akkea.ca> <CAEnQRZCoOyyZVs0=BjXB5=wYe3XW9GOF9JvwjhSU9BsChh08uA@mail.gmail.com>
+ <1563292685.2676.12.camel@pengutronix.de>
+In-Reply-To: <1563292685.2676.12.camel@pengutronix.de>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 17 Jul 2019 17:04:01 +0300
+Message-ID: <CAEnQRZDSzjMUQ36BCE=wQUN3fRg_pL2cDb1xxFz222LoZrmW_A@mail.gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: imx8mq: Add sai3 and sai6 nodes
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Angus Ainslie <angus@akkea.ca>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Andra Danciu <andradanciu1997@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>, andrew.smirnov@gmail.com,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some LED drivers that do not implement brightness_set_blocking(),
-for those drivers led_set_brightness_sync() cannot work.
-Fixing it by calling first __led_set_brightness() and falling back to
-__led_set_brightness_blocking() if it failed.
+On Tue, Jul 16, 2019 at 6:58 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Daniel,
+>
+> Am Mittwoch, den 03.07.2019, 16:25 +0300 schrieb Daniel Baluta:
+> > > On Wed, Jul 3, 2019 at 4:12 PM Angus Ainslie <angus@akkea.ca> wrote:
+> > >
+> > > Hi Daniel,
+> > >
+> > > On 2019-07-03 07:10, Daniel Baluta wrote:
+> > > > > > > On Wed, Jul 3, 2019 at 4:01 PM Angus Ainslie <angus@akkea.ca> wrote:
+> > > > >
+> > > > > Hi Andra,
+> > > > >
+> > > > > I tried this out on linux-next and I'm not able to record or play
+> > > > > sound.
+> > > > >
+> > > > > I also added the sai2 entry to test out our devkit and get a PCM
+> > > > > timeout
+> > > > > with that.
+> > > >
+> > > > Hi Angus,
+> > > >
+> > > > There are still lots of SAI patches that need to be upstream. Me and
+> > > > Andra
+> > > > will be working on that over this summer.
+> > > >
+> > > > >
+> > > > > On 2019-07-02 07:23, Andra Danciu wrote:
+> > > > > > SAI3 and SAI6 nodes are used to connect to an external codec.
+> > > > > > They have 1 Tx and 1 Rx dataline.
+> > > > > >
+> > > > > > > > > > > Cc: Daniel Baluta <daniel.baluta@nxp.com>
+> > > > > > > > > > > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+> > > > > > ---
+> > > > > > Changes since v2:
+> > > > > >       - removed multiple new lines
+> > > > > >
+> > > > > > Changes since v1:
+> > > > > >       - Added sai3 node because we need it to enable audio on pico-pi-8m
+> > > > > >       - Added commit description
+> > > > > >
+> > > > > >  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 29
+> > > > > > +++++++++++++++++++++++++++++
+> > > > > >  1 file changed, 29 insertions(+)
+> > > > > >
+> > > > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > index d09b808eff87..736cf81b695e 100644
+> > > > > > --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> > > > > > @@ -278,6 +278,20 @@
+> > > > > >                       #size-cells = <1>;
+> > > > > >                       ranges = <0x30000000 0x30000000 0x400000>;
+> > > > > >
+> > > > > > > > > > > +                     sai6: sai@30030000 {
+> > > > > > +                             compatible = "fsl,imx8mq-sai",
+> > > > >
+> > > > > I don't find this compatible string in sound/soc/fsl/fsl_sai.c. Aren't
+> > > > > the registers at a different offset from "fsl,imx6sx-sai".
+> > > >
+> > > > Yes, you are right on this. We are trying to slowly push all our
+> > > > internal-tree
+> > > > patches to mainline. Obviously, with started with low hanging fruits,
+> > > > DTS
+> > > > nodes and small SAI fixes.
+> > > >
+> > > > Soon, we will start to send patches for SAI IP ipgrade for imx8.
+> > > >
+> > > > >
+> > > > > How is this supposed to work ?
+> > > > >
+> > > >
+> > > > For the moment it won't work unless we will upstream all our SAI
+> > > > internal patches.
+> > > > But we will get there hopefully this summer.
+> > > >
+> > >
+> > > Shouldn't a working driver be upstream before enabling it in the
+> > > devicetree ?
+> >
+> > I see your point here and maybe your suggestion is the ideal
+> > way to do things.
+> >
+> > Anyhow, I don't see a problem with adding the node in dts
+> > because CONFIG_FSL_SAI is not set in the default config.
+> >
+> > We try to speedup the upstreaming process giving the fact
+> > that SAI patches will go through audio maintainer's tree and
+> > the DTS patches will most likely go through Shawn's tree.
+>
+> I've also looked at adding audio support to one of the custom boards I
+> have here and was caught a bit off guard by the fact that the SAI
+> driver is totally broken for i.MX8M due to missing patches, as I
+> assumed the necessary bits are in place before the DT patches are
+> landed. It's certainly not how things are usually done.
+>
+> This also means the DT description of the SAI nodes is wrong, as they
+> are actually not compatible to the "fsl,imx6sx-sai". The register
+> layout is moved around, so there is no point in claiming any backwards
+> compat with the old SAI version.
+>
+> Do you have an ETA when the necessary patches for the i.MX8M SAI will
+> be available for test and review?
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
----
- drivers/leds/led-core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index dab32cf778f2..4a0506081c0e 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -320,15 +320,19 @@ int led_set_brightness_sync(struct led_classdev *led_cdev,
- 	if (led_cdev->blink_delay_on || led_cdev->blink_delay_off)
- 		return -EBUSY;
- 
--	led_cdev->brightness = min(value, led_cdev->max_brightness);
-+	value = min(value, led_cdev->max_brightness);
- 
- 	if (led_cdev->flags & LED_SUSPENDED)
- 		return 0;
- 
--	ret = __led_set_brightness_blocking(led_cdev, led_cdev->brightness);
-+	ret = __led_set_brightness(led_cdev, value);
-+	if (ret == -ENOTSUPP)
-+		ret = __led_set_brightness_blocking(led_cdev, value);
- 	if (ret)
- 		return ret;
- 
-+	led_cdev->brightness = value;
-+
- 	return __led_handle_regulator(led_cdev, led_cdev->brightness);
- }
- EXPORT_SYMBOL_GPL(led_set_brightness_sync);
--- 
-2.17.1
-
+No ETA for this. Sorry! We try to upstream it as soon as possible
