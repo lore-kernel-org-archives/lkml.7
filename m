@@ -2,169 +2,147 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8D3C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC1BC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF47621848
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8DD21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WO09GKZi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sGHO2hRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfGQBU2 (ORCPT
+        id S1726100AbfGQBYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 21:20:28 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19484 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfGQBU2 (ORCPT
+        Tue, 16 Jul 2019 21:24:12 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44913 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfGQBYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 21:20:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2e77db0000>; Tue, 16 Jul 2019 18:20:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 16 Jul 2019 18:20:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 16 Jul 2019 18:20:27 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
- 2019 01:20:24 +0000
-Subject: Re: [PATCH 1/3] mm: document zone device struct page reserved fields
-To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190717001446.12351-1-rcampbell@nvidia.com>
- <20190717001446.12351-2-rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <26a47482-c736-22c4-c21b-eb5f82186363@nvidia.com>
-Date:   Tue, 16 Jul 2019 18:20:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 21:24:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t14so11010911plr.11;
+        Tue, 16 Jul 2019 18:24:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6M9uF5bstPPN0pYSwASOOs//F+sr/bjg9ukHy0L2y4g=;
+        b=sGHO2hRx3t2OIYOt5aLQicz0Q57voCcLIYaRKX6aoUVl/8NBDi3LCYeMIBWnf3ThDm
+         oT+ABzqYVQRq12jHvsh6nbNk/PfZEWqVVkurYXVJgkFChccWT573+BBkzm+CE5OwLOIX
+         MJgqoIJ8j8W8enXLLE9MNUIN7UF3J6It1n6A/RPOlwVknVBX3beF+DYTgtSzE5bo9dt7
+         tcUEdpdMzjno1vY0+zvssEONN2lES/32gBdjV3YSS8pLnZY+DMXGNcR1141YOV+f/ART
+         r2UxG960fHxVifgbuA0RA/KLHMTKNMswRS5eRDSHt3d4y55qrcLNqvL+ZZgVY1dGZOoh
+         t94A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6M9uF5bstPPN0pYSwASOOs//F+sr/bjg9ukHy0L2y4g=;
+        b=RGmTYNYBl0cJyvnUB5nqz2sRIgaobD2YxmuwTuznTh4E9HwVlEsFnczNnC96defVZr
+         0AKJbPyBkLk+1rcfwK1WnEejfmbB2mXgOoqkFRrG8cER8sUIVEhKkBh3SaBrp6s9m4W9
+         fh8J8vYfBtNmrvklVr/lzBW4xHB7k+n8mQfkVXlqtOGiUBA5BC3Ym9gQHx7kfMDna86U
+         GmyBG8xXMc1LPUP4tDORWfL5HwvFGR6dvGCntKON1xrWbcXtx0ztw0T9Da/dwLTBIFlq
+         T+tSwfjmMmTUZ4GlUK0LingvdUwxyn4smfXlRNpqvgrSHUQcGrMBTZl9vwVnYbM8SnRF
+         C+UA==
+X-Gm-Message-State: APjAAAVEGfF4Pt+W6Knc4qCW0+2556oUn9llmjXQYrb6fgGbwVi9dP6h
+        G9lMuxzm5am/m10BK3rrTfyR0a8Qpuo=
+X-Google-Smtp-Source: APXvYqxZAeP0010wWGd4gGZMai5AEonP7WPfRkoTP5x6U+IRFYKYd4rrMPkVjcong96gN6ITvRUnfQ==
+X-Received: by 2002:a17:902:9f8e:: with SMTP id g14mr39388892plq.67.1563326650873;
+        Tue, 16 Jul 2019 18:24:10 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::b82a])
+        by smtp.gmail.com with ESMTPSA id v138sm23218547pfc.15.2019.07.16.18.24.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jul 2019 18:24:10 -0700 (PDT)
+Date:   Tue, 16 Jul 2019 18:24:07 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        Manali Shukla <manalishukla14@gmail.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matt Mullins <mmullins@fb.com>,
+        Michal Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
+        namhyung@kernel.org, netdev@vger.kernel.org,
+        paul.chaignon@gmail.com, primiano@google.com,
+        Qais Yousef <qais.yousef@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
+References: <20190710141548.132193-1-joel@joelfernandes.org>
+ <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+ <20190716213050.GA161922@google.com>
+ <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
+ <20190716224150.GC172157@google.com>
+ <20190716235500.GA199237@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190717001446.12351-2-rcampbell@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563326427; bh=Vyc38CvrMI+IuIuIo5NTAipNHSrHTq4RP4d6/FH8/Ss=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WO09GKZipFxahEW5auLlDTfWxasD4caJ5DWx+kkRN+SKTnZgpslwxIm1aMHk+NDM5
-         oNro819e/6ny7tzneXhd7c3oFzjSAfCUAoyg+4fgYv94zvnDGpVTnEH8JC0Fs8u7i+
-         lQFDuRTd/mCIaObX6wuhRGeGlJh0q0TTi2K7OSbNLS61IcAvpK7XcAWEuW9NNbCZtC
-         UVULswtoe3nVubu594nPb/vsUveh4uHeRbIdotQnPxCVYRhb6saCW2Rv6oSuZtwhTa
-         yF2goo651+RXsGS6KJKvH/SqVF2bnh+pTJ8e85MDItskjDETciEas0UvsrqFTt/u9Z
-         UFW14TArW4Q/g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716235500.GA199237@google.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 5:14 PM, Ralph Campbell wrote:
-> Struct page for ZONE_DEVICE private pages uses the reserved fields when
-> anonymous pages are migrated to device private memory. This is so
-> the page->mapping and page->index fields are preserved and the page can
-> be migrated back to system memory.
-> Document this in comments so it is more clear.
->=20
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Matthew Wilcox <mawilcox@microsoft.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> ---
->  include/linux/mm_types.h | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 3a37a89eb7a7..d6ea74e20306 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -159,7 +159,14 @@ struct page {
->  			/** @pgmap: Points to the hosting device page map. */
->  			struct dev_pagemap *pgmap;
->  			void *zone_device_data;
-> -			unsigned long _zd_pad_1;	/* uses mapping */
-> +			/*
-> +			 * The following fields are used to hold the source
-> +			 * page anonymous mapping information while it is
-> +			 * migrated to device memory. See migrate_page().
-> +			 */
-> +			unsigned long _zd_pad_1;	/* aliases mapping */
-> +			unsigned long _zd_pad_2;	/* aliases index */
-> +			unsigned long _zd_pad_3;	/* aliases private */
+On Tue, Jul 16, 2019 at 07:55:00PM -0400, Joel Fernandes wrote:
+> On Tue, Jul 16, 2019 at 06:41:50PM -0400, Joel Fernandes wrote:
+> > On Tue, Jul 16, 2019 at 03:26:52PM -0700, Alexei Starovoitov wrote:
+> > > On Tue, Jul 16, 2019 at 05:30:50PM -0400, Joel Fernandes wrote:
+> > > > 
+> > > > I also thought about the pinning idea before, but we also want to add support
+> > > > for not just raw tracepoints, but also regular tracepoints (events if you
+> > > > will). I am hesitant to add a new BPF API just for creating regular
+> > > > tracepoints and then pinning those as well.
+> > > 
+> > > and they should be done through the pinning as well.
+> > 
+> > Hmm ok, I will give it some more thought.
+> 
+> I think I can make the new BPF API + pinning approach work, I will try to
+> work on something like this and post it soon.
+> 
+> Also, I had a question below if you don't mind taking a look:
+> 
+> thanks Alexei!
+> 
+> > > > I don't see why a new bpf node for a trace event is a bad idea, really.
+> > > 
+> > > See the patches for kprobe/uprobe FD-based api and the reasons behind it.
+> > > tldr: text is racy, doesn't scale, poor security, etc.
+> > 
+> > Is it possible to use perf without CAP_SYS_ADMIN and control security at the
+> > per-event level? We are selective about who can access which event, using
+> > selinux. That's how our ftrace-based tracers work. Its fine grained per-event
+> > control. That's where I was going with the tracefs approach since we get that
+> > granularity using the file system.
 
-Actually, I do think this helps. It's hard to document these fields, and
-the ZONE_DEVICE pages have a really complicated situation during migration
-to a device.=20
+android's choice of selinux is not a factor in deciding kernel apis.
+It's completely separate discusion wether disallowing particular tracepoints
+for given user make sense at all.
+Just because you can hack it in via selinux blocking particular
+/sys/debug/tracing/ directory and convince yourself that it's somehow
+makes android more secure. It doesn't mean that all new api should fit
+into this model.
+I think allowing one tracepoint and disallowing another is pointless
+from security point of view. Tracing bpf program can do bpf_probe_read
+of anything.
 
-Additionally, I'm not sure, but should we go even further, and do this on t=
-he=20
-other side of the alias:
-
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index d6ea74e20306..c5ce5989d8a8 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -83,7 +83,12 @@ struct page {
-                         * by the page owner.
-                         */
-                        struct list_head lru;
--                       /* See page-flags.h for PAGE_MAPPING_FLAGS */
-+                       /*
-+                        * See page-flags.h for PAGE_MAPPING_FLAGS.
-+                        *
-+                        * Also: the next three fields (mapping, index and
-+                        * private) are all used by ZONE_DEVICE pages.
-+                        */
-                        struct address_space *mapping;
-                        pgoff_t index;          /* Our offset within mappin=
-g. */
-                        /**
-
-?
-
-Either way, you can add:
-
-    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
