@@ -2,112 +2,140 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD20BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB61C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3D121743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124E521743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dcy/uAn0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rWjPhmk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfGQNNw (ORCPT
+        id S1727233AbfGQNOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:13:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33942 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfGQNNw (ORCPT
+        Wed, 17 Jul 2019 09:14:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60750 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfGQNOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:13:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HD9NOL005794;
-        Wed, 17 Jul 2019 13:13:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=LvJcFP3WbYRFhH5RPKJxzin/B++FAUocm+phpN2H9iw=;
- b=dcy/uAn0qe2K0Cahf3nMkzKbZ1DE51Ip3wXL5D4xl9P9TogSB4FowopYb0PG/T4MRksE
- ALG7BqHgwkE2+7bh3FJQWVx6wD7+vEd1Ny8UoJ6oqZC4zTpvp3HQhE6qGfeMIzvGLtXz
- eQS3UI1CiG9YqY78DbxORW69RgZVVMg+UQu/MlM3TXeVFs6jJ0eox++cgS54it1+aFc7
- +MnAisB+E6mSPrRZGnHApY+WdrbwAejsuCNGNxJeQarfOtltPKSsrVPD0XgdkFdaf4Xf
- 30/AgEGLLsN7BZVW6WzItnGDVErnmNrn05I8owgSrRzPLJztwZvSFNEMP0N48xwlhVy+ dg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2tq7xr2gwq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 13:13:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HDCrcC037315;
-        Wed, 17 Jul 2019 13:13:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2tsmccd4cp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 13:13:30 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6HDDThp005527;
-        Wed, 17 Jul 2019 13:13:29 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 13:13:28 +0000
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] x86/boot/compressed/64: Remove unused variable
-Date:   Tue, 16 Jul 2019 21:17:20 +0800
-Message-Id: <1563283040-31101-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170160
+        Wed, 17 Jul 2019 09:14:35 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HDEPVB051538;
+        Wed, 17 Jul 2019 08:14:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563369265;
+        bh=MVYQ4EwMJMXmcBaMpkvWQRFoUm35w+HQYW/PHcy1kFc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rWjPhmk9DU9HJIORujSb2McQa1FSgeWq54pLhFe2Nmw10zDo5kvu3QR3wsj/0yko6
+         fKmuX1/Xm6BYWYj9IVi5gyiB62Be8rgNTpbAXeNZaMU6KMpGsveuojoPl08CzYWH9g
+         WZUw35WR8ObV1Oez3ejRxxhta5AGluR9EZYHY6XY=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HDEPmO039603
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Jul 2019 08:14:25 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
+ Jul 2019 08:14:25 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 17 Jul 2019 08:14:25 -0500
+Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HDENq3080895;
+        Wed, 17 Jul 2019 08:14:23 -0500
+Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Dan Murphy <dmurphy@ti.com>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <daniel.thompson@linaro.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190715155657.22976-1-jjhiblot@ti.com>
+ <20190715155657.22976-3-jjhiblot@ti.com>
+ <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <3b8e5847-6859-d78d-6274-7a879557dcae@ti.com>
+Date:   Wed, 17 Jul 2019 15:14:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <9c17e9cc-8162-7b5d-2db9-d2bed20969c5@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gcc warning:
+Hi Dan,
 
-arch/x86/boot/compressed/pgtable_64.c: In function 'find_trampoline_placement':
-arch/x86/boot/compressed/pgtable_64.c:43:16: warning: unused variable 'trampoline_start' [-Wunused-variable]
-  unsigned long trampoline_start;
-                ^
+On 15/07/2019 20:59, Dan Murphy wrote:
+> JJ
+>
+> On 7/15/19 10:56 AM, Jean-Jacques Hiblot wrote:
+>> A LED is usually powered by a voltage/current regulator. Let the LED 
+>> core
+>> know about it. This allows the LED core to turn on or off the power 
+>> supply
+>> as needed.
+>
+> This allows the LED core to turn on or off managed power supplies.
+>
+>
+>>
+>> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>> ---
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
----
- arch/x86/boot/compressed/pgtable_64.c | 1 -
- 1 file changed, 1 deletion(-)
+>>       if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+>>           ret = led_add_brightness_hw_changed(led_cdev);
+>>           if (ret) {
+>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>> index 7107cd7e87cf..a12b880b0a2f 100644
+>> --- a/drivers/leds/led-core.c
+>> +++ b/drivers/leds/led-core.c
+>> @@ -23,6 +23,33 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
+>>   LIST_HEAD(leds_list);
+>>   EXPORT_SYMBOL_GPL(leds_list);
+>>   +static bool __led_need_regulator_update(struct led_classdev 
+>> *led_cdev,
+>> +                    int brightness)
+>> +{
+>> +    bool new_state = (brightness != LED_OFF);
+>> +
+>> +    return led_cdev->regulator && led_cdev->regulator_state != 
+>> new_state;
+>> +}
+>> +
+>> +static int __led_handle_regulator(struct led_classdev *led_cdev,
+>> +                int brightness)
+>> +{
+>> +    int rc;
+>
+> Should there be a check for the regulator pointer.
+>
+> If (!led_cdev->regulator)
+>
+>     return 0;
 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index f8debf7..5f2d030 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -40,7 +40,6 @@ struct paging_config {
- static unsigned long find_trampoline_placement(void)
- {
- 	unsigned long bios_start = 0, ebda_start = 0;
--	unsigned long trampoline_start;
- 	struct boot_e820_entry *entry;
- 	char *signature;
- 	int i;
--- 
-1.8.3.1
+Not required because __led_need_regulator_update() returns false if 
+led_cdev->regulator is NULL.
 
+Thanks for the review
+
+JJ
+
+>
+>
+> Otherwise
+>
+> Reviewed-by: Dan Murphy <dmurphy@ti.com>
+>
+> <snip>
+>
