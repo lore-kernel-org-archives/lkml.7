@@ -2,141 +2,93 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E11FC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA768C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D9621841
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72B421743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="gIlQDHNo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y8q8WGxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbfGQRVr (ORCPT
+        id S2387885AbfGQRWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:21:47 -0400
-Received: from vern.gendns.com ([98.142.107.122]:41884 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQRVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:21:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0e5KXANYBSya6HFY+w50szT78V3hXoXrtYknRgw92PY=; b=gIlQDHNo+7ek+vYWfHdVTFxW6d
-        kMOJGCGKxDfLFXrwfXRbsKuHiUd4R8kXgAAcOU21r5PYa7/8bwhtTxieHeeyqReWP7Ems3tIbeXgR
-        XshlZ5r1AJDGwycXPa2SmDxjpa9B8vFOLM8PSnlnKgGa0reGv31ItWue3x42potZohs8AfGU6bY+D
-        vnNSt7UUdRH2ykv951H1d11lef/uaRiORrSFn4tL2puuHguaP1nu7dfreXkmqzlI1pWHwbhE3MTOJ
-        qHAGPh4VQcY32IMBta8JLWKUqv6fdG7eI79D8uom5XRz3YpLG/UU9aFgYKUWOGXtc5lguNmb41Ohq
-        tXtzIj+A==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:47560 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hnncd-007Yqa-Ka; Wed, 17 Jul 2019 13:21:43 -0400
-Subject: Re: [PATCH 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     Suman Anna <s-anna@ti.com>, Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-Cc:     Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-3-s-anna@ti.com>
- <3d91800b-e858-8c73-5ea8-e99e5ea30e8e@lechnology.com>
- <54e871a8-dfa4-f65b-5869-d1661144cbf0@ti.com>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <5241ecb9-4ab2-b01c-367c-38c554c056c4@lechnology.com>
-Date:   Wed, 17 Jul 2019 12:21:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 17 Jul 2019 13:22:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44954 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727280AbfGQRWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:22:23 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so11147431pfe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=l2ulz+HEZ33TLtGD0gtyTHpRn0lM8VKKeKFHaHpL698=;
+        b=Y8q8WGxHQQll47oGZMGDyQeU9t4dUPA+MBl5AUYiBoRR/gNrknxYpikGgCHTVq8WA6
+         iFKJS7m79cR/x0ODwjsBeAGh11f2A8JJ3glgAg7yT9UXyUlRJwPbXftAvjnAFx/nEBn/
+         REQVFCLRerodwlpY2V4mzgpjgU1C3OjDrwW00=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=l2ulz+HEZ33TLtGD0gtyTHpRn0lM8VKKeKFHaHpL698=;
+        b=TDZkB9+pfkR/XbmG2d2W4WsH8BBxc9Znp76qiDqs5BaL3YkBU4wXzQXBku165wl2NC
+         phnf9CAWOf3G5FDPNro2ffIXG7A9u0md25L4xK62YRB73ANykHrliju4ofMuicxp+IVB
+         0Uz2uPmmeyEjLwOXxivG3/nsXsNaxS8p3Qige+xjDTyLh3y3roNT1maQDMwyWteBDawW
+         Hjg9TrhcfV/ejSgpWfbv0rlQydeLARNXMCVBNkOPhYidu1MLEbknhkC6iGdlmRYu5cE/
+         2TwBMh64ztHT/b5eM3u58bf61BsqmbGnXmGCqcEzlmhBwXpCZ7mbWP92f5feV7A5vyKR
+         uz5g==
+X-Gm-Message-State: APjAAAW6OGXsA9esRomN+ZPB3EXQnp9/FoqbcSpPYETtcyw0dtLzE9/r
+        9MZJ3M/dIve0mqHlGEK6yPaUCg==
+X-Google-Smtp-Source: APXvYqyWQKoNBIXLCon0D7eQpNio5dhXZcv2k6RF9k4MMwut6x0yKBuJ5c1e1zhHJI+aGoqMy60GIg==
+X-Received: by 2002:a63:fe15:: with SMTP id p21mr43006226pgh.149.1563384142245;
+        Wed, 17 Jul 2019 10:22:22 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f12sm22308136pgo.85.2019.07.17.10.22.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 10:22:21 -0700 (PDT)
+Message-ID: <5d2f594d.1c69fb81.baadd.d81d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <54e871a8-dfa4-f65b-5869-d1661144cbf0@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190717171216.GK12119@ziepe.ca>
+References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-6-swboyd@chromium.org> <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com> <20190717122558.GF12119@ziepe.ca> <5d2f51a7.1c69fb81.6495.fbe8@mx.google.com> <20190717165628.GJ12119@ziepe.ca> <5d2f5570.1c69fb81.f3832.3c3f@mx.google.com> <20190717171216.GK12119@ziepe.ca>
+Subject: Re: [PATCH v2 5/6] tpm: add driver for cr50 on SPI
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 17 Jul 2019 10:22:20 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 12:21 PM, Suman Anna wrote:
->>> +static int pruss_intc_probe(struct platform_device *pdev)
->>> +{
->>> +    static const char * const irq_names[] = {
->>> +                "host0", "host1", "host2", "host3",
->>> +                "host4", "host5", "host6", "host7", };
->>> +    struct device *dev = &pdev->dev;
->>> +    struct pruss_intc *intc;
->>> +    struct resource *res;
->>> +    struct irq_chip *irqchip;
->>> +    int i, irq;
->>> +
->>> +    intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
->>> +    if (!intc)
->>> +        return -ENOMEM;
->>> +    platform_set_drvdata(pdev, intc);
->>> +
->>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +    intc->base = devm_ioremap_resource(dev, res);
->>> +    if (IS_ERR(intc->base)) {
->>> +        dev_err(dev, "failed to parse and map intc memory resource\n");
->>> +        return PTR_ERR(intc->base);
->>> +    }
->>> +
->>> +    dev_dbg(dev, "intc memory: pa %pa size 0x%zx va %pK\n", &res->start,
->>> +        (size_t)resource_size(res), intc->base);
->>> +
->>> +    mutex_init(&intc->lock);
->>> +
->>> +    pruss_intc_init(intc);
->>> +
->>> +    irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
->>> +    if (!irqchip)
->>> +        return -ENOMEM;
->>> +
->>> +    irqchip->irq_ack = pruss_intc_irq_ack;
->>> +    irqchip->irq_mask = pruss_intc_irq_mask;
->>> +    irqchip->irq_unmask = pruss_intc_irq_unmask;
->>> +    irqchip->irq_retrigger = pruss_intc_irq_retrigger;
->>> +    irqchip->irq_request_resources = pruss_intc_irq_reqres;
->>> +    irqchip->irq_release_resources = pruss_intc_irq_relres;
->>> +    irqchip->name = dev_name(dev);
->>
->> Should we also set `irqchip->parent_device = dev;` here?
->>
->> I tried it and had to add pm runtime stuff as well, otherwise
->> requesting irqs would fail.
-> 
-> I haven't seen any during my local testing. What sort of failure are you
-> seeing?
-> 
-> The clocking for the overall PRUSS module will be handled in either the
-> ti-sysc driver for OMAP SoCs or in the pruss platform driver.
-> 
-I was getting -EACCESS bubbling up from rpm_resume() in drivers/base/
-power/runtime.c. It was probably a mix of how I set up the device tree
-and the dummy PRUSS bus driver I made.
+Quoting Jason Gunthorpe (2019-07-17 10:12:16)
+> On Wed, Jul 17, 2019 at 10:05:52AM -0700, Stephen Boyd wrote:
+> >=20
+> > Yes. The space savings comes from having the extra module 'cr50.ko' that
+> > holds almost nothing at all when the two drivers are modules.
+>=20
+> I'm not sure it is an actual savings, there is alot of minimum
+> overhead and alignment to have a module in the first place.
+>=20
 
-I'm sure it will be fine with a proper PRUSS platform driver.
+Yeah. I'm pretty sure that's why it's a bool and not a tristate for this
+symbol. A module has overhead that is not necessary for these little
+helpers.
+
