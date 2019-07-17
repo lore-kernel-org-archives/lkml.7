@@ -2,120 +2,155 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5929C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82C0C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8574B2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B235217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfGQJHB (ORCPT
+        id S1729803AbfGQJHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 05:07:01 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:56183 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfGQJHA (ORCPT
+        Wed, 17 Jul 2019 05:07:20 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:45351 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQJHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 05:07:00 -0400
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 34A23240008;
-        Wed, 17 Jul 2019 09:06:55 +0000 (UTC)
-Date:   Wed, 17 Jul 2019 11:06:55 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ran Bi <ran.bi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        YT Shen <yt.shen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Flora Fu <flora.fu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 2/3] rtc: Add support for the MediaTek MT2712 RTC
-Message-ID: <20190717090655.GA21823@piout.net>
-References: <20190702032120.16539-1-ran.bi@mediatek.com>
- <20190702032120.16539-3-ran.bi@mediatek.com>
- <20190713211231.GD4732@piout.net>
- <1563353694.19945.33.camel@mhfsdcap03>
+        Wed, 17 Jul 2019 05:07:19 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45pWcN21Jdz1rTYF;
+        Wed, 17 Jul 2019 11:07:16 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45pWcN17bSz1qqkk;
+        Wed, 17 Jul 2019 11:07:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id bUafEv2oczDA; Wed, 17 Jul 2019 11:07:14 +0200 (CEST)
+X-Auth-Info: l2cC+iloM8OXQmKRxGRUhZ6HveFajU/YblcV1LyHQzY=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 17 Jul 2019 11:07:14 +0200 (CEST)
+Date:   Wed, 17 Jul 2019 11:07:09 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] input: touchscreen mc13xxx: Add mc34708 support
+Message-ID: <20190717110709.7ae3c9f3@jawa>
+In-Reply-To: <20190717085338.GA581@penguin>
+References: <20190716221929.3782-1-lukma@denx.de>
+        <20190716221929.3782-4-lukma@denx.de>
+        <20190717033655.GC621@penguin>
+        <20190717101704.2ff4d877@jawa>
+        <20190717085338.GA581@penguin>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563353694.19945.33.camel@mhfsdcap03>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/J3YSRAFC6/++9p0DylGe61+"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/07/2019 16:54:54+0800, Ran Bi wrote:
-> > > +
-> > > +/* we map HW YEAR 0 to 1968 not 1970 because 2000 is the leap year */
-> > > +#define RTC_MIN_YEAR		1968
-> > > +#define RTC_BASE_YEAR		1900
-> > > +#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
-> > 
-> > Do not do that. If this RTC range starts in 200, ths is what the driver
-> > has to support, you should not care about dates before 2000. Note that
-> > the RTC core can still properly shift the range if it is absolutely
-> > necessary.
-> > 
-> 
-> Do we need to care about default alarm date 1970-01-01? Or can I just
-> set it to 2000-01-01?
-> 
+--Sig_/J3YSRAFC6/++9p0DylGe61+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-You never have to set a default value. It doesn't add any value versus
-an unknown value.
+Hi Dmitry,
 
-> > > +
-> > > +static inline u32 rtc_readl(struct mt2712_rtc *rtc, u32 reg)
-> > 
-> > Please use a more descriptive prefix than just rtc_.
-> > 
-> 
-> Do you mean it's better to use prefix "mt2712_rtc_"?
-> 
+> Hi Lukasz,
+>=20
+> On Wed, Jul 17, 2019 at 10:17:04AM +0200, Lukasz Majewski wrote:
+> > Hi Dmitry,
+> >  =20
+> > > On Wed, Jul 17, 2019 at 12:19:29AM +0200, Lukasz Majewski wrote: =20
+> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > > >=20
+> > > > The mc34708 has a different bit to enable pen detection. This
+> > > > adds the driver data and devtype necessary to probe the device
+> > > > and to distinguish between the mc13783 and the mc34708.
+> > > >=20
+> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > >=20
+> > > > ---
+> > > > Changes for v3:
+> > > > - Replace forward declaration of mc13xxx_driver_data with
+> > > >   structure definition
+> > > > - Rename mc13xxx_driver_data with mc13xxx_chip
+> > > > - Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
+> > > >   closer to ID table
+> > > > - Do not check mc13xxx device type   =20
+> > >=20
+> > > You do not even need to define or store the type. Once it is
+> > > dropped please feel free to add =20
+> >=20
+> > Ok. I will remove the type definition.
+> >  =20
+> > >=20
+> > > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > >=20
+> > > and merge with the other 2 patches.
+> > >  =20
+> >=20
+> > Ok. I will squash those three patches into a single one, add your
+> > Acked-by and wait for Lee to pull this single patch to his MFD
+> > tree. =20
+>=20
+> Sorry, it looks like there is misunderstanding. I did not ask to
+> squash together the 3 patches, I meant that they can all go together
+> through the same tree (MFD). That is what I meant by them being
+> merged together.
+>=20
 
-Yes.
+Thanks for the explanation.
 
-> > > +
-> > > +	/*
-> > > +	 * register status was not correct,
-> > > +	 * need set time and alarm to default
-> > > +	 */
-> > > +	if (p1 != RTC_POWERKEY1_KEY || p2 != RTC_POWERKEY2_KEY
-> > > +	    || !valid_rtc_time(rtc)) {
-> > > +		reset_rtc_time(rtc);
-> > 
-> > Do not do that. This is valuable information. If the time is invalid,
-> > report it as such in read_time and read_alarm. Resetting the time here
-> > will lead to more issues later (i.e. userspace is not able to know
-> > whether the time is set correctly or not).
-> > 
-> 
-> When RTC's power run out, RTC will lost it's registers value and time
-> data at next boot up. We even cannot know what the date and time it
-> shows. We want to check this state here and set a default RTC date. Do
-> you think it's no need here and the date should be set by system?
-> 
+> Sorry for being unclear.
 
-If I understand correctly, the POWERKEY register will lose their value.
-This means that you know that the time is incorrect. instead of setting
-it to a default value and losing that valuable information, simply check
-for that in read_time and return EINVAL in that case. then on the next
-set_time invocation, you can set the POWERKEY registers and set the time
-to a known value.
+No problem - big thanks for very prompt review.
+
+>=20
+> Thanks.
+>=20
 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/J3YSRAFC6/++9p0DylGe61+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl0u5T0ACgkQAR8vZIA0
+zr0FkAf/byAxKc6UDdbwve8hkqfG9u3wRAtzDy75Lu+JDBEJbDSFcq5hzKd2dyqD
+1eAvwzGUidwNktfvq5mA/a66/PCssfjmkIDiigdYsuACclmw/1jo1+Em25YRes/n
+NfF72JfaMO4K/m71rZGWSPnQQsl00VY96rsY0dkV2M3dgy+VoB3UVRfQz8lNN8bS
+6j+T/CEVzcGmbLIrLDs3r0FwHvGq5MN2fHMCd6ja3OWJfJ+0MsQuVX/tT14l5Quj
+sJp6WdgaIpdRBwPCIoi69lyPz4EuBNK11XfjybN+I0Np/V6HDA8nNzxMMBpWsq2s
+UxCG35VrFVyjk/p0z4MUNp+xHZd33Q==
+=ldUl
+-----END PGP SIGNATURE-----
+
+--Sig_/J3YSRAFC6/++9p0DylGe61+--
