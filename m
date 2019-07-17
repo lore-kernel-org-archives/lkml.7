@@ -2,81 +2,132 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9795FC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C5AC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AAE2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432FD217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AIh90U/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbfGQBs0 (ORCPT
+        id S1726112AbfGQBvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 21:48:26 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51824 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfGQBsZ (ORCPT
+        Tue, 16 Jul 2019 21:51:15 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15200 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfGQBvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 21:48:25 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnZ34-00075C-8b; Wed, 17 Jul 2019 01:48:02 +0000
-Date:   Wed, 17 Jul 2019 02:48:02 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        tony.luck@intel.com, fenghua.yu@intel.com, geert@linux-m68k.org,
-        monstr@monstr.eu, ralf@linux-mips.org, paul.burton@mips.com,
-        jhogan@kernel.org, James.Bottomley@hansenpartnership.com,
-        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, peterz@infradead.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, dhowells@redhat.com, firoz.khan@linaro.org,
-        stefan@agner.ch, schwidefsky@de.ibm.com, axboe@kernel.dk,
-        christian@brauner.io, hare@suse.com, deepa.kernel@gmail.com,
-        tycho@tycho.ws, kim.phillips@arm.com, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] Add fchmodat4(), a new syscall
-Message-ID: <20190717014802.GS17978@ZenIV.linux.org.uk>
-References: <20190717012719.5524-1-palmer@sifive.com>
- <20190717012719.5524-3-palmer@sifive.com>
+        Tue, 16 Jul 2019 21:51:14 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2e7f170000>; Tue, 16 Jul 2019 18:51:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Jul 2019 18:51:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Jul 2019 18:51:13 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
+ 2019 01:51:11 +0000
+Subject: Re: [PATCH 3/3] mm/hmm: Fix bad subpage pointer in try_to_unmap_one
+To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>, <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190717001446.12351-1-rcampbell@nvidia.com>
+ <20190717001446.12351-4-rcampbell@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <67107cc6-cc8a-c072-a323-b5c417fb45c6@nvidia.com>
+Date:   Tue, 16 Jul 2019 18:51:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717012719.5524-3-palmer@sifive.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190717001446.12351-4-rcampbell@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563328279; bh=1dmjq+OnPGvrHvEejwkg5+2298h2fZxzldWUuZPTtbI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AIh90U/Cm54D0y3Ou8lNAM1j8ozgoxqDzEIxoGg959X3ZDt/Gxbu0DLmQZjTpiPT3
+         k0E4lrszsGcs4DXpbafUoCk0Tvr1JFCUh3CZ9+tmc1Pe9C7eW3+7L6m3TnM6zAoOOO
+         uEW7HREvelwp9GSn7pMHEEYUvqSF5SL6ERgDBFqfOL5pI5l6ukeW8cmk2EOojUvVyW
+         8HQDwvUHMa7xudjZMCkqEhRWCYTYCfWG1qPhlloRFCHHYVkNTRwrsQFxObgdrwQj01
+         p9dtBgaPXQTk98EdNnY0m2+msq9M+krIEk6rKhqu9u/2MdjgnvwvxMKLi30pjZ3JBp
+         kklI/IdXiI2ug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:27:17PM -0700, Palmer Dabbelt wrote:
+On 7/16/19 5:14 PM, Ralph Campbell wrote:
+> When migrating an anonymous private page to a ZONE_DEVICE private page,
+> the source page->mapping and page->index fields are copied to the
+> destination ZONE_DEVICE struct page and the page_mapcount() is increased.
+> This is so rmap_walk() can be used to unmap and migrate the page back to
+> system memory. However, try_to_unmap_one() computes the subpage pointer
+> from a swap pte which computes an invalid page pointer and a kernel panic
+> results such as:
+>=20
+> BUG: unable to handle page fault for address: ffffea1fffffffc8
+>=20
+> Currently, only single pages can be migrated to device private memory so
+> no subpage computation is needed and it can be set to "page".
+>=20
+> Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE pa=
+ge in migration")
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  mm/rmap.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index e5dfe2ae6b0d..ec1af8b60423 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1476,6 +1476,7 @@ static bool try_to_unmap_one(struct page *page, str=
+uct vm_area_struct *vma,
+>  			 * No need to invalidate here it will synchronize on
+>  			 * against the special swap migration pte.
+>  			 */
+> +			subpage =3D page;
+>  			goto discard;
+>  		}
 
-> -int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
-> +int do_fchmodat4(int dfd, const char __user *filename, umode_t mode, int flags)
->  {
->  	struct path path;
->  	int error;
-> -	unsigned int lookup_flags = LOOKUP_FOLLOW;
-> +	unsigned int lookup_flags;
-> +
-> +	if (unlikely(flags & ~AT_SYMLINK_NOFOLLOW))
-> +		return -EINVAL;
-> +
-> +	lookup_flags = flags & AT_SYMLINK_NOFOLLOW ? 0 : LOOKUP_FOLLOW;
-> +
+The problem is clear, but the solution still leaves the code ever so slight=
+ly
+more confusing, and it was already pretty difficult to begin with.
 
-	Why not do that in sys_fchmodat4() itself, passing lookup_flags to
-do_fchmodat() and updating old callers to pass it 0 as extra argument?
+I still hold out hope for some comment documentation at least, and maybe
+even just removing the subpage variable (as Jerome mentioned, offline) as
+well.
+
+Jerome?
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
