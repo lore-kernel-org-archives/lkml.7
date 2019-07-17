@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D03DC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82539C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DF5217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A46217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="R7DpYzbr"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="xQsdwRHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfGQWtp (ORCPT
+        id S1729932AbfGQWuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:49:45 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46415 "EHLO
+        Wed, 17 Jul 2019 18:50:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45535 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfGQWto (ORCPT
+        with ESMTP id S1727106AbfGQWuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:49:44 -0400
+        Wed, 17 Jul 2019 18:50:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HMn77K1721124
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HMnqZf1721179
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 15:49:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HMn77K1721124
+        Wed, 17 Jul 2019 15:49:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HMnqZf1721179
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563403748;
-        bh=mEsc60L5fMB3luZERNg/M17SqMWzNavg4/33oaS13X8=;
+        s=2019061801; t=1563403793;
+        bh=2Xp0P282pJPndrE62OooNood1FpAOyswYIewn+I2fPw=;
         h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=R7DpYzbreM8NMKnvu9W5+2xHhh2lW3exLfqbW4x4hH9ntc8YSsdiWmDsnfNw7RR0b
-         MF8qt/2KM5AKbQ4/UUh3OcWJQMjXkQi2+ZBkK4EwqA2M7hqFISqrLh+jcIiZhl3JCK
-         Zj7XgAtI0Y+xJLYBNyE+iL/y6IawSnMtNO51W0sN1xlrQEn0ETKPA7tOVpSdHqt+Br
-         40O3fEirm1RbBHdg0DlCShR4doyuyHmRBJhO8zsyzUoUgwDmVt8RuwT8yNalsp/GNy
-         7JDSs0iMWniB+Wc77SriStmmlsrXju0V6E1lSsssnKYl2eS/HJTHeQ1WWkWdxFBv/P
-         sd0+atph50c2Q==
+        b=xQsdwRHZfDseFQan9LU5xMkrBl5bz0JdkCxnRnaEoxAO4lOUrspSrUPZjQjo5SUcv
+         fZqtFP71i07WGED34TI8LGWpLwkAIT9d9S2mWFDpo3x8NYRSlW3UdrpCAnWQzntlk7
+         /8E8bFu+xd/n9286KpYee30Yp3VlQwkEm+cw4RxdDX8eZ+1CnloyTfzRYgj4kf7nrP
+         GCuGOVr318CdwQEPKCWK+9HWNtVNQA1mq2D3NqhtAh6iD+kQSsMEHmU0yC3eOgZdWF
+         P4zLta0xdjfayqCiQ9pYRYKnne4Ao22lqSIlYY27Xq0FD3RTHzV/DPpPfhNa0HUlYT
+         xB30m5KnZ3+bw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HMn7tS1721121;
-        Wed, 17 Jul 2019 15:49:07 -0700
-Date:   Wed, 17 Jul 2019 15:49:07 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HMnqNn1721175;
+        Wed, 17 Jul 2019 15:49:52 -0700
+Date:   Wed, 17 Jul 2019 15:49:52 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-muvqef2i7n6pzqbmu7tn2d2y@git.kernel.org>
-Cc:     acme@redhat.com, ast@kernel.org, jolsa@kernel.org,
-        daniel@iogearbox.net, adrian.hunter@intel.com, tglx@linutronix.de,
-        namhyung@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org
-Reply-To: acme@redhat.com, ast@kernel.org, daniel@iogearbox.net,
-          jolsa@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
-          namhyung@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          mingo@kernel.org
+Message-ID: <tip-b9fubkhr4jm192lu7y8hgjvo@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        namhyung@kernel.org, daniel@iogearbox.net, hpa@zytor.com,
+        mingo@kernel.org, jolsa@kernel.org, acme@redhat.com,
+        ast@kernel.org, adrian.hunter@intel.com
+Reply-To: namhyung@kernel.org, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, adrian.hunter@intel.com, acme@redhat.com,
+          ast@kernel.org, jolsa@kernel.org, hpa@zytor.com,
+          mingo@kernel.org, daniel@iogearbox.net
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf tools: Introduce rlimit__bump_memlock()
- helper
-Git-Commit-ID: 4975223b8156c14f0537dcde1554f050fb4d29bf
+Subject: [tip:perf/urgent] perf test: Auto bump rlimit(MEMLOCK) for BPF test
+ sake
+Git-Commit-ID: d3280ce01e21a827daa50b0e9bdc8588c6f855d8
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,95 +70,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4975223b8156c14f0537dcde1554f050fb4d29bf
-Gitweb:     https://git.kernel.org/tip/4975223b8156c14f0537dcde1554f050fb4d29bf
+Commit-ID:  d3280ce01e21a827daa50b0e9bdc8588c6f855d8
+Gitweb:     https://git.kernel.org/tip/d3280ce01e21a827daa50b0e9bdc8588c6f855d8
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 9 Jul 2019 14:49:26 -0300
+AuthorDate: Tue, 9 Jul 2019 16:27:01 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 9 Jul 2019 14:59:11 -0300
+CommitDate: Tue, 9 Jul 2019 16:27:01 -0300
 
-perf tools: Introduce rlimit__bump_memlock() helper
+perf test: Auto bump rlimit(MEMLOCK) for BPF test sake
 
-Just like the BPF guys did when faced with failures with map creation,
-etc, i.e. their solution is:
+I noticed that the 'perf test bpf' was failing:
 
-  tools/testing/selftests/bpf/bpf_rlimit.h
+  # perf test bpf
+  41: BPF filter                                            :
+  41.1: Basic BPF filtering                                 : Skip
+  41.2: BPF pinning                                         : Skip
+  41.3: BPF prologue generation                             : Skip
+  41.4: BPF relocation checker                              : Skip
+  # ulimit -l
+  64
+  #
 
-For perf use this function in 'perf test' and in 'perf trace'.
+Using verbose mode we get just a line bout -EPERF being returned from
+libbpf's bpf_load_program_xattr(), that ends up being used in 'perf
+test bpf' initial program loading capability query:
 
-Make it bump to 4 times the current value, if it fails twice the current
-value and if it still fails, warn that things like BPF map creation may
-fail, to help in diagnosing the problem.
+  Missing basic BPF support, skip this test: Operation not permitted
+
+Not that informative, but on a separate problem when creating BPF maps
+bumping rlimit(MEMLOCK) helped, so I tried it here as well, works:
+
+  # ulimit -l 128
+  # perf test bpf
+  41: BPF filter                                            :
+  41.1: Basic BPF filtering                                 : Ok
+  41.2: BPF pinning                                         : Ok
+  41.3: BPF prologue generation                             : Ok
+  41.4: BPF relocation checker                              : Ok
+  #
+
+So use the recently added rlimit__bump_memlock() helper:
+
+  # ulimit -l 64
+  # perf test bpf
+  41: BPF filter                                            :
+  41.1: Basic BPF filtering                                 : Ok
+  41.2: BPF pinning                                         : Ok
+  41.3: BPF prologue generation                             : Ok
+  41.4: BPF relocation checker                              : Ok
+  # ulimit -l
+  64
+  #
+
+I.e. the bumping of memlock is restricted to the 'perf test' instance,
+not changing the global value.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-muvqef2i7n6pzqbmu7tn2d2y@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-b9fubkhr4jm192lu7y8hgjvo@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/Build    |  1 +
- tools/perf/util/rlimit.c | 29 +++++++++++++++++++++++++++++
- tools/perf/util/rlimit.h |  6 ++++++
- 3 files changed, 36 insertions(+)
+ tools/perf/tests/builtin-test.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index d7e3b008a613..14f812bb07a7 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -20,6 +20,7 @@ perf-y += parse-events.o
- perf-y += perf_regs.o
- perf-y += path.o
- perf-y += print_binary.o
-+perf-y += rlimit.o
- perf-y += argv_split.o
- perf-y += rbtree.o
- perf-y += libstring.o
-diff --git a/tools/perf/util/rlimit.c b/tools/perf/util/rlimit.c
-new file mode 100644
-index 000000000000..13521d392a22
---- /dev/null
-+++ b/tools/perf/util/rlimit.c
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+
-+#include "util/debug.h"
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 66a82badc1d1..c3bec9d2c201 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -21,6 +21,7 @@
+ #include <subcmd/parse-options.h>
+ #include "string2.h"
+ #include "symbol.h"
 +#include "util/rlimit.h"
-+#include <sys/time.h>
-+#include <sys/resource.h>
-+
-+/*
-+ * Bump the memlock so that we can get bpf maps of a reasonable size,
-+ * like the ones used with 'perf trace' and with 'perf test bpf',
-+ * improve this to some specific request if needed.
-+ */
-+void rlimit__bump_memlock(void)
-+{
-+	struct rlimit rlim;
-+
-+	if (getrlimit(RLIMIT_MEMLOCK, &rlim) == 0) {
-+		rlim.rlim_cur *= 4;
-+		rlim.rlim_max *= 4;
-+
-+		if (setrlimit(RLIMIT_MEMLOCK, &rlim) < 0) {
-+			rlim.rlim_cur /= 2;
-+			rlim.rlim_max /= 2;
-+
-+			if (setrlimit(RLIMIT_MEMLOCK, &rlim) < 0)
-+				pr_debug("Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc\n");
-+		}
-+	}
-+}
-diff --git a/tools/perf/util/rlimit.h b/tools/perf/util/rlimit.h
-new file mode 100644
-index 000000000000..9f59d8e710a3
---- /dev/null
-+++ b/tools/perf/util/rlimit.h
-@@ -0,0 +1,6 @@
-+#ifndef __PERF_RLIMIT_H_
-+#define __PERF_RLIMIT_H_
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+
-+void rlimit__bump_memlock(void);
-+#endif // __PERF_RLIMIT_H_
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <subcmd/exec-cmd.h>
+@@ -727,6 +728,11 @@ int cmd_test(int argc, const char **argv)
+ 
+ 	if (skip != NULL)
+ 		skiplist = intlist__new(skip);
++	/*
++	 * Tests that create BPF maps, for instance, need more than the 64K
++	 * default:
++	 */
++	rlimit__bump_memlock();
+ 
+ 	return __cmd_test(argc, argv, skiplist);
+ }
