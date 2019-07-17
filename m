@@ -2,149 +2,120 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591D6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C23C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3346220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A426B20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSO+abSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfGQFcJ (ORCPT
+        id S1726832AbfGQFdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 01:32:09 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:32997 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725799AbfGQFcI (ORCPT
+        Wed, 17 Jul 2019 01:33:11 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41163 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfGQFdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 01:32:08 -0400
-X-UUID: 63807a7f58414eb2859707a1f8ff8aae-20190717
-X-UUID: 63807a7f58414eb2859707a1f8ff8aae-20190717
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1883150426; Wed, 17 Jul 2019 13:31:56 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Jul 2019 13:31:54 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Jul 2019 13:31:54 +0800
-Message-ID: <1563341514.29169.14.camel@mtksdaap41>
-Subject: Re: [PATCH v4, 11/33] drm/mediatek: add mutex sof register offset
- into ddp private data
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 17 Jul 2019 13:31:54 +0800
-In-Reply-To: <1562625253-29254-12-git-send-email-yongqiang.niu@mediatek.com>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1562625253-29254-12-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Jul 2019 01:33:11 -0400
+Received: by mail-qk1-f193.google.com with SMTP id v22so16514140qkj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 22:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RiyaRaIWUGIsAa8lRiNjECqd/N4fEUvhVcUuMO28K0E=;
+        b=YSO+abSwu2ezoMPct2o4RKHrP0PgNwSzcQjt+oqwXwecnjrX2JDJCvQ4OdZRGLzW5O
+         gd2Ejwy8TvaUkHtOs/6jB9/k+58LfKZBfdnJBZtjMr18hMa2IRAPjRbrA4CChKGpFO0v
+         EGAoEgXp2gP1LEn4MUOw8cBKLhm9IfbLUjwDrYRmyCvNZyFtST/tp98Dkk9damXz+7p1
+         aolOISQV9Dyy6zCG4c64v9wyVg/95aoKm5wprKkpNLCICgrqrLNWh4sr7nh9+NoPmvyV
+         Cpajs++nZVNKhbCuessupquwH0Bap83aQLXeb5k71ayIEpNv0ySOlg6OGfDCRyQK1aVK
+         PO1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RiyaRaIWUGIsAa8lRiNjECqd/N4fEUvhVcUuMO28K0E=;
+        b=uFt8IRttkLEZdCB+0a8zaTSzuuEFgyrKeUo1f1wLofI3J4HUk7pvjr+qh1vKZAjUXp
+         EQi1Qait2QSLz7LlDOPi4SDN8dBiPEvpK4++NgbRAJ2lF+ctemjH9A6ydU8IWfM6lZbg
+         nYGkZqYX7pMVol0AwgoDg4PEcpjG7PceVOi7tspza9sDdyHsoTX5vIVTJ1dRuXq3hkKy
+         WhDctS0jBU87BYfKIyWR8MQ7+SD2VebQmvqz3i0KL2A8JBMwfTMmqA+UmiyErEIaZtle
+         ggdzz+LyTYtG6It9LILRexB0djPgGdTc9m6+8XcvfxGPpE1Gh2Z3z4WBfME5M12/nqiS
+         +Duw==
+X-Gm-Message-State: APjAAAVspJaCkcXrhooROt1neX2xODYz8w9vRGRAGHDBVYff2N55lO2B
+        7j1V60j0euDEqdL4Qp+5ErVtnwbtZqeQItrbLNc=
+X-Google-Smtp-Source: APXvYqxY4DOlSafrfiMUVleZkw4BEDIF4C77opVS8EK78gd8hM6AQVGuL1CehtsfF9MZhulF5xML/sc9iJdLWWw/3Q8=
+X-Received: by 2002:a05:620a:1181:: with SMTP id b1mr25847555qkk.390.1563341590181;
+ Tue, 16 Jul 2019 22:33:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 86CB27915B31E087E11638F66BC5816F7C93AAD27091893D150F28DAAEDA8DA92000:8
-X-MTK:  N
+References: <20190715092809.736834-1-arnd@arndb.de>
+In-Reply-To: <20190715092809.736834-1-arnd@arndb.de>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Wed, 17 Jul 2019 13:32:58 +0800
+Message-ID: <CAHttsrb+vg-E2HpQDTKnf7Xkg03-wd2YEOAWaVCDzdeOASPcPQ@mail.gmail.com>
+Subject: Re: [PATCH] locking/lockdep: hide unused 'class' variable
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+Whoops..... Thanks.
 
-On Tue, 2019-07-09 at 06:33 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> mutex sof register offset will be private data of ddp
-> 
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Mon, 15 Jul 2019 at 17:28, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The usage is now hidden in an #ifdef, so we need to move
+> the variable itself in there as well to avoid this warning:
+>
+> kernel/locking/lockdep_proc.c:203:21: error: unused variable 'class' [-Werror,-Wunused-variable]
+>
+> Fixes: 68d41d8c94a3 ("locking/lockdep: Fix lock used or unused stats error")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index ab396ee..d015c1a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -42,12 +42,13 @@
->  #define DISP_REG_CONFIG_DPI_SEL			0x064
->  
->  #define MT2701_DISP_MUTEX0_MOD0			0x2c
-> +#define MT2701_DISP_MUTEX0_SOF0			0x30
->  
->  #define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
->  #define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
->  #define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
->  #define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 * (n))
-> -#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_SOF(mutex_sof_reg, n)	(mutex_sof_reg + 0x20 * (n))
->  #define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
->  
->  #define INT_MUTEX				BIT(1)
-> @@ -163,6 +164,7 @@ struct mtk_ddp_data {
->  	const unsigned int *mutex_mod;
->  	const unsigned int *mutex_sof;
->  	const unsigned int mutex_mod_reg;
-> +	const unsigned int mutex_sof_reg;
->  };
->  
->  struct mtk_ddp {
-> @@ -234,18 +236,21 @@ struct mtk_ddp {
->  	.mutex_mod = mt2701_mutex_mod,
->  	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static const struct mtk_ddp_data mt2712_ddp_driver_data = {
->  	.mutex_mod = mt2712_mutex_mod,
->  	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static const struct mtk_ddp_data mt8173_ddp_driver_data = {
->  	.mutex_mod = mt8173_mutex_mod,
->  	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
-> @@ -527,7 +532,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
->  	}
->  
->  	writel_relaxed(ddp->data->mutex_sof[sof_id],
-> -		       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-> +		       ddp->regs +
-> +		       DISP_REG_MUTEX_SOF(ddp->data->mutex_sof_reg, mutex->id));
->  }
->  
->  void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
-> @@ -549,7 +555,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
->  	case DDP_COMPONENT_DPI1:
->  		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
->  			       ddp->regs +
-> -			       DISP_REG_MUTEX_SOF(mutex->id));
-> +			       DISP_REG_MUTEX_SOF(ddp->data->mutex_sof_reg,
-> +						  mutex->id));
->  		break;
->  	default:
->  		if (ddp->data->mutex_mod[id] < 32) {
-
-
+>  kernel/locking/lockdep_proc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+> index 65b6a1600c8f..bda006f8a88b 100644
+> --- a/kernel/locking/lockdep_proc.c
+> +++ b/kernel/locking/lockdep_proc.c
+> @@ -200,7 +200,6 @@ static void lockdep_stats_debug_show(struct seq_file *m)
+>
+>  static int lockdep_stats_show(struct seq_file *m, void *v)
+>  {
+> -       struct lock_class *class;
+>         unsigned long nr_unused = 0, nr_uncategorized = 0,
+>                       nr_irq_safe = 0, nr_irq_unsafe = 0,
+>                       nr_softirq_safe = 0, nr_softirq_unsafe = 0,
+> @@ -211,6 +210,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+>                       sum_forward_deps = 0;
+>
+>  #ifdef CONFIG_PROVE_LOCKING
+> +       struct lock_class *class;
+> +
+>         list_for_each_entry(class, &all_lock_classes, lock_entry) {
+>
+>                 if (class->usage_mask == 0)
+> --
+> 2.20.0
+>
