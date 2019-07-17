@@ -2,262 +2,175 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA74C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B37BC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF23208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E576B21849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9Xmw9K+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfGQWHH (ORCPT
+        id S1728046AbfGQWLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:07:07 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60303 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfGQWHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:07:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 15:07:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,275,1559545200"; 
-   d="scan'208";a="366711687"
-Received: from bxing-desk.ccr.corp.intel.com (HELO [134.134.148.187]) ([134.134.148.187])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jul 2019 15:07:05 -0700
-Subject: Re: [PATCH v21 23/28] x86/vdso: Add __vdso_sgx_enter_enclave() to
- wrap SGX enclave transitions
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-24-jarkko.sakkinen@linux.intel.com>
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-Message-ID: <d6a6865f-d7a9-dbe9-66b4-3f5cf62aaf6f@intel.com>
-Date:   Wed, 17 Jul 2019 15:07:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 17 Jul 2019 18:11:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38337 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfGQWLt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 18:11:49 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r9so25219403ljg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 15:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PUxtMGjaf72vzCpxt/R6uev+cNVuXdHwXT8m7TN3wTY=;
+        b=q9Xmw9K+sdJ8jsYx/L/LdJD+SFlOKLv47RKoAe028arvkvug0Xk2PAt76UKv/S+Nen
+         ICO/6AP7QNpxf4p/LZ+qslSD3ZPv1LwoNFZK0IT0wCB0x3Q69dWdwYSgdrAKV805U+I+
+         8N+fOSs1pyAPGNKeN1cRL3NLNoUiPu5oaLzZkTMJXKMdQsihu4TIx6fJbcMl6UlF9ZJ/
+         rW+kdDG/zS1563aPRhCjZO66WDjoiw00SRBZEWiPIXQwIrLoFJHCU/fMKLv6eyQFhXQg
+         a6ihRbk7AsVK0N78cPxOAa/SlghoL5NkgukY81DpSD30QtetuHFXyIQy1MIPcaFiYmht
+         THJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PUxtMGjaf72vzCpxt/R6uev+cNVuXdHwXT8m7TN3wTY=;
+        b=MK6SI4brYnwxWzfruxbTYrGBuA64rRThqQfqPO6tthpmdDulfv/4+9FWQI/U2dbOT4
+         5zT/LivqRN/rMRmSx2thX+LPWB+mHhustoR4xEITzlv/i2+/iDXzNLVKCISP4h3wAvSc
+         VNypA76lTxM/VZFwNnfrTcqryIMbdxDSMUisp7WvZ+Swjj6307O3oaQfS3Gg5ctEOrFe
+         bQD7bms7+we8+c9bM+ojfXBIYxZgjIdvHc8oAPYqTOUrDThHZrXshwrK/S3QAGiGW7gn
+         XXJXZ95abg9ERlMdFBxeGo294f+drc7GWWtMSTYoQRwkSTOYecPRKIoNC85RPh6KrvgR
+         ibbQ==
+X-Gm-Message-State: APjAAAUli1tOC8xvVq8dQ9ZS3bHevVFFmaZHKFRGJ2DpEDcwPxhKww3V
+        WKxiiEPK7/lBgtJvtq2jaO6714yNlTjcRhsS8yQcCQ==
+X-Google-Smtp-Source: APXvYqwkxeoAAEmKPXBKqcwArNwHM5ZRiJDfHTtme7+dvEaL7DsOcwbkhI2vmmp5VHytDxCyIpffqfFRwxH1lRi3qw8=
+X-Received: by 2002:a2e:9a87:: with SMTP id p7mr22215183lji.133.1563401506127;
+ Wed, 17 Jul 2019 15:11:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190713170804.2340-24-jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000afe2c70589526668@google.com> <20190612192312.GF18795@gmail.com>
+ <CAHRSSEw52jBRVNbw-DxgrmfZKoo3sqBVHCQ+e3BJtPTfhZADbQ@mail.gmail.com>
+In-Reply-To: <CAHRSSEw52jBRVNbw-DxgrmfZKoo3sqBVHCQ+e3BJtPTfhZADbQ@mail.gmail.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Wed, 17 Jul 2019 15:11:35 -0700
+Message-ID: <CAHRSSEya6LKyaE=nJ_Lg1-P5V1V=AwTeUmBLG_dfg+nkFReWYQ@mail.gmail.com>
+Subject: Re: WARNING in binder_transaction_buffer_release
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        syzbot <syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/13/2019 10:07 AM, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Intel Software Guard Extensions (SGX) introduces a new CPL3-only enclave
-> mode that runs as a sort of black box shared object that is hosted by an
-> untrusted normal CPL3 process.
-> 
-> Skipping over a great deal of gory architecture details[1], SGX was
-> designed in such a way that the host process can utilize a library to
-> build, launch and run an enclave.  This is roughly analogous to how
-> e.g. libc implementations are used by most applications so that the
-> application can focus on its business logic.
-> 
-> The big gotcha is that because enclaves can generate *and* handle
-> exceptions, any SGX library must be prepared to handle nearly any
-> exception at any time (well, any time a thread is executing in an
-> enclave).  In Linux, this means the SGX library must register a
-> signal handler in order to intercept relevant exceptions and forward
-> them to the enclave (or in some cases, take action on behalf of the
-> enclave).  Unfortunately, Linux's signal mechanism doesn't mesh well
-> with libraries, e.g. signal handlers are process wide, are difficult
-> to chain, etc...  This becomes particularly nasty when using multiple
-> levels of libraries that register signal handlers, e.g. running an
-> enclave via cgo inside of the Go runtime.
-> 
-> In comes vDSO to save the day.  Now that vDSO can fixup exceptions,
-> add a function, __vdso_sgx_enter_enclave(), to wrap enclave transitions
-> and intercept any exceptions that occur when running the enclave.
-> 
-> __vdso_sgx_enter_enclave() does NOT adhere to the x86-64 ABI and instead
-> uses a custom calling convention.  The primary motivation is to avoid
-> issues that arise due to asynchronous enclave exits.  The x86-64 ABI
-> requires that EFLAGS.DF, MXCSR and FCW be preserved by the callee, and
-> unfortunately for the vDSO, the aformentioned registers/bits are not
-> restored after an asynchronous exit, e.g. EFLAGS.DF is in an unknown
-> state while MXCSR and FCW are reset to their init values.  So the vDSO
-> cannot simply pass the buck by requiring enclaves to adhere to the
-> x86-64 ABI.  That leaves three somewhat reasonable options:
-> 
->    1) Save/restore non-volatile GPRs, MXCSR and FCW, and clear EFLAGS.DF
-> 
->       + 100% compliant with the x86-64 ABI
->       + Callable from any code
->       + Minimal documentation required
->       - Restoring MXCSR/FCW is likely unnecessary 99% of the time
->       - Slow
-> 
->    2) Save/restore non-volatile GPRs and clear EFLAGS.DF
-> 
->       + Mostly compliant with the x86-64 ABI
->       + Callable from any code that doesn't use SIMD registers
->       - Need to document deviations from x86-64 ABI, i.e. MXCSR and FCW
-> 
->    3) Require the caller to save/restore everything.
-> 
->       + Fast
->       + Userspace can pass all GPRs to the enclave (minus EAX, RBX and RCX)
->       - Custom ABI
->       - For all intents and purposes must be called from an assembly wrapper
-> 
-> __vdso_sgx_enter_enclave() implements option (3).  The custom ABI is
-> mostly a documentation issue, and even that is offset by the fact that
-> being more similar to hardware's ENCLU[EENTER/ERESUME] ABI reduces the
-> amount of documentation needed for the vDSO, e.g. options (2) and (3)
-> would need to document which registers are marshalled to/from enclaves.
-> Requiring an assembly wrapper imparts minimal pain on userspace as SGX
-> libraries and/or applications need a healthy chunk of assembly, e.g. in
-> the enclave, regardless of the vDSO's implementation.
-> 
-> Note, the C-like pseudocode describing the assembly routine is wrapped
-> in a non-existent macro instead of in a comment to trick kernel-doc into
-> auto-parsing the documentation and function prototype.  This is a double
-> win as the pseudocode is intended to aid kernel developers, not userland
-> enclave developers.
-> 
-> [1] Documentation/x86/sgx/1.Architecture.rst
-> 
-> Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Haitao Huang <haitao.huang@linux.intel.com>
-> Cc: Jethro Beekman <jethro@fortanix.com>
-> Cc: Dr. Greg Wettstein <greg@enjellic.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Cedric Xing <cedric.xing@intel.com>
-> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
-> ---
->   arch/x86/entry/vdso/Makefile             |   2 +
->   arch/x86/entry/vdso/vdso.lds.S           |   1 +
->   arch/x86/entry/vdso/vsgx_enter_enclave.S | 169 +++++++++++++++++++++++
->   arch/x86/include/uapi/asm/sgx.h          |  18 +++
->   4 files changed, 190 insertions(+)
->   create mode 100644 arch/x86/entry/vdso/vsgx_enter_enclave.S
-> 
-> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-> index 715106395c71..1ae23e7d54a9 100644
-> --- a/arch/x86/entry/vdso/Makefile
-> +++ b/arch/x86/entry/vdso/Makefile
-> @@ -24,6 +24,7 @@ VDSO32-$(CONFIG_IA32_EMULATION)	:= y
->   
->   # files to link into the vdso
->   vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
-> +vobjs-$(VDSO64-y)		+= vsgx_enter_enclave.o
->   
->   # files to link into kernel
->   obj-y				+= vma.o extable.o
-> @@ -92,6 +93,7 @@ CFLAGS_REMOVE_vdso-note.o = -pg
->   CFLAGS_REMOVE_vclock_gettime.o = -pg
->   CFLAGS_REMOVE_vgetcpu.o = -pg
->   CFLAGS_REMOVE_vvar.o = -pg
-> +CFLAGS_REMOVE_vsgx_enter_enclave.o = -pg
->   
->   #
->   # X32 processes use x32 vDSO to access 64bit kernel data.
-> diff --git a/arch/x86/entry/vdso/vdso.lds.S b/arch/x86/entry/vdso/vdso.lds.S
-> index 36b644e16272..4bf48462fca7 100644
-> --- a/arch/x86/entry/vdso/vdso.lds.S
-> +++ b/arch/x86/entry/vdso/vdso.lds.S
-> @@ -27,6 +27,7 @@ VERSION {
->   		__vdso_time;
->   		clock_getres;
->   		__vdso_clock_getres;
-> +		__vdso_sgx_enter_enclave;
->   	local: *;
->   	};
->   }
-> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> new file mode 100644
-> index 000000000000..9331279b8fa6
-> --- /dev/null
-> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> @@ -0,0 +1,169 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#include <linux/linkage.h>
-> +#include <asm/export.h>
-> +#include <asm/errno.h>
-> +
-> +#include "extable.h"
-> +
-> +#define EX_LEAF		0*8
-> +#define EX_TRAPNR	0*8+4
-> +#define EX_ERROR_CODE	0*8+6
-> +#define EX_ADDRESS	1*8
-> +
-> +.code64
-> +.section .text, "ax"
-> +
-> +#ifdef SGX_KERNEL_DOC
-> +/**
-> + * __vdso_sgx_enter_enclave() - Enter an SGX enclave
-> + * @leaf:	ENCLU leaf, must be EENTER or ERESUME
-> + * @tcs:	TCS, must be non-NULL
-> + * @ex_info:	Optional struct sgx_enclave_exception instance
-> + * @callback:	Optional callback function to be called on enclave exit or
-> + *		exception
-> + *
-> + * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant with the
-> + * x86-64 ABI, i.e. cannot be called from standard C code. As noted above,
-> + * input parameters must be passed via ``%eax``, ``8(%rsp)``, ``0x10(%rsp)`` and
-> + * ``0x18(%rsp)``, with the return value passed via ``%eax``. All other
-> + * registers will be passed through to the enclave as is. All registers except
-> + * ``%rbp`` must be treated as volatile from the caller's perspective, including
-> + * but not limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc... Conversely, the
-> + * enclave being run **must** preserve the untrusted ``%rbp``.
-> + *
-> + * ``callback`` has the following signature:
-> + * int callback(long rdi, long rsi, long rdx,
-> + *		struct sgx_enclave_exinfo *exinfo, long r8, long r9,
-> + *		void *tcs, long ursp);
-> + * ``callback`` **shall** follow x86_64 ABI. All GPRs **except** ``%rax``,
-> + * ``%rbx`` and ``rcx`` are passed through to ``callback``. ``%rdi``, ``%rsi``,
-> + * ``%rdx``, ``%r8``, ``%r9``, along with the value of ``%rsp`` when the enclave
-> + * exited/excepted, can be accessed directly as input parameters, while other
-> + * GPRs can be accessed in assembly if needed.  A positive value returned from
-> + * ``callback`` will be treated as an ENCLU leaf (e.g. EENTER/ERESUME) to
-> + * reenter the enclave (without popping the extra data pushed by the enclave off
-> + * the stack), while 0 (zero) or a negative return value will be passed back to
-> + * the caller of __vdso_sgx_enter_enclave(). It is also safe to leave
-> + * ``callback`` via ``longjmp()`` or by throwing a C++ exception.
-> + *
-> + * Return:
-> + *    0 on success,
-> + *    -EINVAL if ENCLU leaf is not allowed,
-> + *    -EFAULT if ENCL or the enclave faults or non-positive value is returned
-> + *     from the callback.
-> + */
-> +typedef int (*sgx_callback)(long rdi, long rsi, long rdx,
-> +			    struct sgx_enclave_exinfo *exinfo, long r8,
-> +			    long r9, void *tcs, long ursp);
-> +int __vdso_sgx_enter_enclave(int leaf, void *tcs,
-> +			     struct sgx_enclave_exinfo *exinfo,
-> +			     sgx_callback callback)
++Hridya Valsaraju
 
-I may not have invoked kernel-doc properly but it seems kernel-doc isn't 
-able to pick up the parameters correctly.
+Fix posted: https://lkml.kernel.org/lkml/20190715191804.112933-1-hridya@google.com/
+
+
+On Wed, Jun 12, 2019 at 1:14 PM Todd Kjos <tkjos@google.com> wrote:
+>
+> On Wed, Jun 12, 2019 at 12:23 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > On Mon, May 20, 2019 at 07:18:06AM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    72cf0b07 Merge tag 'sound-fix-5.2-rc1' of git://git.kernel..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=17c7d4bca00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=d103f114f9010324
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=8b3c354d33c4ac78bfad
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > userspace arch: i386
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b99b44a00000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+> > >
+> > > WARNING: CPU: 1 PID: 8535 at drivers/android/binder.c:2368
+> > > binder_transaction_buffer_release+0x673/0x8f0 drivers/android/binder.c:2368
+> > > Kernel panic - not syncing: panic_on_warn set ...
+> > > CPU: 1 PID: 8535 Comm: syz-executor.2 Not tainted 5.1.0+ #19
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Call Trace:
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> > >  panic+0x2cb/0x715 kernel/panic.c:214
+> > >  __warn.cold+0x20/0x4c kernel/panic.c:571
+> > >  report_bug+0x263/0x2b0 lib/bug.c:186
+> > >  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> > >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> > >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+> > >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+> > >  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> > > RIP: 0010:binder_transaction_buffer_release+0x673/0x8f0
+> > > drivers/android/binder.c:2368
+> > > Code: 31 ff 41 89 c5 89 c6 e8 7b 04 1f fc 45 85 ed 0f 85 1f 41 01 00 49 8d
+> > > 47 40 48 89 85 50 fe ff ff e9 9d fa ff ff e8 dd 02 1f fc <0f> 0b e9 7f fc ff
+> > > ff e8 d1 02 1f fc 48 89 d8 45 31 c9 4c 89 fe 4c
+> > > RSP: 0018:ffff88807b2775f0 EFLAGS: 00010293
+> > > RAX: ffff888092b1e040 RBX: 0000000000000060 RCX: 1ffff11012563caa
+> > > RDX: 0000000000000000 RSI: ffffffff85519e13 RDI: ffff888097a2d248
+> > > RBP: ffff88807b2777d8 R08: ffff888092b1e040 R09: ffffed100f64eee3
+> > > R10: ffffed100f64eee2 R11: ffff88807b277717 R12: ffff88808fd2c340
+> > > R13: 0000000000000068 R14: ffff88807b2777b0 R15: ffff88809f7ea580
+> > >  binder_transaction+0x153d/0x6620 drivers/android/binder.c:3484
+> > >  binder_thread_write+0x87e/0x2820 drivers/android/binder.c:3792
+> > >  binder_ioctl_write_read drivers/android/binder.c:4836 [inline]
+> > >  binder_ioctl+0x102f/0x1833 drivers/android/binder.c:5013
+> > >  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
+> > >  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
+> > >  __ia32_compat_sys_ioctl+0x195/0x620 fs/compat_ioctl.c:998
+> > >  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+> > >  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+> > >  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> > > RIP: 0023:0xf7f9e849
+> > > Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
+> > > 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
+> > > 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+> > > RSP: 002b:00000000f7f9a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
+> > > RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000c0306201
+> > > RDX: 0000000020000140 RSI: 0000000000000000 RDI: 0000000000000000
+> > > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > > R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> > > Kernel Offset: disabled
+> > > Rebooting in 86400 seconds..
+> > >
+> > >
+> > > ---
+> > > This bug is generated by a bot. It may contain errors.
+> > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > > syzbot will keep track of this bug report. See:
+> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > syzbot can test patches for this bug, for details see:
+> > > https://goo.gl/tpsmEJ#testing-patches
+> > >
+> >
+> > Are any of the binder maintainers planning to fix this?  This seems to be the
+> > only open syzbot report for binder on the upstream kernel.
+>
+> Taking a look.
+>
+> >
+> > - Eric
