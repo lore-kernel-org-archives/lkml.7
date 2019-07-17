@@ -2,104 +2,99 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B42C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A8FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FA9208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C2F208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:47:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OvE+rl3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfGQNpE (ORCPT
+        id S1727219AbfGQNr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:45:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:47570 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfGQNpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:45:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 645C5337;
-        Wed, 17 Jul 2019 06:45:03 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C33683F71A;
-        Wed, 17 Jul 2019 06:45:01 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm/arm64: Assign pmc->idx before
- kvm_pmu_stop_counter()
-To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Cc:     marc.zyngier@arm.com, james.morse@arm.com, suzuki.poulose@arm.com,
-        julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org,
-        wanghaibin.wang@huawei.com, andrew.murray@arm.com
-References: <1563366019-31200-1-git-send-email-yuzenghui@huawei.com>
-From:   Julien Thierry <julien.thierry@arm.com>
-Message-ID: <01fa98c1-8274-445c-5e04-219372920ba2@arm.com>
-Date:   Wed, 17 Jul 2019 14:44:59 +0100
+        Wed, 17 Jul 2019 09:47:29 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59366 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfGQNr2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:47:28 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HDlKab106607;
+        Wed, 17 Jul 2019 08:47:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563371240;
+        bh=KE7ll8RGnYW0NspHb1Isx+it3u3F262JZfA7NFbvB3Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OvE+rl3DHZ7If/K/1iJwdCLx5InQVBbexmSEQpkQ1Kme5IQpTazoz/ueXM1ClMQ6I
+         GdzxtbsgpT7rXrDsVr9Zxk10m5WmII+hj1yjSZwOhOaNtOAnTJ3ik54N8hvVcRQ5TZ
+         IbT8SqyWweaUefOfxcp1QobQtlEtCzRc89qOfR5A=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HDlK6C122361
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Jul 2019 08:47:20 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
+ Jul 2019 08:47:20 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 17 Jul 2019 08:47:20 -0500
+Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HDlIet039267;
+        Wed, 17 Jul 2019 08:47:18 -0500
+Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
+ to the LED core
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <dmurphy@ti.com>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190715155657.22976-1-jjhiblot@ti.com>
+ <20190715155657.22976-3-jjhiblot@ti.com>
+ <20190716105032.thpcttko5do3u56n@holly.lan>
+From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
+Message-ID: <9497174a-65b9-bd4f-8ce3-89176930a78c@ti.com>
+Date:   Wed, 17 Jul 2019 15:47:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1563366019-31200-1-git-send-email-yuzenghui@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190716105032.thpcttko5do3u56n@holly.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
 
-On 17/07/2019 13:20, Zenghui Yu wrote:
-> We use "pmc->idx" and the "chained" bitmap to determine if the pmc is
-> chained, in kvm_pmu_pmc_is_chained().  But idx might be uninitialized
-> (and random) when we doing this decision, through a KVM_ARM_VCPU_INIT
-> ioctl -> kvm_pmu_vcpu_reset(). And the test_bit() against this random
-> idx will potentially hit a KASAN BUG [1].
-> 
-> Fix it by moving the assignment of idx before kvm_pmu_stop_counter().
-> 
-> [1] https://www.spinics.net/lists/kvm-arm/msg36700.html
-> 
-> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
-> Suggested-by: Andrew Murray <andrew.murray@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>> ---
->  virt/kvm/arm/pmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-> index 3dd8238..521bfdd 100644
-> --- a/virt/kvm/arm/pmu.c
-> +++ b/virt/kvm/arm/pmu.c
-> @@ -225,8 +225,8 @@ void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
->  	struct kvm_pmu *pmu = &vcpu->arch.pmu;
->  
->  	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++) {
-> -		kvm_pmu_stop_counter(vcpu, &pmu->pmc[i]);
->  		pmu->pmc[i].idx = i;
+On 16/07/2019 12:50, Daniel Thompson wrote:
+> On Mon, Jul 15, 2019 at 05:56:57PM +0200, Jean-Jacques Hiblot wrote:
+>> A LED is usually powered by a voltage/current regulator. Let the LED core
+> This is almost certainly nitpicking but since there's enough other
+> review comments that you will have to respin anyway ;-)
+No problems. comments are welcome.
+> Is an LED really "usually powered by a voltage/current regulator"? Some
+> LEDs have a software controlled power supply but I'm not sure it is
+> the usual case.
+True. I'll reword this.
+> Likewise its a little confusing to be talking about LEDs with an
+> external current regulator since, although that is possible, it is also
+> one the main features provided by LED driver chips.
 
-Yes, this is kind of a static property that should really be part of a
-"kvm_pmu_vcpu_init()" or "kvm_pmu_vcpu_create()" and is not expected to
-be modified across resets...
+In my experience LED drivers are quite often current sinks. In that case 
+the power is provided externally, and sometimes by a managed regulator.
 
-There is no such function at the time and I'm unsure whether this
-warrants creating that separate function (I would still suggest creating
-it to make things clearer).
+Thanks,
 
-> +		kvm_pmu_stop_counter(vcpu, &pmu->pmc[i]);
+JJ
 
-Whatever other opinions are on splitting pmu_vcpu_init/reset, that
-change makes sense and fixes the issue:
-
-Acked-by: Julien Thierry <julien.thierry@arm.com>
-
->  	}
->  
->  	bitmap_zero(vcpu->arch.pmu.chained, ARMV8_PMU_MAX_COUNTER_PAIRS);
-> 
-
-Cheers,
-
--- 
-Julien Thierry
+>
+> Daniel.
