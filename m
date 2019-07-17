@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C08BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E22C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CD421019
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16C4D21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nJp3Rl6x"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="tq0526O6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbfGQW6c (ORCPT
+        id S1731204AbfGQW7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:58:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43727 "EHLO
+        Wed, 17 Jul 2019 18:59:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39711 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfGQW6b (ORCPT
+        with ESMTP id S1727653AbfGQW7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:58:31 -0400
+        Wed, 17 Jul 2019 18:59:14 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HMwM0P1722867
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HMx6pG1722935
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 15:58:22 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HMwM0P1722867
+        Wed, 17 Jul 2019 15:59:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HMx6pG1722935
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563404303;
-        bh=0XJp/+EmtjziKDpYMlfxoRS6N+SabMI2Vqh8e3V4euM=;
+        s=2019061801; t=1563404346;
+        bh=1z7PnNcU//F2XTxZOh62vd7RsSskdP38Rm9idDPjxik=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=nJp3Rl6xtO7n0cjI6BKGUn1VH5NArEJTNPc3DIIyJMPVNizpH5OD0vxpYUqE/3S5X
-         j2lmXxIJPWwf2QZk0uhVCBiSYI1lAtFU9i/1YpiNKbrtDU7t8xEcPmUFtz8pAtO0Rk
-         c7w9nNu/GDPRepXL/UnohRgS3t+iIgY9hP1JbgfnU3C+KLYOTV3+CjMKYkc1xpFEfm
-         aAij7RxIwmKF+rqh5EOr+Y/89WobNBzPc6t/rmHG+8l9hwjgYIWnhH+wN8T0N8uF5b
-         s6N5vimiDz7dfMPSw5qmBhhiU5DSJd/4gdukTlYi9xaPQUgIEvT471BVBWdoBnqOXQ
-         MXWI0OBAJoPWQ==
+        b=tq0526O6MTdxlGvnYcGAzmlQRO7oInQg7Nv7BTwBwqYrH4seu3cvar2/SXU4CtEfV
+         +dJZVZS1E/RXAy4WhNMj+a3Y0xASgToR2yUNxld/nrAE+2l34Steg6NMeyD29xs4Zg
+         pewxKC1Pdg70AhQXVjEcvTRCtbIxGq9iHdPaX9c3TRec6Qk+qZC4ponN5P5+kX64+w
+         e7LvNmeLTlCupAWqPuTpB5GxobEEyiVhSpLxJHKY8xP9XHs1hrvLzAeQQMOogbnRHH
+         uz1HWHtyxCMNVms6THaFF9L+f9VJQOaJ6lbK32bUYDfiu8tqCdsHfX6oT2IPRfJb88
+         0+lDzllNrjaxg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HMwL101722864;
-        Wed, 17 Jul 2019 15:58:21 -0700
-Date:   Wed, 17 Jul 2019 15:58:21 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HMx5o91722932;
+        Wed, 17 Jul 2019 15:59:05 -0700
+Date:   Wed, 17 Jul 2019 15:59:05 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-80859c947a1eb170927d03e713abf7550a3d8766@git.kernel.org>
-Cc:     jolsa@redhat.com, acme@redhat.com, tglx@linutronix.de,
-        mingo@kernel.org, linux-kernel@vger.kernel.org,
-        adrian.hunter@intel.com, hpa@zytor.com
-Reply-To: adrian.hunter@intel.com, hpa@zytor.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, jolsa@redhat.com, acme@redhat.com,
-          tglx@linutronix.de
-In-Reply-To: <20190710085810.1650-12-adrian.hunter@intel.com>
-References: <20190710085810.1650-12-adrian.hunter@intel.com>
+Message-ID: <tip-4650c7bed79582c74452d284e45d5b76987c0ef3@git.kernel.org>
+Cc:     jolsa@redhat.com, acme@redhat.com, hpa@zytor.com,
+        tglx@linutronix.de, adrian.hunter@intel.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: hpa@zytor.com, tglx@linutronix.de, adrian.hunter@intel.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org, jolsa@redhat.com,
+          acme@redhat.com
+In-Reply-To: <20190710085810.1650-13-adrian.hunter@intel.com>
+References: <20190710085810.1650-13-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf db-export: Factor out db_export__comm()
-Git-Commit-ID: 80859c947a1eb170927d03e713abf7550a3d8766
+Subject: [tip:perf/urgent] perf db-export: Also export thread's current comm
+Git-Commit-ID: 4650c7bed79582c74452d284e45d5b76987c0ef3
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,85 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  80859c947a1eb170927d03e713abf7550a3d8766
-Gitweb:     https://git.kernel.org/tip/80859c947a1eb170927d03e713abf7550a3d8766
+Commit-ID:  4650c7bed79582c74452d284e45d5b76987c0ef3
+Gitweb:     https://git.kernel.org/tip/4650c7bed79582c74452d284e45d5b76987c0ef3
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Wed, 10 Jul 2019 11:58:00 +0300
+AuthorDate: Wed, 10 Jul 2019 11:58:01 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 10 Jul 2019 12:13:51 -0300
+CommitDate: Wed, 10 Jul 2019 12:14:07 -0300
 
-perf db-export: Factor out db_export__comm()
+perf db-export: Also export thread's current comm
 
-In preparation for exporting the current comm for a thread, factor out
-db_export__comm().
+Currently, the initial comm of the main thread is exported. Export also
+a thread's current comm. That better supports the tracing of
+multi-threaded applications that set different comms for different
+threads to make it easier to distinguish them.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-12-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190710085810.1650-13-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/db-export.c | 30 +++++++++++++++++++++++-------
- tools/perf/util/db-export.h |  2 ++
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ tools/perf/util/db-export.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index b0504d3eb130..b1e581c13963 100644
+index b1e581c13963..5057fdd7f62d 100644
 --- a/tools/perf/util/db-export.c
 +++ b/tools/perf/util/db-export.c
-@@ -78,6 +78,26 @@ int db_export__thread(struct db_export *dbe, struct thread *thread,
- 	return 0;
- }
+@@ -299,6 +299,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 	};
+ 	struct thread *main_thread;
+ 	struct comm *comm = NULL;
++	struct comm *curr_comm;
+ 	int err;
  
-+static int __db_export__comm(struct db_export *dbe, struct comm *comm,
-+			     struct thread *thread)
-+{
-+	comm->db_id = ++dbe->comm_last_db_id;
-+
-+	if (dbe->export_comm)
-+		return dbe->export_comm(dbe, comm, thread);
-+
-+	return 0;
-+}
-+
-+int db_export__comm(struct db_export *dbe, struct comm *comm,
-+		    struct thread *thread)
-+{
-+	if (comm->db_id)
-+		return 0;
-+
-+	return __db_export__comm(dbe, comm, thread);
-+}
-+
- /*
-  * Export the "exec" comm. The "exec" comm is the program / application command
-  * name at the time it first executes. It is used to group threads for the same
-@@ -92,13 +112,9 @@ int db_export__exec_comm(struct db_export *dbe, struct comm *comm,
- 	if (comm->db_id)
- 		return 0;
+ 	err = db_export__evsel(dbe, evsel);
+@@ -350,6 +351,13 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 		}
+ 	}
  
--	comm->db_id = ++dbe->comm_last_db_id;
--
--	if (dbe->export_comm) {
--		err = dbe->export_comm(dbe, comm, main_thread);
--		if (err)
--			return err;
--	}
-+	err = __db_export__comm(dbe, comm, main_thread);
-+	if (err)
-+		return err;
++	curr_comm = thread__comm(thread);
++	if (curr_comm) {
++		err = db_export__comm(dbe, curr_comm, thread);
++		if (err)
++			goto out_put;
++	}
++
+ 	es.db_id = ++dbe->sample_last_db_id;
  
- 	/*
- 	 * Record the main thread for this comm. Note that the main thread can
-diff --git a/tools/perf/util/db-export.h b/tools/perf/util/db-export.h
-index 29f7c3b035a7..f5f0865f07e1 100644
---- a/tools/perf/util/db-export.h
-+++ b/tools/perf/util/db-export.h
-@@ -77,6 +77,8 @@ int db_export__evsel(struct db_export *dbe, struct perf_evsel *evsel);
- int db_export__machine(struct db_export *dbe, struct machine *machine);
- int db_export__thread(struct db_export *dbe, struct thread *thread,
- 		      struct machine *machine, struct thread *main_thread);
-+int db_export__comm(struct db_export *dbe, struct comm *comm,
-+		    struct thread *thread);
- int db_export__exec_comm(struct db_export *dbe, struct comm *comm,
- 			 struct thread *main_thread);
- int db_export__comm_thread(struct db_export *dbe, struct comm *comm,
+ 	err = db_ids_from_al(dbe, al, &es.dso_db_id, &es.sym_db_id, &es.offset);
