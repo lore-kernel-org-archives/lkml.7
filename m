@@ -2,101 +2,96 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E51C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765CAC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E760320818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5129D21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfGQOQ7 (ORCPT
+        id S1727509AbfGQORP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:16:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:58329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfGQOQ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:16:59 -0400
-Received: from [192.168.1.110] ([77.7.13.186]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MkHEH-1iBlku1J9t-00kfCy; Wed, 17 Jul 2019 16:16:41 +0200
-Subject: Re: [PATCH 4/4] debian: add generic rule file
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <1562664759-16009-1-git-send-email-info@metux.net>
- <1562664759-16009-4-git-send-email-info@metux.net>
- <CAK7LNAR1N-bwVWm0LXky2-d2GfvRuRrEWeo5CGm3Z2Lp_s0WEw@mail.gmail.com>
- <5af9db32-2cf5-10ba-261c-e08852d0814f@metux.net>
- <20190715191245.GD3068@mit.edu>
- <CAK7LNASps6JBAvtJshjMbqMk8QaSrMaH8pm-wHsEySTRJzu0Kw@mail.gmail.com>
- <20190716123431.GB2999@mit.edu>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <77f82ca2-f89b-e8e2-507a-c37bce1343a5@metux.net>
-Date:   Wed, 17 Jul 2019 16:16:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Jul 2019 10:17:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2674 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725936AbfGQORO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 10:17:14 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 11C1F52B2202777E0778;
+        Wed, 17 Jul 2019 22:17:12 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
+ 22:17:08 +0800
+Subject: Re: [PATCH 1/3] power: supply: ab8500: remove set but not used
+ variables 'vbup33_vrtcn' and 'bup_vch_range'
+To:     <sre@kernel.org>, <linus.walleij@linaro.org>,
+        <lee.jones@linaro.org>, <loic.pallardy@st.com>
+References: <20190717141502.53968-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <3142ee96-0bca-a9f3-1138-a4cf58d46bd8@huawei.com>
+Date:   Wed, 17 Jul 2019 22:17:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190716123431.GB2999@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190717141502.53968-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:8HnEQhX5qC0lbl/5iJtYcFfeJ0Kw333zWG878y65QFvMazOMKER
- WHM/m1Ezx3M1tX80++6gg/P7sJ7xS69gwKfMLSzdNgGCYvFya0T3VZQCHM0U1inFUEri+a8
- GiOVyeW37SZ681d9hkRJZMu5QQNf3BowK45qR2u42VZ9o2aJuzXyxDzcKeLaHoj211cD2MN
- KLPjrLUbq3j+8tC7yAiSg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iqJCQL2Ve+M=:eLA7MM/kzThA5XWvEsiQfx
- FqCpQSrv85qNdT1iaOWhC8bCBMiQV1vf6FOlR+R/KY9pj2ve5MZZ128EYsKNlSlpo4283aJpJ
- Iu00EI+e7IC9m7PqrJ7cGHqpM1KGM1J0ZY3ouApUNbuF9ILgTxJIzQwV5c4hKCNCUNaxikERj
- 7HeT0CEW5VyzpzS1S0Scg4ELM8yVakZ5wHqzQHQ+6OT8UVR12sPfySw+WVum8Jax5mvx6cqx6
- igNAtoAVdttDEuX4Am5DZp2/hIL4y5SYKp2ZWj8OtjqYaZ7DbjV9rHYbSJQwdddqkCDy6FiJ6
- DTms95X+fwEa0o1nfxKExtIyQgghHOkGFoHfhLJZGiMLOoGN8Y6E1r2RQSJyLS5zPTrtDp+Rv
- GXZlicSwpoZXzWYH4ROm0XC7uqVMk5QHStfGDpNYuYCIWl3E0+fbcseAhcdzJh9jbmIyhnwhg
- 5gPNg3WAxaXTW/trnRdCBG0MB01BJC+Z/lhBymKXyGX3BqLQbRfCmDH8ZXMluG/Bp2twCYo5M
- Ck27fR1WA5kNyM6BbMt6PG1+w14CTgPapAbmo8dpSfux7kh5JhgcInF2cjDJERPW009OgxiAC
- HzljwX2k+bxfyzUkE7RO97wjJQdua0RlMJMQ9mp0tHkvL9N4PkwyOtfibYge2Orb4bkaZ5SLt
- AKjqjN/xTd3cgVGyuHWI1nzbvYs/7zO6HmJuqVaAqof3ug9dTR7DF9ZWJ+DXxBrBKWsnJT77D
- 9te7Li0DfCy067+cxIpEtAUS11vbfdPe0wz2XBP9M4lZhoQBwxDrmg5hGAc=
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.07.19 14:34, Theodore Y. Ts'o wrote:
+Sorry, Pls ignore this, I will fix patch title.
 
-Hi,
+On 2019/7/17 22:15, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warnings:
+> 
+> drivers/power/supply/ab8500_charger.c:
+>  In function ab8500_charger_init_hw_registers:
+> drivers/power/supply/ab8500_charger.c:3013:24: warning:
+>  variable vbup33_vrtcn set but not used [-Wunused-but-set-variable]
+> drivers/power/supply/ab8500_charger.c:3013:5: warning:
+>  variable bup_vch_range set but not used [-Wunused-but-set-variable]
+> 
+> They are not used since commit 4c4268dc97c4 ("power:
+> supply: ab8500: Drop AB8540/9540 support")
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/power/supply/ab8500_charger.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply/ab8500_charger.c
+> index 30de448..270a48a 100644
+> --- a/drivers/power/supply/ab8500_charger.c
+> +++ b/drivers/power/supply/ab8500_charger.c
+> @@ -3010,7 +3010,6 @@ static int ab8500_charger_usb_get_property(struct power_supply *psy,
+>  static int ab8500_charger_init_hw_registers(struct ab8500_charger *di)
+>  {
+>  	int ret = 0;
+> -	u8 bup_vch_range = 0, vbup33_vrtcn = 0;
+>  
+>  	/* Setup maximum charger current and voltage for ABB cut2.0 */
+>  	if (!is_ab8500_1p1_or_earlier(di->parent)) {
+> @@ -3111,12 +3110,6 @@ static int ab8500_charger_init_hw_registers(struct ab8500_charger *di)
+>  		goto out;
+>  	}
+>  
+> -	/* Backup battery voltage and current */
+> -	if (di->bm->bkup_bat_v > BUP_VCH_SEL_3P1V)
+> -		bup_vch_range = BUP_VCH_RANGE;
+> -	if (di->bm->bkup_bat_v == BUP_VCH_SEL_3P3V)
+> -		vbup33_vrtcn = VBUP33_VRTCN;
+> -
+>  	ret = abx500_set_register_interruptible(di->dev,
+>  		AB8500_RTC,
+>  		AB8500_RTC_BACKUP_CHG_REG,
+> 
 
-> In practice, that's not going to be a problem for most distributions.
-> The traditional way Debian-derived systems have done builds is
-> completely outside of git.  So there will be a linux_5.2.orig.tar.gz
-> and a linux_5.2-1.debian.tar.xz.  dpkg_source -x will first unpackage
-> the orig.tar.gz, and then the debian.tar.xz, and if the second
-> overwrites the first, it's no big deal.
-
-ACK. IIRC they already filter out debian/ directories when generating
-upstream tarballs - other upstreams already provide their debian/
-stuff, too.
-
-> First, once it's checked in, I expect changes to the default
-> debian/rules file will be relatively rare.  
-
-ACK. I currently don't see much reasons for future changes. If anybody
-sees something missing, just let me know, and I'll take it up for the
-next review round.
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
