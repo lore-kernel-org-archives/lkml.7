@@ -2,180 +2,139 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2437EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2111C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02D5208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:10:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hZum+jiR"
+	by mail.kernel.org (Postfix) with ESMTP id 79184208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388704AbfGQSKN (ORCPT
+        id S2388788AbfGQSNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:10:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45246 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfGQSKN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:10:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so25798567wre.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 11:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h4zRuuB0tQXvX7Wdz6K3fiN9+DH90QL9fyAJw6VWrt0=;
-        b=hZum+jiR2vgl4lS74AjOj+d62h8hAhmn4FOC9UXn7kG9/RgpXWF7CXHaoU+P7vYAcn
-         j9IL9atHTvQM0fNvrFvbol0WL4XwOSthmuDrX1OZCDmLWNADLb/haP/kK5ZyWQ9ZXMdy
-         q45HzysbyXpRzrPUtu9JcIKpUVrClA9Jy+FNsjoL5aLh8J6R4T+69N1Mb4w/WrNetHh1
-         7vBbT3z0rLa80sjSyXrG7Ba3TRBRyb3XR/kHqVCNLZZJm0JuLF+MyyYjF8m8UfIUxH3L
-         neOu+RCrTFJNr4wR+ywZoGSYbauYJG6Yu98Lilu/U/7/T8RzjfwJNQ3eIlyG6uQznLRX
-         pnZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h4zRuuB0tQXvX7Wdz6K3fiN9+DH90QL9fyAJw6VWrt0=;
-        b=iyYiSba7zhe2onUM2neJcL8WJeZEQBA14bFVVIRV1lommzCzx2GP3uQ8qyGjma0Dc/
-         D3v2Q7SrHr9lX17GwXRvlPtfL+pk05xwJzs0stfA+ls2eBpYenGj7tGwdwJ9I3tcSPSP
-         1UqqgfMjr6XDYJtwsAvZJyCI4j4YOnhCynbRnVzErxyUoiq+ByfW9Nf3+njOPn3UrLtZ
-         tdbzkvrM4fk+CMLgFjHPLDfIyAxBsWnoxY2TZSRYFkeldCvtq1qwWiBYTPAC8/jPxpcE
-         glMXKcxxZaNMhgIikNjRyQnchDMYhnlx0hRinNjCYVozFkzpDNp2xN34bAQkqAt3YIoS
-         yCHw==
-X-Gm-Message-State: APjAAAUyFmgkEDQHbODHtTTFNF68vAOLrhG5rfQHZUclEpOZ9uZWbb+q
-        kZUrq4HWpjjlqv6H9ITFKyP8yEdWfO3MMJABmMBNsg==
-X-Google-Smtp-Source: APXvYqxhijtKaBEq5+Ox1NxfoTOb5cA2wv9dpEJ0x9BhkoYyJZmFHCkvbN2mhmlt7GRKsdQ5VehCG31uxWbiYxU+2B4=
-X-Received: by 2002:adf:ce88:: with SMTP id r8mr18117945wrn.42.1563387010687;
- Wed, 17 Jul 2019 11:10:10 -0700 (PDT)
+        Wed, 17 Jul 2019 14:13:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47222 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727399AbfGQSNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 14:13:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A28C2AE03;
+        Wed, 17 Jul 2019 18:13:30 +0000 (UTC)
+Subject: Re: incoming
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Jonathan Corbet <corbet@lwn.net>,
+        Thorsten Leemhuis <linux@leemhuis.info>
+References: <20190716162536.bb52b8f34a8ecf5331a86a42@linux-foundation.org>
+ <8056ff9c-1ff2-6b6d-67c0-f62e66064428@suse.cz>
+ <CAHk-=wg1VK0sCzCf_=KXWufTF1PPLX-kfSbNN0pk+QHzw7=ajw@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c3af33ec-82d8-c26d-e93d-b7645e0efae9@suse.cz>
+Date:   Wed, 17 Jul 2019 20:13:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190717172100.261204-1-joel@joelfernandes.org> <20190717175556.axe2pne7lcrkmtzr@brauner.io>
-In-Reply-To: <20190717175556.axe2pne7lcrkmtzr@brauner.io>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 17 Jul 2019 11:09:59 -0700
-Message-ID: <CAJuCfpHYoxT0yJvgU62GaoT0g9+ngOhLBN2LP1wt9rrN4-oxvg@mail.gmail.com>
-Subject: Re: [PATCH RFC v1] pidfd: fix a race in setting exit_state for pidfd polling
-To:     Christian Brauner <christian@brauner.io>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wg1VK0sCzCf_=KXWufTF1PPLX-kfSbNN0pk+QHzw7=ajw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:56 AM Christian Brauner <christian@brauner.io> wrote:
->
-> On Wed, Jul 17, 2019 at 01:21:00PM -0400, Joel Fernandes wrote:
-> > From: Suren Baghdasaryan <surenb@google.com>
-> >
-> > There is a race between reading task->exit_state in pidfd_poll and writing
-> > it after do_notify_parent calls do_notify_pidfd. Expected sequence of
-> > events is:
-> >
-> > CPU 0                            CPU 1
-> > ------------------------------------------------
-> > exit_notify
-> >   do_notify_parent
-> >     do_notify_pidfd
-> >   tsk->exit_state = EXIT_DEAD
-> >                                   pidfd_poll
-> >                                      if (tsk->exit_state)
-> >
-> > However nothing prevents the following sequence:
-> >
-> > CPU 0                            CPU 1
-> > ------------------------------------------------
-> > exit_notify
-> >   do_notify_parent
-> >     do_notify_pidfd
-> >                                    pidfd_poll
-> >                                       if (tsk->exit_state)
-> >   tsk->exit_state = EXIT_DEAD
-> >
-> > This causes a polling task to wait forever, since poll blocks because
-> > exit_state is 0 and the waiting task is not notified again. A stress
-> > test continuously doing pidfd poll and process exits uncovered this bug,
-> > and the below patch fixes it.
-> >
-> > To fix this, we set tsk->exit_state before calling do_notify_pidfd.
-> >
-> > Cc: kernel-team@android.com
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->
-> That means in such a situation other users will see EXIT_ZOMBIE where
-> they didn't see that before until after the parent failed to get
-> notified.
+On 7/17/19 6:13 PM, Linus Torvalds wrote:
+> On Wed, Jul 17, 2019 at 1:47 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>>
+>> So I've tried now to provide an example what I had in mind, below.
+> 
+> I'll take it as a trial. I added one-line notes about coda and the
+> PTRACE_GET_SYSCALL_INFO interface too.
 
-I'm a little nervous about that myself even though in my stress
-testing this worked fine. I think the safest change would be to move
-do_notify_pidfd() out of do_notify_parent() and call it after
-tsk->exit_state is finalized. The downside of that is that there are 4
-places we call do_notify_parent(), so instead of calling
-do_notify_pidfd() one time from do_notify_parent() we will be calling
-it 4 times now.
+Thanks.
 
-Also my original patch had memory barriers to ensure correct ordering
-of tsk->exit_state writes before reads. In this final version Joel
-removed them, so I suppose he found out they are not needed. Joel,
-please clarify.
-Thanks!
+> I do hope that eventually I'll just get pull requests,
 
-> That's a rather subtle internal change. I was worried about
-> __ptrace_detach() since it explicitly checks for EXIT_ZOMBIE but it
-> seems to me that this is fine since we hold write_lock_irq(&tasklist_lock);
-> at the point when we do set p->exit_signal.
->
-> Acked-by: Christian Brauner <christian@brauner.io>
->
-> Once Oleg confirms that I'm right not to worty I'll pick this up.
->
-> Thanks!
-> Christian
->
-> >
-> > ---
-> >  kernel/exit.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/exit.c b/kernel/exit.c
-> > index a75b6a7f458a..740ceacb4b76 100644
-> > --- a/kernel/exit.c
-> > +++ b/kernel/exit.c
-> > @@ -720,6 +720,7 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
-> >       if (group_dead)
-> >               kill_orphaned_pgrp(tsk->group_leader, NULL);
-> >
-> > +     tsk->exit_state = EXIT_ZOMBIE;
-> >       if (unlikely(tsk->ptrace)) {
-> >               int sig = thread_group_leader(tsk) &&
-> >                               thread_group_empty(tsk) &&
-> > @@ -1156,10 +1157,11 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
-> >               ptrace_unlink(p);
-> >
-> >               /* If parent wants a zombie, don't release it now */
-> > -             state = EXIT_ZOMBIE;
-> > +             p->exit_state = EXIT_ZOMBIE;
-> >               if (do_notify_parent(p, p->exit_signal))
-> > -                     state = EXIT_DEAD;
-> > -             p->exit_state = state;
-> > +                     p->exit_state = EXIT_DEAD;
-> > +
-> > +             state = p->exit_state;
-> >               write_unlock_irq(&tasklist_lock);
-> >       }
-> >       if (state == EXIT_DEAD)
-> > --
-> > 2.22.0.657.g960e92d24f-goog
-> >
+Very much agree, that was also discussed at length in the LSF/MM mm
+process session I've linked.
+
+> and they'll
+> have more of a "theme" than this all (*)
+
+I'll check if the first patch bomb would be more amenable to that, as I
+plan to fill in the mm part for 5.3 on LinuxChanges wiki, but for a
+merge commit it's too late.
+
+>            Linus
+> 
+> (*) Although in many ways, the theme for Andrew is "falls through the
+> cracks otherwise" so I'm not really complaining. This has been working
+> for years and years.
+
+Nevermind the misc stuff that much, but I think mm itself is more
+important and deserves what other subsystems have.
+
