@@ -2,92 +2,110 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48797C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB3C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019892173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F352173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfGQOuf (ORCPT
+        id S1727456AbfGQOv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:50:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50406 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725936AbfGQOuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:50:35 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C24388FE867EE1C592AC;
-        Wed, 17 Jul 2019 22:34:54 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
- 22:34:47 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <payal.s.kshirsagar.98@gmail.com>,
-        <hariprasad.kelam@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] staging: rtl8723bs: remove set but not used variable 'cck_highpwr'
-Date:   Wed, 17 Jul 2019 22:20:14 +0800
-Message-ID: <20190717142014.43216-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 17 Jul 2019 10:51:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfGQOv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 10:51:59 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AFE9581F19;
+        Wed, 17 Jul 2019 14:51:58 +0000 (UTC)
+Received: from redhat.com (ovpn-125-71.rdu2.redhat.com [10.10.125.71])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7D6B660BEE;
+        Wed, 17 Jul 2019 14:51:51 +0000 (UTC)
+Date:   Wed, 17 Jul 2019 10:51:47 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] vsock/virtio: fix locking in
+ virtio_transport_inc_tx_pkt()
+Message-ID: <20190717105056-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-4-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-4-sgarzare@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 17 Jul 2019 14:51:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Wed, Jul 17, 2019 at 01:30:28PM +0200, Stefano Garzarella wrote:
+> fwd_cnt and last_fwd_cnt are protected by rx_lock, so we should use
+> the same spinlock also if we are in the TX path.
+> 
+> Move also buf_alloc under the same lock.
+> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-drivers/staging/rtl8723bs/hal/odm_HWConfig.c:
- In function odm_RxPhyStatus92CSeries_Parsing:
-drivers/staging/rtl8723bs/hal/odm_HWConfig.c:92:5: warning:
- variable cck_highpwr set but not used [-Wunused-but-set-variable]
+Wait a second is this a bugfix?
+If it's used under the wrong lock won't values get corrupted?
+Won't traffic then stall or more data get to sent than
+credits?
 
-It is never used and can be removed.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/rtl8723bs/hal/odm_HWConfig.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/hal/odm_HWConfig.c b/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
-index 49fa81406..71919a3 100644
---- a/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
-+++ b/drivers/staging/rtl8723bs/hal/odm_HWConfig.c
-@@ -89,7 +89,6 @@ static void odm_RxPhyStatus92CSeries_Parsing(
- 	u8 RSSI, total_rssi = 0;
- 	bool isCCKrate = false;
- 	u8 rf_rx_num = 0;
--	u8 cck_highpwr = 0;
- 	u8 LNA_idx, VGA_idx;
- 	PPHY_STATUS_RPT_8192CD_T pPhyStaRpt = (PPHY_STATUS_RPT_8192CD_T)pPhyStatus;
- 
-@@ -107,16 +106,10 @@ static void odm_RxPhyStatus92CSeries_Parsing(
- 		/*  (2)PWDB, Average PWDB cacluated by hardware (for rate adaptive) */
- 		/*  */
- 
--		/* if (pHalData->eRFPowerState == eRfOn) */
--		cck_highpwr = pDM_Odm->bCckHighPower;
--		/* else */
--		/* cck_highpwr = false; */
--
- 		cck_agc_rpt =  pPhyStaRpt->cck_agc_rpt_ofdm_cfosho_a ;
- 
- 		/* 2011.11.28 LukeLee: 88E use different LNA & VGA gain table */
- 		/* The RSSI formula should be modified according to the gain table */
--		/* In 88E, cck_highpwr is always set to 1 */
- 		LNA_idx = ((cck_agc_rpt & 0xE0)>>5);
- 		VGA_idx = (cck_agc_rpt & 0x1F);
- 		rx_pwr_all = odm_CCKRSSI_8723B(LNA_idx, VGA_idx);
--- 
-2.7.4
-
-
+> ---
+>  include/linux/virtio_vsock.h            | 2 +-
+>  net/vmw_vsock/virtio_transport_common.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> index 49fc9d20bc43..4c7781f4b29b 100644
+> --- a/include/linux/virtio_vsock.h
+> +++ b/include/linux/virtio_vsock.h
+> @@ -35,7 +35,6 @@ struct virtio_vsock_sock {
+>  
+>  	/* Protected by tx_lock */
+>  	u32 tx_cnt;
+> -	u32 buf_alloc;
+>  	u32 peer_fwd_cnt;
+>  	u32 peer_buf_alloc;
+>  
+> @@ -43,6 +42,7 @@ struct virtio_vsock_sock {
+>  	u32 fwd_cnt;
+>  	u32 last_fwd_cnt;
+>  	u32 rx_bytes;
+> +	u32 buf_alloc;
+>  	struct list_head rx_queue;
+>  };
+>  
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index a85559d4d974..34a2b42313b7 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -210,11 +210,11 @@ static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
+>  
+>  void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt)
+>  {
+> -	spin_lock_bh(&vvs->tx_lock);
+> +	spin_lock_bh(&vvs->rx_lock);
+>  	vvs->last_fwd_cnt = vvs->fwd_cnt;
+>  	pkt->hdr.fwd_cnt = cpu_to_le32(vvs->fwd_cnt);
+>  	pkt->hdr.buf_alloc = cpu_to_le32(vvs->buf_alloc);
+> -	spin_unlock_bh(&vvs->tx_lock);
+> +	spin_unlock_bh(&vvs->rx_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_transport_inc_tx_pkt);
+>  
+> -- 
+> 2.20.1
