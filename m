@@ -2,148 +2,118 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A99FBC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBACDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DD2217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9671F20880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:08:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="af1ZzoQS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTIrJmKd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfGQNBX (ORCPT
+        id S1727046AbfGQNIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:01:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33279 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfGQNBW (ORCPT
+        Wed, 17 Jul 2019 09:08:18 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39430 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQNIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:01:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g2so10824784pfq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 06:01:22 -0700 (PDT)
+        Wed, 17 Jul 2019 09:08:18 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u25so11738836wmc.4;
+        Wed, 17 Jul 2019 06:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/2kZjQOSWU81kHquRCCTS3R2h91VV4bpIT1uTfaQV5o=;
-        b=af1ZzoQSHrqVDDWQrA4VASz5++0JDUGwmcQd31ADjyOhdWK/pICy2eNdyY7iNr5pqV
-         NaPEcXn/twlQE6dChS+rDBe/c9Qno+5OAYnYvg80MvabLRJQ6EOwm2cMF7rJS05j9kSd
-         oZwEH7sW7elIJT6hLNlXxYjzbIuI+PrKdwaWQ=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h2yLsvzismF8aSznQ40gS7iVeJd2FnjlYb1X34YBrA8=;
+        b=hTIrJmKdb4eBexEx/Rfsp2Pg7LnciIrsWX1mLz99xre2zIlgoiZaRCMFERkDAw8DDI
+         5SSzeqshErtNi7bSc3tgUmHN3HPsgCWWlvGsy5P/jXXVo0NoNhymFSNuVUOA4bwJMwQq
+         MtK+PW3Kf6jxpRM6/m4vtBsrRPTyXrgx/CfumOVFW75rvSeMeoGDLotXbLZ4dZj9XvW8
+         zdFqWe7FC1i2CMy81xtbA8AfUzcU8z4KSd/Vr3Dpsm935/ni2Spayq5xnOomWsic77dq
+         G/PfZx5IhgH+2aj5ZUt9rXZNbq+d9eLIiBIHkaNMX3oLc2RTPfkQ84cO11KPR8XNTi+r
+         Hnlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/2kZjQOSWU81kHquRCCTS3R2h91VV4bpIT1uTfaQV5o=;
-        b=Gvjl4Jqwg9tPOK4PyVW6xIu3oCuhBKaBzk+uIf2nGhbvLe8bfjANj1oqzElB+Zf6yg
-         txtIyGCNCPKCBSma+kHO1xRTn60v88/ltmTOtBDVQ8PULJhKAAGHuflTlGImZK5MxZlK
-         thqn9jhu1RdU7KKNweOIBTg9cmBVwzAeDV85HhfYwgHTZ79N3sajZ6PrNxx97Q/ywfDm
-         4nQNS+JpToNWr5I7rVPGuZ4wquQr4RuyvKw6OLAVjzDg/0YTkd2pqMyZS9LHT0RD5k/Q
-         940xgJayq4CT7niSaQsRa9o3m5Gv6GqGzk8taFeCrRm1VGqeJmbrKLu+pWlkRnmul+P7
-         DeUQ==
-X-Gm-Message-State: APjAAAXkUD+xtl2gET7UwTWbkbvO1zLzTD9DweoAOWK8p3Md59WKnmoR
-        JX6VRba0pAGdn5zen+/bpvw=
-X-Google-Smtp-Source: APXvYqwtWhnOZOF45C6Cr5hs9BpPPXwsXrITYeTQ/PuXCt4p+AvM15okMMCqiFsrp/ZD/fCo3ObANA==
-X-Received: by 2002:a17:90a:8984:: with SMTP id v4mr43650667pjn.133.1563368481782;
-        Wed, 17 Jul 2019 06:01:21 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l189sm28147054pfl.7.2019.07.17.06.01.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 06:01:20 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 09:01:19 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
-        kernel-team@android.com, linux-kselftest@vger.kernel.org,
-        Manali Shukla <manalishukla14@gmail.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matt Mullins <mmullins@fb.com>,
-        Michal Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
-        namhyung@kernel.org, netdev@vger.kernel.org,
-        paul.chaignon@gmail.com, primiano@google.com,
-        Qais Yousef <qais.yousef@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190717130119.GA138030@google.com>
-References: <20190710141548.132193-1-joel@joelfernandes.org>
- <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
- <20190716213050.GA161922@google.com>
- <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
- <20190716224150.GC172157@google.com>
- <20190716235500.GA199237@google.com>
- <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h2yLsvzismF8aSznQ40gS7iVeJd2FnjlYb1X34YBrA8=;
+        b=O1e78+1J2f40rNBND+xZyUcC3m3V8AwikoMYItnpKQr22vdoVUePEX1gPcIsPzLDRF
+         quwPWEU9mEhkQ3C/t43TALj/yJfZ22rTmDc19+kZn352qwjtXJBzoYDPjVh0e8CWyuIB
+         VJ98Ue2AyFQpSVFMJ0nv9THVXR7DX/bCcdI8LCYXepO8+Ni5sLagLtvj124xPjoS8TYX
+         fJ8DHGsZG+M8nTu3o2mOl1mN8d1ChFC+YXOLmAwGuQam4mpNo4bF2z49p6Qn7fbU+Yfw
+         iz3CSAvQ7GqTKljuxw3jTVe6++1tIuy/sxNly4YjI4fCCG5m+gbLDHqF9+X/WP0FZ4qh
+         4fDA==
+X-Gm-Message-State: APjAAAXtsvPN2Iboe5msYUSDqHsIRdgStBMbDIp+OrqwVt85C7TSNwYJ
+        ZyEDyeo077APxs+3FFhiC+/nXYEUVIk=
+X-Google-Smtp-Source: APXvYqwizHNDm7V2q4Zl8PfRLV8uyVMUdooEDkuQU8R8qdODhQ4UauaxynjAA3/s6qsYZwd+jj1eJQ==
+X-Received: by 2002:a1c:9a53:: with SMTP id c80mr34774771wme.173.1563368895160;
+        Wed, 17 Jul 2019 06:08:15 -0700 (PDT)
+Received: from [10.43.17.52] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n12sm24739515wmc.24.2019.07.17.06.08.13
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 06:08:14 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 0/1] Add dm verity root hash pkcs7 sig validation.
+To:     Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+Cc:     ebiggers@google.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org,
+        Scott Shell <SCOTTSH@microsoft.com>,
+        Nazmus Sakib <mdsakib@microsoft.com>, mpatocka@redhat.com
+References: <20190701181958.6493-1-jaskarankhurana@linux.microsoft.com>
+ <MN2PR21MB12008A962D4DD8662B3614508AF20@MN2PR21MB1200.namprd21.prod.outlook.com>
+ <alpine.LRH.2.21.1907121025510.66082@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+ <395efa90-65d8-d832-3e2b-2b8ee3794688@gmail.com>
+ <alpine.LRH.2.21.1907161035490.121213@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <bdcd7d7c-92fc-11af-7924-9bd0e184b427@gmail.com>
+Date:   Wed, 17 Jul 2019 15:08:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LRH.2.21.1907161035490.121213@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:24:07PM -0700, Alexei Starovoitov wrote:
-[snip]
-> > > > > I don't see why a new bpf node for a trace event is a bad idea, really.
-> > > > 
-> > > > See the patches for kprobe/uprobe FD-based api and the reasons behind it.
-> > > > tldr: text is racy, doesn't scale, poor security, etc.
-> > > 
-> > > Is it possible to use perf without CAP_SYS_ADMIN and control security at the
-> > > per-event level? We are selective about who can access which event, using
-> > > selinux. That's how our ftrace-based tracers work. Its fine grained per-event
-> > > control. That's where I was going with the tracefs approach since we get that
-> > > granularity using the file system.
+Hi,
+
+On 16/07/2019 20:08, Jaskaran Singh Khurana wrote:
+>>> Could you please provide feedback on this v6 version.
+>>
+>> Hi,
+>>
+>> I am ok with the v6 patch; I think Mike will return to it in 5.4 reviews.
+>>
 > 
-> android's choice of selinux is not a factor in deciding kernel apis.
-> It's completely separate discusion wether disallowing particular tracepoints
-> for given user make sense at all.
-> Just because you can hack it in via selinux blocking particular
-> /sys/debug/tracing/ directory and convince yourself that it's somehow
-> makes android more secure. It doesn't mean that all new api should fit
-> into this model.
+> Thanks for the help and also for reviewing this patch. Could you please 
+> add Reviewed-by/Tested-by tag to the patch.
 
-Its not like a hack, it is just control of which tracefs node can be
-accessed and which cannot be since the tracing can run on production systems
-out in the field and there are several concerns to address like security,
-privacy etc. It is not just for debugging usecases. We do collect traces out
-in the field where these issues are real and cannot be ignored.
+ok, you can add
+Tested-and-Reviewed-by: Milan Broz <gmazyland@gmail.com>
 
-SELinux model is deny everything, and then selectively grant access to what
-is needed. The VFS and security LSM hooks provide this control quite well. I am
-not sure if such control is possible through perf hence I asked the question.
+or just use the version on my git, I already updated few lines because
+of recent kernel changes, mainly the revert of keyring changes, tested patch is here
 
-> I think allowing one tracepoint and disallowing another is pointless
-> from security point of view. Tracing bpf program can do bpf_probe_read
-> of anything.
+  https://git.kernel.org/pub/scm/linux/kernel/git/mbroz/linux.git/commit/?h=dm-cryptsetup&id=266f7c9c74b23e4cb2e67ceb813dd707061c1641
+...
 
-I think the assumption here is the user controls the program instructions at
-runtime, but that's not the case. The BPF program we are loading is not
-dynamically generated, it is built at build time and it is loaded from a
-secure verified partition, so even though it can do bpf_probe_read, it is
-still not something that the user can change. And, we are planning to make it
-even more secure by making it kernel verify the program at load time as well
-(you were on some discussions about that a few months ago).
+> The steps and workflow is correct. I will send the cryptsetup changes for 
+> review.
 
-thanks,
+ok, I'll probably try to use our existing userspace libcryptsetup API to avoid introducing new calls,
+but that is not important for now - the kernel bits must be in the mainline kernel first.
 
- - Joel
-
+Thanks,
+Milan
