@@ -2,119 +2,83 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE9BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461EFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84DE2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TZHdWNwI"
+	by mail.kernel.org (Postfix) with ESMTP id 1BF3C2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 09:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfGQI7R (ORCPT
+        id S1726211AbfGQJCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:59:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfGQI7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:59:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vAzlqx/lFVlfT0a1qLbPZP1qhezVl/F0oinXuzJi9bw=; b=TZHdWNwIYTCWJ0RxqxfUHlLnY
-        +VupZBhYjL0yeFleSwLYphjW1QXBSWIICBb+KSaGFTiwWOggj3RhUN625816vNXK7uoNQ47B+2ZpZ
-        wMASf51aAidNJUjJ+canyxQaoERvd9jp756ri2gktddwKXCyNvopDH+wQB460WWdHHoVSvOP7v1VR
-        e2nsKG+TkQxEkWjD68U6VLfpVVTmYpOtRZQ/f250DhY3iZlpAOjlOieTOTVH0597OeNRrz+xqvv1O
-        lO/C1lxkKAek/pVup0GljJKgl1EqXJvyi+8pPEfKhaEd9ogK/lrInlgCOQ1BufObG8QxjtBhOdAQ+
-        GN5WjTSNA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnfmA-0001zi-SN; Wed, 17 Jul 2019 08:59:03 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D667720B51F57; Wed, 17 Jul 2019 10:59:00 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 10:59:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20190717085900.GS3463@hirez.programming.kicks-ass.net>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
- <20190716155022.GR3419@hirez.programming.kicks-ass.net>
- <193BBB31-F376-451F-BDE1-D4807140EB51@oracle.com>
- <20190716184724.GH3402@hirez.programming.kicks-ass.net>
- <20190717083944.GR3463@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717083944.GR3463@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 17 Jul 2019 05:02:24 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49520 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfGQJCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 05:02:24 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D3741A0174;
+        Wed, 17 Jul 2019 11:02:22 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 79D371A00FF;
+        Wed, 17 Jul 2019 11:02:15 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F0931402D5;
+        Wed, 17 Jul 2019 17:02:06 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     ulf.hansson@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linus.walleij@linaro.org, stefan.wahren@i2se.com,
+        kstewart@linuxfoundation.org, tglx@linutronix.de,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] mmc: mxs: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 17 Jul 2019 16:52:59 +0800
+Message-Id: <20190717085259.31235-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:39:44AM +0200, Peter Zijlstra wrote:
-> On Tue, Jul 16, 2019 at 08:47:24PM +0200, Peter Zijlstra wrote:
+From: Anson Huang <Anson.Huang@nxp.com>
 
-> > My primary concern was readability; I find the above suggestion much
-> > more readable. Maybe it can be written differently; you'll have to play
-> > around a bit.
-> 
-> static void cna_splice_tail(struct cna_node *cn, struct cna_node *head, struct cna_node *tail)
-> {
-> 	struct cna_node *list;
-> 
-> 	/* remove [head,tail] */
-> 	WRITE_ONCE(cn->mcs.next, tail->mcs.next);
-> 	tail->mcs.next = NULL;
-> 
-> 	/* stick [head,tail] on the secondary list tail */
-> 	if (cn->mcs.locked <= 1) {
-> 		/* create secondary list */
-> 		head->tail = tail;
-> 		cn->mcs.locked = head->encoded_tail;
-> 	} else {
-> 		/* add to tail */
-> 		list = (struct cna_node *)decode_tail(cn->mcs.locked);
-> 		list->tail->next = head;
-> 		list->tail = tail;
-> 	}
-> }
-> 
-> static struct cna_node *cna_find_next(struct mcs_spinlock *node)
-> {
-> 	struct cna_node *cni, *cn = (struct cna_node *)node;
-> 	struct cna_node *head, *tail = NULL;
-> 
-> 	/* find any next lock from 'our' node */
-> 	for (head = cni = (struct cna_node *)READ_ONCE(cn->mcs.next);
-> 	     cni && cni->node != cn->node;
-> 	     tail = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
-> 		;
+Use the new helper devm_platform_ioremap_resource() which wraps the
+platform_get_resource() and devm_ioremap_resource() together, to
+simplify the code.
 
-I think we can do away with those READ_ONCE()s, at this point those
-pointers should be stable. But please double check.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/mmc/host/mxs-mmc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> 	/* when found, splice any skipped locks onto the secondary list */
-> 	if (cni && tail)
-> 		cna_splice_tail(cn, head, tail);
-> 
-> 	return cni;
-> }
-> 
-> How's that?
+diff --git a/drivers/mmc/host/mxs-mmc.c b/drivers/mmc/host/mxs-mmc.c
+index b334e81..78e7e35 100644
+--- a/drivers/mmc/host/mxs-mmc.c
++++ b/drivers/mmc/host/mxs-mmc.c
+@@ -571,7 +571,6 @@ static int mxs_mmc_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct mxs_mmc_host *host;
+ 	struct mmc_host *mmc;
+-	struct resource *iores;
+ 	int ret = 0, irq_err;
+ 	struct regulator *reg_vmmc;
+ 	struct mxs_ssp *ssp;
+@@ -587,8 +586,7 @@ static int mxs_mmc_probe(struct platform_device *pdev)
+ 	host = mmc_priv(mmc);
+ 	ssp = &host->ssp;
+ 	ssp->dev = &pdev->dev;
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	ssp->base = devm_ioremap_resource(&pdev->dev, iores);
++	ssp->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ssp->base)) {
+ 		ret = PTR_ERR(ssp->base);
+ 		goto out_mmc_free;
+-- 
+2.7.4
+
