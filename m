@@ -2,84 +2,148 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC61FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99FBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49142173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 12:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DD2217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="af1ZzoQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfGQM5L (ORCPT
+        id S1727018AbfGQNBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 08:57:11 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55947 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQM5L (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 08:57:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 05:57:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
-   d="scan'208";a="178890559"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.214.202]) ([10.254.214.202])
-  by orsmga002.jf.intel.com with ESMTP; 17 Jul 2019 05:57:08 -0700
-Subject: Re: [PATCH] perf diff: Report noisy for cycles diff
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20190712075355.16019-1-yao.jin@linux.intel.com>
- <20190716085112.GC22317@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <68639364-53d3-6221-ec57-c338a485b40c@linux.intel.com>
-Date:   Wed, 17 Jul 2019 20:57:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 17 Jul 2019 09:01:23 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33279 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQNBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:01:22 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so10824784pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 06:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/2kZjQOSWU81kHquRCCTS3R2h91VV4bpIT1uTfaQV5o=;
+        b=af1ZzoQSHrqVDDWQrA4VASz5++0JDUGwmcQd31ADjyOhdWK/pICy2eNdyY7iNr5pqV
+         NaPEcXn/twlQE6dChS+rDBe/c9Qno+5OAYnYvg80MvabLRJQ6EOwm2cMF7rJS05j9kSd
+         oZwEH7sW7elIJT6hLNlXxYjzbIuI+PrKdwaWQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/2kZjQOSWU81kHquRCCTS3R2h91VV4bpIT1uTfaQV5o=;
+        b=Gvjl4Jqwg9tPOK4PyVW6xIu3oCuhBKaBzk+uIf2nGhbvLe8bfjANj1oqzElB+Zf6yg
+         txtIyGCNCPKCBSma+kHO1xRTn60v88/ltmTOtBDVQ8PULJhKAAGHuflTlGImZK5MxZlK
+         thqn9jhu1RdU7KKNweOIBTg9cmBVwzAeDV85HhfYwgHTZ79N3sajZ6PrNxx97Q/ywfDm
+         4nQNS+JpToNWr5I7rVPGuZ4wquQr4RuyvKw6OLAVjzDg/0YTkd2pqMyZS9LHT0RD5k/Q
+         940xgJayq4CT7niSaQsRa9o3m5Gv6GqGzk8taFeCrRm1VGqeJmbrKLu+pWlkRnmul+P7
+         DeUQ==
+X-Gm-Message-State: APjAAAXkUD+xtl2gET7UwTWbkbvO1zLzTD9DweoAOWK8p3Md59WKnmoR
+        JX6VRba0pAGdn5zen+/bpvw=
+X-Google-Smtp-Source: APXvYqwtWhnOZOF45C6Cr5hs9BpPPXwsXrITYeTQ/PuXCt4p+AvM15okMMCqiFsrp/ZD/fCo3ObANA==
+X-Received: by 2002:a17:90a:8984:: with SMTP id v4mr43650667pjn.133.1563368481782;
+        Wed, 17 Jul 2019 06:01:21 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l189sm28147054pfl.7.2019.07.17.06.01.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 06:01:20 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 09:01:19 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, connoro@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        duyuchao <yuchao.du@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+        jeffv@google.com, Karim Yaghmour <karim.yaghmour@opersys.com>,
+        kernel-team@android.com, linux-kselftest@vger.kernel.org,
+        Manali Shukla <manalishukla14@gmail.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matt Mullins <mmullins@fb.com>,
+        Michal Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>, namhyung@google.com,
+        namhyung@kernel.org, netdev@vger.kernel.org,
+        paul.chaignon@gmail.com, primiano@google.com,
+        Qais Yousef <qais.yousef@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190717130119.GA138030@google.com>
+References: <20190710141548.132193-1-joel@joelfernandes.org>
+ <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+ <20190716213050.GA161922@google.com>
+ <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
+ <20190716224150.GC172157@google.com>
+ <20190716235500.GA199237@google.com>
+ <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190716085112.GC22317@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/16/2019 4:51 PM, Jiri Olsa wrote:
-> On Fri, Jul 12, 2019 at 03:53:55PM +0800, Jin Yao wrote:
->> This patch prints the stddev and hist for the cycles diff of
->> program block. It can help us to understand if the cycles diff
->> is noisy or not.
+On Tue, Jul 16, 2019 at 06:24:07PM -0700, Alexei Starovoitov wrote:
+[snip]
+> > > > > I don't see why a new bpf node for a trace event is a bad idea, really.
+> > > > 
+> > > > See the patches for kprobe/uprobe FD-based api and the reasons behind it.
+> > > > tldr: text is racy, doesn't scale, poor security, etc.
+> > > 
+> > > Is it possible to use perf without CAP_SYS_ADMIN and control security at the
+> > > per-event level? We are selective about who can access which event, using
+> > > selinux. That's how our ftrace-based tracers work. Its fine grained per-event
+> > > control. That's where I was going with the tracefs approach since we get that
+> > > granularity using the file system.
 > 
-> I'm getting compile error:
-> 
->    CC       builtin-diff.o
-> builtin-diff.c: In function ‘compute_cycles_diff’:
-> builtin-diff.c:712:10: error: taking the absolute value of unsigned type ‘u64’ {aka ‘long unsigned int’} has no effect [-Werror=absolute-value]
->    712 |          labs(pair->block_info->cycles_spark[i] -
->        |          ^~~~
-> cc1: all warnings being treated as errors
-> mv: cannot stat './.builtin-diff.o.tmp': No such file or directory
-> 
-> 
+> android's choice of selinux is not a factor in deciding kernel apis.
+> It's completely separate discusion wether disallowing particular tracepoints
+> for given user make sense at all.
+> Just because you can hack it in via selinux blocking particular
+> /sys/debug/tracing/ directory and convince yourself that it's somehow
+> makes android more secure. It doesn't mean that all new api should fit
+> into this model.
 
-Oh, sorry about that. My gcc (gcc version 7.4.0 (Ubuntu 
-7.4.0-1ubuntu1~18.04.1)) didn't report this error. :(
+Its not like a hack, it is just control of which tracefs node can be
+accessed and which cannot be since the tracing can run on production systems
+out in the field and there are several concerns to address like security,
+privacy etc. It is not just for debugging usecases. We do collect traces out
+in the field where these issues are real and cannot be ignored.
 
-u64 - u64 is u64. I should define it as s64.
+SELinux model is deny everything, and then selectively grant access to what
+is needed. The VFS and security LSM hooks provide this control quite well. I am
+not sure if such control is possible through perf hence I asked the question.
 
-Thanks for reminding me.
+> I think allowing one tracepoint and disallowing another is pointless
+> from security point of view. Tracing bpf program can do bpf_probe_read
+> of anything.
 
-Thanks
-Jin Yao
+I think the assumption here is the user controls the program instructions at
+runtime, but that's not the case. The BPF program we are loading is not
+dynamically generated, it is built at build time and it is loaded from a
+secure verified partition, so even though it can do bpf_probe_read, it is
+still not something that the user can change. And, we are planning to make it
+even more secure by making it kernel verify the program at load time as well
+(you were on some discussions about that a few months ago).
 
-> jirka
-> 
+thanks,
+
+ - Joel
+
