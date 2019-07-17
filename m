@@ -2,137 +2,198 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF28C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3BDC76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C357D208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563402443;
-	bh=krSZVsysL0odWmIs/cz6KRrtJu8WmJDZwR1kfZs0uhA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yK0Ko5CYNQicVcrgplg6H/9+AO4iW9odjX9yJpzHjrZIgg/D6XAdm/VIqpBaV5Nov
-	 pd0/5He+a46k1xgmNNw9lxBmRcr60O7fmPvJAr/dFj5ahJWTDLzZzzV0n0Uh0HH38J
-	 B+JcpeJMXr/45Rv8pSnKkLysNVmZPSK6mvNl/v1E=
+	by mail.kernel.org (Postfix) with ESMTP id C741D208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbfGQW1W (ORCPT
+        id S1728099AbfGQWhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:27:22 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45656 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbfGQW1W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:27:22 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m206so19854164oib.12;
-        Wed, 17 Jul 2019 15:27:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aKdCh/T0TvCjAVMnS0S/bH9S/vTC4w+CAFYfC32nDW8=;
-        b=mIhmNY8OOmwtMFNU6RpTk6OQ2bxRPWaHGEoYM6ZeeChFB8EPoLmmSQksz7WYM6uBI5
-         8ZEUjIDNIM+0UvXGkMjqAN5ezqlWUFOlvCaSsz3ipUWKPCaNulv3Dv0AGS165zzojj3S
-         fLXCSnTVcNff2I4BqEmTr8RNdWBEbNHMl9UyxD+mtgRbsiaIRkJUbTUcUWRwvLmqi46m
-         1QTM6AtPHy6p9wYsnSD5tWSUwZWZOdsvOVCUq/02KzvJnmmQfyN48TclShPXbygr1cAX
-         FEumu/fwVZgSaniXZCKlbzzN8lRx/CIcnN7aQaNZWcqpAXXoMuEk6eyhhI9KYvwz72Sb
-         /pww==
-X-Gm-Message-State: APjAAAUzqY/mrwjEH1g80wF3vsZHauBbdEZENBYZ3GNDIuC1f+HF8bO6
-        4yaV0qfaWnSi4cVNbQtKcA4oC9Sy1QxxtOk0ZaQ=
-X-Google-Smtp-Source: APXvYqxjF6AUD3helldHpsLA2ynZmGMJJif5IvIahrbl69j2lcbFNCAcru7gRAkBWEUHYm+zLKJK8RxSzHAFHKW/TCg=
-X-Received: by 2002:aca:edc8:: with SMTP id l191mr20926358oih.103.1563402441139;
- Wed, 17 Jul 2019 15:27:21 -0700 (PDT)
+        Wed, 17 Jul 2019 18:37:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4184 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727606AbfGQWhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 18:37:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 15:37:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,275,1559545200"; 
+   d="scan'208";a="366717388"
+Received: from bxing-desk.ccr.corp.intel.com (HELO [134.134.148.187]) ([134.134.148.187])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jul 2019 15:37:02 -0700
+Subject: Re: [PATCH v21 24/28] selftests/x86: Add a selftest for SGX
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-25-jarkko.sakkinen@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <e7b51875-c190-bab6-28ec-0eaa6caf2955@intel.com>
+Date:   Wed, 17 Jul 2019 15:37:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <6254683.2O5gIZElE2@kreacher> <20190716214024.GA8345@lenoir>
- <CAJZ5v0gB0AHTebjpp87YKA1wmE+tCw5V=eaRE2XDM3nyQYndnA@mail.gmail.com> <20190717132115.GB8345@lenoir>
-In-Reply-To: <20190717132115.GB8345@lenoir>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 18 Jul 2019 00:27:09 +0200
-Message-ID: <CAJZ5v0icfumJc7E4+LgWpi3+UNpTsH4usAJOg4FEeCBptYYzUQ@mail.gmail.com>
-Subject: Re: [PATCH] cpuidle: Always stop scheduler tick on adaptive-tick CPUs
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190713170804.2340-25-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 3:21 PM Frederic Weisbecker <frederic@kernel.org> wrote:
->
-> On Wed, Jul 17, 2019 at 09:55:08AM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Jul 16, 2019 at 11:40 PM Frederic Weisbecker
-> > <frederic@kernel.org> wrote:
-> > >
-> > > On Tue, Jul 16, 2019 at 05:25:10PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Running the scheduler tick on idle adaptive-tick CPUs is not useful
-> > >
-> > > Judging by the below change, you mean full dynticks, right?
-> >
-> > Right.
-> >
-> > > > and it may also be not expected by users (as reported by Thomas), so
-> > > > add a check to cpuidle_idle_call() to always stop the tick on them
-> > > > regardless of the idle duration predicted by the governor.
-> > > >
-> > > > Fixes: 554c8aa8ecad ("sched: idle: Select idle state before stopping the tick")
-> > > > Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-> > > > Tested-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >  kernel/sched/idle.c |    3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > Index: linux-pm/kernel/sched/idle.c
-> > > > ===================================================================
-> > > > --- linux-pm.orig/kernel/sched/idle.c
-> > > > +++ linux-pm/kernel/sched/idle.c
-> > > > @@ -191,7 +191,8 @@ static void cpuidle_idle_call(void)
-> > > >                */
-> > > >               next_state = cpuidle_select(drv, dev, &stop_tick);
-> > > >
-> > > > -             if (stop_tick || tick_nohz_tick_stopped())
-> > > > +             if (stop_tick || tick_nohz_tick_stopped() ||
-> > > > +                 !housekeeping_cpu(dev->cpu, HK_FLAG_TICK))
-> > >
-> > > But tick_nohz_tick_stopped() also works on full dynticks CPUs. If the
-> > > tick isn't stopped on a full dynticks CPU by the time we reach this path,
-> > > it means that the conditions for the tick to be stopped are not met anyway
-> > > (eg: more than one task and sched tick is needed, perf event requires the tick,
-> > > posix CPU timer, etc...)
-> >
-> > First of all, according to Thomas, the patch does make a difference,
-> > so evidently on his system(s) the full dynticks CPUs enter the idle
-> > loop with running tick.
-> >
-> > This means that, indeed, the conditions for the tick to be stopped
-> > have not been met up to that point, but if the (full dynticks) CPU
-> > becomes idle, that's because it has been made idle on purpose
-> > (presumably by a user-space "orchestrator" or the sysadmin), so the
-> > kernel can assume that it will remain idle indefinitely.  That, in
-> > turn, is when the tick would be stopped on it regardless of everything
-> > else (even if it wasn't a full dynticks CPU).
->
-> Well I think we disagree on that assumption that if a nohz_full CPU is put
-> idle, it will remain there indefinitely. Nohz_full CPUs aren't really special
-> in this regard, they can sleep on an IO, wait for a short event just like
-> any other CPU.
+On 7/13/2019 10:08 AM, Jarkko Sakkinen wrote:
+> Add a selftest for SGX. It is a trivial test where a simple enclave
+> copies one 64-bit word of memory between two memory locations given to
+> the enclave as arguments.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>   tools/testing/selftests/x86/Makefile          |  10 +
+>   tools/testing/selftests/x86/sgx/Makefile      |  48 ++
+>   tools/testing/selftests/x86/sgx/defines.h     |  39 ++
+>   tools/testing/selftests/x86/sgx/encl.c        |  20 +
+>   tools/testing/selftests/x86/sgx/encl.lds      |  33 ++
+>   .../selftests/x86/sgx/encl_bootstrap.S        |  94 ++++
+>   tools/testing/selftests/x86/sgx/encl_piggy.S  |  18 +
+>   tools/testing/selftests/x86/sgx/encl_piggy.h  |  14 +
+>   tools/testing/selftests/x86/sgx/main.c        | 301 +++++++++++
+>   tools/testing/selftests/x86/sgx/sgx_call.S    |  49 ++
+>   tools/testing/selftests/x86/sgx/sgxsign.c     | 508 ++++++++++++++++++
+>   .../testing/selftests/x86/sgx/signing_key.pem |  39 ++
+>   12 files changed, 1173 insertions(+)
+>   create mode 100644 tools/testing/selftests/x86/sgx/Makefile
+>   create mode 100644 tools/testing/selftests/x86/sgx/defines.h
+>   create mode 100644 tools/testing/selftests/x86/sgx/encl.c
+>   create mode 100644 tools/testing/selftests/x86/sgx/encl.lds
+>   create mode 100644 tools/testing/selftests/x86/sgx/encl_bootstrap.S
+>   create mode 100644 tools/testing/selftests/x86/sgx/encl_piggy.S
+>   create mode 100644 tools/testing/selftests/x86/sgx/encl_piggy.h
+>   create mode 100644 tools/testing/selftests/x86/sgx/main.c
+>   create mode 100644 tools/testing/selftests/x86/sgx/sgx_call.S
+>   create mode 100644 tools/testing/selftests/x86/sgx/sgxsign.c
+>   create mode 100644 tools/testing/selftests/x86/sgx/signing_key.pem
+> 
+> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
+> index fa07d526fe39..a1831406fd01 100644
+> --- a/tools/testing/selftests/x86/Makefile
+> +++ b/tools/testing/selftests/x86/Makefile
+> @@ -1,4 +1,7 @@
+>   # SPDX-License-Identifier: GPL-2.0
+> +
+> +SUBDIRS_64 := sgx
+> +
+>   all:
+>   
+>   include ../lib.mk
+> @@ -68,6 +71,13 @@ all_32: $(BINARIES_32)
+>   
+>   all_64: $(BINARIES_64)
+>   
+> +all_64: $(SUBDIRS_64)
 
-Fair enough.
+$(SUBDIRS_64) aren't targets. No need for all_64 to depend on them.
 
-This means that the governor (or rather governors) will need to be
-modified to address the issue reported by Thomas.
+> +	@for DIR in $(SUBDIRS_64); do			\
+> +		BUILD_TARGET=$(OUTPUT)/$$DIR;		\
+> +		mkdir $$BUILD_TARGET  -p;		\
+> +		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
 
-Fortunately, I have a patch going in that direction too. :-)
+Please use $(MAKE), otherwise command line options cannot be passed onto 
+sub-makes.
 
-Cheers!
+> +	done
+
+The above only builds but will not run SGX tests.
+
+Also, 'clean' target will not descend into sgx folder either.
+
+> +
+>   EXTRA_CLEAN := $(BINARIES_32) $(BINARIES_64)
+>   
+>   $(BINARIES_32): $(OUTPUT)/%_32: %.c
+> diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
+> new file mode 100644
+> index 000000000000..10136b73096b
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/Makefile
+> @@ -0,0 +1,48 @@
+> +top_srcdir = ../../../../..
+> +
+> +include ../../lib.mk
+> +
+> +HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC -z noexecstack
+> +ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
+> +	       -fno-stack-protector -mrdrnd $(INCLUDES)
+> +
+> +TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx
+> +all_64: $(TEST_CUSTOM_PROGS)
+> +
+> +$(TEST_CUSTOM_PROGS): $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o \
+> +		      $(OUTPUT)/encl_piggy.o
+> +	$(CC) $(HOST_CFLAGS) -o $@ $^
+> +
+> +$(OUTPUT)/main.o: main.c
+> +	$(CC) $(HOST_CFLAGS) -c $< -o $@
+
+.o files don't have to be generated/kept. And to be consistent with 
+other selftests, please don't generate/keep them.
+
+> +
+> +$(OUTPUT)/sgx_call.o: sgx_call.S
+> +	$(CC) $(HOST_CFLAGS) -c $< -o $@
+> +
+> +$(OUTPUT)/encl_piggy.o: $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> +	$(CC) $(HOST_CFLAGS) -c encl_piggy.S -o $@
+
+Without -I, the above command breaks when "O=<target dir>" is specified.
+
+> +
+> +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
+> +	objcopy --remove-section=.got.plt -O binary $< $@
+
+.got.plt section will never be present for statically linked binaries.
+
+> +
+> +$(OUTPUT)/encl.elf: $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o
+> +	$(CC) $(ENCL_CFLAGS) -T encl.lds -o $@ $^
+
+Please fix the warning of ".note.gnu.build-id section discarded".
+
+> +
+> +$(OUTPUT)/encl.o: encl.c
+> +	$(CC) $(ENCL_CFLAGS) -c $< -o $@
+> +
+> +$(OUTPUT)/encl_bootstrap.o: encl_bootstrap.S
+> +	$(CC) $(ENCL_CFLAGS) -c $< -o $@
+> +
+> +$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin  $(OUTPUT)/sgxsign
+> +	$(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> +
+> +$(OUTPUT)/sgxsign: sgxsign.c
+> +	$(CC) -o $@ $< -lcrypto
+> +
+> +EXTRA_CLEAN := $(OUTPUT)/sgx-selftest $(OUTPUT)/sgx-selftest.o \
+> +	       $(OUTPUT)/sgx_call.o $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss \
+> +	       $(OUTPUT)/encl.elf $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o \
+> +	       $(OUTPUT)/sgxsign
+> +
+
+encl_piggy.o, main.o and test_sgx are not cleaned.
+
+> +.PHONY: clean
