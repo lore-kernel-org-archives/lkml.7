@@ -3,116 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119ABC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E05C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21A2217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1256920880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563360327;
-	bh=BV67gKZo3TGKl5Dyp0PiXOnjcwWPe3Mb76WeWSeK1Kk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=o5eiM73nTa9aUhZVWe7HEyjXfPkQigkn5F8B3c4a+mtMhdvtoGpNpI7xJ+bAlBPNW
-	 w57vmiQmiXvJ6dXvHEb6nXnBxGIHqMYj64Y0yOUniWjMdWAH5X0GCmQ1Gjk0k57Z1u
-	 cgq87y+nrEijo2ZeWko1iIUardHmpKfh/pxIGJeg=
+	s=default; t=1563360513;
+	bh=bvfEvsj27j9s8qMur8gvYFEu77AHAGnRCqkVRfegmkQ=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=mkkSstPMiq8AFUTwOtLHJ3byL6dX+BG0S20GPJqlGHhmbdUAJ+2tv+42SHg5c4aoG
+	 5P1BaLJYBHHBRWQfnM/4Z+g8a9YGPLfWm9Fr9Zxkac297HBxiLkeQbMhf/GJXqSudY
+	 /RgTkLn0IlEuI6DVJCCBTFg3p4PxUQuJEPkDqBqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfGQKp1 (ORCPT
+        id S1726605AbfGQKsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:45:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfGQKp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:45:26 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69D1A21848;
-        Wed, 17 Jul 2019 10:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563360325;
-        bh=BV67gKZo3TGKl5Dyp0PiXOnjcwWPe3Mb76WeWSeK1Kk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sa8VZxLKaZ+t14tOXNmprtzrJLglCy1PsYbfA7DaZjZWLlWOGSE2XXPDiXWLjjJu3
-         VPJZky6Y3S2KNNFSXUQ3+8QTmYQK6LvWghSlFzaQox1pb08nQHZccweJymSuv2XWyh
-         Djc4YBEe9OaGYriJGMQORgbhm+bhtvGKGXQFhlPo=
-Received: by mail-lj1-f176.google.com with SMTP id m8so23103156lji.7;
-        Wed, 17 Jul 2019 03:45:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAWgiUnLIR+hulklTJp+BRNVwkWztkGMypRbgT2IT8i7bmnT1jpN
-        nE/klcTiZCMy8skaXaDNh9afojUgxPaa4XIb2Zs=
-X-Google-Smtp-Source: APXvYqwlyzdnXsJBMRHPL0vNfSLDb9PnHTvcxtKUhMNdwslUbRE4WspET8zxNcy1qzE2312nOzDKyeMEQIBX887w5Xk=
-X-Received: by 2002:a2e:124b:: with SMTP id t72mr20810837lje.143.1563360323685;
- Wed, 17 Jul 2019 03:45:23 -0700 (PDT)
+        Wed, 17 Jul 2019 06:48:32 -0400
+Received: from mail-oi1-f178.google.com ([209.85.167.178]:36748 "EHLO
+        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfGQKsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:48:31 -0400
+Received: by mail-oi1-f178.google.com with SMTP id w7so18108023oic.3;
+        Wed, 17 Jul 2019 03:48:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=bvfEvsj27j9s8qMur8gvYFEu77AHAGnRCqkVRfegmkQ=;
+        b=cWlLA7a1OVjk1RWiE/xC+SrunH8terYSYcrzNT/06yrKlW3H1oyl90otm9FfveX8Mw
+         rxM98xhj+y43xwIllJBIpTTAyesXUbrhn9/k/v/RpT+XeMlGEQCkiKEdbEW2ieP9f9ZP
+         gD8nrGHC3m28LCNZ8FL/fziQwjWk5rs0JBgIKzFMGLugUhUl6DFTbl9rEcdZBlEnp9TC
+         L/IEDV7ToTnYHO/DxDANhzkwwkE6q+9v5uRWZRiayVGHJlDH5FJ46Iv8lPb2uXfc54Ib
+         QNkVlKmRPc9EXmEqqL2WFfsVhUx7tFmdIbtv86judwBd4v/3e622MwWGWsbCzebNtmBe
+         lT2g==
+X-Gm-Message-State: APjAAAVe1DKCvW8QNuC4Jv3jL7BdsXDLx/B72Uckr6G7vl/I8urvR2Wm
+        wTS2VtRUKMPFw651f3OEUZJ0rQ6ZBZzOw6cNYJVfXDYM
+X-Google-Smtp-Source: APXvYqyvLt2x3jI5UIFxEZbDTlsn5zNxQYrtboH7mw0dB2JI07Ix/X6Pww9sunz/9xzrsizF/8Mo4j4Bcao3tKrYN7g=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr19263570oib.110.1563360510411;
+ Wed, 17 Jul 2019 03:48:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190715124504eucas1p1afe0da2c6ac3a8b45d85017a77ba9edf@eucas1p1.samsung.com>
- <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-38-l.luba@partner.samsung.com>
- <CAJKOXPfrGgAczQ-=1aE453RpJ9BN10ZDmFcrEMPkNyF6GcGtNA@mail.gmail.com> <2fe2e840-f4b2-773b-7d92-4ffb8502d4e6@partner.samsung.com>
-In-Reply-To: <2fe2e840-f4b2-773b-7d92-4ffb8502d4e6@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 17 Jul 2019 12:45:12 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd3gm7no-0TnPmgFg+X3FgdiM6ov5rtzFSM6hKEdEzRCg@mail.gmail.com>
-Message-ID: <CAJKOXPd3gm7no-0TnPmgFg+X3FgdiM6ov5rtzFSM6hKEdEzRCg@mail.gmail.com>
-Subject: Re: [PATCH v1 37/50] ARM: dts: exynos: change parent and rate of
- bus_fsys in Exynos5422
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 17 Jul 2019 12:48:19 +0200
+Message-ID: <CAJZ5v0hrpO_PRos3=JnLQ0ZbuBX1vdR8j2jx3je5+Y2m=Dwk2A@mail.gmail.com>
+Subject: [LPC 2019] Power Management and Thermal Control MC: Call for topics
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jul 2019 at 12:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >>
-> >>   &bus_fsys {
-> >>          devfreq = <&bus_wcore>;
-> >> +       assigned-clocks = <&clock CLK_MOUT_ACLK200_FSYS>,
-> >> +                         <&clock CLK_DOUT_ACLK200_FSYS>,
-> >> +                         <&clock CLK_FOUT_DPLL>;
-> >> +       assigned-clock-parents = <&clock CLK_MOUT_SCLK_DPLL>;
-> >> +       assigned-clock-rates = <0>, <240000000>,<1200000000>;
-> >
-> > Here and in all other patches:
-> > I am not entirely sure that this should be here. It looks like
-> > property of the SoC. Do we expect that buses will be configured to
-> > different clock rates between different boards? Since the OPP tables
-> > are shared (they are property of the SoC, not board) then I would
-> > assume that default frequency is shared as well.
-> These clocks they all relay on some bootloader configuration. It depends
-> which version of the bootloader you have, then you might get different
-> default configuration in the clocks.
+Hi All,
 
-I do not agree here. This configuration is not dependent on
-bootloader. Although one bootloader might set the clocks to X and
-other to Y, but still you provide here valid configuration setting
-them, e.g. to Y (or to Z). What bootloader set before does not matter
-because you always override it.
+Now that the PM+Thermal MC has been officially announced
 
-> The pattern of changing the parent
-> or even rate is known in the DT files (or I am missing something).
-> When you grep for it, you get 168 hits (38 for exynos*):
-> git grep -n "assigned-clock-rates" ./arch/arm/boot/dts/ | wc -l
+https://linuxplumbersconf.org/event/4/page/34-accepted-microconferences#pm-tc
 
-Yeah, and if you grep per type you got:
-DTSI: 114
-DTS: 54
-so what do you want to say?
+everyone interested in the problem space in question and having a
+topic for discussion is kindly requested to submit a topic proposal
+for that MC via the LPC web site:
 
-My thinking is that all the boards have buses configured to the same
-initial frequency. I am not questioning the use of
-assigned-clock-rates at all. Just the place...
+https://linuxplumbersconf.org/event/4/abstracts/
 
-BR,
-Krzysztof
+To do that (after following the link above):
+
+1. "Press" the "Submit new proposal" button.
+2. Log in to the LPC CFP system (* see below in case you don't want to
+create an account).
+3. Put a one line title of your topic into the "Title" field.
+4. Put your abstract into the "Content" field (please keep the
+abstracts concise).
+5. Add yourself as the author (there may be multiple authors, in which
+case add all of them).
+6. In the "Comments" field say how much time the topic is expected to take.
+7. Choose "Power Management and Thermal Control MC topic" in the
+"Track" selection.
+8. Answer "Yes" to the anti-harassment policy compliance confirmation.
+9. "Press" the "Submit" button.
+
+* In case you don't have an account in the LPC web site and you don't
+want to create one, you can send the topic title and abstract to me,
+and I will put the proposal into the LPC CFP system for you. Still,
+please do consider adding an LPC account and following the steps above
+yourself.
+
+Please note that the most relevant topics are those aimed at solving
+specific problems in the Linux "plumbing" area: the kernel, libraries,
+system management tools etc.
+
+Thanks,
+Rafael
