@@ -2,139 +2,123 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC3DC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49866C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B512173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uj/Uge9X"
+	by mail.kernel.org (Postfix) with ESMTP id 294D02173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfGQPqx (ORCPT
+        id S1727322AbfGQPrA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:46:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33292 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfGQPqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:46:53 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so24137960ljg.0;
-        Wed, 17 Jul 2019 08:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Tco0T6GUzNhrBGd7cFs6bV7dSuixfzg1Q/s9JVtij1Y=;
-        b=Uj/Uge9XOmsj8TIDG0mFw0CjPiYNxcycYs/iy1yBZ4ECFDWWnLOW4LI08s6nWPXiOL
-         L8NaBJ+7XbFE3B7acyeqinFFfMveOPF0o+O9cux2+yBM4IL76GaZ0IhI+KPpLGAjPWjk
-         +mC4FRR82MqYkesg58bAl6iF3P/TziQmtf5e8HR/j6nNclmKU5QQRNhiAsOns8rpl85m
-         /HJNCt1tskBg+VP3M8h2+1wNPPlqE69SAvNuSbtqnH6Ls6dI2GS43A+hWg63JLnN59Hp
-         FnkG661LEPaskusBaSsugA95bGyl9CUO7gfOcXL1hz2AVDWKamdvPUW3YE+Uc24+EKvT
-         g/mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Tco0T6GUzNhrBGd7cFs6bV7dSuixfzg1Q/s9JVtij1Y=;
-        b=pUIbQNPfcSiJitwQIu0vOTivUbClp7uge30VGQW327FPSDDMv61iQpaohrzf/z5xRF
-         nT2An5r1u642XeGvER7kyt9fE3BYAXwrnuZKHKfja16fcspR8uoCU111ZuIgwoBQ/RjK
-         w3gburoXvFDlrNFY7sMTFUkSNRYxd5PfOfnAkvtMDIxcK6HaAXCrGbuQ0Kh2yG/mfla5
-         nQokx3yWF6ALVFYgVp2n9R+6CS+7W9VzLWqgg88u2B+GbHxGlpklnFARHpj+qOfKYr+P
-         UpW3okNJYgb4DrkdAFrVvBawd6D+i8nBKYzTrM45fzGNHPiCqOZxWYxSOglHForVdfdt
-         3bOw==
-X-Gm-Message-State: APjAAAX7kTC8PigsZfpitaEVX5lPFEQrybP/q6eX2m17EUurg5GFRhVZ
-        lDC44tWCDDSmRHDQYoSBV1DsajMJ
-X-Google-Smtp-Source: APXvYqycQIAZnYbH1HBOTmgtaXaNa57jNzWKUkiRi01uSB4SfwSPysCdsLzy7rBwFoTPiaBr3udSgQ==
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr1651174ljm.180.1563378410353;
-        Wed, 17 Jul 2019 08:46:50 -0700 (PDT)
-Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
-        by smtp.googlemail.com with ESMTPSA id g5sm4580442ljj.69.2019.07.17.08.46.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 08:46:49 -0700 (PDT)
-Subject: Re: [PATCH v4 11/24] PM / devfreq: tegra30: Add debug messages
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190707223303.6755-1-digetx@gmail.com>
- <CGME20190707223640epcas4p15337f40466342832b731ad6a53be946e@epcas4p1.samsung.com>
- <20190707223303.6755-12-digetx@gmail.com>
- <c883bdbe-427f-35a1-9e63-5e4953a84286@samsung.com>
- <53cd0ba5-f814-cd9b-19c5-1d42717ca58c@gmail.com>
- <922c9178-71de-46ad-eafd-805af461bedb@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f819c226-4328-c85d-5da3-932391fa6747@gmail.com>
-Date:   Wed, 17 Jul 2019 18:46:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <922c9178-71de-46ad-eafd-805af461bedb@samsung.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 17 Jul 2019 11:47:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32729 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725993AbfGQPq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 11:46:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 08:46:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
+   d="scan'208";a="169592189"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga007.fm.intel.com with ESMTP; 17 Jul 2019 08:46:59 -0700
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 17 Jul 2019 08:46:59 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.3]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.240]) with mapi id 14.03.0439.000;
+ Wed, 17 Jul 2019 23:46:57 +0800
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+CC:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "lcapitulino@redhat.com" <lcapitulino@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: RE: use of shrinker in virtio balloon free page hinting
+Thread-Topic: use of shrinker in virtio balloon free page hinting
+Thread-Index: AQHVPJG4M96i+fJ6kUytx6sFNaZpP6bO17og
+Date:   Wed, 17 Jul 2019 15:46:57 +0000
+Message-ID: <286AC319A985734F985F78AFA26841F73E16D4B2@shsmsx102.ccr.corp.intel.com>
+References: <20190717071332-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190717071332-mutt-send-email-mst@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZWQwOTNjZDctYzMyOC00Mzg1LTgwOWMtNjNkNjliYmY2Yjg3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUzNSVGk4aHVLTE8xK2Q3XC9QXC9lVVhRTitQNEdsR3pPaWlqRlh4QWdFOGhJWDJFSGlLd3AxNWxZcnRXS082ZDgxIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.07.2019 9:45, Chanwoo Choi пишет:
-> On 19. 7. 16. 오후 10:26, Dmitry Osipenko wrote:
->> 16.07.2019 15:23, Chanwoo Choi пишет:
->>> Hi Dmitry,
->>>
->>> Usually, the kernel log print for all users
->>> such as changing the frequency, fail or success.
->>>
->>> But, if the log just show the register dump,
->>> it is not useful for all users. It is just used
->>> for only specific developer.
->>>
->>> I recommend that you better to add more exception handling
->>> code on many points instead of just showing the register dump.
->>
->> The debug messages are not users, but for developers. Yes, I primarily
->> made the debugging to be useful for myself and will be happy to change
->> the way debugging is done if there will be any other active developer
->> for this driver. The registers dump is more than enough in order to
->> understand what's going on, I don't see any real need to change anything
->> here for now.
+On Wednesday, July 17, 2019 7:21 PM, Michael S. Tsirkin wrote:
 > 
-> Basically, we have to develop code and add the log for anyone.
-> As you commented, even if there are no other developer, we never
-> guarantee this assumption forever. And also, if added debug message
-> for only you, you can add them when testing it temporarily.
+> Wei, others,
 > 
-> If you want to add the just register dump log for you,
-> I can't agree. Once again, I hope that anyone understand
-> the meaning of debug message as much possible as.
+> ATM virtio_balloon_shrinker_scan will only get registered when deflate on
+> oom feature bit is set.
 > 
+> Not sure whether that's intentional. 
 
-The registers dump should be good for everyone because it's a
-self-explanatory information for anyone who is familiar with the
-hardware. I don't think there is a need for anything else than what is
-proposed in this patch, at least for now. I also simply don't see any
-other better way to debug the state of this particular hardware, again
-this logging is for the driver developers and not for users.
+Yes, we wanted to follow the old oom behavior, which allows the oom notifier
+to deflate pages only when this feature bit has been negotiated.
 
-Initially, I was temporarily adding the debug messages. Now they are
-pretty much mandatory for verifying that driver is working properly. And
-of course the debugging messages got into the shape of this patch after
-several iterations of refinements. So again, I suppose that this should
-be good enough for everyone who is familiar with the hardware. And of
-course I'm open to the constructive suggestions, the debugging aid is
-not an ABI and could be changed/improved at any time.
 
-You're suggesting to break down the debugging into several smaller
-pieces, but I'm finding that as not a constructive suggestion because
-the information about the full hardware state is actually necessary for
-the productive debugging.
+> Assuming it is:
+> 
+> virtio_balloon_shrinker_scan will try to locate and free pages that are
+> processed by host.
+> The above seems broken in several ways:
+> - count ignores the free page list completely
+
+Do you mean virtio_balloon_shrinker_count()? It just reports to
+do_shrink_slab the amount of freeable memory that balloon has.
+(vb->num_pages and vb->num_free_page_blocks are all included )
+
+> - if free pages are being reported, pages freed
+>   by shrinker will just get re-allocated again
+
+fill_balloon will re-try the allocation after sleeping 200ms once allocation fails.
+
+ 
+> I was unable to make this part of code behave in any reasonable way - was
+> shrinker usage tested? What's a good way to test that?
+
+Please see the example that I tested before : https://lkml.org/lkml/2018/8/6/29
+(just the first one: *1. V3 patches)
+
+What problem did you see?
+
+I just tried the latest code, and find ballooning reports a #GP (seems caused by
+418a3ab1e). 
+I'll take a look at the details in the office tomorrow.
+
+Best,
+Wei
