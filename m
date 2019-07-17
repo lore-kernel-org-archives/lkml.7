@@ -2,219 +2,173 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAE0C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48F0C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560ED2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C020D21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nXGYX7Bn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="Pi1elbfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfGQQ6S (ORCPT
+        id S1728649AbfGQRAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 12:58:18 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:55253 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfGQQ6R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 12:58:17 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190717165816euoutp0252bad19e883c1ae8d31c0ed419ec779c~yQEdqX4Rm2742927429euoutp02Q
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 16:58:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190717165816euoutp0252bad19e883c1ae8d31c0ed419ec779c~yQEdqX4Rm2742927429euoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563382696;
-        bh=V1wpaje81eje1NrWW1ptiMNOsXRcdxiPOhucNCD1eEY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=nXGYX7Bn/Dttv3kcmrDFOqvKZtr0pc1MRR1tO26/7uo6bWRbhUFyXXfV0MOkGc8Sm
-         CpHiOKuHpopLRT/8MyewI1uwD4PIi9Y5zAch6OV8nV/dSTOdvJSqXNzchFBAKobqfm
-         ZKgiGcj/R75a4WVAHlMzRS3FKueC6v214okphNjo=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190717165815eucas1p279fee303eaec634eaed3461d3802b2cb~yQEc9FbDO0444204442eucas1p2k;
-        Wed, 17 Jul 2019 16:58:15 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 2D.C5.04377.7A35F2D5; Wed, 17
-        Jul 2019 17:58:15 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190717165814eucas1p12a0a42511f483a59ec4cfa08539c8473~yQEb7XByq0096600966eucas1p1y;
-        Wed, 17 Jul 2019 16:58:14 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190717165814eusmtrp22999ba4923bc624cb160ac404a2ba979~yQEbtIgkL0331803318eusmtrp2j;
-        Wed, 17 Jul 2019 16:58:14 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-2c-5d2f53a7298d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D0.AD.04140.5A35F2D5; Wed, 17
-        Jul 2019 17:58:13 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190717165813eusmtip2dfc0e9d3fca9dda817e61896f286116d~yQEayw2Ai3092430924eusmtip2E;
-        Wed, 17 Jul 2019 16:58:13 +0000 (GMT)
-Subject: Re: [PATCH v1 27/50] ARM: dts: exynos: align bus_wcore OPPs in
- Exynos5420
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <15310bd0-0fd4-8d62-82a9-7a9df6a8ced3@partner.samsung.com>
-Date:   Wed, 17 Jul 2019 18:58:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Wed, 17 Jul 2019 13:00:21 -0400
+Received: from vps.deutnet.info ([92.222.219.9]:60606 "EHLO vps.deutnet.info"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727184AbfGQRAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:00:20 -0400
+X-Greylist: delayed 585 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jul 2019 13:00:20 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deutnet.info; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:
+        To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JdQW5yef3/oLdjTuLUcYjPBC8Xuj3agNuqkg0iaCI/0=; b=Pi1elbfwtrRbO+R5GCA6FDVnRd
+        F3R7Ds7xeGVPEM1FDfJEix+Qia5HG7HUaR5tzxhzT9iMbftSHHMKSmohbPhWC8CXerIIK52+4F58x
+        cU1IAD+t+OEyE86495/d6i2etopa71aXDT6USIOmdZ/zs5oxSZbdBxJSf2m1lTfIEOSEkjTUwgSGB
+        +Ydjm2rfY+sFwvvZ8Llu+K4uFa28v43qacHaALK8xDbbfoBSAahTUaeoVGn1VIzj2uT5koXQ/ZCNl
+        GU18Z+PUdlLkam7jGH1IIbRkYRhhNGYJhm87XI7KivSlS+1hOAZgVn4yAe/QJBYwpfmDAMxsvw30T
+        wZh4eUKw==;
+Received: from [2001:41d0:fe79:6700:cf3e:2f2c:b15:9bf9] (helo=sonata)
+        by vps.deutnet.info with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <agriveaux@deutnet.info>)
+        id 1hnnHr-0006uW-LA; Wed, 17 Jul 2019 19:00:15 +0200
+Received: from agriveaux by sonata with local (Exim 4.92)
+        (envelope-from <agriveaux@localhost.localdomain>)
+        id 1hnnHq-0003J4-Og; Wed, 17 Jul 2019 19:00:14 +0200
+Date:   Wed, 17 Jul 2019 19:00:14 +0200
+From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Alexandre GRIVEAUX <agriveaux@deutnet.info>
+Cc:     linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCHv2] MIPS: JZ4780: DTS: Add I2C nodes     Ralf Baechle
+ <ralf@linux-mips.org>,
+Message-ID: <20190717170014.GA12488@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfFZL8q9hM1vPsLq+Qxe-gMz4c8j0jgFKfdf5qs68MTmA@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7djPc7rLg/VjDZ7tYrW4te4cq8XGGetZ
-        La5/ec5qMf8IkNv/+DWzxfnzG9gtzja9YbfY9Pgaq8XHnnusFpd3zWGzmHF+H5PF2iN32S2W
-        Xr/IZHHxlKvF7cYVbBate4+wWxx+085q8e/aRhYHIY8189Ywery/0crusWlVJ5vH5iX1Hn1b
-        VjF6fN4kF8AWxWWTkpqTWZZapG+XwJVx6c4u9oK18hWz959jbGB8JNLFyMEhIWAiceueaxcj
-        F4eQwApGidm31rJDOF8YJc7u+ssG4XxmlDh66AkLTMfaU3JdjJxA8eWMEqdvqkHUvGWUaLjW
-        zQaSEBYIkZhxpoUJxBYR0JS4/vc7K0gRs8BVFokf97+DDWIT0JPYsaoQpIZXwE2iqWs2M4jN
-        IqAqcXfdZ0YQW1QgQuLyll2MEDWCEidngtzAycEpECix/v4isPnMAuISt57Mh7LlJba/ncMM
-        sktCoJdDYtPspWAJCQEXicn3D7FC2MISr45vYYewZST+75wPVVMs0dC7kBHCrpF43D8XqsZa
-        4vDxi6wgNzMDPbN+lz5E2FFi/YrvTJAw4ZO48VYQ4gQ+iUnbpjNDhHklOtqEIKo1JLb0XIBa
-        JCaxfM009gmMSrOQPDYLyTOzkDwzC2HvAkaWVYziqaXFuempxUZ5qeV6xYm5xaV56XrJ+bmb
-        GIEJ7/S/4192MO76k3SIUYCDUYmHt0FBP1aINbGsuDL3EKMEB7OSCK/tV+1YId6UxMqq1KL8
-        +KLSnNTiQ4zSHCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYycZ3ds+TWLxfHv3m81t4P+
-        Viyo3xO1I3zLQSkWk4TbOzJtb9sI/mQJneKZqW2m++/l770JimvCLa/ZGItff+RVbhiRdHjD
-        LO+fF6YIv/if4nd/1seX03cL7wr0q/I+eMLDrFPtSv70GZ+Li86tDOYUXcf8qTPM/LQL+7N9
-        7+YET9KfqzCVd+YDJZbijERDLeai4kQAVeYqP3QDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGIsWRmVeSWpSXmKPExsVy+t/xe7pLg/VjDVa/sbK4te4cq8XGGetZ
-        La5/ec5qMf8IkNv/+DWzxfnzG9gtzja9YbfY9Pgaq8XHnnusFpd3zWGzmHF+H5PF2iN32S2W
-        Xr/IZHHxlKvF7cYVbBate4+wWxx+085q8e/aRhYHIY8189Ywery/0crusWlVJ5vH5iX1Hn1b
-        VjF6fN4kF8AWpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZa
-        pG+XoJdx6c4u9oK18hWz959jbGB8JNLFyMEhIWAisfaUXBcjJ4eQwFJGic2TKkBsCQExiUn7
-        trND2MISf651sXUxcgHVvGaUuLH7BwtIQlggRGLGmRYmEFtEQFPi+t/vrCBFzAJXWSSmvNrI
-        DtHRzyRxesNBZpBtbAJ6EjtWFYI08Aq4STR1zWYGsVkEVCXurvvMCGKLCkRI9LXNZoOoEZQ4
-        OfMJ2DJOgUCJ9fcXgS1jFjCTmLf5ITOELS5x68l8qLi8xPa3c5gnMArNQtI+C0nLLCQts5C0
-        LGBkWcUoklpanJueW2ykV5yYW1yal66XnJ+7iREY59uO/dyyg7HrXfAhRgEORiUe3htK+rFC
-        rIllxZW5hxglOJiVRHhtv2rHCvGmJFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+MAXllcQbmhqa
-        W1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgbDb+Vlp1IEGlgoevuIjzNqes
-        ZENo1d/+NbVa52JOyFXx9lvxse5s3FPAkX9tX43BOf+Gvxcj734zF9F79Kj8sUnlnMnvtNrD
-        ly289FmHZTvfDqEPCkWZq++6eiZv7ZZ7FfF/Q88FAUXXU+W3uwyevNx4oZFlhuy7qX6tJwo8
-        HCcrZubtbt+txFKckWioxVxUnAgA4nArRwkDAAA=
-X-CMS-MailID: 20190717165814eucas1p12a0a42511f483a59ec4cfa08539c8473
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190715124456eucas1p2acf15d00e3fa7b77fe3a2b10ce1ab74f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190715124456eucas1p2acf15d00e3fa7b77fe3a2b10ce1ab74f
-References: <CGME20190715124456eucas1p2acf15d00e3fa7b77fe3a2b10ce1ab74f@eucas1p2.samsung.com>
-        <20190715124417.4787-1-l.luba@partner.samsung.com>
-        <20190715124417.4787-28-l.luba@partner.samsung.com>
-        <CAJKOXPfFZL8q9hM1vPsLq+Qxe-gMz4c8j0jgFKfdf5qs68MTmA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
+by default.
+---
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 86 ++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
-On 7/17/19 12:15 PM, Krzysztof Kozlowski wrote:
-> On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> This is the most important bus in the Exynos5x SoC. The whole communication
->> inside SoC does through that bus (apart from direct requests from CCI to
->> DRAM controller). It is also modeled as a master bus in devfreq framework.
->> It is also the only one OPP table throughout other buses which has voltage
->> values. The devfreq software controls the speed of that bus and other
->> buses. The other buses follows the rate of the master. There is only one
->> regulator. The old lowest OPP had pair 925mV, 84MHz which is enough for
-> 
-> s/lowest/slowest/
-please see below
-> 
->> this frequency. However, due to the fact that the other buses follows the
->> WCORE bus by taking the OPP from their table with the same id, e.g. opp02,
->> the children frequency should be stable with the set voltage.
->> It could cause random faults very hard to debug.
->> Thus, the patch removes the lowest OPP to make other buses' lowest OPPs
-> 
-> s/lowest/slowest/
-Actually, I have double checked that, because we always used this 
-terminology: low OPP, high OPP, lower OPPs, higher OPPs. I can change
-it here for you, but I think this is not something that people are used
-to. Please check EAS pdf documentation or this file:
-https://www.kernel.org/doc/Documentation/scheduler/sched-energy.txt
-i.e. "running at a lower OPP" or "high OPPs", "lowest OPPs".
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index b03cdec56de9..a76ecd69bfd0 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -239,6 +239,92 @@
+ 		status = "disabled";
+ 	};
+ 
++	i2c0: i2c@10050000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg = <0x10050000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <60>;
++
++		clocks = <&cgu JZ4780_CLK_SMB0>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c0_data>;
++
++		status = "disabled";
++	};
++
++	i2c1: i2c@10051000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10051000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <59>;
++
++		clocks = <&cgu JZ4780_CLK_SMB1>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c1_data>;
++
++		status = "disabled";
++	};
++
++	i2c2: i2c@10052000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10052000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <58>;
++
++		clocks = <&cgu JZ4780_CLK_SMB2>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c2_data>;
++
++		status = "disabled";
++	};
++
++	i2c3: i2c@10053000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10053000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <57>;
++
++		clocks = <&cgu JZ4780_CLK_SMB3>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c3_data>;
++
++		status = "disabled";
++	};
++
++	i2c4: i2c@10054000 {
++		compatible = "ingenic,jz4780-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x10054000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <56>;
++
++		clocks = <&cgu JZ4780_CLK_SMB4>;
++		clock-frequency = <100000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_i2c4_data>;
++
++		status = "disabled";
++	};
++
+ 	watchdog: watchdog@10002000 {
+ 		compatible = "ingenic,jz4780-watchdog";
+ 		reg = <0x10002000 0x10>;
+-- 
+2.20.1
 
-Regards,
-Lukasz
-> 
->> working. The new lowest OPP has voltage high enough for buses working up
->> to 333MHz. It also changes the frequencies of the OPPs to align them to
->> PLL value such that it is possible to set them using only a divider without
->> reprogramming OPP.
-> 
-> Reprogramming OPP? What is it?
-> 
->> Reprogramming the PLL was not set, so the real frequency
-> 
-> I understood from the previous that reprogramming the OPP (PLL?) was
-> happening... Please rephrase entire sentence.
-> 
-> BR,
-> Krzysztof
-> 
->> values were not the one from the OPP table, which could confuse the
->> governor algorithms which relay on OPP speed values making the system to
->> behave weird.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos5420.dtsi | 12 ++++--------
->>   1 file changed, 4 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index f8c36ff0d4c3..a355c76af5a5 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -1107,22 +1107,18 @@
->>                          compatible = "operating-points-v2";
->>
->>                          opp00 {
->> -                               opp-hz = /bits/ 64 <84000000>;
->> -                               opp-microvolt = <925000>;
->> +                               opp-hz = /bits/ 64 <150000000>;
->> +                               opp-microvolt = <950000>;
->>                          };
->>                          opp01 {
->> -                               opp-hz = /bits/ 64 <111000000>;
->> +                               opp-hz = /bits/ 64 <200000000>;
->>                                  opp-microvolt = <950000>;
->>                          };
->>                          opp02 {
->> -                               opp-hz = /bits/ 64 <222000000>;
->> +                               opp-hz = /bits/ 64 <300000000>;
->>                                  opp-microvolt = <950000>;
->>                          };
->>                          opp03 {
->> -                               opp-hz = /bits/ 64 <333000000>;
->> -                               opp-microvolt = <950000>;
->> -                       };
->> -                       opp04 {
->>                                  opp-hz = /bits/ 64 <400000000>;
->>                                  opp-microvolt = <987500>;
->>                          };
->> --
->> 2.17.1
->>
-> 
-> 
