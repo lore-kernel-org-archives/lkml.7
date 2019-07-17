@@ -2,79 +2,136 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D00C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C013AC76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC5A217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952E3217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dul4ANMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbfGQKce (ORCPT
+        id S1726075AbfGQKdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:32:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:45816 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730633AbfGQKce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:32:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B648628;
-        Wed, 17 Jul 2019 03:32:33 -0700 (PDT)
-Received: from e112298-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B0EF3F71A;
-        Wed, 17 Jul 2019 03:32:32 -0700 (PDT)
-From:   Julien Thierry <julien.thierry@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     maz@kernel.org, will@kernel.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, julien.thierry.kdev@gmail.com,
-        Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH] MAINTAINERS: Update my email address
-Date:   Wed, 17 Jul 2019 11:32:15 +0100
-Message-Id: <1563359535-2762-1-git-send-email-julien.thierry@arm.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 17 Jul 2019 06:33:11 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34139 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbfGQKdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:33:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so10636388pfo.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 03:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9k7PEq3YaWLJm47OKEtp5j4oXp3rjTfBF0mMIsuiDAQ=;
+        b=Dul4ANMNCdSpSs/j0ZxpHvioQBfiR4bXcwEQRW8s+ErgOSfdnx78Qt8agNUBZG2V3G
+         tIua5SDC9I7sQA0/bT7Bx09ekRomkuC+GLFRBo+0UJuAznly6/B+tRlfGxcToEexpXOD
+         WgTxMleNqwhWPq89fF2sDgVMGb6gzFtCu8Qfq9EZI/pb1EdKu+rUIDdAh+nZRL2ikDUc
+         4zagx9uiklANQvb30ZF6DIQvy3C9aeD9V1a3dEhkPo0cz2VX6G/MHuVM5bzXFX0ydpey
+         bHNpblAL973a8HGH7qAe0Q5tLQmKQYmXRKXDh6tFpzLkCUSUotfCdiJ0idFQNBYtcWn/
+         cE+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9k7PEq3YaWLJm47OKEtp5j4oXp3rjTfBF0mMIsuiDAQ=;
+        b=j73rVyKCpsnrZCRJYSqlEid2YLb9stJkZpLpU/k3AA/lDsJC8mJdZvwsrG2kU+l1nI
+         Hzs6PcX4iuc0ofEjZzr8QaqyeRnWSinB7btPuUYYuklR2+30vH+uW23S4pHYyrOafmru
+         7kpkKHjqiyBkmCVebFZQfklmzl8AlfqI+XWenDbM0c/gTevY0+1bITUCErTt84txFuBz
+         KB5RRVJrKM7aXSj5irfERsZI0UAA5Tql3ni2W/qUiAqPMIZM5O9Eh0KJ8J925Bt3viNI
+         JYhY8vMJwkUw38rD0j3fGWEOF2u20yLc1MaYAGQ+dRHSlxHAt6G9iBxu/q/HD8rV6lZo
+         NnzQ==
+X-Gm-Message-State: APjAAAUgJEG0XRVGDNhr9bEE6YfADi0LXV6KB3SYstJspdG/CR2/1Iea
+        +cH+3K7hIeLm2/8oYJ44Mx/NiQ==
+X-Google-Smtp-Source: APXvYqz/Sfxl0RQLtUc3wMREss8uX/59u3jEO2nzgrxKdE2umZKvMGiCYBh9eFTpkdk7pse+CuF5gA==
+X-Received: by 2002:a65:690e:: with SMTP id s14mr26228230pgq.47.1563359590031;
+        Wed, 17 Jul 2019 03:33:10 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id 30sm58222326pjk.17.2019.07.17.03.33.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 03:33:08 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 16:03:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Christian Neubert <christian.neubert.86@gmail.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190717103306.r3wuqvvwr2b5z4ok@vireshk-i7>
+References: <874l85v8p6.fsf@FE-laptop>
+ <20190318112844.GA1708@apalos>
+ <87h8c0s955.fsf@FE-laptop>
+ <20190318122113.GA4834@apalos>
+ <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
+ <20190425123303.GA12659@apalos>
+ <20190520112042.mpamnabxpwciih5m@vireshk-i7>
+ <20190522070341.GA32613@apalos>
+ <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
+ <20190610101918.sypafywc6fn4jsbo@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610101918.sypafywc6fn4jsbo@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My @arm.com address will stop working in a couple of weeks. Update
-MAINTAINERS and .mailmap files with an address I'll have access to.
+On 10-06-19, 15:49, Viresh Kumar wrote:
+> On 22-05-19, 12:36, Viresh Kumar wrote:
+> > On 22-05-19, 10:03, Ilias Apalodimas wrote:
+> > > Hi Viresh, Gregory
+> > > On Mon, May 20, 2019 at 04:50:42PM +0530, Viresh Kumar wrote:
+> > > > On 25-04-19, 15:33, Ilias Apalodimas wrote:
+> > > > > Hi Viresh,
+> > > > > 
+> > > > > > > > Also, during this week-end, Christian suggested that the issue might
+> > > > > > > > come from the AVS support.
+> > > > > > > > 
+> > > > > > > > Could you disable it and check you still have the issue?
+> > > > > > > > 
+> > > > > > > > For this, you just have to remove the avs node in
+> > > > > > > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
+> > > > > > > Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
+> > > > > > >  once i return
+> > > > > > 
+> > > > > > @Ilias: Can you please try this now and confirm to Gregory ?
+> > > > > I am more overloaded than usual and totally forgot about this. Apologies.
+> > > > > I'll try finding some time and do this.
+> > > > 
+> > > > Ping Ilias.
+> > > Sorry for the huge delay. 
+> > > Applying this patch and removing tha 'avs' node from
+> > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi seems to work.
+> > > Changing between governors does not freeze the board any more. I haven't checked
+> > > the actual impact on the CPU speed but the values on 
+> > > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor are correct
+> > 
+> > Thanks for testing it out. Lets see what Gregory has to say now.
+> 
+> @Gregory: Do you have any further advice for Ilias ?
 
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
----
- .mailmap    | 1 +
- MAINTAINERS | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+Ping.
 
-diff --git a/.mailmap b/.mailmap
-index 0fef932..468bced8 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -116,6 +116,7 @@ John Stultz <johnstul@us.ibm.com>
- Juha Yrjola <at solidboot.com>
- Juha Yrjola <juha.yrjola@nokia.com>
- Juha Yrjola <juha.yrjola@solidboot.com>
-+Julien Thierry <julien.thierry.kdev@gmail.com> <julien.thierry@arm.com>
- Kay Sievers <kay.sievers@vrfy.org>
- Kenneth W Chen <kenneth.w.chen@intel.com>
- Konstantin Khlebnikov <koct9i@gmail.com> <k.khlebnikov@samsung.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 91d8700..9525601 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8808,7 +8808,7 @@ F:	arch/x86/kvm/svm.c
- KERNEL VIRTUAL MACHINE FOR ARM/ARM64 (KVM/arm, KVM/arm64)
- M:	Marc Zyngier <marc.zyngier@arm.com>
- R:	James Morse <james.morse@arm.com>
--R:	Julien Thierry <julien.thierry@arm.com>
-+R:	Julien Thierry <julien.thierry.kdev@gmail.com>
- R:	Suzuki K Pouloze <suzuki.poulose@arm.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	kvmarm@lists.cs.columbia.edu
 -- 
-1.9.1
-
+viresh
