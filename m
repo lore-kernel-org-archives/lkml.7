@@ -2,134 +2,257 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1774C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84657C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB752173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4D421743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gXVacMqu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ghw6opmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfGQGeJ (ORCPT
+        id S1727047AbfGQGe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:34:09 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:49861 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfGQGeJ (ORCPT
+        Wed, 17 Jul 2019 02:34:26 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:50868 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfGQGe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:34:09 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x6H6Y50h019086;
-        Wed, 17 Jul 2019 15:34:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x6H6Y50h019086
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563345246;
-        bh=rG7ekEvaQy1IjhchJCTkqJacKz4cRc1jvbuG8gJAP9M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gXVacMquCuEXEGhx3Ti/SvGU6V2I4SNFOhfrjTKdUzbkaCwO18NlV21SnudqyxPHG
-         d+PjzkPbvOk0scjD/dOXf3Vg52Bp0v1WK5EC6wX6RxboJZXTw41dJjoNWQ3Je3c++e
-         u4XU2LWxmOGQKbRUkvSXBhNMBme07AqBAarjfd2ve+aftPiCe3CBPARFZ9Nf6p/Rz3
-         EWV/8P+MkYogE6+47q6v7DuYqJOdUCeQ62DHmXnud4EvHOHwAgybx8VzNoq4N3AI5o
-         eGV7K+mpxuGafTKlxs8WDo9sHqRvSe6q0D7RKCPOcUK8Q7lQzRBpib8ZOhy+0rpveI
-         fPEBa27iGHVKQ==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id m8so15737320vsj.0;
-        Tue, 16 Jul 2019 23:34:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAUbd3RgE1WpC6uDxGuibYNgQPrGTdPD4ZUt7KtG7DTCmiP6zIfN
-        D+84pE3NEA0enK2maE4CDkzypayhzHINxEOZfcs=
-X-Google-Smtp-Source: APXvYqzgNWfC169qm/VJmhV93vE8pqpShdA43iCdrk/fvt6DOhA6i66MYEisEz8GA2ScseJMPjrlg8uFi3GEPxYwCfk=
-X-Received: by 2002:a67:f495:: with SMTP id o21mr23161422vsn.54.1563345244535;
- Tue, 16 Jul 2019 23:34:04 -0700 (PDT)
+        Wed, 17 Jul 2019 02:34:26 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190717063422epoutp035b9a033762e817b7916562a211f258ca~yHjvCmgBI1962819628epoutp03A
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 06:34:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190717063422epoutp035b9a033762e817b7916562a211f258ca~yHjvCmgBI1962819628epoutp03A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563345262;
+        bh=JH91yOtS+jffgxTTFHGvw6ei+DdsN9zJJgohcmSBYac=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ghw6opmMfKXxmk6IuAPNpKUABd2hDsPjQFDnPWvGJB3u6CIzlb/yPkj3OS9x53TWR
+         aP1xQDwS0pBQyrpzMmG3ikC0PS91IzqqcQrSnJkizBeIfg5IHKlDFydi9VYJ48IhoL
+         FvB2VVlCu7kkfeIs+w2XWr73w280ZnEdH1vPLBLY=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190717063422epcas1p203192e207e6f33e7ff96ee2fd29038cb~yHjuzgLBD1459914599epcas1p2a;
+        Wed, 17 Jul 2019 06:34:22 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 45pSCw1dFbzMqYlv; Wed, 17 Jul
+        2019 06:34:20 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        16.F0.04160.C61CE2D5; Wed, 17 Jul 2019 15:34:20 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190717063419epcas1p48c8037c7214623b761c270bfefbf88d9~yHjsS0z900625506255epcas1p4j;
+        Wed, 17 Jul 2019 06:34:19 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190717063419epsmtrp2e0bd7419f210c5a1549631ecea66561e~yHjsSCCD81019710197epsmtrp2q;
+        Wed, 17 Jul 2019 06:34:19 +0000 (GMT)
+X-AuditID: b6c32a38-b4bff70000001040-71-5d2ec16cd0af
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AE.8F.03638.B61CE2D5; Wed, 17 Jul 2019 15:34:19 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190717063419epsmtip1ccf829f1c4c3d555a71411df1e7224d9~yHjsGweoS1162611626epsmtip1R;
+        Wed, 17 Jul 2019 06:34:19 +0000 (GMT)
+Subject: Re: [PATCH v4 02/24] PM / devfreq: tegra30: Keep interrupt disabled
+ while governor is stopped
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <ca339b7f-1141-4c68-1c07-2ac818422bbc@samsung.com>
+Date:   Wed, 17 Jul 2019 15:37:28 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190709133019.25a8cd27@canb.auug.org.au> <ba1dd3e2-3091-816c-c308-2f9dd4385596@mellanox.com>
- <20190709071758.GI7034@mtr-leonro.mtl.com> <20190709124631.GG3436@mellanox.com>
- <20190710110443.002220c8@canb.auug.org.au> <20190710143036.1582c79d@canb.auug.org.au>
- <20190717092801.77037015@canb.auug.org.au>
-In-Reply-To: <20190717092801.77037015@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 17 Jul 2019 15:33:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARZqi-QcGaTEaoTEASbnBaGzYchgDoWeuthR+G8jxQHMg@mail.gmail.com>
-Message-ID: <CAK7LNARZqi-QcGaTEaoTEASbnBaGzYchgDoWeuthR+G8jxQHMg@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the rdma tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Majd Dibbiny <majd@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6c517d04-cf99-f907-e74d-9fba99405a53@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut7vdTW11nVnHBaW3B7lwetXVNVoUhg16IJX0AFkXvW3qXuxu
+        Pek5y7QMrShaZWVF5QPTXOmyJGeJhiVZUMoiSCjK7GGaVli73iL/+853vvP4fr8jwxSVuFKW
+        ZXGwdgtjIvFg8S1ftDrGdF+dHrevejxd/uUNonPdpWK6fX+vlO70nsXp/sJmROd/c+N0975r
+        OD3sLRHTRyuf4ouDdHX+y0hX7/ZLdYWuPlx3tLYM6fprpqVKNuYsNLJMJmuPZC0Z1swsi0FL
+        Ll+jT9Zr5sVRMVQSPZ+MtDBmVksuXZEak5JlCixERm5hTM4AlcpwHBm7aKHd6nSwkUYr59CS
+        rC3TZEuyqTnGzDktBnWG1byAiouL1wSEm3KMVd3PpLZccltFXoNoL2qdWoBkMiAS4XdbSAEK
+        limIOgRVpT0SIfiK4GRTkagABQWCQQRdD7N5zBecOjEoFUR3EeSe6MaF4BOCX0U+Ca8KI4zg
+        H/IhPjGJGEGQP+zC+QRGbABfffloW5xQQeO7F6P8RCIKng+9QfxOcmIR3CsN5mkxMQvuvS1B
+        PA4n1kNbc4mYx3IiFFpP94ziIEILt199lgrtp0BXz3mRgKeDy3MG43cAwiWFw0PtEsHzUvhQ
+        rBbchMH7llqpgJXQ33cXF/BOuN7ajAu1hxDUNnZIhEQCNF45LuL7YEQ0VHljBToK6n+eQ8Lc
+        CdA3cOTvKDkcOqgQJDOg87VfJOAIuJSXjxch0j3GjXuMA/cYB+7/wy4gcRmazNo4s4HlKFvi
+        2L+uQaOnqqLrUMPjFU2IkCFyvFzni0lXSJgt3HZzEwIZRk6Sawfmpivkmcz2Hazdqrc7TSzX
+        hDSBxy7GlOEZ1sDhWxx6ShOfkJBAJ1LzNBRFTpGX/IpOVxAGxsHmsKyNtf+rE8mClHuRkwrd
+        /9GQtMSStzq6Fzt9pmLbjxHP7q3Z9MvBcTrbk86Q5LWP0g6E71J+LfS03lS1fCz6UXwkq3p1
+        RHes52DB1Ybvq1Quj3Ekajp2zHT+bVlGx/vN7uGelWm1+nU47Q35kpcyc7Z32R0uoottDv2W
+        PMe/Z8IOqSLlRvuDi2FJFbc3kGLOyFAqzM4xfwB/p6KpwAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG72Qb1YgzVN6harPz5mtGiZtYjF
+        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
+        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZ629fYS9oUapY076HqYHxpHQXIyeHhICJxPQp
+        39i7GLk4hAR2M0rsazzJDJGQlJh28SiQzQFkC0scPlwMEhYSeMsocbZdCMQWFsiQuPvjMCNI
+        r4hAE5PEpt4L7CAJZoFIiZ65W9gghs5mknjQ1MoEkmAT0JLY/+IGG4jNL6AocfXHY0aQBbwC
+        dhL7FnGBhFkEVCX2PZ/HCGKLCkRITLq2kwXE5hUQlDg58wmYzSlgK7H93geoXeoSf+ZdYoaw
+        xSVuPZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC4tz03GLDAqO81HK94sTc
+        4tK8dL3k/NxNjOAI09LawXjiRPwhRgEORiUeXo/DurFCrIllxZW5hxglOJiVRHhtv2rHCvGm
+        JFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamDMWFW659QLs6dv
+        dGuMqmXqttf+y9xc8NNN3Mv+89dGRd34E8xK+2UmMNnvW7xHrko/SWhbf9X8b0fnH5l82i2X
+        dZd2HcuZVQu9d0+YvXdtcrlw4yGD/f2/Jm8WsVhyPmlVDu+MTwyeMSa3/SX5mYyezf2s9PbS
+        6SkrDGLOHblcWPUr5PpCxf40JZbijERDLeai4kQAPr+/sawCAAA=
+X-CMS-MailID: 20190717063419epcas1p48c8037c7214623b761c270bfefbf88d9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223724epcas4p2d82cecc2969fecddca67192417843418
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223724epcas4p2d82cecc2969fecddca67192417843418@epcas4p2.samsung.com>
+        <20190707223303.6755-3-digetx@gmail.com>
+        <f691a845-18f3-a6fb-302c-a8a3fc13e5bf@samsung.com>
+        <6c517d04-cf99-f907-e74d-9fba99405a53@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 19. 7. 16. 오후 10:03, Dmitry Osipenko wrote:
+> 16.07.2019 14:47, Chanwoo Choi пишет:
+>> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+>>> There is no real need to keep interrupt always-enabled, will be nicer
+>>> to keep it disabled while governor is inactive.
+>>>
+>>> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/devfreq/tegra30-devfreq.c | 43 ++++++++++++++++---------------
+>>>  1 file changed, 22 insertions(+), 21 deletions(-)
+>>>
+>>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>>> index a27300f40b0b..5e2b133babdd 100644
+>>> --- a/drivers/devfreq/tegra30-devfreq.c
+>>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>>> @@ -11,6 +11,7 @@
+>>>  #include <linux/devfreq.h>
+>>>  #include <linux/interrupt.h>
+>>>  #include <linux/io.h>
+>>> +#include <linux/irq.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/mod_devicetable.h>
+>>>  #include <linux/platform_device.h>
+>>> @@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
+>>>  {
+>>>  	unsigned int i;
+>>>  
+>>> -	disable_irq(tegra->irq);
+>>> -
+>>>  	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
+>>>  		      ACTMON_GLB_PERIOD_CTRL);
+>>>  
+>>> @@ -442,8 +441,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+>>>  	}
+>>>  
+>>>  	actmon_write_barrier(tegra);
+>>> -
+>>> -	enable_irq(tegra->irq);
+>>>  }
+>>>  
+>>>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+>>> @@ -552,6 +549,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
+>>>  {
+>>>  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
+>>>  
+>>> +	/*
+>>> +	 * Couple device with the governor early as it is needed at
+>>> +	 * the moment of governor's start (used by ISR).
+>>> +	 */
+>>> +	tegra->devfreq = devfreq;
+>>
+>> I'm not sure it is necessary. Almost devfreq device get
+>> the devfreq instance on probe timing through devfreq_add_device directly.
+> 
+> This is necessary because this assignment is for the "governor" and not
+> the "device". Governor is started during of devfreq_add_device(), hence
+> there is no better way to assign device to the driver's governor.
 
+OK. I understand.
 
-On Wed, Jul 17, 2019 at 8:28 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi,
->
-> On Wed, 10 Jul 2019 14:30:36 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > On Wed, 10 Jul 2019 11:04:43 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > On Tue, 9 Jul 2019 12:46:34 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
-> > > >
-> > > > It isn't quite enough to make the header compile stand alone, I'm
-> > > > adding this instead.
-> > > >
-> > > > From 37c1e072276b03b080eb24ff24c39080aeaf49ef Mon Sep 17 00:00:00 2001
-> > > > From: Jason Gunthorpe <jgg@mellanox.com>
-> > > > Date: Tue, 9 Jul 2019 09:44:47 -0300
-> > > > Subject: [PATCH] RDMA/counters: Make rdma_counter.h compile stand alone
-> > >
-> > > I will apply this to linux-next today and reenable the stand alone
-> > > building for rdma_counter.h
-> >
-> > That worked for me ...
->
-> rdma_counter.h should be able to be removed from the exceptions list now.
->
-> I have been building linux-next with this patch for a while, so maybe
-> it could be applied to the kbuild tree?
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 10 Jul 2019 13:03:16 +1000
-> Subject: [PATCH] rdma: attempt to build rdma_counter.h stand alone again
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/Kbuild | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/include/Kbuild b/include/Kbuild
-> index 7e9f1acb9dd5..765ff864130d 100644
-> --- a/include/Kbuild
-> +++ b/include/Kbuild
-> @@ -949,7 +949,6 @@ header-test-                        += pcmcia/ds.h
->  header-test-                   += rdma/ib.h
->  header-test-                   += rdma/iw_portmap.h
->  header-test-                   += rdma/opa_port_info.h
-> -header-test-                   += rdma/rdma_counter.h
->  header-test-                   += rdma/rdmavt_cq.h
->  header-test-                   += rdma/restrack.h
->  header-test-                   += rdma/signature.h
+But, I have a question. Is it working before this patch?
+How can you test it on that tegra->devfreq is NULL?
 
-Yes, this is just a one-liner fix-up,
-so I'd like to fold it into this:
-
-https://patchwork.kernel.org/patch/11047283/
+> 
+>>> +
+>>>  	switch (event) {
+>>>  	case DEVFREQ_GOV_START:
+>>>  		devfreq_monitor_start(devfreq);
+>>> @@ -586,10 +589,11 @@ static struct devfreq_governor tegra_devfreq_governor = {
+>>>  
+>>>  static int tegra_devfreq_probe(struct platform_device *pdev)
+>>>  {
+>>> -	struct tegra_devfreq *tegra;
+>>>  	struct tegra_devfreq_device *dev;
+>>> -	unsigned int i;
+>>> +	struct tegra_devfreq *tegra;
+>>> +	struct devfreq *devfreq;
+>>>  	unsigned long rate;
+>>> +	unsigned int i;
+>>>  	int err;
+>>>  
+>>>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+>>> @@ -625,6 +629,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>>  	}
+>>>  	tegra->irq = err;
+>>>  
+>>> +	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
+>>> +
+>>> +	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
+>>> +					actmon_thread_isr, IRQF_ONESHOT,
+>>> +					"tegra-devfreq", tegra);
+>>> +	if (err) {
+>>> +		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
+>>> +		return err;
+>>> +	}
+>>> +
+>>>  	reset_control_assert(tegra->reset);
+>>>  
+>>>  	err = clk_prepare_enable(tegra->clock);
+>>> @@ -672,28 +686,15 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>>>  	}
+>>>  
+>>>  	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
+>>> -	tegra->devfreq = devfreq_add_device(&pdev->dev,
+>>> -					    &tegra_devfreq_profile,
+>>> -					    "tegra_actmon",
+>>> -					    NULL);
+>>> +	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
+>>> +				     "tegra_actmon", NULL);
+>>>  	if (IS_ERR(tegra->devfreq)) {
+>>
+>> Have to check 'devfreq' instead of 'tegra->devfreq'.
+>> Did you test it? It might be failed because 'tegra->devfreq is NULL.
+> 
+> That's a good catch! Thank you very much.
+> 
+>>>  		err = PTR_ERR(tegra->devfreq);
+>>
+>> ditto.
+> 
+> Ok
+> 
+> 
 
 
 -- 
-Best Regards
-Masahiro Yamada
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
