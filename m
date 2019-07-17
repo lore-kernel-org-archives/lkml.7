@@ -2,86 +2,117 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48E0C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77423C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920AF21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AE521743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZ2RaTg9"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gB1evY8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfGQQtu (ORCPT
+        id S1729554AbfGQQuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 12:49:50 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44254 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfGQQtu (ORCPT
+        Wed, 17 Jul 2019 12:50:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38415 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbfGQQuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 12:49:50 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so36518lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 09:49:48 -0700 (PDT)
+        Wed, 17 Jul 2019 12:50:13 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n11so24065249qtl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 09:50:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m6oZLtgSIS9rgNH1VmPitrjtzKoJqON6sdHU4IUhX60=;
-        b=FZ2RaTg9GPLEkxN7+amRYx7I4vc95+CxEEqZB1xzW84uUWox7iWgJFlyhkC3Pd4B4G
-         7LmgGsdr6Brgy3TzlD7Ixz5NKHUWu1YxpZfVqUCSYYU1dH7EqJNqEj5XtVqiQbpRoXpC
-         JL7S+QIQ10aDPe+c7AZIJLTskPuTR/Th0MNNr3vld7oqZqPZ+8e9ugHBIE9lOZx/Mofg
-         6hqKPir+0Y5BGWo8pEwc2rUDc7nJUkyN0Lct8A1FW8Ry5axwIA1htIc66TmHZlNXYP5s
-         yYgUyD6u37rO3QQF3AFXizoy07YoS/KjHpDA3nMsgv9/gYOodQ+LNjSi/LlHJfygnYvk
-         fieQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XH5XQyD8DWa/SvKRgH4wl/Y2fbyFH6tgDRoMo0vIhhY=;
+        b=gB1evY8iTPI6wfVzoXC+7BeHJtHWmdvHLjC8PnnCntCDln0SaiT2PXdqU5NYqnog3Z
+         XVB5Wt3nYRL6NuSs0CgYTHiJ91zMm8i5A81ZY8q2OAH0hiFpILG6UlKl8OSyLTGD8cSQ
+         YM5FKH8IAtdRDsohoy5a1a677OGbxx4mc8fRnGAL8Lbiu5KCl/VjYZj8EzP6gqX1kiim
+         wTToDzhldW1cNFTwySsulv3c3NlWbkEyOcNVJVKWhqMsSNqXgDc0qMh1+GEkaEQYT1pJ
+         mWlsw/RSPEDQI3q7NbArQVrjeu9lm/gboJDHJdWa+ZNgQDYbIFqtoRXzJIActcXSbrEI
+         M54w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m6oZLtgSIS9rgNH1VmPitrjtzKoJqON6sdHU4IUhX60=;
-        b=gWorSS52kIxLQHNl9N5LO2aDqjMNPbAqDwr+BB9lBdj/MJsTHvMSlt9j1dNyzamqYt
-         WTIShDjjkhdMr7A7PAI2l4OpmpIJBQnRVFmnh9XEnDw0OJ4FTp5UoNNt3oiGMCBAjkuG
-         6yimkUGSr3RsqAaaHAaldF5HIHPtXFwUyUiaxObCSVVioe54F3zECLhNhQE1jiiGRiCq
-         fwUzV8HHtXjJsgsLivoxQva3TE77byu4zVTNNOwB33SrV/PfPFDCQk5nyZ16NfbyujRo
-         d/jKkoaEZIZzYddTtglvo/0kHDKRATOB3vsZCh4uYsyPiyxv33QgaFhTfWWi+IrpGIE1
-         /FaQ==
-X-Gm-Message-State: APjAAAVcir6ud88urvn7UJePPmLyBojCopb60voS8cjNDtc78Pu2lWR/
-        vTNloCq2cf3YXjsHsJU8J13lOQF0sJ1vM9qbThI=
-X-Google-Smtp-Source: APXvYqxJ4yTmF/pEXAKsdPEHMzOv76SGz9LRObCgiAXOj7ccVoWP20M9veb+o2mFCiCES+7mGZeyM7yluyfy94mq1f8=
-X-Received: by 2002:a19:6e41:: with SMTP id q1mr7978304lfk.20.1563382187939;
- Wed, 17 Jul 2019 09:49:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XH5XQyD8DWa/SvKRgH4wl/Y2fbyFH6tgDRoMo0vIhhY=;
+        b=XrHlp/0gBGkhU/k47mlelpem/RbfpvcMALJvja/RNbWdgNmunqSxCuJYmQQ9eYao5b
+         BfAtNsE21TtYpGjqYQcNy/Qg8DloneeJGp01khgWqnQkazdY4dLAop+Ci7+i1UIH7LxY
+         DuSwMdSHRySOCBXeiWci8Tr0HcwSN58Y19AfF/3q5TW9xpEiAO+zsUnSYLSsrsRvqtAS
+         SkspEwGh78bZ7JTiKo1hSEA0poyDKhBGMYqq1xsbmRKZzVsEC9wx399bqGWLj6PndxPm
+         0GxpnITJeSSJjUUXBwsxqBs2VfM26i8Zy/pESSM250EmvlUEpLtWT+8K+Pqx4PdGmBDb
+         WE3w==
+X-Gm-Message-State: APjAAAULBYSUcix1XU3gCZsF8bwpq6JeF1cRyMnB0teqKnPD/rBLvVvk
+        8KGZspL9IfgzFTMb6ZBwBVMq/A==
+X-Google-Smtp-Source: APXvYqyYhM0GPsQWijd96/WpMOLz0ToqCooX486o7mCVsOebCRI1o1wjyQCLw53tIr7eh92YQVXtDQ==
+X-Received: by 2002:a0c:acfb:: with SMTP id n56mr29627290qvc.87.1563382212870;
+        Wed, 17 Jul 2019 09:50:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id k38sm14299332qtk.10.2019.07.17.09.50.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jul 2019 09:50:12 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hnn87-0000MT-Q3; Wed, 17 Jul 2019 13:50:11 -0300
+Date:   Wed, 17 Jul 2019 13:50:11 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
+Message-ID: <20190717165011.GI12119@ziepe.ca>
+References: <20190716224518.62556-1-swboyd@chromium.org>
+ <20190716224518.62556-2-swboyd@chromium.org>
+ <20190717113956.GA12119@ziepe.ca>
+ <5d2f4ff9.1c69fb81.3c314.ab00@mx.google.com>
 MIME-Version: 1.0
-References: <20190717163014.429-1-oleksandr.suvorov@toradex.com> <20190717163014.429-6-oleksandr.suvorov@toradex.com>
-In-Reply-To: <20190717163014.429-6-oleksandr.suvorov@toradex.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 17 Jul 2019 13:49:37 -0300
-Message-ID: <CAOMZO5B6M-YKB7gn0Gn7CJG+8YyvC_Xqu99wtHac_bQktm3T+g@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] ASoC: sgtl5000: Fix of unmute outputs on probe
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d2f4ff9.1c69fb81.3c314.ab00@mx.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 1:30 PM Oleksandr Suvorov
-<oleksandr.suvorov@toradex.com> wrote:
->
-> To enable "zero cross detect" for ADC/HP, change
-> HP_ZCD_EN/ADC_ZCD_EN bits only instead of writing the whole
-> CHIP_ANA_CTRL register.
->
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+On Wed, Jul 17, 2019 at 09:42:32AM -0700, Stephen Boyd wrote:
+> Quoting Jason Gunthorpe (2019-07-17 04:39:56)
+> > On Tue, Jul 16, 2019 at 03:45:13PM -0700, Stephen Boyd wrote:
+> > > The hwrng_fill() function can run while devices are suspending and
+> > > resuming. If the hwrng is behind a bus such as i2c or SPI and that bus
+> > > is suspended, the hwrng may hang the bus while attempting to add some
+> > > randomness. It's been observed on ChromeOS devices with suspend-to-idle
+> > > (s2idle) and an i2c based hwrng that this kthread may run and ask the
+> > > hwrng device for randomness before the i2c bus has been resumed.
+> > 
+> > You mean the TPM here right?
+> 
+> In my case yes, but in general it isn't the TPM.
+> 
+> > 
+> > Should we be more careful in the TPM code to check if the TPM is
+> > suspended before trying to use it, rather than muck up callers?
+> > 
+> 
+> Given that it's not just a TPM issue I don't see how checking in the TPM
+> is going to fix this problem. It's better to not try to get random bytes
+> from the hwrng when the device could be suspended.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+I think the same comment would apply to all the other suspend capable
+hwrngs...
+
+It just seems weird to do this, what about all the other tpm API
+users? Do they have a racy problem with suspend too?
+
+Jason
