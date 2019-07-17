@@ -2,99 +2,85 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4461C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86331C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE02E208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE12208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:36:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="skV6paaY"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="s+ad5D3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387955AbfGQReD (ORCPT
+        id S2387887AbfGQRg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:34:03 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:18818 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfGQReD (ORCPT
+        Wed, 17 Jul 2019 13:36:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40467 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbfGQRg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:34:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1563384839;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=dOZPXX2/0UU+1woBsjSlDEXl3gIGo8OmSzylGf5Wz0k=;
-        b=skV6paaY29cqK31xSkvj0hUeaBV/IkN4lFR+MuC1HRPNjqaOjs8MjwbSLxkooasoOC
-        HtPRxz/FcFN5YOxIyG+WeZdnk/3YHTxpEigM2sD0JBNH56UO1ole/FcnxaXTmU9nR6Ve
-        Z6/fFfw/r7biyVjLvqtwRQXwqlZjt/hpSuLoHbMJMLBk6iROA82xSMhfE6f/eX+PN4cW
-        3/E90TpzmqP35YoWIU5MPwSX3eOWdD1CNTx1HKay8gCmFfn2ZYVuHZamu6+by3R4X890
-        /wiGfp7J8ovQ15X/MJnHgA+idSS7HY4/k5i4vdnYz9eMxlmgWyb3SsbjOY8trvUnScGV
-        9RQg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaZXA4NYcM="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id V09459v6HHXaDXl
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 17 Jul 2019 19:33:36 +0200 (CEST)
+        Wed, 17 Jul 2019 13:36:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so11496274pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kevqSiJxsbEDhmFvXT17QTCK6a0eC0i3z1ong8Uuwzo=;
+        b=s+ad5D3HLMkro+DDkazkpKnGSOtq0joJ9Dhea4g9PK8M83SoVUqNCj+XFLDhLVFCXN
+         LhSDJJlL9veZeJTb8HGu2EHXbdqc3MGn+X2TEylr3LuYoXWRGxc6OV9R31Lal6Ta7siR
+         SC4Daabecb3ER5mJq2B/zliFco6r8xtP4X4XixA9e9wg2lQQ0up5OlWsFAEsVcbhUBnj
+         sNGlA3yJuWKHnl/gK0iHUOIxG+SLTlurFGvUAQHqzNkSaw+w9MBJJuQY61aFmJwnd5JR
+         NCZ7kpch6dnxKmD1mdMCexQZQPR+nirg656XJ2DuCckrTqzD6TBwz0PsSmeP83mAoanB
+         yWCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kevqSiJxsbEDhmFvXT17QTCK6a0eC0i3z1ong8Uuwzo=;
+        b=e4Ht7qZODdwITQ/kLxSe/Gr5bwf/Gkl2BpgLu0PTzIHPm2f46Iy7f3w6IJOOZCSgfr
+         S4zfebAfvGK/CK71iZZTsitcpN+kSqpCNkX9pUegiv9mgue4BPV2TP/Rotpw4dTvU/nZ
+         izcCFfOLNhhpdKTMt12ZFE461EZ566/Kp8gZwQs+p6aqEkmJ5XEiR7bnTRvy/DAAfjHe
+         59rqUHjjYyWs4wL0sdyUuNV4mkHHQR+7vruTsFH+8wZiRz1UTS4CNJFgH1L6bdqFzXk7
+         0+7TmS2b8zKsgKNYpQctZy/TH2gyVs3hQKAoIm4AFyRrZBOFI0iPgchGUWI2eub5l8xw
+         GbkQ==
+X-Gm-Message-State: APjAAAVD+wL0Qd3plYkVJb45XczgmsFWNjrTx5/zZAc5gDV+pPy8Sjoh
+        k7RrlKpz3b8bhNQ10qc5mMg=
+X-Google-Smtp-Source: APXvYqyD6WnsaJ0bItM20gy/k7ygrcTP83wuDov/ycTiAnYjvD2WHzA2+KiUtWbJ3BsDF7phWpmP3Q==
+X-Received: by 2002:a17:90a:2343:: with SMTP id f61mr46121179pje.130.1563384986821;
+        Wed, 17 Jul 2019 10:36:26 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:4db])
+        by smtp.gmail.com with ESMTPSA id g4sm33697577pfo.93.2019.07.17.10.36.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 10:36:26 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 13:36:24 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 1/2] mm/memcontrol: fix flushing per-cpu counters in
+ memcg_hotplug_cpu_dead
+Message-ID: <20190717173624.GA25882@cmpxchg.org>
+References: <156336655741.2828.4721531901883313745.stgit@buzz>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
-Date:   Wed, 17 Jul 2019 19:33:35 +0200
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Belisko Marek <marek.belisko@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <33D92C0E-A430-4C34-A698-646F2592093D@goldelico.com>
-References: <cover.1559905870.git.hns@goldelico.com> <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com> <20190625204356.GF18595@ravnborg.org> <20190626073350.GA15288@ravnborg.org> <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <156336655741.2828.4721531901883313745.stgit@buzz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+On Wed, Jul 17, 2019 at 03:29:17PM +0300, Konstantin Khlebnikov wrote:
+> Use correct memcg pointer.
+> 
+> Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-> Am 26.06.2019 um 14:40 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Sam,
->=20
->> Am 26.06.2019 um 09:33 schrieb Sam Ravnborg <sam@ravnborg.org>:
->>=20
->> Hi Nikolaus.
->>=20
->>>>=20
->>>> any progress towards merging this somewhere? It did not yet arrive =
-in linux-next.
->>>>=20
->>>> BTW: should also be applied to 5.2
->>> The drm bits are reviewed. The DT bits needs OK from DT people.
->>> When we have OK from DT people we can apply them all to =
-drm-misc-next.
->>=20
->> I got OK on irc from Rob to process these.
->> All patches are now applied to drm-misc-next.
->=20
-> Thanks for taking care of this!
+Oops, nice catch.
 
-I have checked but it seems they are still not merged into linux-next.
-
-BR and thanks,
-Nikolaus
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
