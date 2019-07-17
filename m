@@ -2,152 +2,308 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB88C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3646C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67EF21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12A220880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z8mzWEN0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mRBQVsxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfGQWBc (ORCPT
+        id S1729050AbfGQWDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:01:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40807 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfGQWBb (ORCPT
+        Wed, 17 Jul 2019 18:03:15 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33558 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfGQWDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:01:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so11813117pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 15:01:30 -0700 (PDT)
+        Wed, 17 Jul 2019 18:03:14 -0400
+Received: by mail-qt1-f195.google.com with SMTP id r6so20854121qtt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 15:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fTLcLaPhVwoKKpKMc1I9xT0INE94L4TgQfexrydY+cA=;
-        b=Z8mzWEN0CeWUNvwKhn1qfilBTBRC7WxTjomnVsKPHQU0ElCU8F0S+0b6hmIm7/nhch
-         +DifBmtphlUm+XiggXkiUNvdXglwFDqpqRYwxBJ1aOOituDUlQ5cPcH9WfCGseEHOFw8
-         dDQZwj8eABofHwsXh91agobn7fLXtduOSolkjgIHCQv/JlOq7DmttmbAYWr2vOlJHh/X
-         phhszvm1zTiHpZUGPBawQGRzDFNXcee7ET2hvB3e81ksWT88LZYlNsbh3x47Hm/XlI/B
-         u/OFwzWhaWgaDyCoNr42/zXR8ZJo1XWCYRP7jHIEVOQDhNfXPOTXnrdvEzUwqf+8fBHz
-         lHxw==
+        bh=eUlTffAvSCym+EN8x6Xer387d72KBIqU0xjI+Qp9AZQ=;
+        b=mRBQVsxJ5hH7rx0TDoqbXg3hVL+LxBLAH/7WcvKGedYSVPk79cuwiagqxujDX9kDgl
+         yOKEhn8NeODMUeWG4XjuJuub6jwZh0qQGYAFL+JU+F0uC+liJCT37Cvb92U0Wcw79QTz
+         zunhLyVbf7FSSRSTmGugqijqQ7/8tB3XKe/oY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fTLcLaPhVwoKKpKMc1I9xT0INE94L4TgQfexrydY+cA=;
-        b=Pg1SFDOhbOEdE7qEpJqZD6yDRW+5DX14cE+f3SYkcKxgMqVmyj1tz623bdq4r5X9zS
-         PBB9D8/OnCjbGI20p1r8cmg9WPRzaIsnD2zeu2zSM302fGf5XIJTR/2qeBv3P3Pe1Xgv
-         ObNYLNpBSJdVXhg22AYPkNF0+nLzG4VWvEbZaeIzS2A6yFCSLmxPyznQi34ZZA9Clxvc
-         MEigtUqqKdxYHRQ1jejjNqo3600ztocVSUHKYxE3hsfS/8WNFrpZB2zn6RO7ULureHLn
-         hQhrSXb4FfeOMMMlgJ2JgofmNJy1/HwEBVqJWCZsvo2NKrBkMKfFMtZX3Ock/ukUUH3C
-         WmvQ==
-X-Gm-Message-State: APjAAAV3DVPBTkl+My4Mnf3hCBWhZhiHm9IFZVO/7Z9ciOtxjKTQ97JW
-        kUzANvNb5pZqxiqVFD26L7zrLXAbnOnIAdkc8slXkA==
-X-Google-Smtp-Source: APXvYqyNMgmaBD93cLMzjr2ceMGWNdB2nEoU4SUn3C4KPY9rINU9MjXlmnh0tT2J3vMVKPOps1R5xEFcGQ55emc7qr0=
-X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr45895718pje.123.1563400889995;
- Wed, 17 Jul 2019 15:01:29 -0700 (PDT)
+        bh=eUlTffAvSCym+EN8x6Xer387d72KBIqU0xjI+Qp9AZQ=;
+        b=Izc1Vpw4r0nUmXLMB1BGEKV+7voGUjPVD3n0eNNf2qyoC/CsownzyRrXIY1X1KOHBd
+         Scbx4haEpevm/bOPWzPDv9dYnrX9Vzbfd+2yvXwUTRiXI8mbyt2X8XqSKgIgM7IUkefl
+         IsZ9OgFVnBSYSBGBBmIGkUvpW1ayivnrf1vsncBwkeTNJTYG8BW2Ttpwyl6w1fZDkYxj
+         ptHiVNS7EE6SuHvBAAFdrwCf0iuuMzcgFp3WGq6RMbjS+WkWtQWx3ErSSyl9a5qlLV+4
+         o3rR3bbLPLtv5tzhkhVYzoIIgIlx64PFJV2DU11R46TVQiExQAS1LlW0LBg7SFJb0tHt
+         ObIQ==
+X-Gm-Message-State: APjAAAVfvAVXBpQQCKFQKo8R4XSPm9QoXk0yLlI/L94FzlM4wfWvfvAI
+        qiGGz8KfXrRCPItYbNlLr6sGZqQV2VeUCtNFLANjDQ==
+X-Google-Smtp-Source: APXvYqwlZ/+M4C2ZxvRJLy8gaEXSFZyKFFT5fxDNnE2XZA0FFCCziGYDv5isP9eILwhLMyxH0KfusFXlDRxsixsO5GA=
+X-Received: by 2002:aed:3b1c:: with SMTP id p28mr28131013qte.312.1563400993457;
+ Wed, 17 Jul 2019 15:03:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190717033807.1207-1-cai@lca.pw>
-In-Reply-To: <20190717033807.1207-1-cai@lca.pw>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 17 Jul 2019 15:01:18 -0700
-Message-ID: <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
-Subject: Re: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
-To:     Qian Cai <cai@lca.pw>
-Cc:     rafael.j.wysocki@intel.com, robert.moore@intel.com,
-        erik.schmauss@intel.com, jkim@freebsd.org,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190627080116.40264-1-jitao.shi@mediatek.com>
+ <20190627080116.40264-7-jitao.shi@mediatek.com> <1561945387.17120.4.camel@mtksdaap41>
+In-Reply-To: <1561945387.17120.4.camel@mtksdaap41>
+From:   Ryan Case <ryandcase@chromium.org>
+Date:   Wed, 17 Jul 2019 15:03:02 -0700
+Message-ID: <CACjz--m8BuJbe80m7HfakVi8uXj5mTj72=6YZ5+OAa-gF29M8Q@mail.gmail.com>
+Subject: Re: [v5 6/7] drm/mediatek: change the dsi phytiming calculate method
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        stonea168@163.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 8:38 PM Qian Cai <cai@lca.pw> wrote:
+On Sun, Jun 30, 2019 at 6:43 PM CK Hu <ck.hu@mediatek.com> wrote:
 >
-> Clang generate quite a few of those warnings.
+> Hi, Jitao:
 >
-> drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer
-> treated as a cast from integer to pointer is a GNU extension
-> [-Wnull-pointer-arithmetic]
->                 status = acpi_get_handle(ACPI_ROOT_OBJECT,
-> obj->string.pointer,
->                                          ^~~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:458:56: note: expanded from macro
-> 'ACPI_ROOT_OBJECT'
->  #define ACPI_ROOT_OBJECT                ((acpi_handle) ACPI_TO_POINTER
-> (ACPI_MAX_PTR))
->                                                         ^~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:509:41: note: expanded from macro
-> 'ACPI_TO_POINTER'
->  #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0,
-> (acpi_size) (i))
->                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:503:84: note: expanded from macro
-> 'ACPI_ADD_PTR'
->  #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
-> (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
->                                          ^~~~~~~~~~~~~~~~~
-> ./include/acpi/actypes.h:501:66: note: expanded from macro
-> 'ACPI_CAST_PTR'
->  #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->                                                                   ^
-> This is because pointer arithmetic on a pointer not pointing to an array
-> is an undefined behavior. Fix it by doing an integer arithmetic
-> instead.
+> On Thu, 2019-06-27 at 16:01 +0800, Jitao Shi wrote:
+> > Change the method of frame rate calc which can get more accurate
+> > frame rate.
+> >
+> > data rate = pixel_clock * bit_per_pixel / lanes
+> > Adjust hfp_wc to adapt the additional phy_data
+> >
+> > if MIPI_DSI_MODE_VIDEO_BURST
+> >       hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12 - 6;
+> > else
+> >       hfp_wc = hfp * bpp - data_phy_cycles * lanes - 12;
+> >
+> > Note:
+> > //(2: 1 for sync, 1 for phy idle)
+> > data_phy_cycles = T_hs_exit + T_lpx + T_hs_prepare + T_hs_zero + 2;
+> >
+> > bpp: bit per pixel
+> >
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > Tested-by: Ryan Case <ryandcase@chromium.org>
+> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
+>
+> This version is different than previous version, so you should remove
+> Reviewed-by tag. For this version, I still give you a
+>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+>
+> > ---
+> >  drivers/gpu/drm/mediatek/mtk_dsi.c | 117 ++++++++++++++++++++---------
+> >  1 file changed, 80 insertions(+), 37 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > index 1621e8cdacc2..cefdcb1509cb 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > @@ -144,12 +144,6 @@
+> >  #define DATA_0                               (0xff << 16)
+> >  #define DATA_1                               (0xff << 24)
+> >
+> > -#define T_LPX                5
+> > -#define T_HS_PREP    6
+> > -#define T_HS_TRAIL   8
+> > -#define T_HS_EXIT    7
+> > -#define T_HS_ZERO    10
+> > -
+> >  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
+> >
+> >  #define MTK_DSI_HOST_IS_READ(type) \
+> > @@ -158,6 +152,25 @@
+> >       (type == MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM) || \
+> >       (type == MIPI_DSI_DCS_READ))
+> >
+> > +struct mtk_phy_timing {
+> > +     u32 lpx;
+> > +     u32 da_hs_prepare;
+> > +     u32 da_hs_zero;
+> > +     u32 da_hs_trail;
+> > +
+> > +     u32 ta_go;
+> > +     u32 ta_sure;
+> > +     u32 ta_get;
+> > +     u32 da_hs_exit;
+> > +
+> > +     u32 clk_hs_zero;
+> > +     u32 clk_hs_trail;
+> > +
+> > +     u32 clk_hs_prepare;
+> > +     u32 clk_hs_post;
+> > +     u32 clk_hs_exit;
+> > +};
+> > +
+> >  struct phy;
+> >
+> >  struct mtk_dsi_driver_data {
+> > @@ -188,6 +201,7 @@ struct mtk_dsi {
+> >       enum mipi_dsi_pixel_format format;
+> >       unsigned int lanes;
+> >       struct videomode vm;
+> > +     struct mtk_phy_timing phy_timing;
+> >       int refcount;
+> >       bool enabled;
+> >       u32 irq_data;
+> > @@ -221,17 +235,36 @@ static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+> >  {
+> >       u32 timcon0, timcon1, timcon2, timcon3;
+> >       u32 ui, cycle_time;
+> > +     struct mtk_phy_timing *timing = &dsi->phy_timing;
+> > +
+> > +     ui = 1000000000 / dsi->data_rate;
+> > +     cycle_time = div_u64(8000000000ULL, dsi->data_rate);
+> > +
+> > +     timing->lpx = NS_TO_CYCLE(60, cycle_time);
+> > +     timing->da_hs_prepare = NS_TO_CYCLE(40 + 5 * ui, cycle_time);
+> > +     timing->da_hs_zero = NS_TO_CYCLE(110 + 6 * ui, cycle_time);
+> > +     timing->da_hs_trail = NS_TO_CYCLE(80 + 4 * ui, cycle_time);
+> >
+> > -     ui = 1000 / dsi->data_rate + 0x01;
+> > -     cycle_time = 8000 / dsi->data_rate + 0x01;
+> > +     timing->ta_go = 4 * timing->lpx;
+> > +     timing->ta_sure = 3 * timing->lpx / 2;
+> > +     timing->ta_get = 5 * timing->lpx;
+> > +     timing->da_hs_exit = 2 * timing->lpx;
+> >
+> > -     timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
+> > -     timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
+> > -               T_HS_EXIT << 24;
+> > -     timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+> > -               (NS_TO_CYCLE(0x150, cycle_time) << 16);
+> > -     timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
+> > -               NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
+> > +     timing->clk_hs_zero = NS_TO_CYCLE(336, cycle_time);
+> > +     timing->clk_hs_trail = NS_TO_CYCLE(100, cycle_time) + 10;
+> > +
+> > +     timing->clk_hs_prepare = NS_TO_CYCLE(64, cycle_time);
+> > +     timing->clk_hs_post = NS_TO_CYCLE(80 + 52 * ui, cycle_time);
+> > +     timing->clk_hs_exit = 2 * timing->lpx;
+> > +
+> > +     timcon0 = timing->lpx | timing->da_hs_prepare << 8 |
+> > +               timing->da_hs_zero << 16 | timing->da_hs_trail << 24;
+> > +     timcon1 = timing->ta_go | timing->ta_sure << 8 |
+> > +               timing->ta_get << 16 | timing->da_hs_exit << 24;
+> > +     timcon2 = 1 << 8 | timing->clk_hs_zero << 16 |
+> > +               timing->clk_hs_trail << 24;
+> > +     timcon3 = timing->clk_hs_prepare | timing->clk_hs_post << 8 |
+> > +               timing->clk_hs_exit << 16;
+> >
+> >       writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+> >       writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+> > @@ -418,7 +451,8 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+> >       u32 horizontal_sync_active_byte;
+> >       u32 horizontal_backporch_byte;
+> >       u32 horizontal_frontporch_byte;
+> > -     u32 dsi_tmp_buf_bpp;
+> > +     u32 dsi_tmp_buf_bpp, data_phy_cycles;
+> > +     struct mtk_phy_timing *timing = &dsi->phy_timing;
+> >
+> >       struct videomode *vm = &dsi->vm;
+> >
+> > @@ -445,7 +479,34 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+> >               horizontal_backporch_byte = ((vm->hback_porch + vm->hsync_len) *
+> >                       dsi_tmp_buf_bpp - 10);
+> >
+> > -     horizontal_frontporch_byte = (vm->hfront_porch * dsi_tmp_buf_bpp - 12);
+> > +     data_phy_cycles = timing->lpx + timing->da_hs_prepare +
+> > +                               timing->da_hs_zero + timing->da_hs_exit + 2;
+> > +
+> > +     if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> > +             if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> > +                 data_phy_cycles * dsi->lanes + 18) {
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp -
+> > +                                                  data_phy_cycles *
+> > +                                                  dsi->lanes - 18;
+> > +             } else {
+> > +                     DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp;
+> > +             }
+> > +     } else {
+> > +             if (vm->hfront_porch * dsi_tmp_buf_bpp >
+> > +                 data_phy_cycles * dsi->lanes + 12) {
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp -
+> > +                                                  data_phy_cycles *
+> > +                                                  dsi->lanes - 12;
+> > +             } else {
+> > +                     DRM_WARN("HFP less than d-phy, FPS will under 60Hz\n");
+> > +                     horizontal_frontporch_byte = vm->hfront_porch *
+> > +                                                  dsi_tmp_buf_bpp;
+> > +             }
+> > +     }
+> >
+> >       writel(horizontal_sync_active_byte, dsi->regs + DSI_HSA_WC);
+> >       writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
+> > @@ -545,8 +606,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+> >  {
+> >       struct device *dev = dsi->->host.dev;
+> >       int ret;
+> > -     u64 pixel_clock, total_bits;
+> > -     u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+> > +     u32 bit_per_pixel;
+> >
+> >       if (++dsi->refcount != 1)
+> >               return 0;
+> > @@ -565,24 +625,7 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+> >               break;
+> >       }
+> >
+> > -     /**
+> > -      * htotal_time = htotal * byte_per_pixel / num_lanes
+> > -      * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
+> > -      * mipi_ratio = (htotal_time + overhead_time) / htotal_time
+> > -      * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
+> > -      */
+> > -     pixel_clock = dsi->vm.pixelclock;
+> > -     htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
+> > -                     dsi->vm.hsync_len;
+> > -     htotal_bits = htotal * bit_per_pixel;
+> > -
+> > -     overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
+> > -                     T_HS_EXIT;
+> > -     overhead_bits = overhead_cycles * dsi->lanes * 8;
+> > -     total_bits = htotal_bits + overhead_bits;
+> > -
+> > -     dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
+> > -                                       htotal * dsi->lanes);
+> > +     dsi->data_rate = DIV_ROUND_UP_ULL(dsi->vm.pixelclock * bit_per_pixel, dsi->lanes);
 
-Hi Qian, thanks for the patch.  How do I reproduce this issue,
-precisely?  I just tried:
-$ make CC=clang -j71 drivers/acpi/scan.o
-on linux-next today and don't observe the warning.  My clang is ToT
-built sometime this week.  It looks like drivers/acpi/scan.o when
-CONFIG_ACPI=y, which is set in the defconfig.  Is there another set of
-configs to enable to observe the warning?
+nit: Wrap this line, it's over 80 characters.
 
-Also, the fix is curious.  Arithmetic on pointers to different
-"objects" (with one element passed the end) may lead to provence
-issues due to undefined behavior, but I would have expected some cases
-to uintptr_t, then arithmetic on that type, as the solution (which is
-what I suspect ACPI_CAST_PTR is doing).
-
-Further, you seem to have modified ACPI_ADD_PTR but not ACPI_SUB_PTR;
-I would have expected both to be afflicted together or not at all
-based on their existing implementations.
-
+> >
+> >       ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+> >       if (ret < 0) {
 >
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  include/acpi/actypes.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-> index ad6892a24015..25b4a32da177 100644
-> --- a/include/acpi/actypes.h
-> +++ b/include/acpi/actypes.h
-> @@ -500,13 +500,13 @@ typedef u64 acpi_integer;
->
->  #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->  #define ACPI_CAST_INDIRECT_PTR(t, p)    ((t **) (acpi_uintptr_t) (p))
-> -#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
-> +#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, (a) + (acpi_size)(b))
->  #define ACPI_SUB_PTR(t, a, b)           ACPI_CAST_PTR (t, (ACPI_CAST_PTR (u8, (a)) - (acpi_size)(b)))
->  #define ACPI_PTR_DIFF(a, b)             ((acpi_size) (ACPI_CAST_PTR (u8, (a)) - ACPI_CAST_PTR (u8, (b))))
->
->  /* Pointer/Integer type conversions */
->
-> -#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0, (acpi_size) (i))
-> +#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, 0, (acpi_size) (i))
-
-IIUC, these are adding `i` to NULL (or (void*)0)? X + 0 == X ?
--- 
-Thanks,
-~Nick Desaulniers
