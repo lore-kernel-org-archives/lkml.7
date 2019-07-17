@@ -7,154 +7,120 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F55C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1398C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DBE2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D8021873
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cBBnA7aT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kOui65Ll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfGQS5r (ORCPT
+        id S1727286AbfGQS7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:57:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51990 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfGQS5q (ORCPT
+        Wed, 17 Jul 2019 14:59:03 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10790 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfGQS7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:57:46 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HIuQxQ105360;
-        Wed, 17 Jul 2019 13:56:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563389786;
-        bh=9xrHanN7wF+YEAMH0DerryN6ZokQ2ri0VkKUaA0rV4I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cBBnA7aTZ4VPZfscvEOQuCnHvT5AP+s+fEiBczChHtQnDNvh6ExpY3XYSlB+KJJDM
-         og/XKQmFHPFJwsScGRCE6o/xRlpRQQErIhx9K4b/QcIVd3CUNfIsWAWYeg3kXvQYgj
-         SyX5mwxHgxece3D+jXC6bEfCDkcGrwvQYnHD6gK0=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HIuPGB066992
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jul 2019 13:56:25 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Jul 2019 13:56:25 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Jul 2019 13:56:25 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HIuP8I051629;
-        Wed, 17 Jul 2019 13:56:25 -0500
-Subject: Re: [PATCH 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     David Lechner <david@lechnology.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-CC:     Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-3-s-anna@ti.com>
- <3d91800b-e858-8c73-5ea8-e99e5ea30e8e@lechnology.com>
- <54e871a8-dfa4-f65b-5869-d1661144cbf0@ti.com>
- <5241ecb9-4ab2-b01c-367c-38c554c056c4@lechnology.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <0c81706f-3a86-8e84-312a-5001e34fc5a2@ti.com>
-Date:   Wed, 17 Jul 2019 13:56:25 -0500
+        Wed, 17 Jul 2019 14:59:03 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2f6ff80000>; Wed, 17 Jul 2019 11:59:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 17 Jul 2019 11:59:02 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 17 Jul 2019 11:59:02 -0700
+Received: from [10.26.11.185] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
+ 2019 18:58:55 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+Date:   Wed, 17 Jul 2019 19:58:53 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <5241ecb9-4ab2-b01c-367c-38c554c056c4@lechnology.com>
+In-Reply-To: <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563389948; bh=z75CQwjX2xRi5gGhwHjg8Pb0vqIzhGv/Pngd7H+0mq4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kOui65LlUHDKPSoenvOQqNo6CMaBFq9txXXL4myoyRD7rw0ct2r+IZeTekYGEXl4a
+         Swjz4fIrhSaKyYdejDvhZN0XvC1ZIFzxHgoigM4nZUbo6G1MBlfhSqrLI+42Yss3hP
+         MdzKnB3tWewVJLVhq654EIg0FdmU6BYz1dirOoQSemuh6mI/5fSnEsTDmzTsSYf2dU
+         lNIieLby+qlnTCt4wV6VVgT93iR1qszonlhNTmUEPRSgxFZW+PR01+St079CSK+U7u
+         ltRfKYaBMjeF6H0+A8vk1f/D+qDsZZpMP8cW6N48RpqcI+pw+XJD/WWOK+z4EeGVEY
+         KEcbpDQQj+KvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/19 12:21 PM, David Lechner wrote:
-> On 7/16/19 12:21 PM, Suman Anna wrote:
->>>> +static int pruss_intc_probe(struct platform_device *pdev)
->>>> +{
->>>> +    static const char * const irq_names[] = {
->>>> +                "host0", "host1", "host2", "host3",
->>>> +                "host4", "host5", "host6", "host7", };
->>>> +    struct device *dev = &pdev->dev;
->>>> +    struct pruss_intc *intc;
->>>> +    struct resource *res;
->>>> +    struct irq_chip *irqchip;
->>>> +    int i, irq;
->>>> +
->>>> +    intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
->>>> +    if (!intc)
->>>> +        return -ENOMEM;
->>>> +    platform_set_drvdata(pdev, intc);
->>>> +
->>>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +    intc->base = devm_ioremap_resource(dev, res);
->>>> +    if (IS_ERR(intc->base)) {
->>>> +        dev_err(dev, "failed to parse and map intc memory
->>>> resource\n");
->>>> +        return PTR_ERR(intc->base);
->>>> +    }
->>>> +
->>>> +    dev_dbg(dev, "intc memory: pa %pa size 0x%zx va %pK\n",
->>>> &res->start,
->>>> +        (size_t)resource_size(res), intc->base);
->>>> +
->>>> +    mutex_init(&intc->lock);
->>>> +
->>>> +    pruss_intc_init(intc);
->>>> +
->>>> +    irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
->>>> +    if (!irqchip)
->>>> +        return -ENOMEM;
->>>> +
->>>> +    irqchip->irq_ack = pruss_intc_irq_ack;
->>>> +    irqchip->irq_mask = pruss_intc_irq_mask;
->>>> +    irqchip->irq_unmask = pruss_intc_irq_unmask;
->>>> +    irqchip->irq_retrigger = pruss_intc_irq_retrigger;
->>>> +    irqchip->irq_request_resources = pruss_intc_irq_reqres;
->>>> +    irqchip->irq_release_resources = pruss_intc_irq_relres;
->>>> +    irqchip->name = dev_name(dev);
->>>
->>> Should we also set `irqchip->parent_device = dev;` here?
->>>
->>> I tried it and had to add pm runtime stuff as well, otherwise
->>> requesting irqs would fail.
->>
->> I haven't seen any during my local testing. What sort of failure are you
->> seeing?
->>
->> The clocking for the overall PRUSS module will be handled in either the
->> ti-sysc driver for OMAP SoCs or in the pruss platform driver.
->>
-> I was getting -EACCESS bubbling up from rpm_resume() in drivers/base/
-> power/runtime.c. It was probably a mix of how I set up the device tree
-> and the dummy PRUSS bus driver I made.
+
+On 03/07/2019 11:37, Jose Abreu wrote:
+> Mapping and unmapping DMA region is an high bottleneck in stmmac driver,
+> specially in the RX path.
 > 
-> I'm sure it will be fine with a proper PRUSS platform driver.
+> This commit introduces support for Page Pool API and uses it in all RX
+> queues. With this change, we get more stable troughput and some increase
+> of banwidth with iperf:
+> 	- MAC1000 - 950 Mbps
+> 	- XGMAC: 9.22 Gbps
+I am seeing a boot regression on one of our Tegra boards with both
+mainline and -next. Bisecting is pointing to this commit and reverting
+this commit on top of mainline fixes the problem. Unfortunately, there
+is not much of a backtrace but what I have captured is below. 
 
-Yeah, ok. You just need to have the power-domains property added in the
-pruss node, and the pm_runtime calls in the pruss platform driver which
-are missing in Roger's series.
+Please note that this is seen on a system that is using NFS to mount
+the rootfs and the crash occurs right around the point the rootfs is
+mounted.
 
-I have the following line on my da850 pruss node.
-power-domains = <&psc0 13>;
+Let me know if you have any thoughts.
 
-regards
-Suman
+Cheers
+Jon 
 
+[   12.221843] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[   12.229485] CPU: 5 PID: 1 Comm: init Tainted: G S                5.2.0-11500-g916f562fb28a #18
+[   12.238076] Hardware name: NVIDIA Tegra186 P2771-0000 Development Board (DT)
+[   12.245105] Call trace:
+[   12.247548]  dump_backtrace+0x0/0x150
+[   12.251199]  show_stack+0x14/0x20
+[   12.254505]  dump_stack+0x9c/0xc4
+[   12.257809]  panic+0x13c/0x32c
+[   12.260853]  complete_and_exit+0x0/0x20
+[   12.264676]  do_group_exit+0x34/0x98
+[   12.268241]  get_signal+0x104/0x668
+[   12.271718]  do_notify_resume+0x2ac/0x380
+[   12.275716]  work_pending+0x8/0x10
+[   12.279109] SMP: stopping secondary CPUs
+[   12.283025] Kernel Offset: disabled
+[   12.286502] CPU features: 0x0002,20806000
+[   12.290499] Memory Limit: none
+[   12.293548] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+
+-- 
+nvpublic
