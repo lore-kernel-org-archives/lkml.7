@@ -2,91 +2,99 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC33C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4461C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AC7208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE02E208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="skV6paaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387768AbfGQRdX (ORCPT
+        id S2387955AbfGQReD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:33:23 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:59494 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfGQRdX (ORCPT
+        Wed, 17 Jul 2019 13:34:03 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:18818 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfGQReD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:33:23 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 106242002E;
-        Wed, 17 Jul 2019 19:33:18 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 19:33:17 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm/panel: simple: Doxygenize 'struct panel_desc';
- rename a few functions
-Message-ID: <20190717173317.GA4862@ravnborg.org>
-References: <20190712163333.231884-1-dianders@chromium.org>
-MIME-Version: 1.0
+        Wed, 17 Jul 2019 13:34:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1563384839;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=dOZPXX2/0UU+1woBsjSlDEXl3gIGo8OmSzylGf5Wz0k=;
+        b=skV6paaY29cqK31xSkvj0hUeaBV/IkN4lFR+MuC1HRPNjqaOjs8MjwbSLxkooasoOC
+        HtPRxz/FcFN5YOxIyG+WeZdnk/3YHTxpEigM2sD0JBNH56UO1ole/FcnxaXTmU9nR6Ve
+        Z6/fFfw/r7biyVjLvqtwRQXwqlZjt/hpSuLoHbMJMLBk6iROA82xSMhfE6f/eX+PN4cW
+        3/E90TpzmqP35YoWIU5MPwSX3eOWdD1CNTx1HKay8gCmFfn2ZYVuHZamu6+by3R4X890
+        /wiGfp7J8ovQ15X/MJnHgA+idSS7HY4/k5i4vdnYz9eMxlmgWyb3SsbjOY8trvUnScGV
+        9RQg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaZXA4NYcM="
+X-RZG-CLASS-ID: mo00
+Received: from mbp-13-nikolaus.fritz.box
+        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
+        with ESMTPSA id V09459v6HHXaDXl
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 17 Jul 2019 19:33:36 +0200 (CEST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712163333.231884-1-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=cm27Pg_UAAAA:8 a=6j_ga0iaD_65Czu98M8A:9 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=xmb-EsYY8bH0VWELuYED:22
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
+Date:   Wed, 17 Jul 2019 19:33:35 +0200
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Belisko Marek <marek.belisko@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <33D92C0E-A430-4C34-A698-646F2592093D@goldelico.com>
+References: <cover.1559905870.git.hns@goldelico.com> <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com> <20190625204356.GF18595@ravnborg.org> <20190626073350.GA15288@ravnborg.org> <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug.
+Hi Sam,
 
-On Fri, Jul 12, 2019 at 09:33:33AM -0700, Douglas Anderson wrote:
-> This attempts to address outstanding review feedback from commit
-> b8a2948fa2b3 ("drm/panel: simple: Add ability to override typical
-> timing").  Specifically:
-> 
-> * It was requested that I document (in the structure definition) that
->   the device tree override had no effect if 'struct drm_display_mode'
->   was used in the panel description.  I have provided full Doxygen
->   comments for 'struct panel_desc' to accomplish that.
-> * panel_simple_get_fixed_modes() was thought to be a confusing name,
->   so it has been renamed to panel_simple_get_display_modes().
-> * panel_simple_parse_override_mode() was thought to be better named as
->   panel_simple_parse_panel_timing_node().
-> 
-> Suggested-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Am 26.06.2019 um 14:40 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Sam,
+>=20
+>> Am 26.06.2019 um 09:33 schrieb Sam Ravnborg <sam@ravnborg.org>:
+>>=20
+>> Hi Nikolaus.
+>>=20
+>>>>=20
+>>>> any progress towards merging this somewhere? It did not yet arrive =
+in linux-next.
+>>>>=20
+>>>> BTW: should also be applied to 5.2
+>>> The drm bits are reviewed. The DT bits needs OK from DT people.
+>>> When we have OK from DT people we can apply them all to =
+drm-misc-next.
+>>=20
+>> I got OK on irc from Rob to process these.
+>> All patches are now applied to drm-misc-next.
+>=20
+> Thanks for taking care of this!
 
-Thanks.
+I have checked but it seems they are still not merged into linux-next.
 
-I updated the $subject to:
-    drm/panel: simple: document panel_desc; rename a few functions
+BR and thanks,
+Nikolaus
 
-And pushed out to drm-misc-next.
-
-> - Sam said that there was still something that he didn't understand
->   with regards to the flags.  Sam: if this is something that needs to
->   be addressed, please yell.
-
-Need to re-visit this later when I have familiarized myself with
-the new yaml syntax and what impact any potential changes may have on
-the panel drivers.
-So for now we leave it as is.
-
-	Sam
