@@ -2,42 +2,41 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFB8C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA9C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F2A20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB342184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfGQNgn (ORCPT
+        id S1727758AbfGQNgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:36:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:36148 "EHLO mga04.intel.com"
+        Wed, 17 Jul 2019 09:36:45 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36159 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727516AbfGQNgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:36:39 -0400
+        id S1727647AbfGQNgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:36:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 06:36:38 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 06:36:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
-   d="scan'208";a="191261856"
+   d="scan'208";a="191261876"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 06:36:37 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 06:36:40 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com
 Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
         yu.c.zhang@intel.com, alazar@bitdefender.com,
         Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v4 4/9] KVM: VMX: Introduce SPP access bitmap and operation functions
-Date:   Wed, 17 Jul 2019 21:37:46 +0800
-Message-Id: <20190717133751.12910-5-weijiang.yang@intel.com>
+Subject: [PATCH v4 6/9] KVM: VMX: Introduce SPP user-space IOCTLs
+Date:   Wed, 17 Jul 2019 21:37:48 +0800
+Message-Id: <20190717133751.12910-7-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190717133751.12910-1-weijiang.yang@intel.com>
 References: <20190717133751.12910-1-weijiang.yang@intel.com>
@@ -46,11 +45,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create access bitmap for SPP subpages, 4KB/128B = 32bits,
-for each 4KB physical page, 32bits are required. The bitmap can
-be easily accessed with a gfn. The initial access bitmap for each
-physical page is 0xFFFFFFFF, meaning SPP is not enabled for the
-subpages.
+User application, e.g., QEMU or VMI, must initialize SPP
+before gets/sets SPP subpages, the dynamic initialization is to
+reduce the extra storage cost if the SPP feature is not not used.
 
 Co-developed-by: He Chen <he.chen@linux.intel.com>
 Signed-off-by: He Chen <he.chen@linux.intel.com>
@@ -59,106 +56,157 @@ Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
 Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/mmu.c              | 50 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c              | 11 ++++++++
- 3 files changed, 62 insertions(+)
+ arch/x86/kvm/x86.c       | 90 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/kvm_host.h |  4 ++
+ include/uapi/linux/kvm.h |  3 ++
+ 3 files changed, 97 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 98e5158287d5..44f6e1757861 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -790,6 +790,7 @@ struct kvm_lpage_info {
- 
- struct kvm_arch_memory_slot {
- 	struct kvm_rmap_head *rmap[KVM_NR_PAGE_SIZES];
-+	u32 *subpage_wp_info;
- 	struct kvm_lpage_info *lpage_info[KVM_NR_PAGE_SIZES - 1];
- 	unsigned short *gfn_track[KVM_PAGE_TRACK_MAX];
- };
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 494ad2038f36..16e390fd6e58 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -1485,6 +1485,56 @@ static u64 *rmap_get_next(struct rmap_iterator *iter)
- 	return sptep;
- }
- 
-+#define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
-+
-+static int kvm_subpage_create_bitmaps(struct kvm *kvm)
-+{
-+	struct kvm_memslots *slots;
-+	struct kvm_memory_slot *memslot;
-+	int i, j, ret;
-+	u32 *buff;
-+
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-+		slots = __kvm_memslots(kvm, i);
-+		kvm_for_each_memslot(memslot, slots) {
-+			buff = kvzalloc(memslot->npages*
-+				sizeof(*memslot->arch.subpage_wp_info),
-+				GFP_KERNEL);
-+
-+			if (!buff) {
-+			      ret = -ENOMEM;
-+			      goto out_free;
-+			}
-+			memslot->arch.subpage_wp_info = buff;
-+
-+			for(j = 0; j< memslot->npages; j++)
-+			      buff[j] = FULL_SPP_ACCESS;
-+		}
-+	}
-+
-+	return 0;
-+out_free:
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-+		slots = __kvm_memslots(kvm, i);
-+		kvm_for_each_memslot(memslot, slots) {
-+			if (memslot->arch.subpage_wp_info) {
-+				kvfree(memslot->arch.subpage_wp_info);
-+				memslot->arch.subpage_wp_info = NULL;
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn)
-+{
-+	unsigned long idx;
-+
-+	idx = gfn_to_index(gfn, slot->base_gfn, PT_PAGE_TABLE_LEVEL);
-+	return &slot->arch.subpage_wp_info[idx];
-+}
-+
- #define for_each_rmap_spte(_rmap_head_, _iter_, _spte_)			\
- 	for (_spte_ = rmap_get_first(_rmap_head_, _iter_);		\
- 	     _spte_; _spte_ = rmap_get_next(_iter_))
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b5edc8e3ce1d..26e4c574731c 100644
+index c7cb17941344..54a1d2423a17 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -9317,6 +9317,17 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- 	kvm_hv_destroy_vm(kvm);
+@@ -4589,6 +4589,23 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 	return r;
  }
  
-+void kvm_subpage_free_memslot(struct kvm_memory_slot *free,
-+			      struct kvm_memory_slot *dont)
++static int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
++				     struct kvm_subpage *spp_info)
 +{
-+
-+	if (!dont || free->arch.subpage_wp_info !=
-+	    dont->arch.subpage_wp_info) {
-+		kvfree(free->arch.subpage_wp_info);
-+		free->arch.subpage_wp_info = NULL;
-+	}
++	return kvm_arch_get_subpages(kvm, spp_info);
 +}
 +
- void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- 			   struct kvm_memory_slot *dont)
++static int kvm_vm_ioctl_set_subpages(struct kvm *kvm,
++				     struct kvm_subpage *spp_info)
++{
++	return kvm_arch_set_subpages(kvm, spp_info);
++}
++
++static int kvm_vm_ioctl_init_spp(struct kvm *kvm)
++{
++	return kvm_arch_init_spp(kvm);
++}
++
+ int kvm_get_subpages(struct kvm *kvm,
+ 		     struct kvm_subpage *spp_info)
  {
+@@ -4922,8 +4939,55 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 		if (copy_from_user(&hvevfd, argp, sizeof(hvevfd)))
+ 			goto out;
+ 		r = kvm_vm_ioctl_hv_eventfd(kvm, &hvevfd);
++	}
++	case KVM_SUBPAGES_GET_ACCESS: {
++		struct kvm_subpage spp_info;
++
++		if (!kvm->arch.spp_active) {
++			r = -ENODEV;
++			goto out;
++		}
++
++		r = -EFAULT;
++		if (copy_from_user(&spp_info, argp, sizeof(spp_info)))
++			goto out;
++
++		r = -EINVAL;
++		if (spp_info.npages == 0 ||
++		    spp_info.npages > SUBPAGE_MAX_BITMAP)
++			goto out;
++
++		r = kvm_vm_ioctl_get_subpages(kvm, &spp_info);
++		if (copy_to_user(argp, &spp_info, sizeof(spp_info))) {
++			r = -EFAULT;
++			goto out;
++		}
++		break;
++	}
++	case KVM_SUBPAGES_SET_ACCESS: {
++		struct kvm_subpage spp_info;
++
++		if (!kvm->arch.spp_active) {
++			r = -ENODEV;
++			goto out;
++		}
++
++		r = -EFAULT;
++		if (copy_from_user(&spp_info, argp, sizeof(spp_info)))
++			goto out;
++
++		r = -EINVAL;
++		if (spp_info.npages == 0 ||
++		    spp_info.npages > SUBPAGE_MAX_BITMAP)
++			goto out;
++
++		r = kvm_vm_ioctl_set_subpages(kvm, &spp_info);
+ 		break;
+ 	}
++	case KVM_INIT_SPP: {
++		r = kvm_vm_ioctl_init_spp(kvm);
++		break;
++	 }
+ 	default:
+ 		r = -ENOTTY;
+ 	}
+@@ -9925,6 +9989,32 @@ int kvm_arch_update_irqfd_routing(struct kvm *kvm, unsigned int host_irq,
+ 	return kvm_x86_ops->update_pi_irte(kvm, host_irq, guest_irq, set);
+ }
+ 
++int kvm_arch_get_subpages(struct kvm *kvm,
++			  struct kvm_subpage *spp_info)
++{
++	if (!kvm_x86_ops->get_subpages)
++		return -EINVAL;
++
++	return kvm_x86_ops->get_subpages(kvm, spp_info);
++}
++
++int kvm_arch_set_subpages(struct kvm *kvm,
++			  struct kvm_subpage *spp_info)
++{
++	if (!kvm_x86_ops->set_subpages)
++		return -EINVAL;
++
++	return kvm_x86_ops->set_subpages(kvm, spp_info);
++}
++
++int kvm_arch_init_spp(struct kvm *kvm)
++{
++	if (!kvm_x86_ops->init_spp)
++		return -EINVAL;
++
++	return kvm_x86_ops->init_spp(kvm);
++}
++
+ bool kvm_vector_hashing_enabled(void)
+ {
+ 	return vector_hashing;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index da30fcbb2727..b5ae112f209f 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -852,6 +852,10 @@ struct kvm_mmu_page *kvm_mmu_get_spp_page(struct kvm_vcpu *vcpu,
+ int kvm_get_subpages(struct kvm *kvm, struct kvm_subpage *spp_info);
+ int kvm_set_subpages(struct kvm *kvm, struct kvm_subpage *spp_info);
+ int kvm_init_spp(struct kvm *kvm);
++int kvm_arch_get_subpages(struct kvm *kvm, struct kvm_subpage *spp_info);
++int kvm_arch_set_subpages(struct kvm *kvm, struct kvm_subpage *spp_info);
++int kvm_arch_init_spp(struct kvm *kvm);
++
+ #ifndef __KVM_HAVE_ARCH_VM_ALLOC
+ /*
+  * All architectures that want to use vzalloc currently also
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 2c75a87ab3b5..5754f8d21e7d 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1246,6 +1246,9 @@ struct kvm_vfio_spapr_tce {
+ 					struct kvm_userspace_memory_region)
+ #define KVM_SET_TSS_ADDR          _IO(KVMIO,   0x47)
+ #define KVM_SET_IDENTITY_MAP_ADDR _IOW(KVMIO,  0x48, __u64)
++#define KVM_SUBPAGES_GET_ACCESS   _IOR(KVMIO,  0x49, __u64)
++#define KVM_SUBPAGES_SET_ACCESS   _IOW(KVMIO,  0x4a, __u64)
++#define KVM_INIT_SPP              _IOW(KVMIO,  0x4b, __u64)
+ 
+ /* enable ucontrol for s390 */
+ struct kvm_s390_ucas_mapping {
 -- 
 2.17.2
 
