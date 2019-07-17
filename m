@@ -2,364 +2,166 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9968C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4A1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8473120818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA66C21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xc1xRNuT"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="zKWTsB5x";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="oKsBEW53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfGQGLQ (ORCPT
+        id S1727072AbfGQGLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:11:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39897 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfGQGLP (ORCPT
+        Wed, 17 Jul 2019 02:11:38 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:27552 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725932AbfGQGLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:11:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so6304513pfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 23:11:15 -0700 (PDT)
+        Wed, 17 Jul 2019 02:11:38 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x6H6AiFh021799;
+        Tue, 16 Jul 2019 23:11:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=ulf4R1+itXisgUUhZrblhOXZf38lotcQ0cako8hfkns=;
+ b=zKWTsB5xGjmREJMz9ZPOLJJCBD134+aSmdlsLyb6y4SWuHzqZpIa+WqqTR/J9UojzO8+
+ TK0cYftsl3z8ZTUA62ERoguInz475zHGPPEc/I/LRWA3GNps00BAIeAFV9ujCQ3JOIF9
+ RW2+YVYwC81Wo6TtY2imprFbYZZ7u+kJ54yIiqSS4JB3kHe/Ulbl+JyEoCqurPD+Ah8h
+ K/8rPuqO0Yo8+nbdm9NySnG6IUFcJzIuKiKGYQZwXWLrJwtR2GVQJ1+BSwYJP4yE5Ov5
+ Zz2DgAijf/6tfa8I9MbQwktAVMJz8BYYaB+n07qE3iBNqgXtQ9oCblDI2DjLpApJYgcQ uQ== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2ts07vexd1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jul 2019 23:11:34 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 16 Jul
+ 2019 23:11:32 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.50) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 16 Jul 2019 23:11:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TYXNP0+b3pTsxO0owo5Mtrdz7O5eHWuW0E6hrVk6ddcEk5WShSzFobHgpDoH4c7rqpDh4Vl/xkppWhqQVqTC2Y/cp74JidfktGAYi/aT9GLukRxu2FmdLbJUgIAT1g4A7enOZvU3n3ZSwvHNO21kSH73e9B6ydsyEdSDG9krwaPLv9e2Jcyw7HVpmDN51FsM6Cq4KqQkZpitkxivMOfPnrzT45ZuUJEOq4k/4gLeY4dHbZaUoKHzDksOfywAxJp2xD2jie7OPvuoPkEZjlOW+sUwxXkBxMtCjIpXfo26Omn4xidYeYx+RJ9A/x9bs0sTFlm/dTK8CMruZGVUmkkUhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ulf4R1+itXisgUUhZrblhOXZf38lotcQ0cako8hfkns=;
+ b=NP/3W2V88ISvhs3nzYPox06dlYbXEO+5vkNOjysKzB+LbocgfbTv5AH1YAzPRmObL2V5rg8mjxcxhxS7vo6vs3srl0/nLmQnD04tQyEtRzLkg+7I0wgeoYqSU0LEvjthrVATJij/CvMSISRkC9aiSqKSaYUW1GKUv18o6eBYnrmRtseds0F/s0CKxqUK+obPhc+0T1Mv6htSE51EgS0jqCXomkld8BhV1TBhtM4fyL96T0QJEBwR37HzMfa5ZZXBx1ujp7pQcfe3COlpB06as1wE0fq1sGo1IM5X2ZO4p9An1GdQZcrEzQZ0IPE9c8+fCpRyr5UWJkw/ebXmastWYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=marvell.com;dmarc=pass action=none
+ header.from=marvell.com;dkim=pass header.d=marvell.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RbXsDOZtHwZ08bPRDrLEB86RltE7V0AqNmUN9K9esMo=;
-        b=xc1xRNuTmLWP+xE8Z4chh1rj2crfMCPSeR4OVVdivGE56KFhCejb0m6EWtbbImD7sd
-         YjwDywkW58TFUH47eNllJkv21IKYuRVRbyUmG53pcTsQAXMxAfb6qcticJ149KP58PHG
-         a5PY2Z5AX4DbJzEg2Mki9J1JPjFlCl5FGkhWnjC/m7V0Uxu1y+bej00zpkyrezTHngv8
-         5Lu6dnmqFOrEu/w/OTE1NmNQ+vZFc/6jaJovHJTQiAr39BtSg5uqs1WnNXlpxRhia8dc
-         PzHIaGGGsWF2GiWq1v+muDw0d989Ex8jrTXANXXVdxwNtqsaJbhSQkUxnJrX7p4oPuN3
-         3s0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RbXsDOZtHwZ08bPRDrLEB86RltE7V0AqNmUN9K9esMo=;
-        b=h6GslcuBuWov29h8FSo3RwiuNsR5u9+AFXoY/Gt6rdpkCy8bXn0ckgGxLEQM5lF/Xl
-         wb63s/6KpWbv5+N1wi+G4zpea5zT4ncrxpZ8OKJNAgCnbpMTCd8chHdy1t5hGV49oOCx
-         X9ylnkXwu9TungAMM1y//TVYGS/u6ow+Fn8CL4e7t+JKZ0rSz/5dOQUwbByt2+1AyVZE
-         cH29yaaNgMQeewjo6ggaai6iDRY0YQLnUjKItbh1iSYBMIz7XHdkq1XuwN4nMpc9QVTw
-         Md8OAm8qasGajiTK8HGuQnGds/CPl4DabLsz4G23X4ywcIFca2dxLY7GIhhvXJLJDm5Y
-         lKuA==
-X-Gm-Message-State: APjAAAXRUr0ghpnmbibKyELR60Pd7ykNvuiIM4ScryfMZpgH/T6f9ma+
-        evIYiegCjPO+1Pz60tPP4sYu
-X-Google-Smtp-Source: APXvYqyqMxFEIwtjWXr8/mzqg8O0We8uIfXn1IRKysycAylkQmf2mavIqLqR8pjSWGMdj25tZ1bXAA==
-X-Received: by 2002:a17:90a:bc42:: with SMTP id t2mr41770260pjv.121.1563343874706;
-        Tue, 16 Jul 2019 23:11:14 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:7301:59e6:f493:40df:9c8a:5041])
-        by smtp.gmail.com with ESMTPSA id r27sm25993313pgn.25.2019.07.16.23.11.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 23:11:14 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Darshak.Patel@einfochips.com,
-        kinjan.patel@einfochips.com, prajose.john@einfochips.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: freescale: Add support for i.MX8QXP AI_ML board
-Date:   Wed, 17 Jul 2019 11:40:39 +0530
-Message-Id: <20190717061039.9271-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
-References: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ulf4R1+itXisgUUhZrblhOXZf38lotcQ0cako8hfkns=;
+ b=oKsBEW53MMflahXaYoMNOIkMuDt2C+N6m+o12n0UzuQDJ7f/Wv/Yky8NL3Yiy0PPVnuD0xE5vMkRKzjabY250JgL++thObXUWQE6cFtx5RnVY5faqg3hXWMGH+HN0OdUkr5/Gk6X360GO/8tJ8Okv14dg1d1xVulNshoilpxqO0=
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
+ MN2PR18MB2541.namprd18.prod.outlook.com (20.179.83.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Wed, 17 Jul 2019 06:11:31 +0000
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::8cb3:f7d7:8bb2:c36e]) by MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::8cb3:f7d7:8bb2:c36e%6]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
+ 06:11:31 +0000
+From:   Michal Kalderon <mkalderon@marvell.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] infiniband: hw: qedr: Remove Unneeded variable rc
+Thread-Topic: [PATCH] infiniband: hw: qedr: Remove Unneeded variable rc
+Thread-Index: AQHVO/0mS0hjrp/mNUiJzem/6b/FsabOVNtA
+Date:   Wed, 17 Jul 2019 06:11:31 +0000
+Message-ID: <MN2PR18MB31825F87E4440ED62AB05418A1C90@MN2PR18MB3182.namprd18.prod.outlook.com>
+References: <20190716173712.GA12949@hari-Inspiron-1545>
+In-Reply-To: <20190716173712.GA12949@hari-Inspiron-1545>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [79.183.34.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e4f7a10f-371e-4de5-d503-08d70a7d9cf1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2541;
+x-ms-traffictypediagnostic: MN2PR18MB2541:
+x-microsoft-antispam-prvs: <MN2PR18MB25413880FE0CF459A7541A4BA1C90@MN2PR18MB2541.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:41;
+x-forefront-prvs: 01018CB5B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(366004)(136003)(396003)(39860400002)(346002)(376002)(199004)(189003)(66066001)(99286004)(110136005)(74316002)(7736002)(2501003)(68736007)(305945005)(8936002)(316002)(11346002)(7696005)(102836004)(8676002)(186003)(446003)(256004)(26005)(66556008)(76116006)(52536014)(66446008)(14454004)(66476007)(81166006)(81156014)(53936002)(64756008)(66946007)(9686003)(2906002)(25786009)(6116002)(3846002)(486006)(2201001)(6436002)(478600001)(86362001)(55016002)(229853002)(476003)(5660300002)(76176011)(6506007)(71190400001)(71200400001)(33656002)(6246003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2541;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 09w3O7Mt8zm2vDXEwo37tlN6gO3fnhbOZm0YqouI1BchIfHWS2aUEqjyLIVT1NGj1aoOsrX/+O4Sl6XR/0FQs+jgsaqm4gQQr6YXLvIRj2H4zDUwcaRibhfISqKas2JFNptzJ1sb+xeLaV52oeaolrqaUslR4K3llI77cmC7XR7UfXSTL1Fdbd8jBJVJ2THmWrhSfd1WL37+44T6bZFzEXrFzetM3xY7hanXMYDA/zYZIv7+IBkkMnX335k2BtcDgcGAaaR45N65oKjA3BkVyNY+ABAkA0UOdRykfBnnK94G0AabUwHiWe5iZHjZL3H4+rnw0sLDmohz0MzC729ek8c3hyDCpZ6oVN+1Z5FVQV4fve/v4utVWZY3TlIvohxkjJxAH7XZjTR7W9LaF3gV3g7KZouiEqH4UNYJDSHG4Fg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4f7a10f-371e-4de5-d503-08d70a7d9cf1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 06:11:31.4239
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mkalderon@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2541
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-07-17_02:2019-07-16,2019-07-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for i.MX8QXP AI_ML board from Einfochips. This board is one
-of the Consumer Edition boards of the 96Boards family based on i.MX8QXP
-SoC from NXP/Freescale.
+> From: linux-rdma-owner@vger.kernel.org <linux-rdma-
+> owner@vger.kernel.org> On Behalf Of Hariprasad Kelam
+>=20
+> fix below issue reported by coccicheck
+> drivers/infiniband/hw/qedr/verbs.c:2454:5-7: Unneeded variable: "rc".
+> Return "0" on line 2499
+>=20
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/infiniband/hw/qedr/verbs.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/infiniband/hw/qedr/verbs.c
+> b/drivers/infiniband/hw/qedr/verbs.c
+> index 27d90a84..0c6a4bc 100644
+> --- a/drivers/infiniband/hw/qedr/verbs.c
+> +++ b/drivers/infiniband/hw/qedr/verbs.c
+> @@ -2451,7 +2451,6 @@ int qedr_destroy_qp(struct ib_qp *ibqp, struct
+> ib_udata *udata)
+>  	struct qedr_dev *dev =3D qp->dev;
+>  	struct ib_qp_attr attr;
+>  	int attr_mask =3D 0;
+> -	int rc =3D 0;
+>=20
+>  	DP_DEBUG(dev, QEDR_MSG_QP, "destroy qp: destroying %p, qp
+> type=3D%d\n",
+>  		 qp, qp->qp_type);
+> @@ -2496,7 +2495,7 @@ int qedr_destroy_qp(struct ib_qp *ibqp, struct
+> ib_udata *udata)
+>  		xa_erase_irq(&dev->qps, qp->qp_id);
+>  		kfree(qp);
+>  	}
+> -	return rc;
+> +	return 0;
+>  }
+>=20
+>  int qedr_create_ah(struct ib_ah *ibah, struct rdma_ah_attr *attr, u32 fl=
+ags,
+> --
+> 2.7.4
 
-The initial support includes following peripherals which are tested and
-known to be working:
+Thanks,=A0
 
-1. Debug serial via UART2
-2. uSD
-3. WiFi
-4. Ethernet
+Acked-by: Michal Kalderon=A0<michal.kalderon@marvell.com>
 
-More information about this board can be found in Arrow website:
-https://www.arrow.com/en/products/imx8-ai-ml/arrow-development-tools
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8qxp-ai_ml.dts      | 249 ++++++++++++++++++
- 2 files changed, 250 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 0bd122f60549..bd8460549d1a 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -24,4 +24,5 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-new file mode 100644
-index 000000000000..dcd36e57d916
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dts
-@@ -0,0 +1,249 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018 Einfochips
-+ * Copyright 2019 Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qxp.dtsi"
-+
-+/ {
-+	model = "Einfochips i.MX8QXP AI_ML";
-+	compatible = "einfochips,imx8qxp-ai_ml", "fsl,imx8qxp";
-+
-+	aliases {
-+		serial1 = &adma_lpuart1;
-+		serial2 = &adma_lpuart2;
-+		serial3 = &adma_lpuart3;
-+	};
-+
-+	chosen {
-+		stdout-path = &adma_lpuart2;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x80000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		user_led1 {
-+			label = "green:user1";
-+			gpios = <&lsio_gpio4 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		user_led2 {
-+			label = "green:user2";
-+			gpios = <&lsio_gpio0 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "none";
-+		};
-+
-+		user_led3 {
-+			label = "green:user3";
-+			gpios = <&lsio_gpio0 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		user_led4 {
-+			label = "green:user4";
-+			gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+			panic-indicator;
-+			linux,default-trigger = "none";
-+		};
-+
-+		wlan_active_led {
-+			label = "yellow:wlan";
-+			gpios = <&lsio_gpio4 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		bt_active_led {
-+			label = "blue:bt";
-+			gpios = <&lsio_gpio4 18 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "hci0-power";
-+			default-state = "off";
-+		};
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_reg_on>;
-+		reset-gpios = <&lsio_gpio3 24 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+/* BT */
-+&adma_lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+/* LS-I2C0 */
-+&adma_lpuart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart1>;
-+	status = "okay";
-+};
-+
-+/* Debug */
-+&adma_lpuart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart2>;
-+	status = "okay";
-+};
-+
-+/* PCI-E */
-+&adma_lpuart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart3>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+/* WiFi */
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <4>;
-+	no-sd;
-+	non-removable;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SD */
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QXP_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+			IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_leds: ledsgrp{
-+		fsl,pins = <
-+			IMX8QXP_ESAI0_TX2_RX3_LSIO_GPIO0_IO06			0x00000021
-+			IMX8QXP_ESAI0_TX3_RX2_LSIO_GPIO0_IO07			0x00000021
-+			IMX8QXP_EMMC0_DATA7_LSIO_GPIO4_IO16			0x00000021
-+			IMX8QXP_USDHC1_WP_LSIO_GPIO4_IO21			0x00000021
-+			IMX8QXP_EMMC0_STROBE_LSIO_GPIO4_IO17			0x00000021
-+			IMX8QXP_EMMC0_RESET_B_LSIO_GPIO4_IO18			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QXP_UART0_RX_ADMA_UART0_RX				0X06000020
-+			IMX8QXP_UART0_TX_ADMA_UART0_TX				0X06000020
-+			IMX8QXP_FLEXCAN0_TX_ADMA_UART0_CTS_B 			0x06000020
-+			IMX8QXP_FLEXCAN0_RX_ADMA_UART0_RTS_B			0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart1: lpuart1grp {
-+		fsl,pins = <
-+			IMX8QXP_UART1_RX_ADMA_UART1_RX				0X06000020
-+			IMX8QXP_UART1_TX_ADMA_UART1_TX				0X06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart2: lpuart2grp {
-+		fsl,pins = <
-+			IMX8QXP_UART2_RX_ADMA_UART2_RX				0X06000020
-+			IMX8QXP_UART2_TX_ADMA_UART2_TX				0X06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart3: lpuart3grp {
-+		fsl,pins = <
-+			IMX8QXP_FLEXCAN2_RX_ADMA_UART3_RX			0X06000020
-+			IMX8QXP_FLEXCAN2_TX_ADMA_UART3_TX			0X06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK			0x06000041
-+			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD			0x00000021
-+			IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+			IMX8QXP_USDHC1_CD_B_LSIO_GPIO4_IO22			0x00000021
-+		>;
-+	};
-+
-+	pinctrl_wifi_reg_on: wifiregongrp {
-+		fsl,pins = <
-+			IMX8QXP_QSPI0B_SS1_B_LSIO_GPIO3_IO24			0x00000021
-+		>;
-+	};
-+};
--- 
-2.17.1
 
