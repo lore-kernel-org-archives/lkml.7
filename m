@@ -2,168 +2,153 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C42C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C652CC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26712208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8BF217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vzEDQebF"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="Yft2/SB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389093AbfGQSdG (ORCPT
+        id S2389020AbfGQSeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:33:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59650 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfGQSdF (ORCPT
+        Wed, 17 Jul 2019 14:34:31 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:40904 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727377AbfGQSeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:33:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HIOMrp104085;
-        Wed, 17 Jul 2019 18:32:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Nt1djCiW2v5DCWrFgJ4gH6llZFolu0csYx/x53Q36PY=;
- b=vzEDQebF8/I2vM9bCDO6V7GLz4jTyBpGCSlB0Ge9uO1/K54cE2hQLoXMamB8Bf6+m3hl
- rLNR+evgTsmVYQ4Vf9ZHMCKre92BBTW79CY5ggJ0o5BHo7rfFbRQwT798qe84/xhRtIi
- b6Ikjym84OB+G0i9mwun/OXMRIv8P3kIcvTZTCqkdcrFSMMMKMkuOI/Di+9hEXWEDYvI
- 1tH4CLFVByOwpRWo+6Zf76R30ldwEOBJsWxq8iK1tSmRNSrE4otxt9cpYtwR1oHQ4fTL
- nbQzcxU8qu5YX7THZhIaFjVb834UFN1b0wthL1TQyHVoJrfOoPHntlF98RrcDEOvj9Jx 1w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tq6qtvqq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 18:32:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HIWZSR035259;
-        Wed, 17 Jul 2019 18:32:38 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2tt77h9x8p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 18:32:36 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6HIWWKM019968;
-        Wed, 17 Jul 2019 18:32:32 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 18:32:32 +0000
-Date:   Wed, 17 Jul 2019 14:32:27 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>
-Subject: Re: [PATCH] padata: Replace delayed timer with immediate workqueue
- in padata_reorder
-Message-ID: <20190717183227.b3hqphukkndqumhw@ca-dmjordan1.us.oracle.com>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
- <20190716163253.24377-1-daniel.m.jordan@oracle.com>
- <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
+        Wed, 17 Jul 2019 14:34:31 -0400
+Received: from pps.filterd (m0050102.ppops.net [127.0.0.1])
+        by m0050102.ppops.net-00190b01. (8.16.0.27/8.16.0.27) with SMTP id x6HIVgsu011513;
+        Wed, 17 Jul 2019 19:34:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=jan2016.eng;
+ bh=4qMDk6GdYd6oIMIaSO7765g7DBUTGEZb/qDIz2MM7vk=;
+ b=Yft2/SB4FXRQYN7RXB5BW8+5XnkS7SWdGWNDJlJGxJgTj7ukxHbNo5d9WCWfNUwGVFFu
+ hOHfJpvcyolcPGCuJN6HKluOZvJYusxn3m51LdGbE5wnOx8lLmDTiD+jWpE83ZE+l8Lh
+ FwN+hlI7kUBNU4Eqmka2iYoZASxpxvxSlDWfCShA5VTY1omSiUlBlytFXiUTZ7qiKh0D
+ lJolQOpSaR0w6OkxeTh+BnIy8plA8JOPUq6XdcFnMYUSVmOHt/Ss0kbtHncz/FlC68Bb
+ I1h0ktAphNHtePAUZvu2/F5364awrjhkTPZe8jB6dsiZsYKhwtPXo+POjndweL/87hoK wQ== 
+Received: from prod-mail-ppoint8 (prod-mail-ppoint8.akamai.com [96.6.114.122] (may be forged))
+        by m0050102.ppops.net-00190b01. with ESMTP id 2try9prxa3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jul 2019 19:34:02 +0100
+Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
+        by prod-mail-ppoint8.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x6HIWIYD001630;
+        Wed, 17 Jul 2019 14:34:01 -0400
+Received: from email.msg.corp.akamai.com ([172.27.27.21])
+        by prod-mail-ppoint8.akamai.com with ESMTP id 2tqamwnfd5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jul 2019 14:33:59 -0400
+Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com (172.27.27.105) by
+ ustx2ex-dag1mb1.msg.corp.akamai.com (172.27.27.101) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Wed, 17 Jul 2019 13:33:58 -0500
+Received: from USTX2EX-DAG1MB5.msg.corp.akamai.com ([172.27.27.105]) by
+ ustx2ex-dag1mb5.msg.corp.akamai.com ([172.27.27.105]) with mapi id
+ 15.00.1473.004; Wed, 17 Jul 2019 13:33:58 -0500
+From:   "Lubashev, Igor" <ilubashe@akamai.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        James Morris <jmorris@namei.org>
+Subject: RE: [PATCH 2/3] perf: Use CAP_SYS_ADMIN with perf_event_paranoid
+ checks
+Thread-Topic: [PATCH 2/3] perf: Use CAP_SYS_ADMIN with perf_event_paranoid
+ checks
+Thread-Index: AQHVMTPFo1SW8Ha07Ua7MbRsBb5FgabNV64AgAAy/wCAAUQogIAAamrQ
+Date:   Wed, 17 Jul 2019 18:33:58 +0000
+Message-ID: <4693ccba52114913afaafd498ae284de@ustx2ex-dag1mb5.msg.corp.akamai.com>
+References: <1562112605-6235-1-git-send-email-ilubashe@akamai.com>
+ <1562112605-6235-3-git-send-email-ilubashe@akamai.com>
+ <20190716084744.GB22317@krava>
+ <cd2b162a59804cdaa7f4de18c3337aa8@ustx2ex-dag1mb5.msg.corp.akamai.com>
+ <20190717071027.GG28722@krava>
+In-Reply-To: <20190717071027.GG28722@krava>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.19.33.211]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_07:,,
+ signatures=0
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=895
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1907170210
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_07:,,
+ signatures=0
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=947 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170209
+ definitions=main-1907170210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 07:11:47PM +0800, Herbert Xu wrote:
-> On Tue, Jul 16, 2019 at 12:32:53PM -0400, Daniel Jordan wrote:
-> > Testing padata with the tcrypt module on a 5.2 kernel...
-> 
-> Thanks for the patch!
-> 
-> And here is an incremental patch to get rid of the timer that
-> appears to be an attempt at fixing a problem related to this.
+> On Wednesday, July 17, 2019 3:10 AM Jiri Olsa wrote:
+> On Tue, Jul 16, 2019 at 05:01:26PM +0000, Lubashev, Igor wrote:
+> > I could add another patch to the series for that.  Any suggestion for w=
+hat
+> capability to check for here?
+>=20
+> it's:
+>=20
+> 	if (geteuid() !=3D 0) {
+> 		pr_err("ftrace only works for root!\n");
+> 		return -1
+> 	}
+>=20
+> so I think check for CAP_SYS_ADMIN should be fine in here
 
-Nice, +1 for getting rid of the timer.
+Thanks.  Added the [PATCH 4/3] to this series (https://lore.kernel.org/lkml=
+/1563387359-27694-1-git-send-email-ilubashe@akamai.com/).
+Let me know if you'd rather I reroll a V2 of this series.
 
-> diff --git a/kernel/padata.c b/kernel/padata.c
-> index 15a8ad63f4ff..b5dfc21e976f 100644
-> --- a/kernel/padata.c
-> +++ b/kernel/padata.c
-> @@ -165,23 +165,12 @@ EXPORT_SYMBOL(padata_do_parallel);
->   */
->  static struct padata_priv *padata_get_next(struct parallel_data *pd)
->  {
-> -	int cpu, num_cpus;
-> -	unsigned int next_nr, next_index;
->  	struct padata_parallel_queue *next_queue;
->  	struct padata_priv *padata;
->  	struct padata_list *reorder;
-> +	int cpu = pd->cpu;
->  
-> -	num_cpus = cpumask_weight(pd->cpumask.pcpu);
-> -
-> -	/*
-> -	 * Calculate the percpu reorder queue and the sequence
-> -	 * number of the next object.
-> -	 */
-> -	next_nr = pd->processed;
-> -	next_index = next_nr % num_cpus;
-> -	cpu = padata_index_to_cpu(pd, next_index);
->  	next_queue = per_cpu_ptr(pd->pqueue, cpu);
-> -
->  	reorder = &next_queue->reorder;
->  
->  	spin_lock(&reorder->lock);
-> @@ -192,7 +181,8 @@ static struct padata_priv *padata_get_next(struct parallel_data *pd)
->  		list_del_init(&padata->list);
->  		atomic_dec(&pd->reorder_objects);
->  
-> -		pd->processed++;
-> +		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, 0,
-> +					    false);
-
-We'll crash when cpumask_next_wrap returns nr_cpumask_bits and later try to get
-the corresponding per-cpu queue.
-
-This handles that as well as the case where there's only 1 CPU in the parallel
-mask:
-
-diff --git a/kernel/padata.c b/kernel/padata.c
-index b5dfc21e976f..ab352839df04 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -181,8 +181,10 @@ static struct padata_priv *padata_get_next(struct parallel_data *pd)
- 		list_del_init(&padata->list);
- 		atomic_dec(&pd->reorder_objects);
- 
--		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, 0,
--					    false);
-+		if (cpumask_weight(pd->cpumask.pcpu) > 1) {
-+			pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, cpu,
-+						    false);
-+		}
- 
- 		spin_unlock(&reorder->lock);
- 		goto out;
+- Igor
 
 
-
-Haven't finished looking at the patch, but have to run somewhere for now, will
-pick it up later today.
+>=20
+> jirka
+>=20
+> >
+> > (There is always an alternative to not check for anything and let the k=
+ernel
+> refuse to perform actions that the user does not have permissions to perf=
+orm.)
+> >
+> > - Igor
+> >
+> > -----Original Message-----
+> > From: Jiri Olsa <jolsa@redhat.com>
+> > Sent: Tuesday, July 16, 2019 4:48 AM
+> > Subject: Re: [PATCH 2/3] perf: Use CAP_SYS_ADMIN with perf_event_parano=
+id
+> checks
+> >
+> > On Tue, Jul 02, 2019 at 08:10:04PM -0400, Igor Lubashev wrote:
+> > > The kernel is using CAP_SYS_ADMIN instead of euid=3D=3D0 to override
+> > > perf_event_paranoid check. Make perf do the same.
+> >
+> > I see another geteuid check in __cmd_ftrace,
+> > perhaps we should cover this one as well
+> >
+> > jirka
