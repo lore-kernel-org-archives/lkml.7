@@ -2,118 +2,71 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32341C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E4DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC62217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D77220880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563363079;
+	bh=xAaSzTjN4BLCl7mY//cGoE5wCGBd3TJKDeqOVTVzU8k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Z5W1eAlZg0wuQn3OvAuToP4sukC3x3BHNdwM5U2oC+edeMYjCny5BAVp09MRizctW
+	 4dnaTP/1gG/FlBcx3B9jViDaV15MhoV0azsxY1voby9heFU+j3NifYwLfDM29ZieEH
+	 aKcWzNDERXaiBiAifbdA/A1hs/RlaCQTGgtM3aX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbfGQLau (ORCPT
+        id S1732468AbfGQLbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:30:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33266 "EHLO mx1.redhat.com"
+        Wed, 17 Jul 2019 07:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730927AbfGQLar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:30:47 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732048AbfGQLbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 07:31:14 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2119EC055673;
-        Wed, 17 Jul 2019 11:30:47 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-116-100.ams2.redhat.com [10.36.116.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B2ED5C257;
-        Wed, 17 Jul 2019 11:30:44 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH v4 2/5] vsock/virtio: reduce credit update messages
-Date:   Wed, 17 Jul 2019 13:30:27 +0200
-Message-Id: <20190717113030.163499-3-sgarzare@redhat.com>
-In-Reply-To: <20190717113030.163499-1-sgarzare@redhat.com>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B422D20880;
+        Wed, 17 Jul 2019 11:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563363073;
+        bh=xAaSzTjN4BLCl7mY//cGoE5wCGBd3TJKDeqOVTVzU8k=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=wmnLoWsRu+B1plujq3r2lS8MXgrUC1jKi2oof1nnMwmQV1S3RI+YvKqYcJ1Xhu4ay
+         HQQiUYHVYNhmqEsZXp0+wG9RVm0HuhO/X3e5hB8qvUVE8ZVqiyJ8V2/HryYVxzX4BP
+         Kj8JO2lpaqXLqfa+s6844X3gcuaKejrYOJqimk1s=
+Date:   Wed, 17 Jul 2019 13:31:03 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@archlinux.org>
+cc:     nlopezcasad@logitech.com,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hid-logitech-hidpp: add USB PID for some mice
+In-Reply-To: <20190716073726.6726-1-lains@archlinux.org>
+Message-ID: <nycvar.YFH.7.76.1907171330320.5899@cbobk.fhfr.pm>
+References: <20190716073726.6726-1-lains@archlinux.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 17 Jul 2019 11:30:47 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to reduce the number of credit update messages,
-we send them only when the space available seen by the
-transmitter is less than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE.
+On Tue, 16 Jul 2019, Filipe Laíns wrote:
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- include/linux/virtio_vsock.h            |  1 +
- net/vmw_vsock/virtio_transport_common.c | 16 +++++++++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
+> Signed-off-by: Filipe Laíns <lains@archlinux.org>
 
-diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-index 7d973903f52e..49fc9d20bc43 100644
---- a/include/linux/virtio_vsock.h
-+++ b/include/linux/virtio_vsock.h
-@@ -41,6 +41,7 @@ struct virtio_vsock_sock {
- 
- 	/* Protected by rx_lock */
- 	u32 fwd_cnt;
-+	u32 last_fwd_cnt;
- 	u32 rx_bytes;
- 	struct list_head rx_queue;
- };
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index 095221f94786..a85559d4d974 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -211,6 +211,7 @@ static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
- void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt)
- {
- 	spin_lock_bh(&vvs->tx_lock);
-+	vvs->last_fwd_cnt = vvs->fwd_cnt;
- 	pkt->hdr.fwd_cnt = cpu_to_le32(vvs->fwd_cnt);
- 	pkt->hdr.buf_alloc = cpu_to_le32(vvs->buf_alloc);
- 	spin_unlock_bh(&vvs->tx_lock);
-@@ -261,6 +262,7 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
- 	struct virtio_vsock_sock *vvs = vsk->trans;
- 	struct virtio_vsock_pkt *pkt;
- 	size_t bytes, total = 0;
-+	u32 free_space;
- 	int err = -EFAULT;
- 
- 	spin_lock_bh(&vvs->rx_lock);
-@@ -291,11 +293,19 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
- 			virtio_transport_free_pkt(pkt);
- 		}
- 	}
-+
-+	free_space = vvs->buf_alloc - (vvs->fwd_cnt - vvs->last_fwd_cnt);
-+
- 	spin_unlock_bh(&vvs->rx_lock);
- 
--	/* Send a credit pkt to peer */
--	virtio_transport_send_credit_update(vsk, VIRTIO_VSOCK_TYPE_STREAM,
--					    NULL);
-+	/* We send a credit update only when the space available seen
-+	 * by the transmitter is less than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE
-+	 */
-+	if (free_space < VIRTIO_VSOCK_MAX_PKT_BUF_SIZE) {
-+		virtio_transport_send_credit_update(vsk,
-+						    VIRTIO_VSOCK_TYPE_STREAM,
-+						    NULL);
-+	}
- 
- 	return total;
- 
+We generally don't accept empty changelogs for the kernel. I've added at 
+least a few words, and comitted.
+
+This applies also to your second patch to logitech-dj. Thanks,
+
 -- 
-2.20.1
+Jiri Kosina
+SUSE Labs
 
