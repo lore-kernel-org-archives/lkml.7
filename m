@@ -2,171 +2,181 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFF0C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BFBC76196
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5EE20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:16:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="nFlfFWBY"
+	by mail.kernel.org (Postfix) with ESMTP id ABBE321849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfGQRQj (ORCPT
+        id S1729350AbfGQRTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:16:39 -0400
-Received: from vps.deutnet.info ([92.222.219.9]:60708 "EHLO vps.deutnet.info"
+        Wed, 17 Jul 2019 13:19:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:49330 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726917AbfGQRQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:16:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deutnet.info; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:
-        To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JdQW5yef3/oLdjTuLUcYjPBC8Xuj3agNuqkg0iaCI/0=; b=nFlfFWBYdBHEuafvpo+RbP7HTS
-        GI04vJPPD00ES7Hli6DLAaqlXo8+mjfV4L7R30WWDTG/WEfOJdOWByhAsoGcpvrzTkDHOHdkg8ZiR
-        LkN7oUv6ZtAllN+9j++w6pH1D3iV8deHDCpMwfMs4HneCqFYIUhyeZVZ7ar3N2GxryIVdXzDk1ZRw
-        pMtpyPrmX/DYhQjAKCDD2bc/V1fS66bq34xoe9Za3ThgBrmEa4J6GpzNpga6OCQUjX+NCuEjkffbK
-        KVcRhZrs1ETStZvwXk3PkhAfMB6CPZes/pP8NT54sTYBiNFvxGUUIYd2ps63KJskGZc0AFd4zT4Vl
-        4c8Z1/ew==;
-Received: from [2001:41d0:fe79:6700:cf3e:2f2c:b15:9bf9] (helo=sonata)
-        by vps.deutnet.info with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1hnn8N-0006tM-G7; Wed, 17 Jul 2019 18:50:27 +0200
-Received: from agriveaux by sonata with local (Exim 4.92)
-        (envelope-from <agriveaux@localhost.localdomain>)
-        id 1hnn8L-0003Du-DF; Wed, 17 Jul 2019 18:50:25 +0200
-Date:   Wed, 17 Jul 2019 18:50:25 +0200
-From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
-To:     Rob Herring <robh+dt@kernel.org>,
+        id S1725873AbfGQRTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:19:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACFB728;
+        Wed, 17 Jul 2019 10:19:01 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C30D73F71F;
+        Wed, 17 Jul 2019 10:18:58 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 18:18:56 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Cc:     linux-mips <linux-mips@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH] MIPS: JZ4740: DTS: Add I2C nodes
-Message-ID: <20190717165025.GA12362@localhost.localdomain>
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>
+Subject: Re: [PATCH 17/18] arm64: dts: Convert to the hierarchical CPU
+ topology layout for MSM8916
+Message-ID: <20190717171856.GF18370@e107155-lin>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-18-ulf.hansson@linaro.org>
+ <20190716144730.GA7250@e107155-lin>
+ <20190716203631.GC25567@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716203631.GC25567@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
-by default.
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 86 ++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+On Tue, Jul 16, 2019 at 02:36:31PM -0600, Lina Iyer wrote:
+> On Tue, Jul 16 2019 at 08:47 -0600, Sudeep Holla wrote:
+> > On Mon, May 13, 2019 at 09:22:59PM +0200, Ulf Hansson wrote:
+> > > From: Lina Iyer <lina.iyer@linaro.org>
+> > >
+> > > In the hierarchical layout, we are creating power domains around each CPU
+> > > and describes the idle states for them inside the power domain provider
+> > > node. Note that, the CPU's idle states still needs to be compatible with
+> > > "arm,idle-state".
+> > >
+> > > Furthermore, represent the CPU cluster as a separate master power domain,
+> > > powering the CPU's power domains. The cluster node, contains the idle
+> > > states for the cluster and each idle state needs to be compatible with the
+> > > "domain-idle-state".
+> > >
+> > > If the running platform is using a PSCI FW that supports the OS initiated
+> > > CPU suspend mode, which likely should be the case unless the PSCI FW is
+> > > very old, this change triggers the PSCI driver to enable it.
+> > >
+> > > Cc: Andy Gross <andy.gross@linaro.org>
+> > > Cc: David Brown <david.brown@linaro.org>
+> > > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> > > Co-developed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > ---
+> >
+> > [...]
+> >
+> > > @@ -166,12 +170,57 @@
+> > >  				min-residency-us = <2000>;
+> > >  				local-timer-stop;
+> > >  			};
+> > > +
+> > > +			CLUSTER_RET: cluster-retention {
+> > > +				compatible = "domain-idle-state";
+> > > +				arm,psci-suspend-param = <0x1000010>;
+> > > +				entry-latency-us = <500>;
+> > > +				exit-latency-us = <500>;
+> > > +				min-residency-us = <2000>;
+> > > +			};
+> > > +
+> > > +			CLUSTER_PWRDN: cluster-gdhs {
+> > > +				compatible = "domain-idle-state";
+> > > +				arm,psci-suspend-param = <0x1000030>;
+> > > +				entry-latency-us = <2000>;
+> > > +				exit-latency-us = <2000>;
+> > > +				min-residency-us = <6000>;
+> > > +			};
+> > >  		};
+> > >  	};
+> >
+> > I was trying to understand the composition of composite state parameters
+> > in this series and that made me look at these DT examples.
+> >
+> This was meant to depict a hierarchical state format for OSI.
+>
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..a76ecd69bfd0 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -239,6 +239,92 @@
- 		status = "disabled";
- 	};
- 
-+	i2c0: i2c@10050000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg = <0x10050000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <60>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB0>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c0_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c1: i2c@10051000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10051000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <59>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB1>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c1_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@10052000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10052000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB2>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c2_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@10053000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10053000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <57>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB3>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c3_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c4: i2c@10054000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10054000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <56>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB4>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c4_data>;
-+
-+		status = "disabled";
-+	};
-+
- 	watchdog: watchdog@10002000 {
- 		compatible = "ingenic,jz4780-watchdog";
- 		reg = <0x10002000 0x10>;
--- 
-2.20.1
+Hmm, I am more confused. We have 2 formats: original and extended.
 
+1. Original:
+	31:26 Reserved. Must be zero.
+	25:24 PowerLevel
+	23:17 Reserved. Must be zero.
+	16 StateType
+	15:0 StateID
+2. Extended
+	31 Reserved. Must be zero.
+	30 StateType
+	29:28 Reserved. Must be zero.
+	27:0 StateID
+
+I was trying to match them to that. I think I commented on other patches.
+I think simple OR logic breaks with extended format easily if StateIDs
+are not carefully crafted which is not mandated and hence the trouble.
+The same holds to original format but with PowerLevel, it slightly
+relaxing things a bit but still it needs to be crafted when firmware
+decides these parameters. E.g.: what is done with HiKey platform is
+completely wrong.
+
+It's helpful if we want to avoid save/restore for retention states.
+CPU_PM_CPU_IDLE_ENTER_RETENTION vs CPU_PM_CPU_IDLE_ENTER
+
+> > What format does the above platform use ? I tried matching them to
+> > both original as well as extended format and I fail to understand.
+> > Assuming original format:
+> > 	State         power_state PowerLevel  StateType     StateID
+> > 	SPC           0x40000002   0(core)    0(Retention)  0x2 (Res0 b[29]=1?)
+> > 	CLUSTER_RET   0x1000010   1(clusters) 0(Retention)  0x10
+> > 	CLUSTER_PWRDN 0x1000030   1(clusters) 0(Retention?) 0x30
+> > Now extended format:
+> > 	State         power_state StateType     StateID
+> > 	SPC           0x40000002  0(Retention)  0x40000002 (Res0 b[29]=1?)
+> > 	CLUSTER_RET   0x1000010   0(Retention)  0x1000010
+> The composite state would comprise of CPU state and  Cluster state.
+> So for the last CPU entering idle -
+> (CLUSTER_RET | SPC)
+> 0x41000012
+> > 	CLUSTER_PWRDN 0x1000030   0(Retention?) 0x1000030
+> >
+> (CLUSTER_PWRDN | SPC)
+> 0x41000032
+>
+> Hope this helps.
+>
+
+I just follow OR logic. I have made wrong reference to bit 29 above(I
+can't read simple 32 bit number anymore :(), it should bit 30 and if
+this platform follow extended state, then it makes some sense. But
+I expect CLUSTER_PWRDN also to have bit 30 set. I tried to match to both
+formats and failed to understand which it follows, so thought of asking.
+
+--
+Regards,
+Sudeep
