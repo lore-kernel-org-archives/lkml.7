@@ -2,136 +2,113 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C013AC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408DBC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952E3217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dul4ANMN"
+	by mail.kernel.org (Postfix) with ESMTP id 1A283217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563359623;
+	bh=jSaDID9hgYfnliGptlwXumcvM/zIQPwcjviS3KOK0iM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bH+ypnofprz0RxQAne6DhJPSIrEEMf8I6ZZuk+2aXZV6owfav3gyzJWtATy8qNn1q
+	 FY9TNZz4DwOI34neDGs8x7hrojgq5+ng6vtoOEpDsCcKm8tsB5ECluPjtc9uI+Wb82
+	 V3O6TM9ucqAzgZuhUnYdMLRfLhgcLPQHB/zXJJkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfGQKdL (ORCPT
+        id S1730947AbfGQKdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:33:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34139 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbfGQKdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:33:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so10636388pfo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 03:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9k7PEq3YaWLJm47OKEtp5j4oXp3rjTfBF0mMIsuiDAQ=;
-        b=Dul4ANMNCdSpSs/j0ZxpHvioQBfiR4bXcwEQRW8s+ErgOSfdnx78Qt8agNUBZG2V3G
-         tIua5SDC9I7sQA0/bT7Bx09ekRomkuC+GLFRBo+0UJuAznly6/B+tRlfGxcToEexpXOD
-         WgTxMleNqwhWPq89fF2sDgVMGb6gzFtCu8Qfq9EZI/pb1EdKu+rUIDdAh+nZRL2ikDUc
-         4zagx9uiklANQvb30ZF6DIQvy3C9aeD9V1a3dEhkPo0cz2VX6G/MHuVM5bzXFX0ydpey
-         bHNpblAL973a8HGH7qAe0Q5tLQmKQYmXRKXDh6tFpzLkCUSUotfCdiJ0idFQNBYtcWn/
-         cE+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9k7PEq3YaWLJm47OKEtp5j4oXp3rjTfBF0mMIsuiDAQ=;
-        b=j73rVyKCpsnrZCRJYSqlEid2YLb9stJkZpLpU/k3AA/lDsJC8mJdZvwsrG2kU+l1nI
-         Hzs6PcX4iuc0ofEjZzr8QaqyeRnWSinB7btPuUYYuklR2+30vH+uW23S4pHYyrOafmru
-         7kpkKHjqiyBkmCVebFZQfklmzl8AlfqI+XWenDbM0c/gTevY0+1bITUCErTt84txFuBz
-         KB5RRVJrKM7aXSj5irfERsZI0UAA5Tql3ni2W/qUiAqPMIZM5O9Eh0KJ8J925Bt3viNI
-         JYhY8vMJwkUw38rD0j3fGWEOF2u20yLc1MaYAGQ+dRHSlxHAt6G9iBxu/q/HD8rV6lZo
-         NnzQ==
-X-Gm-Message-State: APjAAAUgJEG0XRVGDNhr9bEE6YfADi0LXV6KB3SYstJspdG/CR2/1Iea
-        +cH+3K7hIeLm2/8oYJ44Mx/NiQ==
-X-Google-Smtp-Source: APXvYqz/Sfxl0RQLtUc3wMREss8uX/59u3jEO2nzgrxKdE2umZKvMGiCYBh9eFTpkdk7pse+CuF5gA==
-X-Received: by 2002:a65:690e:: with SMTP id s14mr26228230pgq.47.1563359590031;
-        Wed, 17 Jul 2019 03:33:10 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id 30sm58222326pjk.17.2019.07.17.03.33.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 03:33:08 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 16:03:06 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Christian Neubert <christian.neubert.86@gmail.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
- cpu clocks
-Message-ID: <20190717103306.r3wuqvvwr2b5z4ok@vireshk-i7>
-References: <874l85v8p6.fsf@FE-laptop>
- <20190318112844.GA1708@apalos>
- <87h8c0s955.fsf@FE-laptop>
- <20190318122113.GA4834@apalos>
- <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
- <20190425123303.GA12659@apalos>
- <20190520112042.mpamnabxpwciih5m@vireshk-i7>
- <20190522070341.GA32613@apalos>
- <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
- <20190610101918.sypafywc6fn4jsbo@vireshk-i7>
+        Wed, 17 Jul 2019 06:33:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbfGQKdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:33:41 -0400
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D56E821848;
+        Wed, 17 Jul 2019 10:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563359621;
+        bh=jSaDID9hgYfnliGptlwXumcvM/zIQPwcjviS3KOK0iM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EeA60zFQcj611TQd7C6MujlhxW6JLU1lGaIiFIcdmkRVWf+gZjyhg2nDEGKnNXenN
+         ym2YnxH4ohgCWo5ZO52McWzudtbRePzKY6mDN30ZEvgHneZ+VCs0p26Cu7I7Js2OyA
+         Nr24bdmBAm6J8u+tsgoe2kWlvRuvFSmKhGry5fH8=
+Received: by mail-lf1-f51.google.com with SMTP id q26so16069247lfc.3;
+        Wed, 17 Jul 2019 03:33:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAUiE9/p0HIyhTUwW8AkzEe3FFtbTAr7P/dOEX1D9QAMjzGZPM9X
+        pjrF7x/If0CRdWvgEVGqOp8SdWnvNZX8a8XLDJk=
+X-Google-Smtp-Source: APXvYqzfd8qQfJ47ARKH7ZjU+7AbaDNvBG2A0KFFMMr0HRO82EOOxLdt1QfT4GOhtDlngwx+wXKbAfJRQeeskhxBGWA=
+X-Received: by 2002:ac2:514b:: with SMTP id q11mr17797614lfd.33.1563359619184;
+ Wed, 17 Jul 2019 03:33:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610101918.sypafywc6fn4jsbo@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <CGME20190715124458eucas1p2df56f2e0c7a1a0a9144a4d5fbdb471a9@eucas1p2.samsung.com>
+ <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-31-l.luba@partner.samsung.com>
+In-Reply-To: <20190715124417.4787-31-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 17 Jul 2019 12:33:27 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdD-g1A+LKp1Nmmho2MVRxERfXb+Q3WsBrN=7YbnVufMQ@mail.gmail.com>
+Message-ID: <CAJKOXPdD-g1A+LKp1Nmmho2MVRxERfXb+Q3WsBrN=7YbnVufMQ@mail.gmail.com>
+Subject: Re: [PATCH v1 30/50] ARM: dts: exynos: add bus_isp266 into Exynos5800
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-06-19, 15:49, Viresh Kumar wrote:
-> On 22-05-19, 12:36, Viresh Kumar wrote:
-> > On 22-05-19, 10:03, Ilias Apalodimas wrote:
-> > > Hi Viresh, Gregory
-> > > On Mon, May 20, 2019 at 04:50:42PM +0530, Viresh Kumar wrote:
-> > > > On 25-04-19, 15:33, Ilias Apalodimas wrote:
-> > > > > Hi Viresh,
-> > > > > 
-> > > > > > > > Also, during this week-end, Christian suggested that the issue might
-> > > > > > > > come from the AVS support.
-> > > > > > > > 
-> > > > > > > > Could you disable it and check you still have the issue?
-> > > > > > > > 
-> > > > > > > > For this, you just have to remove the avs node in
-> > > > > > > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
-> > > > > > > Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
-> > > > > > >  once i return
-> > > > > > 
-> > > > > > @Ilias: Can you please try this now and confirm to Gregory ?
-> > > > > I am more overloaded than usual and totally forgot about this. Apologies.
-> > > > > I'll try finding some time and do this.
-> > > > 
-> > > > Ping Ilias.
-> > > Sorry for the huge delay. 
-> > > Applying this patch and removing tha 'avs' node from
-> > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi seems to work.
-> > > Changing between governors does not freeze the board any more. I haven't checked
-> > > the actual impact on the CPU speed but the values on 
-> > > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor are correct
-> > 
-> > Thanks for testing it out. Lets see what Gregory has to say now.
-> 
-> @Gregory: Do you have any further advice for Ilias ?
+On Mon, 15 Jul 2019 at 14:45, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> The Exynos5420 SoC had one clock for two lines while Exynos5422/5800 have
+> dedicated clock tree for the ACLK266_ISP. The max frequency is 300MHz so
+> it shares the OPP table with bus_gen. The bus is added here and is enabled
+> in .dts file for proper board.
 
-Ping.
+Squash it with 48 please.
 
--- 
-viresh
+BR,
+Krzysztof
+
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5800.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
+> index 57d3b319fd65..3b9200db43b6 100644
+> --- a/arch/arm/boot/dts/exynos5800.dtsi
+> +++ b/arch/arm/boot/dts/exynos5800.dtsi
+> @@ -131,3 +131,13 @@
+>  &mfc {
+>         compatible = "samsung,mfc-v8";
+>  };
+> +
+> +&soc {
+> +               bus_isp266: bus_isp266 {
+> +                       compatible = "samsung,exynos-bus";
+> +                       clocks = <&clock CLK_DOUT_ACLK266_ISP>;
+> +                       clock-names = "bus";
+> +                       operating-points-v2 = <&bus_gen_opp_table>;
+> +                       status = "disabled";
+> +               };
+> +};
+> --
+> 2.17.1
+>
