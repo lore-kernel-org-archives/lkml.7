@@ -2,92 +2,86 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C87BC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62C1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84C3205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:23:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rCTktTTy"
+	by mail.kernel.org (Postfix) with ESMTP id 8728420659
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfGQNX0 (ORCPT
+        id S1726861AbfGQN30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:23:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33626 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfGQNX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:23:26 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6HDNJfc053821;
-        Wed, 17 Jul 2019 08:23:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563369799;
-        bh=7w70GvKKtgyFoxwG+WzJCvNRew7k10rVv3rd6Z95nLk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rCTktTTyWodhfYtJr/j12+hmDxYg2bovIequtwO63+ayqS47UzhSEHpEh0nT4tZGr
-         e4GwNvJ8SSrBRQynqnsUV64I7LyMi2kdZJOnwoUmpey134e7Pt+eX+nQauZemFlBQ0
-         /qkj9b2I8S19A8pT9ASekkSQ3C0umAA7BQH8n/3g=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6HDNJDH060743
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jul 2019 08:23:19 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Jul 2019 08:23:19 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Jul 2019 08:23:19 -0500
-Received: from [10.250.98.129] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6HDNHfr093396;
-        Wed, 17 Jul 2019 08:23:18 -0500
-Subject: Re: [PATCH v2 2/2] leds: Add control of the voltage/current regulator
- to the LED core
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <mark.rutland@arm.com>, <daniel.thompson@linaro.org>
-CC:     <dmurphy@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190715155657.22976-1-jjhiblot@ti.com>
- <20190715155657.22976-3-jjhiblot@ti.com>
- <4ae4d83b-8dee-72e4-3860-dd420a29115e@gmail.com>
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-Message-ID: <08873dfd-d7b2-9fd2-1aca-c63a7e983e2d@ti.com>
-Date:   Wed, 17 Jul 2019 15:23:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 17 Jul 2019 09:29:26 -0400
+Received: from sauhun.de ([88.99.104.3]:52118 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfGQN30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:29:26 -0400
+Received: from localhost (p54B3309B.dip0.t-ipconnect.de [84.179.48.155])
+        by pokefinder.org (Postfix) with ESMTPSA id BAEC23E4757;
+        Wed, 17 Jul 2019 15:29:23 +0200 (CEST)
+Date:   Wed, 17 Jul 2019 15:29:23 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        leilk.liu@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
+Message-ID: <20190717132923.GC1458@kunai>
+References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
+ <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
+ <20190626133941.GL801@ninjato>
+ <1563368121.16970.7.camel@mhfsdcap03>
 MIME-Version: 1.0
-In-Reply-To: <4ae4d83b-8dee-72e4-3860-dd420a29115e@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
+Content-Disposition: inline
+In-Reply-To: <1563368121.16970.7.camel@mhfsdcap03>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacek,
 
-On 15/07/2019 22:42, Jacek Anaszewski wrote:
-> @@ -80,6 +107,7 @@ static void led_timer_function(struct timer_list *t)
->   	}
->   
->   	led_set_brightness_nosleep(led_cdev, brightness);
-> +	__led_handle_regulator(led_cdev, brightness);
-> This cannot be called from atomic context since regulator_enable/disable
-> use mutex beneath, that can sleep on contention. Therefore this call
-> has to be made in two places instead:
->
-> __led_set_brightness()
-> __led_set_brightness_blocking()
+--GZVR6ND4mMseVXL/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks. I'll fix this in v3.
 
-JJ
+> > Can't you use those to derive your values from that? Which ones are you=
+ missing
+> > if not?
+>=20
+> I have take a little time to develop a new patch which based on your
+> suggestions, and it tested OK. Thanks for your suggestions, I will
+> update the patch after I test it fully.
+
+Great news, thanks!
+
+
+--GZVR6ND4mMseVXL/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0vIrMACgkQFA3kzBSg
+KbZc3A/+MaKqaXoxfLhF7cf/4W3pivQuZ1XwN1uUj0ywybWz2dxrakkTsTS5kCSF
+D2GRUcGvTLGKod/BaV/wIfdFVeyYPGoh38C2LSEcc2zTWl3CO+CyiJ35rAUvVhKe
+DoxAxfkR4LSUpzTJUi26asAWZggVjEBZkWQQxhyJma8txPhAtuOg2Dp9J6w8oZtO
+Ufj5c1FbF8r3q82ah5dmHqs924Q6WHUhBQXQf3eGNRJgqY/np4XHB5TZkOVj1uCW
+qQhUIx4xBooJa1cSXGr7kA6nSay+zIX++F5R9hbxkGSCFcGZXei0owslreNQsyDf
+rHMEc9JoZ5wXIMVjzPoxRwWrxDVIGdqfkqrmSDBjmYq4CDOAWvBZUIjgsy1E9d9R
+YPX5zj3Fvinui4/dxqADBLuAoinkw3NAYg14KCAzIzXbOLwetnGXxoIaiLE2v8PT
+qaTbtnIIhG9n/gaSQIQ3lDwTsa6dxv7FS3++6h+RFhAQ8XsaNKvYTgvmVrV4jKvs
+Rr3Kg+m/MdEiWHceoa6tPM96kiWlQAQLq1yN1B06DMoFBkr4S7pjOe6LCYFG7AfP
+Cu8nEykpDz6DT6KVwjefQpH14gTGH4TSjvpuXQLfjKB5k5sfi+NIif3+v3tJUBoE
+8KH9/iRcWMwVKm36gyugDLIa4xfsb5fj0v2Lk1ZL4dvw75Z2JiU=
+=K/nF
+-----END PGP SIGNATURE-----
+
+--GZVR6ND4mMseVXL/--
