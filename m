@@ -2,154 +2,185 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F56C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FBFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC17420818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jjkZEjQy"
+	by mail.kernel.org (Postfix) with ESMTP id 4565120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 05:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfGQFWg (ORCPT
+        id S1726809AbfGQFXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 01:22:36 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:31373 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfGQFWg (ORCPT
+        Wed, 17 Jul 2019 01:23:11 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:37502 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725856AbfGQFXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 01:22:36 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x6H5MLIw019393;
-        Wed, 17 Jul 2019 14:22:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x6H5MLIw019393
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563340942;
-        bh=8wyTio6eWyGUXfWyfehEhhkmdilatgeueQHXUAhXgr4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jjkZEjQyqgPxgWTOy06lg4XiFphMdGWD0dkUcdUYRoSjTfEzKCyWDbeA5l31sjtlm
-         zqOouOpTmUUR1fjahmM8X+/YdO8qcyiNNe/EGkudDoubXi/RlIem/UE/RAAkEjKJgh
-         himXcjVNPka+DQQXDdOxZ2i3rvRxdvBbWHupkJ9TKhcVkX/7Yl+V6prx8J69e33QVH
-         S9lLWYrJ+8F5i/cfhRFNjb8TthMvCpEoI8s5kfke/nBaxQwTDWKJ+Bxw4OlQxLrnBs
-         sg97P4FS1Ng2YABVXz8w+/L7e2Y0z2G7Lx2h2kyckTDcFpr+rpm9z+ZdGcr4193J/2
-         NCmvyHeUWB/VQ==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id v129so15558763vsb.11;
-        Tue, 16 Jul 2019 22:22:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAVl3Sjbdfsq2mHM/rp+f7FllZQ7mPBUJBo8jkYZSwNvehRO8lRZ
-        4OPRzgpyVDLwOM5ESjmuVdY/CZUJJErvkmIg1yg=
-X-Google-Smtp-Source: APXvYqwM5DJTshi4lT6RxsMUMhzPLDUhdj8WyuK6eYGDHz2arKntCfRETXQ1UAKIK0Q4h8X3O1m1X0VZa1fFkqSF56c=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr22707775vsl.155.1563340941315;
- Tue, 16 Jul 2019 22:22:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190711054434.1177-1-yamada.masahiro@socionext.com>
- <20190711054434.1177-9-yamada.masahiro@socionext.com> <20190716214023.GA15159@redhat.com>
-In-Reply-To: <20190716214023.GA15159@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 17 Jul 2019 14:21:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ41NhPPO6xoVObgFctTO6WewSXPfZkE7_bZXsdAtKSpA@mail.gmail.com>
-Message-ID: <CAK7LNAQ41NhPPO6xoVObgFctTO6WewSXPfZkE7_bZXsdAtKSpA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] kbuild: create *.mod with full directory path
- and remove MODVERDIR
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
+        Wed, 17 Jul 2019 01:23:11 -0400
+X-UUID: ab5a80b20d4a444baf315bfd10eabca4-20190717
+X-UUID: ab5a80b20d4a444baf315bfd10eabca4-20190717
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2118796664; Wed, 17 Jul 2019 13:23:04 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 17 Jul 2019 13:23:00 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 17 Jul 2019 13:22:54 +0800
+Message-ID: <1563340974.29169.11.camel@mtksdaap41>
+Subject: Re: [PATCH v4, 08/33] drm/mediatek: add mutex mod into ddp private
+ data
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 17 Jul 2019 13:22:54 +0800
+In-Reply-To: <1562625253-29254-9-git-send-email-yongqiang.niu@mediatek.com>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1562625253-29254-9-git-send-email-yongqiang.niu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: CFF9E5198CA28369170E44526D2AFDC1FA459C62420A782C0EDFB70474AD79132000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe
+Hi, Yongqiang:
 
-On Wed, Jul 17, 2019 at 6:40 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
->
-> On Thu, Jul 11, 2019 at 02:44:31PM +0900, Masahiro Yamada wrote:
-> > While descending directories, Kbuild produces objects for modules,
-> > but do not link final *.ko files; it is done in the modpost.
-> >
-> > To keep track of modules, Kbuild creates a *.mod file in $(MODVERDIR)
-> > for every module it is building. Some post-processing steps read the
-> > necessary information from *.mod files. This avoids descending into
-> > directories again. This mechanism was introduced in 2003 or so.
-> >
-> > Later, commit 551559e13af1 ("kbuild: implement modules.order") added
-> > modules.order. So, we can simply read it out to know all the modules
-> > with directory paths. This is easier than parsing the first line of
-> > *.mod files.
-> >
-> > $(MODVERDIR) has a flat directory structure, that is, *.mod files
-> > are named only with base names. This is based on the assumption that
-> > the module name is unique across the tree. This assumption is really
-> > fragile.
-> >
-> > Stephen Rothwell reported a race condition caused by a module name
-> > conflict:
-> >
-> >   https://lkml.org/lkml/2019/5/13/991
-> >
-> > In parallel building, two different threads could write to the same
-> > $(MODVERDIR)/*.mod simultaneously.
-> >
-> > Non-unique module names are the source of all kind of troubles, hence
-> > commit 3a48a91901c5 ("kbuild: check uniqueness of module names")
-> > introduced a new checker script.
-> >
-> > However, it is still fragile in the build system point of view because
-> > this race happens before scripts/modules-check.sh is invoked. If it
-> > happens again, the modpost will emit unclear error messages.
-> >
-> > To fix this issue completely, create *.mod in the same directory as
-> > *.ko so that two threads never attempt to write to the same file.
-> > $(MODVERDIR) is no longer needed.
-> >
-> > Since modules with directory paths are listed in modules.order, Kbuild
-> > is still able to find *.mod files without additional descending.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Acked-by: Nicolas Pitre <nico@fluxnic.net>
+On Tue, 2019-07-09 at 06:33 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> except mutex mod, mutex mod reg,mutex sof reg,
+> and mutex sof id will be ddp private data
 
-> >
->
-> Hi Masahiro,
->
-> I'm following this patchset changes as they will affect the klp-convert
-> series [1] that the livepatching folks have been working on...
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Empty files .tmp_versions/*.livepatch are touched
-to keep track of 'LIVEPATCH_* := y', right?
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 41 +++++++++++++++++++++++++---------
+>  1 file changed, 30 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 579ce28..412b82f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -147,12 +147,16 @@ struct mtk_disp_mutex {
+>  	bool claimed;
+>  };
+>  
+> +struct mtk_ddp_data {
+> +	const unsigned int *mutex_mod;
+> +};
+> +
+>  struct mtk_ddp {
+>  	struct device			*dev;
+>  	struct clk			*clk;
+>  	void __iomem			*regs;
+>  	struct mtk_disp_mutex		mutex[10];
+> -	const unsigned int		*mutex_mod;
+> +	const struct mtk_ddp_data	*data;
+>  };
+>  
+>  static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> @@ -202,6 +206,18 @@ struct mtk_ddp {
+>  	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+>  };
+>  
+> +static const struct mtk_ddp_data mt2701_ddp_driver_data = {
+> +	.mutex_mod = mt2701_mutex_mod,
+> +};
+> +
+> +static const struct mtk_ddp_data mt2712_ddp_driver_data = {
+> +	.mutex_mod = mt2712_mutex_mod,
+> +};
+> +
+> +static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+> +	.mutex_mod = mt8173_mutex_mod,
+> +};
+> +
+>  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>  				    enum mtk_ddp_comp_id next,
+>  				    unsigned int *addr)
+> @@ -464,15 +480,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>  		reg = MUTEX_SOF_DPI1;
+>  		break;
+>  	default:
+> -		if (ddp->mutex_mod[id] < 32) {
+> +		if (ddp->data->mutex_mod[id] < 32) {
+>  			offset = DISP_REG_MUTEX_MOD(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg |= 1 << ddp->mutex_mod[id];
+> +			reg |= 1 << ddp->data->mutex_mod[id];
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		} else {
+>  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg |= 1 << (ddp->mutex_mod[id] - 32);
+> +			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		}
+>  		return;
+> @@ -502,15 +518,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
+>  			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
+>  		break;
+>  	default:
+> -		if (ddp->mutex_mod[id] < 32) {
+> +		if (ddp->data->mutex_mod[id] < 32) {
+>  			offset = DISP_REG_MUTEX_MOD(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg &= ~(1 << ddp->mutex_mod[id]);
+> +			reg &= ~(1 << ddp->data->mutex_mod[id]);
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		} else {
+>  			offset = DISP_REG_MUTEX_MOD2(mutex->id);
+>  			reg = readl_relaxed(ddp->regs + offset);
+> -			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
+> +			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
+>  			writel_relaxed(reg, ddp->regs + offset);
+>  		}
+>  		break;
+> @@ -585,7 +601,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+>  		return PTR_ERR(ddp->regs);
+>  	}
+>  
+> -	ddp->mutex_mod = of_device_get_match_data(dev);
+> +	ddp->data = of_device_get_match_data(dev);
+>  
+>  	platform_set_drvdata(pdev, ddp);
+>  
+> @@ -598,9 +614,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ddp_driver_dt_match[] = {
+> -	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+> -	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
+> -	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
+> +	{ .compatible = "mediatek,mt2701-disp-mutex",
+> +	  .data = &mt2701_ddp_driver_data},
+> +	{ .compatible = "mediatek,mt2712-disp-mutex",
+> +	  .data = &mt2712_ddp_driver_data},
+> +	{ .compatible = "mediatek,mt8173-disp-mutex",
+> +	  .data = &mt8173_ddp_driver_data},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
 
-Perhaps, adding a new field
-to *.mod files might be cleaner.
 
-
-
-> Just wondering if these other files should be checked for more MODVERDIR
-> fallout:
->
->   % grep -R 'tmp_versions'
->   tools/power/cpupower/debug/kernel/Makefile:     - rm -rf .tmp_versions* Module.symvers modules.order
->   scripts/export_report.pl:    while (<.tmp_versions/*.mod>) {
->   scripts/adjust_autoksyms.sh:# .tmp_versions/*.mod files.
->
-> export_report.pl is probably the only interesting one on this list.
-
-Good catch. I will fix it.
-
-> Also, can you cc me on subsequent patchset versions?
-
-Yes, will do.
-
-
-
---
-Best Regards
-Masahiro Yamada
