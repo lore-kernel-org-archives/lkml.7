@@ -2,153 +2,106 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 599AAC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAB1C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C32D20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F82621849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563406291;
+	bh=8VpnxGStLf8E5O7z0t32FrG8nOd4aZ30LIjDn4eMqCo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bmLt4qjdNXIjB1otaiqB6foCvQ1k3qh5GW12/eY9e0q9hhwmJFoOhms+si4ce9oxx
+	 fbmotP1Hou4szggQThw4TvE4U84JHOFy45DLut6WI1hHGPmZSjNmQz3JmAXdY0bveO
+	 P0phcU4joF4KW2QFeFuZQit/8RBVfY2u96M55/cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfGQXaf (ORCPT
+        id S1729765AbfGQXba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 19:30:35 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:54668 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbfGQXaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 19:30:35 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 8897B72CCD6;
-        Thu, 18 Jul 2019 02:30:31 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 6F6307CCE5C; Thu, 18 Jul 2019 02:30:31 +0300 (MSK)
-Date:   Thu, 18 Jul 2019 02:30:31 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        sparclinux@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
-Message-ID: <20190717233031.GB30369@altlinux.org>
-References: <20190625143715.1689-1-hch@lst.de>
- <20190625143715.1689-10-hch@lst.de>
- <20190717215956.GA30369@altlinux.org>
- <CAHk-=whj_+tYSRcDsw7mDGrkmyU9tAk-a53XK271wYtDqYRzig@mail.gmail.com>
+        Wed, 17 Jul 2019 19:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbfGQXba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 19:31:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BDD520651;
+        Wed, 17 Jul 2019 23:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563406289;
+        bh=8VpnxGStLf8E5O7z0t32FrG8nOd4aZ30LIjDn4eMqCo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r01M60NWkw8fznxWilOLF4w8ZPxjnmrEfdkmqVj156+7ZWyrosI1IL6TPX/oCKQZ0
+         oy2vQ7UQ+90CCBMdvSV5CvM4EKIrVwIiwguYjO6FIMdZq8K8qsX9UP61ie+IkbFJaf
+         sQuEEWFunKmVil4IsA35Gc+sw/p4vx8VcMsBvm78=
+Date:   Wed, 17 Jul 2019 19:31:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v4 2/6] ASoC: sgtl5000: Improve VAG power and mute control
+Message-ID: <20190717233128.GB3079@sasha-vm>
+References: <20190717163014.429-1-oleksandr.suvorov@toradex.com>
+ <20190717163014.429-3-oleksandr.suvorov@toradex.com>
+ <CAOMZO5AgCqH+8W36vh4n3tCFvqUE=H+4Zp0jG1NQi5UFOsSSAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whj_+tYSRcDsw7mDGrkmyU9tAk-a53XK271wYtDqYRzig@mail.gmail.com>
+In-Reply-To: <CAOMZO5AgCqH+8W36vh4n3tCFvqUE=H+4Zp0jG1NQi5UFOsSSAQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 17, 2019 at 01:48:43PM -0300, Fabio Estevam wrote:
+>On Wed, Jul 17, 2019 at 1:30 PM Oleksandr Suvorov
+><oleksandr.suvorov@toradex.com> wrote:
+>>
+>> Change VAG power on/off control according to the following algorithm:
+>> - turn VAG power ON on the 1st incoming event.
+>> - keep it ON if there is any active VAG consumer (ADC/DAC/HP/Line-In).
+>> - turn VAG power OFF when there is the latest consumer's pre-down event
+>>   come.
+>> - always delay after VAG power OFF to avoid pop.
+>> - delay after VAG power ON if the initiative consumer is Line-In, this
+>>   prevents pop during line-in muxing.
+>>
+>> Also, according to the data sheet [1], to avoid any pops/clicks,
+>> the outputs should be muted during input/output
+>> routing changes.
+>>
+>> [1] https://www.nxp.com/docs/en/data-sheet/SGTL5000.pdf
+>>
+>> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+>> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>> Fixes: 9b34e6cc3bc2 ("ASoC: Add Freescale SGTL5000 codec support")
+>
+>Reviewed-by: Fabio Estevam <festevam@gmail.com>
+>
+>By the way, I prefer the description you put in the cover letter as it
+>explicitly talks about a bug being fixed.
 
---eJnRUKwClWJh1Khz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes. This patch describes itself as an improvement rather than a fix.
 
-On Wed, Jul 17, 2019 at 03:04:56PM -0700, Linus Torvalds wrote:
-> On Wed, Jul 17, 2019 at 2:59 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
-> >
-> > So this ended up as commit 7b9afb86b6328f10dc2cad9223d7def12d60e505
-> > (thanks to Anatoly for bisecting) and introduced a regression:
-> > futex.test from the strace test suite now causes an Oops on sparc64
-> > in futex syscall.
->=20
-> Can you post the oops here in the same thread too? Maybe it's already
-> posted somewhere else, but I can't seem to find anything likely on
-> lkml at least..
+You need to add an explicit stable tag, rather than just cc us.
+Something like:
 
-Sure, here it is:
+	Cc: stable@kernel.org
 
-[  514.137217] Unable to handle kernel paging request at virtual address 00=
-060000541d0000
-[  514.137295] tsk->{mm,active_mm}->context =3D 00000000000005b2
-[  514.137343] tsk->{mm,active_mm}->pgd =3D fff80024955a2000
-[  514.137387]               \|/ ____ \|/
-                             "@'/ .. \`@"
-                             /_| \__/ |_\
-                                \__U_/
-[  514.137493] futex(1599): Oops [#1]
-[  514.137533] CPU: 26 PID: 1599 Comm: futex Not tainted 5.2.0-05721-gd3649=
-f68b433 #1096
-[  514.137595] TSTATE: 0000000011001603 TPC: 000000000051adc4 TNPC: 0000000=
-00051adc8 Y: 00000000    Not tainted
-[  514.137678] TPC: <get_futex_key+0xe4/0x6a0>
-[  514.137712] g0: 0000000000000000 g1: 0000000000e75178 g2: 000000000009a2=
-1d g3: 0000000000000000
-[  514.137769] g4: fff8002474fbc0e0 g5: fff80024aa80c000 g6: fff8002495aec0=
-00 g7: 0000000000000200
-[  514.137825] o0: 0000000000000001 o1: 0000000000000001 o2: 00000000000000=
-00 o3: fff8002495aefa28
-[  514.137882] o4: fff8000100030000 o5: fff800010002e000 sp: fff8002495aef1=
-61 ret_pc: 000000000051ada4
-[  514.137944] RPC: <get_futex_key+0xc4/0x6a0>
-[  514.137978] l0: 000000000051b144 l1: 0000000000000001 l2: 0000000000c019=
-50 l3: fff80024626051c0
-[  514.138036] l4: 0000000000c01970 l5: 0000000000cf6800 l6: 00060000541d13=
-f0 l7: 00000000014b3000
-[  514.138094] i0: 0000000000000001 i1: 000000000051af30 i2: fff8002495aefc=
-28 i3: 0000000000000001
-[  514.138152] i4: 0000000000cf69b0 i5: fff800010002e000 i6: fff8002495aef2=
-31 i7: 000000000051b3a8
-[  514.138211] I7: <futex_wait_setup+0x28/0x120>
-[  514.138245] Call Trace:
-[  514.138271]  [000000000051b3a8] futex_wait_setup+0x28/0x120
-[  514.138313]  [000000000051b550] futex_wait+0xb0/0x200
-[  514.138352]  [000000000051d734] do_futex+0xd4/0xc00
-[  514.138390]  [000000000051e384] sys_futex+0x124/0x140
-[  514.138435]  [0000000000406294] linux_sparc_syscall+0x34/0x44
-[  514.138478] Disabling lock debugging due to kernel taint
-[  514.138501] Caller[000000000051b3a8]: futex_wait_setup+0x28/0x120
-[  514.138524] Caller[000000000051b550]: futex_wait+0xb0/0x200
-[  514.138547] Caller[000000000051d734]: do_futex+0xd4/0xc00
-[  514.138568] Caller[000000000051e384]: sys_futex+0x124/0x140
-[  514.138590] Caller[0000000000406294]: linux_sparc_syscall+0x34/0x44
-[  514.138614] Caller[0000010000000e90]: 0x10000000e90
-[  514.138633] Instruction DUMP:
-[  514.138635]  0640016e=20
-[  514.138650]  b13da000=20
-[  514.138663]  ec5fa7f7=20
-[  514.138676] <c25da008>
-[  514.138689]  ae100016=20
-[  514.138702]  84086001=20
-[  514.138714]  82007fff=20
-[  514.138727]  af789401=20
-[  514.138740]  f05de018=20
-
-
---=20
-ldv
-
---eJnRUKwClWJh1Khz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJdL6+XAAoJEAVFT+BVnCUItv0P/RQl7zn0jCq+B4G33r61CH0f
-MM3lOaEkCdZV3KhE/13PJWKFSRP2b6rh0k95kDhUNnPdItg3b4xEwHuMwHKzyzCs
-RdDrQ5ISjKrSwGJqrAywjpEX5Wf7JnUS98muIIWgcrfA3M3HzQMgKmVIna3SstVD
-ZTXmMFjnnuGSKI5xA79VBve9xPbDDkF0cPTrRIkXwk3HzTrQi9NKwj+VyFnzvri/
-vXBb8oQ5OJymQryUnoeVxs2MmraXPotL+M/8krsZIoAuaK4IMFiFh5T7ZBVigqFv
-934gPFbRyRdErsuiJo6PMqJUay39etJBifC4sem9zw6NcP+sSMB5L8EABFkWT0j+
-VuW3foMsOIoH/+8dbYsdTsw4RHpXv6WeUwrNLXZLCWACt2M/m5wBlrBFf0NMbRW4
-LtWcIzy4IYfmmUiKrVfAUNv3Yx991ah+QTeq871+Wsy2irvJuE7c4lfH6RxCOjKT
-CrtF6oqFcOFHZRfl4JSzc2dbd/tepmNwonQeO6WXwruxRoMI2NhL350ijQJjkXOP
-qhz/qutyUOk662ZP30+j0G1iT4TGERug8SLaI11eEjTpqIMUQMtPa0ATsoIkR/+x
-S1637lihAJh2d2ik4os1nLjDNakmc6TMgS0KcDXhfo219fWAD5YrgmQD8g7fUnLp
-4bgJDOaNpCu6rzRT4WY4
-=3YbY
------END PGP SIGNATURE-----
-
---eJnRUKwClWJh1Khz--
+--
+Thanks,
+Sasha
