@@ -2,94 +2,70 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEECC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49803C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D93321743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563345803;
-	bh=rpX3FlNAUKO8GVGTnuVeNc+iCU/DRSE4jAZjnlhh6/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OLdU801r3X0a0hWHQPKzkYCcz43z+uqoY8O2PXudYwlHIk+F7XJJlqNcnPfHLT7Qt
-	 jKqjfC2sXl5i/FsBvS049JPFvju4JSAzMQVIrdGoARhsA02bkq9z2/ym5bg4e/PJrs
-	 qnIVUahP9yVHQ2HEBN7Qm5tMUl+rtGJMR+X0Sc8E=
+	by mail.kernel.org (Postfix) with ESMTP id 00087217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfGQGnW (ORCPT
+        id S1726015AbfGQGqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbfGQGnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:43:21 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6B120651;
-        Wed, 17 Jul 2019 06:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563345801;
-        bh=rpX3FlNAUKO8GVGTnuVeNc+iCU/DRSE4jAZjnlhh6/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1Vhrd6HEP6Ym1QpvFRVB2pgGZDP5qGRMoJkZYzXkAT27BZk5SUBotZROwJh1ayhnO
-         A8zUaGmoGJ/E0pJrpvM2gBtZDwuJMN8OGYggKcdz90mSOXoLd7PbT1rTrWua8/6X2p
-         Za0+sksAuoM3znqHViWu2lp7dyiSu2O3GUGD4ajs=
-Date:   Wed, 17 Jul 2019 07:43:15 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, maz@kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update my email address to @kernel.org
-Message-ID: <20190717064315.tn26dss343iv33oj@willie-the-truck>
-References: <20190716174308.17147-1-marc.zyngier@arm.com>
+        Wed, 17 Jul 2019 02:46:46 -0400
+Received: from smtprelay0122.hostedemail.com ([216.40.44.122]:42790 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbfGQGqq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 02:46:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 17059181D12ED;
+        Wed, 17 Jul 2019 06:46:45 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: copy28_7d036c1ef63
+X-Filterd-Recvd-Size: 1561
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 17 Jul 2019 06:46:43 +0000 (UTC)
+Message-ID: <9791d12717bba784f24f35c29ddfaab9ccb78965.camel@perches.com>
+Subject: Re: [PATCH v8 4/5] x86/paravirt: Remove const mark from
+ x86_hyper_xen_hvm variable
+From:   Joe Perches <joe@perches.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org
+Date:   Tue, 16 Jul 2019 23:46:41 -0700
+In-Reply-To: <1563251169-30740-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1563251169-30740-1-git-send-email-zhenzhong.duan@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716174308.17147-1-marc.zyngier@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:43:08PM +0100, Marc Zyngier wrote:
-> I will soon lose access to my @arm.com email address, so let's
-> update the MAINTAINERS file to point to my @kernel.org address,
-> as well as .mailmap for good measure.
+On Tue, 2019-07-16 at 12:26 +0800, Zhenzhong Duan wrote:
+> .. as "nopv" support needs it to be changeable at boot up stage.
 > 
-> Note that my @arm.com address will still work, but someone else
-> will be reading whatever is sent there. Don't say you didn't know!
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
-> 
-> Notes:
->     Yes, I'm sending this from my ARM address. That's intentional.
->     I'll probably send it as part of a pull request later in the
->     cycle, but that's just so that people know what is coming.
-> 
->  .mailmap    | 1 +
->  MAINTAINERS | 8 ++++----
->  2 files changed, 5 insertions(+), 4 deletions(-)
+> Checkpatch reports warning, so move variable declarations from
+> hypervisor.c to hypervisor.h
+[]
+> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+[]
+> @@ -259,7 +259,7 @@ static __init void xen_hvm_guest_late_init(void)
+>  #endif
+>  }
+>  
+> -const __initconst struct hypervisor_x86 x86_hyper_xen_hvm = {
+> +struct hypervisor_x86 x86_hyper_xen_hvm __initdata = {
 
-Let's see if you manage a better job of getting people to use your new
-address than I have:
+static?
 
-Acked-by: Will Deacon <will@kernel.org>
 
-Will
