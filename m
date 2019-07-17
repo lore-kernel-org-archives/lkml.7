@@ -2,89 +2,87 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDCEC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A5C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B988621743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF7521841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 16:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHfgK6HW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfGQQqx (ORCPT
+        id S1729343AbfGQQrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 12:46:53 -0400
-Received: from gate.crashing.org ([63.228.1.57]:57045 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728430AbfGQQqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 12:46:53 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6HGkUed008627;
-        Wed, 17 Jul 2019 11:46:30 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6HGkSxG008626;
-        Wed, 17 Jul 2019 11:46:28 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Wed, 17 Jul 2019 11:46:28 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-Message-ID: <20190717164628.GN20882@gate.crashing.org>
-References: <20190713032106.8509-1-yamada.masahiro@socionext.com> <20190713124744.GS14074@gate.crashing.org> <20190713131642.GU14074@gate.crashing.org> <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com> <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au> <20190715072959.GB20882@gate.crashing.org> <87pnma89ak.fsf@concordia.ellerman.id.au> <20190717143811.GL20882@gate.crashing.org> <CAK7LNATesRrJFGZQOkTY+PL7FNyub5FJ0N6NF4s6icdXdPNr+Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNATesRrJFGZQOkTY+PL7FNyub5FJ0N6NF4s6icdXdPNr+Q@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+        Wed, 17 Jul 2019 12:47:21 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33656 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729160AbfGQQrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 12:47:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h10so24335374ljg.0;
+        Wed, 17 Jul 2019 09:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bs/QITWbhqAZxDhjSjDJdcwaHkIW+GS9/ueefoQtdFc=;
+        b=jHfgK6HWw2DZSrGHtZx8q+g4s8uAJoOkBI1je+U1ttvkHW0Mdrp6NZXQuH1aruQFSx
+         twKkQDDxOqu/Q4/dMSRAqdLHO/X0cO/85YFm15xb13DcnBDKOpx+XwUeXe6FWRzhStPO
+         sbk8DyKpQRpE46tK3V8ZMUj0tCr0DNHzarWAbNUVVPz6H05hTdxahwmuspn/lKyuyqkZ
+         4uKuARsDBm+5KUUAd58FdMaIJqUQEMqrMIB61DSbb9ErMSD/6+I2PnUQPQUiVmQ9UPQp
+         z9LkKuDveVOm2f86NQK388zbUHEI0gV5v6r6uzFbVwD76WqHy0y+b7U1AJCboFSwFSWP
+         nRCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bs/QITWbhqAZxDhjSjDJdcwaHkIW+GS9/ueefoQtdFc=;
+        b=nWCk6s3tadNdwy/Cj0KnjgkZwuW0aYH0wlsDz08eyHN3vncLiJLwRdmW8stLI2g5hW
+         AcBsm4emfddpzxXoIiXTP7BhOdj1/tUcyNHjx3OnMCGLB3Sm0F169+SRZ1m1n40n91VY
+         JiETrjRot8okn/p8FGPPGp1lYZOFerBAMx2p11BKSG+xAPhHcOmn8RPDIVFnijIDtd5l
+         JNniqk0juWoQQ4RHbioedu8xsRn+hDrX6Y2ccFI9t9AQ8Zw8lDigd/3oZZtP0r/qcx1N
+         yn8ugaDHYKQ+3HcceRPW5hMKoNxw6DAsjxZCl6QGLeqHUfLVP2hUVwLCouyj5unLydn/
+         YkNg==
+X-Gm-Message-State: APjAAAUsIxTH/fiX5wdbBj54ZsWT13OWiNtnNROgUr81ggP3A39mCieF
+        SRTKeRvoa0xzR0vDvJ8kImPvJk11xkiRKwMC474=
+X-Google-Smtp-Source: APXvYqy+aNYb7anJn+W+Rf+NmIpi47qfolURZwZXuLoTi8QKxjWASrknRWjcO23N0nDwwtBGM6WVUZr4teTmVEJi7B4=
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr20833447lje.214.1563382039201;
+ Wed, 17 Jul 2019 09:47:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190717163014.429-1-oleksandr.suvorov@toradex.com> <20190717163014.429-2-oleksandr.suvorov@toradex.com>
+In-Reply-To: <20190717163014.429-2-oleksandr.suvorov@toradex.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 17 Jul 2019 13:47:08 -0300
+Message-ID: <CAOMZO5C=gYAZ4F2XOaTgCTRVyZdNSa5CEHsiVv7SsSgo5VfZ9A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] ASoC: Define a set of DAPM pre/post-up events
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:19:36AM +0900, Masahiro Yamada wrote:
-> On Wed, Jul 17, 2019 at 11:38 PM Segher Boessenkool
-> <segher@kernel.crashing.org> wrote:
-> >
-> > On Tue, Jul 16, 2019 at 10:15:47PM +1000, Michael Ellerman wrote:
-> > > Segher Boessenkool <segher@kernel.crashing.org> writes:
-> > > And it's definitely calling ar with no flags, eg:
-> > >
-> > >   rm -f init/built-in.a; powerpc-linux-ar rcSTPD init/built-in.a init/main.o init/version.o init/do_mounts.o init/do_mounts_rd.o init/do_mounts_initrd.o init/do_mounts_md.o init/initramfs.o init/init_task.o
-> >
-> > This uses thin archives.  Those will work fine.
-> >
-> > The failing case was empty files IIRC, stuff created from no inputs.
-> 
-> Actually, empty files are created everywhere.
+On Wed, Jul 17, 2019 at 1:30 PM Oleksandr Suvorov
+<oleksandr.suvorov@toradex.com> wrote:
+>
+> Prepare to use SND_SOC_DAPM_PRE_POST_PMU definition to
+> reduce coming code size and make it more readable.
+>
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Reviewed-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 
->        cmd_ar_builtin = rm -f $@; $(AR) rcSTP$(KBUILD_ARFLAGS) $@
-> $(real-prereqs)
-
-You use thin archives.
-
-Does every config use thin archives always nowadays?
-
-> BTW, your commit 8995ac8702737147115e1c75879a1a2d75627b9e
-> dates back to 2008.
-> 
-> At that time, thin archive was not used.
-
-Yes, I know.  This isn't about built-in.[oa], it is about *other*
-archives we at least *used to* create.  If we *know* we do not anymore,
-then this workaround can of course be removed (and good riddance).
-
-If ar creates an archive file (a real one, not a thin archive), and it
-has no input files, it uses its default object format as destination
-format, if it isn't told to use something else.  And that doesn't work,
-it needs to use some format compatible with what that archive later is
-linked with.
-
-
-Segher
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
