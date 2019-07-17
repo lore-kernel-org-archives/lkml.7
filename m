@@ -2,108 +2,199 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB0AC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E46FC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA752173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E019F2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q3Dcl+EI"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NMQ9OBew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfGQBcr (ORCPT
+        id S1726053AbfGQBkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 21:32:47 -0400
-Received: from mail-eopbgr20043.outbound.protection.outlook.com ([40.107.2.43]:56964
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725856AbfGQBcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 21:32:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eu1dnk/e5mzkNn4cF2hIjJGUj/D0SapbsTNWhwLyEyr8CfAm/ytQPBdjRjuww0L1CRJXc2Jk/nTlkUONXK6dMRXjPiim4gQz4udtAjmEdZT/zsSKKuQnVWZ/OnuTtKrTS6cK1WCwxmyhzwjEDEZAMEvU96LWieAIBtaoqSQLllFpPwG3i+ElSJugWYQWgPtIv4J7uLYCqWQg772VkuxzVVL6V0XQSXYE0jAoq8z5D9UC4vHYWbh7aQzoombkWeYMvYvXgV6dhN2Iy+2WJ6aST46uulbZG1Q4t+gjzz/l2sju7VlpsZuHlLsBuPhDW/zkrwyznHn87bWwRlQE4XLiJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pyByxjlNd5gF/gvMuXebC8//j6u9791TEgyavOkRB1M=;
- b=WdKwtro23ideLhrhJHx0zoF0lWXVVsjKB8xG0/t/roxakXl42ZXABEuUmt1iKJkkB9sartlBm5fsgVSVtW5bRNuVBfmYIOKaAY7r/P4+TlJJ1h7e3eSdzFLED6pp8ekOU0XRP6uvOR66WNHL+WhVgI/tCkhljfzfLXxAMMXSWb15cBAUqD6V9hI3FVjAAwqztTmo83R1VmD+XIk31yqWAxLOAQ3Zl+liyOdGYkTy7rsk0qVnW5FOIP9kYqDcUzLj/yA8QI5pqzjC9SLeEyu/iWiAQLEgwqzLYEMhKwAto6ZNfS3FIzkiVyTp4Bz1xxofOxFP+OMbu8dfniFFCy0q6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pyByxjlNd5gF/gvMuXebC8//j6u9791TEgyavOkRB1M=;
- b=Q3Dcl+EIiOWNQWT4Bmce8FxA4KF+4bfFQaLRrNQvYBXvwHZQ6BYzqiO5iAc8chSWqNC5c1A7nmsv4vC23hcuezaKAZ2U9PnulQiXS1xISgAsTaXyUWKmiDqfKAE2zIllrt6/7h9dv1Zo0NE05h9CpPlUOFJdTA1k5w70JiFrM9w=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
- VI1PR0402MB3501.eurprd04.prod.outlook.com (52.134.4.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 01:32:33 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c539:7bdc:7eea:2a52]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c539:7bdc:7eea:2a52%7]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 01:32:33 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH v1] net: fec: optionally reset PHY via a
- reset-controller
-Thread-Topic: [EXT] [PATCH v1] net: fec: optionally reset PHY via a
- reset-controller
-Thread-Index: AQHVO1EEL3ng1jsYe0KS/0rCZTBO1KbMdjtAgADFVICAAMwi4A==
-Date:   Wed, 17 Jul 2019 01:32:33 +0000
-Message-ID: <VI1PR0402MB36009A9893832F89BB932E09FFC90@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20190715210512.15823-1-TheSven73@gmail.com>
- <VI1PR0402MB36009E99D7361583702B84DDFFCE0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CAGngYiUb5==QSM1-oa4bSeqhGyoaTw_dWjygLo=0X60eX=wQhQ@mail.gmail.com>
-In-Reply-To: <CAGngYiUb5==QSM1-oa4bSeqhGyoaTw_dWjygLo=0X60eX=wQhQ@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2fd37790-7ec5-4345-9717-08d70a56a418
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3501;
-x-ms-traffictypediagnostic: VI1PR0402MB3501:
-x-microsoft-antispam-prvs: <VI1PR0402MB350195766D7616AEFABD5FB8FFC90@VI1PR0402MB3501.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(199004)(189003)(316002)(25786009)(14454004)(68736007)(54906003)(7696005)(229853002)(186003)(26005)(8936002)(4326008)(5660300002)(71200400001)(478600001)(33656002)(71190400001)(52536014)(99286004)(305945005)(76116006)(76176011)(102836004)(7736002)(86362001)(53936002)(8676002)(66476007)(64756008)(66556008)(66946007)(66446008)(1411001)(486006)(256004)(14444005)(74316002)(6246003)(9686003)(11346002)(55016002)(6116002)(4744005)(53546011)(3846002)(66066001)(446003)(6506007)(81156014)(81166006)(6436002)(2906002)(476003)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3501;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VsLkYD+LsOhhJ2sJRfXumyPIMgaKME+5wFmaQbC5laPNh2sD/jVuaXFHXMSSBa4G3hDPAE9g0+4elZHmEIc6GL6D4mo4/Fl9ej7pDChd9+vvDbDV1x0jyXHnB/vdvq5swBfoQ8N+idHC9ms4nlYaOlQDc8JF+ofDxSbqkLiGvx15MAWJESY0HqUh8WLw0yVkorPwo0FNy595pTgUXjsJAS4oqH+2woqkFMSpUVUOnZsHRwStoCl5HtoYbk3tgzN8tdYy/IYYRL/aoW2uVtgec2FDUJyN2+xcZfnz10U2qMklg8F15x94HnZ9WsxPhR650uoIa1ZyRRL54hmyCQ0vSIXHVNe7OdyEWZbn/9Ktk78Ps1IOATWPQyLv8EhrQdhwo2e+MmAHiaN35pd3PBifKPIJAHrdwArBC74+h9F+/RU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 16 Jul 2019 21:40:16 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:1365 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfGQBkP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 21:40:15 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2e7c7b0000>; Tue, 16 Jul 2019 18:40:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Jul 2019 18:40:13 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Jul 2019 18:40:13 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
+ 2019 01:40:09 +0000
+Subject: Re: [PATCH 2/3] mm/hmm: fix ZONE_DEVICE anon page mapping reuse
+To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        "Christoph Hellwig" <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Logan Gunthorpe" <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Jan Kara" <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20190717001446.12351-1-rcampbell@nvidia.com>
+ <20190717001446.12351-3-rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <ebd1ea66-f8c0-7a03-594c-dce9ec4d0fa6@nvidia.com>
+Date:   Tue, 16 Jul 2019 18:40:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fd37790-7ec5-4345-9717-08d70a56a418
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 01:32:33.2494
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fugang.duan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3501
+In-Reply-To: <20190717001446.12351-3-rcampbell@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563327611; bh=4zW6WMS58NKwkK2EYGU0erGO3LAau6AlIU4w5xeRscI=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=NMQ9OBewREnnGi+MzFdTbeISiClUuUw26DewOW2/gLvttzLKSC1XGFYxlpGNrQX76
+         VKZ6sM2Vrn3hs4a/KqcMLLarvtE7n9bdVrc/pixmxjDDxNbLYX+yP1MKKbW3j3MhJD
+         EAElXQgWL2H1BcX1fP8k557RCIcWIJXff0FLDHEIV/d6O2SXxB3AnwPgo3z7T34t1Q
+         aDnlxp0eegoOosDedPH/as6UFkO61/whGbcnxvOiTJkKqDKnc2NuJXMUcpffcJOE93
+         F5/9V7Uq09XAxJeIcx82qR198xvNbwe4WkoAQeESsy2JsDBAPvvrZu+Q1vIE1+IGqN
+         2TRvEOS/JW3gw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU3ZlbiBWYW4gQXNicm9lY2sgPHRoZXN2ZW43M0BnbWFpbC5jb20+IFNlbnQ6IFR1ZXNk
-YXksIEp1bHkgMTYsIDIwMTkgOToxOSBQTQ0KPiBIaSBBbmR5LA0KPiANCj4gT24gTW9uLCBKdWwg
-MTUsIDIwMTkgYXQgMTA6MDIgUE0gQW5keSBEdWFuIDxmdWdhbmcuZHVhbkBueHAuY29tPg0KPiB3
-cm90ZToNCj4gPg0KPiA+IHRoZSBwaHlsaWIgYWxyZWFkeSBjYW4gaGFuZGxlIG1paSBidXMgcmVz
-ZXQgYW5kIHBoeSBkZXZpY2UgcmVzZXQNCj4gDQo+IFRoYXQncyBhIGdyZWF0IHN1Z2dlc3Rpb24s
-IHRoYW5rIHlvdSAhISBJIGNvbXBsZXRlbHkgb3Zlcmxvb2tlZCB0aGF0IGNvZGUuDQo+IFdoYXQg
-d2lsbCBoYXBwZW4gdG8gdGhlIGxlZ2FjeSBwaHkgcmVzZXQgY29kZSBpbiBmZWM/IEFyZSB0aGVy
-ZSBtYW55IHVzZXJzDQo+IGxlZnQ/DQoNClllcywgc28gdGhlIG9sZCBsZWdhY3kgY29kZSBpcyBr
-ZXB0IHRoZXJlLiBCdXQgaXQgaXMgYmV0dGVyIHRvIGNsZWFuIHVwIGFsbCBpZiANCnRoZXJlIGhh
-dmUgZW5vdWdoIGJvYXJkcyB0byB2ZXJpZnkgdGhlbS4NCg==
+On 7/16/19 5:14 PM, Ralph Campbell wrote:
+> When a ZONE_DEVICE private page is freed, the page->mapping field can be
+> set. If this page is reused as an anonymous page, the previous value can
+> prevent the page from being inserted into the CPU's anon rmap table.
+> For example, when migrating a pte_none() page to device memory:
+>   migrate_vma(ops, vma, start, end, src, dst, private)
+>     migrate_vma_collect()
+>       src[] =3D MIGRATE_PFN_MIGRATE
+>     migrate_vma_prepare()
+>       /* no page to lock or isolate so OK */
+>     migrate_vma_unmap()
+>       /* no page to unmap so OK */
+>     ops->alloc_and_copy()
+>       /* driver allocates ZONE_DEVICE page for dst[] */
+>     migrate_vma_pages()
+>       migrate_vma_insert_page()
+>         page_add_new_anon_rmap()
+>           __page_set_anon_rmap()
+>             /* This check sees the page's stale mapping field */
+>             if (PageAnon(page))
+>               return
+>             /* page->mapping is not updated */
+>=20
+> The result is that the migration appears to succeed but a subsequent CPU
+> fault will be unable to migrate the page back to system memory or worse.
+>=20
+> Clear the page->mapping field when freeing the ZONE_DEVICE page so stale
+> pointer data doesn't affect future page use.
+>=20
+> Fixes: b7a523109fb5c9d2d6dd ("mm: don't clear ->mapping in hmm_devmem_fre=
+e")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+> ---
+>  kernel/memremap.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index bea6f887adad..238ae5d0ae8a 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -408,6 +408,10 @@ void __put_devmap_managed_page(struct page *page)
+> =20
+>  		mem_cgroup_uncharge(page);
+> =20
+> +		/* Clear anonymous page mapping to prevent stale pointers */
+
+This is sufficiently complex, that some concise form of the documentation
+that you've put in the commit description, needs to also exist right here, =
+as
+a comment.=20
+
+How's this read:
+
+diff --git a/kernel/memremap.c b/kernel/memremap.c
+index 238ae5d0ae8a..e52e9da5d0a7 100644
+--- a/kernel/memremap.c
++++ b/kernel/memremap.c
+@@ -408,7 +408,27 @@ void __put_devmap_managed_page(struct page *page)
+=20
+                mem_cgroup_uncharge(page);
+=20
+-               /* Clear anonymous page mapping to prevent stale pointers *=
+/
++               /*
++                * When a device_private page is freed, the page->mapping f=
+ield
++                * may still contain a (stale) mapping value. For example, =
+the
++                * lower bits of page->mapping may still identify the page =
+an an
++                * anonymous page. Ultimately, this entire field is just st=
+ale
++                * and wrong, and it will cause errors if not cleared. One
++                * example is:
++                *
++                *  migrate_vma_pages()
++                *    migrate_vma_insert_page()
++                *      page_add_new_anon_rmap()
++                *        __page_set_anon_rmap()
++                *          ...checks page->mapping, via PageAnon(page) cal=
+l,
++                *            and incorrectly concludes that the page is an
++                *            anonymous page. Therefore, it incorrectly,
++                *            silently fails to set up the new anon rmap.
++                *
++                * For other types of ZONE_DEVICE pages, migration is eithe=
+r
++                * handled differently or not done at all, so there is no n=
+eed
++                * to clear page->mapping.
++                */
+                if (is_device_private_page(page))
+                        page->mapping =3D NULL;
+=20
+?
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
