@@ -2,189 +2,210 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8EBC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6404320818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C7C20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V11DzqkC"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABpsfu/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727765AbfGQOMY (ORCPT
+        id S1727795AbfGQOMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:12:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41623 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfGQOMW (ORCPT
+        Wed, 17 Jul 2019 10:12:48 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44397 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfGQOMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:12:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so10910655pff.8;
-        Wed, 17 Jul 2019 07:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4s7YPj0sRs5ZowClSZ1agTnqtfmEiokOlFXuNb237V0=;
-        b=V11DzqkChmijR3NqfYxVhUUbqkCH9ei1WMLUAwJ75245s0ObUTdGjXQh9MqPcXfaBt
-         IVVRs9wUqj0PrO7UgfW/RTcdZ3AwCeZVgQ7GU8b8bcJdwASMxUW7BfyyYHJ58PERk/M5
-         YpS5iYl7WhELPZVUN5LjlXvYfZkSfkdr0+nnc70Lbdsu/O3MrTX6kykO5yyNxkyYxSD0
-         9fS3TQ3d8o/0B+jttafuxDUaZZ40zGfzA0HtRrO4Yvy6HaNqJBPrsdO9vFL55qAWnKuy
-         TuhnuoDAEdBFyng1PfgY8qe7FtnANW3tyUzOZ8/CwDcBjCB2Pkaxqw6RBNUiK9ZNJTqR
-         aJTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4s7YPj0sRs5ZowClSZ1agTnqtfmEiokOlFXuNb237V0=;
-        b=IZJRxNvqz4mDhINzlBhPh9qZIBpqetjN/OyEmLNuY6F7ubVFHxR2pV+69WsHuxdB/h
-         aRTg8E6M8rb7pND197eD/vWj2M5Rs0Q52s9ZlTqDTrGPvNfBUTA3Jc7yRfgYHU9KU0/5
-         K1JBoscS5MEG0hfjh2WP2SVMAeMASYWAIfO6DaYs1VOaWYBhB+dVeMB9Iltly4k/0LUa
-         rpxhc5mK8f5uFRC2l16tu4ZjMNgP7Gosrr+tvdjfSqbHMXFbrcktK6R0kYN1Et37dtME
-         le4meaNrkof8EcLjz8lzU5XLPTzfiFhnB2IJhSoNR3b4AtO2wvwPJPf2HkW6poWaEyl4
-         tuKg==
-X-Gm-Message-State: APjAAAVKVpXHC11Y0WVuzSwuP1oM7PV4OuQ+1Jp3xXt7RPJEtx9diZBc
-        SgpfRJJqzdrNOEr595x/Jnc=
-X-Google-Smtp-Source: APXvYqznGX4+JEme6lKbDB5vR5tkrbLnL36X6Bm6n+RzroQYGlgvIKo2t5wrcridRZsW1hlXxTvSTQ==
-X-Received: by 2002:a65:448a:: with SMTP id l10mr16735169pgq.327.1563372740190;
-        Wed, 17 Jul 2019 07:12:20 -0700 (PDT)
-Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.76.70])
-        by smtp.gmail.com with ESMTPSA id s43sm27565680pjb.10.2019.07.17.07.12.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 07:12:19 -0700 (PDT)
-From:   Vandana BN <bnvandana@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH] media:dvb-frontends:Return if Max devices are added in dvb_pll_attach().
-Date:   Wed, 17 Jul 2019 19:42:04 +0530
-Message-Id: <20190717141204.19433-1-bnvandana@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jul 2019 10:12:48 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190717141246euoutp02eca645e8620be574dcb0cae43a72c280~yNz9-K2gX1337913379euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 14:12:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190717141246euoutp02eca645e8620be574dcb0cae43a72c280~yNz9-K2gX1337913379euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563372766;
+        bh=e7owagyzm32/x8fQaeiUS1HzPuby4JB3XeoTnzx54mQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ABpsfu/AoPIpQ92e1e+OBC5bBSrkVN1FDhP4sqoygoxo8n0bTjyktWFxwegStsYog
+         lnh3m1MItmuBO2A7SR05R/CGqpxlYFsFHW5Pp+dbD8whn9Q+SFaxS91pSHqkpMgaM5
+         hCeLB9S3jPiZKjX66W+VJZPXuAm7z9sdIEyIdeCc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190717141245eucas1p2c16ff22a3ed0ebf0f56c021d47ca5616~yNz9Otly70335803358eucas1p2Y;
+        Wed, 17 Jul 2019 14:12:45 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id E5.49.04298.DDC2F2D5; Wed, 17
+        Jul 2019 15:12:45 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190717141244eucas1p2f2a29627d97d942a7afad36f794a5190~yNz8UkrW40549205492eucas1p2P;
+        Wed, 17 Jul 2019 14:12:44 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190717141244eusmtrp298844cfbbfdb6604b73f714120ca8a82~yNz8GN5zb3155131551eusmtrp2H;
+        Wed, 17 Jul 2019 14:12:44 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-1d-5d2f2cdd021f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 36.A8.04146.CDC2F2D5; Wed, 17
+        Jul 2019 15:12:44 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190717141243eusmtip2a6e78e0dcb3c2d83be7dcabbbaf919ef~yNz7aE4OC2299922999eusmtip2e;
+        Wed, 17 Jul 2019 14:12:43 +0000 (GMT)
+Subject: Re: [PATCH v2 1/4] opp: core: add regulators enable and disable
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <297179a4-a542-0836-6192-e06369fdcae5@partner.samsung.com>
+Date:   Wed, 17 Jul 2019 16:12:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <9acc7dd0-614b-ccd3-a485-eeca3dab494b@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0iTURjGO/su+xSnx7nwRSNjEV3UWZR0SLtSuaAioj/Cslz6YZIz3Zym
+        /dFmljdSUciaogXdMM2ctxS7TXOEmpRRM82GZnaTyksk0sztU/K/33ne5+F9XjgcJbUxPlxs
+        fBKviVfFyVlXuqF9qjvwfUBQxNrqSh9Sc6WaIW8nRhhS3vaCIflD3yjS3X1fTLrSv4uJaegN
+        Q3qaS1kyfqkNkSvdj0Skqu29mNx8+1JE+gx3WPL9T5eIXHjYJib2NzU0qbW1s9s8lZVllUhp
+        qshmlbU3zinz6iqQ0mJtFCnHTUsPsOGuodF8XGwyrwnaEul60lRURCfUys68erZPj5pwDnLh
+        AG+A6SfXaAdL8R0EVaMJOch1licQFD0zscJjHEF7p5GdT0ykD1LC4DaC4inrnGsUwZcffxmH
+        ywsrwfJ6xJmQ4VVw9e9r5DBRuIeGy4OFThOLN8JgY6fIwRK8G2rqOygH03gF6PP6neHF+DCM
+        2VoZweMJz69+dJZ1wVuh4XMfcjCFveHdx3KRwH5wvr7EWQ+wgYOahlqx0Hsn5NfdpAT2gq+W
+        ujl9Ccw0CWHAKTB8PU8shDMQ2DJ/0cIgBFotL2dbcLMbVkN1c5Agb4fCklvIIQN2B+uop9DB
+        HQobiilBlkDWRangDoSymU5GYF/ImbnHFCC5ccFlxgXXGBdcY/y/9xqiK5A3r9OqY3jtung+
+        RaFVqbW6+BhF1Gm1Cc3+uw67ZewBmnx1wowwh+RuEv2yoAgpo0rWpqrNCDhKLpNsnvSPkEqi
+        ValpvOb0cY0ujteakS9Hy70lZxfZjkhxjCqJP8XzCbxmfiriXHz0qGhTpf6xLHuP/ZZcEZi4
+        0l4SOp15uXeAoxWG372dBn84pkg/6rXb/jQsuEWeV74yY/Gn9A8juYl+VVmKkVHdGVl4wMAO
+        jyFDeEtHT1rpXc1a893P0ba44ahNVY3rM04Eq62HdMF7H3lEin8O9O9fnniwYFe026rsXOtF
+        c25+SJi3nNaeVK1bQ2m0qn9iGAzTcwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsVy+t/xe7p3dPRjDfZdlbTYOGM9q8X1L89Z
+        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
+        cbtxBZvFmx9nmSxa9x5ht/h3bSOLxeYHx9gcBD3WzFvD6LFpVSebx+Yl9R59W1Yxehy/sZ3J
+        4/MmuQC2KD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27
+        BL2MTZMnsxRsFqm4dNS3gXGnQBcjJ4eEgInEl6ZHzF2MXBxCAksZJS7uecUKkZCWaDy9mgnC
+        Fpb4c62LDaLoNaPEs77zYEXCAh4Sx688ZwOxRQQ0JGb+vcIIUsQscJVF4vzGOWAJIYE2Jon3
+        E1RBbDYBc4lH28+ATeUVcJPYuPU0M4jNIqAq0dB3B6xeVCBC4vCOWYwQNYISJ2c+YQGxOQXs
+        Jba9uA0WZxZQl/gz7xIzhC0ucevJfCYIW16ieets5gmMQrOQtM9C0jILScssJC0LGFlWMYqk
+        lhbnpucWG+oVJ+YWl+al6yXn525iBEb4tmM/N+9gvLQx+BCjAAejEg/vDSX9WCHWxLLiytxD
+        jBIczEoivLZftWOFeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YfPJK4g1NDc0tLA3Njc2N
+        zSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTAWVIhl16SXv1+4ws8/RNiDp2/fGY7bfGKx
+        VhflZj3kUJ4T3VFYe6h+5blAEdO8jeEhBRfVl/2PiH/Im7raZlPN5RknueN0W68ceBrZaSMY
+        OEdwysLIwoc22kf7ctPa+5XuJlp0JpsIaHnePeYyS/xr86cpot63mOO6/u1cr7PU6+uqJr9t
+        O5VYijMSDbWYi4oTAS3AVUMGAwAA
+X-CMS-MailID: 20190717141244eucas1p2f2a29627d97d942a7afad36f794a5190
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190715120430eucas1p19dddcc93756e6a110d3476229f9428b3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190715120430eucas1p19dddcc93756e6a110d3476229f9428b3
+References: <20190715120416.3561-1-k.konieczny@partner.samsung.com>
+        <CGME20190715120430eucas1p19dddcc93756e6a110d3476229f9428b3@eucas1p1.samsung.com>
+        <20190715120416.3561-2-k.konieczny@partner.samsung.com>
+        <9acc7dd0-614b-ccd3-a485-eeca3dab494b@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzbot reported global-out-of-bounds Read in dvb_pll_attach, while
-accessing id[dvb_pll_devcount], because dvb_pll_devcount was 65,
-that is more than size of 'id' which is DVB_PLL_MAX(64).
+On 16.07.2019 06:03, Chanwoo Choi wrote:
+> Hi Kamil,
+> 
+> On 19. 7. 15. 오후 9:04, Kamil Konieczny wrote:
+>> Add enable regulators to dev_pm_opp_set_regulators() and disable
+>> regulators to dev_pm_opp_put_regulators(). This prepares for
+>> converting exynos-bus devfreq driver to use dev_pm_opp_set_rate().
+> 
+> IMHO, it is not proper to mention the specific driver name.
+> If you explain the reason why enable the regulator before using it,
+> it is enough description.
+> 
+>>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> --
+>> Changes in v2:
+>>
+>> - move regulator enable and disable into loop
+>>
+>> ---
+>>  drivers/opp/core.c | 18 +++++++++++++++---
+>>  1 file changed, 15 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+>> index 0e7703fe733f..069c5cf8827e 100644
+>> --- a/drivers/opp/core.c
+>> +++ b/drivers/opp/core.c
+>> @@ -1570,6 +1570,10 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>>  			goto free_regulators;
+>>  		}
+>>  
+>> +		ret = regulator_enable(reg);
+>> +		if (ret < 0)
+>> +			goto disable;
+>> +
+>>  		opp_table->regulators[i] = reg;
+>>  	}
+>>  
+>> @@ -1582,9 +1586,15 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
+>>  
+>>  	return opp_table;
+>>  
+>> +disable:
+>> +	regulator_put(reg);
+>> +	--i;
+>> +
+>>  free_regulators:
+>> -	while (i != 0)
+>> -		regulator_put(opp_table->regulators[--i]);
+>> +	for (; i >= 0; --i) {
+>> +		regulator_disable(opp_table->regulators[i]);
+>> +		regulator_put(opp_table->regulators[i]);
+>> +	}
+>>  
+>>  	kfree(opp_table->regulators);
+>>  	opp_table->regulators = NULL;
+>> @@ -1610,8 +1620,10 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
+>>  	/* Make sure there are no concurrent readers while updating opp_table */
+>>  	WARN_ON(!list_empty(&opp_table->opp_list));
+>>  
+>> -	for (i = opp_table->regulator_count - 1; i >= 0; i--)
+>> +	for (i = opp_table->regulator_count - 1; i >= 0; i--) {
+>> +		regulator_disable(opp_table->regulators[i]);
+>>  		regulator_put(opp_table->regulators[i]);
+>> +	}
+>>  
+>>  	_free_set_opp_data(opp_table);
+>>  
+>>
+> 
+> I agree to enable the regulator before using it.
+> The bootloader might not enable the regulators
+> and the kernel need to enable regulator in order to increase
+> the reference count explicitly event if bootloader enables it.
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Fix is to check if DVB_PLL_MAX devices are attached and if so return
-NULL from dvb_pll_attach().
+Thank you, I will change commit description and send v3.
 
-Reported-by: syz...@syzkaller.appspotmail.com
-
-usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
-software demuxer
-dvbdev: DVB: registering new adapter (774 Friio White ISDB-T USB2.0)
-usb 1-1: media controller created
-dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
-tc90522 0-0018: Toshiba TC90522 attached.
-usb 1-1: DVB: registering adapter 0 frontend 0 (Toshiba TC90522 ISDB-T
-module)...
-dvbdev: dvb_create_media_entity: media entity 'Toshiba TC90522 ISDB-T
-module' registered.
-==================================================================
-BUG: KASAN: global-out-of-bounds in dvb_pll_attach+0x6c5/0x830
-drivers/media/dvb-frontends/dvb-pll.c:798
-Read of size 4 at addr ffffffff89c9e5e0 by task kworker/0:1/12
-
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  dvb_pll_attach+0x6c5/0x830 drivers/media/dvb-frontends/dvb-pll.c:798
-  dvb_pll_probe+0xfe/0x174 drivers/media/dvb-frontends/dvb-pll.c:877
-  i2c_device_probe+0x790/0xaa0 drivers/i2c/i2c-core-base.c:389
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  i2c_new_client_device+0x5b3/0xc40 drivers/i2c/i2c-core-base.c:778
-  i2c_new_device+0x19/0x50 drivers/i2c/i2c-core-base.c:821
-  dvb_module_probe+0xf9/0x220 drivers/media/dvb-core/dvbdev.c:985
-  friio_tuner_attach+0x125/0x1d0 drivers/media/usb/dvb-usb-v2/gl861.c:536
-  dvb_usbv2_adapter_frontend_init
-drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:675 [inline]
-  dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
-[inline]
-  dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
-  dvb_usbv2_probe.cold+0x24dc/0x255d
-drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the variable:
-  id+0x100/0x120
-
-Memory state around the buggy address:
-  ffffffff89c9e480: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 00 00
-  ffffffff89c9e500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffffffff89c9e580: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
-                                                        ^
-  ffffffff89c9e600: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-  ffffffff89c9e680: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
-==================================================================
-
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
----
- drivers/media/dvb-frontends/dvb-pll.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/media/dvb-frontends/dvb-pll.c b/drivers/media/dvb-frontends/dvb-pll.c
-index ba0c49107bd2..c850f1d69bce 100644
---- a/drivers/media/dvb-frontends/dvb-pll.c
-+++ b/drivers/media/dvb-frontends/dvb-pll.c
-@@ -788,6 +788,9 @@ struct dvb_frontend *dvb_pll_attach(struct dvb_frontend *fe, int pll_addr,
- 	int ret;
- 	const struct dvb_pll_desc *desc;
-
-+	if (dvb_pll_devcount > DVB_PLL_MAX - 1)
-+		return NULL;
-+
- 	b1 = kmalloc(1, GFP_KERNEL);
- 	if (!b1)
- 		return NULL;
 -- 
-2.17.1
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
 
