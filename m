@@ -2,165 +2,168 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6698DC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7A5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F507217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6322173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:48:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="xFZwS0Bb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbfGQIr4 (ORCPT
+        id S1726323AbfGQIsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:47:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38430 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfGQIrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:47:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8B0C0AE34;
-        Wed, 17 Jul 2019 08:47:53 +0000 (UTC)
-Subject: Re: incoming
-To:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, Jonathan Corbet <corbet@lwn.net>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190716162536.bb52b8f34a8ecf5331a86a42@linux-foundation.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8056ff9c-1ff2-6b6d-67c0-f62e66064428@suse.cz>
-Date:   Wed, 17 Jul 2019 10:47:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190716162536.bb52b8f34a8ecf5331a86a42@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 17 Jul 2019 04:48:03 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:12569 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQIsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:48:02 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: QzGdowYLA48+27nPZvfRV38mTblXx42mexgA5wRTiFfWmC22XBYDNFj+kEYC2cK9q6IcaM21TV
+ ur8P+iwkBb1dg/NctKT/9/Ntvko9jPnI4MU7GxdRdXXdr106ivVxHADw9RAmYdFXcQ1BHK63Uj
+ 2faB5aXbICwrqvo1zcSi9NTeUOa7k268vJQOymqTVYwG2z/xNcCAexPGrSk8iY6BdoFLlH8ymI
+ h2h+IUuU7xtq7MaFPopf5TP8iIB6Mzkxzit1CphoYnMpf+KDz4Os5j3K0AyWMI27898+oJtWgv
+ cjg=
+X-IronPort-AV: E=Sophos;i="5.64,273,1559545200"; 
+   d="scan'208";a="41633726"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jul 2019 01:47:59 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 17 Jul 2019 01:47:58 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 17 Jul 2019 01:47:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CiPmWpZYKZzUYrqH+owOXtQr5UDL0zetXHLDHMDe+kpErRVhwoEucYllgLp+M4R10Vy9ussxy+0QCwX76VYZ+oJWs1hpqghH1sUfuYshdm7zu3DYWbU1kQ/NDL1HQMREOjCa40P9A4kffmH0O4q7h3aJf0wiuJv992CjfJnQkB6mZtyg9raPaFGuQMO/6sdccirOdVv8jWOonH7z7NPdKw0Hee6fJWlQJyTek4CSBJKMo8epc2+Hw99mBecnrq3L/+OtBwoN6flI7KhNyaLpS8e2j295TqNN4cJiwc7h4HYMLjYCxDVXWoHxc9/byBh9nDeJNdTneJV/vvmpQbJRPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Xu84YWtk/lS9JfP69/HC4gSO8nxDAxKE2idXbpKK3M=;
+ b=KHYqzAO/IfcP5PJi8jSQfqZfZMsyDgUTDlwj1mEUHc9X+10Y8nvr+sHM77oRQzAHZo8mEPKNZHWk7ufzs2n11+WO5oYWhCWm+L0Ws0lx29FqKzXonYDxThwa9gftYHMraGDb6ooj3liwOSp3uZjOb731WCycoiqLIZ7EwNwLan5l3s5wIokXe5idVmHGQpRmTwsUB6XblUJVYFVA20ctWqO1CoX4L7BVwEI3N+nSYgfmTUnT1xaTk7nWyNZP4Ce6ML2I5wdIXzamZgJUs7NhtvBjvP7JjM1lmatjrpIlxl9rGw8OHhAXxESUzb4E9hO8nwnUlJf6SlGwGwudXHhszQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microchip.com;dmarc=pass action=none
+ header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Xu84YWtk/lS9JfP69/HC4gSO8nxDAxKE2idXbpKK3M=;
+ b=xFZwS0BbvT3f3dOcqujCWiqJK1qOQJ6ZOuLVtHUmzJ+QkItYGmVeAVr+nWXgKHc6snl124xECvqqSYF/cK51egQKuQI3pY+NnOYIjxZBWHoaXHt7plKIzdf+do4L1Fjaue/ukFLpUgBke4mBKpGURzzgQtGdGAADd+p2QQDuLdc=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6SPR00MB254.namprd11.prod.outlook.com (10.173.236.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Wed, 17 Jul 2019 08:47:57 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::6515:912a:d113:5102]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::6515:912a:d113:5102%12]) with mapi id 15.20.2073.012; Wed, 17 Jul
+ 2019 08:47:57 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>, <marek.vasut@gmail.com>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 0/5] mtd: spi-nor: write protection at power-up
+Thread-Topic: [PATCH 0/5] mtd: spi-nor: write protection at power-up
+Thread-Index: AQHVPHxUB6tYOD3eaEWmYluw6fwWCA==
+Date:   Wed, 17 Jul 2019 08:47:56 +0000
+Message-ID: <20190717084745.19322-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1P195CA0085.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:802:59::38) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.9.5
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0806800c-877d-4cb4-08f9-08d70a9376d4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6SPR00MB254;
+x-ms-traffictypediagnostic: BN6SPR00MB254:
+x-microsoft-antispam-prvs: <BN6SPR00MB254CB352AC9F444228CEC92F0C90@BN6SPR00MB254.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01018CB5B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(376002)(366004)(346002)(189003)(199004)(66066001)(102836004)(186003)(4326008)(99286004)(52116002)(2616005)(486006)(386003)(6436002)(256004)(26005)(476003)(86362001)(53936002)(107886003)(6506007)(6486002)(66446008)(14454004)(14444005)(6512007)(71190400001)(64756008)(71200400001)(25786009)(81156014)(110136005)(2501003)(478600001)(305945005)(7736002)(54906003)(1076003)(2906002)(5660300002)(36756003)(66476007)(81166006)(66556008)(6116002)(8676002)(50226002)(8936002)(316002)(3846002)(66946007)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6SPR00MB254;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mCfwQ3Uhhm8K7Uox/0erWQQFjhkMefzpXL6y0FhI20caKGsejUMP0CSbnh84Dhnv1NF2+MiLt3J3oegq1AOgCr0ztLSmSR5M8PJ+723BfQSw8kMWPe3oVLd6UWxMSe7vxbhBBMO5QBJCe9dCa+XHg+EtkNSzWufxOx7Q1cuI6PrQROYk7NlElox6/GbgPyqhtxVO93NcGKe0N5cIN1CnGNnE4Mf/FTZss0ke9cvJ0tSX38F2hF9GfE3Lx9CytfVvpkrkozXxmyUxnrJTtBO4LECFAD3lSwarQr9liiQpMPbhikrkPQM96WeGEvSPRAN6aTaidrzXi7G663PifbvD+t84xU9gyNbtdq7S7JjNK5Q6hfc3/JxFum/KO/HZkdNyt19GHxgwF57bUpfsYjPxluHbUVBGI+B0qp/J5iWd5Yo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0806800c-877d-4cb4-08f9-08d70a9376d4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 08:47:56.9200
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6SPR00MB254
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/19 1:25 AM, Andrew Morton wrote:
-> 
-> Most of the rest of MM and just about all of the rest of everything
-> else.
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Hi,
+There is no functional change intended for the first 2 patches.
 
-as I've mentioned at LSF/MM [1], I think it would be nice if mm pull
-requests had summaries similar to other subsystems. I see they are now
-more structured (thanks!), but they are now probably hitting the limit
-of what scripting can do to produce a high-level summary for human
-readers (unless patch authors themselves provide a blurb that can be
-extracted later?).
+Patch 3 adds support for the Global Block Unlock command: a single
+command cycle that unlocks the entire memory array.
 
-So I've tried now to provide an example what I had in mind, below. Maybe
-it's too concise - if there were "larger" features in this pull request,
-they would probably benefit from more details. I'm CCing the known (to
-me) consumers of these mails to judge :) Note I've only covered mm, and
-core stuff that I think will be interesting to wide audience (change in
-LIST_POISON2 value? I'm sure as hell glad to know about that one :)
+Patch 4 unlocks the global block protection on sst26vf064b. This is
+identical with what other nor flashes are doing by clearing the
+block protection bits from the status register: disable the write
+protection after a power-on reset cycle.
 
-Feel free to include this in the merge commit, if you find it useful.
+Patch 5 adds a Kconfig option to disable the write protection at
+power-up. This permits users to choose if they want the write
+protection at power-up enabled or not. Backward compatibility imposes
+to disable the write protection at power-up, so the Kconfig option is
+selected by default.
 
-Thanks,
-Vlastimil
+Tudor Ambarus (5):
+  mtd: spi-nor: fix description for int (*flash_is_locked)()
+  mtd: spi-nor: group the code about the write protection at power-up
+  mtd: spi-nor: add Global Block Unlock support
+  mtd: spi-nor: unlock global block protection on sst26vf064b
+  mtd: spi-nor: add Kconfig option to disable write protection at
+    power-up
 
-[1] https://lwn.net/Articles/787705/
+ drivers/mtd/spi-nor/Kconfig   |  8 ++++++
+ drivers/mtd/spi-nor/spi-nor.c | 66 ++++++++++++++++++++++++++++++++-------=
+----
+ include/linux/mtd/spi-nor.h   |  9 +++---
+ 3 files changed, 62 insertions(+), 21 deletions(-)
 
------
-
-- z3fold fixes and enhancements by Henry Burns and Vitaly Wool
-- more accurate reclaimed slab caches calculations by Yafang Shao
-- fix MAP_UNINITIALIZED UAPI symbol to not depend on config, by
-Christoph Hellwig
-- !CONFIG_MMU fixes by Christoph Hellwig
-- new novmcoredd parameter to omit device dumps from vmcore, by Kairui Song
-- new test_meminit module for testing heap and pagealloc initialization,
-by Alexander Potapenko
-- ioremap improvements for huge mappings, by Anshuman Khandual
-- generalize kprobe page fault handling, by Anshuman Khandual
-- device-dax hotplug fixes and improvements, by Pavel Tatashin
-- enable synchronous DAX fault on powerpc, by Aneesh Kumar K.V
-- add pte_devmap() support for arm64, by Robin Murphy
-- unify locked_vm accounting with a helper, by Daniel Jordan
-- several misc fixes
-
-core/lib
-- new typeof_member() macro including some users, by Alexey Dobriyan
-- make BIT() and GENMASK() available in asm, by Masahiro Yamada
-- changed LIST_POISON2 on x86_64 to 0xdead000000000122 for better code
-generation, by Alexey Dobriyan
-- rbtree code size optimizations, by Michel Lespinasse
-- convert struct pid count to refcount_t, by Joel Fernandes
-
-get_maintainer.pl
-- add --no-moderated switch to skip moderated ML's, by Joe Perches
-
+--=20
+2.9.5
 
