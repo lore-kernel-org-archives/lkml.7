@@ -2,88 +2,134 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69A9C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE217C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1B32182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:30:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8RkSqE+"
+	by mail.kernel.org (Postfix) with ESMTP id 8E0D32182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389045AbfGQAaO (ORCPT
+        id S2388985AbfGQApv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 20:30:14 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39785 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfGQAaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 20:30:14 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so17067007otq.6;
-        Tue, 16 Jul 2019 17:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MCQzjwUfSJg8bVO8ghpSoCJiKJHXzfZqPvw/ahHwNPw=;
-        b=r8RkSqE+qR7LaYol52hD5Dvfbz30XMK7h8IO7ZYcUatnZjYqDyYB9knIneCuG34u0u
-         Q+tnanwGyUBGo30K0/kfsaOThbM8D2oERf9Gb+h5rZ9M7LhehsO4yPxSRVWJRxgtxGnN
-         h9N6G/3dfhWNIHvqwdM+VgQKZHBGB4DP1LC1uU5DbGDm0V+X7xegwK7R9uLvsOtQVprn
-         Ew1cclbTrx528p9yWGPAZoZrH/vJOphp9OMpEES0kZFY6b1eO2GKJkjDkpsGor/B5L/L
-         1XNdnHmga/qB1T/PZbAMMfT7gLKrShkpzMj5CL7/a99AI1lDIXBGuedjDN5tA7BXRNK5
-         S5Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MCQzjwUfSJg8bVO8ghpSoCJiKJHXzfZqPvw/ahHwNPw=;
-        b=sk2tuUJtJzF3qKgzLw4IU8bikJUALF4dCKQnsn9wQF3VtA2vg6tbsTZgiZh0bWorvd
-         ifaRhsO+Nr5lm6wqgSzalsgYOXBUYFtiNzRGqfLbqMjpvxLS3rFMdOmfqGHrzTVmvy2n
-         XpuEzJRR0em3eMvhnkw7W3a2h8aE4/exq3xMl29hV2/rTedg26YStwTp3kL06fr9+OO2
-         YA22HUwP3mmXnPIfE3LWE+AaoBi25lkphzCXgUhiotU6iFdyCwU85SgIzPSbp+tX2a+p
-         jqlqIRwN5gJvZM76grvuWp1xqB44sOLcrcRuoZi8itGmf/8Whi5R8Yal4mJiD6Zjo2ou
-         HZog==
-X-Gm-Message-State: APjAAAUpAJBgRTdDpuAcCwEFXJyxsw1gkV2efuWntW40x/JTJqWeQbBG
-        82IrDW8iea95JzuSbg5pL10vJYzvbC8kitVuQNoJEEz8
-X-Google-Smtp-Source: APXvYqwQuNZFZzhUZbkicKvWjEpcwSqJAVFAEJ9MRYLTYpXpNAERa2KheVR2ATM+eFC1fFJ24NlNJK8RLN6Zt/a/5BY=
-X-Received: by 2002:a9d:2c47:: with SMTP id f65mr27751467otb.185.1563323413251;
- Tue, 16 Jul 2019 17:30:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
- <TY2PR02MB41600B4C6B9FF4A9F8CD957880F30@TY2PR02MB4160.apcprd02.prod.outlook.com>
- <0e05bac0-af49-996a-c5fd-f6c61782ae4f@redhat.com>
-In-Reply-To: <0e05bac0-af49-996a-c5fd-f6c61782ae4f@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 17 Jul 2019 08:30:07 +0800
-Message-ID: <CANRm+Cwi33d5LCNu0JTRkf1W5dSVUOOfqo+QGYe=pd0i=vRXzw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] KVM: LAPIC: Implement Exitless Timer
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpeng.li@hotmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jul 2019 20:45:51 -0400
+Received: from gate.crashing.org ([63.228.1.57]:56495 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbfGQApv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 20:45:51 -0400
+Received: from ufdda393ec48b57.ant.amazon.com (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6H0jXni032429;
+        Tue, 16 Jul 2019 19:45:38 -0500
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     linux-nvme@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Paul Pawlowski <paul@mrarm.io>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH v2 2/3] nvme-pci: Add support for variable IO SQ element size
+Date:   Wed, 17 Jul 2019 10:45:26 +1000
+Message-Id: <20190717004527.30363-2-benh@kernel.crashing.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190717004527.30363-1-benh@kernel.crashing.org>
+References: <20190717004527.30363-1-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jul 2019 at 22:05, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 11/07/19 15:50, Wanpeng Li wrote:
-> > kindly ping=EF=BC=8C
->
-> Sorry, I need more time to review this.  It's basically the only
-> remaining item for the 5.3 merge window, even though it won't be part of
-> the first pull request to Linus.
+The size of a submission queue element should always be 6 (64 bytes)
+by spec.
 
-Thank you! Hope finally we will not miss it. :)
+However some controllers such as Apple's are not properly implementing
+the standard and require a different size.
 
-Regards,
-Wanpeng Li
+This provides the ground work for the subsequent quirks for these
+controllers.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+ drivers/nvme/host/pci.c | 11 ++++++++---
+ include/linux/nvme.h    |  1 +
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 8f006638452b..1637677afb78 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -28,7 +28,7 @@
+ #include "trace.h"
+ #include "nvme.h"
+ 
+-#define SQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_command))
++#define SQ_SIZE(q)	((q)->q_depth << (q)->sqes)
+ #define CQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_completion))
+ 
+ #define SGES_PER_PAGE	(PAGE_SIZE / sizeof(struct nvme_sgl_desc))
+@@ -100,6 +100,7 @@ struct nvme_dev {
+ 	unsigned io_queues[HCTX_MAX_TYPES];
+ 	unsigned int num_vecs;
+ 	int q_depth;
++	int io_sqes;
+ 	u32 db_stride;
+ 	void __iomem *bar;
+ 	unsigned long bar_mapped_size;
+@@ -162,7 +163,7 @@ static inline struct nvme_dev *to_nvme_dev(struct nvme_ctrl *ctrl)
+ struct nvme_queue {
+ 	struct nvme_dev *dev;
+ 	spinlock_t sq_lock;
+-	struct nvme_command *sq_cmds;
++	void *sq_cmds;
+ 	 /* only used for poll queues: */
+ 	spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
+ 	volatile struct nvme_completion *cqes;
+@@ -178,6 +179,7 @@ struct nvme_queue {
+ 	u16 last_cq_head;
+ 	u16 qid;
+ 	u8 cq_phase;
++	u8 sqes;
+ 	unsigned long flags;
+ #define NVMEQ_ENABLED		0
+ #define NVMEQ_SQ_CMB		1
+@@ -488,7 +490,8 @@ static void nvme_submit_cmd(struct nvme_queue *nvmeq, struct nvme_command *cmd,
+ 			    bool write_sq)
+ {
+ 	spin_lock(&nvmeq->sq_lock);
+-	memcpy(&nvmeq->sq_cmds[nvmeq->sq_tail], cmd, sizeof(*cmd));
++	memcpy(nvmeq->sq_cmds + (nvmeq->sq_tail << nvmeq->sqes),
++	       cmd, sizeof(*cmd));
+ 	if (++nvmeq->sq_tail == nvmeq->q_depth)
+ 		nvmeq->sq_tail = 0;
+ 	nvme_write_sq_db(nvmeq, write_sq);
+@@ -1465,6 +1468,7 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 	if (dev->ctrl.queue_count > qid)
+ 		return 0;
+ 
++	nvmeq->sqes = qid ? dev->io_sqes : NVME_NVM_ADMSQES;
+ 	nvmeq->q_depth = depth;
+ 	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(nvmeq),
+ 					 &nvmeq->cq_dma_addr, GFP_KERNEL);
+@@ -2318,6 +2322,7 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+ 				io_queue_depth);
+ 	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
+ 	dev->dbs = dev->bar + 4096;
++	dev->io_sqes = NVME_NVM_IOSQES;
+ 
+ 	/*
+ 	 * Temporary fix for the Apple controller found in the MacBook8,1 and
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index 01aa6a6c241d..d5a4bc21f36b 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -140,6 +140,7 @@ enum {
+  * Submission and Completion Queue Entry Sizes for the NVM command set.
+  * (In bytes and specified as a power of two (2^n)).
+  */
++#define NVME_NVM_ADMSQES	6
+ #define NVME_NVM_IOSQES		6
+ #define NVME_NVM_IOCQES		4
+ 
+-- 
+2.17.1
+
