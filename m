@@ -2,223 +2,153 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9758C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599AAC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A126321841
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EVotIEnZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3C32D20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbfGQXWL (ORCPT
+        id S1728572AbfGQXaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 19:22:11 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37382 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfGQXWK (ORCPT
+        Wed, 17 Jul 2019 19:30:35 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:54668 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfGQXaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 19:22:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HN8v7l017634;
-        Wed, 17 Jul 2019 23:21:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=hCHrTU7VoG4zjLFZxdulw58hq+gR27EbiMFMvD5jW0w=;
- b=EVotIEnZX5AMgotP0WiDlItf1sIKJK8zMiD9MwfJN4w21tzxOjUf174tLSG4Q8pEiv1m
- k8SY1pznBQmb+GYIWKaHihXYf0VtMdccxlMnT1CqCH6zIlKLggTlfL5iWD5O0855LzuG
- dhneqzxTiRGNGslIltrtaMGZ3z6gFRLH5XL1/ryGH+GjMpSEtBHdtphAIpNzRZm62XLP
- yu0yXZqVwYwnyYpyFS3yktrAjkncOnTgS+qdxR1EQ1MbugCZwAI16NWuyj7UDK5erZuq
- bZJ5qgu6tBRkwjv/dwNj+opvhg9NWvuoF/cI5mAW0IPpeXug3XvumbgwJ5/Vc+qmg0GZ sQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tq78pwq76-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 23:21:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HN7wZT082185;
-        Wed, 17 Jul 2019 23:21:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tsmccperb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 23:21:44 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6HNLf4A006652;
-        Wed, 17 Jul 2019 23:21:41 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 23:21:41 +0000
-Date:   Wed, 17 Jul 2019 19:21:36 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>
-Subject: Re: [PATCH] padata: Replace delayed timer with immediate workqueue
- in padata_reorder
-Message-ID: <20190717232136.pboms73sqf6fdzic@ca-dmjordan1.us.oracle.com>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
- <20190716163253.24377-1-daniel.m.jordan@oracle.com>
- <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
+        Wed, 17 Jul 2019 19:30:35 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 8897B72CCD6;
+        Thu, 18 Jul 2019 02:30:31 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 6F6307CCE5C; Thu, 18 Jul 2019 02:30:31 +0300 (MSK)
+Date:   Thu, 18 Jul 2019 02:30:31 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        sparclinux@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
+Message-ID: <20190717233031.GB30369@altlinux.org>
+References: <20190625143715.1689-1-hch@lst.de>
+ <20190625143715.1689-10-hch@lst.de>
+ <20190717215956.GA30369@altlinux.org>
+ <CAHk-=whj_+tYSRcDsw7mDGrkmyU9tAk-a53XK271wYtDqYRzig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
 Content-Disposition: inline
-In-Reply-To: <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=940
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170259
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=992 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170259
+In-Reply-To: <CAHk-=whj_+tYSRcDsw7mDGrkmyU9tAk-a53XK271wYtDqYRzig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 07:11:47PM +0800, Herbert Xu wrote:
-> Note that we don't bother removing the work queue in
-> padata_flush_queues because the whole premise is broken.  You
-> cannot flush async crypto requests so it makes no sense to even
-> try.  A subsequent patch will fix it by replacing it with a ref
-> counting scheme.
 
-Interested to see what happens with the ref counting.
+--eJnRUKwClWJh1Khz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You mean you don't bother removing the serial workqueue flushing, right, not
-the parallel?
+On Wed, Jul 17, 2019 at 03:04:56PM -0700, Linus Torvalds wrote:
+> On Wed, Jul 17, 2019 at 2:59 PM Dmitry V. Levin <ldv@altlinux.org> wrote:
+> >
+> > So this ended up as commit 7b9afb86b6328f10dc2cad9223d7def12d60e505
+> > (thanks to Anatoly for bisecting) and introduced a regression:
+> > futex.test from the strace test suite now causes an Oops on sparc64
+> > in futex syscall.
+>=20
+> Can you post the oops here in the same thread too? Maybe it's already
+> posted somewhere else, but I can't seem to find anything likely on
+> lkml at least..
 
-> @@ -122,10 +117,10 @@ struct padata_cpumask {
->   * @reorder_objects: Number of objects waiting in the reorder queues.
->   * @refcnt: Number of objects holding a reference on this parallel_data.
->   * @max_seq_nr:  Maximal used sequence number.
-> + * @cpu: Next CPU to be processed.
+Sure, here it is:
 
-Maybe something more specific...
+[  514.137217] Unable to handle kernel paging request at virtual address 00=
+060000541d0000
+[  514.137295] tsk->{mm,active_mm}->context =3D 00000000000005b2
+[  514.137343] tsk->{mm,active_mm}->pgd =3D fff80024955a2000
+[  514.137387]               \|/ ____ \|/
+                             "@'/ .. \`@"
+                             /_| \__/ |_\
+                                \__U_/
+[  514.137493] futex(1599): Oops [#1]
+[  514.137533] CPU: 26 PID: 1599 Comm: futex Not tainted 5.2.0-05721-gd3649=
+f68b433 #1096
+[  514.137595] TSTATE: 0000000011001603 TPC: 000000000051adc4 TNPC: 0000000=
+00051adc8 Y: 00000000    Not tainted
+[  514.137678] TPC: <get_futex_key+0xe4/0x6a0>
+[  514.137712] g0: 0000000000000000 g1: 0000000000e75178 g2: 000000000009a2=
+1d g3: 0000000000000000
+[  514.137769] g4: fff8002474fbc0e0 g5: fff80024aa80c000 g6: fff8002495aec0=
+00 g7: 0000000000000200
+[  514.137825] o0: 0000000000000001 o1: 0000000000000001 o2: 00000000000000=
+00 o3: fff8002495aefa28
+[  514.137882] o4: fff8000100030000 o5: fff800010002e000 sp: fff8002495aef1=
+61 ret_pc: 000000000051ada4
+[  514.137944] RPC: <get_futex_key+0xc4/0x6a0>
+[  514.137978] l0: 000000000051b144 l1: 0000000000000001 l2: 0000000000c019=
+50 l3: fff80024626051c0
+[  514.138036] l4: 0000000000c01970 l5: 0000000000cf6800 l6: 00060000541d13=
+f0 l7: 00000000014b3000
+[  514.138094] i0: 0000000000000001 i1: 000000000051af30 i2: fff8002495aefc=
+28 i3: 0000000000000001
+[  514.138152] i4: 0000000000cf69b0 i5: fff800010002e000 i6: fff8002495aef2=
+31 i7: 000000000051b3a8
+[  514.138211] I7: <futex_wait_setup+0x28/0x120>
+[  514.138245] Call Trace:
+[  514.138271]  [000000000051b3a8] futex_wait_setup+0x28/0x120
+[  514.138313]  [000000000051b550] futex_wait+0xb0/0x200
+[  514.138352]  [000000000051d734] do_futex+0xd4/0xc00
+[  514.138390]  [000000000051e384] sys_futex+0x124/0x140
+[  514.138435]  [0000000000406294] linux_sparc_syscall+0x34/0x44
+[  514.138478] Disabling lock debugging due to kernel taint
+[  514.138501] Caller[000000000051b3a8]: futex_wait_setup+0x28/0x120
+[  514.138524] Caller[000000000051b550]: futex_wait+0xb0/0x200
+[  514.138547] Caller[000000000051d734]: do_futex+0xd4/0xc00
+[  514.138568] Caller[000000000051e384]: sys_futex+0x124/0x140
+[  514.138590] Caller[0000000000406294]: linux_sparc_syscall+0x34/0x44
+[  514.138614] Caller[0000010000000e90]: 0x10000000e90
+[  514.138633] Instruction DUMP:
+[  514.138635]  0640016e=20
+[  514.138650]  b13da000=20
+[  514.138663]  ec5fa7f7=20
+[  514.138676] <c25da008>
+[  514.138689]  ae100016=20
+[  514.138702]  84086001=20
+[  514.138714]  82007fff=20
+[  514.138727]  af789401=20
+[  514.138740]  f05de018=20
 
-      @cpu: CPU of the next reorder queue to process.
 
->  static struct padata_priv *padata_get_next(struct parallel_data *pd)
->  {
-> -	int cpu, num_cpus;
-> -	unsigned int next_nr, next_index;
->  	struct padata_parallel_queue *next_queue;
->  	struct padata_priv *padata;
->  	struct padata_list *reorder;
-> +	int cpu = pd->cpu;
->  
-> -	num_cpus = cpumask_weight(pd->cpumask.pcpu);
-> -
-> -	/*
-> -	 * Calculate the percpu reorder queue and the sequence
-> -	 * number of the next object.
-> -	 */
-> -	next_nr = pd->processed;
-> -	next_index = next_nr % num_cpus;
-> -	cpu = padata_index_to_cpu(pd, next_index);
+--=20
+ldv
 
-After this patch padata_index_to_cpu has only one caller, so it doesn't need to
-be a function anymore.
+--eJnRUKwClWJh1Khz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> @@ -246,7 +237,6 @@ static void padata_reorder(struct parallel_data *pd)
->  		 * so exit immediately.
->  		 */
->  		if (PTR_ERR(padata) == -ENODATA) {
-> -			del_timer(&pd->timer);
->  			spin_unlock_bh(&pd->lock);
->  			return;
->  		}
-> @@ -265,70 +255,29 @@ static void padata_reorder(struct parallel_data *pd)
->  
->  	/*
->  	 * The next object that needs serialization might have arrived to
-> -	 * the reorder queues in the meantime, we will be called again
-> -	 * from the timer function if no one else cares for it.
-> +	 * the reorder queues in the meantime.
->  	 *
-> -	 * Ensure reorder_objects is read after pd->lock is dropped so we see
-> -	 * an increment from another task in padata_do_serial.  Pairs with
-> +	 * Ensure reorder queue is read after pd->lock is dropped so we see
-> +	 * new objects from another task in padata_do_serial.  Pairs with
->  	 * smp_mb__after_atomic in padata_do_serial.
->  	 */
->  	smp_mb();
-> -	if (atomic_read(&pd->reorder_objects)
-> -			&& !(pinst->flags & PADATA_RESET))
-> -		mod_timer(&pd->timer, jiffies + HZ);
-> -	else
-> -		del_timer(&pd->timer);
->  
-> -	return;
-> +	next_queue = per_cpu_ptr(pd->pqueue, pd->cpu);
-> +	if (!list_empty(&next_queue->reorder.list))
-> +		queue_work(pinst->wq, &pd->reorder_work);
+-----BEGIN PGP SIGNATURE-----
 
-It's possible that the work gets queued when it doesn't need to be when another
-task adds a job to the reorder queue but hasn't grabbed pd->lock yet, but I
-can't think of a way around it...and it does no harm anyway.
+iQIcBAEBCAAGBQJdL6+XAAoJEAVFT+BVnCUItv0P/RQl7zn0jCq+B4G33r61CH0f
+MM3lOaEkCdZV3KhE/13PJWKFSRP2b6rh0k95kDhUNnPdItg3b4xEwHuMwHKzyzCs
+RdDrQ5ISjKrSwGJqrAywjpEX5Wf7JnUS98muIIWgcrfA3M3HzQMgKmVIna3SstVD
+ZTXmMFjnnuGSKI5xA79VBve9xPbDDkF0cPTrRIkXwk3HzTrQi9NKwj+VyFnzvri/
+vXBb8oQ5OJymQryUnoeVxs2MmraXPotL+M/8krsZIoAuaK4IMFiFh5T7ZBVigqFv
+934gPFbRyRdErsuiJo6PMqJUay39etJBifC4sem9zw6NcP+sSMB5L8EABFkWT0j+
+VuW3foMsOIoH/+8dbYsdTsw4RHpXv6WeUwrNLXZLCWACt2M/m5wBlrBFf0NMbRW4
+LtWcIzy4IYfmmUiKrVfAUNv3Yx991ah+QTeq871+Wsy2irvJuE7c4lfH6RxCOjKT
+CrtF6oqFcOFHZRfl4JSzc2dbd/tepmNwonQeO6WXwruxRoMI2NhL350ijQJjkXOP
+qhz/qutyUOk662ZP30+j0G1iT4TGERug8SLaI11eEjTpqIMUQMtPa0ATsoIkR/+x
+S1637lihAJh2d2ik4os1nLjDNakmc6TMgS0KcDXhfo219fWAD5YrgmQD8g7fUnLp
+4bgJDOaNpCu6rzRT4WY4
+=3YbY
+-----END PGP SIGNATURE-----
 
-> @@ -376,9 +325,8 @@ void padata_do_serial(struct padata_priv *padata)
->  
->  	cpu = get_cpu();
->  
-> -	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
-> -	 * was called on -- or, at least, enqueue the padata object into the
-> -	 * correct per-cpu queue.
-> +	/* We need to enqueue the padata object into the correct
-> +	 * per-cpu queue.
->  	 */
->  	if (cpu != padata->cpu) {
->  		reorder_via_wq = 1;
-
-reorder_via_wq and I think get_cpu/put_cpu can go away now that we're always
-using padata->cpu to get the parallel queue and then running padata_reorder in
-the current task.
-
-Maybe Steffen can check my reasoning on the get_cpu thing.  It looks like that
-was added in the original padata commit to keep 'cpu' stable for getting the
-parallel queue but is no longer needed because we just use padata->cpu.
-
-> @@ -388,12 +336,12 @@ void padata_do_serial(struct padata_priv *padata)
->  	pqueue = per_cpu_ptr(pd->pqueue, cpu);
->  
->  	spin_lock(&pqueue->reorder.lock);
-> -	atomic_inc(&pd->reorder_objects);
->  	list_add_tail(&padata->list, &pqueue->reorder.list);
-> +	atomic_inc(&pd->reorder_objects);
-
-Why switch the lines?  Seems ok to not do this.
-
-> @@ -538,8 +479,6 @@ static void padata_flush_queues(struct parallel_data *pd)
->  		flush_work(&pqueue->work);
->  	}
->  
-> -	del_timer_sync(&pd->timer);
-> -
-
->  	if (atomic_read(&pd->reorder_objects))
->  		padata_reorder(pd);
-
-I think we can do away with reorder_objects entirely by checking pd->cpu's
-reorder queue here.
-
-It's racy to read pd->cpu without pd->lock, but it doesn't matter.  If there
-are objects left to process and no other task is in padata_reorder, this path
-will notice that, and if there's another task in padata_reorder changing
-pd->cpu from under us, that task will finish the reordering so this path
-doesn't have to.
+--eJnRUKwClWJh1Khz--
