@@ -2,143 +2,141 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1732EC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5703C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836592184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBB4217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 18:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eEW5GRpi";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="XcogKFpg"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dy15Ompy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389162AbfGQSf1 (ORCPT
+        id S2389096AbfGQSgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 14:35:27 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:12040 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbfGQSf0 (ORCPT
+        Wed, 17 Jul 2019 14:36:48 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34017 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfGQSgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 14:35:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1563388525; x=1594924525;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=npA5ARj+GwXWJpeyBmWB7akT7BrpCPGMHSQgfAAUmDg=;
-  b=eEW5GRpiBw7LbkI1s2lWU0uXCBT1NNXZGFSZRnCcoMpsJ/QABAej9Ymb
-   FOxchBN5NigHZI9JnuRrC4IP1G9uFfr0dMJsb2cNJwH48UVmPE+VJ4NN8
-   znfr/YHup1N4c/F9pcO8rn4/W4r8ZAmVOeEYknFTOEkoQIn+dq1YcDaeK
-   3Yt8upPTbYVqY7LrQ5E2bHJx/PLAjBTBQfhk21E+f9RnUQl4NGgxA+A5H
-   vjT1BE6uc3CXAtr212zRkniUMr/WAOK17/sjgzuxVLg5m5sjkZEu7GcaB
-   oAtaXK9xGHvDZw4ho6FGp01V5UGhcQNyrmD2mPxB886UGcFj6sHnt2VA7
-   Q==;
-IronPort-SDR: mxhRoaSH9F/33v1ROF1+kpVhJRy8MwXt9lAO0/GbY6sEFRvCTTlp6G72uFGL13mnc9oNAvfypK
- zfGy08YzX+cUYP6u6CAfZJGrqIwdmxdaGMyMae/XFGzDLc8wRurZBQZu+o/AfGdQiDI/VsQQ5g
- X0y2KegfFJebyhb0uqVVIYWhj25LDUmE919458DBTc2gAECRjWsSNud51drdyVNjTh7mxiBGol
- dLK6zZpIcItkUXBz8iQxbihfg5AUadT9ReroVjIUfOkXlBjgx2Nf4XHdyhk6BfFwj2uf7byMRC
- 8gE=
-X-IronPort-AV: E=Sophos;i="5.64,275,1559491200"; 
-   d="scan'208";a="219753321"
-Received: from mail-bl2nam02lp2059.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.59])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jul 2019 02:35:23 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L8pT8vZRLTeak2VCpboknKgj7N0MaOPN9Sn0LigWUY+cZuz1rhA/fXQIIvGxGWQRWJozHLycZDC1J6elY/3KNIzjiC1Bn6OBhydfLxPCYQwYZK9qBNayeBKN2gMETFs3DOB2nLKCbEWSeRxVzflPK2C1prxA+SAY3lD2dtcKfwpUpviE+HUs80khbBmzS0clIUghxvvCqk1OFeY1jEUUKeVhuh3Uw41dhuzOZJenVydKP6DtS/rqjOXCgYqKVBLzosFyx0tZo5XAJcJRAayHj6v0SGgBziLhYlU1p829FG/vgdaWdjuAVVCMU8Dt5hI8E9CePgQfRhYctJD+qQMdCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=npA5ARj+GwXWJpeyBmWB7akT7BrpCPGMHSQgfAAUmDg=;
- b=MA3AcBFx1+m89u9zrEMw70JxFLhvBfoDbwGuetAqBghKoaeHvrH0kMMTkfieMe8bnBLjPl7w0K+cdObGL+doJr2pJiXser3uQawDyvRuh+J5hZZbP63fSbQLLYyLrHn31mBPOc18rmls+ge5I85ieqIof7gFiex0z2hQijtVqb7uF74WS3vtoqcbP5w2AwWjlSNuf17HVYWrlSKwsI0YaA9085KqwpRCF9/9OihxY3FNnkinxY10GwC8kSOeDoZowAXCGs0vdglbaHf1U3ODCkzuF8EbV4g5oOeamGH9Sep+64IJz9p7U77+z8pa+QBcBt+kuyoWxlD78DLnmdZTkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
- header.d=wdc.com;arc=none
+        Wed, 17 Jul 2019 14:36:48 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k10so24484276qtq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 11:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=npA5ARj+GwXWJpeyBmWB7akT7BrpCPGMHSQgfAAUmDg=;
- b=XcogKFpg3m0IySu8Zj2EXRM9B4u2zc0k2FiivxwYu1hDJp34LWyPURH0LPYhQQtgkIT0EeW5MmfFlPreu18Ik1EMxHImKlEFeXFFWppFssXlLTaMK7mKsBRBi/fjZP/Lisq/oNNvcy5K848ju3Ih7f2okU+D73rZZGbT3/RZB40=
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.58.26) by
- BYAPR04MB4775.namprd04.prod.outlook.com (52.135.240.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 18:35:23 +0000
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::8025:ccea:a0e6:9078]) by BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::8025:ccea:a0e6:9078%5]) with mapi id 15.20.2094.011; Wed, 17 Jul 2019
- 18:35:23 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH v2] nvmet-file: fix nvmet_file_flush() always returning an
- error
-Thread-Topic: [PATCH v2] nvmet-file: fix nvmet_file_flush() always returning
- an error
-Thread-Index: AQHVO1sRlL6YpeqcQEOD+On3jfJuog==
-Date:   Wed, 17 Jul 2019 18:35:22 +0000
-Message-ID: <BYAPR04MB57492E5376FAAF29B70A46F786C90@BYAPR04MB5749.namprd04.prod.outlook.com>
-References: <20190715221707.3265-1-logang@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f552c421-7704-4c59-f8f4-08d70ae5874e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB4775;
-x-ms-traffictypediagnostic: BYAPR04MB4775:
-x-microsoft-antispam-prvs: <BYAPR04MB4775149D2B214656FC84FC2A86C90@BYAPR04MB4775.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(376002)(136003)(396003)(366004)(51914003)(199004)(189003)(6116002)(5660300002)(14454004)(3846002)(66476007)(66066001)(305945005)(25786009)(7736002)(4744005)(68736007)(74316002)(256004)(14444005)(7696005)(76116006)(316002)(6506007)(76176011)(66946007)(446003)(53546011)(110136005)(66556008)(66446008)(486006)(33656002)(229853002)(64756008)(102836004)(54906003)(99286004)(52536014)(186003)(26005)(9686003)(53936002)(81156014)(8936002)(71190400001)(55016002)(71200400001)(2906002)(81166006)(478600001)(2501003)(4326008)(6246003)(476003)(8676002)(86362001)(6436002)(2201001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4775;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gX7mnHsTLOD2jvm8sCU56K0XveoHIXpVN68Gi91jPGbh5mFXT/SzRrGWJh2/oy1rpSEJwnkdUDBAbSH1JclV5+OZw3QZroKX9mLd1qvgK2bpH7C5jr1xusve8RMdse4w6/iJyc05wa72aoj+8ULcCumZtrkMYYhnV0FIvDo3OyrLE72JCpfgBY2rS51IRZ6YTcC8ahL68wB8v9u5jFy8hk8P7ZGNUd1gumAR/kv/xkSR0qbBpNIuUXvffwdAVcpm26EZKq0VVQZVPKw3wJs4iVNkZZtgo5sBTMqM6ESb3ttdi9kJtf6lXjlDyneZlHYPSnKBFiV7sQQbS1sMN0eyK+ycYVF56fQkHemr0f4Wun5PY6+ycKt5O8ZRmhOy8jiVO5XmlVOxJ0rs2ZHjh42zuk6kxov7lYME22RwEgW4EOg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SSKZa6Us7cCnh0Xx6N0rrk3Uo1FNKkBPCZAzeKIzLoM=;
+        b=dy15OmpyuVkVLIL85AO3BUY2xBLXfKYWfW9PVnw411iTqoykNswF8yx5hKFHfIZtz8
+         9WwURoA145HAEF3JL+33oS7bLB4BhMp9GSr5+gtia9HSRgzfouP0DuJsDl3vGYr6479p
+         DMcpUI2iqztNCKp7dXHSQfJonLthM0ssJy+bqYqUxfmJ7oC+YbNwKAM2IU/jnDSdKp3t
+         iZ4Oy3vW3orUKrMfjJP7k7Is/CyVeB3jlczhj11jdvkwCzU0phq0bbkUULkq1DkD3pcu
+         ya/rM2uz/JHPHfcIgtlVmaEVeLEwY/TTxhzljsfYOiFp6cA8Pc6e2hMyGZYc/OB0ZzXW
+         fIvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SSKZa6Us7cCnh0Xx6N0rrk3Uo1FNKkBPCZAzeKIzLoM=;
+        b=s+BIGeKrWATqN25NPT3rTm5mEUMNK6y0//cNsR4Wa5a9inTX3XJFPrUFhYukSbVH6v
+         epY08aK2D+gWybtkQZT7iJiccGR1Gyad3z7IMXqLQ/svFv4GO4yPiPKr2gEO39DiqKsG
+         zjmyK3yrdkpkq2NkGDIq4Dk0X4gdcx87ecxgK5KgjrW3XeQ8feYfEqo49IH6ssfRSBSD
+         FlFBamT3Ie8+zZ9btGq2adW157xeYzklw1HIIzoTH4Ist5OzvOfiP8InOYkHcITkmqOI
+         C7iY5VJRSFYdapdhv8+7ruGuYjQEdCiRCYeU0PZBcDFi2JsBffQQhoJp4hEFtkS00eMm
+         LyFw==
+X-Gm-Message-State: APjAAAUoVhnuZiZr6uWo7AbU11uNSHk2f48SdT9wu6eP2lbHPljBNa13
+        i78VVepeNCX5wyVS2ea1lBeUxg==
+X-Google-Smtp-Source: APXvYqzntA3lbzPxuz197IzATj+vlzc/f3fvk57/e3CZjIw28/6w10ef2ol2px+7J/NIHW1NaDh8RQ==
+X-Received: by 2002:a0c:ae24:: with SMTP id y33mr29988815qvc.106.1563388606713;
+        Wed, 17 Jul 2019 11:36:46 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id 47sm14978551qtw.90.2019.07.17.11.36.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jul 2019 11:36:46 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hnonF-00068G-Dr; Wed, 17 Jul 2019 15:36:45 -0300
+Date:   Wed, 17 Jul 2019 15:36:45 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v2 5/6] tpm: add driver for cr50 on SPI
+Message-ID: <20190717183645.GM12119@ziepe.ca>
+References: <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com>
+ <20190717122558.GF12119@ziepe.ca>
+ <5d2f51a7.1c69fb81.6495.fbe8@mx.google.com>
+ <20190717165628.GJ12119@ziepe.ca>
+ <5d2f5570.1c69fb81.f3832.3c3f@mx.google.com>
+ <20190717171216.GK12119@ziepe.ca>
+ <5d2f594d.1c69fb81.baadd.d81d@mx.google.com>
+ <20190717172544.GL12119@ziepe.ca>
+ <5d2f671b.1c69fb81.59c84.dec9@mx.google.com>
+ <CABXOdTfh5iz3FnkRxZ=ggPNvmegz4_1gRaEPAq-9V=eNcEJPmw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f552c421-7704-4c59-f8f4-08d70ae5874e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 18:35:22.9113
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Chaitanya.Kulkarni@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4775
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABXOdTfh5iz3FnkRxZ=ggPNvmegz4_1gRaEPAq-9V=eNcEJPmw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/15/2019 03:17 PM, Logan Gunthorpe wrote:=0A=
-> Presently, nvmet_file_flush() always returns a call to=0A=
-> errno_to_nvme_status() but that helper doesn't take into account the=0A=
-> case when errno=3D0. So nvmet_file_flush() always returns an error code.=
-=0A=
->=0A=
-> All other callers of errno_to_nvme_status() check for success before=0A=
-> calling it.=0A=
->=0A=
-> To fix this, ensure errno_to_nvme_status() returns success if the=0A=
-> errno is zero. This should prevent future mistakes like this from=0A=
-> happening.=0A=
->=0A=
-> Fixes: c6aa3542e010 ("nvmet: add error log support for file backend")=0A=
-> Signed-off-by: Logan Gunthorpe<logang@deltatee.com>=0A=
-> Cc: Chaitanya Kulkarni<chaitanya.kulkarni@wdc.com>=0A=
-=0A=
-Thanks for the fix Logan, errno_to_nvme_status() needs to be only called =
-=0A=
-in the case of error. Clearly bad example of calling function withing =0A=
-function.=0A=
-=0A=
-Looks good to me.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+On Wed, Jul 17, 2019 at 11:30:42AM -0700, Guenter Roeck wrote:
+> On Wed, Jul 17, 2019 at 11:21 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Jason Gunthorpe (2019-07-17 10:25:44)
+> > > On Wed, Jul 17, 2019 at 10:22:20AM -0700, Stephen Boyd wrote:
+> > > > Quoting Jason Gunthorpe (2019-07-17 10:12:16)
+> > > > > On Wed, Jul 17, 2019 at 10:05:52AM -0700, Stephen Boyd wrote:
+> > > > > >
+> > > > > > Yes. The space savings comes from having the extra module 'cr50.ko' that
+> > > > > > holds almost nothing at all when the two drivers are modules.
+> > > > >
+> > > > > I'm not sure it is an actual savings, there is alot of minimum
+> > > > > overhead and alignment to have a module in the first place.
+> > > > >
+> > > >
+> > > > Yeah. I'm pretty sure that's why it's a bool and not a tristate for this
+> > > > symbol. A module has overhead that is not necessary for these little
+> > > > helpers.
+> > >
+> > > Linking driver stuff like that to the kernel is pretty hacky, IMHO
+> > >
+> >
+> > So combine lines?
+> >
+> >         obj-$(CONFIG_...) += cr50.o cr50_spi.o
+> >
+> > Sounds great.
+> >
+> 
+> Please keep in mind that cr50.c exports symbols. If cr50.o is added to
+> two modules, those symbols will subsequently available from both
+> modules. To avoid that, you might want to consider removing the
+> EXPORT_SYMBOL() declarations from cr50.c.
+
+Yep
+
+> I don't know what happens if those two modules are both built into the
+> kernel (as happens, for example, with allyesconfig). Does the linker
+> try to load cr50.o twice, resulting in duplicate symbols ?
+
+Hum. Looks like it uses --whole-archive here and would probably
+break? Maybe not, hns recently sent a patch doing this, but maybe they
+never tested it too.
+
+Jason
