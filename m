@@ -2,290 +2,96 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A472C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7819BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0268B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4288D217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="SUfoXXZA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0uABlP35"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="swMFO0oK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfGQDtE (ORCPT
+        id S1729263AbfGQDuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 23:49:04 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:42771 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728029AbfGQDtD (ORCPT
+        Tue, 16 Jul 2019 23:50:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37252 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbfGQDuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 23:49:03 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E1D1125D5;
-        Tue, 16 Jul 2019 23:48:59 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 16 Jul 2019 23:48:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=mh/pMipFPT+Mu/hJUdFSzOvvP0fIfxk
-        W6RkfI+IZShA=; b=SUfoXXZAv3O8PWgUgt9K/YejLz6gCEM5nAA8HEcbqAjwNYW
-        sLi1uKsWqoNiqytpXjTLmfzLsw/Dn8sJOhuath9tDVu1B5hLkofqqqgiHyT462Ml
-        HZh9HCmGWRgXtltI8CTrH6q05MaClzB9s9z57pcR1feqHroRPHFuSgLmbgnbQ02z
-        hOqMtZjV9C98EXCZsF17tG3buKjcfSty1zouQEpnF7xy7t2JejDQNS+ad7iSw5Op
-        RftsWZzdKAquJRWLlh5EP7G1gxHMAzRAI/WQ/QXWVwi7dg6Puwz26zBPBJFrXn77
-        tsbGpRJ03QDudmApIZj5bjd0aTMVWE/TBrdNtfw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=mh/pMi
-        pFPT+Mu/hJUdFSzOvvP0fIfxkW6RkfI+IZShA=; b=0uABlP357PIQJYJ89+ZXrs
-        mNazU1xqJLwGEsRhXJun95r5dkezduTH6jPcc2YodELLvNrgYsn65jL/e4X/owOf
-        vzAgB6Wdl2gaYba1T0lubHcdD8XpZNAnrmMGm3yZYNHDOejhhHj5R98DJxVgSKl7
-        Zf+bAm0iwvzGXTMVnEyCJVnI9CUgwG+LBLAl+h27XKLo34RVFxJYX+i2G8zSUVgn
-        izUSpJ917Prl8wtSA1pGugXVTrNc4/Ve8m4FeFs67R03+tTTt/ARDmsuG6WbZ2iM
-        FhH5tLLT9gACfTIJKwCIbo6wdgf7DGd1YiP1u6cZKkt9V6cQYatug7+O5YOFoqog
-        ==
-X-ME-Sender: <xms:qZouXbPKSxS1lK4HvOejyJBdIK8FUaltpFY_R4LGEnpdMaEh249Z4Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddriedugdejiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:qZouXQ0qOUGgnZ5U5ErkWmLrqdFyrPTWzt_GEU57WpN8kKn8Ah0ucw>
-    <xmx:qZouXSFWSY6NwShMr05LeOu2I38mLQj7DUm3LHB7H7SPUNgux-L-nw>
-    <xmx:qZouXd5f8ermVymBWLW9I5mcFy8_axXyphMokb1GOWJ9J_0nbNfU_A>
-    <xmx:q5ouXXRmboc0UcZzqNsRvPckR4kWnwba4JMzfmiWS8VPV5_lqaQc_Q>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id B62ACE00CC; Tue, 16 Jul 2019 23:48:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-731-g19d3b16-fmstable-20190627v1
-Mime-Version: 1.0
-Message-Id: <91ebb817-3cc6-4b87-8c2b-cfcd66f4c284@www.fastmail.com>
-In-Reply-To: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
-References: <1563313711-17961-1-git-send-email-hongweiz@ami.com>
-Date:   Wed, 17 Jul 2019 13:19:07 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Hongwei Zhang" <hongweiz@ami.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org
-Cc:     "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3 v3] dt-bindings: gpio: aspeed: Add SGPIO support
-Content-Type: text/plain
+        Tue, 16 Jul 2019 23:50:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LRyB1JKPo1g9viozQbn+8G4YzmKA4nqslPwu0uoBl1E=; b=swMFO0oK0G+l+YUUlFZXG0x6y
+        cKnODAhceBjMyRkEWsnSyoMTW8b6HsRXZO2blKLfhvtoX7Uc6r+tgXFU+wbZYn1WHxjYymZ5HOwDM
+        0qMq+aj5fOUmxHMdimh3JCFhu0oZtLwoVEAuTfFchx1BnpL5sPfwtu0lbHDXche91qHIGWvFYtoCd
+        lpUZj0XRztKsPIB6+QwXKBvVZcAj0t1iJFOIbkk0rka0l2HRnTzKD7loQlUQxv28OgdK28u8txI7h
+        lkDAyFnpqJTyXRZ7rXJ555r2TKmdVnOK2Vje34oiDBTh03FKATcyXBhMWmJaWX4oAUWVgl/5ezm1L
+        5Paiqsa9g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnaxK-0003P0-QH; Wed, 17 Jul 2019 03:50:14 +0000
+Subject: Re: mmotm 2019-07-16-17-14 uploaded
+To:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
+        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
+References: <20190717001534.83sL1%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8165e113-6da1-c4c0-69eb-37b2d63ceed9@infradead.org>
+Date:   Tue, 16 Jul 2019 20:50:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190717001534.83sL1%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Hongwei,
-
-On Wed, 17 Jul 2019, at 07:18, Hongwei Zhang wrote:
-> Add bindings to support SGPIO on AST2400 or AST2500.
+On 7/16/19 5:15 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-07-16-17-14 has been uploaded to
 > 
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> ---
->  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+>    http://www.ozlabs.org/~akpm/mmotm/
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
-> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> new file mode 100644
-> index 0000000..8c3a747
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> @@ -0,0 +1,55 @@
-> +Aspeed SGPIO controller Device Tree Bindings
-> +-------------------------------------------
-> +
-> +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 
-> full 
-> +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed 
-> to 
-> +support the following options:
-> +- Support interrupt option for each input port and various interrupt 
-> +  sensitivity option (level-high, level-low, edge-high, edge-low)
-> +- Support reset tolerance option for each output port
-> +- Directly connected to APB bus and its shift clock is from APB bus 
-> clock
-> +  divided by a programmable value.
-> +- Co-work with external signal-chained TTL components (74LV165/74LV595)
-
-Nice description.
-
-> +
-> +
-> +Required properties:
-> +
-> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> +
-> +- #gpio-cells 		: Should be two
-> +			  - First cell is the GPIO line number
-> +			  - Second cell is used to specify optional
-> +			    parameters (unused)
-> +
-> +- reg			: Address and length of the register set for the device
-> +- gpio-controller	: Marks the device node as a GPIO controller.
-> +- interrupts		: Interrupt specifier (see interrupt bindings for
-> +			  details)
-> +
-> +- interrupt-controller	: Mark the GPIO controller as an 
-> interrupt-controller
-> +
-> +- nr-gpios		: number of GPIO pins to serialise. 
-> +			  (should be multiple of 8, up to 80 pins; 0 if not used)
-
-It's unclear to me what you mean by "0 if not used" here. The property is
-required, so its description in a devicetree should always have a non-zero
-value of `status = "okay";`, as 0 is an invalid value according to the
-datasheet (sensibly so). If `status = "disabled";` then it doesn't really
-matter, which makes the comment not terribly useful.
-
-> +
-> +- clocks               : A phandle to the APB clock for SGPM clock 
-> division
-> +
-> +- bus-frequency	: SGPM CLK frequency, derived from APB bus clock by a 
-> programmable devisor
-
-I'd leave off the parent clock information. Practically speaking it's probably
-always going to be the APB clock, but who knows. From a devicetree writer's
-perspective they just want to say "make it 7MHz" or whatever speed they,
-and it shouldn't matter too much how we get there.
-
-Finally, as mentioned on the driver patch, please send v4 without the history
-at the bottom.
-
-Cheers,
-
-Andrew
-
-> +
-> +
-> +The sgpio and interrupt properties are further described in their 
-> respective bindings documentation:
-> +
-> +- Documentation/devicetree/bindings/sgpio/gpio.txt
-> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +
-> +  Example:
-> +	sgpio@1e780200 {
-> +		#gpio-cells = <2>;
-> +		compatible = "aspeed,ast2500-sgpio";
-> +		gpio-controller;
-> +		interrupts = <40>;
-> +		reg = <0x1e780200 0x0100>;
-> +		clocks = <&syscon ASPEED_CLK_APB>;
-> +		interrupt-controller;
-> +		nr-gpios = <8>;
-> +		bus-frequency = <12000000>;
-> +	};
-> -- 
-> 2.7.4
+> mmotm-readme.txt says
 > 
+> README for mm-of-the-moment:
 > 
-> Thanks Andrew, please see above v3 and inline comments at below.
-> --Hongwei
+> http://www.ozlabs.org/~akpm/mmotm/
 > 
-> > From:	Andrew Jeffery <andrew@aj.id.au>
-> > Sent:	Sunday, July 14, 2019 10:25 PM
-> > To:	Hongwei Zhang; Joel Stanley; Linus Walleij; devicetree@vger.kernel.org
-> > Cc:	Rob Herring; Mark Rutland; Bartosz Golaszewski; linux-aspeed@lists.ozlabs.org; linux-
-> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-gpio@vger.kernel.org
-> > Subject:	Re: [PATCH 2/3 v2] dt-bindings: gpio: aspeed: Add SGPIO support
-> > 
-> > Hello Hongwei,
-> > 
-> > On Sat, 13 Jul 2019, at 05:44, Hongwei Zhang wrote:
-> > > Add bindings to support SGPIO on AST2400 or AST2500.
-> > > 
-> > > Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> > > ---
-> > >  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 43 ++++++++++++++++++++++
-> > >  1 file changed, 43 insertions(+)
-> > >  create mode 100755 
-> > > Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > > b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > > new file mode 100755
-> > > index 0000000..3ae2b79
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
-> > > @@ -0,0 +1,43 @@
-> > > +Aspeed SGPIO controller Device Tree Bindings
-> > > +-------------------------------------------
-> > > +
-> > > +Required properties:
-> > > +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
-> > > +
-> > > +- #gpio-cells 		: Should be two
-> > > +			  - First cell is the GPIO line number
-> > > +			  - Second cell is used to specify optional
-> > > +			    parameters (unused)
-> > > +
-> > > +- reg			: Address and length of the register set for the device
-> > > +- gpio-controller	: Marks the device node as a GPIO controller.
-> > > +- interrupts		: Interrupt specifier (see interrupt bindings for
-> > > +			  details)
-> > > +
-> > > +- interrupt-controller	: Mark the GPIO controller as an 
-> > > interrupt-controller
-> > > +
-> > > +- nr-gpios		: number of GPIO pins to serialise. (should be multiple of 
-> > > 8, up to 80 pins)
-> > > +			  if not specified, defaults to 80.
-> > 
-> > This appears to be a statement about the driver implementation, but bindings documents are about 
-> > describing hardware. Reading the datasheet it actually appears the ASPEED SGPIO hardware comes up 
-> > in what is "technically" a forbidden state (equivalent to `nr-gpios = <0>;`), though the device is also 
-> > disabled at this point, so it's probably moot. The point is the true default value from a hardware 
-> > perspective is 0, not 80, so if we're going to talk about default values, 0 would be more appropriate. 
-> > However:
-> > 
-> > You've also listed nr-gpios under the "Required properties" header, but the description suggests it's 
-> > optional. It's either one or the other, please lets be clear about it. On that front, lets make it nr-gpios 
-> > *not* optional (i.e. make it
-> > required) thus force the specification of how many SGPIOs we want to emit on the bus. This value is 
-> > coupled to the platform design, so I don't think there's ever a scenario where we want nr-gpios to take a 
-> > default value.
-> > 
-> 
-> Added some descriptions and updated nr-gpios, please see v3.
-> 
-> > > +
-> > > +- clocks               : A phandle to the APB clock for SGPM clock 
-> > > division
-> > > +
-> > > +- bus-frequency	: SGPM CLK frequency, if not specified defaults to 1 
-> > > MHz
-> > 
-> > Again here with the default value - SGPM CLK period is derived from PCLK by the expression `period = 
-> > PCLK * 2 *(GPIO254[31:16] + 1)`, where GPIO254's initialisation state is `GPIO254[31:16] = 0`, which 
-> > gives a default SGPM bus frequency of PCLK / 2. This is likely not going to be 1MHz (more like ~12MHz).
-> > 
-> > Lets just make the property required. That way we avoid any ambiguity about the bus frequency and 
-> > thus don't need words about defaults that turn out to be about the driver, not about the hardware.
-> > 
-> 
-> updated, please see v3.
-> 
-> > Finally, when updating patches in response to feedback, please send the full series again, and bump the 
-> > series version number. That way people can review a coherent set of patches and not have to hunt 
-> > around and (fail to) collate the correct combination. It makes it easier to say "Reviewed-by:" on your 
-> > patches :)
-> > 
-> > Cheers,
-> > 
-> > Andrew
->
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+
+drivers/gpu/drm/amd/amdgpu/Kconfig contains this (from linux-next.patch):
+
+--- a/drivers/gpu/drm/amd/amdgpu/Kconfig~linux-next
++++ a/drivers/gpu/drm/amd/amdgpu/Kconfig
+@@ -27,7 +27,12 @@ config DRM_AMDGPU_CIK
+ config DRM_AMDGPU_USERPTR
+ 	bool "Always enable userptr write support"
+ 	depends on DRM_AMDGPU
++<<<<<<< HEAD
+ 	depends on HMM_MIRROR
++=======
++	depends on ARCH_HAS_HMM
++	select HMM_MIRROR
++>>>>>>> linux-next/akpm-base
+ 	help
+ 	  This option selects CONFIG_HMM and CONFIG_HMM_MIRROR if it
+ 	  isn't already selected to enabled full userptr support.
+
+which causes a lot of problems.
+
+
+-- 
+~Randy
