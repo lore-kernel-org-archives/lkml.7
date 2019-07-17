@@ -2,199 +2,81 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E46FC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8606C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E019F2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NMQ9OBew"
+	by mail.kernel.org (Postfix) with ESMTP id CE3A120818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 01:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726053AbfGQBkQ (ORCPT
+        id S1726183AbfGQBob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 21:40:16 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1365 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfGQBkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 21:40:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d2e7c7b0000>; Tue, 16 Jul 2019 18:40:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Jul 2019 18:40:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Jul 2019 18:40:13 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
- 2019 01:40:09 +0000
-Subject: Re: [PATCH 2/3] mm/hmm: fix ZONE_DEVICE anon page mapping reuse
-To:     Ralph Campbell <rcampbell@nvidia.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Logan Gunthorpe" <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Jan Kara" <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20190717001446.12351-1-rcampbell@nvidia.com>
- <20190717001446.12351-3-rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <ebd1ea66-f8c0-7a03-594c-dce9ec4d0fa6@nvidia.com>
-Date:   Tue, 16 Jul 2019 18:40:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 21:44:31 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:49234 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbfGQBob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 21:44:31 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnYzF-0003JW-NM; Wed, 17 Jul 2019 09:44:05 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnYz9-0002Lm-Gn; Wed, 17 Jul 2019 09:43:59 +0800
+Date:   Wed, 17 Jul 2019 09:43:59 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v2 1/6] hwrng: core: Freeze khwrng thread during suspend
+Message-ID: <20190717014359.5xcnubpmazl3vqg5@gondor.apana.org.au>
+References: <20190716224518.62556-1-swboyd@chromium.org>
+ <20190716224518.62556-2-swboyd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190717001446.12351-3-rcampbell@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563327611; bh=4zW6WMS58NKwkK2EYGU0erGO3LAau6AlIU4w5xeRscI=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=NMQ9OBewREnnGi+MzFdTbeISiClUuUw26DewOW2/gLvttzLKSC1XGFYxlpGNrQX76
-         VKZ6sM2Vrn3hs4a/KqcMLLarvtE7n9bdVrc/pixmxjDDxNbLYX+yP1MKKbW3j3MhJD
-         EAElXQgWL2H1BcX1fP8k557RCIcWIJXff0FLDHEIV/d6O2SXxB3AnwPgo3z7T34t1Q
-         aDnlxp0eegoOosDedPH/as6UFkO61/whGbcnxvOiTJkKqDKnc2NuJXMUcpffcJOE93
-         F5/9V7Uq09XAxJeIcx82qR198xvNbwe4WkoAQeESsy2JsDBAPvvrZu+Q1vIE1+IGqN
-         2TRvEOS/JW3gw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716224518.62556-2-swboyd@chromium.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 5:14 PM, Ralph Campbell wrote:
-> When a ZONE_DEVICE private page is freed, the page->mapping field can be
-> set. If this page is reused as an anonymous page, the previous value can
-> prevent the page from being inserted into the CPU's anon rmap table.
-> For example, when migrating a pte_none() page to device memory:
->   migrate_vma(ops, vma, start, end, src, dst, private)
->     migrate_vma_collect()
->       src[] =3D MIGRATE_PFN_MIGRATE
->     migrate_vma_prepare()
->       /* no page to lock or isolate so OK */
->     migrate_vma_unmap()
->       /* no page to unmap so OK */
->     ops->alloc_and_copy()
->       /* driver allocates ZONE_DEVICE page for dst[] */
->     migrate_vma_pages()
->       migrate_vma_insert_page()
->         page_add_new_anon_rmap()
->           __page_set_anon_rmap()
->             /* This check sees the page's stale mapping field */
->             if (PageAnon(page))
->               return
->             /* page->mapping is not updated */
->=20
-> The result is that the migration appears to succeed but a subsequent CPU
-> fault will be unable to migrate the page back to system memory or worse.
->=20
-> Clear the page->mapping field when freeing the ZONE_DEVICE page so stale
-> pointer data doesn't affect future page use.
->=20
-> Fixes: b7a523109fb5c9d2d6dd ("mm: don't clear ->mapping in hmm_devmem_fre=
-e")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+On Tue, Jul 16, 2019 at 03:45:13PM -0700, Stephen Boyd wrote:
+> The hwrng_fill() function can run while devices are suspending and
+> resuming. If the hwrng is behind a bus such as i2c or SPI and that bus
+> is suspended, the hwrng may hang the bus while attempting to add some
+> randomness. It's been observed on ChromeOS devices with suspend-to-idle
+> (s2idle) and an i2c based hwrng that this kthread may run and ask the
+> hwrng device for randomness before the i2c bus has been resumed.
+> 
+> Let's make this kthread freezable so that we don't try to touch the
+> hwrng during suspend/resume. This ensures that we can't cause the hwrng
+> backing driver to get into a bad state because the device is guaranteed
+> to be resumed before the hwrng kthread is thawed.
+> 
+> Cc: Andrey Pronin <apronin@chromium.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: Duncan Laurie <dlaurie@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  kernel/memremap.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/kernel/memremap.c b/kernel/memremap.c
-> index bea6f887adad..238ae5d0ae8a 100644
-> --- a/kernel/memremap.c
-> +++ b/kernel/memremap.c
-> @@ -408,6 +408,10 @@ void __put_devmap_managed_page(struct page *page)
-> =20
->  		mem_cgroup_uncharge(page);
-> =20
-> +		/* Clear anonymous page mapping to prevent stale pointers */
+>  drivers/char/hw_random/core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-This is sufficiently complex, that some concise form of the documentation
-that you've put in the commit description, needs to also exist right here, =
-as
-a comment.=20
+Do you want this to go through the crypto tree? If so you need
+to cc the linux-crypto mailing list.
 
-How's this read:
-
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index 238ae5d0ae8a..e52e9da5d0a7 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -408,7 +408,27 @@ void __put_devmap_managed_page(struct page *page)
-=20
-                mem_cgroup_uncharge(page);
-=20
--               /* Clear anonymous page mapping to prevent stale pointers *=
-/
-+               /*
-+                * When a device_private page is freed, the page->mapping f=
-ield
-+                * may still contain a (stale) mapping value. For example, =
-the
-+                * lower bits of page->mapping may still identify the page =
-an an
-+                * anonymous page. Ultimately, this entire field is just st=
-ale
-+                * and wrong, and it will cause errors if not cleared. One
-+                * example is:
-+                *
-+                *  migrate_vma_pages()
-+                *    migrate_vma_insert_page()
-+                *      page_add_new_anon_rmap()
-+                *        __page_set_anon_rmap()
-+                *          ...checks page->mapping, via PageAnon(page) cal=
-l,
-+                *            and incorrectly concludes that the page is an
-+                *            anonymous page. Therefore, it incorrectly,
-+                *            silently fails to set up the new anon rmap.
-+                *
-+                * For other types of ZONE_DEVICE pages, migration is eithe=
-r
-+                * handled differently or not done at all, so there is no n=
-eed
-+                * to clear page->mapping.
-+                */
-                if (is_device_private_page(page))
-                        page->mapping =3D NULL;
-=20
-?
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
