@@ -2,92 +2,122 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0565C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B36C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF8521841
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7DB20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 14:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v0AsSmXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfGQOii (ORCPT
+        id S1727728AbfGQOnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 10:38:38 -0400
-Received: from gate.crashing.org ([63.228.1.57]:46008 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbfGQOih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 10:38:37 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6HEcEwG003587;
-        Wed, 17 Jul 2019 09:38:14 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6HEcCZK003586;
-        Wed, 17 Jul 2019 09:38:12 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Wed, 17 Jul 2019 09:38:11 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: remove meaningless KBUILD_ARFLAGS addition
-Message-ID: <20190717143811.GL20882@gate.crashing.org>
-References: <20190713032106.8509-1-yamada.masahiro@socionext.com> <20190713124744.GS14074@gate.crashing.org> <20190713131642.GU14074@gate.crashing.org> <CAK7LNASBmZxX+U=LS+dgvet96cA3T6Tf_tiAa2vduUV81DEnBw@mail.gmail.com> <20190713235430.GZ14074@gate.crashing.org> <87v9w393r5.fsf@concordia.ellerman.id.au> <20190715072959.GB20882@gate.crashing.org> <87pnma89ak.fsf@concordia.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pnma89ak.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.4.2.3i
+        Wed, 17 Jul 2019 10:43:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33262 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfGQOnT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 10:43:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HEdBvo100794;
+        Wed, 17 Jul 2019 14:42:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=ksYZhu2fdY7kAOsQzqB4qBn41JsG7CcF18Hev7FIFKE=;
+ b=v0AsSmXvq1TQUtPQP6fHperZC/SOkuz28Z5PxhUtLv9iU8G/lDb4YiWwTfy8HXeQbmvy
+ cGJllhe0vBjy+42s6uBkqcZHBc0V++AP3IeeiQ3R3eH6/dyHouzot/ov/5AnWFHOU8Xq
+ pKDPoiMErZ9zoBDKqj5DGKBzypX9U0i5TpA2huYIacQo0SjOEQBlB8Y9PQpTG+FTtg1R
+ hseJmjrqG9JaFzlPeFGVC9xIpz0R9tBVijQxeDY7dkl7mPtCDqsiwGIUrrHtk7zE4WPI
+ WhNuJNVIpss8xSIdaUc+efJAH/6MN3xSIwe9sL5hMn/4PuPdQMemW414vNUZ0ZDojib4 xA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2tq7xr382x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 14:42:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HEbtWW106473;
+        Wed, 17 Jul 2019 14:42:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2tsmccf337-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 14:42:38 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6HEgVhQ014169;
+        Wed, 17 Jul 2019 14:42:31 GMT
+Received: from [192.168.0.21] (/209.6.165.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jul 2019 14:42:30 +0000
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <20190717074435.GU3419@hirez.programming.kicks-ass.net>
+Date:   Wed, 17 Jul 2019 10:42:26 -0400
+Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <779FC7D4-67CE-4D22-8154-FC108479935F@oracle.com>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-4-alex.kogan@oracle.com>
+ <9fa54e98-0b9b-0931-db32-c6bd6ccfe75b@redhat.com>
+ <20190717074435.GU3419@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3259)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=789
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907170172
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9320 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=838 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907170172
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:15:47PM +1000, Michael Ellerman wrote:
-> Segher Boessenkool <segher@kernel.crashing.org> writes:
-> And it's definitely calling ar with no flags, eg:
-> 
->   rm -f init/built-in.a; powerpc-linux-ar rcSTPD init/built-in.a init/main.o init/version.o init/do_mounts.o init/do_mounts_rd.o init/do_mounts_initrd.o init/do_mounts_md.o init/initramfs.o init/init_task.o
 
-This uses thin archives.  Those will work fine.
-
-The failing case was empty files IIRC, stuff created from no inputs.
-
-> So presumably at some point ar learnt to cope with objects that don't
-> match its default? (how do I ask it what its default is?)
-
-The first supported target in the --help list is the default, I think?
-
-$ powerpc-linux-ar --help
- [...]
-powerpc-linux-ar: supported targets: elf32-powerpc aixcoff-rs6000 elf32-powerpcle ppcboot elf64-powerpc elf64-powerpcle elf64-little elf64-big elf32-little elf32-big plugin srec symbolsrec verilog tekhex binary ihex
-
-$ powerpc64-linux-ar --help
- [...]
-powerpc64-linux-ar: supported targets: elf64-powerpc elf64-powerpcle elf32-powerpc elf32-powerpcle aixcoff-rs6000 aixcoff64-rs6000 aix5coff64-rs6000 elf64-little elf64-big elf32-little elf32-big plugin srec symbolsrec verilog tekhex binary ihex
-
-$ powerpc64le-linux-ar --help
- [...]
-powerpc64le-linux-ar: supported targets: elf64-powerpcle elf64-powerpc elf32-powerpcle elf32-powerpc aixcoff-rs6000 aixcoff64-rs6000 aix5coff64-rs6000 elf64-little elf64-big elf32-little elf32-big plugin srec symbolsrec verilog tekhex binary ihex
-
-$ powerpcle-linux-ar --help
- [...]
-powerpcle-linux-ar: supported targets: elf32-powerpcle aixcoff-rs6000 elf32-powerpc ppcboot elf64-powerpc elf64-powerpcle elf64-little elf64-big elf32-little elf32-big plugin srec symbolsrec verilog tekhex binary ihex
-
-> > Then again, does that work at *all* nowadays?  Do we even consider that
-> > important, *should* it work?
-> 
-> Yes and yes. There were a lot of bugs in the kernel makefiles after we
-> added LE support which prevented a biarch/biendian compiler from working.
-> But now it does work and we want it to keep working because it means you
-> can have a single compiler for building 32-bit, 64-bit BE & 64-bit LE.
-
-Good to hear :-)
+>>  *    mcs_node
+>>  *   +--------+      +----+         +----+
+>>  *   | next   | ---> |next| -> ...  |next| -> NULL  [Main queue]
+>>  *   | locked | -+   +----+         +----+
+>>  *   +--------+  |
+>>  *               |   +---------+         +----+
+>>  *               +-> |mcs::next| -> ...  |next| -> NULL     =
+[Secondary queue]
+>> *                   |cna::tail| -+      +----+
+>>  *                   +---------+  |        ^
+>> *                                +--------+
+>>  *
+>>  * N.B. locked =3D 1 if secondary queue is absent.
+>>  */
 
 
-Segher
+I would change mcs_node to cna_node, next to mcs::next and locked to =
+mcs::locked
+in the very first node. Other than that, this is great. Thanks, Peter =
+and Longman!
+
+I should probably stick this graphic in the comment at the top of the =
+file,=20
+instead of a comment to find_successor() (or whatever this function ends =
+up=20
+being called).
+
+=E2=80=94 Alex
+
+
