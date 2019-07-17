@@ -2,103 +2,86 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C59C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F61C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B6920880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A6921019
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfGQUxS (ORCPT
+        id S1728786AbfGQUxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:53:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:32450 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfGQUxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:53:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 13:53:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,275,1559545200"; 
-   d="scan'208";a="170366132"
-Received: from fei-dev-host.jf.intel.com ([10.7.198.158])
-  by orsmga003.jf.intel.com with ESMTP; 17 Jul 2019 13:53:17 -0700
-From:   fei.yang@intel.com
-To:     felipe.balbi@linux.intel.com, john.stultz@linaro.org,
-        andrzej.p@collabora.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        stable@vger.kernel.org
-Subject: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated properly
-Date:   Wed, 17 Jul 2019 13:53:08 -0700
-Message-Id: <1563396788-126034-1-git-send-email-fei.yang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 17 Jul 2019 16:53:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55126 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfGQUxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 16:53:42 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnqvd-0004DO-Lt; Wed, 17 Jul 2019 22:53:33 +0200
+Date:   Wed, 17 Jul 2019 22:53:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+cc:     peterz@infradead.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: regression with napi/softirq ?
+In-Reply-To: <20190717201925.fur57qfs2x3ha6aq@debian>
+Message-ID: <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
+References: <20190717201925.fur57qfs2x3ha6aq@debian>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fei Yang <fei.yang@intel.com>
+On Wed, 17 Jul 2019, Sudip Mukherjee wrote:
+> I am using v4.14.55 on an Intel Atom based board and I am seeing network
+> packet drops frequently on wireshark logs. After lots of debugging it
+> seems that when this happens softirq is taking huge time to start after
+> it has been raised. This is a small snippet from ftrace:
+> 
+>            <...>-2110  [001] dNH1   466.634916: irq_handler_entry: irq=126 name=eth0-TxRx-0
+>            <...>-2110  [001] dNH1   466.634917: softirq_raise: vec=3 [action=NET_RX]
+>            <...>-2110  [001] dNH1   466.634918: irq_handler_exit: irq=126 ret=handled
+>      ksoftirqd/1-15    [001] ..s.   466.635826: softirq_entry: vec=3 [action=NET_RX]
+>      ksoftirqd/1-15    [001] ..s.   466.635852: softirq_exit: vec=3 [action=NET_RX]
+>      ksoftirqd/1-15    [001] d.H.   466.635856: irq_handler_entry: irq=126 name=eth0-TxRx-0
+>      ksoftirqd/1-15    [001] d.H.   466.635857: softirq_raise: vec=3 [action=NET_RX]
+>      ksoftirqd/1-15    [001] d.H.   466.635858: irq_handler_exit: irq=126 ret=handled
+>      ksoftirqd/1-15    [001] ..s.   466.635860: softirq_entry: vec=3 [action=NET_RX]
+>      ksoftirqd/1-15    [001] ..s.   466.635863: softirq_exit: vec=3 [action=NET_RX]
+> 
+> So, softirq was raised at 466.634917 but it started at 466.635826 almost
+> 909 usec after it was raised.
 
-If scatter-gather operation is allowed, a large USB request would be split
-into multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN
-bit except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
-Since only the last TRB has IOC set, dwc3_gadget_ep_reclaim_completed_trb()
-would be called only once for the whole USB request, thus all the TRBs need
-to be reclaimed within this single call. However that is not what the current
-code does.
+This is a situation where the network softirq decided to delegate softirq
+processing to ksoftirqd. That happens when too much work is available while
+processing softirqs on return from interrupt.
 
-This patch addresses the issue by checking each TRB in function
-dwc3_gadget_ep_reclaim_trb_sg() and reclaiming the chained ones right there.
-Only the last TRB gets passed to dwc3_gadget_ep_reclaim_completed_trb(). This
-would guarantee all TRBs are reclaimed and trb_dequeue/num_trbs are updated
-properly.
+That means that softirq processing happens under scheduler control. So if
+there are other runnable tasks on the same CPU ksoftirqd can be delayed
+until their time slice expired. As a consequence ksoftirqd might not be
+able to catch up with the incoming packet flood and the NIC starts to drop.
 
-Signed-off-by: Fei Yang <fei.yang@intel.com>
-Cc: stable <stable@vger.kernel.org>
----
+You can hack ksoftirq_running() to return always false to avoid this, but
+that might cause application starvation and a huge packet buffer backlog
+when the amount of incoming packets makes the CPU do nothing else than
+softirq processing.
 
-V2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_trb_sg()
-    and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
+Thanks,
 
----
+	tglx
 
- drivers/usb/dwc3/gadget.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 173f532..c0662c2 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2404,7 +2404,7 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
- 		struct dwc3_request *req, const struct dwc3_event_depevt *event,
- 		int status)
- {
--	struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
-+	struct dwc3_trb *trb;
- 	struct scatterlist *sg = req->sg;
- 	struct scatterlist *s;
- 	unsigned int pending = req->num_pending_sgs;
-@@ -2419,7 +2419,15 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
- 
- 		req->sg = sg_next(s);
- 		req->num_pending_sgs--;
-+		if (!(trb->ctrl & DWC3_TRB_CTRL_IOC)) {
-+			/* reclaim the TRB without calling
-+			 * dwc3_gadget_ep_reclaim_completed_trb */
-+			dwc3_ep_inc_deq(dep);
-+			req->num_trbs--;
-+			continue;
-+		}
- 
-+		/* Only the last TRB in the sg list would reach here */
- 		ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
- 				trb, event, status, true);
- 		if (ret)
--- 
-2.7.4
 
