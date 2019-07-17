@@ -4,97 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904BDC76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89C7C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7502173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DA2206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfGQDe4 (ORCPT
+        id S1728771AbfGQDhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 23:34:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39728 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728035AbfGQDe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 23:34:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D95B7AC66;
-        Wed, 17 Jul 2019 03:34:54 +0000 (UTC)
-Subject: Re: [PATCH v7 4/5] x86/paravirt: Remove const mark from
- x86_hyper_xen_hvm variable
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bp@alien8.de, sstabellini@kernel.org, tglx@linutronix.de,
-        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
-        mingo@redhat.com
-References: <1562846532-32152-1-git-send-email-zhenzhong.duan@oracle.com>
- <1562846532-32152-5-git-send-email-zhenzhong.duan@oracle.com>
- <2433589d-a2d2-6b51-cfbd-c1141014ab93@suse.com>
- <67261f6e-5dce-2452-a6d6-aa6ca73dfeec@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <06b1e979-3ac6-1f3c-616f-5756ac16519b@suse.com>
-Date:   Wed, 17 Jul 2019 05:34:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 16 Jul 2019 23:37:53 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:60200 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726069AbfGQDhw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 23:37:52 -0400
+X-UUID: d0db6bff8b214815abb3b0db654177db-20190717
+X-UUID: d0db6bff8b214815abb3b0db654177db-20190717
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1155228632; Wed, 17 Jul 2019 11:37:33 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 17 Jul 2019 11:37:31 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 17 Jul 2019 11:37:31 +0800
+Message-ID: <1563334651.29169.8.camel@mtksdaap41>
+Subject: Re: [PATCH v4, 03/33] dt-bindings: mediatek: add ccorr description
+ for mt8183 display
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 17 Jul 2019 11:37:31 +0800
+In-Reply-To: <1562625253-29254-4-git-send-email-yongqiang.niu@mediatek.com>
+References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1562625253-29254-4-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <67261f6e-5dce-2452-a6d6-aa6ca73dfeec@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 403168DAAE7D0F5F3260CBF4E27C82B0F49F3568C5D9161274FEC2680BC066432000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.07.19 04:09, Zhenzhong Duan wrote:
-> 
-> On 2019/7/16 18:57, Juergen Gross wrote:
->> On 11.07.19 14:02, Zhenzhong Duan wrote:
->>> .. as "nopv" support needs it to be changeable at boot up stage.
->>>
->>> Checkpatch report warning, so move variable declarations from
->>> hypervisor.c to hypervisor.h
->>>
->>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>> Cc: Juergen Gross <jgross@suse.com>
->>> Cc: Stefano Stabellini <sstabellini@kernel.org>
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>> Cc: Ingo Molnar <mingo@redhat.com>
->>> Cc: Borislav Petkov <bp@alien8.de>
->>> ---
->>>   arch/x86/include/asm/hypervisor.h | 8 ++++++++
->>>   arch/x86/kernel/cpu/hypervisor.c  | 8 --------
->>>   2 files changed, 8 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/arch/x86/include/asm/hypervisor.h 
->>> b/arch/x86/include/asm/hypervisor.h
->>> index f7b4c53..e41cbf2 100644
->>> --- a/arch/x86/include/asm/hypervisor.h
->>> +++ b/arch/x86/include/asm/hypervisor.h
->>> @@ -58,6 +58,14 @@ struct hypervisor_x86 {
->>>       bool ignore_nopv;
->>>   };
->>>   +extern const struct hypervisor_x86 x86_hyper_vmware;
->>> +extern const struct hypervisor_x86 x86_hyper_ms_hyperv;
->>> +extern const struct hypervisor_x86 x86_hyper_xen_pv;
->>> +extern const struct hypervisor_x86 x86_hyper_kvm;
->>> +extern const struct hypervisor_x86 x86_hyper_jailhouse;
->>> +extern const struct hypervisor_x86 x86_hyper_acrn;
->>> +extern struct hypervisor_x86 x86_hyper_xen_hvm;
->>
->> This should either stay const and be changed in patch 5, or you
->> should adapt its definition in arch/x86/xen/enlighten_hvm.c in
->> this patch.
-> 
-> Ok, thanks for your suggestion.
-> 
-> I'll choose 2nd opinion as I don't need to change descripton with that.
-
-Just resend the last two modified patches then, please.
+Hi, Yongqiang:
 
 
-Juergen
+This version is identical to previous version, and Rob has gave a
+'Reviwed-by' tag on previous version, so you should keep that tag on
+this version, so we don't need to review this patch again.
+
+Regards,
+CK
+
+
+On Tue, 2019-07-09 at 06:33 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 8c4700f..cf5fb08 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -31,6 +31,7 @@ Required properties (all function blocks):
+>  	"mediatek,<chip>-disp-ovl-2l"           - overlay (2 layers, blending, csc)
+>  	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
+>  	"mediatek,<chip>-disp-wdma"  		- write DMA
+> +	"mediatek,<chip>-disp-ccorr"            - color correction
+>  	"mediatek,<chip>-disp-color" 		- color processor
+>  	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
+>  	"mediatek,<chip>-disp-gamma" 		- gamma correction
+
+
