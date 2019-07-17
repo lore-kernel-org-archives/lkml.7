@@ -2,145 +2,223 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC705C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFCAC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC25221743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E552173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfGQLIl (ORCPT
+        id S1730573AbfGQLJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:08:41 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:42221 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfGQLIl (ORCPT
+        Wed, 17 Jul 2019 07:09:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbfGQLJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:08:41 -0400
-Received: from [192.168.1.110] ([77.7.13.186]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MI4cT-1hhRC50gpr-00FFCN; Wed, 17 Jul 2019 13:08:22 +0200
-Subject: Re: [PATCH 4/4] debian: add generic rule file
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <1562664759-16009-1-git-send-email-info@metux.net>
- <1562664759-16009-4-git-send-email-info@metux.net>
- <CAK7LNAR1N-bwVWm0LXky2-d2GfvRuRrEWeo5CGm3Z2Lp_s0WEw@mail.gmail.com>
- <5af9db32-2cf5-10ba-261c-e08852d0814f@metux.net>
- <20190715191245.GD3068@mit.edu>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <9dace139-ab0d-f1bd-436e-d95a4ff4a7f7@metux.net>
-Date:   Wed, 17 Jul 2019 13:08:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 17 Jul 2019 07:09:34 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6HB5DrD144774
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 07:09:32 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tt0tr50fb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 07:09:32 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 17 Jul 2019 12:09:29 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 17 Jul 2019 12:09:19 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6HB9I7C39190742
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jul 2019 11:09:18 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C29152063;
+        Wed, 17 Jul 2019 11:09:18 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.168])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 366B052050;
+        Wed, 17 Jul 2019 11:09:15 +0000 (GMT)
+Date:   Wed, 17 Jul 2019 14:09:13 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v18 08/15] userfaultfd: untag user pointers
+References: <cover.1561386715.git.andreyknvl@google.com>
+ <d8e3b9a819e98d6527e506027b173b128a148d3c.1561386715.git.andreyknvl@google.com>
+ <20190624175120.GN29120@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190715191245.GD3068@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ls2KdKhlB/ERv7ImE0pEbdHSeZNUh2CLrbNdokQc4+7HDaSPFnH
- NWof8UK9fZ70y9OOR7NqmnH49OthwYD4CJvEByZVBLedq6jKVFzDd8ZilQP6fvhLFS0CQgW
- eOIitHgU3txoT5k3bK0BeMXSos96Hb+c25Z9OnrRJyeuMbvCiekhpq0yCMvt1P6fUDHFJzD
- 9b1bZJa5geDEZScPMT+8g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l4VD3LhjbFs=:iBaZCq5t7ZNDjcoa1g/GHQ
- hPi2gmZPgmxeWOzgGFmciK5msfjaPYzPmXvGMIEWDgP5baBPaJp90fjM3CMYAFN4GMFrNjZ4D
- TXfZTKjxdLFSSY+ydeTHfW9Qbu4DhZr3Exrl6XjSn8RHFhx6CaW+EIc/+vjY/zXjMXNhJIoVZ
- jD9rCK7W19mZWbpfi2I8fowg0d6VGS8qbJRyjGI9jLTocymBTg+MaOYQSGnzZY/RfeRikDK+S
- EfM5Ti6J1MCMAKqaJMRWFY8ipIlxz1JXmrfhYN3SENTo1B6xG1+kBZ8Gr3tdjcpe7EGpALAP1
- Xj2YpneaVZKUkvw3PXKQAnBTGSYKvkQeG0DFvdiPexSnwOpnQuRSiurgX61daSGvbnRm0vP/S
- cVmNqlZpeUl+NdxnGpLyA37PAqX+SH3/Eejb6Xsme6DO8QUT72cnNXZt1stWcZk0nktWCTrMT
- 8bMiF8rTH/a2Hfcyf1/8r3ldzkB0s4gb7uE137ENM2PdiQKrfOPoJiT3ya2uZkVI2wx1yjeao
- 8lfI9xwe3MrusEOpwWz1E5ILm0B6SfEAQa7GVw8L0F80w7EqoTbRRv2UPezCVks49LIhyzOVL
- JCZCHWEL4FjceHHkvwhxvSKR4Twvzvg8gBoPW2HlpUL+ekEQSRmHUQbDoovscttYY73YL+xko
- m8d1CZ8dmbK7I83h/31GRJHJGkcNAzos1/tGfGJuseqUut94PR82A7/3EpOuR2BDKQ0P+44rS
- 7c94uKgPuUWiIIL4mLwUmE6W+ZxR2McYZ2unEICCdVksL9oExYRrrD4fwGU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624175120.GN29120@arrakis.emea.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19071711-0020-0000-0000-00000354AA32
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071711-0021-0000-0000-000021A87C56
+Message-Id: <20190717110910.GA12017@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907170135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.07.19 21:12, Theodore Y. Ts'o wrote:
+On Mon, Jun 24, 2019 at 06:51:21PM +0100, Catalin Marinas wrote:
+> On Mon, Jun 24, 2019 at 04:32:53PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends kernel ABI to allow to pass
+> > tagged user pointers (with the top byte set to something else other than
+> > 0x00) as syscall arguments.
+> > 
+> > userfaultfd code use provided user pointers for vma lookups, which can
+> > only by done with untagged pointers.
+> > 
+> > Untag user pointers in validate_range().
+> > 
+> > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  fs/userfaultfd.c | 22 ++++++++++++----------
+> >  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> Same here, it needs an ack from Al Viro.
 
-Hi,
+The userfault patches usually go via -mm tree, not sure if Al looks at them :) 
+ 
+FWIW, you can add 
 
-> It's possible I'm not remembering some of the feedback, but the only> thing I recall was the comment I made that I'd really like this use>
-case:> > make O=/build/linux-build bindeb-pkg
-ah, I yet wanted to test that - thx for reminding me. > to not break.
-And as far as I can tell from the proposed patch series> (I haven't had
-a chance to experimentally verify it yet), I don't> think it should
-break anything --- I'm assuming that we will still> have a way of
-creating the debian/rules file in> /build/linux-build/debian/rules when
-doing a O= build, and that the> intdeb-pkg rule remains the same.  At
-least, it appears to be the case> from my doing a quick look at the patches.
-Yes (unless i've missed something), everything should remain as it is.
-One thing that could happen (not checked yet) is that running good old
-'make bindeb-pkg' without O=... could overwrite the now already existing
-debian/rules file.
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
-If that's really a problem, we could tweak the machinery to use a
-different name for the rule file (for now, one the preceeding patch
-just allows giving a different name for just *generating* the rules
-file). Another idea could be rewriting the whole process so that no
-rules file needs to be generated at all.
-
-> Yeah, the official Debian debian/rules is optimized for doing a
-> distribution release, and in addition to the issues Enrico has raised,
-> last time I tried it, it was S-L-O-W since it was building a fully
-> generic kernel.  It's not at all useable for general developer use.
-
-I'm a bit reluctant calling this 'optimized' :p
-
-The strangest aspect (IMHO) is they're building several different trees
-(w/ different huge patch queues) from only one source package. Instead
-I'd rather:
-* try to get as much as possible in one tree
-* have separate source packages if there really need to be separate
-  patche queues (IMHO, these things, like RT stuff, just need proper
-  Kconfig's)
-* do all the patching in git and skip the text-based patches entirely
-
-Haven't found out, why they're actually doing it that complicated way
-(didn't get any useful answers from debian kernel folks)
-
-> It sounds like what Enrico is trying to do is to enable running
-> "dpkg-buildpackage -us -uc -b" from the the top-level kernel package
-> as being easier than running "make bindeb-pkg".  I suspect this might
-> be because his goal is to integrate individual kernel builds from
-> using Debian's hermetic build / chroot systems (e.g., sbuild, pbuilder)?
-
-Yes, I'm building all deb's by the same process / infrastructure.
-In my case it's dck-buildpackage (*1) which runs the build in a docker
-container (kinda pbuilder w/ docker). It always starts with a fresh
-(minimal) base image, calls debian/rules to create debian/control
-(if necessary) deploys the dependencies found in the control file
-and finally fire's up dpkg-buildpackage - the output is collected
-in an ready-to-use apt repo.
-
-The goal of this is having a canonical build process for all deb
-packages, not having to care of any special cases anymore. I also
-have another tool ontop of that, which runs the whole show for dozens
-of packages and targets (*2).
-
-My first approach was trying to use Debian source packages with new
-kernel trees, but had to give up after a few days. Then I've found out
-that the kernel already has *almost* what I needed. The difference
-between almost and fine is this patch queue (minus local .config files)
-
-
---mtx
+> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> > index ae0b8b5f69e6..c2be36a168ca 100644
+> > --- a/fs/userfaultfd.c
+> > +++ b/fs/userfaultfd.c
+> > @@ -1261,21 +1261,23 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
+> >  }
+> >  
+> >  static __always_inline int validate_range(struct mm_struct *mm,
+> > -					  __u64 start, __u64 len)
+> > +					  __u64 *start, __u64 len)
+> >  {
+> >  	__u64 task_size = mm->task_size;
+> >  
+> > -	if (start & ~PAGE_MASK)
+> > +	*start = untagged_addr(*start);
+> > +
+> > +	if (*start & ~PAGE_MASK)
+> >  		return -EINVAL;
+> >  	if (len & ~PAGE_MASK)
+> >  		return -EINVAL;
+> >  	if (!len)
+> >  		return -EINVAL;
+> > -	if (start < mmap_min_addr)
+> > +	if (*start < mmap_min_addr)
+> >  		return -EINVAL;
+> > -	if (start >= task_size)
+> > +	if (*start >= task_size)
+> >  		return -EINVAL;
+> > -	if (len > task_size - start)
+> > +	if (len > task_size - *start)
+> >  		return -EINVAL;
+> >  	return 0;
+> >  }
+> > @@ -1325,7 +1327,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+> >  		goto out;
+> >  	}
+> >  
+> > -	ret = validate_range(mm, uffdio_register.range.start,
+> > +	ret = validate_range(mm, &uffdio_register.range.start,
+> >  			     uffdio_register.range.len);
+> >  	if (ret)
+> >  		goto out;
+> > @@ -1514,7 +1516,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+> >  	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
+> >  		goto out;
+> >  
+> > -	ret = validate_range(mm, uffdio_unregister.start,
+> > +	ret = validate_range(mm, &uffdio_unregister.start,
+> >  			     uffdio_unregister.len);
+> >  	if (ret)
+> >  		goto out;
+> > @@ -1665,7 +1667,7 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
+> >  	if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
+> >  		goto out;
+> >  
+> > -	ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
+> > +	ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
+> >  	if (ret)
+> >  		goto out;
+> >  
+> > @@ -1705,7 +1707,7 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
+> >  			   sizeof(uffdio_copy)-sizeof(__s64)))
+> >  		goto out;
+> >  
+> > -	ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
+> > +	ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
+> >  	if (ret)
+> >  		goto out;
+> >  	/*
+> > @@ -1761,7 +1763,7 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
+> >  			   sizeof(uffdio_zeropage)-sizeof(__s64)))
+> >  		goto out;
+> >  
+> > -	ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
+> > +	ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
+> >  			     uffdio_zeropage.range.len);
+> >  	if (ret)
+> >  		goto out;
+> > -- 
+> > 2.22.0.410.gd8fdbe21b5-goog
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Sincerely yours,
+Mike.
+
