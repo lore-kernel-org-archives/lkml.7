@@ -2,128 +2,178 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C58C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF38C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AB72077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563350123;
-	bh=YGPwnHtu76iidTJbkfyZ1IvpEUOGpnGQCqPkzYcyYzM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M1dc5tzTdlPJFyKbvOjcJYHomLk59F6UEIYreEF2auyHiBwB65XdWflAptRxbqag5
-	 iXd07wuB6Hyq2rietzcvZPdunnZnYTeeFf94kYJFwm9AllFAAKcZ+72/MUsEyx9Mqj
-	 I8rkNe+A/VlYN4Td5Lo9sue/G6NMx21UYqCoyDvI=
+	by mail.kernel.org (Postfix) with ESMTP id 05E322077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 07:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfGQHzW (ORCPT
+        id S1728809AbfGQHzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 03:55:22 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37362 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfGQHzW (ORCPT
+        Wed, 17 Jul 2019 03:55:31 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41086 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfGQHzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 03:55:22 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s20so24042227otp.4;
-        Wed, 17 Jul 2019 00:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iH2k1ar00PKs26usVcgRsgrZEYhcLBd9ajfdFKToAbs=;
-        b=HMDvr3Drdvp27hXOI4aeLQULbhmqhaaLWZ7EQc7bGlVA688Awzrb07rRd2ZwJ9EjMj
-         nV1VGlfPpdFpSAVvYiZLPKdNjr0EY9PlB+iSlxNDTwHcNdxk9aqiO4OBbi2lZ4OsLNfM
-         tenghIOn0jutRC3GlQWdM8Mx3FMrgCLKpIK6K3pPSWKrtugNudynRWeH4FsU+atBCIFA
-         egCp/JBd/dOMP35N8JtRNHJLDWm/yn2DNxLNXZx6RPIWl/eiRFR7fvNGB9QUQv8z/O6k
-         ZyJvTgGCSZIT2bVxThJfEc9rrLzYoPt7sZrR27Q4V/5rmbJQT3XvAUIiL4j8FF1UzldR
-         7hYQ==
-X-Gm-Message-State: APjAAAUxrTtow8rZPzZ+dQrnOHzYbNBqimQXBcQMmRLd4ER0J7Dobz4d
-        cBjamEaYO40BDQfvd8SJ7iZ3srB4+8p/Iq0Si3EnuaJm
-X-Google-Smtp-Source: APXvYqzlEtNuhiNzoPrvm4HvombJYRRJCzTTWi3ikgXV0m5bQF2sSaq8Fk7kIkbnac3+vka5gV1vMHciU+mlh4RjJaY=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr29016349otq.262.1563350121302;
- Wed, 17 Jul 2019 00:55:21 -0700 (PDT)
+        Wed, 17 Jul 2019 03:55:31 -0400
+Received: from pc-375.home (2a01cb0c88d94a005820d607da339aae.ipv6.abo.wanadoo.fr [IPv6:2a01:cb0c:88d9:4a00:5820:d607:da33:9aae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id AD5B2261FA0;
+        Wed, 17 Jul 2019 08:55:28 +0100 (BST)
+Date:   Wed, 17 Jul 2019 09:55:25 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Naga Sureshkumar Relli <nagasure@xilinx.com>
+Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "richard@nod.at" <richard@nod.at>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        Srikanth Vemula <svemula@xilinx.com>,
+        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
+Subject: Re: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over
+ write driver's read_page()/write_page()
+Message-ID: <20190717095525.6e2e9730@pc-375.home>
+In-Reply-To: <DM6PR02MB4779307E32670683AE9F60D6AFC90@DM6PR02MB4779.namprd02.prod.outlook.com>
+References: <20190716053051.11282-1-naga.sureshkumar.relli@xilinx.com>
+        <20190716093137.3d8e8c1f@pc-375.home>
+        <20190716094450.122ba6e7@pc-375.home>
+        <DM6PR02MB4779307E32670683AE9F60D6AFC90@DM6PR02MB4779.namprd02.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <6254683.2O5gIZElE2@kreacher> <20190716214024.GA8345@lenoir>
-In-Reply-To: <20190716214024.GA8345@lenoir>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 17 Jul 2019 09:55:08 +0200
-Message-ID: <CAJZ5v0gB0AHTebjpp87YKA1wmE+tCw5V=eaRE2XDM3nyQYndnA@mail.gmail.com>
-Subject: Re: [PATCH] cpuidle: Always stop scheduler tick on adaptive-tick CPUs
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Lindroth <thomas.lindroth@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 11:40 PM Frederic Weisbecker
-<frederic@kernel.org> wrote:
->
-> On Tue, Jul 16, 2019 at 05:25:10PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Running the scheduler tick on idle adaptive-tick CPUs is not useful
->
-> Judging by the below change, you mean full dynticks, right?
+On Wed, 17 Jul 2019 05:33:35 +0000
+Naga Sureshkumar Relli <nagasure@xilinx.com> wrote:
 
-Right.
+> Hi Boris,
+> 
+> > -----Original Message-----
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > Sent: Tuesday, July 16, 2019 1:15 PM
+> > To: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> > Cc: miquel.raynal@bootlin.com; bbrezillon@kernel.org; richard@nod.at;
+> > dwmw2@infradead.org; computersforpeace@gmail.com; marek.vasut@gmail.com;
+> > vigneshr@ti.com; yamada.masahiro@socionext.com; linux-mtd@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; Michal Simek <michals@xilinx.com>; Srikanth Vemula
+> > <svemula@xilinx.com>; nagasuresh12@gmail.com
+> > Subject: Re: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over write
+> > driver's read_page()/write_page()
+> > 
+> > On Tue, 16 Jul 2019 09:31:37 +0200
+> > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> >   
+> > > On Mon, 15 Jul 2019 23:30:51 -0600
+> > > Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
+> > >  
+> > > > Add check before assigning chip->ecc.read_page() and
+> > > > chip->ecc.write_page()
+> > > >
+> > > > Signed-off-by: Naga Sureshkumar Relli
+> > > > <naga.sureshkumar.relli@xilinx.com>
+> > > > ---
+> > > > Changes in v18
+> > > >  - None
+> > > > ---
+> > > >  drivers/mtd/nand/raw/nand_micron.c | 7 +++++--
+> > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/mtd/nand/raw/nand_micron.c
+> > > > b/drivers/mtd/nand/raw/nand_micron.c
+> > > > index cbd4f09ac178..565f2696c747 100644
+> > > > --- a/drivers/mtd/nand/raw/nand_micron.c
+> > > > +++ b/drivers/mtd/nand/raw/nand_micron.c
+> > > > @@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_chip *chip)
+> > > >  		chip->ecc.size = 512;
+> > > >  		chip->ecc.strength = chip->base.eccreq.strength;
+> > > >  		chip->ecc.algo = NAND_ECC_BCH;
+> > > > -		chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> > > > -		chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+> > > > +		if (!chip->ecc.read_page)
+> > > > +			chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> > > > +
+> > > > +		if (!chip->ecc.write_page)
+> > > > +			chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+> > > >  
+> > >
+> > > Seriously?! I told you this was inappropriate and you keep sending
+> > > this patch. So let's make it clear:
+> > >
+> > > Nacked-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > >
+> > > Fix your controller driver instead of adding hacks to the Micron logic!  
+> > 
+> > Not even going to review the other patch: if you have to do that, that means the driver is
+> > broken. On a side note, this patch series is still not threaded as it should be and it's a v18 for a
+> > damn NAND controller driver! Sorry but you reached the limit of my patience. Please find
+> > someone to help you with that task.  
+> My intention is not to resend this 1/2 again. Sorry for that.
+> We already had some discussion on [v17 1/2], https://lkml.org/lkml/2019/6/26/430
+> And there we didn't conclude that raw_read()/writes().
 
-> > and it may also be not expected by users (as reported by Thomas), so
-> > add a check to cpuidle_idle_call() to always stop the tick on them
-> > regardless of the idle duration predicted by the governor.
-> >
-> > Fixes: 554c8aa8ecad ("sched: idle: Select idle state before stopping the tick")
-> > Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-> > Tested-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  kernel/sched/idle.c |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > Index: linux-pm/kernel/sched/idle.c
-> > ===================================================================
-> > --- linux-pm.orig/kernel/sched/idle.c
-> > +++ linux-pm/kernel/sched/idle.c
-> > @@ -191,7 +191,8 @@ static void cpuidle_idle_call(void)
-> >                */
-> >               next_state = cpuidle_select(drv, dev, &stop_tick);
-> >
-> > -             if (stop_tick || tick_nohz_tick_stopped())
-> > +             if (stop_tick || tick_nohz_tick_stopped() ||
-> > +                 !housekeeping_cpu(dev->cpu, HK_FLAG_TICK))
->
-> But tick_nohz_tick_stopped() also works on full dynticks CPUs. If the
-> tick isn't stopped on a full dynticks CPU by the time we reach this path,
-> it means that the conditions for the tick to be stopped are not met anyway
-> (eg: more than one task and sched tick is needed, perf event requires the tick,
-> posix CPU timer, etc...)
+Yes, looks like I never replied to that one, but I think my previous
+explanation were clear enough to not argue on that aspect any longer/
 
-First of all, according to Thomas, the patch does make a difference,
-so evidently on his system(s) the full dynticks CPUs enter the idle
-loop with running tick.
+> So I thought that, will send updated driver along with this patch, then will get more information about
+> The issue on the latest driver review.
 
-This means that, indeed, the conditions for the tick to be stopped
-have not been met up to that point, but if the (full dynticks) CPU
-becomes idle, that's because it has been made idle on purpose
-(presumably by a user-space "orchestrator" or the sysadmin), so the
-kernel can assume that it will remain idle indefinitely.  That, in
-turn, is when the tick would be stopped on it regardless of everything
-else (even if it wasn't a full dynticks CPU).
+More on that topic. I don't think you ever tested on-die ECC on a
+Micron NAND, otherwise you would have noticed that your solution
+completely bypasses the on-die ECC logic (and this will clearly break
+existing on-die ECC users). See, that's what I'm complaining about,
+Looks like you don't really understand what you're doing.
 
-I guess I should add the above to the changelog.
+> There is nothing like keep on sending this patch, As you people are experts in the driver review, 
+> if this patch is a hack, then we will definitely fix that in controller driver. I will find a way to do that.
+> 
+> But in this flow of patch sending, if the work I did hurts you, then I am really sorry for that.
 
-> Or am I missing something else?
+I'm not offended, just tired going through the same driver over and
+over again, reporting things that are wrong/inappropriate to then
+realize you only addressed of a tiny portion of it in the following
+version. My last reviews were rather incomplete because of that, and
+now I'm giving up.
 
-Well, if full dynticks CPUs are expected to always enter the idle loop
-with stopped tick, then something appears to be amiss, but I'm not
-sure if that expectation is entirely realistic.
+> Will fix this issue in the controller driver and will send the updated one.
 
-Cheers!
+How? You say you'll fix the issue but I'm not even sure you understand
+what the issue is? Clearly, the patch you've posted doesn't fix
+anything, it's just papering over the fact that your controller driver
+is not supporting raw accesses (or at least, not supporting it
+properly).
+
+Have you even looked at the datasheet you pointed to in patch 2 [1]?
+Just went through it, and found a field that's supposed to control the
+ECC engine activation: ecc_memcfg.ecc_mode. I don't see anything
+changing that field in your code, so I guess raw accesses are actually
+not really happening with the ECC engine disabled... 
+
+> Could you please let me know if this is OK.
+
+You can send a new version, I'm just saying I won't spend time
+reviewing it.
+
+> 
+> I will send the series as threaded one from next time onwards.
+> 
+> Thanks,
+> pcieNaga Sureshkumar Relli
+
+[1]http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/DDI0380G_smc_pl350_series_r2p1_trm.pdf
