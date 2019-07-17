@@ -2,109 +2,263 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ED2C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAC3C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A27D2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hc6r1e69"
+	by mail.kernel.org (Postfix) with ESMTP id 6B7A12077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfGQI5D (ORCPT
+        id S1729496AbfGQI6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:57:03 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39607 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfGQI5D (ORCPT
+        Wed, 17 Jul 2019 04:58:08 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50927 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGQI6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:57:03 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v18so22793260ljh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 01:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5jVJYwVPqhI92ePrVwuK/g+oP5mpkNXJhduBRrTnzOo=;
-        b=hc6r1e69nhIl69WPP0wsHJjCJ0EIaTLGofpXpOOCuwEBWVM2DslumLrlHBCVRPlXOb
-         vtpofLq3bWMezI1jFYPQSlVS0XUVXadYW1mcxJJ5hzyT0MTd+x3PpzFNVy3N1IxT0mBM
-         zCVb5nyOsBRFPJnDRXtMVc95qbpz21UCgaHQBRVnZjF87bPjqx3yZHbISO4sBn7ubXjb
-         qa7ZJwAAPRVKsL+9pm4ezR+ltfBh3ZdLMYqJFyBAUnv1FDYODKsz9I1vzYgHx5jMZToN
-         VCYnF5+0nRvQ69Xkihe/2ovzECrI4sGWEORpaknO3Y4aTs7qO9TZ198lz6V70XEcqWDr
-         bOOw==
+        Wed, 17 Jul 2019 04:58:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id m26so26391109ioh.17
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 01:58:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5jVJYwVPqhI92ePrVwuK/g+oP5mpkNXJhduBRrTnzOo=;
-        b=U7GbUl5Y83mf/pf0hv0+ICrOc56FyDfLRp2TgGZYyFpMIknudbfryeWvcF4GmI6180
-         xOObT/KamHLDIATblJmU2fCNOA6xG2UGNTB3A6PELL6DM+uZ3oiMLEr32SyBIdAQsmOZ
-         uJRuX0w2TpHfis56ku80ohQQzvagz+EBVigG+8GOSKukHQI+O7TYw8cL1ccieuNLWdOW
-         Iqwl355ad5cDhXVPtDua+gP0z5OQfsFqefwncGp9HZv7Pv1qfZ0plmbF7LrVv/WJQYgj
-         p3ff/mlTTw76RSOExM00cUen/IeD46eNvTRmmhbMyT9aZHRNLEghdBkyFrK3555enwmD
-         dtKA==
-X-Gm-Message-State: APjAAAUomssB9oulMvAM1Eb3yvraCS/L6zUmkbOYW1joJGASoIof8B0C
-        qlB5a4QAaySa3ETpga9Pzb3fKRMV8elOwY3c6z0e6A==
-X-Google-Smtp-Source: APXvYqyhRKr01SffiXafxqbMn+xTzX5Ioffnm7MxINn2mQfMWmEYQmOejSLNGmv1u5rD0MnWkP9irHPVVa+jHScvu+s=
-X-Received: by 2002:a2e:8559:: with SMTP id u25mr20141598ljj.224.1563353821144;
- Wed, 17 Jul 2019 01:57:01 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=j6y32OJPWourfE4drRSdflRccTKGtBjM7b1HH25HQhc=;
+        b=DViPVigSSb07Xw0/OPNI/ZbDujFA+bg5qMOkhkvEVv5iXLw/NqYMPEnOYBFY675fid
+         QQKb0eyn3WzLEia1KOFH3zvqS66/3JJ4pFF5RvJdCZnAtU/SvsBL+b6fzyyzcBilh0ND
+         5LKJgGSfKc91/YDc7MUHLCheBrNU5zE8iEF75db6bCEw0bXz6aA2/12Z64zW9clc0H+O
+         EmNQoJIBHeR2ZOC6IRPqqv5SEZtzKZGut4eqY30tCqGWnQos3aSGdGhRCeuus619ZFca
+         XGOYQkQ73Q0z9pskTNJqsB6qVDyJWWau5ELvoeJNyYDAhZyjMt2FYwWoPkh5LqZM/7N7
+         3wAg==
+X-Gm-Message-State: APjAAAWuza/ZjsLz1soNHFOC36eQmrjL3npPWvRHxlls56esPNKuptzz
+        3soAxrxIDmq7ynExSD/IU52yLUAfPl1/oOtTgLOat37N+DNX
+X-Google-Smtp-Source: APXvYqy1NCmoglbmmEAsNgNifu1CY90YIrXe+oNUErPBYbJ/PlTbwfrEJH6eHVLKmyedcnxfYAX4sXRMNA8vECUomYEvaZEd3/1H
 MIME-Version: 1.0
-References: <20190405174708.1010-1-guro@fb.com> <20190405174708.1010-7-guro@fb.com>
- <CA+G9fYvz6MA0N8GgwY5QNdWBAw+XT9QcmwnABsSpjLnwz_jLzA@mail.gmail.com> <20190717004904.GA32357@castle.dhcp.thefacebook.com>
-In-Reply-To: <20190717004904.GA32357@castle.dhcp.thefacebook.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 17 Jul 2019 14:26:49 +0530
-Message-ID: <CA+G9fYt+UmakwaZAM4gR-B+V8kZUJVNh8gFBcXa4zU2j0Cz0ZQ@mail.gmail.com>
-Subject: Re: [PATCH v10 6/9] kselftests: cgroup: add freezer controller self-tests
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Roman Gushchin <guroan@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:b710:: with SMTP id g16mr39633583jam.88.1563353886870;
+ Wed, 17 Jul 2019 01:58:06 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 01:58:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000015d943058ddcb1b3@google.com>
+Subject: WARNING: held lock freed in nr_release
+From:   syzbot <syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roman,
+Hello,
 
-> The interaction between ptrace and freezer is complicated
-> (as ptrace in general),so there are known cases when spurious
-> cgroup transitions (frozen <-> non frozen <-> frozen ) can happen.
+syzbot found the following crash on:
 
-When test ran for 8 times it got failed 5 times.
-I have noticed intermittent failure on x86_64, arm64 hikey device and
-qemu_arm64.
+HEAD commit:    3eb51486 Merge tag 'arc-5.3-rc1' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=144104d0600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1044f14a33f8bb44
+dashboard link: https://syzkaller.appspot.com/bug?extid=a34e5f3d0300163f0c87
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174ef948600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12475834600000
 
->
-> Does it create any difficulties? If so, I'll send a diff to ignore
-> the result of this test for now.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a34e5f3d0300163f0c87@syzkaller.appspotmail.com
 
-No difficulties. I will mark this test case as known failure.
+=========================
+WARNING: held lock freed!
+5.2.0+ #66 Not tainted
+-------------------------
+syz-executor290/9125 is freeing memory ffff8880936e02c0-ffff8880936e0abf,  
+with a lock still held there!
+000000005bf1c8ae (sk_lock-AF_NETROM){+.+.}, at: lock_sock  
+include/net/sock.h:1522 [inline]
+000000005bf1c8ae (sk_lock-AF_NETROM){+.+.}, at: nr_release+0x130/0x3e0  
+net/netrom/af_netrom.c:522
+2 locks held by syz-executor290/9125:
+  #0: 0000000027c540ab (&sb->s_type->i_mutex_key#12){+.+.}, at: inode_lock  
+include/linux/fs.h:778 [inline]
+  #0: 0000000027c540ab (&sb->s_type->i_mutex_key#12){+.+.}, at:  
+__sock_release+0x89/0x280 net/socket.c:585
+  #1: 000000005bf1c8ae (sk_lock-AF_NETROM){+.+.}, at: lock_sock  
+include/net/sock.h:1522 [inline]
+  #1: 000000005bf1c8ae (sk_lock-AF_NETROM){+.+.}, at: nr_release+0x130/0x3e0  
+net/netrom/af_netrom.c:522
 
-> > > This patch implements 9 tests for the freezer controller for
-> > > cgroup v2:
-> > ...
-> > > 6) ptrace test: the test checks that it's possible to attach to
-> > > a process in a frozen cgroup, get some information and detach, and
-> > > the cgroup will remain frozen.
-> >
-> > selftests cgroup test_freezer failed because of the sys entry path not found.
->
-> Can you, please, elaborate on this?
+stack backtrace:
+CPU: 0 PID: 9125 Comm: syz-executor290 Not tainted 5.2.0+ #66
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_freed_lock_bug kernel/locking/lockdep.c:5185 [inline]
+  debug_check_no_locks_freed.cold+0x9d/0xa9 kernel/locking/lockdep.c:5218
+  kfree+0xec/0x2c0 mm/slab.c:3753
+  sk_prot_free net/core/sock.c:1640 [inline]
+  __sk_destruct+0x4f7/0x6e0 net/core/sock.c:1726
+  sk_destruct+0x86/0xa0 net/core/sock.c:1734
+  __sk_free+0xfb/0x360 net/core/sock.c:1745
+  sk_free+0x42/0x50 net/core/sock.c:1756
+  sock_put include/net/sock.h:1725 [inline]
+  nr_destroy_socket+0x3ea/0x4b0 net/netrom/af_netrom.c:288
+  nr_release+0x347/0x3e0 net/netrom/af_netrom.c:530
+  __sock_release+0xce/0x280 net/socket.c:586
+  sock_close+0x1e/0x30 net/socket.c:1264
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2eb0 kernel/exit.c:877
+  do_group_exit+0x135/0x370 kernel/exit.c:981
+  get_signal+0x48a/0x2510 kernel/signal.c:2728
+  do_signal+0x87/0x1670 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x442609
+Code: Bad RIP value.
+RSP: 002b:00007ffc16869ec8 EFLAGS: 00000246 ORIG_RAX: 000000000000002b
+RAX: 0000000000000003 RBX: 0000000000000003 RCX: 0000000000442609
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000017e2c R08: 0000000000000003 R09: 0000000400000009
+R10: 0000000400000009 R11: 0000000000000246 R12: 0000000000403440
+R13: 00000000004034d0 R14: 0000000000000000 R15: 0000000000000000
+==================================================================
+BUG: KASAN: use-after-free in debug_spin_lock_before  
+kernel/locking/spinlock_debug.c:83 [inline]
+BUG: KASAN: use-after-free in do_raw_spin_lock+0x28a/0x2e0  
+kernel/locking/spinlock_debug.c:112
+Read of size 4 at addr ffff8880936e034c by task syz-executor290/9125
 
-I see this failure output on screen and sharing log here.
+CPU: 0 PID: 9125 Comm: syz-executor290 Not tainted 5.2.0+ #66
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x20 mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
+  do_raw_spin_lock+0x28a/0x2e0 kernel/locking/spinlock_debug.c:112
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:136 [inline]
+  _raw_spin_lock_bh+0x3b/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  release_sock+0x20/0x1c0 net/core/sock.c:2932
+  nr_release+0x303/0x3e0 net/netrom/af_netrom.c:553
+  __sock_release+0xce/0x280 net/socket.c:586
+  sock_close+0x1e/0x30 net/socket.c:1264
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2eb0 kernel/exit.c:877
+  do_group_exit+0x135/0x370 kernel/exit.c:981
+  get_signal+0x48a/0x2510 kernel/signal.c:2728
+  do_signal+0x87/0x1670 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x442609
+Code: Bad RIP value.
+RSP: 002b:00007ffc16869ec8 EFLAGS: 00000246 ORIG_RAX: 000000000000002b
+RAX: 0000000000000003 RBX: 0000000000000003 RCX: 0000000000442609
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000017e2c R08: 0000000000000003 R09: 0000000400000009
+R10: 0000000400000009 R11: 0000000000000246 R12: 0000000000403440
+R13: 00000000004034d0 R14: 0000000000000000 R15: 0000000000000000
 
-Please find full test log here,
-https://lkft.validation.linaro.org/scheduler/job/825346#L673
+Allocated by task 9130:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc+0x163/0x780 mm/slab.c:3664
+  kmalloc include/linux/slab.h:557 [inline]
+  sk_prot_alloc+0x23a/0x310 net/core/sock.c:1603
+  sk_alloc+0x39/0xf70 net/core/sock.c:1657
+  nr_make_new net/netrom/af_netrom.c:476 [inline]
+  nr_rx_frame+0x733/0x1e80 net/netrom/af_netrom.c:959
+  nr_loopback_timer+0x7b/0x170 net/netrom/nr_loopback.c:59
+  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1322
+  expire_timers kernel/time/timer.c:1366 [inline]
+  __run_timers kernel/time/timer.c:1685 [inline]
+  __run_timers kernel/time/timer.c:1653 [inline]
+  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
 
-- Naresh
+Freed by task 9125:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  sk_prot_free net/core/sock.c:1640 [inline]
+  __sk_destruct+0x4f7/0x6e0 net/core/sock.c:1726
+  sk_destruct+0x86/0xa0 net/core/sock.c:1734
+  __sk_free+0xfb/0x360 net/core/sock.c:1745
+  sk_free+0x42/0x50 net/core/sock.c:1756
+  sock_put include/net/sock.h:1725 [inline]
+  nr_destroy_socket+0x3ea/0x4b0 net/netrom/af_netrom.c:288
+  nr_release+0x347/0x3e0 net/netrom/af_netrom.c:530
+  __sock_release+0xce/0x280 net/socket.c:586
+  sock_close+0x1e/0x30 net/socket.c:1264
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x904/0x2eb0 kernel/exit.c:877
+  do_group_exit+0x135/0x370 kernel/exit.c:981
+  get_signal+0x48a/0x2510 kernel/signal.c:2728
+  do_signal+0x87/0x1670 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880936e02c0
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 140 bytes inside of
+  2048-byte region [ffff8880936e02c0, ffff8880936e0ac0)
+The buggy address belongs to the page:
+page:ffffea00024db800 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea000257f988 ffffea00024ef988 ffff8880aa400e00
+raw: 0000000000000000 ffff8880936e02c0 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880936e0200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880936e0280: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+> ffff8880936e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                               ^
+  ffff8880936e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880936e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
