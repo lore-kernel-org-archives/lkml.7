@@ -2,113 +2,147 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DECC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58647C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5ED120880
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D79F20880
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X44Pl8Ml"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QOsekYg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfGQK0e (ORCPT
+        id S1730162AbfGQK1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:26:34 -0400
-Received: from mail-eopbgr10073.outbound.protection.outlook.com ([40.107.1.73]:65447
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfGQK0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:26:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PQx+W2UPZJByIx+J/oXIOWBjgYsbwbfnQ2PGkEfxZZ8m9RDurVepKSugahDvb2b5Wde+75yUvqoSgvtHS+P1FnB/jQOb2rU90gdPUKgPUe9DhRrKnKmuIhdCYJVXMYr5ChBV/2cmz53AKU2IiAI629111l6DiJA3OTTUSd/VkFsMoJzvPHW9W2yJd++h4fA+5bEdiUEQL1VjnApG54LkORax/jRXn0WKhhwXMU54jO4ajFImmpk6Sz28MQK5PzsNRFl2G4z6xhi86oHe5hZxQAqMODx20eo1a41vx2Kj+S2LSomyeBbQvDW7Zg7ua1SLWY2zPUZpXWc/wSzVfAg7FQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=swgPGqtt1BaNBY8SzzBCVBDSwX2D8vPm7WqfMY5jRJc=;
- b=KJgmBYP4s7x4SAxGRo8hHpIlfMIC67iZF2GGJESvwuKJBs+i+E+Ct+OGQP5eg82+fAVcvdFdu5W5F+t1fBlaGvRe3kFbmgYG1RbsvieVo6Ci9XGyOk64752u3PsXX7IV2E5VOgg77REiiA4r8yJtUjfSmlMjH9IbAZNbeOH/cCrH9Y1/aDyU6WYwuDfZlii111gnkaBi7cEH87rdrCl3VSxO334BaLAqpojZ9dbreNeMz6IxFk2FY9tW5IWQ3NfuEumYRuR8FI65fj/o7KuHQRd/PgZm3Kfl6IDLo3HFcc2pAAQPpiILjKecKLozxbU9PX96wuaeCOW5BFOTmY85kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=swgPGqtt1BaNBY8SzzBCVBDSwX2D8vPm7WqfMY5jRJc=;
- b=X44Pl8Mlq3B5VzEmpmdcJw2IYRHi+YpMh3Hdv3Twj5K/rm9lgN31vZvizhetCveoknh8NoQBwC2GD5An5jhYqOFiGJaJnt10iuVe9HFI6ANgydzWL8buLz6wI1pGz/Pr9uHMuj+6fu3tY5q6qfPP/dLV3G9ed2UkHZM0TOKYSR4=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB6306.eurprd04.prod.outlook.com (20.179.33.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 10:26:31 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 10:26:30 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Darshak Patel <Darshak.patel@einfochips.com>,
-        Kinjan Patel <Kinjan.patel@einfochips.com>,
-        Prajose John <Prajose.john@einfochips.com>
-Subject: RE: [PATCH 1/3] dt-bindings: Add Vendor prefix for Einfochips
-Thread-Topic: [PATCH 1/3] dt-bindings: Add Vendor prefix for Einfochips
-Thread-Index: AQHVPGZqg5LESwYIhES8Xd8HR6s4kqbOmyvA
-Date:   Wed, 17 Jul 2019 10:26:30 +0000
-Message-ID: <AM0PR04MB4211BC8A04B5FB935E15598980C90@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190717061039.9271-1-manivannan.sadhasivam@linaro.org>
- <20190717061039.9271-2-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190717061039.9271-2-manivannan.sadhasivam@linaro.org>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ef2cd81-8324-4319-be20-08d70aa13c0f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6306;
-x-ms-traffictypediagnostic: AM0PR04MB6306:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM0PR04MB6306DB898244413AFEDBCA8D80C90@AM0PR04MB6306.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(366004)(346002)(396003)(199004)(189003)(7416002)(81166006)(81156014)(446003)(74316002)(2501003)(7736002)(25786009)(64756008)(66946007)(66476007)(66556008)(66446008)(86362001)(8936002)(478600001)(558084003)(68736007)(76116006)(54906003)(316002)(8676002)(110136005)(53936002)(76176011)(55016002)(5660300002)(6436002)(3846002)(4326008)(6116002)(66066001)(33656002)(52536014)(7696005)(11346002)(476003)(14454004)(2906002)(71190400001)(44832011)(305945005)(486006)(71200400001)(9686003)(6246003)(229853002)(186003)(102836004)(26005)(6506007)(2201001)(256004)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6306;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VmdGQpJUcpCONLqxkHPDIkYPx6xir8487iQp8FuzIQlfI0MBgU5ufWMsyvUM01rAYQ9eB+lbc8l34Ax5XjSAIuIcur3K85o5ADUf86H4ON1FbdzKswD7rzzWxU8ZnQT5efuYuq8k0AZM4EcybZM4SfFNA7mnp7Ue3pz0rk5BOEpDqoJilryG+mezrCPbxb8clM2d+BVxfRsK2uNLUsZPSI6MeeQOUHqENJRsJocBHqd5KYNWg3V7r+r6d+8Cl7dKvQNwDeAj4pq7LtroNf3cGsjlUGE39s8dIdGJeNrnFk3JgwXHUUbioNBO1HLRO65swFBHLYhcX1qETcb+5J1XXiEY2KUXrJCXAQFGFKnP2rnEjqZvuc5oQAVn7D0Upbx8d6n2ywRbdP8NBKwfjWbMf2uMZ06HBeyuJlzDVTRptrw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 17 Jul 2019 06:27:45 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57531 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfGQK1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 06:27:44 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190717102742euoutp01624b1084bcad5c32e460850ba651af36~yKvdTDQuj0291402914euoutp01q
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:27:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190717102742euoutp01624b1084bcad5c32e460850ba651af36~yKvdTDQuj0291402914euoutp01q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563359262;
+        bh=iB1QtByjyd0P/XN/YkMVgR+nl43qh6xlM1ggN0/FSXc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QOsekYg7uDN/yWGFfk9LE3t/Ox1ujCFaU12WFqo6zVIzwSddz532IURaKgUy8Tsw4
+         OwllVRW0RBHFM25w7xys1srQD4a0dLhDtcRiQGt8EwYd4uyQL6kRoO6SJyzkAEuWH1
+         YbJiRbNweS68Mp/kwDC1Ew4GBUTOOFsJiiKfv0Lo=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190717102741eucas1p23f3d8810e1929cc25f0052c815dbf389~yKvcbvz0Q3019930199eucas1p2s;
+        Wed, 17 Jul 2019 10:27:41 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5F.9B.04298.D18FE2D5; Wed, 17
+        Jul 2019 11:27:41 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190717102740eucas1p17ffdf3b1560ad6d56311b5a92e9a5e7a~yKvbfKdWR0755707557eucas1p1b;
+        Wed, 17 Jul 2019 10:27:40 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190717102740eusmtrp23963acbd383cc2a0d250dd3a4f351c4c~yKvbQ3UTl1980319803eusmtrp2c;
+        Wed, 17 Jul 2019 10:27:40 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-5a-5d2ef81d5c97
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DC.23.04140.C18FE2D5; Wed, 17
+        Jul 2019 11:27:40 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190717102739eusmtip1d74ac72fc55f265d9c29d7e594ecb2d3~yKvagaTUm1611016110eusmtip1B;
+        Wed, 17 Jul 2019 10:27:39 +0000 (GMT)
+Subject: Re: [PATCH v1 26/50] ARM: dts: exynos: align NOC100 bus OPPs in
+ Exynos5420
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <8ed83c77-57f7-78a4-e437-714cfc7b5c58@partner.samsung.com>
+Date:   Wed, 17 Jul 2019 12:27:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ef2cd81-8324-4319-be20-08d70aa13c0f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 10:26:30.9052
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6306
+In-Reply-To: <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0iTYRjt3XdVnH3Oygcro4FQicsi6IWsVljsV2QQSKK16kMjnbZPTbPL
+        ilZW3ohIW2ZqmbbMy1pLJ2boSMps2UXNMA0XYToiL2iEq81vkf/Oc57zvOcceFlC5qCC2SOa
+        NF6rUSfJaV/S8vyXPXz5jCIuouk9i/trX1O4obiOwr2T3yh82+YeC4ZHCWy31zO469wYg03D
+        PRT+mfuZwu+sJTQutj+V4Ie2AQZX9nZLcPfLHfjT2Woa61tsDG4fu0hhV08DqZSpakprkOpH
+        n55RmYyXaNWju2dU+WYjUk2YQnbT+3wjD/NJRzJ47dotB3wTmybGJakWOvP3SA6tQzrqMvJh
+        gdsALZaLksvIl5Vx1QhuNn5C4jCJoNVh8G4mEDSP3SH/nXyZzSPERRUC/WsjIw5OBPambolH
+        FcjthUJDLuPBi7jV0Ds7TXlEBPeBhJnBafdTLEtzCmg0HvNopNxOGCi00R5McqHw6P6NObfF
+        XAy8M1uRqAmAFzccc7wPFw2VQ2VzeoILgn7HbYmIV8ATZ8lcOuAusVD07Lk3dhSUXzN5cSB8
+        7zAzIl4Gf5rEY+AE0OWVIxGfhOGCW17NJmjv6KY8mQl3mTrrWpHeBtPts4yHBs4f+pwBYgR/
+        uGopIkRaCjkXZKJ6FZhz33iNlkBVzXWmEMkN84oZ5pUxzCtj+O9bhkgjCuLTheQEXlin4Y8r
+        BHWykK5JUBxKSTYh99/rdHWMN6KptwfbEMciuZ9U1R4eJ6PUGUJWchsClpAvkm6eCouTSQ+r
+        s07w2pT92vQkXmhDS1lSHiTNXjAUK+MS1Gn8UZ5P5bX/thLWJ1iHFv/uqvg889HxvlSqLE0v
+        FgwrH3ReyX4aPzCuZFr8opb3nl5oCW1ef60i7064Ky1yJGN06OF21Bkf/3hv5J6jzl3W1nrb
+        vZCvro2Ndy0xtba6vtjo3LD8j61kR6p1LO9YTERRc6BfT8+gU6+SbH0VcYqY6o86jzJz0iqj
+        Sz4o9/NyUkhUr1tDaAX1XwLB7od3AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsVy+t/xu7oyP/RiDWY/5LC4te4cq8XGGetZ
+        La5/ec5qMf8IkNv/+DWzxfnzG9gtzja9YbfY9Pgaq8XHnnusFpd3zWGzmHF+H5PF2iN32S2W
+        Xr/IZHHxlKvF7cYVbBate4+wWxx+085q8e/aRhYHIY8189Ywery/0crusWlVJ5vH5iX1Hn1b
+        VjF6fN4kF8AWpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZa
+        pG+XoJex8/MnpoJtbBW/X3awNTA2sHYxcnJICJhIPPzby9zFyMUhJLCUUeLj6RdQCTGJSfu2
+        s0PYwhJ/rnWxQRS9ZpS4u7aXDSQhLBAqMWFWD1iRiICmxPW/31lBipgFrrJITHm1kR2io59J
+        4sfESSxdjBwcbAJ6EjtWFYI08Aq4SdydcARsEIuAqsTmlTNZQGxRgQiJvrbZbBA1ghInZz4B
+        i3MKBEosfbAALM4sYCYxb/NDZghbXOLWk/lMELa8xPa3c5gnMArNQtI+C0nLLCQts5C0LGBk
+        WcUoklpanJueW2ykV5yYW1yal66XnJ+7iREY69uO/dyyg7HrXfAhRgEORiUeXo/DurFCrIll
+        xZW5hxglOJiVRHhtv2rHCvGmJFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+MA3llcQbmhqaW1ga
+        mhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgFA2/NX9/W6Na69v9PGym0zU/7X2f
+        H/BOi71vYcbmcJf2izfe31uw+8MaM+MTHpOvpoWe/jApuvPpG40PKwod5U3zLWv2bNg7nfGo
+        5Ip1RUd6qnor9vJmzAtc3m370VxjavrFqt+/RCIrAk40mju8EX1/xTdO7uRhtv2/pibbHugq
+        SGef0rfrjRJLcUaioRZzUXEiAHEFoU0LAwAA
+X-CMS-MailID: 20190717102740eucas1p17ffdf3b1560ad6d56311b5a92e9a5e7a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c
+References: <CGME20190715124455eucas1p13bfc0c1d113225db9607e4c0dbac353c@eucas1p1.samsung.com>
+        <20190715124417.4787-1-l.luba@partner.samsung.com>
+        <20190715124417.4787-27-l.luba@partner.samsung.com>
+        <CAJKOXPc3qsM5Xe5JViDZXYfes+_veb-KX3fnZjpkUCrphBcu-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0gPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5h
-cm8ub3JnPg0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkgMTcsIDIwMTkgMjoxMSBQTQ0KPiANCj4g
-QWRkIGRldmljZXRyZWUgdmVuZG9yIHByZWZpeCBmb3IgRWluZm9jaGlwcy4NCj4NCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IE1hbml2YW5uYW4gU2FkaGFzaXZhbSA8bWFuaXZhbm5hbi5zYWRoYXNpdmFt
-QGxpbmFyby5vcmc+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0Bu
-eHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
+
+On 7/17/19 12:10 PM, Krzysztof Kozlowski wrote:
+> On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> The NOC100 has a parent which clock rate is set tot 400MHz. The OPPs which
+>> are not possible to set are removed and new one is added.
+> 
+> I think it is just NOC bus... or are there more of such and this is 100 MHz one?
+Yes, there is a bus NOC100 with a dedicated clock tree in the HW (with
+3 muxes and one divider), which makes possible to take different PLL as
+a source then WCORE have, divide the rate from it and even switch for a
+while to alternative stable PLL (on the 2nd mux to SPLL (after a
+divider)) to wait for main PLL rate change stability delay. Max rate is
+limited to 100MHz for this NOC100 bus.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
