@@ -2,81 +2,119 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397AFC76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BECC76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADE52173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E578D2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfGQCl0 (ORCPT
+        id S1728003AbfGQCpS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:41:26 -0400
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:39154 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfGQClZ (ORCPT
+        Tue, 16 Jul 2019 22:45:18 -0400
+Received: from gli-ex.genesyslogic.com.tw ([60.251.58.171]:42091 "EHLO
+        gli-ex.genesyslogic.com.tw" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725892AbfGQCpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:41:25 -0400
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1hnZs6-0002cE-00; Wed, 17 Jul 2019 02:40:46 +0000
-Date:   Tue, 16 Jul 2019 22:40:46 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        tony.luck@intel.com, fenghua.yu@intel.com, geert@linux-m68k.org,
-        monstr@monstr.eu, ralf@linux-mips.org, paul.burton@mips.com,
-        jhogan@kernel.org, James.Bottomley@HansenPartnership.com,
-        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        davem@davemloft.net, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        peterz@infradead.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, dhowells@redhat.com, firoz.khan@linaro.org,
-        stefan@agner.ch, schwidefsky@de.ibm.com, axboe@kernel.dk,
-        christian@brauner.io, hare@suse.com, deepa.kernel@gmail.com,
-        tycho@tycho.ws, kim.phillips@arm.com, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] Add fchmodat4(), a new syscall
-Message-ID: <20190717024046.GI1506@brightrain.aerifal.cx>
-References: <20190717012719.5524-1-palmer@sifive.com>
- <20190717012719.5524-3-palmer@sifive.com>
+        Tue, 16 Jul 2019 22:45:18 -0400
+X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jul 2019 22:45:17 EDT
+Received: from localhost (172.17.104.60) by Gli-CASHT02.genesyslogic.com.tw
+ (172.17.50.60) with Microsoft SMTP Server id 14.2.347.0; Wed, 17 Jul 2019
+ 10:39:46 +0800
+From:   Ben Chuang <ben.chuang@genesyslogic.com.tw>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <johnsonm@danlj.org>, Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Subject: [PATCH 1/2] mmc: sdhci: Add PLL Enable support to internal clock setup
+Date:   Wed, 17 Jul 2019 10:39:51 +0800
+Message-ID: <20190717023951.5064-1-ben.chuang@genesyslogic.com.tw>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717012719.5524-3-palmer@sifive.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [172.17.104.60]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 06:27:17PM -0700, Palmer Dabbelt wrote:
-> man 3p says that fchmodat() takes a flags argument, but the Linux
-> syscall does not.  There doesn't appear to be a good userspace
-> workaround for this issue but the implementation in the kernel is pretty
-> straight-forward.  The specific use case where the missing flags came up
-> was WRT a fuse filesystem implemenation, but the functionality is pretty
-> generic so I'm assuming there would be other use cases.
+The GL9750 and GL9755 chipsets, and possibly others, require PLL Enable
+setup as part of the internal clock setup as described in 3.2.1 Internal
+Clock Setup Sequence of SD Host Controller Simplified Specification
+Version 4.20.  This changes the timeouts to the new specification of
+150ms for each step and is documented as safe for "prior versions which
+do not support PLL Enable."
 
-Note that we do have a workaround in musl libc with O_PATH and
-/proc/self/fd, but a syscall that allows a proper fix with the ugly
-workaround only in the fallback path for old kernels will be much
-appreciated!
+Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
+---
+ drivers/mmc/host/sdhci.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-What about also doing a new SYS_faccessat4 with working AT_EACCESS
-flag? The workaround we have to do for it is far worse.
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 59acf8e3331e..fd684d7a5f15 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1636,15 +1636,11 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+        clk |= SDHCI_CLOCK_INT_EN;
+        sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
 
-Rich
+-       /* Wait max 20 ms */
+-       timeout = ktime_add_ms(ktime_get(), 20);
+-       while (1) {
+-               bool timedout = ktime_after(ktime_get(), timeout);
+-
+-               clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+-               if (clk & SDHCI_CLOCK_INT_STABLE)
+-                       break;
+-               if (timedout) {
++       /* Wait max 150 ms */
++       timeout = ktime_add_ms(ktime_get(), 150);
++       while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
++               & SDHCI_CLOCK_INT_STABLE)) {
++               if (ktime_after(ktime_get(), timeout)) {
+                        pr_err("%s: Internal clock never stabilised.\n",
+                               mmc_hostname(host->mmc));
+                        sdhci_dumpregs(host);
+@@ -1653,8 +1649,27 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+                udelay(10);
+        }
+
++       clk |= SDHCI_CLOCK_PLL_EN;
++       clk &= ~SDHCI_CLOCK_INT_STABLE;
++       sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
++
++       /* Wait max 150 ms */
++       timeout = ktime_add_ms(ktime_get(), 150);
++       while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
++               & SDHCI_CLOCK_INT_STABLE)) {
++               if (ktime_after(ktime_get(), timeout)) {
++                       pr_err("%s: PLL clock never stabilised.\n",
++                              mmc_hostname(host->mmc));
++                       sdhci_dumpregs(host);
++                       return;
++               }
++               udelay(10);
++       }
++
+        clk |= SDHCI_CLOCK_CARD_EN;
+        sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
++
++       mdelay(1);
+ }
+ EXPORT_SYMBOL_GPL(sdhci_enable_clk);
+
+--
+2.22.0
+
+________________________________
+
+Genesys Logic Email Confidentiality Notice:
+This mail and any attachments may contain information that is confidential, proprietary, privileged or otherwise protected by law. The mail is intended solely for the named addressee (or a person responsible for delivering it to the addressee). If you are not the intended recipient of this mail, you are not authorized to read, print, copy or disseminate this mail.
+
+If you have received this email in error, please notify us immediately by reply email and immediately delete this message and any attachments from your system. Please be noted that any unauthorized use, dissemination, distribution or copying of this email is strictly prohibited.
+________________________________
