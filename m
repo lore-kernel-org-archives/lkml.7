@@ -2,310 +2,137 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3388C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF28C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7183208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C357D208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563402443;
+	bh=krSZVsysL0odWmIs/cz6KRrtJu8WmJDZwR1kfZs0uhA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yK0Ko5CYNQicVcrgplg6H/9+AO4iW9odjX9yJpzHjrZIgg/D6XAdm/VIqpBaV5Nov
+	 pd0/5He+a46k1xgmNNw9lxBmRcr60O7fmPvJAr/dFj5ahJWTDLzZzzV0n0Uh0HH38J
+	 B+JcpeJMXr/45Rv8pSnKkLysNVmZPSK6mvNl/v1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfGQW0o (ORCPT
+        id S1731178AbfGQW1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:26:44 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:56153 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbfGQW0c (ORCPT
+        Wed, 17 Jul 2019 18:27:22 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45656 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbfGQW1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:26:32 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45psLY2n51z1rMkZ;
-        Thu, 18 Jul 2019 00:26:29 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45psLY2W6kz1qqkw;
-        Thu, 18 Jul 2019 00:26:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 7OFsxKUyjPHz; Thu, 18 Jul 2019 00:26:27 +0200 (CEST)
-X-Auth-Info: DF75T8guc9DE7myZemriajq3ZlmtzQr3ly7xk433k3s=
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu, 18 Jul 2019 00:26:27 +0200 (CEST)
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v4 1/3] mfd: mc13xxx: Add mc34708 adc support
-Date:   Thu, 18 Jul 2019 00:26:00 +0200
-Message-Id: <20190717222602.2912-2-lukma@denx.de>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190717222602.2912-1-lukma@denx.de>
-References: <20190717222602.2912-1-lukma@denx.de>
+        Wed, 17 Jul 2019 18:27:22 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m206so19854164oib.12;
+        Wed, 17 Jul 2019 15:27:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aKdCh/T0TvCjAVMnS0S/bH9S/vTC4w+CAFYfC32nDW8=;
+        b=mIhmNY8OOmwtMFNU6RpTk6OQ2bxRPWaHGEoYM6ZeeChFB8EPoLmmSQksz7WYM6uBI5
+         8ZEUjIDNIM+0UvXGkMjqAN5ezqlWUFOlvCaSsz3ipUWKPCaNulv3Dv0AGS165zzojj3S
+         fLXCSnTVcNff2I4BqEmTr8RNdWBEbNHMl9UyxD+mtgRbsiaIRkJUbTUcUWRwvLmqi46m
+         1QTM6AtPHy6p9wYsnSD5tWSUwZWZOdsvOVCUq/02KzvJnmmQfyN48TclShPXbygr1cAX
+         FEumu/fwVZgSaniXZCKlbzzN8lRx/CIcnN7aQaNZWcqpAXXoMuEk6eyhhI9KYvwz72Sb
+         /pww==
+X-Gm-Message-State: APjAAAUzqY/mrwjEH1g80wF3vsZHauBbdEZENBYZ3GNDIuC1f+HF8bO6
+        4yaV0qfaWnSi4cVNbQtKcA4oC9Sy1QxxtOk0ZaQ=
+X-Google-Smtp-Source: APXvYqxjF6AUD3helldHpsLA2ynZmGMJJif5IvIahrbl69j2lcbFNCAcru7gRAkBWEUHYm+zLKJK8RxSzHAFHKW/TCg=
+X-Received: by 2002:aca:edc8:: with SMTP id l191mr20926358oih.103.1563402441139;
+ Wed, 17 Jul 2019 15:27:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <6254683.2O5gIZElE2@kreacher> <20190716214024.GA8345@lenoir>
+ <CAJZ5v0gB0AHTebjpp87YKA1wmE+tCw5V=eaRE2XDM3nyQYndnA@mail.gmail.com> <20190717132115.GB8345@lenoir>
+In-Reply-To: <20190717132115.GB8345@lenoir>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 18 Jul 2019 00:27:09 +0200
+Message-ID: <CAJZ5v0icfumJc7E4+LgWpi3+UNpTsH4usAJOg4FEeCBptYYzUQ@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: Always stop scheduler tick on adaptive-tick CPUs
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Lindroth <thomas.lindroth@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On Wed, Jul 17, 2019 at 3:21 PM Frederic Weisbecker <frederic@kernel.org> wrote:
+>
+> On Wed, Jul 17, 2019 at 09:55:08AM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jul 16, 2019 at 11:40 PM Frederic Weisbecker
+> > <frederic@kernel.org> wrote:
+> > >
+> > > On Tue, Jul 16, 2019 at 05:25:10PM +0200, Rafael J. Wysocki wrote:
+> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >
+> > > > Running the scheduler tick on idle adaptive-tick CPUs is not useful
+> > >
+> > > Judging by the below change, you mean full dynticks, right?
+> >
+> > Right.
+> >
+> > > > and it may also be not expected by users (as reported by Thomas), so
+> > > > add a check to cpuidle_idle_call() to always stop the tick on them
+> > > > regardless of the idle duration predicted by the governor.
+> > > >
+> > > > Fixes: 554c8aa8ecad ("sched: idle: Select idle state before stopping the tick")
+> > > > Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
+> > > > Tested-by: Thomas Lindroth <thomas.lindroth@gmail.com>
+> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > ---
+> > > >  kernel/sched/idle.c |    3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > Index: linux-pm/kernel/sched/idle.c
+> > > > ===================================================================
+> > > > --- linux-pm.orig/kernel/sched/idle.c
+> > > > +++ linux-pm/kernel/sched/idle.c
+> > > > @@ -191,7 +191,8 @@ static void cpuidle_idle_call(void)
+> > > >                */
+> > > >               next_state = cpuidle_select(drv, dev, &stop_tick);
+> > > >
+> > > > -             if (stop_tick || tick_nohz_tick_stopped())
+> > > > +             if (stop_tick || tick_nohz_tick_stopped() ||
+> > > > +                 !housekeeping_cpu(dev->cpu, HK_FLAG_TICK))
+> > >
+> > > But tick_nohz_tick_stopped() also works on full dynticks CPUs. If the
+> > > tick isn't stopped on a full dynticks CPU by the time we reach this path,
+> > > it means that the conditions for the tick to be stopped are not met anyway
+> > > (eg: more than one task and sched tick is needed, perf event requires the tick,
+> > > posix CPU timer, etc...)
+> >
+> > First of all, according to Thomas, the patch does make a difference,
+> > so evidently on his system(s) the full dynticks CPUs enter the idle
+> > loop with running tick.
+> >
+> > This means that, indeed, the conditions for the tick to be stopped
+> > have not been met up to that point, but if the (full dynticks) CPU
+> > becomes idle, that's because it has been made idle on purpose
+> > (presumably by a user-space "orchestrator" or the sysadmin), so the
+> > kernel can assume that it will remain idle indefinitely.  That, in
+> > turn, is when the tick would be stopped on it regardless of everything
+> > else (even if it wasn't a full dynticks CPU).
+>
+> Well I think we disagree on that assumption that if a nohz_full CPU is put
+> idle, it will remain there indefinitely. Nohz_full CPUs aren't really special
+> in this regard, they can sleep on an IO, wait for a short event just like
+> any other CPU.
 
-The mc34708 has an improved adc. The older variants will always convert
-a fixed order of channels. The mc34708 can do up to eight conversions
-in arbitrary channel order. Currently this extended feature is not
-supported. We only support touchscreen conversions now, which will
-be sampled in a data format compatible to the older chips in order
-to keep the API between the mfd and the touchscreen driver.
+Fair enough.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
+This means that the governor (or rather governors) will need to be
+modified to address the issue reported by Thomas.
 
----
-Changes for v4:
-- None
+Fortunately, I have a patch going in that direction too. :-)
 
-Changes for v3:
-- None
-
-Changes for v2:
-- Change the return code patch when the mc13xxx ADC is performing conversion
-- Introduce new include/linux/mfd/mc34708.h header file for mc34708 specific
-  defines
-
-Changes from the original patches:
-- ADC conversion functions prototypes added to fix build error
-- Adjustments to make checkpatch clean (-ENOSYS, line over 80 char)
-
-This patch applies on top of v5.2 - SHA1: 0ecfebd2b52404ae0c54a878c872bb93363ada36
----
- drivers/mfd/mc13xxx-core.c  | 102 +++++++++++++++++++++++++++++++++++++++++++-
- drivers/mfd/mc13xxx.h       |   3 ++
- include/linux/mfd/mc34708.h |  37 ++++++++++++++++
- 3 files changed, 141 insertions(+), 1 deletion(-)
- create mode 100644 include/linux/mfd/mc34708.h
-
-diff --git a/drivers/mfd/mc13xxx-core.c b/drivers/mfd/mc13xxx-core.c
-index 1abe7432aad8..01473d6fda21 100644
---- a/drivers/mfd/mc13xxx-core.c
-+++ b/drivers/mfd/mc13xxx-core.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/mfd/core.h>
-+#include <linux/mfd/mc34708.h>
- 
- #include "mc13xxx.h"
- 
-@@ -45,6 +46,8 @@
- 
- #define MC13XXX_ADC2		45
- 
-+#define MC13XXX_ADC_WORKING		(1 << 0)
-+
- void mc13xxx_lock(struct mc13xxx *mc13xxx)
- {
- 	if (!mutex_trylock(&mc13xxx->lock)) {
-@@ -198,22 +201,30 @@ static void mc34708_print_revision(struct mc13xxx *mc13xxx, u32 revision)
- 			maskval(revision, MC34708_REVISION_FAB));
- }
- 
-+static int mc13xxx_adc_conversion(struct mc13xxx *, unsigned int,
-+				  unsigned int, u8, bool, unsigned int *);
-+static int mc34708_adc_conversion(struct mc13xxx *, unsigned int,
-+				  unsigned int, u8, bool, unsigned int *);
-+
- /* These are only exported for mc13xxx-i2c and mc13xxx-spi */
- struct mc13xxx_variant mc13xxx_variant_mc13783 = {
- 	.name = "mc13783",
- 	.print_revision = mc13xxx_print_revision,
-+	.adc_do_conversion = mc13xxx_adc_conversion,
- };
- EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13783);
- 
- struct mc13xxx_variant mc13xxx_variant_mc13892 = {
- 	.name = "mc13892",
- 	.print_revision = mc13xxx_print_revision,
-+	.adc_do_conversion = mc13xxx_adc_conversion,
- };
- EXPORT_SYMBOL_GPL(mc13xxx_variant_mc13892);
- 
- struct mc13xxx_variant mc13xxx_variant_mc34708 = {
- 	.name = "mc34708",
- 	.print_revision = mc34708_print_revision,
-+	.adc_do_conversion = mc34708_adc_conversion,
- };
- EXPORT_SYMBOL_GPL(mc13xxx_variant_mc34708);
- 
-@@ -249,7 +260,7 @@ static irqreturn_t mc13xxx_handler_adcdone(int irq, void *data)
- 
- #define MC13XXX_ADC_WORKING (1 << 0)
- 
--int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
-+static int mc13xxx_adc_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 		unsigned int channel, u8 ato, bool atox,
- 		unsigned int *sample)
- {
-@@ -358,6 +369,95 @@ int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
- 
- 	return ret;
- }
-+
-+static int mc34708_adc_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
-+		unsigned int channel, u8 ato, bool atox,
-+		unsigned int *sample)
-+{
-+	int ret, i;
-+	u32 adc0, adc3, adc1, old_adc0;
-+	struct mc13xxx_adcdone_data adcdone_data = {
-+		.mc13xxx = mc13xxx,
-+	};
-+
-+	switch (mode) {
-+	case MC13XXX_ADC_MODE_TS:
-+		adc0 = MC34708_ADC0_TSEN | MC34708_ADC0_TSSTART |
-+			MC34708_ADC0_TSSTOP(7);
-+
-+		adc1 = MC34708_ADC1_TSDLY1(0xf) |
-+			MC34708_ADC1_TSDLY2(0xf) |
-+			MC34708_ADC1_TSDLY3(0xf);
-+
-+		adc3 = MC34708_ADC3_TSSEL(0, MC34708_TS_X) |
-+			MC34708_ADC3_TSSEL(1, MC34708_TS_Y) |
-+			MC34708_ADC3_TSSEL(2, MC34708_TS_X) |
-+			MC34708_ADC3_TSSEL(3, MC34708_TS_Y) |
-+			MC34708_ADC3_TSSEL(4, MC34708_TS_X) |
-+			MC34708_ADC3_TSSEL(5, MC34708_TS_R) |
-+			MC34708_ADC3_TSSEL(6, MC34708_TS_Y) |
-+			MC34708_ADC3_TSSEL(7, MC34708_TS_R);
-+		break;
-+
-+	case MC13XXX_ADC_MODE_SINGLE_CHAN:
-+	case MC13XXX_ADC_MODE_MULT_CHAN:
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	init_completion(&adcdone_data.done);
-+
-+	mc13xxx_lock(mc13xxx);
-+
-+	if (mc13xxx->adcflags & MC13XXX_ADC_WORKING) {
-+		mc13xxx_unlock(mc13xxx);
-+		return -EBUSY;
-+	}
-+
-+	mc13xxx->adcflags |= MC13XXX_ADC_WORKING;
-+
-+	mc13xxx_reg_read(mc13xxx, MC13XXX_ADC0, &old_adc0);
-+
-+	mc13xxx_irq_request(mc13xxx, MC34708_IRQ_TSDONE,
-+			mc13xxx_handler_adcdone, __func__, &adcdone_data);
-+	mc13xxx_irq_ack(mc13xxx, MC34708_IRQ_TSDONE);
-+
-+	mc13xxx_reg_write(mc13xxx, MC34708_ADC3, adc3);
-+	mc13xxx_reg_write(mc13xxx, MC13XXX_ADC1, adc1);
-+	mc13xxx_reg_write(mc13xxx, MC13XXX_ADC0, adc0);
-+
-+	mc13xxx_unlock(mc13xxx);
-+
-+	ret = wait_for_completion_interruptible_timeout(&adcdone_data.done, HZ);
-+
-+	mc13xxx_lock(mc13xxx);
-+
-+	mc13xxx_irq_free(mc13xxx, MC34708_IRQ_TSDONE, &adcdone_data);
-+
-+	if (!ret) {
-+		ret = -ETIMEDOUT;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < 4; i++)
-+		mc13xxx_reg_read(mc13xxx, MC34708_ADC4 + i, &sample[i]);
-+
-+out:
-+	ret = mc13xxx_reg_write(mc13xxx, MC13XXX_ADC0, old_adc0);
-+
-+	mc13xxx->adcflags &= ~MC13XXX_ADC_WORKING;
-+	mc13xxx_unlock(mc13xxx);
-+
-+	return ret;
-+}
-+
-+int mc13xxx_adc_do_conversion(struct mc13xxx *mc13xxx, unsigned int mode,
-+		unsigned int channel, u8 ato, bool atox,
-+		unsigned int *sample)
-+{
-+	return mc13xxx->variant->adc_do_conversion(mc13xxx, mode, channel, ato,
-+			atox, sample);
-+}
- EXPORT_SYMBOL_GPL(mc13xxx_adc_do_conversion);
- 
- static int mc13xxx_add_subdevice_pdata(struct mc13xxx *mc13xxx,
-diff --git a/drivers/mfd/mc13xxx.h b/drivers/mfd/mc13xxx.h
-index ce6eec52e8eb..0a79fbb8bcb4 100644
---- a/drivers/mfd/mc13xxx.h
-+++ b/drivers/mfd/mc13xxx.h
-@@ -19,6 +19,9 @@ struct mc13xxx;
- struct mc13xxx_variant {
- 	const char *name;
- 	void (*print_revision)(struct mc13xxx *mc13xxx, u32 revision);
-+	int (*adc_do_conversion)(struct mc13xxx *mc13xxx, unsigned int mode,
-+		unsigned int channel, u8 ato, bool atox,
-+		unsigned int *sample);
- };
- 
- extern struct mc13xxx_variant
-diff --git a/include/linux/mfd/mc34708.h b/include/linux/mfd/mc34708.h
-new file mode 100644
-index 000000000000..c812104dc53d
---- /dev/null
-+++ b/include/linux/mfd/mc34708.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2019
-+ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-+ */
-+#ifndef __LINUX_MFD_MC34708_H
-+#define __LINUX_MFD_MC34708_H
-+
-+#define MC34708_ADC3			46
-+#define MC34708_ADC4			47
-+
-+#define MC34708_IRQ_TSDONE		1
-+
-+#define MC34708_ADC0_TSEN		BIT(12)
-+#define MC34708_ADC0_TSSTART		BIT(13)
-+#define MC34708_ADC0_TSCONT		BIT(14)
-+#define MC34708_ADC0_TSHOLD		BIT(15)
-+#define MC34708_ADC0_TSPENDETEN		BIT(20)
-+
-+#define MC34708_ADC0_TSMASK            (MC34708_ADC0_TSPENDETEN | \
-+					MC34708_ADC0_TSEN |       \
-+					MC34708_ADC0_TSSTART |    \
-+					MC34708_ADC0_TSCONT |     \
-+					MC34708_ADC0_TSHOLD)
-+
-+#define MC34708_ADC0_TSSTOP(x)		(((x) & 0x7) << 16)
-+
-+#define MC34708_ADC3_TSSEL(step, ch)	((ch) << (8 + 2 * (step)))
-+#define MC34708_ADC1_TSDLY1(d)		((d) << 12)
-+#define MC34708_ADC1_TSDLY2(d)		((d) << 16)
-+#define MC34708_ADC1_TSDLY3(d)		((d) << 20)
-+
-+#define MC34708_TS_X			1
-+#define MC34708_TS_Y			2
-+#define MC34708_TS_R			3
-+
-+#endif /* __LINUX_MFD_MC34708_H */
--- 
-2.11.0
-
+Cheers!
