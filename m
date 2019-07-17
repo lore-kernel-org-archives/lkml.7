@@ -2,141 +2,159 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F08C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71254C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71842173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563352792;
-	bh=3AsfA0apHgKPHqSErY1FFUic2G0ulq9KKXmKDllcBcQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tt920QUwoMSvGewBUowG5vz4db/KSEY7NLGD3dBL80dX//7Gy5TbCI0IIsdUqamrA
-	 4KtpnlyUFbCG+7UGIL7flU+aek8QDQINxobMUSHsi8BT9M+XKRCZm3h8tFLIT107gu
-	 LGJyLSsg7ko+etdFuhSEK8blwnCm14eV5Ckl0nt4=
+	by mail.kernel.org (Postfix) with ESMTP id 43DB42173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sn8ZMHe7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfGQIjv (ORCPT
+        id S1727078AbfGQIkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQIju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:39:50 -0400
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E642D217F9;
-        Wed, 17 Jul 2019 08:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563352789;
-        bh=3AsfA0apHgKPHqSErY1FFUic2G0ulq9KKXmKDllcBcQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SgAXPRs6GJZnZ4dXfaI5y+fqWmAL7vSP8DcilTZOMiaFiRuMkriRkV2D7uDUMRsHD
-         LuOrCUBJADNdyG96KBNIcHBVXxPWwdvnZB7W23YzPXUGsU2DRyL7pCEuvDEI7FPSaG
-         8V0w+33PvRBAUq9VEUGaunN4tWBv4nQIt0r5tjnM=
-Received: by mail-lj1-f170.google.com with SMTP id z28so22819895ljn.4;
-        Wed, 17 Jul 2019 01:39:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXS45LH6tK+Aqz9v+dMPbEeTJo2ZrzMQgFnF0tvW8RtvaRCsyF
-        LXevqW2P3Mn3ZpS3RdHuicSPORuUdVpDIXxXn4k=
-X-Google-Smtp-Source: APXvYqyRN0A/GOrnI+2UBk5Z9rTURP+hHTiKsonTWMcGbY1Ffif3bsCYCsun+URUyB4xBf4ku2h81Gn6CSsFtvv1zzo=
-X-Received: by 2002:a2e:124b:: with SMTP id t72mr20492141lje.143.1563352787197;
- Wed, 17 Jul 2019 01:39:47 -0700 (PDT)
+        Wed, 17 Jul 2019 04:40:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45592 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfGQIkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:40:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=k3SygQrVYGRxIr8/Ey1B5LfPQh62hunNBAFxIxNx0uo=; b=Sn8ZMHe7TPDK3LeiyU0p8YDyYE
+        hQ8umtlgXoLUK2rhJ/07RgbpoQlHOwWua9liOHQkJrKQ5SuYGn/c19YbTWdxL9Tl1qtfYYUFL/e+y
+        rFuWzMRT1cWmHeR7lMOmDiNRaFRxWvzGJKuhAPMr0pRFizfmcThOeRuy/+qeezNufBrfjpQI9OY7/
+        pXkJ5Bz9jAfFwattW9W80S+Ak3itmeoyXasleKQMbqSMpQSvg33T9Xh+M7P0Dspzt2HLY33rJ4L0H
+        VdD+jHmC0/cAkBE2KSuPsjyWCD6CA9jkgplZzQrT14HuAP0bCpUfF7KTjrZwbVHV52v0vHr7mzVWo
+        aQ3Um6kA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hnfTW-0000SX-DN; Wed, 17 Jul 2019 08:39:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BF02420B15D60; Wed, 17 Jul 2019 10:39:44 +0200 (CEST)
+Date:   Wed, 17 Jul 2019 10:39:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20190717083944.GR3463@hirez.programming.kicks-ass.net>
+References: <20190715192536.104548-1-alex.kogan@oracle.com>
+ <20190715192536.104548-4-alex.kogan@oracle.com>
+ <20190716155022.GR3419@hirez.programming.kicks-ass.net>
+ <193BBB31-F376-451F-BDE1-D4807140EB51@oracle.com>
+ <20190716184724.GH3402@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <CGME20190715124450eucas1p189043d196375aa6adacf898de81bfa9b@eucas1p1.samsung.com>
- <20190715124417.4787-1-l.luba@partner.samsung.com> <20190715124417.4787-21-l.luba@partner.samsung.com>
-In-Reply-To: <20190715124417.4787-21-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 17 Jul 2019 10:39:36 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfHgmBo9NX6jO8qSqXjN1pFmnKkQEWbou+q7-BDq2XKQg@mail.gmail.com>
-Message-ID: <CAJKOXPfHgmBo9NX6jO8qSqXjN1pFmnKkQEWbou+q7-BDq2XKQg@mail.gmail.com>
-Subject: Re: [PATCH v1 20/50] ARM: dts: exynos: change and rename FSYS OPP
- table in Exynos5420
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com, Andrzej Hajda <a.hajda@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190716184724.GH3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jul 2019 at 14:44, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> The FSYS and FSYS2 buses have similar characteristics and both have max
-> frequency 240MHz. The old OPP table bus_fsys_apb_opp_table should be used
-> only to FSYS APB bus because APB max frequency is 200MHz.
-> The new OPPs for FSYS should increase its performance and related devices.
+On Tue, Jul 16, 2019 at 08:47:24PM +0200, Peter Zijlstra wrote:
+> On Tue, Jul 16, 2019 at 01:19:16PM -0400, Alex Kogan wrote:
+> > > On Jul 16, 2019, at 11:50 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > static void cna_move(struct cna_node *cn, struct cna_node *cni)
+> > > {
+> > > 	struct cna_node *head, *tail;
+> > > 
+> > > 	/* remove @cni */
+> > > 	WRITE_ONCE(cn->mcs.next, cni->mcs.next);
+> > > 
+> > > 	/* stick @cni on the 'other' list tail */
+> > > 	cni->mcs.next = NULL;
+> > > 
+> > > 	if (cn->mcs.locked <= 1) {
+> > > 		/* head = tail = cni */
+> > > 		head = cni;
+> > > 		head->tail = cni;
+> > > 		cn->mcs.locked = head->encoded_tail;
+> > > 	} else {
+> > > 		/* add to tail */
+> > > 		head = (struct cna_node *)decode_tail(cn->mcs.locked);
+> > > 		tail = tail->tail;
+> > > 		tail->next = cni;
+> > > 	}
+> > > }
+> > > 
+> > > static struct cna_node *cna_find_next(struct mcs_spinlock *node)
+> > > {
+> > > 	struct cna_node *cni, *cn = (struct cna_node *)node;
+> > > 
+> > > 	while ((cni = (struct cna_node *)READ_ONCE(cn->mcs.next))) {
+> > > 		if (likely(cni->node == cn->node))
+> > > 			break;
+> > > 
+> > > 		cna_move(cn, cni);
+> > > 	}
+> > > 
+> > > 	return cni;
+> > > }
+> > But then you move nodes from the main list to the ‘other’ list one-by-one.
+> > I’m afraid this would be unnecessary expensive.
+> > Plus, all this extra work is wasted if you do not find a thread on the same 
+> > NUMA node (you move everyone to the ‘other’ list only to move them back in 
+> > cna_mcs_pass_lock()).
+> 
+> My primary concern was readability; I find the above suggestion much
+> more readable. Maybe it can be written differently; you'll have to play
+> around a bit.
 
-I do not understand the explanation. You say that there are two buses
-- FSYS and FSYS2 - and old OPP table should be used for FSYS APB but
-you remove the old one (by renaming). Or which one is the 'old one'
-here? The reason is speed... wait, what? Usually DTS should describe
-the HW so I imagine that proper opp table should be used for proper
-bus. It surprised me that we switch a bus to different OPP table just
-because of speed concerns. It should be correctness concern.
+static void cna_splice_tail(struct cna_node *cn, struct cna_node *head, struct cna_node *tail)
+{
+	struct cna_node *list;
 
-Please clarify and reword all this.
+	/* remove [head,tail] */
+	WRITE_ONCE(cn->mcs.next, tail->mcs.next);
+	tail->mcs.next = NULL;
 
-I am also not sure how this relates with previous patch - whether you
-are fixing independent issues. Maybe because I do not see the issue
-fixed... change the commit title and adjust the messages to focus WHY
-you are doing it. For small fixes WHAT you are doing is rather obvious
-so commit msg (and title) should not focus on it.
+	/* stick [head,tail] on the secondary list tail */
+	if (cn->mcs.locked <= 1) {
+		/* create secondary list */
+		head->tail = tail;
+		cn->mcs.locked = head->encoded_tail;
+	} else {
+		/* add to tail */
+		list = (struct cna_node *)decode_tail(cn->mcs.locked);
+		list->tail->next = head;
+		list->tail = tail;
+	}
+}
 
-Best regards,
-Krzysztof
+static struct cna_node *cna_find_next(struct mcs_spinlock *node)
+{
+	struct cna_node *cni, *cn = (struct cna_node *)node;
+	struct cna_node *head, *tail = NULL;
 
->
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 941c58bdd809..c7fc4b829b2a 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -995,7 +995,7 @@
->                         compatible = "samsung,exynos-bus";
->                         clocks = <&clock CLK_DOUT_ACLK200_FSYS>;
->                         clock-names = "bus";
-> -                       operating-points-v2 = <&bus_fsys_apb_opp_table>;
-> +                       operating-points-v2 = <&bus_fsys_opp_table>;
->                         status = "disabled";
->                 };
->
-> @@ -1003,7 +1003,7 @@
->                         compatible = "samsung,exynos-bus";
->                         clocks = <&clock CLK_DOUT_ACLK200_FSYS2>;
->                         clock-names = "bus";
-> -                       operating-points-v2 = <&bus_fsys2_opp_table>;
-> +                       operating-points-v2 = <&bus_fsys_opp_table>;
->                         status = "disabled";
->                 };
->
-> @@ -1157,7 +1157,7 @@
->                         };
->                 };
->
-> -               bus_fsys2_opp_table: opp_table5 {
-> +               bus_fsys_opp_table: opp_table5 {
->                         compatible = "operating-points-v2";
->
->                         opp00 {
-> --
-> 2.17.1
->
+	/* find any next lock from 'our' node */
+	for (head = cni = (struct cna_node *)READ_ONCE(cn->mcs.next);
+	     cni && cni->node != cn->node;
+	     tail = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
+		;
+
+	/* when found, splice any skipped locks onto the secondary list */
+	if (cni && tail)
+		cna_splice_tail(cn, head, tail);
+
+	return cni;
+}
+
+How's that?
