@@ -2,131 +2,153 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D23C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2EA2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAD52077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563351490;
+	bh=5GNQoM7T3OZ2EwjYuZ7fJtx8Y6qQF3hP9lT0ttHPpvQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wgld/sAAe3PIZdB1lfK/tfAHCLTkH8ufZpLoKwRs4Kpa4DVHuQfXeLWqwTAH4eGaC
+	 Zc3v2Lql0EuDAkusKfpMf0pwEfnHpIbGXwYO8XruA4A+ZapRC+bdKbkAcK3wgPOnb2
+	 dmlU3HRSDIMNHyfHNBN/oEEd/GicLCL2PeOFhk60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfGQIRL (ORCPT
+        id S1727576AbfGQISJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:17:11 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:48249 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfGQIRK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:17:10 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45pVVW2Qxkz1rK4w;
-        Wed, 17 Jul 2019 10:17:07 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45pVVW1bdKz1qqkk;
-        Wed, 17 Jul 2019 10:17:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id xkHrL21nNJg8; Wed, 17 Jul 2019 10:17:05 +0200 (CEST)
-X-Auth-Info: dpSTQWSDAzf4wgslH74+b3etluAaZEKtmtRkVTiYpFY=
-Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 17 Jul 2019 04:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfGQISJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:18:09 -0400
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 17 Jul 2019 10:17:05 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 10:17:04 +0200
-From:   Lukasz Majewski <lukma@denx.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] input: touchscreen mc13xxx: Add mc34708 support
-Message-ID: <20190717101704.2ff4d877@jawa>
-In-Reply-To: <20190717033655.GC621@penguin>
-References: <20190716221929.3782-1-lukma@denx.de>
-        <20190716221929.3782-4-lukma@denx.de>
-        <20190717033655.GC621@penguin>
-Organization: denx.de
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id A60142173B;
+        Wed, 17 Jul 2019 08:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563351488;
+        bh=5GNQoM7T3OZ2EwjYuZ7fJtx8Y6qQF3hP9lT0ttHPpvQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BMk82FbNEX+ScgsGCO0TrFEo5sKOIUbK5ki+a7Wp3dBgcRxNpGjwSOStaJ8QPCblm
+         KAKapKaVZTat/7/27NdE3ZLBc2oBo1+69lm3o387UzZc5uNX5PEPq7pqZHF0/lmGFM
+         OoSvbBOnZkfov7Tz20pMcQ1yN75tnvNVZPksyyuk=
+Received: by mail-lj1-f169.google.com with SMTP id p17so22723185ljg.1;
+        Wed, 17 Jul 2019 01:18:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAUt7rdp+AVb1gC6sjNHwoY+sJ/Ic54JLXlXhIhtbSPn12qekBFS
+        4FiumNToRDC+zhhd5vAPglvRl4dyJjMPC/hWwZo=
+X-Google-Smtp-Source: APXvYqylYz7gNmzlXqUoO2oJVnfuYOhDlPlxB7yrdES0wr8vBhhh8uj9yF8LJHi/hEx9u2UnvjdI9FfTGNOF6wdZ8Fc=
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr20519868ljw.13.1563351485856;
+ Wed, 17 Jul 2019 01:18:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/bfopTdlYpTmTI0/.0Uf3PCA"; protocol="application/pgp-signature"
+References: <20190712141242.4915-1-krzk@kernel.org> <cde6f251-4b15-a4f0-57ed-ca2ed014b511@kontron.de>
+In-Reply-To: <cde6f251-4b15-a4f0-57ed-ca2ed014b511@kontron.de>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 17 Jul 2019 10:17:54 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcLdfo6XCc--HneYjCHOYKdKgWDBDSVjxQBR+pc+1mcfg@mail.gmail.com>
+Message-ID: <CAJKOXPcLdfo6XCc--HneYjCHOYKdKgWDBDSVjxQBR+pc+1mcfg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6ul-kontron-ul2: Add Exceet/Kontron iMX6-UL2 SoM
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bfopTdlYpTmTI0/.0Uf3PCA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 16 Jul 2019 at 17:38, Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
+>
+> Hi Krzysztof,
+>
+> On 12.07.19 16:12, Krzysztof Kozlowski wrote:
+> > Add support for iMX6-UL2 modules from Kontron Electronics GmbH (before
+> > acquisition: Exceet Electronics) and evalkit boards based on it:
+> >
+> > 1. i.MX6 UL System-on-Module, a 25x25 mm solderable module (LGA pads and
+> >     pin castellations) with 256 MB RAM, 1 MB NOR-Flash, 256 MB NAND and
+> >     other interfaces,
+> > 1. UL2 evalkit, w/wo eMMC, without display,
+> > 2. UL2 evalkit with 4.3" display,
+> > 3. UL2 evalkit with 5.0" display.
+>
+> We will use a new naming scheme for these and other boards. The new
+> names would be:
+>
+> 1. Kontron N6310 SOM    (i.MX6UL SoM with 256MB RAM/NAND)
+> 2. Kontron N6310 S      (Evalkit with SoM)
+> 3. Kontron N6310 S 43   (Evalkit with SoM and 4.3" display)
+> 4. Kontron N6310 S 50   (Evalkit with SoM and 5.0" display)
 
-Hi Dmitry,
+OK (and OK for all other comments which I will skip below).
 
-> On Wed, Jul 17, 2019 at 12:19:29AM +0200, Lukasz Majewski wrote:
-> > From: Sascha Hauer <s.hauer@pengutronix.de>
-> >=20
-> > The mc34708 has a different bit to enable pen detection. This
-> > adds the driver data and devtype necessary to probe the device
-> > and to distinguish between the mc13783 and the mc34708.
-> >=20
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >=20
-> > ---
-> > Changes for v3:
-> > - Replace forward declaration of mc13xxx_driver_data with
-> >   structure definition
-> > - Rename mc13xxx_driver_data with mc13xxx_chip
-> > - Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
-> >   closer to ID table
-> > - Do not check mc13xxx device type =20
->=20
-> You do not even need to define or store the type. Once it is dropped
-> please feel free to add
+(...)
 
-Ok. I will remove the type definition.
+> > +
+> > +     memory@80000000 {
+> > +             reg = <0x80000000 0x10000000>;
+> > +     };
+> > +};
+> > +
+> > +&cpu0 {
+> > +     clock-frequency = <528000000>;
+> > +     operating-points = <
+> > +             /* kHz  uV */
+> > +             528000  1175000
+> > +             396000  1025000
+> > +             198000  950000
+> > +     >;
+> > +     fsl,soc-operating-points = <
+> > +             /* KHz  uV */
+> > +             528000  1175000
+> > +             396000  1175000
+> > +             198000  1175000
+> > +     >;
+> > +};
+>
+> What's the reason behind overwriting the operating-points and setting
+> clock-frequency? Doesn't imx6q-cpufreq.c already read the speed grades
+> from the hardware and adjust the operating-points accordingly?
 
->=20
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->=20
-> and merge with the other 2 patches.
->=20
+Good point. From the driver point of view overwriting of opps is not
+needed. As you said, the driver will adjust the speed to the reported
+grade. This could have meaning for the completeness of hardware
+description however I see that there are no even bindings for CPU and
+other boards do not overwrite it. I'll skip it then.
 
-Ok. I will squash those three patches into a single one, add your
-Acked-by and wait for Lee to pull this single patch to his MFD tree.
+(...)
 
-Thanks for review and help :-).
+> > +
+> > +     regulators {
+> > +             compatible = "simple-bus";
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+>
+> We copied this from some other devicetree and I'm not sure in what case
+> we should really group the regulators in a simple-bus, or what's the
+> reason behind this. But others do it like this, so it's probably not so
+> wrong.
 
+Either simple-bus with regulator@address or unique regulator node
+names (regulator-1, no unit address). Both are popular but I think in
+recent submissions and comments Rob Herring was proposing the second
+option - unique regulator names without addresses. I can use such
+approach (unless DTC complains).
+
+Thanks for review and feedback!
 
 Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/bfopTdlYpTmTI0/.0Uf3PCA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl0u2YEACgkQAR8vZIA0
-zr1Gagf+P8RQt3O4pwxt7GUd1HpRpMLyELslWExzBG5Oqs0Mb7ZyhW/Wk5uHIyDg
-0YFoYvyIe9kjVjgfxZAOAipIDCLQNFv+hUIDp/+VDcLPDdvZdokJHNzEPqb1LPGz
-5+ZkKHm8UlzqiAu8+QzzXQ5vDHA31Y0IBtBiAtet+zPqrre2F1OAkSXRfnN7vXou
-vguchQf/NASbsG9DvUDfhFUZKQ2PdNJxpDCg7nXbcDHTU45dutxpDmm8JNlnxeu8
-dt03SQaqASiIBSFcI0l7pHl+e8pFpgXSdjdwlI1LbE0DIj884M3HuErzvpInX0Ua
-jcrZ90ATOX0zUObbIlPiVOozngzCGw==
-=ji12
------END PGP SIGNATURE-----
-
---Sig_/bfopTdlYpTmTI0/.0Uf3PCA--
+Krzysztof
