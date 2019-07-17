@@ -2,257 +2,140 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84657C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F84C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4D421743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A398A21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 06:35:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ghw6opmM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBgIS3ZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfGQGe0 (ORCPT
+        id S1727362AbfGQGfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 02:34:26 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:50868 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfGQGe0 (ORCPT
+        Wed, 17 Jul 2019 02:35:06 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45512 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGQGfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:34:26 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190717063422epoutp035b9a033762e817b7916562a211f258ca~yHjvCmgBI1962819628epoutp03A
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 06:34:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190717063422epoutp035b9a033762e817b7916562a211f258ca~yHjvCmgBI1962819628epoutp03A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563345262;
-        bh=JH91yOtS+jffgxTTFHGvw6ei+DdsN9zJJgohcmSBYac=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Ghw6opmMfKXxmk6IuAPNpKUABd2hDsPjQFDnPWvGJB3u6CIzlb/yPkj3OS9x53TWR
-         aP1xQDwS0pBQyrpzMmG3ikC0PS91IzqqcQrSnJkizBeIfg5IHKlDFydi9VYJ48IhoL
-         FvB2VVlCu7kkfeIs+w2XWr73w280ZnEdH1vPLBLY=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190717063422epcas1p203192e207e6f33e7ff96ee2fd29038cb~yHjuzgLBD1459914599epcas1p2a;
-        Wed, 17 Jul 2019 06:34:22 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 45pSCw1dFbzMqYlv; Wed, 17 Jul
-        2019 06:34:20 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        16.F0.04160.C61CE2D5; Wed, 17 Jul 2019 15:34:20 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190717063419epcas1p48c8037c7214623b761c270bfefbf88d9~yHjsS0z900625506255epcas1p4j;
-        Wed, 17 Jul 2019 06:34:19 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190717063419epsmtrp2e0bd7419f210c5a1549631ecea66561e~yHjsSCCD81019710197epsmtrp2q;
-        Wed, 17 Jul 2019 06:34:19 +0000 (GMT)
-X-AuditID: b6c32a38-b4bff70000001040-71-5d2ec16cd0af
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AE.8F.03638.B61CE2D5; Wed, 17 Jul 2019 15:34:19 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190717063419epsmtip1ccf829f1c4c3d555a71411df1e7224d9~yHjsGweoS1162611626epsmtip1R;
-        Wed, 17 Jul 2019 06:34:19 +0000 (GMT)
-Subject: Re: [PATCH v4 02/24] PM / devfreq: tegra30: Keep interrupt disabled
- while governor is stopped
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <ca339b7f-1141-4c68-1c07-2ac818422bbc@samsung.com>
-Date:   Wed, 17 Jul 2019 15:37:28 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Wed, 17 Jul 2019 02:35:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so23375778wre.12;
+        Tue, 16 Jul 2019 23:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4XebQ0f49Yy5q8IYJhpYbcY0E6K9JZ6GxX2Mpn0fMj4=;
+        b=sBgIS3ZGF9wiNKJ9acaqaZ8z0aNFhvIJc+683vOPaN4oO8BOLGN63qm9Hm7x0dAdn1
+         PzoIWoLt1maDIT3XxPhIS3xxk1Ek03yxTXF6vMUrnXpBFSN5aU9p7VWNIAKrW0G77BMy
+         keQJZuAOyj8Z8kGJ2ynwvJkyPzYJXmqRk4RS5jgA6bE/qpjHa8j02lw/QqdulKADa0XA
+         /lR0irdJMEaxmrVJMEoFu2UyUs+FaVfsj9nu6Z9i7Dzo3Yw+Nhh8lcan8YCgKqZ2IHFy
+         y85JjaM1N9XWOJkgyLyYOsM2Zw6mI2BgbeDSvoBrsWRQufWUQ25OsM2wHH7dT+Rbkykr
+         qOEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4XebQ0f49Yy5q8IYJhpYbcY0E6K9JZ6GxX2Mpn0fMj4=;
+        b=ccrtH98VJ7Sqe740y9Nbii36W2j4uJjXiWDg/5JwewkxnQopbgTu9G/ekN7wlsUVOD
+         TOzX8iDsbKQjlrLXeCMgaXMBdwrWILrvh8Wl6EjiOJaCKGnz1NBvMP8SupjYCKMeHvZ3
+         dsncwmZ5povOAxoeS7UviKaZK0aLD8sSf8eCmKBdklavYCvc79LJyS6lEjatL7zmZXm2
+         +H9HXzHbUxxeQBlyu4LdnjWmB/NfrkAaCS52IWcRquU85EjRlRDEXKsHpIOSu8cKna74
+         8Iq4gfTLwZCAyQavPFpj/EI8gXXCBfngC4LjWxxRZPBqqiIdr5Q7OtTWSDOukOseoqsB
+         xXQQ==
+X-Gm-Message-State: APjAAAXSioXiSP5YXyCuA22wTDABJp6tzKIFHtmhpT9PByNmdbbL6HTC
+        jUPLN1mOybLEmRs/MP0OUJtNqHZ7sSs=
+X-Google-Smtp-Source: APXvYqxnyNHyEbGNaXQD2Er7btAWJsv/EJB6L63+SkspuUAY1lOR9tO9IidM0n2t38IM6Udqo+rzLQ==
+X-Received: by 2002:adf:ce07:: with SMTP id p7mr39962069wrn.129.1563345302347;
+        Tue, 16 Jul 2019 23:35:02 -0700 (PDT)
+Received: from localhost.localdomain ([151.15.230.231])
+        by smtp.gmail.com with ESMTPSA id f12sm24530404wrg.5.2019.07.16.23.35.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jul 2019 23:35:01 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 08:34:59 +0200
+From:   Juri Lelli <juri.lelli@gmail.com>
+To:     Clark Williams <williams@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        RT <linux-rt-users@vger.kernel.org>
+Subject: Re: [PREEMPT_RT]  splat in v5.2-rt1:   r t_mutex_owner(lock) !=
+ current
+Message-ID: <20190717063459.GD13885@localhost.localdomain>
+References: <20190716175509.17b03f1e@torg>
 MIME-Version: 1.0
-In-Reply-To: <6c517d04-cf99-f907-e74d-9fba99405a53@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut7vdTW11nVnHBaW3B7lwetXVNVoUhg16IJX0AFkXvW3qXuxu
-        Pek5y7QMrShaZWVF5QPTXOmyJGeJhiVZUMoiSCjK7GGaVli73iL/+853vvP4fr8jwxSVuFKW
-        ZXGwdgtjIvFg8S1ftDrGdF+dHrevejxd/uUNonPdpWK6fX+vlO70nsXp/sJmROd/c+N0975r
-        OD3sLRHTRyuf4ouDdHX+y0hX7/ZLdYWuPlx3tLYM6fprpqVKNuYsNLJMJmuPZC0Z1swsi0FL
-        Ll+jT9Zr5sVRMVQSPZ+MtDBmVksuXZEak5JlCixERm5hTM4AlcpwHBm7aKHd6nSwkUYr59CS
-        rC3TZEuyqTnGzDktBnWG1byAiouL1wSEm3KMVd3PpLZccltFXoNoL2qdWoBkMiAS4XdbSAEK
-        limIOgRVpT0SIfiK4GRTkagABQWCQQRdD7N5zBecOjEoFUR3EeSe6MaF4BOCX0U+Ca8KI4zg
-        H/IhPjGJGEGQP+zC+QRGbABfffloW5xQQeO7F6P8RCIKng+9QfxOcmIR3CsN5mkxMQvuvS1B
-        PA4n1kNbc4mYx3IiFFpP94ziIEILt199lgrtp0BXz3mRgKeDy3MG43cAwiWFw0PtEsHzUvhQ
-        rBbchMH7llqpgJXQ33cXF/BOuN7ajAu1hxDUNnZIhEQCNF45LuL7YEQ0VHljBToK6n+eQ8Lc
-        CdA3cOTvKDkcOqgQJDOg87VfJOAIuJSXjxch0j3GjXuMA/cYB+7/wy4gcRmazNo4s4HlKFvi
-        2L+uQaOnqqLrUMPjFU2IkCFyvFzni0lXSJgt3HZzEwIZRk6Sawfmpivkmcz2Hazdqrc7TSzX
-        hDSBxy7GlOEZ1sDhWxx6ShOfkJBAJ1LzNBRFTpGX/IpOVxAGxsHmsKyNtf+rE8mClHuRkwrd
-        /9GQtMSStzq6Fzt9pmLbjxHP7q3Z9MvBcTrbk86Q5LWP0g6E71J+LfS03lS1fCz6UXwkq3p1
-        RHes52DB1Ybvq1Quj3Ekajp2zHT+bVlGx/vN7uGelWm1+nU47Q35kpcyc7Z32R0uoottDv2W
-        PMe/Z8IOqSLlRvuDi2FJFbc3kGLOyFAqzM4xfwB/p6KpwAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG72Qb1YgzVN6harPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZ629fYS9oUapY076HqYHxpHQXIyeHhICJxPQp
-        39i7GLk4hAR2M0rsazzJDJGQlJh28SiQzQFkC0scPlwMEhYSeMsocbZdCMQWFsiQuPvjMCNI
-        r4hAE5PEpt4L7CAJZoFIiZ65W9gghs5mknjQ1MoEkmAT0JLY/+IGG4jNL6AocfXHY0aQBbwC
-        dhL7FnGBhFkEVCX2PZ/HCGKLCkRITLq2kwXE5hUQlDg58wmYzSlgK7H93geoXeoSf+ZdYoaw
-        xSVuPZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC4tz03GLDAqO81HK94sTc
-        4tK8dL3k/NxNjOAI09LawXjiRPwhRgEORiUeXo/DurFCrIllxZW5hxglOJiVRHhtv2rHCvGm
-        JFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamDMWFW659QLs6dv
-        dGuMqmXqttf+y9xc8NNN3Mv+89dGRd34E8xK+2UmMNnvW7xHrko/SWhbf9X8b0fnH5l82i2X
-        dZd2HcuZVQu9d0+YvXdtcrlw4yGD/f2/Jm8WsVhyPmlVDu+MTwyeMSa3/SX5mYyezf2s9PbS
-        6SkrDGLOHblcWPUr5PpCxf40JZbijERDLeai4kQAPr+/sawCAAA=
-X-CMS-MailID: 20190717063419epcas1p48c8037c7214623b761c270bfefbf88d9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223724epcas4p2d82cecc2969fecddca67192417843418
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223724epcas4p2d82cecc2969fecddca67192417843418@epcas4p2.samsung.com>
-        <20190707223303.6755-3-digetx@gmail.com>
-        <f691a845-18f3-a6fb-302c-a8a3fc13e5bf@samsung.com>
-        <6c517d04-cf99-f907-e74d-9fba99405a53@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716175509.17b03f1e@torg>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 16. 오후 10:03, Dmitry Osipenko wrote:
-> 16.07.2019 14:47, Chanwoo Choi пишет:
->> On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
->>> There is no real need to keep interrupt always-enabled, will be nicer
->>> to keep it disabled while governor is inactive.
->>>
->>> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/devfreq/tegra30-devfreq.c | 43 ++++++++++++++++---------------
->>>  1 file changed, 22 insertions(+), 21 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->>> index a27300f40b0b..5e2b133babdd 100644
->>> --- a/drivers/devfreq/tegra30-devfreq.c
->>> +++ b/drivers/devfreq/tegra30-devfreq.c
->>> @@ -11,6 +11,7 @@
->>>  #include <linux/devfreq.h>
->>>  #include <linux/interrupt.h>
->>>  #include <linux/io.h>
->>> +#include <linux/irq.h>
->>>  #include <linux/module.h>
->>>  #include <linux/mod_devicetable.h>
->>>  #include <linux/platform_device.h>
->>> @@ -416,8 +417,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
->>>  {
->>>  	unsigned int i;
->>>  
->>> -	disable_irq(tegra->irq);
->>> -
->>>  	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
->>>  		      ACTMON_GLB_PERIOD_CTRL);
->>>  
->>> @@ -442,8 +441,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->>>  	}
->>>  
->>>  	actmon_write_barrier(tegra);
->>> -
->>> -	enable_irq(tegra->irq);
->>>  }
->>>  
->>>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
->>> @@ -552,6 +549,12 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->>>  {
->>>  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
->>>  
->>> +	/*
->>> +	 * Couple device with the governor early as it is needed at
->>> +	 * the moment of governor's start (used by ISR).
->>> +	 */
->>> +	tegra->devfreq = devfreq;
->>
->> I'm not sure it is necessary. Almost devfreq device get
->> the devfreq instance on probe timing through devfreq_add_device directly.
-> 
-> This is necessary because this assignment is for the "governor" and not
-> the "device". Governor is started during of devfreq_add_device(), hence
-> there is no better way to assign device to the driver's governor.
+Hi Clark,
 
-OK. I understand.
+On 16/07/19 17:55, Clark Williams wrote:
+> Saw this after applying my thermal lock to raw patch and the change in i915 for lockdep. The 
+> splat occurred on boot when creating the kdump initramfs. System is an Intel NUC i7 with 32GB ram
+> and 256GB SSD for rootfs. 
+> 
+> The booting kernel has rt_mutex debugging turned on as well as lockdep and lockup configs. 
+> 
+> Jul 16 14:41:48 theseus dracut[3082]: *** Creating initramfs image file '/boot/initramfs-5.2.0-rt1.fixes+kdump.img' done ***
+> Jul 16 14:41:48 theseus kernel: ------------[ cut here ]------------
+> Jul 16 14:41:48 theseus kernel: DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) != current)
+> Jul 16 14:41:48 theseus kernel: WARNING: CPU: 1 PID: 8349 at kernel/locking/rtmutex-debug.c:145 debug_rt_mutex_unlock+0x47/0x50
+> Jul 16 14:41:48 theseus kernel: Modules linked in: rfcomm xt_CHECKSUM xt_MASQUERADE tun bridge stp llc fuse nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ebtable_nat ip6table_nat ip6table_mangle ip6table_raw>
+> Jul 16 14:41:48 theseus kernel:  snd_rawmidi snd_hda_core media snd_hwdep snd_seq btusb wmi_bmof snd_seq_device iwlwifi btrtl intel_wmi_thunderbolt btbcm snd_pcm iTCO_wdt btintel iTCO_vendor_support pcspkr bluetooth snd_timer rtsx_pci_ms cfg80211 snd memstick ecdh_generic i2c_i801 soundcore ec>
+> Jul 16 14:41:48 theseus kernel: CPU: 1 PID: 8349 Comm: fsfreeze Not tainted 5.2.0-rt1.fixes+ #16
+> Jul 16 14:41:48 theseus kernel: Hardware name: Intel Corporation NUC7i7BNH/NUC7i7BNB, BIOS BNKBL357.86A.0054.2017.1025.1822 10/25/2017
+> Jul 16 14:41:48 theseus kernel: RIP: 0010:debug_rt_mutex_unlock+0x47/0x50
+> Jul 16 14:41:48 theseus kernel: Code: c2 75 01 c3 e8 6a c1 3e 00 85 c0 74 f6 8b 05 30 3c 66 01 85 c0 75 ec 48 c7 c6 a0 b3 2e b1 48 c7 c7 48 bf 2c b1 e8 42 7d f8 ff <0f> 0b c3 66 0f 1f 44 00 00 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f
+> Jul 16 14:41:48 theseus kernel: RSP: 0018:ffffc03c5b607dd0 EFLAGS: 00010086
+> Jul 16 14:41:48 theseus kernel: RAX: 0000000000000000 RBX: ffff9a7d6deb0d98 RCX: 0000000000000000
+> Jul 16 14:41:48 theseus kernel: RDX: ffffffffb167ce50 RSI: 00000000ffffffff RDI: 00000000ffffffff
+> Jul 16 14:41:48 theseus kernel: RBP: ffff9a7d6deb0ab0 R08: 0000000000000000 R09: ffffffffb167cd20
+> Jul 16 14:41:48 theseus kernel: R10: ffffc03c5b607d10 R11: ffffffffb2aa38eb R12: 0000000000000246
+> Jul 16 14:41:48 theseus kernel: R13: ffffc03c5b607e00 R14: ffffc03c5b607e10 R15: ffffffffb034c53f
+> Jul 16 14:41:48 theseus kernel: FS:  00007fd6e2f0e540(0000) GS:ffff9a7d9e600000(0000) knlGS:0000000000000000
+> Jul 16 14:41:48 theseus kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jul 16 14:41:48 theseus kernel: CR2: 0000563557bc0178 CR3: 0000000792188006 CR4: 00000000003606e0
+> Jul 16 14:41:48 theseus kernel: Call Trace:
+> Jul 16 14:41:48 theseus kernel:  rt_mutex_slowunlock+0x25/0x80
+> Jul 16 14:41:48 theseus kernel:  __rt_mutex_unlock+0x45/0x80
+> Jul 16 14:41:48 theseus kernel:  percpu_up_write+0x1f/0x30
+> Jul 16 14:41:48 theseus kernel:  thaw_super_locked+0xde/0x110
+> Jul 16 14:41:48 theseus kernel:  do_vfs_ioctl+0x5de/0x720
+> Jul 16 14:41:48 theseus kernel:  ksys_ioctl+0x5e/0x90
+> Jul 16 14:41:48 theseus kernel:  __x64_sys_ioctl+0x16/0x20
+> Jul 16 14:41:48 theseus kernel:  do_syscall_64+0x66/0xb0
+> Jul 16 14:41:48 theseus kernel:  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Jul 16 14:41:48 theseus kernel: RIP: 0033:0x7fd6e2e391fb
+> Jul 16 14:41:48 theseus kernel: Code: 0f 1e fa 48 8b 05 8d dc 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 5d dc 0c 00 f7 d8 64 89 01 48
+> Jul 16 14:41:48 theseus kernel: RSP: 002b:00007ffe61e2f498 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> Jul 16 14:41:48 theseus kernel: RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fd6e2e391fb
+> Jul 16 14:41:48 theseus kernel: RDX: 0000000000000000 RSI: 00000000c0045878 RDI: 0000000000000003
+> Jul 16 14:41:48 theseus kernel: RBP: 0000000000000003 R08: 0000000000000001 R09: 0000000000000000
+> Jul 16 14:41:48 theseus kernel: R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
+> Jul 16 14:41:48 theseus kernel: R13: 00007ffe61e309fa R14: 0000000000000000 R15: 0000000000000000
+> Jul 16 14:41:48 theseus kernel: irq event stamp: 6254
+> Jul 16 14:41:48 theseus kernel: hardirqs last  enabled at (6253): [<ffffffffb0ac8590>] _raw_spin_unlock_irqrestore+0x60/0x90
+> Jul 16 14:41:48 theseus kernel: hardirqs last disabled at (6254): [<ffffffffb0ac8713>] _raw_spin_lock_irqsave+0x23/0x90
+> Jul 16 14:41:48 theseus kernel: softirqs last  enabled at (3330): [<ffffffffb003e4a8>] fpu__clear+0x88/0x200
+> Jul 16 14:41:48 theseus kernel: softirqs last disabled at (3327): [<ffffffffb003e46b>] fpu__clear+0x4b/0x200
+> Jul 16 14:41:48 theseus kernel: ---[ end trace 0000000000000002 ]---
+> Jul 16 14:41:49 theseus kdumpctl[1500]: kexec: loaded kdump kernel
+> Jul 16 14:41:49 theseus kdumpctl[1500]: Starting kdump: [OK]
 
-But, I have a question. Is it working before this patch?
-How can you test it on that tegra->devfreq is NULL?
+Looks like this is the same percpu_rwsem problem Peter is chasing down:
 
-> 
->>> +
->>>  	switch (event) {
->>>  	case DEVFREQ_GOV_START:
->>>  		devfreq_monitor_start(devfreq);
->>> @@ -586,10 +589,11 @@ static struct devfreq_governor tegra_devfreq_governor = {
->>>  
->>>  static int tegra_devfreq_probe(struct platform_device *pdev)
->>>  {
->>> -	struct tegra_devfreq *tegra;
->>>  	struct tegra_devfreq_device *dev;
->>> -	unsigned int i;
->>> +	struct tegra_devfreq *tegra;
->>> +	struct devfreq *devfreq;
->>>  	unsigned long rate;
->>> +	unsigned int i;
->>>  	int err;
->>>  
->>>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->>> @@ -625,6 +629,16 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>  	}
->>>  	tegra->irq = err;
->>>  
->>> +	irq_set_status_flags(tegra->irq, IRQ_NOAUTOEN);
->>> +
->>> +	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
->>> +					actmon_thread_isr, IRQF_ONESHOT,
->>> +					"tegra-devfreq", tegra);
->>> +	if (err) {
->>> +		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
->>> +		return err;
->>> +	}
->>> +
->>>  	reset_control_assert(tegra->reset);
->>>  
->>>  	err = clk_prepare_enable(tegra->clock);
->>> @@ -672,28 +686,15 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->>>  	}
->>>  
->>>  	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
->>> -	tegra->devfreq = devfreq_add_device(&pdev->dev,
->>> -					    &tegra_devfreq_profile,
->>> -					    "tegra_actmon",
->>> -					    NULL);
->>> +	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
->>> +				     "tegra_actmon", NULL);
->>>  	if (IS_ERR(tegra->devfreq)) {
->>
->> Have to check 'devfreq' instead of 'tegra->devfreq'.
->> Did you test it? It might be failed because 'tegra->devfreq is NULL.
-> 
-> That's a good catch! Thank you very much.
-> 
->>>  		err = PTR_ERR(tegra->devfreq);
->>
->> ditto.
-> 
-> Ok
-> 
-> 
+https://lore.kernel.org/linux-rt-users/20190326093421.GA29508@localhost.localdomain/
 
+Thanks,
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Juri
