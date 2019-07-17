@@ -2,97 +2,106 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91272C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EEAC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6430C21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A9D21849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjxMWmXI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qln0DjeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfGQUTB (ORCPT
+        id S1727947AbfGQUTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:19:01 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42609 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfGQUTA (ORCPT
+        Wed, 17 Jul 2019 16:19:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35104 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfGQUTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:19:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x1so11184723wrr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 13:18:59 -0700 (PDT)
+        Wed, 17 Jul 2019 16:19:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l2so23392185wmg.0;
+        Wed, 17 Jul 2019 13:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kTmO6laa8AMlEy3FVJ9aY/qrcEHg2mrLH4K7ieCaV2g=;
-        b=XjxMWmXICKBvNudqL+OqoYbuuGqPjYFZTGiZiCahDP2nMQG9wXTlspMk7AfaYjOQfK
-         kLHfU29/nmqs7tZkWlAe3S8ivfMV4X3Ow9DVpdY34C3s40AxxzR47YxTVRWcnhtB7kHH
-         SU7/V/6rVMby7JnW7sm0bD6nfUyXXwdGtrA380+qzDIFggxDhBwMwNdbYEDrF+OOnPlJ
-         H4usVBXvkovuZ9gsV710V9UQjhxA/6iGmu50dMZ70PqeotLIb4NyY6HTLJ1Ft8b/hgD5
-         LJFmN64p5qTPR0EPiMoXBr2CM2mU9pk29n1xi7yglhAdJje+782QPwFgEk6RxQy0CK7n
-         /G8g==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nqaMPv708RCiesrxZDz1cZrIB3dLCSSINVU8+So70w0=;
+        b=qln0DjeKwd94XPAiTvY1WJ/CL7tTNBmdoL8p2i+aj2tj2RtVTVZWjR2Rb+16c1e1Kh
+         jMlXYQBkLVc7H6+Fc44QHiGsKIibSnZ+IzbOj9/4EFAoPHu/A5Lv8MCPIaGpHW3j7+Xk
+         6KHi3NJPjbBkDcZq3qMJkzna6/7asPVRyLLCIO1Xy2/yPL5DKHBaHRmLODzVhx3HZkpJ
+         l5IrZn7PXCb5LL+8Fz5Tn7WqQhxHctBNeUIehZqVXkS8pRpuo6Rpql0j8SwmCjeWvPJv
+         u3DrSsUnjGFSE7M/ACJGdn9+QoJjNRSI1tVc/mRWiGjT3hci2WzLTK4jYaCQ+FBGS4SP
+         Z+MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kTmO6laa8AMlEy3FVJ9aY/qrcEHg2mrLH4K7ieCaV2g=;
-        b=kODcfaQgOO9WizZO4d/RSmLPJBMljat3aSk2Q7UWg7PxXHarDQwlQRDh4ZMLtW1167
-         1GJwg21yhrUPo4dcLVBz+sp+AQp31alPKPoJ+YQpkm7lH4eeAePwtKidodWb08kEltXA
-         KhaNd7nSpmrWy/kE/6wm8g15rWDNj98DxGiIEq8hTcs/bZGE2NYRb4dWA+V5HtBP1X+x
-         NRWROUfklYiQdNZbN0aL6hYSETByphlxbCyGjNNgM/Ws7i8AG0W7Xicnox+iBTFLXgb4
-         XT+sKdOWnIhGEmF4HXGImlcaDV3W6AlzEQodEJGM/gVdwIXAd/RL36lsFWBMtKQXGHhI
-         /teA==
-X-Gm-Message-State: APjAAAUas2DOy9Nvo8/vIzrXbpdf5NkdLA8kmwuj7h8ZA/yLLKrmCDY0
-        dg6WoQUrYV4Km/8/GBHzsfVCK5N/EBIVQleHqe4=
-X-Google-Smtp-Source: APXvYqwU9dJ05+8rynzhhNBicgBPmijgGoBBliwmzdrpt/5iiUPQNt2RvS/2MnRfvnaqnA6up+jW2OIgcJT5839RZwA=
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr45124961wrx.196.1563394738526;
- Wed, 17 Jul 2019 13:18:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nqaMPv708RCiesrxZDz1cZrIB3dLCSSINVU8+So70w0=;
+        b=ibwmWH81ELSumkwW9w8un5wNhEPVEl/k2IDcK08z/wi0hgDn1fnx+EwNSSIv6oIsto
+         l+rpZ2Qq2iBXAqemQUIuJ/FGbXQZVo/gFStjBGvz/Wt5r2louYrWP3ySmVkhdYHUDYiS
+         8rTHwtuv5KbWeOKJk61DzSk/qO93JIuOrXzM5HGofDBeEy19FfISwYT/oSiK9DLqNXxb
+         rXgnqKOgTv7G4WmW2V0rSdrjQOgLZmTAlHHpoUvkYWsjSsBerAOXvKGOXQdejvMd9oU2
+         liq6eXy6YTRPF8Ux1RV0eVSR3xGk6yA58BTtPglUOXWWsUYkXABt1oSqvdgeT3wrfJua
+         yyig==
+X-Gm-Message-State: APjAAAVI+l2t2wkWvu/cs3ONpayHGqHU28un0rT0tv96NkpMbZCT5efN
+        1kBSfiJbjHBFH9XzLXP2s+E=
+X-Google-Smtp-Source: APXvYqwK1dsG8qqPpVwTplC7CW84CZEZ0F4XKUlx8chgxaOXxW7ZmkQrifWn4fhsWl8GynTuyQJ6EA==
+X-Received: by 2002:a1c:b146:: with SMTP id a67mr37260276wmf.124.1563394768433;
+        Wed, 17 Jul 2019 13:19:28 -0700 (PDT)
+Received: from debian ([78.40.148.180])
+        by smtp.gmail.com with ESMTPSA id y1sm20423638wma.32.2019.07.17.13.19.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jul 2019 13:19:27 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 21:19:25 +0100
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     peterz@infradead.org, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: regression with napi/softirq ?
+Message-ID: <20190717201925.fur57qfs2x3ha6aq@debian>
 MIME-Version: 1.0
-References: <20190703190404.21136-1-daniel.baluta@nxp.com>
-In-Reply-To: <20190703190404.21136-1-daniel.baluta@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 17 Jul 2019 23:18:47 +0300
-Message-ID: <CAEnQRZAagcb5Qzh1ZhAR0g3kQNyR3u1GJXFqwExnzDp-YWTDxw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Add power domain range for MU side b / IRQSTR_DSP
-To:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aisheng/Shengjiu,
+Hi All,
 
-Care to help with review on this?
+I am using v4.14.55 on an Intel Atom based board and I am seeing network
+packet drops frequently on wireshark logs. After lots of debugging it
+seems that when this happens softirq is taking huge time to start after
+it has been raised. This is a small snippet from ftrace:
 
-On Wed, Jul 3, 2019 at 10:06 PM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> This patch adds power domain range for MU side b and irqsteer in
-> preparation for adding support for DSP <-> AP IPC communication.
->
-> Daniel Baluta (3):
->   firmware: imx: scu-pid: Rename mu PD range to mu_a
->   firmware: imx: scu-pd: Add mu_b side PD range
->   firmware: imx: scu-pd: Add IRQSTR_DSP PD range
->
->  drivers/firmware/imx/scu-pd.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> --
-> 2.17.1
->
+           <...>-2110  [001] dNH1   466.634916: irq_handler_entry: irq=126 name=eth0-TxRx-0
+           <...>-2110  [001] dNH1   466.634917: softirq_raise: vec=3 [action=NET_RX]
+           <...>-2110  [001] dNH1   466.634918: irq_handler_exit: irq=126 ret=handled
+     ksoftirqd/1-15    [001] ..s.   466.635826: softirq_entry: vec=3 [action=NET_RX]
+     ksoftirqd/1-15    [001] ..s.   466.635852: softirq_exit: vec=3 [action=NET_RX]
+     ksoftirqd/1-15    [001] d.H.   466.635856: irq_handler_entry: irq=126 name=eth0-TxRx-0
+     ksoftirqd/1-15    [001] d.H.   466.635857: softirq_raise: vec=3 [action=NET_RX]
+     ksoftirqd/1-15    [001] d.H.   466.635858: irq_handler_exit: irq=126 ret=handled
+     ksoftirqd/1-15    [001] ..s.   466.635860: softirq_entry: vec=3 [action=NET_RX]
+     ksoftirqd/1-15    [001] ..s.   466.635863: softirq_exit: vec=3 [action=NET_RX]
+
+So, softirq was raised at 466.634917 but it started at 466.635826 almost
+909 usec after it was raised.
+
+If I move back to v4.4 kernel I still see similar behaviour but the maximum
+delay I get is in the range of 500usec. But if I move back to v3.8 kernel I
+can see there is no packet loss and the maximum delay between softirq_raise
+and irq_handler_entry is 103usec.
+
+Is this a known issue?
+Will really appreciate your help in this problem.
+
+
+--
+Regards
+Sudip
+
