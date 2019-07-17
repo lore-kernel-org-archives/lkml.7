@@ -2,82 +2,123 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4901AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13C8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C94721743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781CD217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 10:14:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f1LdET+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfGQKN7 (ORCPT
+        id S1726885AbfGQKOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 06:13:59 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43816 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfGQKN7 (ORCPT
+        Wed, 17 Jul 2019 06:14:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32824 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfGQKOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 06:13:59 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m14so16943895qka.10;
-        Wed, 17 Jul 2019 03:13:58 -0700 (PDT)
+        Wed, 17 Jul 2019 06:14:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g2so10618175pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 03:14:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PrtH8Kksib4dUXTG8vDDfJrfFptIvUSjdQBJsI2iu0I=;
+        b=f1LdET+KRqIqj9PnA29N8nNQaxzbjiZ1JbKHviB/BsS+AsQOPL4XhHv2A4MUIeQuvc
+         F+gYsmL0JB7hb85aYAftvNVt3oyy64kpgQSawB3nlXdZ9N6/Z+QyXLQHhvMms0O9aiiu
+         NOpnPL6tFJ5HCABcFOMbcFOjP63kP8qNSOlsCzyWQmFyVPDpdL1LUEqRGuuNPKRNP3hD
+         R1uWasEL3FHU1fmMNPabLuVF0rpSlM5z/Di3BmBIh3DA8niPmOkVE4S6E8coh6tbuzcE
+         Cp9i0nNJNQx2wB/pyblAm8KxortM3KD83m5NsqibpBGKyLrKyv5quGCchOTw5kRpav7j
+         giPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ydiSyI4VXzh3zwStu1DezvNmkPT/fY5oXBVsiFA5W2o=;
-        b=ausJYawhEzVyfA4gKkINvXh5b6jXesE9jBUu9a8yPFClKPmJNlns2zkvzqoshUpmXV
-         HHNF9PBr/Tmierpn5hfmZWjwRpn1YwvDVD5J5zSFJcWvrPr7G40lSogX725HuLMDHtVC
-         PL+1BGtkK60G/5eYZZ72xOAFuuVDWNZm/+ZLBamZqqYYwEgCW7DhmKjb3kx8kdA1LHID
-         FBnJpyBpIdVLQ8rHFBzCpLeNSi28Kfvdf4IXBHScpkVuoutR7DtfRqle2wKz/rCrfrVh
-         DJkICpIbgTzOyKNPmtJ8d+7eZMGwa8xF+/yNSw34gN8+6T2227p1fzXC7798IqjPilRv
-         pScQ==
-X-Gm-Message-State: APjAAAURfKKcN1U212d335QFzRipxX9F7cT80QSjqtINFC8o9eexju47
-        31QI8AJJ3Y2jgwFeqLvEUZth3+L/IW4/Pofmi4Y=
-X-Google-Smtp-Source: APXvYqz74sf0zQMwIgSKx0dWLQuwU1Y+rjwpOBcH/2vc6J1LxldCUAQqB70LmnswEuy2Ve9BFykDlWeG3fM4zb5gMwE=
-X-Received: by 2002:a05:620a:b:: with SMTP id j11mr25818064qki.352.1563358438144;
- Wed, 17 Jul 2019 03:13:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PrtH8Kksib4dUXTG8vDDfJrfFptIvUSjdQBJsI2iu0I=;
+        b=OAs1S7/8lsiOp6SkAjh4w0kI/DOxgg/ojKQq3t2Of3/6T/zYfdIrAO7djZ2LeALxGU
+         G1oXkqTDS7v001ikBwcq9J7h8TDCUFFwP6pWxBCpDF4DouluGuYR202FsqIw2DF+BLW6
+         9Iz84M7g67Ih/hvvUd+q4P+RuBG+EZBmGp3PwHyE/WRk2kEMFLkmk8nkhuv7CGOFqeQH
+         O2qpKqnskN0LHHF2VXi0B/DLk8ARQVbrvahdixiEN26pnvPMQ12flVz77WDWgfqCeYB3
+         K3XxxrE9OHfngYQNeV9PLw2EK6YRZWVgpQ6WTg59JNjSzhzUM+6yqzURTr6Ac9goE7a1
+         JMGQ==
+X-Gm-Message-State: APjAAAVzkrbQdkDSA/xIVgxUIbpSjWsvq5Mzu43/L/GIiV+1eWvcfDwl
+        nNiuHocxUSK2sUurOEd9rTgeCw==
+X-Google-Smtp-Source: APXvYqwgDelo1R0pRbDg83TwcxWu53VaHcsIJ299vAGkcFkrH9OXpupDlA5aqqlZy1Ny7BKUMPBgCQ==
+X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr42202505pje.123.1563358447438;
+        Wed, 17 Jul 2019 03:14:07 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id i3sm25297361pfo.138.2019.07.17.03.14.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 03:14:06 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 15:44:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] opp: Return genpd virtual devices from
+ dev_pm_opp_attach_genpd()
+Message-ID: <20190717101404.a7p5zjweq5m22vf5@vireshk-i7>
+References: <027985ce35873cd218298302a1408da06d48458b.1562565567.git.viresh.kumar@linaro.org>
+ <2ed7993d-523b-270a-2be9-83ad2426e946@codeaurora.org>
+ <20190717054713.vn65cfiqebhzdvjq@vireshk-i7>
+ <2fbfc0fc-7d61-bf8c-67de-28183d03e26a@codeaurora.org>
 MIME-Version: 1.0
-References: <20190717090438.31522-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190717090438.31522-1-Anson.Huang@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 17 Jul 2019 12:13:41 +0200
-Message-ID: <CAK8P3a2nBkxk_qEQm7kT6pQtQXS1GECND_b1d-bEu09A_ttnyw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] char: hw_random: imx-rngc: use devm_platform_ioremap_resource()
- to simplify code
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>, allison@lohutok.net,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-imx@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fbfc0fc-7d61-bf8c-67de-28183d03e26a@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 11:14 AM <Anson.Huang@nxp.com> wrote:
->
-> From: Anson Huang <Anson.Huang@nxp.com>
->
-> Use the new helper devm_platform_ioremap_resource() which wraps the
-> platform_get_resource() and devm_ioremap_resource() together, to
-> simplify the code.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On 17-07-19, 15:34, Rajendra Nayak wrote:
+> 
+> 
+> On 7/17/2019 11:17 AM, Viresh Kumar wrote:
+> > On 11-07-19, 15:09, Rajendra Nayak wrote:
+> > > Sorry for the delay
+> > 
+> > Same here :)
+> > 
+> > > I seem to have completely missed this patch.
+> > > I just gave this a try and here are some observations,
+> > > 
+> > > I have a case where I have one device with 2 power domains, one of them
+> > > is scale-able (supports perf state) and the other one supports only being
+> > > turned on and off.
+> > > 
+> > > 1. In the driver I now need to use dev_pm_domain_attach_by_name/id to attach the
+> > > power domain which supports only on/off and then use dev_pm_opp_attach_genpd()
+> > > for the one which supports perf states.
+> > > 
+> > > 2. My OPP table has only 1 required_opps, so the required_opp_count for the OPP table is 1.
+> > > Now if my device tree has my scale-able powerdomain at index 1 (it works if its at index 0)
+> > > then I end up with this error
+> > > 
+> > > [    2.858628] ufshcd-qcom 1d84000.ufshc: Index can't be greater than required-opp-count - 1, rpmh_pd (1 : 1)
+> > > 
+> > > so it looks like a lot of the OPP core today just assumes that if a device has multiple power domains,
+> > > all of them are scale-able which isn't necessarily true.
+> > 
+> > I don't think a lot of OPP core has these problems, but maybe only
+> > this place. I was taking care of this since the beginning just forgot
+> > it now.
+> > 
+> > What about this over this commit:
+> 
+> Yes, this does seem to fix my concern mentioned in 2. above.
 
-Both patches
+Great. I will include your Tested-by:, Lemme know if you have any
+objections.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+-- 
+viresh
