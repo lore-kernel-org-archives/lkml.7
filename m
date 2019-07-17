@@ -2,97 +2,75 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F37C76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0F5C76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1DF20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A638206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfGQDDR (ORCPT
+        id S1728361AbfGQDGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 23:03:17 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52610 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbfGQDDQ (ORCPT
+        Tue, 16 Jul 2019 23:06:38 -0400
+Received: from smtprelay0182.hostedemail.com ([216.40.44.182]:35905 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726069AbfGQDGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 23:03:16 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnaDa-0008R1-HC; Wed, 17 Jul 2019 03:02:58 +0000
-Date:   Wed, 17 Jul 2019 04:02:58 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Rich Felker <dalias@libc.org>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-        tony.luck@intel.com, fenghua.yu@intel.com, geert@linux-m68k.org,
-        monstr@monstr.eu, ralf@linux-mips.org, paul.burton@mips.com,
-        jhogan@kernel.org, James.Bottomley@hansenpartnership.com,
-        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        davem@davemloft.net, luto@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        peterz@infradead.org, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, dhowells@redhat.com, firoz.khan@linaro.org,
-        stefan@agner.ch, schwidefsky@de.ibm.com, axboe@kernel.dk,
-        christian@brauner.io, hare@suse.com, deepa.kernel@gmail.com,
-        tycho@tycho.ws, kim.phillips@arm.com, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 2/4] Add fchmodat4(), a new syscall
-Message-ID: <20190717030258.GT17978@ZenIV.linux.org.uk>
-References: <20190717012719.5524-1-palmer@sifive.com>
- <20190717012719.5524-3-palmer@sifive.com>
- <20190717024046.GI1506@brightrain.aerifal.cx>
+        Tue, 16 Jul 2019 23:06:37 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 4A32B34A1;
+        Wed, 17 Jul 2019 03:06:36 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cause64_738513b3fb42d
+X-Filterd-Recvd-Size: 1832
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 17 Jul 2019 03:06:33 +0000 (UTC)
+Message-ID: <fa656d2d8a1677a0a1fbea4b7f60dfca2661827b.camel@perches.com>
+Subject: Re: [PATCH] skbuff: fix compilation warnings in skb_dump()
+From:   Joe Perches <joe@perches.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Qian Cai <cai@lca.pw>
+Cc:     David Miller <davem@davemloft.net>,
+        Willem de Bruijn <willemb@google.com>,
+        clang-built-linux@googlegroups.com,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 16 Jul 2019 20:06:32 -0700
+In-Reply-To: <CAF=yD-KW-XnDvD0i8VbzrkLGNWEY6cPoaEcHy40hbghGXTo+kA@mail.gmail.com>
+References: <1563288840-1913-1-git-send-email-cai@lca.pw>
+         <CAF=yD-KW-XnDvD0i8VbzrkLGNWEY6cPoaEcHy40hbghGXTo+kA@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717024046.GI1506@brightrain.aerifal.cx>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 10:40:46PM -0400, Rich Felker wrote:
-> On Tue, Jul 16, 2019 at 06:27:17PM -0700, Palmer Dabbelt wrote:
-> > man 3p says that fchmodat() takes a flags argument, but the Linux
-> > syscall does not.  There doesn't appear to be a good userspace
-> > workaround for this issue but the implementation in the kernel is pretty
-> > straight-forward.  The specific use case where the missing flags came up
-> > was WRT a fuse filesystem implemenation, but the functionality is pretty
-> > generic so I'm assuming there would be other use cases.
+On Tue, 2019-07-16 at 17:04 +0200, Willem de Bruijn wrote:
+> On Tue, Jul 16, 2019 at 4:56 PM Qian Cai <cai@lca.pw> wrote:
+> > Fix them by using the proper types, and also fix some checkpatch
+> > warnings by using pr_info().
+> > 
+> > WARNING: printk() should include KERN_<LEVEL> facility level
+> > +               printk("%ssk family=%hu type=%u proto=%u\n",
 > 
-> Note that we do have a workaround in musl libc with O_PATH and
-> /proc/self/fd, but a syscall that allows a proper fix with the ugly
-> workaround only in the fallback path for old kernels will be much
-> appreciated!
+> Converting printk to pr_info lowers all levels to KERN_INFO.
 > 
-> What about also doing a new SYS_faccessat4 with working AT_EACCESS
-> flag? The workaround we have to do for it is far worse.
+> skb_dump takes an explicit parameter level to be able to log at
+> KERN_ERR or KERN_WARNING
+> 
+> I would like to avoid those checkpatch warnings, but this is not the
+> right approach.
 
-Umm...  That's doable, but getting into the "don't switch creds unless
-needed" territory.  I'll need to play with that a bit and see what
-gives a tolerable variant...
+Just ignore checkpatch when it doesn't know that
+the printk actually includes a KERN_<LEVEL> via
+"%s...", level
 
-What of this part wrt AT_EACCESS?
-        if (!issecure(SECURE_NO_SETUID_FIXUP)) {
-                /* Clear the capabilities if we switch to a non-root user */
-                kuid_t root_uid = make_kuid(override_cred->user_ns, 0);
-                if (!uid_eq(override_cred->uid, root_uid))
-                        cap_clear(override_cred->cap_effective);
-                else
-                        override_cred->cap_effective =
-                                override_cred->cap_permitted;
-        }
+
