@@ -2,175 +2,243 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B37BC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E2EC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E576B21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6344020651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9Xmw9K+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="emeuTjc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfGQWLt (ORCPT
+        id S1728100AbfGQWOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:11:49 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38337 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfGQWLt (ORCPT
+        Wed, 17 Jul 2019 18:14:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46179 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfGQWOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:11:49 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so25219403ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 15:11:47 -0700 (PDT)
+        Wed, 17 Jul 2019 18:14:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c2so12677366plz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 15:14:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PUxtMGjaf72vzCpxt/R6uev+cNVuXdHwXT8m7TN3wTY=;
-        b=q9Xmw9K+sdJ8jsYx/L/LdJD+SFlOKLv47RKoAe028arvkvug0Xk2PAt76UKv/S+Nen
-         ICO/6AP7QNpxf4p/LZ+qslSD3ZPv1LwoNFZK0IT0wCB0x3Q69dWdwYSgdrAKV805U+I+
-         8N+fOSs1pyAPGNKeN1cRL3NLNoUiPu5oaLzZkTMJXKMdQsihu4TIx6fJbcMl6UlF9ZJ/
-         rW+kdDG/zS1563aPRhCjZO66WDjoiw00SRBZEWiPIXQwIrLoFJHCU/fMKLv6eyQFhXQg
-         a6ihRbk7AsVK0N78cPxOAa/SlghoL5NkgukY81DpSD30QtetuHFXyIQy1MIPcaFiYmht
-         THJA==
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=bni+Z42fzJug5JhYQ5stiuRJiEWmfpZ/sFa5RIyPdd4=;
+        b=emeuTjc+mXVOEbjKQSGjm9CTjjRmVL0k9KVsdgLViBbSz4c0MlMsZPuJoZ9nbSJw5L
+         OFXue6RA4LeGHn8VRW3VPXoRi6c+e+3VnffcqtVTDq4CdOv5dyfgJtIwK6KuzBfA9bpO
+         BkGdW7ZgeklhFzPd2RYS+RCz9i6Op8NbJhAJxNcBytHVVHBpmP1IuS0XdjNrNjEpiKYs
+         0oeCPZMBE9AwPF8P1AhEopgZqEvAdiQoDTKwtlZxWv/xsn/wLlVJY+ENcS1ZNx3J53D1
+         T1W0NS4jkJkOdBtTdDzS0fAKkplvc1e79V5oyKTtkgHmPAEWAvnKvt4l6K9xsxcnfkbA
+         7YjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PUxtMGjaf72vzCpxt/R6uev+cNVuXdHwXT8m7TN3wTY=;
-        b=MK6SI4brYnwxWzfruxbTYrGBuA64rRThqQfqPO6tthpmdDulfv/4+9FWQI/U2dbOT4
-         5zT/LivqRN/rMRmSx2thX+LPWB+mHhustoR4xEITzlv/i2+/iDXzNLVKCISP4h3wAvSc
-         VNypA76lTxM/VZFwNnfrTcqryIMbdxDSMUisp7WvZ+Swjj6307O3oaQfS3Gg5ctEOrFe
-         bQD7bms7+we8+c9bM+ojfXBIYxZgjIdvHc8oAPYqTOUrDThHZrXshwrK/S3QAGiGW7gn
-         XXJXZ95abg9ERlMdFBxeGo294f+drc7GWWtMSTYoQRwkSTOYecPRKIoNC85RPh6KrvgR
-         ibbQ==
-X-Gm-Message-State: APjAAAUli1tOC8xvVq8dQ9ZS3bHevVFFmaZHKFRGJ2DpEDcwPxhKww3V
-        WKxiiEPK7/lBgtJvtq2jaO6714yNlTjcRhsS8yQcCQ==
-X-Google-Smtp-Source: APXvYqwkxeoAAEmKPXBKqcwArNwHM5ZRiJDfHTtme7+dvEaL7DsOcwbkhI2vmmp5VHytDxCyIpffqfFRwxH1lRi3qw8=
-X-Received: by 2002:a2e:9a87:: with SMTP id p7mr22215183lji.133.1563401506127;
- Wed, 17 Jul 2019 15:11:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=bni+Z42fzJug5JhYQ5stiuRJiEWmfpZ/sFa5RIyPdd4=;
+        b=PmtTke7PMUkezMl8WvgeEzCZzXg302zKbWwJ5CaszWaXDf6uQ6NMr5GJHaRdlkiS7Z
+         PaZCru2oQl6jimYmFJGzs0q0qJW48NA1nfXkcsE7VVyfjTqTQLBzsI9lAIiFUFCEw6Ke
+         1EX1M2Sj+72UvY/wye/4MTfbT3Z+JY3yr4csGgFr496Nw2eqBbHyOx4ZBlLBYV8TqQxs
+         VqR5EU9Ts3oaH0ukQWt1uqZfuleQf2s23eTEkFBGo5YgQsh9dbLONxYTZiioI3Am3IGc
+         cJhuA5Ms3WPsTmg8pTdm4wNVhXlw3zWVFBwTvtCABN8wa4vA6e7ZMM/CviHSGf13fFZK
+         9H7Q==
+X-Gm-Message-State: APjAAAUWBEdGopqQMGjooe/ghvlOstoQvxIx/nE74+hn9phVTHX3jlgN
+        bZtvCPyLnnVAsbBJVDd0V9O5ZA==
+X-Google-Smtp-Source: APXvYqxqTE3Ak4PslnTEdETq6mYvLmSYVFMaDKC39P/K6Xxy0gPBa0uji6xX9ZEZ1IcX9kCFU6w1WQ==
+X-Received: by 2002:a17:902:e282:: with SMTP id cf2mr46538329plb.301.1563401690083;
+        Wed, 17 Jul 2019 15:14:50 -0700 (PDT)
+Received: from [100.112.64.100] ([104.133.8.100])
+        by smtp.gmail.com with ESMTPSA id f64sm27346303pfa.115.2019.07.17.15.14.48
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Jul 2019 15:14:49 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 15:14:04 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+cc:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v4 PATCH 1/2] mm: thp: make transhuge_vma_suitable available
+ for anonymous THP
+In-Reply-To: <1563400758-124759-2-git-send-email-yang.shi@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.1907171512030.6309@eggly.anvils>
+References: <1563400758-124759-1-git-send-email-yang.shi@linux.alibaba.com> <1563400758-124759-2-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-References: <000000000000afe2c70589526668@google.com> <20190612192312.GF18795@gmail.com>
- <CAHRSSEw52jBRVNbw-DxgrmfZKoo3sqBVHCQ+e3BJtPTfhZADbQ@mail.gmail.com>
-In-Reply-To: <CAHRSSEw52jBRVNbw-DxgrmfZKoo3sqBVHCQ+e3BJtPTfhZADbQ@mail.gmail.com>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Wed, 17 Jul 2019 15:11:35 -0700
-Message-ID: <CAHRSSEya6LKyaE=nJ_Lg1-P5V1V=AwTeUmBLG_dfg+nkFReWYQ@mail.gmail.com>
-Subject: Re: WARNING in binder_transaction_buffer_release
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        syzbot <syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Hridya Valsaraju
+On Thu, 18 Jul 2019, Yang Shi wrote:
 
-Fix posted: https://lkml.kernel.org/lkml/20190715191804.112933-1-hridya@google.com/
+> The transhuge_vma_suitable() was only available for shmem THP, but
+> anonymous THP has the same check except pgoff check.  And, it will be
+> used for THP eligible check in the later patch, so make it available for
+> all kind of THPs.  This also helps reduce code duplication slightly.
+> 
+> Since anonymous THP doesn't have to check pgoff, so make pgoff check
+> shmem vma only.
+> 
+> And regroup some functions in include/linux/mm.h to solve compile issue since
+> transhuge_vma_suitable() needs call vma_is_anonymous() which was defined
+> after huge_mm.h is included.
+> 
+> Cc: Hugh Dickins <hughd@google.com>
 
+Thanks!
+Acked-by: Hugh Dickins <hughd@google.com>
 
-On Wed, Jun 12, 2019 at 1:14 PM Todd Kjos <tkjos@google.com> wrote:
->
-> On Wed, Jun 12, 2019 at 12:23 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Mon, May 20, 2019 at 07:18:06AM -0700, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    72cf0b07 Merge tag 'sound-fix-5.2-rc1' of git://git.kernel..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=17c7d4bca00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=d103f114f9010324
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=8b3c354d33c4ac78bfad
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > userspace arch: i386
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b99b44a00000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
-> > >
-> > > WARNING: CPU: 1 PID: 8535 at drivers/android/binder.c:2368
-> > > binder_transaction_buffer_release+0x673/0x8f0 drivers/android/binder.c:2368
-> > > Kernel panic - not syncing: panic_on_warn set ...
-> > > CPU: 1 PID: 8535 Comm: syz-executor.2 Not tainted 5.1.0+ #19
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > Call Trace:
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > >  panic+0x2cb/0x715 kernel/panic.c:214
-> > >  __warn.cold+0x20/0x4c kernel/panic.c:571
-> > >  report_bug+0x263/0x2b0 lib/bug.c:186
-> > >  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> > >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> > >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-> > >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-> > >  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> > > RIP: 0010:binder_transaction_buffer_release+0x673/0x8f0
-> > > drivers/android/binder.c:2368
-> > > Code: 31 ff 41 89 c5 89 c6 e8 7b 04 1f fc 45 85 ed 0f 85 1f 41 01 00 49 8d
-> > > 47 40 48 89 85 50 fe ff ff e9 9d fa ff ff e8 dd 02 1f fc <0f> 0b e9 7f fc ff
-> > > ff e8 d1 02 1f fc 48 89 d8 45 31 c9 4c 89 fe 4c
-> > > RSP: 0018:ffff88807b2775f0 EFLAGS: 00010293
-> > > RAX: ffff888092b1e040 RBX: 0000000000000060 RCX: 1ffff11012563caa
-> > > RDX: 0000000000000000 RSI: ffffffff85519e13 RDI: ffff888097a2d248
-> > > RBP: ffff88807b2777d8 R08: ffff888092b1e040 R09: ffffed100f64eee3
-> > > R10: ffffed100f64eee2 R11: ffff88807b277717 R12: ffff88808fd2c340
-> > > R13: 0000000000000068 R14: ffff88807b2777b0 R15: ffff88809f7ea580
-> > >  binder_transaction+0x153d/0x6620 drivers/android/binder.c:3484
-> > >  binder_thread_write+0x87e/0x2820 drivers/android/binder.c:3792
-> > >  binder_ioctl_write_read drivers/android/binder.c:4836 [inline]
-> > >  binder_ioctl+0x102f/0x1833 drivers/android/binder.c:5013
-> > >  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
-> > >  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
-> > >  __ia32_compat_sys_ioctl+0x195/0x620 fs/compat_ioctl.c:998
-> > >  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-> > >  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
-> > >  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-> > > RIP: 0023:0xf7f9e849
-> > > Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
-> > > 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
-> > > 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-> > > RSP: 002b:00000000f7f9a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
-> > > RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000c0306201
-> > > RDX: 0000000020000140 RSI: 0000000000000000 RDI: 0000000000000000
-> > > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> > > R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> > > Kernel Offset: disabled
-> > > Rebooting in 86400 seconds..
-> > >
-> > >
-> > > ---
-> > > This bug is generated by a bot. It may contain errors.
-> > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > > syzbot will keep track of this bug report. See:
-> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > > syzbot can test patches for this bug, for details see:
-> > > https://goo.gl/tpsmEJ#testing-patches
-> > >
-> >
-> > Are any of the binder maintainers planning to fix this?  This seems to be the
-> > only open syzbot report for binder on the upstream kernel.
->
-> Taking a look.
->
-> >
-> > - Eric
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: David Rientjes <rientjes@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>  include/linux/huge_mm.h | 23 +++++++++++++++++++++++
+>  include/linux/mm.h      | 34 +++++++++++++++++-----------------
+>  mm/huge_memory.c        |  2 +-
+>  mm/memory.c             | 13 -------------
+>  4 files changed, 41 insertions(+), 31 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 7cd5c15..45ede62 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -121,6 +121,23 @@ static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+>  
+>  bool transparent_hugepage_enabled(struct vm_area_struct *vma);
+>  
+> +#define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
+> +
+> +static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
+> +		unsigned long haddr)
+> +{
+> +	/* Don't have to check pgoff for anonymous vma */
+> +	if (!vma_is_anonymous(vma)) {
+> +		if (((vma->vm_start >> PAGE_SHIFT) & HPAGE_CACHE_INDEX_MASK) !=
+> +			(vma->vm_pgoff & HPAGE_CACHE_INDEX_MASK))
+> +			return false;
+> +	}
+> +
+> +	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
+> +		return false;
+> +	return true;
+> +}
+> +
+>  #define transparent_hugepage_use_zero_page()				\
+>  	(transparent_hugepage_flags &					\
+>  	 (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
+> @@ -271,6 +288,12 @@ static inline bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>  	return false;
+>  }
+>  
+> +static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
+> +		unsigned long haddr)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline void prep_transhuge_page(struct page *page) {}
+>  
+>  #define transparent_hugepage_flags 0UL
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0389c34..beae0ae 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -541,6 +541,23 @@ static inline void vma_set_anonymous(struct vm_area_struct *vma)
+>  	vma->vm_ops = NULL;
+>  }
+>  
+> +static inline bool vma_is_anonymous(struct vm_area_struct *vma)
+> +{
+> +	return !vma->vm_ops;
+> +}
+> +
+> +#ifdef CONFIG_SHMEM
+> +/*
+> + * The vma_is_shmem is not inline because it is used only by slow
+> + * paths in userfault.
+> + */
+> +bool vma_is_shmem(struct vm_area_struct *vma);
+> +#else
+> +static inline bool vma_is_shmem(struct vm_area_struct *vma) { return false; }
+> +#endif
+> +
+> +int vma_is_stack_for_current(struct vm_area_struct *vma);
+> +
+>  /* flush_tlb_range() takes a vma, not a mm, and can care about flags */
+>  #define TLB_FLUSH_VMA(mm,flags) { .vm_mm = (mm), .vm_flags = (flags) }
+>  
+> @@ -1629,23 +1646,6 @@ static inline void cancel_dirty_page(struct page *page)
+>  
+>  int get_cmdline(struct task_struct *task, char *buffer, int buflen);
+>  
+> -static inline bool vma_is_anonymous(struct vm_area_struct *vma)
+> -{
+> -	return !vma->vm_ops;
+> -}
+> -
+> -#ifdef CONFIG_SHMEM
+> -/*
+> - * The vma_is_shmem is not inline because it is used only by slow
+> - * paths in userfault.
+> - */
+> -bool vma_is_shmem(struct vm_area_struct *vma);
+> -#else
+> -static inline bool vma_is_shmem(struct vm_area_struct *vma) { return false; }
+> -#endif
+> -
+> -int vma_is_stack_for_current(struct vm_area_struct *vma);
+> -
+>  extern unsigned long move_page_tables(struct vm_area_struct *vma,
+>  		unsigned long old_addr, struct vm_area_struct *new_vma,
+>  		unsigned long new_addr, unsigned long len,
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 885642c..782dd14 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -689,7 +689,7 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>  	struct page *page;
+>  	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+>  
+> -	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
+> +	if (!transhuge_vma_suitable(vma, haddr))
+>  		return VM_FAULT_FALLBACK;
+>  	if (unlikely(anon_vma_prepare(vma)))
+>  		return VM_FAULT_OOM;
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 89325f9..e2bb51b 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3162,19 +3162,6 @@ static vm_fault_t pte_alloc_one_map(struct vm_fault *vmf)
+>  }
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGE_PAGECACHE
+> -
+> -#define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
+> -static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
+> -		unsigned long haddr)
+> -{
+> -	if (((vma->vm_start >> PAGE_SHIFT) & HPAGE_CACHE_INDEX_MASK) !=
+> -			(vma->vm_pgoff & HPAGE_CACHE_INDEX_MASK))
+> -		return false;
+> -	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
+> -		return false;
+> -	return true;
+> -}
+> -
+>  static void deposit_prealloc_pte(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+> -- 
+> 1.8.3.1
+> 
+> 
