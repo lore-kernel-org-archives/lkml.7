@@ -2,263 +2,473 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74399C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0EC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C4121743
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46976205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HeJn7cHD";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="wIc2getZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5fj6ip4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfGQPKB (ORCPT
+        id S1727234AbfGQPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:10:01 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:45726 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725906AbfGQPKB (ORCPT
+        Wed, 17 Jul 2019 11:18:08 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36524 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfGQPSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:10:01 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 24DF8C0ABC;
-        Wed, 17 Jul 2019 15:09:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563376200; bh=4WuDKry4NMQz7qo173QpDM1hbO7KVVZ0inwJoAulOkc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=HeJn7cHDmLkdnJg7O4DS9DkTLY9ILDspypHoYjNLrgmWYbGddupNKFPooucEQ6rnN
-         r/UrLlHmp3FO8S/Vn8Prj/kdlkssc6bK6nwMBhgiEgMYVO9fsQ+nAygZjgXdHZtEgS
-         cqpjkWYfpGO4kxaIfzo5OmdEZZ+GzFbAwB8eMPxOxYZjvarc5Y7SM4pkVyonL6pVTk
-         HzEi5y12dKSYK7c0vSNqbg2IqUtTaj/z8o5lk0SpKNYP9iE+BEPZlwJLeqQBjBTPQa
-         QKTtj9dulttLIxW9h685yHRw/UKMgj0djEhhjOtxH11riTg6ze1tyhu0AGFPAkNqvw
-         zvnU0MqOdIfvw==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 9C960A009F;
-        Wed, 17 Jul 2019 15:09:58 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 17 Jul 2019 08:09:40 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 17 Jul 2019 08:09:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XU5bl4Lx4Csj7mQpdBFB/Do00f/xlsm9Drbj7NHMS6zTvZw7XVP9DKqUeVYhmGELXDDM4YC8uS3VCRw3Tku3AcTYbJcrrat3ut3fLJPeKkwSN7OGPs20XsdW2pRJXMF0wyKDVQas996Lbfj5i4CyDYSLLig9gwCU2wYNt1BqQ7oe5QE3+sMKxDhqxbMvjmJpZw/ozCJLRSCk1/FLQRO29n2IAiXL4j12FZHy5jZ8fqtL9SZ2pZ0wme/Yhd61K4Sdh8qPKICWnF8LCk7gq7ci/QN4BGtEb2xLMp6p968Hf4hsFH+WFoawwzhydSoB3Hktd7eqR2luYdC2hand21xsYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4WuDKry4NMQz7qo173QpDM1hbO7KVVZ0inwJoAulOkc=;
- b=fo0/iJ8I3av9xOHI/We3aIj/glUfZdpkbDrq+KrG9plj0eouj8byfnZByijUWG4E1Ounk08fSCsTX8XliTEwQ/8HCWqUnJJTNw1+K0S9S5lVjbhi3seLLSTOJJuE5rtBxTQc5kPQADx8oIFmc06/XstvvESYM/XhvkulR/l+2NATjq6kwH3ppde/3jP8wpBOQbNeErSiX5/Am4/bgKdIhABxKi0Dy7dcs94IcGAzj/IfCS7Ft8OhwfJ4VmlTvdZuD8SnTiNpGQYTJZ5ob11y38vk3Ish0dcgzdp/rRW84lEiybpvt4KLpmyGySpwcfjTnf2HpFpI85kZsrikO1T1Kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
+        Wed, 17 Jul 2019 11:18:07 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i21so24038307ljj.3;
+        Wed, 17 Jul 2019 08:18:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4WuDKry4NMQz7qo173QpDM1hbO7KVVZ0inwJoAulOkc=;
- b=wIc2getZ42v6wiLf4q5Ctwoh+yEXwdGyeOF0mutFclOLiHfYrmeLkBd1Hxl4OshNvv+or+QmsZmKqdOUeZOlMeCCqQ3L4MXlekNKrMl1QZbhD7DgOWYMz0ADC9DjzVS7UjVWqfa5hp8e0t/AImm9R2tMhMCLIolBTAffZKHF3ko=
-Received: from SN6PR12MB2670.namprd12.prod.outlook.com (52.135.103.23) by
- SN6PR12MB2703.namprd12.prod.outlook.com (52.135.103.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Wed, 17 Jul 2019 15:09:35 +0000
-Received: from SN6PR12MB2670.namprd12.prod.outlook.com
- ([fe80::ecdd:a159:c3f7:67a]) by SN6PR12MB2670.namprd12.prod.outlook.com
- ([fe80::ecdd:a159:c3f7:67a%6]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 15:09:34 +0000
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
-        "Vineet Gupta" <Vineet.Gupta1@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "peterz@infradead.org" <peterz@infradead.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "jbaron@redhat.com" <jbaron@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Thread-Topic: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Thread-Index: AQHVItABmoPNpjiRbEyPVk6MS/0psabPHaMA
-Date:   Wed, 17 Jul 2019 15:09:34 +0000
-Message-ID: <57076361ad37f4fe7a5584643ae47adf30a99d35.camel@synopsys.com>
-References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
-         <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=paltsev@synopsys.com; 
-x-originating-ip: [84.204.78.101]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 86463fc7-48fe-4d13-6298-08d70ac8c751
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR12MB2703;
-x-ms-traffictypediagnostic: SN6PR12MB2703:
-x-microsoft-antispam-prvs: <SN6PR12MB2703A0B0AB30E04060E7503ADEC90@SN6PR12MB2703.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(376002)(39860400002)(396003)(136003)(189003)(199004)(36756003)(68736007)(86362001)(256004)(14444005)(26005)(476003)(186003)(6512007)(6506007)(53546011)(305945005)(76176011)(486006)(118296001)(8676002)(6486002)(11346002)(7736002)(8936002)(2616005)(446003)(66066001)(99286004)(25786009)(229853002)(6246003)(14454004)(91956017)(76116006)(53936002)(81166006)(4326008)(66946007)(81156014)(5660300002)(66556008)(66476007)(66446008)(64756008)(2906002)(316002)(71200400001)(71190400001)(6436002)(3846002)(6116002)(478600001)(2501003)(102836004)(54906003)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR12MB2703;H:SN6PR12MB2670.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VfifBPh87GIlb8ScASj4b+CcAOvnEOfLIK1lxcqHcWDzm6Ky1D4ANWRE8NoaKlzAWLaCOd1JLUBo7sdWRLL3vADy5XAv3y+03f2T340e0UmkgT6qvK6Rzh7ha6z6x0PVRZdOPvCpvXFxUXaYpHHVDUpVRqP5CZz737NxEE9fTMgAnFwKVXol4bHKLRftEti/MNyr5Z+L7Zon4YoDwCMrDm7Czh8/SuBpuz0xnjCBcpszGf5q77t9BtsQoL4X625pHbDY9SlsvZKRjVyDvbgb79K2oiItyGaOenqHwhDd1B4FTL5xd37gTqAURn5eI+pjZh5g/Kr0OQ9m0dvTE169XXWp+FKAEY95qiH/sVYUKa2yDetLfGsAyPw04jRVsdsQ53V0WxXvQK1N9zAzwtP+JidnmGxfPBCEqyUhJQ9tCXg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D7C326816A754845AF2E747A7106B602@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ys9qT2aavEZUfN9E2ZXgsutUYT66O1lrl1/0UUKg11A=;
+        b=Z5fj6ip4vq15LlWhc/2RSEk1GjucjrkHj1UjB6m8kTlEewUVNW542T7yVv8zupzB+m
+         OFL8YD5smqla55N7ck1DSDB7zeHJ0m9+2JVgulHlgTtc7aadKdXkwfW2/kuC0qmbbHLz
+         1Y7Q0hNdm1NYif1m46jBki2uw/vxoEE+efBadqG4gJk3w8p8E9dQBwratLrOekh7vrWP
+         fngLWSz4NUZFuwgfOBJfTjUGMiCxmCQYdbXogo7/1COfX9DJil1p678DP8rtkmNWTOK2
+         jAyumaaJ1O+XAKLYI5z7Pmp3lAxlZb0/s9rYoiklJuUkEbv0aPq4OUD7joywWEaXz+P+
+         kstg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ys9qT2aavEZUfN9E2ZXgsutUYT66O1lrl1/0UUKg11A=;
+        b=RpmWVlyyjhah6nn0PvFikT0fs/6R8f7z035CF/PtIxgyn1Z9aJlGyjcj4yJvAhV9Ft
+         YxwN/ghrhWnGrn6f9URLb2aJXNyjTzXJuUFnNme9vlrKIIT7MTytv02RIBCn/nrDAEfT
+         qxRkb0/A99tFVr5MuNre8X02Pl5iKiCqIMLzDUCnjiZl/1WAU5N5N/KpIzsHF5J7zIHw
+         Vt77fmy5+0I0WdQvtPW4hIKhJ0c7jZos74yDsF5zLVHDpBGXKB1A50IDpmr8d0HVL8Ze
+         e0Taa3FDkEyH/mfcsiYs/FR2cKEjmAouGRAu0Vu8RF/90fOHXr1a8giZaaLfJJJGI744
+         ZZ0w==
+X-Gm-Message-State: APjAAAVHSt/8GojBH0KEpr1iywsiZj3QwjL205VmHbo6bMh+o4EuuJ51
+        RwLjx3bWx5BM3UCt1nTRicxiso0/
+X-Google-Smtp-Source: APXvYqyU5UB+4qm0/bA3h/UO4crU/taqw2/DS7hyIscjx1I6+MglAyulIZGVUFUxalgWYOI6kvUL5Q==
+X-Received: by 2002:a2e:88d3:: with SMTP id a19mr21539956ljk.32.1563376682862;
+        Wed, 17 Jul 2019 08:18:02 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id s24sm4512304lje.58.2019.07.17.08.18.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 08:18:01 -0700 (PDT)
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
+ <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
+ <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
+ <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
+ <ef63f72a-db03-ef28-a371-e578f351c713@nvidia.com>
+ <27641e30-fdd1-e53a-206d-71e1f23343fd@gmail.com>
+ <10c4b9a2-a857-d124-c22d-7fd71a473079@nvidia.com>
+ <fd8bad73-464b-54f1-be94-fe3ac8b23e6e@gmail.com>
+ <0ee06d1a-310d-59f7-0aa6-b688b33447f5@nvidia.com>
+ <cedfafd0-4114-0821-0c4b-efc17c213449@gmail.com>
+ <707c4679-fde6-1714-ced0-dcf7ca8380a9@nvidia.com>
+ <c6c0a205-c083-fd46-361c-175bd8840c6e@nvidia.com>
+ <055457fd-621b-6c93-b671-d5e5380698c6@nvidia.com>
+ <20190717071105.3750a021@dimatab>
+ <77df234f-aa40-0319-a593-f1f19f0f1c2a@nvidia.com>
+ <20190717084221.2e9af56c@dimatab>
+ <093462f3-8c6d-d084-9822-ae4eff041c64@nvidia.com>
+ <20190717093317.70fefb27@dimatab>
+ <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
+Date:   Wed, 17 Jul 2019 18:17:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86463fc7-48fe-4d13-6298-08d70ac8c751
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 15:09:34.7812
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: paltsev@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2703
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <6e73dcee-6e24-b646-97a4-4b34aedd231d@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVmluZWV0LA0KSSdtIGZpbmFsbHkgYmFjaywgc28gc2VlIG15IGNvbW1lbnRzIGJlbG93Lg0K
-DQpPbiBUdWUsIDIwMTktMDYtMTggYXQgMTY6MTYgKzAwMDAsIFZpbmVldCBHdXB0YSB3cm90ZToN
-Cj4gT24gNi8xNC8xOSA5OjQxIEFNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+ID4gSW1wbGVt
-ZW50IGp1bXAgbGFiZWwgcGF0Y2hpbmcgZm9yIEFSQy4gSnVtcCBsYWJlbHMgcHJvdmlkZQ0KPiA+
-IGFuIGludGVyZmFjZSB0byBnZW5lcmF0ZSBkeW5hbWljIGJyYW5jaGVzIHVzaW5nDQo+ID4gc2Vs
-Zi1tb2RpZnlpbmcgY29kZS4NCj4gPiANCj4gPiBUaGlzIGFsbG93cyB1cyB0byBpbXBsZW1lbnQg
-Y29uZGl0aW9uYWwgYnJhbmNoZXMgd2hlcmUNCj4gPiBjaGFuZ2luZyBicmFuY2ggZGlyZWN0aW9u
-IGlzIGV4cGVuc2l2ZSBidXQgYnJhbmNoIHNlbGVjdGlvbg0KPiA+IGlzIGJhc2ljYWxseSAnZnJl
-ZScNCj4gPiANCj4gPiBUaGlzIGltcGxlbWVudGF0aW9uIHVzZXMgMzItYml0IE5PUCBhbmQgQlJB
-TkNIIGluc3RydWN0aW9ucw0KPiA+IHdoaWNoIGZvcmNlZCB0byBiZSBhbGlnbmVkIGJ5IDQgdG8g
-Z3VhcmFudGVlIHRoYXQgdGhleSBkb24ndA0KPiA+IGNyb3NzIEwxIGNhY2hlIGxpbmUgYW5kIGNh
-biBiZSB1cGRhdGUgYXRvbWljYWxseS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5
-IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+IA0KPiBMR1RNIG92ZXJh
-bGwgLSBuaXRzIGJlbG93Lg0KPiANCj4gPiAtLS0NCj4gPiAgYXJjaC9hcmMvS2NvbmZpZyAgICAg
-ICAgICAgICAgICAgIHwgICA4ICsrDQo+ID4gIGFyY2gvYXJjL2luY2x1ZGUvYXNtL2p1bXBfbGFi
-ZWwuaCB8ICA2OCArKysrKysrKysrKysNCj4gPiAgYXJjaC9hcmMva2VybmVsL01ha2VmaWxlICAg
-ICAgICAgIHwgICAxICsNCj4gPiAgYXJjaC9hcmMva2VybmVsL2p1bXBfbGFiZWwuYyAgICAgIHwg
-MTY4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQs
-IDI0NSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FyYy9pbmNs
-dWRlL2FzbS9qdW1wX2xhYmVsLmgNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJjL2tl
-cm5lbC9qdW1wX2xhYmVsLmMNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvS2NvbmZp
-ZyBiL2FyY2gvYXJjL0tjb25maWcNCj4gPiBpbmRleCBjNzgxZTQ1ZDFkOTkuLmIxMzEzZTAxNmM1
-NCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FyYy9LY29uZmlnDQo+ID4gKysrIGIvYXJjaC9hcmMv
-S2NvbmZpZw0KPiA+IEBAIC00Nyw2ICs0Nyw3IEBAIGNvbmZpZyBBUkMNCj4gPiAgCXNlbGVjdCBP
-Rl9FQVJMWV9GTEFUVFJFRQ0KPiA+ICAJc2VsZWN0IFBDSV9TWVNDQUxMIGlmIFBDSQ0KPiA+ICAJ
-c2VsZWN0IFBFUkZfVVNFX1ZNQUxMT0MgaWYgQVJDX0NBQ0hFX1ZJUFRfQUxJQVNJTkcNCj4gPiAr
-CXNlbGVjdCBIQVZFX0FSQ0hfSlVNUF9MQUJFTCBpZiBJU0FfQVJDVjIgJiYgIUNQVV9FTkRJQU5f
-QkUzMg0KPiA+ICANCj4gPiAgY29uZmlnIEFSQ0hfSEFTX0NBQ0hFX0xJTkVfU0laRQ0KPiA+ICAJ
-ZGVmX2Jvb2wgeQ0KPiA+IEBAIC01MjksNiArNTMwLDEzIEBAIGNvbmZpZyBBUkNfRFcyX1VOV0lO
-RA0KPiA+ICBjb25maWcgQVJDX0RCR19UTEJfUEFSQU5PSUENCj4gPiAgCWJvb2wgIlBhcmFub2lh
-IENoZWNrcyBpbiBMb3cgTGV2ZWwgVExCIEhhbmRsZXJzIg0KPiA+ICANCj4gPiArY29uZmlnIEFS
-Q19EQkdfU1RBVElDX0tFWVMNCj4gPiArCWJvb2wgIlBhcmFub2lkIGNoZWNrcyBpbiBTdGF0aWMg
-S2V5cyBjb2RlIg0KPiA+ICsJZGVwZW5kcyBvbiBKVU1QX0xBQkVMDQo+ID4gKwlzZWxlY3QgU1RB
-VElDX0tFWVNfU0VMRlRFU1QNCj4gPiArCWhlbHANCj4gPiArCSAgRW5hYmxlIHBhcmFub2lkIGNo
-ZWNrcyBhbmQgc2VsZi10ZXN0IG9mIGJvdGggQVJDLXNwZWNpZmljIGFuZCBnZW5lcmljDQo+ID4g
-KwkgIHBhcnQgb2Ygc3RhdGljLWtleXMtcmVsYXRlZCBjb2RlLg0KPiANCj4gV2h5IGNhbid0IHdl
-IGp1c3QgZW5hYmxlIHRoaXMgaWYgU1RBVElDX0tFWVNfU0VMRlRFU1QNCg0KQXMgd2UgZXh0ZW50
-IFNUQVRJQ19LRVlTX1NFTEZURVNUIG9wdGlvbiBzdWNoIGRlcGVuZGVuY3kgbG9va3MgbW9yZSBy
-ZWFzb25hYmxlIGZvciBtZQ0KKHdlIGVuYWJsZSBvdXIgY2hlY2tzIC0+IGxldHMgZW5hYmxlIGNv
-cnJlc3BvbmRpbmcgZ2VuZXJpYyBvbmVzKQ0KSSBkb24ndCBpbnNpc3QsIHRob3VnaC4NCg0KPiA+
-ICBlbmRpZg0KPiA+ICANCj4gPiAgY29uZmlnIEFSQ19CVUlMVElOX0RUQl9OQU1FDQo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJjL2luY2x1ZGUvYXNtL2p1bXBfbGFiZWwuaCBiL2FyY2gvYXJjL2lu
-Y2x1ZGUvYXNtL2p1bXBfbGFiZWwuaA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5k
-ZXggMDAwMDAwMDAwMDAwLi44OTcxZDA2MDhmMmMNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysr
-IGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vanVtcF9sYWJlbC5oDQo+ID4gQEAgLTAsMCArMSw2OCBA
-QA0KPiA+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAqLw0KPiA+ICsjaWZu
-ZGVmIF9BU01fQVJDX0pVTVBfTEFCRUxfSA0KPiA+ICsjZGVmaW5lIF9BU01fQVJDX0pVTVBfTEFC
-RUxfSA0KPiA+ICsNCj4gPiArI2lmbmRlZiBfX0FTU0VNQkxZX18NCj4gPiArDQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC90eXBlcy5oPg0KPiA+ICsNCj4gPiArI2RlZmluZSBKVU1QX0xBQkVMX05PUF9T
-SVpFIDQNCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIFRvIG1ha2UgYXRvbWljIHVwZGF0ZSBvZiBw
-YXRjaGVkIGluc3RydWN0aW9uIGF2YWlsYWJsZSB3ZSBuZWVkIHRvIGd1YXJhbnRlZQ0KPiA+ICsg
-KiB0aGF0IHRoaXMgaW5zdHJ1Y3Rpb24gZG9lc24ndCBjcm9zcyBMMSBjYWNoZSBsaW5lIGJvdW5k
-YXJ5Lg0KPiA+ICsgKg0KPiA+ICsgKiBBcyBvZiB0b2RheSB3ZSBzaW1wbHkgYWxpZ24gaW5zdHJ1
-Y3Rpb24gd2hpY2ggY2FuIGJlIHBhdGNoZWQgYnkgNCBieXRlIHVzaW5nDQo+ID4gKyAqICIuYmFs
-aWduIDQiIGRpcmVjdGl2ZS4gSW4gdGhhdCBjYXNlIHBhdGNoZWQgaW5zdHJ1Y3Rpb24gaXMgYWxp
-Z25lZCB3aXRoIG9uZQ0KPiA+ICsgKiAxNi1iaXQgTk9QX1MgaWYgdGhpcyBpcyByZXF1aXJlZC4N
-Cj4gPiArICogSG93ZXZlciAnYWxpZ24gYnkgNCcgZGlyZWN0aXZlIGlzIG11Y2ggc3RyaWN0ZXIg
-dGhhbiBpdCBhY3R1YWxseSByZXF1aXJlZC4NCj4gPiArICogSXQncyBlbm91Z2ggdGhhdCBvdXIg
-MzItYml0IGluc3RydWN0aW9uIGRvbid0IGNyb3NzIGwxIGNhY2hlIGxpbmUgYm91bmRhcnkNCj4g
-PiArICogd2hpY2ggY2FuIGJlIGFjaGlldmVkIGJ5IHVzaW5nICIuYnVuZGxlX2FsaWduX21vZGUi
-IGRpcmVjdGl2ZS4gVGhhdCB3aWxsIHNhdmUNCj4gPiArICogdXMgZnJvbSBhZGRpbmcgdXNlbGVz
-cyBOT1BfUyBwYWRkaW5nIGluIG1vc3Qgb2YgdGhlIGNhc2VzLg0KPiA+ICsgKg0KPiA+ICsgKiBU
-T0RPOiBzd2l0Y2ggdG8gIi5idW5kbGVfYWxpZ25fbW9kZSIgZGlyZWN0aXZlIHVzaW5nIHdoaW4g
-aXQgd2lsbCBiZQ0KPiA+ICsgKiBzdXBwb3J0ZWQgYnkgQVJDIHRvb2xjaGFpbi4NCj4gPiArICov
-DQo+ID4gKw0KPiANCj4gU28gYmxvY2sgY29tbWVudHMgb24gdG9wIG9mIGEgZnVuY3Rpb24gaW1w
-bHkgc3VtbWFyeSBvZiBmdW5jdGlvbiBldGMuDQo+IFdoYXQgeW91IGFyZSBkb2luZyBoZXJlIGlz
-IGNhbGxpbmcgb3V0IHRoZSBuZWVkIGZvciAuYmFsaWduIHF1aXJrLiBTbyBiZXR0ZXIgdG8NCj4g
-cGhyYXNlIGl0IGlzIGFzICJOb3RlIGFib3V0IC5iYWxpZ24iIGFuZCB0aGVuIGRlc2NyaWJlIHRo
-ZSB0aGluZw0KDQpPaywgd2lsbCBmaXggaW4gdjIuDQoNCj4gPiArc3RhdGljIF9fYWx3YXlzX2lu
-bGluZSBib29sIGFyY2hfc3RhdGljX2JyYW5jaChzdHJ1Y3Qgc3RhdGljX2tleSAqa2V5LA0KPiA+
-ICsJCQkJCSAgICAgICBib29sIGJyYW5jaCkNCj4gPiArew0KPiA+ICsJYXNtX3ZvbGF0aWxlX2dv
-dG8oIi5iYWxpZ24gNAkJCVxuIg0KPiA+ICsJCSAiMToJCQkJCVxuIg0KPiA+ICsJCSAibm9wCQkJ
-CQlcbiINCj4gPiArCQkgIi5wdXNoc2VjdGlvbiBfX2p1bXBfdGFibGUsIFwiYXdcIglcbiINCj4g
-PiArCQkgIi53b3JkIDFiLCAlbFtsX3llc10sICVjMAkJXG4iDQo+ID4gKwkJICIucG9wc2VjdGlv
-bgkJCQlcbiINCj4gPiArCQkgOiA6ICJpIiAoJigoY2hhciAqKWtleSlbYnJhbmNoXSkgOiA6IGxf
-eWVzKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gZmFsc2U7DQo+ID4gK2xfeWVzOg0KPiA+ICsJcmV0
-dXJuIHRydWU7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBfX2Fsd2F5c19pbmxpbmUgYm9v
-bCBhcmNoX3N0YXRpY19icmFuY2hfanVtcChzdHJ1Y3Qgc3RhdGljX2tleSAqa2V5LA0KPiA+ICsJ
-CQkJCQkgICAgYm9vbCBicmFuY2gpDQo+ID4gK3sNCj4gPiArCWFzbV92b2xhdGlsZV9nb3RvKCIu
-YmFsaWduIDQJCQlcbiINCj4gPiArCQkgIjE6CQkJCQlcbiINCj4gPiArCQkgImIgJWxbbF95ZXNd
-CQkJCVxuIg0KPiA+ICsJCSAiLnB1c2hzZWN0aW9uIF9fanVtcF90YWJsZSwgXCJhd1wiCVxuIg0K
-PiA+ICsJCSAiLndvcmQgMWIsICVsW2xfeWVzXSwgJWMwCQlcbiINCj4gPiArCQkgIi5wb3BzZWN0
-aW9uCQkJCVxuIg0KPiA+ICsJCSA6IDogImkiICgmKChjaGFyICopa2V5KVticmFuY2hdKSA6IDog
-bF95ZXMpOw0KPiA+ICsNCj4gPiArCXJldHVybiBmYWxzZTsNCj4gPiArbF95ZXM6DQo+ID4gKwly
-ZXR1cm4gdHJ1ZTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArdHlwZWRlZiB1MzIganVtcF9sYWJlbF90
-Ow0KPiA+ICsNCj4gPiArc3RydWN0IGp1bXBfZW50cnkgew0KPiA+ICsJanVtcF9sYWJlbF90IGNv
-ZGU7DQo+ID4gKwlqdW1wX2xhYmVsX3QgdGFyZ2V0Ow0KPiA+ICsJanVtcF9sYWJlbF90IGtleTsN
-Cj4gPiArfTsNCj4gPiArDQo+ID4gKyNlbmRpZiAgLyogX19BU1NFTUJMWV9fICovDQo+ID4gKyNl
-bmRpZg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FyYy9rZXJuZWwvTWFrZWZpbGUgYi9hcmNoL2Fy
-Yy9rZXJuZWwvTWFrZWZpbGUNCj4gPiBpbmRleCAyZGM1ZjQyOTZkNDQuLjMwN2Y3NDE1NmQ5OSAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FyYy9rZXJuZWwvTWFrZWZpbGUNCj4gPiArKysgYi9hcmNo
-L2FyYy9rZXJuZWwvTWFrZWZpbGUNCj4gPiBAQCAtMjIsNiArMjIsNyBAQCBvYmotJChDT05GSUdf
-QVJDX0VNVUxfVU5BTElHTkVEKSAJKz0gdW5hbGlnbmVkLm8NCj4gPiAgb2JqLSQoQ09ORklHX0tH
-REIpCQkJKz0ga2dkYi5vDQo+ID4gIG9iai0kKENPTkZJR19BUkNfTUVUQVdBUkVfSExJTkspCSs9
-IGFyY19ob3N0bGluay5vDQo+ID4gIG9iai0kKENPTkZJR19QRVJGX0VWRU5UUykJCSs9IHBlcmZf
-ZXZlbnQubw0KPiA+ICtvYmotJChDT05GSUdfSlVNUF9MQUJFTCkJCSs9IGp1bXBfbGFiZWwubw0K
-PiA+ICANCj4gPiAgb2JqLSQoQ09ORklHX0FSQ19GUFVfU0FWRV9SRVNUT1JFKQkrPSBmcHUubw0K
-PiA+ICBDRkxBR1NfZnB1Lm8gICArPSAtbWRwZnANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMv
-a2VybmVsL2p1bXBfbGFiZWwuYyBiL2FyY2gvYXJjL2tlcm5lbC9qdW1wX2xhYmVsLmMNCj4gPiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uOTNlM2JjODQyODhm
-DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJjL2tlcm5lbC9qdW1wX2xhYmVs
-LmMNCj4gPiBAQCAtMCwwICsxLDE2OCBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogR1BMLTIuMA0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPiA+ICsj
-aW5jbHVkZSA8bGludXgvanVtcF9sYWJlbC5oPg0KPiA+ICsNCj4gPiArI2luY2x1ZGUgImFzbS9j
-YWNoZWZsdXNoLmgiDQo+ID4gKw0KPiA+ICsjZGVmaW5lIEpVTVBMQUJFTF9FUlIJIkFSQzoganVt
-cF9sYWJlbDogRVJST1I6ICINCj4gPiArDQo+ID4gKy8qIEhhbHQgc3lzdGVtIG9uIGZhdGFsIGVy
-cm9yIHRvIG1ha2UgZGVidWcgZWFzaWVyICovDQo+ID4gKyNkZWZpbmUgYXJjX2psX2ZhdGFsKGZv
-cm1hdC4uLikJCQkJCQlcDQo+ID4gKyh7CQkJCQkJCQkJXA0KPiA+ICsJcHJfZXJyKEpVTVBMQUJF
-TF9FUlIgZm9ybWF0KTsJCQkJCVwNCj4gPiArCUJVRygpOwkJCQkJCQkJXA0KPiANCj4gRG9lcyBp
-dCBtYWtlIHNlbnNlIHRvIGJyaW5nIGRvd24gdGhlIHdob2xlIHN5c3RlbSB2cy4gZmFpbGluZyBh
-bmQgcmV0dXJuaW5nLg0KPiBJIHNlZSB0aGVyZSBpcyBubyBlcnJvciBwcm9wYWdhdGlvbiB0byBj
-b3JlIGNvZGUsIGJ1dCBzdGlsbC4NCg0KSSB0b3RhbGx5IGFncmVlIHdpdGggUGV0ZXIsIGFuZCBJ
-IHByZWZlciB0byBzdG9wIHRoZSBzeXN0ZW0gb24gdGhpcyBlcnJvcnMuIEhlcmUgaXMgZmV3IGFy
-Z3VtZW50czoNCkFsbCB0aGlzIGNoZWNrcyBjYW4ndCBiZSB0b2dnbGUgaW4gc3lzdGVtIG9wZXJh
-dGluZyBub3JtYWxseSBhbmQgb25seSBtYXkgYmUgY2F1c2VkIGJ5IGJhZCBjb2RlIGdlbmVyYXRp
-b24gKG9yIHNvbWUgY29kZS9kYXRhIGNvcnJ1cHRpb24pOg0KMSkgV2UgZ290IG91ciBpbnN0cnVj
-dGlvbiB0byBwYXRjaCB1bmFsaWduZWQgYnkgNCBieXRlcyAoZGVzcGl0ZSB0aGUgZmFjdCB0aGF0
-IHdlIHVzZWQgJy5iYWxpZ24gNCcgdG8gYWxpZ24gaXQpDQoyKSBXZSBnb3QgYnJhbmNoIG9mZnNl
-dCB1bmFsaWduZWQgKHdoaWNoIG1lYW5zIHRoYXQgd2UgY2FsY3VsYXRlIGl0IHdyb25nIGF0IGJ1
-aWxkIHRpbWUgb3IgY29ycnVwdCBpdCBpbiBydW4gdGltZSkNCjMpIFdlIGdvdCBicmFuY2ggb2Zm
-c2V0IHdoaWNoIG5vdCBmaXRzIGludG8gczI1LiBBcyB0aGlzIGlzIG9mZnNldCBpbnNpZGUgb25l
-IGZ1bmN0aW9uIChpbnNpZGUgb25lICdpZicgc3RhdGVtZW50IGFjdHVhbGx5KSB3ZSBuZXdlciBn
-ZXQgc3VjaCBodWdlDQpvZmZzZXQgaW4gcmVhbCBsaWZlIGlmIGNvZGUgZ2VuZXJhdGlvbiBpcyBv
-ay4NCg0KSWYgd2Ugb25seSB3YXJuIHRvIGxvZyBhbmQgcmV0dXJuIHdlIHdpbGwgZmFjZSB3aXRo
-IGNvbXByb21pc2VkIGtlcm5lbCBmbG93IGxhdGVyLg0KSS5FLiBpdCBjb3VsZCBiZSAnaWYnIHN0
-YXRlbWVudCBpbiBrZXJuZWwgdGV4dCB3aGljaCBpcyBzd2l0Y2hlZCB0byB3cm9uZyBzdGF0ZTog
-dGhlIGNvbmRpdGlvbiBpcyB0cnVlIGJ1dCB3ZSB0YWtlIHRoZSBmYWxzZSBicmFuY2guDQpBbmQg
-SXQgd2lsbCBiZSB0aGUgaXNzdWUgd2hpY2ggaXMgbXVjaCBtb3JlIGRpZmZpY3VsdCB0byBkZWJ1
-Zy4NCg0KRG9lcyBpdCBzb3VuZCByZWFzb25hYmx5Pw0KDQpJZiB5b3UgcmVhbGx5IGRvbid0IHdh
-bnQgdG8gaGF2ZSBCVUcgaGVyZSwgSSBjYW4gbWFrZSBpdCBjb25kaXRpb25hbGx5IGVuYWJsZWQN
-CmluIGRlcGVuZCBvbiBDT05GSUdfQVJDX1NUQVRJQ19LRVlTX0RFQlVHIGFzIEkgd2FudCB0byBo
-YXZlIGl0IGVuYWJsZWQgYXQgbGVhc3Qgb24gQVJDIGRldmVsb3BtZW50IHBsYXRmb3Jtcy4NCg0K
-W3NuaXBdDQotLSANCiBFdWdlbml5IFBhbHRzZXYNCg==
+17.07.2019 9:36, Sowjanya Komatineni пишет:
+> 
+> On 7/16/19 11:33 PM, Dmitry Osipenko wrote:
+>> В Tue, 16 Jul 2019 22:55:52 -0700
+>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
+>>
+>>> On 7/16/19 10:42 PM, Dmitry Osipenko wrote:
+>>>> В Tue, 16 Jul 2019 22:25:25 -0700
+>>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
+>>>>  
+>>>>> On 7/16/19 9:11 PM, Dmitry Osipenko wrote:
+>>>>>> В Tue, 16 Jul 2019 19:35:49 -0700
+>>>>>> Sowjanya Komatineni <skomatineni@nvidia.com> пишет:
+>>>>>>     
+>>>>>>> On 7/16/19 7:18 PM, Sowjanya Komatineni wrote:
+>>>>>>>> On 7/16/19 3:06 PM, Sowjanya Komatineni wrote:
+>>>>>>>>> On 7/16/19 3:00 PM, Dmitry Osipenko wrote:
+>>>>>>>>>> 17.07.2019 0:35, Sowjanya Komatineni пишет:
+>>>>>>>>>>> On 7/16/19 2:21 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>> 17.07.2019 0:12, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>> On 7/16/19 1:47 PM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>> 16.07.2019 22:26, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>> On 7/16/19 11:43 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>> 16.07.2019 21:30, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>> On 7/16/19 11:25 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>> 16.07.2019 21:19, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>>>>>>> On 7/16/19 9:50 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>>>>>>> On 7/16/19 8:00 AM, Dmitry Osipenko wrote:
+>>>>>>>>>>>>>>>>>>>>> 16.07.2019 11:06, Peter De Schrijver пишет:
+>>>>>>>>>>>>>>>>>>>>>> On Tue, Jul 16, 2019 at 03:24:26PM +0800, Joseph
+>>>>>>>>>>>>>>>>>>>>>> Lo wrote:
+>>>>>>>>>>>>>>>>>>>>>>>> OK, Will add to CPUFreq driver...
+>>>>>>>>>>>>>>>>>>>>>>>>> The other thing that also need attention is
+>>>>>>>>>>>>>>>>>>>>>>>>> that T124 CPUFreq
+>>>>>>>>>>>>>>>>>>>>>>>>> driver
+>>>>>>>>>>>>>>>>>>>>>>>>> implicitly relies on DFLL driver to be probed
+>>>>>>>>>>>>>>>>>>>>>>>>> first, which is
+>>>>>>>>>>>>>>>>>>>>>>>>> icky.
+>>>>>>>>>>>>>>>>>>>>>>>>>         
+>>>>>>>>>>>>>>>>>>>>>>>> Should I add check for successful dfll clk
+>>>>>>>>>>>>>>>>>>>>>>>> register explicitly in
+>>>>>>>>>>>>>>>>>>>>>>>> CPUFreq driver probe and defer till dfll clk
+>>>>>>>>>>>>>>>>>>>>>>>> registers?
+>>>>>>>>>>>>>>>>>>>>> Probably you should use the "device links". See
+>>>>>>>>>>>>>>>>>>>>> [1][2] for the
+>>>>>>>>>>>>>>>>>>>>> example.
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>> [1]
+>>>>>>>>>>>>>>>>>>>>> https://elixir.bootlin.com/linux/v5.2.1/source/drivers/gpu/drm/tegra/dc.c#L2383
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>> [2]
+>>>>>>>>>>>>>>>>>>>>> https://www.kernel.org/doc/html/latest/driver-api/device_link.html
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>> Return EPROBE_DEFER instead of EINVAL if
+>>>>>>>>>>>>>>>>>>>>> device_link_add() fails.
+>>>>>>>>>>>>>>>>>>>>> And
+>>>>>>>>>>>>>>>>>>>>> use of_find_device_by_node() to get the DFLL's
+>>>>>>>>>>>>>>>>>>>>> device, see [3].
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>> [3]
+>>>>>>>>>>>>>>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/devfreq/tegra20-devfreq.c#n100
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>         
+>>>>>>>>>>>>>>>>>>>> Will go thru and add...
+>>>>>>>>>>>>>>>>>> Looks like I initially confused this case with getting
+>>>>>>>>>>>>>>>>>> orphaned clock.
+>>>>>>>>>>>>>>>>>> I'm now seeing that the DFLL driver registers the
+>>>>>>>>>>>>>>>>>> clock and then
+>>>>>>>>>>>>>>>>>> clk_get(dfll) should be returning EPROBE_DEFER until
+>>>>>>>>>>>>>>>>>> DFLL driver is
+>>>>>>>>>>>>>>>>>> probed, hence everything should be fine as-is and
+>>>>>>>>>>>>>>>>>> there is no real
+>>>>>>>>>>>>>>>>>> need
+>>>>>>>>>>>>>>>>>> for the 'device link'. Sorry for the confusion!
+>>>>>>>>>>>>>>>>>>        
+>>>>>>>>>>>>>>>>>>>>>>> Sorry, I didn't follow the mail thread. Just
+>>>>>>>>>>>>>>>>>>>>>>> regarding the DFLL
+>>>>>>>>>>>>>>>>>>>>>>> part.
+>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>> As you know it, the DFLL clock is one of the CPU
+>>>>>>>>>>>>>>>>>>>>>>> clock sources and
+>>>>>>>>>>>>>>>>>>>>>>> integrated with DVFS control logic with the
+>>>>>>>>>>>>>>>>>>>>>>> regulator. We will not
+>>>>>>>>>>>>>>>>>>>>>>> switch
+>>>>>>>>>>>>>>>>>>>>>>> CPU to other clock sources once we switched to
+>>>>>>>>>>>>>>>>>>>>>>> DFLL. Because the
+>>>>>>>>>>>>>>>>>>>>>>> CPU has
+>>>>>>>>>>>>>>>>>>>>>>> been regulated by the DFLL HW with the DVFS table
+>>>>>>>>>>>>>>>>>>>>>>> (CVB or OPP
+>>>>>>>>>>>>>>>>>>>>>>> table
+>>>>>>>>>>>>>>>>>>>>>>> you see
+>>>>>>>>>>>>>>>>>>>>>>> in the driver.). We shouldn't reparent it to
+>>>>>>>>>>>>>>>>>>>>>>> other sources with
+>>>>>>>>>>>>>>>>>>>>>>> unknew
+>>>>>>>>>>>>>>>>>>>>>>> freq/volt pair. That's not guaranteed to work. We
+>>>>>>>>>>>>>>>>>>>>>>> allow switching to
+>>>>>>>>>>>>>>>>>>>>>>> open-loop mode but different sources.
+>>>>>>>>>>>>>>>>>>>>> Okay, then the CPUFreq driver will have to enforce
+>>>>>>>>>>>>>>>>>>>>> DFLL freq to
+>>>>>>>>>>>>>>>>>>>>> PLLP's
+>>>>>>>>>>>>>>>>>>>>> rate before switching to PLLP in order to have a
+>>>>>>>>>>>>>>>>>>>>> proper CPU voltage.
+>>>>>>>>>>>>>>>>>>>> PLLP freq is safe to work for any CPU voltage. So no
+>>>>>>>>>>>>>>>>>>>> need to enforce
+>>>>>>>>>>>>>>>>>>>> DFLL freq to PLLP rate before changing CCLK_G source
+>>>>>>>>>>>>>>>>>>>> to PLLP during
+>>>>>>>>>>>>>>>>>>>> suspend
+>>>>>>>>>>>>>>>>>>>>         
+>>>>>>>>>>>>>>>>>>> Sorry, please ignore my above comment. During
+>>>>>>>>>>>>>>>>>>> suspend, need to change
+>>>>>>>>>>>>>>>>>>> CCLK_G source to PLLP when dfll is in closed loop
+>>>>>>>>>>>>>>>>>>> mode first and
+>>>>>>>>>>>>>>>>>>> then
+>>>>>>>>>>>>>>>>>>> dfll need to be set to open loop.
+>>>>>>>>>>>>>>>>>> Okay.
+>>>>>>>>>>>>>>>>>>        
+>>>>>>>>>>>>>>>>>>>>>>> And I don't exactly understand why we need to
+>>>>>>>>>>>>>>>>>>>>>>> switch to PLLP in
+>>>>>>>>>>>>>>>>>>>>>>> CPU
+>>>>>>>>>>>>>>>>>>>>>>> idle
+>>>>>>>>>>>>>>>>>>>>>>> driver. Just keep it on CL-DVFS mode all the
+>>>>>>>>>>>>>>>>>>>>>>> time.
+>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>> In SC7 entry, the dfll suspend function moves it
+>>>>>>>>>>>>>>>>>>>>>>> the open-loop
+>>>>>>>>>>>>>>>>>>>>>>> mode. That's
+>>>>>>>>>>>>>>>>>>>>>>> all. The sc7-entryfirmware will handle the rest
+>>>>>>>>>>>>>>>>>>>>>>> of the sequence to
+>>>>>>>>>>>>>>>>>>>>>>> turn off
+>>>>>>>>>>>>>>>>>>>>>>> the CPU power.
+>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>> In SC7 resume, the warmboot code will handle the
+>>>>>>>>>>>>>>>>>>>>>>> sequence to
+>>>>>>>>>>>>>>>>>>>>>>> turn on
+>>>>>>>>>>>>>>>>>>>>>>> regulator and power up the CPU cluster. And leave
+>>>>>>>>>>>>>>>>>>>>>>> it on PLL_P.
+>>>>>>>>>>>>>>>>>>>>>>> After
+>>>>>>>>>>>>>>>>>>>>>>> resuming to the kernel, we re-init DFLL, restore
+>>>>>>>>>>>>>>>>>>>>>>> the CPU clock
+>>>>>>>>>>>>>>>>>>>>>>> policy (CPU
+>>>>>>>>>>>>>>>>>>>>>>> runs on DFLL open-loop mode) and then moving to
+>>>>>>>>>>>>>>>>>>>>>>> close-loop mode.
+>>>>>>>>>>>>>>>>>>>>> The DFLL is re-inited after switching CCLK to DFLL
+>>>>>>>>>>>>>>>>>>>>> parent during of
+>>>>>>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>>>>>>> early clocks-state restoring by CaR driver. Hence
+>>>>>>>>>>>>>>>>>>>>> instead of having
+>>>>>>>>>>>>>>>>>>>>> odd
+>>>>>>>>>>>>>>>>>>>>> hacks in the CaR driver, it is much nicer to have a
+>>>>>>>>>>>>>>>>>>>>> proper suspend-resume sequencing of the device
+>>>>>>>>>>>>>>>>>>>>> drivers. In this case
+>>>>>>>>>>>>>>>>>>>>> CPUFreq
+>>>>>>>>>>>>>>>>>>>>> driver is the driver that enables DFLL and switches
+>>>>>>>>>>>>>>>>>>>>> CPU to that
+>>>>>>>>>>>>>>>>>>>>> clock
+>>>>>>>>>>>>>>>>>>>>> source, which means that this driver is also should
+>>>>>>>>>>>>>>>>>>>>> be responsible for
+>>>>>>>>>>>>>>>>>>>>> management of the DFLL's state during of
+>>>>>>>>>>>>>>>>>>>>> suspend/resume process. If
+>>>>>>>>>>>>>>>>>>>>> CPUFreq driver disables DFLL during suspend and
+>>>>>>>>>>>>>>>>>>>>> re-enables it
+>>>>>>>>>>>>>>>>>>>>> during
+>>>>>>>>>>>>>>>>>>>>> resume, then looks like the CaR driver hacks around
+>>>>>>>>>>>>>>>>>>>>> DFLL are not
+>>>>>>>>>>>>>>>>>>>>> needed.
+>>>>>>>>>>>>>>>>>>>>>        
+>>>>>>>>>>>>>>>>>>>>>>> The DFLL part looks good to me. BTW, change the
+>>>>>>>>>>>>>>>>>>>>>>> patch subject to
+>>>>>>>>>>>>>>>>>>>>>>> "Add
+>>>>>>>>>>>>>>>>>>>>>>> suspend-resume support" seems more appropriate to
+>>>>>>>>>>>>>>>>>>>>>>> me.
+>>>>>>>>>>>>>>>>>>>>>> To clarify this, the sequences for DFLL use are as
+>>>>>>>>>>>>>>>>>>>>>> follows (assuming
+>>>>>>>>>>>>>>>>>>>>>> all
+>>>>>>>>>>>>>>>>>>>>>> required DFLL hw configuration has been done)
+>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>> Switch to DFLL:
+>>>>>>>>>>>>>>>>>>>>>> 0) Save current parent and frequency
+>>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
+>>>>>>>>>>>>>>>>>>>>>> 2) Enable DFLL
+>>>>>>>>>>>>>>>>>>>>>> 3) Change cclk_g parent to DFLL
+>>>>>>>>>>>>>>>>>>>>>> For OVR regulator:
+>>>>>>>>>>>>>>>>>>>>>> 4) Change PWM output pin from tristate to output
+>>>>>>>>>>>>>>>>>>>>>> 5) Enable DFLL PWM output
+>>>>>>>>>>>>>>>>>>>>>> For I2C regulator:
+>>>>>>>>>>>>>>>>>>>>>> 4) Enable DFLL I2C output
+>>>>>>>>>>>>>>>>>>>>>> 6) Program DFLL to closed loop mode
+>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>> Switch away from DFLL:
+>>>>>>>>>>>>>>>>>>>>>> 0) Change cclk_g parent to PLLP so the CPU
+>>>>>>>>>>>>>>>>>>>>>> frequency is ok for
+>>>>>>>>>>>>>>>>>>>>>> any
+>>>>>>>>>>>>>>>>>>>>>> vdd_cpu voltage
+>>>>>>>>>>>>>>>>>>>>>> 1) Program DFLL to open loop mode
+>>>>>>>>>>>>>>>>>>>>>>         
+>>>>>>>>>>>>>>>>>>> I see during switch away from DFLL (suspend), cclk_g
+>>>>>>>>>>>>>>>>>>> parent is not
+>>>>>>>>>>>>>>>>>>> changed to PLLP before changing dfll to open loop
+>>>>>>>>>>>>>>>>>>> mode.
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>> Will add this ...
+>>>>>>>>>>>>>>>>>> The CPUFreq driver switches parent to PLLP during the
+>>>>>>>>>>>>>>>>>> probe, similar
+>>>>>>>>>>>>>>>>>> should be done on suspend.
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> I'm also wondering if it's always safe to switch to
+>>>>>>>>>>>>>>>>>> PLLP in the probe.
+>>>>>>>>>>>>>>>>>> If CPU is running on a lower freq than PLLP, then some
+>>>>>>>>>>>>>>>>>> other more
+>>>>>>>>>>>>>>>>>> appropriate intermediate parent should be selected.
+>>>>>>>>>>>>>>>>>>         
+>>>>>>>>>>>>>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always
+>>>>>>>>>>>>>>>>> runs at higher
+>>>>>>>>>>>>>>>>> rate
+>>>>>>>>>>>>>>>>> so switching to PLL_P during CPUFreq probe prior to
+>>>>>>>>>>>>>>>>> dfll clock enable
+>>>>>>>>>>>>>>>>> should be safe.
+>>>>>>>>>>>>>>>> AFAIK, PLLX could run at ~200MHz. There is also a
+>>>>>>>>>>>>>>>> divided output of
+>>>>>>>>>>>>>>>> PLLP
+>>>>>>>>>>>>>>>> which CCLKG supports, the PLLP_OUT4.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Probably, realistically, CPU is always running off a
+>>>>>>>>>>>>>>>> fast PLLX during
+>>>>>>>>>>>>>>>> boot, but I'm wondering what may happen on KEXEC. I
+>>>>>>>>>>>>>>>> guess ideally CPUFreq driver should also have a
+>>>>>>>>>>>>>>>> 'shutdown' callback to teardown DFLL
+>>>>>>>>>>>>>>>> on a reboot, but likely that there are other
+>>>>>>>>>>>>>>>> clock-related problems as
+>>>>>>>>>>>>>>>> well that may break KEXEC and thus it is not very
+>>>>>>>>>>>>>>>> important at the
+>>>>>>>>>>>>>>>> moment.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> [snip]
+>>>>>>>>>>>>>>> During bootup CPUG sources from PLL_X. By PLL_P source
+>>>>>>>>>>>>>>> above I meant
+>>>>>>>>>>>>>>> PLL_P_OUT4.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> As per clock policies, PLL_X is always used for high freq
+>>>>>>>>>>>>>>> like
+>>>>>>>>>>>>>>>> 800Mhz
+>>>>>>>>>>>>>>> and for low frequency it will be sourced from PLLP.
+>>>>>>>>>>>>>> Alright, then please don't forget to pre-initialize
+>>>>>>>>>>>>>> PLLP_OUT4 rate to a
+>>>>>>>>>>>>>> reasonable value using tegra_clk_init_table or
+>>>>>>>>>>>>>> assigned-clocks.
+>>>>>>>>>>>>> PLLP_OUT4 rate update is not needed as it is safe to run at
+>>>>>>>>>>>>> 408Mhz because it is below fmax @ Vmin
+>>>>>>>>>>>> So even 204MHz CVB entries are having the same voltage as
+>>>>>>>>>>>> 408MHz, correct? It's not instantly obvious to me from the
+>>>>>>>>>>>> DFLL driver's code where the fmax @ Vmin is defined, I see
+>>>>>>>>>>>> that there is the min_millivolts
+>>>>>>>>>>>> and frequency entries starting from 204MHZ defined
+>>>>>>>>>>>> per-table.
+>>>>>>>>>>> Yes at Vmin CPU Fmax is ~800Mhz. So anything below that will
+>>>>>>>>>>> work at Vmin voltage and PLLP max is 408Mhz.
+>>>>>>>>>> Thank you for the clarification. It would be good to have that
+>>>>>>>>>> commented
+>>>>>>>>>> in the code as well.
+>>>>>>>>> OK, Will add...
+>>>>>>>> Regarding, adding suspend/resume to CPUFreq, CPUFreq suspend
+>>>>>>>> happens very early even before disabling non-boot CPUs and also
+>>>>>>>> need to export clock driver APIs to CPUFreq.
+>>>>>>>>
+>>>>>>>> Was thinking of below way of implementing this...
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Clock DFLL driver Suspend:
+>>>>>>>>
+>>>>>>>>            - Save CPU clock policy registers, and Perform dfll
+>>>>>>>> suspend which sets in open loop mode
+>>>>>>>>
+>>>>>>>> CPU Freq driver Suspend: does nothing
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Clock DFLL driver Resume:
+>>>>>>>>
+>>>>>>>>            - Re-init DFLL, Set in Open-Loop mode, restore CPU
+>>>>>>>> Clock policy registers which actually sets source to DFLL along
+>>>>>>>> with other CPU Policy register restore.
+>>>>>>>>
+>>>>>>>> CPU Freq driver Resume:
+>>>>>>>>
+>>>>>>>>            - do clk_prepare_enable which acutally sets DFLL in
+>>>>>>>> Closed loop mode
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Adding one more note: Switching CPU Clock to PLLP is not needed
+>>>>>>>> as CPU CLock can be from dfll in open-loop mode as DFLL is not
+>>>>>>>> disabled anywhere throught the suspend/resume path and SC7 entry
+>>>>>>>> FW and Warm boot code will switch CPU source to PLLP.
+>>>>>> Since CPU resumes on PLLP, it will be cleaner to suspend it on
+>>>>>> PLLP as well. And besides, seems that currently disabling DFLL
+>>>>>> clock will disable DFLL completely and then you'd want to re-init
+>>>>>> the DFLL on resume any ways. So better to just disable DFLL
+>>>>>> completely on suspend, which should happen on clk_disable(dfll).
+>>>>> Will switch to PLLP during CPUFreq suspend. With decision of using
+>>>>> clk_disable during suspend, its mandatory to switch to PLLP as DFLL
+>>>>> is completely disabled.
+>>>>>
+>>>>> My earlier concern was on restoring CPU policy as we can't do that
+>>>>> from CPUFreq driver and need export from clock driver.
+>>>>>
+>>>>> Clear now and will do CPU clock policy restore in after dfll
+>>>>> re-init.
+>>>> Why the policy can't be saved/restored by the CaR driver as a
+>>>> context of any other clock?
+>>> restoring cpu clock policy involves programming source and
+>>> super_cclkg_divider.
+>>>
+>>> cclk_g is registered as clk_super_mux and it doesn't use frac_div ops
+>>> to do save/restore its divider.
+>> That can be changed of course and I guess it also could be as simple as
+>> saving and restoring of two raw u32 values of the policy/divider
+>> registers.
+>>
+>>> Also, during clock context we cant restore cclk_g as cclk_g source
+>>> will be dfll and dfll will not be resumed/re-initialized by the time
+>>> clk_super_mux save/restore happens.
+>>>
+>>> we can't use save/restore context for dfll clk_ops because
+>>> dfllCPU_out parent to CCLK_G is first in the clock tree and dfll_ref
+>>> and dfll_soc peripheral clocks are not restored by the time dfll
+>>> restore happens. Also dfll peripheral clock enables need to be
+>>> restored before dfll restore happens which involves programming dfll
+>>> controller for re-initialization.
+>>>
+>>> So dfll resume/re-init is done in clk-tegra210 at end of all clocks
+>>> restore in V5 series but instead of in clk-tegra210 driver I moved
+>>> now to dfll-fcpu driver pm_ops as all dfll dependencies will be
+>>> restored thru clk_restore_context by then. This will be in V6.
+>> Since DFLL is now guaranteed to be disabled across CaR suspend/resume
+>> (hence it has nothing to do in regards to CCLK) and given that PLLs
+>> state is restored before the rest of the clocks, I don't see why not to
+>> implement CCLK save/restore in a generic fasion. CPU policy wull be
+>> restored to either PLLP or PLLX (if CPUFreq driver is disabled).
+>>
+> CCLK_G save/restore should happen in clk_super_mux ops save/context and
+> clk_super_mux save/restore happens very early as cclk_g is first in the
+> clock tree and save/restore traverses through the tree top-bottom order.
+
+If CCLK_G is restored before the PLLs, then just change the clocks order
+such that it won't happen.
+
+> DFLL enable thru CPUFreq resume happens after all clk_restore_context
+> happens. So during clk_restore_context, dfll re-init doesnt happen and
+> doing cpu clock policy restore during super_mux clk_ops will crash as
+> DFLL is not initialized and its clock is not enabled but CPU clock
+> restore sets source to DFLL if we restore during super_clk_mux
+
+If CPU was suspended on PLLP, then it will be restored on PLLP by CaR. I
+don't understand what DFLL has to do with the CCLK in that case during
+the clocks restore.
