@@ -2,85 +2,131 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E45C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14629C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC1A2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83682077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKc7/n9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfGQIxi (ORCPT
+        id S1728566AbfGQIxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:53:38 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:35122 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfGQIxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:53:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 7F5C0201AE;
-        Wed, 17 Jul 2019 10:53:36 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XTJfI7HmDPTO; Wed, 17 Jul 2019 10:53:35 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id D995320189;
-        Wed, 17 Jul 2019 10:53:35 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 17 Jul 2019
- 10:53:36 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 8B819318055E;
- Wed, 17 Jul 2019 10:53:35 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 10:53:35 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        <andrea.parri@amarulasolutions.com>, <boqun.feng@gmail.com>,
-        <paulmck@linux.ibm.com>, <peterz@infradead.org>,
-        <linux-arch@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] padata: Use RCU when fetching pd from do_serial
-Message-ID: <20190717085335.GR17989@gauss3.secunet.de>
-References: <20190712101012.GW14601@gauss3.secunet.de>
- <20190712160737.iniaaxlsnhs6azg5@ca-dmjordan1.us.oracle.com>
- <20190713050321.c5wq7a7jrb6q2pxn@gondor.apana.org.au>
- <20190715161045.zqwgsp62uqjnvx3l@ca-dmjordan1.us.oracle.com>
- <20190716100447.pdongriwwfxsuajf@gondor.apana.org.au>
- <20190716111410.GN17989@gauss3.secunet.de>
- <20190716125704.l2jolyyd3bue6hhn@gondor.apana.org.au>
- <20190716130928.ga4acvxipsdzyzlp@gondor.apana.org.au>
- <20190717082815.GP17989@gauss3.secunet.de>
- <20190717084739.35evhqushmjejmmq@gondor.apana.org.au>
+        Wed, 17 Jul 2019 04:53:45 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34034 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbfGQIxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 04:53:44 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p17so22828978ljg.1;
+        Wed, 17 Jul 2019 01:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QcbKPxVwtatmJY3AjWYhH7cBiQwwWyAzrWPhCcC06hs=;
+        b=mKc7/n9j44bgxhAFUB6RMzVoM7wReNc/CXUxq7NMCHtIOyeRfxN21HqKuoESCXewIe
+         qnc5nAsWRLlJffUeCN8NDp6kXJhTTIUA/zoi8wouTsPQOdKoIuciZpt6IE2HpgxNcImK
+         +USTvtiwp/KvlciNssCTZGrSWbnIvLWNuM9nEp/3XOKFaTslIEXxHqRlN0GSscLjiJEW
+         tHgNq4CV81E3/L3oas1463yagLrBztLQuQ6TGi2ptNcPZI5d1WKLdR/bjVrgiKXm6n8h
+         cA0dCs0n0cffiBLGXRQmXXfU6NluJBYGz9t21fenVZaZOX/hcHMH3mxTwaYBD97mc8lV
+         opRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QcbKPxVwtatmJY3AjWYhH7cBiQwwWyAzrWPhCcC06hs=;
+        b=evEwfk3euPma+nWQt6CGGHkDbguk1B3V7m8zupezWYWgWOPd8awDZgwVn1Oov3yL1t
+         ouqKbY1V5ukpoJnnSN2kvO60HYF8ECZ4UqP8IOt4q8n7y5+rMz04P1jzz5NnZmujkrZU
+         QLqB+dfHTop7ZglgqopoAlHbYreVcbTXkf7UTY62LOgdJAW08x9aWASnx66768BGT6WO
+         O5RKZ54sbNVw2hHaxVr1c8LSyIL4R9yibx+o6nfNQdqfPubHQBFoLEV7+wGdhbGQeLDS
+         X+J4RUl0k7nE43zPN9SdC+DgzniJZi2TdVqHdgMN06Ww0wiZE3IOflXeqc8FynAvzXLn
+         gZzA==
+X-Gm-Message-State: APjAAAVEj5/aVvvDs8WS/3w7wXHP5gJxD4nbazL258j5ea0sxul6w2/i
+        8rM6XwAWIgXTsd//Ed0C7ykbv6rn8vQ=
+X-Google-Smtp-Source: APXvYqyKL3ejFcIvM1Z95+BRfMICIJyTzccMrtIq+j9NWcL70es2LK6VfpjCcDIb7BtFCwWrZzeL/A==
+X-Received: by 2002:a2e:93c8:: with SMTP id p8mr19997872ljh.6.1563353621760;
+        Wed, 17 Jul 2019 01:53:41 -0700 (PDT)
+Received: from localhost ([188.170.223.67])
+        by smtp.gmail.com with ESMTPSA id e12sm3287047lfb.66.2019.07.17.01.53.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jul 2019 01:53:41 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 11:53:38 +0300
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] input: touchscreen mc13xxx: Add mc34708 support
+Message-ID: <20190717085338.GA581@penguin>
+References: <20190716221929.3782-1-lukma@denx.de>
+ <20190716221929.3782-4-lukma@denx.de>
+ <20190717033655.GC621@penguin>
+ <20190717101704.2ff4d877@jawa>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190717084739.35evhqushmjejmmq@gondor.apana.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+In-Reply-To: <20190717101704.2ff4d877@jawa>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 04:47:40PM +0800, Herbert Xu wrote:
-> On Wed, Jul 17, 2019 at 10:28:15AM +0200, Steffen Klassert wrote:
-> >
-> > I had a patch to support crypto backlog some years ago,
-> > but testing with dm-crypt did not show any performance
-> > improvement. So I decided to just skip that patch because
-> > it added code for no need.
+Hi Lukasz,
+
+On Wed, Jul 17, 2019 at 10:17:04AM +0200, Lukasz Majewski wrote:
+> Hi Dmitry,
 > 
-> Well pcrypt is part of the API so it needs to obey the rules.
-> So even if it wouldn't make sense to use dm-crypt with pcrypt
-> it still needs to do the right thing.
+> > On Wed, Jul 17, 2019 at 12:19:29AM +0200, Lukasz Majewski wrote:
+> > > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > > 
+> > > The mc34708 has a different bit to enable pen detection. This
+> > > adds the driver data and devtype necessary to probe the device
+> > > and to distinguish between the mc13783 and the mc34708.
+> > > 
+> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > 
+> > > ---
+> > > Changes for v3:
+> > > - Replace forward declaration of mc13xxx_driver_data with
+> > >   structure definition
+> > > - Rename mc13xxx_driver_data with mc13xxx_chip
+> > > - Move static struct mc13xxx_chip mc13783_chip and mc34708_chip
+> > >   closer to ID table
+> > > - Do not check mc13xxx device type  
+> > 
+> > You do not even need to define or store the type. Once it is dropped
+> > please feel free to add
+> 
+> Ok. I will remove the type definition.
+> 
+> > 
+> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > 
+> > and merge with the other 2 patches.
+> > 
+> 
+> Ok. I will squash those three patches into a single one, add your
+> Acked-by and wait for Lee to pull this single patch to his MFD tree.
 
-Ok, makes sense. The old patch still exists:
+Sorry, it looks like there is misunderstanding. I did not ask to squash
+together the 3 patches, I meant that they can all go together through
+the same tree (MFD). That is what I meant by them being merged together.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/klassert/linux-stk.git/commit/?h=net-next-pcrypt&id=5909a88ccef6f4c78fe9969160155a8f0ce8fee7
+Sorry for being unclear.
 
-Let me see if I can respin it...
+Thanks.
+
+-- 
+Dmitry
