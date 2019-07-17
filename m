@@ -2,215 +2,111 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE38C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6195C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F6E2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWrcoX9t"
+	by mail.kernel.org (Postfix) with ESMTP id 806FD2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbfGQLsp (ORCPT
+        id S1731446AbfGQLuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:48:45 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40152 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfGQLso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:48:44 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so11046987pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:48:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IX1oEKhWMcbZ3ftDa5lhCYFdP6n0csBetOxwFU3RYp8=;
-        b=FWrcoX9tCqnjF6fms56lVrS+b6oK2EEjPMoGVMBlr7D4Q099BprcDD2PDRq/l13OR3
-         zBU1baA2oyQbtWYUkxzvNgePX8rqn8sO7Ngyl+ukSJXLzzJC7vKT4R2uCa+2ZThJxJx2
-         q/u3ReCF6FVVuNxtfn63IszRerJn/XFhKyrd9aJqigBc/7wjAdAp0IifB/rGyU/g3rAa
-         AjGPsmWeuumoOrvyZ/Xm0SSK8lekd293oy7+lOJuJ8Uf2TmxD2pH/Kn2QhI0zORpGzRY
-         1y4GfXKYWKd8Cu+O+Mt1eIHOthNyS8bIJp9uTWOH4UdjxJ3CdfXuQ6aNeodmdS7ZQw2w
-         WjZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IX1oEKhWMcbZ3ftDa5lhCYFdP6n0csBetOxwFU3RYp8=;
-        b=ZpSG6TX4in3jtJIIgzpiMm0HvkccVOD+1vdpRkIQfrdTKRWz1MX4c21q7SCsOwQe0p
-         IYcIN7dKtoO4zBF1cY7wos/82nqhuvZ2PJsiIE6JNt2cvwkHeKBnoJje5iuvbqJash16
-         /+njtpIv6WvA5bpMAJytMiXkuE7hMGsgXlb8WQ2v9RA7WG84oeFG1PZTZaefNHPfLTL1
-         7AP7d59P5teYCfwqb1WeTS2xvbQRF9Y2k9MbQmUJYmSG8/sLbF6f787UsRC5m+UoFmax
-         moU33TS0D7TDUwVbw0Q08Q8Wagi2S6E+MdNuiUFghaOYNon/BotgzUlohul3MzfOJuPu
-         BFSw==
-X-Gm-Message-State: APjAAAXAd5eghnarkrigui895lV9WaVAett3PQBjyw/MxI5c/IBeJ58A
-        26vCx16FpsFM8WdOjdhuCkMVlAS0jz+79igofTp//A==
-X-Google-Smtp-Source: APXvYqzm84uaNKukWdMrxaNW5HMVvKm5YJnrbNb8pYtDjKLTdFo76TKc18tucDMSzlTHxjR2vxi9m+SoB7VXfMmFtsw=
-X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr43106787pjp.47.1563364123675;
- Wed, 17 Jul 2019 04:48:43 -0700 (PDT)
+        Wed, 17 Jul 2019 07:50:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45510 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfGQLuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 07:50:03 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CF44C309174E;
+        Wed, 17 Jul 2019 11:50:02 +0000 (UTC)
+Received: from localhost (dhcp-192-232.str.redhat.com [10.33.192.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 72A4B5D720;
+        Wed, 17 Jul 2019 11:50:00 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH] vfio: re-arrange vfio region definitions
+Date:   Wed, 17 Jul 2019 13:49:56 +0200
+Message-Id: <20190717114956.16263-1-cohuck@redhat.com>
 MIME-Version: 1.0
-References: <000000000000a55d7d058d51ad4f@google.com> <CACRpkdYbuJ_yJ+UKtvWrkmBCbQzfk-1mn1-A836dkNMrmTtZow@mail.gmail.com>
- <20190717091621.GC16694@localhost>
-In-Reply-To: <20190717091621.GC16694@localhost>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 17 Jul 2019 13:48:32 +0200
-Message-ID: <CAAeHK+x4KAy2koonjij26iowtPuj67F=Mx+g0kYF968Zr-h8xg@mail.gmail.com>
-Subject: Re: WARNING in gpio_to_desc
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        syzbot <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com>,
-        Vincent Cuissard <cuissard@marvell.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Samuel Ortiz <sameo@linux.intel.com>
-Content-Type: multipart/mixed; boundary="0000000000003f9b95058ddf1388"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 17 Jul 2019 11:50:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003f9b95058ddf1388
-Content-Type: text/plain; charset="UTF-8"
+It is easy to miss already defined region types. Let's re-arrange
+the definitions a bit and add more comments to make it hopefully
+a bit clearer.
 
-On Wed, Jul 17, 2019 at 11:16 AM Johan Hovold <johan@kernel.org> wrote:
->
-> On Tue, Jul 16, 2019 at 11:52:19PM +0200, Linus Walleij wrote:
-> > On Wed, Jul 10, 2019 at 1:07 PM syzbot
-> > <syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com> wrote:
-> >
-> > > HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
-> > (...)
-> > >   __gpio_set_value include/asm-generic/gpio.h:104 [inline]
-> > >   gpio_set_value include/linux/gpio.h:71 [inline]
-> > >   nfcmrvl_chip_halt+0x4e/0x70 drivers/nfc/nfcmrvl/main.c:259
-> > >   nfcmrvl_nci_register_dev+0x2d4/0x378 drivers/nfc/nfcmrvl/main.c:176
-> > >   nfcmrvl_probe+0x4e9/0x5e0 drivers/nfc/nfcmrvl/usb.c:344
-> >
-> > This bug is somewhere in the drivers/nfc/nfcmrvl* code handling
-> > GPIOs.
->
-> Right, and it's my bug.
->
-> > It should be converted to GPIO descriptors and fixed up, see
-> > drivers/gpio/TODO for details on how to do this.
->
-> Conversion will have to wait, let's fix the regression first. :)
->
-> > Johan/Vincent, tell me if you want me to forward the full fuzzing
-> > robot crash dump.
->
-> No need, thanks. I got it the report.
->
-> Something like the below compiles and should fix it. Vacation starts
-> today so I'll revisit and send a proper patch in a couple of weeks.
->
-> Perhaps someone can feed it to the bot meanwhile (no time to play with
-> it right now).
+No functional change.
 
-#syz test: https://github.com/google/kasan.git usb-fuzzer
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
+ include/uapi/linux/vfio.h | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
->
-> Note that this issue has been there since 4.12, so guess no one uses
-> these devices...
->
-> Johan
->
->
-> From e9d9d0ef5ffd6b306cffb2f4e2514f503aa626a5 Mon Sep 17 00:00:00 2001
-> From: Johan Hovold <johan@kernel.org>
-> Date: Wed, 17 Jul 2019 11:07:13 +0200
-> Subject: [PATCH] NFC: nfcmrvl: fix gpio-handling regression
->
-> FIXME
->
-> Fixes: e33a3f84f88f ("NFC: nfcmrvl: allow gpio 0 for reset signalling")
-> Not-Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  drivers/nfc/nfcmrvl/main.c | 4 ++--
->  drivers/nfc/nfcmrvl/usb.c  | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
-> index e65d027b91fa..529be35ac178 100644
-> --- a/drivers/nfc/nfcmrvl/main.c
-> +++ b/drivers/nfc/nfcmrvl/main.c
-> @@ -244,7 +244,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
->         /* Reset possible fault of previous session */
->         clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
->
-> -       if (priv->config.reset_n_io) {
-> +       if (gpio_is_valid(priv->config.reset_n_io)) {
->                 nfc_info(priv->dev, "reset the chip\n");
->                 gpio_set_value(priv->config.reset_n_io, 0);
->                 usleep_range(5000, 10000);
-> @@ -255,7 +255,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
->
->  void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
->  {
-> -       if (priv->config.reset_n_io)
-> +       if (gpio_is_valid(priv->config.reset_n_io))
->                 gpio_set_value(priv->config.reset_n_io, 0);
->  }
->
-> diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
-> index 945cc903d8f1..888e298f610b 100644
-> --- a/drivers/nfc/nfcmrvl/usb.c
-> +++ b/drivers/nfc/nfcmrvl/usb.c
-> @@ -305,6 +305,7 @@ static int nfcmrvl_probe(struct usb_interface *intf,
->
->         /* No configuration for USB */
->         memset(&config, 0, sizeof(config));
-> +       config.reset_n_io = -EINVAL;
->
->         nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
->
-> --
-> 2.22.0
->
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 8f10748dac79..d9bcf40240be 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -295,15 +295,23 @@ struct vfio_region_info_cap_type {
+ 	__u32 subtype;	/* type specific */
+ };
+ 
++/*
++ * List of region types, global per bus driver.
++ * If you introduce a new type, please add it here.
++ */
++
++/* PCI region type containing a PCI vendor part */
+ #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE	(1 << 31)
+ #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
++#define VFIO_REGION_TYPE_GFX                    (1)
++#define VFIO_REGION_TYPE_CCW			(2)
+ 
+-/* 8086 Vendor sub-types */
++/* 8086 vendor PCI sub-types */
+ #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION	(1)
+ #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG	(2)
+ #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG	(3)
+ 
+-#define VFIO_REGION_TYPE_GFX                    (1)
++/* GFX sub-types */
+ #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+ 
+ /**
+@@ -353,20 +361,17 @@ struct vfio_region_gfx_edid {
+ #define VFIO_DEVICE_GFX_LINK_STATE_DOWN  2
+ };
+ 
+-#define VFIO_REGION_TYPE_CCW			(2)
+ /* ccw sub-types */
+ #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD	(1)
+ 
++/* 10de vendor PCI sub-types */
+ /*
+- * 10de vendor sub-type
+- *
+  * NVIDIA GPU NVlink2 RAM is coherent RAM mapped onto the host address space.
+  */
+ #define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM	(1)
+ 
++/* 1014 vendor PCI sub-types*/
+ /*
+- * 1014 vendor sub-type
+- *
+  * IBM NPU NVlink2 ATSD (Address Translation Shootdown) register of NPU
+  * to do TLB invalidation on a GPU.
+  */
+-- 
+2.20.1
 
---0000000000003f9b95058ddf1388
-Content-Type: text/x-patch; charset="US-ASCII"; name="usb-gpio.patch"
-Content-Disposition: attachment; filename="usb-gpio.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jy76mgo90>
-X-Attachment-Id: f_jy76mgo90
-
-RnJvbSBlOWQ5ZDBlZjVmZmQ2YjMwNmNmZmIyZjRlMjUxNGY1MDNhYTYyNmE1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBKb2hhbiBIb3ZvbGQgPGpvaGFuQGtlcm5lbC5vcmc+CkRhdGU6
-IFdlZCwgMTcgSnVsIDIwMTkgMTE6MDc6MTMgKzAyMDAKU3ViamVjdDogW1BBVENIXSBORkM6IG5m
-Y21ydmw6IGZpeCBncGlvLWhhbmRsaW5nIHJlZ3Jlc3Npb24KCkZJWE1FCgpGaXhlczogZTMzYTNm
-ODRmODhmICgiTkZDOiBuZmNtcnZsOiBhbGxvdyBncGlvIDAgZm9yIHJlc2V0IHNpZ25hbGxpbmci
-KQpOb3QtU2lnbmVkLW9mZi1ieTogSm9oYW4gSG92b2xkIDxqb2hhbkBrZXJuZWwub3JnPgotLS0K
-IGRyaXZlcnMvbmZjL25mY21ydmwvbWFpbi5jIHwgNCArKy0tCiBkcml2ZXJzL25mYy9uZmNtcnZs
-L3VzYi5jICB8IDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZmMvbmZjbXJ2bC9tYWluLmMgYi9kcml2ZXJz
-L25mYy9uZmNtcnZsL21haW4uYwppbmRleCBlNjVkMDI3YjkxZmEuLjUyOWJlMzVhYzE3OCAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9uZmMvbmZjbXJ2bC9tYWluLmMKKysrIGIvZHJpdmVycy9uZmMvbmZj
-bXJ2bC9tYWluLmMKQEAgLTI0NCw3ICsyNDQsNyBAQCB2b2lkIG5mY21ydmxfY2hpcF9yZXNldChz
-dHJ1Y3QgbmZjbXJ2bF9wcml2YXRlICpwcml2KQogCS8qIFJlc2V0IHBvc3NpYmxlIGZhdWx0IG9m
-IHByZXZpb3VzIHNlc3Npb24gKi8KIAljbGVhcl9iaXQoTkZDTVJWTF9QSFlfRVJST1IsICZwcml2
-LT5mbGFncyk7CiAKLQlpZiAocHJpdi0+Y29uZmlnLnJlc2V0X25faW8pIHsKKwlpZiAoZ3Bpb19p
-c192YWxpZChwcml2LT5jb25maWcucmVzZXRfbl9pbykpIHsKIAkJbmZjX2luZm8ocHJpdi0+ZGV2
-LCAicmVzZXQgdGhlIGNoaXBcbiIpOwogCQlncGlvX3NldF92YWx1ZShwcml2LT5jb25maWcucmVz
-ZXRfbl9pbywgMCk7CiAJCXVzbGVlcF9yYW5nZSg1MDAwLCAxMDAwMCk7CkBAIC0yNTUsNyArMjU1
-LDcgQEAgdm9pZCBuZmNtcnZsX2NoaXBfcmVzZXQoc3RydWN0IG5mY21ydmxfcHJpdmF0ZSAqcHJp
-dikKIAogdm9pZCBuZmNtcnZsX2NoaXBfaGFsdChzdHJ1Y3QgbmZjbXJ2bF9wcml2YXRlICpwcml2
-KQogewotCWlmIChwcml2LT5jb25maWcucmVzZXRfbl9pbykKKwlpZiAoZ3Bpb19pc192YWxpZChw
-cml2LT5jb25maWcucmVzZXRfbl9pbykpCiAJCWdwaW9fc2V0X3ZhbHVlKHByaXYtPmNvbmZpZy5y
-ZXNldF9uX2lvLCAwKTsKIH0KIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZmMvbmZjbXJ2bC91c2Iu
-YyBiL2RyaXZlcnMvbmZjL25mY21ydmwvdXNiLmMKaW5kZXggOTQ1Y2M5MDNkOGYxLi44ODhlMjk4
-ZjYxMGIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmZjL25mY21ydmwvdXNiLmMKKysrIGIvZHJpdmVy
-cy9uZmMvbmZjbXJ2bC91c2IuYwpAQCAtMzA1LDYgKzMwNSw3IEBAIHN0YXRpYyBpbnQgbmZjbXJ2
-bF9wcm9iZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwKIAogCS8qIE5vIGNvbmZpZ3VyYXRp
-b24gZm9yIFVTQiAqLwogCW1lbXNldCgmY29uZmlnLCAwLCBzaXplb2YoY29uZmlnKSk7CisJY29u
-ZmlnLnJlc2V0X25faW8gPSAtRUlOVkFMOwogCiAJbmZjX2luZm8oJnVkZXYtPmRldiwgImludGYg
-JXAgaWQgJXBcbiIsIGludGYsIGlkKTsKIAotLSAKMi4yMi4wCg==
---0000000000003f9b95058ddf1388--
