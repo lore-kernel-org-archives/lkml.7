@@ -2,307 +2,136 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFCBC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FAFC76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDD821871
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563322538;
-	bh=VWazqoqxzRcg9+xvQ08CTUhXDgkOfK9yOjMAWZaWwNc=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=sBzj/O6GGynK0RFK4mQw2qU8Aww0GjDXtrkNot2BA7P1EeetR7iOB0ATNDWfhUFRQ
-	 676M8tkWPUqpkwuJEJ0FoHgr0Nw2OBQ4flUGVLDq4SC0GDkwBdLI64jjFJLreCx584
-	 HRUzrR7QZ2lLuqcLrQc3Gti7WenAcQiUFya6Vj+g=
+	by mail.kernel.org (Postfix) with ESMTP id 606F521850
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:15:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h8ViET5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389061AbfGQAPh (ORCPT
+        id S2389087AbfGQAPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 20:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbfGQAPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 20:15:36 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A712184E;
-        Wed, 17 Jul 2019 00:15:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563322535;
-        bh=VWazqoqxzRcg9+xvQ08CTUhXDgkOfK9yOjMAWZaWwNc=;
-        h=Date:From:To:Subject:From;
-        b=ZfXxA78hwAdFsushpnuxaKVDTdmfXDS6J8xfa/uYtNrA3sqqb0MtVdKGZTYJshf4I
-         NHl4D9KYNCoczL+XZfeGCpN8HmErEzHfOA99K3SXTzb12MAbP61Bo8NNg40jtYyrUf
-         PcsS702PZwHntB66gXFmkD4Qj6NwmyQAjL8HrY9I=
-Date:   Tue, 16 Jul 2019 17:15:34 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject:  mmotm 2019-07-16-17-14 uploaded
-Message-ID: <20190717001534.83sL1%akpm@linux-foundation.org>
-User-Agent: s-nail v14.9.10
+        Tue, 16 Jul 2019 20:15:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17076 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728597AbfGQAPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 20:15:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d2e68a90000>; Tue, 16 Jul 2019 17:15:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 16 Jul 2019 17:15:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 16 Jul 2019 17:15:39 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
+ 2019 00:15:39 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jul
+ 2019 00:15:35 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 17 Jul 2019 00:15:34 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d2e68a60000>; Tue, 16 Jul 2019 17:15:34 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        "Pekka Enberg" <penberg@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Andrey Ryabinin" <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 1/3] mm: document zone device struct page reserved fields
+Date:   Tue, 16 Jul 2019 17:14:44 -0700
+Message-ID: <20190717001446.12351-2-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190717001446.12351-1-rcampbell@nvidia.com>
+References: <20190717001446.12351-1-rcampbell@nvidia.com>
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563322537; bh=n97TMr2JNhrSZ7vCgIqLLYdPmnZDRy5pEGPbgjYfhkI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Type:Content-Transfer-Encoding;
+        b=h8ViET5nQwShosN/h1iEpWwaV7U1MHGQpL145RrpAfBB7pb/hc+UNknepxfXQ+2/i
+         J+K60wFo6SunE78IG0A0ZSAQQeHwH/iXCHjF1/BHYLCYl3qTA94/TYq7La3Xwhx6OP
+         gIEoMP9B+YfuGPWfz589qTOokW9//Lnvs9yq4U6FNVX3dULjF7MDdxO3WjRTLpsJsk
+         tWfbqPbketRhICohw8wN/hPjyiSo5iFqWRtGTPq5HVuEdlwUaI8dNzNaW/yvih5paC
+         odsBDvIHPlG1zU/ocufSij+Hmh0IUQJWk1lLgIl95Wsxl/xkTE8AzjnLcE1crREseF
+         Cd6FZowRbWTkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-07-16-17-14 has been uploaded to
+Struct page for ZONE_DEVICE private pages uses the reserved fields when
+anonymous pages are migrated to device private memory. This is so
+the page->mapping and page->index fields are preserved and the page can
+be migrated back to system memory.
+Document this in comments so it is more clear.
 
-   http://www.ozlabs.org/~akpm/mmotm/
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Cc: Matthew Wilcox <mawilcox@microsoft.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ include/linux/mm_types.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-mmotm-readme.txt says
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 3a37a89eb7a7..d6ea74e20306 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -159,7 +159,14 @@ struct page {
+ 			/** @pgmap: Points to the hosting device page map. */
+ 			struct dev_pagemap *pgmap;
+ 			void *zone_device_data;
+-			unsigned long _zd_pad_1;	/* uses mapping */
++			/*
++			 * The following fields are used to hold the source
++			 * page anonymous mapping information while it is
++			 * migrated to device memory. See migrate_page().
++			 */
++			unsigned long _zd_pad_1;	/* aliases mapping */
++			unsigned long _zd_pad_2;	/* aliases index */
++			unsigned long _zd_pad_3;	/* aliases private */
+ 		};
+=20
+ 		/** @rcu_head: You can use this to free a page by RCU. */
+--=20
+2.20.1
 
-README for mm-of-the-moment:
-
-http://www.ozlabs.org/~akpm/mmotm/
-
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
-
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
-
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
-
-
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is available at
-
-	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
-
-and use of this tree is similar to
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
-
-
-This mmotm tree contains the following patches against 5.2:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* mm-z3foldc-dont-try-to-use-buddy-slots-after-free.patch
-* thp-fix-unused-shmem_parse_huge-function-warning.patch
-* lib-mpi-fix-building-with-32-bit-x86.patch
-* slab-work-around-clang-bug-42570.patch
-* mm-cma-fix-a-typo-alloc_cma-cma_alloc-in-cma_release-comments.patch
-* mm-z3foldc-allow-__gfp_highmem-in-z3fold_alloc.patch
-* mm-memcontrol-keep-local-vm-counters-in-sync-with-the-hierarchical-ones.patch
-* mm-vmscan-add-a-new-member-reclaim_state-in-struct-shrink_control.patch
-* mm-vmscan-calculate-reclaimed-slab-caches-in-all-reclaim-paths.patch
-* mm-vmscanc-add-checks-for-incorrect-handling-of-current-reclaim_state.patch
-* mm-z3foldc-remove-z3fold_migration-trylock.patch
-* mm-z3foldc-reinitialize-zhdr-structs-after-migration.patch
-* cma-fail-if-fixed-declaration-cant-be-honored.patch
-* mm-fix-the-map_uninitialized-flag.patch
-* mm-provide-a-print_vma_addr-stub-for-config_mmu.patch
-* mm-stub-out-all-of-swapopsh-for-config_mmu.patch
-* proc-hide-segfault-at-ffffffffff600000-dmesg-spam.patch
-* vmcore-add-a-kernel-parameter-novmcoredd.patch
-* add-typeof_member-macro.patch
-* proc-use-typeof_member-macro.patch
-* proc-test-proc-sysvipc-vs-setnsclone_newipc.patch
-* fs-fix-the-default-values-of-i_uid-i_gid-on-proc-sys-inodes.patch
-* kernel-fix-typos-and-some-coding-style-in-comments.patch
-* linux-bitsh-make-bit-genmask-and-friends-available-in-assembly.patch
-* arch-replace-_bitul-in-kernel-space-headers-with-bit.patch
-* drop-unused-isa_page_to_bus.patch
-* asm-generic-fix-a-compilation-warning.patch
-* get_maintainer-add-ability-to-skip-moderated-mailing-lists.patch
-* tweak-list_poison2-for-better-code-generation-on-x86_64.patch
-* lib-string-allow-searching-for-nul-with-strnchr.patch
-* lib-test_string-avoid-masking-memset16-32-64-failures.patch
-* lib-test_string-add-some-testcases-for-strchr-and-strnchr.patch
-* lib-test_overflow-avoid-tainting-the-kernel-and-fix-wrap-size.patch
-* lib-introduce-test_meminit-module.patch
-* mm-ioremap-check-virtual-address-alignment-while-creating-huge-mappings.patch
-* mm-ioremap-probe-platform-for-p4d-huge-map-support.patch
-* lib-string_helpers-fix-some-kerneldoc-warnings.patch
-* lib-test_meminit-fix-wmaybe-uninitialized-false-positive.patch
-* lib-test_meminitc-minor-test-fixes.patch
-* rbtree-avoid-generating-code-twice-for-the-cached-versions.patch
-* checkpatchpl-warn-on-duplicate-sysctl-local-variable.patch
-* binfmt_flat-remove-set-but-not-used-variable-inode.patch
-* elf-delete-stale-comment.patch
-* mm-kconfig-fix-neighboring-typos.patch
-* mm-generalize-and-rename-notify_page_fault-as-kprobe_page_fault.patch
-* coda-pass-the-host-file-in-vma-vm_file-on-mmap.patch
-* uapi-linux-codah-use-__kernel_pid_t-for-userspace.patch
-* uapi-linux-coda_psdevh-move-upc_req-definition-from-uapi-to-kernel-side-headers.patch
-* coda-add-error-handling-for-fget.patch
-* coda-potential-buffer-overflow-in-coda_psdev_write.patch
-* coda-fix-build-using-bare-metal-toolchain.patch
-* coda-dont-try-to-print-names-that-were-considered-too-long.patch
-* uapi-linux-coda_psdevh-move-coda_req_-from-uapi-to-kernel-side-headers.patch
-* coda-clean-up-indentation-replace-spaces-with-tab.patch
-* coda-stop-using-struct-timespec-in-user-api.patch
-* coda-change-codas-user-api-to-use-64-bit-time_t-in-timespec.patch
-* coda-get-rid-of-coda_alloc.patch
-* coda-get-rid-of-coda_free.patch
-* coda-bump-module-version.patch
-* coda-move-internal-defs-out-of-include-linux.patch
-* coda-remove-uapi-linux-coda_psdevh.patch
-* coda-destroy-mutex-in-put_super.patch
-* coda-use-size-for-stat.patch
-* coda-add-__init-to-init_coda_psdev.patch
-* coda-remove-sysctl-object-from-module-when-unused.patch
-* coda-remove-sb-test-in-coda_fid_to_inode.patch
-* coda-ftoc-validity-check-integration.patch
-* coda-add-hinting-support-for-partial-file-caching.patch
-* hfsplus-replace-strncpy-with-memcpy.patch
-* ufs-remove-set-but-not-used-variable-usb3.patch
-* fs-reiserfs-journal-change-return-type-of-dirty_one_transaction.patch
-* nds32-fix-asm-syscallh.patch
-* hexagon-define-syscall_get_error-and-syscall_get_return_value.patch
-* mips-define-syscall_get_error.patch
-* parisc-define-syscall_get_error.patch
-* powerpc-define-syscall_get_error.patch
-* ptrace-add-ptrace_get_syscall_info-request.patch
-* selftests-ptrace-add-a-test-case-for-ptrace_get_syscall_info.patch
-* signal-reorder-struct-sighand_struct.patch
-* signal-simplify-set_user_sigmask-restore_user_sigmask.patch
-* select-change-do_poll-to-return-erestartnohand-rather-than-eintr.patch
-* select-shift-restore_saved_sigmask_unless-into-poll_select_copy_remaining.patch
-* rapidio-mport_cdev-nul-terminate-some-strings.patch
-* convert-struct-pid-count-to-refcount_t.patch
-* pps-clear-offset-flags-in-pps_setparams-ioctl.patch
-* scripts-gdb-add-lx-genpd-summary-command.patch
-* scripts-gdb-add-helpers-to-find-and-list-devices.patch
-* bug-fix-cut-here-for-warn_on-for-__warn_taint-architectures.patch
-* ipc-mqueue-only-perform-resource-calculation-if-user-valid.patch
-* lz4-fix-spelling-and-copy-paste-errors-in-documentation.patch
-* device-dax-fix-memory-and-resource-leak-if-hotplug-fails.patch
-* mm-hotplug-make-remove_memory-interface-useable.patch
-* device-dax-hotremove-persistent-memory-that-is-used-like-normal-ram.patch
-* mm-move-map_sync-to-asm-generic-mman-commonh.patch
-* mm-mmap-move-common-defines-to-mman-commonh.patch
-* mm-clean-up-is_device__page-definitions.patch
-* mm-introduce-arch_has_pte_devmap.patch
-* arm64-mm-implement-pte_devmap-support.patch
-* mm-add-account_locked_vm-utility-function.patch
-* fs-select-use-struct_size-in-kmalloc.patch
-* mm-hmm-fix-bad-subpage-pointer-in-try_to_unmap_one.patch
-* revert-kmemleak-allow-to-coexist-with-fault-injection.patch
-* ocfs2-remove-set-but-not-used-variable-last_hash.patch
-* ocfs2-clear-zero-in-unaligned-direct-io.patch
-* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
-* ocfs2-wait-for-recovering-done-after-direct-unlock-request.patch
-* ocfs2-checkpoint-appending-truncate-log-transaction-before-flushing.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-memory_hotplug-simplify-and-fix-check_hotplug_memory_range.patch
-* s390x-mm-fail-when-an-altmap-is-used-for-arch_add_memory.patch
-* s390x-mm-implement-arch_remove_memory.patch
-* arm64-mm-add-temporary-arch_remove_memory-implementation.patch
-* drivers-base-memory-pass-a-block_id-to-init_memory_block.patch
-* drivers-base-memory-pass-a-block_id-to-init_memory_block-fix.patch
-* mm-memory_hotplug-allow-arch_remove_pages-without-config_memory_hotremove.patch
-* mm-memory_hotplug-create-memory-block-devices-after-arch_add_memory.patch
-* mm-memory_hotplug-drop-mhp_memblock_api.patch
-* mm-memory_hotplug-remove-memory-block-devices-before-arch_remove_memory.patch
-* mm-memory_hotplug-make-unregister_memory_block_under_nodes-never-fail.patch
-* mm-memory_hotplug-remove-zone-parameter-from-sparse_remove_one_section.patch
-* mm-sparse-set-section-nid-for-hot-add-memory.patch
-* mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory.patch
-* mm-sparse-fix-memory-leak-of-sparsemap_buf-in-aliged-memory-fix.patch
-* mm-sparse-fix-align-without-power-of-2-in-sparse_buffer_alloc.patch
-* mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified.patch
-* mm-mempolicy-handle-vma-with-unmovable-pages-mapped-correctly-in-mbind.patch
-* mm-oom_killer-add-task-uid-to-info-message-on-an-oom-kill.patch
-* mm-oom_killer-add-task-uid-to-info-message-on-an-oom-kill-fix.patch
-* mm-thp-make-transhuge_vma_suitable-available-for-anonymous-thp.patch
-* mm-thp-make-transhuge_vma_suitable-available-for-anonymous-thp-fix.patch
-* mm-thp-fix-false-negative-of-shmem-vmas-thp-eligibility.patch
-* mm-proportional-memorylowmin-reclaim.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* mm-dont-expose-page-to-fast-gup-before-its-ready.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* checkpatch-added-warnings-in-favor-of-strscpy.patch
-* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
-* checkpatch-fix-something.patch
-* fat-add-nobarrier-to-workaround-the-strange-behavior-of-device.patch
-* coredump-split-pipe-command-whitespace-before-expanding-template.patch
-* aio-simplify-read_events.patch
-* resource-fix-locking-in-find_next_iomem_res.patch
-* resource-fix-locking-in-find_next_iomem_res-fix.patch
-* resource-avoid-unnecessary-lookups-in-find_next_iomem_res.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-  linux-next.patch
-  diff-sucks.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* mm-section-numbers-use-the-type-unsigned-long.patch
-* mm-section-numbers-use-the-type-unsigned-long-fix.patch
-* mm-section-numbers-use-the-type-unsigned-long-v3.patch
-* drivers-base-memory-use-unsigned-long-for-block-ids.patch
-* mm-make-register_mem_sect_under_node-static.patch
-* mm-memory_hotplug-rename-walk_memory_range-and-pass-startsize-instead-of-pfns.patch
-* mm-memory_hotplug-move-and-simplify-walk_memory_blocks.patch
-* drivers-base-memoryc-get-rid-of-find_memory_block_hinted.patch
-* drivers-base-memoryc-get-rid-of-find_memory_block_hinted-v3.patch
-* drivers-base-memoryc-get-rid-of-find_memory_block_hinted-v3-fix.patch
-* mm-sparsemem-introduce-struct-mem_section_usage.patch
-* mm-sparsemem-introduce-a-section_is_early-flag.patch
-* mm-sparsemem-add-helpers-track-active-portions-of-a-section-at-boot.patch
-* mm-hotplug-prepare-shrink_zone-pgdat_span-for-sub-section-removal.patch
-* mm-sparsemem-convert-kmalloc_section_memmap-to-populate_section_memmap.patch
-* mm-hotplug-kill-is_dev_zone-usage-in-__remove_pages.patch
-* mm-kill-is_dev_zone-helper.patch
-* mm-sparsemem-prepare-for-sub-section-ranges.patch
-* mm-sparsemem-support-sub-section-hotplug.patch
-* mm-sparsemem-support-sub-section-hotplug-fix.patch
-* mm-sparsemem-support-sub-section-hotplug-fix-fix.patch
-* mm-document-zone_device-memory-model-implications.patch
-* mm-document-zone_device-memory-model-implications-fix.patch
-* mm-devm_memremap_pages-enable-sub-section-remap.patch
-* libnvdimm-pfn-fix-fsdax-mode-namespace-info-block-zero-fields.patch
-* libnvdimm-pfn-stop-padding-pmem-namespaces-to-section-alignment.patch
-* mm-sparsemem-cleanup-section-number-data-types.patch
-* mm-sparsemem-cleanup-section-number-data-types-fix.patch
-* mm-migrate-remove-unused-mode-argument.patch
-* proc-sysctl-add-shared-variables-for-range-check.patch
-* proc-sysctl-add-shared-variables-for-range-check-fix-2.patch
-* proc-sysctl-add-shared-variables-for-range-check-fix-2-fix.patch
-* proc-sysctl-add-shared-variables-for-range-check-fix-3.patch
-* proc-sysctl-add-shared-variables-for-range-check-fix-4.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
