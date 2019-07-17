@@ -2,136 +2,109 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF4BC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60384C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407CA208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v63F/0+t"
+	by mail.kernel.org (Postfix) with ESMTP id 32A112184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563405068;
+	bh=eqjfu4EfQ+2Wfj1wuya+/cWVM8GGec0PJnrVTjC1VOk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B9j1V6hF+wPvnisa8uHWAKYO7hkS//m1ZqVIaTVexxQJGqgL22hZj/UDk9yCpNEas
+	 6LhA2twShDSyNS1EqXrVmJq/HUWPcRLZamKV9XY5J7wOtlKKy/qIW9dvMlOn7lChkL
+	 UMkdibRLiNVDiE7KJ1Rt4S6AiUCw6WLKl9ifhLH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbfGQXLB (ORCPT
+        id S1731378AbfGQXLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 19:11:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40193 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727468AbfGQXLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 19:11:01 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HNArCG1727011
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 16:10:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HNArCG1727011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563405053;
-        bh=+zy0zTOL7hWrGpB/2EvHDXOhpis6yGUILgZQBqu7ghQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=v63F/0+tss7rZKmnF1nL3P+l4q3O/LAqVpiGYGfYdSX7+c5LWU9b3+OsU583lvX2t
-         aSlPTR3xmG+0SF0KGFzNwZQ9Y5ILzk20B0Aq6kQYFWujOcKK0Csy3Cf71zDQn9xVwj
-         mLEL/eRCfofF90n07Y9wPsfW/G1Y/9K97jlAMwBWtjHGDcdRWrHj27efoJzi46BdSA
-         IewevWxjGLz5nA8JXj5tL6aOUjoS1WvjEwpMFoinI5won6yyUGKzjpme81cZEMt28L
-         WOU9KYETpRZRbGWypP4XxmDDD6DtPkByfW7HnEcOTxT534NSsDTdGd/FpQMKqcV6z8
-         cGC9ZWiUUFIiA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HNAqQX1727008;
-        Wed, 17 Jul 2019 16:10:52 -0700
-Date:   Wed, 17 Jul 2019 16:10:52 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Michael Forney <tipbot@zytor.com>
-Message-ID: <tip-8e144797f1a67c52e386161863da4614a23ad913@git.kernel.org>
-Cc:     hpa@zytor.com, jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-        mforney@mforney.org, mingo@kernel.org, tglx@linutronix.de
-Reply-To: hpa@zytor.com, tglx@linutronix.de, jpoimboe@redhat.com,
-          linux-kernel@vger.kernel.org, mforney@mforney.org,
-          mingo@kernel.org
-In-Reply-To: <7ce2d1b35665edf19fd0eb6fbc0b17b81a48e62f.1562793604.git.jpoimboe@redhat.com>
-References: <7ce2d1b35665edf19fd0eb6fbc0b17b81a48e62f.1562793604.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Rename elf_open() to prevent conflict
- with libelf from elftoolchain
-Git-Commit-ID: 8e144797f1a67c52e386161863da4614a23ad913
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Jul 2019 19:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727468AbfGQXLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 19:11:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B050208C0;
+        Wed, 17 Jul 2019 23:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563405066;
+        bh=eqjfu4EfQ+2Wfj1wuya+/cWVM8GGec0PJnrVTjC1VOk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1TAPHuM4Q8YW8zNcJToxVk7TV5HRiHU0NTvap+eqbtdDvPDnGVt8vB5oswn7gWty8
+         2RET96Qti3KRKIkaPWNq3beg8vsxK/XkzLX4rEvF0i58ABx85dJTA5QgJlWh8kkM5p
+         wZnq7yTmEKF23QWpeyuz4VO+OBiQ0jtUbag8BKx0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     corbet@lwn.net, solar@openwall.com
+Cc:     will@kernel.org, keescook@chromium.org, peterz@infradead.org,
+        gregkh@linuxfoundation.org, tyhicks@canonical.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v2] Documentation/security-bugs: provide more information about linux-distros
+Date:   Wed, 17 Jul 2019 19:11:03 -0400
+Message-Id: <20190717231103.13949-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8e144797f1a67c52e386161863da4614a23ad913
-Gitweb:     https://git.kernel.org/tip/8e144797f1a67c52e386161863da4614a23ad913
-Author:     Michael Forney <mforney@mforney.org>
-AuthorDate: Wed, 10 Jul 2019 16:20:11 -0500
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Jul 2019 00:50:14 +0200
+Provide more information about how to interact with the linux-distros
+mailing list for disclosing security bugs.
 
-objtool: Rename elf_open() to prevent conflict with libelf from elftoolchain
+Reference the linux-distros list policy and clarify that the reporter
+must read and understand those policies as they differ from
+security@kernel.org's policy.
 
-The elftoolchain version of libelf has a function named elf_open().
-
-The function name isn't quite accurate anyway, since it also reads all
-the ELF data.  Rename it to elf_read(), which is more accurate.
-
-[ jpoimboe: rename to elf_read(); write commit description ]
-
-Signed-off-by: Michael Forney <mforney@mforney.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/7ce2d1b35665edf19fd0eb6fbc0b17b81a48e62f.1562793604.git.jpoimboe@redhat.com
-
+Suggested-by: Solar Designer <solar@openwall.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 2 +-
- tools/objtool/elf.c   | 2 +-
- tools/objtool/elf.h   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..de8f40730b37 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2407,7 +2407,7 @@ int check(const char *_objname, bool orc)
+Changes in v2:
+ - Focus more on pointing to the linux-distros wiki and policies.
+ - Remove explicit linux-distros email.
+ - Remove various explanations of linux-distros policies.
+
+ Documentation/admin-guide/security-bugs.rst | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/admin-guide/security-bugs.rst b/Documentation/admin-guide/security-bugs.rst
+index dcd6c93c7aac..380d44fd618d 100644
+--- a/Documentation/admin-guide/security-bugs.rst
++++ b/Documentation/admin-guide/security-bugs.rst
+@@ -60,16 +60,15 @@ Coordination
+ ------------
  
- 	objname = _objname;
+ Fixes for sensitive bugs, such as those that might lead to privilege
+-escalations, may need to be coordinated with the private
+-<linux-distros@vs.openwall.org> mailing list so that distribution vendors
+-are well prepared to issue a fixed kernel upon public disclosure of the
+-upstream fix. Distros will need some time to test the proposed patch and
+-will generally request at least a few days of embargo, and vendor update
+-publication prefers to happen Tuesday through Thursday. When appropriate,
+-the security team can assist with this coordination, or the reporter can
+-include linux-distros from the start. In this case, remember to prefix
+-the email Subject line with "[vs]" as described in the linux-distros wiki:
+-<http://oss-security.openwall.org/wiki/mailing-lists/distros#how-to-use-the-lists>
++escalations, may need to be coordinated with the private linux-distros mailing
++list so that distribution vendors are well prepared to issue a fixed kernel
++upon public disclosure of the upstream fix. Please read and follow the policies
++of linux-distros as specified in the linux-distros wiki page before reporting:
++<https://oss-security.openwall.org/wiki/mailing-lists/distros>. When
++appropriate, the security team can assist with this coordination, or the
++reporter can include linux-distros from the start. In this case, remember to
++prefix the email Subject line with "[vs]" as described in the linux-distros
++wiki.
  
--	file.elf = elf_open(objname, orc ? O_RDWR : O_RDONLY);
-+	file.elf = elf_read(objname, orc ? O_RDWR : O_RDONLY);
- 	if (!file.elf)
- 		return 1;
- 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 76e4f7ceab82..e18698262837 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -401,7 +401,7 @@ static int read_relas(struct elf *elf)
- 	return 0;
- }
- 
--struct elf *elf_open(const char *name, int flags)
-+struct elf *elf_read(const char *name, int flags)
- {
- 	struct elf *elf;
- 	Elf_Cmd cmd;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index e44ca5d51871..2fe0b0aa741d 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -74,7 +74,7 @@ struct elf {
- };
- 
- 
--struct elf *elf_open(const char *name, int flags);
-+struct elf *elf_read(const char *name, int flags);
- struct section *find_section_by_name(struct elf *elf, const char *name);
- struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
- struct symbol *find_symbol_by_name(struct elf *elf, const char *name);
+ CVE assignment
+ --------------
+-- 
+2.20.1
+
