@@ -2,183 +2,112 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B307EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA82C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F7221783
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F83821841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 23:05:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qKsrAfK1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frAbdH6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfGQXE7 (ORCPT
+        id S1731426AbfGQXFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 19:04:59 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46437 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfGQXE6 (ORCPT
+        Wed, 17 Jul 2019 19:05:07 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41438 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727657AbfGQXFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 19:04:58 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6HN4nu31725477
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Jul 2019 16:04:50 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6HN4nu31725477
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563404690;
-        bh=SzndoWfCgEKFRZyDeWCB/Nw6sZ6ea+9Rk+qSp0jAZQc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=qKsrAfK1sljKVmYSslmN+UoU/esJwNdE3GVg85CBON90d9xbRohqBBD+1Z0aiJpM8
-         uncE1XBfPT1YvH+gKs8vOOEmLLxXwAvqpioSOglTRNOwH9vcf3kiPrqdcyHkFO+GKb
-         cLPf5FYL37gtQGpBYXORbP7VMFak8+fFg9bfinXubvlkduB4MdQsnIW6ZOxBTERSx2
-         g1Cv6JLYlvq8dV6kJ3/qYtJ1TlcV1EaJY52LylhJxCnuzNINVRY80y4pHTJa+dzuCI
-         gX8Xl/gB7DLziG5m5CrBtGu4sAtw6Vpo+5L3P8Kh0hSMGnnovFnMxt4AKjC5qh9LkC
-         3ahPycSPHFJoA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6HN4nEs1725474;
-        Wed, 17 Jul 2019 16:04:49 -0700
-Date:   Wed, 17 Jul 2019 16:04:49 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-37c1f991b1bcdbe268b99b22e265738f4209f4f4@git.kernel.org>
-Cc:     adrian.hunter@intel.com, mingo@kernel.org, tglx@linutronix.de,
-        acme@redhat.com, linux-kernel@vger.kernel.org, jolsa@redhat.com,
-        hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
-          adrian.hunter@intel.com, tglx@linutronix.de, hpa@zytor.com,
-          jolsa@redhat.com
-In-Reply-To: <20190710085810.1650-21-adrian.hunter@intel.com>
-References: <20190710085810.1650-21-adrian.hunter@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf scripts python: export-to-sqlite.py: Export
- switch events
-Git-Commit-ID: 37c1f991b1bcdbe268b99b22e265738f4209f4f4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Jul 2019 19:05:07 -0400
+Received: by mail-qk1-f193.google.com with SMTP id v22so18893612qkj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 16:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C6X3lAyZ4nhSUI23jBO0nTgKAeT4lK3jiOA8EMPkRqY=;
+        b=frAbdH6dyjD4Yg05XVrC0KB/PkLCDAE0jaS7JrEQXhZI0XJHgay5LoWUcfDQmImjaI
+         2Bxd7RlNeQK6wvWWiNurZlY6mF9ZwPj7p8WXoFng1c3QBlUoheYiSFeF/BplGq8z3RxP
+         CKmSCRfxE3Zj89Q0Q59EuN88ty4nGk+PhS/FwSmTSgtnFsFdJFphQxwuVizDCVGNzWB3
+         yMK0G7yLAoRi4wPT4gw9keQItkfyx5PjZFbuW/fDnzmuxo2dx5YnJWxaD0/pjuP90be0
+         vlbXsr5rMdhKcQ+3pGFYKY8LOIrc8d9XIrbB+zGIVwvPNINXm/XSJjLT+ThDCrTxuUQz
+         JU2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C6X3lAyZ4nhSUI23jBO0nTgKAeT4lK3jiOA8EMPkRqY=;
+        b=DHtNtBDnN9c6teZ/bFwS4L213hxTCV0+Tex9U2WutF8b8pR2WUXRcr8ijp3AxnFIPr
+         CMHxUdbX3eXOGrlgJPSj1oJ2y1wuvBBF28AvHBJF0gZXWXIn63VGSyLUoFbhlV9sYTuv
+         5YT0Yp4iU41n2qz1FO6NidXquHgbmVcAtb/xfoC+dfEMXdnus481F2i8cBXq9bdZ4zAg
+         kXzTM3Iecno4joL4IaGFumvWr+sWw1TlyhwwRx6vjjNkgk+Pj4VVy8UY/H3vC0SgwV7D
+         d4azBoEkkxzV+iFo86MVwGFxVp2eXaGexD5kqaQpNkmaRBKGmbV4aiq3EY+HcB3lJJvE
+         RCZA==
+X-Gm-Message-State: APjAAAUEYCK/c0y2SqVxg6LVtJEAk4tJjEC6rl0pZ/e2HBcsEg50MusJ
+        JMKV3PIBgreyUk8v1CbUeFw=
+X-Google-Smtp-Source: APXvYqxaTDZcQ02bBk5pW1vvhkSBEJZHiMiJafycngXLwi1UtewV+jo/YfEISoH2hEMtWjEvgJjJwQ==
+X-Received: by 2002:ae9:eb16:: with SMTP id b22mr24660664qkg.160.1563404705766;
+        Wed, 17 Jul 2019 16:05:05 -0700 (PDT)
+Received: from lclaudio.dyndns.org ([191.177.181.235])
+        by smtp.gmail.com with ESMTPSA id j6sm11331933qkf.119.2019.07.17.16.05.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 16:05:04 -0700 (PDT)
+From:   "Luis Claudio R. Goncalves" <lclaudio@uudg.org>
+X-Google-Original-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Received: by lclaudio.dyndns.org (Postfix, from userid 1000)
+        id 723F43C154C; Wed, 17 Jul 2019 20:05:01 -0300 (-03)
+Date:   Wed, 17 Jul 2019 20:05:01 -0300
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <clark.williams@gmail.com>,
+        Julia Cartwright <julia@ni.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [patch 1/1] Kconfig: Introduce CONFIG_PREEMPT_RT
+Message-ID: <20190717230501.GA5727@uudg.org>
+References: <20190715150402.798499167@linutronix.de>
+ <20190715150601.205143057@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190715150601.205143057@linutronix.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  37c1f991b1bcdbe268b99b22e265738f4209f4f4
-Gitweb:     https://git.kernel.org/tip/37c1f991b1bcdbe268b99b22e265738f4209f4f4
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Wed, 10 Jul 2019 11:58:09 +0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 10 Jul 2019 12:37:35 -0300
+On Mon, Jul 15, 2019 at 05:04:03PM +0200, Thomas Gleixner wrote:
+> Add a new entry to the preemption menu which enables the real-time support
+> for the kernel. The choice is only enabled when an architecture supports
+> it.
+> 
+> It selects PREEMPT as the RT features depend on it. To achieve that the
+> existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
+> well.
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
 
-perf scripts python: export-to-sqlite.py: Export switch events
+Glad to see this important step being taken!
 
-Export switch events to a new table 'context_switches' and create a view
-'context_switches_view'. The table and view will show automatically in
-the exported-sql-viewer.py script.
+Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
 
-If the table ends up empty, then it and the view are dropped.
-
-Committer testing:
-
-Use the exported-sql-viewer.py and look at "Tables" ->
-"context_switches":
-
-  id  machine_id  time             cpu  thread_out_id  comm_out_id  thread_in_id  comm_in_id  flags
-  1   1           187836111885918  7    1              1            2             2           3
-  2   1           187836111889369  7    1              1            2             2           0
-  3   1           187836112464618  7    2              3            1             1           1
-  4   1           187836112465511  7    2              3            1             1           0
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-21-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/scripts/python/export-to-sqlite.py | 41 +++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index 9156f6a1e5f0..8043a7272a56 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -306,6 +306,17 @@ do_query(query, 'CREATE TABLE pwrx ('
- 		'last_cstate	integer,'
- 		'wake_reason	integer)')
- 
-+do_query(query, 'CREATE TABLE context_switches ('
-+		'id		integer		NOT NULL	PRIMARY KEY,'
-+		'machine_id	bigint,'
-+		'time		bigint,'
-+		'cpu		integer,'
-+		'thread_out_id	bigint,'
-+		'comm_out_id	bigint,'
-+		'thread_in_id	bigint,'
-+		'comm_in_id	bigint,'
-+		'flags		integer)')
-+
- # printf was added to sqlite in version 3.8.3
- sqlite_has_printf = False
- try:
-@@ -530,6 +541,29 @@ do_query(query, 'CREATE VIEW power_events_view AS '
- 	' INNER JOIN selected_events ON selected_events.id = evsel_id'
- 	' WHERE selected_events.name IN (\'cbr\',\'mwait\',\'exstop\',\'pwre\',\'pwrx\')')
- 
-+do_query(query, 'CREATE VIEW context_switches_view AS '
-+	'SELECT '
-+		'context_switches.id,'
-+		'context_switches.machine_id,'
-+		'context_switches.time,'
-+		'context_switches.cpu,'
-+		'th_out.pid AS pid_out,'
-+		'th_out.tid AS tid_out,'
-+		'comm_out.comm AS comm_out,'
-+		'th_in.pid AS pid_in,'
-+		'th_in.tid AS tid_in,'
-+		'comm_in.comm AS comm_in,'
-+		'CASE	  WHEN context_switches.flags = 0 THEN \'in\''
-+			' WHEN context_switches.flags = 1 THEN \'out\''
-+			' WHEN context_switches.flags = 3 THEN \'out preempt\''
-+			' ELSE context_switches.flags '
-+		'END AS flags'
-+	' FROM context_switches'
-+	' INNER JOIN threads AS th_out ON th_out.id   = context_switches.thread_out_id'
-+	' INNER JOIN threads AS th_in  ON th_in.id    = context_switches.thread_in_id'
-+	' INNER JOIN comms AS comm_out ON comm_out.id = context_switches.comm_out_id'
-+	' INNER JOIN comms AS comm_in  ON comm_in.id  = context_switches.comm_in_id')
-+
- do_query(query, 'END TRANSACTION')
- 
- evsel_query = QSqlQuery(db)
-@@ -571,6 +605,8 @@ exstop_query = QSqlQuery(db)
- exstop_query.prepare("INSERT INTO exstop VALUES (?, ?)")
- pwrx_query = QSqlQuery(db)
- pwrx_query.prepare("INSERT INTO pwrx VALUES (?, ?, ?, ?)")
-+context_switch_query = QSqlQuery(db)
-+context_switch_query.prepare("INSERT INTO context_switches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
- 
- def trace_begin():
- 	printdate("Writing records...")
-@@ -620,6 +656,8 @@ def trace_end():
- 		drop("pwrx")
- 		if is_table_empty("cbr"):
- 			drop("cbr")
-+	if is_table_empty("context_switches"):
-+		drop("context_switches")
- 
- 	if (unhandled_count):
- 		printdate("Warning: ", unhandled_count, " unhandled events")
-@@ -753,3 +791,6 @@ def synth_data(id, config, raw_buf, *x):
- 		pwrx(id, raw_buf)
- 	elif config == 5:
- 		cbr(id, raw_buf)
-+
-+def context_switch_table(*x):
-+	bind_exec(context_switch_query, 9, x)
