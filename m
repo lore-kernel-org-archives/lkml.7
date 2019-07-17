@@ -2,166 +2,99 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97600C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477F9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA420818
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jU/Zat9i"
+	by mail.kernel.org (Postfix) with ESMTP id 1F0D521848
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfGQNhC (ORCPT
+        id S1728544AbfGQNhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:37:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41016 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfGQNgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:36:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so841052pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 06:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=upJur9hX33jRa5ZDAABYWCcVNIU4OKrA323sUj0kiJ0=;
-        b=jU/Zat9i+mrs8cSnCYXrBiEONUz0WXxyKyOECIIPiTvG8WEhtGZGjK61290IX8o36U
-         OrHTHQ7Woyg/qn3+sukX8RWKFmT/Ab3vSFlM0FM2BRuiucJNWXV94DF4e2NhGQgdA44A
-         dT08TPfZUZgkz0of54cXYItyNEHlQbHBkArsYbqcDoUXDHAB+kz50O9ewS939NtAQV8u
-         N3pg+MG4dZM9J1oQTBELA9KEuGXZuE94dTh2nx4VJ6oW11nUXuKKdq/o5lVXbnas7dEB
-         7eGFT9GZTTNoP+bU6YviC4h7qnZidfElkMDjIpsDOMoPQb/nzifgWXLs7MlD24BgMlQq
-         Xslw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=upJur9hX33jRa5ZDAABYWCcVNIU4OKrA323sUj0kiJ0=;
-        b=mmId2lFnwDTRsNMAm8cyINLeKuX3bzLetMj4mF9jTcQhjvaa3/NJv41Oi9QvNbOByf
-         HIwCj996ss03Wx/D6162efnH7lbaffOa1H6T2j7fVYeNVEVk+JExFqm9IYdm3+uP7LN1
-         D0G6IYeMKWsemMItTPb4t6yIb1mgodIeyWW9nXmzrAUTS7VTVk6HBb69xUWgixRl0+DD
-         dQ6hUgiFuKngPsnSxoB96fMGKgimRUqgR8KVh7yTQ0P+LuW7hE6IC/8Vy/sfHukv0Hxk
-         BkcWEJbzF4nt3pxTJDZVVcr221zTKbJ+VN9s7iIgRe8myUmjgMaiP/VjdS96SfslkaFg
-         X2rA==
-X-Gm-Message-State: APjAAAXNTMk08JBUDDm78JIdtsecNdvm35vZgMdKFKaeIvl8qi84UFdQ
-        hLrPKr/s9qaMUfqPdJdVfKlmM5swgn2Nhp4jX4TSQw==
-X-Google-Smtp-Source: APXvYqz7m/UfmCxQEvGyEZmLKWfGDEQqrP2qzxF/oMVv3Ek5NDX+f4ncbRdtOgqzhkxO4Lp3vwbZe7MPyGJ1vZM4Wx0=
-X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr43162554pje.123.1563370608796;
- Wed, 17 Jul 2019 06:36:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1561386715.git.andreyknvl@google.com> <ea0ff94ef2b8af12ea6c222c5ebd970e0849b6dd.1561386715.git.andreyknvl@google.com>
- <20190624174015.GL29120@arrakis.emea.arm.com> <CAAeHK+y8vE=G_odK6KH=H064nSQcVgkQkNwb2zQD9swXxKSyUQ@mail.gmail.com>
- <20190715180510.GC4970@ziepe.ca> <CAAeHK+xPQqJP7p_JFxc4jrx9k7N0TpBWEuB8Px7XHvrfDU1_gw@mail.gmail.com>
- <20190716120624.GA29727@ziepe.ca> <CAAeHK+xPPQ9QjAksbfWG-Zmnawt-cdw9eO_6GVxjEYcaDGvaRA@mail.gmail.com>
- <20190717115828.GE12119@ziepe.ca>
-In-Reply-To: <20190717115828.GE12119@ziepe.ca>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 17 Jul 2019 15:36:37 +0200
-Message-ID: <CAAeHK+yyQpc6cxyVeUUWUwiQYy8iAgVXmOVO=EQYSNzy9G8Q0A@mail.gmail.com>
-Subject: Re: [PATCH v18 11/15] IB/mlx4: untag user pointers in mlx4_get_umem_mr
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 17 Jul 2019 09:37:09 -0400
+Received: from mga04.intel.com ([192.55.52.120]:36165 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727779AbfGQNgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:36:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 06:36:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
+   d="scan'208";a="191261897"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 06:36:45 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com
+Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v4 9/9] KVM: MMU: Handle host memory remapping and reclaim
+Date:   Wed, 17 Jul 2019 21:37:51 +0800
+Message-Id: <20190717133751.12910-10-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190717133751.12910-1-weijiang.yang@intel.com>
+References: <20190717133751.12910-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 1:58 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Jul 17, 2019 at 01:44:07PM +0200, Andrey Konovalov wrote:
-> > On Tue, Jul 16, 2019 at 2:06 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Tue, Jul 16, 2019 at 12:42:07PM +0200, Andrey Konovalov wrote:
-> > > > On Mon, Jul 15, 2019 at 8:05 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > >
-> > > > > On Mon, Jul 15, 2019 at 06:01:29PM +0200, Andrey Konovalov wrote:
-> > > > > > On Mon, Jun 24, 2019 at 7:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jun 24, 2019 at 04:32:56PM +0200, Andrey Konovalov wrote:
-> > > > > > > > This patch is a part of a series that extends kernel ABI to allow to pass
-> > > > > > > > tagged user pointers (with the top byte set to something else other than
-> > > > > > > > 0x00) as syscall arguments.
-> > > > > > > >
-> > > > > > > > mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
-> > > > > > > > only by done with untagged pointers.
-> > > > > > > >
-> > > > > > > > Untag user pointers in this function.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > > > > > >  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
-> > > > > > > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > > > > >
-> > > > > > > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > > > > >
-> > > > > > > This patch also needs an ack from the infiniband maintainers (Jason).
-> > > > > >
-> > > > > > Hi Jason,
-> > > > > >
-> > > > > > Could you take a look and give your acked-by?
-> > > > >
-> > > > > Oh, I think I did this a long time ago. Still looks OK.
-> > > >
-> > > > Hm, maybe that was we who lost it. Thanks!
-> > > >
-> > > > > You will send it?
-> > > >
-> > > > I will resend the patchset once the merge window is closed, if that's
-> > > > what you mean.
-> > >
-> > > No.. I mean who send it to Linus's tree? ie do you want me to take
-> > > this patch into rdma?
-> >
-> > I think the plan was to merge the whole series through the mm tree.
-> > But I don't mind if you want to take this patch into your tree. It's
-> > just that this patch doesn't make much sense without the rest of the
-> > series.
->
-> Generally I prefer if subsystem changes stay in subsystem trees. If
-> the patch is good standalone, and the untag API has already been
-> merged, this is a better strategy.
+Host page swapping/migration may change the translation in
+EPT leaf entry, if the target page is SPP protected,
+re-enable SPP protection in MMU notifier. If SPPT shadow
+page is reclaimed, the level1 pages don't have rmap to clear.
 
-OK, feel free to take this into your tree, this works for me.
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ arch/x86/kvm/mmu.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
->
-> Jason
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index f017fe6cd67b..6aab8902c808 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -1926,6 +1926,24 @@ static int kvm_set_pte_rmapp(struct kvm *kvm, struct kvm_rmap_head *rmap_head,
+ 			new_spte &= ~PT_WRITABLE_MASK;
+ 			new_spte &= ~SPTE_HOST_WRITEABLE;
+ 
++			/*
++			 * if it's EPT leaf entry and the physical page is
++			 * SPP protected, then re-enable SPP protection for
++			 * the page.
++			 */
++			if (kvm->arch.spp_active &&
++			    level == PT_PAGE_TABLE_LEVEL) {
++				struct kvm_subpage spp_info = {0};
++				int i;
++
++				spp_info.base_gfn = gfn;
++				spp_info.npages = 1;
++				i = kvm_mmu_get_subpages(kvm, &spp_info, true);
++				if (i == 1 &&
++				    spp_info.access_map[0] != FULL_SPP_ACCESS)
++					new_spte |= PT_SPP_MASK;
++			}
++
+ 			new_spte = mark_spte_for_access_track(new_spte);
+ 
+ 			mmu_spte_clear_track_bits(sptep);
+@@ -2809,6 +2827,10 @@ static bool mmu_page_zap_pte(struct kvm *kvm, struct kvm_mmu_page *sp,
+ 	pte = *spte;
+ 	if (is_shadow_present_pte(pte)) {
+ 		if (is_last_spte(pte, sp->role.level)) {
++			/* SPPT leaf entries don't have rmaps*/
++			if (sp->role.level == PT_PAGE_TABLE_LEVEL &&
++			    is_spp_spte(sp))
++				return true;
+ 			drop_spte(kvm, spte);
+ 			if (is_large_pte(pte))
+ 				--kvm->stat.lpages;
+-- 
+2.17.2
+
