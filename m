@@ -2,176 +2,339 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D3EC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF69C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E8A21851
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51E421851
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 20:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="moNgVqVQ"
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="hu+EC6WZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfGQUf1 (ORCPT
+        id S1728773AbfGQUgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 16:35:27 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41370 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfGQUf0 (ORCPT
+        Wed, 17 Jul 2019 16:36:37 -0400
+Received: from www.linux-watchdog.org ([185.87.125.42]:38490 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfGQUgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 16:35:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so26506083ota.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 13:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FXMPE8BPcH8HZFC59zfa+SPhPyvIIvJuCBoRrteYkho=;
-        b=moNgVqVQhCBuJdG5uOFEyRfVcJzkfTBNTs1Z3BXgLCU/zNi1D4oLYm2x2ZWNlhu00o
-         LT6iBaph3MXCWS/sJoRYUvIu8UNhz9wxYLRNawV9XKeiTlkcM6V4EJgr/o0s/l7F9H9n
-         eaCRXJ8QSkb6IS+3uCDJJTElg4bu/QRKrv6kl7cRPXszOjrPpMBITdPZYbXHEjohwL+D
-         5/kfaWdk788Em87avYwEI0HznRAtBgp6KwKJ6+O5YVGIUkjhdDxnZTLwziPCixlz6PTU
-         1KCuifdDUYJNf8a0zKSnLcOplBhmSUW0TobyxmWOkuvaybNzsLmYg0kGob2RUtlutN3j
-         qGdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FXMPE8BPcH8HZFC59zfa+SPhPyvIIvJuCBoRrteYkho=;
-        b=s7dU1E8++E0xIfW26ukL7l0/A9RBZAQsxIVFDs98wgbgp3QNp5TppRKFNFVMposquy
-         uUo01Bg9s1GVpoVvsqBYe+dTnaVgzwQJic4NM30eQUVn3GYjAyjSGVyKF80gdEmLbSXR
-         d8ial5LtBeyqxVLNrc/FfgFp3oBqoHq7DWoNl4WQ9pneysj7kn8zZk1VvZkJwbIH3nl0
-         l8tBJZpQDgT0H4+adxWVnlJNqFRsOj6F8zBHf9/PpmirHU0NmaM3xErCc0ejTAlbzwtB
-         vzTPXogOInC2Dq6wYXT/E7CrB0HPYjynp2bKOFo+6eBicOF4bm420gRStJFezPlzvMIt
-         NVZw==
-X-Gm-Message-State: APjAAAXm8WvFy6aj74E/cfDaTi5rpYlma82ZmnS6G+PH3Y5YMY1nCCGN
-        mrjzsJV/w7PH+iiW++YmXkjiw9JF1az34xLi4gDxYg==
-X-Google-Smtp-Source: APXvYqwiUDUXNi3NqRWqHDw5Y5A6ix3QwgYxmpU6YxwqpVdAsmXY+1UW4eisFVhv1mqNUfAErWIwIX2XUNG2O5mIWr8=
-X-Received: by 2002:a05:6830:160c:: with SMTP id g12mr32951615otr.231.1563395725759;
- Wed, 17 Jul 2019 13:35:25 -0700 (PDT)
+        Wed, 17 Jul 2019 16:36:37 -0400
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id 244FB4095E; Wed, 17 Jul 2019 21:58:29 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 244FB4095E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1563393509;
+        bh=iKxcO+1p2J0b9cU8Eqh3XVt9fxA1J24Ufjda3Mh2hQA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hu+EC6WZPrGEX4heX+jkjdK1h7P3/ZmQmMHlWo5/pTVBfC2aS6Vx9R/19HXJtOvJe
+         itMWrQahrtkP5tn+WIATIISriit2yt+S41DyXnaDD9r5cJ1UbKIEkIr49JTHBgiTa+
+         vRYBfl3QiTkLMVzZSHOj/gXOrr+PFpgDqJRH871g=
+Date:   Wed, 17 Jul 2019 21:58:28 +0200
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hoan Nguyen An <na-hoan@jinso.co.jp>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Ken Sloat <ksloat@aampglobal.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [GIT PULL REQUEST] watchdog - v5.3 Merge window
+Message-ID: <20190717195828.GA25283@www.linux-watchdog.org>
 MIME-Version: 1.0
-References: <20190703011020.151615-1-saravanak@google.com> <20190717103220.f7cys267hq23fbsb@vireshk-i7>
-In-Reply-To: <20190717103220.f7cys267hq23fbsb@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 17 Jul 2019 13:34:49 -0700
-Message-ID: <CAGETcx-tbjVzRKW8D-564zgNOhrA_z-NC1q5U70bhoUDBhp6VA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Introduce Bandwidth OPPs for interconnect paths
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 3:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 02-07-19, 18:10, Saravana Kannan wrote:
-> > Interconnects and interconnect paths quantify their performance levels in
-> > terms of bandwidth and not in terms of frequency. So similar to how we have
-> > frequency based OPP tables in DT and in the OPP framework, we need
-> > bandwidth OPP table support in the OPP framework and in DT. Since there can
-> > be more than one interconnect path used by a device, we also need a way to
-> > assign a bandwidth OPP table to an interconnect path.
-> >
-> > This patch series:
-> > - Adds opp-peak-KBps and opp-avg-KBps properties to OPP DT bindings
-> > - Adds interconnect-opp-table property to interconnect DT bindings
-> > - Adds OPP helper functions for bandwidth OPP tables
-> > - Adds icc_get_opp_table() to get the OPP table for an interconnect path
-> >
-> > So with the DT bindings added in this patch series, the DT for a GPU
-> > that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> > something like this:
-> >
-> > gpu_cache_opp_table: gpu_cache_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_cache_3000: opp-3000 {
-> >               opp-peak-KBps = <3000>;
-> >               opp-avg-KBps = <1000>;
-> >       };
-> >       gpu_cache_6000: opp-6000 {
-> >               opp-peak-KBps = <6000>;
-> >               opp-avg-KBps = <2000>;
-> >       };
-> >       gpu_cache_9000: opp-9000 {
-> >               opp-peak-KBps = <9000>;
-> >               opp-avg-KBps = <9000>;
-> >       };
-> > };
-> >
-> > gpu_ddr_opp_table: gpu_ddr_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_ddr_1525: opp-1525 {
-> >               opp-peak-KBps = <1525>;
-> >               opp-avg-KBps = <452>;
-> >       };
-> >       gpu_ddr_3051: opp-3051 {
-> >               opp-peak-KBps = <3051>;
-> >               opp-avg-KBps = <915>;
-> >       };
-> >       gpu_ddr_7500: opp-7500 {
-> >               opp-peak-KBps = <7500>;
-> >               opp-avg-KBps = <3000>;
-> >       };
-> > };
->
-> Who is going to use the above tables and how ?
+Hi Linus,
 
-In this example the GPU driver would use these. It'll go through these
-and then decide what peak and average bw to pick based on whatever
-criteria.
+Please pull the watchdog changes for the v5.3 release cycle.
 
-> These are the maximum
-> BW available over these paths, right ?
+This series contains:
+* add Allwinner H6 watchdog
+* drop warning after registering device patches
+* hpwdt improvements
+* gpio: add support for nowayout option
+* introduce CONFIG_WATCHDOG_OPEN_TIMEOUT
+* convert remaining drivers to use SPDX license identifier
+* Fixes and improvements on several watchdog device drivers
 
-I wouldn't call them "maximum" because there can't be multiple
-maximums :) But yes, these are the meaningful bandwidth from the GPU's
-perspective to use over these paths.
+Stephen resolved the following 2 conflicts in linux-next:
+1) Documentation/watchdog/hpwdt.rst
+Documentation/watchdog/watchdog-parameters.rst
 
->
-> > gpu_opp_table: gpu_opp_table {
-> >       compatible = "operating-points-v2";
-> >       opp-shared;
-> >
-> >       opp-200000000 {
-> >               opp-hz = /bits/ 64 <200000000>;
-> >       };
-> >       opp-400000000 {
-> >               opp-hz = /bits/ 64 <400000000>;
-> >       };
-> > };
->
-> Shouldn't this link back to the above tables via required-opp, etc ?
-> How will we know how much BW is required by the GPU device for all the
-> paths ?
+between commit: cc2a2d19f896 ("docs: watchdog: convert docs to ReST and rename to *.rst") from the jc_docs tree 
+and commit: 74665686f0e2 ("docs: watchdog: convert docs to ReST and rename to *.rst") from the watchdog tree.
+These are the same patch with only a coouple of differences.
 
-If that's what the GPU driver wants to do, then yes. But the GPU
-driver could also choose to scale the bandwidth for these paths based
-on multiple other signals. Eg: bus port busy percentage, measure
-bandwidth, etc.
+2) Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
 
-Or they might even decide to pick the BW OPP that matches the index of
-their GPU OPP. It's up to them how they actually do the heuristic.
+between commit: 8c21ead3ea5d ("dt-bindings: watchdog: move i.MX system controller watchdog binding to SCU") from the watchdog tree 
+and commit: c2a6ea23a401 ("dt-bindings: fsl: scu: add ocotp binding") from the char-misc tree.
 
--Saravana
+
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit 46713c3d2f8da5e3d8ddd2249bcb1d9974fb5d28:
+
+  Merge tag 'for-linus-20190706' of git://git.kernel.dk/linux-block (2019-07-06 11:48:39 -0700)
+
+are available in the git repository at:
+
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.3-rc1
+
+for you to fetch changes up to 7fb832ae72949c883da52d6316ff08f03c75d300:
+
+  watchdog: digicolor_wdt: Remove unused variable in dc_wdt_probe (2019-07-15 08:49:11 +0200)
+
+----------------------------------------------------------------
+linux-watchdog 5.3-rc1 tag
+
+----------------------------------------------------------------
+Anson Huang (2):
+      watchdog: imx_sc: Add pretimeout support
+      dt-bindings: watchdog: move i.MX system controller watchdog binding to SCU
+
+Clément Péron (1):
+      dt-bindings: watchdog: add Allwinner H6 watchdog
+
+Eugen Hristev (1):
+      watchdog: sama5d4: fix WDD value to be always set to max
+
+Greg Kroah-Hartman (2):
+      watchdog: bcm_kona_wdt: no need to check return value of debugfs_create functions
+      watchdog: mei_wdt: no need to check return value of debugfs_create functions
+
+Guenter Roeck (1):
+      watchdog: convert remaining drivers to use SPDX license identifier
+
+Hoan Nguyen An (1):
+      watchdog: renesas_wdt: Use 'dev' instead of dereferencing it repeatedly
+
+Jerry Hoemann (7):
+      watchdog/hpwdt: Stop hpwdt on unregister.
+      watchdog/hpwdt: Advertize max_hw_heartbeat_ms
+      watchdog/hpwdt: Have core ping watchdog.
+      watchdog/hpwdt: Add module parameter kdumptimeout.
+      watchdog/hpwdt: Update documentation
+      watchdog/hpwdt: Reflect changes
+      docs: watchdog: Fix build error.
+
+Ken Sloat (1):
+      watchdog: atmel: atmel-sama5d4-wdt: Disable watchdog on system suspend
+
+Mans Rullgard (1):
+      watchdog: gpio: add support for nowayout option
+
+Mauro Carvalho Chehab (1):
+      docs: watchdog: convert docs to ReST and rename to *.rst
+
+Nathan Chancellor (1):
+      watchdog: digicolor_wdt: Remove unused variable in dc_wdt_probe
+
+Paul Cercueil (2):
+      watchdog: jz4740: Use register names from <linux/mfd/ingenic-tcu.h>
+      watchdog: jz4740: Avoid starting watchdog in set_timeout
+
+Rasmus Villemoes (3):
+      watchdog: introduce watchdog.open_timeout commandline parameter
+      watchdog: introduce CONFIG_WATCHDOG_OPEN_TIMEOUT
+      watchdog: make the device time out at open_deadline when open_timeout is used
+
+Sebastian Andrzej Siewior (1):
+      watchdog: ie6xx_wdt: Use spinlock_t instead of struct spinlock
+
+Simon Horman (1):
+      dt-bindings: watchdog: Rename bindings documentation file
+
+Stefan Wahren (1):
+      watchdog: bcm2835_wdt: Fix module autoload
+
+Wolfram Sang (46):
+      watchdog: make watchdog_deferred_registration_add() void
+      watchdog: let core print error message when registering device fails
+      watchdog: aspeed_wdt: drop warning after registering device
+      watchdog: bcm2835_wdt: drop warning after registering device
+      watchdog: bcm7038_wdt: drop warning after registering device
+      watchdog: bcm_kona_wdt: drop warning after registering device
+      watchdog: cadence_wdt: drop warning after registering device
+      watchdog: da9052_wdt: drop warning after registering device
+      watchdog: da9062_wdt: drop warning after registering device
+      watchdog: davinci_wdt: drop warning after registering device
+      watchdog: digicolor_wdt: drop warning after registering device
+      watchdog: ftwdt010_wdt: drop warning after registering device
+      watchdog: hpwdt: drop warning after registering device
+      watchdog: i6300esb: drop warning after registering device
+      watchdog: ie6xx_wdt: drop warning after registering device
+      watchdog: imx2_wdt: drop warning after registering device
+      watchdog: imx_sc_wdt: drop warning after registering device
+      watchdog: intel-mid_wdt: drop warning after registering device
+      watchdog: jz4740_wdt: drop warning after registering device
+      watchdog: loongson1_wdt: drop warning after registering device
+      watchdog: max77620_wdt: drop warning after registering device
+      watchdog: mei_wdt: drop warning after registering device
+      watchdog: mena21_wdt: drop warning after registering device
+      watchdog: menf21bmc_wdt: drop warning after registering device
+      watchdog: mpc8xxx_wdt: drop warning after registering device
+      watchdog: ni903x_wdt: drop warning after registering device
+      watchdog: nic7018_wdt: drop warning after registering device
+      watchdog: npcm_wdt: drop warning after registering device
+      watchdog: of_xilinx_wdt: drop warning after registering device
+      watchdog: pic32-dmt: drop warning after registering device
+      watchdog: pic32-wdt: drop warning after registering device
+      watchdog: pnx4008_wdt: drop warning after registering device
+      watchdog: qcom-wdt: drop warning after registering device
+      watchdog: rave-sp-wdt: drop warning after registering device
+      watchdog: s3c2410_wdt: drop warning after registering device
+      watchdog: sama5d4_wdt: drop warning after registering device
+      watchdog: sp5100_tco: drop warning after registering device
+      watchdog: sp805_wdt: drop warning after registering device
+      watchdog: sprd_wdt: drop warning after registering device
+      watchdog: st_lpc_wdt: drop warning after registering device
+      watchdog: stm32_iwdg: drop warning after registering device
+      watchdog: stmp3xxx_rtc_wdt: drop warning after registering device
+      watchdog: tegra_wdt: drop warning after registering device
+      watchdog: ts4800_wdt: drop warning after registering device
+      watchdog: wm831x_wdt: drop warning after registering device
+      watchdog: xen_wdt: drop warning after registering device
+
+Yoshihiro Shimoda (1):
+      watchdog: renesas_wdt: Add a few cycles delay
+
+ Documentation/admin-guide/kernel-parameters.txt    |   2 +-
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  |  15 +
+ .../bindings/watchdog/fsl-imx-sc-wdt.txt           |  24 -
+ .../watchdog/{renesas-wdt.txt => renesas,wdt.txt}  |   0
+ .../devicetree/bindings/watchdog/sunxi-wdt.txt     |   1 +
+ Documentation/kernel-per-CPU-kthreads.txt          |   2 +-
+ ...l_api.txt => convert_drivers_to_kernel_api.rst} | 109 +--
+ Documentation/watchdog/{hpwdt.txt => hpwdt.rst}    |  29 +-
+ Documentation/watchdog/index.rst                   |  25 +
+ .../watchdog/{mlx-wdt.txt => mlx-wdt.rst}          |  24 +-
+ .../{pcwd-watchdog.txt => pcwd-watchdog.rst}       |  13 +-
+ .../{watchdog-api.txt => watchdog-api.rst}         |  76 ++-
+ ...hdog-kernel-api.txt => watchdog-kernel-api.rst} |  91 ++-
+ Documentation/watchdog/watchdog-parameters.rst     | 747 +++++++++++++++++++++
+ Documentation/watchdog/watchdog-parameters.txt     | 410 -----------
+ .../watchdog/{watchdog-pm.txt => watchdog-pm.rst}  |   3 +
+ Documentation/watchdog/{wdt.txt => wdt.rst}        |  31 +-
+ MAINTAINERS                                        |   2 +-
+ drivers/watchdog/Kconfig                           |  16 +-
+ drivers/watchdog/acquirewdt.c                      |   6 +-
+ drivers/watchdog/advantechwdt.c                    |   6 +-
+ drivers/watchdog/aspeed_wdt.c                      |   8 +-
+ drivers/watchdog/bcm2835_wdt.c                     |   5 +-
+ drivers/watchdog/bcm7038_wdt.c                     |   4 +-
+ drivers/watchdog/bcm_kona_wdt.c                    |  18 +-
+ drivers/watchdog/cadence_wdt.c                     |   4 +-
+ drivers/watchdog/da9052_wdt.c                      |   9 +-
+ drivers/watchdog/da9062_wdt.c                      |   5 +-
+ drivers/watchdog/davinci_wdt.c                     |  14 +-
+ drivers/watchdog/digicolor_wdt.c                   |   9 +-
+ drivers/watchdog/ebc-c384_wdt.c                    |   9 -
+ drivers/watchdog/eurotechwdt.c                     |   6 +-
+ drivers/watchdog/ftwdt010_wdt.c                    |   4 +-
+ drivers/watchdog/gpio_wdt.c                        |   7 +
+ drivers/watchdog/hpwdt.c                           |  59 +-
+ drivers/watchdog/i6300esb.c                        |   5 +-
+ drivers/watchdog/iTCO_vendor_support.c             |   7 +-
+ drivers/watchdog/iTCO_wdt.c                        |   6 +-
+ drivers/watchdog/ib700wdt.c                        |   6 +-
+ drivers/watchdog/ie6xx_wdt.c                       |   8 +-
+ drivers/watchdog/imx2_wdt.c                        |   4 +-
+ drivers/watchdog/imx_sc_wdt.c                      | 123 +++-
+ drivers/watchdog/intel-mid_wdt.c                   |   4 +-
+ drivers/watchdog/jz4740_wdt.c                      |  57 +-
+ drivers/watchdog/loongson1_wdt.c                   |   4 +-
+ drivers/watchdog/max77620_wdt.c                    |   8 +-
+ drivers/watchdog/mei_wdt.c                         |  34 +-
+ drivers/watchdog/mena21_wdt.c                      |   4 +-
+ drivers/watchdog/menf21bmc_wdt.c                   |   4 +-
+ drivers/watchdog/mpc8xxx_wdt.c                     |   5 +-
+ drivers/watchdog/mv64x60_wdt.c                     |   6 +-
+ drivers/watchdog/ni903x_wdt.c                      |   4 +-
+ drivers/watchdog/nic7018_wdt.c                     |   1 -
+ drivers/watchdog/npcm_wdt.c                        |   4 +-
+ drivers/watchdog/nv_tco.h                          |   6 +-
+ drivers/watchdog/octeon-wdt-main.c                 |  11 +-
+ drivers/watchdog/of_xilinx_wdt.c                   |   4 +-
+ drivers/watchdog/omap_wdt.c                        |   6 +-
+ drivers/watchdog/omap_wdt.h                        |  21 +-
+ drivers/watchdog/pc87413_wdt.c                     |   6 +-
+ drivers/watchdog/pcwd_pci.c                        |   6 +-
+ drivers/watchdog/pcwd_usb.c                        |   6 +-
+ drivers/watchdog/pic32-dmt.c                       |   4 +-
+ drivers/watchdog/pic32-wdt.c                       |   4 +-
+ drivers/watchdog/pnx4008_wdt.c                     |   9 +-
+ drivers/watchdog/qcom-wdt.c                        |   4 +-
+ drivers/watchdog/rave-sp-wdt.c                     |   1 -
+ drivers/watchdog/renesas_wdt.c                     |  35 +-
+ drivers/watchdog/retu_wdt.c                        |  10 +-
+ drivers/watchdog/s3c2410_wdt.c                     |   4 +-
+ drivers/watchdog/sa1100_wdt.c                      |   6 +-
+ drivers/watchdog/sama5d4_wdt.c                     |  29 +-
+ drivers/watchdog/sbc7240_wdt.c                     |  11 +-
+ drivers/watchdog/sbc8360.c                         |   6 +-
+ drivers/watchdog/sch311x_wdt.c                     |   6 +-
+ drivers/watchdog/smsc37b787_wdt.c                  |   2 +-
+ drivers/watchdog/softdog.c                         |   6 +-
+ drivers/watchdog/sp5100_tco.c                      |   4 +-
+ drivers/watchdog/sp805_wdt.c                       |   5 +-
+ drivers/watchdog/sprd_wdt.c                        |   1 -
+ drivers/watchdog/st_lpc_wdt.c                      |   4 +-
+ drivers/watchdog/stm32_iwdg.c                      |   4 +-
+ drivers/watchdog/stmp3xxx_rtc_wdt.c                |   4 +-
+ drivers/watchdog/tegra_wdt.c                       |   4 +-
+ drivers/watchdog/ts4800_wdt.c                      |   4 +-
+ drivers/watchdog/w83627hf_wdt.c                    |   6 +-
+ drivers/watchdog/wafer5823wdt.c                    |   6 +-
+ drivers/watchdog/watchdog_core.c                   |  22 +-
+ drivers/watchdog/watchdog_core.h                   |   6 +-
+ drivers/watchdog/watchdog_dev.c                    |  54 +-
+ drivers/watchdog/wd501p.h                          |   6 +-
+ drivers/watchdog/wdt.c                             |   6 +-
+ drivers/watchdog/wdt_pci.c                         |   6 +-
+ drivers/watchdog/wm831x_wdt.c                      |   9 +-
+ drivers/watchdog/xen_wdt.c                         |   4 +-
+ 95 files changed, 1406 insertions(+), 1039 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
+ rename Documentation/devicetree/bindings/watchdog/{renesas-wdt.txt => renesas,wdt.txt} (100%)
+ rename Documentation/watchdog/{convert_drivers_to_kernel_api.txt => convert_drivers_to_kernel_api.rst} (75%)
+ rename Documentation/watchdog/{hpwdt.txt => hpwdt.rst} (73%)
+ create mode 100644 Documentation/watchdog/index.rst
+ rename Documentation/watchdog/{mlx-wdt.txt => mlx-wdt.rst} (78%)
+ rename Documentation/watchdog/{pcwd-watchdog.txt => pcwd-watchdog.rst} (89%)
+ rename Documentation/watchdog/{watchdog-api.txt => watchdog-api.rst} (80%)
+ rename Documentation/watchdog/{watchdog-kernel-api.txt => watchdog-kernel-api.rst} (90%)
+ create mode 100644 Documentation/watchdog/watchdog-parameters.rst
+ delete mode 100644 Documentation/watchdog/watchdog-parameters.txt
+ rename Documentation/watchdog/{watchdog-pm.txt => watchdog-pm.rst} (92%)
+ rename Documentation/watchdog/{wdt.txt => wdt.rst} (68%)
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
+
