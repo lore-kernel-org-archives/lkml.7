@@ -6,153 +6,124 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1D4C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7A9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E382182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC282182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 00:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389079AbfGQApx (ORCPT
+        id S2389109AbfGQApy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 20:45:53 -0400
-Received: from gate.crashing.org ([63.228.1.57]:56497 "EHLO gate.crashing.org"
+        Tue, 16 Jul 2019 20:45:54 -0400
+Received: from gate.crashing.org ([63.228.1.57]:56499 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726344AbfGQApw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 20:45:52 -0400
+        id S1726344AbfGQApy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 20:45:54 -0400
 Received: from ufdda393ec48b57.ant.amazon.com (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6H0jXnh032429;
-        Tue, 16 Jul 2019 19:45:34 -0500
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6H0jXnj032429;
+        Tue, 16 Jul 2019 19:45:41 -0500
 From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
 To:     linux-nvme@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
         Keith Busch <kbusch@kernel.org>,
         Christoph Hellwig <hch@lst.de>, Paul Pawlowski <paul@mrarm.io>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH v2 1/3] nvme-pci: Pass the queue to SQ_SIZE/CQ_SIZE macros
-Date:   Wed, 17 Jul 2019 10:45:25 +1000
-Message-Id: <20190717004527.30363-1-benh@kernel.crashing.org>
+Subject: [PATCH v2 3/3] nvme-pci: Add support for Apple 2018+ models
+Date:   Wed, 17 Jul 2019 10:45:27 +1000
+Message-Id: <20190717004527.30363-3-benh@kernel.crashing.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190717004527.30363-1-benh@kernel.crashing.org>
+References: <20190717004527.30363-1-benh@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will make it easier to handle variable queue entry sizes
-later. No functional change.
+Based on reverse engineering and original patch by
+
+Paul Pawlowski <paul@mrarm.io>
+
+This adds support for Apple weird implementation of NVME in their
+2018 or later machines. It accounts for the twice-as-big SQ entries
+for the IO queues, and the fact that only interrupt vector 0 appears
+to function properly.
 
 Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- drivers/nvme/host/pci.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
 
+# Conflicts:
+#	drivers/nvme/host/core.c
+---
+ drivers/nvme/host/nvme.h | 10 ++++++++++
+ drivers/nvme/host/pci.c  | 21 ++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 716a876119c8..ced0e0a7e039 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -92,6 +92,16 @@ enum nvme_quirks {
+ 	 * Broken Write Zeroes.
+ 	 */
+ 	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
++
++	/*
++	 * Use only one interrupt vector for all queues
++	 */
++	NVME_QUIRK_SINGLE_VECTOR		= (1 << 10),
++
++	/*
++	 * Use non-standard 128 bytes SQEs.
++	 */
++	NVME_QUIRK_128_BYTES_SQES		= (1 << 11),
+ };
+ 
+ /*
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index dd10cf78f2d3..8f006638452b 100644
+index 1637677afb78..7088971d4c42 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -28,8 +28,8 @@
- #include "trace.h"
- #include "nvme.h"
+@@ -2081,6 +2081,13 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 	dev->io_queues[HCTX_TYPE_DEFAULT] = 1;
+ 	dev->io_queues[HCTX_TYPE_READ] = 0;
  
--#define SQ_SIZE(depth)		(depth * sizeof(struct nvme_command))
--#define CQ_SIZE(depth)		(depth * sizeof(struct nvme_completion))
-+#define SQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_command))
-+#define CQ_SIZE(q)	((q)->q_depth * sizeof(struct nvme_completion))
- 
- #define SGES_PER_PAGE	(PAGE_SIZE / sizeof(struct nvme_sgl_desc))
- 
-@@ -1344,16 +1344,16 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 
- static void nvme_free_queue(struct nvme_queue *nvmeq)
- {
--	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq->q_depth),
-+	dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq),
- 				(void *)nvmeq->cqes, nvmeq->cq_dma_addr);
- 	if (!nvmeq->sq_cmds)
- 		return;
- 
- 	if (test_and_clear_bit(NVMEQ_SQ_CMB, &nvmeq->flags)) {
- 		pci_free_p2pmem(to_pci_dev(nvmeq->dev->dev),
--				nvmeq->sq_cmds, SQ_SIZE(nvmeq->q_depth));
-+				nvmeq->sq_cmds, SQ_SIZE(nvmeq));
- 	} else {
--		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq->q_depth),
-+		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq),
- 				nvmeq->sq_cmds, nvmeq->sq_dma_addr);
- 	}
++	/*
++	 * Some Apple controllers require all queues to use the
++	 * first vector.
++	 */
++	if (dev->ctrl.quirks & NVME_QUIRK_SINGLE_VECTOR)
++		irq_queues = 1;
++
+ 	return pci_alloc_irq_vectors_affinity(pdev, 1, irq_queues,
+ 			      PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY, &affd);
  }
-@@ -1433,12 +1433,12 @@ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
- }
+@@ -2322,7 +2329,16 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+ 				io_queue_depth);
+ 	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
+ 	dev->dbs = dev->bar + 4096;
+-	dev->io_sqes = NVME_NVM_IOSQES;
++
++	/*
++	 * Some Apple controllers require a non-standard SQE size.
++	 * Interestingly they also seem to ignore the CC:IOSQES register
++	 * so we don't bother updating it here.
++	 */
++	if (dev->ctrl.quirks & NVME_QUIRK_128_BYTES_SQES)
++		dev->io_sqes = 7;
++	else
++		dev->io_sqes = NVME_NVM_IOSQES;
  
- static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
--				int qid, int depth)
-+				int qid)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 
- 	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
--		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
-+		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(nvmeq));
- 		if (nvmeq->sq_cmds) {
- 			nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
- 							nvmeq->sq_cmds);
-@@ -1447,11 +1447,11 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
- 				return 0;
- 			}
- 
--			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
-+			pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(nvmeq));
- 		}
- 	}
- 
--	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(depth),
-+	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(nvmeq),
- 				&nvmeq->sq_dma_addr, GFP_KERNEL);
- 	if (!nvmeq->sq_cmds)
- 		return -ENOMEM;
-@@ -1465,12 +1465,13 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
- 	if (dev->ctrl.queue_count > qid)
- 		return 0;
- 
--	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(depth),
-+	nvmeq->q_depth = depth;
-+	nvmeq->cqes = dma_alloc_coherent(dev->dev, CQ_SIZE(nvmeq),
- 					 &nvmeq->cq_dma_addr, GFP_KERNEL);
- 	if (!nvmeq->cqes)
- 		goto free_nvmeq;
- 
--	if (nvme_alloc_sq_cmds(dev, nvmeq, qid, depth))
-+	if (nvme_alloc_sq_cmds(dev, nvmeq, qid))
- 		goto free_cqdma;
- 
- 	nvmeq->dev = dev;
-@@ -1479,15 +1480,14 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
- 	nvmeq->cq_head = 0;
- 	nvmeq->cq_phase = 1;
- 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
--	nvmeq->q_depth = depth;
- 	nvmeq->qid = qid;
- 	dev->ctrl.queue_count++;
- 
- 	return 0;
- 
-  free_cqdma:
--	dma_free_coherent(dev->dev, CQ_SIZE(depth), (void *)nvmeq->cqes,
--							nvmeq->cq_dma_addr);
-+	dma_free_coherent(dev->dev, CQ_SIZE(nvmeq), (void *)nvmeq->cqes,
-+			  nvmeq->cq_dma_addr);
-  free_nvmeq:
- 	return -ENOMEM;
- }
-@@ -1515,7 +1515,7 @@ static void nvme_init_queue(struct nvme_queue *nvmeq, u16 qid)
- 	nvmeq->cq_head = 0;
- 	nvmeq->cq_phase = 1;
- 	nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
--	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq->q_depth));
-+	memset((void *)nvmeq->cqes, 0, CQ_SIZE(nvmeq));
- 	nvme_dbbuf_init(dev, nvmeq, qid);
- 	dev->online_queues++;
- 	wmb(); /* ensure the first interrupt sees the initialization */
+ 	/*
+ 	 * Temporary fix for the Apple controller found in the MacBook8,1 and
+@@ -3039,6 +3055,9 @@ static const struct pci_device_id nvme_id_table[] = {
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
++		.driver_data = NVME_QUIRK_SINGLE_VECTOR |
++				NVME_QUIRK_128_BYTES_SQES },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, nvme_id_table);
 -- 
 2.17.1
 
