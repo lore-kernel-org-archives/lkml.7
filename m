@@ -2,151 +2,123 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCDBC76188
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B52C76188
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43C320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CCA20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 02:17:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nUiqNxzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfGQCQd (ORCPT
+        id S1727523AbfGQCRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 22:16:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43452 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbfGQCQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 22:16:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 69B073082128;
-        Wed, 17 Jul 2019 02:16:32 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-180.rdu2.redhat.com [10.10.122.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9697E60922;
-        Wed, 17 Jul 2019 02:16:29 +0000 (UTC)
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com
-Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <9fa54e98-0b9b-0931-db32-c6bd6ccfe75b@redhat.com>
-Date:   Tue, 16 Jul 2019 22:16:29 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 16 Jul 2019 22:17:54 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:36060 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfGQCRx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 22:17:53 -0400
+Received: by mail-vs1-f67.google.com with SMTP id y16so15360423vsc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jul 2019 19:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yeo9/78yIZ/9VC2V6OzC4jD48Q2tlshLhO2xlpzyNJY=;
+        b=nUiqNxzKLCH4uh7Rdk28OYJeCqZg+QKn/Ua3o40RM8WpdDaG3iflhnr8M/qkqbKcgw
+         MB6O6mEn6WPNEgokSircT8LHVL2pkHwIAhiObF6mtO0l5foVBQDuDCYQgfQ/yKy2vod1
+         EiRO1lNXlRxUc2xtXifWRV0NCnbRPoBSHfW0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yeo9/78yIZ/9VC2V6OzC4jD48Q2tlshLhO2xlpzyNJY=;
+        b=qg4GCmxEoypBuNnZKEq3r8EJ5ohkpPe83IGykjvDGHA269NH8kzW/b7lkHef0EItRZ
+         qcb26krgPU98ZqnOP1hqSlcdSAGT8MVwCQXL/GxzCWpGmA3LPNyOss6yTlejJORuIZ/w
+         O4CpeVRf09SFKDZ6dRk0e8tub/gyj12cI013HF21UXq2twkd8ILibXVbzOMTNpgCuMcR
+         JcK+NqPGnvGHhKrQE5kLjPhSRuMxUpo+3aHjF6n7/FR+l1zCyjQBV/2/I5MU+J9cyTn3
+         XxR3NAI7qG/nerZOt/TPuGpUH4MAgh480nKWgWmBeEal/BENCQgabI5Q2zI0OGITpT5b
+         JhbA==
+X-Gm-Message-State: APjAAAWkkaGnaJBlh/vDzfJjkRLbvmQowQjohUJOUtswLAk8GNviKIPB
+        hFmJucqJoQjtrxNM+LSuhyXRgzFYvRULHbE0ApuNXA==
+X-Google-Smtp-Source: APXvYqxWnVBbK8jRKVsd6t2y7gQJuZMs4DlVLf7zXq9OOaLMsZSZoBF8H9LF78AxDMSny/dXL5TfEDzdnilbzMthY7M=
+X-Received: by 2002:a67:ebcb:: with SMTP id y11mr13049180vso.138.1563329872293;
+ Tue, 16 Jul 2019 19:17:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190715192536.104548-4-alex.kogan@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 17 Jul 2019 02:16:32 +0000 (UTC)
+References: <20190716115725.66558-1-cychiang@chromium.org> <20190716115725.66558-3-cychiang@chromium.org>
+ <CA+Px+wWuCBvWra8+=szQOrvr3iv2YPMeoHHVtJ1vmaZWEEQ44A@mail.gmail.com>
+In-Reply-To: <CA+Px+wWuCBvWra8+=szQOrvr3iv2YPMeoHHVtJ1vmaZWEEQ44A@mail.gmail.com>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Wed, 17 Jul 2019 10:17:25 +0800
+Message-ID: <CAFv8NwKVEpnUi=+Hvi1_2vdYqWFd49zu8eoQbMwnjg6i_PGhcA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] drm: bridge: dw-hdmi: Report connector status
+ using callback
+To:     Tzung-Bi Shih <tzungbi@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        ALSA development <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/15/19 3:25 PM, Alex Kogan wrote:
-> +/*
-> + * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
-> + *
-> + * In CNA, spinning threads are organized in two queues, a main queue for
-> + * threads running on the same node as the current lock holder, and a
-> + * secondary queue for threads running on other nodes. At the unlock time,
-> + * the lock holder scans the main queue looking for a thread running on
-> + * the same node. If found (call it thread T), all threads in the main queue
-> + * between the current lock holder and T are moved to the end of the
-> + * secondary queue, and the lock is passed to T. If such T is not found, the
-> + * lock is passed to the first node in the secondary queue. Finally, if the
-> + * secondary queue is empty, the lock is passed to the next thread in the
-> + * main queue. To avoid starvation of threads in the secondary queue,
-> + * those threads are moved back to the head of the main queue
-> + * after a certain expected number of intra-node lock hand-offs.
-> + *
-> + * For more details, see https://arxiv.org/abs/1810.05600.
-> + *
-> + * Authors: Alex Kogan <alex.kogan@oracle.com>
-> + *          Dave Dice <dave.dice@oracle.com>
-> + */
-> +
-> +struct cna_node {
-> +	struct	mcs_spinlock mcs;
-> +	u32	numa_node;
-> +	u32	encoded_tail;
-> +	struct	cna_node *tail;    /* points to the secondary queue tail */
-> +};
-> +
-> +#define CNA_NODE(ptr) ((struct cna_node *)(ptr))
-> +
-> +static void cna_init_node(struct mcs_spinlock *node)
-> +{
-> +	struct cna_node *cn = CNA_NODE(node);
-> +	struct mcs_spinlock *base_node;
-> +	int cpuid;
-> +
-> +	BUILD_BUG_ON(sizeof(struct cna_node) > sizeof(struct qnode));
-> +	/* we store a pointer in the node's @locked field */
-> +	BUILD_BUG_ON(sizeof(uintptr_t) > sizeof_field(struct mcs_spinlock, locked));
-> +
-> +	cpuid = smp_processor_id();
-> +	cn->numa_node = cpu_to_node(cpuid);
-> +
-> +	base_node = this_cpu_ptr(&qnodes[0].mcs);
-> +	cn->encoded_tail = encode_tail(cpuid, base_node->count - 1);
-> +}
-> +
-> +/**
-> + * find_successor - Scan the main waiting queue looking for the first
-> + * thread running on the same node as the lock holder. If found (call it
-> + * thread T), move all threads in the main queue between the lock holder
-> + * and T to the end of the secondary queue and return T; otherwise, return NULL.
-> + */
-
-Here you talk about main and secondary queues. However, there is no
-mention of what are those queues. As I am familiar with qspinlock queue,
-I can figure out that the main queue is the mcs_node->next chain that
-starts from the MCS lock holder. The secondary queue is a separate MCS
-node chain with its head stored in the mcs_node->locked value of the MCS
-lock holder and the tail stored in the cna->tail. More detail comments
-on what and where they are will help to improve the readability of the
-code. A simple graphic to illustrate those queues will help too, for example
-
-/*
- * MCS lock holder
- * ===============
- *    mcs_node
- *   +--------+      +----+         +----+
- *   | next   | ---> |next| -> ...  |next| -> NULL  [Main queue]
- *   | locked | -+   +----+         +----+
- *   +--------+  |
- *               |   +----+         +----+
- *               +-> |next| -> ...  |next| -> X     [Secondary queue]
- *    cna_node       +----+         +----+
- *   +--------*                       ^
- *   | tail   | ----------------------+
- *   +--------*   
- *
- * N.B. locked = 1 if secondary queue is absent.
- */
-
-> +static struct cna_node *find_successor(struct mcs_spinlock *me)
-> +{
-> +	struct cna_node *me_cna = CNA_NODE(me);
-> +	struct cna_node *head_other, *tail_other, *cur;
-As you have talked about secondary queue, how about head_2nd, tail_2nd
-instead of *_other?
-
-Cheers,
-Longman
-
+On Tue, Jul 16, 2019 at 10:13 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
+>
+> On Tue, Jul 16, 2019 at 7:57 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+> >
+> > Change the Kconfig of DRM_DW_HDMI so it selects SND_SOC_HDMI_CODEC.
+> > This is for the typedef of hdmi_codec_plugged_cb to be used in dw-hdmi.c.
+> Not sure why you select SND_SOC_HDMI_CODEC in this patch.  To have
+> definition of hdmi_codec_plugged_cb, include hdmi-codec.h should be
+> sufficient.
+>
+Thank you for the review!
+I misunderstood when to change Kconfig.
+Will fix in v5.
+> >
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/Kconfig b/drivers/gpu/drm/bridge/synopsys/Kconfig
+> > index 21a1be3ced0f..309da052db97 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/Kconfig
+> > +++ b/drivers/gpu/drm/bridge/synopsys/Kconfig
+> > @@ -4,6 +4,7 @@ config DRM_DW_HDMI
+> >         select DRM_KMS_HELPER
+> >         select REGMAP_MMIO
+> >         select CEC_CORE if CEC_NOTIFIER
+> > +       select SND_SOC_HDMI_CODEC
+> So that it is weird to select this option.
+>
+Will be removed in v5.
+Thanks!
+> >
+> >  config DRM_DW_HDMI_AHB_AUDIO
+> >         tristate "Synopsys Designware AHB Audio interface"
+> > @@ -20,7 +21,6 @@ config DRM_DW_HDMI_I2S_AUDIO
+> >         tristate "Synopsys Designware I2S Audio interface"
+> >         depends on SND_SOC
+> >         depends on DRM_DW_HDMI
+> > -       select SND_SOC_HDMI_CODEC
+> Also strange for deselecting the option.  Should be in another commit
+> for another reason?
+Will be removed in v5.
+Thanks!
