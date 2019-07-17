@@ -2,159 +2,74 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71254C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEFCC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DB42173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:40:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Sn8ZMHe7"
+	by mail.kernel.org (Postfix) with ESMTP id 7609D2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfGQIkB (ORCPT
+        id S1726248AbfGQIoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:40:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45592 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfGQIkB (ORCPT
+        Wed, 17 Jul 2019 04:44:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52527 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfGQIoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=k3SygQrVYGRxIr8/Ey1B5LfPQh62hunNBAFxIxNx0uo=; b=Sn8ZMHe7TPDK3LeiyU0p8YDyYE
-        hQ8umtlgXoLUK2rhJ/07RgbpoQlHOwWua9liOHQkJrKQ5SuYGn/c19YbTWdxL9Tl1qtfYYUFL/e+y
-        rFuWzMRT1cWmHeR7lMOmDiNRaFRxWvzGJKuhAPMr0pRFizfmcThOeRuy/+qeezNufBrfjpQI9OY7/
-        pXkJ5Bz9jAfFwattW9W80S+Ak3itmeoyXasleKQMbqSMpQSvg33T9Xh+M7P0Dspzt2HLY33rJ4L0H
-        VdD+jHmC0/cAkBE2KSuPsjyWCD6CA9jkgplZzQrT14HuAP0bCpUfF7KTjrZwbVHV52v0vHr7mzVWo
-        aQ3Um6kA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnfTW-0000SX-DN; Wed, 17 Jul 2019 08:39:46 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BF02420B15D60; Wed, 17 Jul 2019 10:39:44 +0200 (CEST)
-Date:   Wed, 17 Jul 2019 10:39:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Subject: Re: [PATCH v3 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20190717083944.GR3463@hirez.programming.kicks-ass.net>
-References: <20190715192536.104548-1-alex.kogan@oracle.com>
- <20190715192536.104548-4-alex.kogan@oracle.com>
- <20190716155022.GR3419@hirez.programming.kicks-ass.net>
- <193BBB31-F376-451F-BDE1-D4807140EB51@oracle.com>
- <20190716184724.GH3402@hirez.programming.kicks-ass.net>
+        Wed, 17 Jul 2019 04:44:02 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hnfXc-0000rM-8D; Wed, 17 Jul 2019 10:44:00 +0200
+Date:   Wed, 17 Jul 2019 10:43:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LAK <linux-arm-kernel@lists.infradead.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] arm64: Avoid pointless schedule_preempt_irq() invocations
+Message-ID: <alpine.DEB.2.21.1907171036490.1767@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190716184724.GH3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 08:47:24PM +0200, Peter Zijlstra wrote:
-> On Tue, Jul 16, 2019 at 01:19:16PM -0400, Alex Kogan wrote:
-> > > On Jul 16, 2019, at 11:50 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > static void cna_move(struct cna_node *cn, struct cna_node *cni)
-> > > {
-> > > 	struct cna_node *head, *tail;
-> > > 
-> > > 	/* remove @cni */
-> > > 	WRITE_ONCE(cn->mcs.next, cni->mcs.next);
-> > > 
-> > > 	/* stick @cni on the 'other' list tail */
-> > > 	cni->mcs.next = NULL;
-> > > 
-> > > 	if (cn->mcs.locked <= 1) {
-> > > 		/* head = tail = cni */
-> > > 		head = cni;
-> > > 		head->tail = cni;
-> > > 		cn->mcs.locked = head->encoded_tail;
-> > > 	} else {
-> > > 		/* add to tail */
-> > > 		head = (struct cna_node *)decode_tail(cn->mcs.locked);
-> > > 		tail = tail->tail;
-> > > 		tail->next = cni;
-> > > 	}
-> > > }
-> > > 
-> > > static struct cna_node *cna_find_next(struct mcs_spinlock *node)
-> > > {
-> > > 	struct cna_node *cni, *cn = (struct cna_node *)node;
-> > > 
-> > > 	while ((cni = (struct cna_node *)READ_ONCE(cn->mcs.next))) {
-> > > 		if (likely(cni->node == cn->node))
-> > > 			break;
-> > > 
-> > > 		cna_move(cn, cni);
-> > > 	}
-> > > 
-> > > 	return cni;
-> > > }
-> > But then you move nodes from the main list to the ‘other’ list one-by-one.
-> > I’m afraid this would be unnecessary expensive.
-> > Plus, all this extra work is wasted if you do not find a thread on the same 
-> > NUMA node (you move everyone to the ‘other’ list only to move them back in 
-> > cna_mcs_pass_lock()).
-> 
-> My primary concern was readability; I find the above suggestion much
-> more readable. Maybe it can be written differently; you'll have to play
-> around a bit.
+When preempt_count is zero on return from interrupt then
+schedule_preempt_irq() is invoked even if TIF_NEED_RESCHED is not set.
 
-static void cna_splice_tail(struct cna_node *cn, struct cna_node *head, struct cna_node *tail)
-{
-	struct cna_node *list;
+That does not make sense because schedule_preempt_irq() has to go through a
+full __schedule() for nothing in that case.
 
-	/* remove [head,tail] */
-	WRITE_ONCE(cn->mcs.next, tail->mcs.next);
-	tail->mcs.next = NULL;
+Check TIF_NEED_RESCHED and invoke schedule_preempt_irq() only if set.
 
-	/* stick [head,tail] on the secondary list tail */
-	if (cn->mcs.locked <= 1) {
-		/* create secondary list */
-		head->tail = tail;
-		cn->mcs.locked = head->encoded_tail;
-	} else {
-		/* add to tail */
-		list = (struct cna_node *)decode_tail(cn->mcs.locked);
-		list->tail->next = head;
-		list->tail = tail;
-	}
-}
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+Found while staring at some RT wrecakge in that area.
+---
+ arch/arm64/kernel/entry.S |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-static struct cna_node *cna_find_next(struct mcs_spinlock *node)
-{
-	struct cna_node *cni, *cn = (struct cna_node *)node;
-	struct cna_node *head, *tail = NULL;
-
-	/* find any next lock from 'our' node */
-	for (head = cni = (struct cna_node *)READ_ONCE(cn->mcs.next);
-	     cni && cni->node != cn->node;
-	     tail = cni, cni = (struct cna_node *)READ_ONCE(cni->mcs.next))
-		;
-
-	/* when found, splice any skipped locks onto the secondary list */
-	if (cni && tail)
-		cna_splice_tail(cn, head, tail);
-
-	return cni;
-}
-
-How's that?
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -680,6 +680,10 @@ alternative_if ARM64_HAS_IRQ_PRIO_MASKIN
+ 	orr	x24, x24, x0
+ alternative_else_nop_endif
+ 	cbnz	x24, 1f				// preempt count != 0 || NMI return path
++
++	ldr	x0, [tsk, #TSK_TI_FLAGS]        // get flags
++	tbz	x0, #TIF_NEED_RESCHED, 1f      	// needs rescheduling?
++
+ 	bl	preempt_schedule_irq		// irq en/disable is done inside
+ 1:
+ #endif
