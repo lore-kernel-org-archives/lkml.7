@@ -2,40 +2,40 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF728C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907B9C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD557208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A137217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 22:26:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfGQW0a (ORCPT
+        id S1730474AbfGQW0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 18:26:30 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:58406 "EHLO
+        Wed, 17 Jul 2019 18:26:34 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:50708 "EHLO
         mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbfGQW0a (ORCPT
+        with ESMTP id S1727106AbfGQW0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 18:26:30 -0400
+        Wed, 17 Jul 2019 18:26:32 -0400
 Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45psLW5mKDz1rTYH;
-        Thu, 18 Jul 2019 00:26:27 +0200 (CEST)
+        by mail-out.m-online.net (Postfix) with ESMTP id 45psLZ65jsz1rJhX;
+        Thu, 18 Jul 2019 00:26:30 +0200 (CEST)
 Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45psLW4fVfz1qqkw;
-        Thu, 18 Jul 2019 00:26:27 +0200 (CEST)
+        by mail.m-online.net (Postfix) with ESMTP id 45psLZ53dYz1qqkw;
+        Thu, 18 Jul 2019 00:26:30 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at mnet-online.de
 Received: from mail.mnet-online.de ([192.168.8.182])
         by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id isozBEYpkbWb; Thu, 18 Jul 2019 00:26:25 +0200 (CEST)
-X-Auth-Info: Hw6LbJ4s0auCKWd0NCjbmFog2izvtJsMNFg0ei0I90o=
+        with ESMTP id B9NlzxDbVMh1; Thu, 18 Jul 2019 00:26:29 +0200 (CEST)
+X-Auth-Info: vvr2+glzC/hB5ATNDEgEN9uhALRIyYHsR650OZoKZ/I=
 Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu, 18 Jul 2019 00:26:25 +0200 (CEST)
+        Thu, 18 Jul 2019 00:26:29 +0200 (CEST)
 From:   Lukasz Majewski <lukma@denx.de>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -45,40 +45,89 @@ Cc:     linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Kate Stewart <kstewart@linuxfoundation.org>,
         linux-input@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v4 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's mc34708
-Date:   Thu, 18 Jul 2019 00:25:59 +0200
-Message-Id: <20190717222602.2912-1-lukma@denx.de>
+Subject: [PATCH v4 2/3] input: touchscreen mc13xxx: Make platform data optional
+Date:   Thu, 18 Jul 2019 00:26:01 +0200
+Message-Id: <20190717222602.2912-3-lukma@denx.de>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190717222602.2912-1-lukma@denx.de>
+References: <20190717222602.2912-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set provides several enhancements to mc13xxx MFD family
-of devices by introducing mc34708 as a separate device.
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-This IC has dedicated pen detection feature, which allows better
-touchscreen experience.
+The platform data once was optional, make it optional again. This
+is a first step towards device tree support for the mc13xxx touchscreen
+driver.
 
-This is the fourth version of this code (v4).
-Discussion regarding v1 can be found here:
-https://lkml.org/lkml/2018/4/12/351
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.html
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.html
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+Changes for v4:
+- Add Dmitry's Acked-by:
 
+Changes for v3:
+- None
 
-Sascha Hauer (3):
-  mfd: mc13xxx: Add mc34708 adc support
-  input: touchscreen mc13xxx: Make platform data optional
-  input: touchscreen mc13xxx: Add mc34708 support
+Changes for v2:
+- None
 
- drivers/input/touchscreen/mc13783_ts.c |  63 ++++++++++++++++----
- drivers/mfd/mc13xxx-core.c             | 102 ++++++++++++++++++++++++++++++++-
- drivers/mfd/mc13xxx.h                  |   3 +
- include/linux/mfd/mc34708.h            |  37 ++++++++++++
- 4 files changed, 193 insertions(+), 12 deletions(-)
- create mode 100644 include/linux/mfd/mc34708.h
+Changes from the original patch:
+- Commit message typo fixes
+---
+ drivers/input/touchscreen/mc13783_ts.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/input/touchscreen/mc13783_ts.c b/drivers/input/touchscreen/mc13783_ts.c
+index ae0d978c83bf..edd49e44e0c9 100644
+--- a/drivers/input/touchscreen/mc13783_ts.c
++++ b/drivers/input/touchscreen/mc13783_ts.c
+@@ -35,7 +35,8 @@ struct mc13783_ts_priv {
+ 	struct mc13xxx *mc13xxx;
+ 	struct delayed_work work;
+ 	unsigned int sample[4];
+-	struct mc13xxx_ts_platform_data *touch;
++	u8 ato;
++	bool atox;
+ };
+ 
+ static irqreturn_t mc13783_ts_handler(int irq, void *data)
+@@ -125,7 +126,7 @@ static void mc13783_ts_work(struct work_struct *work)
+ 
+ 	if (mc13xxx_adc_do_conversion(priv->mc13xxx,
+ 				mode, channel,
+-				priv->touch->ato, priv->touch->atox,
++				priv->ato, priv->atox,
+ 				priv->sample) == 0)
+ 		mc13783_ts_report_sample(priv);
+ }
+@@ -169,6 +170,7 @@ static void mc13783_ts_close(struct input_dev *dev)
+ static int __init mc13783_ts_probe(struct platform_device *pdev)
+ {
+ 	struct mc13783_ts_priv *priv;
++	struct mc13xxx_ts_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	struct input_dev *idev;
+ 	int ret = -ENOMEM;
+ 
+@@ -180,11 +182,10 @@ static int __init mc13783_ts_probe(struct platform_device *pdev)
+ 	INIT_DELAYED_WORK(&priv->work, mc13783_ts_work);
+ 	priv->mc13xxx = dev_get_drvdata(pdev->dev.parent);
+ 	priv->idev = idev;
+-	priv->touch = dev_get_platdata(&pdev->dev);
+-	if (!priv->touch) {
+-		dev_err(&pdev->dev, "missing platform data\n");
+-		ret = -ENODEV;
+-		goto err_free_mem;
++
++	if (pdata) {
++		priv->atox = pdata->atox;
++		priv->ato = pdata->ato;
+ 	}
+ 
+ 	idev->name = MC13783_TS_NAME;
 -- 
 2.11.0
 
