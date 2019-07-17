@@ -2,181 +2,165 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE41C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87105C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651B9217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5956321743
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 08:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgpTCd0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfGQI6P (ORCPT
+        id S1727130AbfGQI6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 04:58:15 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:38431 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbfGQI6I (ORCPT
+        Wed, 17 Jul 2019 04:58:21 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42729 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfGQI6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 04:58:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id h4so26459904iol.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 01:58:07 -0700 (PDT)
+        Wed, 17 Jul 2019 04:58:12 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so10504019pff.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 01:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TV4qxs2n08gZo7racpvsLudptxi6rnkrvduj7r235gE=;
+        b=SgpTCd0z62yKaM4dIK7cO/buQd33jmMoWt2boG/K0rBXZXRGsmx2ymLehL8QFzbUaQ
+         1KiotepetWU1ZEZxnHObR66lw1OH0COUh0PRyWD7S7x1gKzH7dA/QPPIem3+lkT47hSk
+         iNSf8H4plHWYt2BdAO254zOB4i+c4UNzw3+piAGExUNLXbaC0FVHIwaMgwdFZ27OeYuI
+         SdvWuu5/0XyCc3VX1ZhoKB2bKoc8veckZV1sKh3KVlnXv+4BEKC3tIgGplaMiwkS2fDc
+         Fx3p8pgoj9fijIe170TWpN8jWbagQeS92uRXe3ch2SSaWTZ4/Oeb7beszY5RQXF1yDR2
+         npAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=CJN4Gn5liL+Jh4v+hqpUaqsWoFYa6wblFMfrTlxL8OU=;
-        b=rNenBV1LL7Y4T0vbL1M2bsjB+Su/CAYosTKqRTwihkZSrdOkDnsf2uSecee/YIOMf2
-         1NGvPni/WagNpoKxQhi+j8m0hbH3ustAqW4KXrvJ4gyUIRef0ibSQm7sky0KRNNE20QG
-         Waf9vRPNJT3UI+PjLhephaztpW41roW151f7WzD79K76VxD1NBPkfM3+LStRRoy8eG6e
-         Qw8GVFcZ/529r36fnmm3qDwRtM+Najo2KIr0MNPGqAGn3VVNkDyq6HmdTXtUhpNNnlLS
-         Cm6fxDTBAjLW59sRpuhmuG35G6tnfBNKugKV8T8zZJn9LBakclAWtLovvl58/7Zxl6KV
-         u2GA==
-X-Gm-Message-State: APjAAAVNBI8PgPY9RfEwpsYQ4GU49owVL6Pftx708KTDN94FgIL3Q02Z
-        3e8kA0ESKD3P9pCdTgj20a+x5Qie7t2JQtQQtdBTj7oxYibu
-X-Google-Smtp-Source: APXvYqxd7ZhaaWkXOV+fLH0umZHc+nGgsaMmwYqUp9a22i6583Rozz+W85kIpA1+g3OfMKCk4uKdAbbKd+HxmP1/bq+GAnqlVG0c
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TV4qxs2n08gZo7racpvsLudptxi6rnkrvduj7r235gE=;
+        b=GFYwiyVNNJMujQ5kGeOgFq6HZF2XE7oMgIKZy3dsoSwesEsMVtCqgt8l22OB4SIKpg
+         UiyNXQkBjyLorUiJjx6lvbfzZGdtl09OKPNgk4futARHl8MjodtiVoq98xLV4HTN5MFW
+         OfggKYVtttV208Lgncl5pI2U1CmL61QSAi3ponZkya7gjH4lMw47MHBqlPPocBonbG85
+         9oRDc6HKNR4tkjtinjAyZRqaNzfbYvmrDlWNZewtRg1JwychVA6rlhm4GnhByNEkUkuu
+         ArOIT5C94MmYeCshnf/KlNY4IAsAutilbtgBVcdOVr4jgrHaXWp3m0F1YwPIHjNQFMkw
+         rPMQ==
+X-Gm-Message-State: APjAAAVciwnqFzfkiAS1hbLhZpYCSY9IfuSNcozBZInmGIgr8RBq26CA
+        BYChKVbCofXVq5L12iNRF8eKOHjWQlbeQw==
+X-Google-Smtp-Source: APXvYqwfa0H2woIcnsTn2ce+Ce0XftkvpQt+auITRXk2EX1rd4s0C7yaC5sXbEdDs8zHkQZ8uEMbbQ==
+X-Received: by 2002:a63:c203:: with SMTP id b3mr40335174pgd.450.1563353891884;
+        Wed, 17 Jul 2019 01:58:11 -0700 (PDT)
+Received: from ArchLinux ([103.231.91.34])
+        by smtp.gmail.com with ESMTPSA id o11sm43398998pfh.114.2019.07.17.01.58.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 01:58:10 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 14:27:58 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Jonathan Corbet <corbet@lwn.net>,
+        Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: incoming
+Message-ID: <20190717085758.GA2025@ArchLinux>
+References: <20190716162536.bb52b8f34a8ecf5331a86a42@linux-foundation.org>
+ <8056ff9c-1ff2-6b6d-67c0-f62e66064428@suse.cz>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:9701:: with SMTP id w1mr36713957ioj.294.1563353887422;
- Wed, 17 Jul 2019 01:58:07 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 01:58:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001e443b058ddcb128@google.com>
-Subject: KASAN: use-after-free Write in check_noncircular
-From:   syzbot <syzbot+f5ceb7c55f59455035ca@syzkaller.appspotmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, jmorris@namei.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <8056ff9c-1ff2-6b6d-67c0-f62e66064428@suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
-
-HEAD commit:    9637d517 Merge tag 'for-linus-20190715' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f42e1fa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=88095c4f62402bcd
-dashboard link: https://syzkaller.appspot.com/bug?extid=f5ceb7c55f59455035ca
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cfbe1fa00000
-
-The bug was bisected to:
-
-commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
-Author: John Fastabend <john.fastabend@gmail.com>
-Date:   Sat Jun 30 13:17:47 2018 +0000
-
-     bpf: sockhash fix omitted bucket lock in sock_close
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109c3078600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=129c3078600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=149c3078600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f5ceb7c55f59455035ca@syzkaller.appspotmail.com
-Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
-
-==================================================================
-BUG: KASAN: use-after-free in check_noncircular+0x91/0x560  
-kernel/locking/lockdep.c:1722
-Write of size 56 at addr ffff888089815160 by task syz-executor.4/8772
-
-CPU: 1 PID: 8772 Comm: syz-executor.4 Not tainted 5.2.0+ #31
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-
-Allocated by task 8457:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:487
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
-  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  tomoyo_print_header security/tomoyo/audit.c:156 [inline]
-  tomoyo_init_log+0x176/0x1f20 security/tomoyo/audit.c:255
-  tomoyo_supervisor+0x39c/0x13f0 security/tomoyo/common.c:2095
-  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
-  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
-  tomoyo_check_open_permission+0x488/0x9e0 security/tomoyo/file.c:777
-  tomoyo_file_open+0x141/0x190 security/tomoyo/tomoyo.c:319
-  security_file_open+0x65/0x2f0 security/security.c:1457
-  do_dentry_open+0x397/0x1060 fs/open.c:765
-  vfs_open+0x73/0x80 fs/open.c:887
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x136d/0x4400 fs/namei.c:3533
-  do_filp_open+0x1f7/0x430 fs/namei.c:3563
-  do_sys_open+0x343/0x620 fs/open.c:1070
-  __do_sys_open fs/open.c:1088 [inline]
-  __se_sys_open fs/open.c:1083 [inline]
-  __x64_sys_open+0x87/0x90 fs/open.c:1083
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 8457:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x115/0x200 mm/slab.c:3756
-  tomoyo_init_log+0x1bf7/0x1f20 security/tomoyo/audit.c:294
-  tomoyo_supervisor+0x39c/0x13f0 security/tomoyo/common.c:2095
-  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
-  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
-  tomoyo_check_open_permission+0x488/0x9e0 security/tomoyo/file.c:777
-  tomoyo_file_open+0x141/0x190 security/tomoyo/tomoyo.c:319
-  security_file_open+0x65/0x2f0 security/security.c:1457
-  do_dentry_open+0x397/0x1060 fs/open.c:765
-  vfs_open+0x73/0x80 fs/open.c:887
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x136d/0x4400 fs/namei.c:3533
-  do_filp_open+0x1f7/0x430 fs/namei.c:3563
-  do_sys_open+0x343/0x620 fs/open.c:1070
-  __do_sys_open fs/open.c:1088 [inline]
-  __se_sys_open fs/open.c:1083 [inline]
-  __x64_sys_open+0x87/0x90 fs/open.c:1083
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880898146c0
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 2720 bytes inside of
-  4096-byte region [ffff8880898146c0, ffff8880898156c0)
-The buggy address belongs to the page:
-page:ffffea0002260500 refcount:1 mapcount:0 mapping:ffff8880aa402000  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea0002263b08 ffffea0002916d08 ffff8880aa402000
-raw: 0000000000000000 ffff8880898146c0 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888089815000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888089815080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff888089815100: fb fb fb fb f1 f1 f1 f1 00 f2 f2 f2 fb fb fb fb
-                                                        ^
-  ffff888089815180: fb fb fb f3 f3 f3 f3 f3 fb fb fb fb fb fb fb fb
-  ffff888089815200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Cool !!=20
+
+On 10:47 Wed 17 Jul , Vlastimil Babka wrote:
+>On 7/17/19 1:25 AM, Andrew Morton wrote:
+>>
+>> Most of the rest of MM and just about all of the rest of everything
+>> else.
+>
+>Hi,
+>
+>as I've mentioned at LSF/MM [1], I think it would be nice if mm pull
+>requests had summaries similar to other subsystems. I see they are now
+>more structured (thanks!), but they are now probably hitting the limit
+>of what scripting can do to produce a high-level summary for human
+>readers (unless patch authors themselves provide a blurb that can be
+>extracted later?).
+>
+>So I've tried now to provide an example what I had in mind, below. Maybe
+>it's too concise - if there were "larger" features in this pull request,
+>they would probably benefit from more details. I'm CCing the known (to
+>me) consumers of these mails to judge :) Note I've only covered mm, and
+>core stuff that I think will be interesting to wide audience (change in
+>LIST_POISON2 value? I'm sure as hell glad to know about that one :)
+>
+>Feel free to include this in the merge commit, if you find it useful.
+>
+>Thanks,
+>Vlastimil
+>
+>[1] https://lwn.net/Articles/787705/
+>
+>-----
+>
+>- z3fold fixes and enhancements by Henry Burns and Vitaly Wool
+>- more accurate reclaimed slab caches calculations by Yafang Shao
+>- fix MAP_UNINITIALIZED UAPI symbol to not depend on config, by
+>Christoph Hellwig
+>- !CONFIG_MMU fixes by Christoph Hellwig
+>- new novmcoredd parameter to omit device dumps from vmcore, by Kairui Song
+>- new test_meminit module for testing heap and pagealloc initialization,
+>by Alexander Potapenko
+>- ioremap improvements for huge mappings, by Anshuman Khandual
+>- generalize kprobe page fault handling, by Anshuman Khandual
+>- device-dax hotplug fixes and improvements, by Pavel Tatashin
+>- enable synchronous DAX fault on powerpc, by Aneesh Kumar K.V
+>- add pte_devmap() support for arm64, by Robin Murphy
+>- unify locked_vm accounting with a helper, by Daniel Jordan
+>- several misc fixes
+>
+>core/lib
+>- new typeof_member() macro including some users, by Alexey Dobriyan
+>- make BIT() and GENMASK() available in asm, by Masahiro Yamada
+>- changed LIST_POISON2 on x86_64 to 0xdead000000000122 for better code
+>generation, by Alexey Dobriyan
+>- rbtree code size optimizations, by Michel Lespinasse
+>- convert struct pid count to refcount_t, by Joel Fernandes
+>
+>get_maintainer.pl
+>- add --no-moderated switch to skip moderated ML's, by Joe Perches
+>
+>
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl0u4xEACgkQsjqdtxFL
+KRWrWwf8Cy7nQCi6JgRKYAQ4L1ZAV38WQCEe/uU0nfsMpVCABe01JZuWwavKS6Z0
+WQddJZAQNzVXsAT4jmtj0KCABVIPoUMwaJ/H7wjN3uKIWgBfx+0d9pLWpVVa5DAK
+KwNbjBwSXe4G1CiAJ0w0ZQ6mUdiHe8wwGE1sZI8V/SldhjFeBtlfUqcwcN24GCr5
+dyjof/z8aa53uNPN5F+UVdwKU7GudPsVrohpnVgjmq3t2hn2epLbITFEwfNMUlBh
+mcF7HIE+Jhs2V59EVKv/k4OiGOJoEYe2HeOvHN5QgvQA5qqU99tYxROWokggcVPS
+9gKfzx3IdOoFLCvRq0YtgPfMZVBi2g==
+=zmHX
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
