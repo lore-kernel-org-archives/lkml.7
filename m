@@ -2,335 +2,298 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A12C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C255C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F086621783
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D63217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:15:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UM/mzhfJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GL7DFjZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfGQVOU (ORCPT
+        id S1727935AbfGQVPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 17:14:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45485 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfGQVOT (ORCPT
+        Wed, 17 Jul 2019 17:15:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36450 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727361AbfGQVPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 17:14:19 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so26285992wre.12;
-        Wed, 17 Jul 2019 14:14:16 -0700 (PDT)
+        Wed, 17 Jul 2019 17:15:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so11461883pfl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 14:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=NAV2k4PQLpVaOv8B5/hd+OkxmtsRot12uEd3jdJAhfo=;
-        b=UM/mzhfJ/Yn+yR5Q/4LlDfzuvwk/xCBL4wOvv+O25QzI6mR1+H5sQyOeQvsBCEbgTE
-         bBOQhqrRpNuhBZr6dam//gLkhVuwLBX9x2Zcxt2UMcOzO4PLa9HHIfy1SxJYm35+HjV8
-         Aw5bAQwZjQxSlcELu+vfURdXS+grglrDeo5l8AvKZzP5h5kI1/1rBD8cLfo4i09EYSR0
-         szYvRbwTOoNr63dQK+C22219zb44UVrKuEoR8JicOggYnmmZxFp3nZYY9LDXmlUunKzF
-         JGQBI05OIqAFAn/B39dRu940s/sQi9CBo5Qr8ZeV95S7Qrr+evJa66ed5eMmt2pwcFgK
-         N/1g==
+        bh=30Ka5qQYcLpafISMDmxQq3ADaqOMQoYykPXBu8tolwk=;
+        b=GL7DFjZW8fz/+M4S71u08px6iKy3+8EGU7r38xP03tUPiXDnOwAR/UQhk4ZNlZGqUO
+         hFzR/Xfh/cZ3Uw5hiaC8VYL3YEnNDwfdeL9muEgBXsqa7su5JiwhFIO9BC4TcAODt5kd
+         YcgcRmc5Kg6u6oQZ5dbFLm2/pENxcuFTdnyUPLPzgxuhRJ58h6/N1RHwxHMRW7XQto9C
+         dn0Is7BurkbgpmNoZyV4cVlVHXfwTWTqE5rrvMqicKWYPvwLmEStIK39FoAhAHyazuL0
+         oPU6b+nfl4OLUqACeLG5eJNZHyJHPd2HvX45raG/TwLB600QLdsDiYqTlDwZQA/SmT31
+         e1pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NAV2k4PQLpVaOv8B5/hd+OkxmtsRot12uEd3jdJAhfo=;
-        b=ED5h6ECrj0ZBwtHolwR7xkyvY1I9busMAz0z3YPEN7uFCBlGkk6vZDnWFMhRN+agb/
-         MFLCFRdZo/qgz/JFN7RRe9UEpU1Oi9/hAAkJAKbtW98W4r3FvzIH32DTPi7mMsuZrL90
-         Ax3JIB5ytVx+F/HfRWVTEg3ONUOGEXIRfblK7HS8e3SCwGasDWUmjmePw4Di3j85yJDR
-         0gM70sAAlO3u0GZE2HsIvzfmv54+RHyHggvHARtzMN/MorntDv8NXvgfQgxhd4u23Pw5
-         vjY31XJ3N7SXoku+5Esncd5G3JF1xKNIZ9WUw1dppCyjmsGZM7bEl4Gj9/3+kBP714SH
-         GOSg==
-X-Gm-Message-State: APjAAAXUkyEL54evrhE+uSo0eYNdUuHYvimzBuQsIOd8IKVIjCUR3WVT
-        jdtYMEFd5EXnilz6QHXNg/8=
-X-Google-Smtp-Source: APXvYqweWbBWVFhAoSDb9IT9r6wEvrTjeiTpBA8uvdAzgdJn5r+tDGfYZH+wBehlVNCl/WT6Tz1aaw==
-X-Received: by 2002:adf:ed04:: with SMTP id a4mr41731543wro.86.1563398056060;
-        Wed, 17 Jul 2019 14:14:16 -0700 (PDT)
-Received: from [192.168.1.19] (bgq113.neoplus.adsl.tpnet.pl. [83.28.80.113])
-        by smtp.gmail.com with ESMTPSA id h8sm25394215wmf.12.2019.07.17.14.14.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 14:14:15 -0700 (PDT)
-Subject: Re: [PATCH v5 00/26] Add generic support for composing LED class
- device name
-To:     linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, dtor@google.com, linux@roeck-us.net
-References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
- eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
- FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
- X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
- 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
- Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
- FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
- osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
- IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
- ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
- emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
- AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
- 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
- aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
- hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
- T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
- R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
- 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
- eGGiEQ==
-Message-ID: <405b2806-342a-952d-67ab-47516225c54e@gmail.com>
-Date:   Wed, 17 Jul 2019 23:14:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=30Ka5qQYcLpafISMDmxQq3ADaqOMQoYykPXBu8tolwk=;
+        b=RdM2n0ARxj3LvJIiTAOfboa/meC3cDtywDSpaS0oFhodn/xDBXvhFwaQUE7CgVsrOW
+         gkrR74o9xAgLjt/w8JAoX84xSpbKSznax/tR+sRyJrCxN1qj/Lr5SM2kAD9dMbJ6IJZO
+         7rBHb2xZkIlIVnFi1PsXQmr4qshA//pPmN4Cr7HQVt5Peg9APR/Ri+Z+FuQUV9aNRijN
+         eeS2mmKczGzk0XyibSKgG3etPZk6RYevqLnRPQwROqOkbUMrmg2mdlj93A/Bh7gLx0rL
+         s2qLyrdd1InFI9NpjNGjUPrxgt9WOQ5R3ckkNM6ziU6tP+oyuibybb7Y/VUe7VjEz/W8
+         k3gg==
+X-Gm-Message-State: APjAAAX9/HBoUkfU/Ma0iGrenCbC1PfB+I5CPm2RkBWHSgZ7XQ5VsE0h
+        zcVa4KlwFdMYBj6q3Pd7nNg=
+X-Google-Smtp-Source: APXvYqzvVHu0z61NYCfx/Z7/0Unr/M+mVczgYtuX73olu0+h6Mk/UtlFNUrdcFF1mew/GiF6NVRlzA==
+X-Received: by 2002:a17:90a:3270:: with SMTP id k103mr44816131pjb.54.1563398145618;
+        Wed, 17 Jul 2019 14:15:45 -0700 (PDT)
+Received: from localhost ([2620:15c:f:fd00:4c3b:936:8dc5:a2ad])
+        by smtp.gmail.com with ESMTPSA id m11sm15819014pgl.8.2019.07.17.14.15.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 14:15:45 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Eric Anholt <eric@anholt.net>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Imre Deak <imre.deak@intel.com>,
+        Deepak Sharma <deepak.sharma@amd.com>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/vgem: fix cache synchronization on arm/arm64
+Date:   Wed, 17 Jul 2019 14:15:37 -0700
+Message-Id: <20190717211542.30482-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: Rob Clark <robdclark@chromium.org>
 
-I need explicit acks for some patches from this series, that
-were either requested improvements or I modified them by myself
-after v4.
+drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
+dma_sync API.
 
-The patches I am talking about are the following:
+Fixes failures w/ vgem_test.
 
-1/26
-21/26
-23/26
-25/26
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+An alternative approach to the series[1] I sent yesterday
 
-26/26 would be nice to have but I presume it needs more discussion
-and analysis.
+On the plus side, it keeps the WC buffers and avoids any drm core
+changes.  On the minus side, I don't think it will work (at least
+on arm64) prior to v5.0[2], so the fix can't be backported very
+far.
 
-Best regards,
-Jacek Anaszewski
+[1] https://patchwork.freedesktop.org/series/63771/
+[2] depends on 356da6d0cde3323236977fce54c1f9612a742036
 
-On 6/9/19 9:07 PM, Jacek Anaszewski wrote:
-> Changes from v4:
-> 
-> - switched "charge" function name to "charging"
-> - added "cpu", "mute", "micmute", "disk-activity", "panic", "mtd" LED functions
->   to cover all existing triggers and removed now redundant "nand" and "mmc"
-> - added "capslock", "scrollock", "numlock" LED functions
-> - removed now redundant "keyboard" and "keypad" since there is "kbd_backlight"
->   already available
-> - removed "tv" LED function as depreciated
-> - switched LED_COLOR_ID_COUNT to LED_COLOR_ID_MAX
-> - fixed led_classdev_register_ext() to not leave struct led_classdev's
->   name pointing to no longer existing composed_name stack variable
-> - fixed leds-as3645 and leds-aat1290 to no longer rely on struct led_classdev's
->   name property
-> - added basic LED class device name validation to get_led_device_info.sh
-> - tweaked LED naming section in leds_class.txt to allow devicename section
->   also for non hot-pluggable devices
-> - always initialize all fields of struct led_init_data to zero on declaration
->   in drivers
-> - fix leds-gpio to avoid overwriting the LED name coming from platform_data
-> - add description of LED function names with regard to whether devicename
->   section is initialized or not
-> 
-> Changes from v3:
-> 
-> - allow for devicename section for hot-pluggable devices
-> - move led_colors array to led-core.c to avoid build break
->   due to Kconfig dependency issue
-> - add a patch fixing led_colors array name clash with ALSA driver
-> - change led-enumerator DT property name to more meaningful function-enumerator
-> - add LED_FUNCTION_KBD_BACKLIGHT
-> - change naming and add new proprties to struct led_init_data
->   and struct led_properties
-> 
-> Changes from v2:
-> 
-> - removed from drivers the responsibility of calling led_compose_name()
-> - added struct device* argument to led_compose_name() to allow using
->   dev_<level> logging functions for more informative logs
-> - adjusted the list of LED_FUNCTION definitions according to the v2 review
->   remarks
-> - renamed default_desc to default_label in the struct led_init_data
-> - added led-enumerator DT property to the common LED bindings
-> - removed LED_COLOR_NAME definitions from include/dt-bindings/leds/common.h
-> - change DT color property type from string to integer
-> - change struct initialization list to explicit property assignment in leds-sc27xx-bltc.c
-> - use led->client->name for led_hw_name in leds-lm3692x.c
-> - few other minor improvements to docs etc.
-> 
-> Changes from v1:
-> 
-> - improved led_parse_properties() to parse label property at first
->   and return immediately after parsing succeeds
-> - added tool get_led_device_info.sh for retrieving LED class device's
->   parent device related information
-> - extended LED naming section of Documentation/leds/leds-class.txt
-> - adjusted the list of LED_FUNCTION definitions according to the v1 review
->   remarks
-> - added standard LED_COLOR_NAME definitions
-> - removed functions.h and moved both LED_FUNCTION and LED_COLOR_NAME
->   definitions to include/dt-bindings/common.h
-> - rebased leds-as3645a changes on top of the patch switching to fwnode
->   property API
-> - updated DT bindings to use new LED_COLOR_NAME definitions
-> - improved common LED bindings to not use address unit for sub-nodes
->   without reg property
-> 
-> Generally I still insist on deprecating label property and devicename
-> section of LED name. The tool I added for obtaining LED device name
-> proves availability of the related information in other places in
-> the sysfs. Other discussed use cases are covered in the updated
-> Documentation/leds/leds-class.txt.
-> 
-> Beside that, I tried also to create macros for automatic composition
-> of "-N" suffixed LED functions, so that it would not be necessary
-> to pollute common.h with plenty repetitions of the same function,
-> differing only with the postfix. Unfortunately, the preprocessor
-> of the dtc compiler seems not to accept string concatenetation.
-> I.e. it is not possible to to the following assighment:
-> 
-> function = "hdd""-1"
-> 
-> If anyone knows how to obviate this shortocoming please let me know.
-> 
-> Original cover letter:
-> 
-> LED class device naming pattern included devicename section, which had
-> unpleasant effect of varying userspace interface dependent on underlaying
-> hardware. Moreover, this information was redundant in the LED name, since
-> the LED controller name could have been obtained from sysfs device group
-> 
-> This patch set introduces a led_compose_name() function in the LED core,
-> which unifies and simplifies LED class device name composition. This
-> change is accompanied by the improvements in the common LED DT bindings
-> where two new properties are introduced: "function" and "color" . The two
-> deprecate the old "label" property which was leaving too much room for
-> interpretation, leading to inconsistent LED naming.
-> 
-> There are also changes in LED DT node naming, which are in line with
-> DT maintainer's request from [0].
-> 
-> Since some DT LED naming unification, related to not including devicename
-> section in "label" DT property, is being requested during reviews of new
-> LED class drivers for almost a year now, then those drivers are the first
-> candidates for optimalization and the first users of the new
-> led_compose_name() API. The modifications were tested with Qemu,
-> by stubbing the driver internals where hardware interaction was needed
-> for proper probing.
-> 
-> Thanks,
-> Jacek Anaszewski
-> 
-> Jacek Anaszewski (26):
->   leds: class: Improve LED and LED flash class registration API
->   dt-bindings: leds: Add LED_COLOR_ID definitions
->   dt-bindings: leds: Add LED_FUNCTION definitions
->   dt-bindings: leds: Add properties for LED name construction
->   leds: core: Add support for composing LED class device names
->   dt-bindings: sc27xx-blt: Add function and color properties
->   leds: sc27xx-blt: Use generic support for composing LED names
->   dt-bindings: lt3593: Add function and color properties
->   leds: lt3593: Use generic support for composing LED names
->   dt-bindings: lp8860: Add function and color properties
->   leds: lp8860: Use generic support for composing LED names
->   dt-bindings: lm3692x: Add function and color properties
->   leds: lm3692x: Use generic support for composing LED names
->   dt-bindings: lm36010: Add function and color properties
->   leds: lm3601x: Use generic support for composing LED names
->   dt-bindings: cr0014114: Add function and color properties
->   leds: cr0014114: Use generic support for composing LED names
->   dt-bindings: aat1290: Add function and color properties
->   leds: aat1290: Use generic support for composing LED names
->   dt-bindings: as3645a: Add function and color properties
->   leds: as3645a: Use generic support for composing LED names
->   dt-bindings: leds-gpio: Add function and color properties
->   leds: gpio: Use generic support for composing LED names
->   dt-bindings: an30259a: Add function and color properties
->   leds: an30259a: Use generic support for composing LED names
->   leds: Document standard LED functions
-> 
->  .../devicetree/bindings/leds/ams,as3645a.txt       |  22 +-
->  Documentation/devicetree/bindings/leds/common.txt  |  62 +++++-
->  .../devicetree/bindings/leds/leds-aat1290.txt      |  12 +-
->  .../devicetree/bindings/leds/leds-an30259a.txt     |  22 +-
->  .../devicetree/bindings/leds/leds-cr0014114.txt    |  26 ++-
->  .../devicetree/bindings/leds/leds-gpio.txt         |  23 ++-
->  .../devicetree/bindings/leds/leds-lm3601x.txt      |  10 +-
->  .../devicetree/bindings/leds/leds-lm3692x.txt      |   9 +-
->  .../devicetree/bindings/leds/leds-lp8860.txt       |   9 +-
->  .../devicetree/bindings/leds/leds-lt3593.txt       |  11 +-
->  .../devicetree/bindings/leds/leds-sc27xx-bltc.txt  |  10 +-
->  Documentation/leds/led-functions.txt               | 223 +++++++++++++++++++++
->  Documentation/leds/leds-class.txt                  |  70 ++++++-
->  drivers/leds/led-class-flash.c                     |   9 +-
->  drivers/leds/led-class.c                           |  49 +++--
->  drivers/leds/led-core.c                            | 127 ++++++++++++
->  drivers/leds/leds-aat1290.c                        |  16 +-
->  drivers/leds/leds-an30259a.c                       |  25 +--
->  drivers/leds/leds-as3645a.c                        |  74 +++----
->  drivers/leds/leds-cr0014114.c                      |  33 +--
->  drivers/leds/leds-gpio.c                           |  26 +--
->  drivers/leds/leds-lm3601x.c                        |  38 ++--
->  drivers/leds/leds-lm3692x.c                        |  22 +-
->  drivers/leds/leds-lp8860.c                         |  35 ++--
->  drivers/leds/leds-lt3593.c                         |  20 +-
->  drivers/leds/leds-pwm.c                            |   2 +-
->  drivers/leds/leds-sc27xx-bltc.c                    |  22 +-
->  drivers/leds/leds.h                                |   1 +
->  include/dt-bindings/leds/common.h                  |  55 ++++-
->  include/linux/led-class-flash.h                    |  15 +-
->  include/linux/leds.h                               |  79 +++++++-
->  tools/leds/get_led_device_info.sh                  | 201 +++++++++++++++++++
->  32 files changed, 1086 insertions(+), 272 deletions(-)
->  create mode 100644 Documentation/leds/led-functions.txt
->  create mode 100755 tools/leds/get_led_device_info.sh
-> 
+ drivers/gpu/drm/vgem/vgem_drv.c | 130 ++++++++++++++++++++------------
+ 1 file changed, 83 insertions(+), 47 deletions(-)
 
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index 76d95b5e289c..6c9b5e20b3d4 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -47,10 +47,16 @@ static struct vgem_device {
+ 	struct platform_device *platform;
+ } *vgem_device;
+ 
++static void sync_and_unpin(struct drm_vgem_gem_object *bo);
++static struct page **pin_and_sync(struct drm_vgem_gem_object *bo);
++
+ static void vgem_gem_free_object(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *vgem_obj = to_vgem_bo(obj);
+ 
++	if (!obj->import_attach)
++		sync_and_unpin(vgem_obj);
++
+ 	kvfree(vgem_obj->pages);
+ 	mutex_destroy(&vgem_obj->pages_lock);
+ 
+@@ -78,40 +84,15 @@ static vm_fault_t vgem_gem_fault(struct vm_fault *vmf)
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	mutex_lock(&obj->pages_lock);
++	if (!obj->pages)
++		pin_and_sync(obj);
+ 	if (obj->pages) {
+ 		get_page(obj->pages[page_offset]);
+ 		vmf->page = obj->pages[page_offset];
+ 		ret = 0;
+ 	}
+ 	mutex_unlock(&obj->pages_lock);
+-	if (ret) {
+-		struct page *page;
+-
+-		page = shmem_read_mapping_page(
+-					file_inode(obj->base.filp)->i_mapping,
+-					page_offset);
+-		if (!IS_ERR(page)) {
+-			vmf->page = page;
+-			ret = 0;
+-		} else switch (PTR_ERR(page)) {
+-			case -ENOSPC:
+-			case -ENOMEM:
+-				ret = VM_FAULT_OOM;
+-				break;
+-			case -EBUSY:
+-				ret = VM_FAULT_RETRY;
+-				break;
+-			case -EFAULT:
+-			case -EINVAL:
+-				ret = VM_FAULT_SIGBUS;
+-				break;
+-			default:
+-				WARN_ON(PTR_ERR(page));
+-				ret = VM_FAULT_SIGBUS;
+-				break;
+-		}
+ 
+-	}
+ 	return ret;
+ }
+ 
+@@ -277,32 +258,93 @@ static const struct file_operations vgem_driver_fops = {
+ 	.release	= drm_release,
+ };
+ 
+-static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
++/* Called under pages_lock, except in free path (where it can't race): */
++static void sync_and_unpin(struct drm_vgem_gem_object *bo)
+ {
+-	mutex_lock(&bo->pages_lock);
+-	if (bo->pages_pin_count++ == 0) {
+-		struct page **pages;
++	struct drm_device *dev = bo->base.dev;
++
++	if (bo->table) {
++		dma_sync_sg_for_cpu(dev->dev, bo->table->sgl,
++				bo->table->nents, DMA_BIDIRECTIONAL);
++		sg_free_table(bo->table);
++		kfree(bo->table);
++		bo->table = NULL;
++	}
++
++	if (bo->pages) {
++		drm_gem_put_pages(&bo->base, bo->pages, true, true);
++		bo->pages = NULL;
++	}
++}
++
++static struct page **pin_and_sync(struct drm_vgem_gem_object *bo)
++{
++	struct drm_device *dev = bo->base.dev;
++	int npages = bo->base.size >> PAGE_SHIFT;
++	struct page **pages;
++	struct sg_table *sgt;
++
++	WARN_ON(!mutex_is_locked(&bo->pages_lock));
++
++	pages = drm_gem_get_pages(&bo->base);
++	if (IS_ERR(pages)) {
++		bo->pages_pin_count--;
++		mutex_unlock(&bo->pages_lock);
++		return pages;
++	}
+ 
+-		pages = drm_gem_get_pages(&bo->base);
+-		if (IS_ERR(pages)) {
+-			bo->pages_pin_count--;
+-			mutex_unlock(&bo->pages_lock);
+-			return pages;
+-		}
++	sgt = drm_prime_pages_to_sg(pages, npages);
++	if (IS_ERR(sgt)) {
++		dev_err(dev->dev,
++			"failed to allocate sgt: %ld\n",
++			PTR_ERR(bo->table));
++		drm_gem_put_pages(&bo->base, pages, false, false);
++		mutex_unlock(&bo->pages_lock);
++		return ERR_CAST(bo->table);
++	}
++
++	/*
++	 * Flush the object from the CPU cache so that importers
++	 * can rely on coherent indirect access via the exported
++	 * dma-address.
++	 */
++	dma_sync_sg_for_device(dev->dev, sgt->sgl,
++			sgt->nents, DMA_BIDIRECTIONAL);
++
++	bo->pages = pages;
++	bo->table = sgt;
++
++	return pages;
++}
++
++static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
++{
++	struct page **pages;
+ 
+-		bo->pages = pages;
++	mutex_lock(&bo->pages_lock);
++	if (bo->pages_pin_count++ == 0 && !bo->pages) {
++		pages = pin_and_sync(bo);
++	} else {
++		WARN_ON(!bo->pages);
++		pages = bo->pages;
+ 	}
+ 	mutex_unlock(&bo->pages_lock);
+ 
+-	return bo->pages;
++	return pages;
+ }
+ 
+ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ {
++	/*
++	 * We shouldn't hit this for imported bo's.. in the import
++	 * case we don't own the scatter-table
++	 */
++	WARN_ON(bo->base.import_attach);
++
+ 	mutex_lock(&bo->pages_lock);
+ 	if (--bo->pages_pin_count == 0) {
+-		drm_gem_put_pages(&bo->base, bo->pages, true, true);
+-		bo->pages = NULL;
++		WARN_ON(!bo->table);
++		sync_and_unpin(bo);
+ 	}
+ 	mutex_unlock(&bo->pages_lock);
+ }
+@@ -310,18 +352,12 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ static int vgem_prime_pin(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
+-	long n_pages = obj->size >> PAGE_SHIFT;
+ 	struct page **pages;
+ 
+ 	pages = vgem_pin_pages(bo);
+ 	if (IS_ERR(pages))
+ 		return PTR_ERR(pages);
+ 
+-	/* Flush the object from the CPU cache so that importers can rely
+-	 * on coherent indirect access via the exported dma-address.
+-	 */
+-	drm_clflush_pages(pages, n_pages);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
