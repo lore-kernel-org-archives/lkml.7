@@ -2,206 +2,275 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51CDC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699B5C76192
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82192184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9ED21849
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/fT5sHT"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="CvFLtIDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfGQPZ6 (ORCPT
+        id S1729339AbfGQP0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:25:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37052 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbfGQPZZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:25:25 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so11004006pfa.4;
-        Wed, 17 Jul 2019 08:25:24 -0700 (PDT)
+        Wed, 17 Jul 2019 11:26:05 -0400
+Received: from mail-eopbgr820137.outbound.protection.outlook.com ([40.107.82.137]:55188
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728759AbfGQP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 11:26:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YPhTEqckSiA4KeOAd9GkGVG8D4TrbTk3bvc6haIyeuAINTSYRaU154CjtSxxEwD3P0V2G1eiWo2HJXpS7/H5PBmfjoewzMbpUPkGFvw11hdnpjn1chcGgSkOeKa0F8coI72mI8Hla0QyatIMNWvBJ+p62q/frFEfCZoPY4n/hVMuKyKqkfzVM4pICfPd/0FjtBSu/Nwk3VtHC3Yv9oqts9MlfWytQ4DzOxeQyMvFdllSXE4vPMmm1O7Ts39ZEABJ8XpXg63a0VY1ckMXH76zzaXcXO9NqZMpbfRVJOpam7vXLk5gIMdaNqzP0fHa4PWj6o0id5eC97p1XKim+9iq5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qhgbgFepwYCRsjrYk5MwwCLMp2kif6NyROU5ritNqnY=;
+ b=hEGNeHjCBJTpfn8We7pQ6Ze1eRATOupoCJ/b+kh9ZSn75Q2HBkzglPMqMBJ/8OE2sGsLWY3GAHsmnwqzHxeuNmodiN+yS2IzRqJDutg6OuOzUov1RXhBXvhjyM2XuvchP4d1ujd/O/dEA8q3Drj8afWo0fz5Jbvyje2wr3P8Jnbf7/X0X0vD2GxcYoAwSHYCSXxKGMFVsCnqRQezP5YNpzwGaEqBT+wnUbPauZOSbqP4C+NnlUg7+X9D3JG+GcTRyehadjHDFXVaYyWAzp12bJ/SARojvc8cbgRRZ5dCTGbRsDaqiFjOOkhvYa/pyO0MiiF84YMrnI6k9otTJ4Spxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wavecomp.com;dmarc=pass action=none
+ header.from=mips.com;dkim=pass header.d=mips.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8tXOek1IeFKzJfJBGkdp9fjsRG4DvXBHvm0+MVhl4uE=;
-        b=G/fT5sHTxJdWukzY08OmYDIz3+OJM7KcgjJSIYY4ExyG+8egID8UtAbH9Pvb2JYu05
-         VB404JD2EmAllBOYKch5clADHFajwS5F625+bw9bN+2jal3YNtjGhUtsdne6PKd/2TtT
-         z/JSPQmEDKd6gLCkznO2wc6vsHAsO/2Lbz9ckXVkXwWz0arth0rJsNm3ELGfVNSsL79D
-         x424Tv1Y8QfHmxOSSDr+pFEL2h41of38+xFjI94Sss473PjLyJLHLUcjLBlj999rzPNm
-         0lvayGxYCKuFWVBDX0+Wtdquo0GhdkXVYvgdwhc1OmL6K8c6KZGfR9w8pzBSjgZts32e
-         mlxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8tXOek1IeFKzJfJBGkdp9fjsRG4DvXBHvm0+MVhl4uE=;
-        b=ltryl103QwuqrvfpxarMGAvbmjXNIN2Nl93u0XWZ38ZIlOJDUSl6b7rF3j1/x9CUVu
-         HuAgTjxCzDazRzobzL63y9WB3tlFnBDINNdiLRr24MKL2tXrBxzHV4eQy1U1jWI11vrH
-         CuO/QsJkykWL0sM/5xV0TT25tpgiyAiMhd7HQ/MvoMPZPCLGDkMwCrGJCgG5EBeLL+lJ
-         W1NHDyKdQbTcR7Q0ruETjDsaBVQbTeJG32k75eZPAuLupDXpzJW99Z653mws39eLxIzi
-         bFiRk7ytJi4B0LfjTh8/rYjSj4t9JiD1ijvtCvZR/iUlI065fIzzJHAKQxSIFSiQY1OQ
-         ZE1A==
-X-Gm-Message-State: APjAAAW7l5kuWn0BY29ubw2cEXU3bNUIpbMpoYa5H1kjM++UupVWrw+M
-        7IEKCtBzWvEhpkHfYy98Rmt16sEn
-X-Google-Smtp-Source: APXvYqw3rDpat0jg0o+OfO+eIw1oF0HpVX82VX0gHBT245ejpmc9YTI0yFzlPiHacnQIVvxI+p/eEA==
-X-Received: by 2002:a63:20d:: with SMTP id 13mr29906327pgc.253.1563377124068;
-        Wed, 17 Jul 2019 08:25:24 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id l1sm33771386pfl.9.2019.07.17.08.25.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 08:25:23 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 08/14] crypto: caam - make CAAM_PTR_SZ dynamic
-Date:   Wed, 17 Jul 2019 08:24:52 -0700
-Message-Id: <20190717152458.22337-9-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190717152458.22337-1-andrew.smirnov@gmail.com>
-References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
+ d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qhgbgFepwYCRsjrYk5MwwCLMp2kif6NyROU5ritNqnY=;
+ b=CvFLtIDp8CqlnhKmDBHPpri/T0q0DwCT5DioypQPsfXIgWi3U0tKdElQdcl7bJPzDBfGjZu5pOvBzUO7/ceq+D4ZTffpQW/Fl+VvMHQEY97315E85XEGhEXUhHOzBuekZr1Kw9Smegi4ZWvnh7zz0JHogopOrgtSoKVY4AMEeO4=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1263.namprd22.prod.outlook.com (10.172.62.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Wed, 17 Jul 2019 15:25:47 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::746d:883d:31:522e]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::746d:883d:31:522e%5]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
+ 15:25:47 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: [GIT PULL] MIPS changes
+Thread-Topic: [GIT PULL] MIPS changes
+Thread-Index: AQHVPLPoK/14/ZdPr0q996RBCFXGJg==
+Date:   Wed, 17 Jul 2019 15:25:47 +0000
+Message-ID: <20190717152545.bhdnhjdf2tlhuv3o@pburton-laptop>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0086.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::27) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cc5c98bc-4920-4550-f51c-08d70acb0acf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1263;
+x-ms-traffictypediagnostic: MWHPR2201MB1263:
+x-microsoft-antispam-prvs: <MWHPR2201MB126362A62B51D6FE0F6A35CFC1C90@MWHPR2201MB1263.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01018CB5B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(376002)(366004)(136003)(346002)(39840400004)(396003)(189003)(52314003)(199004)(6116002)(6512007)(9686003)(53936002)(3846002)(8676002)(6486002)(7736002)(305945005)(71190400001)(33716001)(478600001)(6916009)(44832011)(68736007)(6436002)(66066001)(2906002)(486006)(256004)(8936002)(54906003)(386003)(58126008)(6506007)(81166006)(1076003)(66946007)(476003)(81156014)(66476007)(64756008)(102836004)(71200400001)(26005)(66556008)(66446008)(99286004)(25786009)(186003)(5660300002)(4326008)(42882007)(52116002)(316002)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1263;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WPwzMlWJ/vSId7HvUuuSuSWKZbp13reNiLAjpdH+tIKztj/S5P4UDu4ljVWx2KVIVrdDvNIn8E0wD6CzkBK6yhgBtvgwdBu6thb95Yz8gw9sh6Xlg+naiNX2hnI6/S+SLnBzrTXT8L6t6ncgXY3j9ppybjdGxheUCA8rU+pNY80WfRAcc0tMCVfskjtL7KQIPddOxdJ51jpoNxi1h6ChQHxSjSE2pAPsynv2W5DaIbC8lHiUYNtJChq3LA6uKDjXOdlqSnVPanQRjSbKuv1+HzmfGXKok5lyE/MOQUeGMZRst0JLddpENNjTI9oSJ7eQsP1ABcrFdFZ2SySGUIbTHa8Ebts9ncxbQIZOUJmiRwaJo4AwAlkEiYlx2pshgkg4TAhuXTFJXwvWeRtALZwuwevrVLs8w8QTjCFbnDfoiNM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F7AB5C2587A1E64886ADA5EE0437EB13@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc5c98bc-4920-4550-f51c-08d70acb0acf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 15:25:47.4395
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1263
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to be able to configure CAAM pointer size at run-time, which
-needed to support i.MX8MQ, which is 64-bit SoC with 32-bit pointer
-size, convert CAAM_PTR_SZ to refer to a global variable of the same
-name ("caam_ptr_sz") and adjust the rest of the code accordingly. No
-functional change intended.
+Hi Linus,
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Spencer <christopher.spencer@sea.co.uk>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/crypto/caam/caamalg.c     |  2 +-
- drivers/crypto/caam/caamhash.c    |  2 +-
- drivers/crypto/caam/caamrng.c     |  2 +-
- drivers/crypto/caam/ctrl.c        |  2 ++
- drivers/crypto/caam/desc_constr.h | 10 ++++++++--
- drivers/crypto/caam/error.c       |  3 +++
- 6 files changed, 16 insertions(+), 5 deletions(-)
+Here are the main MIPS changes for v5.3, a light batch this time around
+but significant improvements for certain systems. Please pull.
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 43f18253e5b6..4dda2f50a724 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -74,7 +74,7 @@
- 
- #define CHACHAPOLY_DESC_JOB_IO_LEN	(AEAD_DESC_JOB_IO_LEN + CAAM_CMD_SZ * 6)
- 
--#define DESC_MAX_USED_BYTES		(CAAM_DESC_BYTES_MAX - DESC_JOB_IO_LEN)
-+#define DESC_MAX_USED_BYTES		(CAAM_DESC_BYTES_MAX - DESC_JOB_IO_LEN_MIN)
- #define DESC_MAX_USED_LEN		(DESC_MAX_USED_BYTES / CAAM_CMD_SZ)
- 
- struct caam_alg_entry {
-diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
-index e4ac5d591ad6..955cb4d7c910 100644
---- a/drivers/crypto/caam/caamhash.c
-+++ b/drivers/crypto/caam/caamhash.c
-@@ -538,7 +538,7 @@ struct ahash_edesc {
- 	dma_addr_t sec4_sg_dma;
- 	int src_nents;
- 	int sec4_sg_bytes;
--	u32 hw_desc[DESC_JOB_IO_LEN / sizeof(u32)] ____cacheline_aligned;
-+	u32 hw_desc[DESC_JOB_IO_LEN_MAX / sizeof(u32)] ____cacheline_aligned;
- 	struct sec4_sg_entry sec4_sg[0];
- };
- 
-diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
-index 561bcb535184..511f0b44e258 100644
---- a/drivers/crypto/caam/caamrng.c
-+++ b/drivers/crypto/caam/caamrng.c
-@@ -53,7 +53,7 @@
- 					 L1_CACHE_BYTES)
- 
- /* length of descriptors */
--#define DESC_JOB_O_LEN			(CAAM_CMD_SZ * 2 + CAAM_PTR_SZ * 2)
-+#define DESC_JOB_O_LEN			(CAAM_CMD_SZ * 2 + CAAM_PTR_SZ_MAX * 2)
- #define DESC_RNG_LEN			(3 * CAAM_CMD_SZ)
- 
- /* Buffer, its dma address and lock */
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 592ce4a05db8..e5eaaf1efe45 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -606,6 +606,8 @@ static int caam_probe(struct platform_device *pdev)
- 	}
- 	caam_imx = (bool)imx_soc_match;
- 
-+	caam_ptr_sz = sizeof(dma_addr_t);
-+
- 	/* Get configuration properties from device tree */
- 	/* First, get register page */
- 	ctrl = of_iomap(nprop, 0);
-diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
-index 5988a26a2441..3a83a3332ba9 100644
---- a/drivers/crypto/caam/desc_constr.h
-+++ b/drivers/crypto/caam/desc_constr.h
-@@ -14,9 +14,14 @@
- 
- #define IMMEDIATE (1 << 23)
- #define CAAM_CMD_SZ sizeof(u32)
--#define CAAM_PTR_SZ sizeof(dma_addr_t)
-+#define CAAM_PTR_SZ caam_ptr_sz
-+#define CAAM_PTR_SZ_MAX sizeof(dma_addr_t)
-+#define CAAM_PTR_SZ_MIN sizeof(u32)
- #define CAAM_DESC_BYTES_MAX (CAAM_CMD_SZ * MAX_CAAM_DESCSIZE)
--#define DESC_JOB_IO_LEN (CAAM_CMD_SZ * 5 + CAAM_PTR_SZ * 3)
-+#define __DESC_JOB_IO_LEN(n) (CAAM_CMD_SZ * 5 + (n) * 3)
-+#define DESC_JOB_IO_LEN __DESC_JOB_IO_LEN(CAAM_PTR_SZ)
-+#define DESC_JOB_IO_LEN_MAX __DESC_JOB_IO_LEN(CAAM_PTR_SZ_MAX)
-+#define DESC_JOB_IO_LEN_MIN __DESC_JOB_IO_LEN(CAAM_PTR_SZ_MIN)
- 
- #ifdef DEBUG
- #define PRINT_POS do { printk(KERN_DEBUG "%02d: %s\n", desc_len(desc),\
-@@ -37,6 +42,7 @@
- 			       (LDOFF_ENABLE_AUTO_NFIFO << LDST_OFFSET_SHIFT))
- 
- extern bool caam_little_end;
-+extern size_t caam_ptr_sz;
- 
- /*
-  * HW fetches 4 S/G table entries at a time, irrespective of how many entries
-diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
-index 4f0d45865aa2..885cd364a01d 100644
---- a/drivers/crypto/caam/error.c
-+++ b/drivers/crypto/caam/error.c
-@@ -56,6 +56,9 @@ EXPORT_SYMBOL(caam_little_end);
- bool caam_imx;
- EXPORT_SYMBOL(caam_imx);
- 
-+size_t caam_ptr_sz;
-+EXPORT_SYMBOL(caam_ptr_sz);
-+
- static const struct {
- 	u8 value;
- 	const char *error_text;
--- 
-2.21.0
+There's one minor conflict in arch/mips/include/asm/mach-ralink/pinmux.h
+when merging with current master. Commit 1d0ea0692ae3 ("treewide:
+Replace GPLv2 boilerplate/reference with SPDX - rule 332") in master &
+commit 017105478bb5 ("MIPS: ralink: Switch pinmux.h to SPDX header")
+from the MIPS tree both add the SPDX header but a little differently in
+terms of comment style & license name. Reading
+Documentation/process/license-rules.rst suggests to me that the version
+in the MIPS tree is correct in terms of license name ("GPL-2.0" without
+the "-only" suffix) whilst the version in master is correct in terms of
+comment style ("/* */" rather than "//"). That would make the correct
+resolution something like this:
 
+diff --cc arch/mips/include/asm/mach-ralink/pinmux.h
+index e54d4e1533b4,33647f796140..06ff9b17e42e
+--- a/arch/mips/include/asm/mach-ralink/pinmux.h
++++ b/arch/mips/include/asm/mach-ralink/pinmux.h
+@@@ -1,6 -1,5 +1,5 @@@
+- /* SPDX-License-Identifier: GPL-2.0-only */
+ -// SPDX-License-Identifier: GPL-2.0
+++/* SPDX-License-Identifier: GPL-2.0 */
+  /*
+-  *
+   *  Copyright (C) 2012 John Crispin <john@phrozen.org>
+   */
+=20
+Thanks,
+    Paul
+
+
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07=
+:
+
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_5.=
+3
+
+for you to fetch changes up to e5793cd1b5fedb39337cfa62251a25030f526e56:
+
+  MIPS: fix some more fall through errors in arch/mips (2019-07-16 12:40:16=
+ +0100)
+
+----------------------------------------------------------------
+The main MIPS changes for a pretty light v5.3 cycle, including:
+
+- Removal of readq & writeq for MIPS32 kernels where they would simply
+  BUG() anyway, allowing drivers or other code that #ifdefs on their
+  presence to work properly.
+
+- Improvements for Ingenic JZ4740 systems, including support for the
+  external memory controller & pinmuxing fixes for qi_lb60/NanoNote
+  systems.
+
+- Improvements for Lantiq systems, in particular around SMP & IPIs.
+
+- DT updates for ralink/MediaTek MT7628a systems to probe & configure a
+  bunch more devices.
+
+- Miscellaneous cleanups & build fixes.
+
+----------------------------------------------------------------
+Anshuman Khandual (1):
+      mips/kprobes: Export kprobe_fault_handler()
+
+Geert Uytterhoeven (2):
+      memory: jz4780-nemc: Grammar s/the its/its/
+      MIPS: ftrace: Reword prepare_ftrace_return() comment block
+
+Krzysztof Kozlowski (2):
+      MIPS: config: Remove left-over BACKLIGHT_LCD_SUPPORT
+      MIPS: configs: Remove useless UEVENT_HELPER_PATH
+
+Lubomir Rintel (1):
+      MIPS: ralink: Switch pinmux.h to SPDX header
+
+Masahiro Yamada (1):
+      MIPS: replace MBIT_ULL() with BIT_ULL()
+
+Paul Burton (1):
+      FDDI: defza: Include linux/io-64-nonatomic-lo-hi.h
+
+Paul Cercueil (6):
+      MIPS: lb60: Fix pin mappings
+      memory: Kconfig: Drop dependency on MACH_JZ4780 for jz4780
+      dt-bindings: memory: jz4780: Add compatible string for JZ4740 SoC
+      memory: jz4780_nemc: Add support for the JZ4740
+      memory: jz4780-nemc: Reduce size of const array
+      MAINTAINERS: Add myself as Ingenic SoCs maintainer
+
+Petr Cvek (7):
+      MIPS: lantiq: Move macro directly to iomem function
+      MIPS: lantiq: Change variables to the same type as the source
+      MIPS: lantiq: Fix attributes of of_device_id structure
+      MIPS: lantiq: Remove unused macros
+      MIPS: lantiq: Fix bitfield masking
+      MIPS: lantiq: Shorten register names, remove unused macros
+      MIPS: lantiq: Add SMP support for lantiq interrupt controller
+
+Serge Semin (1):
+      mips: Remove q-accessors from non-64bit platforms
+
+Stefan Roese (6):
+      MIPS: ralink: mt7628a.dtsi: Add SPDX GPL-2.0 license identifier
+      MIPS: ralink: mt7628a.dtsi: Add pinmux DT node
+      MIPS: ralink: mt7628a.dtsi: Add pinctrl DT properties to the UART nod=
+es
+      MIPS: ralink: mt7628a.dtsi: Add GPIO controller DT node
+      MIPS: ralink: mt7628a.dtsi: Add SPI controller DT node
+      MIPS: ralink: mt7628a.dtsi: Add watchdog controller DT node
+
+Stephen Rothwell (2):
+      MIPS: perf events: handle switch statement falling through warnings
+      MIPS: fix some more fall through errors in arch/mips
+
+ .../memory-controllers/ingenic,jz4780-nemc.txt     |   1 +
+ MAINTAINERS                                        |  27 ++++
+ arch/mips/ar7/setup.c                              |   1 +
+ arch/mips/ath79/setup.c                            |   2 +-
+ arch/mips/bcm63xx/dev-flash.c                      |   1 +
+ arch/mips/boot/dts/ralink/mt7628a.dtsi             | 148 ++++++++++++++++-
+ arch/mips/cavium-octeon/executive/cvmx-pko.c       |   2 +-
+ arch/mips/configs/ar7_defconfig                    |   1 -
+ arch/mips/configs/ath25_defconfig                  |   1 -
+ arch/mips/configs/ath79_defconfig                  |   1 -
+ arch/mips/configs/bcm63xx_defconfig                |   1 -
+ arch/mips/configs/bigsur_defconfig                 |   1 -
+ arch/mips/configs/bmips_be_defconfig               |   1 -
+ arch/mips/configs/bmips_stb_defconfig              |   1 -
+ arch/mips/configs/cavium_octeon_defconfig          |   1 -
+ arch/mips/configs/ci20_defconfig                   |   1 -
+ arch/mips/configs/cobalt_defconfig                 |   1 -
+ arch/mips/configs/fuloong2e_defconfig              |   1 -
+ arch/mips/configs/gpr_defconfig                    |   1 -
+ arch/mips/configs/ip27_defconfig                   |   1 -
+ arch/mips/configs/ip32_defconfig                   |   1 -
+ arch/mips/configs/lemote2f_defconfig               |   2 -
+ arch/mips/configs/loongson1b_defconfig             |   1 -
+ arch/mips/configs/loongson1c_defconfig             |   1 -
+ arch/mips/configs/loongson3_defconfig              |   1 -
+ arch/mips/configs/malta_defconfig                  |   1 -
+ arch/mips/configs/malta_kvm_defconfig              |   1 -
+ arch/mips/configs/malta_kvm_guest_defconfig        |   1 -
+ arch/mips/configs/maltaup_xpa_defconfig            |   1 -
+ arch/mips/configs/mips_paravirt_defconfig          |   1 -
+ arch/mips/configs/omega2p_defconfig                |   1 -
+ arch/mips/configs/pistachio_defconfig              |   1 -
+ arch/mips/configs/pnx8335_stb225_defconfig         |   1 -
+ arch/mips/configs/qi_lb60_defconfig                |   2 -
+ arch/mips/configs/rb532_defconfig                  |   1 -
+ arch/mips/configs/rt305x_defconfig                 |   1 -
+ arch/mips/configs/sb1250_swarm_defconfig           |   1 -
+ arch/mips/configs/tb0219_defconfig                 |   1 -
+ arch/mips/configs/tb0226_defconfig                 |   1 -
+ arch/mips/configs/tb0287_defconfig                 |   1 -
+ arch/mips/configs/vocore2_defconfig                |   1 -
+ arch/mips/configs/xway_defconfig                   |   1 -
+ arch/mips/include/asm/cpu.h                        | 125 +++++++--------
+ arch/mips/include/asm/io.h                         |  11 ++
+ arch/mips/include/asm/kprobes.h                    |   1 +
+ arch/mips/include/asm/mach-ralink/pinmux.h         |   5 +-
+ arch/mips/jz4740/board-qi_lb60.c                   |  16 +-
+ arch/mips/kernel/ftrace.c                          |  23 +--
+ arch/mips/kernel/kprobes.c                         |   2 +-
+ arch/mips/kernel/perf_event_mipsxx.c               |  30 ++--
+ arch/mips/lantiq/irq.c                             | 177 +++++++++++++++--=
+----
+ drivers/memory/Kconfig                             |   2 +-
+ drivers/memory/jz4780-nemc.c                       |  28 +++-
+ drivers/net/fddi/defza.c                           |   1 +
+ 54 files changed, 439 insertions(+), 201 deletions(-)
