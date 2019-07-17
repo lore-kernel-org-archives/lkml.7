@@ -2,106 +2,130 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13DCC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8088C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C95EB2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:55:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VgFnL306"
+	by mail.kernel.org (Postfix) with ESMTP id AA39020818
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 03:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfGQDzB (ORCPT
+        id S1729131AbfGQD5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jul 2019 23:55:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38718 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfGQDzB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jul 2019 23:55:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vyR2W0buEBQBwHqzpo3Kuz2YKIBskwD7RiIVEkP3yqY=; b=VgFnL306MBZB234zHxrAop3yh
-        J60H45jix4Wp/MlViHpGWFIhp5Jf83Obs/3zEV9kF3cS/eGCH677S46DrgYTo2i5lD1eW+HRToZVq
-        4yioavcYl//gv15+4hlnR5t7JXIBS3B0eoiHp+hwD9D8FZV0kGRrhl5wZmQYm84xs8uLjsLIWIKwB
-        ik9Qt8RW1ywSFw+L2KmAQxw2MNn112vNiDAd04ZVKIAKdEulquWRhtNQ1kcbRzTQUh4BPyA+KV4xa
-        UrNj0oqYk0/juwr7JuzNzYSW2CANtWm/W4j/k+CTcwi10FAZx78aG9AOg7Y4nFJk30b0lGstv1TBA
-        6GiVaCVcQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hnb1v-0004sI-Vk; Wed, 17 Jul 2019 03:55:00 +0000
-Subject: Re: mmotm 2019-07-16-17-14 uploaded
-To:     akpm@linux-foundation.org, broonie@kernel.org, mhocko@suse.cz,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
-References: <20190717001534.83sL1%akpm@linux-foundation.org>
- <8165e113-6da1-c4c0-69eb-37b2d63ceed9@infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d2b7b174-36b2-e0f5-a98f-2b538eab6b6c@infradead.org>
-Date:   Tue, 16 Jul 2019 20:54:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <8165e113-6da1-c4c0-69eb-37b2d63ceed9@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 16 Jul 2019 23:57:37 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:48510 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfGQD5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jul 2019 23:57:37 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 5AE79B2E9F7A54F96F16;
+        Wed, 17 Jul 2019 11:57:35 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x6H3vDmB027532;
+        Wed, 17 Jul 2019 11:57:13 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019071711572903-2389314 ;
+          Wed, 17 Jul 2019 11:57:29 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     rjw@rjwysocki.net
+Cc:     viresh.kumar@linaro.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        cheng.shengyu@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH v7] cpufreq/pasemi: fix an use-after-free in pas_cpufreq_cpu_init()
+Date:   Wed, 17 Jul 2019 11:55:04 +0800
+Message-Id: <1563335704-25562-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-07-17 11:57:29,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-07-17 11:57:16,
+        Serialize complete at 2019-07-17 11:57:16
+X-MAIL: mse-fl1.zte.com.cn x6H3vDmB027532
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/16/19 8:50 PM, Randy Dunlap wrote:
-> On 7/16/19 5:15 PM, akpm@linux-foundation.org wrote:
->> The mm-of-the-moment snapshot 2019-07-16-17-14 has been uploaded to
->>
->>    http://www.ozlabs.org/~akpm/mmotm/
->>
->> mmotm-readme.txt says
->>
->> README for mm-of-the-moment:
->>
->> http://www.ozlabs.org/~akpm/mmotm/
->>
->> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->> more than once a week.
-> 
-> drivers/gpu/drm/amd/amdgpu/Kconfig contains this (from linux-next.patch):
-> 
-> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig~linux-next
-> +++ a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> @@ -27,7 +27,12 @@ config DRM_AMDGPU_CIK
->  config DRM_AMDGPU_USERPTR
->  	bool "Always enable userptr write support"
->  	depends on DRM_AMDGPU
-> +<<<<<<< HEAD
->  	depends on HMM_MIRROR
-> +=======
-> +	depends on ARCH_HAS_HMM
-> +	select HMM_MIRROR
-> +>>>>>>> linux-next/akpm-base
->  	help
->  	  This option selects CONFIG_HMM and CONFIG_HMM_MIRROR if it
->  	  isn't already selected to enabled full userptr support.
-> 
-> which causes a lot of problems.
-> 
-> 
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-include/uapi/linux/magic.h:
-<<<<<<< HEAD
-=======
-#define Z3FOLD_MAGIC		0x33
->>>>>>> linux-next/akpm-base
+Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+v7: adapt to commit ("cpufreq: Make cpufreq_generic_init() return void")
+v6: keep the blank line and fix warning: label 'out_unmap_sdcpwr' defined but not used.
+v5: put together the code to get, use, and release cpu device_node.
+v4: restore the blank line.
+v3: fix a leaked reference.
+v2: clean up the code according to the advice of viresh.
 
+ drivers/cpufreq/pasemi-cpufreq.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 93f39a1..c66f566 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -131,10 +131,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	int err = -ENODEV;
+ 
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
++	if (!cpu)
++		goto out;
+ 
++	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+ 	of_node_put(cpu);
+-	if (!cpu)
++	if (!max_freqp) {
++		err = -EINVAL;
+ 		goto out;
++	}
++
++	/* we need the freq in kHz */
++	max_freq = *max_freqp / 1000;
+ 
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+ 	if (!dn)
+@@ -171,16 +179,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	}
+ 
+ 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+-
+-	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+-	if (!max_freqp) {
+-		err = -EINVAL;
+-		goto out_unmap_sdcpwr;
+-	}
+-
+-	/* we need the freq in kHz */
+-	max_freq = *max_freqp / 1000;
+-
+ 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+ 	pr_debug("initializing frequency table\n");
+ 
+@@ -199,9 +197,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+ 	return 0;
+ 
+-out_unmap_sdcpwr:
+-	iounmap(sdcpwr_mapbase);
+-
+ out_unmap_sdcasr:
+ 	iounmap(sdcasr_mapbase);
+ out:
 -- 
-~Randy
+2.9.5
+
