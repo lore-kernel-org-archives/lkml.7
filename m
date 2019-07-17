@@ -2,260 +2,112 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E297C76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD12C76195
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C962184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AB921855
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 13:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbfGQNgw (ORCPT
+        id S1728288AbfGQNgz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 09:36:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:36160 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727726AbfGQNgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 09:36:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 06:36:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
-   d="scan'208";a="191261885"
-Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jul 2019 06:36:42 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com
-Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        yu.c.zhang@intel.com, alazar@bitdefender.com,
-        Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v4 7/9] KVM: VMX: Handle SPP induced vmexit and page fault
-Date:   Wed, 17 Jul 2019 21:37:49 +0800
-Message-Id: <20190717133751.12910-8-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190717133751.12910-1-weijiang.yang@intel.com>
-References: <20190717133751.12910-1-weijiang.yang@intel.com>
+        Wed, 17 Jul 2019 09:36:55 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:41254 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfGQNgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 09:36:53 -0400
+Received: from [192.168.21.149] (unknown [157.25.100.178])
+        by mail.holtmann.org (Postfix) with ESMTPSA id A216DCECC9;
+        Wed, 17 Jul 2019 15:45:25 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2 1/3] Bluetooth: btintel: Add firmware lock function
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190717074920.21624-1-kai.heng.feng@canonical.com>
+Date:   Wed, 17 Jul 2019 15:36:50 +0200
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        emmanuel.grumbach@intel.com, luciano.coelho@intel.com,
+        Johan Hedberg <johan.hedberg@gmail.com>, linuxwifi@intel.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <7CE1949F-76D2-4D27-82B6-02124E62DF5C@holtmann.org>
+References: <20190717074920.21624-1-kai.heng.feng@canonical.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If write to subpage is not allowed, EPT violation is generated,
-it's propagated to QEMU or VMI to handle.
+Hi Kai-Heng,
 
-If the target page is SPP protected, however SPPT missing is
-encoutered while traversing with gfn, vmexit is generated so
-that KVM can handle the issue. Any SPPT misconfig will be
-propagated to QEMU or VMI.
+> When Intel 8260 starts to load Bluetooth firmware and WiFi firmware, by
+> calling btintel_download_firmware() and iwl_pcie_load_given_ucode_8000()
+> respectively, the Bluetooth btintel_download_firmware() aborts half way:
+> [   11.950216] Bluetooth: hci0: Failed to send firmware data (-38)
+> 
+> Let btusb and iwlwifi load firmwares exclusively can avoid the issue, so
+> introduce a lock to use in btusb and iwlwifi.
+> 
+> This issue still occurs with latest WiFi and Bluetooth firmwares.
+> 
+> BugLink: https://bugs.launchpad.net/bugs/1832988
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v2:
+> - Add bug report link.
+> - Rebase on latest wireless-next.
+> 
+> drivers/bluetooth/btintel.c   | 14 ++++++++++++++
+> drivers/bluetooth/btintel.h   | 10 ++++++++++
+> include/linux/intel-wifi-bt.h |  8 ++++++++
+> 3 files changed, 32 insertions(+)
+> create mode 100644 include/linux/intel-wifi-bt.h
+> 
+> diff --git a/drivers/bluetooth/btintel.c b/drivers/bluetooth/btintel.c
+> index bb99c8653aab..93ab18d6ddad 100644
+> --- a/drivers/bluetooth/btintel.c
+> +++ b/drivers/bluetooth/btintel.c
+> @@ -20,6 +20,8 @@
+> 
+> #define BDADDR_INTEL (&(bdaddr_t) {{0x00, 0x8b, 0x9e, 0x19, 0x03, 0x00}})
+> 
+> +static DEFINE_MUTEX(firmware_lock);
+> +
+> int btintel_check_bdaddr(struct hci_dev *hdev)
+> {
+> 	struct hci_rp_read_bd_addr *bda;
+> @@ -709,6 +711,18 @@ int btintel_download_firmware(struct hci_dev *hdev, const struct firmware *fw,
+> }
+> EXPORT_SYMBOL_GPL(btintel_download_firmware);
+> 
+> +void btintel_firmware_lock(void)
+> +{
+> +	mutex_lock(&firmware_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(btintel_firmware_lock);
+> +
+> +void btintel_firmware_unlock(void)
+> +{
+> +	mutex_unlock(&firmware_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(btintel_firmware_unlock);
+> +
 
-A SPP specific bit(11) is added to exit_qualification and a new
-exit reason(66) is introduced for SPP.
+so I am not in favor of this solution. The hardware guys should start looking into fixing the firmware loading and provide proper firmware that can be loaded at the same time.
 
-Co-developed-by: He Chen <he.chen@linux.intel.com>
-Signed-off-by: He Chen <he.chen@linux.intel.com>
-Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/vmx.h      |  7 ++++
- arch/x86/include/uapi/asm/vmx.h |  2 +
- arch/x86/kvm/mmu.c              | 17 ++++++++
- arch/x86/kvm/vmx/vmx.c          | 71 +++++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h        |  5 +++
- 5 files changed, 102 insertions(+)
+I am also not for sure penalizing all Intel Bluetooth/WiFi combos only because one of them has a bug during simultaneous loading of WiFi and Bluetooth firmware.
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 6cb05ac07453..11ca64ced578 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -547,6 +547,13 @@ struct vmx_msr_entry {
- #define EPT_VIOLATION_EXECUTABLE	(1 << EPT_VIOLATION_EXECUTABLE_BIT)
- #define EPT_VIOLATION_GVA_TRANSLATED	(1 << EPT_VIOLATION_GVA_TRANSLATED_BIT)
- 
-+/*
-+ * Exit Qualifications for SPPT-Induced vmexits
-+ */
-+#define SPPT_INDUCED_EXIT_TYPE_BIT     11
-+#define SPPT_INDUCED_EXIT_TYPE         (1 << SPPT_INDUCED_EXIT_TYPE_BIT)
-+#define SPPT_INTR_INFO_UNBLOCK_NMI     INTR_INFO_UNBLOCK_NMI
-+
- /*
-  * VM-instruction error numbers
-  */
-diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
-index d213ec5c3766..fd89ebf321c9 100644
---- a/arch/x86/include/uapi/asm/vmx.h
-+++ b/arch/x86/include/uapi/asm/vmx.h
-@@ -85,6 +85,7 @@
- #define EXIT_REASON_PML_FULL            62
- #define EXIT_REASON_XSAVES              63
- #define EXIT_REASON_XRSTORS             64
-+#define EXIT_REASON_SPP                 66
- 
- #define VMX_EXIT_REASONS \
- 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-@@ -141,6 +142,7 @@
- 	{ EXIT_REASON_ENCLS,                 "ENCLS" }, \
- 	{ EXIT_REASON_RDSEED,                "RDSEED" }, \
- 	{ EXIT_REASON_PML_FULL,              "PML_FULL" }, \
-+	{ EXIT_REASON_SPP,                   "SPP" }, \
- 	{ EXIT_REASON_XSAVES,                "XSAVES" }, \
- 	{ EXIT_REASON_XRSTORS,               "XRSTORS" }
- 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 16d3ca544b67..419878301375 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -3602,6 +3602,19 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
- 		if ((error_code & PFERR_WRITE_MASK) &&
- 		    spte_can_locklessly_be_made_writable(spte))
- 		{
-+			/*
-+			 * Record write protect fault caused by
-+			 * Sub-page Protection, let VMI decide
-+			 * the next step.
-+			 */
-+			if (spte & PT_SPP_MASK) {
-+				fault_handled = true;
-+				vcpu->run->exit_reason = KVM_EXIT_SPP;
-+				vcpu->run->spp.addr = gva;
-+				kvm_skip_emulated_instruction(vcpu);
-+				break;
-+			}
-+
- 			new_spte |= PT_WRITABLE_MASK;
- 
- 			/*
-@@ -5786,6 +5799,10 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gva_t cr2, u64 error_code,
- 		r = vcpu->arch.mmu->page_fault(vcpu, cr2,
- 					       lower_32_bits(error_code),
- 					       false);
-+
-+		if (vcpu->run->exit_reason == KVM_EXIT_SPP)
-+			return 0;
-+
- 		WARN_ON(r == RET_PF_INVALID);
- 	}
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 855d02dd94c7..2506ca958277 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5327,6 +5327,76 @@ static int handle_monitor(struct kvm_vcpu *vcpu)
- 	return handle_nop(vcpu);
- }
- 
-+static int handle_spp(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long exit_qualification;
-+	struct kvm_memory_slot *slot;
-+	gpa_t gpa;
-+	gfn_t gfn;
-+
-+	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
-+
-+	/*
-+	 * SPP VM exit happened while executing iret from NMI,
-+	 * "blocked by NMI" bit has to be set before next VM entry.
-+	 * There are errata that may cause this bit to not be set:
-+	 * AAK134, BY25.
-+	 */
-+	if (!(to_vmx(vcpu)->idt_vectoring_info & VECTORING_INFO_VALID_MASK) &&
-+	    (exit_qualification & SPPT_INTR_INFO_UNBLOCK_NMI))
-+		vmcs_set_bits(GUEST_INTERRUPTIBILITY_INFO,
-+			      GUEST_INTR_STATE_NMI);
-+
-+	vcpu->arch.exit_qualification = exit_qualification;
-+	if (exit_qualification & SPPT_INDUCED_EXIT_TYPE) {
-+		struct kvm_subpage spp_info = {0};
-+		int ret;
-+
-+		/*
-+		 * SPPT missing
-+		 * We don't set SPP write access for the corresponding
-+		 * GPA, if we haven't setup, we need to construct
-+		 * SPP table here.
-+		 */
-+		pr_info("SPP - SPPT entry missing!\n");
-+		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
-+		gfn = gpa >> PAGE_SHIFT;
-+		slot = gfn_to_memslot(vcpu->kvm, gfn);
-+		if (!slot)
-+		      return -EFAULT;
-+
-+		/*
-+		 * if the target gfn is not protected, but SPPT is
-+		 * traversed now, regard this as some kind of fault.
-+		 */
-+		spp_info.base_gfn = gfn;
-+		spp_info.npages = 1;
-+
-+		spin_lock(&(vcpu->kvm->mmu_lock));
-+		ret = kvm_mmu_get_subpages(vcpu->kvm, &spp_info, true);
-+		if (ret == 1) {
-+			kvm_mmu_setup_spp_structure(vcpu,
-+				spp_info.access_map[0], gfn);
-+		}
-+		spin_unlock(&(vcpu->kvm->mmu_lock));
-+
-+		return 1;
-+
-+	}
-+
-+	/*
-+	 * SPPT Misconfig
-+	 * This is probably caused by some mis-configuration in SPPT
-+	 * entries, cannot handle it here, escalate the fault to
-+	 * emulator.
-+	 */
-+	WARN_ON(1);
-+	vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
-+	vcpu->run->hw.hardware_exit_reason = EXIT_REASON_SPP;
-+	pr_alert("SPP - SPPT Misconfiguration!\n");
-+	return 0;
-+}
-+
- static int handle_invpcid(struct kvm_vcpu *vcpu)
- {
- 	u32 vmx_instruction_info;
-@@ -5530,6 +5600,7 @@ static int (*kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
- 	[EXIT_REASON_INVVPID]                 = handle_vmx_instruction,
- 	[EXIT_REASON_RDRAND]                  = handle_invalid_op,
- 	[EXIT_REASON_RDSEED]                  = handle_invalid_op,
-+	[EXIT_REASON_SPP]                     = handle_spp,
- 	[EXIT_REASON_XSAVES]                  = handle_xsaves,
- 	[EXIT_REASON_XRSTORS]                 = handle_xrstors,
- 	[EXIT_REASON_PML_FULL]		      = handle_pml_full,
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 5754f8d21e7d..caff0ed1eeaf 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -244,6 +244,7 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_S390_STSI        25
- #define KVM_EXIT_IOAPIC_EOI       26
- #define KVM_EXIT_HYPERV           27
-+#define KVM_EXIT_SPP              28
- 
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -399,6 +400,10 @@ struct kvm_run {
- 		struct {
- 			__u8 vector;
- 		} eoi;
-+		/* KVM_EXIT_SPP */
-+		struct {
-+			__u64 addr;
-+		} spp;
- 		/* KVM_EXIT_HYPERV */
- 		struct kvm_hyperv_exit hyperv;
- 		/* Fix the size of the union. */
--- 
-2.17.2
+Frankly it would be better to detect a failed load and try a second time instead of trying to lock each other out. The cross-contamination of WiFi and Bluetooth drivers is just not clean.
+
+Regards
+
+Marcel
 
