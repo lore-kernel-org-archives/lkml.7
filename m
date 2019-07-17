@@ -2,181 +2,145 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BFBC76196
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CA6C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBE321849
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329BB21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 17:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HRQVheon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfGQRTC (ORCPT
+        id S1728220AbfGQRVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 13:19:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:49330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQRTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:19:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACFB728;
-        Wed, 17 Jul 2019 10:19:01 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C30D73F71F;
-        Wed, 17 Jul 2019 10:18:58 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 18:18:56 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>
-Subject: Re: [PATCH 17/18] arm64: dts: Convert to the hierarchical CPU
- topology layout for MSM8916
-Message-ID: <20190717171856.GF18370@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-18-ulf.hansson@linaro.org>
- <20190716144730.GA7250@e107155-lin>
- <20190716203631.GC25567@codeaurora.org>
+        Wed, 17 Jul 2019 13:21:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35162 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfGQRVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 13:21:08 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s1so5170954pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 10:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iX1wftE5Aqgtgj+nGNer/hw/V9PAwsfP++ET+7am9rU=;
+        b=HRQVheonDQr8B9B6F0GQNx/ySkrc3u72V+igTa8ElldPlOlzxJvFRR57GLMrAYz3mY
+         imK5rGkWSJ605HsPuSQ0rogb0jaQMqwT3fbt8L/z2YDmA/PdskqVBuZgZFqUl45wbDDb
+         3ln+xNw8a3r/ABjC5qqyBBe9Kz94J9V8zij3g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iX1wftE5Aqgtgj+nGNer/hw/V9PAwsfP++ET+7am9rU=;
+        b=ZZa8FVD5wzh+j4pIiD8tYD0MnEAi42EwOkXGDHyPVNy2xc2A/qU5/76CK+rhH/gJTZ
+         6OmxopW2qkQMTnSCB5Siz/iaYb6pZ0LHR3mXM4EP9LJV6RvKhT6HctedLF4na79i7ydT
+         b2Hs3Qttw5RtLA/JNBpkTCoGxrrciSUKkO4960XygrJp0Pg4eFAdohGzZbOZzS5hhmhN
+         tHRYu7p/YTz2d1CEUHWamtES/UIjgkcI5Ri2HWnPF9Gy2wPPfvMdMyus31a6RYZTh4YC
+         oNCcEIkNjytXbZPbfmMMLdjNTjM7pjwX5da8MWbngR9xdSLDO4lcWCTPb41NXDDCcdbQ
+         qYbg==
+X-Gm-Message-State: APjAAAWu7TEMxWyVghlQmXCNz6XZaeIXt+PSq0MtnSsZ6wBE7vssbE1S
+        a4UtSEYXEDvqjZEJL+QEWVogKjDb
+X-Google-Smtp-Source: APXvYqxWxl2bGR4dH0M+I2nha6OcTiJqIwwpb5dgj1wfx9kugj0hPDhAFZ2u7N7017Rtt3m1A2SBXQ==
+X-Received: by 2002:a63:205f:: with SMTP id r31mr42551949pgm.159.1563384067498;
+        Wed, 17 Jul 2019 10:21:07 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v4sm21679110pgf.20.2019.07.17.10.21.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Jul 2019 10:21:06 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Suren Baghdasaryan <surenb@google.com>, kernel-team@android.com,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH RFC v1] pidfd: fix a race in setting exit_state for pidfd polling
+Date:   Wed, 17 Jul 2019 13:21:00 -0400
+Message-Id: <20190717172100.261204-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716203631.GC25567@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 02:36:31PM -0600, Lina Iyer wrote:
-> On Tue, Jul 16 2019 at 08:47 -0600, Sudeep Holla wrote:
-> > On Mon, May 13, 2019 at 09:22:59PM +0200, Ulf Hansson wrote:
-> > > From: Lina Iyer <lina.iyer@linaro.org>
-> > >
-> > > In the hierarchical layout, we are creating power domains around each CPU
-> > > and describes the idle states for them inside the power domain provider
-> > > node. Note that, the CPU's idle states still needs to be compatible with
-> > > "arm,idle-state".
-> > >
-> > > Furthermore, represent the CPU cluster as a separate master power domain,
-> > > powering the CPU's power domains. The cluster node, contains the idle
-> > > states for the cluster and each idle state needs to be compatible with the
-> > > "domain-idle-state".
-> > >
-> > > If the running platform is using a PSCI FW that supports the OS initiated
-> > > CPU suspend mode, which likely should be the case unless the PSCI FW is
-> > > very old, this change triggers the PSCI driver to enable it.
-> > >
-> > > Cc: Andy Gross <andy.gross@linaro.org>
-> > > Cc: David Brown <david.brown@linaro.org>
-> > > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> > > Co-developed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > ---
-> >
-> > [...]
-> >
-> > > @@ -166,12 +170,57 @@
-> > >  				min-residency-us = <2000>;
-> > >  				local-timer-stop;
-> > >  			};
-> > > +
-> > > +			CLUSTER_RET: cluster-retention {
-> > > +				compatible = "domain-idle-state";
-> > > +				arm,psci-suspend-param = <0x1000010>;
-> > > +				entry-latency-us = <500>;
-> > > +				exit-latency-us = <500>;
-> > > +				min-residency-us = <2000>;
-> > > +			};
-> > > +
-> > > +			CLUSTER_PWRDN: cluster-gdhs {
-> > > +				compatible = "domain-idle-state";
-> > > +				arm,psci-suspend-param = <0x1000030>;
-> > > +				entry-latency-us = <2000>;
-> > > +				exit-latency-us = <2000>;
-> > > +				min-residency-us = <6000>;
-> > > +			};
-> > >  		};
-> > >  	};
-> >
-> > I was trying to understand the composition of composite state parameters
-> > in this series and that made me look at these DT examples.
-> >
-> This was meant to depict a hierarchical state format for OSI.
->
+From: Suren Baghdasaryan <surenb@google.com>
 
-Hmm, I am more confused. We have 2 formats: original and extended.
+There is a race between reading task->exit_state in pidfd_poll and writing
+it after do_notify_parent calls do_notify_pidfd. Expected sequence of
+events is:
 
-1. Original:
-	31:26 Reserved. Must be zero.
-	25:24 PowerLevel
-	23:17 Reserved. Must be zero.
-	16 StateType
-	15:0 StateID
-2. Extended
-	31 Reserved. Must be zero.
-	30 StateType
-	29:28 Reserved. Must be zero.
-	27:0 StateID
+CPU 0                            CPU 1
+------------------------------------------------
+exit_notify
+  do_notify_parent
+    do_notify_pidfd
+  tsk->exit_state = EXIT_DEAD
+                                  pidfd_poll
+                                     if (tsk->exit_state)
 
-I was trying to match them to that. I think I commented on other patches.
-I think simple OR logic breaks with extended format easily if StateIDs
-are not carefully crafted which is not mandated and hence the trouble.
-The same holds to original format but with PowerLevel, it slightly
-relaxing things a bit but still it needs to be crafted when firmware
-decides these parameters. E.g.: what is done with HiKey platform is
-completely wrong.
+However nothing prevents the following sequence:
 
-It's helpful if we want to avoid save/restore for retention states.
-CPU_PM_CPU_IDLE_ENTER_RETENTION vs CPU_PM_CPU_IDLE_ENTER
+CPU 0                            CPU 1
+------------------------------------------------
+exit_notify
+  do_notify_parent
+    do_notify_pidfd
+                                   pidfd_poll
+                                      if (tsk->exit_state)
+  tsk->exit_state = EXIT_DEAD
 
-> > What format does the above platform use ? I tried matching them to
-> > both original as well as extended format and I fail to understand.
-> > Assuming original format:
-> > 	State         power_state PowerLevel  StateType     StateID
-> > 	SPC           0x40000002   0(core)    0(Retention)  0x2 (Res0 b[29]=1?)
-> > 	CLUSTER_RET   0x1000010   1(clusters) 0(Retention)  0x10
-> > 	CLUSTER_PWRDN 0x1000030   1(clusters) 0(Retention?) 0x30
-> > Now extended format:
-> > 	State         power_state StateType     StateID
-> > 	SPC           0x40000002  0(Retention)  0x40000002 (Res0 b[29]=1?)
-> > 	CLUSTER_RET   0x1000010   0(Retention)  0x1000010
-> The composite state would comprise of CPU state and  Cluster state.
-> So for the last CPU entering idle -
-> (CLUSTER_RET | SPC)
-> 0x41000012
-> > 	CLUSTER_PWRDN 0x1000030   0(Retention?) 0x1000030
-> >
-> (CLUSTER_PWRDN | SPC)
-> 0x41000032
->
-> Hope this helps.
->
+This causes a polling task to wait forever, since poll blocks because
+exit_state is 0 and the waiting task is not notified again. A stress
+test continuously doing pidfd poll and process exits uncovered this bug,
+and the below patch fixes it.
 
-I just follow OR logic. I have made wrong reference to bit 29 above(I
-can't read simple 32 bit number anymore :(), it should bit 30 and if
-this platform follow extended state, then it makes some sense. But
-I expect CLUSTER_PWRDN also to have bit 30 set. I tried to match to both
-formats and failed to understand which it follows, so thought of asking.
+To fix this, we set tsk->exit_state before calling do_notify_pidfd.
 
---
-Regards,
-Sudeep
+Cc: kernel-team@android.com
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+---
+ kernel/exit.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index a75b6a7f458a..740ceacb4b76 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -720,6 +720,7 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 	if (group_dead)
+ 		kill_orphaned_pgrp(tsk->group_leader, NULL);
+ 
++	tsk->exit_state = EXIT_ZOMBIE;
+ 	if (unlikely(tsk->ptrace)) {
+ 		int sig = thread_group_leader(tsk) &&
+ 				thread_group_empty(tsk) &&
+@@ -1156,10 +1157,11 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
+ 		ptrace_unlink(p);
+ 
+ 		/* If parent wants a zombie, don't release it now */
+-		state = EXIT_ZOMBIE;
++		p->exit_state = EXIT_ZOMBIE;
+ 		if (do_notify_parent(p, p->exit_signal))
+-			state = EXIT_DEAD;
+-		p->exit_state = state;
++			p->exit_state = EXIT_DEAD;
++
++		state = p->exit_state;
+ 		write_unlock_irq(&tasklist_lock);
+ 	}
+ 	if (state == EXIT_DEAD)
+-- 
+2.22.0.657.g960e92d24f-goog
+
