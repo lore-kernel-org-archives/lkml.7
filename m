@@ -2,145 +2,78 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B717C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDB9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B092182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UtfkndZ3"
+	by mail.kernel.org (Postfix) with ESMTP id C49412173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 15:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfGQPdz (ORCPT
+        id S1727199AbfGQPkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 11:33:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54082 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfGQPdv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 11:33:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HFT9V7144925;
-        Wed, 17 Jul 2019 15:33:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=YpieagIzClqGep+kYvHHdZfJtmpglYeY9E+VdFYWRP8=;
- b=UtfkndZ3/N+9XdDmFaPTHF1/dTkPgs3CcC5Sf8UudKnGAl7PqkLdnLw8FYJB/m24hO3V
- mMZDAii0Rgppk+KCAsNrpllG4gvSoEG8CcmxBjhMoUGBQqc1FIVrm9tCah5Fd8bvAeID
- mOra7dsF0+vefgw8qkDgxxetG5Mzxbz85tzYJCNPd+YaLHMo/oOP9mbhABDGziRLO76Z
- 6xGg+PacyTL3Q/Zelbml2U2FV0nRV/a1J4cG9zPt11Y4/zhojtNmfMXtWFCF+JflI2js
- Q72Wfbgpvd2HJacxIpgKCsWxyJMKnPd8tbBTeUs1uAa2etuiHamCuqHUnPNzFouY4sh7 Pg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tq6qtur88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 15:33:42 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6HFXSFU181798;
-        Wed, 17 Jul 2019 15:33:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2tq4dukjev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jul 2019 15:33:42 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6HFXWrI002643;
-        Wed, 17 Jul 2019 15:33:36 GMT
-Received: from localhost (/10.159.238.155)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jul 2019 15:33:31 +0000
-Date:   Wed, 17 Jul 2019 08:33:29 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: linux-next: Tree for Jul 17
-Message-ID: <20190717153329.GC7116@magnolia>
-References: <20190717142922.214d54ec@canb.auug.org.au>
- <CA+icZUUhnSGkLQcCZBzYXCRxExiZ1F=KnzdeiNSbojHRfxRjOA@mail.gmail.com>
+        Wed, 17 Jul 2019 11:40:20 -0400
+Received: from mga03.intel.com ([134.134.136.65]:37682 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfGQPkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 11:40:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 08:40:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
+   d="scan'208";a="169590256"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by fmsmga007.fm.intel.com with ESMTP; 17 Jul 2019 08:40:19 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id DEBDB30125F; Wed, 17 Jul 2019 08:40:18 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 08:40:18 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [Patch] perf stat: always separate stalled cycles per insn
+Message-ID: <20190717154018.GL32439@tassilo.jf.intel.com>
+References: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
+ <20190520065906.GC8068@krava>
+ <CAM_iQpXoD3YzkUzyLSF9qKLpbGxXVeOdFccLbv-mCTVfshx-2w@mail.gmail.com>
+ <20190528191102.GD13830@kernel.org>
+ <CAM_iQpWxAYqUsC8TEOfhp12d8gbLmJ+xpLmcE_DwTV7gKm6_ww@mail.gmail.com>
+ <20190716204324.GH3624@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+icZUUhnSGkLQcCZBzYXCRxExiZ1F=KnzdeiNSbojHRfxRjOA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1907170181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1907170180
+In-Reply-To: <20190716204324.GH3624@kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 05:30:47PM +0200, Sedat Dilek wrote:
-> Hi Steven, Hi Darrick,
+On Tue, Jul 16, 2019 at 05:43:24PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jul 16, 2019 at 12:24:41PM -0700, Cong Wang escreveu:
+> > Hi, Arnaldo
+> > 
+> > On Tue, May 28, 2019 at 12:11 PM Arnaldo Carvalho de Melo
+> > <arnaldo.melo@gmail.com> wrote:
+> > >
+> > > Em Tue, May 28, 2019 at 11:21:38AM -0700, Cong Wang escreveu:
+> > > > Thanks for reviewing it. Is there anyone takes this patch?
+> > >
+> > > Enough time, acked already, picking it.
+> > 
+> > Where is this patch landed? I don't see it in Linus tree. I guess you
+> > are still holding it somewhere?
 > 
-> Unfortunately, my build-script is not working anymore.
-> 
-> I am using builddeb/mkdebian scripts.
+> Got it now, will push upstream in the next batch, sorry for the delay.
 
-Yeah, I accidentally uploaded an internal build patch yesterday which
-got sucked into for-next.  It's been fixed in the iomap-for-next tree
-and should disappear in Thursday's for-next tree.  Sorry about that. :(
+FWIW i would prefer to deprecate the stalled cycles metrics. They 
+are confusing and misleading. --topdown FrontendBound is a much
+better metric.
 
---D
-
-> [ BUILD-LOG ]
-> ...
-> set -e; mkdir -p include/config/; { echo "5.2.0$(/bin/bash
-> ./scripts/setlocalversion .)"; } > include/config/kernel.release.tmp;
-> if [ -r include/config/kernel.release ] && cmp -s
-> include/config/kernel.release include/config/kernel.release.tmp; then
-> rm -f include/config/kernel.release.tmp; else : '  UPD
-> include/config/kernel.release'; mv -f
-> include/config/kernel.release.tmp include/config/kernel.release; fi
-> make -f ./scripts/Makefile.build obj=scripts/package bindeb-pkg
-> /bin/bash ./scripts/package/mkdebian
-> ./scripts/package/mkdebian: line 149: cd: source/: No such file or directory
-> make[1]: *** [scripts/package/Makefile:79: bindeb-pkg] Error 1
-> make: *** [Makefile:1442: bindeb-pkg] Error 2
-> 
-> Investigations revealed hardcoded stuff from the ...
-> 
-> Merge remote-tracking branch 'iomap/iomap-for-next'
-> 
-> $ git blame scripts/package/mkdebian | grep 'cd source'
-> 87bdff62e470c (Darrick J. Wong    2019-06-27 17:30:15 -0700 149) (cd
-> source/ ; stg ser | sed -e '/^-/d' -e 's/^. /  * /g') >>
-> debian/changelog
-> 
-> $ git log --oneline --author="Darrick J. Wong" scripts/package/mkdebian
-> 87bdff62e470 mtr: Build script adjustments
-> 
-> I do not think this was intended?
-> 
-> Reverting seems to be easy and fix it for me.
-> 
-> $ git revert --no-edit 87bdff62e470
-> Führe Erkennung für ungenaue Umbenennung aus: 100% (2251440/2251440), Fertig.
-> [5.2.0-3-amd64-cbl-asmgoto db8ec1968620] Revert "mtr: Build script adjustments"
->  Date: Wed Jul 17 17:27:26 2019 +0200
->  3 files changed, 10 insertions(+), 17 deletions(-)
-> 
-> Please make it work again for $WORLD.
-> 
-> Thanks.
-> 
-> Regards,
-> - Sedat -
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/scripts/package/mkdebian?h=next-20190717
+-Andi
