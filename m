@@ -2,491 +2,128 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9035FC76195
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9AFC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53DAA2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D2B2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 21:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R2LjRwg3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oui+ecCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfGQVij (ORCPT
+        id S1728606AbfGQVkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 17:38:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36828 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbfGQVij (ORCPT
+        Wed, 17 Jul 2019 17:40:52 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43703 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727205AbfGQVkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 17:38:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so11489140pfl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 14:38:38 -0700 (PDT)
+        Wed, 17 Jul 2019 17:40:52 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j11so2470735otp.10;
+        Wed, 17 Jul 2019 14:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=vqm6FmYVMCMbj653BlwIW56fUVEkPV5mCQ6faXZj74s=;
-        b=R2LjRwg3x6xLuJMH17/bg6t0nA/+BfmUCGcYX7oARiR8DrNToGgk5iwEDr5gpRzcGF
-         AmlrTC2vLVQOSbdNRviefwVnV9np5Cd4TMbH4Vc4eliYa3gg2JyMhKDJPOgxDcp5s3no
-         6H3NUg52biL30IILFLLWHVROchLL2BU8HCL7s=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JwCY5EkX6qsSCI1zqTSmNzIVniTYPiFia3C3pkf6gXE=;
+        b=Oui+ecCfFLBBgtSmUJViQyKvDee4rnPVVVxZZq6vZZTBhBkUYkeheQyB5cyJ2EPCYn
+         qSj1BDqGkQaEN9QLj7v//zqlXqRlqKlyRZIVqhe/APlDIkuhJtPzRJEmVag7WFBte2bY
+         Lqv5BzzRxApG1McZHAYYOgj7VjMpBz2BN8wcOcaDVnbmsmjmyn4C91Jb+RFckM3bNB0v
+         Wpewsgu/++kYdMmv9vwfitUWM3BAcRxs6vvylfdizkFAPxh83jLiFf5NxZUmmFV0eLev
+         KhB1fUacbnJms/HzNNNhMFW2IC4qdnw+LqyMvknUyWl583p1OPvx6XslBLCjOMJscVQg
+         Biaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=vqm6FmYVMCMbj653BlwIW56fUVEkPV5mCQ6faXZj74s=;
-        b=btZ7WQ10aFcM208gg7o29T6OS+fRifoscwYsuEuV77udvAFwdrrmo51BGEC62IJ5JC
-         wF0wYAAsbm7dIcTicjpNlf70UhgdRUf7w4FOg4m0MqHdVJTvYSE+Y0v1DIiPtU1bpl24
-         wKTjMG5cStRzDVAhPK/yzHt+kLje/ZoEptGk+AkwaRzRJMoWVPwgQIexwFheOKGaAtco
-         3jZeAS5kHFY5nYGLxd4CiDlWt6c5yXOboZSZiabOb4dbludF9a0OWnAg6Qk3YpTF8qig
-         dMwJGYXLQUEd8ZJyV0cYJUKRL5i0YLLQ/0QZRwpetjAlBURRNQS8pB+Vvd+NM72YBaaJ
-         doiw==
-X-Gm-Message-State: APjAAAUqgFOjyb2+LqfJHWdq33R4fstBqkJydu/61WWE0oMPV2MVGLhc
-        XTIFIdFoCcTn0QQN/tzuvxP2qswyxVg=
-X-Google-Smtp-Source: APXvYqwYhz4U6+27P/zTusiNUrzuIiSVmrXfeERFwW+Tv1lAyrfMhP2yylPVHoUfIPv6cXl51rq/Lg==
-X-Received: by 2002:a63:c006:: with SMTP id h6mr10098140pgg.290.1563399518264;
-        Wed, 17 Jul 2019 14:38:38 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i14sm43423909pfk.0.2019.07.17.14.38.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 14:38:37 -0700 (PDT)
-Message-ID: <5d2f955d.1c69fb81.35877.7018@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwCY5EkX6qsSCI1zqTSmNzIVniTYPiFia3C3pkf6gXE=;
+        b=ht/nt4cMLs93eg2a0t9yCVL0jGgaSWtUbmuJ5Lqx7btzLLQ1oW6r3r/dKwtN6JPhiq
+         7NdAW3IQ41hJO1rJy4kdvEwH8BmZ6NsBU1SoMolPcoQcYpKXlM4I415lSvK4Y6o9PkNA
+         lZEk8Ig6mOOL1DrmdJrsDbs1tYQrvSaD6T9MnmocdlIK4vhtPnWdmQaoSA6WyLxEpkM/
+         DISp1XMZg2mvCOFb1YcH3fdeGu73LBeiS3EgMMVrRla7lTDRljpDcnIO9jRNfgwWBpbf
+         BzF0wh+wzuArAEeVU23a2pMGyUMc0aYA9P0djaf/1JJ0SS61e25Kyes9SaTvtT+RqFK5
+         dqeg==
+X-Gm-Message-State: APjAAAUEyPIb+/6PVwmB4ZjR4e3sRtGcsXkgG0Y9M3BdFkcEordOrR/R
+        a8tBNlVZKB/4EPpdQjj5RVhAr2ZYNz1aJAI7nx8=
+X-Google-Smtp-Source: APXvYqysf8UWPm8GTDujuPn5wVlp6jl/AWJqP+AE7CvVunAzweacnZCJdfiO11rsJ1qDVpL0VrJQKsSWa8Yqs3pHsZ4=
+X-Received: by 2002:a9d:6c46:: with SMTP id g6mr29693212otq.104.1563399650821;
+ Wed, 17 Jul 2019 14:40:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5d2f7daf.1c69fb81.c0b13.c3d4@mx.google.com>
-References: <20190716224518.62556-1-swboyd@chromium.org> <20190716224518.62556-6-swboyd@chromium.org> <f824e3ab-ae2f-8c2f-549a-16569b10966e@infineon.com> <5d2f7daf.1c69fb81.c0b13.c3d4@mx.google.com>
-Subject: Re: [PATCH v2 5/6] tpm: add driver for cr50 on SPI
-To:     Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 17 Jul 2019 14:38:36 -0700
+References: <20190717201925.fur57qfs2x3ha6aq@debian> <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Wed, 17 Jul 2019 22:40:14 +0100
+Message-ID: <CADVatmO_m-NYotb9Htd7gS0d2-o0DeEWeDJ1uYKE+oj_HjoN0Q@mail.gmail.com>
+Subject: Re: regression with napi/softirq ?
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-07-17 12:57:34)
-> Quoting Alexander Steffen (2019-07-17 05:00:06)
-> >=20
-> > Can't the code be shared more explicitly, e.g. by cr50_spi wrapping=20
-> > tpm_tis_spi, so that it can intercept the calls, execute the additional=
-=20
-> > actions (like waking up the device), but then let tpm_tis_spi do the=20
-> > common work?
-> >=20
->=20
-> I suppose the read{16,32} and write32 functions could be reused. I'm not
-> sure how great it will be if we combine these two drivers, but I can
-> give it a try today and see how it looks.
->=20
+Hi,
 
-Here's the patch. I haven't tested it besides compile testing.
+On Wed, Jul 17, 2019 at 9:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Wed, 17 Jul 2019, Sudip Mukherjee wrote:
+> > I am using v4.14.55 on an Intel Atom based board and I am seeing network
+> > packet drops frequently on wireshark logs. After lots of debugging it
+> > seems that when this happens softirq is taking huge time to start after
+> > it has been raised. This is a small snippet from ftrace:
+> >
+> >            <...>-2110  [001] dNH1   466.634916: irq_handler_entry: irq=126 name=eth0-TxRx-0
+> >            <...>-2110  [001] dNH1   466.634917: softirq_raise: vec=3 [action=NET_RX]
+> >            <...>-2110  [001] dNH1   466.634918: irq_handler_exit: irq=126 ret=handled
+> >      ksoftirqd/1-15    [001] ..s.   466.635826: softirq_entry: vec=3 [action=NET_RX]
+> >      ksoftirqd/1-15    [001] ..s.   466.635852: softirq_exit: vec=3 [action=NET_RX]
+> >      ksoftirqd/1-15    [001] d.H.   466.635856: irq_handler_entry: irq=126 name=eth0-TxRx-0
+> >      ksoftirqd/1-15    [001] d.H.   466.635857: softirq_raise: vec=3 [action=NET_RX]
+> >      ksoftirqd/1-15    [001] d.H.   466.635858: irq_handler_exit: irq=126 ret=handled
+> >      ksoftirqd/1-15    [001] ..s.   466.635860: softirq_entry: vec=3 [action=NET_RX]
+> >      ksoftirqd/1-15    [001] ..s.   466.635863: softirq_exit: vec=3 [action=NET_RX]
+> >
+> > So, softirq was raised at 466.634917 but it started at 466.635826 almost
+> > 909 usec after it was raised.
+>
+> This is a situation where the network softirq decided to delegate softirq
+> processing to ksoftirqd. That happens when too much work is available while
+> processing softirqs on return from interrupt.
+>
+> That means that softirq processing happens under scheduler control. So if
+> there are other runnable tasks on the same CPU ksoftirqd can be delayed
+> until their time slice expired. As a consequence ksoftirqd might not be
+> able to catch up with the incoming packet flood and the NIC starts to drop.
 
-----8<----
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index 19513e622053..12f4026c3620 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -34,14 +34,54 @@
- #include <linux/of_irq.h>
- #include <linux/of_gpio.h>
- #include <linux/tpm.h>
-+#include "cr50.h"
- #include "tpm.h"
- #include "tpm_tis_core.h"
-=20
- #define MAX_SPI_FRAMESIZE 64
-=20
-+/*
-+ * Cr50 timing constants:
-+ * - can go to sleep not earlier than after CR50_SLEEP_DELAY_MSEC.
-+ * - needs up to CR50_WAKE_START_DELAY_USEC to wake after sleep.
-+ * - requires waiting for "ready" IRQ, if supported; or waiting for at lea=
-st
-+ *   CR50_NOIRQ_ACCESS_DELAY_MSEC between transactions, if IRQ is not supp=
-orted.
-+ * - waits for up to CR50_FLOW_CONTROL for flow control 'ready' indication.
-+ */
-+#define CR50_SLEEP_DELAY_MSEC			1000
-+#define CR50_WAKE_START_DELAY_USEC		1000
-+#define CR50_NOIRQ_ACCESS_DELAY			msecs_to_jiffies(2)
-+#define CR50_READY_IRQ_TIMEOUT			msecs_to_jiffies(TPM2_TIMEOUT_A)
-+#define CR50_FLOW_CONTROL			msecs_to_jiffies(TPM2_TIMEOUT_A)
-+#define MAX_IRQ_CONFIRMATION_ATTEMPTS		3
-+
-+#define TPM_CR50_FW_VER(l)			(0x0f90 | ((l) << 12))
-+#define TPM_CR50_MAX_FW_VER_LEN			64
-+#define TIS_IS_CR50				1
-+
-+static unsigned short rng_quality =3D 1022;
-+module_param(rng_quality, ushort, 0644);
-+MODULE_PARM_DESC(rng_quality,
-+		 "Estimation of true entropy, in bits per 1024 bits.");
-+
-+
- struct tpm_tis_spi_phy {
- 	struct tpm_tis_data priv;
- 	struct spi_device *spi_device;
-+
-+	struct mutex time_track_mutex;
-+	unsigned long last_access;
-+	unsigned long wake_after;
-+
-+	unsigned long access_delay;
-+
-+	struct completion ready;
-+
-+	unsigned int irq_confirmation_attempt;
-+	bool irq_needs_confirmation;
-+	bool irq_confirmed;
-+	bool is_cr50;
-+
- 	u8 *iobuf;
- };
-=20
-@@ -50,6 +90,127 @@ static inline struct tpm_tis_spi_phy *to_tpm_tis_spi_ph=
-y(struct tpm_tis_data *da
- 	return container_of(data, struct tpm_tis_spi_phy, priv);
- }
-=20
-+/*
-+ * The cr50 interrupt handler just signals waiting threads that the
-+ * interrupt was asserted.  It does not do any processing triggered
-+ * by interrupts but is instead used to avoid fixed delays.
-+ */
-+static irqreturn_t cr50_spi_irq_handler(int dummy, void *dev_id)
-+{
-+	struct tpm_tis_spi_phy *phy =3D dev_id;
-+
-+	phy->irq_confirmed =3D true;
-+	complete(&phy->ready);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * Cr50 needs to have at least some delay between consecutive
-+ * transactions. Make sure we wait.
-+ */
-+static void cr50_ensure_access_delay(struct tpm_tis_spi_phy *phy)
-+{
-+	unsigned long allowed_access =3D phy->last_access + phy->access_delay;
-+	unsigned long time_now =3D jiffies;
-+	struct device *dev =3D &phy->spi_device->dev;
-+
-+	/*
-+	 * Note: There is a small chance, if Cr50 is not accessed in a few days,
-+	 * that time_in_range will not provide the correct result after the wrap
-+	 * around for jiffies. In this case, we'll have an unneeded short delay,
-+	 * which is fine.
-+	 */
-+	if (time_in_range_open(time_now, phy->last_access, allowed_access)) {
-+		unsigned long remaining, timeout =3D allowed_access - time_now;
-+
-+		remaining =3D wait_for_completion_timeout(&phy->ready, timeout);
-+		if (!remaining && phy->irq_confirmed)
-+			dev_warn(dev, "Timeout waiting for TPM ready IRQ\n");
-+	}
-+
-+	if (phy->irq_needs_confirmation) {
-+		unsigned int attempt =3D ++phy->irq_confirmation_attempt;
-+
-+		if (phy->irq_confirmed) {
-+			phy->irq_needs_confirmation =3D false;
-+			phy->access_delay =3D CR50_READY_IRQ_TIMEOUT;
-+			dev_info(dev, "TPM ready IRQ confirmed on attempt %u\n",
-+				 attempt);
-+		} else if (attempt > MAX_IRQ_CONFIRMATION_ATTEMPTS) {
-+			phy->irq_needs_confirmation =3D false;
-+			dev_warn(dev, "IRQ not confirmed - will use delays\n");
-+		}
-+	}
-+}
-+
-+/*
-+ * Cr50 might go to sleep if there is no SPI activity for some time and
-+ * miss the first few bits/bytes on the bus. In such case, wake it up
-+ * by asserting CS and give it time to start up.
-+ */
-+static bool cr50_needs_waking(struct tpm_tis_spi_phy *phy)
-+{
-+	/*
-+	 * Note: There is a small chance, if Cr50 is not accessed in a few days,
-+	 * that time_in_range will not provide the correct result after the wrap
-+	 * around for jiffies. In this case, we'll probably timeout or read
-+	 * incorrect value from TPM_STS and just retry the operation.
-+	 */
-+	return !time_in_range_open(jiffies, phy->last_access, phy->wake_after);
-+}
-+
-+static void cr50_wake_if_needed(struct tpm_tis_spi_phy *phy)
-+{
-+	if (cr50_needs_waking(phy)) {
-+		/* Assert CS, wait 1 msec, deassert CS */
-+		struct spi_transfer spi_cs_wake =3D { .delay_usecs =3D 1000 };
-+
-+		spi_sync_transfer(phy->spi_device, &spi_cs_wake, 1);
-+		/* Wait for it to fully wake */
-+		usleep_range(CR50_WAKE_START_DELAY_USEC,
-+			     CR50_WAKE_START_DELAY_USEC * 2);
-+	}
-+	/* Reset the time when we need to wake Cr50 again */
-+	phy->wake_after =3D jiffies + msecs_to_jiffies(CR50_SLEEP_DELAY_MSEC);
-+
-+}
-+
-+/*
-+ * Flow control: clock the bus and wait for cr50 to set LSB before
-+ * sending/receiving data. TCG PTP spec allows it to happen during
-+ * the last byte of header, but cr50 never does that in practice,
-+ * and earlier versions had a bug when it was set too early, so don't
-+ * check for it during header transfer.
-+ */
-+static int cr50_spi_flow_control(struct tpm_tis_spi_phy *phy)
-+{
-+	struct device *dev =3D &phy->spi_device->dev;
-+	unsigned long timeout =3D jiffies + CR50_FLOW_CONTROL;
-+	struct spi_message m;
-+	int ret;
-+	struct spi_transfer spi_xfer =3D {
-+		.rx_buf =3D phy->iobuf,
-+		.len =3D 1,
-+		.cs_change =3D 1,
-+	};
-+
-+	do {
-+		spi_message_init(&m);
-+		spi_message_add_tail(&spi_xfer, &m);
-+		ret =3D spi_sync_locked(phy->spi_device, &m);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_warn(dev, "Timeout during flow control\n");
-+			return -EBUSY;
-+		}
-+	} while (!(phy->iobuf[0] & 0x01));
-+
-+	return 0;
-+}
-+
- static int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 l=
-en,
- 				u8 *in, const u8 *out)
- {
-@@ -60,6 +221,12 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *da=
-ta, u32 addr, u16 len,
- 	struct spi_transfer spi_xfer;
- 	u8 transfer_len;
-=20
-+	mutex_lock(&phy->time_track_mutex);
-+	if (phy->is_cr50) {
-+		cr50_ensure_access_delay(phy);
-+		cr50_wake_if_needed(phy);
-+	}
-+
- 	spi_bus_lock(phy->spi_device->master);
-=20
- 	while (len) {
-@@ -82,7 +249,11 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *da=
-ta, u32 addr, u16 len,
- 		if (ret < 0)
- 			goto exit;
-=20
--		if ((phy->iobuf[3] & 0x01) =3D=3D 0) {
-+		if (phy->is_cr50) {
-+			ret =3D cr50_spi_flow_control(phy);
-+			if (ret < 0)
-+				goto exit;
-+		} else if ((phy->iobuf[3] & 0x01) =3D=3D 0) {
- 			// handle SPI wait states
- 			phy->iobuf[0] =3D 0;
-=20
-@@ -117,6 +288,7 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *da=
-ta, u32 addr, u16 len,
-=20
- 		spi_message_init(&m);
- 		spi_message_add_tail(&spi_xfer, &m);
-+		reinit_completion(&phy->ready);
- 		ret =3D spi_sync_locked(phy->spi_device, &m);
- 		if (ret < 0)
- 			goto exit;
-@@ -131,6 +303,8 @@ static int tpm_tis_spi_transfer(struct tpm_tis_data *da=
-ta, u32 addr, u16 len,
-=20
- exit:
- 	spi_bus_unlock(phy->spi_device->master);
-+	phy->last_access =3D jiffies;
-+	mutex_lock(&phy->time_track_mutex);
- 	return ret;
- }
-=20
-@@ -192,10 +366,37 @@ static const struct tpm_tis_phy_ops tpm_spi_phy_ops =
-=3D {
- 	.write32 =3D tpm_tis_spi_write32,
- };
-=20
-+static void cr50_print_fw_version(struct tpm_tis_spi_phy *phy)
-+{
-+	int i, len =3D 0;
-+	char fw_ver[TPM_CR50_MAX_FW_VER_LEN + 1];
-+	char fw_ver_block[4];
-+	struct tpm_tis_data *data =3D &phy->priv;
-+
-+	/*
-+	 * Write anything to TPM_CR50_FW_VER to start from the beginning
-+	 * of the version string
-+	 */
-+	tpm_tis_write8(data, TPM_CR50_FW_VER(data->locality), 0);
-+
-+	/* Read the string, 4 bytes at a time, until we get '\0' */
-+	do {
-+		tpm_tis_read_bytes(data, TPM_CR50_FW_VER(data->locality), 4,
-+				   fw_ver_block);
-+		for (i =3D 0; i < 4 && fw_ver_block[i]; ++len, ++i)
-+			fw_ver[len] =3D fw_ver_block[i];
-+	} while (i =3D=3D 4 && len < TPM_CR50_MAX_FW_VER_LEN);
-+	fw_ver[len] =3D '\0';
-+
-+	dev_info(&phy->spi_device->dev, "Cr50 firmware version: %s\n", fw_ver);
-+}
-+
- static int tpm_tis_spi_probe(struct spi_device *dev)
- {
- 	struct tpm_tis_spi_phy *phy;
--	int irq;
-+	int ret, irq =3D -1;
-+	struct device_node *np =3D dev->dev.of_node;
-+	const struct spi_device_id *spi_dev_id =3D spi_get_device_id(dev);
-=20
- 	phy =3D devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_spi_phy),
- 			   GFP_KERNEL);
-@@ -208,17 +409,94 @@ static int tpm_tis_spi_probe(struct spi_device *dev)
- 	if (!phy->iobuf)
- 		return -ENOMEM;
-=20
--	/* If the SPI device has an IRQ then use that */
--	if (dev->irq > 0)
-+	phy->is_cr50 =3D of_device_is_compatible(np, "google,cr50") ||
-+		       (spi_dev_id && spi_dev_id->driver_data =3D=3D TIS_IS_CR50);
-+
-+	if (phy->is_cr50) {
-+		phy->access_delay =3D CR50_NOIRQ_ACCESS_DELAY;
-+
-+		mutex_init(&phy->time_track_mutex);
-+		phy->wake_after =3D jiffies;
-+		phy->last_access =3D jiffies;
-+
-+		init_completion(&phy->ready);
-+		if (dev->irq > 0) {
-+			ret =3D devm_request_irq(&dev->dev, dev->irq, cr50_spi_irq_handler,
-+					       IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					       "cr50_spi", phy);
-+			if (ret < 0) {
-+				if (ret =3D=3D -EPROBE_DEFER)
-+					return ret;
-+				dev_warn(&dev->dev, "Requesting IRQ %d failed: %d\n",
-+					 dev->irq, ret);
-+				/*
-+				 * This is not fatal, the driver will fall back to
-+				 * delays automatically, since ready will never
-+				 * be completed without a registered irq handler.
-+				 * So, just fall through.
-+				 */
-+			} else {
-+				/*
-+				 * IRQ requested, let's verify that it is actually
-+				 * triggered, before relying on it.
-+				 */
-+				phy->irq_needs_confirmation =3D true;
-+			}
-+		} else {
-+			dev_warn(&dev->dev,
-+				 "No IRQ - will use delays between transactions.\n");
-+		}
-+
-+		phy->priv.rng_quality =3D rng_quality;
-+	} else if (dev->irq > 0) {
-+		/* If the SPI device has an IRQ then use that */
- 		irq =3D dev->irq;
--	else
--		irq =3D -1;
-+	}
-=20
--	return tpm_tis_core_init(&dev->dev, &phy->priv, irq, &tpm_spi_phy_ops,
-+	ret =3D tpm_tis_core_init(&dev->dev, &phy->priv, irq, &tpm_spi_phy_ops,
- 				 NULL);
-+
-+	if (!ret && phy->is_cr50)
-+		cr50_print_fw_version(phy);
-+
-+	return ret;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int tpm_tis_spi_pm_suspend(struct device *dev)
-+{
-+	struct tpm_chip *chip =3D dev_get_drvdata(dev);
-+	struct tpm_tis_data *data =3D dev_get_drvdata(&chip->dev);
-+	struct tpm_tis_spi_phy *phy =3D to_tpm_tis_spi_phy(data);
-+
-+	if (phy->is_cr50)
-+		return cr50_suspend(dev);
-+
-+	return tpm_pm_suspend(dev);
-+}
-+
-+static int tpm_tis_spi_pm_resume(struct device *dev)
-+{
-+	struct tpm_chip *chip =3D dev_get_drvdata(dev);
-+	struct tpm_tis_data *data =3D dev_get_drvdata(&chip->dev);
-+	struct tpm_tis_spi_phy *phy =3D to_tpm_tis_spi_phy(data);
-+
-+	if (phy->is_cr50) {
-+		/*
-+		 * Jiffies not increased during suspend, so we need to reset
-+		 * the time to wake Cr50 after resume.
-+		 */
-+		phy->wake_after =3D jiffies;
-+
-+		return cr50_resume(dev);
-+	}
-+
-+	return tpm_tis_resume(dev);
- }
-+#endif
-=20
--static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
-+static SIMPLE_DEV_PM_OPS(tpm_tis_pm,
-+			 tpm_tis_spi_pm_suspend, tpm_tis_spi_pm_resume);
-=20
- static int tpm_tis_spi_remove(struct spi_device *dev)
- {
-@@ -230,12 +508,14 @@ static int tpm_tis_spi_remove(struct spi_device *dev)
- }
-=20
- static const struct spi_device_id tpm_tis_spi_id[] =3D {
-+	{"cr50", TIS_IS_CR50},
- 	{"tpm_tis_spi", 0},
- 	{}
- };
- MODULE_DEVICE_TABLE(spi, tpm_tis_spi_id);
-=20
- static const struct of_device_id of_tis_spi_match[] =3D {
-+	{ .compatible =3D "google,cr50", },
- 	{ .compatible =3D "st,st33htpm-spi", },
- 	{ .compatible =3D "infineon,slb9670", },
- 	{ .compatible =3D "tcg,tpm_tis-spi", },
+Yes, and I see in the ftrace that there are many other userspace processes
+getting scheduled in that time.
+
+>
+> You can hack ksoftirq_running() to return always false to avoid this, but
+> that might cause application starvation and a huge packet buffer backlog
+> when the amount of incoming packets makes the CPU do nothing else than
+> softirq processing.
+
+I tried that now, it is better but still not as good as v3.8
+Now I am getting 375.9usec as the maximum time between raising the softirq
+and it starting to execute and packet drops still there.
+
+And just a thought, do you think there should be a CONFIG_ option for
+this feature
+of ksoftirqd_running() so that it can be disabled if needed by users like us?
+
+Can you please think of anything else that might have changed which I still need
+to change to make the time comparable to v3.8..
+
+
+-- 
+Regards
+Sudip
