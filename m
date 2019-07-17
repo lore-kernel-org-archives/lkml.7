@@ -2,359 +2,160 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C83C76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B478C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16109217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C04F2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="tP7WnEwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbfGQLMH (ORCPT
+        id S1726573AbfGQLPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:12:07 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59544 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfGQLMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:12:07 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hnhqk-0004F7-83; Wed, 17 Jul 2019 19:11:54 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hnhqd-0003q3-Bn; Wed, 17 Jul 2019 19:11:47 +0800
-Date:   Wed, 17 Jul 2019 19:11:47 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>
-Subject: [PATCH] padata: Replace delayed timer with immediate workqueue in
- padata_reorder
-Message-ID: <20190717111147.t776zlyhdqyl5dhc@gondor.apana.org.au>
-References: <c1bbbe94-dbdc-da14-e0c3-850c965d8b5d@oracle.com>
- <20190716163253.24377-1-daniel.m.jordan@oracle.com>
+        Wed, 17 Jul 2019 07:15:17 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:23722 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfGQLPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 07:15:17 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: PkjvMBi+hhJeDYZMKfiG5htAYrKEJgTsjVP64Yw4zel4lKidM5zeKhIWTX9Qr4JS+UwgZb5gdW
+ x26ctZK+B6Clg/WMz+Vy8/ccplkB/LmdLX3veVJOlH4wfKOQeMPE1qHN/5MYterrRfJieA+j8r
+ DHEjXFFx5MEgFfpVNgmVxz5QtXYo1eig/ZppEDhfv7P0SsRYGt4ncjkllocE5dua96sKRAJT1B
+ OqUqW+JUFzQar+aFVYXuaIdleiwCg6b2596sugAUFjJbhTyNZirfsPZvg4Hv2NnF/m5LYknJdx
+ hms=
+X-IronPort-AV: E=Sophos;i="5.64,274,1559545200"; 
+   d="scan'208";a="40906042"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jul 2019 04:15:15 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 17 Jul 2019 04:15:14 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 17 Jul 2019 04:15:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PGeDnWt16+MyOHrJW+8ThVE++phoDwJqjaYau5TbkL6rjjUfMrsi9HB8zbYp3i3vXemWaE0aE9PI9IDqo2beo7u0VRQp/s74Wcqu0dd//+12/CAkqR840ysCpJPsqUVkoo9nZJ4xSHev46FkvTsmVOaLDrAcziMzEKwNEK/gxxB+RsIeDsUvQBXVYO0HSb6MTMZhcmd9tH+DVbgTADTFLFyAZur01kH6NERzYH+a26RZVmXX9fPNqv00tnytgy+vowdzu3qxny7dWXIoVpUg6jap65cmmpNjnCZVJsRY83n9qBGjKPr8Yyw2iez2VXbWr6VeO/6GKCYwDrugMLhziA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wxrhLv0BcYeUb3D5Emtt5ctERgY0q5ZQt9b5MR0HiFQ=;
+ b=XDqtuQK66kknYDoH3SlYtef3lUgHtkozvB1gIHaNyTnvAqQid0zWc0qA+u666EqtkEQxHL76ycCxRd1BM51alwZLcRzcWN59bu1FHHMIeR4HzMVMeuSPrrlkk6UaKGW5b7g8dL0kyRoJD87ZPM23onjQD1P/Gfp6MD2fnx/ZyG/ebg1wDxkVbMXPY35hoPYaArhXFODACOZfrJNeeRXc0CM06B37qR8XtO+TwmTyYC15nQJBLbfKUFQ7b80WPO/81VrJSUUxOniD8Mjv93UjoHO3/XxurDBSDmuZz1NEktixZNPmQ/+XB5aDdkB8l6c6Ai4sKkI545pfA29CcKBuDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=microchip.com;dmarc=pass action=none
+ header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wxrhLv0BcYeUb3D5Emtt5ctERgY0q5ZQt9b5MR0HiFQ=;
+ b=tP7WnEwDJvGM6gb1RDjRufiZjUwHDx6Q5b8VIyu4WU9/OdhitLw3cbFDRM3W8VTj1FKiybTa+748OXwsF2u/F5yOXt2FbbOhc6NjVLXGsLIvpYHeU/7YFoP3Wbr7btt6i044EItgHig5gUnJTDmSmx2EcH1UzJAiuEOF3S8qyCU=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6PR11MB1396.namprd11.prod.outlook.com (10.173.33.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Wed, 17 Jul 2019 11:15:13 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::6515:912a:d113:5102]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::6515:912a:d113:5102%12]) with mapi id 15.20.2073.012; Wed, 17 Jul
+ 2019 11:15:13 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>, <marek.vasut@gmail.com>
+CC:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 5/5] mtd: spi-nor: add Kconfig option to disable write
+ protection at power-up
+Thread-Topic: [PATCH 5/5] mtd: spi-nor: add Kconfig option to disable write
+ protection at power-up
+Thread-Index: AQHVPHxf57xp/vrlsEWVvsFB8NifHqbOqMyA
+Date:   Wed, 17 Jul 2019 11:15:13 +0000
+Message-ID: <0fc5d3bb-aa11-2816-4734-75dc86deb0d2@microchip.com>
+References: <20190717084745.19322-1-tudor.ambarus@microchip.com>
+ <20190717084745.19322-6-tudor.ambarus@microchip.com>
+In-Reply-To: <20190717084745.19322-6-tudor.ambarus@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0802CA0041.eurprd08.prod.outlook.com
+ (2603:10a6:800:a9::27) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c60e8cb2-4513-426d-5cbd-08d70aa809ba
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1396;
+x-ms-traffictypediagnostic: BN6PR11MB1396:
+x-microsoft-antispam-prvs: <BN6PR11MB1396D891FD702FFC4549200BF0C90@BN6PR11MB1396.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 01018CB5B3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(396003)(376002)(366004)(189003)(199004)(53936002)(5660300002)(14454004)(6486002)(6512007)(6436002)(478600001)(6246003)(6116002)(66066001)(2501003)(186003)(3846002)(86362001)(229853002)(107886003)(66946007)(99286004)(305945005)(36756003)(110136005)(81166006)(2616005)(31696002)(2906002)(102836004)(11346002)(8676002)(81156014)(476003)(26005)(71200400001)(71190400001)(486006)(31686004)(256004)(446003)(25786009)(8936002)(68736007)(316002)(4326008)(386003)(6506007)(66476007)(66446008)(64756008)(66556008)(54906003)(76176011)(53546011)(7736002)(14444005)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1396;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qLpX/sUllvxXCXZF2mCRBFIzsx4X5joa1tqCcUz57E2cYwLOSK/LCneyXNUudESzjH8Sz4vsXM9fZdjaPqr9xLQFO44fmr3EH7MVaMHsKPNvdPzrjf+eqCxeeBRkjjAYVd62OUDhvNq2wvs0MZImOoBOTY9b/s2wXOF91wObN0LxqeFjChfLJPkRg1/+Abb9gv5CYcC5VHUq4f/U5O29OdbjWglAyGbcRF5ve/b9pSjbG8/Y0qr0TzMqv6Q5i5Yc6y3SHBhwNOU9kFQPGitB+LixeN0wyLJ2oyAIoYyjPnkSq9Q88IY2K5mTkTApR+SqjcZcLCvSAZgUHJFlYAeqWnRBtuoh/m1puH96Bj+4Do6vNbxhWANDzNFMs/mtKxHMx2Djd0cxlqMU5SMX0xevv8YGqcq84HY+mqzMXpsBnis=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6EA44986D3302C4A90449E4E33BD478E@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716163253.24377-1-daniel.m.jordan@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c60e8cb2-4513-426d-5cbd-08d70aa809ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 11:15:13.3125
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1396
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 12:32:53PM -0400, Daniel Jordan wrote:
-> Testing padata with the tcrypt module on a 5.2 kernel...
-
-Thanks for the patch!
-
-And here is an incremental patch to get rid of the timer that
-appears to be an attempt at fixing a problem related to this.
-
----8<---
-The function padata_reorder will use a timer when it cannot progress
-while completed jobs are outstanding (pd->reorder_objects > 0).  This
-is suboptimal as if we do end up using the timer then it would have
-introduced a gratuitous delay of one second.
-
-In fact we can easily distinguish between whether completed jobs
-are outstanding and whether we can make progress.  All we have to
-do is look at the next pqueue list.
-
-This patch does that by replacing pd->processed with pd->cpu so
-that the next pqueue is more accessible.
-
-A work queue is used instead of the original try_again to avoid
-hogging the CPU.
-
-Note that we don't bother removing the work queue in
-padata_flush_queues because the whole premise is broken.  You
-cannot flush async crypto requests so it makes no sense to even
-try.  A subsequent patch will fix it by replacing it with a ref
-counting scheme.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index 5d13d25da2c8..d803397a28f7 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -24,7 +24,6 @@
- #include <linux/workqueue.h>
- #include <linux/spinlock.h>
- #include <linux/list.h>
--#include <linux/timer.h>
- #include <linux/notifier.h>
- #include <linux/kobject.h>
- 
-@@ -85,18 +84,14 @@ struct padata_serial_queue {
-  * @serial: List to wait for serialization after reordering.
-  * @pwork: work struct for parallelization.
-  * @swork: work struct for serialization.
-- * @pd: Backpointer to the internal control structure.
-  * @work: work struct for parallelization.
-- * @reorder_work: work struct for reordering.
-  * @num_obj: Number of objects that are processed by this cpu.
-  * @cpu_index: Index of the cpu.
-  */
- struct padata_parallel_queue {
-        struct padata_list    parallel;
-        struct padata_list    reorder;
--       struct parallel_data *pd;
-        struct work_struct    work;
--       struct work_struct    reorder_work;
-        atomic_t              num_obj;
-        int                   cpu_index;
- };
-@@ -122,10 +117,10 @@ struct padata_cpumask {
-  * @reorder_objects: Number of objects waiting in the reorder queues.
-  * @refcnt: Number of objects holding a reference on this parallel_data.
-  * @max_seq_nr:  Maximal used sequence number.
-+ * @cpu: Next CPU to be processed.
-  * @cpumask: The cpumasks in use for parallel and serial workers.
-+ * @reorder_work: work struct for reordering.
-  * @lock: Reorder lock.
-- * @processed: Number of already processed objects.
-- * @timer: Reorder timer.
-  */
- struct parallel_data {
- 	struct padata_instance		*pinst;
-@@ -134,10 +129,10 @@ struct parallel_data {
- 	atomic_t			reorder_objects;
- 	atomic_t			refcnt;
- 	atomic_t			seq_nr;
-+	int				cpu;
- 	struct padata_cpumask		cpumask;
-+	struct work_struct		reorder_work;
- 	spinlock_t                      lock ____cacheline_aligned;
--	unsigned int			processed;
--	struct timer_list		timer;
- };
- 
- /**
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 15a8ad63f4ff..b5dfc21e976f 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -165,23 +165,12 @@ EXPORT_SYMBOL(padata_do_parallel);
-  */
- static struct padata_priv *padata_get_next(struct parallel_data *pd)
- {
--	int cpu, num_cpus;
--	unsigned int next_nr, next_index;
- 	struct padata_parallel_queue *next_queue;
- 	struct padata_priv *padata;
- 	struct padata_list *reorder;
-+	int cpu = pd->cpu;
- 
--	num_cpus = cpumask_weight(pd->cpumask.pcpu);
--
--	/*
--	 * Calculate the percpu reorder queue and the sequence
--	 * number of the next object.
--	 */
--	next_nr = pd->processed;
--	next_index = next_nr % num_cpus;
--	cpu = padata_index_to_cpu(pd, next_index);
- 	next_queue = per_cpu_ptr(pd->pqueue, cpu);
--
- 	reorder = &next_queue->reorder;
- 
- 	spin_lock(&reorder->lock);
-@@ -192,7 +181,8 @@ static struct padata_priv *padata_get_next(struct parallel_data *pd)
- 		list_del_init(&padata->list);
- 		atomic_dec(&pd->reorder_objects);
- 
--		pd->processed++;
-+		pd->cpu = cpumask_next_wrap(cpu, pd->cpumask.pcpu, 0,
-+					    false);
- 
- 		spin_unlock(&reorder->lock);
- 		goto out;
-@@ -215,6 +205,7 @@ static void padata_reorder(struct parallel_data *pd)
- 	struct padata_priv *padata;
- 	struct padata_serial_queue *squeue;
- 	struct padata_instance *pinst = pd->pinst;
-+	struct padata_parallel_queue *next_queue;
- 
- 	/*
- 	 * We need to ensure that only one cpu can work on dequeueing of
-@@ -246,7 +237,6 @@ static void padata_reorder(struct parallel_data *pd)
- 		 * so exit immediately.
- 		 */
- 		if (PTR_ERR(padata) == -ENODATA) {
--			del_timer(&pd->timer);
- 			spin_unlock_bh(&pd->lock);
- 			return;
- 		}
-@@ -265,70 +255,29 @@ static void padata_reorder(struct parallel_data *pd)
- 
- 	/*
- 	 * The next object that needs serialization might have arrived to
--	 * the reorder queues in the meantime, we will be called again
--	 * from the timer function if no one else cares for it.
-+	 * the reorder queues in the meantime.
- 	 *
--	 * Ensure reorder_objects is read after pd->lock is dropped so we see
--	 * an increment from another task in padata_do_serial.  Pairs with
-+	 * Ensure reorder queue is read after pd->lock is dropped so we see
-+	 * new objects from another task in padata_do_serial.  Pairs with
- 	 * smp_mb__after_atomic in padata_do_serial.
- 	 */
- 	smp_mb();
--	if (atomic_read(&pd->reorder_objects)
--			&& !(pinst->flags & PADATA_RESET))
--		mod_timer(&pd->timer, jiffies + HZ);
--	else
--		del_timer(&pd->timer);
- 
--	return;
-+	next_queue = per_cpu_ptr(pd->pqueue, pd->cpu);
-+	if (!list_empty(&next_queue->reorder.list))
-+		queue_work(pinst->wq, &pd->reorder_work);
- }
- 
- static void invoke_padata_reorder(struct work_struct *work)
- {
--	struct padata_parallel_queue *pqueue;
- 	struct parallel_data *pd;
- 
- 	local_bh_disable();
--	pqueue = container_of(work, struct padata_parallel_queue, reorder_work);
--	pd = pqueue->pd;
-+	pd = container_of(work, struct parallel_data, reorder_work);
- 	padata_reorder(pd);
- 	local_bh_enable();
- }
- 
--static void padata_reorder_timer(struct timer_list *t)
--{
--	struct parallel_data *pd = from_timer(pd, t, timer);
--	unsigned int weight;
--	int target_cpu, cpu;
--
--	cpu = get_cpu();
--
--	/* We don't lock pd here to not interfere with parallel processing
--	 * padata_reorder() calls on other CPUs. We just need any CPU out of
--	 * the cpumask.pcpu set. It would be nice if it's the right one but
--	 * it doesn't matter if we're off to the next one by using an outdated
--	 * pd->processed value.
--	 */
--	weight = cpumask_weight(pd->cpumask.pcpu);
--	target_cpu = padata_index_to_cpu(pd, pd->processed % weight);
--
--	/* ensure to call the reorder callback on the correct CPU */
--	if (cpu != target_cpu) {
--		struct padata_parallel_queue *pqueue;
--		struct padata_instance *pinst;
--
--		/* The timer function is serialized wrt itself -- no locking
--		 * needed.
--		 */
--		pinst = pd->pinst;
--		pqueue = per_cpu_ptr(pd->pqueue, target_cpu);
--		queue_work_on(target_cpu, pinst->wq, &pqueue->reorder_work);
--	} else {
--		padata_reorder(pd);
--	}
--
--	put_cpu();
--}
--
- static void padata_serial_worker(struct work_struct *serial_work)
- {
- 	struct padata_serial_queue *squeue;
-@@ -376,9 +325,8 @@ void padata_do_serial(struct padata_priv *padata)
- 
- 	cpu = get_cpu();
- 
--	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
--	 * was called on -- or, at least, enqueue the padata object into the
--	 * correct per-cpu queue.
-+	/* We need to enqueue the padata object into the correct
-+	 * per-cpu queue.
- 	 */
- 	if (cpu != padata->cpu) {
- 		reorder_via_wq = 1;
-@@ -388,12 +336,12 @@ void padata_do_serial(struct padata_priv *padata)
- 	pqueue = per_cpu_ptr(pd->pqueue, cpu);
- 
- 	spin_lock(&pqueue->reorder.lock);
--	atomic_inc(&pd->reorder_objects);
- 	list_add_tail(&padata->list, &pqueue->reorder.list);
-+	atomic_inc(&pd->reorder_objects);
- 	spin_unlock(&pqueue->reorder.lock);
- 
- 	/*
--	 * Ensure the atomic_inc of reorder_objects above is ordered correctly
-+	 * Ensure the addition to the reorder list is ordered correctly
- 	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
- 	 * in padata_reorder.
- 	 */
-@@ -401,13 +349,7 @@ void padata_do_serial(struct padata_priv *padata)
- 
- 	put_cpu();
- 
--	/* If we're running on the wrong CPU, call padata_reorder() via a
--	 * kernel worker.
--	 */
--	if (reorder_via_wq)
--		queue_work_on(cpu, pd->pinst->wq, &pqueue->reorder_work);
--	else
--		padata_reorder(pd);
-+	padata_reorder(pd);
- }
- EXPORT_SYMBOL(padata_do_serial);
- 
-@@ -463,14 +405,12 @@ static void padata_init_pqueues(struct parallel_data *pd)
- 			continue;
- 		}
- 
--		pqueue->pd = pd;
- 		pqueue->cpu_index = cpu_index;
- 		cpu_index++;
- 
- 		__padata_list_init(&pqueue->reorder);
- 		__padata_list_init(&pqueue->parallel);
- 		INIT_WORK(&pqueue->work, padata_parallel_worker);
--		INIT_WORK(&pqueue->reorder_work, invoke_padata_reorder);
- 		atomic_set(&pqueue->num_obj, 0);
- 	}
- }
-@@ -498,12 +438,13 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 
- 	padata_init_pqueues(pd);
- 	padata_init_squeues(pd);
--	timer_setup(&pd->timer, padata_reorder_timer, 0);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
- 	atomic_set(&pd->refcnt, 0);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
-+	pd->cpu = cpumask_first(pcpumask);
-+	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
- 
- 	return pd;
- 
-@@ -538,8 +479,6 @@ static void padata_flush_queues(struct parallel_data *pd)
- 		flush_work(&pqueue->work);
- 	}
- 
--	del_timer_sync(&pd->timer);
--
- 	if (atomic_read(&pd->reorder_objects))
- 		padata_reorder(pd);
- 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+DQoNCk9uIDA3LzE3LzIwMTkgMTE6NDggQU0sIFR1ZG9yIEFtYmFydXMgLSBNMTgwNjQgd3JvdGU6
+DQo+IEZyb206IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4g
+DQo+IFNvbWUgc3BpLW5vciBmbGFzaGVzIGNvbWUgd3JpdGUgcHJvdGVjdGVkIGJ5IGRlZmF1bHQg
+YWZ0ZXIgYQ0KPiBwb3dlci1vbiBzZXF1ZW5jZSB0byBhdm9pZCBkZXN0cnVjdGluZyBjb21tYW5k
+cyAoZXJhc2UsIHdyaXRlKQ0KPiBkdXJpbmcgcG93ZXItdXAuDQo+IA0KPiBCYWNrd2FyZCBjb21w
+YXRpYmlsaXR5IGltcG9zZXMgdG8gZGlzYWJsZSB0aGUgd3JpdGUgcHJvdGVjdGlvbg0KPiBhdCBw
+b3dlci11cCBieSBkZWZhdWx0LiBBZGQgYSBLY29uZmlnIG9wdGlvbiB0byBsZXQgdGhlIHVzZXIN
+Cj4gYmVuZWZpdCBvZiB0aGUgcG93ZXItdXAgd3JpdGUgcHJvdGVjdGlvbi4NCj4gDQo+IFNpZ25l
+ZC1vZmYtYnk6IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4g
+LS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcgICB8IDggKysrKysrKysNCj4gIGRy
+aXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIHwgMiArKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAx
+MCBpbnNlcnRpb25zKCspDQoNCkknbGwgaGF2ZSB0byBtYXJrIHNwaV9ub3Jfc3BhbnNpb25fY2xl
+YXJfc3JfYnAoKSBhbmQNCnNwaV9ub3JfdW5sb2NrX2dsb2JhbF9ibG9ja19wcm90ZWN0aW9uKCkg
+ZGVmaW5pdGlvbnMgYXMgX19tYXliZV91bnVzZWQuDQoNCmRyaXZlcnMvbXRkL3NwaS1ub3Ivc3Bp
+LW5vci5jOjE3Mjk6MTI6IHdhcm5pbmc6DQrigJhzcGlfbm9yX3VubG9ja19nbG9iYWxfYmxvY2tf
+cHJvdGVjdGlvbuKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtZnVuY3Rpb25dDQog
+c3RhdGljIGludCBzcGlfbm9yX3VubG9ja19nbG9iYWxfYmxvY2tfcHJvdGVjdGlvbihzdHJ1Y3Qg
+c3BpX25vciAqbm9yKQ0KICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn4NCmRyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jOjE2ODc6MTI6IHdhcm5pbmc6
+IOKAmHNwaV9ub3Jfc3BhbnNpb25fY2xlYXJfc3JfYnDigJkNCmRlZmluZWQgYnV0IG5vdCB1c2Vk
+IFstV3VudXNlZC1mdW5jdGlvbl0NCiBzdGF0aWMgaW50IHNwaV9ub3Jfc3BhbnNpb25fY2xlYXJf
+c3JfYnAoc3RydWN0IHNwaV9ub3IgKm5vcikNCiAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn4NCg==
