@@ -2,118 +2,199 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B81C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1623AC76196
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484BD218B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2F4218B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="i4XXUz/s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V+41nzxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfGQToH (ORCPT
+        id S1729164AbfGQToe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:44:07 -0400
-Received: from mail-eopbgr790071.outbound.protection.outlook.com ([40.107.79.71]:6176
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726598AbfGQToG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:44:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C4c7MsB/2ZOM3nYt+rtK/9KFPqPx8ZIvlTU46T7zyU9SS3xXfUdJdTI6OS5bONgyYV0eOK0BwLxO/vpAJNNYpmlVeIEr4+MSShdGbcXuHkXY2TW47V6jkreW7aOE9/RHMHDaWgoqu15Fta3BwnrxK2kzlsVONg2WILGbg5yMhTA0D8P/aU70ltKnGzEk2C23/UCZQKBpC5BA0TUuMnewi7KSbt1GrTPpU6a0igOg2O7sd1bh5OpfMs66dociLmyne6oEdcSSBXlyVYJaC1OwsmD7Oz2LJ75DbmtlXp7q3TW+AMqVzrvYMqmef76u2LmtmnI5Ibi1PLUrCHLzuoToog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXadSCt6ppOAY1CPvXfkoh66xz2Tl2pihgBS8UBFWww=;
- b=FpgmbxuJPAZwy8lu5XLlnCl3Ol7zNBihlZvWBa91pnmvQ/CIMoLD9EyG5SBn6W1zZ20Ga7T8Qoh44gBdKpugU1oXtYEj0o8z53OaRKemls3cffTTuPpnlaDJjvZFuDwf/hrLlGqYfK+Swa8c/1nNQUIuMpSqfnrGmVpilHUEJK8ksqEqizB6moqIcXz2parrZtOp1jkHRU4Valnw9EGlj97PV6VkXBF+Hsz1QG9i9Az1nG1Cjy1Te/0u1OGpH0To6izglMowthogvOKLSfQBcdOeKhrV7Kp5FEf59LGyV4IlygpMJDR8VLKb76QHD27RJ6qtn7GkhlDqi5O2zXljJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
+        Wed, 17 Jul 2019 15:44:34 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41582 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfGQToe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 15:44:34 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so12452024pls.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 12:44:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXadSCt6ppOAY1CPvXfkoh66xz2Tl2pihgBS8UBFWww=;
- b=i4XXUz/s50vGgtIrYOcKzzC+n5ETCLMCucaDfFmJJqVESxrwA5gfZ9ht3r1LTq3KkKrjc/v9xRdYzFI/OPUJ5ANVWSKvmKMMUZUk8VCDXAg0XVqd2FmTPKq1pYuHhWQ0aSMfb/k4jnpaepJc4qwIZgR9MzrgWW5rzYxCtKHI8Mw=
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
- DM6PR12MB3563.namprd12.prod.outlook.com (20.178.199.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.11; Wed, 17 Jul 2019 19:44:03 +0000
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::a91d:8752:288:ed5f]) by DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::a91d:8752:288:ed5f%6]) with mapi id 15.20.2073.012; Wed, 17 Jul 2019
- 19:44:03 +0000
-From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-Subject: Re: [PATCH 1/6] KVM: x86: Add callback functions for handling APIC
- ID, DFR and LDR update
-Thread-Topic: [PATCH 1/6] KVM: x86: Add callback functions for handling APIC
- ID, DFR and LDR update
-Thread-Index: AQHU4KZqWIh7CkaDPUGAVOVmco9DYqa6B+qAgBXmv4A=
-Date:   Wed, 17 Jul 2019 19:44:03 +0000
-Message-ID: <1fa8e887-8ef7-eaa9-567d-cfe349be2d3a@amd.com>
-References: <20190322115702.10166-1-suravee.suthikulpanit@amd.com>
- <20190322115702.10166-2-suravee.suthikulpanit@amd.com>
- <15e1b25c-906a-03dd-cb69-6b99c8c98ff7@redhat.com>
-In-Reply-To: <15e1b25c-906a-03dd-cb69-6b99c8c98ff7@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [165.204.77.1]
-x-clientproxiedby: SN6PR08CA0026.namprd08.prod.outlook.com
- (2603:10b6:805:66::39) To DM6PR12MB2844.namprd12.prod.outlook.com
- (2603:10b6:5:45::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 27e5e5d7-e9bc-4b81-d595-08d70aef1ef7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3563;
-x-ms-traffictypediagnostic: DM6PR12MB3563:
-x-microsoft-antispam-prvs: <DM6PR12MB356365CEE3519EF694180B9DF3C90@DM6PR12MB3563.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 01018CB5B3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(376002)(396003)(39860400002)(199004)(189003)(6436002)(31686004)(229853002)(65956001)(66066001)(26005)(65806001)(4326008)(99286004)(186003)(6512007)(6246003)(53936002)(66556008)(66446008)(64126003)(8936002)(3846002)(6116002)(8676002)(2616005)(81166006)(478600001)(81156014)(7736002)(476003)(446003)(11346002)(6486002)(65826007)(58126008)(86362001)(305945005)(68736007)(2501003)(316002)(31696002)(25786009)(71190400001)(2201001)(71200400001)(15650500001)(54906003)(110136005)(2906002)(36756003)(5660300002)(4744005)(52116002)(76176011)(102836004)(386003)(53546011)(6506007)(256004)(66476007)(64756008)(486006)(14444005)(66946007)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3563;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WHqb+/bmg2z0878IB7j31pa1FrjEN30MlkfygWv8vez075PBB2etE2/ZLFZA1WJUB/avxgSz3AGOv8lIabSI7fKoLvW4QsCYPMtKn/LdIAsBBtjyRMlkKGFWcN53C8uMjKWJwiDF4TSQX6QmKkKTLfvuau1o+DIKzP9Dbtc3jVq7HQfXSMwwcUSsHXVbpttDKOlNeYvfoj/Z3PV5t/2DhuW6aShpW6j3cvWu1w5+Gs8V7NYRRUCKBZ1D09vMUO4GmGhHE3xLXdnZi94vcoS0SKrnE8eanG9nRuey2XJlNSqh0vMsmZ2xIROxeu7Md8GE9qiFY3AB1LqYWryxzy6jJspbuG+0TPOm2MPHW47wTrKQsHSanmPTYipPVfWDhEb31G5ksIzqcVVzYeNOqeS0zhDvmDnbNQr9gBSYtNsgZTI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BD2DB7E021333E479685C297903D18B5@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=gvjPZWoufoHncj5iyWeqiWRKnFrwf8zGjNBYtpZ6tKQ=;
+        b=V+41nzxSMtHHtuKjjlYe2GfJUL8OkwTW54lqpP4dzM4zgY3shyyLaX0K65MjCbgkMA
+         JbEoFVMktVLB3yjSnRHiCY/QGDeT/Ry1EtepMiiQZBtORT4LcsanPu+wmDHPU5A8ImJZ
+         ldVpzOO2iZ7YzyDbWT2fLzrjfofjjisJtzT8oJ+LheNWez/iuEh8rIrXccIbc6wOmENU
+         bymQc2QANDdpuvEugqEqUY33+9C5zNaq8aNQvWYnJfl2VIYp+NDrL1dmaf/yoMoe+wia
+         PQa0y1K4sc3F7Xf58nEjx6tNNBQQWv75mlgYI1ha4k6Jhx5wCMoMPtZyRCR9AsEli8l9
+         8+aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=gvjPZWoufoHncj5iyWeqiWRKnFrwf8zGjNBYtpZ6tKQ=;
+        b=JTas0zq+PDTkv8X8qXf881rjYKIvKC95jEuHmDQPsnSaXSzab9FlGZpQAIXU30Jxqx
+         LL9JNyZnRe77A5k8Hf+dDXUJSnzhIrRm5RlaxP8HicV3Ux7iqhiRKM7azpSQU20sVQ+F
+         q99IOLbOxRjxT+ej5bVpmLMhhYBGG4GLMZBAjszK3jDyqud5xCNVc3LetTN861rURg3D
+         9ldka5jxc7kgSOch1qz1FQMuae1Q6n8j9jg4ppSJSOeTqbBDsDN6t7rT6brlLPM7fmzQ
+         L1/u07A0VotsL3/3Ujmp+fOeHqo9r+Qg9HEBRuJ37sqLj1H6kBLMsjRCIp1o3p5BQJZZ
+         LIRg==
+X-Gm-Message-State: APjAAAWWTjMwsidL/USsLb39hOGH+Yal716Vcs7JBBB+IuQC3esL2BDU
+        8UIuZO04upkqks9hbkEm2QYBfQ==
+X-Google-Smtp-Source: APXvYqxyIhVLV3+xZdZyruXl0Q+nykHdkO769WGjExr3291Arvp8ld8l1OClYHmZUBHqkGiwRJjaKw==
+X-Received: by 2002:a17:902:9041:: with SMTP id w1mr46275249plz.132.1563392672552;
+        Wed, 17 Jul 2019 12:44:32 -0700 (PDT)
+Received: from [100.112.64.100] ([104.133.8.100])
+        by smtp.gmail.com with ESMTPSA id 14sm24016805pfy.40.2019.07.17.12.44.31
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 17 Jul 2019 12:44:31 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 12:44:30 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+cc:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+In-Reply-To: <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.1907171243400.1177@eggly.anvils>
+References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com> <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27e5e5d7-e9bc-4b81-d595-08d70aef1ef7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jul 2019 19:44:03.2253
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ssuthiku@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3563
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGFvbG8sDQoNCk9uIDcvMy8yMDE5IDQ6MTYgUE0sIFBhb2xvIEJvbnppbmkgd3JvdGU6DQo+IE9u
-IDIyLzAzLzE5IDEyOjU3LCBTdXRoaWt1bHBhbml0LCBTdXJhdmVlIHdyb3RlOg0KPj4gQWRkIGhv
-b2tzIGZvciBoYW5kbGluZyB0aGUgY2FzZSB3aGVuIGd1ZXN0IFZNIHVwZGF0ZSBBUElDIElELCBE
-RlIgYW5kIExEUi4NCj4+IFRoaXMgaXMgbmVlZGVkIGR1cmluZyBBTUQgQVZJQyBpcyB0ZW1wb3Jh
-cnkgZGVhY3RpdmF0ZWQuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogU3VyYXZlZSBTdXRoaWt1bHBh
-bml0PHN1cmF2ZWUuc3V0aGlrdWxwYW5pdEBhbWQuY29tPg0KPiBXaHkgbm90IGRvIHRoaXMgbGF0
-ZXIgd2hlbiBBVklDIGlzIHJlYWN0aXZhdGVkLCBpbg0KPiBzdm1fcmVmcmVzaF9hcGljdl9leGVj
-X2N0cmw/DQo+IA0KPiBUaGFua3MsDQo+IA0KPiBQYW9sbw0KPiANCg0KQWN0dWFsbHksIGNhbGxp
-bmcgYXZpY19wb3N0X3N0YXRlX3Jlc3RvcmUoKSBpbiB0aGUgc3ZtX3JlZnJlc2hfYXBpY3ZfZXhl
-Y19jdHJsKCkNCnNob3VsZCB3b3JrIGFsc28uIEknbGwgZG8gdGhhdCB0aGVuLg0KDQpUaGFua3Ms
-DQpTdXJhdmVlDQo=
+On Thu, 13 Jun 2019, Yang Shi wrote:
+
+> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+> vma") introduced THPeligible bit for processes' smaps. But, when checking
+> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+> called to override the result from shmem_huge_enabled().  It may result
+> in the anonymous vma's THP flag override shmem's.  For example, running a
+> simple test which create THP for shmem, but with anonymous THP disabled,
+> when reading the process's smaps, it may show:
+> 
+> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+> Size:               4096 kB
+> ...
+> [snip]
+> ...
+> ShmemPmdMapped:     4096 kB
+> ...
+> [snip]
+> ...
+> THPeligible:    0
+> 
+> And, /proc/meminfo does show THP allocated and PMD mapped too:
+> 
+> ShmemHugePages:     4096 kB
+> ShmemPmdMapped:     4096 kB
+> 
+> This doesn't make too much sense.  The shmem objects should be treated
+> separately from anonymous THP.  Calling shmem_huge_enabled() with checking
+> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+> dax vma check since we already checked if the vma is shmem already.
+> 
+> Also check if vma is suitable for THP by calling
+> transhuge_vma_suitable().
+> 
+> And minor fix to smaps output format and documentation.
+> 
+> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
+> Cc: Hugh Dickins <hughd@google.com>
+
+Thanks,
+Acked-by: Hugh Dickins <hughd@google.com>
+
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: David Rientjes <rientjes@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>  Documentation/filesystems/proc.txt | 4 ++--
+>  fs/proc/task_mmu.c                 | 3 ++-
+>  mm/huge_memory.c                   | 9 +++++++--
+>  mm/shmem.c                         | 3 +++
+>  4 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> index 66cad5c..b0ded06 100644
+> --- a/Documentation/filesystems/proc.txt
+> +++ b/Documentation/filesystems/proc.txt
+> @@ -477,8 +477,8 @@ replaced by copy-on-write) part of the underlying shmem object out on swap.
+>  "SwapPss" shows proportional swap share of this mapping. Unlike "Swap", this
+>  does not take into account swapped out page of underlying shmem objects.
+>  "Locked" indicates whether the mapping is locked in memory or not.
+> -"THPeligible" indicates whether the mapping is eligible for THP pages - 1 if
+> -true, 0 otherwise.
+> +"THPeligible" indicates whether the mapping is eligible for allocating THP
+> +pages - 1 if true, 0 otherwise. It just shows the current status.
+>  
+>  "VmFlags" field deserves a separate description. This member represents the kernel
+>  flags associated with the particular virtual memory area in two letter encoded
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 01d4eb0..6a13882 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
+>  
+>  	__show_smap(m, &mss);
+>  
+> -	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
+> +	seq_printf(m, "THPeligible:		%d\n",
+> +		   transparent_hugepage_enabled(vma));
+>  
+>  	if (arch_pkeys_enabled())
+>  		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 4bc2552..36f0225 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -65,10 +65,15 @@
+>  
+>  bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>  {
+> +	/* The addr is used to check if the vma size fits */
+> +	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
+> +
+> +	if (!transhuge_vma_suitable(vma, addr))
+> +		return false;
+>  	if (vma_is_anonymous(vma))
+>  		return __transparent_hugepage_enabled(vma);
+> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+> -		return __transparent_hugepage_enabled(vma);
+> +	if (vma_is_shmem(vma))
+> +		return shmem_huge_enabled(vma);
+>  
+>  	return false;
+>  }
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 1bb3b8d..a807712 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+>  	loff_t i_size;
+>  	pgoff_t off;
+>  
+> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+> +		return false;
+>  	if (shmem_huge == SHMEM_HUGE_FORCE)
+>  		return true;
+>  	if (shmem_huge == SHMEM_HUGE_DENY)
+> -- 
+> 1.8.3.1
