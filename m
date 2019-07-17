@@ -2,705 +2,157 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54C6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE9DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3422173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95DB2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 11:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ahjpDQAB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RX5Dcqig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733026AbfGQLv7 (ORCPT
+        id S1726768AbfGQLyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 07:51:59 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16050 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725906AbfGQLvp (ORCPT
+        Wed, 17 Jul 2019 07:54:33 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39027 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfGQLyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 07:51:45 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6HBmHEQ030988;
-        Wed, 17 Jul 2019 07:51:41 -0400
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2051.outbound.protection.outlook.com [104.47.37.51])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2tsf0g3hw8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jul 2019 07:51:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d9WhWLRxrdlA72+DtrDw/KE8bt8exZi2IcXurvk3LMRCM3Zo0U05xQ+OgtX2irthtGQ9NozKIw/+THqNZgcuTSmrPrjXl3ix9XE7jFdPLVPHRX1njFsHtcllsbpHH9DpYaoZoxA9/ZmA0x+flQVwYm+/SV2KDkf9Z/IcN3CfMn3cfjBhC/5tEVonjMPkFy7J0+QB4dMCm+rjU/U9dTBamwEsZVxCSppNIQjKJqzEPd5ZIQZyUXRb1XDp49XPSWK1LrhsdfLMfY4ZGyqS5wLf/+LjJrFNdLXVBrB3bi2G64pVrfJDtUM3pjGF8WyThkyseU6pqCPxZJ7kYOMAOGGYUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9+MNPfHIw4Y5w7vMcBRpj44vkyRT4kcvuWAxAFNkRKY=;
- b=Dcp8ow7QQ3k2iaIftQnVcNDthi41rceQvRZ/xuCTftoXRMvKAnCFTQJLxi8QlKYtFhqtumYvNIHBvSA9dLhYRLeyLiORR3bxOJcVanCNKUbkFHb+EB23dZoHhDfm9OGnvBGf8iS/d3qgrq39cHtmSE6SAb2LNVpLWh61e3BEeao7PxkClMh4fPaY3gSlWWxwmlIz3erS+/VVyqAmOLLBIoaibWGQNgBBvcZgGKE3iNY0enjBzD+uTwq98lz1DWJbprIQ006Zlwelcl29oUopYGOPcxziyetRD9lMeD++1DKmnFRH6fNJzwM9gpaZLh5s4JxcopA5CEVYgzS1xAoPMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
- header.from=analog.com;dkim=none (message not signed);arc=none
+        Wed, 17 Jul 2019 07:54:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so11868576pls.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 04:54:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9+MNPfHIw4Y5w7vMcBRpj44vkyRT4kcvuWAxAFNkRKY=;
- b=ahjpDQABPCeE/xmbFn28N+1pfVo/iW/d+QNW315F9Gk0JysirwGR09YorvE6Tn68JXmdp9pILx67b1p8C34uwhxJGDkVjFKMGHOooBmsf9YbGMpxEVxwmBL51JCNVF70fxpPin9r6o9l9POGVcMxcq98BOEHaYzteOwMDjtXbog=
-Received: from DM5PR03CA0032.namprd03.prod.outlook.com (2603:10b6:4:3b::21) by
- MN2PR03MB4718.namprd03.prod.outlook.com (2603:10b6:208:ae::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.10; Wed, 17 Jul 2019 11:51:38 +0000
-Received: from SN1NAM02FT037.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by DM5PR03CA0032.outlook.office365.com
- (2603:10b6:4:3b::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2073.10 via Frontend
- Transport; Wed, 17 Jul 2019 11:51:38 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT037.mail.protection.outlook.com (10.152.72.89) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2052.25
- via Frontend Transport; Wed, 17 Jul 2019 11:51:38 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x6HBpbXn003303
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 17 Jul 2019 04:51:37 -0700
-Received: from saturn.ad.analog.com (10.48.65.145) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 17 Jul 2019 07:51:36 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <broonie@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: [PATCH 3/4][V2] iio: imu: Add support for the ADIS16460 IMU
-Date:   Wed, 17 Jul 2019 14:51:08 +0300
-Message-ID: <20190717115109.15168-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190717115109.15168-1-alexandru.ardelean@analog.com>
-References: <20190717115109.15168-1-alexandru.ardelean@analog.com>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ftsA6SziUzB7mZMqtb+NPTOifNieeCki+4HWoD26B1Y=;
+        b=RX5DcqigpBS6JXUlYNzu9cmNMAC2grNOXp9WsR0aK0MCsioAXFeMRSMQHJR2oP1DOv
+         uTQp8odiUnxv/zpgKZZn/q9NJ/sGzWV3xfils+WM1YL69MBfwixBwgD5PQl6G+DEDe9p
+         AfLe1ruR/2eWKLQBC8yp5Y8mQ5//Z0Cz9PAjMzaXclRWCXSxAKI0xugHegeT/bJ5DFXT
+         83h5pYuhgK9CBpf+24Qr3WIsTvlaPdSR84jq7tYki4PP8woT1zPumXvGelaTRPWM6CRJ
+         aXeFOZKK+gKOnX7gpveGdh00ggAnBKZqVirZmWkPpls9LytJZ4yFtoNnohPTOHgNMMnv
+         9msg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ftsA6SziUzB7mZMqtb+NPTOifNieeCki+4HWoD26B1Y=;
+        b=pLgOqFlIoCU2QsyCZYy1Mbikc0rXzwLv5ZCt+hQnC9dMwIflDE8bTHwvfotWQG2xaF
+         AOlmUHMsjCj2pG9zFu+1K10y74Z8Nv7J7he2TjKvkGZ7oRc0lapMws65zuabv8xkNoyQ
+         RoQvLqEyzc5hYWbj96NiqWlTrYbdM1f63D20uSt09wscBv4qVwAMeSuQEmSJRDv+gUJb
+         xlEHzF9yof3eEhD8OK5rhhHoHq3/s/KwD7Z5Om5mP28YKqNHAcbQnSmGc4tKdQUsIXja
+         teiNrddfxRm1affxH2GVXDHurVcg4/rxMa2aHSAwFcRp/HZXdlnxPWsHWvI6mkWxneff
+         mOrA==
+X-Gm-Message-State: APjAAAVAnviKfk5ocTCFvCpbHyWf3q8I3jI0z+piHOuQfJmvVUA8wf0I
+        WT31KcX5GjykbhhceOMDTm4fFVdQfaw=
+X-Google-Smtp-Source: APXvYqzO02oaG99jKfNVRblZVE5ffaRzjKmORg3MYGOu0u9fYxYJwDy/w8tVgyvu/Y2NMOte7qvNvw==
+X-Received: by 2002:a17:902:ea:: with SMTP id a97mr42227799pla.182.1563364472811;
+        Wed, 17 Jul 2019 04:54:32 -0700 (PDT)
+Received: from localhost ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id k8sm24242905pgm.14.2019.07.17.04.54.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jul 2019 04:54:32 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 20:54:29 +0900
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH v2 3/3] nvme-pci: Add support for Apple 2018+ models
+Message-ID: <20190717115429.GC10495@minwoo-desktop>
+References: <20190717004527.30363-1-benh@kernel.crashing.org>
+ <20190717004527.30363-3-benh@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(346002)(376002)(2980300002)(199004)(189003)(2616005)(7636002)(426003)(356004)(70206006)(30864003)(476003)(106002)(8676002)(1076003)(126002)(107886003)(305945005)(14444005)(446003)(36756003)(70586007)(2201001)(6666004)(336012)(48376002)(486006)(11346002)(246002)(8936002)(478600001)(316002)(44832011)(47776003)(186003)(26005)(86362001)(50226002)(2906002)(110136005)(2870700001)(7696005)(6306002)(5660300002)(54906003)(51416003)(966005)(76176011)(4326008)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB4718;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2e3c49a2-5e2a-4898-cd1d-08d70aad2050
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:MN2PR03MB4718;
-X-MS-TrafficTypeDiagnostic: MN2PR03MB4718:
-X-MS-Exchange-PUrlCount: 2
-X-Microsoft-Antispam-PRVS: <MN2PR03MB4718D00AF1BAFF3E7D2C9A77F9C90@MN2PR03MB4718.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 01018CB5B3
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: v2R5DKTKpez+a0Sphln2Ha+MOFzk63y/SsB/8jJZHrzaDJvPZKD1xnCsjpT9qVPNiP5rxq65Rzfi3C4ek64SwonHIh1XHVcHSXMcTwYQ2/uub9Xia/hnCYIx9ERN6x3VNvU8lhcHSIFjQwYAltkDvJjKo+1SPOSSvKzLHIy/vh+Xluz0BUiP/yMqhWgKhETg4iHwb44Gf66q0v7CNz/d3U80CH2pKqjyQmvtWsTMudEnLIavphpKDNvmBBSjLjZotHIsCPSCr1iaI1DBN7CWyM33/m4XDBdMUV1zCDuKt3aZC2b5pTiPDUadkWJXSJlImX0R7kwKJ92HEVw3GpfIVLr7tFcT4lMeP51KLupVZH/dpjPEa/zOoxEezXHZHClKco/e7ZRPOkrg5CuzRbg3eacPWvX3OXnpU71tF+iHneg=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2019 11:51:38.0087
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e3c49a2-5e2a-4898-cd1d-08d70aad2050
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB4718
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907170145
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190717004527.30363-3-benh@kernel.crashing.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADIS16460 device is a complete inertial system that includes a triaxial
-gyroscope and a triaxial accelerometer. It's more simplified design than
-that of the ADIS16480, and does not offer the triaxial magnetometers &
-pressure sensors. It does also have a temperature sensor (like the
-ADIS16480).
-Since it is part of the ADIS16XXX family, it re-uses parts of the ADIS
-library.
+On 19-07-17 10:45:27, Benjamin Herrenschmidt wrote:
+> Based on reverse engineering and original patch by
+> 
+> Paul Pawlowski <paul@mrarm.io>
+> 
+> This adds support for Apple weird implementation of NVME in their
+> 2018 or later machines. It accounts for the twice-as-big SQ entries
+> for the IO queues, and the fact that only interrupt vector 0 appears
+> to function properly.
+> 
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> 
+> # Conflicts:
+> #	drivers/nvme/host/core.c
+> ---
+>  drivers/nvme/host/nvme.h | 10 ++++++++++
+>  drivers/nvme/host/pci.c  | 21 ++++++++++++++++++++-
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+> index 716a876119c8..ced0e0a7e039 100644
+> --- a/drivers/nvme/host/nvme.h
+> +++ b/drivers/nvme/host/nvme.h
+> @@ -92,6 +92,16 @@ enum nvme_quirks {
+>  	 * Broken Write Zeroes.
+>  	 */
+>  	NVME_QUIRK_DISABLE_WRITE_ZEROES		= (1 << 9),
+> +
+> +	/*
+> +	 * Use only one interrupt vector for all queues
+> +	 */
+> +	NVME_QUIRK_SINGLE_VECTOR		= (1 << 10),
+> +
+> +	/*
+> +	 * Use non-standard 128 bytes SQEs.
+> +	 */
+> +	NVME_QUIRK_128_BYTES_SQES		= (1 << 11),
+>  };
+>  
+>  /*
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 1637677afb78..7088971d4c42 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -2081,6 +2081,13 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+>  	dev->io_queues[HCTX_TYPE_DEFAULT] = 1;
+>  	dev->io_queues[HCTX_TYPE_READ] = 0;
+>  
+> +	/*
+> +	 * Some Apple controllers require all queues to use the
+> +	 * first vector.
+> +	 */
+> +	if (dev->ctrl.quirks & NVME_QUIRK_SINGLE_VECTOR)
+> +		irq_queues = 1;
+> +
+>  	return pci_alloc_irq_vectors_affinity(pdev, 1, irq_queues,
+>  			      PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY, &affd);
+>  }
+> @@ -2322,7 +2329,16 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+>  				io_queue_depth);
+>  	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
+>  	dev->dbs = dev->bar + 4096;
+> -	dev->io_sqes = NVME_NVM_IOSQES;
+> +
+> +	/*
+> +	 * Some Apple controllers require a non-standard SQE size.
+> +	 * Interestingly they also seem to ignore the CC:IOSQES register
+> +	 * so we don't bother updating it here.
+> +	 */
 
-Naturally, the register map is different and much more simplified than the
-ADIS16480 subfamily, so it cannot be integrated into that driver. A major
-difference is that the registers are not paged.
+That is really interesting.
 
-One thing that is particularly special about it, is that it requires a
-higher delay between CS changes (i.e. when CS goes up, the spec recommends
-that it be brought down after a minimum of 16 uS).
-Other ADIS chips require (via spec) a minimum of 2 uS between CS changes.
-The kernel's 10 uS default should be fine for those other chips; they
-haven't been tested with lower CS change delays yet.
+This also looks good to me.
 
-Datasheet:
-  https://www.analog.com/media/en/technical-documentation/data-sheets/adis16460.pdf
+Reviewed-by: Minwoo Im <minwoo.im.dev@gmail.com>
 
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- MAINTAINERS                 |   7 +
- drivers/iio/imu/Kconfig     |  12 +
- drivers/iio/imu/Makefile    |   1 +
- drivers/iio/imu/adis16460.c | 489 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 509 insertions(+)
- create mode 100644 drivers/iio/imu/adis16460.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ad498428b38c..8e679504c087 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -937,6 +937,13 @@ L:	linux-iio@vger.kernel.org
- F:	include/linux/iio/imu/adis.h
- F:	drivers/iio/imu/adis.c
- 
-+ANALOG DEVICES INC ADIS16460 DRIVER
-+M:	Dragos Bogdan <dragos.bogdan@analog.com>
-+S:	Supported
-+L:	linux-iio@vger.kernel.org
-+W:	http://ez.analog.com/community/linux-device-drivers
-+F:	drivers/iio/imu/adis16460.c
-+
- ANALOG DEVICES INC ADP5061 DRIVER
- M:	Stefan Popa <stefan.popa@analog.com>
- L:	linux-pm@vger.kernel.org
-diff --git a/drivers/iio/imu/Kconfig b/drivers/iio/imu/Kconfig
-index 156630a21696..f048d0d757b1 100644
---- a/drivers/iio/imu/Kconfig
-+++ b/drivers/iio/imu/Kconfig
-@@ -16,6 +16,18 @@ config ADIS16400
- 	  adis16365, adis16400 and adis16405 triaxial inertial sensors
- 	  (adis16400 series also have magnetometers).
- 
-+config ADIS16460
-+	tristate "Analog Devices ADIS16460 and similar IMU driver"
-+	depends on SPI
-+	select IIO_ADIS_LIB
-+	select IIO_ADIS_LIB_BUFFER if IIO_BUFFER
-+	help
-+	  Say yes here to build support for Analog Devices ADIS16460 inertial
-+	  sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called adis16460.
-+
- config ADIS16480
- 	tristate "Analog Devices ADIS16480 and similar IMU driver"
- 	depends on SPI
-diff --git a/drivers/iio/imu/Makefile b/drivers/iio/imu/Makefile
-index 9e452fce1aaf..4a6958865504 100644
---- a/drivers/iio/imu/Makefile
-+++ b/drivers/iio/imu/Makefile
-@@ -5,6 +5,7 @@
- 
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_ADIS16400) += adis16400.o
-+obj-$(CONFIG_ADIS16460) += adis16460.o
- obj-$(CONFIG_ADIS16480) += adis16480.o
- 
- adis_lib-y += adis.o
-diff --git a/drivers/iio/imu/adis16460.c b/drivers/iio/imu/adis16460.c
-new file mode 100644
-index 000000000000..db713cba75a2
---- /dev/null
-+++ b/drivers/iio/imu/adis16460.c
-@@ -0,0 +1,489 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * ADIS16460 IMU driver
-+ *
-+ * Copyright 2019 Analog Devices Inc.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/spi/spi.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/imu/adis.h>
-+
-+#include <linux/debugfs.h>
-+
-+#define ADIS16460_REG_FLASH_CNT		0x00
-+#define ADIS16460_REG_DIAG_STAT		0x02
-+#define ADIS16460_REG_X_GYRO_LOW	0x04
-+#define ADIS16460_REG_X_GYRO_OUT	0x06
-+#define ADIS16460_REG_Y_GYRO_LOW	0x08
-+#define ADIS16460_REG_Y_GYRO_OUT	0x0A
-+#define ADIS16460_REG_Z_GYRO_LOW	0x0C
-+#define ADIS16460_REG_Z_GYRO_OUT	0x0E
-+#define ADIS16460_REG_X_ACCL_LOW	0x10
-+#define ADIS16460_REG_X_ACCL_OUT	0x12
-+#define ADIS16460_REG_Y_ACCL_LOW	0x14
-+#define ADIS16460_REG_Y_ACCL_OUT	0x16
-+#define ADIS16460_REG_Z_ACCL_LOW	0x18
-+#define ADIS16460_REG_Z_ACCL_OUT	0x1A
-+#define ADIS16460_REG_SMPL_CNTR		0x1C
-+#define ADIS16460_REG_TEMP_OUT		0x1E
-+#define ADIS16460_REG_X_DELT_ANG	0x24
-+#define ADIS16460_REG_Y_DELT_ANG	0x26
-+#define ADIS16460_REG_Z_DELT_ANG	0x28
-+#define ADIS16460_REG_X_DELT_VEL	0x2A
-+#define ADIS16460_REG_Y_DELT_VEL	0x2C
-+#define ADIS16460_REG_Z_DELT_VEL	0x2E
-+#define ADIS16460_REG_MSC_CTRL		0x32
-+#define ADIS16460_REG_SYNC_SCAL		0x34
-+#define ADIS16460_REG_DEC_RATE		0x36
-+#define ADIS16460_REG_FLTR_CTRL		0x38
-+#define ADIS16460_REG_GLOB_CMD		0x3E
-+#define ADIS16460_REG_X_GYRO_OFF	0x40
-+#define ADIS16460_REG_Y_GYRO_OFF	0x42
-+#define ADIS16460_REG_Z_GYRO_OFF	0x44
-+#define ADIS16460_REG_X_ACCL_OFF	0x46
-+#define ADIS16460_REG_Y_ACCL_OFF	0x48
-+#define ADIS16460_REG_Z_ACCL_OFF	0x4A
-+#define ADIS16460_REG_LOT_ID1		0x52
-+#define ADIS16460_REG_LOT_ID2		0x54
-+#define ADIS16460_REG_PROD_ID		0x56
-+#define ADIS16460_REG_SERIAL_NUM	0x58
-+#define ADIS16460_REG_CAL_SGNTR		0x60
-+#define ADIS16460_REG_CAL_CRC		0x62
-+#define ADIS16460_REG_CODE_SGNTR	0x64
-+#define ADIS16460_REG_CODE_CRC		0x66
-+
-+struct adis16460_chip_info {
-+	unsigned int num_channels;
-+	const struct iio_chan_spec *channels;
-+	unsigned int gyro_max_val;
-+	unsigned int gyro_max_scale;
-+	unsigned int accel_max_val;
-+	unsigned int accel_max_scale;
-+};
-+
-+struct adis16460 {
-+	const struct adis16460_chip_info *chip_info;
-+	struct adis adis;
-+};
-+
-+#ifdef CONFIG_DEBUG_FS
-+
-+static int adis16460_show_serial_number(void *arg, u64 *val)
-+{
-+	struct adis16460 *adis16460 = arg;
-+	u16 serial;
-+	int ret;
-+
-+	ret = adis_read_reg_16(&adis16460->adis, ADIS16460_REG_SERIAL_NUM,
-+		&serial);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = serial;
-+
-+	return 0;
-+}
-+DEFINE_SIMPLE_ATTRIBUTE(adis16460_serial_number_fops,
-+	adis16460_show_serial_number, NULL, "0x%.4llx\n");
-+
-+static int adis16460_show_product_id(void *arg, u64 *val)
-+{
-+	struct adis16460 *adis16460 = arg;
-+	u16 prod_id;
-+	int ret;
-+
-+	ret = adis_read_reg_16(&adis16460->adis, ADIS16460_REG_PROD_ID,
-+		&prod_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = prod_id;
-+
-+	return 0;
-+}
-+DEFINE_SIMPLE_ATTRIBUTE(adis16460_product_id_fops,
-+	adis16460_show_product_id, NULL, "%llu\n");
-+
-+static int adis16460_show_flash_count(void *arg, u64 *val)
-+{
-+	struct adis16460 *adis16460 = arg;
-+	u32 flash_count;
-+	int ret;
-+
-+	ret = adis_read_reg_32(&adis16460->adis, ADIS16460_REG_FLASH_CNT,
-+		&flash_count);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = flash_count;
-+
-+	return 0;
-+}
-+DEFINE_SIMPLE_ATTRIBUTE(adis16460_flash_count_fops,
-+	adis16460_show_flash_count, NULL, "%lld\n");
-+
-+static int adis16460_debugfs_init(struct iio_dev *indio_dev)
-+{
-+	struct adis16460 *adis16460 = iio_priv(indio_dev);
-+
-+	debugfs_create_file("serial_number", 0400, indio_dev->debugfs_dentry,
-+		adis16460, &adis16460_serial_number_fops);
-+	debugfs_create_file("product_id", 0400, indio_dev->debugfs_dentry,
-+		adis16460, &adis16460_product_id_fops);
-+	debugfs_create_file("flash_count", 0400, indio_dev->debugfs_dentry,
-+		adis16460, &adis16460_flash_count_fops);
-+
-+	return 0;
-+}
-+
-+#else
-+
-+static int adis16460_debugfs_init(struct iio_dev *indio_dev)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
-+static int adis16460_set_freq(struct iio_dev *indio_dev, int val, int val2)
-+{
-+	struct adis16460 *st = iio_priv(indio_dev);
-+	unsigned int t;
-+
-+	t =  val * 1000 + val2 / 1000;
-+	if (t <= 0)
-+		return -EINVAL;
-+
-+	t = 2048000 / t;
-+	if (t > 2048)
-+		t = 2048;
-+
-+	if (t != 0)
-+		t--;
-+
-+	return adis_write_reg_16(&st->adis, ADIS16460_REG_DEC_RATE, t);
-+}
-+
-+static int adis16460_get_freq(struct iio_dev *indio_dev, int *val, int *val2)
-+{
-+	struct adis16460 *st = iio_priv(indio_dev);
-+	uint16_t t;
-+	int ret;
-+	unsigned int freq;
-+
-+	ret = adis_read_reg_16(&st->adis, ADIS16460_REG_DEC_RATE, &t);
-+	if (ret < 0)
-+		return ret;
-+
-+	freq = 2048000 / (t + 1);
-+	*val = freq / 1000;
-+	*val2 = (freq % 1000) * 1000;
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int adis16460_read_raw(struct iio_dev *indio_dev,
-+	const struct iio_chan_spec *chan, int *val, int *val2, long info)
-+{
-+	struct adis16460 *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_RAW:
-+		return adis_single_conversion(indio_dev, chan, 0, val);
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->type) {
-+		case IIO_ANGL_VEL:
-+			*val = st->chip_info->gyro_max_scale;
-+			*val2 = st->chip_info->gyro_max_val;
-+			return IIO_VAL_FRACTIONAL;
-+		case IIO_ACCEL:
-+			*val = st->chip_info->accel_max_scale;
-+			*val2 = st->chip_info->accel_max_val;
-+			return IIO_VAL_FRACTIONAL;
-+		case IIO_TEMP:
-+			*val = 50; /* 50 milli degrees Celsius/LSB */
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+	case IIO_CHAN_INFO_OFFSET:
-+		*val = 500; /* 25 degrees Celsius = 0x0000 */
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		return adis16460_get_freq(indio_dev, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int adis16460_write_raw(struct iio_dev *indio_dev,
-+	const struct iio_chan_spec *chan, int val, int val2, long info)
-+{
-+	switch (info) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		return adis16460_set_freq(indio_dev, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+enum {
-+	ADIS16460_SCAN_GYRO_X,
-+	ADIS16460_SCAN_GYRO_Y,
-+	ADIS16460_SCAN_GYRO_Z,
-+	ADIS16460_SCAN_ACCEL_X,
-+	ADIS16460_SCAN_ACCEL_Y,
-+	ADIS16460_SCAN_ACCEL_Z,
-+	ADIS16460_SCAN_TEMP,
-+};
-+
-+#define ADIS16460_MOD_CHANNEL(_type, _mod, _address, _si, _bits) \
-+	{ \
-+		.type = (_type), \
-+		.modified = 1, \
-+		.channel2 = (_mod), \
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
-+		.address = (_address), \
-+		.scan_index = (_si), \
-+		.scan_type = { \
-+			.sign = 's', \
-+			.realbits = (_bits), \
-+			.storagebits = (_bits), \
-+			.endianness = IIO_BE, \
-+		}, \
-+	}
-+
-+#define ADIS16460_GYRO_CHANNEL(_mod) \
-+	ADIS16460_MOD_CHANNEL(IIO_ANGL_VEL, IIO_MOD_ ## _mod, \
-+	ADIS16460_REG_ ## _mod ## _GYRO_LOW, ADIS16460_SCAN_GYRO_ ## _mod, \
-+	32)
-+
-+#define ADIS16460_ACCEL_CHANNEL(_mod) \
-+	ADIS16460_MOD_CHANNEL(IIO_ACCEL, IIO_MOD_ ## _mod, \
-+	ADIS16460_REG_ ## _mod ## _ACCL_LOW, ADIS16460_SCAN_ACCEL_ ## _mod, \
-+	32)
-+
-+#define ADIS16460_TEMP_CHANNEL() { \
-+		.type = IIO_TEMP, \
-+		.indexed = 1, \
-+		.channel = 0, \
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
-+			BIT(IIO_CHAN_INFO_SCALE) | \
-+			BIT(IIO_CHAN_INFO_OFFSET), \
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
-+		.address = ADIS16460_REG_TEMP_OUT, \
-+		.scan_index = ADIS16460_SCAN_TEMP, \
-+		.scan_type = { \
-+			.sign = 's', \
-+			.realbits = 16, \
-+			.storagebits = 16, \
-+			.endianness = IIO_BE, \
-+		}, \
-+	}
-+
-+static const struct iio_chan_spec adis16460_channels[] = {
-+	ADIS16460_GYRO_CHANNEL(X),
-+	ADIS16460_GYRO_CHANNEL(Y),
-+	ADIS16460_GYRO_CHANNEL(Z),
-+	ADIS16460_ACCEL_CHANNEL(X),
-+	ADIS16460_ACCEL_CHANNEL(Y),
-+	ADIS16460_ACCEL_CHANNEL(Z),
-+	ADIS16460_TEMP_CHANNEL(),
-+	IIO_CHAN_SOFT_TIMESTAMP(7)
-+};
-+
-+static const struct adis16460_chip_info adis16460_chip_info = {
-+	.channels = adis16460_channels,
-+	.num_channels = ARRAY_SIZE(adis16460_channels),
-+	/*
-+	 * storing the value in rad/degree and the scale in degree
-+	 * gives us the result in rad and better precession than
-+	 * storing the scale directly in rad.
-+	 */
-+	.gyro_max_val = IIO_RAD_TO_DEGREE(200 << 16),
-+	.gyro_max_scale = 1,
-+	.accel_max_val = IIO_M_S_2_TO_G(20000 << 16),
-+	.accel_max_scale = 5,
-+};
-+
-+static const struct iio_info adis16460_info = {
-+	.read_raw = &adis16460_read_raw,
-+	.write_raw = &adis16460_write_raw,
-+	.update_scan_mode = adis_update_scan_mode,
-+	.debugfs_reg_access = adis_debugfs_reg_access,
-+};
-+
-+static int adis16460_enable_irq(struct adis *adis, bool enable)
-+{
-+	/*
-+	 * There is no way to gate the data-ready signal internally inside the
-+	 * ADIS16460 :(
-+	 */
-+	if (enable)
-+		enable_irq(adis->spi->irq);
-+	else
-+		disable_irq(adis->spi->irq);
-+
-+	return 0;
-+}
-+
-+static int adis16460_initial_setup(struct iio_dev *indio_dev)
-+{
-+	struct adis16460 *st = iio_priv(indio_dev);
-+	uint16_t prod_id;
-+	unsigned int device_id;
-+	int ret;
-+
-+	adis_reset(&st->adis);
-+	msleep(222);
-+
-+	ret = adis_write_reg_16(&st->adis, ADIS16460_REG_GLOB_CMD, BIT(1));
-+	if (ret)
-+		return ret;
-+	msleep(75);
-+
-+	ret = adis_check_status(&st->adis);
-+	if (ret)
-+		return ret;
-+
-+	ret = adis_read_reg_16(&st->adis, ADIS16460_REG_PROD_ID, &prod_id);
-+	if (ret)
-+		return ret;
-+
-+	ret = sscanf(indio_dev->name, "adis%u\n", &device_id);
-+	if (ret != 1)
-+		return -EINVAL;
-+
-+	if (prod_id != device_id)
-+		dev_warn(&indio_dev->dev, "Device ID(%u) and product ID(%u) do not match.",
-+				device_id, prod_id);
-+
-+	return 0;
-+}
-+
-+#define ADIS16460_DIAG_STAT_IN_CLK_OOS	7
-+#define ADIS16460_DIAG_STAT_FLASH_MEM	6
-+#define ADIS16460_DIAG_STAT_SELF_TEST	5
-+#define ADIS16460_DIAG_STAT_OVERRANGE	4
-+#define ADIS16460_DIAG_STAT_SPI_COMM	3
-+#define ADIS16460_DIAG_STAT_FLASH_UPT	2
-+
-+static const char * const adis16460_status_error_msgs[] = {
-+	[ADIS16460_DIAG_STAT_IN_CLK_OOS] = "Input clock out of sync",
-+	[ADIS16460_DIAG_STAT_FLASH_MEM] = "Flash memory failure",
-+	[ADIS16460_DIAG_STAT_SELF_TEST] = "Self test diagnostic failure",
-+	[ADIS16460_DIAG_STAT_OVERRANGE] = "Sensor overrange",
-+	[ADIS16460_DIAG_STAT_SPI_COMM] = "SPI communication failure",
-+	[ADIS16460_DIAG_STAT_FLASH_UPT] = "Flash update failure",
-+};
-+
-+static const struct adis_data adis16460_data = {
-+	.diag_stat_reg = ADIS16460_REG_DIAG_STAT,
-+	.glob_cmd_reg = ADIS16460_REG_GLOB_CMD,
-+	.has_paging = false,
-+	.read_delay = 5,
-+	.write_delay = 5,
-+	.cs_change_delay = 16,
-+	.status_error_msgs = adis16460_status_error_msgs,
-+	.status_error_mask = BIT(ADIS16460_DIAG_STAT_IN_CLK_OOS) |
-+		BIT(ADIS16460_DIAG_STAT_FLASH_MEM) |
-+		BIT(ADIS16460_DIAG_STAT_SELF_TEST) |
-+		BIT(ADIS16460_DIAG_STAT_OVERRANGE) |
-+		BIT(ADIS16460_DIAG_STAT_SPI_COMM) |
-+		BIT(ADIS16460_DIAG_STAT_FLASH_UPT),
-+	.enable_irq = adis16460_enable_irq,
-+};
-+
-+static int adis16460_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct adis16460 *st;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	if (indio_dev == NULL)
-+		return -ENOMEM;
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	st = iio_priv(indio_dev);
-+
-+	st->chip_info = &adis16460_chip_info;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->channels = st->chip_info->channels;
-+	indio_dev->num_channels = st->chip_info->num_channels;
-+	indio_dev->info = &adis16460_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = adis_init(&st->adis, indio_dev, spi, &adis16460_data);
-+	if (ret)
-+		return ret;
-+
-+	ret = adis_setup_buffer_and_trigger(&st->adis, indio_dev, NULL);
-+	if (ret)
-+		return ret;
-+
-+	adis16460_enable_irq(&st->adis, 0);
-+
-+	ret = adis16460_initial_setup(indio_dev);
-+	if (ret)
-+		goto error_cleanup_buffer;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto error_cleanup_buffer;
-+
-+	adis16460_debugfs_init(indio_dev);
-+
-+	return 0;
-+
-+error_cleanup_buffer:
-+	adis_cleanup_buffer_and_trigger(&st->adis, indio_dev);
-+	return ret;
-+}
-+
-+static int adis16460_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct adis16460 *st = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	adis_cleanup_buffer_and_trigger(&st->adis, indio_dev);
-+
-+	return 0;
-+}
-+
-+static const struct spi_device_id adis16460_ids[] = {
-+	{ "adis16460", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, adis16460_id);
-+
-+static const struct of_device_id adis16460_of_match[] = {
-+	{ .compatible = "adi,adis16460" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, adis16460_of_match);
-+
-+static struct spi_driver adis16460_driver = {
-+	.driver = {
-+		.name = "adis16460",
-+		.of_match_table = adis16460_of_match,
-+	},
-+	.id_table = adis16460_ids,
-+	.probe = adis16460_probe,
-+	.remove = adis16460_remove,
-+};
-+module_spi_driver(adis16460_driver);
-+
-+MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
-+MODULE_DESCRIPTION("Analog Devices ADIS16460 IMU driver");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
-
+Thanks,
