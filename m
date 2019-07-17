@@ -2,171 +2,250 @@ Return-Path: <SRS0=Ncac=VO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2647AC76192
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1A1C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F322F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:19:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="IXY3N1uV"
+	by mail.kernel.org (Postfix) with ESMTP id 71242217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jul 2019 19:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfGQTTp (ORCPT
+        id S1727365AbfGQTVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 15:19:45 -0400
-Received: from vps.deutnet.info ([92.222.219.9]:33340 "EHLO vps.deutnet.info"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727057AbfGQTTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 15:19:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deutnet.info; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:
-        To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=JdQW5yef3/oLdjTuLUcYjPBC8Xuj3agNuqkg0iaCI/0=; b=IXY3N1uVXn3srXrAv5kYRi8FnR
-        Hw+AHgOzzGntAckgmCaG1hFPjheKH2of7BxHzbPOl/go2Cxo16GZXRtjGIYFouyhJt9gM+9f/H1hw
-        eAkq/70bCMtUnpqJqxofODO4fpNOede6peZeRYkK6aQkzKOL1n8uBBBY6kOfM6MOTqS4/vVOQUt4U
-        NvbmdiWe7pMTHO0R910jVTg8j0mFmMz++w6D+9ket0wv2nxU4HSXXNLmZwuXWqH0/PV1Tgb4NxrC1
-        /od9nZKBsTvmu3331SQ+FVLX05zx7zMBLcvoVCwtc8U3vb6Z/W8DHUNIXGWL+KL/b9QW2bMdRx71l
-        p1ok8w/A==;
-Received: from [2001:41d0:fe79:6700:cf3e:2f2c:b15:9bf9] (helo=sonata)
-        by vps.deutnet.info with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1hnpSj-0007J7-5L; Wed, 17 Jul 2019 21:19:38 +0200
-Received: from agriveaux by sonata with local (Exim 4.92)
-        (envelope-from <agriveaux@localhost.localdomain>)
-        id 1hnpSY-0001DM-4j; Wed, 17 Jul 2019 21:19:26 +0200
-Date:   Wed, 17 Jul 2019 21:19:26 +0200
-From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Cc:     linux-mips <linux-mips@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCHv3] MIPS: JZ4780: DTS: Add I2C nodes
-Message-ID: <20190717191926.GA4571@localhost.localdomain>
+        Wed, 17 Jul 2019 15:21:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46704 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfGQTVg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 15:21:36 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 3F28928A884
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Cc:     kernel@collabora.com, mcasas@google.com, zhenyu.z.wang@intel.com,
+        airlied@linux.ie, daniel.vetter@ffwll.ch,
+        joonas.lahtinen@linux.intel.com, linux-kernel@vger.kernel.org,
+        jani.nikula@linux.intel.com, tfiga@chromium.org,
+        gustavo.padovan@collabora.com, rodrigo.vivi@intel.com,
+        enric.balletbo@collabora.com, tina.zhang@intel.com,
+        ville.syrjala@linux.intel.com,
+        Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH v10 1/2] drm/i915: Introduce async plane update to i915
+Date:   Wed, 17 Jul 2019 16:21:12 -0300
+Message-Id: <20190717192114.21855-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
-by default.
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 86 ++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+From: Gustavo Padovan <gustavo.padovan@collabora.com>
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..a76ecd69bfd0 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -239,6 +239,92 @@
- 		status = "disabled";
- 	};
+Add implementation for async plane update callbacks
+
+Signed-off-by: Gustavo Padovan <gustavo.padovan@collabora.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Tested-by: Tina Zhang <tina.zhang@intel.com>
+
+---
+Hi,
+
+This is v10, I just fixed the order in how the commit_ready fence is
+initialized in the intel_atomic_commit() function and solved some
+conflicts during rebase.
+
+This patch depends on [1] "[PATCH] drm: don't block fb changes for async plane updates",
+which is already on drm-misc, otherwise there will be a regression on igt tests:
+
+        cursor-vs-flip-atomic-transitions-varying-size
+        cursor-vs-flip-toggle
+        cursor-vs-flip-varying-size
+
+with errors of type:
+
+"CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+expect to complete approximately 15360 updates, with the threshold set
+at 7680"
+
+When picking this patch, please backmerge [1] into drm-intel tree.
+
+[1] https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=89a4aac0ab0e6f5eea10d7bf4869dd15c3de2cd4
+
+Thanks
+Helen
+
+Changes in v10:
+ - v9: https://patchwork.kernel.org/patch/11000561/
+ - rebase on drm-tip
+ - call i915_sw_fence_init() in the begining of intel_atomic_commit(),
+ otherwise drm_atomic_helper_prepare_planes() without initializing the
+ fence object, casing errors like:
+ODEBUG: assert_init not available (active state 0) object type: i915_sw_fence hint: 0x0
+
+Changes in v9:
+ - v8: https://patchwork.kernel.org/patch/10843395/
+ - Added tested-by tag
+ - submitted to  intel-gfx@lists.freedesktop.org to invoke CI
+ - rebased and fixed conflicts on top of drm-tip
+
+Changes in v8:
+ - v7: https://lkml.org/lkml/2018/6/8/168
+ - v7 was splited in two, one that adds the async callbacks and another
+ that updates the cursor.
+ - rebase with drm-intel
+ - allow async update in all types of planes, not only cursor
+ - add watermark checks in async update
+ - remove bypass of intel_prepare_plane_fb() in case of async update
+ - add missing drm_atomic_helper_cleanup_planes(dev, state) call in
+ intel_atomic_commit().
+ - use swap() function in async update to set the old_fb in the
+ new_state object.
+ - use helpers intel_update_plane()/intel_disable_plane()
+
+Changes in v7:
+- Rebase on top of drm-intel repository. Hopefully now will play
+  nicely with autobuilders.
+
+Changes in v6:
+- Rework the intel_plane_atomic_async_update due driver changed from
+  last time.
+- Removed the mutex_lock/unlock as causes a deadlock.
+
+Changes in v5:
+- Call drm_atomic_helper_async_check() from the check hook
+
+Changes in v4:
+- Set correct vma to new state for cleanup
+- Move size checks back to drivers (Ville Syrjälä)
+
+Changes in v3:
+- Move fb setting to core and use new state (Eric Anholt)
+
+ .../gpu/drm/i915/display/intel_atomic_plane.c | 71 +++++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_display.c  | 14 +++-
+ 2 files changed, 83 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
+index ab411d5e093c..2aa6e2ab4ac8 100644
+--- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
++++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
+@@ -364,8 +364,79 @@ void i9xx_update_planes_on_crtc(struct intel_atomic_state *state,
+ 	}
+ }
  
-+	i2c0: i2c@10050000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++static int intel_plane_atomic_async_check(struct drm_plane *plane,
++					  struct drm_plane_state *state)
++{
++	struct drm_crtc_state *crtc_state;
 +
-+		reg = <0x10050000 0x1000>;
++	crtc_state = drm_atomic_get_existing_crtc_state(state->state,
++							state->crtc);
++	if (WARN_ON(!crtc_state))
++		return -EINVAL;
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <60>;
++	/*
++	 * When crtc is inactive or there is a modeset pending,
++	 * wait for it to complete in the slowpath
++	 */
++	if (!crtc_state->active || to_intel_crtc_state(crtc_state)->update_pipe)
++		return -EINVAL;
 +
-+		clocks = <&cgu JZ4780_CLK_SMB0>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c0_data>;
++	/*
++	 * If any parameters change that may affect watermarks,
++	 * take the slowpath. Only changing fb or position should be
++	 * in the fastpath.
++	 */
++	if (plane->state->crtc != state->crtc ||
++	    plane->state->src_w != state->src_w ||
++	    plane->state->src_h != state->src_h ||
++	    plane->state->crtc_w != state->crtc_w ||
++	    plane->state->crtc_h != state->crtc_h ||
++	    !plane->state->fb != !state->fb)
++		return -EINVAL;
 +
-+		status = "disabled";
-+	};
++	return 0;
++}
 +
-+	i2c1: i2c@10051000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10051000 0x1000>;
++static void intel_plane_atomic_async_update(struct drm_plane *plane,
++					    struct drm_plane_state *new_state)
++{
++	struct intel_atomic_state *intel_new_state =
++		to_intel_atomic_state(new_state->state);
++	struct intel_plane *intel_plane = to_intel_plane(plane);
++	struct drm_crtc *crtc = plane->state->crtc;
++	struct intel_crtc_state *new_crtc_state;
++	struct intel_crtc *intel_crtc;
++	int i;
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <59>;
++	for_each_new_intel_crtc_in_state(intel_new_state, intel_crtc,
++					 new_crtc_state, i)
++		WARN_ON(new_crtc_state->wm.need_postvbl_update ||
++			new_crtc_state->update_wm_post);
 +
-+		clocks = <&cgu JZ4780_CLK_SMB1>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c1_data>;
++	i915_gem_track_fb(intel_fb_obj(plane->state->fb),
++			  intel_fb_obj(new_state->fb),
++			  intel_plane->frontbuffer_bit);
 +
-+		status = "disabled";
-+	};
++	plane->state->src_x = new_state->src_x;
++	plane->state->src_y = new_state->src_y;
++	plane->state->crtc_x = new_state->crtc_x;
++	plane->state->crtc_y = new_state->crtc_y;
 +
-+	i2c2: i2c@10052000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10052000 0x1000>;
++	swap(plane->state->fb, new_state->fb);
 +
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
++	if (plane->state->visible)
++		intel_update_plane(intel_plane,
++				   to_intel_crtc_state(crtc->state),
++				   to_intel_plane_state(plane->state));
++	else
++		intel_disable_plane(intel_plane,
++				    to_intel_crtc_state(crtc->state));
++}
 +
-+		clocks = <&cgu JZ4780_CLK_SMB2>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c2_data>;
+ const struct drm_plane_helper_funcs intel_plane_helper_funcs = {
+ 	.prepare_fb = intel_prepare_plane_fb,
+ 	.cleanup_fb = intel_cleanup_plane_fb,
+ 	.atomic_check = intel_plane_atomic_check,
++	.atomic_async_check = intel_plane_atomic_async_check,
++	.atomic_async_update = intel_plane_atomic_async_update,
+ };
+diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+index e25b82d07d4f..acfb9b7939e2 100644
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -14142,11 +14142,21 @@ static int intel_atomic_commit(struct drm_device *dev,
+ 	struct drm_i915_private *dev_priv = to_i915(dev);
+ 	int ret = 0;
+ 
++	i915_sw_fence_init(&state->commit_ready,
++			   intel_atomic_commit_ready);
 +
-+		status = "disabled";
-+	};
++	if (_state->async_update) {
++		ret = drm_atomic_helper_prepare_planes(dev, _state);
++		if (ret)
++			return ret;
++		drm_atomic_helper_async_commit(dev, _state);
++		drm_atomic_helper_cleanup_planes(dev, _state);
++		return 0;
++	}
 +
-+	i2c3: i2c@10053000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10053000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <57>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB3>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c3_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c4: i2c@10054000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10054000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <56>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB4>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c4_data>;
-+
-+		status = "disabled";
-+	};
-+
- 	watchdog: watchdog@10002000 {
- 		compatible = "ingenic,jz4780-watchdog";
- 		reg = <0x10002000 0x10>;
+ 	state->wakeref = intel_runtime_pm_get(&dev_priv->runtime_pm);
+ 
+ 	drm_atomic_state_get(&state->base);
+-	i915_sw_fence_init(&state->commit_ready,
+-			   intel_atomic_commit_ready);
+ 
+ 	/*
+ 	 * The intel_legacy_cursor_update() fast path takes care
 -- 
-2.20.1
+2.22.0
 
