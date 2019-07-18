@@ -3,80 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B3BC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52048C76197
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BBF20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E07217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfGRNaV (ORCPT
+        id S2390236AbfGRNbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:30:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51295 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726665AbfGRNaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:30:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 207so25620918wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 06:30:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZE7qeIo+WhLKExx8RJE14kSmCWYHFTAnkh+UlLH0SC8=;
-        b=CX0ytiPbMkBZk2u9RECIIeHIcPFARCnB7oxWVyq0NqXCOpFbcSESwnbpneZnlYVELq
-         ZEtx8IFLlyFH8N7NH23MeMY/7OPtm34EAGOGNSaSb2lckC2GnIGybRTx6eCdE7sxBErn
-         YWub+Dsg0mZAVL9J3Xz96SGETTc1xBeEB/ZTrIhEVTK1QjmMXWJKLsLnJWxRBBq05+gU
-         +r1G2XBb8exoHYPx8ZcjrV6k6oARAFq5zHEgvesekjZUnBM4YztBA8lilcuqkhP4Ikrr
-         FobgDU+A6xpJZm6l/GGOl+WZQp2VKYTAVOXPdQgNFwSpmMmDn1g1JySdp4rrndUFSwlh
-         yRiQ==
-X-Gm-Message-State: APjAAAV0cbTgZWje/MyfHEzyzsWO6dTWXJHd3T6vrjbzM7oda6Jek0jy
-        9pU1C4doDCpiOqIPgK93Ni082g==
-X-Google-Smtp-Source: APXvYqx3V5p2CKlfwWpWyhN/va1NPlp3PYMM04M8eSKtHjS8zhgid38VQPsLoaAWTYKhki9qOPdqrw==
-X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr42485323wml.84.1563456618835;
-        Thu, 18 Jul 2019 06:30:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
-        by smtp.gmail.com with ESMTPSA id k124sm42226579wmk.47.2019.07.18.06.30.17
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 06:30:18 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] KVM: Boosting vCPUs that are delivering interrupts
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Marc Zyngier <maz@kernel.org>
-References: <1563449947-7749-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <c4c23d93-879b-1783-afa5-b6e053f32990@redhat.com>
-Date:   Thu, 18 Jul 2019 15:30:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 18 Jul 2019 09:31:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:58428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfGRNbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:31:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5B6A344;
+        Thu, 18 Jul 2019 06:31:04 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59D753F71F;
+        Thu, 18 Jul 2019 06:31:02 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 14:30:53 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/18] drivers: firmware: psci: Manage runtime PM in the
+ idle path for CPUs
+Message-ID: <20190718133053.GA27222@e121166-lin.cambridge.arm.com>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+ <20190513192300.653-15-ulf.hansson@linaro.org>
+ <20190716155317.GB32490@e121166-lin.cambridge.arm.com>
+ <CAPDyKFrJ75mo+s6GuUCTQ-nVv7C+9YJyTVmwuBZ2RKFOvOi3Nw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1563449947-7749-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFrJ75mo+s6GuUCTQ-nVv7C+9YJyTVmwuBZ2RKFOvOi3Nw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/19 13:39, Wanpeng Li wrote:
-> -	if (kvm_vcpu_wake_up(vcpu))
-> +	if (kvm_vcpu_wake_up(vcpu)) {
-> +		vcpu->ready = true;
->  		return;
-> +	}
+On Thu, Jul 18, 2019 at 12:35:07PM +0200, Ulf Hansson wrote:
+> On Tue, 16 Jul 2019 at 17:53, Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > On Mon, May 13, 2019 at 09:22:56PM +0200, Ulf Hansson wrote:
+> > > When the hierarchical CPU topology layout is used in DT, let's allow the
+> > > CPU to be power managed through its PM domain, via deploying runtime PM
+> > > support.
+> > >
+> > > To know for which idle states runtime PM reference counting is needed,
+> > > let's store the index of deepest idle state for the CPU, in a per CPU
+> > > variable. This allows psci_cpu_suspend_enter() to compare this index with
+> > > the requested idle state index and then act accordingly.
+> >
+> > I do not see why a system with two CPU CPUidle states, say CPU retention
+> > and CPU shutdown, should not be calling runtime PM on CPU retention
+> > entry.
+> 
+> If the CPU idle governor did select the CPU retention for the CPU, it
+> was probably because the target residency for the CPU shutdown state
+> could not be met.
 
-Why here and not in kvm_vcpu_wake_up (which would allow further
-simplification of s390 code)?
+The kernel does not know what those cpu states represent, so, this is an
+assumption you are making and it must be made clear that this code works
+as long as your assumption is valid.
 
-Paolo
+If eg a "cluster" retention state has lower target_residency than
+the deepest CPU idle state this assumption is wrong.
 
-Paolo
+And CPUidle and genPD governor decisions are not synced anyway so,
+again, this is an assumption, not a certainty.
+
+> In this case, there is no point in allowing any other deeper idle
+> states for cluster/package/system, since those have even greater
+> residencies, hence calling runtime PM doesn't make sense.
+
+On the systems you are testing on.
+
+Lorenzo
+
+> > The question then is what cluster/package/system states
+> > are allowed for a given CPU idle state, to understand
+> > what idle states can be actually entered at any hierarchy
+> > level given the choice made for the CPU idle state.
+> >
+> > In the case above, a CPU entering retention state should prevent
+> > runtime PM selecting a cluster shutdown state; most likely firmware
+> > would demote the request to cluster retention but still, we should
+> > find a way to describe these dependencies.
+> 
+> See above.
+> 
+> [...]
+> 
+> Kind regards
+> Uffe
