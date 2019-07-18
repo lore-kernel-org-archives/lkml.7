@@ -2,116 +2,156 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22011C76191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD762C76196
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39AA217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13E2217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfGRIRt (ORCPT
+        id S2389425AbfGRIRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:17:49 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43616 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfGRIRt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:17:49 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so27595182wru.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:17:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gxcnav4cxj9NSWzD1Jo7B/97fmLNhoQUXArg3gxl5H8=;
-        b=XuTwyj57aTCaU6cyJZhbiuYI5t/6Olkt1dmOmmtKit/YRAN1qhsjHF/igqCYsTcMRH
-         QxXf/tFpSiSOejc7RiaA7YtH0YZnT0QV+lbMjReBWBNGuaF9rvgqqq5m+hM1tI935Hs+
-         E7de6uZrtdecJG6izXlRfFpf1E8pY/rdPuuOky5b9iSEq2gIFPG4wDUZyNjO5GYY+0Pm
-         O3sTdH2uvVmvsSF+EwD/CUKjs33eCMryjPTdUvVj3HeXQsDtfBA174b0feGQKxv+gu+e
-         t53C43SQgM2YhbLETnYGcFPIO4H9Ms8PKE5NEUUrHiFEBS3vNv52xqI+lcOdVJUY0TLf
-         27jQ==
-X-Gm-Message-State: APjAAAW7tUaL/UpiZc+UkwBnKJT/LpAHyr8xV/g/7tudNbP3LAK3EVjy
-        FBT4ER1AGT7JHfr7J4T7NYwLWwH3n3rAKQ==
-X-Google-Smtp-Source: APXvYqzGFipt/JGSI4UDF+hfMuTUCQUMCUT8bsb/SNwDx6YIzS8VdHrXOL4zKiO14pX+q9h3fbDbpg==
-X-Received: by 2002:adf:cd84:: with SMTP id q4mr40390898wrj.232.1563437867685;
-        Thu, 18 Jul 2019 01:17:47 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
-        by smtp.gmail.com with ESMTPSA id k17sm28255950wrq.83.2019.07.18.01.17.46
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 01:17:47 -0700 (PDT)
-Subject: Re: [PATCH v2 03/22] x86/kvm: Replace vmx_vmenter()'s call to
- kvm_spurious_fault() with UD2
-To:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <cover.1563413318.git.jpoimboe@redhat.com>
- <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <2a0e0d3f-f8a1-afce-810a-bc9697e54ed1@redhat.com>
-Date:   Thu, 18 Jul 2019 10:17:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 18 Jul 2019 04:17:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2678 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726397AbfGRIRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:17:50 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DC0A470A26760DD399DD;
+        Thu, 18 Jul 2019 16:17:47 +0800 (CST)
+Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 18 Jul 2019 16:17:39 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <marc.zyngier@arm.com>, <james.morse@arm.com>,
+        <julien.thierry@arm.com>, <suzuki.poulose@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, <andrew.murray@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH v2] KVM: arm/arm64: Introduce kvm_pmu_vcpu_init() to setup PMU counter idx
+Date:   Thu, 18 Jul 2019 08:15:10 +0000
+Message-ID: <1563437710-30756-1-git-send-email-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.6.4.windows.1
 MIME-Version: 1.0
-In-Reply-To: <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/19 03:36, Josh Poimboeuf wrote:
-> Objtool reports the following:
-> 
->   arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
-> 
-> But frame pointers are necessarily broken anyway, because
-> __vmx_vcpu_run() clobbers RBP with the guest's value before calling
-> vmx_vmenter().  So calling without a frame pointer doesn't make things
-> any worse.
-> 
-> Make objtool happy by changing the call to a UD2.
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> v2: ud2 instead of kvm_spurious_fault() [Paolo]
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> ---
->  arch/x86/kvm/vmx/vmenter.S | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
-> index d4cb1945b2e3..4010d519eb8c 100644
-> --- a/arch/x86/kvm/vmx/vmenter.S
-> +++ b/arch/x86/kvm/vmx/vmenter.S
-> @@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
->  	ret
->  
->  3:	cmpb $0, kvm_rebooting
-> -	jne 4f
-> -	call kvm_spurious_fault
-> -4:	ret
-> +	je 4f
-> +	ret
-> +4:	ud2
->  
->  	.pushsection .fixup, "ax"
->  5:	jmp 3b
-> 
+We use "pmc->idx" and the "chained" bitmap to determine if the pmc is
+chained, in kvm_pmu_pmc_is_chained().  But idx might be uninitialized
+(and random) when we doing this decision, through a KVM_ARM_VCPU_INIT
+ioctl -> kvm_pmu_vcpu_reset(). And the test_bit() against this random
+idx will potentially hit a KASAN BUG [1].
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+In general, idx is the static property of a PMU counter that is not
+expected to be modified across resets, as suggested by Julien.  It
+looks more reasonable if we can setup the PMU counter idx for a vcpu
+in its creation time. Introduce a new function - kvm_pmu_vcpu_init()
+for this basic setup. Oh, and the KASAN BUG will get fixed this way.
+
+[1] https://www.spinics.net/lists/kvm-arm/msg36700.html
+
+Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
+Suggested-by: Andrew Murray <andrew.murray@arm.com>
+Suggested-by: Julien Thierry <julien.thierry@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
+
+Changes since v1:
+ - Introduce kvm_pmu_vcpu_init() in vcpu's creation time, move the
+   assignment of pmc->idx into it.
+ - Thus change the subject. The old one is "KVM: arm/arm64: Assign
+   pmc->idx before kvm_pmu_stop_counter()".
+
+Julien, I haven't collected your Acked-by into this version. If you're
+still happy with the change, please Ack again. Thanks!
+
+ include/kvm/arm_pmu.h |  2 ++
+ virt/kvm/arm/arm.c    |  2 ++
+ virt/kvm/arm/pmu.c    | 18 +++++++++++++++---
+ 3 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+index 16c769a..6db0304 100644
+--- a/include/kvm/arm_pmu.h
++++ b/include/kvm/arm_pmu.h
+@@ -34,6 +34,7 @@ struct kvm_pmu {
+ u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx);
+ void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx, u64 val);
+ u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu);
++void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu);
+ void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu);
+ void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu);
+ void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val);
+@@ -71,6 +72,7 @@ static inline u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu)
+ {
+ 	return 0;
+ }
++static inline void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu) {}
+ static inline void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val) {}
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index f645c0f..c704fa6 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -340,6 +340,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+ 	/* Set up the timer */
+ 	kvm_timer_vcpu_init(vcpu);
+ 
++	kvm_pmu_vcpu_init(vcpu);
++
+ 	kvm_arm_reset_debug_ptr(vcpu);
+ 
+ 	return kvm_vgic_vcpu_init(vcpu);
+diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+index 3dd8238..362a018 100644
+--- a/virt/kvm/arm/pmu.c
++++ b/virt/kvm/arm/pmu.c
+@@ -215,6 +215,20 @@ static void kvm_pmu_stop_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc)
+ }
+ 
+ /**
++ * kvm_pmu_vcpu_init - assign pmu counter idx for cpu
++ * @vcpu: The vcpu pointer
++ *
++ */
++void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu)
++{
++	int i;
++	struct kvm_pmu *pmu = &vcpu->arch.pmu;
++
++	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
++		pmu->pmc[i].idx = i;
++}
++
++/**
+  * kvm_pmu_vcpu_reset - reset pmu state for cpu
+  * @vcpu: The vcpu pointer
+  *
+@@ -224,10 +238,8 @@ void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
+ 	int i;
+ 	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+ 
+-	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++) {
++	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
+ 		kvm_pmu_stop_counter(vcpu, &pmu->pmc[i]);
+-		pmu->pmc[i].idx = i;
+-	}
+ 
+ 	bitmap_zero(vcpu->arch.pmu.chained, ARMV8_PMU_MAX_COUNTER_PAIRS);
+ }
+-- 
+1.8.3.1
+
+
