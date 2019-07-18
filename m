@@ -2,120 +2,176 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A06C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500E8C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DB7205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC45205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419541;
-	bh=AsEgbgRxH0Tp+ZFrZIy9i6uRXoJJUF6eGevBzFtOm00=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SFigHN202NSerb3s5TCpk4LQ01ttGISvIXpVZqt7eZ7DIXj/4fvAZEGh2m42WfbKA
-	 PNCzf7SSKFAcCeGdxg3Rvw6gKltKr3S3C+56UcidrQYyraJnaqKEaRdCRGU5ct2nBW
-	 f0qayuNCv80nkR2AAWEx9u96OFc0YPMhZ0jYO2hY=
+	s=default; t=1563419544;
+	bh=sQu3Agub57cCB0KuFahhAdB5I1Qbqog5/+leSesvPcc=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=gvwVilwKgeAGgGDrAVi+GkS5mmzZUVoVNitoNHYPqBphU8jWaJCjseiKUqj9R+g33
+	 n3JOFSj+uPoGcr44GHr6pbaRDGvCvjBE2vkvY8LWCTKcj24SEN8vHs+UDx3Mimahbv
+	 Zzsf2Hqk9cjpJtji9aLSI2J1xP4TFsO8W4TM3yp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390911AbfGRDMU (ORCPT
+        id S2403980AbfGRDMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:12:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403924AbfGRDMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:12:13 -0400
-Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
+        id S2403940AbfGRDMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:12:16 -0400
+Received: from localhost (unknown [104.132.1.68])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3F9E2053B;
-        Thu, 18 Jul 2019 03:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4B9A21848;
+        Thu, 18 Jul 2019 03:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419532;
-        bh=AsEgbgRxH0Tp+ZFrZIy9i6uRXoJJUF6eGevBzFtOm00=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tx5+/jXTlulukNt9MylD7TBU7gkZ2e/WqIm5xfHjI/pmFMvS8UWv8DSLkSfMYiPpU
-         W3uJbOMFRad4xxxHeH9pXF0GhNpNMLKjplpOuKTJDTLf8uubM2ksa9k2jHUpiZ/1Gt
-         1dBrPn83gWiS+PI3k2JCOGo+9rzee9iIPMwKeQdI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@eero.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/54] mac80211: mesh: fix RCU warning
-Date:   Thu, 18 Jul 2019 12:01:35 +0900
-Message-Id: <20190718030049.461266618@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
-References: <20190718030048.392549994@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1563419535;
+        bh=sQu3Agub57cCB0KuFahhAdB5I1Qbqog5/+leSesvPcc=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=q9JwjuHFgJbTFb4eYacj2xshYNrHu2CNdC2Cp+JA+Ql0UKDnQ2NmPlTzxhI7KcEkq
+         J//KcJ2JPaHJNknTJihj1PuTCQ5brfVQ7Z1sqtmA9bbuEJTzyZ7bl3BR4jYQat0UZy
+         YkE5X6UeLTgrq0/pFLsDvx/oIkdvSf3vNP2nlP78=
+Date:   Wed, 17 Jul 2019 20:12:14 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH v2] f2fs: fix to read source block before invalidating it
+Message-ID: <20190718031214.GA78336@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190718013718.70335-1-jaegeuk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718013718.70335-1-jaegeuk@kernel.org>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
+f2fs_allocate_data_block() invalidates old block address and enable new block
+address. Then, if we try to read old block by f2fs_submit_page_bio(), it will
+give WARN due to reading invalid blocks.
 
-ifmsh->csa is an RCU-protected pointer. The writer context
-in ieee80211_mesh_finish_csa() is already mutually
-exclusive with wdev->sdata.mtx, but the RCU checker did
-not know this. Use rcu_dereference_protected() to avoid a
-warning.
+Let's make the order sanely back.
 
-fixes the following warning:
-
-[   12.519089] =============================
-[   12.520042] WARNING: suspicious RCU usage
-[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
-[   12.521409] -----------------------------
-[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
-[   12.522928] other info that might help us debug this:
-[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
-[   12.524855] 5 locks held by kworker/u8:2/152:
-[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
-[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
-[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
-[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
-[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
-
-Signed-off-by: Thomas Pedersen <thomas@eero.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- net/mac80211/mesh.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+v2:
+I was fixing the comments. :)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index b2a27263d6ff..7f902e69530f 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -1135,7 +1135,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
- 	ifmsh->chsw_ttl = 0;
+ fs/f2fs/gc.c | 70 +++++++++++++++++++++++++---------------------------
+ 1 file changed, 34 insertions(+), 36 deletions(-)
+
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 6691f526fa40..8974672db78f 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -796,6 +796,29 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 	if (lfs_mode)
+ 		down_write(&fio.sbi->io_order_lock);
  
- 	/* Remove the CSA and MCSP elements from the beacon */
--	tmp_csa_settings = rcu_dereference(ifmsh->csa);
-+	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
-+					    lockdep_is_held(&sdata->wdev.mtx));
- 	RCU_INIT_POINTER(ifmsh->csa, NULL);
- 	if (tmp_csa_settings)
- 		kfree_rcu(tmp_csa_settings, rcu_head);
-@@ -1157,6 +1158,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
- 	struct mesh_csa_settings *tmp_csa_settings;
- 	int ret = 0;
- 
-+	lockdep_assert_held(&sdata->wdev.mtx);
++	mpage = f2fs_grab_cache_page(META_MAPPING(fio.sbi),
++					fio.old_blkaddr, false);
++	if (!mpage)
++		goto up_out;
 +
- 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
- 				   GFP_ATOMIC);
- 	if (!tmp_csa_settings)
++	fio.encrypted_page = mpage;
++
++	/* read source block in mpage */
++	if (!PageUptodate(mpage)) {
++		err = f2fs_submit_page_bio(&fio);
++		if (err) {
++			f2fs_put_page(mpage, 1);
++			goto up_out;
++		}
++		lock_page(mpage);
++		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
++						!PageUptodate(mpage))) {
++			err = -EIO;
++			f2fs_put_page(mpage, 1);
++			goto up_out;
++		}
++	}
++
+ 	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
+ 					&sum, CURSEG_COLD_DATA, NULL, false);
+ 
+@@ -803,44 +826,18 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ 				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
+ 	if (!fio.encrypted_page) {
+ 		err = -ENOMEM;
+-		goto recover_block;
+-	}
+-
+-	mpage = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
+-					fio.old_blkaddr, FGP_LOCK, GFP_NOFS);
+-	if (mpage) {
+-		bool updated = false;
+-
+-		if (PageUptodate(mpage)) {
+-			memcpy(page_address(fio.encrypted_page),
+-					page_address(mpage), PAGE_SIZE);
+-			updated = true;
+-		}
+ 		f2fs_put_page(mpage, 1);
+-		invalidate_mapping_pages(META_MAPPING(fio.sbi),
+-					fio.old_blkaddr, fio.old_blkaddr);
+-		if (updated)
+-			goto write_page;
+-	}
+-
+-	err = f2fs_submit_page_bio(&fio);
+-	if (err)
+-		goto put_page_out;
+-
+-	/* write page */
+-	lock_page(fio.encrypted_page);
+-
+-	if (unlikely(fio.encrypted_page->mapping != META_MAPPING(fio.sbi))) {
+-		err = -EIO;
+-		goto put_page_out;
+-	}
+-	if (unlikely(!PageUptodate(fio.encrypted_page))) {
+-		err = -EIO;
+-		goto put_page_out;
++		goto recover_block;
+ 	}
+ 
+-write_page:
++	/* write target block */
+ 	f2fs_wait_on_page_writeback(fio.encrypted_page, DATA, true, true);
++	memcpy(page_address(fio.encrypted_page),
++				page_address(mpage), PAGE_SIZE);
++	f2fs_put_page(mpage, 1);
++	invalidate_mapping_pages(META_MAPPING(fio.sbi),
++				fio.old_blkaddr, fio.old_blkaddr);
++
+ 	set_page_dirty(fio.encrypted_page);
+ 	if (clear_page_dirty_for_io(fio.encrypted_page))
+ 		dec_page_count(fio.sbi, F2FS_DIRTY_META);
+@@ -871,11 +868,12 @@ static int move_data_block(struct inode *inode, block_t bidx,
+ put_page_out:
+ 	f2fs_put_page(fio.encrypted_page, 1);
+ recover_block:
+-	if (lfs_mode)
+-		up_write(&fio.sbi->io_order_lock);
+ 	if (err)
+ 		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
+ 								true, true);
++up_out:
++	if (lfs_mode)
++		up_write(&fio.sbi->io_order_lock);
+ put_out:
+ 	f2fs_put_dnode(&dn);
+ out:
 -- 
-2.20.1
-
-
+2.19.0.605.g01d371f741-goog
 
