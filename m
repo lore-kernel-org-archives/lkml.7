@@ -2,58 +2,56 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2771BC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AEEC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36D02053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0079E2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419864;
-	bh=a9z8rCK1xSzHtj4ft+94eFAnnHdLi6TsvngDXLxFIjY=;
+	s=default; t=1563419871;
+	bh=nmpK3gZd43PWK653ZajHttdDO4lbHQPISVPaW5lPcbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kMzdRvH+eUMvzRxRfX3wJ3IIwVV01DQNzbV+6NDfuJEe2AW0OMhtDDMlxaJTmQEjS
-	 MiIVlqSsIx3/zdjoI5uckUgg/1Y6/rh8cYPvkwSfZFG0X0QW7NmEZsgtwSHlwbuRFa
-	 PPdA+7IFZZZSQhWWOPsvUfif3F0juQ7yTFD3J5Fc=
+	b=nlzEkI3wKYXze45XNoL5IwqC/Ybm0uAxL3q3yaGI9Mj4XeGYZ7tV46sMTCk8gm10g
+	 HDkAszr1qJx9N2yc/255jGJoz0EBfXN6XhY94JfGYiu7+OfNDhTzH187qBEKGNU2H9
+	 QqVyLA0EkLBg6JCcmu0I/9qziyCT91n3gr9nSqUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391772AbfGRDRm (ORCPT
+        id S2392140AbfGRDRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50290 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:17:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388695AbfGRDOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:24 -0400
+        id S2391755AbfGRDOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:20 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2D72053B;
-        Thu, 18 Jul 2019 03:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6CAA2173E;
+        Thu, 18 Jul 2019 03:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419663;
-        bh=a9z8rCK1xSzHtj4ft+94eFAnnHdLi6TsvngDXLxFIjY=;
+        s=default; t=1563419660;
+        bh=nmpK3gZd43PWK653ZajHttdDO4lbHQPISVPaW5lPcbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DI2k3XYVuYXfprL0JHIeohL5aCMR2/+q7BcnCPp0/UZN1xzLokWplDhvvC/X6hlBj
-         I+HhvQBW/ivbKH88FlcTKE/j1kHHHBHPKQkJCLYfhWc29LcYh1It9kN65a8jd6ykAP
-         O9B1yEM9gQv+oPA0NDRCuk+qlONm0h/M8w1z2o7w=
+        b=oQo3s9mZk22FvcovGLu1NCsNXcbzenJ+z0JP+9HAJoAKXIFuWH3tat/h/wxS757iR
+         9BabCWB7FmRJXwuHw+AX9JpxWUYy/Dnln8/DIwM3s6hw5/YryjqBItSpJBBVLCsiRc
+         4j6S1g+en7TOyJTP8Zo/6/5hXrPygdcx/QYV4dzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Ma <aaron.ma@canonical.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/40] Input: elantech - enable middle button support on 2 ThinkPads
-Date:   Thu, 18 Jul 2019 12:01:57 +0900
-Message-Id: <20190718030039.885612461@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.9 33/54] usb: gadget: ether: Fix race between gether_disconnect and rx_submit
+Date:   Thu, 18 Jul 2019 12:02:03 +0900
+Message-Id: <20190718030052.008794590@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
-References: <20190718030039.676518610@linuxfoundation.org>
+In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
+References: <20190718030048.392549994@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,32 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa440de3058a3ef530851f9ef373fbb5f694dbc3 ]
+From: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
 
-Adding 2 new touchpad PNPIDs to enable middle button support.
+commit d29fcf7078bc8be2b6366cbd4418265b53c94fac upstream.
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+On spin lock release in rx_submit, gether_disconnect get a chance to
+run, it makes port_usb NULL, rx_submit access NULL port USB, hence null
+pointer crash.
+
+Fixed by releasing the lock in rx_submit after port_usb is used.
+
+Fixes: 2b3d942c4878 ("usb ethernet gadget: split out network core")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/mouse/elantech.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/function/u_ether.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 4c1e527f14a5..7b942ee364b6 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1191,6 +1191,8 @@ static const char * const middle_button_pnp_ids[] = {
- 	"LEN2132", /* ThinkPad P52 */
- 	"LEN2133", /* ThinkPad P72 w/ NFC */
- 	"LEN2134", /* ThinkPad P72 */
-+	"LEN0407",
-+	"LEN0408",
- 	NULL
- };
+--- a/drivers/usb/gadget/function/u_ether.c
++++ b/drivers/usb/gadget/function/u_ether.c
+@@ -198,11 +198,12 @@ rx_submit(struct eth_dev *dev, struct us
+ 		out = dev->port_usb->out_ep;
+ 	else
+ 		out = NULL;
+-	spin_unlock_irqrestore(&dev->lock, flags);
  
--- 
-2.20.1
-
+ 	if (!out)
++	{
++		spin_unlock_irqrestore(&dev->lock, flags);
+ 		return -ENOTCONN;
+-
++	}
+ 
+ 	/* Padding up to RX_EXTRA handles minor disagreements with host.
+ 	 * Normally we use the USB "terminate on short read" convention;
+@@ -223,6 +224,7 @@ rx_submit(struct eth_dev *dev, struct us
+ 
+ 	if (dev->port_usb->is_fixed)
+ 		size = max_t(size_t, size, dev->port_usb->fixed_out_len);
++	spin_unlock_irqrestore(&dev->lock, flags);
+ 
+ 	skb = alloc_skb(size + NET_IP_ALIGN, gfp_flags);
+ 	if (skb == NULL) {
 
 
