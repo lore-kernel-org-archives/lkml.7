@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C193C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A06C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D74205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DB7205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419539;
-	bh=y+Qt8z6EkrYn2syy8x91Sls59simFVNgynORAtiOfBw=;
+	s=default; t=1563419541;
+	bh=AsEgbgRxH0Tp+ZFrZIy9i6uRXoJJUF6eGevBzFtOm00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nEesrHv0vjysCNqXIQUva3d2PSBSz0Ddxm6cs7PVZ7LpA8ezhfKLYaBKYdRsOIcXx
-	 zqLHPPGGZeTz91TrpeAclXKneLWM2p6CGcPykwwVAL7rJGUTAzNm2PwSZVyea/QRn1
-	 8dUINn0W/4+m9040ITUvcma5vZ2huszXaqdN/jFE=
+	b=SFigHN202NSerb3s5TCpk4LQ01ttGISvIXpVZqt7eZ7DIXj/4fvAZEGh2m42WfbKA
+	 PNCzf7SSKFAcCeGdxg3Rvw6gKltKr3S3C+56UcidrQYyraJnaqKEaRdCRGU5ct2nBW
+	 f0qayuNCv80nkR2AAWEx9u96OFc0YPMhZ0jYO2hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403960AbfGRDMR (ORCPT
+        id S2390911AbfGRDMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:12:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:12:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403790AbfGRDL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:59 -0400
+        id S2403924AbfGRDMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:12:13 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C778E20818;
-        Thu, 18 Jul 2019 03:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3F9E2053B;
+        Thu, 18 Jul 2019 03:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419518;
-        bh=y+Qt8z6EkrYn2syy8x91Sls59simFVNgynORAtiOfBw=;
+        s=default; t=1563419532;
+        bh=AsEgbgRxH0Tp+ZFrZIy9i6uRXoJJUF6eGevBzFtOm00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJox1JtBPadBYhA8PLD62zxlBoziJQ57oDka5Wu+VAr2l8Avb2Vjyb90PzypBAAws
-         VQ8DEn+HhqpRpcYeLnHdZI7TlmsmzmM6/0zkL7FdHRGJKBU3QFTcpjsbmYwp0sIiQq
-         84bUqw7G7CNvxsLLnZIPS9/iIMC5Md0e1cuDtSwE=
+        b=Tx5+/jXTlulukNt9MylD7TBU7gkZ2e/WqIm5xfHjI/pmFMvS8UWv8DSLkSfMYiPpU
+         W3uJbOMFRad4xxxHeH9pXF0GhNpNMLKjplpOuKTJDTLf8uubM2ksa9k2jHUpiZ/1Gt
+         1dBrPn83gWiS+PI3k2JCOGo+9rzee9iIPMwKeQdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Thomas Pedersen <thomas@eero.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/54] mlxsw: spectrum: Disallow prio-tagged packets when PVID is removed
-Date:   Thu, 18 Jul 2019 12:01:44 +0900
-Message-Id: <20190718030050.357370688@linuxfoundation.org>
+Subject: [PATCH 4.9 05/54] mac80211: mesh: fix RCU warning
+Date:   Thu, 18 Jul 2019 12:01:35 +0900
+Message-Id: <20190718030049.461266618@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -61,33 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4b14cc313f076c37b646cee06a85f0db59cf216c ]
+[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
 
-When PVID is removed from a bridge port, the Linux bridge drops both
-untagged and prio-tagged packets. Align mlxsw with this behavior.
+ifmsh->csa is an RCU-protected pointer. The writer context
+in ieee80211_mesh_finish_csa() is already mutually
+exclusive with wdev->sdata.mtx, but the RCU checker did
+not know this. Use rcu_dereference_protected() to avoid a
+warning.
 
-Fixes: 148f472da5db ("mlxsw: reg: Add the Switch Port Acceptable Frame Types register")
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+fixes the following warning:
+
+[   12.519089] =============================
+[   12.520042] WARNING: suspicious RCU usage
+[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
+[   12.521409] -----------------------------
+[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
+[   12.522928] other info that might help us debug this:
+[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
+[   12.524855] 5 locks held by kworker/u8:2/152:
+[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
+[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
+[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
+
+Signed-off-by: Thomas Pedersen <thomas@eero.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/reg.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/mesh.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index a01e6c0d0cd1..b2a745b579fd 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -935,7 +935,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
- 	MLXSW_REG_ZERO(spaft, payload);
- 	mlxsw_reg_spaft_local_port_set(payload, local_port);
- 	mlxsw_reg_spaft_allow_untagged_set(payload, allow_untagged);
--	mlxsw_reg_spaft_allow_prio_tagged_set(payload, true);
-+	mlxsw_reg_spaft_allow_prio_tagged_set(payload, allow_untagged);
- 	mlxsw_reg_spaft_allow_tagged_set(payload, true);
- }
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index b2a27263d6ff..7f902e69530f 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1135,7 +1135,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
+ 	ifmsh->chsw_ttl = 0;
  
+ 	/* Remove the CSA and MCSP elements from the beacon */
+-	tmp_csa_settings = rcu_dereference(ifmsh->csa);
++	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
++					    lockdep_is_held(&sdata->wdev.mtx));
+ 	RCU_INIT_POINTER(ifmsh->csa, NULL);
+ 	if (tmp_csa_settings)
+ 		kfree_rcu(tmp_csa_settings, rcu_head);
+@@ -1157,6 +1158,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
+ 	struct mesh_csa_settings *tmp_csa_settings;
+ 	int ret = 0;
+ 
++	lockdep_assert_held(&sdata->wdev.mtx);
++
+ 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
+ 				   GFP_ATOMIC);
+ 	if (!tmp_csa_settings)
 -- 
 2.20.1
 
