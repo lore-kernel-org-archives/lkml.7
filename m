@@ -2,84 +2,106 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A12C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74888C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A591F2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE362083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jItEiZ4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390901AbfGRSJC (ORCPT
+        id S2390772AbfGRSLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:09:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60044 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfGRSJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:09:02 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DA9DC81DE5;
-        Thu, 18 Jul 2019 18:09:01 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B827360922;
-        Thu, 18 Jul 2019 18:09:00 +0000 (UTC)
-Subject: Re: [PATCH v2 0/2] mm, slab: Extend slab/shrink to shrink all memcg
- caches
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <20190718180733.18596-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <4d2ca559-4a59-1368-7b40-f05b9aefe84e@redhat.com>
-Date:   Thu, 18 Jul 2019 14:09:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190718180733.18596-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 18 Jul 2019 18:09:02 +0000 (UTC)
+        Thu, 18 Jul 2019 14:11:12 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42217 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRSLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:11:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t28so28264133lje.9;
+        Thu, 18 Jul 2019 11:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ACngBykYqB0o3NihblCBOiLR+sDnmChE/17QqNQkmcw=;
+        b=jItEiZ4smIzaJkxpqnRTFanp5FpRVV/67ycDHQXpzrPJUx6p2owcwNeJImKQR310CW
+         kzWda1OmdsgvC/hwoMkcUThzcnaAyihMpvlEJTatPYHAQTsAbsi+ad84rmJC+2s9uVcc
+         VLGK5ET37aeorCMQ7iDU/hMxd+X6MggGYi1tyrIcYeNdG7LgNFwzfoQInw8Uz1vDLgmd
+         oO9sMR2R9B80MnJbpZoW5NZw4QjXXfanxvFzbDby4tzMMPBcWq18ciQldrvPzEXj8gLa
+         dvCMWmL2VmoSpQVYgVflj+/rXLXkk0Q0Mkw6Oe89uDp+Ip8lZLsyVXnovBkT30NPEqkO
+         N2Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ACngBykYqB0o3NihblCBOiLR+sDnmChE/17QqNQkmcw=;
+        b=lDyyO6q2EN7BjeVemhoZ6jjK5an0Z8yQ821HBvOiinWmgU+inoqzjAiYOk9v/bAP/V
+         rM40gTfo5wmprWVpF4qj8moTs9LiRXj4mg9tdHbDrkWhiG9DGHFl8RcJmnJ68T/R7zLp
+         VZPJQEeuNLNoOk+ANZT9a7PNCHsAWom28sx84AXf+ts3Rr4wwCMAGc/mQ4plZ+nyM/J2
+         ScrJJtVbrxY2EpwmdYU1+/q3sWcb3k793qt0Ktugw/PfpUB8zKU4kiPgQkEhXi9Zqd8G
+         NbmxEc44an+hczPyvySMElFYIZ1GZIYGv1TQ7Lg8e5mziMncjuAtiBmYum3Wevqu1yjE
+         AUvA==
+X-Gm-Message-State: APjAAAWBj8YoSBP/hZTaPsL/cQ6gkN6wiMkO1H+G0MmXSXD82uRp/X0o
+        KGQ9OZojkXz+rxrFOwTAPuQ=
+X-Google-Smtp-Source: APXvYqz/XTtQof1rtC+XVjV+AQYDnfiRRkma3v5LvU9uzKZHguKDa20vmBNi3JFOkSc7d9PhykRxWg==
+X-Received: by 2002:a2e:9048:: with SMTP id n8mr5868906ljg.37.1563473469447;
+        Thu, 18 Jul 2019 11:11:09 -0700 (PDT)
+Received: from ul001888.eu.tieto.com ([91.90.160.140])
+        by smtp.gmail.com with ESMTPSA id k82sm5196001lje.30.2019.07.18.11.11.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 11:11:08 -0700 (PDT)
+From:   Vasyl Gomonovych <gomonovych@gmail.com>
+To:     gomonovych@gmail.com
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: pmcraid: Use dma_pool_zalloc rather than dma_pool_alloc
+Date:   Thu, 18 Jul 2019 20:10:51 +0200
+Message-Id: <20190718181051.22882-1-gomonovych@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/18/19 2:07 PM, Waiman Long wrote:
->  v2:
->   - Just extend the shrink sysfs file to shrink all memcg caches without
->     adding new semantics.
->   - Add a patch to report the time of the shrink operation.
->
-> This patchset enables the slab/shrink sysfs file to shrink all the
-> memcg caches that are associated with the given root cache. The time of
-> the shrink operation can now be read from the shrink file.
->
-> Waiman Long (2):
->   mm, slab: Extend slab/shrink to shrink all memcg caches
->   mm, slab: Show last shrink time in us when slab/shrink is read
->
->  Documentation/ABI/testing/sysfs-kernel-slab | 14 +++++---
->  include/linux/slub_def.h                    |  1 +
->  mm/slab.h                                   |  1 +
->  mm/slab_common.c                            | 37 +++++++++++++++++++++
->  mm/slub.c                                   | 14 +++++---
->  5 files changed, 59 insertions(+), 8 deletions(-)
->
-Sorry, it is a mistake. Please ignore it.
+Use *_pool_zalloc rather than *_pool_alloc followed by memset with 0
+The semantic patch that makes this change is available
+in scripts/coccinelle/api/alloc/pool_zalloc-simple.cocci.
 
--Longman
+Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
+---
+ drivers/scsi/pmcraid.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+index 71ff3936da4f945f3d8a798a8b2129ca3c07ec22..f79d7750934e629c6d6edc1a075205247889531d 100644
+--- a/drivers/scsi/pmcraid.c
++++ b/drivers/scsi/pmcraid.c
+@@ -4653,9 +4653,7 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < PMCRAID_MAX_CMD; i++) {
+-		pinstance->cmd_list[i]->ioa_cb =
+-			dma_pool_alloc(
+-				pinstance->control_pool,
++		pinstance->cmd_list[i]->ioa_cb = dma_pool_zalloc(pinstance->control_pool,
+ 				GFP_KERNEL,
+ 				&(pinstance->cmd_list[i]->ioa_cb_bus_addr));
+ 
+@@ -4663,8 +4661,6 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
+ 			pmcraid_release_control_blocks(pinstance, i);
+ 			return -ENOMEM;
+ 		}
+-		memset(pinstance->cmd_list[i]->ioa_cb, 0,
+-			sizeof(struct pmcraid_control_block));
+ 	}
+ 	return 0;
+ }
+-- 
+2.17.1
 
