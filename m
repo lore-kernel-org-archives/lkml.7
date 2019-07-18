@@ -2,199 +2,293 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719F7C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB056C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F66020880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942A220880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tmbqnD9Z"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="KioRWZlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390297AbfGRMa2 (ORCPT
+        id S2390238AbfGRMc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:30:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44676 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbfGRMa1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:30:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so12840846pgl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:30:27 -0700 (PDT)
+        Thu, 18 Jul 2019 08:32:27 -0400
+Received: from mail-eopbgr770087.outbound.protection.outlook.com ([40.107.77.87]:15579
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726608AbfGRMc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 08:32:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VnY6/hB9kNc+F95lJapJt2EsAqsF3nz7IB7k0XZB7Sbd04TPGci1/3vFabUqz3v+ht+iEDR1NNVUB14LAbFZUExBMI29ySEnccBLZbpC0zwJFC9XXnpJvi+URSdg1e6eHDq3OykxWrnF+hGDs8BtS3VJYyNgeQqQ/VSxsCuGJuGo4x1+czn5DmpGBFT2W5KJnzj3KbZJGEGfLW+qcy6Ot6PNf0ovzn0MiQHMSQmLeVQrX6FD/Mbu1zJH6fr8NMC0dFMNaBqB2nnlCgHckB390ZEwdtCPw/y+n/DsBOApI2cO12fe0CcrF+RXLQyl6xzpPLtMLNkt/jvgqj5+2N5FNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sQga/SRtFGOxY66+A212eCpypLZ9fxAxswMejjRTnJ4=;
+ b=nOVVF+HwlKgUEncfOU58s0GwJtj+tNcDHHj0TO5UNpwKUtgZXMmLru4MyIHBSUHAJL48PdhDbxXTZEupmxzh3IwsPoHoFbkSgYpSNeGuWQlnX1yzXBggE6iv/xbYX84vWEntW7cwJqR0EW6BcpsQf3UxD9X2LLk6hwbiMDOtcQbbyuxGE+WuU5cY3pics7zXQEECrZx486CUSqzZGsUypOeft/nIG+HxVYtSz1S7GllA5zPXgc7mjBdO4Y/yjMOZPeFgGok5/Tz8E7bZRxjVFZ9ECSFOzyIEGA47z7+tx6k7nSwmV4low/DUI0Fg1jhF/27kcbqIjrgPLIHiNs87UA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=xilinx.com;dmarc=pass action=none
+ header.from=xilinx.com;dkim=pass header.d=xilinx.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sNI/YJaWkX8UYTrYkvZcLx6RHalepOZBtGLT3HE85xM=;
-        b=tmbqnD9Z2jyZ1PMaE2PPWh8eLA6VTQPsy2gwcEbFdjZsyY5zyAV9SRbzaxoHwaECNY
-         0AY71fm67vmhf0SIMYZh4JXFJHXoa2XdYvSzAe8FRLd08zQtPNKfIcWZI14NfGUjtGul
-         x3gLQyvIHZnuN+DnL2PKDuB3Y2pluW7q6DLQDlcXTu6ery2CGb89mK9HqApYaWnFmKIo
-         V2CaMaJml90z94CKs3rAALrMAw7KNLBqaS4FVlKx63XAAVfGZK3XGC3BgeFFcaIsx2CA
-         3YBWkSiU3pAkFz4GXRgJvPji4AtwORwuoIAnfXHXdmPZUOfhDTMSTi0UPPEvQsN9F7mS
-         2AvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sNI/YJaWkX8UYTrYkvZcLx6RHalepOZBtGLT3HE85xM=;
-        b=tMoICd3jZViLdof78byTm10esNJIObl7soVA0uZXopaGDugXkkg9nYIeR4lVDHQdJl
-         r+GhsfD5rBnKpPZe3ovhcCObUIzv8+BYqlvERDBg3vikACHv84aQE1Js1LMvQiyiSMOV
-         UpamiBzbcSje/YT8GYT3MGhKS8w7VlhGaNxDATxZaVh2FZGJrCpr8Z9OK97dHhsjjs4I
-         JU7ivujfhX4QiMdkQIHjXnJ355LKwICWVqUj8tMt97lbLUlW+1GqrRjFbP86FH34l5dN
-         uwdCJhkOhMsHmRwvjaWc7C6XQM51xJur6TME9V+t2icoNo3AQyl9sqMjWoaZ4C9WgA6K
-         9whQ==
-X-Gm-Message-State: APjAAAXBOu9GvdTSvVrh7cURHHXMXiHbNruqQOoCA98SnOTdFVbyRyco
-        KUmimG6P+evktIJyZWfiN4W67kp1qQCrDtcMr/zC4V7WGYM=
-X-Google-Smtp-Source: APXvYqzwFskv0W8U7KSgufW5eWmQzcYdRC6ElGBUjTN0Tq/oISZutchUB/HHo7kibgWzx7x5hfc8+8+ufcUb5zuzjAk=
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr47271992pgq.130.1563453026280;
- Thu, 18 Jul 2019 05:30:26 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sQga/SRtFGOxY66+A212eCpypLZ9fxAxswMejjRTnJ4=;
+ b=KioRWZlx7AtrbeHDKPLhm6YHWQqCiE8GZydgjgAH666NWY9RGdUyflII/o4K9wzBTOX+XwMN6lxA7rOWtHtUTeO7bbwJPwLTkUEoiBM5GLFxAR2bpb7+nahU9xCeH/0oKN5Xwx7p66Yb9n1stKjZG7aAAo1aUvCb8jI6hfjFFzw=
+Received: from DM6PR02MB4779.namprd02.prod.outlook.com (20.176.109.16) by
+ DM6PR02MB5961.namprd02.prod.outlook.com (20.179.69.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.12; Thu, 18 Jul 2019 12:32:23 +0000
+Received: from DM6PR02MB4779.namprd02.prod.outlook.com
+ ([fe80::546b:d87d:292d:2cf7]) by DM6PR02MB4779.namprd02.prod.outlook.com
+ ([fe80::546b:d87d:292d:2cf7%7]) with mapi id 15.20.2094.013; Thu, 18 Jul 2019
+ 12:32:23 +0000
+From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "richard@nod.at" <richard@nod.at>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        Srikanth Vemula <svemula@xilinx.com>,
+        "nagasuresh12@gmail.com" <nagasuresh12@gmail.com>
+Subject: RE: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over
+ write driver's read_page()/write_page()
+Thread-Topic: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over
+ write driver's read_page()/write_page()
+Thread-Index: AQHVO5eo4+vjEMfVj0u12vHDQxXMaabM2dGAgAADsQCAAWJjoIAAMueAgAAHaACAAAvXAIABjK6w
+Date:   Thu, 18 Jul 2019 12:32:23 +0000
+Message-ID: <DM6PR02MB4779D2DBBD94ACE5E4C2FD76AFC80@DM6PR02MB4779.namprd02.prod.outlook.com>
+References: <20190716053051.11282-1-naga.sureshkumar.relli@xilinx.com>
+        <20190716093137.3d8e8c1f@pc-375.home>   <20190716094450.122ba6e7@pc-375.home>
+        <DM6PR02MB4779307E32670683AE9F60D6AFC90@DM6PR02MB4779.namprd02.prod.outlook.com>
+        <20190717095525.6e2e9730@pc-375.home>   <20190717102156.68aa86f7@pc-375.home>
+ <20190717110418.34453dd3@pc-375.home>
+In-Reply-To: <20190717110418.34453dd3@pc-375.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nagasure@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5132d486-a3a4-4588-9a1b-08d70b7bfbfd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR02MB5961;
+x-ms-traffictypediagnostic: DM6PR02MB5961:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR02MB5961AFF25547CC8679EB8A21AFC80@DM6PR02MB5961.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(376002)(346002)(39850400004)(13464003)(189003)(199004)(3846002)(52536014)(66556008)(66446008)(66946007)(76116006)(64756008)(81156014)(81166006)(66476007)(26005)(2906002)(6116002)(71200400001)(71190400001)(102836004)(53546011)(7696005)(966005)(6506007)(186003)(5660300002)(229853002)(76176011)(6916009)(316002)(11346002)(74316002)(446003)(86362001)(7416002)(6246003)(7736002)(478600001)(476003)(486006)(33656002)(305945005)(53936002)(68736007)(4326008)(6436002)(9686003)(6306002)(55016002)(66066001)(256004)(14444005)(8936002)(14454004)(54906003)(99286004)(8676002)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5961;H:DM6PR02MB4779.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: d8hLFJJbs64/Tx+ufHf37Q82Kely8983PMfrhOV30HpnOnqJp2Qix86KMl2KY3s/vr5G/VnS2/ddd1+W5kq1zoqWAHhPYmRkfbAr4n5bCYrjVheRFhD+Cen0E/fTU6AhxCcNFuIfoXEWg9PgZOGGjXYSlEVfg+fv+4UZ7Z43wG/vgjPZhooeieDdSC6J2Mt5W3ZeeV9tL5DKSqSdy3Xg0633FFQRroS0optXs/ygpVdzSTbH2arfmkCwbYagesbq7oHe2OGndHtIt+HM2J+5V2PuQPHuLfaW2F7j0LmO81ItuLrI6UB6Olu5O6ShEHRHmyWYqfI7+jRcUjRJWCDzD/hx/CDEtrQfqqgEBpNE6ErmDqqzO83gzhirUUpoy8czWXGu9FT0aCiagQ7bWc0I365DLjheYHiAOwVLRuN2Sxc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000d06dc2058dc9f8f2@google.com>
-In-Reply-To: <000000000000d06dc2058dc9f8f2@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 18 Jul 2019 14:30:15 +0200
-Message-ID: <CAAeHK+y03vvKOnP4FpAhs7UACoDotyz-GQVZ52YEEio+D48rcQ@mail.gmail.com>
-Subject: Re: WARNING in shark_write_reg/usb_submit_urb
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5132d486-a3a4-4588-9a1b-08d70b7bfbfd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 12:32:23.1799
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nagasure@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5961
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 4:17 PM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> Hello,
->
-> On Tue, 16 Jul 2019 03:38:05 -0700 (PDT)
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=111fc400600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d90745bdf884fc0a
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=4b3f8190f6e13b3efd74
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10784148600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d826a4600000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+4b3f8190f6e13b3efd74@syzkaller.appspotmail.com
-> >
-> > usb 1-1: string descriptor 0 read error: -22
-> > usb 1-1: New USB device found, idVendor=077d, idProduct=627a, bcdDevice=
-> > 0.10
-> > usb 1-1: New USB device strings: Mfr=63, Product=5, SerialNumber=1
-> > ------------[ cut here ]------------
-> > usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-> > WARNING: CPU: 1 PID: 22 at drivers/usb/core/urb.c:477
-> > usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #14
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  Google 01/01/2011
-> > Workqueue: usb_hub_wq hub_event
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> >   panic+0x292/0x6c9 kernel/panic.c:219
-> >   __warn.cold+0x20/0x4b kernel/panic.c:576
-> >   report_bug+0x262/0x2a0 lib/bug.c:186
-> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-> >   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> > RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-> > Code: 4d 85 ed 74 2c e8 c8 69 e8 fd 4c 89 f7 e8 f0 c4 12 ff 41 89 d8 44 89
-> > e1 4c 89 ea 48 89 c6 48 c7 c7 60 3a 1a 86 e8 53 2e be fd <0f> 0b e9 20 f4
-> > ff ff e8 9c 69 e8 fd 4c 89 f2 48 b8 00 00 00 00 00
-> > RSP: 0018:ffff8881d9f96f58 EFLAGS: 00010282
-> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3f2ddd
-> > RBP: ffff8881cf557590 R08: ffff8881d9f88000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-> > R13: ffff8881d0c77000 R14: ffff8881d553cd20 R15: ffff8881d5123b00
-> >   usb_start_wait_urb+0x108/0x2b0 drivers/usb/core/message.c:57
-> >   usb_bulk_msg+0x228/0x550 drivers/usb/core/message.c:253
-> >   shark_write_reg+0x1ef/0x2b0 drivers/media/radio/radio-shark2.c:88
->
-> Based on
-> drivers/media/radio/radio-shark2.c:88 and
-> drivers/usb/core/message.c:245
->
-> I say that the warning reported is bogus.
->
-> A similar one can be found at
-> https://lore.kernel.org/lkml/CAAeHK+zO6s5zWmz_QP6HiXd81Q217X6Viua+v1HkyXiowS_2Sg@mail.gmail.com/
+Hi Boris,
 
-Hi Hilf,
+> -----Original Message-----
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Sent: Wednesday, July 17, 2019 2:34 PM
+> To: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> Cc: miquel.raynal@bootlin.com; bbrezillon@kernel.org; richard@nod.at;
+> dwmw2@infradead.org; computersforpeace@gmail.com; marek.vasut@gmail.com;
+> vigneshr@ti.com; yamada.masahiro@socionext.com; linux-mtd@lists.infradead=
+.org; linux-
+> kernel@vger.kernel.org; Michal Simek <michals@xilinx.com>; Srikanth Vemul=
+a
+> <svemula@xilinx.com>; nagasuresh12@gmail.com
+> Subject: Re: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do not over=
+ write
+> driver's read_page()/write_page()
+>=20
+> On Wed, 17 Jul 2019 10:21:56 +0200
+> Boris Brezillon <boris.brezillon@collabora.com> wrote:
+>=20
+> > On Wed, 17 Jul 2019 09:55:25 +0200
+> > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> >
+> > > On Wed, 17 Jul 2019 05:33:35 +0000
+> > > Naga Sureshkumar Relli <nagasure@xilinx.com> wrote:
+> > >
+> > > > Hi Boris,
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > > Sent: Tuesday, July 16, 2019 1:15 PM
+> > > > > To: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> > > > > Cc: miquel.raynal@bootlin.com; bbrezillon@kernel.org;
+> > > > > richard@nod.at; dwmw2@infradead.org;
+> > > > > computersforpeace@gmail.com; marek.vasut@gmail.com;
+> > > > > vigneshr@ti.com; yamada.masahiro@socionext.com;
+> > > > > linux-mtd@lists.infradead.org; linux- kernel@vger.kernel.org;
+> > > > > Michal Simek <michals@xilinx.com>; Srikanth Vemula
+> > > > > <svemula@xilinx.com>; nagasuresh12@gmail.com
+> > > > > Subject: Re: [LINUX PATCH v18 1/2] mtd: rawnand: nand_micron: Do
+> > > > > not over write driver's read_page()/write_page()
+> > > > >
+> > > > > On Tue, 16 Jul 2019 09:31:37 +0200 Boris Brezillon
+> > > > > <boris.brezillon@collabora.com> wrote:
+> > > > >
+> > > > > > On Mon, 15 Jul 2019 23:30:51 -0600 Naga Sureshkumar Relli
+> > > > > > <naga.sureshkumar.relli@xilinx.com> wrote:
+> > > > > >
+> > > > > > > Add check before assigning chip->ecc.read_page() and
+> > > > > > > chip->ecc.write_page()
+> > > > > > >
+> > > > > > > Signed-off-by: Naga Sureshkumar Relli
+> > > > > > > <naga.sureshkumar.relli@xilinx.com>
+> > > > > > > ---
+> > > > > > > Changes in v18
+> > > > > > >  - None
+> > > > > > > ---
+> > > > > > >  drivers/mtd/nand/raw/nand_micron.c | 7 +++++--
+> > > > > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/mtd/nand/raw/nand_micron.c
+> > > > > > > b/drivers/mtd/nand/raw/nand_micron.c
+> > > > > > > index cbd4f09ac178..565f2696c747 100644
+> > > > > > > --- a/drivers/mtd/nand/raw/nand_micron.c
+> > > > > > > +++ b/drivers/mtd/nand/raw/nand_micron.c
+> > > > > > > @@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_=
+chip *chip)
+> > > > > > >  		chip->ecc.size =3D 512;
+> > > > > > >  		chip->ecc.strength =3D chip->base.eccreq.strength;
+> > > > > > >  		chip->ecc.algo =3D NAND_ECC_BCH;
+> > > > > > > -		chip->ecc.read_page =3D micron_nand_read_page_on_die_ecc;
+> > > > > > > -		chip->ecc.write_page =3D micron_nand_write_page_on_die_ecc=
+;
+> > > > > > > +		if (!chip->ecc.read_page)
+> > > > > > > +			chip->ecc.read_page =3D micron_nand_read_page_on_die_ecc;
+> > > > > > > +
+> > > > > > > +		if (!chip->ecc.write_page)
+> > > > > > > +			chip->ecc.write_page =3D
+> > > > > > > +micron_nand_write_page_on_die_ecc;
+> > > > > > >
+> > > > > >
+> > > > > > Seriously?! I told you this was inappropriate and you keep
+> > > > > > sending this patch. So let's make it clear:
+> > > > > >
+> > > > > > Nacked-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > > >
+> > > > > > Fix your controller driver instead of adding hacks to the Micro=
+n logic!
+> > > > >
+> > > > > Not even going to review the other patch: if you have to do
+> > > > > that, that means the driver is broken. On a side note, this
+> > > > > patch series is still not threaded as it should be and it's a v18=
+ for a damn NAND
+> controller driver! Sorry but you reached the limit of my patience. Please=
+ find
+> > > > > someone to help you with that task.
+> > > > My intention is not to resend this 1/2 again. Sorry for that.
+> > > > We already had some discussion on [v17 1/2], https://lkml.org/lkml/=
+2019/6/26/430
+> > > > And there we didn't conclude that raw_read()/writes().
+> > >
+> > > Yes, looks like I never replied to that one, but I think my previous
+> > > explanation were clear enough to not argue on that aspect any
+> > > longer/
+> > >
+> > > > So I thought that, will send updated driver along with this patch, =
+then will get more
+> information about
+> > > > The issue on the latest driver review.
+> > >
+> > > More on that topic. I don't think you ever tested on-die ECC on a
+> > > Micron NAND, otherwise you would have noticed that your solution
+> > > completely bypasses the on-die ECC logic (and this will clearly
+> > > break existing on-die ECC users). See, that's what I'm complaining
+> > > about, Looks like you don't really understand what you're doing.
+> > >
+> > > > There is nothing like keep on sending this patch, As you people
+> > > > are experts in the driver review, if this patch is a hack, then we =
+will definitely fix that in
+> controller driver. I will find a way to do that.
+> > > >
+> > > > But in this flow of patch sending, if the work I did hurts you, the=
+n I am really sorry for
+> that.
+> > >
+> > > I'm not offended, just tired going through the same driver over and
+> > > over again, reporting things that are wrong/inappropriate to then
+> > > realize you only addressed of a tiny portion of it in the following
+> > > version. My last reviews were rather incomplete because of that, and
+> > > now I'm giving up.
+> > >
+> > > > Will fix this issue in the controller driver and will send the upda=
+ted one.
+> > >
+> > > How? You say you'll fix the issue but I'm not even sure you
+> > > understand what the issue is? Clearly, the patch you've posted
+> > > doesn't fix anything, it's just papering over the fact that your
+> > > controller driver is not supporting raw accesses (or at least, not
+> > > supporting it properly).
+> > >
+> > > Have you even looked at the datasheet you pointed to in patch 2 [1]?
+> > > Just went through it, and found a field that's supposed to control
+> > > the ECC engine activation: ecc_memcfg.ecc_mode. I don't see anything
+> > > changing that field in your code, so I guess raw accesses are actuall=
+y
+> > > not really happening with the ECC engine disabled...
+> >
+> > Looks like I was wrong about that part, you seem to call
+> > pl353_smc_set_ecc_mode(), just not in the right place (this should be
+> > done in the read/write_page_raw()).
+>=20
+> I'm wrong again. ECC should be in BYPASS mode by default and you should e=
+nable it when
+> entering pl353_nand_{read,write}_page() and disable it (put it back to BY=
+PASS mode) when
+> leaving those functions. This way, you don't even have to implement your =
+own raw accessors
+> and can use
+> nand_{read,write}_page_raw() instead.
+Yes, ECC should be in BYPASS mode, and we are already doing that in pl353_e=
+cc_init(),
+I will move that to page read/writes.
 
-As I replied to you in this other thread, this report is not bogus and
-points to a missing endpoint type check in the driver. I've just made
-sure that this report is produced on a stock Linux host by using a
-hardware reproducer for this bug.
+The PL353 driver is not configuring properly the third row address cycle, i=
+.e. when chip->options is set
+With NAND_ROW_ADDR_3, which says third row address cycle is needed.
+In the drivers ->exec_op() method, it is just setting three row address cyc=
+les but not writing
+The row address properly during NAND_OP_ADDR_INSTR.
+I fixed that and now as you said, without pl353_nand_read_page_raw() and pl=
+353_nand_write_page_raw()
+The on-die page read/writes are working.
 
-Thanks!
+I have tested ubifs and I see no issues with that.
 
->
-> >   radio_tea5777_set_freq+0x1ed/0x470 drivers/media/radio/radio-tea5777.c:213
-> >   radio_tea5777_init+0xb7/0x600 drivers/media/radio/radio-tea5777.c:544
-> >   usb_shark_probe+0x5b9/0x740 drivers/media/radio/radio-shark2.c:318
-> >   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-> >   really_probe+0x281/0x660 drivers/base/dd.c:509
-> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
-> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
-> >   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-> >   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-> >   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-> >   really_probe+0x281/0x660 drivers/base/dd.c:509
-> >   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-> >   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-> >   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x217/0x360 drivers/base/dd.c:843
-> >   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> >   device_add+0xae6/0x16f0 drivers/base/core.c:2111
-> >   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2536
-> >   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-> >   port_event drivers/usb/core/hub.c:5359 [inline]
-> >   hub_event+0x1b3d/0x35f0 drivers/usb/core/hub.c:5441
-> >   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-> >   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-> >   kthread+0x30b/0x410 kernel/kthread.c:255
-> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000d06dc2058dc9f8f2%40google.com.
-> For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Naga Sureshkumar Relli
+
+
