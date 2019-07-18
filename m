@@ -2,118 +2,160 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8278FC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2D6C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67ABC20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFB020873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:51:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHyse0Ol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390512AbfGRNug (ORCPT
+        id S2390544AbfGRNvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:50:36 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:56811 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbfGRNuf (ORCPT
+        Thu, 18 Jul 2019 09:51:05 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38657 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbfGRNvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:50:35 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MBlpC-1hiZQe46Xs-00C92P; Thu, 18 Jul 2019 15:50:21 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Ondrej Mosnacek <omosnacek@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] crypto: aegis: fix badly optimized clang output
-Date:   Thu, 18 Jul 2019 15:50:04 +0200
-Message-Id: <20190718135017.2493006-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 18 Jul 2019 09:51:05 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r9so27423093ljg.5;
+        Thu, 18 Jul 2019 06:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=1BOBfJjzAO1ncQLuZBsQ1y8vAYf9kKWTQWjBVQihWco=;
+        b=dHyse0OlMCR4dZAzAAy2KlktQbXcOjLVPAOst3rFciJTqSnSxShtGX4cZEhASN6Md8
+         mEPhZljNWjS+gaNti3Nhzt2pTEWpt1psSiSVfMRtJHzCQIlxHUDAjayBw9J4/zMgvioR
+         gqYwDm9oAms8jXfZjPfcquZpbVP7zgN70pd1UVO9T9Owt8sDq6bzsGsvOaE2GDTD2KJi
+         PRb5qKo+4Uc7CngWgl6cooCenuqmBj9WE62JVFIjbzrpbALjrNXhIZk8RgGfOU/xyN1p
+         qKB/1I6AO8oWujv8oJjxVJQRRNwd4p22+G6zmTGOjz7IaqhAqgAl/C7hnCcYGIM5ucoW
+         I6QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=1BOBfJjzAO1ncQLuZBsQ1y8vAYf9kKWTQWjBVQihWco=;
+        b=F8dLLiqZL7k5QTKuDfHypuPYjEWY+HPJ0Cs1XRza+AAhXPDPUSPgCWi3AT8uXbuyxk
+         BeuOpwRcl/tCaZdrI6D1cdLqyYHlR1QbXZfpmIW6MAyVnA+sW5HtWAQAWQMjKU0YDS77
+         K3+k68mD+Uf2cNU4Cef7C938R+DaxKqzxxMfOt/rlftYWy4AcqRwjV/gZ21jiUgsaL+x
+         HnUxbVJNMn1qnRNHAFyjC1wG5vkGZvaov8vxgl9gPLlqlIEza1jUwg5mXrcTN0fCu15u
+         ecdi5fkVClJkXXsBTid5wqVni6vea9FTIk9M2Cq9408VWkicu9EtO9PnsefkubVnyEAE
+         D5Qw==
+X-Gm-Message-State: APjAAAVy6O2rTU815Q9jgfXCwrH6vHAEo886/VfrN5s7ynHKrnih5pSd
+        ETyYaunPKvrMYRYTzt5ZX1Uss2L2aK8io/li0BE=
+X-Google-Smtp-Source: APXvYqxt/0B7BmQXX4nJWn8Apr06RMr6QZRBEqRaQXynp22L7R1W2vLTcurN1dI9F092AnQEmnQ/OKbzBhiLIf5IAz8=
+X-Received: by 2002:a2e:8155:: with SMTP id t21mr24203961ljg.80.1563457862034;
+ Thu, 18 Jul 2019 06:51:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uwVqefWDs4o63p6iE6Irj25ryb6bdvtC7Hrf93yaHtWNB3UyaJp
- 4OkfB2kFOY5aXDuTVLHY0gjWaXZSUkd3hdU7IXfyQfGDuBfNtrAcmaozeItDwwk75ge58G1
- sBfVJ6df5mTpV5Y8kgpJ0tPbdf/YlMfhVkrn+9yxYQAHpRDwi5aDbittwSsgXq836kuLfO6
- atp6LgcOt/SEcndX4E/nQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aCIrsaK3jkM=:ZKGmbmo1TdnpLnjvQ7TKLR
- UK81lUNUbJPH6N3UzauZAmgjkh8XdIXJfHlA2yxaBZzaQbahE13aQU30plQa8EoM4NcHktAFu
- BUo1N5DZRWhcPq/pKVsolC5wrOu+Vknahoism+3/CG/QZEWno0G4XuiVW9G+2TL3erKB06AuV
- MIzkPjX1BEtl2PAg5AcrNJX76hAt9fcMTIdZweDC1+uxgEPYaRvAe8qCSRU+ODacG89bmlRgc
- urdUX2XmkHq9ZVppXO6zqwXsmJ4fMdqhTTf+mWJf/pgBP/oDacehSNQsQSVTlQVNgaYWbeJeZ
- NZrwJGaQ0PwcIwFcHoUpMMQvc0HQVtD1Ks5mybVvvNE454pggdn21V2drwBY/dWWKEKhOIOp2
- RXbyfy2JFwvjzyQ8a3s7gcvYcvrftA8rwk8MVtcNoMITl9+vHJpqARtMOuHduPjK8styPiOwP
- rzrfdqasn4dgnKvRD66DQgKxAN/dc9HJL0gyYl1RjAw2WIO6W16rERZu1pqnLrh3O4ifiAOl+
- /vWjCU54+pwusGnbn3yox0/vQwpOY8vHJ8zcmSOuTPIwv3I4Te0NnwpSiVZqXwu+EmzR2geNb
- mfcsvg2dhNFODniKVonHEPqOjwIGS2kTAD7VVIpi520lhplRTZbXOVLW/abWpyW/u9AtZBnKT
- LoyJ7SIEpUDk5tdJdw0k/STEE3V7OZVaAW3OnNSLyjehfTJt7elnuWaxP0uuy9cap+zntpV8P
- hM0gm+T/uxbOZLVE18lo0/HPejnoQkbgy0IMcw==
+References: <20190718020745.8867-1-fred@fredlawl.com>
+In-Reply-To: <20190718020745.8867-1-fred@fredlawl.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Thu, 18 Jul 2019 08:50:50 -0500
+Message-ID: <CABhMZUWX055ysYoy7CyFoKE1DCCrGnQXuh9cEqNHk4r5Se+5fA@mail.gmail.com>
+Subject: Re: [PATCH] cxgb4: Prefer pcie_capability_read_word()
+To:     Frederick Lawler <fred@fredlawl.com>
+Cc:     vishal@chelsio.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang sometimes makes very different inlining decisions from gcc.
-In case of the aegis crypto algorithms, it decides to turn the innermost
-primitives (and, xor, ...) into separate functions but inline most of
-the rest.
+On Wed, Jul 17, 2019 at 9:08 PM Frederick Lawler <fred@fredlawl.com> wrote:
+>
+> Commit 8c0d3a02c130 ("PCI: Add accessors for PCI Express Capability")
+> added accessors for the PCI Express Capability so that drivers didn't
+> need to be aware of differences between v1 and v2 of the PCI
+> Express Capability.
+>
+> Replace pci_read_config_word() and pci_write_config_word() calls with
+> pcie_capability_read_word() and pcie_capability_write_word().
+>
+> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 
-This results in a huge amount of variables spilled on the stack, leading
-to rather slow execution as well as kernel stack usage beyond the 32-bit
-warning limit when CONFIG_KASAN is enabled:
+Nice job on all these patches!  These all help avoid errors and
+identify possibilities for refactoring.
 
-crypto/aegis256.c:123:13: warning: stack frame size of 648 bytes in function 'crypto_aegis256_encrypt_chunk' [-Wframe-larger-than=]
-crypto/aegis256.c:366:13: warning: stack frame size of 1264 bytes in function 'crypto_aegis256_crypt' [-Wframe-larger-than=]
-crypto/aegis256.c:187:13: warning: stack frame size of 656 bytes in function 'crypto_aegis256_decrypt_chunk' [-Wframe-larger-than=]
-crypto/aegis128l.c:135:13: warning: stack frame size of 832 bytes in function 'crypto_aegis128l_encrypt_chunk' [-Wframe-larger-than=]
-crypto/aegis128l.c:415:13: warning: stack frame size of 1480 bytes in function 'crypto_aegis128l_crypt' [-Wframe-larger-than=]
-crypto/aegis128l.c:218:13: warning: stack frame size of 848 bytes in function 'crypto_aegis128l_decrypt_chunk' [-Wframe-larger-than=]
-crypto/aegis128.c:116:13: warning: stack frame size of 584 bytes in function 'crypto_aegis128_encrypt_chunk' [-Wframe-larger-than=]
-crypto/aegis128.c:351:13: warning: stack frame size of 1064 bytes in function 'crypto_aegis128_crypt' [-Wframe-larger-than=]
-crypto/aegis128.c:177:13: warning: stack frame size of 592 bytes in function 'crypto_aegis128_decrypt_chunk' [-Wframe-larger-than=]
+If there were a cover letter for the series, I would have replied to
+that, but for all of them:
 
-Forcing the primitives to all get inlined avoids the issue and the
-resulting code is similar to what gcc produces.
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- crypto/aegis.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+If you post the series again for any reason, you can add that.
+Otherwise, whoever applies them can add my reviewed-by.
 
-diff --git a/crypto/aegis.h b/crypto/aegis.h
-index 41a3090cda8e..efed7251c49d 100644
---- a/crypto/aegis.h
-+++ b/crypto/aegis.h
-@@ -34,21 +34,21 @@ static const union aegis_block crypto_aegis_const[2] = {
- 	} },
- };
- 
--static void crypto_aegis_block_xor(union aegis_block *dst,
-+static __always_inline void crypto_aegis_block_xor(union aegis_block *dst,
- 				   const union aegis_block *src)
- {
- 	dst->words64[0] ^= src->words64[0];
- 	dst->words64[1] ^= src->words64[1];
- }
- 
--static void crypto_aegis_block_and(union aegis_block *dst,
-+static __always_inline void crypto_aegis_block_and(union aegis_block *dst,
- 				   const union aegis_block *src)
- {
- 	dst->words64[0] &= src->words64[0];
- 	dst->words64[1] &= src->words64[1];
- }
- 
--static void crypto_aegis_aesenc(union aegis_block *dst,
-+static __always_inline void crypto_aegis_aesenc(union aegis_block *dst,
- 				const union aegis_block *src,
- 				const union aegis_block *key)
- {
--- 
-2.20.0
-
+> ---
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 6 ++----
+>  drivers/net/ethernet/chelsio/cxgb4/t4_hw.c      | 9 +++------
+>  2 files changed, 5 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> index 715e4edcf4a2..98ff71434673 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> @@ -5441,7 +5441,6 @@ static int cxgb4_iov_configure(struct pci_dev *pdev, int num_vfs)
+>                 char name[IFNAMSIZ];
+>                 u32 devcap2;
+>                 u16 flags;
+> -               int pos;
+>
+>                 /* If we want to instantiate Virtual Functions, then our
+>                  * parent bridge's PCI-E needs to support Alternative Routing
+> @@ -5449,9 +5448,8 @@ static int cxgb4_iov_configure(struct pci_dev *pdev, int num_vfs)
+>                  * and above.
+>                  */
+>                 pbridge = pdev->bus->self;
+> -               pos = pci_find_capability(pbridge, PCI_CAP_ID_EXP);
+> -               pci_read_config_word(pbridge, pos + PCI_EXP_FLAGS, &flags);
+> -               pci_read_config_dword(pbridge, pos + PCI_EXP_DEVCAP2, &devcap2);
+> +               pcie_capability_read_word(pbridge, PCI_EXP_FLAGS, &flags);
+> +               pcie_capability_read_dword(pbridge, PCI_EXP_DEVCAP2, &devcap2);
+>
+>                 if ((flags & PCI_EXP_FLAGS_VERS) < 2 ||
+>                     !(devcap2 & PCI_EXP_DEVCAP2_ARI)) {
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+> index f9b70be59792..346d7b59c50b 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+> @@ -7267,7 +7267,6 @@ int t4_fixup_host_params(struct adapter *adap, unsigned int page_size,
+>         } else {
+>                 unsigned int pack_align;
+>                 unsigned int ingpad, ingpack;
+> -               unsigned int pcie_cap;
+>
+>                 /* T5 introduced the separation of the Free List Padding and
+>                  * Packing Boundaries.  Thus, we can select a smaller Padding
+> @@ -7292,8 +7291,7 @@ int t4_fixup_host_params(struct adapter *adap, unsigned int page_size,
+>                  * multiple of the Maximum Payload Size.
+>                  */
+>                 pack_align = fl_align;
+> -               pcie_cap = pci_find_capability(adap->pdev, PCI_CAP_ID_EXP);
+> -               if (pcie_cap) {
+> +               if (pci_is_pcie(adap->pdev)) {
+>                         unsigned int mps, mps_log;
+>                         u16 devctl;
+>
+> @@ -7301,9 +7299,8 @@ int t4_fixup_host_params(struct adapter *adap, unsigned int page_size,
+>                          * [bits 7:5] encodes sizes as powers of 2 starting at
+>                          * 128 bytes.
+>                          */
+> -                       pci_read_config_word(adap->pdev,
+> -                                            pcie_cap + PCI_EXP_DEVCTL,
+> -                                            &devctl);
+> +                       pcie_capability_read_word(adap->pdev, PCI_EXP_DEVCTL,
+> +                                                 &devctl);
+>                         mps_log = ((devctl & PCI_EXP_DEVCTL_PAYLOAD) >> 5) + 7;
+>                         mps = 1 << mps_log;
+>                         if (mps > pack_align)
+> --
+> 2.17.1
+>
