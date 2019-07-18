@@ -2,81 +2,242 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3328DC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56001C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E5021849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563478380;
-	bh=CLupE/lo1riA13YdIygZu79G1Jn33wd0Lj+QWcC8hvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KY3SAotJDZumQrEW63dIm6nwRmiFky6dEu/loywI7ojmRpwKLn3ejQZLOsrSzj/ot
-	 O//jH9C9FJwEpGQHA6AsIWGbZu/JkjXabfUwUnkqv2pGav0IqvF0ykQyjlCItPRt44
-	 y8w3ZxnehXj+K8/Lf4qkOC7Zi2AsR3zyo4TT9OXk=
+	by mail.kernel.org (Postfix) with ESMTP id 24541208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391412AbfGRTc7 (ORCPT
+        id S2403778AbfGRTgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfGRTc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:32:58 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B4B52173B;
-        Thu, 18 Jul 2019 19:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563478377;
-        bh=CLupE/lo1riA13YdIygZu79G1Jn33wd0Lj+QWcC8hvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0qY8XsM16uoNsDiGiFobZCQn9iZpIYq9m36toWJoC7Up2mKOVowQcCENm+yPX4TPM
-         p5KIDd+GRV7eoJaCSNNeWk9ngTuznnyPM7n7wlqtwcJI+LQ2Vda8hg9E9qRN0Xxgqp
-         XgcVGYebdLZuY5pxtbxZyVmcEMNSWZHS0nntRjfs=
-Date:   Thu, 18 Jul 2019 15:32:56 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jiri Benc <jbenc@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH AUTOSEL 5.2 226/249] selftests: bpf: fix inlines in
- test_lwt_seg6local
-Message-ID: <20190718193256.GA4240@sasha-vm>
-References: <20190715134655.4076-1-sashal@kernel.org>
- <20190715134655.4076-226-sashal@kernel.org>
- <20190717114334.5556a14e@redhat.com>
- <20190717234757.GD3079@sasha-vm>
- <20190718093654.0a3426f5@redhat.com>
+        Thu, 18 Jul 2019 15:36:49 -0400
+Received: from smtprelay0162.hostedemail.com ([216.40.44.162]:53434 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727687AbfGRTgt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 15:36:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A019B181D12E7;
+        Thu, 18 Jul 2019 19:36:47 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: duck35_58333dbfa7011
+X-Filterd-Recvd-Size: 7148
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 18 Jul 2019 19:36:45 +0000 (UTC)
+Message-ID: <5cce2a9f73f6bf5ee55c576f98a28b04fdbe05d6.camel@perches.com>
+Subject: Re: [PATCH] fnic: remove casting vmalloc
+From:   Joe Perches <joe@perches.com>
+To:     Vasyl Gomonovych <gomonovych@gmail.com>, satishkh@cisco.com,
+        sebaddel@cisco.com, kartilak@cisco.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Thu, 18 Jul 2019 12:36:44 -0700
+In-Reply-To: <20190718190235.8089-1-gomonovych@gmail.com>
+References: <20190718190235.8089-1-gomonovych@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190718093654.0a3426f5@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 09:36:54AM +0200, Jiri Benc wrote:
->On Wed, 17 Jul 2019 19:47:57 -0400, Sasha Levin wrote:
->> It fixes a bug, right?
->
->A bug in selftests. And quite likely, it probably happens only with
->some compiler versions.
->
->I don't think patches only touching tools/testing/selftests/ qualify
->for stable in general. They don't affect the end users.
+On Thu, 2019-07-18 at 21:02 +0200, Vasyl Gomonovych wrote:
+> Generated by:  alloc_cast.cocci
 
-I'd argue that a bug in your tests is just as (if not even more) worse
-than a bug in the code.
+Please look deeper than just the cocci output.
 
---
-Thanks,
-Sasha
+> diff --git a/drivers/scsi/fnic/fnic_debugfs.c b/drivers/scsi/fnic/fnic_debugfs.c
+[]
+> @@ -59,8 +59,7 @@ int fnic_debugfs_init(void)
+>  						fnic_trace_debugfs_root);
+>  
+>  	/* Allocate memory to structure */
+> -	fc_trc_flag = (struct fc_trace_flag_type *)
+> -		vmalloc(sizeof(struct fc_trace_flag_type));
+> +	fc_trc_flag = vmalloc(sizeof(struct fc_trace_flag_type));
+>  
+>  	if (fc_trc_flag) {
+>  		fc_trc_flag->fc_row_file = 0;
+
+Not your fault, but this code is not well written.
+
+struct fc_trace_flag_type is:
+
+drivers/scsi/fnic/fnic_debugfs.c:struct fc_trace_flag_type {
+drivers/scsi/fnic/fnic_debugfs.c-       u8 fc_row_file;
+drivers/scsi/fnic/fnic_debugfs.c-       u8 fc_normal_file;
+drivers/scsi/fnic/fnic_debugfs.c-       u8 fnic_trace;
+drivers/scsi/fnic/fnic_debugfs.c-       u8 fc_trace;
+drivers/scsi/fnic/fnic_debugfs.c-       u8 fc_clear;
+drivers/scsi/fnic/fnic_debugfs.c-};
+
+It doesn't require vmalloc as it's just 5 bytes in size.
+Might as well do either of allocate it with kmalloc
+or because it's a singleton, just create a static.
+
+Maybe:
+---
+ drivers/scsi/fnic/fnic_debugfs.c | 55 ++++++++++++++++------------------------
+ 1 file changed, 22 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/scsi/fnic/fnic_debugfs.c b/drivers/scsi/fnic/fnic_debugfs.c
+index 21991c99db7c..72071bd4c9a1 100644
+--- a/drivers/scsi/fnic/fnic_debugfs.c
++++ b/drivers/scsi/fnic/fnic_debugfs.c
+@@ -31,15 +31,13 @@ static struct dentry *fnic_fc_rdata_trace_debugfs_file;
+ static struct dentry *fnic_fc_trace_enable;
+ static struct dentry *fnic_fc_trace_clear;
+ 
+-struct fc_trace_flag_type {
++static struct {
+ 	u8 fc_row_file;
+ 	u8 fc_normal_file;
+ 	u8 fnic_trace;
+ 	u8 fc_trace;
+ 	u8 fc_clear;
+-};
+-
+-static struct fc_trace_flag_type *fc_trc_flag;
++} fc_trc_flag;
+ 
+ /*
+  * fnic_debugfs_init - Initialize debugfs for fnic debug logging
+@@ -52,26 +50,18 @@ static struct fc_trace_flag_type *fc_trc_flag;
+  */
+ int fnic_debugfs_init(void)
+ {
+-	int rc = -1;
+ 	fnic_trace_debugfs_root = debugfs_create_dir("fnic", NULL);
+ 
+ 	fnic_stats_debugfs_root = debugfs_create_dir("statistics",
+ 						fnic_trace_debugfs_root);
+ 
+-	/* Allocate memory to structure */
+-	fc_trc_flag = (struct fc_trace_flag_type *)
+-		vmalloc(sizeof(struct fc_trace_flag_type));
+-
+-	if (fc_trc_flag) {
+-		fc_trc_flag->fc_row_file = 0;
+-		fc_trc_flag->fc_normal_file = 1;
+-		fc_trc_flag->fnic_trace = 2;
+-		fc_trc_flag->fc_trace = 3;
+-		fc_trc_flag->fc_clear = 4;
+-	}
++	fc_trc_flag.fc_row_file = 0;
++	fc_trc_flag.fc_normal_file = 1;
++	fc_trc_flag.fnic_trace = 2;
++	fc_trc_flag.fc_trace = 3;
++	fc_trc_flag.fc_clear = 4;
+ 
+-	rc = 0;
+-	return rc;
++	return 0;
+ }
+ 
+ /*
+@@ -89,8 +79,7 @@ void fnic_debugfs_terminate(void)
+ 	debugfs_remove(fnic_trace_debugfs_root);
+ 	fnic_trace_debugfs_root = NULL;
+ 
+-	if (fc_trc_flag)
+-		vfree(fc_trc_flag);
++	memset(&fc_trc_flag, 0, sizeof(fc_trc_flag));
+ }
+ 
+ /*
+@@ -121,11 +110,11 @@ static ssize_t fnic_trace_ctrl_read(struct file *filp,
+ 	u8 *trace_type;
+ 	len = 0;
+ 	trace_type = (u8 *)filp->private_data;
+-	if (*trace_type == fc_trc_flag->fnic_trace)
++	if (*trace_type == fc_trc_flag.fnic_trace)
+ 		len = sprintf(buf, "%u\n", fnic_tracing_enabled);
+-	else if (*trace_type == fc_trc_flag->fc_trace)
++	else if (*trace_type == fc_trc_flag.fc_trace)
+ 		len = sprintf(buf, "%u\n", fnic_fc_tracing_enabled);
+-	else if (*trace_type == fc_trc_flag->fc_clear)
++	else if (*trace_type == fc_trc_flag.fc_clear)
+ 		len = sprintf(buf, "%u\n", fnic_fc_trace_cleared);
+ 	else
+ 		pr_err("fnic: Cannot read to any debugfs file\n");
+@@ -172,11 +161,11 @@ static ssize_t fnic_trace_ctrl_write(struct file *filp,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (*trace_type == fc_trc_flag->fnic_trace)
++	if (*trace_type == fc_trc_flag.fnic_trace)
+ 		fnic_tracing_enabled = val;
+-	else if (*trace_type == fc_trc_flag->fc_trace)
++	else if (*trace_type == fc_trc_flag.fc_trace)
+ 		fnic_fc_tracing_enabled = val;
+-	else if (*trace_type == fc_trc_flag->fc_clear)
++	else if (*trace_type == fc_trc_flag.fc_clear)
+ 		fnic_fc_trace_cleared = val;
+ 	else
+ 		pr_err("fnic: cannot write to any debugfs file\n");
+@@ -218,7 +207,7 @@ static int fnic_trace_debugfs_open(struct inode *inode,
+ 	if (!fnic_dbg_prt)
+ 		return -ENOMEM;
+ 
+-	if (*rdata_ptr == fc_trc_flag->fnic_trace) {
++	if (*rdata_ptr == fc_trc_flag.fnic_trace) {
+ 		fnic_dbg_prt->buffer = vmalloc(array3_size(3, trace_max_pages,
+ 							   PAGE_SIZE));
+ 		if (!fnic_dbg_prt->buffer) {
+@@ -347,13 +336,13 @@ void fnic_trace_debugfs_init(void)
+ 	fnic_trace_enable = debugfs_create_file("tracing_enable",
+ 					S_IFREG|S_IRUGO|S_IWUSR,
+ 					fnic_trace_debugfs_root,
+-					&(fc_trc_flag->fnic_trace),
++					&fc_trc_flag.fnic_trace,
+ 					&fnic_trace_ctrl_fops);
+ 
+ 	fnic_trace_debugfs_file = debugfs_create_file("trace",
+ 					S_IFREG|S_IRUGO|S_IWUSR,
+ 					fnic_trace_debugfs_root,
+-					&(fc_trc_flag->fnic_trace),
++					&fc_trc_flag.fnic_trace,
+ 					&fnic_trace_debugfs_fops);
+ }
+ 
+@@ -390,27 +379,27 @@ void fnic_fc_trace_debugfs_init(void)
+ 	fnic_fc_trace_enable = debugfs_create_file("fc_trace_enable",
+ 					S_IFREG|S_IRUGO|S_IWUSR,
+ 					fnic_trace_debugfs_root,
+-					&(fc_trc_flag->fc_trace),
++					&fc_trc_flag.fc_trace,
+ 					&fnic_trace_ctrl_fops);
+ 
+ 	fnic_fc_trace_clear = debugfs_create_file("fc_trace_clear",
+ 					S_IFREG|S_IRUGO|S_IWUSR,
+ 					fnic_trace_debugfs_root,
+-					&(fc_trc_flag->fc_clear),
++					&fc_trc_flag.fc_clear,
+ 					&fnic_trace_ctrl_fops);
+ 
+ 	fnic_fc_rdata_trace_debugfs_file =
+ 		debugfs_create_file("fc_trace_rdata",
+ 				    S_IFREG|S_IRUGO|S_IWUSR,
+ 				    fnic_trace_debugfs_root,
+-				    &(fc_trc_flag->fc_normal_file),
++				    &fc_trc_flag.fc_normal_file,
+ 				    &fnic_trace_debugfs_fops);
+ 
+ 	fnic_fc_trace_debugfs_file =
+ 		debugfs_create_file("fc_trace",
+ 				    S_IFREG|S_IRUGO|S_IWUSR,
+ 				    fnic_trace_debugfs_root,
+-				    &(fc_trc_flag->fc_row_file),
++				    &fc_trc_flag.fc_row_file,
+ 				    &fnic_trace_debugfs_fops);
+ }
+ 
+
