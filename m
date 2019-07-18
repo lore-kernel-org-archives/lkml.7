@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B7DC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EE8C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FF920818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B6521848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419525;
-	bh=oRBcSGHv2PFwnQvU9asDYheOp+4qhfeHajrqlsl1K/M=;
+	s=default; t=1563419528;
+	bh=Cf1a/+xiUmejQNtMpMDZ7l+V+H20cegVoA9RHPjXCpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ivfo05kbMSSBqc55LaG5uD0BgV9LMOJ11UuiUcQb+7wPHmPzGy6CWsxyM7PWAJExB
-	 bAqOyAFDNCsoRnyRqfIavt0gztHfZaHW6ZuqLV3F/a3uJcy35JL5ibqqPOgMo44iyN
-	 t/M6y79YnThHVgpxAtjOCBB+ppO+Vv4nDyu5fjXI=
+	b=v7cAdByTcsUUWqAKLM7O2YvKbfExXB1OY2tCQAk/Q4nL4xUfHH9v0fRpY5Jr1syDq
+	 EuAl9tn0wby7YhzbAvo4W281Z2qy4EJaJsRif8j9NvY7aI/IohbU7fGI1Du8T728iY
+	 txVftSfXH6cyan+SRJHE1CYja91F9YXlBB4zZN8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391385AbfGRDMD (ORCPT
+        id S2403912AbfGRDMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391461AbfGRDLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:11:43 -0400
+        id S2390991AbfGRDLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:11:44 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B11120818;
-        Thu, 18 Jul 2019 03:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396612053B;
+        Thu, 18 Jul 2019 03:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419501;
-        bh=oRBcSGHv2PFwnQvU9asDYheOp+4qhfeHajrqlsl1K/M=;
+        s=default; t=1563419503;
+        bh=Cf1a/+xiUmejQNtMpMDZ7l+V+H20cegVoA9RHPjXCpQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gb/S+oxdroKn0trU4Ug3a44JO6cJnPkdMtqOP/hUIp5vpjp7HXSrktGjt4quMlimZ
-         FnzNoPId1Dkg+xJM3TOXHel5MMBlH0LiYw6TV1MzHDJI5qqSLhp4rHFDq4WPQrITrK
-         B+TPFZFU9X1cz2O33dSHEoWlAlHuF+Ib58jtTvS4=
+        b=VXl+39cs+73AVwHw5TPD+BaMiM5Eo4qHfM1oimd7SwpMhI0Zm4lf2hl4Z3CPs68ee
+         HCN86VD2IprA+Gq6UBkHA3yDGrV7SaXdHctZr3weN7ewso9IdHViWSJL7jKvhiGMwr
+         MF8cG/+omTwxZyBMB6LH7uZ07YrUAvwqowIhpOmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dave Airlie <airlied@redhat.com>,
         Ross Zwisler <zwisler@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 79/80] drm/udl: introduce a macro to convert dev to udl.
-Date:   Thu, 18 Jul 2019 12:02:10 +0900
-Message-Id: <20190718030105.682959719@linuxfoundation.org>
+Subject: [PATCH 4.14 80/80] drm/udl: move to embedding drm device inside udl device.
+Date:   Thu, 18 Jul 2019 12:02:11 +0900
+Message-Id: <20190718030105.759766674@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -61,145 +61,255 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit fd96e0dba19c53c2d66f2a398716bb74df8ca85e upstream.
+commit 6ecac85eadb9d4065b9038fa3d3c66d49038e14b upstream.
 
-This just makes it easier to later embed drm into udl.
+This should help with some of the lifetime issues, and move us away
+from load/unload.
 
 [rez] Regarding the backport to v4.14.y, the only difference is due to
-the fact that in v4.14.y the udl_gem_mmap() function doesn't have a
-local 'struct udl_device' pointer so it didn't need to be converted.
+the fact that in v4.14.y the udl_usb_probe() function still uses
+drm_dev_unref() instead of drm_dev_put().
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Backport notes:
+
+On Mon, Jul 15, 2019 at 09:13:08PM -0400, Sasha Levin wrote:
+> Hm, we don't need ac3b35f11a06 here? Why not? I'd love to document that
+> with the backport.
+
+Nope, we don't need that patch in the v4.14 backport.
+
+In v4.19.y we have two functions, drm_dev_put() and drm_dev_unref(), which are
+aliases for one another (drm_dev_unref() just calls drm_dev_put()).
+drm_dev_unref() is the older of the two, and was introduced back in v4.0.
+drm_dev_put() was introduced in v4.15 with
+
+9a96f55034e41 drm: introduce drm_dev_{get/put} functions
+
+and slowly callers were moved from the old name (_unref) to the new name
+(_put).  The patch you mentioned, ac3b35f11a06, is one such patch where we are
+replacing a drm_dev_unref() call with a drm_dev_put() call.  This doesn't have
+a functional change, but was necessary so that the third patch in the v4.19.y
+series I sent would apply cleanly.
+
+For the v4.14.y series, though, the drm_dev_put() function hasn't yet been
+defined and everyone is still using drm_dev_unref().  So, we don't need a
+backport of ac3b35f11a06, and I also had a small backport change in the last
+patch of the v4.14.y series where I had to change a drm_dev_put() call with a
+drm_dev_unref() call.
+
+Just for posterity, the drm_dev_unref() calls were eventually all changed to
+drm_dev_put() in v5.0, and drm_dev_unref() was removed entirely.  That
+happened with the following two patches:
+
+808bad32ea423 drm: replace "drm_dev_unref" function with "drm_dev_put"
+ba1d345401476 drm: remove deprecated "drm_dev_unref" function
+
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405031715.5959-3-airlied@gmail.com
+Link: https://patchwork.freedesktop.org/patch/msgid/20190405031715.5959-4-airlied@gmail.com
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/udl/udl_drv.h  |  2 ++
- drivers/gpu/drm/udl/udl_fb.c   | 10 +++++-----
- drivers/gpu/drm/udl/udl_main.c | 12 ++++++------
- 3 files changed, 13 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/udl/udl_drv.c  | 56 +++++++++++++++++++++++++++-------
+ drivers/gpu/drm/udl/udl_drv.h  |  9 +++---
+ drivers/gpu/drm/udl/udl_fb.c   |  2 +-
+ drivers/gpu/drm/udl/udl_main.c | 23 ++------------
+ 4 files changed, 53 insertions(+), 37 deletions(-)
 
+diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+index b45ac6bc8add..b428c3da7576 100644
+--- a/drivers/gpu/drm/udl/udl_drv.c
++++ b/drivers/gpu/drm/udl/udl_drv.c
+@@ -43,10 +43,16 @@ static const struct file_operations udl_driver_fops = {
+ 	.llseek = noop_llseek,
+ };
+ 
++static void udl_driver_release(struct drm_device *dev)
++{
++	udl_fini(dev);
++	udl_modeset_cleanup(dev);
++	drm_dev_fini(dev);
++	kfree(dev);
++}
++
+ static struct drm_driver driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME,
+-	.load = udl_driver_load,
+-	.unload = udl_driver_unload,
+ 	.release = udl_driver_release,
+ 
+ 	/* gem hooks */
+@@ -70,28 +76,56 @@ static struct drm_driver driver = {
+ 	.patchlevel = DRIVER_PATCHLEVEL,
+ };
+ 
++static struct udl_device *udl_driver_create(struct usb_interface *interface)
++{
++	struct usb_device *udev = interface_to_usbdev(interface);
++	struct udl_device *udl;
++	int r;
++
++	udl = kzalloc(sizeof(*udl), GFP_KERNEL);
++	if (!udl)
++		return ERR_PTR(-ENOMEM);
++
++	r = drm_dev_init(&udl->drm, &driver, &interface->dev);
++	if (r) {
++		kfree(udl);
++		return ERR_PTR(r);
++	}
++
++	udl->udev = udev;
++	udl->drm.dev_private = udl;
++
++	r = udl_init(udl);
++	if (r) {
++		drm_dev_fini(&udl->drm);
++		kfree(udl);
++		return ERR_PTR(r);
++	}
++
++	usb_set_intfdata(interface, udl);
++	return udl;
++}
++
+ static int udl_usb_probe(struct usb_interface *interface,
+ 			 const struct usb_device_id *id)
+ {
+-	struct usb_device *udev = interface_to_usbdev(interface);
+-	struct drm_device *dev;
+ 	int r;
++	struct udl_device *udl;
+ 
+-	dev = drm_dev_alloc(&driver, &interface->dev);
+-	if (IS_ERR(dev))
+-		return PTR_ERR(dev);
++	udl = udl_driver_create(interface);
++	if (IS_ERR(udl))
++		return PTR_ERR(udl);
+ 
+-	r = drm_dev_register(dev, (unsigned long)udev);
++	r = drm_dev_register(&udl->drm, 0);
+ 	if (r)
+ 		goto err_free;
+ 
+-	usb_set_intfdata(interface, dev);
+-	DRM_INFO("Initialized udl on minor %d\n", dev->primary->index);
++	DRM_INFO("Initialized udl on minor %d\n", udl->drm.primary->index);
+ 
+ 	return 0;
+ 
+ err_free:
+-	drm_dev_unref(dev);
++	drm_dev_unref(&udl->drm);
+ 	return r;
+ }
+ 
 diff --git a/drivers/gpu/drm/udl/udl_drv.h b/drivers/gpu/drm/udl/udl_drv.h
-index 307455dd6526..ba0146e06b1e 100644
+index ba0146e06b1e..d5a5dcd15dd8 100644
 --- a/drivers/gpu/drm/udl/udl_drv.h
 +++ b/drivers/gpu/drm/udl/udl_drv.h
-@@ -68,6 +68,8 @@ struct udl_device {
+@@ -49,8 +49,8 @@ struct urb_list {
+ struct udl_fbdev;
+ 
+ struct udl_device {
++	struct drm_device drm;
+ 	struct device *dev;
+-	struct drm_device *ddev;
+ 	struct usb_device *udev;
+ 	struct drm_crtc *crtc;
+ 
+@@ -68,7 +68,7 @@ struct udl_device {
  	atomic_t cpu_kcycles_used; /* transpired during pixel processing */
  };
  
-+#define to_udl(x) ((x)->dev_private)
-+
+-#define to_udl(x) ((x)->dev_private)
++#define to_udl(x) container_of(x, struct udl_device, drm)
+ 
  struct udl_gem_object {
  	struct drm_gem_object base;
- 	struct page **pages;
+@@ -101,9 +101,8 @@ struct urb *udl_get_urb(struct drm_device *dev);
+ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len);
+ void udl_urb_completion(struct urb *urb);
+ 
+-int udl_driver_load(struct drm_device *dev, unsigned long flags);
+-void udl_driver_unload(struct drm_device *dev);
+-void udl_driver_release(struct drm_device *dev);
++int udl_init(struct udl_device *udl);
++void udl_fini(struct drm_device *dev);
+ 
+ int udl_fbdev_init(struct drm_device *dev);
+ void udl_fbdev_cleanup(struct drm_device *dev);
 diff --git a/drivers/gpu/drm/udl/udl_fb.c b/drivers/gpu/drm/udl/udl_fb.c
-index 491f1892b50e..1e78767df06c 100644
+index 1e78767df06c..f41fd0684ce4 100644
 --- a/drivers/gpu/drm/udl/udl_fb.c
 +++ b/drivers/gpu/drm/udl/udl_fb.c
-@@ -82,7 +82,7 @@ int udl_handle_damage(struct udl_framebuffer *fb, int x, int y,
- 		      int width, int height)
- {
- 	struct drm_device *dev = fb->base.dev;
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int i, ret;
- 	char *cmd;
- 	cycles_t start_cycles, end_cycles;
-@@ -210,7 +210,7 @@ static int udl_fb_open(struct fb_info *info, int user)
- {
- 	struct udl_fbdev *ufbdev = info->par;
- 	struct drm_device *dev = ufbdev->ufb.base.dev;
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
+@@ -213,7 +213,7 @@ static int udl_fb_open(struct fb_info *info, int user)
+ 	struct udl_device *udl = to_udl(dev);
  
  	/* If the USB device is gone, we don't accept new opens */
- 	if (drm_dev_is_unplugged(udl->ddev))
-@@ -441,7 +441,7 @@ static void udl_fbdev_destroy(struct drm_device *dev,
+-	if (drm_dev_is_unplugged(udl->ddev))
++	if (drm_dev_is_unplugged(&udl->drm))
+ 		return -ENODEV;
  
- int udl_fbdev_init(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int bpp_sel = fb_bpp;
- 	struct udl_fbdev *ufbdev;
- 	int ret;
-@@ -480,7 +480,7 @@ int udl_fbdev_init(struct drm_device *dev)
- 
- void udl_fbdev_cleanup(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	if (!udl->fbdev)
- 		return;
- 
-@@ -491,7 +491,7 @@ void udl_fbdev_cleanup(struct drm_device *dev)
- 
- void udl_fbdev_unplug(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	struct udl_fbdev *ufbdev;
- 	if (!udl->fbdev)
- 		return;
+ 	ufbdev->fb_count++;
 diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
-index 60866b422f81..05c14c80024c 100644
+index 05c14c80024c..124428f33e1e 100644
 --- a/drivers/gpu/drm/udl/udl_main.c
 +++ b/drivers/gpu/drm/udl/udl_main.c
-@@ -28,7 +28,7 @@
- static int udl_parse_vendor_descriptor(struct drm_device *dev,
- 				       struct usb_device *usbdev)
+@@ -311,20 +311,12 @@ int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
+ 	return ret;
+ }
+ 
+-int udl_driver_load(struct drm_device *dev, unsigned long flags)
++int udl_init(struct udl_device *udl)
  {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	char *desc;
- 	char *buf;
- 	char *desc_end;
-@@ -164,7 +164,7 @@ void udl_urb_completion(struct urb *urb)
+-	struct usb_device *udev = (void*)flags;
+-	struct udl_device *udl;
++	struct drm_device *dev = &udl->drm;
+ 	int ret = -ENOMEM;
  
- static void udl_free_urb_list(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int count = udl->urbs.count;
- 	struct list_head *node;
- 	struct urb_node *unode;
-@@ -198,7 +198,7 @@ static void udl_free_urb_list(struct drm_device *dev)
+ 	DRM_DEBUG("\n");
+-	udl = kzalloc(sizeof(struct udl_device), GFP_KERNEL);
+-	if (!udl)
+-		return -ENOMEM;
+-
+-	udl->udev = udev;
+-	udl->ddev = dev;
+-	dev->dev_private = udl;
  
- static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	struct urb *urb;
- 	struct urb_node *unode;
- 	char *buf;
-@@ -262,7 +262,7 @@ static int udl_alloc_urb_list(struct drm_device *dev, int count, size_t size)
- 
- struct urb *udl_get_urb(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int ret = 0;
- 	struct list_head *entry;
- 	struct urb_node *unode;
-@@ -296,7 +296,7 @@ struct urb *udl_get_urb(struct drm_device *dev)
- 
- int udl_submit_urb(struct drm_device *dev, struct urb *urb, size_t len)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 	int ret;
- 
- 	BUG_ON(len > udl->urbs.size);
-@@ -372,7 +372,7 @@ int udl_drop_usb(struct drm_device *dev)
- 
- void udl_driver_unload(struct drm_device *dev)
- {
--	struct udl_device *udl = dev->dev_private;
-+	struct udl_device *udl = to_udl(dev);
- 
+ 	if (!udl_parse_vendor_descriptor(dev, udl->udev)) {
+ 		ret = -ENODEV;
+@@ -359,7 +351,6 @@ int udl_driver_load(struct drm_device *dev, unsigned long flags)
+ err:
  	if (udl->urbs.count)
  		udl_free_urb_list(dev);
+-	kfree(udl);
+ 	DRM_ERROR("%d\n", ret);
+ 	return ret;
+ }
+@@ -370,7 +361,7 @@ int udl_drop_usb(struct drm_device *dev)
+ 	return 0;
+ }
+ 
+-void udl_driver_unload(struct drm_device *dev)
++void udl_fini(struct drm_device *dev)
+ {
+ 	struct udl_device *udl = to_udl(dev);
+ 
+@@ -378,12 +369,4 @@ void udl_driver_unload(struct drm_device *dev)
+ 		udl_free_urb_list(dev);
+ 
+ 	udl_fbdev_cleanup(dev);
+-	kfree(udl);
+-}
+-
+-void udl_driver_release(struct drm_device *dev)
+-{
+-	udl_modeset_cleanup(dev);
+-	drm_dev_fini(dev);
+-	kfree(dev);
+ }
 -- 
 2.20.1
 
