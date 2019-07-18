@@ -2,71 +2,112 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385A1C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A29C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAF42184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CFA2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="FDFQtZ4z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7xXDV/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390223AbfGRLjd (ORCPT
+        id S2390146AbfGRLkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:39:33 -0400
-Received: from a9-37.smtp-out.amazonses.com ([54.240.9.37]:33408 "EHLO
-        a9-37.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389994AbfGRLjd (ORCPT
+        Thu, 18 Jul 2019 07:40:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46294 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727882AbfGRLkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:39:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1563449972;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=3iT/OaO0Q2X3P8RhjupPqyY23NtLVrvRLicg+uM8g44=;
-        b=FDFQtZ4zf6FgI43zUELi6/Zg+fvJYbr4Qi8Uy1KRexi8MISbZNS8UXYwlbwZtKjr
-        ZIcLsvcRKg0taoqGZ17XIpRSbXCYzGRGkp10Y+jcpW8bkQDY7U0lVrCEYNhOxWMj9fc
-        tr6WLHoRK9d2cxDtjdaAcHLtgqjGMyN9te7rG0NQ=
-Date:   Thu, 18 Jul 2019 11:39:32 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Waiman Long <longman@redhat.com>
-cc:     Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH v2 2/2] mm, slab: Show last shrink time in us when
- slab/shrink is read
-In-Reply-To: <20190717202413.13237-3-longman@redhat.com>
-Message-ID: <0100016c04e1562a-e516c595-1d46-40df-ab29-da1709277e9a-000000@email.amazonses.com>
-References: <20190717202413.13237-1-longman@redhat.com> <20190717202413.13237-3-longman@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Jul 2019 07:40:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z23so318758ote.13;
+        Thu, 18 Jul 2019 04:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0wT5Tj/n2RBfQhJG08mVc86LI5QLyQMdXu4Aow//MCg=;
+        b=Z7xXDV/4TY1dg6KBkMskZBDH3w92Xls9x8KPY9aIyeqdukEOhimPJD/+5aFOdB+zlk
+         UO10r/49CLzHyeb4CgO06m5s/qPl7+MhGOP4AJq5SLVjIj8jPBYROtT5OX3RltkAvPDn
+         mN3ombIS7+3MdpXh9/Z58mAvk40Jkjqa2qKqmayuD+DPoldj5z9QJKD/PJPW7CpvIdPh
+         fqJgrcLYzNsbUTVKz7j197z0/k4LMhb9D+ChPFPbXSLshlmThLpUtmk2pJCVPDtzzwma
+         e7wdUNUjOP1XNPz6mf9rTm1DkkOJcIFMOXC0f0GpP6XDS5WS56P1XTPEpuwxe34INHoN
+         pcTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0wT5Tj/n2RBfQhJG08mVc86LI5QLyQMdXu4Aow//MCg=;
+        b=GJL2SlPdZVQyh5PKVs1vwRQxK4Wjbm2NrvDwkont3LlKmNOHANzvrMOVyv9SGw/BsA
+         GdWx404cZJf1vyHfmo7xX2h+NNnTRSVxCyf2ILZ/bfdlUApvw4Sc2VADPy+iCc0BiQ+s
+         8LvXqiYNNla+3TeKCfjcB27BmVqSs+1aF8ujmAhUVD0cxe9HP4ZCCthBZzRmHRXA5wRd
+         yB/d4+KArCCoQ4l8HUnhKuPhFpkcyl+cBoEhNzNkATthPBfWAIPby/ScAiboqz9RCl8t
+         e44593pgCCzyjKDWxVTGF80FbEUiq6EC5f+Bzph6Ul/MbqN8Yctn2BkdZf63WsowXcDp
+         Osow==
+X-Gm-Message-State: APjAAAX3L4BqscPwuFG0klP9SEQ6T1Q0LQwBOZxjq7YinGV0m3zrfTwL
+        frY/lO5bj3bRscnHtxvPSbfbyRS3iseSJxvdxR8=
+X-Google-Smtp-Source: APXvYqxhC2R1XSP9OMlLkXamvscGo+GlECN3WFHF9e8PPObst5TaewmXC2qc4Qh5ZxmXZITEg8SeryCqElJgBnFkRwI=
+X-Received: by 2002:a9d:1b02:: with SMTP id l2mr14808131otl.45.1563450013270;
+ Thu, 18 Jul 2019 04:40:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.07.18-54.240.9.37
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
+ <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com> <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
+ <e31024e4-f437-becd-a9e3-e1ea8cd2e0c7@redhat.com> <CANRm+Cw43DKqD17U+7-OPX3BmeNBThSe9-uWP2Atob+A0ApzLA@mail.gmail.com>
+ <bc210153-fbae-25d4-bf6b-e31ceef36aa5@redhat.com> <CANRm+CxV0c3RSidV_GQtVuQ5fUUCT8vM=5LpodgDg+dFWhkH3w@mail.gmail.com>
+ <f6f9c2ca-6fea-d7b5-9797-d180e42f50d5@redhat.com>
+In-Reply-To: <f6f9c2ca-6fea-d7b5-9797-d180e42f50d5@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 18 Jul 2019 19:40:04 +0800
+Message-ID: <CANRm+CzJtSeCtuNHqGc588FMLzFvjFAcBhhipORsJSisk_KdRw@mail.gmail.com>
+Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jul 2019, Waiman Long wrote:
+On Thu, 18 Jul 2019 at 17:39, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 18/07/19 11:29, Wanpeng Li wrote:
+> > On Thu, 18 Jul 2019 at 17:07, Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >>
+> >> On 18/07/19 10:43, Wanpeng Li wrote:
+> >>>>> Isnt that done by the sched_in handler?
+> >>>>
+> >>>> I am a bit confused because, if it is done by the sched_in later, I
+> >>>> don't understand why the sched_out handler hasn't set vcpu->preempted
+> >>>> already.
+> >>>>
+> >>>> The s390 commit message is not very clear, but it talks about "a former
+> >>>> sleeping cpu" that "gave up the cpu voluntarily".  Does "voluntarily"
+> >>>> that mean it is in kvm_vcpu_block?  But then at least for x86 it would
+> >>>
+> >>> see the prepare_to_swait_exlusive() in kvm_vcpu_block(), the task will
+> >>> be set in TASK_INTERRUPTIBLE state, kvm_sched_out will set
+> >>> vcpu->preempted to true iff current->state == TASK_RUNNING.
+> >>
+> >> Ok, I was totally blind to that "if" around vcpu->preempted = true, it's
+> >> obvious now.
+> >>
+> >> I think we need two flags then, for example vcpu->preempted and vcpu->ready:
+> >>
+> >> - kvm_sched_out sets both of them to true iff current->state == TASK_RUNNING
+> >>
+> >> - kvm_vcpu_kick sets vcpu->ready to true
+> >>
+> >> - kvm_sched_in clears both of them
+>
+> ... and also kvm_vcpu_on_spin should check vcpu->ready.  vcpu->preempted
+> remains only for use by vmx_vcpu_pi_put.
 
-> The show method of /sys/kernel/slab/<slab>/shrink sysfs file currently
-> returns nothing. This is now modified to show the time of the last
-> cache shrink operation in us.
+Done in v2, please have a look. :)
 
-What is this useful for? Any use cases?
-
-> CONFIG_SLUB_DEBUG depends on CONFIG_SYSFS. So the new shrink_us field
-> is always available to the shrink methods.
-
-Aside from minimal systems without CONFIG_SYSFS... Does this build without
-CONFIG_SYSFS?
+Regards,
+Wanpeng Li
