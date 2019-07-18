@@ -2,78 +2,141 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5975C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BABC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9567921849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CEmXIqx1"
+	by mail.kernel.org (Postfix) with ESMTP id 361EF2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389234AbfGRHmO (ORCPT
+        id S2389299AbfGRHnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 03:42:14 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38754 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfGRHmN (ORCPT
+        Thu, 18 Jul 2019 03:43:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38024 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfGRHnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:42:13 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a27so19677853qkk.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nzmwtsx5tycGhb+4LFPxCL+N+c9XhlGZm/gifhTU4EI=;
-        b=CEmXIqx1zEiZseyaLHbAZg2eYr52IGrxCiYtf3WdbIdRfxNALuaF360H38na2HHGeT
-         kJhvHRHwPkvdmaSFb4Ut1bXNNSwq+Az21CQwDcXz/2aJYfDrZA8FLv0Whf7jcqWPgUP7
-         cxDS052qMR+IQox9Kk3hORyh7saHwYg+y7qKk=
+        Thu, 18 Jul 2019 03:43:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so3182085wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:43:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nzmwtsx5tycGhb+4LFPxCL+N+c9XhlGZm/gifhTU4EI=;
-        b=khs204RA82Vg6raKp/Cz8eXklF7tapsxBAkYPQkYsHSH/tkgtOJfVqOOLabzi382jk
-         E1cGzgMokLNMfBV20DHn4b57NiLXJN55gFttWHOywDsJFw1pCU6OuVvuHf8Bbu9fPZlw
-         Xn/tkRXq19+QIB49dE7fHvsBNMmQU6PQBDrdFlM9DLa3ljWiXJHuQGtMBeohyKB3vJr+
-         hw3O7d1gmhQ52jB/DbTYZwarqokLTdM+8VY1ZTvlqe14vJlf29NMeFwxoqhjNs3aASzR
-         gRBbD09tz4h94j77mw6O/2T2DcCFGpk1OMDWUXKzIpfHdQY5UX6QBpOW2d1DCajugPAA
-         0lDQ==
-X-Gm-Message-State: APjAAAXfOasWrLKf+Qezi4wI2A+N69AMT9TWDfEnXziuogguUb+3toUk
-        sB/1cbCQpgACpE1D8iYQAblLJ8C6PxIkmHmEYljq8g==
-X-Google-Smtp-Source: APXvYqyaijtootjYh8DupgYeIQoCu/S4vDUdZBI2rD3C+dIP7BgMxJuxlurbcYyMNzYZGK8otJ+FaVyHPZ59zlJBHRk=
-X-Received: by 2002:a37:a603:: with SMTP id p3mr30398001qke.297.1563435732883;
- Thu, 18 Jul 2019 00:42:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+5h5a3O3K59BqV9oPAQLtP560NcGiWgROtgONhhQBcA=;
+        b=V/Lbl3MS0QTR2eWLfgooAM/DNDuqF2N2EG4kJp3SiIh6ZtNh3MOHgNDLTR6pbk0Mxg
+         Zcj4sdwfusFdTJBfewOFNvU3xS0oxL+77I7lX3JTCHXc9amahucRCnhp7NDGejZL3gcq
+         FfB9xCcanNKhF2yewC0uf5iILakpBEMzXKV1b2Xd6AmGNEuyiN+UImGFDGFPHM/DdZnh
+         6RFUQ1D1qutjJdiDuB4wkjmt3zzXHWsC5fRrjyneO7dY1ta5eEBNWlUlGUhJ6cxtcnJW
+         zX4FdQHpd4F4BaVyz5K7Q8w0gixjgNdaCv7+0WUyDNuP9IQ9o/l0+eKA6dX3iBl/bnIi
+         hEGA==
+X-Gm-Message-State: APjAAAV+Ko+gbZwpg33F3z/ioI71YWyAq8qfjmmhu2qzwtScshEwpOgw
+        S2JAS1c6nb6DYJ7z6c0Uh8RY+GU1kFA=
+X-Google-Smtp-Source: APXvYqwtVzF6pOrVC5RrHtwRwAyqm+l6A25CyYC8a8Kyj4y50SwTmJGOs3CDoEzgqjZKGhzJbIUIfQ==
+X-Received: by 2002:a1c:3:: with SMTP id 3mr41105085wma.6.1563435787761;
+        Thu, 18 Jul 2019 00:43:07 -0700 (PDT)
+Received: from steredhat ([5.170.38.133])
+        by smtp.gmail.com with ESMTPSA id g25sm18763167wmk.39.2019.07.18.00.43.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 00:43:07 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 09:43:04 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] vsock/virtio: fix locking in
+ virtio_transport_inc_tx_pkt()
+Message-ID: <CAGxU2F5PS8Ug3ei79ShVHOwLSXGYKwn3umvfvnhSFDs9pdvH2g@mail.gmail.com>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-4-sgarzare@redhat.com>
+ <20190717105056-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <20190717061124.453-1-hsinyi@chromium.org>
-In-Reply-To: <20190717061124.453-1-hsinyi@chromium.org>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 18 Jul 2019 15:41:47 +0800
-Message-ID: <CAJMQK-ga16BekNgZqDm2Bz4xw6O6Jt0Zaw3vcUhrvh6s570WOQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 0/2] Use cpu based scaling passive governor for
- MT8183 CCI
-To:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     "MyungJoo Ham )" <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717105056-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 2:12 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> 2. cpu based scaling support to passive_governor from Sibi Sankar
-> https://lore.kernel.org/patchwork/patch/1101049/
-This series is tested with previous version:
-https://patchwork.kernel.org/patch/10875195/
+On Wed, Jul 17, 2019 at 4:51 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Wed, Jul 17, 2019 at 01:30:28PM +0200, Stefano Garzarella wrote:
+> > fwd_cnt and last_fwd_cnt are protected by rx_lock, so we should use
+> > the same spinlock also if we are in the TX path.
+> >
+> > Move also buf_alloc under the same lock.
+> >
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>
+> Wait a second is this a bugfix?
+> If it's used under the wrong lock won't values get corrupted?
+> Won't traffic then stall or more data get to sent than
+> credits?
+
+Before this series, we only read vvs->fwd_cnt and vvs->buf_alloc in this
+function, but using a different lock than the one used to write them.
+I'm not sure if a corruption can happen, but if we want to avoid the
+lock, we should use an atomic operation or memory barriers.
+
+Since now we also need to update vvs->last_fwd_cnt, in order to limit the
+credit message, I decided to take the same lock used to protect vvs->fwd_cnt
+and vvs->last_fwd_cnt.
+
+
+Thanks,
+Stefano
+
+>
+> > ---
+> >  include/linux/virtio_vsock.h            | 2 +-
+> >  net/vmw_vsock/virtio_transport_common.c | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> > index 49fc9d20bc43..4c7781f4b29b 100644
+> > --- a/include/linux/virtio_vsock.h
+> > +++ b/include/linux/virtio_vsock.h
+> > @@ -35,7 +35,6 @@ struct virtio_vsock_sock {
+> >
+> >       /* Protected by tx_lock */
+> >       u32 tx_cnt;
+> > -     u32 buf_alloc;
+> >       u32 peer_fwd_cnt;
+> >       u32 peer_buf_alloc;
+> >
+> > @@ -43,6 +42,7 @@ struct virtio_vsock_sock {
+> >       u32 fwd_cnt;
+> >       u32 last_fwd_cnt;
+> >       u32 rx_bytes;
+> > +     u32 buf_alloc;
+> >       struct list_head rx_queue;
+> >  };
+> >
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index a85559d4d974..34a2b42313b7 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -210,11 +210,11 @@ static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
+> >
+> >  void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt)
+> >  {
+> > -     spin_lock_bh(&vvs->tx_lock);
+> > +     spin_lock_bh(&vvs->rx_lock);
+> >       vvs->last_fwd_cnt = vvs->fwd_cnt;
+> >       pkt->hdr.fwd_cnt = cpu_to_le32(vvs->fwd_cnt);
+> >       pkt->hdr.buf_alloc = cpu_to_le32(vvs->buf_alloc);
+> > -     spin_unlock_bh(&vvs->tx_lock);
+> > +     spin_unlock_bh(&vvs->rx_lock);
+> >  }
+> >  EXPORT_SYMBOL_GPL(virtio_transport_inc_tx_pkt);
+> >
+> > --
+> > 2.20.1
