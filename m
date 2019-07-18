@@ -2,109 +2,144 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3BFC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88546C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B613421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563454216;
-	bh=y7rgzQpDdIRlSy73vLU8vfCyWdqRCX6IVZMwX+buRH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MkYfzFSvkCbDYlGNsjyTL8qb0prd6u0l15Jy2EEJ7u0MYW8hvPq9OLL2VR/D8Z4c0
-	 bdAzZoFlUG/8zH9MHGvJFbQFhe8nUb/sErui1BhiefkSmliHkTXXjzM4fGdvA2Q++Q
-	 KjpVGtXpV89kk7K10hpKSrP2HZBypaL493YtG9Tw=
+	by mail.kernel.org (Postfix) with ESMTP id 40C382173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fHAwCNhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390282AbfGRMuP (ORCPT
+        id S2390104AbfGRMzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:50:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54764 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727730AbfGRMuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:50:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cEKz6vzhG50bLPrFj2nQ+q2iCqfHJ5p08/faFuU/tmo=; b=GkRibwu+YUKwTy3cvBnatmb2D
-        FD10UfEpSVZg4jJPngQlitY7aA/iWbv18ZQaXaLcxpyYbpNkX66qWKc6LjwyN9nenTpPt1VSAbPp5
-        3qdSEVW2GJBLOTnS+rrdpMgZ5BFMCxHAyzCvnzvSZY/2GQQiNPjsoE1+J3mp/bZN76DRg=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ho5rN-000564-HM; Thu, 18 Jul 2019 12:50:09 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id A5E4C2742A55; Thu, 18 Jul 2019 13:50:08 +0100 (BST)
-Date:   Thu, 18 Jul 2019 13:50:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH 1/4][V2] drivers: spi: core: Add optional delay between
- cs_change transfers
-Message-ID: <20190718125008.GD5761@sirena.org.uk>
-References: <20190717115109.15168-1-alexandru.ardelean@analog.com>
- <20190717115109.15168-2-alexandru.ardelean@analog.com>
+        Thu, 18 Jul 2019 08:55:09 -0400
+Received: from mout.web.de ([212.227.17.11]:35523 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfGRMzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 08:55:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563454476;
+        bh=Pr3yCBSMC/eDqRyfZblnMBsouognLzOFVijXQGgUyBw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=fHAwCNhPejNmRTH0XE6YCYQH9iVaylgX//BySZP5S0JqcukmOrW/7kxOPb/odcLur
+         C5wvUlimYQFwlB3n/ehp76kiEJJRegQHNFzBd0OQOMSilrp4hGd3NAkrMUhC3ERyNQ
+         LD+TvcPttGvFXvs+YJQe7AQMWTbhHdajcJ8OksJY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.59.79]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MFt8s-1hcWgk0OSE-00Ev28; Thu, 18
+ Jul 2019 14:54:36 +0200
+Subject: =?UTF-8?Q?Re=3a_=5bv3=5d_Coccinelle=3a_semantic_code_search_for_?=
+ =?UTF-8?B?4oCcdXNlIGFmdGVyIOKApuKAnQ==?=
+To:     Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
+        kernel-janitors@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wen Yang <yellowriver2010@hotmail.com>
+References: <1563246347-7803-1-git-send-email-wen.yang99@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <184a9193-dd65-6413-9e36-f11a8a603ed7@web.de>
+Date:   Thu, 18 Jul 2019 14:54:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
-Content-Disposition: inline
-In-Reply-To: <20190717115109.15168-2-alexandru.ardelean@analog.com>
-X-Cookie: Oh, wow!  Look at the moon!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1563246347-7803-1-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MiU/qVEIINA3DNRYsw7EBqOnNsVgQrd/ilVP0mpKcwqsxsoLIKy
+ 3ANrGbBmhf2BJySr63f1nAaBhD0nQL7gVG+CAUh3aE8Xc6pqVptGISS827aTP5SPq7xvWqh
+ PrCwFDkBe4RTyGoKcPTCntcseUjOVGmU6BZx000edO3vA9RWJEXoosry41iKUHOYfjiIUF/
+ KYao/tyY2neg/JrHIqdLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eh4EFja4ro8=:bJ93WKL+5hmlJ3i1E+TtxO
+ 5IsB9LbrRXUito+f+wvKoEs53PkWa0AwY/mJ/upVxAgcMtvb48CKt0660W+Xij76z7mpxBJDK
+ YvXYDdd39RkWreHLdU3zJjxp3PyiwMCSBtgXjrMc8SsZXAq9Ay/wDjR/p2RpN8BQBVS6gecUM
+ MQ84y0dZPbik015+LTpummDzV/pzHyQ6oRwfT49bunsospgWGuF+f0yjlcJUPEQ8JNxSoxS14
+ 64KbYEeyvzlSJiXsEEgsmJ53PawJjLoo8LqGnzThFAPP5BqjbZv5AVk9HdiBOY+HGc8qezDHX
+ WJpOzwOzU6RDSfn87cv+8ZtayO/ZlCRt2joaFVBmZKV6Rok0RRlFeSCJa7Vw3dvFcL8YobK5M
+ Aj+LADxyBmuk17UjdM5ZJ4/8uxE6oNoLgwQRt+zAlOH0RJ00UhMftxLw2yT8K/snk53CweulK
+ BZFuekc16Zkq6OFS5FGRW449UBr5YaZtpGsp1fVbOqlo/ny8S4OTkNYoorDjp0zckXgywIqrw
+ 6nhTavqF3Exd4n15NqF+egwFLJvg+ehRSIatB3QulCqTHK1jiZz+Fu++kLoqNrECbXL6G6ckt
+ TOuTSZu4SkbR2LREzzRV4OTl0v51gBgzd6Zgt19CyGQBE994DWecjo6NW8KiwIZVg/k+1Qfx+
+ lRmKpTedL48UEOnm+u/ZzBL/Hm+fsIy1WcF5VAgJcWt+ZO7b+5uYVql+y2Md2FFnA8rYVBpc3
+ zWCfIzexwGBVlQSawe5W2eE872tTod8iGJYut5fLS4FM03LsmUIMU9+n4xti9MwZvSfQfNH5d
+ p9GylMmPKIfAjrBTx4kc6gnHMF9T3ywJ/1n4TccpuCrXG4p6bSAdOSvCfM+aei1YpEFiT+sT5
+ E9PIPr88SOh4MMaPTcoY0CpY525GfXMqy+1V0UGNgqbDCG84wPoodg4/jYw1KmedP7j34pVhM
+ gbTzdjNyuwv6fs94lU5R6WXjdUCsmm4cBkVsXsYUzpiEKbSVlpdjdYfFF+/O4sPPlLPnMnDtO
+ ibWBSjv1V1UwrrS2aOpx2gb48fx/W8DIAFAja38ASw9lT45buZVK2qdpcm/vu0tHaXS2jmcJ5
+ HlhhCzeImtRyuMFynsqKMlvx0+CTtUJsSDU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Finally, this patch finds use-after-free issues for a node.
+> (implemented by the r_use_after_put rule)
 
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I suggest to take another look also at information from a clarification at=
+tempt
+on a topic like =E2=80=9CChecking statement order for patch generation wit=
+h SmPL support=E2=80=9D.
+https://systeme.lip6.fr/pipermail/cocci/2017-September/004483.html
+https://lore.kernel.org/cocci/alpine.DEB.2.20.1709071519240.3168@hadrien/
 
-On Wed, Jul 17, 2019 at 02:51:06PM +0300, Alexandru Ardelean wrote:
-> Some devices like the ADIS16460 IMU require a stall period between
-> transfers, i.e. between when the CS is de-asserted and re-asserted. The
-> default value of 10us is not enough. This change makes the delay
-> configurable for when the next CS change goes active.
+Under which circumstances will it become safer to develop SmPL script vari=
+ants
+for such source code search patterns?
 
-To repeat my previous feedback:
-
-| This looks like cs_change_delay.
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
-Please don't ignore review comments, people are generally making them
-for a reason and are likely to have the same concerns if issues remain
-unaddressed.  Having to repeat the same comments can get repetitive and
-make people question the value of time spent reviewing.  If you disagree
-with the review comments that's fine but you need to reply and discuss
-your concerns so that the reviewer can understand your decisions.
-
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0wav8ACgkQJNaLcl1U
-h9APhQf/QOouOeq0OOWIhFy4+/g0D4HdPXY0lzPOPRqIa3No7BWtewQIntQ7uARy
-/6nZrCA4lT9IuLtQY9TtxBtY3GyY1hLyWXnibxUsD0vZqS7cBjvVdYYv9/FTdDEK
-VquUng/K54Vp6Ku0GCfh9EXhEs05w/L4B1cWa1r7FD6gbF5llweQ6A/JP68B2Jzl
-mAj3fEjb7brceyU08UiJsfDCIehvVc3vpu5wCyFFj0FzGhJ+IfJdAmFn7C6EmotF
-CM8deV1NaeQB0iUkCSVgTj+pBG4UZ0hj0CGju8xXxE6/f/+1BgBp6EpNZj1Tptzg
-XIBZ7Xf1k9oTXGZ+05q/wXtv2P9N+w==
-=liAJ
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
+Regards,
+Markus
