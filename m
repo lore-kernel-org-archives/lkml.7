@@ -6,306 +6,227 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E577AC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0F0C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B883420880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689E220880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390414AbfGRNRk (ORCPT
+        id S2390308AbfGRNSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:17:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:58296 "EHLO foss.arm.com"
+        Thu, 18 Jul 2019 09:18:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46743 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbfGRNRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:17:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9973344;
-        Thu, 18 Jul 2019 06:17:38 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CC9D3F71F;
-        Thu, 18 Jul 2019 06:17:38 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 39CF96827B0; Thu, 18 Jul 2019 14:17:37 +0100 (BST)
-Date:   Thu, 18 Jul 2019 14:17:37 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Adds error event print functionality
-Message-ID: <20190718131737.GD5942@e110455-lin.cambridge.arm.com>
-References: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
+        id S1726715AbfGRNSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:18:36 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3731B30842A1;
+        Thu, 18 Jul 2019 13:18:36 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E660160635;
+        Thu, 18 Jul 2019 13:18:34 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 18 Jul 2019 15:18:35 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 15:18:34 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] sched/cputime: make scale_stime() more precise
+Message-ID: <20190718131834.GA22211@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 18 Jul 2019 13:18:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 04:10:36AM +0100, Lowry Li (Arm Technology China) wrote:
-> Adds to print the event message when error happens and the same event
-> will not be printed until next vsync.
-> 
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> ---
->  drivers/gpu/drm/arm/display/komeda/Makefile       |   1 +
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   |  13 ++
->  drivers/gpu/drm/arm/display/komeda/komeda_event.c | 144 ++++++++++++++++++++++
->  drivers/gpu/drm/arm/display/komeda/komeda_kms.c   |   2 +
->  4 files changed, 160 insertions(+)
->  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_event.c
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
-> index 38aa584..3f53d2d 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/Makefile
-> +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
-> @@ -7,6 +7,7 @@ ccflags-y := \
->  komeda-y := \
->  	komeda_drv.o \
->  	komeda_dev.o \
-> +	komeda_event.o \
->  	komeda_format_caps.o \
->  	komeda_coeffs.o \
->  	komeda_color_mgmt.o \
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> index 096f9f7..e863ec3 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> @@ -40,6 +40,17 @@
->  #define KOMEDA_ERR_TTNG			BIT_ULL(30)
->  #define KOMEDA_ERR_TTF			BIT_ULL(31)
->  
-> +#define KOMEDA_ERR_EVENTS	\
-> +	(KOMEDA_EVENT_URUN	| KOMEDA_EVENT_IBSY	| KOMEDA_EVENT_OVR |\
-> +	KOMEDA_ERR_TETO		| KOMEDA_ERR_TEMR	| KOMEDA_ERR_TITR |\
-> +	KOMEDA_ERR_CPE		| KOMEDA_ERR_CFGE	| KOMEDA_ERR_AXIE |\
-> +	KOMEDA_ERR_ACE0		| KOMEDA_ERR_ACE1	| KOMEDA_ERR_ACE2 |\
-> +	KOMEDA_ERR_ACE3		| KOMEDA_ERR_DRIFTTO	| KOMEDA_ERR_FRAMETO |\
-> +	KOMEDA_ERR_ZME		| KOMEDA_ERR_MERR	| KOMEDA_ERR_TCF |\
-> +	KOMEDA_ERR_TTNG		| KOMEDA_ERR_TTF)
-> +
-> +#define KOMEDA_WARN_EVENTS	KOMEDA_ERR_CSCE
-> +
->  /* malidp device id */
->  enum {
->  	MALI_D71 = 0,
-> @@ -207,6 +218,8 @@ struct komeda_dev {
->  
->  struct komeda_dev *dev_to_mdev(struct device *dev);
->  
-> +void komeda_print_events(struct komeda_events *evts);
-> +
->  int komeda_dev_resume(struct komeda_dev *mdev);
->  int komeda_dev_suspend(struct komeda_dev *mdev);
->  #endif /*_KOMEDA_DEV_H_*/
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
-> new file mode 100644
-> index 0000000..309dbe2
-> --- /dev/null
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
-> @@ -0,0 +1,144 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
-> + * Author: James.Qian.Wang <james.qian.wang@arm.com>
-> + *
-> + */
-> +#include <drm/drm_print.h>
-> +
-> +#include "komeda_dev.h"
-> +
-> +struct komeda_str {
-> +	char *str;
-> +	u32 sz;
-> +	u32 len;
-> +};
-> +
-> +/* return 0 on success,  < 0 on no space.
-> + */
-> +static int komeda_sprintf(struct komeda_str *str, const char *fmt, ...)
-> +{
-> +	va_list args;
-> +	int num, free_sz;
-> +	int err;
-> +
-> +	free_sz = str->sz - str->len;
-> +	if (free_sz <= 0)
-> +		return -ENOSPC;
-> +
-> +	va_start(args, fmt);
-> +
-> +	num = vsnprintf(str->str + str->len, free_sz, fmt, args);
-> +
-> +	va_end(args);
-> +
-> +	if (num <= free_sz) {
-> +		str->len += num;
-> +		err = 0;
-> +	} else {
-> +		str->len = str->sz;
-> +		err = -ENOSPC;
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +static void evt_sprintf(struct komeda_str *str, u64 evt, const char *msg)
-> +{
-> +	if (evt)
-> +		komeda_sprintf(str, msg);
-> +}
+People report that utime and stime from /proc/<pid>/stat become very wrong
+when the numbers are big enough. In particular, the monitored application
+can run all the time in user-space but only stime grows.
 
-Why do we need this wrapper?
+This is because scale_stime() is very inaccurate. It tries to minimize the
+relative error, but the absolute error can be huge.
 
-> +
-> +static void evt_str(struct komeda_str *str, u64 events)
-> +{
-> +	if (events == 0ULL) {
-> +		evt_sprintf(str, 1, "None");
-> +		return;
-> +	}
-> +
-> +	evt_sprintf(str, events & KOMEDA_EVENT_VSYNC, "VSYNC|");
-> +	evt_sprintf(str, events & KOMEDA_EVENT_FLIP, "FLIP|");
-> +	evt_sprintf(str, events & KOMEDA_EVENT_EOW, "EOW|");
-> +	evt_sprintf(str, events & KOMEDA_EVENT_MODE, "OP-MODE|");
-> +
-> +	evt_sprintf(str, events & KOMEDA_EVENT_URUN, "UNDERRUN|");
-> +	evt_sprintf(str, events & KOMEDA_EVENT_OVR, "OVERRUN|");
-> +
-> +	/* GLB error */
-> +	evt_sprintf(str, events & KOMEDA_ERR_MERR, "MERR|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
-> +
-> +	/* DOU error */
-> +	evt_sprintf(str, events & KOMEDA_ERR_DRIFTTO, "DRIFTTO|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_TETO, "TETO|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_CSCE, "CSCE|");
-> +
-> +	/* LPU errors or events */
-> +	evt_sprintf(str, events & KOMEDA_EVENT_IBSY, "IBSY|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_AXIE, "AXIE|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_ACE0, "ACE0|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_ACE1, "ACE1|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_ACE2, "ACE2|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_ACE3, "ACE3|");
-> +
-> +	/* LPU TBU errors*/
-> +	evt_sprintf(str, events & KOMEDA_ERR_TCF, "TCF|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_TTNG, "TTNG|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_TITR, "TITR|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_TTF, "TTF|");
-> +
-> +	/* CU errors*/
-> +	evt_sprintf(str, events & KOMEDA_ERR_CPE, "COPROC|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_ZME, "ZME|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_CFGE, "CFGE|");
-> +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
-> +
-> +	if (str->len > 0 && (str->str[str->len - 1] == '|')) {
-> +		str->str[str->len - 1] = 0;
-> +		str->len--;
-> +	}
-> +}
-> +
-> +static bool is_new_frame(struct komeda_events *a)
-> +{
-> +	return (a->pipes[0] | a->pipes[1]) & KOMEDA_EVENT_FLIP;
-> +}
-> +
-> +void komeda_print_events(struct komeda_events *evts)
-> +{
-> +	u64 print_evts = KOMEDA_ERR_EVENTS;
-> +	static bool en_print = true;
-> +
-> +	/* reduce the same msg print, only print the first evt for one frame */
-> +	if (evts->global || is_new_frame(evts))
-> +		en_print = true;
-> +	if (!en_print)
-> +		return;
+Andrew wrote the test-case:
 
-When does en_print ever get false?
+	int main(int argc, char **argv)
+	{
+	    struct task_cputime c;
+	    struct prev_cputime p;
+	    u64 st, pst, cst;
+	    u64 ut, put, cut;
+	    u64 x;
+	    int i = -1; // one step not printed
 
-> +
-> +#ifdef DEBUG
-> +	print_evts |= KOMEDA_WARN_EVENTS;
-> +#endif
-> +
-> +	if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_evts) {
-> +		#define STR_SZ		128
-> +		char msg[STR_SZ];
+	    if (argc != 2)
+	    {
+		printf("usage: %s <start_in_seconds>\n", argv[0]);
+		return 1;
+	    }
+	    x = strtoull(argv[1], NULL, 0) * SEC;
+	    printf("start=%lld\n", x);
 
-I've counted about 27 evt_sprintf() calls in evt_str() function, with an
-average of 5 characters each, so thats 135 characters printed into a buffer
-that is only 128 bytes. Please don't do this!
+	    p.stime = 0;
+	    p.utime = 0;
 
-> +		struct komeda_str str;
-> +
-> +		str.str = msg;
-> +		str.sz  = STR_SZ;
-> +		str.len = 0;
-> +
-> +		komeda_sprintf(&str, "gcu: ");
-> +		evt_str(&str, evts->global);
-> +		komeda_sprintf(&str, ", pipes[0]: ");
-> +		evt_str(&str, evts->pipes[0]);
-> +		komeda_sprintf(&str, ", pipes[1]: ");
-> +		evt_str(&str, evts->pipes[1]);
-> +
-> +		DRM_ERROR("err detect: %s\n", msg);
-> +
-> +		en_print = false;
-> +	}
-> +}
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> index 647bce5..1462bac 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> @@ -47,6 +47,8 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
->  	memset(&evts, 0, sizeof(evts));
->  	status = mdev->funcs->irq_handler(mdev, &evts);
->  
-> +	komeda_print_events(&evts);
+	    while (i++ < NSTEPS)
+	    {
+		x += STEP;
+		c.stime = x;
+		c.utime = x;
+		c.sum_exec_runtime = x + x;
+		pst = cputime_to_clock_t(p.stime);
+		put = cputime_to_clock_t(p.utime);
+		cputime_adjust(&c, &p, &ut, &st);
+		cst = cputime_to_clock_t(st);
+		cut = cputime_to_clock_t(ut);
+		if (i)
+		    printf("ut(diff)/st(diff): %20lld (%4lld)  %20lld (%4lld)\n",
+			cut, cut - put, cst, cst - pst);
+	    }
+	}
 
-Calling this function from the IRQ handler is a bad idea. We should use debugfs
-if you really want to have a trace of the events, but I personally don't see
-value in having this functionality in the kernel at all. You can expose the
-value of the evts->global and evts->pipes[] as integers and decode that in
-userspace or as a debugfs entry.
+For example,
 
-Best regards,
-Liviu
+	$ ./stime 300000
+	start=300000000000000
+	ut(diff)/st(diff):            299994875 (   0)             300009124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300011124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300013124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300015124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300017124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300019124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300021124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300023124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300025124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300027124 (2000)
+	ut(diff)/st(diff):            299994875 (   0)             300029124 (2000)
+	ut(diff)/st(diff):            299996875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            299998875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300000875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300002875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300004875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300006875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300008875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300010875 (2000)             300029124 (   0)
+	ut(diff)/st(diff):            300012055 (1180)             300029944 ( 820)
+	ut(diff)/st(diff):            300012055 (   0)             300031944 (2000)
+	ut(diff)/st(diff):            300012055 (   0)             300033944 (2000)
+	ut(diff)/st(diff):            300012055 (   0)             300035944 (2000)
+	ut(diff)/st(diff):            300012055 (   0)             300037944 (2000)
 
-> +
->  	/* Notify the crtc to handle the events */
->  	for (i = 0; i < kms->n_crtcs; i++)
->  		komeda_crtc_handle_event(&kms->crtcs[i], &evts);
-> -- 
-> 1.9.1
-> 
+shows the problem even when sum_exec_runtime is not that big: 300000 secs.
 
+The new implementation of scale_stime() does the additional div64_u64_rem()
+in a loop but see the comment, as long it is used by cputime_adjust() this
+can happen only once.
+
+Reported-by: Andrew Fox <afox@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/sched/cputime.c | 66 ++++++++++++++++++++++++++++----------------------
+ 1 file changed, 37 insertions(+), 29 deletions(-)
+
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 2305ce8..ad055a3 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -525,47 +525,55 @@ void account_idle_ticks(unsigned long ticks)
+ }
+ 
+ /*
+- * Perform (stime * rtime) / total, but avoid multiplication overflow by
+- * losing precision when the numbers are big.
++ * Perform (stime * rtime) / total, but avoid multiplication overflow
++ * by losing precision when the numbers are big.
++ *
++ * NOTE! currently the only user is cputime_adjust() and thus
++ *
++ *	stime < total && rtime > total
++ *
++ * this means that the end result is always precise and the additional
++ * div64_u64_rem() inside the main loop is called at most once.
+  */
+ static u64 scale_stime(u64 stime, u64 rtime, u64 total)
+ {
+-	u64 scaled;
++	u64 res = 0, div, rem;
+ 
+-	for (;;) {
+-		/* Make sure "rtime" is the bigger of stime/rtime */
++	/* can stime * rtime overflow ? */
++	while (ilog2(stime) + ilog2(rtime) > 62) {
+ 		if (stime > rtime)
+ 			swap(rtime, stime);
+ 
+-		/* Make sure 'total' fits in 32 bits */
+-		if (total >> 32)
+-			goto drop_precision;
+-
+-		/* Does rtime (and thus stime) fit in 32 bits? */
+-		if (!(rtime >> 32))
+-			break;
+-
+-		/* Can we just balance rtime/stime rather than dropping bits? */
+-		if (stime >> 31)
+-			goto drop_precision;
+-
+-		/* We can grow stime and shrink rtime and try to make them both fit */
+-		stime <<= 1;
+-		rtime >>= 1;
+-		continue;
++		if (rtime >= total) {
++			/*
++			 * (rtime * stime) / total is equal to
++			 *
++			 *	(rtime / total) * stime +
++			 *	(rtime % total) * stime / total
++			 *
++			 * if nothing overflows. Can the 1st multiplication
++			 * overflow? Yes, but we do not care: this can only
++			 * happen if the end result can't fit in u64 anyway.
++			 *
++			 * So the code below does
++			 *
++			 *	res += (rtime / total) * stime;
++			 *	rtime = rtime % total;
++			 */
++			div = div64_u64_rem(rtime, total, &rem);
++			res += div * stime;
++			rtime = rem;
++			continue;
++		}
+ 
+-drop_precision:
+-		/* We drop from rtime, it has more bits than stime */
++		/* drop precision */
+ 		rtime >>= 1;
+ 		total >>= 1;
++		if (!total)
++			return res;
+ 	}
+ 
+-	/*
+-	 * Make sure gcc understands that this is a 32x32->64 multiply,
+-	 * followed by a 64/32->64 divide.
+-	 */
+-	scaled = div_u64((u64) (u32) stime * (u64) (u32) rtime, (u32)total);
+-	return scaled;
++	return res + div64_u64(stime * rtime, total);
+ }
+ 
+ /*
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+2.5.0
+
+
