@@ -2,130 +2,118 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BB6C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B33C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFE720880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hRS9tdns"
+	by mail.kernel.org (Postfix) with ESMTP id 6B56A21783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389850AbfGRKfp (ORCPT
+        id S2389846AbfGRKhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:35:45 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33684 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbfGRKfp (ORCPT
+        Thu, 18 Jul 2019 06:37:34 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:47058 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfGRKhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:35:45 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m8so18807134vsj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 03:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bPsZyaY1avB4NmRKihmlAbRWMA/+wWnkWYAQnUJy/uc=;
-        b=hRS9tdns/W1JgD4gXX9suvoW/sEfa10WszlqRMNyTDVGE4pvXMTTfwq/5kkohrxDM7
-         W7+I5ziWAyIuiHrX/lcoOj0SJw+f5YG4xCubaO4tE70Z+vieiYB4B26jaOQUvlMI4S+U
-         xyN1krAtJQAXe2Vz8klpfFqYJMDNdZ8cfzuW9QcUmMv6R4UjK1Kq/58lPsgA4sCtpTzA
-         0qFoFw674o5/tuQ1z4FPQeyxpwMSw1+qVsC8O6HgdTQBOqM/uGIyiyS0Pf5HCXETQW4d
-         5Gyb4/sUE+H9nH3Nb/q1LqBqKoM5Uq2R4rYtA1XYgsHvHKaCOvYtSeHXrL6RULNV1DnO
-         IYpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bPsZyaY1avB4NmRKihmlAbRWMA/+wWnkWYAQnUJy/uc=;
-        b=VVA4mmvYckGsbdP8DEL2z7+y3DqmFSHjkS3I+Of3q2uWER2AqtPMqoNlmd7Jj/Uisx
-         h/scU236lsxjjs6V19GCiNxkda9xdUbWAo7O4Y1jBfE4q2F4b4js7m4pp3U0y3hJch0P
-         2EWqP2S6+QOpxps9P3t0+9H/d7UadiyikVF3Ju02OiF5VHGi6VK5HPmVuFuqozlri4IT
-         +QgR0xAhnObtUyKlC3Pza6u63abeb/pUb40CRMAFNDBUZ6J1GkRnIn3wPHNFFh7JsLwm
-         SND50pcxjun+W+IRAbELLWOEsXF6To0+UKRaGTIJlivVz8aaQ+hmD255Eoho58enA8v1
-         bXoA==
-X-Gm-Message-State: APjAAAXwLiLdykNm8v0QShcmKEm0unwIfue1ilWN00P01ztxZ4cV5Tql
-        q/QBTyOvMqlLbPJe7K10A+LP1kSvZ0n3zYGWVD1YYw==
-X-Google-Smtp-Source: APXvYqzSx0aR/M+aRW6giaR+8hf163WchtvCdbWRJMcDQ/HVNG1W8viO5bTF5uxNvGiQXgL7jxarygjbk3mkugNqF9Q=
-X-Received: by 2002:a67:ee16:: with SMTP id f22mr28548547vsp.191.1563446144144;
- Thu, 18 Jul 2019 03:35:44 -0700 (PDT)
+        Thu, 18 Jul 2019 06:37:33 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 0121980335;
+        Thu, 18 Jul 2019 12:37:27 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 12:37:26 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Jens Remus <jremus@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Martin Hostettler <textshell@uchuujin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] vt: Grab console_lock around con_is_bound in show_bind
+Message-ID: <20190718103726.GA17341@ravnborg.org>
+References: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-15-ulf.hansson@linaro.org>
- <20190716155317.GB32490@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190716155317.GB32490@e121166-lin.cambridge.arm.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 18 Jul 2019 12:35:07 +0200
-Message-ID: <CAPDyKFrJ75mo+s6GuUCTQ-nVv7C+9YJyTVmwuBZ2RKFOvOi3Nw@mail.gmail.com>
-Subject: Re: [PATCH 14/18] drivers: firmware: psci: Manage runtime PM in the
- idle path for CPUs
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=ag1SF4gXAAAA:8
+        a=KKAkSRfTAAAA:8 a=20KFwNOVAAAA:8 a=QyXUC8HyAAAA:8 a=II7inwo8ijMyP0ieMOUA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=Yupwre4RP9_Eg_Bd0iYG:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 at 17:53, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Mon, May 13, 2019 at 09:22:56PM +0200, Ulf Hansson wrote:
-> > When the hierarchical CPU topology layout is used in DT, let's allow the
-> > CPU to be power managed through its PM domain, via deploying runtime PM
-> > support.
-> >
-> > To know for which idle states runtime PM reference counting is needed,
-> > let's store the index of deepest idle state for the CPU, in a per CPU
-> > variable. This allows psci_cpu_suspend_enter() to compare this index with
-> > the requested idle state index and then act accordingly.
->
-> I do not see why a system with two CPU CPUidle states, say CPU retention
-> and CPU shutdown, should not be calling runtime PM on CPU retention
-> entry.
+Hi Daniel.
 
-If the CPU idle governor did select the CPU retention for the CPU, it
-was probably because the target residency for the CPU shutdown state
-could not be met.
+Patch looks good. You can add my:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-In this case, there is no point in allowing any other deeper idle
-states for cluster/package/system, since those have even greater
-residencies, hence calling runtime PM doesn't make sense.
+For good measure I checked all other users of con_is_bound()
+and they looked good from a locking perspective.
+Then I looked a bit more for missing locking and lost
+the overview.
 
->
-> The question then is what cluster/package/system states
-> are allowed for a given CPU idle state, to understand
-> what idle states can be actually entered at any hierarchy
-> level given the choice made for the CPU idle state.
->
-> In the case above, a CPU entering retention state should prevent
-> runtime PM selecting a cluster shutdown state; most likely firmware
-> would demote the request to cluster retention but still, we should
-> find a way to describe these dependencies.
+On Thu, Jul 18, 2019 at 10:09:03AM +0200, Daniel Vetter wrote:
+> Not really harmful not to, but also not harm in grabbing the lock. And
+> this shuts up a new WARNING I introduced in commit ddde3c18b700 ("vt:
+> More locking checks").
 
-See above.
+Maybe add the warning that Jens reported to the changelog, in case
+someone hits something that looks like this warning.
+Mainly for google fodder, but also in case changelogs are searched.
 
-[...]
-
-Kind regards
-Uffe
+	Sam
+> 
+> Reported-by: Jens Remus <jremus@linux.ibm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+> Cc: Martin Hostettler <textshell@uchuujin.de>
+> Cc: Adam Borowski <kilobyte@angband.pl>
+> Cc: Mikulas Patocka <mpatocka@redhat.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  drivers/tty/vt/vt.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index ec92f36ab5c4..34aa39d1aed9 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -3771,7 +3771,11 @@ static ssize_t show_bind(struct device *dev, struct device_attribute *attr,
+>  			 char *buf)
+>  {
+>  	struct con_driver *con = dev_get_drvdata(dev);
+> -	int bind = con_is_bound(con->con);
+> +	int bind;
+> +
+> +	console_lock();
+> +	bind = con_is_bound(con->con);
+> +	console_unlock();
+>  
+>  	return snprintf(buf, PAGE_SIZE, "%i\n", bind);
+>  }
+> -- 
+> 2.20.1
