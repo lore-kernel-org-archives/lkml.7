@@ -2,224 +2,114 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC23C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E85C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF909217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0CA21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PI5+xloA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390145AbfGRMMT (ORCPT
+        id S2390163AbfGRMQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:12:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54830 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726715AbfGRMMT (ORCPT
+        Thu, 18 Jul 2019 08:16:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42137 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRMQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:12:19 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IC2gvA087001;
-        Thu, 18 Jul 2019 08:12:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttqje2m6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 08:12:07 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6IC2ri4088019;
-        Thu, 18 Jul 2019 08:12:06 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttqje2m5v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 08:12:06 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6IC5tm0030585;
-        Thu, 18 Jul 2019 12:12:05 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01dal.us.ibm.com with ESMTP id 2tq6x7787m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 12:12:05 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6ICC5HV42140018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 12:12:05 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22A9FB2066;
-        Thu, 18 Jul 2019 12:12:05 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C7E4B205F;
-        Thu, 18 Jul 2019 12:12:04 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.169.29])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 12:12:04 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id EF89116C0DA2; Thu, 18 Jul 2019 05:12:03 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 05:12:03 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Jan Stancek <jstancek@redhat.com>
-Cc:     Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-        linux-kernel@vger.kernel.org, dbueso@suse.de, peterz@infradead.org,
-        mingo@redhat.com, jade alglave <jade.alglave@arm.com>
-Subject: Re: [PATCH v2] locking/rwsem: add acquire barrier to read_slowpath
- exit when queue is empty
-Message-ID: <20190718121203.GL14271@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
- <a524cf95ab0dbdd1eb65e9decb9283e73d416b1d.1563352912.git.jstancek@redhat.com>
- <20190717131335.b2ry43t2ov7ba4t4@willie-the-truck>
- <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com>
- <20190717192200.GA17687@dustball.usersys.redhat.com>
- <20190718092640.52oliw3sid7gxyh6@willie-the-truck>
- <79224323.853324.1563447052432.JavaMail.zimbra@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79224323.853324.1563447052432.JavaMail.zimbra@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180129
+        Thu, 18 Jul 2019 08:16:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so13451720wrr.9;
+        Thu, 18 Jul 2019 05:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HlKgdAFzp18sETE1uDUVicMGRgYUwku23fLq36LfrKo=;
+        b=PI5+xloAJufCBhwAGyxRbfL4TwEOinM7rEWJhL5tQhF7gL75dcwscoNH3SuhECb2kH
+         V3KOiIEXFTUFOcOMoREj3YNwFu/q03NnYg5V+ACIAeloEY05ADjFPtRH2Br58TpTFd7i
+         wDYTIhfBxuiDYAAOkyGTufbU0bdrmTl4PJ03ybIogGU1VrMN+kwfpnZEqia6y1ypCXyc
+         6XbN8F4d1dKCWOyxV+cdd1aTAm2Sl9jNGHwZQA0/X/bAdO/hlL/ShDesqgQzh2/Fy3Yw
+         iCoShhyVpf6mCWugD5gpY0/5r4/CpbJksYX6SUrgHTwd0KfN+Tai0ahYkT8rJYzy1CNi
+         Z/og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HlKgdAFzp18sETE1uDUVicMGRgYUwku23fLq36LfrKo=;
+        b=aM/V1ClCSk2LnODxOU+zZSRBvExexuyrehs053SY4W4qmhg+3EErOFarb9SLNoP43n
+         IarNlqTMhIIgVgXtl+jj7tfAAymNvQFdiLTRPWpjsUgAvnwgdZtbI6MLN9AO1zPVj97f
+         vs1qIJAYf8m2o0JJB8VmwsKTCXTHizK/MvcwFgyOovp89EB922mAMxzokyULbY1tePzC
+         C+zqVI3LDWdcr1eyMKwNTDHjMTOaobnHGzd6OVZEpLqmHd3hnWPpFzNg6x/7+0Zj8j1A
+         lI56Mq5t7XZGpPa+SsW3cHcPtEiyKb2n8fycLGCEyOkxwQ9LsDkWL70QAG0S4RmifOty
+         5GsA==
+X-Gm-Message-State: APjAAAXK7VLQg1bwKFX8aGd9VYJOua8+gyg/5rkIvLcmzUW2Hz/WQEYD
+        xPVAoc7KLU86CUsRsHSORK0=
+X-Google-Smtp-Source: APXvYqx2Vrkyj853VRaFPhtIGDn21ERmcu8ofvYr0lb7++IeNlIdeINLTBFtoYlWTCac/x3BBu0zvQ==
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr51486358wrs.93.1563452209900;
+        Thu, 18 Jul 2019 05:16:49 -0700 (PDT)
+Received: from localhost.localdomain ([212.146.100.6])
+        by smtp.gmail.com with ESMTPSA id f17sm22897463wmf.27.2019.07.18.05.16.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 05:16:49 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        u.kleine-koenig@pengutronix.de, aisheng.dong@nxp.com,
+        andradanciu1997@gmail.com, leoyang.li@nxp.com, festevam@gmail.com,
+        sriram.dash@nxp.com, l.stach@pengutronix.de, pankaj.bansal@nxp.com,
+        ping.bai@nxp.com, pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com,
+        richard.hu@technexion.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Add basic support for pico-pi-imx8m
+Date:   Thu, 18 Jul 2019 15:16:26 +0300
+Message-Id: <20190718121628.23991-1-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 06:50:52AM -0400, Jan Stancek wrote:
-> 
-> ----- Original Message -----
-> > Hi Jan, Waiman, [+Jade and Paul for the litmus test at the end]
-> > 
-> > On Wed, Jul 17, 2019 at 09:22:00PM +0200, Jan Stancek wrote:
-> > > On Wed, Jul 17, 2019 at 10:19:04AM -0400, Waiman Long wrote:
-> > > > > If you add a comment to the code outlining the issue (preferably as a
-> > > > > litmus
-> > > > > test involving sem->count and some shared data which happens to be
-> > > > > vmacache_seqnum in your test)), then:
-> > > > > 
-> > > > > Reviewed-by: Will Deacon <will@kernel.org>
-> > > > > 
-> > > > > Thanks,
-> > > > > 
-> > > > > Will
-> > > > 
-> > > > Agreed. A comment just above smp_acquire__after_ctrl_dep() on why this
-> > > > is needed will be great.
-> > > > 
-> > > > Other than that,
-> > > > 
-> > > > Acked-by: Waiman Long <longman@redhat.com>
-> > > > 
-> > > 
-> > > litmus test looks a bit long, would following be acceptable?
-> > > 
-> > > diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> > > index 37524a47f002..d9c96651bfc7 100644
-> > > --- a/kernel/locking/rwsem.c
-> > > +++ b/kernel/locking/rwsem.c
-> > > @@ -1032,6 +1032,13 @@ static inline bool rwsem_reader_phase_trylock(struct
-> > > rw_semaphore *sem,
-> > >  		 */
-> > >  		if (adjustment && !(atomic_long_read(&sem->count) &
-> > >  		     (RWSEM_WRITER_MASK | RWSEM_FLAG_HANDOFF))) {
-> > > +			/*
-> > > +			 * down_read() issued ACQUIRE on enter, but we can race
-> > > +			 * with writer who did RELEASE only after us.
-> > > +			 * ACQUIRE here makes sure reader operations happen only
-> > > +			 * after all writer ones.
-> > > +			 */
-> > 
-> > How about an abridged form of the litmus test here, just to show the cod
-> > flow? e.g.:
-> > 
-> > /*
-> >  * We need to ensure ACQUIRE semantics when reading sem->count so that
-> >  * we pair with the RELEASE store performed by an unlocking/downgrading
-> >  * writer.
-> >  *
-> >  * P0 (writer)			P1 (reader)
-> >  *
-> >  * down_write(sem);
-> >  * <write shared data>
-> >  * downgrade_write(sem);
-> >  * -> fetch_add_release(&sem->count)
-> >  *
-> >  *				down_read_slowpath(sem);
-> >  *				-> atomic_read(&sem->count)
-> >  *				   <ctrl dep>
-> >  *				   smp_acquire__after_ctrl_dep()
-> >  *				<read shared data>
-> >  */
-> 
-> Works for me. The code is at 3 level of indentation, but I can try
-> to squeeze it in for v4.
-> 
-> > 
-> > In writing this, I also noticed that we don't have any explicit ordering
-> > at the end of the reader slowpath when we wait on the queue but get woken
-> > immediately:
-> > 
-> > 	if (!waiter.task)
-> > 		break;
-> > 
-> > Am I missing something?
-> 
-> I'm assuming this isn't problem, because set_current_state() on line above
-> is using smp_store_mb().
-> 
-> > 
-> > > +			smp_acquire__after_ctrl_dep();
-> > >  			raw_spin_unlock_irq(&sem->wait_lock);
-> > >  			rwsem_set_reader_owned(sem);
-> > >  			lockevent_inc(rwsem_rlock_fast);
-> > > 
-> > > 
-> > > with litmus test in commit log:
-> > > ----------------------------------- 8< ------------------------------------
-> > > C rwsem
-> > > 
-> > > {
-> > > 	atomic_t rwsem_count = ATOMIC_INIT(1);
-> > > 	int vmacache_seqnum = 10;
-> > > }
-> > > 
-> > > P0(int *vmacache_seqnum, atomic_t *rwsem_count)
-> > > {
-> > > 	r0 = READ_ONCE(*vmacache_seqnum);
-> > > 	WRITE_ONCE(*vmacache_seqnum, r0 + 1);
-> > > 	/* downgrade_write */
-> > > 	r1 = atomic_fetch_add_release(-1+256, rwsem_count);
-> > > }
-> > > 
-> > > P1(int *vmacache_seqnum, atomic_t *rwsem_count, spinlock_t *sem_wait_lock)
-> > > {
-> > > 	/* rwsem_read_trylock */
-> > > 	r0 = atomic_add_return_acquire(256, rwsem_count);
-> > > 	/* rwsem_down_read_slowpath */
-> > > 	spin_lock(sem_wait_lock);
-> > > 	r0 = atomic_read(rwsem_count);
-> > > 	if ((r0 & 1) == 0) {
-> > > 		// BUG: needs barrier
-> > > 		spin_unlock(sem_wait_lock);
-> > > 		r1 = READ_ONCE(*vmacache_seqnum);
-> > > 	}
-> > > }
-> > > exists (1:r1=10)
-> > > ----------------------------------- 8< ------------------------------------
-> > 
-> > Thanks for writing this! It's definitely worth sticking it in the commit
-> > log, but Paul and Jade might also like to include it as part of their litmus
-> > test repository too.
+Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
+Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
 
-Thank you for forwarding this!  It may now be found at:
+Changes since v2:
+ - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
+   technexion,pico-pi-imx8m
+ - removed bootargs property
+ - removed regulators node and put fixed regulator directly under root node
+ - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
+ - removed pinctrl-names property from iomuxc node
+ - removed wand-pi-8m container node
+ - sorted pinctrl nodes alphabetically
+ - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
+   driver
+ - changed properties' order in usb_dwc3_1 node
 
-https://github.com/paulmckrcu/litmus/blob/master/manual/kernel/C-JanStancek-rwsem.litmus
+Changes since v1:
+ - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
+ - removed pinctrl_csi1, pinctrl_wifi_ctrl
+ - used generic name for pmic
+ - removed gpo node
+ - delete regulator-virtuals node
+ - remove always-on property from buck1-8 and ldo3-7
+ - remove pmic-buck-uses-i2c-dvs property for buck1-4
 
-							Thanx, Paul
+Andra Danciu (1):
+  dt-bindings: arm: fsl: Add the pico-pi-imx8m board
+
+Richard Hu (1):
+  arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+
+ Documentation/devicetree/bindings/arm/fsl.yaml |   1 +
+ arch/arm64/boot/dts/freescale/Makefile         |   1 +
+ arch/arm64/boot/dts/freescale/pico-pi-8m.dts   | 417 +++++++++++++++++++++++++
+ 3 files changed, 419 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/pico-pi-8m.dts
+
+-- 
+2.11.0
+
