@@ -2,74 +2,62 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1DDC76197
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A802173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5F52173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732235AbfGRFiX (ORCPT
+        id S1727649AbfGRFls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 01:38:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40469 "EHLO mga05.intel.com"
+        Thu, 18 Jul 2019 01:41:48 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:57798 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbfGRFiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 01:38:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 22:38:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="161969852"
-Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.159])
-  by orsmga008.jf.intel.com with ESMTP; 17 Jul 2019 22:38:20 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, Avi Kivity <avi@scylladb.com>
-Cc:     Joe Perches <joe@perches.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, like.xu@linux.intel.com
-Subject: [PATCH v2] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
-Date:   Thu, 18 Jul 2019 13:35:14 +0800
-Message-Id: <20190718053514.59742-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        id S1726376AbfGRFls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 01:41:48 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hnzAk-0007AX-DF; Thu, 18 Jul 2019 13:41:42 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hnzAg-0005eJ-UB; Thu, 18 Jul 2019 13:41:38 +0800
+Date:   Thu, 18 Jul 2019 13:41:38 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Cfir Cohen <cfir@google.com>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] crypto: ccp/gcm - use const time tag comparison.
+Message-ID: <20190718054138.nzz24mi6mawlrpa4@gondor.apana.org.au>
+References: <20190702173256.50485-1-cfir@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190702173256.50485-1-cfir@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a perf_event creation fails due to any reason of the host perf
-subsystem, it has no chance to log the corresponding event for guest
-which may cause abnormal sampling data in guest result. In debug mode,
-this message helps to understand the state of vPMC and we may not
-limit the number of occurrences but not in a spamming style.
+On Tue, Jul 02, 2019 at 10:32:56AM -0700, Cfir Cohen wrote:
+> Avoid leaking GCM tag through timing side channel.
+> 
+> Fixes: 36cf515b9bbe ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
+> Cc: <stable@vger.kernel.org> # v4.12+
+> Signed-off-by: Cfir Cohen <cfir@google.com>
+> ---
+>  drivers/crypto/ccp/ccp-ops.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
- arch/x86/kvm/pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index aa5a2597305a..cedaa01ceb6f 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -131,8 +131,8 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 						 intr ? kvm_perf_overflow_intr :
- 						 kvm_perf_overflow, pmc);
- 	if (IS_ERR(event)) {
--		printk_once("kvm_pmu: event creation failed %ld\n",
--			    PTR_ERR(event));
-+		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
-+			    PTR_ERR(event), pmc->idx);
- 		return;
- 	}
- 
+Patch applied.  Thanks.
 -- 
-2.21.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
