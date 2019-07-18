@@ -2,166 +2,194 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7766C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7501BC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9653321783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4191121783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:21:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eTHUdDlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390667AbfGRORX convert rfc822-to-8bit (ORCPT
+        id S2390513AbfGROVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:17:23 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2113 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390356AbfGRORX (ORCPT
+        Thu, 18 Jul 2019 10:21:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35389 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfGROVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:17:23 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5d307f28e2e-a11f6; Thu, 18 Jul 2019 22:16:09 +0800 (CST)
-X-RM-TRANSID: 2eec5d307f28e2e-a11f6
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [10.0.0.249] (unknown[112.22.251.180])
-        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15d307f26c3f-095a6;
-        Thu, 18 Jul 2019 22:16:09 +0800 (CST)
-X-RM-TRANSID: 2ee15d307f26c3f-095a6
-Content-Type: text/plain; charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [net-next 1/2] ipvs: batch __ip_vs_cleanup
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-In-Reply-To: <alpine.LFD.2.21.1907152333300.5700@ja.home.ssi.bg>
-Date:   Thu, 18 Jul 2019 22:16:05 +0800
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Simon Horman <horms@verge.net.au>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <8441EA26-E197-4F40-A6D7-5B7D59AA7F7F@cmss.chinamobile.com>
-References: <1563031186-2101-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <1563031186-2101-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <alpine.LFD.2.21.1907152333300.5700@ja.home.ssi.bg>
-To:     Julian Anastasov <ja@ssi.bg>
-X-Mailer: Apple Mail (2.3273)
+        Thu, 18 Jul 2019 10:21:03 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IEJMYd2020610
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 18 Jul 2019 07:19:22 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IEJMYd2020610
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563459564;
+        bh=AmdxMoMzuLsh1qy0WRK6wfOHnIglwr04LEu/wExBCJk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=eTHUdDlVWA4BaJiDpdnnWjxgYZj7R0Lt++CmqqLnGhdTSF9liSeXOyvxajLQOgCrX
+         jj9Y6dNeYCoKkbMesPh/VP5ExdI7etAJSGw8ZpRywymc2VGk30IVxRgG9knCAmgNby
+         uISVteHT2Jcp48WH/RKiS/9e3Np4wMxGeKo3nC8mLra6f7aRHyFNfzBjFGGLyqFrDj
+         RNRa1/ojiblzxusGAX91CRHUdyQ1ZMWfr7eajmeT/HptGK9/LvdC98uavbL1uXebGm
+         yNYDJ+6jiV80M0c4JQklSMUWvY4RORldj49EbmyY6KfqcEFts3Q7sS+qlc/NZtwTIw
+         yt62U2CXTSCWw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IEJLdT2020601;
+        Thu, 18 Jul 2019 07:19:21 -0700
+Date:   Thu, 18 Jul 2019 07:19:21 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-2c2ffb925b368a1f00d4ddcc837f830394861d6c@git.kernel.org>
+Cc:     paulmck@linux.vnet.ibm.com, williams@redhat.com,
+        frederic@kernel.org, peterz@infradead.org, mingo@kernel.org,
+        rostedt@goodmis.org, hpa@zytor.com, lukas.bulwahn@gmail.com,
+        julia@ni.com, linux-kernel@vger.kernel.org, efault@gmx.de,
+        marc.zyngier@arm.com, bristot@redhat.com,
+        torvalds@linux-foundation.org, tom.zanussi@linux.intel.com,
+        gregkh@linuxfoundation.org, hch@lst.de, bigeasy@linutronix.de,
+        lgoncalv@redhat.com, clark.williams@gmail.com, tj@kernel.org,
+        gratian.crisan@ni.com, wagi@monom.org, paulmck@linux.ibm.com,
+        akpm@linuxfoundation.org, tglx@linutronix.de
+Reply-To: gratian.crisan@ni.com, tj@kernel.org, clark.williams@gmail.com,
+          lgoncalv@redhat.com, bigeasy@linutronix.de, hch@lst.de,
+          tglx@linutronix.de, akpm@linuxfoundation.org,
+          paulmck@linux.ibm.com, wagi@monom.org, marc.zyngier@arm.com,
+          efault@gmx.de, tom.zanussi@linux.intel.com,
+          gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
+          bristot@redhat.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
+          lukas.bulwahn@gmail.com, julia@ni.com, frederic@kernel.org,
+          williams@redhat.com, paulmck@linux.vnet.ibm.com,
+          rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org
+In-Reply-To: <alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/urgent] sched/rt, Kconfig: Introduce CONFIG_PREEMPT_RT
+Git-Commit-ID: 2c2ffb925b368a1f00d4ddcc837f830394861d6c
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  2c2ffb925b368a1f00d4ddcc837f830394861d6c
+Gitweb:     https://git.kernel.org/tip/2c2ffb925b368a1f00d4ddcc837f830394861d6c
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Wed, 17 Jul 2019 22:01:49 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 18 Jul 2019 14:53:32 +0200
 
-> On 2019年7月16日, at 上午4:39, Julian Anastasov <ja@ssi.bg> wrote:
-> 
-> 
-> 	Hello,
-> 
-> On Sat, 13 Jul 2019, Haishuang Yan wrote:
-> 
->> It's better to batch __ip_vs_cleanup to speedup ipvs
->> connections dismantle.
->> 
->> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
->> ---
->> include/net/ip_vs.h             |  2 +-
->> net/netfilter/ipvs/ip_vs_core.c | 29 +++++++++++++++++------------
->> net/netfilter/ipvs/ip_vs_ctl.c  | 13 ++++++++++---
->> 3 files changed, 28 insertions(+), 16 deletions(-)
->> 
->> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
->> index 3759167..93e7a25 100644
->> --- a/include/net/ip_vs.h
->> +++ b/include/net/ip_vs.h
->> @@ -1324,7 +1324,7 @@ static inline void ip_vs_control_del(struct ip_vs_conn *cp)
->> void ip_vs_control_net_cleanup(struct netns_ipvs *ipvs);
->> void ip_vs_estimator_net_cleanup(struct netns_ipvs *ipvs);
->> void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs);
->> -void ip_vs_service_net_cleanup(struct netns_ipvs *ipvs);
->> +void ip_vs_service_nets_cleanup(struct list_head *net_list);
->> 
->> /* IPVS application functions
->>  * (from ip_vs_app.c)
->> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
->> index 46f06f9..b4d79b7 100644
->> --- a/net/netfilter/ipvs/ip_vs_core.c
->> +++ b/net/netfilter/ipvs/ip_vs_core.c
->> @@ -2402,18 +2402,23 @@ static int __net_init __ip_vs_init(struct net *net)
->> 	return -ENOMEM;
->> }
->> 
->> -static void __net_exit __ip_vs_cleanup(struct net *net)
->> +static void __net_exit __ip_vs_cleanup_batch(struct list_head *net_list)
->> {
->> -	struct netns_ipvs *ipvs = net_ipvs(net);
->> -
->> -	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
->> -	ip_vs_conn_net_cleanup(ipvs);
->> -	ip_vs_app_net_cleanup(ipvs);
->> -	ip_vs_protocol_net_cleanup(ipvs);
->> -	ip_vs_control_net_cleanup(ipvs);
->> -	ip_vs_estimator_net_cleanup(ipvs);
->> -	IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
->> -	net->ipvs = NULL;
->> +	struct netns_ipvs *ipvs;
->> +	struct net *net;
->> +	LIST_HEAD(list);
->> +
->> +	ip_vs_service_nets_cleanup(net_list);	/* ip_vs_flush() with locks */
->> +	list_for_each_entry(net, net_list, exit_list) {
-> 
-> 	How much faster is to replace list_for_each_entry in
-> ops_exit_list() with this one. IPVS can waste time in calls
-> such as kthread_stop() and del_timer_sync() but I'm not sure
-> we can solve it easily. What gain do you see in benchmarks?
+sched/rt, Kconfig: Introduce CONFIG_PREEMPT_RT
 
-Hi, 
+Add a new entry to the preemption menu which enables the real-time support
+for the kernel. The choice is only enabled when an architecture supports
+it.
 
-As the following benchmark testing results show, there is a little performance improvement:
+It selects PREEMPT as the RT features depend on it. To achieve that the
+existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
+well.
 
-$  cat add_del_unshare.sh
-#!/bin/bash
+No functional change.
 
-for i in `seq 1 100`
-    do
-     (for j in `seq 1 40` ; do  unshare -n ipvsadm -A -t 172.16.$i.$j:80 >/dev/null ; done) &
-    done
-wait; grep net_namespace /proc/slabinfo
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Clark Williams <williams@redhat.com>
+Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Acked-by: Daniel Wagner <wagi@monom.org>
+Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Cc: Andrew Morton <akpm@linuxfoundation.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Clark Williams <clark.williams@gmail.com>
+Cc: Gratian Crisan <gratian.crisan@ni.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Julia Cartwright <julia@ni.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Paul McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/Kconfig           |  3 +++
+ kernel/Kconfig.preempt | 25 +++++++++++++++++++++++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
-Befor patch:
-$  time sh add_del_unshare.sh
-net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
-
-real    0m8.086s
-user    0m2.025s
-sys     0m36.956s
-
-After patch:
-$  time sh add_del_unshare.sh
-net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
-
-real    0m7.623s
-user    0m2.003s
-sys     0m32.935s
-
-
-> 
->> +		ipvs = net_ipvs(net);
->> +		ip_vs_conn_net_cleanup(ipvs);
->> +		ip_vs_app_net_cleanup(ipvs);
->> +		ip_vs_protocol_net_cleanup(ipvs);
->> +		ip_vs_control_net_cleanup(ipvs);
->> +		ip_vs_estimator_net_cleanup(ipvs);
->> +		IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
->> +		net->ipvs = NULL;
->> +	}
->> }
-> 
-> Regards
-> 
-> --
-> Julian Anastasov <ja@ssi.bg>
-> 
-
-
-
+diff --git a/arch/Kconfig b/arch/Kconfig
+index c47b328eada0..ada51f36bd5d 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -801,6 +801,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
+ config ARCH_NO_PREEMPT
+ 	bool
+ 
++config ARCH_SUPPORTS_RT
++	bool
++
+ config CPU_NO_EFFICIENT_FFS
+ 	def_bool n
+ 
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index dc0b682ec2d9..fc020c09b7e8 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
+ 
+ 	  Select this if you are building a kernel for a desktop system.
+ 
+-config PREEMPT
++config PREEMPT_LL
+ 	bool "Preemptible Kernel (Low-Latency Desktop)"
+ 	depends on !ARCH_NO_PREEMPT
+-	select PREEMPT_COUNT
++	select PREEMPT
+ 	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
+ 	help
+ 	  This option reduces the latency of the kernel by making
+@@ -55,7 +55,28 @@ config PREEMPT
+ 	  embedded system with latency requirements in the milliseconds
+ 	  range.
+ 
++config PREEMPT_RT
++	bool "Fully Preemptible Kernel (Real-Time)"
++	depends on EXPERT && ARCH_SUPPORTS_RT
++	select PREEMPT
++	help
++	  This option turns the kernel into a real-time kernel by replacing
++	  various locking primitives (spinlocks, rwlocks, etc.) with
++	  preemptible priority-inheritance aware variants, enforcing
++	  interrupt threading and introducing mechanisms to break up long
++	  non-preemptible sections. This makes the kernel, except for very
++	  low level and critical code pathes (entry code, scheduler, low
++	  level interrupt handling) fully preemptible and brings most
++	  execution contexts under scheduler control.
++
++	  Select this if you are building a kernel for systems which
++	  require real-time guarantees.
++
+ endchoice
+ 
+ config PREEMPT_COUNT
+        bool
++
++config PREEMPT
++       bool
++       select PREEMPT_COUNT
