@@ -2,368 +2,250 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D007C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52C0C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0340E20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QAWiyJvv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KF5lwZNt"
+	by mail.kernel.org (Postfix) with ESMTP id AE56021849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390456AbfGRNDF (ORCPT
+        id S2390479AbfGRNDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:03:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41878 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727623AbfGRNDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:03:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E25F6602A8; Thu, 18 Jul 2019 13:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563454983;
-        bh=gneXePiPfPnUPOowcmKnHrB/RAgCMyJVUI6J+o0briM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAWiyJvv5EvYLC66r6JbVt9iJI/qCd5+Pu1rYBSolXvo+g46UsLjXQf/xiJObP+2c
-         LScrwjmYobdR5Cl7VcfkrMeaGPIG5G98rNvcaW8hDnSjtOO7nYjrAMgfH7qpriVuqz
-         gG4kDoGam9V3t6fOoL1xEgTfJf/e57QudEPn/m5g=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AF9C616DA;
-        Thu, 18 Jul 2019 13:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563454979;
-        bh=gneXePiPfPnUPOowcmKnHrB/RAgCMyJVUI6J+o0briM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KF5lwZNt0cTHHL+iaP719VQpvmiLRHia0xerG3x9XIrquwaHHIDUzdurH/7AE5VZ/
-         4wPCeJ+y6LpX5i/2HNmfjwx+ksvGVaQoXvt82+c8ysqBjtXO1xq0S7TMMSMBo7Ojaj
-         YnyzQIIS95cR2XmrsI9F2KXgxaEpMlVJ3Jc/d7GU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AF9C616DA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     agross@kernel.org, linux-arm-msm@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
-        rishabhb@codeaurora.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH 3/3] soc: qcom: Make llcc-qcom a generic driver
-Date:   Thu, 18 Jul 2019 18:32:38 +0530
-Message-Id: <20190718130238.11324-4-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
-In-Reply-To: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
-References: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
+        Thu, 18 Jul 2019 09:03:32 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:57986 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbfGRNDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:03:32 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 8EB7E2070A;
+        Thu, 18 Jul 2019 15:03:30 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 73348206B8;
+        Thu, 18 Jul 2019 15:03:30 +0200 (CEST)
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v3] media: dvb: Provide 4 devm variants
+To:     Sean Young <sean@mess.org>, Brad Love <brad@nextdimension.cc>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Message-ID: <068836c7-a116-7e6f-cbb2-f2176fbb9a38@free.fr>
+Date:   Thu, 18 Jul 2019 15:03:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jul 18 15:03:30 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes way for adding future llcc versions.
-Also pull out the llcc-qcom specific definitions from includes.
-Includes path now contains the only definitions that are
-to be exposed to other subsystems.
+Provide devm variants for automatic resource release on device removal.
+Makes error-handling in probe() simpler, thus less error-prone.
+Once all resources are devmanaged, remove() is no longer needed.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
 ---
- drivers/soc/qcom/llcc-qcom.c       | 137 +++++++++++++++++++++++++++++++------
- include/linux/soc/qcom/llcc-qcom.h |  89 ------------------------
- 2 files changed, 116 insertions(+), 110 deletions(-)
+Changes from v2:
+x Handle dvb_register_adapter() return code correctly
+Changes from v1:
+x Simplify devm_dvb_register_adapter() implementation
+x Add 3 more devm APIs
+x Document them in devres.rst
+---
+ Documentation/driver-model/devres.rst |  6 ++++++
+ drivers/media/dvb-core/dmxdev.c       | 13 +++++++++++++
+ drivers/media/dvb-core/dvb_demux.c    | 13 +++++++++++++
+ drivers/media/dvb-core/dvb_frontend.c | 13 +++++++++++++
+ drivers/media/dvb-core/dvbdev.c       | 12 ++++++++++++
+ include/media/dmxdev.h                |  3 +++
+ include/media/dvb_demux.h             |  2 ++
+ include/media/dvb_frontend.h          |  3 +++
+ include/media/dvbdev.h                |  3 +++
+ 9 files changed, 68 insertions(+)
 
-diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-index 574bb5bf20bc..98563ef0ac6b 100644
---- a/drivers/soc/qcom/llcc-qcom.c
-+++ b/drivers/soc/qcom/llcc-qcom.c
-@@ -47,6 +47,100 @@
+diff --git a/Documentation/driver-model/devres.rst b/Documentation/driver-model/devres.rst
+index 6af41a6a4bb6..84bdb61f27a3 100644
+--- a/Documentation/driver-model/devres.rst
++++ b/Documentation/driver-model/devres.rst
+@@ -268,6 +268,12 @@ DMA
+ DRM
+   devm_drm_dev_init()
  
- #define BANK_OFFSET_STRIDE	      0x80000
++DVB
++  devm_dvb_dmx_init()
++  devm_dvb_dmxdev_init()
++  devm_dvb_register_adapter()
++  devm_dvb_register_frontend()
++
+ GPIO
+   devm_gpiod_get()
+   devm_gpiod_get_index()
+diff --git a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
+index f14a872d1268..f38b65d1b430 100644
+--- a/drivers/media/dvb-core/dmxdev.c
++++ b/drivers/media/dvb-core/dmxdev.c
+@@ -1444,6 +1444,19 @@ int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *dvb_adapter)
  
-+/**
-+ * llcc_slice_config - Data associated with the llcc slice
-+ * @usecase_id: Unique id for the client's use case
-+ * @slice_id: llcc slice id for each client
-+ * @max_cap: The maximum capacity of the cache slice provided in KB
-+ * @priority: Priority of the client used to select victim line for replacement
-+ * @fixed_size: Boolean indicating if the slice has a fixed capacity
-+ * @bonus_ways: Bonus ways are additional ways to be used for any slice,
-+ *		if client ends up using more than reserved cache ways. Bonus
-+ *		ways are allocated only if they are not reserved for some
-+ *		other client.
-+ * @res_ways: Reserved ways for the cache slice, the reserved ways cannot
-+ *		be used by any other client than the one its assigned to.
-+ * @cache_mode: Each slice operates as a cache, this controls the mode of the
-+ *             slice: normal or TCM(Tightly Coupled Memory)
-+ * @probe_target_ways: Determines what ways to probe for access hit. When
-+ *                    configured to 1 only bonus and reserved ways are probed.
-+ *                    When configured to 0 all ways in llcc are probed.
-+ * @dis_cap_alloc: Disable capacity based allocation for a client
-+ * @retain_on_pc: If this bit is set and client has maintained active vote
-+ *               then the ways assigned to this client are not flushed on power
-+ *               collapse.
-+ * @activate_on_init: Activate the slice immediately after it is programmed
-+ */
-+struct llcc_slice_config {
-+	u32 usecase_id;
-+	u32 slice_id;
-+	u32 max_cap;
-+	u32 priority;
-+	bool fixed_size;
-+	u32 bonus_ways;
-+	u32 res_ways;
-+	u32 cache_mode;
-+	u32 probe_target_ways;
-+	bool dis_cap_alloc;
-+	bool retain_on_pc;
-+	bool activate_on_init;
-+};
-+
-+/**
-+ * llcc_drv_data - Data associated with the llcc driver
-+ * @regmap: regmap associated with the llcc device
-+ * @bcast_regmap: regmap associated with llcc broadcast offset
-+ * @cfg: pointer to the data structure for slice configuration
-+ * @lock: mutex associated with each slice
-+ * @cfg_size: size of the config data table
-+ * @max_slices: max slices as read from device tree
-+ * @num_banks: Number of llcc banks
-+ * @bitmap: Bit map to track the active slice ids
-+ * @offsets: Pointer to the bank offsets array
-+ * @ecc_irq: interrupt for llcc cache error detection and reporting
-+ */
-+struct llcc_drv_data {
-+	struct regmap *regmap;
-+	struct regmap *bcast_regmap;
-+	const struct llcc_slice_config *cfg;
-+	struct mutex lock;
-+	u32 cfg_size;
-+	u32 max_slices;
-+	u32 num_banks;
-+	unsigned long *bitmap;
-+	u32 *offsets;
-+	int ecc_irq;
-+};
-+
-+/**
-+ * llcc_edac_reg_data - llcc edac registers data for each error type
-+ * @name: Name of the error
-+ * @synd_reg: Syndrome register address
-+ * @count_status_reg: Status register address to read the error count
-+ * @ways_status_reg: Status register address to read the error ways
-+ * @reg_cnt: Number of registers
-+ * @count_mask: Mask value to get the error count
-+ * @ways_mask: Mask value to get the error ways
-+ * @count_shift: Shift value to get the error count
-+ * @ways_shift: Shift value to get the error ways
-+ */
-+struct llcc_edac_reg_data {
-+	char *name;
-+	u64 synd_reg;
-+	u64 count_status_reg;
-+	u64 ways_status_reg;
-+	u32 reg_cnt;
-+	u32 count_mask;
-+	u32 ways_mask;
-+	u8  count_shift;
-+	u8  ways_shift;
-+};
-+
-+struct qcom_llcc_config {
-+	const struct llcc_slice_config *sct_data;
-+	int size;
-+};
-+
- static struct llcc_slice_config sdm845_data[] =  {
- 	{ LLCC_CPUSS,    1,  2816, 1, 0, 0xffc, 0x2,   0, 0, 1, 1, 1 },
- 	{ LLCC_VIDSC0,   2,  512,  2, 1, 0x0,   0x0f0, 0, 0, 1, 1, 0 },
-@@ -68,6 +162,11 @@ static struct llcc_slice_config sdm845_data[] =  {
- 	{ LLCC_AUDHW,    22, 1024, 1, 1, 0xffc, 0x2,   0, 0, 1, 1, 0 },
- };
+ EXPORT_SYMBOL(dvb_dmxdev_init);
  
-+static const struct qcom_llcc_config sdm845_cfg = {
-+	.sct_data	= sdm845_data,
-+	.size		= ARRAY_SIZE(sdm845_data),
-+};
++static void dmxdev_release(void *dmxdev)
++{
++	dvb_dmxdev_release(dmxdev);
++}
 +
- static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
- 
- static const struct regmap_config llcc_regmap_config = {
-@@ -347,13 +446,15 @@ static struct regmap *qcom_llcc_init_mmio(struct platform_device *pdev,
- 	return devm_regmap_init_mmio(&pdev->dev, base, &llcc_regmap_config);
- }
- 
--static int qcom_llcc_probe(struct platform_device *pdev,
--			   const struct llcc_slice_config *llcc_cfg, u32 sz)
-+static int qcom_llcc_probe(struct platform_device *pdev)
++int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
++		struct dvb_adapter *dvb_adapter)
++{
++	int rc = dvb_dmxdev_init(dmxdev, dvb_adapter);
++	return rc ? : devm_add_action_or_reset(dev, dmxdev_release, dmxdev);
++}
++EXPORT_SYMBOL(devm_dvb_dmxdev_init);
++
+ void dvb_dmxdev_release(struct dmxdev *dmxdev)
  {
- 	u32 num_banks;
- 	struct device *dev = &pdev->dev;
- 	int ret, i;
- 	struct platform_device *llcc_edac;
-+	const struct qcom_llcc_config *cfg;
-+	const struct llcc_slice_config *llcc_cfg;
-+	u32 sz;
+ 	dmxdev->exit = 1;
+diff --git a/drivers/media/dvb-core/dvb_demux.c b/drivers/media/dvb-core/dvb_demux.c
+index 39a2c6ccf31d..55b9675b99c5 100644
+--- a/drivers/media/dvb-core/dvb_demux.c
++++ b/drivers/media/dvb-core/dvb_demux.c
+@@ -28,6 +28,7 @@
+ #include <linux/string.h>
+ #include <linux/crc32.h>
+ #include <linux/uaccess.h>
++#include <linux/device.h>
+ #include <asm/div64.h>
  
- 	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
- 	if (!drv_data) {
-@@ -383,6 +484,10 @@ static int qcom_llcc_probe(struct platform_device *pdev,
- 	num_banks >>= LLCC_LB_CNT_SHIFT;
- 	drv_data->num_banks = num_banks;
+ #include <media/dvb_demux.h>
+@@ -1317,6 +1318,18 @@ int dvb_dmx_init(struct dvb_demux *dvbdemux)
  
-+	cfg = of_device_get_match_data(&pdev->dev);
-+	llcc_cfg = cfg->sct_data;
-+	sz = cfg->size;
+ EXPORT_SYMBOL(dvb_dmx_init);
+ 
++static void dmx_release(void *dvbdemux)
++{
++	dvb_dmx_release(dvbdemux);
++}
 +
- 	for (i = 0; i < sz; i++)
- 		if (llcc_cfg[i].slice_id > drv_data->max_slices)
- 			drv_data->max_slices = llcc_cfg[i].slice_id;
-@@ -429,30 +534,20 @@ static int qcom_llcc_probe(struct platform_device *pdev,
- 	return ret;
++int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *dvbdemux)
++{
++	int rc = dvb_dmx_init(dvbdemux);
++	return rc ? : devm_add_action_or_reset(dev, dmx_release, dvbdemux);
++}
++EXPORT_SYMBOL(devm_dvb_dmx_init);
++
+ void dvb_dmx_release(struct dvb_demux *dvbdemux)
+ {
+ 	vfree(dvbdemux->cnt_storage);
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 209186c5cd9b..4a281cd8c064 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -3007,6 +3007,19 @@ int dvb_register_frontend(struct dvb_adapter *dvb,
  }
+ EXPORT_SYMBOL(dvb_register_frontend);
  
--static int sdm845_qcom_llcc_remove(struct platform_device *pdev)
--{
--	return qcom_llcc_remove(pdev);
--}
--
--static int sdm845_qcom_llcc_probe(struct platform_device *pdev)
--{
--	return qcom_llcc_probe(pdev, sdm845_data, ARRAY_SIZE(sdm845_data));
--}
--
--static const struct of_device_id sdm845_qcom_llcc_of_match[] = {
--	{ .compatible = "qcom,sdm845-llcc", },
-+static const struct of_device_id qcom_llcc_of_match[] = {
-+	{ .compatible = "qcom,sdm845-llcc", .data = &sdm845_cfg },
- 	{ }
- };
++static void unregister_frontend(void *fe)
++{
++	dvb_unregister_frontend(fe);
++}
++
++int devm_dvb_register_frontend(struct device *dev,
++		struct dvb_adapter *dvb, struct dvb_frontend *fe)
++{
++	int rc = dvb_register_frontend(dvb, fe);
++	return rc ? : devm_add_action_or_reset(dev, unregister_frontend, fe);
++}
++EXPORT_SYMBOL(devm_dvb_register_frontend);
++
+ int dvb_unregister_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index a3393cd4e584..0fc8dbf65045 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -885,6 +885,18 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
+ }
+ EXPORT_SYMBOL(dvb_register_adapter);
  
--static struct platform_driver sdm845_qcom_llcc_driver = {
-+static struct platform_driver qcom_llcc_driver = {
- 	.driver = {
--		.name = "sdm845-llcc",
--		.of_match_table = sdm845_qcom_llcc_of_match,
-+		.name = "qcom-llcc",
-+		.of_match_table = qcom_llcc_of_match,
- 	},
--	.probe = sdm845_qcom_llcc_probe,
--	.remove = sdm845_qcom_llcc_remove,
-+	.probe = qcom_llcc_probe,
-+	.remove = qcom_llcc_remove,
- };
--module_platform_driver(sdm845_qcom_llcc_driver);
-+module_platform_driver(qcom_llcc_driver);
++static void unreg_adapter(void *adap)
++{
++	dvb_unregister_adapter(adap);
++}
++
++int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
++		const char *name, struct module *module, short *adapter_nums)
++{
++	int rc = dvb_register_adapter(adap, name, module, dev, adapter_nums);
++	return rc < 0 ? rc : devm_add_action_or_reset(dev, unreg_adapter, adap);
++}
++EXPORT_SYMBOL(devm_dvb_register_adapter);
  
--MODULE_DESCRIPTION("QCOM sdm845 LLCC driver");
-+MODULE_DESCRIPTION("Qualcomm Last Level Cache Controller");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-index d5cad6f7953c..c0acdb28fde8 100644
---- a/include/linux/soc/qcom/llcc-qcom.h
-+++ b/include/linux/soc/qcom/llcc-qcom.h
-@@ -37,95 +37,6 @@ struct llcc_slice_desc {
- 	size_t slice_size;
- };
+ int dvb_unregister_adapter(struct dvb_adapter *adap)
+ {
+diff --git a/include/media/dmxdev.h b/include/media/dmxdev.h
+index baafa3b8aca4..0300d829aeea 100644
+--- a/include/media/dmxdev.h
++++ b/include/media/dmxdev.h
+@@ -204,6 +204,9 @@ struct dmxdev {
+  */
+ int dvb_dmxdev_init(struct dmxdev *dmxdev, struct dvb_adapter *adap);
  
--/**
-- * llcc_slice_config - Data associated with the llcc slice
-- * @usecase_id: Unique id for the client's use case
-- * @slice_id: llcc slice id for each client
-- * @max_cap: The maximum capacity of the cache slice provided in KB
-- * @priority: Priority of the client used to select victim line for replacement
-- * @fixed_size: Boolean indicating if the slice has a fixed capacity
-- * @bonus_ways: Bonus ways are additional ways to be used for any slice,
-- *		if client ends up using more than reserved cache ways. Bonus
-- *		ways are allocated only if they are not reserved for some
-- *		other client.
-- * @res_ways: Reserved ways for the cache slice, the reserved ways cannot
-- *		be used by any other client than the one its assigned to.
-- * @cache_mode: Each slice operates as a cache, this controls the mode of the
-- *             slice: normal or TCM(Tightly Coupled Memory)
-- * @probe_target_ways: Determines what ways to probe for access hit. When
-- *                    configured to 1 only bonus and reserved ways are probed.
-- *                    When configured to 0 all ways in llcc are probed.
-- * @dis_cap_alloc: Disable capacity based allocation for a client
-- * @retain_on_pc: If this bit is set and client has maintained active vote
-- *               then the ways assigned to this client are not flushed on power
-- *               collapse.
-- * @activate_on_init: Activate the slice immediately after it is programmed
-- */
--struct llcc_slice_config {
--	u32 usecase_id;
--	u32 slice_id;
--	u32 max_cap;
--	u32 priority;
--	bool fixed_size;
--	u32 bonus_ways;
--	u32 res_ways;
--	u32 cache_mode;
--	u32 probe_target_ways;
--	bool dis_cap_alloc;
--	bool retain_on_pc;
--	bool activate_on_init;
--};
--
--/**
-- * llcc_drv_data - Data associated with the llcc driver
-- * @regmap: regmap associated with the llcc device
-- * @bcast_regmap: regmap associated with llcc broadcast offset
-- * @cfg: pointer to the data structure for slice configuration
-- * @lock: mutex associated with each slice
-- * @cfg_size: size of the config data table
-- * @max_slices: max slices as read from device tree
-- * @num_banks: Number of llcc banks
-- * @bitmap: Bit map to track the active slice ids
-- * @offsets: Pointer to the bank offsets array
-- * @ecc_irq: interrupt for llcc cache error detection and reporting
-- */
--struct llcc_drv_data {
--	struct regmap *regmap;
--	struct regmap *bcast_regmap;
--	const struct llcc_slice_config *cfg;
--	struct mutex lock;
--	u32 cfg_size;
--	u32 max_slices;
--	u32 num_banks;
--	unsigned long *bitmap;
--	u32 *offsets;
--	int ecc_irq;
--};
--
--/**
-- * llcc_edac_reg_data - llcc edac registers data for each error type
-- * @name: Name of the error
-- * @synd_reg: Syndrome register address
-- * @count_status_reg: Status register address to read the error count
-- * @ways_status_reg: Status register address to read the error ways
-- * @reg_cnt: Number of registers
-- * @count_mask: Mask value to get the error count
-- * @ways_mask: Mask value to get the error ways
-- * @count_shift: Shift value to get the error count
-- * @ways_shift: Shift value to get the error ways
-- */
--struct llcc_edac_reg_data {
--	char *name;
--	u64 synd_reg;
--	u64 count_status_reg;
--	u64 ways_status_reg;
--	u32 reg_cnt;
--	u32 count_mask;
--	u32 ways_mask;
--	u8  count_shift;
--	u8  ways_shift;
--};
--
- #if IS_ENABLED(CONFIG_QCOM_LLCC)
++int devm_dvb_dmxdev_init(struct device *dev, struct dmxdev *dmxdev,
++		struct dvb_adapter *dvb_adapter);
++
  /**
-  * llcc_slice_getd - get llcc slice descriptor
+  * dvb_dmxdev_release - releases a digital TV demux and unregisters it.
+  *
+diff --git a/include/media/dvb_demux.h b/include/media/dvb_demux.h
+index 3b6aeca7a49e..95fe901076d7 100644
+--- a/include/media/dvb_demux.h
++++ b/include/media/dvb_demux.h
+@@ -266,6 +266,8 @@ struct dvb_demux {
+  */
+ int dvb_dmx_init(struct dvb_demux *demux);
+ 
++int devm_dvb_dmx_init(struct device *dev, struct dvb_demux *demux);
++
+ /**
+  * dvb_dmx_release - releases a digital TV demux internal buffers.
+  *
+diff --git a/include/media/dvb_frontend.h b/include/media/dvb_frontend.h
+index f05cd7b94a2c..56dbaf3cc7a9 100644
+--- a/include/media/dvb_frontend.h
++++ b/include/media/dvb_frontend.h
+@@ -713,6 +713,9 @@ struct dvb_frontend {
+ int dvb_register_frontend(struct dvb_adapter *dvb,
+ 				 struct dvb_frontend *fe);
+ 
++int devm_dvb_register_frontend(struct device *dev,
++		struct dvb_adapter *dvb, struct dvb_frontend *fe);
++
+ /**
+  * dvb_unregister_frontend() - Unregisters a DVB frontend
+  *
+diff --git a/include/media/dvbdev.h b/include/media/dvbdev.h
+index 551325858de3..32f8d1626319 100644
+--- a/include/media/dvbdev.h
++++ b/include/media/dvbdev.h
+@@ -202,6 +202,9 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
+ 			 struct module *module, struct device *device,
+ 			 short *adapter_nums);
+ 
++int devm_dvb_register_adapter(struct device *dev, struct dvb_adapter *adap,
++		const char *name, struct module *module, short *adapter_nums);
++
+ /**
+  * dvb_unregister_adapter - Unregisters a DVB adapter
+  *
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+2.17.1
