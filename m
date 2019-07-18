@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588CEC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A28C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2534421841
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BC121841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419184;
-	bh=id5xTGZWb3XlWrAhj085noDDY/dIansEgTy9xjKT/3k=;
+	s=default; t=1563419188;
+	bh=sWK4i+p/35T5hB/RVRHRHVv3oqwIeJXgGkvOV38q0UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RaiL6Gpc6kinDLfmHQ6wVWtv2ZL5k5gmWMJ5GjfBSmJjCgvYOPENpY5IvwUCQ5M2x
-	 CUytww5WQbFIkxi6HVi+ibfE1N1HiEFt8Drs1HqAl2nPx33dB0Ne3uW0n4szXTajd/
-	 J5p9dJHF2yV5g2cjB/1PE9HrXDk5GOWf+juiqD/s=
+	b=zoIq97hkIl9qNUJN1hf6zy8+DwkHFeEszoGan+oF6b9lZwEr4z2tV5OSkn1wDb5Y0
+	 s3Erm/JLnhvK6ygLPAF+1pSV6TU8Q92Ev6pY32oig+0CDwu+P3RydYFzn1eOI/Zowm
+	 Syd/SF08/cMUtePmdob0fUVUIRXrvgvMe6HThZI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733109AbfGRDGW (ORCPT
+        id S2390215AbfGRDG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37530 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbfGRDGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:19 -0400
+        id S2390204AbfGRDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:23 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE26121848;
-        Thu, 18 Jul 2019 03:06:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3C9D2173E;
+        Thu, 18 Jul 2019 03:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419178;
-        bh=id5xTGZWb3XlWrAhj085noDDY/dIansEgTy9xjKT/3k=;
+        s=default; t=1563419182;
+        bh=sWK4i+p/35T5hB/RVRHRHVv3oqwIeJXgGkvOV38q0UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NzEbCdLZYSo06r7zLSTZMHC1R1S3BO0b9Uty6Grfut6G7JZhMvd4spdvA5vQq7mRK
-         Bwv1P0ezvgu8Uyw/t+SUbmksSGI/WJZfzosWu1PNXaXN1sPQ6H+Kk+MYGCRMO0YPDt
-         2ifLirr0Zy7aPGJLj3GdqtpyG04KdfprkPIfvyrs=
+        b=UxgCm66L9bYn3Ze8Ye4hez6Y6d2KyZaEhaL+lersMU92mLFmJP8Pouy3F1iZSo4Cp
+         GBS37j/jT6qk90I0CvtEgYO9qXBILsA2/9aSMGFIMCzpr/cPSY6l4VLOAo7syVNrQk
+         /omRM4sNoiG0IEiyECo2I0bKraHo7LOPsrNBp1Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Jan Beulich <jbeulich@suse.com>
-Subject: [PATCH 5.1 46/54] x86/irq: Seperate unused system vectors from spurious entry again
-Date:   Thu, 18 Jul 2019 12:01:41 +0900
-Message-Id: <20190718030056.742367806@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH 5.1 48/54] s390: fix stfle zero padding
+Date:   Thu, 18 Jul 2019 12:01:43 +0900
+Message-Id: <20190718030056.913035326@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -61,209 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-commit f8a8fe61fec8006575699559ead88b0b833d5cad upstream.
+commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
 
-Quite some time ago the interrupt entry stubs for unused vectors in the
-system vector range got removed and directly mapped to the spurious
-interrupt vector entry point.
+The stfle inline assembly returns the number of double words written
+(condition code 0) or the double words it would have written
+(condition code 3), if the memory array it got as parameter would have
+been large enough.
 
-Sounds reasonable, but it's subtly broken. The spurious interrupt vector
-entry point pushes vector number 0xFF on the stack which makes the whole
-logic in __smp_spurious_interrupt() pointless.
+The current stfle implementation assumes that the array is always
+large enough and clears those parts of the array that have not been
+written to with a subsequent memset call.
 
-As a consequence any spurious interrupt which comes from a vector != 0xFF
-is treated as a real spurious interrupt (vector 0xFF) and not
-acknowledged. That subsequently stalls all interrupt vectors of equal and
-lower priority, which brings the system to a grinding halt.
+If however the array is not large enough memset will get a negative
+length parameter, which means that memset clears memory until it gets
+an exception and the kernel crashes.
 
-This can happen because even on 64-bit the system vector space is not
-guaranteed to be fully populated. A full compile time handling of the
-unused vectors is not possible because quite some of them are conditonally
-populated at runtime.
+To fix this simply limit the maximum length. Move also the inline
+assembly to an extra function to avoid clobbering of register 0, which
+might happen because of the added min_t invocation together with code
+instrumentation.
 
-Bring the entry stubs back, which wastes 160 bytes if all stubs are unused,
-but gains the proper handling back. There is no point to selectively spare
-some of the stubs which are known at compile time as the required code in
-the IDT management would be way larger and convoluted.
+The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
+facility list handling") but was rather harmless, since it would only
+write to a rather large array. It became a potential problem with
+commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
+then it writes to an array with only four double words, while some
+machines already deliver three double words. As soon as machines have
+a facility bit within the fifth double a crash on IPL would happen.
 
-Do not route the spurious entries through common_interrupt and do_IRQ() as
-the original code did. Route it to smp_spurious_interrupt() which evaluates
-the vector number and acts accordingly now that the real vector numbers are
-handed in.
-
-Fixup the pr_warn so the actual spurious vector (0xff) is clearly
-distiguished from the other vectors and also note for the vectored case
-whether it was pending in the ISR or not.
-
- "Spurious APIC interrupt (vector 0xFF) on CPU#0, should never happen."
- "Spurious interrupt vector 0xed on CPU#1. Acked."
- "Spurious interrupt vector 0xee on CPU#1. Not pending!."
-
-Fixes: 2414e021ac8d ("x86: Avoid building unused IRQ entry stubs")
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Jan Beulich <jbeulich@suse.com>
-Link: https://lkml.kernel.org/r/20190628111440.550568228@linutronix.de
+Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
+Cc: <stable@vger.kernel.org> # v2.6.37+
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_32.S     |   24 ++++++++++++++++++++++++
- arch/x86/entry/entry_64.S     |   30 ++++++++++++++++++++++++++----
- arch/x86/include/asm/hw_irq.h |    2 ++
- arch/x86/kernel/apic/apic.c   |   33 ++++++++++++++++++++++-----------
- arch/x86/kernel/idt.c         |    3 ++-
- 5 files changed, 76 insertions(+), 16 deletions(-)
+ arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1105,6 +1105,30 @@ ENTRY(irq_entries_start)
-     .endr
- END(irq_entries_start)
- 
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	.align 8
-+ENTRY(spurious_entries_start)
-+    vector=FIRST_SYSTEM_VECTOR
-+    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
-+	pushl	$(~vector+0x80)			/* Note: always in signed byte range */
-+    vector=vector+1
-+	jmp	common_spurious
-+	.align	8
-+    .endr
-+END(spurious_entries_start)
-+
-+common_spurious:
-+	ASM_CLAC
-+	addl	$-0x80, (%esp)			/* Adjust vector into the [-256, -1] range */
-+	SAVE_ALL switch_stacks=1
-+	ENCODE_FRAME_POINTER
-+	TRACE_IRQS_OFF
-+	movl	%esp, %eax
-+	call	smp_spurious_interrupt
-+	jmp	ret_from_intr
-+ENDPROC(common_interrupt)
-+#endif
-+
- /*
-  * the CPU automatically disables interrupts when executing an IRQ vector,
-  * so IRQ-flags tracing has to follow that:
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -377,6 +377,18 @@ ENTRY(irq_entries_start)
-     .endr
- END(irq_entries_start)
- 
-+	.align 8
-+ENTRY(spurious_entries_start)
-+    vector=FIRST_SYSTEM_VECTOR
-+    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
-+	UNWIND_HINT_IRET_REGS
-+	pushq	$(~vector+0x80)			/* Note: always in signed byte range */
-+	jmp	common_spurious
-+	.align	8
-+	vector=vector+1
-+    .endr
-+END(spurious_entries_start)
-+
- .macro DEBUG_ENTRY_ASSERT_IRQS_OFF
- #ifdef CONFIG_DEBUG_ENTRY
- 	pushq %rax
-@@ -573,10 +585,20 @@ _ASM_NOKPROBE(interrupt_entry)
- 
- /* Interrupt entry/exit. */
- 
--	/*
--	 * The interrupt stubs push (~vector+0x80) onto the stack and
--	 * then jump to common_interrupt.
--	 */
-+/*
-+ * The interrupt stubs push (~vector+0x80) onto the stack and
-+ * then jump to common_spurious/interrupt.
-+ */
-+common_spurious:
-+	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
-+	call	interrupt_entry
-+	UNWIND_HINT_REGS indirect=1
-+	call	smp_spurious_interrupt		/* rdi points to pt_regs */
-+	jmp	ret_from_intr
-+END(common_spurious)
-+_ASM_NOKPROBE(common_spurious)
-+
-+/* common_interrupt is a hotpath. Align it */
- 	.p2align CONFIG_X86_L1_CACHE_SHIFT
- common_interrupt:
- 	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -150,6 +150,8 @@ extern char irq_entries_start[];
- #define trace_irq_entries_start irq_entries_start
- #endif
- 
-+extern char spurious_entries_start[];
-+
- #define VECTOR_UNUSED		NULL
- #define VECTOR_SHUTDOWN		((void *)~0UL)
- #define VECTOR_RETRIGGERED	((void *)~1UL)
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2035,21 +2035,32 @@ __visible void __irq_entry smp_spurious_
- 	entering_irq();
- 	trace_spurious_apic_entry(vector);
- 
-+	inc_irq_stat(irq_spurious_count);
-+
-+	/*
-+	 * If this is a spurious interrupt then do not acknowledge
-+	 */
-+	if (vector == SPURIOUS_APIC_VECTOR) {
-+		/* See SDM vol 3 */
-+		pr_info("Spurious APIC interrupt (vector 0xFF) on CPU#%d, should never happen.\n",
-+			smp_processor_id());
-+		goto out;
-+	}
-+
- 	/*
--	 * Check if this really is a spurious interrupt and ACK it
--	 * if it is a vectored one.  Just in case...
--	 * Spurious interrupts should not be ACKed.
-+	 * If it is a vectored one, verify it's set in the ISR. If set,
-+	 * acknowledge it.
- 	 */
- 	v = apic_read(APIC_ISR + ((vector & ~0x1f) >> 1));
--	if (v & (1 << (vector & 0x1f)))
-+	if (v & (1 << (vector & 0x1f))) {
-+		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Acked\n",
-+			vector, smp_processor_id());
- 		ack_APIC_irq();
--
--	inc_irq_stat(irq_spurious_count);
--
--	/* see sw-dev-man vol 3, chapter 7.4.13.5 */
--	pr_info("spurious APIC interrupt through vector %02x on CPU#%d, "
--		"should never happen.\n", vector, smp_processor_id());
--
-+	} else {
-+		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Not pending!\n",
-+			vector, smp_processor_id());
-+	}
-+out:
- 	trace_spurious_apic_exit(vector);
- 	exiting_irq();
+--- a/arch/s390/include/asm/facility.h
++++ b/arch/s390/include/asm/facility.h
+@@ -59,6 +59,18 @@ static inline int test_facility(unsigned
+ 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
  }
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -321,7 +321,8 @@ void __init idt_setup_apic_and_irq_gates
- #ifdef CONFIG_X86_LOCAL_APIC
- 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
- 		set_bit(i, system_vectors);
--		set_intr_gate(i, spurious_interrupt);
-+		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
-+		set_intr_gate(i, entry);
+ 
++static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
++{
++	register unsigned long reg0 asm("0") = size - 1;
++
++	asm volatile(
++		".insn s,0xb2b00000,0(%1)" /* stfle */
++		: "+d" (reg0)
++		: "a" (stfle_fac_list)
++		: "memory", "cc");
++	return reg0;
++}
++
+ /**
+  * stfle - Store facility list extended
+  * @stfle_fac_list: array where facility list can be stored
+@@ -75,13 +87,8 @@ static inline void __stfle(u64 *stfle_fa
+ 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
+ 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
+ 		/* More facility bits available with stfle */
+-		register unsigned long reg0 asm("0") = size - 1;
+-
+-		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
+-			     : "+d" (reg0)
+-			     : "a" (stfle_fac_list)
+-			     : "memory", "cc");
+-		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
++		nr = __stfle_asm(stfle_fac_list, size);
++		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
  	}
- #endif
+ 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
  }
 
 
