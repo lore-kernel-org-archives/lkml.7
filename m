@@ -2,100 +2,88 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43F2C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB9C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BA8217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:34:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u6F+WnLG"
+	by mail.kernel.org (Postfix) with ESMTP id A6CB620873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbfGROed (ORCPT
+        id S2390376AbfGROhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:34:33 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37576 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGROed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:34:33 -0400
-Received: by mail-io1-f67.google.com with SMTP id q22so51773376iog.4;
-        Thu, 18 Jul 2019 07:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oDl7E8YKcAEhCCAp8p0njilUrHjKHf6sfibp/FHWZTo=;
-        b=u6F+WnLGI2ptAR4uryiw92FIXjSyTxJroviYtGMBHF1degDfacRhXmmY7s41c2f/kB
-         /R1DuuvYeiI5maIhSSYwosX0qRoZghfT49S29+Wm6vOyMNFp0J9GZtIPAPtQtm4YylID
-         xwrkjNb9k8TclP+0zVToQAvVF/4CH//fITQdiAtUU5ByuKONgkYm+kC9RKrudkGSzhxR
-         jUFWuULz1d0LILvm+m1dOAOdmM/3F/IhCCjO2vmwDIGGFo79UW56ywXAQuKceGq1g/l1
-         dKbInlHFhNgnQCsV3qCwHvJLmPjZtNfm2ws80mU74Y4RZxYE7hId0xU+VSw3/c4qAxcV
-         fvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oDl7E8YKcAEhCCAp8p0njilUrHjKHf6sfibp/FHWZTo=;
-        b=ifkvwy3YkniX0fX7a2jixMA9hxsdei8GDdbr6Wrq31lOh3MY0FED8/RD+Tc/sz3RDa
-         Or9p+4zTR9OUaSnALAwUq2eta9KWcnKAFn79Glnvuk710arRoNUuRRWrasw51CVrrZok
-         IGU/Y9mozhv3HZvfSdLaKS6UF/1gqgVzGd6iMIfCbcFZPHOo6axd+AixhjBi+6wSYvKp
-         /7QKUJ4JYueteFqZQSK8hootpQNQZlEblcuCoxdAuqPDJKJ1HpnYqydH3WCTBJL4YHMz
-         LucqXtnjgiBCDmVklxCCaPQ0lequ8zUcVs9ouHP12LMbhrcIPVNA1XKb18dQpynwUjnq
-         Kb6g==
-X-Gm-Message-State: APjAAAXlBP2ZNPMRuujciV4u7lE+d8uJoCLl9CP4XC+rJsdVtX3kmYL8
-        bXiZ5ygxrgg0KtmfmYbZkc2Fde8d
-X-Google-Smtp-Source: APXvYqwbrz77pJJV1QMk+m26XOfbGgZ4WjOwTiuDXjo1erC4rtTCZ5iiYUeN8N3ZmggpXfDYhuVH9w==
-X-Received: by 2002:a6b:ee15:: with SMTP id i21mr11002926ioh.281.1563460471939;
-        Thu, 18 Jul 2019 07:34:31 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id x13sm21001895ioj.18.2019.07.18.07.34.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 07:34:31 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Fugang Duan <fugang.duan@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: fec: generate warning when using deprecated phy reset
-Date:   Thu, 18 Jul 2019 10:34:28 -0400
-Message-Id: <20190718143428.2392-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 18 Jul 2019 10:37:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50288 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726040AbfGROhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:37:04 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8C258C09AD0F;
+        Thu, 18 Jul 2019 14:37:02 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 14D3660576;
+        Thu, 18 Jul 2019 14:36:59 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm, slab: Show last shrink time in us when
+ slab/shrink is read
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <20190717202413.13237-1-longman@redhat.com>
+ <20190717202413.13237-3-longman@redhat.com>
+ <0100016c04e1562a-e516c595-1d46-40df-ab29-da1709277e9a-000000@email.amazonses.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <6fb9f679-02d1-c33f-2d79-4c2eaa45d264@redhat.com>
+Date:   Thu, 18 Jul 2019 10:36:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <0100016c04e1562a-e516c595-1d46-40df-ab29-da1709277e9a-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 18 Jul 2019 14:37:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allowing the fec to reset its PHY via the phy-reset-gpios
-devicetree property is deprecated. To improve developer
-awareness, generate a warning whenever the deprecated
-property is used.
+On 7/18/19 7:39 AM, Christopher Lameter wrote:
+> On Wed, 17 Jul 2019, Waiman Long wrote:
+>
+>> The show method of /sys/kernel/slab/<slab>/shrink sysfs file currently
+>> returns nothing. This is now modified to show the time of the last
+>> cache shrink operation in us.
+> What is this useful for? Any use cases?
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I got query about how much time will the slab_mutex be held when
+shrinking the cache. I don't have a solid answer as it depends on how
+many memcg caches are there. This patch is a partial answer to that as
+it give a rough upper bound of the lock hold time.
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 38f10f7dcbc3..00e1b5e4ef71 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -3244,6 +3244,12 @@ static int fec_reset_phy(struct platform_device *pdev)
- 	else if (!gpio_is_valid(phy_reset))
- 		return 0;
- 
-+	/* Recommended way to provide a PHY reset:
-+	 * - create a phy devicetree node, and link it to its fec (phy-handle)
-+	 * - add your reset gpio to the phy devicetree node
-+	 */
-+	dev_warn(&pdev->dev, "devicetree: phy-reset-gpios is deprecated\n");
-+
- 	err = of_property_read_u32(np, "phy-reset-post-delay", &phy_post_delay);
- 	/* valid reset duration should be less than 1s */
- 	if (!err && phy_post_delay > 1000)
--- 
-2.17.1
+
+>> CONFIG_SLUB_DEBUG depends on CONFIG_SYSFS. So the new shrink_us field
+>> is always available to the shrink methods.
+> Aside from minimal systems without CONFIG_SYSFS... Does this build without
+> CONFIG_SYSFS?
+
+The sysfs code in mm/slub.c is guarded by CONFIG_SLUB_DEBUG which, in
+turn, depends on CONFIG_SYSFS. So if CONFIG_SYSFS is off, the shrink
+sysfs methods will be off as well. I haven't tried doing a minimal
+build. I will certainly try that, but I don't expect any problem here.
+
+Cheers,
+Longman
 
