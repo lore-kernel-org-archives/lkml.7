@@ -2,127 +2,256 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7052C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1884C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9821521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D67421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389951AbfGRMEH (ORCPT
+        id S2390003AbfGRMFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:04:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59520 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726608AbfGRMEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:04:07 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IC3r23067938
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:04:05 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttqxq17c4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:03:59 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jremus@linux.ibm.com>;
-        Thu, 18 Jul 2019 13:02:28 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 13:02:24 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IC2Ahe29557076
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 12:02:10 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D05D65206C;
-        Thu, 18 Jul 2019 12:02:23 +0000 (GMT)
-Received: from [9.152.224.207] (unknown [9.152.224.207])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7030552077;
-        Thu, 18 Jul 2019 12:02:23 +0000 (GMT)
-Subject: Re: [PATCH] vt: Grab console_lock around con_is_bound in show_bind
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Martin Hostettler <textshell@uchuujin.de>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
-From:   Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Date:   Thu, 18 Jul 2019 14:02:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 18 Jul 2019 08:05:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34390 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726715AbfGRMFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 08:05:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1FAC3AD4D;
+        Thu, 18 Jul 2019 12:05:50 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 14:05:47 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     akpm@linux-foundation.org
+Cc:     dan.j.williams@intel.com, david@redhat.com,
+        pasha.tatashin@soleen.com, mhocko@suse.com,
+        aneesh.kumar@linux.ibm.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm,memory_hotplug: Fix shrink_{zone,node}_span
+Message-ID: <20190718120543.GA8500@linux>
+References: <20190715081549.32577-1-osalvador@suse.de>
+ <20190715081549.32577-3-osalvador@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071812-0012-0000-0000-000003340C87
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071812-0013-0000-0000-0000216D8E5C
-Message-Id: <d242e41d-04cf-ba0e-2d81-9ed1a9c52195@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715081549.32577-3-osalvador@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 18.07.2019 um 10:09 schrieb Daniel Vetter:
-> Not really harmful not to, but also not harm in grabbing the lock. And
-> this shuts up a new WARNING I introduced in commit ddde3c18b700 ("vt:
-> More locking checks").
+On Mon, Jul 15, 2019 at 10:15:49AM +0200, Oscar Salvador wrote:
+> Since [1], shrink_{zone,node}_span work on PAGES_PER_SUBSECTION granularity.
+> The problem is that deactivation of the section occurs later on in
+> sparse_remove_section, so pfn_valid()->pfn_section_valid() will always return
+> true before we deactivate the {sub}section.
 > 
-> Reported-by: Jens Remus <jremus@linux.ibm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Martin Hostettler <textshell@uchuujin.de>
-> Cc: Adam Borowski <kilobyte@angband.pl>
-> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
+> I spotted this during hotplug hotremove tests, there I always saw that
+> spanned_pages was, at least, left with PAGES_PER_SECTION, even if we
+> removed all memory linked to that zone.
+> 
+> Fix this by decoupling section_deactivate from sparse_remove_section, and
+> re-order the function calls.
+> 
+> Now, __remove_section will:
+> 
+> 1) deactivate section
+> 2) shrink {zone,node}'s pages
+> 3) remove section
+> 
+> [1] https://patchwork.kernel.org/patch/11003467/
+
+Hi Andrew,
+
+Please, drop this patch as patch [1] is the easiest way to fix this.
+
+thanks a lot
+
+[1] https://patchwork.kernel.org/patch/11047499/
+
+> 
+> Fixes: mmotm ("mm/hotplug: prepare shrink_{zone, pgdat}_span for sub-section removal")
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
 > ---
->   drivers/tty/vt/vt.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
+>  include/linux/memory_hotplug.h |  7 ++--
+>  mm/memory_hotplug.c            |  6 +++-
+>  mm/sparse.c                    | 77 +++++++++++++++++++++++++++++-------------
+>  3 files changed, 62 insertions(+), 28 deletions(-)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index f46ea71b4ffd..d2eb917aad5f 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -348,9 +348,10 @@ extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>  extern bool is_memblock_offlined(struct memory_block *mem);
+>  extern int sparse_add_section(int nid, unsigned long pfn,
+>  		unsigned long nr_pages, struct vmem_altmap *altmap);
+> -extern void sparse_remove_section(struct mem_section *ms,
+> -		unsigned long pfn, unsigned long nr_pages,
+> -		unsigned long map_offset, struct vmem_altmap *altmap);
+> +int sparse_deactivate_section(unsigned long pfn, unsigned long nr_pages);
+> +void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
+> +                           unsigned long map_offset, struct vmem_altmap *altmap,
+> +                           int section_empty);
+>  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
+>  					  unsigned long pnum);
+>  extern bool allow_online_pfn_range(int nid, unsigned long pfn, unsigned long nr_pages,
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index b9ba5b85f9f7..03d535eee60d 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -517,12 +517,16 @@ static void __remove_section(struct zone *zone, unsigned long pfn,
+>  		struct vmem_altmap *altmap)
+>  {
+>  	struct mem_section *ms = __nr_to_section(pfn_to_section_nr(pfn));
+> +	int ret;
+>  
+>  	if (WARN_ON_ONCE(!valid_section(ms)))
+>  		return;
+>  
+> +	ret = sparse_deactivate_section(pfn, nr_pages);
+>  	__remove_zone(zone, pfn, nr_pages);
+> -	sparse_remove_section(ms, pfn, nr_pages, map_offset, altmap);
+> +	if (ret >= 0)
+> +		sparse_remove_section(pfn, nr_pages, map_offset, altmap,
+> +				      ret);
+>  }
+>  
+>  /**
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 1e224149aab6..d4953ee1d087 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -732,16 +732,47 @@ static void free_map_bootmem(struct page *memmap)
+>  }
+>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>  
+> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> -		struct vmem_altmap *altmap)
+> +static void section_remove(unsigned long pfn, unsigned long nr_pages,
+> +			   struct vmem_altmap *altmap, int section_empty)
+> +{
+> +	struct mem_section *ms = __pfn_to_section(pfn);
+> +	bool section_early = early_section(ms);
+> +	struct page *memmap = NULL;
+> +
+> +	if (section_empty) {
+> +		unsigned long section_nr = pfn_to_section_nr(pfn);
+> +
+> +		if (!section_early) {
+> +			kfree(ms->usage);
+> +			ms->usage = NULL;
+> +		}
+> +		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+> +		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
+> +	}
+> +
+> +        if (section_early && memmap)
+> +		free_map_bootmem(memmap);
+> +        else
+> +		depopulate_section_memmap(pfn, nr_pages, altmap);
+> +}
+> +
+> +/**
+> + * section_deactivate: Deactivate a {sub}section.
+> + *
+> + * Return:
+> + * * -1         - {sub}section has already been deactivated.
+> + * * 0          - Section is not empty
+> + * * 1          - Section is empty
+> + */
+> +
+> +static int section_deactivate(unsigned long pfn, unsigned long nr_pages)
+>  {
+>  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+>  	struct mem_section *ms = __pfn_to_section(pfn);
+> -	bool section_is_early = early_section(ms);
+> -	struct page *memmap = NULL;
+>  	unsigned long *subsection_map = ms->usage
+>  		? &ms->usage->subsection_map[0] : NULL;
+> +	int section_empty = 0;
+>  
+>  	subsection_mask_set(map, pfn, nr_pages);
+>  	if (subsection_map)
+> @@ -750,7 +781,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+>  				"section already deactivated (%#lx + %ld)\n",
+>  				pfn, nr_pages))
+> -		return;
+> +		return -1;
+>  
+>  	/*
+>  	 * There are 3 cases to handle across two configurations
+> @@ -770,21 +801,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+>  	 */
+>  	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> -	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
+> -		unsigned long section_nr = pfn_to_section_nr(pfn);
+> -
+> -		if (!section_is_early) {
+> -			kfree(ms->usage);
+> -			ms->usage = NULL;
+> -		}
+> -		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+> -		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
+> -	}
+> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
+> +		section_empty = 1;
+>  
+> -	if (section_is_early && memmap)
+> -		free_map_bootmem(memmap);
+> -	else
+> -		depopulate_section_memmap(pfn, nr_pages, altmap);
+> +	return section_empty;
+>  }
+>  
+>  static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> @@ -834,7 +854,11 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>  
+>  	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap);
+>  	if (!memmap) {
+> -		section_deactivate(pfn, nr_pages, altmap);
+> +		int ret;
+> +
+> +		ret = section_deactivate(pfn, nr_pages);
+> +		if (ret >= 0)
+> +			section_remove(pfn, nr_pages, altmap, ret);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+> @@ -919,12 +943,17 @@ static inline void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
+>  }
+>  #endif
+>  
+> -void sparse_remove_section(struct mem_section *ms, unsigned long pfn,
+> -		unsigned long nr_pages, unsigned long map_offset,
+> -		struct vmem_altmap *altmap)
+> +int sparse_deactivate_section(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	return section_deactivate(pfn, nr_pages);
+> +}
+> +
+> +void sparse_remove_section(unsigned long pfn, unsigned long nr_pages,
+> +			   unsigned long map_offset, struct vmem_altmap *altmap,
+> +			   int section_empty)
+>  {
+>  	clear_hwpoisoned_pages(pfn_to_page(pfn) + map_offset,
+>  			nr_pages - map_offset);
+> -	section_deactivate(pfn, nr_pages, altmap);
+> +	section_remove(pfn, nr_pages, altmap, section_empty);
+>  }
+>  #endif /* CONFIG_MEMORY_HOTPLUG */
+> -- 
+> 2.12.3
+> 
 
-Thank you for the quick fix! Looks fine to me. Did test with cat as well 
-as our dump2tar utility. The warning is gone.
-
-Tested-by: Jens Remus <jremus@linux.ibm.com>
-
-Regards,
-Jens Remus
 -- 
-Linux on Z and z/VSE Development & Service (D3229)
-IBM Systems & Technology Group, Pure Systems & Modular Software Development
-
-IBM Data Privacy Statement: https://www.ibm.com/privacy/us/en/
-
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Oscar Salvador
+SUSE L3
