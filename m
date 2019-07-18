@@ -2,80 +2,60 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E614C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D08C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0A120873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFA920873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfGRX3a (ORCPT
+        id S1726220AbfGRXcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 19:29:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:57158 "EHLO
+        Thu, 18 Jul 2019 19:32:10 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:57218 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfGRX33 (ORCPT
+        with ESMTP id S1725992AbfGRXcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 19:29:29 -0400
+        Thu, 18 Jul 2019 19:32:10 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D0A7C1528C8AF;
-        Thu, 18 Jul 2019 16:29:28 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 16:29:28 -0700 (PDT)
-Message-Id: <20190718.162928.124906203979938369.davem@davemloft.net>
-To:     cai@lca.pw
-Cc:     morbo@google.com, ndesaulniers@google.com, jyknight@google.com,
-        sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        arnd@arndb.de, dhowells@redhat.com, hpa@zytor.com,
-        netdev@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, natechancellor@gmail.com
-Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8A45A1528C8C4;
+        Thu, 18 Jul 2019 16:32:09 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 16:32:07 -0700 (PDT)
+Message-Id: <20190718.163207.289099133864098969.davem@davemloft.net>
+To:     chuhongyuan@outlook.com
+Cc:     csully@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gve: replace kfree with kvfree
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
-References: <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
-        <CAGG=3QUvdwJs1wW1w+5Mord-qFLa=_WkjTsiZuwGfcjkoEJGNQ@mail.gmail.com>
-        <75B428FC-734C-4B15-B1A7-A3FC5F9F2FE5@lca.pw>
+In-Reply-To: <MWHPR11MB1757F23147F85B59BCF1628BAFC90@MWHPR11MB1757.namprd11.prod.outlook.com>
+References: <MWHPR11MB1757F23147F85B59BCF1628BAFC90@MWHPR11MB1757.namprd11.prod.outlook.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jul 2019 16:29:29 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jul 2019 16:32:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
-Date: Thu, 18 Jul 2019 19:26:47 -0400
+From: Chuhong YUAN <chuhongyuan@outlook.com>
+Date: Wed, 17 Jul 2019 00:59:02 +0000
 
+> Variables allocated by kvzalloc should not be freed by kfree.
+> Because they may be allocated by vmalloc.
+> So we replace kfree with kvfree here.
 > 
-> 
->> On Jul 18, 2019, at 5:21 PM, Bill Wendling <morbo@google.com> wrote:
->> 
->> [My previous response was marked as spam...]
->> 
->> Top-of-tree clang says that it's const:
->> 
->> $ gcc a.c -O2 && ./a.out
->> a is a const.
->> 
->> $ clang a.c -O2 && ./a.out
->> a is a const.
-> 
-> 
-> I used clang-7.0.1. So, this is getting worse where both GCC and clang will start to suffer the
-> same problem.
+> Signed-off-by: Chuhong Yuan <chuhongyuan@outlook.com>
 
-Then rewrite the module parameter macros such that the non-constness
-is evident to all compilers regardless of version.
+Applied, thanks Chuhong.
 
-That is the place to fix this, otherwise we will just be adding hacks
-all over the place rather than in just one spot.
-
-Thanks.
+GVE maintainers, you are upstream now and have to stay on top of review
+of changes like this.  Otherwise I'll just review it myself and apply
+it unless I find problems, and that may not be what you want :)
