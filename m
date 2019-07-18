@@ -2,233 +2,942 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD9DC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C915C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE97217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:22:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LMkaZKuo"
+	by mail.kernel.org (Postfix) with ESMTP id 17936217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733198AbfGRBWo (ORCPT
+        id S2387395AbfGRBWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 21:22:44 -0400
-Received: from mail-eopbgr1300120.outbound.protection.outlook.com ([40.107.130.120]:36552
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727487AbfGRBWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 21:22:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VR0UmS6QCqLmXUknHKN+LWfyTfsUcwn6ld3ijoh3RTDt0zk8e4l27LZ8CCuIo5/T9j57M6ZMMR3B7nlEahBESJIarWhAnIM9R0WevP2hYDoXyIMtO7tRq2+WjPUv2R9+0Ab5PXho28R3ej6hVqLs9nwco1/WgFYPLvX0EoH1/UYnu/o+eGAU0RACBHH4/LWOWpbga8JFjzo1/N55n1VI/NHwddtya/aR2fPsZcGGkvUzMO2U6vgTkr0SCAEe+eyFRN7NSevdafd65FeZ04bkOKvgPbx7fJRBsqC153eW5PAlhrlo6PbQsDvG8XW9H+ZsL6+9TMMu2XzION/UrYO/sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=INrghvx6QgGLPW0M1Vvb6Plp2C+EXbUyZnGTqOtgRPo=;
- b=lvx9F7i3PJQbpmx4yqX7we+2syS1kGs6EOobMgKoYVGv9Xia/YeVBUUoRd5C7gtI4Wf+YDB563u/PFrjpgFm6g5IiLs19CMzC7kf0AUfO8LFNpxPzvErWj1tU4LX3d48sRjxDnj+R5BQ6tj1dOlCVpnFJDKFDMwrNZ/FUH5zF543Q2eHZGkCIb0rfZJvnwTa7iBlhr3w+zEE0USlXqxaAEyav2f6LZwWS5e+SXrAjJpgT6P2mfQuWRlMbi2B3PxUn6r/sgqYVV+PlgtPZKMK6zp3c8jP5+Bcie/fdiW5CSCiLNj+OVd5M6kv5dMNMK3quuzUDKKyaeXvs/CIdH7FxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microsoft.com;dmarc=pass action=none
- header.from=microsoft.com;dkim=pass header.d=microsoft.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=INrghvx6QgGLPW0M1Vvb6Plp2C+EXbUyZnGTqOtgRPo=;
- b=LMkaZKuozO9+ywQ832bS3NsQNsHOc1JT/iwy4ta4GULP4mwKeW1PJtlXkjlIeoHAzdePC+dGmSeNmPcexzxjaUfmZba+2Yo5e0mCgvsVcc+lkLjUjTzutBKEVF0Q6vEPzVJH1N7LFzphnQOdm2SgttyuYs+3cmDWclr/MVrjuMk=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.0; Thu, 18 Jul 2019 01:22:16 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::383c:3887:faf8:650a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::383c:3887:faf8:650a%5]) with mapi id 15.20.2115.005; Thu, 18 Jul 2019
- 01:22:16 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>, vkuznets <vkuznets@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>
-Subject: RE: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
- offlining
-Thread-Topic: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
- offlining
-Thread-Index: AdUyCb6p1/Ch6raqSV2uCwYf/NBGWgK6h7yAAAMgE9A=
-Date:   Thu, 18 Jul 2019 01:22:16 +0000
-Message-ID: <PU1P153MB01693AB444C4A432FBA2507BBFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB01697CBE66649B4BA91D8B48BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <alpine.DEB.2.21.1907180058210.1778@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1907180058210.1778@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-07-18T01:22:12.0208587Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2a25d370-a8e8-4bca-8fb5-f9b262d22e21;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:3:1ae:f803:a045:b2c5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d00ea60-f617-4ac3-ac37-08d70b1e5eec
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0153;
-x-ms-traffictypediagnostic: PU1P153MB0153:|PU1P153MB0153:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB01532DF79E6A39FF1C9184D4BFC80@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39860400002)(376002)(136003)(396003)(189003)(54534003)(199004)(68736007)(6246003)(478600001)(53936002)(14444005)(446003)(476003)(7416002)(486006)(11346002)(10290500003)(256004)(6916009)(74316002)(8676002)(81156014)(81166006)(66556008)(64756008)(186003)(52536014)(66476007)(46003)(66946007)(66446008)(86362001)(10090500001)(5660300002)(8990500004)(76116006)(54906003)(22452003)(71190400001)(71200400001)(33656002)(102836004)(99286004)(7696005)(316002)(76176011)(6506007)(53546011)(6116002)(305945005)(6436002)(8936002)(14454004)(2906002)(7736002)(229853002)(4326008)(25786009)(9686003)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rJMjGD+JGNxSp2bGmacSaqKyraMDHHA98WM/0KaJe6kC9aIY3IGn0DmQT/z3pkaVEQ4pz8yOQdcy2AuTfl4Vq/Cg7OwsMZ3pKhzC7GEnt5HQz80czda7QZlbSNCEihGyupawmIYR9npBJeq9OQlvFPXJVQct5cY+j6goe0IZCFj069JIBxngodRxx8g782YLZ3ZoTjlCrojnJK7pHIj+dsAT0UAG3KyEgpSWJi0ZDqRe/CA1VNSU9ZMi0zSm8Tso/jO4ppR9Ol1dTiugFX/BXhnfPcJ8IqrLXch/SbHE9rJYgV3BYIh3O0kmaUyXPeuq/ANyJ6nuCwZncBPFgT4cOlNuNni0Yyizo0cKncfU48Fo/res5wktIEyFQs8vREAsCf2UpM+XHEV56Eij80jpgIoWS+0eNASoEhGCzBpZM3E=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 17 Jul 2019 21:22:48 -0400
+Received: from mga02.intel.com ([134.134.136.20]:13221 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfGRBWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 21:22:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 18:22:45 -0700
+X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
+   d="scan'208";a="191449211"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 18:22:44 -0700
+Subject: [PATCH v2 7/7] driver-core,
+ libnvdimm: Let device subsystems add local lockdep coverage
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     Ingo Molnar <mingo@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 17 Jul 2019 18:08:26 -0700
+Message-ID: <156341210661.292348.7014034644265455704.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <156341206785.292348.1660822720191643298.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <156341206785.292348.1660822720191643298.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d00ea60-f617-4ac3-ac37-08d70b1e5eec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 01:22:16.0750
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Wednesday, July 17, 2019 4:04 PM
-> To: Dexuan Cui <decui@microsoft.com>
-> ...
-> On Thu, 4 Jul 2019, Dexuan Cui wrote:
-> > When a CPU is being offlined, the CPU usually still receives a few
-> > interrupts (e.g. reschedule IPIs), after hv_cpu_die() disables the
-> > HV_X64_MSR_VP_ASSIST_PAGE, so hv_apic_eoi_write() may not write=20
-> > the EOI MSR, if the apic_assist field's bit0 happens to be 1; as a resu=
-lt,
-> > Hyper-V may not be able to deliver all the interrupts to the CPU, and t=
-he
-> > CPU may not be stopped, and the kernel will hang soon.
-> >
-> > The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
-> > 5.2.1 "GPA Overlay Pages"), so with this fix we're sure the apic_assist
-> > field is still zero, after the VP ASSIST PAGE is disabled.
-> >
-> > Fixes: ba696429d290 ("x86/hyper-v: Implement EOI assist")
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> >=20
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index 0e033ef11a9f..db51a301f759 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -60,8 +60,14 @@ static int hv_cpu_init(unsigned int cpu)
-> >  	if (!hv_vp_assist_page)
-> >  		return 0;
-> >
-> > +	/*
-> > +	 * The ZERO flag is necessary, because in the case of CPU offlining
-> > +	 * the page can still be used by hv_apic_eoi_write() for a while,
-> > +	 * after the VP ASSIST PAGE is disabled in hv_cpu_die().
-> > +	 */
-> >  	if (!*hvp)
-> > -		*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
-> > +		*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
-> > +				 PAGE_KERNEL);
->=20
-> This is the allocation when the CPU is brought online for the first
-> time. So what effect has zeroing at allocation time vs. offlining and
-> potentially receiving IPIs? That allocation is never freed.
->=20
-> Neither the comment nor the changelog make any sense to me.
-> 	tglx
+For good reason, the standard device_lock() is marked
+lockdep_set_novalidate_class() because there is simply no sane way to
+describe the myriad ways the device_lock() ordered with other locks.
+However, that leaves subsystems that know their own local device_lock()
+ordering rules to find lock ordering mistakes manually. Instead,
+introduce an optional / additional lockdep-enabled lock that a subsystem
+can acquire in all the same paths that the device_lock() is acquired.
 
-That allocation was introduced by the commit
-a46d15cc1ae5 ("x86/hyper-v: allocate and use Virtual Processor Assist Pages=
-").
+A conversion of the NFIT driver and NVDIMM subsystem to a
+lockdep-validate device_lock() scheme is included. The
+debug_nvdimm_lock() implementation implements the correct lock-class and
+stacking order for the libnvdimm device topology hierarchy.
 
-I think it's ok to not free the page when a CPU is offlined: every
-CPU uses only 1 page and CPU offlining is not really a very usual
-operation except for the scenario of hibernation (and suspend-to-memory),=20
-where the CPUs are quickly onlined again, when we resume from hibernation.
-IMO Vitaly intentionally decided to not free the page for simplicity of the
-code.
+Yes, this is a hack, but hopefully it is a useful hack for other
+subsystems device_lock() debug sessions. Quoting Greg:
 
-When a CPU (e.g. CPU1) is being onlined, in hv_cpu_init(), we allocate the
-VP_ASSIST_PAGE page and enable the PV EOI optimization for this CPU by
-writing the MSR HV_X64_MSR_VP_ASSIST_PAGE. From now on, this CPU
-*always* uses hvp->apic_assist (which is updated by the hypervisor) to
-decide if it needs to write the EOI MSR:
+    "Yeah, it feels a bit hacky but it's really up to a subsystem to mess up
+     using it as much as anything else, so user beware :)
 
-static void hv_apic_eoi_write(u32 reg, u32 val)
-{
-        struct hv_vp_assist_page *hvp =3D hv_vp_assist_page[smp_processor_i=
-d()];
+     I don't object to it if it makes things easier for you to debug."
 
-        if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
-                return;
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/acpi/nfit/core.c        |   28 ++++++++--------
+ drivers/acpi/nfit/nfit.h        |   24 ++++++++++++++
+ drivers/base/core.c             |    3 ++
+ drivers/nvdimm/btt_devs.c       |   16 +++++----
+ drivers/nvdimm/bus.c            |   28 ++++++++++------
+ drivers/nvdimm/core.c           |   10 +++---
+ drivers/nvdimm/dimm_devs.c      |    4 +-
+ drivers/nvdimm/namespace_devs.c |   36 ++++++++++-----------
+ drivers/nvdimm/nd-core.h        |   68 +++++++++++++++++++++++++++++++++++++++
+ drivers/nvdimm/pfn_devs.c       |   24 +++++++-------
+ drivers/nvdimm/pmem.c           |    4 +-
+ drivers/nvdimm/region.c         |    2 +
+ drivers/nvdimm/region_devs.c    |   16 +++++----
+ include/linux/device.h          |    5 +++
+ 14 files changed, 187 insertions(+), 81 deletions(-)
 
-        wrmsr(HV_X64_MSR_EOI, val, 0);
-}
+diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+index 23022cf20d26..f22139458ce1 100644
+--- a/drivers/acpi/nfit/core.c
++++ b/drivers/acpi/nfit/core.c
+@@ -1282,7 +1282,7 @@ static ssize_t hw_error_scrub_store(struct device *dev,
+ 	if (rc)
+ 		return rc;
+ 
+-	device_lock(dev);
++	nfit_device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (nd_desc) {
+ 		struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
+@@ -1299,7 +1299,7 @@ static ssize_t hw_error_scrub_store(struct device *dev,
+ 			break;
+ 		}
+ 	}
+-	device_unlock(dev);
++	nfit_device_unlock(dev);
+ 	if (rc)
+ 		return rc;
+ 	return size;
+@@ -1319,7 +1319,7 @@ static ssize_t scrub_show(struct device *dev,
+ 	ssize_t rc = -ENXIO;
+ 	bool busy;
+ 
+-	device_lock(dev);
++	nfit_device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (!nd_desc) {
+ 		device_unlock(dev);
+@@ -1339,7 +1339,7 @@ static ssize_t scrub_show(struct device *dev,
+ 	}
+ 
+ 	mutex_unlock(&acpi_desc->init_mutex);
+-	device_unlock(dev);
++	nfit_device_unlock(dev);
+ 	return rc;
+ }
+ 
+@@ -1356,14 +1356,14 @@ static ssize_t scrub_store(struct device *dev,
+ 	if (val != 1)
+ 		return -EINVAL;
+ 
+-	device_lock(dev);
++	nfit_device_lock(dev);
+ 	nd_desc = dev_get_drvdata(dev);
+ 	if (nd_desc) {
+ 		struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
+ 
+ 		rc = acpi_nfit_ars_rescan(acpi_desc, ARS_REQ_LONG);
+ 	}
+-	device_unlock(dev);
++	nfit_device_unlock(dev);
+ 	if (rc)
+ 		return rc;
+ 	return size;
+@@ -1749,9 +1749,9 @@ static void acpi_nvdimm_notify(acpi_handle handle, u32 event, void *data)
+ 	struct acpi_device *adev = data;
+ 	struct device *dev = &adev->dev;
+ 
+-	device_lock(dev->parent);
++	nfit_device_lock(dev->parent);
+ 	__acpi_nvdimm_notify(dev, event);
+-	device_unlock(dev->parent);
++	nfit_device_unlock(dev->parent);
+ }
+ 
+ static bool acpi_nvdimm_has_method(struct acpi_device *adev, char *method)
+@@ -3457,8 +3457,8 @@ static int acpi_nfit_flush_probe(struct nvdimm_bus_descriptor *nd_desc)
+ 	struct device *dev = acpi_desc->dev;
+ 
+ 	/* Bounce the device lock to flush acpi_nfit_add / acpi_nfit_notify */
+-	device_lock(dev);
+-	device_unlock(dev);
++	nfit_device_lock(dev);
++	nfit_device_unlock(dev);
+ 
+ 	/* Bounce the init_mutex to complete initial registration */
+ 	mutex_lock(&acpi_desc->init_mutex);
+@@ -3602,8 +3602,8 @@ void acpi_nfit_shutdown(void *data)
+ 	 * acpi_nfit_ars_rescan() submissions have had a chance to
+ 	 * either submit or see ->cancel set.
+ 	 */
+-	device_lock(bus_dev);
+-	device_unlock(bus_dev);
++	nfit_device_lock(bus_dev);
++	nfit_device_unlock(bus_dev);
+ 
+ 	flush_workqueue(nfit_wq);
+ }
+@@ -3746,9 +3746,9 @@ EXPORT_SYMBOL_GPL(__acpi_nfit_notify);
+ 
+ static void acpi_nfit_notify(struct acpi_device *adev, u32 event)
+ {
+-	device_lock(&adev->dev);
++	nfit_device_lock(&adev->dev);
+ 	__acpi_nfit_notify(&adev->dev, adev->handle, event);
+-	device_unlock(&adev->dev);
++	nfit_device_unlock(&adev->dev);
+ }
+ 
+ static const struct acpi_device_id acpi_nfit_ids[] = {
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 6ee2b02af73e..24241941181c 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -312,6 +312,30 @@ static inline struct acpi_nfit_desc *to_acpi_desc(
+ 	return container_of(nd_desc, struct acpi_nfit_desc, nd_desc);
+ }
+ 
++#ifdef CONFIG_PROVE_LOCKING
++static inline void nfit_device_lock(struct device *dev)
++{
++	device_lock(dev);
++	mutex_lock(&dev->lockdep_mutex);
++}
++
++static inline void nfit_device_unlock(struct device *dev)
++{
++	mutex_unlock(&dev->lockdep_mutex);
++	device_unlock(dev);
++}
++#else
++static inline void nfit_device_lock(struct device *dev)
++{
++	device_lock(dev);
++}
++
++static inline void nfit_device_unlock(struct device *dev)
++{
++	device_unlock(dev);
++}
++#endif
++
+ const guid_t *to_nfit_uuid(enum nfit_uuids id);
+ int acpi_nfit_init(struct acpi_nfit_desc *acpi_desc, void *nfit, acpi_size sz);
+ void acpi_nfit_shutdown(void *data);
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index eaf3aa0cb803..4825949d6547 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1663,6 +1663,9 @@ void device_initialize(struct device *dev)
+ 	kobject_init(&dev->kobj, &device_ktype);
+ 	INIT_LIST_HEAD(&dev->dma_pools);
+ 	mutex_init(&dev->mutex);
++#ifdef CONFIG_PROVE_LOCKING
++	mutex_init(&dev->lockdep_mutex);
++#endif
+ 	lockdep_set_novalidate_class(&dev->mutex);
+ 	spin_lock_init(&dev->devres_lock);
+ 	INIT_LIST_HEAD(&dev->devres_head);
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index 62d00fffa4af..3508a79110c7 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -62,14 +62,14 @@ static ssize_t sector_size_store(struct device *dev,
+ 	struct nd_btt *nd_btt = to_nd_btt(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	rc = nd_size_select_store(dev, buf, &nd_btt->lbasize,
+ 			btt_lbasize_supported);
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc ? rc : len;
+ }
+@@ -91,11 +91,11 @@ static ssize_t uuid_store(struct device *dev,
+ 	struct nd_btt *nd_btt = to_nd_btt(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	rc = nd_uuid_store(dev, &nd_btt->uuid, buf, len);
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc ? rc : len;
+ }
+@@ -120,13 +120,13 @@ static ssize_t namespace_store(struct device *dev,
+ 	struct nd_btt *nd_btt = to_nd_btt(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	rc = nd_namespace_store(dev, &nd_btt->ndns, buf, len);
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+@@ -138,14 +138,14 @@ static ssize_t size_show(struct device *dev,
+ 	struct nd_btt *nd_btt = to_nd_btt(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	if (dev->driver)
+ 		rc = sprintf(buf, "%llu\n", nd_btt->size);
+ 	else {
+ 		/* no size to convey if the btt instance is disabled */
+ 		rc = -ENXIO;
+ 	}
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index df41f3571dc9..798c5c4aea9c 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -26,7 +26,7 @@
+ 
+ int nvdimm_major;
+ static int nvdimm_bus_major;
+-static struct class *nd_class;
++struct class *nd_class;
+ static DEFINE_IDA(nd_ida);
+ 
+ static int to_nd_device_type(struct device *dev)
+@@ -91,7 +91,10 @@ static int nvdimm_bus_probe(struct device *dev)
+ 			dev->driver->name, dev_name(dev));
+ 
+ 	nvdimm_bus_probe_start(nvdimm_bus);
++	debug_nvdimm_lock(dev);
+ 	rc = nd_drv->probe(dev);
++	debug_nvdimm_unlock(dev);
++
+ 	if (rc == 0)
+ 		nd_region_probe_success(nvdimm_bus, dev);
+ 	else
+@@ -113,8 +116,11 @@ static int nvdimm_bus_remove(struct device *dev)
+ 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
+ 	int rc = 0;
+ 
+-	if (nd_drv->remove)
++	if (nd_drv->remove) {
++		debug_nvdimm_lock(dev);
+ 		rc = nd_drv->remove(dev);
++		debug_nvdimm_unlock(dev);
++	}
+ 	nd_region_disable(nvdimm_bus, dev);
+ 
+ 	dev_dbg(&nvdimm_bus->dev, "%s.remove(%s) = %d\n", dev->driver->name,
+@@ -140,7 +146,7 @@ static void nvdimm_bus_shutdown(struct device *dev)
+ 
+ void nd_device_notify(struct device *dev, enum nvdimm_event event)
+ {
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	if (dev->driver) {
+ 		struct nd_device_driver *nd_drv;
+ 
+@@ -148,7 +154,7 @@ void nd_device_notify(struct device *dev, enum nvdimm_event event)
+ 		if (nd_drv->notify)
+ 			nd_drv->notify(dev, event);
+ 	}
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ }
+ EXPORT_SYMBOL(nd_device_notify);
+ 
+@@ -296,7 +302,7 @@ static void nvdimm_bus_release(struct device *dev)
+ 	kfree(nvdimm_bus);
+ }
+ 
+-static bool is_nvdimm_bus(struct device *dev)
++bool is_nvdimm_bus(struct device *dev)
+ {
+ 	return dev->release == nvdimm_bus_release;
+ }
+@@ -575,9 +581,9 @@ void nd_device_unregister(struct device *dev, enum nd_async_mode mode)
+ 		 * or otherwise let the async path handle it if the
+ 		 * unregistration was already queued.
+ 		 */
+-		device_lock(dev);
++		nd_device_lock(dev);
+ 		killed = kill_device(dev);
+-		device_unlock(dev);
++		nd_device_unlock(dev);
+ 
+ 		if (!killed)
+ 			return;
+@@ -888,10 +894,10 @@ void wait_nvdimm_bus_probe_idle(struct device *dev)
+ 		if (nvdimm_bus->probe_active == 0)
+ 			break;
+ 		nvdimm_bus_unlock(dev);
+-		device_unlock(dev);
++		nd_device_unlock(dev);
+ 		wait_event(nvdimm_bus->wait,
+ 				nvdimm_bus->probe_active == 0);
+-		device_lock(dev);
++		nd_device_lock(dev);
+ 		nvdimm_bus_lock(dev);
+ 	} while (true);
+ }
+@@ -1107,7 +1113,7 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		goto out;
+ 	}
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	rc = nd_cmd_clear_to_send(nvdimm_bus, nvdimm, func, buf);
+ 	if (rc)
+@@ -1129,7 +1135,7 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 
+ out_unlock:
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ out:
+ 	kfree(in_env);
+ 	kfree(out_env);
+diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
+index 5e1f060547bf..9204f1e9fd14 100644
+--- a/drivers/nvdimm/core.c
++++ b/drivers/nvdimm/core.c
+@@ -246,7 +246,7 @@ static int nd_uuid_parse(struct device *dev, u8 *uuid_out, const char *buf,
+  *
+  * Enforce that uuids can only be changed while the device is disabled
+  * (driver detached)
+- * LOCKING: expects device_lock() is held on entry
++ * LOCKING: expects nd_device_lock() is held on entry
+  */
+ int nd_uuid_store(struct device *dev, u8 **uuid_out, const char *buf,
+ 		size_t len)
+@@ -347,15 +347,15 @@ static DEVICE_ATTR_RO(provider);
+ 
+ static int flush_namespaces(struct device *dev, void *data)
+ {
+-	device_lock(dev);
+-	device_unlock(dev);
++	nd_device_lock(dev);
++	nd_device_unlock(dev);
+ 	return 0;
+ }
+ 
+ static int flush_regions_dimms(struct device *dev, void *data)
+ {
+-	device_lock(dev);
+-	device_unlock(dev);
++	nd_device_lock(dev);
++	nd_device_unlock(dev);
+ 	device_for_each_child(dev, NULL, flush_namespaces);
+ 	return 0;
+ }
+diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+index dfecd6e17043..29a065e769ea 100644
+--- a/drivers/nvdimm/dimm_devs.c
++++ b/drivers/nvdimm/dimm_devs.c
+@@ -484,12 +484,12 @@ static ssize_t security_store(struct device *dev,
+ 	 * done while probing is idle and the DIMM is not in active use
+ 	 * in any region.
+ 	 */
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	rc = __security_store(dev, buf, len);
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index a434a5964cb9..92cd809d7e43 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -410,7 +410,7 @@ static ssize_t alt_name_store(struct device *dev,
+ 	struct nd_region *nd_region = to_nd_region(dev->parent);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	rc = __alt_name_store(dev, buf, len);
+@@ -418,7 +418,7 @@ static ssize_t alt_name_store(struct device *dev,
+ 		rc = nd_namespace_label_update(nd_region, dev);
+ 	dev_dbg(dev, "%s(%zd)\n", rc < 0 ? "fail " : "", rc);
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc < 0 ? rc : len;
+ }
+@@ -1077,7 +1077,7 @@ static ssize_t size_store(struct device *dev,
+ 	if (rc)
+ 		return rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	rc = __size_store(dev, val);
+@@ -1103,7 +1103,7 @@ static ssize_t size_store(struct device *dev,
+ 	dev_dbg(dev, "%llx %s (%d)\n", val, rc < 0 ? "fail" : "success", rc);
+ 
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc < 0 ? rc : len;
+ }
+@@ -1286,7 +1286,7 @@ static ssize_t uuid_store(struct device *dev,
+ 	} else
+ 		return -ENXIO;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	if (to_ndns(dev)->claim)
+@@ -1302,7 +1302,7 @@ static ssize_t uuid_store(struct device *dev,
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc < 0 ? rc : len;
+ }
+@@ -1376,7 +1376,7 @@ static ssize_t sector_size_store(struct device *dev,
+ 	} else
+ 		return -ENXIO;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	if (to_ndns(dev)->claim)
+ 		rc = -EBUSY;
+@@ -1387,7 +1387,7 @@ static ssize_t sector_size_store(struct device *dev,
+ 	dev_dbg(dev, "result: %zd %s: %s%s", rc, rc < 0 ? "tried" : "wrote",
+ 			buf, buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc ? rc : len;
+ }
+@@ -1502,9 +1502,9 @@ static ssize_t holder_show(struct device *dev,
+ 	struct nd_namespace_common *ndns = to_ndns(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	rc = sprintf(buf, "%s\n", ndns->claim ? dev_name(ndns->claim) : "");
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+@@ -1541,7 +1541,7 @@ static ssize_t holder_class_store(struct device *dev,
+ 	struct nd_region *nd_region = to_nd_region(dev->parent);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	rc = __holder_class_store(dev, buf);
+@@ -1549,7 +1549,7 @@ static ssize_t holder_class_store(struct device *dev,
+ 		rc = nd_namespace_label_update(nd_region, dev);
+ 	dev_dbg(dev, "%s(%zd)\n", rc < 0 ? "fail " : "", rc);
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc < 0 ? rc : len;
+ }
+@@ -1560,7 +1560,7 @@ static ssize_t holder_class_show(struct device *dev,
+ 	struct nd_namespace_common *ndns = to_ndns(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	if (ndns->claim_class == NVDIMM_CCLASS_NONE)
+ 		rc = sprintf(buf, "\n");
+ 	else if ((ndns->claim_class == NVDIMM_CCLASS_BTT) ||
+@@ -1572,7 +1572,7 @@ static ssize_t holder_class_show(struct device *dev,
+ 		rc = sprintf(buf, "dax\n");
+ 	else
+ 		rc = sprintf(buf, "<unknown>\n");
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+@@ -1586,7 +1586,7 @@ static ssize_t mode_show(struct device *dev,
+ 	char *mode;
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	claim = ndns->claim;
+ 	if (claim && is_nd_btt(claim))
+ 		mode = "safe";
+@@ -1599,7 +1599,7 @@ static ssize_t mode_show(struct device *dev,
+ 	else
+ 		mode = "raw";
+ 	rc = sprintf(buf, "%s\n", mode);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+@@ -1703,8 +1703,8 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+ 		 * Flush any in-progess probes / removals in the driver
+ 		 * for the raw personality of this namespace.
+ 		 */
+-		device_lock(&ndns->dev);
+-		device_unlock(&ndns->dev);
++		nd_device_lock(&ndns->dev);
++		nd_device_unlock(&ndns->dev);
+ 		if (ndns->dev.driver) {
+ 			dev_dbg(&ndns->dev, "is active, can't bind %s\n",
+ 					dev_name(dev));
+diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
+index 6cd470547106..0ac52b6eb00e 100644
+--- a/drivers/nvdimm/nd-core.h
++++ b/drivers/nvdimm/nd-core.h
+@@ -9,6 +9,7 @@
+ #include <linux/sizes.h>
+ #include <linux/mutex.h>
+ #include <linux/nd.h>
++#include "nd.h"
+ 
+ extern struct list_head nvdimm_bus_list;
+ extern struct mutex nvdimm_bus_list_mutex;
+@@ -182,4 +183,71 @@ ssize_t nd_namespace_store(struct device *dev,
+ 		struct nd_namespace_common **_ndns, const char *buf,
+ 		size_t len);
+ struct nd_pfn *to_nd_pfn_safe(struct device *dev);
++bool is_nvdimm_bus(struct device *dev);
++
++#ifdef CONFIG_PROVE_LOCKING
++extern struct class *nd_class;
++
++enum {
++	LOCK_BUS,
++	LOCK_NDCTL,
++	LOCK_REGION,
++	LOCK_DIMM = LOCK_REGION,
++	LOCK_NAMESPACE,
++	LOCK_CLAIM,
++};
++
++static inline void debug_nvdimm_lock(struct device *dev)
++{
++	if (is_nd_region(dev))
++		mutex_lock_nested(&dev->lockdep_mutex, LOCK_REGION);
++	else if (is_nvdimm(dev))
++		mutex_lock_nested(&dev->lockdep_mutex, LOCK_DIMM);
++	else if (is_nd_btt(dev) || is_nd_pfn(dev) || is_nd_dax(dev))
++		mutex_lock_nested(&dev->lockdep_mutex, LOCK_CLAIM);
++	else if (dev->parent && (is_nd_region(dev->parent)))
++		mutex_lock_nested(&dev->lockdep_mutex, LOCK_NAMESPACE);
++	else if (is_nvdimm_bus(dev))
++		mutex_lock_nested(&dev->lockdep_mutex, LOCK_BUS);
++	else if (dev->class && dev->class == nd_class)
++		mutex_lock_nested(&dev->lockdep_mutex, LOCK_NDCTL);
++	else
++		dev_WARN(dev, "unknown lock level\n");
++}
++
++static inline void debug_nvdimm_unlock(struct device *dev)
++{
++	mutex_unlock(&dev->lockdep_mutex);
++}
++
++static inline void nd_device_lock(struct device *dev)
++{
++	device_lock(dev);
++	debug_nvdimm_lock(dev);
++}
++
++static inline void nd_device_unlock(struct device *dev)
++{
++	debug_nvdimm_unlock(dev);
++	device_unlock(dev);
++}
++#else
++static inline void nd_device_lock(struct device *dev)
++{
++	device_lock(dev);
++}
++
++static inline void nd_device_unlock(struct device *dev)
++{
++	device_unlock(dev);
++}
++
++static inline void debug_nvdimm_lock(struct device *dev)
++{
++}
++
++static inline void debug_nvdimm_unlock(struct device *dev)
++{
++}
++#endif
+ #endif /* __ND_CORE_H__ */
+diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+index 0f81fc56bbfd..9b09fe18e666 100644
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -67,7 +67,7 @@ static ssize_t mode_store(struct device *dev,
+ 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
+ 	ssize_t rc = 0;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	if (dev->driver)
+ 		rc = -EBUSY;
+@@ -89,7 +89,7 @@ static ssize_t mode_store(struct device *dev,
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc ? rc : len;
+ }
+@@ -132,14 +132,14 @@ static ssize_t align_store(struct device *dev,
+ 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	rc = nd_size_select_store(dev, buf, &nd_pfn->align,
+ 			nd_pfn_supported_alignments());
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc ? rc : len;
+ }
+@@ -161,11 +161,11 @@ static ssize_t uuid_store(struct device *dev,
+ 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	rc = nd_uuid_store(dev, &nd_pfn->uuid, buf, len);
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc ? rc : len;
+ }
+@@ -190,13 +190,13 @@ static ssize_t namespace_store(struct device *dev,
+ 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	rc = nd_namespace_store(dev, &nd_pfn->ndns, buf, len);
+ 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
+ 			buf[len - 1] == '\n' ? "" : "\n");
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+@@ -208,7 +208,7 @@ static ssize_t resource_show(struct device *dev,
+ 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	if (dev->driver) {
+ 		struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
+ 		u64 offset = __le64_to_cpu(pfn_sb->dataoff);
+@@ -222,7 +222,7 @@ static ssize_t resource_show(struct device *dev,
+ 		/* no address to convey if the pfn instance is disabled */
+ 		rc = -ENXIO;
+ 	}
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+@@ -234,7 +234,7 @@ static ssize_t size_show(struct device *dev,
+ 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	if (dev->driver) {
+ 		struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
+ 		u64 offset = __le64_to_cpu(pfn_sb->dataoff);
+@@ -250,7 +250,7 @@ static ssize_t size_show(struct device *dev,
+ 		/* no size to convey if the pfn instance is disabled */
+ 		rc = -ENXIO;
+ 	}
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 28cb44c61d4a..53797e7be18a 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -520,8 +520,8 @@ static int nd_pmem_remove(struct device *dev)
+ 		nvdimm_namespace_detach_btt(to_nd_btt(dev));
+ 	else {
+ 		/*
+-		 * Note, this assumes device_lock() context to not race
+-		 * nd_pmem_notify()
++		 * Note, this assumes nd_device_lock() context to not
++		 * race nd_pmem_notify()
+ 		 */
+ 		sysfs_put(pmem->bb_state);
+ 		pmem->bb_state = NULL;
+diff --git a/drivers/nvdimm/region.c b/drivers/nvdimm/region.c
+index 488c47ac4c4a..37bf8719a2a4 100644
+--- a/drivers/nvdimm/region.c
++++ b/drivers/nvdimm/region.c
+@@ -102,7 +102,7 @@ static int nd_region_remove(struct device *dev)
+ 	nvdimm_bus_unlock(dev);
+ 
+ 	/*
+-	 * Note, this assumes device_lock() context to not race
++	 * Note, this assumes nd_device_lock() context to not race
+ 	 * nd_region_notify()
+ 	 */
+ 	sysfs_put(nd_region->bb_state);
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index a15276cdec7d..91b5a7ade0d5 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -329,7 +329,7 @@ static ssize_t set_cookie_show(struct device *dev,
+ 	 * the v1.1 namespace label cookie definition. To read all this
+ 	 * data we need to wait for probing to settle.
+ 	 */
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	if (nd_region->ndr_mappings) {
+@@ -346,7 +346,7 @@ static ssize_t set_cookie_show(struct device *dev,
+ 		}
+ 	}
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	if (rc)
+ 		return rc;
+@@ -422,12 +422,12 @@ static ssize_t available_size_show(struct device *dev,
+ 	 * memory nvdimm_bus_lock() is dropped, but that's userspace's
+ 	 * problem to not race itself.
+ 	 */
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	available = nd_region_available_dpa(nd_region);
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return sprintf(buf, "%llu\n", available);
+ }
+@@ -439,12 +439,12 @@ static ssize_t max_available_extent_show(struct device *dev,
+ 	struct nd_region *nd_region = to_nd_region(dev);
+ 	unsigned long long available = 0;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	nvdimm_bus_lock(dev);
+ 	wait_nvdimm_bus_probe_idle(dev);
+ 	available = nd_region_allocatable_dpa(nd_region);
+ 	nvdimm_bus_unlock(dev);
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return sprintf(buf, "%llu\n", available);
+ }
+@@ -563,12 +563,12 @@ static ssize_t region_badblocks_show(struct device *dev,
+ 	struct nd_region *nd_region = to_nd_region(dev);
+ 	ssize_t rc;
+ 
+-	device_lock(dev);
++	nd_device_lock(dev);
+ 	if (dev->driver)
+ 		rc = badblocks_show(&nd_region->bb, buf, 0);
+ 	else
+ 		rc = -ENXIO;
+-	device_unlock(dev);
++	nd_device_unlock(dev);
+ 
+ 	return rc;
+ }
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 0da5c67f6be1..9237b857b598 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -909,6 +909,8 @@ struct dev_links_info {
+  * 		This identifies the device type and carries type-specific
+  * 		information.
+  * @mutex:	Mutex to synchronize calls to its driver.
++ * @lockdep_mutex: An optional debug lock that a subsystem can use as a
++ * 		peer lock to gain localized lockdep coverage of the device_lock.
+  * @bus:	Type of bus device is on.
+  * @driver:	Which driver has allocated this
+  * @platform_data: Platform data specific to the device.
+@@ -991,6 +993,9 @@ struct device {
+ 					   core doesn't touch it */
+ 	void		*driver_data;	/* Driver data, set and get with
+ 					   dev_set_drvdata/dev_get_drvdata */
++#ifdef CONFIG_PROVE_LOCKING
++	struct mutex		lockdep_mutex;
++#endif
+ 	struct mutex		mutex;	/* mutex to synchronize calls to
+ 					 * its driver.
+ 					 */
 
-When a CPU (e.g. CPU1) is being offlined, on this CPU, we do:
-1. in hv_cpu_die(), we disable the PV EOI optimizaton for this CPU;
-2. we finish the remaining work of stopping this CPU;
-3. this CPU is completed stopped.
-
-Between 1 and 3, this CPU can still receive interrupts (e.g. IPIs from CPU0=
-,
-and Local APIC timer interrupts), and this CPU *must* write the EOI MSR for
-every interrupt received, otherwise the hypervisor may not deliver further
-interrupts, which may be needed to stop this CPU completely.
-
-So we need to make sure hvp->apic_assist.bit0 is zero, after we run the lin=
-e
-"wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);" in hv_cpu_die(). The easiest
-way is what I do in this patch. Alternatively, we can use the below patch:
-
-@@ -188,8 +188,12 @@ static int hv_cpu_die(unsigned int cpu)
-        local_irq_restore(flags);
-        free_page((unsigned long)input_pg);
-
--       if (hv_vp_assist_page && hv_vp_assist_page[cpu])
-+       if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
-+               local_irq_save(flags);
-                wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
-+               hvp->apic_assist &=3D ~1;
-+               local_irq_restore(flags);
-+       }
-
-        if (hv_reenlightenment_cb =3D=3D NULL)
-                return 0;
-
-This second version needs 3+ lines, so I prefer the one-line version. :-)
-
-Thanks,
--- Dexuan
