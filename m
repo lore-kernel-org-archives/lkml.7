@@ -2,196 +2,291 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41B9C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC853C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AD72173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:04:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bA5VVtKe"
+	by mail.kernel.org (Postfix) with ESMTP id A704A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389869AbfGRJEE (ORCPT
+        id S2389634AbfGRJE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:04:04 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:32361 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726715AbfGRJED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:04:03 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190718090400epoutp0262dbbb8352c014e37adbaf31375bcca9~ydPqQRw4y1253412534epoutp02y
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:04:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190718090400epoutp0262dbbb8352c014e37adbaf31375bcca9~ydPqQRw4y1253412534epoutp02y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563440640;
-        bh=eCzRoBS64n7hVgrP135ikuTSoqkmLqw2kLKgG7YgpEU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=bA5VVtKeasRVhApGYBSUuNXAnG7zgbPmUJw39UjjxGrJSCuoTYSFG+paejuetIfXT
-         Cv7HS23Hi68cNVpZFcONodt+esOk3WLEtJgpddDQ91P428wqVNbhp8vhaqw7FeUFf3
-         5hep0gdG48nHeKRJPfncLBeO2CCSn+y/JbntMNMk=
-Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190718090359epcas1p14d9d1a2eb89b015d6726d6c86bc8c37f~ydPpto1t13105231052epcas1p1Y;
-        Thu, 18 Jul 2019 09:03:59 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp6.localdomain (Postfix) with ESMTP id 45q7V530nXzMqYkX; Thu, 18 Jul
-        2019 09:03:57 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0D.51.04066.DF5303D5; Thu, 18 Jul 2019 18:03:57 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190718090356epcas1p363ba27cd8b2bfbbe4461b2cd790207bb~ydPnPQrDT1995319953epcas1p3o;
-        Thu, 18 Jul 2019 09:03:56 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190718090356epsmtrp13293ce08d24cbaf4ca218978d52e2869~ydPnN-imK2474324743epsmtrp1Y;
-        Thu, 18 Jul 2019 09:03:56 +0000 (GMT)
-X-AuditID: b6c32a37-e27ff70000000fe2-72-5d3035fda9c6
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D0.1B.03706.CF5303D5; Thu, 18 Jul 2019 18:03:56 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190718090356epsmtip2bc4a93adf982290e3fddd4b433b25c85~ydPm_6KI50953309533epsmtip2Z;
-        Thu, 18 Jul 2019 09:03:56 +0000 (GMT)
-Subject: Re: [PATCH v4 11/24] PM / devfreq: tegra30: Add debug messages
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <f630dacc-2065-a12d-bd03-1fc6c4363e1f@samsung.com>
-Date:   Thu, 18 Jul 2019 18:07:05 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+        Thu, 18 Jul 2019 05:04:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39012 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbfGRJE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:04:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4492D3179157;
+        Thu, 18 Jul 2019 09:04:27 +0000 (UTC)
+Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 48FA760C70;
+        Thu, 18 Jul 2019 09:04:20 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 11:04:17 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-nvdimm@lists.01.org, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, swhiteho@redhat.com,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 18/30] virtio_fs, dax: Set up virtio_fs dax_device
+Message-ID: <20190718110417.561f6475.cohuck@redhat.com>
+In-Reply-To: <20190717192725.25c3d146.pasic@linux.ibm.com>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
+        <20190515192715.18000-19-vgoyal@redhat.com>
+        <20190717192725.25c3d146.pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <f819c226-4328-c85d-5da3-932391fa6747@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmge5fU4NYg91rxSxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i9uNK9gsfu6ax2LRt/YSmwOnx467Sxg9ds66y+7R2/yO
-        zaNvyypGj8+b5AJYo7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22V
-        XHwCdN0yc4AOUlIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBboFSfmFpfmpesl
-        5+daGRoYGJkCFSZkZ3w7MZ2x4KJExf9bcQ2MV4W7GDk5JARMJO5cWMIKYgsJ7GCU2DPVvouR
-        C8j+xCgx7XgnO4TzjVHi1uRmoCoOsI5DF7Qg4nsZJfa2zmWDcN4zShyaPIEJZJSwgLvEhgkr
-        mEASIgL/GCU6fzazgSSYBSIlDu9cDVbEJqAlsf/FDbA4v4CixNUfjxlBbF4BO4nN63eD1bAI
-        qEp8m7iQBcQWFYiQOHVkHgtEjaDEyZlPwGxOAVuJqW9WQ80Xl7j1ZD4ThC0v0bx1NjPIERIC
-        v9kk3t3eyQjxtIvE7Lcf2CFsYYlXx7dA2VISL/vboOxqiZUnj7BBNHcwSmzZf4EVImEssX/p
-        ZCZQWDALaEqs36UPEVaU2Pl7LiPEYj6Jd197oMHFK9HRJgRRoixx+cFdJghbUmJxeyfbBEal
-        WUjemYXkhVlIXpiFsGwBI8sqRrHUguLc9NRiwwJj5MjexAhOq1rmOxg3nPM5xCjAwajEw3tD
-        ST9WiDWxrLgy9xCjBAezkgjv7ZdAId6UxMqq1KL8+KLSnNTiQ4ymwNCeyCwlmpwPTPl5JfGG
-        pkbGxsYWJoZmpoaGSuK88/5oxgoJpCeWpGanphakFsH0MXFwSjUw+jN+aZUSeJ5yuD4uadWx
-        jvy6ozM+7z6zi7fXb0vJcobc2jtWWZda34nv0uk8+qDj9foHlxqWx5xZd1vTK8F8rWTkMz7P
-        7wIljQZHU7+xKmz+VJ3qpLX+I+uPj3lzF5xSzzPovXdy1lKHLeu2ntgZVWqsaREyKfH3+mjp
-        X7/FHj0z/bb9/O0d6kosxRmJhlrMRcWJAFAoP+zBAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSvO4fU4NYg8bFxharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZ305MZyy4KFHx/1ZcA+NV4S5GDg4JAROJQxe0
-        uhi5OIQEdjNKrLj8m6WLkRMoLikx7eJRZogaYYnDh4shat4ySsz6dJwJpEZYwF1iw4QVTCAJ
-        EYEmJolNvRfYQRLMApESPXO3sEF0tDBLnHzyD2wqm4CWxP4XN9hAbH4BRYmrPx4zgti8AnYS
-        m9fvBpvKIqAq8W3iQrB6UYEIiUnXdrJA1AhKnJz5BMzmFLCVmPpmNRvEMnWJP/MuMUPY4hK3
-        nsxngrDlJZq3zmaewCg8C0n7LCQts5C0zELSsoCRZRWjZGpBcW56brFhgWFearlecWJucWle
-        ul5yfu4mRnCEaWnuYLy8JP4QowAHoxIP7w0l/Vgh1sSy4srcQ4wSHMxKIry3XwKFeFMSK6tS
-        i/Lji0pzUosPMUpzsCiJ8z7NOxYpJJCeWJKanZpakFoEk2Xi4JRqYAxZwB3Dniym9DfEduk3
-        /ZWcvM7imz/0R+Xt0QiSc3414eZzbwZtaaWHCpYCJe+mbfncpWS1ZcuW++HMxgrXF10pW375
-        5qPMfRH9GiWvL5ReNVHTXTRTy9BpW/KBNt77sq4Ts89oOEZH2bfWRelJR+68p513xFGvuKLI
-        MfSV+ofX6R8N1JKXKbEUZyQaajEXFScCADDxGfGsAgAA
-X-CMS-MailID: 20190718090356epcas1p363ba27cd8b2bfbbe4461b2cd790207bb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223640epcas4p15337f40466342832b731ad6a53be946e
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223640epcas4p15337f40466342832b731ad6a53be946e@epcas4p1.samsung.com>
-        <20190707223303.6755-12-digetx@gmail.com>
-        <c883bdbe-427f-35a1-9e63-5e4953a84286@samsung.com>
-        <53cd0ba5-f814-cd9b-19c5-1d42717ca58c@gmail.com>
-        <922c9178-71de-46ad-eafd-805af461bedb@samsung.com>
-        <f819c226-4328-c85d-5da3-932391fa6747@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 18 Jul 2019 09:04:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 18. 오전 12:46, Dmitry Osipenko wrote:
-> 17.07.2019 9:45, Chanwoo Choi пишет:
->> On 19. 7. 16. 오후 10:26, Dmitry Osipenko wrote:
->>> 16.07.2019 15:23, Chanwoo Choi пишет:
->>>> Hi Dmitry,
->>>>
->>>> Usually, the kernel log print for all users
->>>> such as changing the frequency, fail or success.
->>>>
->>>> But, if the log just show the register dump,
->>>> it is not useful for all users. It is just used
->>>> for only specific developer.
->>>>
->>>> I recommend that you better to add more exception handling
->>>> code on many points instead of just showing the register dump.
->>>
->>> The debug messages are not users, but for developers. Yes, I primarily
->>> made the debugging to be useful for myself and will be happy to change
->>> the way debugging is done if there will be any other active developer
->>> for this driver. The registers dump is more than enough in order to
->>> understand what's going on, I don't see any real need to change anything
->>> here for now.
->>
->> Basically, we have to develop code and add the log for anyone.
->> As you commented, even if there are no other developer, we never
->> guarantee this assumption forever. And also, if added debug message
->> for only you, you can add them when testing it temporarily.
->>
->> If you want to add the just register dump log for you,
->> I can't agree. Once again, I hope that anyone understand
->> the meaning of debug message as much possible as.
->>
+On Wed, 17 Jul 2019 19:27:25 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
+
+> On Wed, 15 May 2019 15:27:03 -0400
+> Vivek Goyal <vgoyal@redhat.com> wrote:
 > 
-> The registers dump should be good for everyone because it's a
-> self-explanatory information for anyone who is familiar with the
-> hardware. I don't think there is a need for anything else than what is
-> proposed in this patch, at least for now. I also simply don't see any
-> other better way to debug the state of this particular hardware, again
-> this logging is for the driver developers and not for users.
+> > From: Stefan Hajnoczi <stefanha@redhat.com>
+> > 
+> > Setup a dax device.
+> > 
+> > Use the shm capability to find the cache entry and map it.
+> > 
+> > The DAX window is accessed by the fs/dax.c infrastructure and must have
+> > struct pages (at least on x86).  Use devm_memremap_pages() to map the
+> > DAX window PCI BAR and allocate struct page.
+> >  
 > 
-> Initially, I was temporarily adding the debug messages. Now they are
-> pretty much mandatory for verifying that driver is working properly. And
-> of course the debugging messages got into the shape of this patch after
-> several iterations of refinements. So again, I suppose that this should
-> be good enough for everyone who is familiar with the hardware. And of
-> course I'm open to the constructive suggestions, the debugging aid is
-> not an ABI and could be changed/improved at any time.
+> Sorry for being this late. I don't see any more recent version so I will
+> comment here.
+
+[Yeah, this one has been sitting in my to-review queue far too long as
+well :(]
+
 > 
-> You're suggesting to break down the debugging into several smaller
-> pieces, but I'm finding that as not a constructive suggestion because
-> the information about the full hardware state is actually necessary for
-> the productive debugging.
+> I'm trying to figure out how is this supposed to work on s390. My concern
+> is, that on s390 PCI memory needs to be accessed by special
+> instructions. This is taken care of by the stuff defined in
+> arch/s390/include/asm/io.h. E.g. we 'override' __raw_writew so it uses
+> the appropriate s390 instruction. However if the code does not use the
+> linux abstractions for accessing PCI memory, but assumes it can be
+> accessed like RAM, we have a problem.
 > 
+> Looking at this patch, it seems to me, that we might end up with exactly
+> the case described. For example AFAICT copy_to_iter() (3) resolves to
+> the function in lib/iov_iter.c which does not seem to cater for s390
+> oddities.
+
+What about the new pci instructions recently introduced? Not sure how
+they differ from the old ones (which are currently the only ones
+supported in QEMU...), but I'm pretty sure they are supposed to solve
+an issue :)
+
+> 
+> I didn't have the time to investigate this properly, and since virtio-fs
+> is virtual, we may be able to get around what is otherwise a
+> limitation on s390. My understanding of these areas is admittedly
+> shallow, and since I'm not sure I'll have much more time to
+> invest in the near future I decided to raise concern.
+> 
+> Any opinions?
+
+Let me point to the thread starting at
+https://marc.info/?l=linux-s390&m=155048406205221&w=2 as well. That
+memory region stuff is still unsolved for ccw, and I'm not sure if we
+need to do something for zpci as well.
+
+Does s390 work with DAX at all? ISTR that DAX evolved from XIP, so I
+thought it did?
+
+> 
+> [CCing some s390 people who are probably more knowledgeable than my on
+> these matters.]
+> 
+> Regards,
+> Halil
+> 
+> 
+> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> > Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+> > ---  
+> 
+> [..]
+>   
+> > +/* Map a window offset to a page frame number.  The window offset will have
+> > + * been produced by .iomap_begin(), which maps a file offset to a window
+> > + * offset.
+> > + */
+> > +static long virtio_fs_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
+> > +				    long nr_pages, void **kaddr, pfn_t *pfn)
+> > +{
+> > +	struct virtio_fs *fs = dax_get_private(dax_dev);
+> > +	phys_addr_t offset = PFN_PHYS(pgoff);
+> > +	size_t max_nr_pages = fs->window_len/PAGE_SIZE - pgoff;
+> > +
+> > +	if (kaddr)
+> > +		*kaddr = fs->window_kaddr + offset;  
+> 
+> (2) Here we use fs->window_kaddr, basically directing the access to the
+> virtio shared memory region.
+> 
+> > +	if (pfn)
+> > +		*pfn = phys_to_pfn_t(fs->window_phys_addr + offset,
+> > +					PFN_DEV | PFN_MAP);
+> > +	return nr_pages > max_nr_pages ? max_nr_pages : nr_pages;
+> > +}
+> > +
+> > +static size_t virtio_fs_copy_from_iter(struct dax_device *dax_dev,
+> > +				       pgoff_t pgoff, void *addr,
+> > +				       size_t bytes, struct iov_iter *i)
+> > +{
+> > +	return copy_from_iter(addr, bytes, i);
+> > +}
+> > +
+> > +static size_t virtio_fs_copy_to_iter(struct dax_device *dax_dev,
+> > +				       pgoff_t pgoff, void *addr,
+> > +				       size_t bytes, struct iov_iter *i)
+> > +{
+> > +	return copy_to_iter(addr, bytes, i);  
+> 
+> (3) And this should be the access to it. Which does not seem to use.
+> 
+> > +}
+> > +
+> > +static const struct dax_operations virtio_fs_dax_ops = {
+> > +	.direct_access = virtio_fs_direct_access,
+> > +	.copy_from_iter = virtio_fs_copy_from_iter,
+> > +	.copy_to_iter = virtio_fs_copy_to_iter,
+> > +};
+> > +
+> > +static void virtio_fs_percpu_release(struct percpu_ref *ref)
+> > +{
+> > +	struct virtio_fs_memremap_info *mi =
+> > +		container_of(ref, struct virtio_fs_memremap_info, ref);
+> > +
+> > +	complete(&mi->completion);
+> > +}
+> > +
+> > +static void virtio_fs_percpu_exit(void *data)
+> > +{
+> > +	struct virtio_fs_memremap_info *mi = data;
+> > +
+> > +	wait_for_completion(&mi->completion);
+> > +	percpu_ref_exit(&mi->ref);
+> > +}
+> > +
+> > +static void virtio_fs_percpu_kill(struct percpu_ref *ref)
+> > +{
+> > +	percpu_ref_kill(ref);
+> > +}
+> > +
+> > +static void virtio_fs_cleanup_dax(void *data)
+> > +{
+> > +	struct virtio_fs *fs = data;
+> > +
+> > +	kill_dax(fs->dax_dev);
+> > +	put_dax(fs->dax_dev);
+> > +}
+> > +
+> > +static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
+> > +{
+> > +	struct virtio_shm_region cache_reg;
+> > +	struct virtio_fs_memremap_info *mi;
+> > +	struct dev_pagemap *pgmap;
+> > +	bool have_cache;
+> > +	int ret;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_DAX_DRIVER))
+> > +		return 0;
+> > +
+> > +	/* Get cache region */
+> > +	have_cache = virtio_get_shm_region(vdev,
+> > +					   &cache_reg,
+> > +					   (u8)VIRTIO_FS_SHMCAP_ID_CACHE);
+> > +	if (!have_cache) {
+> > +		dev_err(&vdev->dev, "%s: No cache capability\n", __func__);
+> > +		return -ENXIO;
+> > +	} else {
+> > +		dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n",
+> > +			   cache_reg.len, cache_reg.addr);
+> > +	}
+> > +
+> > +	mi = devm_kzalloc(&vdev->dev, sizeof(*mi), GFP_KERNEL);
+> > +	if (!mi)
+> > +		return -ENOMEM;
+> > +
+> > +	init_completion(&mi->completion);
+> > +	ret = percpu_ref_init(&mi->ref, virtio_fs_percpu_release, 0,
+> > +			      GFP_KERNEL);
+> > +	if (ret < 0) {
+> > +		dev_err(&vdev->dev, "%s: percpu_ref_init failed (%d)\n",
+> > +			__func__, ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = devm_add_action(&vdev->dev, virtio_fs_percpu_exit, mi);
+> > +	if (ret < 0) {
+> > +		percpu_ref_exit(&mi->ref);
+> > +		return ret;
+> > +	}
+> > +
+> > +	pgmap = &mi->pgmap;
+> > +	pgmap->altmap_valid = false;
+> > +	pgmap->ref = &mi->ref;
+> > +	pgmap->kill = virtio_fs_percpu_kill;
+> > +	pgmap->type = MEMORY_DEVICE_FS_DAX;
+> > +
+> > +	/* Ideally we would directly use the PCI BAR resource but
+> > +	 * devm_memremap_pages() wants its own copy in pgmap.  So
+> > +	 * initialize a struct resource from scratch (only the start
+> > +	 * and end fields will be used).
+> > +	 */
+> > +	pgmap->res = (struct resource){
+> > +		.name = "virtio-fs dax window",
+> > +		.start = (phys_addr_t) cache_reg.addr,
+> > +		.end = (phys_addr_t) cache_reg.addr + cache_reg.len - 1,
+> > +	};
+> > +
+> > +	fs->window_kaddr = devm_memremap_pages(&vdev->dev, pgmap);  
+> 
+> (1) Here we assign fs->window_kaddr basically from the virtio shm region.
+> 
+> > +	if (IS_ERR(fs->window_kaddr))
+> > +		return PTR_ERR(fs->window_kaddr);
+> > +
+> > +	fs->window_phys_addr = (phys_addr_t) cache_reg.addr;
+> > +	fs->window_len = (phys_addr_t) cache_reg.len;
+> > +
+> > +	dev_dbg(&vdev->dev, "%s: window kaddr 0x%px phys_addr 0x%llx"
+> > +		" len 0x%llx\n", __func__, fs->window_kaddr, cache_reg.addr,
+> > +		cache_reg.len);
+> > +
+> > +	fs->dax_dev = alloc_dax(fs, NULL, &virtio_fs_dax_ops);
+> > +	if (!fs->dax_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	return devm_add_action_or_reset(&vdev->dev, virtio_fs_cleanup_dax, fs);
+> > +}
+> > +  
+> 
+> [..]
 > 
 
-Sorry for that as I saie, I cannot agree this patch. In my case,
-I don't understand what is meaning of register dump of this patch.
-I knew that just register dump are useful for real developer.
-
-If you want to show the register dump, you better to add some feature
-with debugfs for devfreq framework in order to read the register dump.
-As I knew, sound framework (alsa) has the similar feature for checking
-the register dump.
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
