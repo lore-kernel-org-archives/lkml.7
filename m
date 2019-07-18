@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AEEC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D092C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0079E2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D912053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419871;
-	bh=nmpK3gZd43PWK653ZajHttdDO4lbHQPISVPaW5lPcbs=;
+	s=default; t=1563419879;
+	bh=kgk7Ue5rId7m2dMEUgqDOMrpm8zUbKkpT7Tr2gHcUq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nlzEkI3wKYXze45XNoL5IwqC/Ybm0uAxL3q3yaGI9Mj4XeGYZ7tV46sMTCk8gm10g
-	 HDkAszr1qJx9N2yc/255jGJoz0EBfXN6XhY94JfGYiu7+OfNDhTzH187qBEKGNU2H9
-	 QqVyLA0EkLBg6JCcmu0I/9qziyCT91n3gr9nSqUk=
+	b=2rjj6wB96cSD4genk7ACFlHqQCRiiBdP+5PnOATwuoke/yVbZGPMNoN2oURXALu7G
+	 iyUN5ekYAE/5biTGizqzJuSBAiHwZ3Z3h5D4TmSo/z7OZjrVbYe7oa4oAUfg25v72E
+	 Nko6V8NgSw6xjzmiXbNywhlOob+ZCG1XcEFSUo3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392140AbfGRDRt (ORCPT
+        id S2391711AbfGRDON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:17:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391755AbfGRDOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:20 -0400
+        id S2391671AbfGRDOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:08 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6CAA2173E;
-        Thu, 18 Jul 2019 03:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B6F42173E;
+        Thu, 18 Jul 2019 03:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419660;
-        bh=nmpK3gZd43PWK653ZajHttdDO4lbHQPISVPaW5lPcbs=;
+        s=default; t=1563419647;
+        bh=kgk7Ue5rId7m2dMEUgqDOMrpm8zUbKkpT7Tr2gHcUq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQo3s9mZk22FvcovGLu1NCsNXcbzenJ+z0JP+9HAJoAKXIFuWH3tat/h/wxS757iR
-         9BabCWB7FmRJXwuHw+AX9JpxWUYy/Dnln8/DIwM3s6hw5/YryjqBItSpJBBVLCsiRc
-         4j6S1g+en7TOyJTP8Zo/6/5hXrPygdcx/QYV4dzY=
+        b=FCaCvmASMsUGfjBT/+U4MgB0+LGoYUQcQh2lg87rbAOC3qbFXf741PfqOFWil9nQB
+         OQ3ReCJwYYYE1ESJkJoMV4dKlIGXmnRA/nXw/Ph5AGX00vqyuGT6omZPNfXGMIEEbH
+         zvZHE+OcTdHKZk6mdEOxMccDrn1+8jX0iUYWomLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.9 33/54] usb: gadget: ether: Fix race between gether_disconnect and rx_submit
-Date:   Thu, 18 Jul 2019 12:02:03 +0900
-Message-Id: <20190718030052.008794590@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.9 36/54] staging: comedi: amplc_pci230: fix null pointer deref on interrupt
+Date:   Thu, 18 Jul 2019 12:02:06 +0900
+Message-Id: <20190718030052.261257680@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -60,50 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit d29fcf7078bc8be2b6366cbd4418265b53c94fac upstream.
+commit 7379e6baeddf580d01feca650ec1ad508b6ea8ee upstream.
 
-On spin lock release in rx_submit, gether_disconnect get a chance to
-run, it makes port_usb NULL, rx_submit access NULL port USB, hence null
-pointer crash.
+The interrupt handler `pci230_interrupt()` causes a null pointer
+dereference for a PCI260 card.  There is no analog output subdevice for
+a PCI260.  The `dev->write_subdev` subdevice pointer and therefore the
+`s_ao` subdevice pointer variable will be `NULL` for a PCI260.  The
+following call near the end of the interrupt handler results in the null
+pointer dereference for a PCI260:
 
-Fixed by releasing the lock in rx_submit after port_usb is used.
+	comedi_handle_events(dev, s_ao);
 
-Fixes: 2b3d942c4878 ("usb ethernet gadget: split out network core")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fix it by only calling the above function if `s_ao` is valid.
+
+Note that the other uses of `s_ao` in the calls
+`pci230_handle_ao_nofifo(dev, s_ao);` and `pci230_handle_ao_fifo(dev,
+s_ao);` will never be reached for a PCI260, so they are safe.
+
+Fixes: 39064f23284c ("staging: comedi: amplc_pci230: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/u_ether.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/staging/comedi/drivers/amplc_pci230.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/function/u_ether.c
-+++ b/drivers/usb/gadget/function/u_ether.c
-@@ -198,11 +198,12 @@ rx_submit(struct eth_dev *dev, struct us
- 		out = dev->port_usb->out_ep;
- 	else
- 		out = NULL;
--	spin_unlock_irqrestore(&dev->lock, flags);
+--- a/drivers/staging/comedi/drivers/amplc_pci230.c
++++ b/drivers/staging/comedi/drivers/amplc_pci230.c
+@@ -2337,7 +2337,8 @@ static irqreturn_t pci230_interrupt(int
+ 	devpriv->intr_running = false;
+ 	spin_unlock_irqrestore(&devpriv->isr_spinlock, irqflags);
  
- 	if (!out)
-+	{
-+		spin_unlock_irqrestore(&dev->lock, flags);
- 		return -ENOTCONN;
--
-+	}
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
+ 	comedi_handle_events(dev, s_ai);
  
- 	/* Padding up to RX_EXTRA handles minor disagreements with host.
- 	 * Normally we use the USB "terminate on short read" convention;
-@@ -223,6 +224,7 @@ rx_submit(struct eth_dev *dev, struct us
- 
- 	if (dev->port_usb->is_fixed)
- 		size = max_t(size_t, size, dev->port_usb->fixed_out_len);
-+	spin_unlock_irqrestore(&dev->lock, flags);
- 
- 	skb = alloc_skb(size + NET_IP_ALIGN, gfp_flags);
- 	if (skb == NULL) {
+ 	return IRQ_HANDLED;
 
 
