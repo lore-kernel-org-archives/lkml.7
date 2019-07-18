@@ -2,87 +2,71 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1F4C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC30217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008D721783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563418175;
+	bh=jdNPPY/nagQO4z4SbeSxOZ2+EDMQori7e6umb/X7wII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mh+50CKiCMJXpX4JEPo4gskgr3kxIJ0kj29a+yICwbdbmQoX7ndaGQHoDPGe7fTGQ
+	 7mE0LCv2GOADvBQXc7pb8L/jejS1AbmnsZF1NgV8/5hWvLbCg4dHDHEcFvFg3fMBT7
+	 yNwD4yJ2I8wvfzCFtiXJuVC0f3juTb2d/QU2sTUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732999AbfGRCrj (ORCPT
+        id S2387455AbfGRCtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 22:47:39 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:45094 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbfGRCri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 22:47:38 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6I2jKju025492, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6I2jKju025492
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 18 Jul 2019 10:45:20 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 18 Jul
- 2019 10:45:19 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "natechancellor@gmail.com" <natechancellor@gmail.com>,
-        "hariprasad.kelam@gmail.com" <hariprasad.kelam@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: [PATCH] rtlwifi: btcoex: fix issue possible condition with no effect (if == else)
-Thread-Topic: [PATCH] rtlwifi: btcoex: fix issue possible condition with no
- effect (if == else)
-Thread-Index: AQHVOOY1W6hVhmptY0OYy+EIYozmE6bPLcOA
-Date:   Thu, 18 Jul 2019 02:45:19 +0000
-Message-ID: <1563417919.4276.0.camel@realtek.com>
-References: <20190712191535.GA4215@hari-Inspiron-1545>
-In-Reply-To: <20190712191535.GA4215@hari-Inspiron-1545>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.114]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8A9B338587918D4EA57C625C3531B5C5@realtek.com>
-Content-Transfer-Encoding: base64
+        Wed, 17 Jul 2019 22:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbfGRCtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 22:49:33 -0400
+Received: from X250 (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76E5205F4;
+        Thu, 18 Jul 2019 02:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563418172;
+        bh=jdNPPY/nagQO4z4SbeSxOZ2+EDMQori7e6umb/X7wII=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2scJcYPaWEnC8O4BuYyROLVOluc2QUVDfFyzDltCMUOGU1YaYhJXRkUz6OdZ/MFIh
+         tseMR2zXmwtg2wmQ+eP+MnVB1t+R6+CHVD+Og6kauZA4tWLC1cBk5JnS1SBMfQ5hsT
+         V6tnMol1y6TXf44Mb9hc2xH6I9DoPfIRwsPgefFU=
+Date:   Thu, 18 Jul 2019 10:49:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     yibin.gong@nxp.com
+Cc:     robh@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        angelo@sysam.it, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v5 6/6] ARM: dts: imx7ulp: add edma device node
+Message-ID: <20190718024920.GC11324@X250>
+References: <20190625094324.19196-1-yibin.gong@nxp.com>
+ <20190625094324.19196-7-yibin.gong@nxp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625094324.19196-7-yibin.gong@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA3LTEyIGF0IDE5OjE1ICswMDAwLCBIYXJpcHJhc2FkIEtlbGFtIHdyb3Rl
-Og0KPiBmaXggYmVsb3cgaXNzdWUgcmVwb3J0ZWQgYnkgY29jY2ljaGVjaw0KPiBkcml2ZXJzL25l
-dC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvYnRjb2V4aXN0L2hhbGJ0Y291dHNyYy5jOjUxNDox
-LTM6DQo+IFdBUk5JTkc6IHBvc3NpYmxlIGNvbmRpdGlvbiB3aXRoIG5vIGVmZmVjdCAoaWYgPT0g
-ZWxzZSkNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEhhcmlwcmFzYWQgS2VsYW0gPGhhcmlwcmFzYWQu
-a2VsYW1AZ21haWwuY29tPg0KPiAtLS0NCj4gwqBkcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVr
-L3J0bHdpZmkvYnRjb2V4aXN0L2hhbGJ0Y291dHNyYy5jIHwgOCArLS0tLS0tLQ0KPiDCoDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgNyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvYnRjb2V4aXN0L2hhbGJ0
-Y291dHNyYy5jDQo+IGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL2J0Y29l
-eGlzdC9oYWxidGNvdXRzcmMuYw0KPiBpbmRleCAxNTIyNDJhLi4xOTFkYWZkMCAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL2J0Y29leGlzdC9oYWxi
-dGNvdXRzcmMuYw0KPiArKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkv
-YnRjb2V4aXN0L2hhbGJ0Y291dHNyYy5jDQo+IEBAIC01MDksMTMgKzUwOSw3IEBAIHN0YXRpYyB1
-MzIgaGFsYnRjX2dldF93aWZpX2xpbmtfc3RhdHVzKHN0cnVjdCBidGNfY29leGlzdA0KPiAqYnRj
-b2V4aXN0KQ0KPiDCoA0KPiDCoHN0YXRpYyBzMzIgaGFsYnRjX2dldF93aWZpX3Jzc2koc3RydWN0
-IHJ0bF9wcml2ICpydGxwcml2KQ0KPiDCoHsNCj4gLQlpbnQgdW5kZWNfc21fcHdkYiA9IDA7DQo+
-IC0NCj4gLQlpZiAocnRscHJpdi0+bWFjODAyMTEubGlua19zdGF0ZSA+PSBNQUM4MDIxMV9MSU5L
-RUQpDQo+IC0JCXVuZGVjX3NtX3B3ZGIgPSBydGxwcml2LT5kbS51bmRlY19zbV9wd2RiOw0KPiAt
-CWVsc2UgLyogYXNzb2NpYXRlZCBlbnRyeSBwd2RiICovDQo+IC0JCXVuZGVjX3NtX3B3ZGIgPSBy
-dGxwcml2LT5kbS51bmRlY19zbV9wd2RiOw0KPiAtCXJldHVybiB1bmRlY19zbV9wd2RiOw0KPiAr
-CXJldHVybiBydGxwcml2LT5kbS51bmRlY19zbV9wd2RiOw0KPiDCoH0NCj4gwqANCj4gwqBzdGF0
-aWMgYm9vbCBoYWxidGNfZ2V0KHZvaWQgKnZvaWRfYnRjb2V4aXN0LCB1OCBnZXRfdHlwZSwgdm9p
-ZCAqb3V0X2J1ZikNCg0KSXQgbG9va3MgZ29vZCB0byBtZS4gVGhhbmsgeW91Lg0KDQpBY2tlZC1i
-eTogUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+DQoNCg0K
+On Tue, Jun 25, 2019 at 05:43:24PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> Add edma device node in dts.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+
+Applied, thanks.
