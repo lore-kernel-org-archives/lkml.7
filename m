@@ -2,63 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9440BC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E7C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D47F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81B02053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419769;
-	bh=+AXeMsSpp/gq1taY1DVJ/SE3QdPb6OpklGsdgwC/kmY=;
+	s=default; t=1563419780;
+	bh=na+qOcdXE9f9QQwaoFlA8DqNEdSfDB6pFZNEoPcYMOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPCxXWilGM/Y+Qgp8YvUO5J73DyX1sPZXkKxPsH26jvn/Dh7l3m0eUc17pi7KoSVZ
-	 bNdD0+sr5qNEV/iWKFnf/WEVZj0fk0YgkUhDBH0z3T6a0VrORnOxnYCFbHkV4SX8yY
-	 i0Cdj0ikJa04GHw1zVtDrNf83MYha5sWPMG2yhOQ=
+	b=Arju8XcApxb9q7Dx4V3IaBBYT13CGeQYk2OkPcM31Z2eSsMcO0H9Q1xKCsXJ/CiQG
+	 FTkfa+PooqWITGbb76NjG8mrVfkuOHuJOCPnVTI79y/4AHFo56j+HOrXmMvSUH7hZy
+	 S5W0EqufwMX86I/9lHg2X23AJqtlShNJttBp3xIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392146AbfGRDPv (ORCPT
+        id S2390014AbfGRDPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52594 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392055AbfGRDP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:28 -0400
+        id S2391968AbfGRDPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:11 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435A021849;
-        Thu, 18 Jul 2019 03:15:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88B72173E;
+        Thu, 18 Jul 2019 03:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419727;
-        bh=+AXeMsSpp/gq1taY1DVJ/SE3QdPb6OpklGsdgwC/kmY=;
+        s=default; t=1563419710;
+        bh=na+qOcdXE9f9QQwaoFlA8DqNEdSfDB6pFZNEoPcYMOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYUA1W6JQ+eRuaS2oRXpb09ma/mljxlYzUm2240/hCDIDkgJ9iMcY7FUbu/tEsQJD
-         I1oc3LVMuw3ZGyFAQ8vl6+vOqp5iydHPlnZefTSlfoxKSB0WtqZCmyzAv216pZUVjg
-         7hYxK+TtkKHd+fdu1lw7aXv9DqApjCCB6gegli8Y=
+        b=NGeCkHYUEbsqyZn9W69VPZ9saWYv1djVjo4n7PKWJfNVSNNkTBRJNV7W6+uYJNZvs
+         GsJ6iXuO19qzR8oUXckn3VKFTpJMmXz6jt5AzHe9Q4nz6AIC7W4iNj4279n1MP59Q7
+         8UKdixc8q69bLeQOMVEqxs7BwvRdYigxGRa1rjqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>,
-        Young Xiao <92siuyang@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 29/40] perf/core: Fix perf_sample_regs_user() mm check
-Date:   Thu, 18 Jul 2019 12:02:25 +0900
-Message-Id: <20190718030049.572756691@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 36/40] ARC: hide unused function unw_hdr_alloc
+Date:   Thu, 18 Jul 2019 12:02:32 +0900
+Message-Id: <20190718030050.224622989@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -71,52 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 085ebfe937d7a7a5df1729f35a12d6d655fea68c ]
+From: Arnd Bergmann <arnd@arndb.de>
 
-perf_sample_regs_user() uses 'current->mm' to test for the presence of
-userspace, but this is insufficient, consider use_mm().
+commit fd5de2721ea7d16e2b16c4049ac49f229551b290 upstream.
 
-A better test is: '!(current->flags & PF_KTHREAD)', exec() clears
-PF_KTHREAD after it sets the new ->mm but before it drops to userspace
-for the first time.
+As kernelci.org reports, this function is not used in
+vdk_hs38_defconfig:
 
-Possibly obsoletes: bf05fc25f268 ("powerpc/perf: Fix oops when kthread execs user process")
+arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
 
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Reported-by: Young Xiao <92siuyang@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 4018994f3d87 ("perf: Add ability to attach user level registers dump to sample")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
+Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/kernel/unwind.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 17230ca00bd4..41fe80e3380f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5078,7 +5078,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
- 	if (user_mode(regs)) {
- 		regs_user->abi = perf_reg_abi(current);
- 		regs_user->regs = regs;
--	} else if (current->mm) {
-+	} else if (!(current->flags & PF_KTHREAD)) {
- 		perf_get_regs_user(regs_user, regs, regs_user_copy);
- 	} else {
- 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
--- 
-2.20.1
-
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -183,11 +183,6 @@ static void *__init unw_hdr_alloc_early(
+ 				       MAX_DMA_ADDRESS);
+ }
+ 
+-static void *unw_hdr_alloc(unsigned long sz)
+-{
+-	return kmalloc(sz, GFP_KERNEL);
+-}
+-
+ static void init_unwind_table(struct unwind_table *table, const char *name,
+ 			      const void *core_start, unsigned long core_size,
+ 			      const void *init_start, unsigned long init_size,
+@@ -368,6 +363,10 @@ ret_err:
+ }
+ 
+ #ifdef CONFIG_MODULES
++static void *unw_hdr_alloc(unsigned long sz)
++{
++	return kmalloc(sz, GFP_KERNEL);
++}
+ 
+ static struct unwind_table *last_table;
+ 
 
 
