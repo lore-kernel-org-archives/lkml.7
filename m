@@ -2,141 +2,72 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BABC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5995C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361EF2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922252173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389299AbfGRHnK (ORCPT
+        id S2389251AbfGRHpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 03:43:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38024 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfGRHnJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:43:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s15so3182085wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:43:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+5h5a3O3K59BqV9oPAQLtP560NcGiWgROtgONhhQBcA=;
-        b=V/Lbl3MS0QTR2eWLfgooAM/DNDuqF2N2EG4kJp3SiIh6ZtNh3MOHgNDLTR6pbk0Mxg
-         Zcj4sdwfusFdTJBfewOFNvU3xS0oxL+77I7lX3JTCHXc9amahucRCnhp7NDGejZL3gcq
-         FfB9xCcanNKhF2yewC0uf5iILakpBEMzXKV1b2Xd6AmGNEuyiN+UImGFDGFPHM/DdZnh
-         6RFUQ1D1qutjJdiDuB4wkjmt3zzXHWsC5fRrjyneO7dY1ta5eEBNWlUlGUhJ6cxtcnJW
-         zX4FdQHpd4F4BaVyz5K7Q8w0gixjgNdaCv7+0WUyDNuP9IQ9o/l0+eKA6dX3iBl/bnIi
-         hEGA==
-X-Gm-Message-State: APjAAAV+Ko+gbZwpg33F3z/ioI71YWyAq8qfjmmhu2qzwtScshEwpOgw
-        S2JAS1c6nb6DYJ7z6c0Uh8RY+GU1kFA=
-X-Google-Smtp-Source: APXvYqwtVzF6pOrVC5RrHtwRwAyqm+l6A25CyYC8a8Kyj4y50SwTmJGOs3CDoEzgqjZKGhzJbIUIfQ==
-X-Received: by 2002:a1c:3:: with SMTP id 3mr41105085wma.6.1563435787761;
-        Thu, 18 Jul 2019 00:43:07 -0700 (PDT)
-Received: from steredhat ([5.170.38.133])
-        by smtp.gmail.com with ESMTPSA id g25sm18763167wmk.39.2019.07.18.00.43.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 00:43:07 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 09:43:04 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] vsock/virtio: fix locking in
- virtio_transport_inc_tx_pkt()
-Message-ID: <CAGxU2F5PS8Ug3ei79ShVHOwLSXGYKwn3umvfvnhSFDs9pdvH2g@mail.gmail.com>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-4-sgarzare@redhat.com>
- <20190717105056-mutt-send-email-mst@kernel.org>
+        Thu, 18 Jul 2019 03:45:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37852 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbfGRHpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 03:45:25 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A906CC057E3C;
+        Thu, 18 Jul 2019 07:45:24 +0000 (UTC)
+Received: from localhost (unknown [10.40.205.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F0DAC5D9CC;
+        Thu, 18 Jul 2019 07:45:23 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 09:45:23 +0200
+From:   Stanislaw Gruszka <sgruszka@redhat.com>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>
+Subject: Re: [PATCH] mac80211: don't warn about CW params when not using them
+Message-ID: <20190718074522.GA13713@redhat.com>
+References: <20190718015712.197499-1-briannorris@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190717105056-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190718015712.197499-1-briannorris@chromium.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Jul 2019 07:45:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 4:51 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Wed, Jul 17, 2019 at 01:30:28PM +0200, Stefano Garzarella wrote:
-> > fwd_cnt and last_fwd_cnt are protected by rx_lock, so we should use
-> > the same spinlock also if we are in the TX path.
-> >
-> > Move also buf_alloc under the same lock.
-> >
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->
-> Wait a second is this a bugfix?
-> If it's used under the wrong lock won't values get corrupted?
-> Won't traffic then stall or more data get to sent than
-> credits?
+On Wed, Jul 17, 2019 at 06:57:12PM -0700, Brian Norris wrote:
+> ieee80211_set_wmm_default() normally sets up the initial CW min/max for
+> each queue, except that it skips doing this if the driver doesn't
+> support ->conf_tx. We still end up calling drv_conf_tx() in some cases
+> (e.g., ieee80211_reconfig()), which also still won't do anything
+> useful...except it complains here about the invalid CW parameters.
+> 
+> Let's just skip the WARN if we weren't going to do anything useful with
+> the parameters.
+> 
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> Noticed because rtw88 does not currently implement .conf_tx()
+> 
+> I think there are several ways to slice this one. I picked one fix,
+> which may not be the best one.
 
-Before this series, we only read vvs->fwd_cnt and vvs->buf_alloc in this
-function, but using a different lock than the one used to write them.
-I'm not sure if a corruption can happen, but if we want to avoid the
-lock, we should use an atomic operation or memory barriers.
+Fix looks fine for me. However I think rtw88 should implement
+drv_conf_tx() because parameters can be different on different
+network setups and maybe more important WMM/AC parameters become
+quite recently part of ETSI regulatory.
 
-Since now we also need to update vvs->last_fwd_cnt, in order to limit the
-credit message, I decided to take the same lock used to protect vvs->fwd_cnt
-and vvs->last_fwd_cnt.
-
-
-Thanks,
-Stefano
-
->
-> > ---
-> >  include/linux/virtio_vsock.h            | 2 +-
-> >  net/vmw_vsock/virtio_transport_common.c | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> > index 49fc9d20bc43..4c7781f4b29b 100644
-> > --- a/include/linux/virtio_vsock.h
-> > +++ b/include/linux/virtio_vsock.h
-> > @@ -35,7 +35,6 @@ struct virtio_vsock_sock {
-> >
-> >       /* Protected by tx_lock */
-> >       u32 tx_cnt;
-> > -     u32 buf_alloc;
-> >       u32 peer_fwd_cnt;
-> >       u32 peer_buf_alloc;
-> >
-> > @@ -43,6 +42,7 @@ struct virtio_vsock_sock {
-> >       u32 fwd_cnt;
-> >       u32 last_fwd_cnt;
-> >       u32 rx_bytes;
-> > +     u32 buf_alloc;
-> >       struct list_head rx_queue;
-> >  };
-> >
-> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> > index a85559d4d974..34a2b42313b7 100644
-> > --- a/net/vmw_vsock/virtio_transport_common.c
-> > +++ b/net/vmw_vsock/virtio_transport_common.c
-> > @@ -210,11 +210,11 @@ static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
-> >
-> >  void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt)
-> >  {
-> > -     spin_lock_bh(&vvs->tx_lock);
-> > +     spin_lock_bh(&vvs->rx_lock);
-> >       vvs->last_fwd_cnt = vvs->fwd_cnt;
-> >       pkt->hdr.fwd_cnt = cpu_to_le32(vvs->fwd_cnt);
-> >       pkt->hdr.buf_alloc = cpu_to_le32(vvs->buf_alloc);
-> > -     spin_unlock_bh(&vvs->tx_lock);
-> > +     spin_unlock_bh(&vvs->rx_lock);
-> >  }
-> >  EXPORT_SYMBOL_GPL(virtio_transport_inc_tx_pkt);
-> >
-> > --
-> > 2.20.1
+Stanislaw 
