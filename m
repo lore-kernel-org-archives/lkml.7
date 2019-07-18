@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A2CC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3449C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD202077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0022053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419941;
-	bh=IjEZr8ulDEb3B1Lc+bRons4bfO/doO5ceruCF0OtxCo=;
+	s=default; t=1563419951;
+	bh=C1c2bap0BjeTdw6aU88vKC6L/xCsD46TWzAYAiH0YoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ao9XtZvg4axtYudVhVG9BkqNTeQb6HJ46RJkkdSXNy/cAHmcUF1Q/xf2/HxrMaj44
-	 0PScTJlbqT9SCgxMcqvwItWudCSyDUItjjfPa/M9CDhcouoJxewPi4xaxe4WCFyEUV
-	 mpiBC8Q232Q+PARjpWyXOjCXiP7qhbSoOcXEC3vc=
+	b=hnVjtHAVscC+gMVqX9nohc85mQDYqL3qRX0+2YsG2hzn371HoDphsclKrZ18N4sud
+	 Ii2FZiOpPesvN6fA3n4f9RVBTLCm/O7JXJi8zXAz4X+vA6+9Bg5Hw/liF3jm5I9+j/
+	 UwY4/yM7s0R2ILLa09bcBhUamDVgSsbvkqHSu2pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392075AbfGRDTA (ORCPT
+        id S2391661AbfGRDTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46664 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390901AbfGRDMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:12:20 -0400
+        id S2403937AbfGRDMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:12:15 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1817F2053B;
-        Thu, 18 Jul 2019 03:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87CAE2053B;
+        Thu, 18 Jul 2019 03:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419539;
-        bh=IjEZr8ulDEb3B1Lc+bRons4bfO/doO5ceruCF0OtxCo=;
+        s=default; t=1563419535;
+        bh=C1c2bap0BjeTdw6aU88vKC6L/xCsD46TWzAYAiH0YoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eBjCWwyAaXVnD9GQ972laAutBWOz7v5XnJdz/kyCzuybfH6q7rkQI3mHD79/Yxh0a
-         MHv6BqV7P9ndmOY1FY3CvF4nx+5FAskMaPaaBE6gzNo4T+wwLrY00aqcNEPNTZQbIc
-         LhpqwCzTLdREbL5WMCVXoG7vanXvNPsm3L/KmZ54=
+        b=KUwGpjx3CZvaZ3jTzriu/l4eENnsMYGdowtEWT3LRh5qKf3cCU7nTj38pGrnaLbA1
+         yHk85X3UyJFCqxIZN7lbiG/Z4mBiZfom40vaFJKeld38AOpXjKWrS2jrF/aJWzKKEU
+         OGCFeA9jnWWXwOQWGFEkN4ZN/6q9106doifpgjG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/54] netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments
-Date:   Thu, 18 Jul 2019 12:01:38 +0900
-Message-Id: <20190718030049.783720080@linuxfoundation.org>
+Subject: [PATCH 4.9 06/54] mac80211: free peer keys before vif down in mesh
+Date:   Thu, 18 Jul 2019 12:01:36 +0900
+Message-Id: <20190718030049.563415326@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -60,61 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0d56cb911ca301de81735f1d73c2aab424654ba ]
+[ Upstream commit 0112fa557c3bb3a002bc85760dc3761d737264d3 ]
 
-With commit 997dd9647164 ("net: IP6 defrag: use rbtrees in
-nf_conntrack_reasm.c"), nf_ct_frag6_reasm() is now called from
-nf_ct_frag6_queue(). With this change, nf_ct_frag6_queue() can fail
-after the skb has been added to the fragment queue and
-nf_ct_frag6_gather() was adapted to handle this case.
+freeing peer keys after vif down is resulting in peer key uninstall
+to fail due to interface lookup failure. so fix that.
 
-But nf_ct_frag6_queue() can still fail before the fragment has been
-queued. nf_ct_frag6_gather() can't handle this case anymore, because it
-has no way to know if nf_ct_frag6_queue() queued the fragment before
-failing. If it didn't, the skb is lost as the error code is overwritten
-with -EINPROGRESS.
-
-Fix this by setting -EINPROGRESS directly in nf_ct_frag6_queue(), so
-that nf_ct_frag6_gather() can propagate the error as is.
-
-Fixes: 997dd9647164 ("net: IP6 defrag: use rbtrees in nf_conntrack_reasm.c")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/netfilter/nf_conntrack_reasm.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ net/mac80211/mesh.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 1e1fa99b3243..e6114a6710e0 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -292,7 +292,11 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 		skb->_skb_refdst = 0UL;
- 		err = nf_ct_frag6_reasm(fq, skb, prev, dev);
- 		skb->_skb_refdst = orefdst;
--		return err;
-+
-+		/* After queue has assumed skb ownership, only 0 or
-+		 * -EINPROGRESS must be returned.
-+		 */
-+		return err ? -EINPROGRESS : 0;
- 	}
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index 7f902e69530f..5c347d3a92c9 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -885,6 +885,7 @@ void ieee80211_stop_mesh(struct ieee80211_sub_if_data *sdata)
  
- 	skb_dst_drop(skb);
-@@ -480,12 +484,6 @@ int nf_ct_frag6_gather(struct net *net, struct sk_buff *skb, u32 user)
- 		ret = 0;
- 	}
+ 	/* flush STAs and mpaths on this iface */
+ 	sta_info_flush(sdata);
++	ieee80211_free_keys(sdata, true);
+ 	mesh_path_flush_by_iface(sdata);
  
--	/* after queue has assumed skb ownership, only 0 or -EINPROGRESS
--	 * must be returned.
--	 */
--	if (ret)
--		ret = -EINPROGRESS;
--
- 	spin_unlock_bh(&fq->q.lock);
- 	inet_frag_put(&fq->q);
- 	return ret;
+ 	/* stop the beacon */
 -- 
 2.20.1
 
