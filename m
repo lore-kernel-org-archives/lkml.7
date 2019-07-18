@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A47C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67432C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E79A21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3342621871
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419646;
-	bh=fPp4oxsVpmed4V5M8YZlWidYt0ClByPUqcNb6374HK8=;
+	s=default; t=1563419649;
+	bh=KKKMov8CfIyqKpdpy8gKJhF3FLqYcO/YSEMQo+fuiiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6CCcns3ys8LUlefeYxlsVLnTeriRK/zcOtwb5OkYLJEz32xkkXPj+YJD6WQZX9je
-	 hOPxPqN/8/Tk6KQTeyLXxrum6DjCTSRBVeI2FukDhecwAYysuklbtBDZCFtCathGsH
-	 jeJI1mmqO5cBJm1dORBsBBnM6B+jnNLZp15DxgCo=
+	b=v715W4urvBjGCqQkGJ1LLKFruO/KclKXXF8maPdu8z0MH1vO5Kwb95Qvr2hwtNR2e
+	 IrhtEW6m2mLhshQQ4yjBP4MFOUI0yfPvrULyTlEyPSYb9O60RmHnCgIrH5PpiX7tfo
+	 JahVbQNya5IGVC/8Z5bymazkCIVmGZp7Nlej9ZjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391647AbfGRDOA (ORCPT
+        id S2391674AbfGRDOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391635AbfGRDN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:13:58 -0400
+        id S2391212AbfGRDOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:00 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0A4121850;
-        Thu, 18 Jul 2019 03:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F0E21850;
+        Thu, 18 Jul 2019 03:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419637;
-        bh=fPp4oxsVpmed4V5M8YZlWidYt0ClByPUqcNb6374HK8=;
+        s=default; t=1563419639;
+        bh=KKKMov8CfIyqKpdpy8gKJhF3FLqYcO/YSEMQo+fuiiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XNGuFQrF9MEBzeZovf9KFsYxkLNBDN/H3iZwaI1mrIiwi8ZLZ33ltj5scHlrlMib3
-         c3C8ZrS8J/pgjLVvZU6vcdR53wuULUitZDX1EdNLYek5dExBGjt0FVjPwR8T8NXMni
-         2X9vtLpKXMcCBNEL23dmmkpy5tvgX1JD2w9TgpRg=
+        b=kraskuiMOMnN+7HRR06r5SY6IsjhnKMRk0L3lnWK9XzwTaIIbchVVth+bW6H3pu3f
+         Q/j7iyRumupbhCjO8RlQniFqWySmXLH8SJQGjsjHIdVHeDTm5Za2oRlHrDO6yspU/a
+         Ec3E9ebiwfmj0MTq6kYJH8t5kNWvYPoim9lcEc+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 4.9 52/54] s390: fix stfle zero padding
-Date:   Thu, 18 Jul 2019 12:02:22 +0900
-Message-Id: <20190718030053.669189276@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.9 35/54] staging: comedi: dt282x: fix a null pointer deref on interrupt
+Date:   Thu, 18 Jul 2019 12:02:05 +0900
+Message-Id: <20190718030052.160246123@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -59,83 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
+commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
 
-The stfle inline assembly returns the number of double words written
-(condition code 0) or the double words it would have written
-(condition code 3), if the memory array it got as parameter would have
-been large enough.
+The interrupt handler `dt282x_interrupt()` causes a null pointer
+dereference for those supported boards that have no analog output
+support.  For these boards, `dev->write_subdev` will be `NULL` and
+therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
+case, the following call near the end of the interrupt handler results
+in a null pointer dereference:
 
-The current stfle implementation assumes that the array is always
-large enough and clears those parts of the array that have not been
-written to with a subsequent memset call.
+	comedi_handle_events(dev, s_ao);
 
-If however the array is not large enough memset will get a negative
-length parameter, which means that memset clears memory until it gets
-an exception and the kernel crashes.
+Fix it by only calling the above function if `s_ao` is valid.
 
-To fix this simply limit the maximum length. Move also the inline
-assembly to an extra function to avoid clobbering of register 0, which
-might happen because of the added min_t invocation together with code
-instrumentation.
+(There are other uses of `s_ao` by the interrupt handler that may or may
+not be reached depending on values of hardware registers.  Trust that
+they are reliable for now.)
 
-The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
-facility list handling") but was rather harmless, since it would only
-write to a rather large array. It became a potential problem with
-commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
-then it writes to an array with only four double words, while some
-machines already deliver three double words. As soon as machines have
-a facility bit within the fifth double a crash on IPL would happen.
+Note:
+commit 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+propagates an earlier error from
+commit f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()").
 
-Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
-Cc: <stable@vger.kernel.org> # v2.6.37+
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
+Cc: <stable@vger.kernel.org> # v3.19+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/staging/comedi/drivers/dt282x.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/s390/include/asm/facility.h
-+++ b/arch/s390/include/asm/facility.h
-@@ -61,6 +61,18 @@ static inline int test_facility(unsigned
- 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
- }
- 
-+static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
-+{
-+	register unsigned long reg0 asm("0") = size - 1;
-+
-+	asm volatile(
-+		".insn s,0xb2b00000,0(%1)" /* stfle */
-+		: "+d" (reg0)
-+		: "a" (stfle_fac_list)
-+		: "memory", "cc");
-+	return reg0;
-+}
-+
- /**
-  * stfle - Store facility list extended
-  * @stfle_fac_list: array where facility list can be stored
-@@ -78,13 +90,8 @@ static inline void stfle(u64 *stfle_fac_
- 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
- 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
- 		/* More facility bits available with stfle */
--		register unsigned long reg0 asm("0") = size - 1;
--
--		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
--			     : "+d" (reg0)
--			     : "a" (stfle_fac_list)
--			     : "memory", "cc");
--		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
-+		nr = __stfle_asm(stfle_fac_list, size);
-+		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
+--- a/drivers/staging/comedi/drivers/dt282x.c
++++ b/drivers/staging/comedi/drivers/dt282x.c
+@@ -566,7 +566,8 @@ static irqreturn_t dt282x_interrupt(int
  	}
- 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
- 	preempt_enable();
+ #endif
+ 	comedi_handle_events(dev, s);
+-	comedi_handle_events(dev, s_ao);
++	if (s_ao)
++		comedi_handle_events(dev, s_ao);
+ 
+ 	return IRQ_RETVAL(handled);
+ }
 
 
