@@ -2,107 +2,203 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6290C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1BDC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02CB2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81692173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389515AbfGRIxY (ORCPT
+        id S2389488AbfGRIzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:53:24 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44905 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfGRIxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:53:24 -0400
-Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 5b3d82715b2f7795; Thu, 18 Jul 2019 10:53:21 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Thomas Lindroth <thomas.lindroth@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH] cpuidle: menu: Allow tick to be stopped if PM QoS is used
-Date:   Thu, 18 Jul 2019 10:53:21 +0200
-Message-ID: <71073128.vkdIulrjX3@kreacher>
+        Thu, 18 Jul 2019 04:55:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:55684 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfGRIzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:55:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 01:55:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
+   d="scan'208";a="366852128"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jul 2019 01:55:15 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     fei.yang@intel.com, john.stultz@linaro.org,
+        andrzej.p@collabora.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated properly
+In-Reply-To: <1563396788-126034-1-git-send-email-fei.yang@intel.com>
+References: <1563396788-126034-1-git-send-email-fei.yang@intel.com>
+Date:   Thu, 18 Jul 2019 11:55:14 +0300
+Message-ID: <87o91riux9.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-After commit 554c8aa8ecad ("sched: idle: Select idle state before
-stopping the tick") the menu governor prevents the scheduler tick from
-being stopped (unless stopped already) if there is a PM QoS latency
-constraint for the given CPU and the target residency of the deepest
-idle state matching that constraint is below the tick boundary.
+Hi,
 
-However, that is problematic if CPUs with PM QoS latency constraints
-are idle for long times, because it effectively causes the tick to
-run on them all the time which is wasteful.  [It is also confusing
-and questionable if they are full dynticks CPUs.]
+Let's look at the relevant code:
 
-To address that issue, make the menu governor allow the tick to be
-stopped only if the idle duration predicted by it is beyond the tick
-boundary, except when the shallowest idle state is selected upfront
-and it is not a "polling" one.
+fei.yang@intel.com writes:
 
-Fixes: 554c8aa8ecad ("sched: idle: Select idle state before stopping the tick")
-Link: https://lore.kernel.org/lkml/79b247b3-e056-610e-9a07-e685dfdaa6c9@gmail.com/
-Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-Tested-by: Thomas Lindroth <thomas.lindroth@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/cpuidle/governors/menu.c |   16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+> From: Fei Yang <fei.yang@intel.com>
+>
+> If scatter-gather operation is allowed, a large USB request would be split
+> into multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN
+> bit except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
+> Since only the last TRB has IOC set, dwc3_gadget_ep_reclaim_completed_trb()
+> would be called only once for the whole USB request, thus all the TRBs need
+> to be reclaimed within this single call. However that is not what the current
+> code does.
+>
+> This patch addresses the issue by checking each TRB in function
+> dwc3_gadget_ep_reclaim_trb_sg() and reclaiming the chained ones right there.
+> Only the last TRB gets passed to dwc3_gadget_ep_reclaim_completed_trb(). This
+> would guarantee all TRBs are reclaimed and trb_dequeue/num_trbs are updated
+> properly.
+>
+> Signed-off-by: Fei Yang <fei.yang@intel.com>
+> Cc: stable <stable@vger.kernel.org>
+> ---
+>
+> V2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_trb_sg()
+>     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
+>
+> ---
+>
+>  drivers/usb/dwc3/gadget.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 173f532..c0662c2 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -2404,7 +2404,7 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+>  		struct dwc3_request *req, const struct dwc3_event_depevt *event,
+>  		int status)
 
-Index: linux-pm/drivers/cpuidle/governors/menu.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/menu.c
-+++ linux-pm/drivers/cpuidle/governors/menu.c
-@@ -302,9 +302,10 @@ static int menu_select(struct cpuidle_dr
- 	     !drv->states[0].disabled && !dev->states_usage[0].disable)) {
- 		/*
- 		 * In this case state[0] will be used no matter what, so return
--		 * it right away and keep the tick running.
-+		 * it right away and keep the tick running if state[0] is a
-+		 * polling one.
- 		 */
--		*stop_tick = false;
-+		*stop_tick = !(drv->states[0].flags & CPUIDLE_FLAG_POLLING);
- 		return 0;
- 	}
- 
-@@ -395,16 +396,9 @@ static int menu_select(struct cpuidle_dr
- 
- 			return idx;
- 		}
--		if (s->exit_latency > latency_req) {
--			/*
--			 * If we break out of the loop for latency reasons, use
--			 * the target residency of the selected state as the
--			 * expected idle duration so that the tick is retained
--			 * as long as that target residency is low enough.
--			 */
--			predicted_us = drv->states[idx].target_residency;
-+		if (s->exit_latency > latency_req)
- 			break;
--		}
-+
- 		idx = i;
- 	}
- 
+Here's the full function:
+
+| static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+| 		struct dwc3_request *req, const struct dwc3_event_depevt *event,
+| 		int status)
+| {
+| 	struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
+| 	struct scatterlist *sg = req->sg;
+| 	struct scatterlist *s;
+| 	unsigned int pending = req->num_pending_sgs;
+| 	unsigned int i;
+| 	int ret = 0;
+| 
+| 	for_each_sg(sg, s, pending, i) {
+
+iterate over each scatterlist member for the current request...
+
+| 		trb = &dep->trb_pool[dep->trb_dequeue];
+| 
+| 		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+| 			break;
+| 
+| 		req->sg = sg_next(s);
+| 		req->num_pending_sgs--;
+| 
+| 		ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+| 				trb, event, status, true);
+
+... and reclaim its TRB.
+
+Now, looking dwc3_gadget_ep_reclaim_compmleted_trb() we have:
+
+| static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
+| 		struct dwc3_request *req, struct dwc3_trb *trb,
+| 		const struct dwc3_event_depevt *event, int status, int chain)
+| {
+| 	unsigned int		count;
+| 
+| 	dwc3_ep_inc_deq(dep);
+
+unconditionally increment the dequeue pointer. What Are we missing here?
+
+[...]
+
+| 	return 0;
+| }
 
 
+Now, looking at what your patch does we will have:
 
+>  {
+> -	struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
+> +	struct dwc3_trb *trb;
+
+small cleanup, should be part of its own patch.
+
+>  	struct scatterlist *sg = req->sg;
+>  	struct scatterlist *s;
+>  	unsigned int pending = req->num_pending_sgs;
+> @@ -2419,7 +2419,15 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+>  
+>  		req->sg = sg_next(s);
+>  		req->num_pending_sgs--;
+> +		if (!(trb->ctrl & DWC3_TRB_CTRL_IOC)) {
+> +			/* reclaim the TRB without calling
+> +			 * dwc3_gadget_ep_reclaim_completed_trb */
+
+why do you have to skip dwc3_gadget_ep_reclaim_completed_trb()? Also,
+your patch description claims that we're NOT incrementing the TRBs,
+which is wrong. I fail to see what problem you're trying to solve here,
+really.
+
+Could it be that we're, simply. returning 1 when we should return 0 for
+the previous SG list members? If that's the case, then that's the bug
+that should be fixed. Still, you shouldn't avoid calling
+dwc3_gadget_ep_reclaim_completed_trb() and should, instead, fix the bug
+it contains.
+
+Looking at the cases where dwc3_gadget_ep_reclaim_completed_trb()
+returns 1, I can't see how that would be the case either:
+
+| 	if (chain && (trb->ctrl & DWC3_TRB_CTRL_HWO))
+| 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
+
+if CHN bit it set and HWO is bit, clear HWO
+
+| 	if (req->needs_extra_trb && !(trb->ctrl & DWC3_TRB_CTRL_CHN)) {
+| 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
+| 		return 1;
+| 	}
+
+if *not* CHN and needs_extra_trb, return 1. This can only be true for
+the last TRB in the SG list.
+
+| 	if ((trb->ctrl & DWC3_TRB_CTRL_HWO) && status != -ESHUTDOWN)
+| 		return 1;
+
+This can't be true because we cleared HWO up above
+
+| 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
+| 		return 1;
+
+can only be true for last TRB
+
+| 	if (event->status & DEPEVT_STATUS_IOC)
+| 		return 1;
+
+If we have a short packet, then we may fall here. Is that the case?
+
+Please share dwc3 tracepoints of the problem happening so I can verify
+what's going on.
+
+-- 
+balbi
