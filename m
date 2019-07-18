@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F4BC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4015C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6372721019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B628721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bmsOTizp"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JPGM7XsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391262AbfGRTPx (ORCPT
+        id S2391132AbfGRTQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:15:53 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54243 "EHLO
+        Thu, 18 Jul 2019 15:16:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38681 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfGRTPw (ORCPT
+        with ESMTP id S1727928AbfGRTQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:15:52 -0400
+        Thu, 18 Jul 2019 15:16:37 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJFbTS2125129
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJGKKH2125202
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:15:37 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJFbTS2125129
+        Thu, 18 Jul 2019 12:16:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJGKKH2125202
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477338;
-        bh=VWx9MCOOFJz1GDP1tSCeOcfNQGoIEiycyvcfSUEDyN8=;
+        s=2019061801; t=1563477380;
+        bh=T+IXuzDIw9YQGbnGWuy3UCysTLAiLf1XKXf+zmgXcoc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=bmsOTizpy2hx6qx9FjsOfjVfhi2+BWJNaRO1ZG6/dJDPhzAQj8CT4hyjWBIFFjFeG
-         ns0YEB69b9/ztOdAjm5OE9PQoz9aX8AH3/n54juur4m7MoGrUpEXCHp7oeCboBBS5G
-         O/C7lzN2aj0uJj+Laun1ZyfXCQh3TTwpxjyj5LFSg2IGZjEYt8yzyK181iox+ntsUP
-         Q6bMZxPxQp8bCHPKWwOS0JO9QGyh+Gj4TaD2Tv8C59oDNBj1O6z36TqwSQk54PnBFN
-         TvFS3xpjE3FuqT0NMu5kpUso2HTT9OOuz97RC1+Ib8o0ipQuP9bVzdmx6Vb+x6TmNn
-         O+lKd2LuaiCHw==
+        b=JPGM7XsR9z7ChFK1AbVu4na1iwhocpLUK4y+XbSx9KB4DUty6lmvhb4sq33SfJVDC
+         WT9gz10l02Acl1WdU/jLqYtlPWy+vaBEU3274QbN+63gkVrsm1N54onqlq9KxmLWgZ
+         PI2rWCGU3Wxv5TwdBsrqbHlVZ2RK7jQeOXiPZoiIhKBbMUExezYg2g+HjHlJl5E67I
+         AwMH2TrpJks6aiyXCzDJ+hJf3JEfB8jVALNainBQot9Zvjs0y3JeRabvK85wIKE2I0
+         56t7/M6SxU2eXW6T7WkxmUKlZ1nMbrID+Uj257ND5rzX6DQYqx6Rgl5fkd4O3iO+eg
+         dQl5ifxfwSLEA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJFbWc2125126;
-        Thu, 18 Jul 2019 12:15:37 -0700
-Date:   Thu, 18 Jul 2019 12:15:37 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJGJS22125199;
+        Thu, 18 Jul 2019 12:16:19 -0700
+Date:   Thu, 18 Jul 2019 12:16:19 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-c705cecc8431951b4f34178e6b1db51b4a504c43@git.kernel.org>
-Cc:     jpoimboe@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        ndesaulniers@google.com, hpa@zytor.com, tglx@linutronix.de
-Reply-To: tglx@linutronix.de, hpa@zytor.com, ndesaulniers@google.com,
-          mingo@kernel.org, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, jpoimboe@redhat.com
-In-Reply-To: <505df630f33c9717e1ccde6e4b64c5303135c25f.1563413318.git.jpoimboe@redhat.com>
-References: <505df630f33c9717e1ccde6e4b64c5303135c25f.1563413318.git.jpoimboe@redhat.com>
+Message-ID: <tip-e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a@git.kernel.org>
+Cc:     tglx@linutronix.de, jpoimboe@redhat.com, hpa@zytor.com,
+        ndesaulniers@google.com, peterz@infradead.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: tglx@linutronix.de, ndesaulniers@google.com, jpoimboe@redhat.com,
+          hpa@zytor.com, peterz@infradead.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <26a99c31426540f19c9a58b9e10727c385a147bc.1563413318.git.jpoimboe@redhat.com>
+References: <26a99c31426540f19c9a58b9e10727c385a147bc.1563413318.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Track original function across branches
-Git-Commit-ID: c705cecc8431951b4f34178e6b1db51b4a504c43
+Subject: [tip:core/urgent] objtool: Refactor function alias logic
+Git-Commit-ID: e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,143 +69,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c705cecc8431951b4f34178e6b1db51b4a504c43
-Gitweb:     https://git.kernel.org/tip/c705cecc8431951b4f34178e6b1db51b4a504c43
+Commit-ID:  e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a
+Gitweb:     https://git.kernel.org/tip/e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:47 -0500
+AuthorDate: Wed, 17 Jul 2019 20:36:48 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 18 Jul 2019 21:01:07 +0200
 
-objtool: Track original function across branches
+objtool: Refactor function alias logic
 
-If 'insn->func' is NULL, objtool skips some important checks, including
-sibling call validation.  So if some .fixup code does an invalid sibling
-call, objtool ignores it.
+- Add an alias check in validate_functions().  With this change, aliases
+  no longer need uaccess_safe set.
 
-Treat all code branches (including alts) as part of the original
-function by keeping track of the original func value from
-validate_functions().
+- Add an alias check in decode_instructions().  With this change, the
+  "if (!insn->func)" check is no longer needed.
 
-This improves the usefulness of some clang function fallthrough
-warnings, and exposes some additional kernel bugs in the process.
+- Don't create aliases for zero-length functions, as it can have
+  unexpected results.  The next patch will spit out a warning for
+  zero-length functions anyway.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/505df630f33c9717e1ccde6e4b64c5303135c25f.1563413318.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/26a99c31426540f19c9a58b9e10727c385a147bc.1563413318.git.jpoimboe@redhat.com
 
 ---
- tools/objtool/check.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ tools/objtool/check.c | 16 +++++++++-------
+ tools/objtool/elf.c   |  2 +-
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f9494ff8c286..d8a1ce80fded 100644
+index d8a1ce80fded..3f8664b0e3f9 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -1934,13 +1934,12 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
-  * each instruction and validate all the rules described in
-  * tools/objtool/Documentation/stack-validation.txt.
-  */
--static int validate_branch(struct objtool_file *file, struct instruction *first,
--			   struct insn_state state)
-+static int validate_branch(struct objtool_file *file, struct symbol *func,
-+			   struct instruction *first, struct insn_state state)
- {
- 	struct alternative *alt;
- 	struct instruction *insn, *next_insn;
- 	struct section *sec;
--	struct symbol *func = NULL;
- 	int ret;
- 
- 	insn = first;
-@@ -1961,9 +1960,6 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 			return 1;
+@@ -276,7 +276,7 @@ static int decode_instructions(struct objtool_file *file)
  		}
  
--		if (insn->func)
--			func = insn->func->pfunc;
--
- 		if (func && insn->ignore) {
- 			WARN_FUNC("BUG: why am I validating an ignored function?",
- 				  sec, insn->offset);
-@@ -1985,7 +1981,7 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
+ 		list_for_each_entry(func, &sec->symbol_list, list) {
+-			if (func->type != STT_FUNC)
++			if (func->type != STT_FUNC || func->alias != func)
+ 				continue;
  
- 				i = insn;
- 				save_insn = NULL;
--				func_for_each_insn_continue_reverse(file, insn->func, i) {
-+				func_for_each_insn_continue_reverse(file, func, i) {
- 					if (i->save) {
- 						save_insn = i;
- 						break;
-@@ -2031,7 +2027,7 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 				if (alt->skip_orig)
- 					skip_orig = true;
- 
--				ret = validate_branch(file, alt->insn, state);
-+				ret = validate_branch(file, func, alt->insn, state);
- 				if (ret) {
- 					if (backtrace)
- 						BT_FUNC("(alt)", insn);
-@@ -2069,7 +2065,7 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 
- 			if (state.bp_scratch) {
- 				WARN("%s uses BP as a scratch register",
--				     insn->func->name);
-+				     func->name);
- 				return 1;
+ 			if (!find_insn(file, sec, func->offset)) {
+@@ -286,8 +286,7 @@ static int decode_instructions(struct objtool_file *file)
  			}
  
-@@ -2109,8 +2105,8 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 			} else if (insn->jump_dest &&
- 				   (!func || !insn->jump_dest->func ||
- 				    insn->jump_dest->func->pfunc == func)) {
--				ret = validate_branch(file, insn->jump_dest,
--						      state);
-+				ret = validate_branch(file, func,
-+						      insn->jump_dest, state);
- 				if (ret) {
- 					if (backtrace)
- 						BT_FUNC("(branch)", insn);
-@@ -2176,7 +2172,7 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 			break;
+ 			func_for_each_insn(file, func, insn)
+-				if (!insn->func)
+-					insn->func = func;
++				insn->func = func;
+ 		}
+ 	}
  
- 		case INSN_CLAC:
--			if (!state.uaccess && insn->func) {
-+			if (!state.uaccess && func) {
- 				WARN_FUNC("redundant UACCESS disable", sec, insn->offset);
- 				return 1;
- 			}
-@@ -2197,7 +2193,7 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 			break;
+@@ -508,7 +507,7 @@ static void add_uaccess_safe(struct objtool_file *file)
+ 		if (!func)
+ 			continue;
  
- 		case INSN_CLD:
--			if (!state.df && insn->func)
-+			if (!state.df && func)
- 				WARN_FUNC("redundant CLD", sec, insn->offset);
+-		func->alias->uaccess_safe = true;
++		func->uaccess_safe = true;
+ 	}
+ }
  
- 			state.df = false;
-@@ -2236,7 +2232,7 @@ static int validate_unwind_hints(struct objtool_file *file)
+@@ -1887,7 +1886,7 @@ static bool insn_state_match(struct instruction *insn, struct insn_state *state)
+ static inline bool func_uaccess_safe(struct symbol *func)
+ {
+ 	if (func)
+-		return func->alias->uaccess_safe;
++		return func->uaccess_safe;
  
- 	for_each_insn(file, insn) {
- 		if (insn->hint && !insn->visited) {
--			ret = validate_branch(file, insn, state);
-+			ret = validate_branch(file, insn->func, insn, state);
- 			if (ret && backtrace)
- 				BT_FUNC("<=== (hint)", insn);
- 			warnings += ret;
-@@ -2363,12 +2359,12 @@ static int validate_functions(struct objtool_file *file)
+ 	return false;
+ }
+@@ -2355,14 +2354,17 @@ static int validate_functions(struct objtool_file *file)
+ 
+ 	for_each_sec(file, sec) {
+ 		list_for_each_entry(func, &sec->symbol_list, list) {
+-			if (func->type != STT_FUNC || func->pfunc != func)
++			if (func->type != STT_FUNC)
++				continue;
++
++			if (func->pfunc != func || func->alias != func)
  				continue;
  
  			insn = find_insn(file, sec, func->offset);
--			if (!insn || insn->ignore)
-+			if (!insn || insn->ignore || insn->visited)
+ 			if (!insn || insn->ignore || insn->visited)
  				continue;
  
- 			state.uaccess = func->alias->uaccess_safe;
+-			state.uaccess = func->alias->uaccess_safe;
++			state.uaccess = func->uaccess_safe;
  
--			ret = validate_branch(file, insn, state);
-+			ret = validate_branch(file, func, insn, state);
+ 			ret = validate_branch(file, func, insn, state);
  			if (ret && backtrace)
- 				BT_FUNC("<=== (func)", insn);
- 			warnings += ret;
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index e18698262837..9194732a673d 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -278,7 +278,7 @@ static int read_symbols(struct elf *elf)
+ 			}
+ 
+ 			if (sym->offset == s->offset) {
+-				if (sym->len == s->len && alias == sym)
++				if (sym->len && sym->len == s->len && alias == sym)
+ 					alias = s;
+ 
+ 				if (sym->len >= s->len) {
