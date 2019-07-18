@@ -2,186 +2,233 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AA9C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C25C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C832E20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E07E20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfGRNrW (ORCPT
+        id S2390486AbfGRNro convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:47:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59958 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727730AbfGRNrW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:47:22 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IDiRfC099246
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:47:21 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttq5cqey6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:47:20 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 18 Jul 2019 14:47:18 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 14:47:15 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IDlESv38470070
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 13:47:14 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4238A4054;
-        Thu, 18 Jul 2019 13:47:14 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E8ACA4062;
-        Thu, 18 Jul 2019 13:47:14 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.115])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 13:47:14 +0000 (GMT)
-Subject: Re: [PATCH 2/2] KVM: s390: Use kvm_vcpu_wake_up in
- kvm_s390_vcpu_wakeup
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     wanpengli@tencent.com, rkrcmar@redhat.com, paulus@ozlabs.org,
-        maz@kernel.org
-References: <1563457031-21189-1-git-send-email-pbonzini@redhat.com>
- <1563457031-21189-3-git-send-email-pbonzini@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Thu, 18 Jul 2019 15:47:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1563457031-21189-3-git-send-email-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 18 Jul 2019 09:47:44 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17861 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbfGRNro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:47:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 06:47:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,278,1559545200"; 
+   d="scan'208";a="169860182"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Jul 2019 06:47:43 -0700
+Received: from fmsmsx155.amr.corp.intel.com (10.18.116.71) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 18 Jul 2019 06:47:42 -0700
+Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
+ FMSMSX155.amr.corp.intel.com (10.18.116.71) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 18 Jul 2019 06:47:42 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.3]) by
+ SHSMSX104.ccr.corp.intel.com ([169.254.5.110]) with mapi id 14.03.0439.000;
+ Thu, 18 Jul 2019 21:47:41 +0800
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: RE: [PATCH v3 2/2] balloon: fix up comments
+Thread-Topic: [PATCH v3 2/2] balloon: fix up comments
+Thread-Index: AQHVPWPB7Kn6mp4V4ECCoWD/TZ2+lqbQWhSw
+Date:   Thu, 18 Jul 2019 13:47:40 +0000
+Message-ID: <286AC319A985734F985F78AFA26841F73E1705ED@shsmsx102.ccr.corp.intel.com>
+References: <20190718122324.10552-1-mst@redhat.com>
+ <20190718122324.10552-2-mst@redhat.com>
+In-Reply-To: <20190718122324.10552-2-mst@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071813-0012-0000-0000-000003341491
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071813-0013-0000-0000-0000216D96E4
-Message-Id: <2af3fb79-61ae-d361-24d7-665cf9638e0b@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=769 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180144
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmYzMTA4NzItODMyNi00OTQ1LWExYmQtYTg0ZjVkNWNjMWNlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSUc3MUVZK0YrRkpHb2Eyam5BN2lKWloyZ3cySDlMd1pRV211TW5KTjAxZXFRcEdRaFNEMitYZmw2c0NBK2VhbiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thursday, July 18, 2019 8:24 PM, Michael S. Tsirkin wrote:
+>  /*
+>   * balloon_page_alloc - allocates a new page for insertion into the balloon
+> - *			  page list.
+> + *			page list.
+>   *
+> - * Driver must call it to properly allocate a new enlisted balloon page.
+> - * Driver must call balloon_page_enqueue before definitively removing it
+> from
+> - * the guest system.  This function returns the page address for the recently
+> - * allocated page or NULL in the case we fail to allocate a new page this turn.
+> + * Driver must call this function to properly allocate a new enlisted balloon
+> page.
+
+Probably better to say "allocate a new balloon page to enlist" ?
+"enlisted page" implies that the allocated page has been added to the list, which might
+be misleading.
 
 
-On 18.07.19 15:37, Paolo Bonzini wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Use kvm_vcpu_wake_up() in kvm_s390_vcpu_wakeup().
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
-> 	v2->v3: no need to set vcpu->ready here
->  arch/s390/kvm/interrupt.c | 23 +++--------------------
->  1 file changed, 3 insertions(+), 20 deletions(-)
+> + * Driver must call balloon_page_enqueue before definitively removing
+> + the page
+> + * from the guest system.
+> + *
+> + * Returns: struct page address for the allocated page or NULL in case it fails
+> + * 			to allocate a new page.
+>   */
 
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Returns: pointer to the page struct of the allocated page, or NULL if allocation fails.
 
-> 
-> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> index 26f8bf4a22a7..b5fd6e85657c 100644
-> --- a/arch/s390/kvm/interrupt.c
-> +++ b/arch/s390/kvm/interrupt.c
-> @@ -1224,28 +1224,11 @@ int kvm_s390_handle_wait(struct kvm_vcpu *vcpu)
->  
->  void kvm_s390_vcpu_wakeup(struct kvm_vcpu *vcpu)
+
+
+>  struct page *balloon_page_alloc(void)
 >  {
-> -	/*
-> -	 * We cannot move this into the if, as the CPU might be already
-> -	 * in kvm_vcpu_block without having the waitqueue set (polling)
-> -	 */
->  	vcpu->valid_wakeup = true;
-> +	kvm_vcpu_wake_up(vcpu);
-> +
->  	/*
-> -	 * This is mostly to document, that the read in swait_active could
-> -	 * be moved before other stores, leading to subtle races.
-> -	 * All current users do not store or use an atomic like update
-> -	 */
-> -	smp_mb__after_atomic();
-> -	if (swait_active(&vcpu->wq)) {
-> -		/*
-> -		 * The vcpu gave up the cpu voluntarily, mark it as a good
-> -		 * yield-candidate.
-> -		 */
-> -		WRITE_ONCE(vcpu->ready, true);
-> -		swake_up_one(&vcpu->wq);
-> -		vcpu->stat.halt_wakeup++;
-> -	}
-> -	/*
-> -	 * The VCPU might not be sleeping but is executing the VSIE. Let's
-> +	 * The VCPU might not be sleeping but rather executing VSIE. Let's
->  	 * kick it, so it leaves the SIE to process the request.
->  	 */
->  	kvm_s390_vsie_kick(vcpu);
-> 
+> @@ -130,19 +133,15 @@ EXPORT_SYMBOL_GPL(balloon_page_alloc);
+>  /*
+>   * balloon_page_enqueue - inserts a new page into the balloon page list.
+>   *
+> - * @b_dev_info: balloon device descriptor where we will insert a new page
+> to
+> + * @b_dev_info: balloon device descriptor where we will insert a new
+> + page
+>   * @page: new page to enqueue - allocated using balloon_page_alloc.
+>   *
+> - * Driver must call it to properly enqueue a new allocated balloon page
+> - * before definitively removing it from the guest system.
+> + * Drivers must call this function to properly enqueue a new allocated
+> + balloon
+> + * page before definitively removing the page from the guest system.
+>   *
+> - * Drivers must not call balloon_page_enqueue on pages that have been
+> - * pushed to a list with balloon_page_push before removing them with
+> - * balloon_page_pop. To all pages on a list, use balloon_page_list_enqueue
+> - * instead.
+> - *
+> - * This function returns the page address for the recently enqueued page or
+> - * NULL in the case we fail to allocate a new page this turn.
+> + * Drivers must not call balloon_page_enqueue on pages that have been
+> + pushed to
+> + * a list with balloon_page_push before removing them with
+> + balloon_page_pop. To
+> + * enqueue all pages on a list, use balloon_page_list_enqueue instead.
 
+"To enqueue a list of pages" ?
+
+
+>   */
+>  void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
+>  			  struct page *page)
+> @@ -157,14 +156,24 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
+> 
+>  /*
+>   * balloon_page_dequeue - removes a page from balloon's page list and
+> returns
+> - *			  the its address to allow the driver release the page.
+> + *			  its address to allow the driver to release the page.
+>   * @b_dev_info: balloon device decriptor where we will grab a page from.
+>   *
+> - * Driver must call it to properly de-allocate a previous enlisted balloon
+> page
+> - * before definetively releasing it back to the guest system.
+> - * This function returns the page address for the recently dequeued page or
+> - * NULL in the case we find balloon's page list temporarily empty due to
+> - * compaction isolated pages.
+> + * Driver must call this to properly dequeue a previously enqueued page
+ 
+"call this function"?
+ 
+
+> + * before definitively releasing it back to the guest system.
+> + *
+> + * Caller must perform its own accounting to ensure that this
+> + * function is called only if some pages are actually enqueued.
+
+
+"only when" ?
+
+> + *
+> + * Note that this function may fail to dequeue some pages even if there
+
+"even when" ?
+
+> + are
+> + * some enqueued pages - since the page list can be temporarily empty
+> + due to
+> + * the compaction of isolated pages.
+> + *
+> + * TODO: remove the caller accounting requirements, and allow caller to
+> + wait
+> + * until all pages can be dequeued.
+> + *
+> + * Returns: struct page address for the dequeued page, or NULL if it fails to
+> + * 			dequeue any pages.
+
+Returns: pointer to the page struct of the dequeued page, or NULL if no page gets dequeued.
+
+
+>   */
+>  struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info)
+> { @@ -177,9 +186,9 @@ struct page *balloon_page_dequeue(struct
+> balloon_dev_info *b_dev_info)
+>  	if (n_pages != 1) {
+>  		/*
+>  		 * If we are unable to dequeue a balloon page because the
+> page
+> -		 * list is empty and there is no isolated pages, then
+> something
+> +		 * list is empty and there are no isolated pages, then
+> something
+>  		 * went out of track and some balloon pages are lost.
+> -		 * BUG() here, otherwise the balloon driver may get stuck
+> into
+> +		 * BUG() here, otherwise the balloon driver may get stuck in
+>  		 * an infinite loop while attempting to release all its pages.
+>  		 */
+>  		spin_lock_irqsave(&b_dev_info->pages_lock, flags); @@ -
+> 230,8 +239,8 @@ int balloon_page_migrate(struct address_space *mapping,
+> 
+>  	/*
+>  	 * We can not easily support the no copy case here so ignore it as it
+ 
+"cannot"
+
+> -	 * is unlikely to be use with ballon pages. See include/linux/hmm.h
+> for
+> -	 * user of the MIGRATE_SYNC_NO_COPY mode.
+> +	 * is unlikely to be used with ballon pages. See include/linux/hmm.h
+
+
+"ballon" -> "balloon"
+
+
+> for
+> +	 * a user of the MIGRATE_SYNC_NO_COPY mode.
+
+"for the usage of" ?
+
+
+Other parts look good to me.
+Reviewed-by: Wei Wang <wei.w.wang@intel.com>
+
+Best,
+Wei
