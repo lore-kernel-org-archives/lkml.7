@@ -2,116 +2,223 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TRACKER_ID autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FBEC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02235C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2012C21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="nnb8r1VU"
+	by mail.kernel.org (Postfix) with ESMTP id CAFAE21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbfGRQLj (ORCPT
+        id S1731362AbfGRQMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:11:39 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:47056 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRQLi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:11:38 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d4so30872604edr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3obEXF97WrsMpoUnrYdgG1Tyxfg+JoWnkuCsTAUEfHc=;
-        b=nnb8r1VUxoT6Rh7UeZIiyvzQQn0SURlNnsdRcOMXX44NSPsaHqRzm9+BeyWexTq/oK
-         98G5MVKnJIUPNWlSW8LoCOppPVI1fyXgjw5MSgUIrawtI1raTD5tKRhgZSMmE1UJromJ
-         JREvbh0Pub5P6qZwdP8UlTPAVo8NsB6Ycrw7u2aDcUEaNSRh0gTllpY7sBURLVHjg9+e
-         vLMXQz1To95LrzSRCyx7wgBwAb40UW1Sx+H/KUFdPi2alc6fxxUiXC1N2xS0o6KMM0MR
-         1J5XUiJ8pwJjJk5G10IHEWpfRfXIbnqd8BFcqGMOAHG+lTa4Xjr6sOR7Omu7U8OIPGry
-         jF2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3obEXF97WrsMpoUnrYdgG1Tyxfg+JoWnkuCsTAUEfHc=;
-        b=JGyXMGCOweZfH1pvbUNYpsPZsLLfXbSwk2D5G4PES1S48hpHnkr3RnRBPJmxX21f++
-         wwPz3oBbLUwKKh6U+cEL6QFXuFM+aUAlc/VlI5C8sX6rfSLu4RqMA657eLJDnI1xoniK
-         BzqxdWnPZjdLbj6H5JFGhy6LItpG/yQ6iYVl10ykCzGZyGGrygVOSvXj6RwcCrtuJ6DK
-         IRxjMPslQ8ycuH4f7OobLGfc9jyrM/+FEGYANRfvzWVQfunv3rDghrd/dr8R/nwlw5UM
-         REmrbqeLey6TuAw5Hd0otb+KthSWJklqbWZ9SFwOT0s3YPqiwa7KBs7OdJvM3fcHtXvu
-         QaGw==
-X-Gm-Message-State: APjAAAUZlEw5mOIlrTzo3tZ4uW9vJr8ch9iAMYPpdgBVvdQZU28hTmiw
-        SWgIDUY8AePeRlUXC9+oRM0VIb53m5CjWx2JcSg=
-X-Google-Smtp-Source: APXvYqw2EEs0Sl3L+PvArw6obe2M4a4Esh+Ohl1Z2Anp/tQxrPnwrWF0NvTuCVtLVZYl71EJ+CdQj7ghlr5+XD6jjJ4=
-X-Received: by 2002:a50:922a:: with SMTP id i39mr41307612eda.219.1563466296738;
- Thu, 18 Jul 2019 09:11:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190718024133.3873-1-leonardo@linux.ibm.com> <1563430353.3077.1.camel@suse.de>
- <0e67afe465cbbdf6ec9b122f596910cae77bc734.camel@linux.ibm.com> <20190718155704.GD30461@dhcp22.suse.cz>
-In-Reply-To: <20190718155704.GD30461@dhcp22.suse.cz>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 18 Jul 2019 12:11:25 -0400
-Message-ID: <CA+CK2bBU72owYSXH10LTU8NttvCASPNTNOqFfzA3XweXR3gOTw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in ZONE_MOVABLE
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thu, 18 Jul 2019 12:12:53 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:62070 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727623AbfGRQMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:12:52 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id DB1F950921;
+        Thu, 18 Jul 2019 18:12:47 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id ZQRmoVgJSQdC; Thu, 18 Jul 2019 18:12:38 +0200 (CEST)
+Date:   Fri, 19 Jul 2019 02:12:31 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        sparclinux <sparclinux@vger.kernel.org>
+Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
+Message-ID: <20190718161231.xcno272nvqpln3wj@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-9-cyphar@cyphar.com>
+ <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cqnjaasdwru53b2s"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 11:57 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Thu 18-07-19 12:50:29, Leonardo Bras wrote:
-> > On Thu, 2019-07-18 at 08:12 +0200, Oscar Salvador wrote:
-> > > We do already have "movable_node" boot option, which exactly has that
-> > > effect.
-> > > Any hotplugged range will be placed in ZONE_MOVABLE.
-> > Oh, I was not aware of it.
-> >
-> > > Why do we need yet another option to achieve the same? Was not that
-> > > enough for your case?
-> > Well, another use of this config could be doing this boot option a
-> > default on any given kernel.
-> > But in the above case I agree it would be wiser to add the code on
-> > movable_node_is_enabled() directly, and not where I did put.
-> >
-> > What do you think about it?
->
-> No further config options please. We do have means a more flexible way
-> to achieve movable node onlining so let's use it. Or could you be more
-> specific about cases which cannot use the command line option and really
-> need a config option to workaround that?
 
-Hi Michal,
+--cqnjaasdwru53b2s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just trying to understand, if kernel parameters is the preferable
-method, why do we even have
+On 2019-07-18, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Sat, Jul 6, 2019 at 5:00 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+>=20
+> > diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel=
+/syscalls/syscall.tbl
+> > index 9e7704e44f6d..1703d048c141 100644
+> > --- a/arch/alpha/kernel/syscalls/syscall.tbl
+> > +++ b/arch/alpha/kernel/syscalls/syscall.tbl
+> > @@ -461,6 +461,7 @@
+> >  530    common  getegid                         sys_getegid
+> >  531    common  geteuid                         sys_geteuid
+> >  532    common  getppid                         sys_getppid
+> > +533    common  openat2                         sys_openat2
+> >  # all other architectures have common numbers for new syscall, alpha
+> >  # is the exception.
+> >  534    common  pidfd_send_signal               sys_pidfd_send_signal
+>=20
+> My plan here was to add new syscalls in the same order as everwhere else,
+> just with the number 110 higher. In the long run, I hope we can automate
+> this.
 
-MEMORY_HOTPLUG_DEFAULT_ONLINE
+Alright, I will adjust this.
 
-It is just strange that we have a config to online memory by default
-without kernel parameter, but no way to specify how to online it. It
-just looks as incomplete interface to me. Perhaps this config should
-be removed as well?
+> > diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+> > index aaf479a9e92d..4ad262698396 100644
+> > --- a/arch/arm/tools/syscall.tbl
+> > +++ b/arch/arm/tools/syscall.tbl
+> > @@ -447,3 +447,4 @@
+> >  431    common  fsconfig                        sys_fsconfig
+> >  432    common  fsmount                         sys_fsmount
+> >  433    common  fspick                          sys_fspick
+> > +434    common  openat2                         sys_openat2
+>=20
+> 434 is already used in linux-next, I suggest you use 437 (Palmer
+> just submitted fchmodat4, which could become 436).
 
-Pasha
+437 sounds good to me.
+
+> > +/**
+> > + * Arguments for how openat2(2) should open the target path. If @extra=
+ is zero,
+> > + * then openat2(2) is identical to openat(2).
+> > + *
+> > + * @flags: O_* flags (unknown flags ignored).
+> > + * @mode: O_CREAT file mode (ignored otherwise).
+> > + * @upgrade_mask: restrict how the O_PATH may be re-opened (ignored ot=
+herwise).
+> > + * @resolve: RESOLVE_* flags (-EINVAL on unknown flags).
+> > + * @reserved: reserved for future extensions, must be zeroed.
+> > + */
+> > +struct open_how {
+> > +       __u32 flags;
+> > +       union {
+> > +               __u16 mode;
+> > +               __u16 upgrade_mask;
+> > +       };
+> > +       __u16 resolve;
+> > +       __u64 reserved[7]; /* must be zeroed */
+> > +};
+>=20
+> We can have system calls with up to six arguments on all architectures, so
+> this could still be done more conventionally without the indirection: like
+>=20
+> long openat2(int dfd, const char __user * filename, int flags, mode_t
+> mode_mask, __u16 resolve);
+>=20
+> In fact, that seems similar enough to the existing openat() that I think
+> you could also just add the fifth argument to the existing call when
+> a newly defined flag is set, similarly to how we only use the 'mode'
+> argument when O_CREAT or O_TMPFILE are set.
+
+I considered doing this (and even had a preliminary version of it), but
+I discovered that I was not in favour of this idea -- once I started to
+write tests using it -- for a few reasons:
+
+  1. It doesn't really allow for clean extension for a future 6th
+	 argument (because you are using up O_* flags to signify "use the
+	 next argument", and O_* flags don't give -EINVAL if they're
+	 unknown). Now, yes you can do the on-start runtime check that
+	 everyone does -- but I've never really liked having to do it.
+
+	 Having reserved padding for later extensions (that is actually
+	 checked and gives -EINVAL) matches more modern syscall designs.
+
+  2. I really was hoping that the variadic openat(2) could be done away
+     using this union setup (Linus said he didn't like it, and suggested
+	 using something like 'struct stat' as an argument for openat(2) --
+	 though personally I am not sure I would personally like to use an
+	 interface like that).
+
+  3. In order to avoid wasting a syscall argument for mode/mask you need
+	 to either have something like your suggested mode_mask (which makes
+	 the syscall arguments less consistent) or have some sort of
+	 mode-like argument that is treated specially (which is really awful
+	 on multiple levels -- this one I also tried and even wrote my
+	 original tests using). And in both cases, the shims for
+	 open{,at}(2) are somewhat less clean.
+
+All of that being said, I'd be happy to switch to whatever you think
+makes the most sense. As long as it's possible to get an O_PATH with
+RESOLVE_IN_ROOT set, I'm happy.
+
+> > --- a/include/linux/syscalls.h
+> > +++ b/include/linux/syscalls.h
+>=20
+> This file seems to lack a declaration for the system call, which means it
+> will cause a build failure on some architectures, e.g. arch/arc/kernel/sy=
+s.c:
+>=20
+> #define __SYSCALL(nr, call) [nr] =3D (call),
+> void *sys_call_table[NR_syscalls] =3D {
+>         [0 ... NR_syscalls-1] =3D sys_ni_syscall,
+> #include <asm/unistd.h>
+> };
+
+Thanks, I will fix this.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--cqnjaasdwru53b2s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXTCaawAKCRCdlLljIbnQ
+EiYSAQDEc7/A6jyOk/lCwRhggyIcxNKsYaVUpK2GNk3BWcMP1gD9HsURgy5VJcXW
+ndP9aKEsYi+1zcPS6NupxsV7j2xWBwo=
+=lnH6
+-----END PGP SIGNATURE-----
+
+--cqnjaasdwru53b2s--
