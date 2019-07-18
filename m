@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ADCC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AEBC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E12921849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECEE21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563474627;
-	bh=1r3EurQxmmR6M8I1pSPfcCUy90F9rFAi+TAF9Ghmyi4=;
+	s=default; t=1563474632;
+	bh=qZHMcMnRBTr/LKF9ulZ0FQG18lq34RDEgtPvWy2omN0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=HoF5UDA+QHW83XQibY6rIHg+VzKbU3453WfBlAj7zXbKyv5+SVP2fqYJCyEodsr4L
-	 M4OhC9Vhxig4cQWKGTEHSSLa1gVogPqu/2mIAWCdYuDxuwxrABJmgBUhHgnwbWLDLW
-	 UDF6DXUCgaZUW756f0+PMSTNmhNcIdtDSqiDflx8=
+	b=n4UYTN854imXfMPbJ3GC63a9uI59PIIm4NQb/J/Pie3sdKiW+p66IOYdOS5+BqmNK
+	 qkj1dUewE+bB+skQw4OFVhh5EHI0S+C9IuU0CD8h4ZPKXVJ+ZRGt21HOpkWD/RYV8T
+	 d/xtpJFBnKZaaFDhWvMQxKpXd1yAZsWlr7DWfrVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391276AbfGRSa0 (ORCPT
+        id S2391316AbfGRSab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:30:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49740 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 14:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391202AbfGRSaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:30:20 -0400
-Subject: Re: [GIT PULL] dax for 5.3
+        id S2391188AbfGRSaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:30:18 -0400
+Subject: Re: [GIT PULL] Ceph updates for 5.3-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563474619;
-        bh=1r3EurQxmmR6M8I1pSPfcCUy90F9rFAi+TAF9Ghmyi4=;
+        s=default; t=1563474617;
+        bh=qZHMcMnRBTr/LKF9ulZ0FQG18lq34RDEgtPvWy2omN0=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=aAICNbsVy9WLwJ7dSj7dhKxofmKV90mme2Jc++9KRZEVqHWBkQVEGrQ/R+6EusN1W
-         JOTMmwbiliVMOl71oTcgCUgG9qmnYcW+oM7qP4fOVuqfHqJMBrl1cRdXtRmx2eGoXh
-         11e8vgtLLr8/SshIRDnDIFkOKz6x+Dom+BWc/JsU=
+        b=UNqIH+2dEtjY0pMu+XxRGarXfHVgfrxgCNbcDLHSrM6IjQFE2OhFdRYW8YgPFqqmb
+         Y5pJl9aQVl7ru/7Hdv8b2xVbhStS2OEkRVr8VsymJQGA78ov6T74+bbUlWCBKSB8T/
+         z+g2nIwcUbhSRceIR/Gg9qaUbPBwbyAM4XrkI9v0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPcyv4jMjvPYTa00hbq=64LZ=Vcu-gi7hLcgDTnD9d4dF0t9ng@mail.gmail.com>
-References: <CAPcyv4jMjvPYTa00hbq=64LZ=Vcu-gi7hLcgDTnD9d4dF0t9ng@mail.gmail.com>
+In-Reply-To: <20190717112825.23829-1-idryomov@gmail.com>
+References: <20190717112825.23829-1-idryomov@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPcyv4jMjvPYTa00hbq=64LZ=Vcu-gi7hLcgDTnD9d4dF0t9ng@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/dax-for-5.3
-X-PR-Tracked-Commit-Id: 23c84eb7837514e16d79ed6d849b13745e0ce688
+X-PR-Tracked-Message-Id: <20190717112825.23829-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
+ tags/ceph-for-5.3-rc1
+X-PR-Tracked-Commit-Id: d31d07b97a5e76f41e00eb81dcca740e84aa7782
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0fe49f70a08d7d25acee3b066a88c654fea26121
-Message-Id: <156347461988.12683.5649730008355419191.pr-tracker-bot@kernel.org>
-Date:   Thu, 18 Jul 2019 18:30:19 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
+X-PR-Merge-Commit-Id: d9b9c893048e9d308a833619f0866f1f52778cf5
+Message-Id: <156347461755.12683.16079074350077877952.pr-tracker-bot@kernel.org>
+Date:   Thu, 18 Jul 2019 18:30:17 +0000
+To:     Ilya Dryomov <idryomov@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 18 Jul 2019 07:37:07 -0700:
+The pull request you sent on Wed, 17 Jul 2019 13:28:25 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/dax-for-5.3
+> https://github.com/ceph/ceph-client.git tags/ceph-for-5.3-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0fe49f70a08d7d25acee3b066a88c654fea26121
+https://git.kernel.org/torvalds/c/d9b9c893048e9d308a833619f0866f1f52778cf5
 
 Thank you!
 
