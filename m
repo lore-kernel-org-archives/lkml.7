@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29769C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3DCC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE27C21873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE7B217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563418976;
-	bh=S3zB4DvXVPTe8ROWrqlgu7FLbjfqLceLVwwFDxHyByo=;
+	s=default; t=1563418983;
+	bh=sCxTIgADXOgJ0ljuhRomr+2gskzHAK3o+DYnRwZQytM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UAQ6Nzhxeaf2W2zGFWAVFOovquQ/XyRNaRdpTauTg9wk12/mGFya+aI6e7MMRxGPz
-	 LUyMk/xVX0yQHdcybff7xyPhLO5MwwoM7GsXFjXn8rdL0kb/Q38ql0xyUvG2BT+8Qx
-	 3AiRtKDp+1ATa1oarEUlGckpwzJGM0FNQ7ZfHT7A=
+	b=u32flumb2VS9cNE6yneZgzITWUncqhcO5Wb6iUsY10hzQ7euNcScStz3OyadEGnhC
+	 RHVgTG6BH3BAjX3vjF5p4ok/DAZoOlxsHw8BFk7eq8jiHiBCC/7qVpuJECYO1avR/k
+	 v/pdnji3ErJNTwdAnQ2bmeCdRYdPL5rQWpucA4Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387601AbfGRDCy (ORCPT
+        id S2389026AbfGRDDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:03:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfGRDCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:02:53 -0400
+        id S2387984AbfGRDC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:02:59 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C4962173B;
-        Thu, 18 Jul 2019 03:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0670F21841;
+        Thu, 18 Jul 2019 03:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563418972;
-        bh=S3zB4DvXVPTe8ROWrqlgu7FLbjfqLceLVwwFDxHyByo=;
+        s=default; t=1563418978;
+        bh=sCxTIgADXOgJ0ljuhRomr+2gskzHAK3o+DYnRwZQytM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yNgNL+mbTmERsJGCCaGt9NbPGwDmDUtwNHpxXEvcLSmQ+PcDJcTs1LfU8cp23Ei87
-         Fy4evM8tOc6FM2PIU5RF+bWyC02ZagaG/naHxsv0I5413yi6hgYxwzGt5MWvZY0GCi
-         9Psv+5n2V0iFgm0Qob2M+PNAdU703zd+cKKYTILs=
+        b=gsqjaetd6he2mqA6TUm1sHKHoa9s8mNcot2x1ZegUAd6axE0BWhC7xbn0uLlbpHmD
+         SvEOHe+n9L7yhIujaYCsTtlrhH33to/Tqoc984TNjUlzgYSQZeUMMGBekC35anKSzP
+         I5sQNUy7D7qpHLfV46oRJtJHhV3tc5picrIt0Y4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cole Rogers <colerogers@disroot.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.2 03/21] Input: synaptics - enable SMBUS on T480 thinkpad trackpad
-Date:   Thu, 18 Jul 2019 12:01:21 +0900
-Message-Id: <20190718030031.073218961@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 5.2 13/21] ARC: hide unused function unw_hdr_alloc
+Date:   Thu, 18 Jul 2019 12:01:31 +0900
+Message-Id: <20190718030033.826192040@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -60,36 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cole Rogers <colerogers@disroot.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit abbe3acd7d72ab4633ade6bd24e8306b67e0add3 upstream.
+commit fd5de2721ea7d16e2b16c4049ac49f229551b290 upstream.
 
-Thinkpad t480 laptops had some touchpad features disabled, resulting in the
-loss of pinch to activities in GNOME, on wayland, and other touch gestures
-being slower. This patch adds the touchpad of the t480 to the smbus_pnp_ids
-whitelist to enable the extra features. In my testing this does not break
-suspend (on fedora, with wayland, and GNOME, using the rc-6 kernel), while
-also fixing the feature on a T480.
+As kernelci.org reports, this function is not used in
+vdk_hs38_defconfig:
 
-Signed-off-by: Cole Rogers <colerogers@disroot.org>
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+arch/arc/kernel/unwind.c:188:14: warning: 'unw_hdr_alloc' defined but not used [-Wunused-function]
+
+Fixes: bc79c9a72165 ("ARC: dw2 unwind: Reinstante unwinding out of modules")
+Link: https://kernelci.org/build/id/5d1cae3f59b514300340c132/logs/
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arc/kernel/unwind.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -173,6 +173,7 @@ static const char * const smbus_pnp_ids[
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
- 	"LEN0092", /* X1 Carbon 6 */
-+	"LEN0093", /* T480 */
- 	"LEN0096", /* X280 */
- 	"LEN0097", /* X280 -> ALPS trackpoint */
- 	"LEN200f", /* T450s */
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -181,11 +181,6 @@ static void *__init unw_hdr_alloc_early(
+ 	return memblock_alloc_from(sz, sizeof(unsigned int), MAX_DMA_ADDRESS);
+ }
+ 
+-static void *unw_hdr_alloc(unsigned long sz)
+-{
+-	return kmalloc(sz, GFP_KERNEL);
+-}
+-
+ static void init_unwind_table(struct unwind_table *table, const char *name,
+ 			      const void *core_start, unsigned long core_size,
+ 			      const void *init_start, unsigned long init_size,
+@@ -366,6 +361,10 @@ ret_err:
+ }
+ 
+ #ifdef CONFIG_MODULES
++static void *unw_hdr_alloc(unsigned long sz)
++{
++	return kmalloc(sz, GFP_KERNEL);
++}
+ 
+ static struct unwind_table *last_table;
+ 
 
 
