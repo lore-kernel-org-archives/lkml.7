@@ -2,243 +2,99 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF87C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD62C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B0121019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7275821019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390963AbfGRS0P (ORCPT
+        id S2391056AbfGRS0b convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:26:15 -0400
-Received: from mail.us.es ([193.147.175.20]:38562 "EHLO mail.us.es"
+        Thu, 18 Jul 2019 14:26:31 -0400
+Received: from mga14.intel.com ([192.55.52.115]:42322 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727762AbfGRS0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:26:15 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 4A927B5AAF
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 20:26:12 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 3AA71D2F98
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 20:26:12 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 2A83A115105; Thu, 18 Jul 2019 20:26:12 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 8692FDA704;
-        Thu, 18 Jul 2019 20:26:09 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Thu, 18 Jul 2019 20:26:09 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 53B7A4265A31;
-        Thu, 18 Jul 2019 20:26:09 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 20:26:08 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     yangxingwu <xingwu.yang@gmail.com>
-Cc:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
-        kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, joe@perches.com
-Subject: Re: [PATCH v2] net/netfilter: remove unnecessary spaces
-Message-ID: <20190718182608.apjgz5xbpsyvxfp6@salvia>
-References: <20190715082747.fdlpvekbqyhwx724@salvia>
- <20190716021301.27753-1-xingwu.yang@gmail.com>
+        id S1727928AbfGRS03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 14:26:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 11:26:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,279,1559545200"; 
+   d="scan'208";a="367015508"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jul 2019 11:26:29 -0700
+Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 18 Jul 2019 11:26:28 -0700
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.142]) by
+ ORSMSX154.amr.corp.intel.com ([169.254.11.96]) with mapi id 14.03.0439.000;
+ Thu, 18 Jul 2019 11:26:28 -0700
+From:   "Yang, Fei" <fei.yang@intel.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated
+ properly
+Thread-Topic: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated
+ properly
+Thread-Index: AQHVPUaDMYdk5Cgjz0WPgMvoOhlVmqbQnM5Q
+Date:   Thu, 18 Jul 2019 18:26:27 +0000
+Message-ID: <02E7334B1630744CBDC55DA8586225837F8DD883@ORSMSX102.amr.corp.intel.com>
+References: <1563396788-126034-1-git-send-email-fei.yang@intel.com>
+ <87o91riux9.fsf@linux.intel.com>
+In-Reply-To: <87o91riux9.fsf@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDBiZWE2MjMtMDliNS00NjZiLThhNDgtNWRlNmRjZWQ0ZjZkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieGJPbTY0RWpFbmxMdkNvSEQ5cUpPZk9hdktFVTVENW5EelJPZWpscWdhbDE3S3Y0MnRTOFBqY3Npb3M3SzRVaiJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716021301.27753-1-xingwu.yang@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good, but you will have to wait until net-next reopens:
+> Can only be true for last TRB
+>
+| 	if (event->status & DEPEVT_STATUS_IOC)
+| 		return 1;
 
-http://vger.kernel.org/~davem/net-next.html
+This is the problem. The whole USB request gets only one interrupt when the last TRB completes, so dwc3_gadget_ep_reclaim_trb_sg()
+gets called with event->status = 0x6 which has DEPEVT_STATUS_IOC bit set. Thus dwc3_gadget_ep_reclaim_completed_trb() returns 1
+for the first TRB and the for-loop ends without having a chance to iterate through the sg list.
 
-Will keep this in my patchwork until that happens.
+> If we have a short packet, then we may fall here. Is that the case?
 
-Thanks.
+No need for a short packet to make it fail. In my case below, a 16384 byte request got slipt into 4 TRBs of 4096 bytes. All TRBs were
+completed normally, but the for-loop in dwc3_gadget_ep_reclaim_trb_sg() was terminated right after handling the first TRB. After that
+the trb_dequeue is messed up.
 
-On Tue, Jul 16, 2019 at 10:13:01AM +0800, yangxingwu wrote:
-> this patch removes extra spaces
-> 
-> Signed-off-by: yangxingwu <xingwu.yang@gmail.com>
-> ---
->  net/netfilter/ipset/ip_set_hash_gen.h  | 2 +-
->  net/netfilter/ipset/ip_set_list_set.c  | 2 +-
->  net/netfilter/ipvs/ip_vs_core.c        | 2 +-
->  net/netfilter/ipvs/ip_vs_mh.c          | 4 ++--
->  net/netfilter/ipvs/ip_vs_proto_tcp.c   | 2 +-
->  net/netfilter/nf_conntrack_ftp.c       | 2 +-
->  net/netfilter/nf_conntrack_proto_tcp.c | 2 +-
->  net/netfilter/nfnetlink_log.c          | 4 ++--
->  net/netfilter/nfnetlink_queue.c        | 4 ++--
->  net/netfilter/xt_IDLETIMER.c           | 2 +-
->  10 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
-> index 10f6196..eb907d2 100644
-> --- a/net/netfilter/ipset/ip_set_hash_gen.h
-> +++ b/net/netfilter/ipset/ip_set_hash_gen.h
-> @@ -954,7 +954,7 @@ struct htype {
->  		mtype_data_netmask(d, NCIDR_GET(h->nets[j].cidr[0]));
->  #endif
->  		key = HKEY(d, h->initval, t->htable_bits);
-> -		n =  rcu_dereference_bh(hbucket(t, key));
-> +		n = rcu_dereference_bh(hbucket(t, key));
->  		if (!n)
->  			continue;
->  		for (i = 0; i < n->pos; i++) {
-> diff --git a/net/netfilter/ipset/ip_set_list_set.c b/net/netfilter/ipset/ip_set_list_set.c
-> index 8ada318..5c2be76 100644
-> --- a/net/netfilter/ipset/ip_set_list_set.c
-> +++ b/net/netfilter/ipset/ip_set_list_set.c
-> @@ -289,7 +289,7 @@ struct list_set {
->  	if (n &&
->  	    !(SET_WITH_TIMEOUT(set) &&
->  	      ip_set_timeout_expired(ext_timeout(n, set))))
-> -		n =  NULL;
-> +		n = NULL;
->  
->  	e = kzalloc(set->dsize, GFP_ATOMIC);
->  	if (!e)
-> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-> index 7138556..6b3ae76 100644
-> --- a/net/netfilter/ipvs/ip_vs_core.c
-> +++ b/net/netfilter/ipvs/ip_vs_core.c
-> @@ -615,7 +615,7 @@ int ip_vs_leave(struct ip_vs_service *svc, struct sk_buff *skb,
->  		unsigned int flags = (svc->flags & IP_VS_SVC_F_ONEPACKET &&
->  				      iph->protocol == IPPROTO_UDP) ?
->  				      IP_VS_CONN_F_ONE_PACKET : 0;
-> -		union nf_inet_addr daddr =  { .all = { 0, 0, 0, 0 } };
-> +		union nf_inet_addr daddr = { .all = { 0, 0, 0, 0 } };
->  
->  		/* create a new connection entry */
->  		IP_VS_DBG(6, "%s(): create a cache_bypass entry\n", __func__);
-> diff --git a/net/netfilter/ipvs/ip_vs_mh.c b/net/netfilter/ipvs/ip_vs_mh.c
-> index 94d9d34..da0280c 100644
-> --- a/net/netfilter/ipvs/ip_vs_mh.c
-> +++ b/net/netfilter/ipvs/ip_vs_mh.c
-> @@ -174,8 +174,8 @@ static int ip_vs_mh_populate(struct ip_vs_mh_state *s,
->  		return 0;
->  	}
->  
-> -	table =  kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-> -			 sizeof(unsigned long), GFP_KERNEL);
-> +	table = kcalloc(BITS_TO_LONGS(IP_VS_MH_TAB_SIZE),
-> +			sizeof(unsigned long), GFP_KERNEL);
->  	if (!table)
->  		return -ENOMEM;
->  
-> diff --git a/net/netfilter/ipvs/ip_vs_proto_tcp.c b/net/netfilter/ipvs/ip_vs_proto_tcp.c
-> index 915ac82..c7b46a9 100644
-> --- a/net/netfilter/ipvs/ip_vs_proto_tcp.c
-> +++ b/net/netfilter/ipvs/ip_vs_proto_tcp.c
-> @@ -710,7 +710,7 @@ static int __ip_vs_tcp_init(struct netns_ipvs *ipvs, struct ip_vs_proto_data *pd
->  							sizeof(tcp_timeouts));
->  	if (!pd->timeout_table)
->  		return -ENOMEM;
-> -	pd->tcp_state_table =  tcp_states;
-> +	pd->tcp_state_table = tcp_states;
->  	return 0;
->  }
->  
-> diff --git a/net/netfilter/nf_conntrack_ftp.c b/net/netfilter/nf_conntrack_ftp.c
-> index 8c6c11b..26c1ff8 100644
-> --- a/net/netfilter/nf_conntrack_ftp.c
-> +++ b/net/netfilter/nf_conntrack_ftp.c
-> @@ -162,7 +162,7 @@ static int try_rfc959(const char *data, size_t dlen,
->  	if (length == 0)
->  		return 0;
->  
-> -	cmd->u3.ip =  htonl((array[0] << 24) | (array[1] << 16) |
-> +	cmd->u3.ip = htonl((array[0] << 24) | (array[1] << 16) |
->  				    (array[2] << 8) | array[3]);
->  	cmd->u.tcp.port = htons((array[4] << 8) | array[5]);
->  	return length;
-> diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
-> index 1e2cc83..48f3a67 100644
-> --- a/net/netfilter/nf_conntrack_proto_tcp.c
-> +++ b/net/netfilter/nf_conntrack_proto_tcp.c
-> @@ -1225,7 +1225,7 @@ static int tcp_to_nlattr(struct sk_buff *skb, struct nlattr *nla,
->  	[CTA_PROTOINFO_TCP_WSCALE_ORIGINAL] = { .type = NLA_U8 },
->  	[CTA_PROTOINFO_TCP_WSCALE_REPLY]    = { .type = NLA_U8 },
->  	[CTA_PROTOINFO_TCP_FLAGS_ORIGINAL]  = { .len = sizeof(struct nf_ct_tcp_flags) },
-> -	[CTA_PROTOINFO_TCP_FLAGS_REPLY]	    = { .len =  sizeof(struct nf_ct_tcp_flags) },
-> +	[CTA_PROTOINFO_TCP_FLAGS_REPLY]	    = { .len = sizeof(struct nf_ct_tcp_flags) },
->  };
->  
->  #define TCP_NLATTR_SIZE	( \
-> diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_log.c
-> index 6dee4f9..d69e186 100644
-> --- a/net/netfilter/nfnetlink_log.c
-> +++ b/net/netfilter/nfnetlink_log.c
-> @@ -651,7 +651,7 @@ static void nfulnl_instance_free_rcu(struct rcu_head *head)
->  	/* FIXME: do we want to make the size calculation conditional based on
->  	 * what is actually present?  way more branches and checks, but more
->  	 * memory efficient... */
-> -	size =    nlmsg_total_size(sizeof(struct nfgenmsg))
-> +	size = nlmsg_total_size(sizeof(struct nfgenmsg))
->  		+ nla_total_size(sizeof(struct nfulnl_msg_packet_hdr))
->  		+ nla_total_size(sizeof(u_int32_t))	/* ifindex */
->  		+ nla_total_size(sizeof(u_int32_t))	/* ifindex */
-> @@ -668,7 +668,7 @@ static void nfulnl_instance_free_rcu(struct rcu_head *head)
->  		+ nla_total_size(sizeof(struct nfgenmsg));	/* NLMSG_DONE */
->  
->  	if (in && skb_mac_header_was_set(skb)) {
-> -		size +=   nla_total_size(skb->dev->hard_header_len)
-> +		size += nla_total_size(skb->dev->hard_header_len)
->  			+ nla_total_size(sizeof(u_int16_t))	/* hwtype */
->  			+ nla_total_size(sizeof(u_int16_t));	/* hwlen */
->  	}
-> diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
-> index 89750f7..a1ef6e3 100644
-> --- a/net/netfilter/nfnetlink_queue.c
-> +++ b/net/netfilter/nfnetlink_queue.c
-> @@ -394,7 +394,7 @@ static int nfqnl_put_bridge(struct nf_queue_entry *entry, struct sk_buff *skb)
->  	char *secdata = NULL;
->  	u32 seclen = 0;
->  
-> -	size =    nlmsg_total_size(sizeof(struct nfgenmsg))
-> +	size = nlmsg_total_size(sizeof(struct nfgenmsg))
->  		+ nla_total_size(sizeof(struct nfqnl_msg_packet_hdr))
->  		+ nla_total_size(sizeof(u_int32_t))	/* ifindex */
->  		+ nla_total_size(sizeof(u_int32_t))	/* ifindex */
-> @@ -453,7 +453,7 @@ static int nfqnl_put_bridge(struct nf_queue_entry *entry, struct sk_buff *skb)
->  	}
->  
->  	if (queue->flags & NFQA_CFG_F_UID_GID) {
-> -		size +=  (nla_total_size(sizeof(u_int32_t))	/* uid */
-> +		size += (nla_total_size(sizeof(u_int32_t))	/* uid */
->  			+ nla_total_size(sizeof(u_int32_t)));	/* gid */
->  	}
->  
-> diff --git a/net/netfilter/xt_IDLETIMER.c b/net/netfilter/xt_IDLETIMER.c
-> index 9cec9ea..f56d3ed 100644
-> --- a/net/netfilter/xt_IDLETIMER.c
-> +++ b/net/netfilter/xt_IDLETIMER.c
-> @@ -283,7 +283,7 @@ static int __init idletimer_tg_init(void)
->  
->  	idletimer_tg_kobj = &idletimer_tg_device->kobj;
->  
-> -	err =  xt_register_target(&idletimer_tg);
-> +	err = xt_register_target(&idletimer_tg);
->  	if (err < 0) {
->  		pr_debug("couldn't register xt target\n");
->  		goto out_dev;
-> -- 
-> 1.8.3.1
-> 
+buffer_addr,size,type,ioc,isp_imi,csp,chn,lst,hwo
+0000000077849000, 4096,normal,0,0,1,1,0,0
+000000007784a000, 4096,normal,0,0,1,1,0,0
+000000007784b000, 4096,normal,0,0,1,1,0,0
+000000007784c000, 4096,normal,1,0,1,0,0,0
+000000007784d000, 512,normal,1,0,1,0,0,0
+
+My first version of the patch was trying to address the issue in dwc3_gadget_ep_reclaim_completed_trb(), but then I thought it's a bad
+idea to touch this function because that is also called from non scatter_gather list case, and I was not sure if returning 1 for the linear
+case is correct or not.
+
+
+-Fei
