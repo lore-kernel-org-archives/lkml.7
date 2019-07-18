@@ -2,67 +2,88 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309C8C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634FCC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E13208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F4E208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389539AbfGRInB (ORCPT
+        id S2389558AbfGRIn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:43:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:57850 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbfGRInA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:43:00 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9FFC668B05; Thu, 18 Jul 2019 10:42:58 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 10:42:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 4/6] x86,s390/mm: Move sme_active() and sme_me_mask
- to x86-specific header
-Message-ID: <20190718084258.GC24562@lst.de>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-5-bauerman@linux.ibm.com>
+        Thu, 18 Jul 2019 04:43:27 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42886 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfGRIn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:43:26 -0400
+Received: from 79.184.255.39.ipv4.supernova.orange.pl (79.184.255.39) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id dfed748a61dd19f0; Thu, 18 Jul 2019 10:43:24 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] acpi: blacklist: fix clang warning for unused dmi table
+Date:   Thu, 18 Jul 2019 10:43:24 +0200
+Message-ID: <1742900.Dcq75AOoeW@kreacher>
+In-Reply-To: <20190710130555.1829974-1-arnd@arndb.de>
+References: <20190710130555.1829974-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718032858.28744-5-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:28:56AM -0300, Thiago Jung Bauermann wrote:
-> Now that generic code doesn't reference them, move sme_active() and
-> sme_me_mask to x86's <asm/mem_encrypt.h>.
+On Wednesday, July 10, 2019 3:05:43 PM CEST Arnd Bergmann wrote:
+> When CONFIG_DMI is disabled, we only have a tentative declaration,
+> which causes a warning from clang:
 > 
-> Also remove the export for sme_active() since it's only used in files that
-> won't be built as modules. sme_me_mask on the other hand is used in
-> arch/x86/kvm/svm.c (via __sme_set() and __psp_pa()) which can be built as a
-> module so its export needs to stay.
+> drivers/acpi/blacklist.c:20:35: error: tentative array definition assumed to have one element [-Werror]
+> static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
 > 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> As the variable is not actually used here, hide it entirely
+> in an #ifdef to shut up the warning.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/acpi/blacklist.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+> index ad2c565f5cbe..a86a770c9b79 100644
+> --- a/drivers/acpi/blacklist.c
+> +++ b/drivers/acpi/blacklist.c
+> @@ -17,7 +17,9 @@
+>  
+>  #include "internal.h"
+>  
+> +#ifdef CONFIG_DMI
+>  static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
+> +#endif
+>  
+>  /*
+>   * POLICY: If *anything* doesn't work, put it on the blacklist.
+> @@ -61,7 +63,9 @@ int __init acpi_blacklisted(void)
+>  	}
+>  
+>  	(void)early_acpi_osi_init();
+> +#ifdef CONFIG_DMI
+>  	dmi_check_system(acpi_rev_dmi_table);
+> +#endif
+>  
+>  	return blacklisted;
+>  }
+> 
 
-Looks good,
+Applied, thanks!
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+
+
