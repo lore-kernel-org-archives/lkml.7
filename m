@@ -2,93 +2,165 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A51C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118DCC76197
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5D8208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE24021849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jv0LYAjJ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W44UTwtv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Tqm5NqXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390802AbfGRPsi (ORCPT
+        id S2390824AbfGRPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:48:38 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37317 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfGRPsh (ORCPT
+        Thu, 18 Jul 2019 11:49:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48996 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfGRPtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:48:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c9so19539942lfh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:48:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H848abaLyIwWER/gEmAO68AwOfA/THbvpS8nBllhwXw=;
-        b=jv0LYAjJ3cQrNJJG4dHU14YIsAdM97SXPVhpRIr4VVu8+9iERlESrVNBKs76k6FuI4
-         5MgODQxyPDbLZqr0MrLNAQSevRvEeeGHp9UlobVgpfitV+wo4l8HV8TOibYKszCq8sy5
-         tp1Rbhe/dxF1BUOEUmPucLb6xWPa9oRC8faBk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H848abaLyIwWER/gEmAO68AwOfA/THbvpS8nBllhwXw=;
-        b=rBrSOWj4dnUui8CkOL3HTmzL2V2+/xMZYCvZYCrV9AcS/5xPL7WTv6Thatwa9tU1om
-         FAY0Zb772tbl2wtqzzuVlwo4BZSWAxpwAJZ90CbgN5kNaegzOMvbnnfmXf+NxaV5cU8X
-         SWI6VfxUN5yWHNB3Kc3KFjcyJef79oAC7c++hXpE7bzwUM5VcOmvjh2FCIU8Hp1Xd5E8
-         Rtvu8GjRWAhScm5q1uNQlS0TPtuyOtV2BSQvdpGdKmkqlYA/Ff1gdu7L5nGY3IhCUJeD
-         Xc33Vv7FZdUmeLGxL5DM+/WU17YQh6PwzGWtKKoTa3wOxo41yKVZwOe+icsBiCLQ3rHh
-         i7Lg==
-X-Gm-Message-State: APjAAAUBcU4PwifTgWjpUuuMhXh+CZbAqaPnCNB/pKneTwjfe5Z99BqK
-        OnwVw66oIlTgIl56zFq5ywCxRLvXlzQ=
-X-Google-Smtp-Source: APXvYqxKRuDw/Tevua3yyxSZtlXPD/N+kvhz9KEid8HUaa0CFoalJV+YlVKslu6zUQzMK0bKU/s+3w==
-X-Received: by 2002:ac2:4a6e:: with SMTP id q14mr21728932lfp.154.1563464915054;
-        Thu, 18 Jul 2019 08:48:35 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id t23sm5143430ljd.98.2019.07.18.08.48.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 08:48:34 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id c9so19539856lfh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:48:33 -0700 (PDT)
-X-Received: by 2002:a19:6519:: with SMTP id z25mr21132151lfb.42.1563464913226;
- Thu, 18 Jul 2019 08:48:33 -0700 (PDT)
+        Thu, 18 Jul 2019 11:49:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 259FB61195; Thu, 18 Jul 2019 15:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563464964;
+        bh=v5hhjA/iytoDxv8ni3GeH5pwLTR7rQrwabw5e/yLgzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W44UTwtvRjwynILo9LYMGbSzofJqMKPKPmsR6yxk9HksSCWlHPSPDb+Vw0zqdd39Q
+         VW+JLcJYhc1ebrMCXO/nDQ0onkI2IVKB1SOydiUwkW5CF4CjmIa21DaYa8k+cRX+kR
+         faYf6rXT8WMpoowIETMS+svwBj7Hdu2doi4SVN08=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B35A61195;
+        Thu, 18 Jul 2019 15:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563464962;
+        bh=v5hhjA/iytoDxv8ni3GeH5pwLTR7rQrwabw5e/yLgzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tqm5NqXz54lQg0ShP9wjPWjNx5HLOVrE6qKdPt6u8BoVv1LVnSyp2l3pz0idbXzq7
+         bibMQuSOdOml73rnmAHbUrVPZLVxTTdqhGXimmfP/LPLvVzZdddTDA//6PRohgWAre
+         K/HPtYPE7SaNryJjHR09gdGo9yhYUDjb9+oNYKCI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B35A61195
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 18 Jul 2019 09:49:19 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        freedreno@lists.freedesktop.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Subject: Re: [Freedreno] [PATCH] drm/msm: stop abusing dma_map/unmap for cache
+Message-ID: <20190718154918.GA25162@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+        freedreno@lists.freedesktop.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Sean Paul <sean@poorly.run>
+References: <20190630124735.27786-1-robdclark@gmail.com>
 MIME-Version: 1.0
-References: <20190718015712.197499-1-briannorris@chromium.org> <20190718074522.GA13713@redhat.com>
-In-Reply-To: <20190718074522.GA13713@redhat.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Thu, 18 Jul 2019 08:48:21 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXM+tN_=RbgWjfajSp9aDq0vJrbLcaYsf5+69R3b-4Y=VQ@mail.gmail.com>
-Message-ID: <CA+ASDXM+tN_=RbgWjfajSp9aDq0vJrbLcaYsf5+69R3b-4Y=VQ@mail.gmail.com>
-Subject: Re: [PATCH] mac80211: don't warn about CW params when not using them
-To:     Stanislaw Gruszka <sgruszka@redhat.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190630124735.27786-1-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:45 AM Stanislaw Gruszka <sgruszka@redhat.com> wrote:
-> Fix looks fine for me. However I think rtw88 should implement
-> drv_conf_tx() because parameters can be different on different
-> network setups and maybe more important WMM/AC parameters become
-> quite recently part of ETSI regulatory.
+On Sun, Jun 30, 2019 at 05:47:22AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Recently splats like this started showing up:
+> 
+>    WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+>    Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
+>    CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+>    Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+>    Workqueue: msm msm_gem_free_work [msm]
+>    pstate: 80c00005 (Nzcv daif +PAN +UAO)
+>    pc : __iommu_dma_unmap+0xb8/0xc0
+>    lr : __iommu_dma_unmap+0x54/0xc0
+>    sp : ffff0000119abce0
+>    x29: ffff0000119abce0 x28: 0000000000000000
+>    x27: ffff8001f9946648 x26: ffff8001ec271068
+>    x25: 0000000000000000 x24: ffff8001ea3580a8
+>    x23: ffff8001f95ba010 x22: ffff80018e83ba88
+>    x21: ffff8001e548f000 x20: fffffffffffff000
+>    x19: 0000000000001000 x18: 00000000c00001fe
+>    x17: 0000000000000000 x16: 0000000000000000
+>    x15: ffff000015b70068 x14: 0000000000000005
+>    x13: 0003142cc1be1768 x12: 0000000000000001
+>    x11: ffff8001f6de9100 x10: 0000000000000009
+>    x9 : ffff000015b78000 x8 : 0000000000000000
+>    x7 : 0000000000000001 x6 : fffffffffffff000
+>    x5 : 0000000000000fff x4 : ffff00001065dbc8
+>    x3 : 000000000000000d x2 : 0000000000001000
+>    x1 : fffffffffffff000 x0 : 0000000000000000
+>    Call trace:
+>     __iommu_dma_unmap+0xb8/0xc0
+>     iommu_dma_unmap_sg+0x98/0xb8
+>     put_pages+0x5c/0xf0 [msm]
+>     msm_gem_free_work+0x10c/0x150 [msm]
+>     process_one_work+0x1e0/0x330
+>     worker_thread+0x40/0x438
+>     kthread+0x12c/0x130
+>     ret_from_fork+0x10/0x18
+>    ---[ end trace afc0dc5ab81a06bf ]---
+> 
+> Not quite sure what triggered that, but we really shouldn't be abusing
+> dma_{map,unmap}_sg() for cache maint.
 
-Ack. I just figured we should stay consistent with the WARNINGs (and
-we both noticed this one on earlier patch reviews). I don't know about
-you, but for me, the whole wireless stack is so full of WARNINGs that
-my crash reporter system separately classifies net/wireless and
-drivers/net/wireless/ from the rest of the kernel when categorizing
-automated problem reports. (And...most developers then ignore them.)
+I'm sure we'll see this rear its head again someday. My kingdom for leaf driver
+cache control that makes sense.
 
-But I digress ;)
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-Brian
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  drivers/gpu/drm/msm/msm_gem.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+> index d31d9f927887..3b84cbdcafa3 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.c
+> +++ b/drivers/gpu/drm/msm/msm_gem.c
+> @@ -108,7 +108,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
+>  		 * because display controller, GPU, etc. are not coherent:
+>  		 */
+>  		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+> -			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
+> +			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+>  					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+>  	}
+>  
+> @@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_object *obj)
+>  			 * GPU, etc. are not coherent:
+>  			 */
+>  			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+> -				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
+> +				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+>  					     msm_obj->sgt->nents,
+>  					     DMA_BIDIRECTIONAL);
+>  
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
