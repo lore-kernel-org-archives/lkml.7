@@ -2,173 +2,118 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE758C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8278FC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD3D20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67ABC20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390460AbfGRNuK (ORCPT
+        id S2390512AbfGRNug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:50:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36714 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390350AbfGRNuK (ORCPT
+        Thu, 18 Jul 2019 09:50:36 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:56811 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbfGRNuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:50:10 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so28833836wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 06:50:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bz4hXPRK29P5/tSQD68cHTBPadb5Yosu8Qu+r8c9DuM=;
-        b=pCD1gMqdgmj5NS4Z+gMlo3JFwFdzrFskrTqHiSt0KpWe8BEDyO1BT73mmxA3K1Z035
-         ITQX0EekNT+dmS/trs2ABZw3Vzi/ZA+5Xe5BUyZOblwe/D72WU1GCz0hw9XEkvrKCx9r
-         4HUyUJ5tX74Vo9w+XncsT5zbpnbyvleB5ELkTHlrk/tIJUa94D0BX86JFeubzRgZ4+a9
-         FDrr81USElkLGqwMriN4PHmai1Qqt70gQDJdYFVIaOop2RFUXhEvC5/xHYwlBMjbZESl
-         YfuQ5p5oW9VWH5c3tvD9KoxkQxKGsq8eMjGzh/bjZvc40uUbQ2+OZLiLF9gdN+6w6Hv/
-         Fiww==
-X-Gm-Message-State: APjAAAXKcqF3ZFhF9cISkRdyh/EgPxwep+bvYLEAp4WePzQcV93RHSAS
-        A7r3fwaslREhBYKi0BrYJrnP9A==
-X-Google-Smtp-Source: APXvYqwpwFxUVWFfPgX205bMOicWtlXBUDH5d5qy2/uaaO9L8NQkWL0kgSuznvRy5cX56Dyvvft4SA==
-X-Received: by 2002:a05:6000:1043:: with SMTP id c3mr24338666wrx.236.1563457807970;
-        Thu, 18 Jul 2019 06:50:07 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
-        by smtp.gmail.com with ESMTPSA id t13sm33212917wrr.0.2019.07.18.06.50.06
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 06:50:07 -0700 (PDT)
-Subject: Re: [PATCH 1/2] KVM: Boost vCPUs that are delivering interrupts
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     wanpengli@tencent.com, rkrcmar@redhat.com, paulus@ozlabs.org,
-        maz@kernel.org
-References: <1563457031-21189-1-git-send-email-pbonzini@redhat.com>
- <1563457031-21189-2-git-send-email-pbonzini@redhat.com>
- <c28fb650-8150-4f42-4d01-8e8b2490c8b6@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <d935d853-fa09-f41a-637a-77b45fd611d3@redhat.com>
+        Thu, 18 Jul 2019 09:50:35 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MBlpC-1hiZQe46Xs-00C92P; Thu, 18 Jul 2019 15:50:21 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Ondrej Mosnacek <omosnacek@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] crypto: aegis: fix badly optimized clang output
 Date:   Thu, 18 Jul 2019 15:50:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Message-Id: <20190718135017.2493006-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <c28fb650-8150-4f42-4d01-8e8b2490c8b6@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:uwVqefWDs4o63p6iE6Irj25ryb6bdvtC7Hrf93yaHtWNB3UyaJp
+ 4OkfB2kFOY5aXDuTVLHY0gjWaXZSUkd3hdU7IXfyQfGDuBfNtrAcmaozeItDwwk75ge58G1
+ sBfVJ6df5mTpV5Y8kgpJ0tPbdf/YlMfhVkrn+9yxYQAHpRDwi5aDbittwSsgXq836kuLfO6
+ atp6LgcOt/SEcndX4E/nQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aCIrsaK3jkM=:ZKGmbmo1TdnpLnjvQ7TKLR
+ UK81lUNUbJPH6N3UzauZAmgjkh8XdIXJfHlA2yxaBZzaQbahE13aQU30plQa8EoM4NcHktAFu
+ BUo1N5DZRWhcPq/pKVsolC5wrOu+Vknahoism+3/CG/QZEWno0G4XuiVW9G+2TL3erKB06AuV
+ MIzkPjX1BEtl2PAg5AcrNJX76hAt9fcMTIdZweDC1+uxgEPYaRvAe8qCSRU+ODacG89bmlRgc
+ urdUX2XmkHq9ZVppXO6zqwXsmJ4fMdqhTTf+mWJf/pgBP/oDacehSNQsQSVTlQVNgaYWbeJeZ
+ NZrwJGaQ0PwcIwFcHoUpMMQvc0HQVtD1Ks5mybVvvNE454pggdn21V2drwBY/dWWKEKhOIOp2
+ RXbyfy2JFwvjzyQ8a3s7gcvYcvrftA8rwk8MVtcNoMITl9+vHJpqARtMOuHduPjK8styPiOwP
+ rzrfdqasn4dgnKvRD66DQgKxAN/dc9HJL0gyYl1RjAw2WIO6W16rERZu1pqnLrh3O4ifiAOl+
+ /vWjCU54+pwusGnbn3yox0/vQwpOY8vHJ8zcmSOuTPIwv3I4Te0NnwpSiVZqXwu+EmzR2geNb
+ mfcsvg2dhNFODniKVonHEPqOjwIGS2kTAD7VVIpi520lhplRTZbXOVLW/abWpyW/u9AtZBnKT
+ LoyJ7SIEpUDk5tdJdw0k/STEE3V7OZVaAW3OnNSLyjehfTJt7elnuWaxP0uuy9cap+zntpV8P
+ hM0gm+T/uxbOZLVE18lo0/HPejnoQkbgy0IMcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/19 15:45, Christian Borntraeger wrote:
-> 
-> 
-> On 18.07.19 15:37, Paolo Bonzini wrote:
->> From: Wanpeng Li <wanpengli@tencent.com>
->>
->> Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during
->> vcpu wakeup and interrupt delivery), we want to also boost not just
->> lock holders but also vCPUs that are delivering interrupts. Most
->> smp_call_function_many calls are synchronous, so the IPI target vCPUs
->> are also good yield candidates.  This patch introduces vcpu->ready to
->> boost vCPUs during wakeup and interrupt delivery time; unlike s390 we do
->> not reuse vcpu->preempted so that voluntarily preempted vCPUs are taken
->> into account by kvm_vcpu_on_spin, but vmx_vcpu_pi_put is not affected
->> (VT-d PI handles voluntary preemption separately, in pi_pre_block).
->>
->> Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
->> ebizzy -M
->>
->>             vanilla     boosting    improved
->> 1VM          21443       23520         9%
->> 2VM           2800        8000       180%
->> 3VM           1800        3100        72%
->>
->> Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs,
->> one running ebizzy -M, the other running 'stress --cpu 2':
->>
->> w/ boosting + w/o pv sched yield(vanilla)
->>
->>             vanilla     boosting   improved
->>               1570         4000      155%
->>
->> w/ boosting + w/ pv sched yield(vanilla)
->>
->>             vanilla     boosting   improved
->>               1844         5157      179%
->>
->> w/o boosting, perf top in VM:
->>
->>  72.33%  [kernel]       [k] smp_call_function_many
->>   4.22%  [kernel]       [k] call_function_i
->>   3.71%  [kernel]       [k] async_page_fault
->>
->> w/ boosting, perf top in VM:
->>
->>  38.43%  [kernel]       [k] smp_call_function_many
->>   6.31%  [kernel]       [k] async_page_fault
->>   6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
->>   4.88%  [kernel]       [k] call_function_interrupt
->>
->> Cc: Paolo Bonzini <pbonzini@redhat.com>
->> Cc: Radim Krčmář <rkrcmar@redhat.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Cc: Paul Mackerras <paulus@ozlabs.org>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->> 	v2->v3: put it in kvm_vcpu_wake_up, use WRITE_ONCE
-> 
-> 
-> Looks good. Some more comments
-> 
->>
->>  arch/s390/kvm/interrupt.c | 2 +-
->>  include/linux/kvm_host.h  | 1 +
->>  virt/kvm/kvm_main.c       | 9 +++++++--
-> [...]
-> 
->> @@ -4205,6 +4206,8 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
->>  
->>  	if (vcpu->preempted)
->>  		vcpu->preempted = false;
->> +	if (vcpu->ready)
->> +		WRITE_ONCE(vcpu->ready, false);
-> 
-> What is the rationale of checking before writing. Avoiding writable cache line ping pong?
+Clang sometimes makes very different inlining decisions from gcc.
+In case of the aegis crypto algorithms, it decides to turn the innermost
+primitives (and, xor, ...) into separate functions but inline most of
+the rest.
 
-I think it can be removed.  The only case where you'd have ping pong is
-when vcpu->ready is true due to kvm_vcpu_wake_up, so it's not saving
-anything.
+This results in a huge amount of variables spilled on the stack, leading
+to rather slow execution as well as kernel stack usage beyond the 32-bit
+warning limit when CONFIG_KASAN is enabled:
 
->>  	kvm_arch_sched_in(vcpu, cpu);
->>  
->> @@ -4216,8 +4219,10 @@ static void kvm_sched_out(struct preempt_notifier *pn,
->>  {
->>  	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
->>  
->> -	if (current->state == TASK_RUNNING)
->> +	if (current->state == TASK_RUNNING) {
->>  		vcpu->preempted = true;
-> 
-> WOuld it make sense to also use WRITE_ONCE for vcpu->preempted ?
+crypto/aegis256.c:123:13: warning: stack frame size of 648 bytes in function 'crypto_aegis256_encrypt_chunk' [-Wframe-larger-than=]
+crypto/aegis256.c:366:13: warning: stack frame size of 1264 bytes in function 'crypto_aegis256_crypt' [-Wframe-larger-than=]
+crypto/aegis256.c:187:13: warning: stack frame size of 656 bytes in function 'crypto_aegis256_decrypt_chunk' [-Wframe-larger-than=]
+crypto/aegis128l.c:135:13: warning: stack frame size of 832 bytes in function 'crypto_aegis128l_encrypt_chunk' [-Wframe-larger-than=]
+crypto/aegis128l.c:415:13: warning: stack frame size of 1480 bytes in function 'crypto_aegis128l_crypt' [-Wframe-larger-than=]
+crypto/aegis128l.c:218:13: warning: stack frame size of 848 bytes in function 'crypto_aegis128l_decrypt_chunk' [-Wframe-larger-than=]
+crypto/aegis128.c:116:13: warning: stack frame size of 584 bytes in function 'crypto_aegis128_encrypt_chunk' [-Wframe-larger-than=]
+crypto/aegis128.c:351:13: warning: stack frame size of 1064 bytes in function 'crypto_aegis128_crypt' [-Wframe-larger-than=]
+crypto/aegis128.c:177:13: warning: stack frame size of 592 bytes in function 'crypto_aegis128_decrypt_chunk' [-Wframe-larger-than=]
 
-vcpu->preempted is not read/written anymore by other threads after this
-patch.
-> 
->> +		WRITE_ONCE(vcpu->ready, true);
->> +	}
->>  	kvm_arch_vcpu_put(vcpu);
->>  }
->>  
->>
-> 
+Forcing the primitives to all get inlined avoids the issue and the
+resulting code is similar to what gcc produces.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ crypto/aegis.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/crypto/aegis.h b/crypto/aegis.h
+index 41a3090cda8e..efed7251c49d 100644
+--- a/crypto/aegis.h
++++ b/crypto/aegis.h
+@@ -34,21 +34,21 @@ static const union aegis_block crypto_aegis_const[2] = {
+ 	} },
+ };
+ 
+-static void crypto_aegis_block_xor(union aegis_block *dst,
++static __always_inline void crypto_aegis_block_xor(union aegis_block *dst,
+ 				   const union aegis_block *src)
+ {
+ 	dst->words64[0] ^= src->words64[0];
+ 	dst->words64[1] ^= src->words64[1];
+ }
+ 
+-static void crypto_aegis_block_and(union aegis_block *dst,
++static __always_inline void crypto_aegis_block_and(union aegis_block *dst,
+ 				   const union aegis_block *src)
+ {
+ 	dst->words64[0] &= src->words64[0];
+ 	dst->words64[1] &= src->words64[1];
+ }
+ 
+-static void crypto_aegis_aesenc(union aegis_block *dst,
++static __always_inline void crypto_aegis_aesenc(union aegis_block *dst,
+ 				const union aegis_block *src,
+ 				const union aegis_block *key)
+ {
+-- 
+2.20.0
 
