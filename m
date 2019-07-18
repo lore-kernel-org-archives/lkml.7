@@ -2,99 +2,117 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7112CC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C749C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AB221849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC1B21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iSlmu3Xj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVybyDuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391392AbfGRWJi (ORCPT
+        id S2391506AbfGRWMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 18:09:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45765 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfGRWJh (ORCPT
+        Thu, 18 Jul 2019 18:12:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39271 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbfGRWMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 18:09:37 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so14557255plr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 15:09:37 -0700 (PDT)
+        Thu, 18 Jul 2019 18:12:46 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so14585651pls.6;
+        Thu, 18 Jul 2019 15:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cJB2IxtNuxhv2Lxf0ZUw5k1i+zFNjuXUoBzzFYiAiUI=;
-        b=iSlmu3XjeX7IDdfGFhQ/E0HlxVhwZD8tpwT0Lm46g9LBlYjiZ4tz0B6zXRD1Ttozne
-         8aOkaZExNeXM631WTOjJr3tWVXPLxz9sUk6B94pxCH7Xv5nbht/AYMn6X0eZ963AqQBU
-         tuK7lf3cbliGizEiu5ytaG5b/RXr+bsL6E5Dle/eSHoe6zRYYN3pzH7EPobKkyWy0L4M
-         bNuyc6koByu1AmbhT0IvsTLIkfY58d0vTWSxuRIpu2VIocQUBeZ4C2xs29DYOU5BBKDw
-         uD949MwV5QXn6bP1BvD6Vk+05moYO84ema77h4j20vFvDxlhJJCsO3Os1VxyXz+Vbxxe
-         IdgQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=L/vMBz0gKnDGWIBpHaUwZO2m9oAQAiDwzG+wKapV5/Q=;
+        b=gVybyDuC2n3eMfkAefaFlUXrdWd3Mo7xsiB0WsZsrYcbWz+rbFNseuDWQtnBEtgZys
+         soMYBS/qS9hRBVnHbiAqpqh4teMp5iblh+CdHe3zMn85t0ORATz1XV+amMC2jdXEEig6
+         1k2lBXVY6wFTdVwmn41/QzXxiZ375MQ3AtCYKMQmU7jKCbeADNyUeFUptaZnbUC7UU9n
+         W4Z9Ax8yx6Sk0lGnRnozfnbCZAf9hNtszurlznEombj6NDqNbHrndkD7GAqZJs+vCKih
+         Qci+/VwhiXtp4mxOI6etOwDeZVwCs5Mo4BqDxe5AFg4vV30UGOm26dlTexAGgAQslw45
+         A4qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cJB2IxtNuxhv2Lxf0ZUw5k1i+zFNjuXUoBzzFYiAiUI=;
-        b=AvS9SBc9cyP7XlS/2DCW+5O58YR+w4phS8XNfaozqb5vejt/fhb1EwJTp0d+oO6oCP
-         3kpAqqijBl3erFtv5cNTXt61jOzuDahskIF2txOZmjnt5+/mk2suxIL2CQjLAzVWVn7C
-         +R99ertKjL8Qp8Qty1BCPsWfPnyIGW7LKeABCmfuCYnkTRlm87byfx6h4gQXjxY1Y2gO
-         pngpD9V19Vwc9BPoJDS1wN73cOdK4EMtYw7PktVmO+M0HiaR9SonBc8vNmlOBL8lusSv
-         YJbPo2Rp+FAOIVX8RT/EcvIMnI2vwOMvj6YVzTLdOmTAIy8wVJ3z/G+TA08DBhIG3bP0
-         LMAQ==
-X-Gm-Message-State: APjAAAUuPupxWxCqoDlwtkZeeIUvom20PQhcku8++EfCiLuEo+5C9SXm
-        4sI1Ney+xcuiVPSzz+Yr5Z6g6SDyaRrBkeewbLYFUA==
-X-Google-Smtp-Source: APXvYqyLN6rNn0D3sq6zwlZXHimecH1MQwyf3IBu+wM0HsHZQXKCwhV8W3q8i3fb7njRdU8V46G9SdJgSzdzsrmox70=
-X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr52157329plq.223.1563487776450;
- Thu, 18 Jul 2019 15:09:36 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=L/vMBz0gKnDGWIBpHaUwZO2m9oAQAiDwzG+wKapV5/Q=;
+        b=S9eh9bu+or4iig0O5dZ+6P06G38slEFBHrjOVIsuJxK0IODn0UURFqIp4iIwQVdrsl
+         E7ZkeuB+SVsel17xekMCqKsEnJQxQYd1oJ/1I7oq0Jf0PVj7iicPm0i2StXTW0fGaTER
+         zUBKWBAsITOFr3iyVf5rtH01TOiajt2AlezUk/H4/e+PIwllJ/UFpNOWrcERU9wdFb82
+         6jkvAqY+FbJ4QhBN/IpvF/NfUQAO768Xx1d4or6u9mpKV1zBLP4As+ptTEbTmSSy/qmm
+         F2Qhl6LXlcfIMR7YsVg7WKKApOPQ1A9WCzkTcH3vkRZutTnSYWrzNzMF3mbslnEnIIN0
+         OZOA==
+X-Gm-Message-State: APjAAAUIhmRkXJHUQ7sGV2ksNANYIOYGIiGqebkng5mwJnAEQyHVeE+R
+        EG7jDY6lSQge0q0P3wC0RjfcqgWm
+X-Google-Smtp-Source: APXvYqyHtZ8S2jkiyXV6GCBLDCKazxSrCXu8T+rQHac346xoL2SmZAxYy5p3790nH0uYew+aQggeZQ==
+X-Received: by 2002:a17:902:2aa8:: with SMTP id j37mr50346469plb.316.1563487965642;
+        Thu, 18 Jul 2019 15:12:45 -0700 (PDT)
+Received: from [192.168.0.16] ([97.115.142.179])
+        by smtp.gmail.com with ESMTPSA id j128sm13832489pfg.28.2019.07.18.15.12.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 15:12:45 -0700 (PDT)
+Subject: Re: [PATCH] openvswitch: Fix a possible memory leak on dst_cache
+To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1563466028-2531-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+From:   Gregory Rose <gvrose8192@gmail.com>
+Message-ID: <9b231232-dd6e-5733-2af9-e2fb3d6ae0a4@gmail.com>
+Date:   Thu, 18 Jul 2019 15:12:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190718141503.3258299-1-arnd@arndb.de> <0ee5952b-5a76-c8a5-a30a-ee3c46a54814@virtuozzo.com>
- <20190718162310.GG5761@sirena.org.uk>
-In-Reply-To: <20190718162310.GG5761@sirena.org.uk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 18 Jul 2019 15:09:25 -0700
-Message-ID: <CAKwvOd=XFVP78OjwQT0HzHyHF+ALA+V0ZLvuOB-8xKrrjSncUA@mail.gmail.com>
-Subject: Re: [PATCH] kasan: push back KASAN_STACK detection to clang-10
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1563466028-2531-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 9:23 AM Mark Brown <broonie@kernel.org> wrote:
+On 7/18/2019 9:07 AM, Haishuang Yan wrote:
+> dst_cache should be destroyed when fail to add flow actions.
 >
-> On Thu, Jul 18, 2019 at 07:18:28PM +0300, Andrey Ryabinin wrote:
-> > On 7/18/19 5:14 PM, Arnd Bergmann wrote:
+> Fixes: d71785ffc7e7 ("net: add dst_cache to ovs vxlan lwtunnel")
+> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+> ---
+>   net/openvswitch/flow_netlink.c | 1 +
+>   1 file changed, 1 insertion(+)
 >
-> > > asan-stack mode still uses dangerously large kernel stacks of
-> > > tens of kilobytes in some drivers, and it does not seem that anyone
-> > > is working on the clang bug.
->
-> > > -   default !(CLANG_VERSION < 90000)
-> > > +   default !(CLANG_VERSION < 100000)
->
-> > Wouldn't be better to make this thing for any clang version? And only when the bug is
-> > finally fixed, specify the clang version which can enable this safely.
->
-> Especially if nobody is currently working on it.
+> diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
+> index d7559c6..1fd1cdd 100644
+> --- a/net/openvswitch/flow_netlink.c
+> +++ b/net/openvswitch/flow_netlink.c
+> @@ -2608,6 +2608,7 @@ static int validate_and_copy_set_tun(const struct nlattr *attr,
+>   			 sizeof(*ovs_tun), log);
+>   	if (IS_ERR(a)) {
+>   		dst_release((struct dst_entry *)tun_dst);
+> +		dst_cache_destroy(&tun_dst->u.tun_info.dst_cache);
+>   		return PTR_ERR(a);
+>   	}
+>   
 
-I agree.
--- 
+Nack.
+
+dst_release will decrement the ref count and will 
+call_rcu(&dst->rcu_head, dst_destroy_rcu) if the ref count is zero.  No 
+other net drivers call dst_destroy SFAICT.
+
+Haishuang,
+
+are you trying to fix some specific problem here?
+
 Thanks,
-~Nick Desaulniers
+
+- Greg
+
+
