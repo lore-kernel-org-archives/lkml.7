@@ -2,33 +2,36 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9F8C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA6C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E4A21783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7FC217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfGRKED (ORCPT
+        id S1727630AbfGRKGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:04:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38996 "EHLO mx1.suse.de"
+        Thu, 18 Jul 2019 06:06:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39440 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726423AbfGRKED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:04:03 -0400
+        id S1726423AbfGRKGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 06:06:16 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 30651AFA5;
-        Thu, 18 Jul 2019 10:04:01 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 12:03:48 +0200
-Message-ID: <s5hblxrpsl7.wl-tiwai@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 0EC94AF81;
+        Thu, 18 Jul 2019 10:06:15 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 12:06:14 +0200
+Message-ID: <s5h8ssvpsh5.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] sound fixes for 5.3-rc1
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     <perex@perex.cz>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: line6: Fix wrong altsetting for LINE6_PODHD500_1
+In-Reply-To: <20190718095313.19498-1-kai.heng.feng@canonical.com>
+References: <20190718095313.19498-1-kai.heng.feng@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -39,392 +42,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, 18 Jul 2019 11:53:13 +0200,
+Kai-Heng Feng wrote:
+> 
+> Commit 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+> set a wrong altsetting for LINE6_PODHD500_1 during refactoring.
+> 
+> Set the correct altsetting number to fix the issue.
+> 
+> BugLink: https://bugs.launchpad.net/bugs/1790595
+> Fixes: 7b9584fa1c0b ("staging: line6: Move altsetting to properties")
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-please pull sound fixes for v5.3-rc1 from:
+Applied, thanks.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.3-rc1
 
-The topmost commit is 4914da2fb0c89205790503f20dfdde854f3afdd8
-
-----------------------------------------------------------------
-
-sound fixes for 5.3-rc1
-
-A collection of small fixes.
-
-- The optimization of PM resume with HD-audio HDMI codecs, which
-  eventually work around weird issues
-- A correction of Intel Icelake HDMI audio code
-- Quirks for Dell machines with Realtek HD-audio codecs
-- The fix for too long sequencer write stall that was spotted by
-  syzkaller
-- A few trivial cleanups reported by coccinelle
-
-----------------------------------------------------------------
-
-Hariprasad Kelam (5):
-      ALSA: lx6464es: Remove unneeded variable err
-      ALSA: ps3: Remove Unneeded variable: "ret"
-      ALSA: au88x0: Remove unneeded variable: "changed"
-      ALSA: emu10k1: Remove unneeded variable "change"
-      ALSA: rme9652: Unneeded variable: "result".
-
-Hui Wang (1):
-      ALSA: hda/realtek: apply ALC891 headset fixup to one Dell machine
-
-Kailang Yang (1):
-      ALSA: hda/realtek - Fixed Headphone Mic can't record on Dell platform
-
-Takashi Iwai (4):
-      ALSA: seq: Break too long mutex context in the write loop
-      ALSA: hda/hdmi - Remove duplicated define
-      ALSA: hda/hdmi - Fix i915 reverse port/pin mapping
-      ALSA: hda - Don't resume forcibly i915 HDMI/DP codec
-
----
- include/sound/hda_codec.h      |  2 ++
- sound/core/seq/seq_clientmgr.c | 11 ++++++++++-
- sound/pci/au88x0/au88x0_a3d.c  | 15 +++++++--------
- sound/pci/emu10k1/emu10k1x.c   |  3 +--
- sound/pci/hda/hda_codec.c      |  8 ++++++--
- sound/pci/hda/patch_hdmi.c     | 31 ++++++++++++++++++++++++-------
- sound/pci/hda/patch_realtek.c  | 10 +++++++++-
- sound/pci/lx6464es/lx6464es.c  |  3 +--
- sound/pci/rme9652/rme9652.c    |  3 +--
- sound/ppc/snd_ps3.c            |  3 +--
- 10 files changed, 62 insertions(+), 27 deletions(-)
-
-diff --git a/include/sound/hda_codec.h b/include/sound/hda_codec.h
-index 8f46ff3449d5..871993696c5f 100644
---- a/include/sound/hda_codec.h
-+++ b/include/sound/hda_codec.h
-@@ -252,6 +252,8 @@ struct hda_codec {
- 	unsigned int auto_runtime_pm:1; /* enable automatic codec runtime pm */
- 	unsigned int force_pin_prefix:1; /* Add location prefix */
- 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
-+	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
-+
- #ifdef CONFIG_PM
- 	unsigned long power_on_acct;
- 	unsigned long power_off_acct;
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index a60e7a17f0b8..7737b2670064 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1021,7 +1021,7 @@ static ssize_t snd_seq_write(struct file *file, const char __user *buf,
- {
- 	struct snd_seq_client *client = file->private_data;
- 	int written = 0, len;
--	int err;
-+	int err, handled;
- 	struct snd_seq_event event;
- 
- 	if (!(snd_seq_file_flags(file) & SNDRV_SEQ_LFLG_OUTPUT))
-@@ -1034,6 +1034,8 @@ static ssize_t snd_seq_write(struct file *file, const char __user *buf,
- 	if (!client->accept_output || client->pool == NULL)
- 		return -ENXIO;
- 
-+ repeat:
-+	handled = 0;
- 	/* allocate the pool now if the pool is not allocated yet */ 
- 	mutex_lock(&client->ioctl_mutex);
- 	if (client->pool->size > 0 && !snd_seq_write_pool_allocated(client)) {
-@@ -1093,12 +1095,19 @@ static ssize_t snd_seq_write(struct file *file, const char __user *buf,
- 						   0, 0, &client->ioctl_mutex);
- 		if (err < 0)
- 			break;
-+		handled++;
- 
- 	__skip_event:
- 		/* Update pointers and counts */
- 		count -= len;
- 		buf += len;
- 		written += len;
-+
-+		/* let's have a coffee break if too many events are queued */
-+		if (++handled >= 200) {
-+			mutex_unlock(&client->ioctl_mutex);
-+			goto repeat;
-+		}
- 	}
- 
-  out:
-diff --git a/sound/pci/au88x0/au88x0_a3d.c b/sound/pci/au88x0/au88x0_a3d.c
-index 73471037d59f..2db183f8826a 100644
---- a/sound/pci/au88x0/au88x0_a3d.c
-+++ b/sound/pci/au88x0/au88x0_a3d.c
-@@ -765,7 +765,7 @@ snd_vortex_a3d_hrtf_put(struct snd_kcontrol *kcontrol,
- 			struct snd_ctl_elem_value *ucontrol)
- {
- 	a3dsrc_t *a = kcontrol->private_data;
--	int changed = 1, i;
-+	int i;
- 	int coord[6];
- 	for (i = 0; i < 6; i++)
- 		coord[i] = ucontrol->value.integer.value[i];
-@@ -774,7 +774,7 @@ snd_vortex_a3d_hrtf_put(struct snd_kcontrol *kcontrol,
- 	vortex_a3d_coord2hrtf(a->hrtf[1], coord);
- 	a3dsrc_SetHrtfTarget(a, a->hrtf[0], a->hrtf[1]);
- 	a3dsrc_SetHrtfCurrent(a, a->hrtf[0], a->hrtf[1]);
--	return changed;
-+	return 1;
- }
- 
- static int
-@@ -783,7 +783,7 @@ snd_vortex_a3d_itd_put(struct snd_kcontrol *kcontrol,
- {
- 	a3dsrc_t *a = kcontrol->private_data;
- 	int coord[6];
--	int i, changed = 1;
-+	int i;
- 	for (i = 0; i < 6; i++)
- 		coord[i] = ucontrol->value.integer.value[i];
- 	/* Translate orientation coordinates to a3d params. */
-@@ -793,7 +793,7 @@ snd_vortex_a3d_itd_put(struct snd_kcontrol *kcontrol,
- 	a3dsrc_SetItdTarget(a, a->itd[0], a->itd[1]);
- 	a3dsrc_SetItdCurrent(a, a->itd[0], a->itd[1]);
- 	a3dsrc_SetItdDline(a, a->dline);
--	return changed;
-+	return 1;
- }
- 
- static int
-@@ -801,7 +801,6 @@ snd_vortex_a3d_ild_put(struct snd_kcontrol *kcontrol,
- 		       struct snd_ctl_elem_value *ucontrol)
- {
- 	a3dsrc_t *a = kcontrol->private_data;
--	int changed = 1;
- 	int l, r;
- 	/* There may be some scale tranlation needed here. */
- 	l = ucontrol->value.integer.value[0];
-@@ -810,7 +809,7 @@ snd_vortex_a3d_ild_put(struct snd_kcontrol *kcontrol,
- 	/* Left Right panning. */
- 	a3dsrc_SetGainTarget(a, l, r);
- 	a3dsrc_SetGainCurrent(a, l, r);
--	return changed;
-+	return 1;
- }
- 
- static int
-@@ -818,7 +817,7 @@ snd_vortex_a3d_filter_put(struct snd_kcontrol *kcontrol,
- 			  struct snd_ctl_elem_value *ucontrol)
- {
- 	a3dsrc_t *a = kcontrol->private_data;
--	int i, changed = 1;
-+	int i;
- 	int params[6];
- 	for (i = 0; i < 6; i++)
- 		params[i] = ucontrol->value.integer.value[i];
-@@ -831,7 +830,7 @@ snd_vortex_a3d_filter_put(struct snd_kcontrol *kcontrol,
- 	a3dsrc_SetAtmosCurrent(a, a->filter[0],
- 			       a->filter[1], a->filter[2],
- 			       a->filter[3], a->filter[4]);
--	return changed;
-+	return 1;
- }
- 
- static const struct snd_kcontrol_new vortex_a3d_kcontrol = {
-diff --git a/sound/pci/emu10k1/emu10k1x.c b/sound/pci/emu10k1/emu10k1x.c
-index 67d6473ab0cd..9cf81832259c 100644
---- a/sound/pci/emu10k1/emu10k1x.c
-+++ b/sound/pci/emu10k1/emu10k1x.c
-@@ -1074,7 +1074,6 @@ static int snd_emu10k1x_shared_spdif_put(struct snd_kcontrol *kcontrol,
- {
- 	struct emu10k1x *emu = snd_kcontrol_chip(kcontrol);
- 	unsigned int val;
--	int change = 0;
- 
- 	val = ucontrol->value.integer.value[0] ;
- 
-@@ -1089,7 +1088,7 @@ static int snd_emu10k1x_shared_spdif_put(struct snd_kcontrol *kcontrol,
- 		snd_emu10k1x_ptr_write(emu, ROUTING, 0, 0x1003F);
- 		snd_emu10k1x_gpio_write(emu, 0x1080);
- 	}
--	return change;
-+	return 0;
- }
- 
- static const struct snd_kcontrol_new snd_emu10k1x_shared_spdif =
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 5346631df1ec..e30e86ca6b72 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -2941,15 +2941,19 @@ static int hda_codec_runtime_resume(struct device *dev)
- #ifdef CONFIG_PM_SLEEP
- static int hda_codec_force_resume(struct device *dev)
- {
-+	struct hda_codec *codec = dev_to_hda_codec(dev);
-+	bool forced_resume = !codec->relaxed_resume;
- 	int ret;
- 
- 	/* The get/put pair below enforces the runtime resume even if the
- 	 * device hasn't been used at suspend time.  This trick is needed to
- 	 * update the jack state change during the sleep.
- 	 */
--	pm_runtime_get_noresume(dev);
-+	if (forced_resume)
-+		pm_runtime_get_noresume(dev);
- 	ret = pm_runtime_force_resume(dev);
--	pm_runtime_put(dev);
-+	if (forced_resume)
-+		pm_runtime_put(dev);
- 	return ret;
- }
- 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 40323d91f9e4..bea7b0961080 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2292,8 +2292,10 @@ static void generic_hdmi_free(struct hda_codec *codec)
- 	struct hdmi_spec *spec = codec->spec;
- 	int pin_idx, pcm_idx;
- 
--	if (codec_has_acomp(codec))
-+	if (codec_has_acomp(codec)) {
- 		snd_hdac_acomp_register_notifier(&codec->bus->core, NULL);
-+		codec->relaxed_resume = 0;
-+	}
- 
- 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
- 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
-@@ -2416,7 +2418,6 @@ static void intel_haswell_fixup_connect_list(struct hda_codec *codec,
- 	snd_hda_override_conn_list(codec, nid, spec->num_cvts, spec->cvt_nids);
- }
- 
--#define INTEL_GET_VENDOR_VERB	0xf81
- #define INTEL_GET_VENDOR_VERB	0xf81
- #define INTEL_SET_VENDOR_VERB	0x781
- #define INTEL_EN_DP12		0x02	/* enable DP 1.2 features */
-@@ -2525,18 +2526,32 @@ static int intel_pin2port(void *audio_ptr, int pin_nid)
- 	return -1;
- }
- 
-+static int intel_port2pin(struct hda_codec *codec, int port)
-+{
-+	struct hdmi_spec *spec = codec->spec;
-+
-+	if (!spec->port_num) {
-+		/* we assume only from port-B to port-D */
-+		if (port < 1 || port > 3)
-+			return 0;
-+		/* intel port is 1-based */
-+		return port + intel_base_nid(codec) - 1;
-+	}
-+
-+	if (port < 1 || port > spec->port_num)
-+		return 0;
-+	return spec->port_map[port - 1];
-+}
-+
- static void intel_pin_eld_notify(void *audio_ptr, int port, int pipe)
- {
- 	struct hda_codec *codec = audio_ptr;
- 	int pin_nid;
- 	int dev_id = pipe;
- 
--	/* we assume only from port-B to port-D */
--	if (port < 1 || port > 3)
-+	pin_nid = intel_port2pin(codec, port);
-+	if (!pin_nid)
- 		return;
--
--	pin_nid = port + intel_base_nid(codec) - 1; /* intel port is 1-based */
--
- 	/* skip notification during system suspend (but not in runtime PM);
- 	 * the state will be updated at resume
- 	 */
-@@ -2566,6 +2581,8 @@ static void register_i915_notifier(struct hda_codec *codec)
- 	spec->drm_audio_ops.pin_eld_notify = intel_pin_eld_notify;
- 	snd_hdac_acomp_register_notifier(&codec->bus->core,
- 					&spec->drm_audio_ops);
-+	/* no need for forcible resume for jack check thanks to notifier */
-+	codec->relaxed_resume = 1;
- }
- 
- /* setup_stream ops override for HSW+ */
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index f24a757f8239..de224cbea7a0 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7657,9 +7657,12 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
- 		{0x21, 0x03211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x04211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
-+		{0x14, 0x90170110},
-+		{0x21, 0x04211030}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC295_STANDARD_PINS,
- 		{0x17, 0x21014020},
-@@ -8800,6 +8803,11 @@ static const struct snd_hda_pin_quirk alc662_pin_fixup_tbl[] = {
- 		{0x18, 0x01a19030},
- 		{0x1a, 0x01813040},
- 		{0x21, 0x01014020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0867, 0x1028, "Dell", ALC891_FIXUP_DELL_MIC_NO_PRESENCE,
-+		{0x16, 0x01813030},
-+		{0x17, 0x02211010},
-+		{0x18, 0x01a19040},
-+		{0x21, 0x01014020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0662, 0x1028, "Dell", ALC662_FIXUP_DELL_MIC_NO_PRESENCE,
- 		{0x14, 0x01014010},
- 		{0x18, 0x01a19020},
-diff --git a/sound/pci/lx6464es/lx6464es.c b/sound/pci/lx6464es/lx6464es.c
-index 1771a6dcbe18..583ca7384d83 100644
---- a/sound/pci/lx6464es/lx6464es.c
-+++ b/sound/pci/lx6464es/lx6464es.c
-@@ -253,9 +253,8 @@ static int lx_pcm_open(struct snd_pcm_substream *substream)
- 
- static int lx_pcm_close(struct snd_pcm_substream *substream)
- {
--	int err = 0;
- 	dev_dbg(substream->pcm->card->dev, "->lx_pcm_close\n");
--	return err;
-+	return 0;
- }
- 
- static snd_pcm_uframes_t lx_pcm_stream_pointer(struct snd_pcm_substream
-diff --git a/sound/pci/rme9652/rme9652.c b/sound/pci/rme9652/rme9652.c
-index cb9818af5b41..4c851f8dcaf8 100644
---- a/sound/pci/rme9652/rme9652.c
-+++ b/sound/pci/rme9652/rme9652.c
-@@ -2158,13 +2158,12 @@ static int snd_rme9652_prepare(struct snd_pcm_substream *substream)
- {
- 	struct snd_rme9652 *rme9652 = snd_pcm_substream_chip(substream);
- 	unsigned long flags;
--	int result = 0;
- 
- 	spin_lock_irqsave(&rme9652->lock, flags);
- 	if (!rme9652->running)
- 		rme9652_reset_hw_pointer(rme9652);
- 	spin_unlock_irqrestore(&rme9652->lock, flags);
--	return result;
-+	return 0;
- }
- 
- static const struct snd_pcm_hardware snd_rme9652_playback_subinfo =
-diff --git a/sound/ppc/snd_ps3.c b/sound/ppc/snd_ps3.c
-index 71b7fd344c58..c213eb7ca23c 100644
---- a/sound/ppc/snd_ps3.c
-+++ b/sound/ppc/snd_ps3.c
-@@ -628,7 +628,6 @@ static int snd_ps3_pcm_trigger(struct snd_pcm_substream *substream,
- 			       int cmd)
- {
- 	struct snd_ps3_card_info *card = snd_pcm_substream_chip(substream);
--	int ret = 0;
- 
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
-@@ -665,7 +664,7 @@ static int snd_ps3_pcm_trigger(struct snd_pcm_substream *substream,
- 
- 	}
- 
--	return ret;
-+	return 0;
- };
- 
- /*
+Takashi
