@@ -2,164 +2,63 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFC3C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D860BC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7674E2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65FF20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403812AbfGRPKl (ORCPT
+        id S2390672AbfGRPLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:10:41 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40739 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727623AbfGRPKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:10:40 -0400
-Received: by mail-qk1-f195.google.com with SMTP id s145so20722123qke.7;
-        Thu, 18 Jul 2019 08:10:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1XVWuLALNboPCBpMHvtA7g3CoUrKrF0vBnrtFanWPT4=;
-        b=uNMGyKFpiV5/NdDwnLap3nQ/K1Tm9DD+6GyGcMY2Qe78+LIG0HJg8gvmpe7KNtScX+
-         ocmxdsLFnmQHavB02uUnWdITNtvdgZUVV6gjGYtzUgUyL101bx2COA+P5GJEB8nUL/si
-         xX9VNpjurF/YIH8K4pRbOmNUfp2t9ascXvvzAmN8JqbF3LGUnbcVvWG+r/eY7BW6dDbE
-         knTCE31c6j90B4zJPTKfVo0AfaPijfILaJmhBbuGf3nOxfSRW+FIerwKGcN9G9c7h1J9
-         QljEyAaRfwsTvFKIQO0h8Zsw7fzxHGQhpcH2zj+Ff7MPOAMzDxkNBXC9D6swUqj3HG9E
-         SpRA==
-X-Gm-Message-State: APjAAAV7gMkfUYn5o8N51yJkmd6XGejNnOOrLcYFBcHIhSrSlqqUt1Gw
-        lGoO9EV8UtrmkKPQlogNaMSLihSIjegnFCVtbl4=
-X-Google-Smtp-Source: APXvYqz91qO2K9L71FiuX0Gt08O/27FhYjsXqzcDsg9SyRt3LsdEPpT+LHh0f5YfOz5Tbuae6UqhheF6pLTx7yCHlYU=
-X-Received: by 2002:a37:ad12:: with SMTP id f18mr30435448qkm.3.1563462638194;
- Thu, 18 Jul 2019 08:10:38 -0700 (PDT)
+        Thu, 18 Jul 2019 11:11:04 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:52928 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390241AbfGRPLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 11:11:04 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ho83i-0000i2-P0; Thu, 18 Jul 2019 23:11:02 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ho83h-0006eW-81; Thu, 18 Jul 2019 23:11:01 +0800
+Date:   Thu, 18 Jul 2019 23:11:01 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] crypto: gcm - restrict assoclen for rfc4543
+Message-ID: <20190718151101.hutxnd7u5nfrikx2@gondor.apana.org.au>
+References: <1563460984-24593-1-git-send-email-iuliana.prodan@nxp.com>
+ <20190718144647.bbsd65qabqpafehe@gondor.apana.org.au>
+ <VI1PR04MB44451D12B66EE3FADA1ECE208CC80@VI1PR04MB4445.eurprd04.prod.outlook.com>
+ <20190718145907.wercecqwr3wlny73@gondor.apana.org.au>
 MIME-Version: 1.0
-References: <20190706145737.5299-1-cyphar@cyphar.com> <20190706145737.5299-9-cyphar@cyphar.com>
-In-Reply-To: <20190706145737.5299-9-cyphar@cyphar.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 18 Jul 2019 17:10:21 +0200
-Message-ID: <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com>
-Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        sparclinux <sparclinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718145907.wercecqwr3wlny73@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 6, 2019 at 5:00 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+On Thu, Jul 18, 2019 at 10:59:07PM +0800, Herbert Xu wrote:
+> 
+> So I presume the driver does enforce the limit.  Please actually
+> state that in the commit description for future reference.
 
-> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-> index 9e7704e44f6d..1703d048c141 100644
-> --- a/arch/alpha/kernel/syscalls/syscall.tbl
-> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
-> @@ -461,6 +461,7 @@
->  530    common  getegid                         sys_getegid
->  531    common  geteuid                         sys_geteuid
->  532    common  getppid                         sys_getppid
-> +533    common  openat2                         sys_openat2
->  # all other architectures have common numbers for new syscall, alpha
->  # is the exception.
->  534    common  pidfd_send_signal               sys_pidfd_send_signal
+Also have you looked at whether other drivers would be affected
+by this? It wouldn't be so nice if this change makes other drivers
+fail the same test as a result.
 
-My plan here was to add new syscalls in the same order as everwhere else,
-just with the number 110 higher. In the long run, I hope we can automate
-this.
-
-> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-> index aaf479a9e92d..4ad262698396 100644
-> --- a/arch/arm/tools/syscall.tbl
-> +++ b/arch/arm/tools/syscall.tbl
-> @@ -447,3 +447,4 @@
->  431    common  fsconfig                        sys_fsconfig
->  432    common  fsmount                         sys_fsmount
->  433    common  fspick                          sys_fspick
-> +434    common  openat2                         sys_openat2
-
-434 is already used in linux-next, I suggest you use 437 (Palmer
-just submitted fchmodat4, which could become 436).
-
-> +/**
-> + * Arguments for how openat2(2) should open the target path. If @extra is zero,
-> + * then openat2(2) is identical to openat(2).
-> + *
-> + * @flags: O_* flags (unknown flags ignored).
-> + * @mode: O_CREAT file mode (ignored otherwise).
-> + * @upgrade_mask: restrict how the O_PATH may be re-opened (ignored otherwise).
-> + * @resolve: RESOLVE_* flags (-EINVAL on unknown flags).
-> + * @reserved: reserved for future extensions, must be zeroed.
-> + */
-> +struct open_how {
-> +       __u32 flags;
-> +       union {
-> +               __u16 mode;
-> +               __u16 upgrade_mask;
-> +       };
-> +       __u16 resolve;
-> +       __u64 reserved[7]; /* must be zeroed */
-> +};
-
-We can have system calls with up to six arguments on all architectures, so
-this could still be done more conventionally without the indirection: like
-
-long openat2(int dfd, const char __user * filename, int flags, mode_t
-mode_mask, __u16 resolve);
-
-In fact, that seems similar enough to the existing openat() that I think
-you could also just add the fifth argument to the existing call when
-a newly defined flag is set, similarly to how we only use the 'mode'
-argument when O_CREAT or O_TMPFILE are set.
-
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-
-This file seems to lack a declaration for the system call, which means it
-will cause a build failure on some architectures, e.g. arch/arc/kernel/sys.c:
-
-#define __SYSCALL(nr, call) [nr] = (call),
-void *sys_call_table[NR_syscalls] = {
-        [0 ... NR_syscalls-1] = sys_ni_syscall,
-#include <asm/unistd.h>
-};
-
-        Arnd
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
