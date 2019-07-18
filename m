@@ -7,58 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D74C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1270DC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195FC21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19B82173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:21:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DVrOET27"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YiSLHEbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391279AbfGRTVK (ORCPT
+        id S2391282AbfGRTVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:21:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41195 "EHLO
+        Thu, 18 Jul 2019 15:21:51 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40199 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbfGRTVI (ORCPT
+        with ESMTP id S1728014AbfGRTVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:21:08 -0400
+        Thu, 18 Jul 2019 15:21:51 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJKmBJ2125914
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJLXFY2126235
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:20:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJKmBJ2125914
+        Thu, 18 Jul 2019 12:21:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJLXFY2126235
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477649;
-        bh=qjRwOOIVq1l1u3smnm58wRFzoAFXeL7IFUivwidysUQ=;
+        s=2019061801; t=1563477694;
+        bh=CnyZSSXgIKqDfh9kzVsFZ+320vtrkUBou3/dE6r75Jc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=DVrOET27D06MwG9sythp8806bFaf8SFoAopy0yVjq1GWtbt1cmpGYcg6Xn9uUPiMx
-         OE5+NB2TFDSJT0rb4TnT0zV7rLZ/Xbdi/l/IcT+or+DgIwWG7ujtp+I5zVoSgwqxSK
-         g+KSUYo4XAuzWoQ5Is0VjfD7UkbQTzC+g40GeE4X8+uPaR1gsCSHtCDR/TL/Dc0TxB
-         c7VQv9jhrJKyXwPlCf83bjxbM2QcxjMhluK8Fl+m8XKorm9EnIm120BRDB+b0l0fKP
-         OjrU5aINkgpLusquQhob/muLqXRTOHwbtgabgxLwlhOBaAoI2fIkwXW9Lufz/WseEk
-         p6SLFVMviYVwA==
+        b=YiSLHEbW1nXbljV4cbxlhcbl4widNgNjVd7XZZXa7SJaraPUCL+OXtHekR/2HK2Ky
+         /vS5LE2D73dtEn8/Pp7wPGnUTJoFTcjXYMT6YlVzQHAN+0jF2QcDcVmw8uij0E5gBF
+         7hyBwnMTvR3F9aUuwo5jhMXluI0MDZ5j1hPEs7cjQukTvqCdti60dapzL7vj4l1+/1
+         4wKk4m8ncW0sROcB52FbBFdYAsNldf4gAALBnfCAQwlsvQVPF2bBJtE/CZuKcrWKO/
+         NVmoKjQt+zixiIRwM6x7ptCroutOnQbkjPkbZ8QqZA12a34xO/9HKb/F+4zdUuLQjP
+         j8vehATiyiOwQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJKmXW2125911;
-        Thu, 18 Jul 2019 12:20:48 -0700
-Date:   Thu, 18 Jul 2019 12:20:48 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJLX0W2126232;
+        Thu, 18 Jul 2019 12:21:33 -0700
+Date:   Thu, 18 Jul 2019 12:21:33 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jann Horn <tipbot@zytor.com>
-Message-ID: <tip-bd98c81346468fc2f86aeeb44d4d0d6f763a62b7@git.kernel.org>
-Cc:     ndesaulniers@google.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, tglx@linutronix.de, arnd@arndb.de,
-        peterz@infradead.org, rdunlap@infradead.org, hpa@zytor.com,
-        jpoimboe@redhat.com, jannh@google.com
-Reply-To: hpa@zytor.com, peterz@infradead.org, rdunlap@infradead.org,
-          arnd@arndb.de, jannh@google.com, jpoimboe@redhat.com,
-          mingo@kernel.org, tglx@linutronix.de, ndesaulniers@google.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <e995befaada9d4d8b2cf788ff3f566ba900d2b4d.1563413318.git.jpoimboe@redhat.com>
-References: <e995befaada9d4d8b2cf788ff3f566ba900d2b4d.1563413318.git.jpoimboe@redhat.com>
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-e65050b94d8c518fdbee572ea4ca6d352e1fda37@git.kernel.org>
+Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        mingo@kernel.org, ndesaulniers@google.com, arnd@arndb.de,
+        tglx@linutronix.de, peterz@infradead.org
+Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+          peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+          arnd@arndb.de, ndesaulniers@google.com
+In-Reply-To: <a9db88eec4f1ca089e040989846961748238b6d8.1563413318.git.jpoimboe@redhat.com>
+References: <a9db88eec4f1ca089e040989846961748238b6d8.1563413318.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Support repeated uses of the same C jump
- table
-Git-Commit-ID: bd98c81346468fc2f86aeeb44d4d0d6f763a62b7
+Subject: [tip:core/urgent] objtool: Fix seg fault on bad switch table entry
+Git-Commit-ID: e65050b94d8c518fdbee572ea4ca6d352e1fda37
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,209 +69,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bd98c81346468fc2f86aeeb44d4d0d6f763a62b7
-Gitweb:     https://git.kernel.org/tip/bd98c81346468fc2f86aeeb44d4d0d6f763a62b7
-Author:     Jann Horn <jannh@google.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:54 -0500
+Commit-ID:  e65050b94d8c518fdbee572ea4ca6d352e1fda37
+Gitweb:     https://git.kernel.org/tip/e65050b94d8c518fdbee572ea4ca6d352e1fda37
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Wed, 17 Jul 2019 20:36:55 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Jul 2019 21:01:09 +0200
+CommitDate: Thu, 18 Jul 2019 21:01:10 +0200
 
-objtool: Support repeated uses of the same C jump table
+objtool: Fix seg fault on bad switch table entry
 
-This fixes objtool for both a GCC issue and a Clang issue:
+In one rare case, Clang generated the following code:
 
-1) GCC issue:
+ 5ca:       83 e0 21                and    $0x21,%eax
+ 5cd:       b9 04 00 00 00          mov    $0x4,%ecx
+ 5d2:       ff 24 c5 00 00 00 00    jmpq   *0x0(,%rax,8)
+                    5d5: R_X86_64_32S       .rodata+0x38
 
-   kernel/bpf/core.o: warning: objtool: ___bpf_prog_run()+0x8d5: sibling call from callable instruction with modified stack frame
+which uses the corresponding jump table relocations:
 
-   With CONFIG_RETPOLINE=n, GCC is doing the following optimization in
-   ___bpf_prog_run().
+  000000000038  000200000001 R_X86_64_64       0000000000000000 .text + 834
+  000000000040  000200000001 R_X86_64_64       0000000000000000 .text + 5d9
+  000000000048  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000050  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000058  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000060  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000068  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000070  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000078  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000080  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000088  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000090  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000098  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000a0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000a8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000b0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000b8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000c0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000c8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000d0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000d8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000e0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000e8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000f0  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  0000000000f8  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000100  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000108  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000110  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000118  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000120  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000128  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000130  000200000001 R_X86_64_64       0000000000000000 .text + b96
+  000000000138  000200000001 R_X86_64_64       0000000000000000 .text + 82f
+  000000000140  000200000001 R_X86_64_64       0000000000000000 .text + 828
 
-   Before:
+Since %eax was masked with 0x21, only the first two and the last two
+entries are possible.
 
-           select_insn:
-                   jmp *jumptable(,%rax,8)
-                   ...
-           ALU64_ADD_X:
-                   ...
-                   jmp select_insn
-           ALU_ADD_X:
-                   ...
-                   jmp select_insn
+Objtool doesn't actually emulate all the code, so it isn't smart enough
+to know that all the middle entries aren't reachable.  They point to the
+NOP padding area after the end of the function, so objtool seg faulted
+when it tried to dereference a NULL insn->func.
 
-   After:
+After this fix, objtool still gives an "unreachable" error because it
+stops reading the jump table when it encounters the bad addresses:
 
-           select_insn:
-                   jmp *jumptable(, %rax, 8)
-                   ...
-           ALU64_ADD_X:
-                   ...
-                   jmp *jumptable(, %rax, 8)
-           ALU_ADD_X:
-                   ...
-                   jmp *jumptable(, %rax, 8)
+  /home/jpoimboe/objtool-tests/adm1275.o: warning: objtool: adm1275_probe()+0x828: unreachable instruction
 
-   This confuses objtool.  It has never seen multiple indirect jump
-   sites which use the same jump table.
+While the above code is technically correct, it's very wasteful of
+memory -- it uses 34 jump table entries when only 4 are needed.  It's
+also not possible for objtool to validate this type of switch table
+because the unused entries point outside the function and objtool has no
+way of determining if that's intentional.  Hopefully the Clang folks can
+fix it.
 
-   For GCC switch tables, the only way of detecting the size of a table
-   is by continuing to scan for more tables.  The size of the previous
-   table can only be determined after another switch table is found, or
-   when the scan reaches the end of the function.
-
-   That logic was reused for C jump tables, and was based on the
-   assumption that each jump table only has a single jump site.  The
-   above optimization breaks that assumption.
-
-2) Clang issue:
-
-   drivers/usb/misc/sisusbvga/sisusb.o: warning: objtool: sisusb_write_mem_bulk()+0x588: can't find switch jump table
-
-   With clang 9, code can be generated where a function contains two
-   indirect jump instructions which use the same switch table.
-
-The fix is the same for both issues: split the jump table parsing into
-two passes.
-
-In the first pass, locate the heads of all switch tables for the
-function and mark their locations.
-
-In the second pass, parse the switch tables and add them.
-
-Fixes: e55a73251da3 ("bpf: Fix ORC unwinding in non-JIT BPF code")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
 Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/e995befaada9d4d8b2cf788ff3f566ba900d2b4d.1563413318.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/a9db88eec4f1ca089e040989846961748238b6d8.1563413318.git.jpoimboe@redhat.com
 
-Co-developed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/check.c | 53 +++++++++++++++++++++++++++------------------------
- tools/objtool/check.h |  1 +
- tools/objtool/elf.h   |  1 +
- 3 files changed, 30 insertions(+), 25 deletions(-)
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4525cf677a1b..66f7c01385a4 100644
+index 66f7c01385a4..a966b22a32ef 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -900,7 +900,7 @@ out:
- }
- 
- static int add_jump_table(struct objtool_file *file, struct instruction *insn,
--			    struct rela *table, struct rela *next_table)
-+			    struct rela *table)
- {
- 	struct rela *rela = table;
- 	struct instruction *dest_insn;
-@@ -913,7 +913,9 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
- 	 * instruction.
- 	 */
- 	list_for_each_entry_from(rela, &table->sec->rela_list, list) {
--		if (rela == next_table)
-+
-+		/* Check for the end of the table: */
-+		if (rela != table && rela->jump_table_start)
+@@ -932,7 +932,7 @@ static int add_jump_table(struct objtool_file *file, struct instruction *insn,
  			break;
  
- 		/* Make sure the table entries are consecutive: */
-@@ -1072,13 +1074,15 @@ static struct rela *find_jump_table(struct objtool_file *file,
- 	return NULL;
- }
+ 		/* Make sure the destination is in the same function: */
+-		if (dest_insn->func->pfunc != pfunc)
++		if (!dest_insn->func || dest_insn->func->pfunc != pfunc)
+ 			break;
  
--
--static int add_func_jump_tables(struct objtool_file *file,
--				  struct symbol *func)
-+/*
-+ * First pass: Mark the head of each jump table so that in the next pass,
-+ * we know when a given jump table ends and the next one starts.
-+ */
-+static void mark_func_jump_tables(struct objtool_file *file,
-+				    struct symbol *func)
- {
--	struct instruction *insn, *last = NULL, *prev_jump = NULL;
--	struct rela *rela, *prev_rela = NULL;
--	int ret;
-+	struct instruction *insn, *last = NULL;
-+	struct rela *rela;
- 
- 	func_for_each_insn_all(file, func, insn) {
- 		if (!last)
-@@ -1102,26 +1106,24 @@ static int add_func_jump_tables(struct objtool_file *file,
- 			continue;
- 
- 		rela = find_jump_table(file, func, insn);
--		if (!rela)
--			continue;
--
--		/*
--		 * We found a jump table, but we don't know yet how big it
--		 * is.  Don't add it until we reach the end of the function or
--		 * the beginning of another jump table in the same function.
--		 */
--		if (prev_jump) {
--			ret = add_jump_table(file, prev_jump, prev_rela, rela);
--			if (ret)
--				return ret;
-+		if (rela) {
-+			rela->jump_table_start = true;
-+			insn->jump_table = rela;
- 		}
--
--		prev_jump = insn;
--		prev_rela = rela;
- 	}
-+}
-+
-+static int add_func_jump_tables(struct objtool_file *file,
-+				  struct symbol *func)
-+{
-+	struct instruction *insn;
-+	int ret;
-+
-+	func_for_each_insn_all(file, func, insn) {
-+		if (!insn->jump_table)
-+			continue;
- 
--	if (prev_jump) {
--		ret = add_jump_table(file, prev_jump, prev_rela, NULL);
-+		ret = add_jump_table(file, insn, insn->jump_table);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1148,6 +1150,7 @@ static int add_jump_table_alts(struct objtool_file *file)
- 			if (func->type != STT_FUNC)
- 				continue;
- 
-+			mark_func_jump_tables(file, func);
- 			ret = add_func_jump_tables(file, func);
- 			if (ret)
- 				return ret;
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index cb60b9acf5cf..afa6a79e0715 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -38,6 +38,7 @@ struct instruction {
- 	struct symbol *call_dest;
- 	struct instruction *jump_dest;
- 	struct instruction *first_jump_src;
-+	struct rela *jump_table;
- 	struct list_head alts;
- 	struct symbol *func;
- 	struct stack_op stack_op;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index d4d3e0528d4a..44150204db4d 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -62,6 +62,7 @@ struct rela {
- 	unsigned int type;
- 	unsigned long offset;
- 	int addend;
-+	bool jump_table_start;
- };
- 
- struct elf {
+ 		alt = malloc(sizeof(*alt));
