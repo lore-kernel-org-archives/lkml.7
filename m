@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C627C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C8FC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804E02173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43B020851
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfGRX6W (ORCPT
+        id S1726661AbfGRX6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 19:58:22 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:54520 "EHLO inva020.nxp.com"
+        Thu, 18 Jul 2019 19:58:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54604 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfGRX6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 19:58:17 -0400
+        id S1726067AbfGRX6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 19:58:20 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 341DA1A0362;
-        Fri, 19 Jul 2019 01:58:14 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CB591A0368;
+        Fri, 19 Jul 2019 01:58:16 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 27C221A010D;
-        Fri, 19 Jul 2019 01:58:14 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0F5AA1A0135;
+        Fri, 19 Jul 2019 01:58:16 +0200 (CEST)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D16FB205D1;
-        Fri, 19 Jul 2019 01:58:13 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B7CB2205D1;
+        Fri, 19 Jul 2019 01:58:15 +0200 (CEST)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -35,226 +35,470 @@ To:     Herbert Xu <herbert@gondor.apana.org.au>,
 Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v2 05/14] crypto: caam - check authsize
-Date:   Fri, 19 Jul 2019 02:57:47 +0300
-Message-Id: <1563494276-3993-6-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH v2 10/14] crypto: caam - fix DKP for certain key lengths
+Date:   Fri, 19 Jul 2019 02:57:52 +0300
+Message-Id: <1563494276-3993-11-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1563494276-3993-1-git-send-email-iuliana.prodan@nxp.com>
 References: <1563494276-3993-1-git-send-email-iuliana.prodan@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check authsize to solve the extra tests that expect -EINVAL to be
-returned when the authentication tag size is not valid.
+From: Horia Geantă <horia.geanta@nxp.com>
 
-Validated authsize for GCM, RFC4106 and RFC4543.
+DKP cannot be used with immediate input key if |user key| > |derived key|,
+since the resulting descriptor (after DKP execution) would be invalid -
+having a few bytes from user key left in descriptor buffer
+as incorrect opcodes.
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Fix DKP usage both in standalone hmac and in authenc algorithms.
+For authenc the logic is simplified, by always storing both virtual
+and dma key addresses.
+
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- drivers/crypto/caam/caamalg.c     | 13 +++++++++++++
- drivers/crypto/caam/caamalg_qi.c  | 14 ++++++++++++++
- drivers/crypto/caam/caamalg_qi2.c | 14 ++++++++++++++
- drivers/crypto/caam/common_if.c   | 40 +++++++++++++++++++++++++++++++++++++++
- drivers/crypto/caam/common_if.h   |  4 ++++
- 5 files changed, 85 insertions(+)
+ drivers/crypto/caam/caamalg.c     | 42 +++++++----------------
+ drivers/crypto/caam/caamalg_qi.c  | 42 +++++++----------------
+ drivers/crypto/caam/caamalg_qi2.c | 70 ++++++++++++++++++++++++++++-----------
+ drivers/crypto/caam/caamhash.c    | 54 +++++++++++++++++++++---------
+ drivers/crypto/caam/desc_constr.h | 24 ++++++++++----
+ 5 files changed, 131 insertions(+), 101 deletions(-)
 
 diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 6ac59b1..6682e67 100644
+index 9a7bb06..22d9fa0 100644
 --- a/drivers/crypto/caam/caamalg.c
 +++ b/drivers/crypto/caam/caamalg.c
-@@ -377,6 +377,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
- static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
-+
-+	err = check_gcm_authsize(authsize);
-+	if (err)
-+		return err;
+@@ -206,6 +206,18 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 				ctx->cdata.keylen - CTR_RFC3686_NONCE_SIZE);
+ 	}
  
- 	ctx->authsize = authsize;
- 	gcm_set_sh_desc(authenc);
-@@ -440,6 +445,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
- 			       unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
++	/*
++	 * In case |user key| > |derived key|, using DKP<imm,imm>
++	 * would result in invalid opcodes (last bytes of user key) in
++	 * the resulting descriptor. Use DKP<ptr,imm> instead => both
++	 * virtual and dma key addresses are needed.
++	 */
++	ctx->adata.key_virt = ctx->key;
++	ctx->adata.key_dma = ctx->key_dma;
 +
-+	err = check_rfc4106_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	rfc4106_set_sh_desc(authenc);
-@@ -504,6 +514,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
- 
-+	if (authsize != 16)
-+		return -EINVAL;
++	ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
++	ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
 +
- 	ctx->authsize = authsize;
- 	rfc4543_set_sh_desc(authenc);
+ 	data_len[0] = ctx->adata.keylen_pad;
+ 	data_len[1] = ctx->cdata.keylen;
+ 
+@@ -222,16 +234,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
+ 
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
+ 
+@@ -254,16 +256,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
+ 
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
+ 
+@@ -288,16 +280,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
+ 
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
  
 diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index 46097e3..5f9b14a 100644
+index b2dd4f3..c7cebd6 100644
 --- a/drivers/crypto/caam/caamalg_qi.c
 +++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -18,6 +18,7 @@
- #include "qi.h"
- #include "jr.h"
- #include "caamalg_desc.h"
-+#include "common_if.h"
+@@ -106,6 +106,18 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 				ctx->cdata.keylen - CTR_RFC3686_NONCE_SIZE);
+ 	}
  
- /*
-  * crypto alg
-@@ -371,6 +372,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
- static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
++	/*
++	 * In case |user key| > |derived key|, using DKP<imm,imm> would result
++	 * in invalid opcodes (last bytes of user key) in the resulting
++	 * descriptor. Use DKP<ptr,imm> instead => both virtual and dma key
++	 * addresses are needed.
++	 */
++	ctx->adata.key_virt = ctx->key;
++	ctx->adata.key_dma = ctx->key_dma;
 +
-+	err = check_gcm_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	gcm_set_sh_desc(authenc);
-@@ -472,6 +478,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
- 			       unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
++	ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
++	ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
 +
-+	err = check_rfc4106_authsize(authsize);
-+	if (err)
-+		return err;
+ 	data_len[0] = ctx->adata.keylen_pad;
+ 	data_len[1] = ctx->cdata.keylen;
  
- 	ctx->authsize = authsize;
- 	rfc4106_set_sh_desc(authenc);
-@@ -581,6 +592,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
+@@ -119,16 +131,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
  
-+	if (authsize != 16)
-+		return -EINVAL;
-+
- 	ctx->authsize = authsize;
- 	rfc4543_set_sh_desc(authenc);
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
+ 
+@@ -144,16 +146,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
+ 
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
+ 
+@@ -172,16 +164,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
+ 
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
  
 diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index da4abf1..0b4de21 100644
+index 285e3c9..6541b10 100644
 --- a/drivers/crypto/caam/caamalg_qi2.c
 +++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -10,6 +10,7 @@
- #include "dpseci_cmd.h"
- #include "desc_constr.h"
- #include "error.h"
-+#include "common_if.h"
- #include "sg_sw_sec4.h"
- #include "sg_sw_qm2.h"
- #include "key_gen.h"
-@@ -719,6 +720,11 @@ static int gcm_set_sh_desc(struct crypto_aead *aead)
- static int gcm_setauthsize(struct crypto_aead *authenc, unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
+@@ -199,6 +199,18 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 				ctx->cdata.keylen - CTR_RFC3686_NONCE_SIZE);
+ 	}
+ 
++	/*
++	 * In case |user key| > |derived key|, using DKP<imm,imm> would result
++	 * in invalid opcodes (last bytes of user key) in the resulting
++	 * descriptor. Use DKP<ptr,imm> instead => both virtual and dma key
++	 * addresses are needed.
++	 */
++	ctx->adata.key_virt = ctx->key;
++	ctx->adata.key_dma = ctx->key_dma;
 +
-+	err = check_gcm_authsize(authsize);
-+	if (err)
-+		return err;
- 
- 	ctx->authsize = authsize;
- 	gcm_set_sh_desc(authenc);
-@@ -811,6 +817,11 @@ static int rfc4106_setauthsize(struct crypto_aead *authenc,
- 			       unsigned int authsize)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
-+	int err;
++	ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
++	ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
 +
-+	err = check_rfc4106_authsize(authsize);
-+	if (err)
-+		return err;
+ 	data_len[0] = ctx->adata.keylen_pad;
+ 	data_len[1] = ctx->cdata.keylen;
  
- 	ctx->authsize = authsize;
- 	rfc4106_set_sh_desc(authenc);
-@@ -913,6 +924,9 @@ static int rfc4543_setauthsize(struct crypto_aead *authenc,
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(authenc);
+@@ -210,16 +222,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
  
-+	if (authsize != 16)
-+		return -EINVAL;
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
+ 
+@@ -248,16 +250,6 @@ static int aead_set_sh_desc(struct crypto_aead *aead)
+ 			      ARRAY_SIZE(data_len)) < 0)
+ 		return -EINVAL;
+ 
+-	if (inl_mask & 1)
+-		ctx->adata.key_virt = ctx->key;
+-	else
+-		ctx->adata.key_dma = ctx->key_dma;
+-
+-	if (inl_mask & 2)
+-		ctx->cdata.key_virt = ctx->key + ctx->adata.keylen_pad;
+-	else
+-		ctx->cdata.key_dma = ctx->key_dma + ctx->adata.keylen_pad;
+-
+ 	ctx->adata.key_inline = !!(inl_mask & 1);
+ 	ctx->cdata.key_inline = !!(inl_mask & 2);
+ 
+@@ -2999,14 +2991,18 @@ enum hash_optype {
+ /**
+  * caam_hash_ctx - ahash per-session context
+  * @flc: Flow Contexts array
++ * @key: authentication key
+  * @flc_dma: I/O virtual addresses of the Flow Contexts
++ * @key_dma: I/O virtual address of the key
+  * @dev: dpseci device
+  * @ctx_len: size of Context Register
+  * @adata: hashing algorithm details
+  */
+ struct caam_hash_ctx {
+ 	struct caam_flc flc[HASH_NUM_OP];
++	u8 key[CAAM_MAX_HASH_BLOCK_SIZE] ____cacheline_aligned;
+ 	dma_addr_t flc_dma[HASH_NUM_OP];
++	dma_addr_t key_dma;
+ 	struct device *dev;
+ 	int ctx_len;
+ 	struct alginfo adata;
+@@ -3306,6 +3302,20 @@ static int ahash_setkey(struct crypto_ahash *ahash, const u8 *key,
+ 	ctx->adata.key_virt = key;
+ 	ctx->adata.key_inline = true;
+ 
++	/*
++	 * In case |user key| > |derived key|, using DKP<imm,imm> would result
++	 * in invalid opcodes (last bytes of user key) in the resulting
++	 * descriptor. Use DKP<ptr,imm> instead => both virtual and dma key
++	 * addresses are needed.
++	 */
++	if (keylen > ctx->adata.keylen_pad) {
++		ctx->adata.key_dma = ctx->key_dma;
++		memcpy(ctx->key, key, keylen);
++		dma_sync_single_for_device(ctx->dev, ctx->key_dma,
++					   ctx->adata.keylen_pad,
++					   DMA_TO_DEVICE);
++	}
 +
- 	ctx->authsize = authsize;
- 	rfc4543_set_sh_desc(authenc);
+ 	ret = ahash_set_sh_desc(ahash);
+ 	kfree(hashed_key);
+ 	return ret;
+@@ -4536,11 +4546,27 @@ static int caam_hash_cra_init(struct crypto_tfm *tfm)
  
-diff --git a/drivers/crypto/caam/common_if.c b/drivers/crypto/caam/common_if.c
-index 859d4b4..fcf47e6 100644
---- a/drivers/crypto/caam/common_if.c
-+++ b/drivers/crypto/caam/common_if.c
-@@ -26,6 +26,46 @@ int check_aes_keylen(unsigned int keylen)
+ 	ctx->dev = caam_hash->dev;
+ 
++	if (alg->setkey) {
++		ctx->key_dma = dma_map_single_attrs(ctx->dev, ctx->key,
++						    ARRAY_SIZE(ctx->key),
++						    DMA_TO_DEVICE,
++						    DMA_ATTR_SKIP_CPU_SYNC);
++		if (dma_mapping_error(ctx->dev, ctx->key_dma)) {
++			dev_err(ctx->dev, "unable to map key\n");
++			return -ENOMEM;
++		}
++	}
++
+ 	dma_addr = dma_map_single_attrs(ctx->dev, ctx->flc, sizeof(ctx->flc),
+ 					DMA_BIDIRECTIONAL,
+ 					DMA_ATTR_SKIP_CPU_SYNC);
+ 	if (dma_mapping_error(ctx->dev, dma_addr)) {
+ 		dev_err(ctx->dev, "unable to map shared descriptors\n");
++		if (ctx->key_dma)
++			dma_unmap_single_attrs(ctx->dev, ctx->key_dma,
++					       ARRAY_SIZE(ctx->key),
++					       DMA_TO_DEVICE,
++					       DMA_ATTR_SKIP_CPU_SYNC);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -4566,6 +4592,10 @@ static void caam_hash_cra_exit(struct crypto_tfm *tfm)
+ 
+ 	dma_unmap_single_attrs(ctx->dev, ctx->flc_dma[0], sizeof(ctx->flc),
+ 			       DMA_BIDIRECTIONAL, DMA_ATTR_SKIP_CPU_SYNC);
++	if (ctx->key_dma)
++		dma_unmap_single_attrs(ctx->dev, ctx->key_dma,
++				       ARRAY_SIZE(ctx->key), DMA_TO_DEVICE,
++				       DMA_ATTR_SKIP_CPU_SYNC);
  }
- EXPORT_SYMBOL(check_aes_keylen);
  
-+/*
-+ * validate authentication tag for GCM
-+ */
-+int check_gcm_authsize(unsigned int authsize)
-+{
-+	switch (authsize) {
-+	case 4:
-+	case 8:
-+	case 12:
-+	case 13:
-+	case 14:
-+	case 15:
-+	case 16:
-+		break;
-+	default:
-+		return -EINVAL;
+ static struct caam_hash_alg *caam_hash_alloc(struct device *dev,
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index 14fdfa1..e89913b 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -98,6 +98,7 @@ struct caam_hash_ctx {
+ 	dma_addr_t sh_desc_digest_dma;
+ 	dma_addr_t key_dma;
+ 	enum dma_data_direction dir;
++	enum dma_data_direction key_dir;
+ 	struct device *jrdev;
+ 	int ctx_len;
+ 	struct alginfo adata;
+@@ -475,6 +476,19 @@ static int ahash_setkey(struct crypto_ahash *ahash,
+ 			goto bad_free_key;
+ 
+ 		memcpy(ctx->key, key, keylen);
++
++		/*
++		 * In case |user key| > |derived key|, using DKP<imm,imm>
++		 * would result in invalid opcodes (last bytes of user key) in
++		 * the resulting descriptor. Use DKP<ptr,imm> instead => both
++		 * virtual and dma key addresses are needed.
++		 */
++		if (keylen > ctx->adata.keylen_pad) {
++			ctx->adata.key_dma = ctx->key_dma;
++			dma_sync_single_for_device(ctx->jrdev, ctx->key_dma,
++						   ctx->adata.keylen_pad,
++						   DMA_TO_DEVICE);
++		}
+ 	} else {
+ 		ret = gen_split_key(ctx->jrdev, ctx->key, &ctx->adata, key,
+ 				    keylen, CAAM_MAX_HASH_KEY_SIZE);
+@@ -1825,40 +1839,50 @@ static int caam_hash_cra_init(struct crypto_tfm *tfm)
+ 
+ 	if (is_xcbc_aes(caam_hash->alg_type)) {
+ 		ctx->dir = DMA_TO_DEVICE;
++		ctx->key_dir = DMA_BIDIRECTIONAL;
+ 		ctx->adata.algtype = OP_TYPE_CLASS1_ALG | caam_hash->alg_type;
+ 		ctx->ctx_len = 48;
+-
+-		ctx->key_dma = dma_map_single_attrs(ctx->jrdev, ctx->key,
+-						    ARRAY_SIZE(ctx->key),
+-						    DMA_BIDIRECTIONAL,
+-						    DMA_ATTR_SKIP_CPU_SYNC);
+-		if (dma_mapping_error(ctx->jrdev, ctx->key_dma)) {
+-			dev_err(ctx->jrdev, "unable to map key\n");
+-			caam_jr_free(ctx->jrdev);
+-			return -ENOMEM;
+-		}
+ 	} else if (is_cmac_aes(caam_hash->alg_type)) {
+ 		ctx->dir = DMA_TO_DEVICE;
++		ctx->key_dir = DMA_NONE;
+ 		ctx->adata.algtype = OP_TYPE_CLASS1_ALG | caam_hash->alg_type;
+ 		ctx->ctx_len = 32;
+ 	} else {
+-		ctx->dir = priv->era >= 6 ? DMA_BIDIRECTIONAL : DMA_TO_DEVICE;
++		if (priv->era >= 6) {
++			ctx->dir = DMA_BIDIRECTIONAL;
++			ctx->key_dir = DMA_TO_DEVICE;
++		} else {
++			ctx->dir = DMA_TO_DEVICE;
++			ctx->key_dir = DMA_NONE;
++		}
+ 		ctx->adata.algtype = OP_TYPE_CLASS2_ALG | caam_hash->alg_type;
+ 		ctx->ctx_len = runninglen[(ctx->adata.algtype &
+ 					   OP_ALG_ALGSEL_SUBMASK) >>
+ 					  OP_ALG_ALGSEL_SHIFT];
+ 	}
+ 
++	if (ctx->key_dir != DMA_NONE) {
++		ctx->key_dma = dma_map_single_attrs(ctx->jrdev, ctx->key,
++						    ARRAY_SIZE(ctx->key),
++						    ctx->key_dir,
++						    DMA_ATTR_SKIP_CPU_SYNC);
++		if (dma_mapping_error(ctx->jrdev, ctx->key_dma)) {
++			dev_err(ctx->jrdev, "unable to map key\n");
++			caam_jr_free(ctx->jrdev);
++			return -ENOMEM;
++		}
 +	}
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL(check_gcm_authsize);
-+
-+/*
-+ * validate authentication tag for RFC4106
-+ */
-+int check_rfc4106_authsize(unsigned int authsize)
-+{
-+	switch (authsize) {
-+	case 8:
-+	case 12:
-+	case 16:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(check_rfc4106_authsize);
-+
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("FSL CAAM drivers common location");
- MODULE_AUTHOR("NXP Semiconductors");
-diff --git a/drivers/crypto/caam/common_if.h b/drivers/crypto/caam/common_if.h
-index 6964ba3..b17386a 100644
---- a/drivers/crypto/caam/common_if.h
-+++ b/drivers/crypto/caam/common_if.h
-@@ -10,4 +10,8 @@
+ 	dma_addr = dma_map_single_attrs(ctx->jrdev, ctx->sh_desc_update,
+ 					offsetof(struct caam_hash_ctx, key),
+ 					ctx->dir, DMA_ATTR_SKIP_CPU_SYNC);
+ 	if (dma_mapping_error(ctx->jrdev, dma_addr)) {
+ 		dev_err(ctx->jrdev, "unable to map shared descriptors\n");
  
- int check_aes_keylen(unsigned int keylen);
+-		if (is_xcbc_aes(caam_hash->alg_type))
++		if (ctx->key_dir != DMA_NONE)
+ 			dma_unmap_single_attrs(ctx->jrdev, ctx->key_dma,
+ 					       ARRAY_SIZE(ctx->key),
+-					       DMA_BIDIRECTIONAL,
++					       ctx->key_dir,
+ 					       DMA_ATTR_SKIP_CPU_SYNC);
  
-+int check_gcm_authsize(unsigned int authsize);
+ 		caam_jr_free(ctx->jrdev);
+@@ -1891,9 +1915,9 @@ static void caam_hash_cra_exit(struct crypto_tfm *tfm)
+ 	dma_unmap_single_attrs(ctx->jrdev, ctx->sh_desc_update_dma,
+ 			       offsetof(struct caam_hash_ctx, key),
+ 			       ctx->dir, DMA_ATTR_SKIP_CPU_SYNC);
+-	if (is_xcbc_aes(ctx->adata.algtype))
++	if (ctx->key_dir != DMA_NONE)
+ 		dma_unmap_single_attrs(ctx->jrdev, ctx->key_dma,
+-				       ARRAY_SIZE(ctx->key), DMA_BIDIRECTIONAL,
++				       ARRAY_SIZE(ctx->key), ctx->key_dir,
+ 				       DMA_ATTR_SKIP_CPU_SYNC);
+ 	caam_jr_free(ctx->jrdev);
+ }
+diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
+index 8154174..536f360 100644
+--- a/drivers/crypto/caam/desc_constr.h
++++ b/drivers/crypto/caam/desc_constr.h
+@@ -533,14 +533,26 @@ static inline void append_proto_dkp(u32 * const desc, struct alginfo *adata)
+ 	if (adata->key_inline) {
+ 		int words;
+ 
+-		append_operation(desc, OP_TYPE_UNI_PROTOCOL | protid |
+-				 OP_PCL_DKP_SRC_IMM | OP_PCL_DKP_DST_IMM |
+-				 adata->keylen);
+-		append_data(desc, adata->key_virt, adata->keylen);
++		if (adata->keylen > adata->keylen_pad) {
++			append_operation(desc, OP_TYPE_UNI_PROTOCOL | protid |
++					 OP_PCL_DKP_SRC_PTR |
++					 OP_PCL_DKP_DST_IMM | adata->keylen);
++			append_ptr(desc, adata->key_dma);
 +
-+int check_rfc4106_authsize(unsigned int authsize);
++			words = (ALIGN(adata->keylen_pad, CAAM_CMD_SZ) -
++				 CAAM_PTR_SZ) / CAAM_CMD_SZ;
++		} else {
++			append_operation(desc, OP_TYPE_UNI_PROTOCOL | protid |
++					 OP_PCL_DKP_SRC_IMM |
++					 OP_PCL_DKP_DST_IMM | adata->keylen);
++			append_data(desc, adata->key_virt, adata->keylen);
 +
- #endif /* CAAM_COMMON_LOCATION_H */
++			words = (ALIGN(adata->keylen_pad, CAAM_CMD_SZ) -
++				 ALIGN(adata->keylen, CAAM_CMD_SZ)) /
++				CAAM_CMD_SZ;
++		}
+ 
+ 		/* Reserve space in descriptor buffer for the derived key */
+-		words = (ALIGN(adata->keylen_pad, CAAM_CMD_SZ) -
+-			 ALIGN(adata->keylen, CAAM_CMD_SZ)) / CAAM_CMD_SZ;
+ 		if (words)
+ 			(*desc) = cpu_to_caam32(caam32_to_cpu(*desc) + words);
+ 	} else {
 -- 
 2.1.0
 
