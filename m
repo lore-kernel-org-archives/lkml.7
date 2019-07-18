@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4E3C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A380C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF7D2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B432053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420048;
-	bh=7iIIemDj4Mzp24Mb71qnqvDeRaw94JV+H4HYHLJoZfo=;
+	s=default; t=1563420052;
+	bh=3fZOVIMhLXlJK6IU7no/pPiVvuBM30eZB7ippg/rVpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypwpmr6EDM8c5GfoJILA1hMP8ZrIaM+KgLCzvc0w9V8Ao3TyuPGhm1V76Mqr7atm+
-	 nFtg1ODi9QmnSznVrWC0Q03L8QN6hIaRJABqNUjrM3my9OoYS1Qu0milKeTvYHqfZL
-	 XSxl0hqIZl5bySas3Ay+kclevYoRjz738JruQFQs=
+	b=QqovrpvBfbsTNC2L6rOvC0dVxNgAgWbmeG8WbyHzwhrKMmkd+XNIN5vn59WQlg+8S
+	 wbHCCKjfK3jbjUuYuot2D20Q8e0q+1U4oJDm2Sx2YxhFRYgca8v7sBuK7vQ4FqHV3Q
+	 t+oE6pX1Ped2PgXi6Uo+/kuYTyqzNtR5D4exv8Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391810AbfGRDUr (ORCPT
+        id S2390359AbfGRDKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43764 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391184AbfGRDK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:10:28 -0400
+        id S2391134AbfGRDKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:10:14 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD7DF2077C;
-        Thu, 18 Jul 2019 03:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A099821841;
+        Thu, 18 Jul 2019 03:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419428;
-        bh=7iIIemDj4Mzp24Mb71qnqvDeRaw94JV+H4HYHLJoZfo=;
+        s=default; t=1563419413;
+        bh=3fZOVIMhLXlJK6IU7no/pPiVvuBM30eZB7ippg/rVpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hFUnhfjs730+57dbhAfURtQPdzJJfX8j+lT2s/Suuow1CFCzgztGl1cwu+AKl98P
-         Hr5MRbgl4tcQiI2D/WxKuUCQM1Ml0uGcB2E/9TLVzBIZ1M/k6PjNvuEwFpE6whf67E
-         YLg0zZn/l9jAN7yZArRPEzSrjrTmevfXQs73YG1k=
+        b=hCGo1U+yQWWxKVyS8T/eaZQQerGEz4mlHMg0Stuf4UzH7r/JEP0CUBTVtCXHKXhPQ
+         7B6E0HhVYdMK+zQm1YblHqGNaQtroGXkBaBLa7+UHko799toLb1pXxKigSZxuTin7J
+         L0RdYxU/jap8OmHYwbmOqb1onCdZcby61J+rrUwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/80] ip6_tunnel: allow not to count pkts on tstats by passing dev as NULL
-Date:   Thu, 18 Jul 2019 12:01:26 +0900
-Message-Id: <20190718030101.347330862@linuxfoundation.org>
+Subject: [PATCH 4.14 38/80] net: dsa: mv88e6xxx: fix shift of FID bits in mv88e6185_g1_vtu_loadpurge()
+Date:   Thu, 18 Jul 2019 12:01:29 +0900
+Message-Id: <20190718030101.598580672@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,38 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6f6a8622057c92408930c31698394fae1557b188 ]
+[ Upstream commit 48620e341659f6e4b978ec229f6944dabe6df709 ]
 
-A similar fix to Patch "ip_tunnel: allow not to count pkts on tstats by
-setting skb's dev to NULL" is also needed by ip6_tunnel.
+The comment is correct, but the code ends up moving the bits four
+places too far, into the VTUOp field.
 
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: 11ea809f1a74 (net: dsa: mv88e6xxx: support 256 databases)
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip6_tunnel.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/dsa/mv88e6xxx/global1_vtu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/ip6_tunnel.h b/include/net/ip6_tunnel.h
-index d66f70f63734..3b0e3cdee1c3 100644
---- a/include/net/ip6_tunnel.h
-+++ b/include/net/ip6_tunnel.h
-@@ -152,9 +152,12 @@ static inline void ip6tunnel_xmit(struct sock *sk, struct sk_buff *skb,
- 	memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
- 	pkt_len = skb->len - skb_inner_network_offset(skb);
- 	err = ip6_local_out(dev_net(skb_dst(skb)->dev), sk, skb);
--	if (unlikely(net_xmit_eval(err)))
--		pkt_len = -1;
--	iptunnel_xmit_stats(dev, pkt_len);
-+
-+	if (dev) {
-+		if (unlikely(net_xmit_eval(err)))
-+			pkt_len = -1;
-+		iptunnel_xmit_stats(dev, pkt_len);
-+	}
- }
- #endif
- #endif
+diff --git a/drivers/net/dsa/mv88e6xxx/global1_vtu.c b/drivers/net/dsa/mv88e6xxx/global1_vtu.c
+index 8c8a0ec3d6e9..f260bd30c73a 100644
+--- a/drivers/net/dsa/mv88e6xxx/global1_vtu.c
++++ b/drivers/net/dsa/mv88e6xxx/global1_vtu.c
+@@ -416,7 +416,7 @@ int mv88e6185_g1_vtu_loadpurge(struct mv88e6xxx_chip *chip,
+ 		 * VTU DBNum[7:4] are located in VTU Operation 11:8
+ 		 */
+ 		op |= entry->fid & 0x000f;
+-		op |= (entry->fid & 0x00f0) << 8;
++		op |= (entry->fid & 0x00f0) << 4;
+ 	}
+ 
+ 	return mv88e6xxx_g1_vtu_op(chip, op);
 -- 
 2.20.1
 
