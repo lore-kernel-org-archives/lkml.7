@@ -2,165 +2,197 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4209C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B231C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73EF2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3942184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:46:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BRg5Fs3f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpW5XOBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391466AbfGRTqd (ORCPT
+        id S2391530AbfGRToc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:46:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49275 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403799AbfGRTqb (ORCPT
+        Thu, 18 Jul 2019 15:44:32 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:44621 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391498AbfGRTo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:46:31 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJkJud2136460
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:46:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJkJud2136460
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563479179;
-        bh=WLy4ldt2VHH4CIY/WRDo7mCruY1+viqvfyUQpu1rzjI=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=BRg5Fs3f0LIQr0V0/niFCYhs0dTjKD0lECzShAqvymHF9OjKldI18Fm380OJur8fz
-         leS93rTp9MNZIhtKjr16wO+JBsgqN5ms7vC+g9bsaQmTxHsFFeoBMpf83YRbOZVI8/
-         YL8xpoCaNHE+kPCEl6ASC3WlYW68asRAxzWMbg6fjHMeqXEH1WWkhPUkEIPCJof8DD
-         NUlczFXhFX6IoIlspaZKmWdlFdsVoR6Zf6eiBNXIKdD6/ME5f2jRAoI3w7P6ETbH32
-         RXRv1EJ2AbDCkBzxDircpA7UJ1xs4mwnvhUoUmt7Ogzhq6YLwViLiwX0npY/a+8jrO
-         mj3reBqRobI/A==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJkIH82136453;
-        Thu, 18 Jul 2019 12:46:18 -0700
-Date:   Thu, 18 Jul 2019 12:46:18 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Zhenzhong Duan <tipbot@zytor.com>
-Message-ID: <tip-cd6697b8b8751b65abd7859af55cf06f36b8e716@git.kernel.org>
-Cc:     zhenzhong.duan@oracle.com, tglx@linutronix.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mingo@kernel.org
-Reply-To: tglx@linutronix.de, zhenzhong.duan@oracle.com, mingo@kernel.org,
-          hpa@zytor.com, linux-kernel@vger.kernel.org
-In-Reply-To: <1563282957-26898-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1563282957-26898-1-git-send-email-zhenzhong.duan@oracle.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/boot/efi: Remove unused variables
-Git-Commit-ID: cd6697b8b8751b65abd7859af55cf06f36b8e716
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Thu, 18 Jul 2019 15:44:29 -0400
+Received: by mail-pf1-f202.google.com with SMTP id j22so17170515pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=TwJXmltaqPXLScJPeplt82MxiWbulhRh2wFIx7ld1zA=;
+        b=KpW5XOBG641l/Xw8B2PEiHxAcqUkwOdT8pWMv4P9X4i+9tASsD+6DKmFEGZAItkLm3
+         nt+eL03RKB94E27Z+0SWtx0TsF44fWmjxgOtF7Cs9dp929LT5CINR0ubQgGECLFjJZ9b
+         CBGqD0yXt2ziKZH/d3fp5ogvaF6WdfGy97JSO7OMqv0X+tki9ZHCr2+fiw/XlJ6SrObJ
+         yF5qQ8imSZIYloYPzge8UZvrzBiV9dfpFgb+FEj56i6tVz5f5s0K17nWcTTh9VZGux5y
+         azQvE+1YXrsqP9Ep53uXtGtJZPhew0u89/7pYmaCmMG+M7r3LcHMmHanccR7UURyvdFV
+         bxrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=TwJXmltaqPXLScJPeplt82MxiWbulhRh2wFIx7ld1zA=;
+        b=I1tg+ZFHVR8c5z9sY318gUHMqM9ZT0c0WeVr1ZY2dXSADJziS4zi4B1NmQa1gjWP67
+         7rwy3uuxpj/jC9VmAHn65iZ/efUIpzTIIjGTmYvAjdIRknj7c77gJsj+H3U2rfWxG+E4
+         TG+D4nBG+DomFETtB8NHaQno0SkOm2Sli3JRVx7q+V5BQVqCC1+jba1phncy0M0evfc4
+         PwxCoKHojWmR37djrlyhR/nJUGppkso+wNaUTLw5r7QBI7yInDEymzVuoUIfMLYwE5Tb
+         DDQHSc1PZuO8tUIk86dC4Q3+RE2s203TbJz2avY6NdyjZXxW72TyIROBCiVnst1XCsrT
+         m/Wg==
+X-Gm-Message-State: APjAAAW5S52fFas4Q3AVg9WpjR7OEIPeVpNPpHU59m9yBqVmSriY346E
+        vW8jqSoNsCNbn8WrmDqZ3LgiozmG1OjsTH2l2+p/Og==
+X-Google-Smtp-Source: APXvYqxsgSe+hKIUupoQACu1/e2K7TL8mPi+SfdyEwMn/PeozIXLkIfTEE+jqRKohan3TNzkLTn9q6P0KM1Cs9A3zxP4YQ==
+X-Received: by 2002:a63:10a:: with SMTP id 10mr50049340pgb.281.1563479068817;
+ Thu, 18 Jul 2019 12:44:28 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 12:43:50 -0700
+In-Reply-To: <20190718194415.108476-1-matthewgarrett@google.com>
+Message-Id: <20190718194415.108476-5-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <20190718194415.108476-1-matthewgarrett@google.com>
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH V36 04/29] Enforce module signatures if the kernel is locked down
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cd6697b8b8751b65abd7859af55cf06f36b8e716
-Gitweb:     https://git.kernel.org/tip/cd6697b8b8751b65abd7859af55cf06f36b8e716
-Author:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-AuthorDate: Tue, 16 Jul 2019 21:15:57 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 18 Jul 2019 21:41:57 +0200
+From: David Howells <dhowells@redhat.com>
 
-x86/boot/efi: Remove unused variables
+If the kernel is locked down, require that all modules have valid
+signatures that we can verify.
 
-Fix gcc warnings:
+I have adjusted the errors generated:
 
-arch/x86/boot/compressed/eboot.c: In function 'make_boot_params':
-arch/x86/boot/compressed/eboot.c:394:6: warning: unused variable 'i' [-Wunused-variable]
-  int i;
-      ^
-arch/x86/boot/compressed/eboot.c:393:6: warning: unused variable 's1' [-Wunused-variable]
-  u8 *s1;
-      ^
-arch/x86/boot/compressed/eboot.c:392:7: warning: unused variable 's2' [-Wunused-variable]
-  u16 *s2;
-       ^
-arch/x86/boot/compressed/eboot.c:387:8: warning: unused variable 'options' [-Wunused-variable]
-  void *options, *handle;
-        ^
-arch/x86/boot/compressed/eboot.c: In function 'add_e820ext':
-arch/x86/boot/compressed/eboot.c:498:16: warning: unused variable 'size' [-Wunused-variable]
-  unsigned long size;
-                ^
-arch/x86/boot/compressed/eboot.c:497:15: warning: unused variable 'status' [-Wunused-variable]
-  efi_status_t status;
-               ^
-arch/x86/boot/compressed/eboot.c: In function 'exit_boot_func':
-arch/x86/boot/compressed/eboot.c:681:15: warning: unused variable 'status' [-Wunused-variable]
-  efi_status_t status;
-               ^
-arch/x86/boot/compressed/eboot.c:680:8: warning: unused variable 'nr_desc' [-Wunused-variable]
-  __u32 nr_desc;
-        ^
-arch/x86/boot/compressed/eboot.c: In function 'efi_main':
-arch/x86/boot/compressed/eboot.c:750:22: warning: unused variable 'image' [-Wunused-variable]
-  efi_loaded_image_t *image;
-                      ^
+ (1) If there's no signature (ENODATA) or we can't check it (ENOPKG,
+     ENOKEY), then:
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1563282957-26898-1-git-send-email-zhenzhong.duan@oracle.com
+     (a) If signatures are enforced then EKEYREJECTED is returned.
 
+     (b) If there's no signature or we can't check it, but the kernel is
+	 locked down then EPERM is returned (this is then consistent with
+	 other lockdown cases).
+
+ (2) If the signature is unparseable (EBADMSG, EINVAL), the signature fails
+     the check (EKEYREJECTED) or a system error occurs (eg. ENOMEM), we
+     return the error we got.
+
+Note that the X.509 code doesn't check for key expiry as the RTC might not
+be valid or might not have been transferred to the kernel's clock yet.
+
+ [Modified by Matthew Garrett to remove the IMA integration. This will
+  be replaced with integration with the IMA architecture policy
+  patchset.]
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Jessica Yu <jeyu@kernel.org>
 ---
- arch/x86/boot/compressed/eboot.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ include/linux/security.h     |  1 +
+ kernel/module.c              | 37 +++++++++++++++++++++++++++++-------
+ security/lockdown/lockdown.c |  1 +
+ 3 files changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index 220d1279d0e2..d6662fdef300 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -384,14 +384,11 @@ struct boot_params *make_boot_params(struct efi_config *c)
- 	struct apm_bios_info *bi;
- 	struct setup_header *hdr;
- 	efi_loaded_image_t *image;
--	void *options, *handle;
-+	void *handle;
- 	efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
- 	int options_size = 0;
- 	efi_status_t status;
- 	char *cmdline_ptr;
--	u16 *s2;
--	u8 *s1;
--	int i;
- 	unsigned long ramdisk_addr;
- 	unsigned long ramdisk_size;
- 
-@@ -494,8 +491,6 @@ static void add_e820ext(struct boot_params *params,
- 			struct setup_data *e820ext, u32 nr_entries)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 54a0532ec12f..8e70063074a1 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -103,6 +103,7 @@ enum lsm_event {
+  */
+ enum lockdown_reason {
+ 	LOCKDOWN_NONE,
++	LOCKDOWN_MODULE_SIGNATURE,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/kernel/module.c b/kernel/module.c
+index a2cee14a83f3..d8e1258e54af 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2753,8 +2753,9 @@ static inline void kmemleak_load_module(const struct module *mod,
+ #ifdef CONFIG_MODULE_SIG
+ static int module_sig_check(struct load_info *info, int flags)
  {
- 	struct setup_data *data;
--	efi_status_t status;
--	unsigned long size;
+-	int err = -ENOKEY;
++	int err = -ENODATA;
+ 	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
++	const char *reason;
+ 	const void *mod = info->hdr;
  
- 	e820ext->type = SETUP_E820_EXT;
- 	e820ext->len  = nr_entries * sizeof(struct boot_e820_entry);
-@@ -677,8 +672,6 @@ static efi_status_t exit_boot_func(efi_system_table_t *sys_table_arg,
- 				   void *priv)
- {
- 	const char *signature;
--	__u32 nr_desc;
--	efi_status_t status;
- 	struct exit_boot_struct *p = priv;
+ 	/*
+@@ -2769,16 +2770,38 @@ static int module_sig_check(struct load_info *info, int flags)
+ 		err = mod_verify_sig(mod, info);
+ 	}
  
- 	signature = efi_is_64bit() ? EFI64_LOADER_SIGNATURE
-@@ -747,7 +740,6 @@ struct boot_params *
- efi_main(struct efi_config *c, struct boot_params *boot_params)
- {
- 	struct desc_ptr *gdt = NULL;
--	efi_loaded_image_t *image;
- 	struct setup_header *hdr = &boot_params->hdr;
- 	efi_status_t status;
- 	struct desc_struct *desc;
+-	if (!err) {
++	switch (err) {
++	case 0:
+ 		info->sig_ok = true;
+ 		return 0;
+-	}
+ 
+-	/* Not having a signature is only an error if we're strict. */
+-	if (err == -ENOKEY && !is_module_sig_enforced())
+-		err = 0;
++		/* We don't permit modules to be loaded into trusted kernels
++		 * without a valid signature on them, but if we're not
++		 * enforcing, certain errors are non-fatal.
++		 */
++	case -ENODATA:
++		reason = "Loading of unsigned module";
++		goto decide;
++	case -ENOPKG:
++		reason = "Loading of module with unsupported crypto";
++		goto decide;
++	case -ENOKEY:
++		reason = "Loading of module with unavailable key";
++	decide:
++		if (is_module_sig_enforced()) {
++			pr_notice("%s is rejected\n", reason);
++			return -EKEYREJECTED;
++		}
+ 
+-	return err;
++		return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++
++		/* All other errors are fatal, including nomem, unparseable
++		 * signatures and signature check failures - even if signatures
++		 * aren't required.
++		 */
++	default:
++		return err;
++	}
+ }
+ #else /* !CONFIG_MODULE_SIG */
+ static int module_sig_check(struct load_info *info, int flags)
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index d30c4d254b5f..2c53fd9f5c9b 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -18,6 +18,7 @@ static enum lockdown_reason kernel_locked_down;
+ 
+ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_NONE] = "none",
++	[LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+-- 
+2.22.0.510.g264f2c817a-goog
+
