@@ -2,151 +2,113 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA505C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95141C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5F62173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BB72173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="MfU7zanx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JHF5kY9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389451AbfGRINq (ORCPT
+        id S2389475AbfGRIOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:13:46 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44159 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387777AbfGRINo (ORCPT
+        Thu, 18 Jul 2019 04:14:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:58488 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfGRIOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:13:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t16so12228993pfe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WEPQWB9mL7qVaCOqVBJLCz5vsDHBMIw1+BdS4ATmzgQ=;
-        b=MfU7zanxbv9W4UR9Jm9cRC1ssg0R8tJalTrmiDVVaixvRRDkLeAVGFMA/uNkbpOa+D
-         jvpp9Z5eb417ob7VF4kFtVHZC48Lck2SAulQIXeJgt1v8Dl7LeD5SOsZ2Mbw/OPTZDQR
-         9CrmsuhLaWXhojYzNwye0Px6EFygP/7sSZUBBK/dh8/PlRTfwvsVYh3w0WVGd4sm32W8
-         OfFCrOH5636iRoq5zvvnmEI0Gwp093U9jrZm8W6O9jCtw75PA8Hmnzyi+lPlhfYn3h1s
-         z/y3Qu9eORQGiqfnYehet7qlxgR+YqMzKt9G4yVGU7yp5SdTh1GSD+3b8ywVvgFXWIJ4
-         +d9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WEPQWB9mL7qVaCOqVBJLCz5vsDHBMIw1+BdS4ATmzgQ=;
-        b=XzLKjEqauHrMdakV2m0SZnX8ChO0avvcq5ArS+n3WBiilBAdX7LNcMzqPXUqo7/XQN
-         0eb2oHvSHE9w51U+2cj/d7KvF3I2du5bhJ+EbvIBh1BG1oERC/l3+Cpk0Mwub9EJwpXO
-         TN7l0N4AXPgbzxlsuJh1QddvvDWiSt6VnPJj0X7qj11Z26CRw9gKTu0w1DCD1lW6Embw
-         KTbc+APq90DlHpMLwCxntq5HX4jFdfTPR7wNPBjZyZfbRF6N3ns4at/TEkemYgBVvJfU
-         1bwjID0hdwxQO8+wa4fbodxz7Hn7+N4Vg5+Dkha2tnNl5F2Rz/FF0YUdIgGi1vXvU361
-         H2AQ==
-X-Gm-Message-State: APjAAAWfaDPHbOoDM2qZcTyZ2/8g1TyDSOWMFh/m0lNPc3Gwx8liQPsO
-        b+Oh/xxgQ7JCH8nqpaPtK2Q=
-X-Google-Smtp-Source: APXvYqwYbAyTAJi5PUBKz5SoezdiiL/6tSMEnS1yZRWW4nvvCzwLv5HlG+A48+VgqzdCLGCq9W2gxg==
-X-Received: by 2002:a63:490a:: with SMTP id w10mr45466506pga.6.1563437623905;
-        Thu, 18 Jul 2019 01:13:43 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id f72sm37999820pjg.10.2019.07.18.01.13.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 01:13:43 -0700 (PDT)
-Subject: Re: [PATCH v2 04/13] powerpc/pseries/svm: Add helpers for
- UV_SHARE_PAGE and UV_UNSHARE_PAGE
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>
-References: <20190713060023.8479-1-bauerman@linux.ibm.com>
- <20190713060023.8479-5-bauerman@linux.ibm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Message-ID: <4fcc84ae-b93a-b5f1-fba4-b0e2af7b727c@ozlabs.ru>
-Date:   Thu, 18 Jul 2019 18:13:37 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thu, 18 Jul 2019 04:14:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6I8E53H117444;
+        Thu, 18 Jul 2019 08:14:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=MnWKO1aPepCSn5Io1XMEqlaALN7Sd2EdfHGfadQRpQ4=;
+ b=JHF5kY9QipPRj5DmCnbVs9QEtCrzknotJLpXqBTUZTaFmEdGTSTpUGTCZc58/5J8/CeY
+ vPYcSWEzZPyAV3kl+3eBhazuJbPiTJAuq15oMLk3uwLG4ShNc7zTR6kt0ptV8srOqhoC
+ 82qymY2E/0aM15M3GkdIDF2KhHvBgNW6ALcHkgnStqrSgFJd4MOgzewgmIQGrOpjmauY
+ g9WaMa+AfVyrlmxRqAVCVC4hulJpfpL5/f1DZjeeLVCN72AYSyOoPWdvTQpZCLW/jS2r
+ 288C7wBo45PWhcjqU6CyPtlyC2CXgg0ahZzI1KHP+WvnIX6QW07Y7tttLKR7mcAQnPo/ Jg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tq6qtyet2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 08:14:04 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6I8CgO1054919;
+        Thu, 18 Jul 2019 08:14:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2tt77hkg61-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 08:14:04 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6I8DuVE018307;
+        Thu, 18 Jul 2019 08:13:58 GMT
+Received: from [10.191.31.100] (/10.191.31.100)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 18 Jul 2019 08:13:56 +0000
+Subject: Re: [PATCH] x86/boot/compressed/64: Remove unused variable
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+References: <1563283040-31101-1-git-send-email-zhenzhong.duan@oracle.com>
+ <20190717143451.xbz6dkjnmxd7rcon@black.fi.intel.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <e513acb4-a893-8134-4853-d31bd3b87ef9@oracle.com>
+Date:   Thu, 18 Jul 2019 16:13:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190713060023.8479-5-bauerman@linux.ibm.com>
+In-Reply-To: <20190717143451.xbz6dkjnmxd7rcon@black.fi.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1907180095
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9321 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907180095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/7/17 22:34, Kirill A. Shutemov wrote:
+> On Tue, Jul 16, 2019 at 01:17:20PM +0000, Zhenzhong Duan wrote:
+>> Fix gcc warning:
+>>
+>> arch/x86/boot/compressed/pgtable_64.c: In function 'find_trampoline_placement':
+>> arch/x86/boot/compressed/pgtable_64.c:43:16: warning: unused variable 'trampoline_start' [-Wunused-variable]
+>>    unsigned long trampoline_start;
+>>                  ^
+>>
+>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>
+> Have no idea why I don't see the warning in my setup.
 
-On 13/07/2019 16:00, Thiago Jung Bauermann wrote:
-> From: Ram Pai <linuxram@us.ibm.com>
-> 
-> These functions are used when the guest wants to grant the hypervisor
-> access to certain pages.
-> 
-> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> ---
->   arch/powerpc/include/asm/ultravisor-api.h |  2 ++
->   arch/powerpc/include/asm/ultravisor.h     | 15 +++++++++++++++
->   2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
-> index fe9a0d8d7673..c7513bbadf57 100644
-> --- a/arch/powerpc/include/asm/ultravisor-api.h
-> +++ b/arch/powerpc/include/asm/ultravisor-api.h
-> @@ -25,6 +25,8 @@
->   #define UV_UNREGISTER_MEM_SLOT		0xF124
->   #define UV_PAGE_IN			0xF128
->   #define UV_PAGE_OUT			0xF12C
-> +#define UV_SHARE_PAGE			0xF130
-> +#define UV_UNSHARE_PAGE			0xF134
->   #define UV_PAGE_INVAL			0xF138
->   #define UV_SVM_TERMINATE		0xF13C
->   
-> diff --git a/arch/powerpc/include/asm/ultravisor.h b/arch/powerpc/include/asm/ultravisor.h
-> index f5dc5af739b8..f7418b663a0e 100644
-> --- a/arch/powerpc/include/asm/ultravisor.h
-> +++ b/arch/powerpc/include/asm/ultravisor.h
-> @@ -91,6 +91,21 @@ static inline int uv_svm_terminate(u64 lpid)
->   
->   	return ucall(UV_SVM_TERMINATE, retbuf, lpid);
->   }
-> +
-> +static inline int uv_share_page(u64 pfn, u64 npages)
-> +{
-> +	unsigned long retbuf[UCALL_BUFSIZE];
-> +
-> +	return ucall(UV_SHARE_PAGE, retbuf, pfn, npages);
+Try below:
 
+make bzImage EXTRA_CFLAGS="-Wunused-variable"
 
-What is in that retbuf? Can you pass NULL instead?
-
-
-> +}
-> +
-> +static inline int uv_unshare_page(u64 pfn, u64 npages)
-> +{
-> +	unsigned long retbuf[UCALL_BUFSIZE];
-> +
-> +	return ucall(UV_UNSHARE_PAGE, retbuf, pfn, npages);
-> +}
-> +
->   #endif /* !__ASSEMBLY__ */
->   
->   #endif	/* _ASM_POWERPC_ULTRAVISOR_H */
-> 
-
--- 
-Alexey
+Zhenzhong
