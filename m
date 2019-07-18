@@ -2,97 +2,224 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4083BC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C625CC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF0620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1340220873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfGRNm5 (ORCPT
+        id S2390023AbfGRNpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:42:57 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:44097 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRNm5 (ORCPT
+        Thu, 18 Jul 2019 09:45:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28364 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726608AbfGRNpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:42:57 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MysFQ-1ib6Sk0g0g-00vua9; Thu, 18 Jul 2019 15:42:44 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/bridge: fix RC_CORE dependency
-Date:   Thu, 18 Jul 2019 15:42:24 +0200
-Message-Id: <20190718134240.2265724-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 18 Jul 2019 09:45:19 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IDhNh6172049
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:45:18 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttqxq57v2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:45:17 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 18 Jul 2019 14:45:15 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 14:45:12 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IDjBPi57606206
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 13:45:11 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6615EA4062;
+        Thu, 18 Jul 2019 13:45:11 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29183A405B;
+        Thu, 18 Jul 2019 13:45:11 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.115])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jul 2019 13:45:11 +0000 (GMT)
+Subject: Re: [PATCH 1/2] KVM: Boost vCPUs that are delivering interrupts
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     wanpengli@tencent.com, rkrcmar@redhat.com, paulus@ozlabs.org,
+        maz@kernel.org
+References: <1563457031-21189-1-git-send-email-pbonzini@redhat.com>
+ <1563457031-21189-2-git-send-email-pbonzini@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ mQINBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
+ J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
+ CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
+ 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
+ 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
+ +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
+ T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
+ OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
+ /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
+ IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABtDRDaHJpc3RpYW4g
+ Qm9ybnRyYWVnZXIgKElCTSkgPGJvcm50cmFlZ2VyQGRlLmlibS5jb20+iQI4BBMBAgAiBQJO
+ nDz4AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRARe7yAtaYcfOYVD/9sqc6ZdYKD
+ bmDIvc2/1LL0g7OgiA8pHJlYN2WHvIhUoZUIqy8Sw2EFny/nlpPVWfG290JizNS2LZ0mCeGZ
+ 80yt0EpQNR8tLVzLSSr0GgoY0lwsKhAnx3p3AOrA8WXsPL6prLAu3yJI5D0ym4MJ6KlYVIjU
+ ppi4NLWz7ncA2nDwiIqk8PBGxsjdc/W767zOOv7117rwhaGHgrJ2tLxoGWj0uoH3ZVhITP1z
+ gqHXYaehPEELDV36WrSKidTarfThCWW0T3y4bH/mjvqi4ji9emp1/pOWs5/fmd4HpKW+44tD
+ Yt4rSJRSa8lsXnZaEPaeY3nkbWPcy3vX6qafIey5d8dc8Uyaan39WslnJFNEx8cCqJrC77kI
+ vcnl65HaW3y48DezrMDH34t3FsNrSVv5fRQ0mbEed8hbn4jguFAjPt4az1xawSp0YvhzwATJ
+ YmZWRMa3LPx/fAxoolq9cNa0UB3D3jmikWktm+Jnp6aPeQ2Db3C0cDyxcOQY/GASYHY3KNra
+ z8iwS7vULyq1lVhOXg1EeSm+lXQ1Ciz3ub3AhzE4c0ASqRrIHloVHBmh4favY4DEFN19Xw1p
+ 76vBu6QjlsJGjvROW3GRKpLGogQTLslbjCdIYyp3AJq2KkoKxqdeQYm0LZXjtAwtRDbDo71C
+ FxS7i/qfvWJv8ie7bE9A6Wsjn7kCDQROnDz4ARAAmPI1e8xB0k23TsEg8O1sBCTXkV8HSEq7
+ JlWz7SWyM8oFkJqYAB7E1GTXV5UZcr9iurCMKGSTrSu3ermLja4+k0w71pLxws859V+3z1jr
+ nhB3dGzVZEUhCr3EuN0t8eHSLSMyrlPL5qJ11JelnuhToT6535cLOzeTlECc51bp5Xf6/XSx
+ SMQaIU1nDM31R13o98oRPQnvSqOeljc25aflKnVkSfqWSrZmb4b0bcWUFFUKVPfQ5Z6JEcJg
+ Hp7qPXHW7+tJTgmI1iM/BIkDwQ8qe3Wz8R6rfupde+T70NiId1M9w5rdo0JJsjKAPePKOSDo
+ RX1kseJsTZH88wyJ30WuqEqH9zBxif0WtPQUTjz/YgFbmZ8OkB1i+lrBCVHPdcmvathknAxS
+ bXL7j37VmYNyVoXez11zPYm+7LA2rvzP9WxR8bPhJvHLhKGk2kZESiNFzP/E4r4Wo24GT4eh
+ YrDo7GBHN82V4O9JxWZtjpxBBl8bH9PvGWBmOXky7/bP6h96jFu9ZYzVgIkBP3UYW+Pb1a+b
+ w4A83/5ImPwtBrN324bNUxPPqUWNW0ftiR5b81ms/rOcDC/k/VoN1B+IHkXrcBf742VOLID4
+ YP+CB9GXrwuF5KyQ5zEPCAjlOqZoq1fX/xGSsumfM7d6/OR8lvUPmqHfAzW3s9n4lZOW5Jfx
+ bbkAEQEAAYkCHwQYAQIACQUCTpw8+AIbDAAKCRARe7yAtaYcfPzbD/9WNGVf60oXezNzSVCL
+ hfS36l/zy4iy9H9rUZFmmmlBufWOATjiGAXnn0rr/Jh6Zy9NHuvpe3tyNYZLjB9pHT6mRZX7
+ Z1vDxeLgMjTv983TQ2hUSlhRSc6e6kGDJyG1WnGQaqymUllCmeC/p9q5m3IRxQrd0skfdN1V
+ AMttRwvipmnMduy5SdNayY2YbhWLQ2wS3XHJ39a7D7SQz+gUQfXgE3pf3FlwbwZhRtVR3z5u
+ aKjxqjybS3Ojimx4NkWjidwOaUVZTqEecBV+QCzi2oDr9+XtEs0m5YGI4v+Y/kHocNBP0myd
+ pF3OoXvcWdTb5atk+OKcc8t4TviKy1WCNujC+yBSq3OM8gbmk6NwCwqhHQzXCibMlVF9hq5a
+ FiJb8p4QKSVyLhM8EM3HtiFqFJSV7F+h+2W0kDyzBGyE0D8z3T+L3MOj3JJJkfCwbEbTpk4f
+ n8zMboekuNruDw1OADRMPlhoWb+g6exBWx/YN4AY9LbE2KuaScONqph5/HvJDsUldcRN3a5V
+ RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
+ oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
+ syiRa+UVlsKmx1hsEg==
+Date:   Thu, 18 Jul 2019 15:45:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <1563457031-21189-2-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LalC3fueD8ns/zVd1zUacsqU9/+XR1XYXbOtp5D2bbPKXX/+BVp
- pih72gFX2h3gXxMbIh6oAihZdwH+/zSdgbm4Y7bfVsDmTY6G5T3jf7i2UeGAM3F7/NhQS7x
- +uktKDqfLMK3uI0kgmWZoIlXK1TVxNOL/rDWwUnatfP7uVfpGNnlQOBWndwsJJ+XqMr5b1c
- P3Pgiqsmjam1WjkypwzAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SL2m0TBWswY=:c4RPZmLcftwWBIHOBql1ST
- Aj7g3NbIsK/RqoAvvZS4zv14zCFTUDURjXMcPEpPoL1ANhtfgPatR8MDdJGEXACdmtI6OiUJP
- KpfO9ZJiqVnUgz8M6plbm/SErsdODRZsN76lQ8PWs02Kk8hgpgPpKvgQ7EUV1gNfFSVz5c9FW
- vcM8zBE/RJR1sY1BBMEWrAwVWhXm5djLGsW8whrHOH+YNhi24tnCYlOFcpeGTxtNfk1xPb5re
- nyRGtqVVA/6oahbrPJKVDKxkSXojMfwZN2iqo4XXdDLHHbkVURnMYlDHSfK2qN83BehQvvAEf
- pd+h/0SmQef8O4SmrUOTq+VO7P4q1XV+tWsCSNAEzQltgZlE+EvF3D+djKDVpxuS8OMTUh/J/
- eKS6dSAXzHuiZXiMNe8vEwCfsRQ/rX2uom7j8scK3y4Vts9evB3QQy8xMtjNolJ5UbWznAPtr
- R3S/hr+Ljg1UEbumD/AcnWjZU7J4LiUmH9JpXntzT8HliOc3nww+G45i00fIKlBLMUc93BZhw
- NRzpOAeLwAxn+3bx/jeUWDlIghYldlztzWIMdbG568tJC9zAJcOnoVzh1gdRtdg0c4s64blVF
- rc+yMf+XJmkdWXS/whosAHGE8zySqupOx1bFq/3vsBBvdGkurVRMrTUVaIE/VooOK5jlH4c44
- ar19zSgnKQiIa7F4tTC13ZBjYTnLecbEygJDs2KlNSAUlvRS17+6bUnPymbvi0WozPJSwEzCK
- 13nxZFneJ+klscHMykjxh6SU23zJzYiwBVf00A==
+X-TM-AS-GCONF: 00
+x-cbid: 19071813-0016-0000-0000-0000029409E2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071813-0017-0000-0000-000032F1E667
+Message-Id: <c28fb650-8150-4f42-4d01-8e8b2490c8b6@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=628 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using 'imply' causes a new problem, as it allows the case of
-CONFIG_INPUT=m with RC_CORE=y, which fails to link:
 
-drivers/media/rc/rc-main.o: In function `ir_do_keyup':
-rc-main.c:(.text+0x2b4): undefined reference to `input_event'
-drivers/media/rc/rc-main.o: In function `rc_repeat':
-rc-main.c:(.text+0x350): undefined reference to `input_event'
-drivers/media/rc/rc-main.o: In function `rc_allocate_device':
-rc-main.c:(.text+0x90c): undefined reference to `input_allocate_device'
 
-Add a 'depends on' that allows building both with and without
-CONFIG_RC_CORE, but disallows combinations that don't link.
+On 18.07.19 15:37, Paolo Bonzini wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Inspired by commit 9cac38dd5d (KVM/s390: Set preempted flag during
+> vcpu wakeup and interrupt delivery), we want to also boost not just
+> lock holders but also vCPUs that are delivering interrupts. Most
+> smp_call_function_many calls are synchronous, so the IPI target vCPUs
+> are also good yield candidates.  This patch introduces vcpu->ready to
+> boost vCPUs during wakeup and interrupt delivery time; unlike s390 we do
+> not reuse vcpu->preempted so that voluntarily preempted vCPUs are taken
+> into account by kvm_vcpu_on_spin, but vmx_vcpu_pi_put is not affected
+> (VT-d PI handles voluntary preemption separately, in pi_pre_block).
+> 
+> Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
+> ebizzy -M
+> 
+>             vanilla     boosting    improved
+> 1VM          21443       23520         9%
+> 2VM           2800        8000       180%
+> 3VM           1800        3100        72%
+> 
+> Testing on my Haswell desktop 8 HT, with 8 vCPUs VM 8GB RAM, two VMs,
+> one running ebizzy -M, the other running 'stress --cpu 2':
+> 
+> w/ boosting + w/o pv sched yield(vanilla)
+> 
+>             vanilla     boosting   improved
+>               1570         4000      155%
+> 
+> w/ boosting + w/ pv sched yield(vanilla)
+> 
+>             vanilla     boosting   improved
+>               1844         5157      179%
+> 
+> w/o boosting, perf top in VM:
+> 
+>  72.33%  [kernel]       [k] smp_call_function_many
+>   4.22%  [kernel]       [k] call_function_i
+>   3.71%  [kernel]       [k] async_page_fault
+> 
+> w/ boosting, perf top in VM:
+> 
+>  38.43%  [kernel]       [k] smp_call_function_many
+>   6.31%  [kernel]       [k] async_page_fault
+>   6.13%  libc-2.23.so   [.] __memcpy_avx_unaligned
+>   4.88%  [kernel]       [k] call_function_interrupt
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Paul Mackerras <paulus@ozlabs.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+> 	v2->v3: put it in kvm_vcpu_wake_up, use WRITE_ONCE
 
-Fixes: 5023cf32210d ("drm/bridge: make remote control optional")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/bridge/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index f64c91defdc3..70a8ed2505aa 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -85,8 +85,8 @@ config DRM_SIL_SII8620
- 	tristate "Silicon Image SII8620 HDMI/MHL bridge"
- 	depends on OF
- 	select DRM_KMS_HELPER
-+	depends on RC_CORE || !RC_CORE
- 	imply EXTCON
--	imply RC_CORE
- 	help
- 	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
- 
--- 
-2.20.0
+Looks good. Some more comments
+
+> 
+>  arch/s390/kvm/interrupt.c | 2 +-
+>  include/linux/kvm_host.h  | 1 +
+>  virt/kvm/kvm_main.c       | 9 +++++++--
+[...]
+
+> @@ -4205,6 +4206,8 @@ static void kvm_sched_in(struct preempt_notifier *pn, int cpu)
+>  
+>  	if (vcpu->preempted)
+>  		vcpu->preempted = false;
+> +	if (vcpu->ready)
+> +		WRITE_ONCE(vcpu->ready, false);
+
+What is the rationale of checking before writing. Avoiding writable cache line ping pong?
+
+
+>  
+>  	kvm_arch_sched_in(vcpu, cpu);
+>  
+> @@ -4216,8 +4219,10 @@ static void kvm_sched_out(struct preempt_notifier *pn,
+>  {
+>  	struct kvm_vcpu *vcpu = preempt_notifier_to_vcpu(pn);
+>  
+> -	if (current->state == TASK_RUNNING)
+> +	if (current->state == TASK_RUNNING) {
+>  		vcpu->preempted = true;
+
+WOuld it make sense to also use WRITE_ONCE for vcpu->preempted ?
+
+> +		WRITE_ONCE(vcpu->ready, true);
+> +	}
+>  	kvm_arch_vcpu_put(vcpu);
+>  }
+>  
+> 
 
