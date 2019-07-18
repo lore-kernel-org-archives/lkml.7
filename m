@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08A3C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67747C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840B22184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6102184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390686AbfGROpl (ORCPT
+        id S2390714AbfGROpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:45:41 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40120 "EHLO inva021.nxp.com"
+        Thu, 18 Jul 2019 10:45:43 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49438 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfGROpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:45:39 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F3CAE200088;
-        Thu, 18 Jul 2019 16:45:36 +0200 (CEST)
+        id S1727708AbfGROpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:45:40 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D743E1A011E;
+        Thu, 18 Jul 2019 16:45:37 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E4821200009;
-        Thu, 18 Jul 2019 16:45:36 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C14BC1A0006;
+        Thu, 18 Jul 2019 16:45:37 +0200 (CEST)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 98768205C7;
-        Thu, 18 Jul 2019 16:45:36 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6355B205C7;
+        Thu, 18 Jul 2019 16:45:37 +0200 (CEST)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -35,9 +35,9 @@ To:     Herbert Xu <herbert@gondor.apana.org.au>,
 Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 01/14] crypto: caam/qi - fix error handling in ERN handler
-Date:   Thu, 18 Jul 2019 17:45:11 +0300
-Message-Id: <1563461124-24641-2-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH 03/14] crypto: caam - update IV only when crypto operation succeeds
+Date:   Thu, 18 Jul 2019 17:45:13 +0300
+Message-Id: <1563461124-24641-4-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
 References: <1563461124-24641-1-git-send-email-iuliana.prodan@nxp.com>
@@ -52,69 +52,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Horia Geantă <horia.geanta@nxp.com>
 
-ERN handler calls the caam/qi frontend "done" callback with a status
-of -EIO. This is incorrect, since the callback expects a status value
-meaningful for the crypto engine - hence the cryptic messages
-like the one below:
-platform caam_qi: 15: unknown error source
+skcipher encryption might fail and in some cases, like (invalid) input
+length smaller then block size, updating the IV would lead to panic
+due to copying from a negative offset (req->cryptlen - ivsize).
 
-Fix this by providing the callback with:
--the status returned by the crypto engine (fd[status]) in case
-it contains an error, OR
--a QI "No error" code otherwise; this will trigger the message:
-platform caam_qi: 50000000: Queue Manager Interface: No error
-which is fine, since QMan driver provides details about the cause of
-failure
-
-Cc: <stable@vger.kernel.org> # v4.12+
-Fixes: 67c2315d ("crypto: caam - add Queue Interface (QI) backend support")
 Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 ---
- drivers/crypto/caam/error.c | 1 +
- drivers/crypto/caam/qi.c    | 5 ++++-
- drivers/crypto/caam/regs.h  | 1 +
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/crypto/caam/caamalg.c     | 5 ++---
+ drivers/crypto/caam/caamalg_qi.c  | 4 +++-
+ drivers/crypto/caam/caamalg_qi2.c | 8 ++++++--
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
-index 4f0d458..95da6ae 100644
---- a/drivers/crypto/caam/error.c
-+++ b/drivers/crypto/caam/error.c
-@@ -118,6 +118,7 @@ static const struct {
- 	u8 value;
- 	const char *error_text;
- } qi_error_list[] = {
-+	{ 0x00, "No error" },
- 	{ 0x1F, "Job terminated by FQ or ICID flush" },
- 	{ 0x20, "FD format error"},
- 	{ 0x21, "FD command format error"},
-diff --git a/drivers/crypto/caam/qi.c b/drivers/crypto/caam/qi.c
-index 0fe618e..19a378b 100644
---- a/drivers/crypto/caam/qi.c
-+++ b/drivers/crypto/caam/qi.c
-@@ -163,7 +163,10 @@ static void caam_fq_ern_cb(struct qman_portal *qm, struct qman_fq *fq,
- 	dma_unmap_single(drv_req->drv_ctx->qidev, qm_fd_addr(fd),
- 			 sizeof(drv_req->fd_sgt), DMA_BIDIRECTIONAL);
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index 06b4f2d..28d55a0 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -990,10 +990,9 @@ static void skcipher_encrypt_done(struct device *jrdev, u32 *desc, u32 err,
+ 	 * ciphertext block (CBC mode) or last counter (CTR mode).
+ 	 * This is used e.g. by the CTS mode.
+ 	 */
+-	if (ivsize) {
++	if (ivsize && !ecode) {
+ 		memcpy(req->iv, (u8 *)edesc->sec4_sg + edesc->sec4_sg_bytes,
+ 		       ivsize);
+-
+ 		print_hex_dump_debug("dstiv  @"__stringify(__LINE__)": ",
+ 				     DUMP_PREFIX_ADDRESS, 16, 4, req->iv,
+ 				     edesc->src_nents > 1 ? 100 : ivsize, 1);
+@@ -1030,7 +1029,7 @@ static void skcipher_decrypt_done(struct device *jrdev, u32 *desc, u32 err,
+ 	 * ciphertext block (CBC mode) or last counter (CTR mode).
+ 	 * This is used e.g. by the CTS mode.
+ 	 */
+-	if (ivsize) {
++	if (ivsize && !ecode) {
+ 		memcpy(req->iv, (u8 *)edesc->sec4_sg + edesc->sec4_sg_bytes,
+ 		       ivsize);
  
--	drv_req->cbk(drv_req, -EIO);
-+	if (fd->status)
-+		drv_req->cbk(drv_req, be32_to_cpu(fd->status));
-+	else
-+		drv_req->cbk(drv_req, JRSTA_SSRC_QI);
- }
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index ab263b1..66531d6 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -1201,7 +1201,9 @@ static void skcipher_done(struct caam_drv_req *drv_req, u32 status)
+ 	 * ciphertext block (CBC mode) or last counter (CTR mode).
+ 	 * This is used e.g. by the CTS mode.
+ 	 */
+-	memcpy(req->iv, (u8 *)&edesc->sgt[0] + edesc->qm_sg_bytes, ivsize);
++	if (!ecode)
++		memcpy(req->iv, (u8 *)&edesc->sgt[0] + edesc->qm_sg_bytes,
++		       ivsize);
  
- static struct qman_fq *create_caam_req_fq(struct device *qidev,
-diff --git a/drivers/crypto/caam/regs.h b/drivers/crypto/caam/regs.h
-index 8591914..7c7ea8a 100644
---- a/drivers/crypto/caam/regs.h
-+++ b/drivers/crypto/caam/regs.h
-@@ -641,6 +641,7 @@ struct caam_job_ring {
- #define JRSTA_SSRC_CCB_ERROR        0x20000000
- #define JRSTA_SSRC_JUMP_HALT_USER   0x30000000
- #define JRSTA_SSRC_DECO             0x40000000
-+#define JRSTA_SSRC_QI               0x50000000
- #define JRSTA_SSRC_JRERROR          0x60000000
- #define JRSTA_SSRC_JUMP_HALT_CC     0x70000000
+ 	qi_cache_free(edesc);
+ 	skcipher_request_complete(req, ecode);
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 2681581..bc370af 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -1358,7 +1358,9 @@ static void skcipher_encrypt_done(void *cbk_ctx, u32 status)
+ 	 * ciphertext block (CBC mode) or last counter (CTR mode).
+ 	 * This is used e.g. by the CTS mode.
+ 	 */
+-	memcpy(req->iv, (u8 *)&edesc->sgt[0] + edesc->qm_sg_bytes, ivsize);
++	if (!ecode)
++		memcpy(req->iv, (u8 *)&edesc->sgt[0] + edesc->qm_sg_bytes,
++		       ivsize);
  
+ 	qi_cache_free(edesc);
+ 	skcipher_request_complete(req, ecode);
+@@ -1394,7 +1396,9 @@ static void skcipher_decrypt_done(void *cbk_ctx, u32 status)
+ 	 * ciphertext block (CBC mode) or last counter (CTR mode).
+ 	 * This is used e.g. by the CTS mode.
+ 	 */
+-	memcpy(req->iv, (u8 *)&edesc->sgt[0] + edesc->qm_sg_bytes, ivsize);
++	if (!ecode)
++		memcpy(req->iv, (u8 *)&edesc->sgt[0] + edesc->qm_sg_bytes,
++		       ivsize);
+ 
+ 	qi_cache_free(edesc);
+ 	skcipher_request_complete(req, ecode);
 -- 
 2.1.0
 
