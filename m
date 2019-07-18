@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F57C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1478BC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6EA21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFFA21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419241;
-	bh=baBU9P10qlX5IXyVCz2/GKUVrIU3uPv5UWjez8prMQU=;
+	s=default; t=1563419246;
+	bh=ej18VNWinyrKMWEU+mxAT/c7G+nIfeAfdwON843YUsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=laJ+qvwM25ANWo/JHPqv/w42yJtlh4PwlZ7rmD2igXYFmiVdb94C5zF1xTuscvZdF
-	 ibUDlzgd5+Mr46CYKmvwUDSV3c8ZnLKDJoidKryF2if86Rk6Wse6cYmAfIYan/x0Pb
-	 WerliyzC/YM3AxduGHnkkWR6H0jKKkWRFNR2hXcg=
+	b=jLpxtMb18Y939Bs1iieNtqPpQ0pFVFT9kTRGz8RfG3daepxaHcuHgDWDuk/6GBmdL
+	 neKhATqVUVJJJtUjUSn4rPYANRD1Y2uAqKOflw2GRrwETLANcYimuijHb5iKKyHSuI
+	 9gqQrplouQqPvdYMhhcbFkzi1QPGOhip2U7tb6EY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbfGRDHT (ORCPT
+        id S2390432AbfGRDHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38640 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390360AbfGRDHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:12 -0400
+        id S2390400AbfGRDHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:19 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAD642053B;
-        Thu, 18 Jul 2019 03:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5856121849;
+        Thu, 18 Jul 2019 03:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419231;
-        bh=baBU9P10qlX5IXyVCz2/GKUVrIU3uPv5UWjez8prMQU=;
+        s=default; t=1563419238;
+        bh=ej18VNWinyrKMWEU+mxAT/c7G+nIfeAfdwON843YUsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8y6oqNws5iTDLNQk9fQuqZI8Y6PuJPZlcwRi2GAt0+cLegUbWkq0wM+/ejOsl0pF
-         80ovCbt3TVKvsfnpDOQiD1eSutrZNeIrl3r4+OPf/U7B9lOtXL0I2jznM7Xzy/INXS
-         CkkZVJ64SJ9T+3w6pAOQpmOk1Uf7QXNcrwduDsrI=
+        b=2X+wDv9dG9o/fgndBvQBJGm9ELRKxH6CcTPEoy1IMU+nWPbLdHS4RN69Rp71AmuYx
+         Rt+1qNpCHMrC7lJRjlHaY3iTyH5jGmf96rsZV81x2iaGFF7irpBxHFYrsufmZfctpr
+         ht/TjxUkxQJ7nlrlCQP38E/LN2alkILmV8tsgkuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/47] x86/boot/64: Fix crash if kernel image crosses page table boundary
-Date:   Thu, 18 Jul 2019 12:01:36 +0900
-Message-Id: <20190718030050.584579412@linuxfoundation.org>
+Subject: [PATCH 4.19 09/47] efi/bgrt: Drop BGRT status field reserved bits check
+Date:   Thu, 18 Jul 2019 12:01:23 +0900
+Message-Id: <20190718030049.364224408@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -66,87 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 81c7ed296dcd02bc0b4488246d040e03e633737a ]
+[ Upstream commit a483fcab38b43fb34a7f12ab1daadd3907f150e2 ]
 
-A kernel which boots in 5-level paging mode crashes in a small percentage
-of cases if KASLR is enabled.
+Starting with ACPI 6.2 bits 1 and 2 of the BGRT status field are no longer
+reserved. These bits are now used to indicate if the image needs to be
+rotated before being displayed.
 
-This issue was tracked down to the case when the kernel image unpacks in a
-way that it crosses an 1G boundary. The crash is caused by an overrun of
-the PMD page table in __startup_64() and corruption of P4D page table
-allocated next to it. This particular issue is not visible with 4-level
-paging as P4D page tables are not used.
+The first device using these bits has now shown up (the GPD MicroPC) and
+the reserved bits check causes us to reject the valid BGRT table on this
+device.
 
-But the P4D and the PUD calculation have similar problems.
+Rather then changing the reserved bits check, allowing only the 2 new bits,
+instead just completely remove it so that we do not end up with a similar
+problem when more bits are added in the future.
 
-The PMD index calculation is wrong due to operator precedence, which fails
-to confine the PMDs in the PMD array on wrap around.
-
-The P4D calculation for 5-level paging and the PUD calculation calculate
-the first index correctly, but then blindly increment it which causes the
-same issue when a kernel image is located across a 512G and for 5-level
-paging across a 46T boundary.
-
-This wrap around mishandling was introduced when these parts moved from
-assembly to C.
-
-Restore it to the correct behaviour.
-
-Fixes: c88d71508e36 ("x86/boot/64: Rewrite startup_64() in C")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190620112345.28833-1-kirill.shutemov@linux.intel.com
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head64.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/firmware/efi/efi-bgrt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index ddee1f0870c4..cc5b519dc687 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -190,18 +190,18 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
- 		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
- 
--		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
--		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
--		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
-+		i = physaddr >> P4D_SHIFT;
-+		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-+		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
- 	} else {
- 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
- 		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
- 		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
+diff --git a/drivers/firmware/efi/efi-bgrt.c b/drivers/firmware/efi/efi-bgrt.c
+index b22ccfb0c991..2bf4d31f4967 100644
+--- a/drivers/firmware/efi/efi-bgrt.c
++++ b/drivers/firmware/efi/efi-bgrt.c
+@@ -50,11 +50,6 @@ void __init efi_bgrt_init(struct acpi_table_header *table)
+ 		       bgrt->version);
+ 		goto out;
  	}
- 
--	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
--	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
--	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
-+	i = physaddr >> PUD_SHIFT;
-+	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-+	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
- 
- 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
- 	/* Filter out unsupported __PAGE_KERNEL_* bits: */
-@@ -211,8 +211,9 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	pmd_entry +=  physaddr;
- 
- 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
--		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
--		pmd[idx] = pmd_entry + i * PMD_SIZE;
-+		int idx = i + (physaddr >> PMD_SHIFT);
-+
-+		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
- 	}
- 
- 	/*
+-	if (bgrt->status & 0xfe) {
+-		pr_notice("Ignoring BGRT: reserved status bits are non-zero %u\n",
+-		       bgrt->status);
+-		goto out;
+-	}
+ 	if (bgrt->image_type != 0) {
+ 		pr_notice("Ignoring BGRT: invalid image type %u (expected 0)\n",
+ 		       bgrt->image_type);
 -- 
 2.20.1
 
