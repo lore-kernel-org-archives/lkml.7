@@ -2,234 +2,196 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E433DC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEAEC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763F62173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563472227;
-	bh=6tSD0Suq+WYw0e1Of1mjiPhBMB1Sm91MrrAFE36jpOc=;
-	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
-	b=vIkStilxTmaOU+aCcjk0gwr7ZpCveUPCg/ZZS1cUO/QbtpwoT2RturFzalnSIKGas
-	 +v5K8cv7kAwTMtVQi2HcppUW7gDimgOpjKhdQMCj1NQyHB4+zqnXn/kzYkr29BFR42
-	 BO4nVbWe1QO9uPk5zzT6wEEOj3FAkXiTKM2QMh98=
+	by mail.kernel.org (Postfix) with ESMTP id 24E3A20873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TEf7btWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390753AbfGRRu0 (ORCPT
+        id S1728222AbfGRRxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfGRRuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:50:25 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3EC421019;
-        Thu, 18 Jul 2019 17:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563472224;
-        bh=6tSD0Suq+WYw0e1Of1mjiPhBMB1Sm91MrrAFE36jpOc=;
-        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
-        b=qhh1Yzvu9wkDER9y45leq7ittg2ChvzEFbwwLVZc06ECTh2DoTQNSKaogbtmfkT68
-         1l2DbFS/qt/oI4MDEM0RfDRSnGQfBEZtVR9UZ8zb3LGf5E0Nrh56Y4ypa4K4xT9cYG
-         u2MA/NXEj9SHiUe3C8HpY4EmJNMMPRP3PJB9AiWI=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 18 Jul 2019 13:53:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42087 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRRxx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:53:53 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IHqGnW2095808
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 18 Jul 2019 10:52:16 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IHqGnW2095808
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563472338;
+        bh=rd7QaIB/lsFqGDOjsr5j5Cd14wGMuqN+A1zM18ay75Q=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=TEf7btWsYFKQ8RyrcIDUTzoDVWnh+p2HDnsS34X3U0h3xTGMGbgCAsfFBftaCGOQt
+         SCAhkxRxkceZSzzgtGltWbYBJxZBd3Aiu4svsiudcUvtOnKRNZlUwZSxeSE1i8cErH
+         h0kuNojxNo/vKuUYIlYjE2+YwkJeTeu11MayBTo4ftX+q0mZ+jGDhCGbRNYBYnuBWW
+         CWxfn5rCqrLrHeL80kD1K/6p18fhXxt1HA8IXow7Bs4oc4HhKM2sqE8u7rmTYuAhKk
+         iYFhFEDCo3win7WLNTU317jekZEsjBetivip7Js1VsTzhM8YjQV6jR4JWG9RmVBhmx
+         JEtU17K1Kexgw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IHqFRh2095803;
+        Thu, 18 Jul 2019 10:52:15 -0700
+Date:   Thu, 18 Jul 2019 10:52:15 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-a003296b7a97dedccb0c35c4c1e44e088050b8c4@git.kernel.org>
+Cc:     hpa@zytor.com, gregkh@linuxfoundation.org,
+        tom.zanussi@linux.intel.com, lukas.bulwahn@gmail.com,
+        tglx@linutronix.de, marc.zyngier@arm.com, rostedt@goodmis.org,
+        akpm@linuxfoundation.org, frederic@kernel.org, efault@gmx.de,
+        paulmck@linux.vnet.ibm.com, lgoncalv@redhat.com,
+        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+        mingo@kernel.org, bristot@redhat.com, julia@ni.com,
+        gratian.crisan@ni.com, torvalds@linux-foundation.org,
+        clark.williams@gmail.com, wagi@monom.org, williams@redhat.com,
+        tj@kernel.org, paulmck@linux.ibm.com, hch@lst.de,
+        peterz@infradead.org
+Reply-To: mingo@kernel.org, clark.williams@gmail.com,
+          torvalds@linux-foundation.org, julia@ni.com,
+          gratian.crisan@ni.com, bristot@redhat.com, wagi@monom.org,
+          peterz@infradead.org, hch@lst.de, tj@kernel.org,
+          paulmck@linux.ibm.com, williams@redhat.com, tglx@linutronix.de,
+          marc.zyngier@arm.com, lukas.bulwahn@gmail.com,
+          tom.zanussi@linux.intel.com, gregkh@linuxfoundation.org,
+          hpa@zytor.com, frederic@kernel.org, akpm@linuxfoundation.org,
+          rostedt@goodmis.org, lgoncalv@redhat.com,
+          paulmck@linux.vnet.ibm.com, efault@gmx.de, bigeasy@linutronix.de,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/urgent] sched/rt, Kconfig: Introduce CONFIG_PREEMPT_RT
+Git-Commit-ID: a003296b7a97dedccb0c35c4c1e44e088050b8c4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
-References: <20190712081744.87097-1-brendanhiggins@google.com> <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org> <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com> <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com> <20190716175021.9CA412173C@mail.kernel.org> <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 18 Jul 2019 10:50:23 -0700
-Message-Id: <20190718175024.C3EC421019@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-07-16 11:52:01)
-> On Tue, Jul 16, 2019 at 10:50 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
->=20
-> > The only hypothetical case where this can't be done is a complicated
-> > assertion or expectation that does more than one check and can't be
-> > written as a function that dumps out what went wrong. Is this a real
-> > problem? Maybe such an assertion should just open code that logic so we
-> > don't have to build up a string for all the other simple cases.
->=20
-> I have some expectations in follow up patchsets for which I created a
-> set of composable matchers for matching structures and function calls
-> that by their nature cannot be written as a single function. The
-> matcher thing is a bit speculative, I know, but for any kind of
-> function call matching, you need to store a record of functions you
-> are expecting to have called and then each one needs to have a set of
-> expectations defined by the user; I don't think there is a way to do
-> that that doesn't involve having multiple separate functions each
-> having some information useful to constructing the message.
->=20
-> I know the code in question isn't in this patchset; the function
-> matching code was in one of the earlier versions of the RFC, but I
-> dropped it to make this patchset smaller and more manageable. So I get
-> it if you would like me to drop it and add it back in when I try to
-> get the function and structure matching stuff in, but I would really
-> prefer to keep it as is if you don't care too much.
+Commit-ID:  a003296b7a97dedccb0c35c4c1e44e088050b8c4
+Gitweb:     https://git.kernel.org/tip/a003296b7a97dedccb0c35c4c1e44e088050b8c4
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Wed, 17 Jul 2019 22:01:49 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 18 Jul 2019 19:47:11 +0200
 
-Do you have a link to those earlier patches?
+sched/rt, Kconfig: Introduce CONFIG_PREEMPT_RT
 
->=20
-> > It seems far simpler to get rid of the string stream API and just have a
-> > struct for this.
-> >
-> >         struct kunit_fail_msg {
-> >                 const char *line;
-> >                 const char *file;
-> >                 const char *func;
-> >                 const char *msg;
-> >         };
-> >
-> > Then you can have the assertion macros create this on the stack (with
-> > another macro?).
-> >
-> >         #define DEFINE_KUNIT_FAIL_MSG(name, _msg) \
-> >                 struct kunit_fail_msg name =3D { \
-> >                         .line =3D  __LINE__, \
-> >                         .file =3D __FILE__, \
-> >                         .func =3D __func__, \
-> >                         .msg =3D _msg, \
-> >                 }
-> >
-> > I don't want to derail this whole series on this topic, but it seems
-> > like a bunch of code is there to construct this same set of information
-> > over and over again into a buffer a little bit at a time and then throw
-> > it away when nothing fails just because we may want to support the case
-> > where we have some unstructured data to inform the user about.
->=20
-> Yeah, that's fair. I think there are a number of improvements to be
-> made with how the expectations are defined other than that, but I was
-> hoping I could do that after this patchset is merged. I just figured
-> with the kinds of things I would like to do, it would lead to a whole
-> new round of discussion.
->=20
-> In either case, I think I would still like to use the `struct
-> kunit_stream` as part of the interface to share the failure message
-> with the test case runner code in test.c, at least eventually, so that
-> I only have to have one way to receive data from expectations, but I
-> think I can do that and still do what you suggest by just constructing
-> the kunit_stream at the end of expectations where it is feasible.
->=20
-> All in all I agree with what you are saying, but I would rather do it
-> as a follow up possibly once we have some more code on the table. I
-> could just see this opening up a whole new can of worms where we
-> debate about exactly how expectations and assertions work for another
-> several months, only to rip it all out shortly there after. I know
-> that's how these things go, but that's my preference.
->=20
-> I can do what you suggest if you feel strongly about it, but I would
-> prefer to hold off until later. It's your call.
->=20
+Add a new entry to the preemption menu which enables the real-time support
+for the kernel. The choice is only enabled when an architecture supports
+it.
 
-The crux of my complaint is that the string stream API is too loosely
-defined to be usable. It allows tests to build up a string of
-unstructured information, but with certain calling constraints so we
-have to tread carefully. If there was more structure to the data that's
-being recorded then the test case runner could operate on the data
-without having to do string/stream operations, allocations, etc. This
-would make the assertion logic much more concrete and specific to kunit,
-instead of this small kunit wrapper that's been placed on top of string
-stream.
+It selects PREEMPT as the RT features depend on it. To achieve that the
+existing PREEMPT choice is renamed to PREEMPT_LL which select PREEMPT as
+well.
 
-TL;DR: If we can get rid of the string stream API I'd view that as an
-improvement because building arbitrary strings in the kernel is complex,
-error prone and has calling context concerns.
+No functional change.
 
-Is the intention that other code besides unit tests will use this string
-stream API to build up strings? Any targets in mind? This would be a
-good way to get the API merged upstream given that its 2019 and we
-haven't had such an API in the kernel so far.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Clark Williams <williams@redhat.com>
+Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Acked-by: Daniel Wagner <wagi@monom.org>
+Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Acked-by: Julia Cartwright <julia@ni.com>
+Cc: Andrew Morton <akpm@linuxfoundation.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Clark Williams <clark.williams@gmail.com>
+Cc: Gratian Crisan <gratian.crisan@ni.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Paul McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907172200190.1778@nanos.tec.linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/Kconfig           |  3 +++
+ kernel/Kconfig.preempt | 25 +++++++++++++++++++++++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
-An "object oriented" (strong quotes!) approach where kunit_fail_msg is
-the innermost struct in some assertion specific structure might work
-nicely and allow the test runner to call a generic 'format' function to
-print out the message based on the type of assertion/expectation it is.
-It probably would mean less code size too because the strings that are
-common will be in the common printing function instead of created twice,
-in the macros/code and then copied to the heap for the string stream.
-
-	struct kunit_assert {
-		const char *line;
-		const char *file;
-		const char *func;
-		void (*format)(struct kunit_assert *assert);
-	};
-
-	struct kunit_comparison_assert {
-		enum operator operator;
-		const char *left;
-		const char *right;
-		struct kunit_assert assert;
-	};
-
-	struct kunit_bool_assert {
-		const char *truth;
-		const char *statement;
-		struct kunit_assert assert;
-	};
-
-	void kunit_format_comparison(struct kunit_assert *assert)
-	{
-		struct kunit_comparison_assert *comp =3D container_of(assert, ...)
-
-		kunit_printk(...)
-	}
-
-Maybe other people have opinions here on if you should do it now or
-later. Future coding is not a great argument because it's hard to
-predict the future. On the other hand, this patchset is in good shape to
-merge and I'd like to use it to write unit tests for code I maintain so
-I don't want to see this stall out. Sorry if I'm opening the can of
-worms you're talking about.
-
+diff --git a/arch/Kconfig b/arch/Kconfig
+index c47b328eada0..ada51f36bd5d 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -801,6 +801,9 @@ config ARCH_NO_COHERENT_DMA_MMAP
+ config ARCH_NO_PREEMPT
+ 	bool
+ 
++config ARCH_SUPPORTS_RT
++	bool
++
+ config CPU_NO_EFFICIENT_FFS
+ 	def_bool n
+ 
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index dc0b682ec2d9..fc020c09b7e8 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -35,10 +35,10 @@ config PREEMPT_VOLUNTARY
+ 
+ 	  Select this if you are building a kernel for a desktop system.
+ 
+-config PREEMPT
++config PREEMPT_LL
+ 	bool "Preemptible Kernel (Low-Latency Desktop)"
+ 	depends on !ARCH_NO_PREEMPT
+-	select PREEMPT_COUNT
++	select PREEMPT
+ 	select UNINLINE_SPIN_UNLOCK if !ARCH_INLINE_SPIN_UNLOCK
+ 	help
+ 	  This option reduces the latency of the kernel by making
+@@ -55,7 +55,28 @@ config PREEMPT
+ 	  embedded system with latency requirements in the milliseconds
+ 	  range.
+ 
++config PREEMPT_RT
++	bool "Fully Preemptible Kernel (Real-Time)"
++	depends on EXPERT && ARCH_SUPPORTS_RT
++	select PREEMPT
++	help
++	  This option turns the kernel into a real-time kernel by replacing
++	  various locking primitives (spinlocks, rwlocks, etc.) with
++	  preemptible priority-inheritance aware variants, enforcing
++	  interrupt threading and introducing mechanisms to break up long
++	  non-preemptible sections. This makes the kernel, except for very
++	  low level and critical code pathes (entry code, scheduler, low
++	  level interrupt handling) fully preemptible and brings most
++	  execution contexts under scheduler control.
++
++	  Select this if you are building a kernel for systems which
++	  require real-time guarantees.
++
+ endchoice
+ 
+ config PREEMPT_COUNT
+        bool
++
++config PREEMPT
++       bool
++       select PREEMPT_COUNT
