@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C08C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F942C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8B120818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78E32173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419366;
-	bh=vz917OUL0hDd8WSGqcb8O1NaNqgvA/64a88o3nUp1AQ=;
+	s=default; t=1563419369;
+	bh=h5RdWlNWRw1e3L1qiJOW6zmuJ++eMsTIU2+NCx9b48A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWGdViZSJC77QUAwqnKTtG9kIecYXnHm4zyb0hWj33mAQVIUT9e3Dwd5tD11RZnKa
-	 RUm79beArl2JZHsjbHREJo3zoIKuCV1qJkUvzOkXM6Q6AWJgsByjcCSo9iHmFTdd+c
-	 pzy5b6aRn3+PP4aL1VPQq6M1QXr89S+If/HFno/s=
+	b=2c7Ijxv34atO1AsLl2PUTh9M2I9vEc9b25Jh6cDLg4fA3yhLxC2FfyYaGLitNdS0d
+	 YWr+phdWWRgJQXo857nDYVUtRplKvtcWPl0JcRWRKIHFxoe8t9+E7gHavOYcabLaJu
+	 QksZucwoqfsYSRP/Rieh7v7f+zICEiVhuJYSf9/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390977AbfGRDJZ (ORCPT
+        id S2390997AbfGRDJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390371AbfGRDJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:09:20 -0400
+        id S2390973AbfGRDJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:09:25 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBEF020818;
-        Thu, 18 Jul 2019 03:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC8F20818;
+        Thu, 18 Jul 2019 03:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419359;
-        bh=vz917OUL0hDd8WSGqcb8O1NaNqgvA/64a88o3nUp1AQ=;
+        s=default; t=1563419364;
+        bh=h5RdWlNWRw1e3L1qiJOW6zmuJ++eMsTIU2+NCx9b48A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0OElJCB1rPgDr4jU3k4IQ83fGfLxNkqf3QMDmvF9Yd6JNERCxRcfnuu4Un4q53YQ
-         xO/cP/OmYe/IiwmVZ8CxxmKMoad5qh7Zj8XlFu3EZVNpTiwmRneb0nWofoFEK2S7li
-         EKz6wGhD7EaQkQyE32BMt+bZsvUw1flsRaDA6R/0=
+        b=YJ42e69vvcwq8OZCMaiq3gdywg8nwasKCqhfhyqLNiAfelYYZ1TTmw2CK4hITwBI4
+         7R38GWX/xGxw6A3GafNJ49+smg7LHG+FT/+7pyRGv3B5ks5iRuf1MAAqGLPiVBPk+3
+         KPqkEFv54n7E79ez9UnKNELLRW7CpVOnrpKb/zmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Reinhard Speyerer <rspmn@arcor.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/80] qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
-Date:   Thu, 18 Jul 2019 12:01:21 +0900
-Message-Id: <20190718030101.043700384@linuxfoundation.org>
+Subject: [PATCH 4.14 32/80] md: fix for divide error in status_resync
+Date:   Thu, 18 Jul 2019 12:01:23 +0900
+Message-Id: <20190718030101.162874206@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -61,71 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8fdde1cb830e560208af42b6c10750137f53eb3 ]
+[ Upstream commit 9642fa73d073527b0cbc337cc17a47d545d82cd2 ]
 
-Switch qmimux_unregister_device() and qmi_wwan_disconnect() to
-use unregister_netdevice_queue() and unregister_netdevice_many()
-instead of unregister_netdevice(). This avoids RCU stalls which
-have been observed on device disconnect in certain setups otherwise.
+Stopping external metadata arrays during resync/recovery causes
+retries, loop of interrupting and starting reconstruction, until it
+hit at good moment to stop completely. While these retries
+curr_mark_cnt can be small- especially on HDD drives, so subtraction
+result can be smaller than 0. However it is casted to uint without
+checking. As a result of it the status bar in /proc/mdstat while stopping
+is strange (it jumps between 0% and 99%).
 
-Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
-Cc: Daniele Palmas <dnlplm@gmail.com>
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The real problem occurs here after commit 72deb455b5ec ("block: remove
+CONFIG_LBDAF"). Sector_div() macro has been changed, now the
+divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
+
+Check if db value can be really counted and replace these macro by
+div64_u64() inline.
+
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/md/md.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 75fe5c5abec4..76c4afac71f7 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -247,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
- 	return err;
- }
- 
--static void qmimux_unregister_device(struct net_device *dev)
-+static void qmimux_unregister_device(struct net_device *dev,
-+				     struct list_head *head)
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index b27a69388dcd..764ed9c46629 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7605,9 +7605,9 @@ static void status_unused(struct seq_file *seq)
+ static int status_resync(struct seq_file *seq, struct mddev *mddev)
  {
- 	struct qmimux_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev = priv->real_dev;
+ 	sector_t max_sectors, resync, res;
+-	unsigned long dt, db;
+-	sector_t rt;
+-	int scale;
++	unsigned long dt, db = 0;
++	sector_t rt, curr_mark_cnt, resync_mark_cnt;
++	int scale, recovery_active;
+ 	unsigned int per_milli;
  
- 	netdev_upper_dev_unlink(real_dev, dev);
--	unregister_netdevice(dev);
-+	unregister_netdevice_queue(dev, head);
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
+@@ -7677,22 +7677,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 	 * db: blocks written from mark until now
+ 	 * rt: remaining time
+ 	 *
+-	 * rt is a sector_t, so could be 32bit or 64bit.
+-	 * So we divide before multiply in case it is 32bit and close
+-	 * to the limit.
+-	 * We scale the divisor (db) by 32 to avoid losing precision
+-	 * near the end of resync when the number of remaining sectors
+-	 * is close to 'db'.
+-	 * We then divide rt by 32 after multiplying by db to compensate.
+-	 * The '+1' avoids division by zero if db is very small.
++	 * rt is a sector_t, which is always 64bit now. We are keeping
++	 * the original algorithm, but it is not really necessary.
++	 *
++	 * Original algorithm:
++	 *   So we divide before multiply in case it is 32bit and close
++	 *   to the limit.
++	 *   We scale the divisor (db) by 32 to avoid losing precision
++	 *   near the end of resync when the number of remaining sectors
++	 *   is close to 'db'.
++	 *   We then divide rt by 32 after multiplying by db to compensate.
++	 *   The '+1' avoids division by zero if db is very small.
+ 	 */
+ 	dt = ((jiffies - mddev->resync_mark) / HZ);
+ 	if (!dt) dt++;
+-	db = (mddev->curr_mark_cnt - atomic_read(&mddev->recovery_active))
+-		- mddev->resync_mark_cnt;
++
++	curr_mark_cnt = mddev->curr_mark_cnt;
++	recovery_active = atomic_read(&mddev->recovery_active);
++	resync_mark_cnt = mddev->resync_mark_cnt;
++
++	if (curr_mark_cnt >= (recovery_active + resync_mark_cnt))
++		db = curr_mark_cnt - (recovery_active + resync_mark_cnt);
  
- 	/* Get rid of the reference to real_dev */
- 	dev_put(real_dev);
-@@ -424,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
- 		ret = -EINVAL;
- 		goto err;
- 	}
--	qmimux_unregister_device(del_dev);
-+	qmimux_unregister_device(del_dev, NULL);
+ 	rt = max_sectors - resync;    /* number of remaining sectors */
+-	sector_div(rt, db/32+1);
++	rt = div64_u64(rt, db/32+1);
+ 	rt *= dt;
+ 	rt >>= 5;
  
- 	if (!qmimux_has_slaves(dev))
- 		info->flags &= ~QMI_WWAN_FLAG_MUX;
-@@ -1423,6 +1424,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
- 	struct qmi_wwan_state *info;
- 	struct list_head *iter;
- 	struct net_device *ldev;
-+	LIST_HEAD(list);
- 
- 	/* called twice if separate control and data intf */
- 	if (!dev)
-@@ -1435,8 +1437,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
- 		}
- 		rcu_read_lock();
- 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
--			qmimux_unregister_device(ldev);
-+			qmimux_unregister_device(ldev, &list);
- 		rcu_read_unlock();
-+		unregister_netdevice_many(&list);
- 		rtnl_unlock();
- 		info->flags &= ~QMI_WWAN_FLAG_MUX;
- 	}
 -- 
 2.20.1
 
