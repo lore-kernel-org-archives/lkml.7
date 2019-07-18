@@ -2,233 +2,123 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C25C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37BBC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E07E20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C5820880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390486AbfGRNro convert rfc822-to-8bit (ORCPT
+        id S2390353AbfGRNtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:47:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17861 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfGRNro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:47:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 06:47:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,278,1559545200"; 
-   d="scan'208";a="169860182"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Jul 2019 06:47:43 -0700
-Received: from fmsmsx155.amr.corp.intel.com (10.18.116.71) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 18 Jul 2019 06:47:42 -0700
-Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
- FMSMSX155.amr.corp.intel.com (10.18.116.71) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 18 Jul 2019 06:47:42 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.3]) by
- SHSMSX104.ccr.corp.intel.com ([169.254.5.110]) with mapi id 14.03.0439.000;
- Thu, 18 Jul 2019 21:47:41 +0800
-From:   "Wang, Wei W" <wei.w.wang@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Jason Wang <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: RE: [PATCH v3 2/2] balloon: fix up comments
-Thread-Topic: [PATCH v3 2/2] balloon: fix up comments
-Thread-Index: AQHVPWPB7Kn6mp4V4ECCoWD/TZ2+lqbQWhSw
-Date:   Thu, 18 Jul 2019 13:47:40 +0000
-Message-ID: <286AC319A985734F985F78AFA26841F73E1705ED@shsmsx102.ccr.corp.intel.com>
-References: <20190718122324.10552-1-mst@redhat.com>
- <20190718122324.10552-2-mst@redhat.com>
-In-Reply-To: <20190718122324.10552-2-mst@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmYzMTA4NzItODMyNi00OTQ1LWExYmQtYTg0ZjVkNWNjMWNlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSUc3MUVZK0YrRkpHb2Eyam5BN2lKWloyZ3cySDlMd1pRV211TW5KTjAxZXFRcEdRaFNEMitYZmw2c0NBK2VhbiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 18 Jul 2019 09:49:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:56529 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRNtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:49:36 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MTfgb-1i0NMn18gf-00U1Gc; Thu, 18 Jul 2019 15:49:32 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jan Kara <jack@suse.cz>, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, reiserfs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] reiserfs: fix code unwinding with clang
+Date:   Thu, 18 Jul 2019 15:49:14 +0200
+Message-Id: <20190718134928.2472465-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:n//jM1UBMvz4mHz40peDwZc0bRe4ei5G+DelCfLdZD7Qggm1mNR
+ 5lg/1/Ua7+Flu6b43iHKvvAncGM9RX+0Iu1W0gkjKyJd1fYgvKnretljrYLFMMkQbYO946Y
+ eFt8rOCaDb1e0s+DjAkwFbI+kLcWuWFEv4iTjUyQLrMy9g59dy8rFqB3VoVbVC+csXL6NiL
+ A9aNZzyatGyOOzim35qsQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Dhra0qbXmnY=:zyw1yfG1la0nHo0Ct+9ozv
+ oyX//ivF63x4MRRXFd10pqUK/uTuHL2XuzE+SsCgsZXKD5a3C/q2cdrF12xFba2SE4K7rEQLq
+ PzZIRxDKm7TfeR7aYQI+IxWW3J6UAFsL0KQgknu2e9llHCY8qw9obDDn3QUCrI4zXMAn3ke9U
+ m5V7elH8Gdyqzd/1+KM3Bxdo0Dj2+3Ha3S5ZdUA5OBr9dLN3MD/R3gfErAUVvGl89SqompmFl
+ HbysB5BGdjrduFpnVlnH9dU5h9S0aJK8TlJWLZ1Kml9SGR9CGORZHQb0rwFqPPoX+tAbTfBtd
+ GnSiRlpNe7Grsa3dg+PMIBYZPb32RV2mJstpOOPvSvyR34e7mIkLzLEISkqc51h+1GGybQK1v
+ cnz4FORiZJZW8znDiIlXh57c6HobSu4Twd6HKhnF3/gMYs2IWhZPJoylHBTX1doITR79uOyXp
+ /aD9sZmMXwZslA1A13ERrFF94/EegLV3Jw7i4G7nKjQhG+2ACuFCbA5wx22vPn+bnQfQv0p4q
+ Q8fLCEHyYbzcAlOmp4oNIAA6xit5lFVFzVrsT6vKCLwP6VJ4p+7GdQ2yS900B+qDRr9qEfQ02
+ wpGetCmR6xk/SjeNBrSZyc7FDTo6ImRQTmVop8m4o3U/xDmXmchMmD7Lqtaf22SPAPFTW1HI3
+ 4AQJwsJFbIJd/MjzWShdH2TiNYsBFjCCxpVqrQstctczHU4jCQuw/24PiFDFftCocupN+TKEE
+ Xc2fAXLIHWDpLM3W4e1SfTGjBl5x1HtR9rQ8AQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, July 18, 2019 8:24 PM, Michael S. Tsirkin wrote:
->  /*
->   * balloon_page_alloc - allocates a new page for insertion into the balloon
-> - *			  page list.
-> + *			page list.
->   *
-> - * Driver must call it to properly allocate a new enlisted balloon page.
-> - * Driver must call balloon_page_enqueue before definitively removing it
-> from
-> - * the guest system.  This function returns the page address for the recently
-> - * allocated page or NULL in the case we fail to allocate a new page this turn.
-> + * Driver must call this function to properly allocate a new enlisted balloon
-> page.
+Building reiserfs with clang leads to objtool warnings about a part of the
+unreachable code that may confuse the ORC unwinder:
 
-Probably better to say "allocate a new balloon page to enlist" ?
-"enlisted page" implies that the allocated page has been added to the list, which might
-be misleading.
+fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0xe8f: stack state mismatch: cfa1=7+240 cfa2=7+248
+fs/reiserfs/ibalance.o: warning: objtool: internal_move_pointers_items()+0x36f: stack state mismatch: cfa1=7+152 cfa2=7+144
+fs/reiserfs/lbalance.o: warning: objtool: leaf_cut_from_buffer()+0x58b: stack state mismatch: cfa1=7+128 cfa2=7+112
+fs/reiserfs/lbalance.o: warning: objtool: leaf_copy_boundary_item()+0x7a9: stack state mismatch: cfa1=7+104 cfa2=7+96
+fs/reiserfs/lbalance.o: warning: objtool: leaf_copy_items_entirely()+0x3d2: stack state mismatch: cfa1=7+120 cfa2=7+128
+fs/reiserfs/do_balan.o: warning: objtool: replace_key()+0x158: stack state mismatch: cfa1=7+40 cfa2=7+56
+fs/reiserfs/do_balan.o: warning: objtool: balance_leaf()+0x2791: stack state mismatch: cfa1=7+176 cfa2=7+192
 
+Reword this to use the regular BUG() call directly from the original code
+location, since objtool finds the generated object code more reasonable.
 
-> + * Driver must call balloon_page_enqueue before definitively removing
-> + the page
-> + * from the guest system.
-> + *
-> + * Returns: struct page address for the allocated page or NULL in case it fails
-> + * 			to allocate a new page.
->   */
+This will likely get fixed in a future clang release, but in the meantime
+the workaround helps us build cleanly with existing releases.
 
-Returns: pointer to the page struct of the allocated page, or NULL if allocation fails.
+Link: https://groups.google.com/d/msgid/clang-built-linux/20190712135755.7qa4wxw3bfmwn5rp%40treble
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/reiserfs/prints.c   | 5 +++--
+ fs/reiserfs/reiserfs.h | 5 ++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-
-
->  struct page *balloon_page_alloc(void)
->  {
-> @@ -130,19 +133,15 @@ EXPORT_SYMBOL_GPL(balloon_page_alloc);
->  /*
->   * balloon_page_enqueue - inserts a new page into the balloon page list.
->   *
-> - * @b_dev_info: balloon device descriptor where we will insert a new page
-> to
-> + * @b_dev_info: balloon device descriptor where we will insert a new
-> + page
->   * @page: new page to enqueue - allocated using balloon_page_alloc.
->   *
-> - * Driver must call it to properly enqueue a new allocated balloon page
-> - * before definitively removing it from the guest system.
-> + * Drivers must call this function to properly enqueue a new allocated
-> + balloon
-> + * page before definitively removing the page from the guest system.
->   *
-> - * Drivers must not call balloon_page_enqueue on pages that have been
-> - * pushed to a list with balloon_page_push before removing them with
-> - * balloon_page_pop. To all pages on a list, use balloon_page_list_enqueue
-> - * instead.
-> - *
-> - * This function returns the page address for the recently enqueued page or
-> - * NULL in the case we fail to allocate a new page this turn.
-> + * Drivers must not call balloon_page_enqueue on pages that have been
-> + pushed to
-> + * a list with balloon_page_push before removing them with
-> + balloon_page_pop. To
-> + * enqueue all pages on a list, use balloon_page_list_enqueue instead.
-
-"To enqueue a list of pages" ?
-
-
->   */
->  void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
->  			  struct page *page)
-> @@ -157,14 +156,24 @@ EXPORT_SYMBOL_GPL(balloon_page_enqueue);
-> 
->  /*
->   * balloon_page_dequeue - removes a page from balloon's page list and
-> returns
-> - *			  the its address to allow the driver release the page.
-> + *			  its address to allow the driver to release the page.
->   * @b_dev_info: balloon device decriptor where we will grab a page from.
->   *
-> - * Driver must call it to properly de-allocate a previous enlisted balloon
-> page
-> - * before definetively releasing it back to the guest system.
-> - * This function returns the page address for the recently dequeued page or
-> - * NULL in the case we find balloon's page list temporarily empty due to
-> - * compaction isolated pages.
-> + * Driver must call this to properly dequeue a previously enqueued page
+diff --git a/fs/reiserfs/prints.c b/fs/reiserfs/prints.c
+index 9fed1c05f1f4..da996eaaebac 100644
+--- a/fs/reiserfs/prints.c
++++ b/fs/reiserfs/prints.c
+@@ -387,7 +387,6 @@ void __reiserfs_panic(struct super_block *sb, const char *id,
+ 	else
+ 		printk(KERN_WARNING "REISERFS panic: %s%s%s: %s\n",
+ 		      id ? id : "", id ? " " : "", function, error_buf);
+-	BUG();
+ }
  
-"call this function"?
+ void __reiserfs_error(struct super_block *sb, const char *id,
+@@ -397,8 +396,10 @@ void __reiserfs_error(struct super_block *sb, const char *id,
  
-
-> + * before definitively releasing it back to the guest system.
-> + *
-> + * Caller must perform its own accounting to ensure that this
-> + * function is called only if some pages are actually enqueued.
-
-
-"only when" ?
-
-> + *
-> + * Note that this function may fail to dequeue some pages even if there
-
-"even when" ?
-
-> + are
-> + * some enqueued pages - since the page list can be temporarily empty
-> + due to
-> + * the compaction of isolated pages.
-> + *
-> + * TODO: remove the caller accounting requirements, and allow caller to
-> + wait
-> + * until all pages can be dequeued.
-> + *
-> + * Returns: struct page address for the dequeued page, or NULL if it fails to
-> + * 			dequeue any pages.
-
-Returns: pointer to the page struct of the dequeued page, or NULL if no page gets dequeued.
-
-
->   */
->  struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info)
-> { @@ -177,9 +186,9 @@ struct page *balloon_page_dequeue(struct
-> balloon_dev_info *b_dev_info)
->  	if (n_pages != 1) {
->  		/*
->  		 * If we are unable to dequeue a balloon page because the
-> page
-> -		 * list is empty and there is no isolated pages, then
-> something
-> +		 * list is empty and there are no isolated pages, then
-> something
->  		 * went out of track and some balloon pages are lost.
-> -		 * BUG() here, otherwise the balloon driver may get stuck
-> into
-> +		 * BUG() here, otherwise the balloon driver may get stuck in
->  		 * an infinite loop while attempting to release all its pages.
->  		 */
->  		spin_lock_irqsave(&b_dev_info->pages_lock, flags); @@ -
-> 230,8 +239,8 @@ int balloon_page_migrate(struct address_space *mapping,
-> 
->  	/*
->  	 * We can not easily support the no copy case here so ignore it as it
+ 	BUG_ON(sb == NULL);
  
-"cannot"
+-	if (reiserfs_error_panic(sb))
++	if (reiserfs_error_panic(sb)) {
+ 		__reiserfs_panic(sb, id, function, error_buf);
++		BUG();
++	}
+ 
+ 	if (id && id[0])
+ 		printk(KERN_CRIT "REISERFS error (device %s): %s %s: %s\n",
+diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
+index e5ca9ed79e54..f5bd17ee21f6 100644
+--- a/fs/reiserfs/reiserfs.h
++++ b/fs/reiserfs/reiserfs.h
+@@ -3185,10 +3185,9 @@ void unfix_nodes(struct tree_balance *);
+ 
+ /* prints.c */
+ void __reiserfs_panic(struct super_block *s, const char *id,
+-		      const char *function, const char *fmt, ...)
+-    __attribute__ ((noreturn));
++		      const char *function, const char *fmt, ...);
+ #define reiserfs_panic(s, id, fmt, args...) \
+-	__reiserfs_panic(s, id, __func__, fmt, ##args)
++	do { __reiserfs_panic(s, id, __func__, fmt, ##args); BUG(); } while (0)
+ void __reiserfs_error(struct super_block *s, const char *id,
+ 		      const char *function, const char *fmt, ...);
+ #define reiserfs_error(s, id, fmt, args...) \
+-- 
+2.20.0
 
-> -	 * is unlikely to be use with ballon pages. See include/linux/hmm.h
-> for
-> -	 * user of the MIGRATE_SYNC_NO_COPY mode.
-> +	 * is unlikely to be used with ballon pages. See include/linux/hmm.h
-
-
-"ballon" -> "balloon"
-
-
-> for
-> +	 * a user of the MIGRATE_SYNC_NO_COPY mode.
-
-"for the usage of" ?
-
-
-Other parts look good to me.
-Reviewed-by: Wei Wang <wei.w.wang@intel.com>
-
-Best,
-Wei
