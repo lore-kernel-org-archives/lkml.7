@@ -2,68 +2,121 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481ABC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7824C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F61E21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A45F21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="itwJ/6Zo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391001AbfGRVOH (ORCPT
+        id S2391218AbfGRVRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:14:07 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:55874 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfGRVOH (ORCPT
+        Thu, 18 Jul 2019 17:17:18 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37292 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfGRVRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:14:07 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 29B831528342B;
-        Thu, 18 Jul 2019 14:14:06 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 14:14:05 -0700 (PDT)
-Message-Id: <20190718.141405.1070121094691581998.davem@davemloft.net>
-To:     ldv@altlinux.org
-Cc:     hch@lst.de, khalid.aziz@oracle.com, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, matorola@gmail.com,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190717215956.GA30369@altlinux.org>
-References: <20190625143715.1689-1-hch@lst.de>
-        <20190625143715.1689-10-hch@lst.de>
-        <20190717215956.GA30369@altlinux.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 18 Jul 2019 14:14:06 -0700 (PDT)
+        Thu, 18 Jul 2019 17:17:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so13179340pfa.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RheZEo0ByWVoAsse+7+UzvQGL1lauI18cqCeYYEU2X4=;
+        b=itwJ/6Zo6ire+6bY6hv/pHAeUJPBFE0mWVZnPXePsf/QCBsQoyCkvttntCGmZgpt9q
+         di/Tml8A3uZ0iGk9DEVxW9HY1uF7ArPmEZ/UVzu940F6WjerA2LRyzN8JvbSaI/msr99
+         A/E5jXKI5Eppe+p99lyQeYLNzcbNg5YciIM9MWBbs/P3RoWvlK+N/bz3qlsfRwZgzIxs
+         eYoJPyEMm3drO2JNaQkdca3XU3sPsszzTWIF6u/sNGNVEZIcRLO0wS0SZ8leeC1cFS1Q
+         RPxB72BpTO+9tXVFOqiYLj4NsRV2QiH+AVdCbLe9YfuQv8XtvyIXFh7GUYVqdnPP7y1Y
+         iDtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RheZEo0ByWVoAsse+7+UzvQGL1lauI18cqCeYYEU2X4=;
+        b=lD2V2qo2KrL47RE25w2mANoeOeU4po51RO4prY8f3HY3mYxbSGxPfCoEiw6wp25r+Y
+         ECgLtTMYYd939Vwhi+6L+0soiPwpmo0+v3zS0b4FM3G0G5J05VPh7GPNLkIaRUYC0UPo
+         gvSYU+vUu3QYc7+Z5m3gCGU1YcInbFCcpbaJbuPp83+DeOLgF10D7YwxEUtVStel+Oh5
+         3Qczo4LdVbkqF/6exq3Lio7g4yMTAONmtUWph9rcqUrrKUbTR6mw2oM/eDisGk0JWtuG
+         61mVQ9NxXENKdZJXQyQWGWSz4TQDstJ60/lYCzrBhx4kAzJo6H9j5VoZQWzHCMLavPUt
+         C61g==
+X-Gm-Message-State: APjAAAVrJit5HDxiTwof2vZLVS7UXo+Bx2okrFEZlfUTAK5aE8TDl5EO
+        9cb05BQoO0sVOpMWNPjayBukeNFKUlF0akm/aPuNsw==
+X-Google-Smtp-Source: APXvYqymD3aZQjaUYh2vja626iApTb0mflzjq8KhKYrkBfBW1qEnkrZNy9omKOFqWN6nM+ILbWAQkpFSVU2vHEbSpMM=
+X-Received: by 2002:a63:2cd1:: with SMTP id s200mr46303202pgs.10.1563484636536;
+ Thu, 18 Jul 2019 14:17:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190718135017.2493006-1-arnd@arndb.de>
+In-Reply-To: <20190718135017.2493006-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jul 2019 14:17:05 -0700
+Message-ID: <CAKwvOd=HEjDA7pcsQvONoHgU2JH3xz+9MwHU0pXKathDRQx=nQ@mail.gmail.com>
+Subject: Re: [PATCH] crypto: aegis: fix badly optimized clang output
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ondrej Mosnacek <omosnacek@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Dmitry V. Levin" <ldv@altlinux.org>
-Date: Thu, 18 Jul 2019 00:59:56 +0300
+On Thu, Jul 18, 2019 at 6:50 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Clang sometimes makes very different inlining decisions from gcc.
+> In case of the aegis crypto algorithms, it decides to turn the innermost
+> primitives (and, xor, ...) into separate functions but inline most of
+> the rest.
+>
+> This results in a huge amount of variables spilled on the stack, leading
+> to rather slow execution as well as kernel stack usage beyond the 32-bit
+> warning limit when CONFIG_KASAN is enabled:
+>
+> crypto/aegis256.c:123:13: warning: stack frame size of 648 bytes in function 'crypto_aegis256_encrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis256.c:366:13: warning: stack frame size of 1264 bytes in function 'crypto_aegis256_crypt' [-Wframe-larger-than=]
+> crypto/aegis256.c:187:13: warning: stack frame size of 656 bytes in function 'crypto_aegis256_decrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128l.c:135:13: warning: stack frame size of 832 bytes in function 'crypto_aegis128l_encrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128l.c:415:13: warning: stack frame size of 1480 bytes in function 'crypto_aegis128l_crypt' [-Wframe-larger-than=]
+> crypto/aegis128l.c:218:13: warning: stack frame size of 848 bytes in function 'crypto_aegis128l_decrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128.c:116:13: warning: stack frame size of 584 bytes in function 'crypto_aegis128_encrypt_chunk' [-Wframe-larger-than=]
+> crypto/aegis128.c:351:13: warning: stack frame size of 1064 bytes in function 'crypto_aegis128_crypt' [-Wframe-larger-than=]
+> crypto/aegis128.c:177:13: warning: stack frame size of 592 bytes in function 'crypto_aegis128_decrypt_chunk' [-Wframe-larger-than=]
+>
+> Forcing the primitives to all get inlined avoids the issue and the
+> resulting code is similar to what gcc produces.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  crypto/aegis.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/crypto/aegis.h b/crypto/aegis.h
+> index 41a3090cda8e..efed7251c49d 100644
+> --- a/crypto/aegis.h
+> +++ b/crypto/aegis.h
+> @@ -34,21 +34,21 @@ static const union aegis_block crypto_aegis_const[2] = {
+>         } },
+>  };
+>
+> -static void crypto_aegis_block_xor(union aegis_block *dst,
+> +static __always_inline void crypto_aegis_block_xor(union aegis_block *dst,
 
-> So this ended up as commit 7b9afb86b6328f10dc2cad9223d7def12d60e505
-> (thanks to Anatoly for bisecting) and introduced a regression: 
-> futex.test from the strace test suite now causes an Oops on sparc64
-> in futex syscall.
-> 
-> Here is a heavily stripped down reproducer:
+`static inline` would be more concise and expand to the same
+attribute, IIRC.  Not sure if that's worth sending a v2. But for now,
+thanks for the patch and:
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Does not reproduce for me on a T4-2 machine.
-
-So this problem might depend on the type of system you are on,
-I suspect it's one of those "pre-Niagara vs. Niagara and later"
-situations because that's the dividing line between two set of
-wildly different TLB and cache management methods.
-
-What kind of machine are you on?
+-- 
+Thanks,
+~Nick Desaulniers
