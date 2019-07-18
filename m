@@ -2,133 +2,121 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABB0C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54CEC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933F421851
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CJD3zXMJ"
+	by mail.kernel.org (Postfix) with ESMTP id 84A8C208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404165AbfGRTpf (ORCPT
+        id S2404151AbfGRTpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:45:35 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:48595 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404140AbfGRTpe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jul 2019 15:45:34 -0400
-Received: by mail-pl1-f202.google.com with SMTP id i33so14454399pld.15
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=hUShFVcCo5z4Vl3457oUOrEoTffedxXk2/9xvS7FuNM=;
-        b=CJD3zXMJRh5tbW+A67mz1tOJy0iCefcuHuCF9CqC00ee5HPWJ+EPTRYHQ8ajqBaBpk
-         On5yctHipOLwatF4emIFuwjwV4cAL/4CHJqeWsraFBTrkYS5b1MYzf8yGymfU0hD7iNY
-         kW6VS8hGFeCkYQyskxGv+nFgLhidXD2Hu5eS9gqPw/vt5pzoyeIrOqfu3bgU3NyBcKIl
-         zU+zCVGeTrV3lqhR4r4KmuJjkRO5PReh2YnByyV4Ds2akzBp83izrunExNbHqoSA9cQ8
-         O09OnKxXaQt5yUg5K/5hIhJVWUv3q7aUBmQg9Rb3d1QKzQuH31I3UY8gXT2lsOIsIEWu
-         LzZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=hUShFVcCo5z4Vl3457oUOrEoTffedxXk2/9xvS7FuNM=;
-        b=eLoykHAZJ/0E2XWOaWkEoLidnXYYOQFhJkIFu7GZNpyccTUzZSWvQlgQT6GScBLVke
-         nkOjy/Zrkecw6DcFNHx/Ksot67M6OfNqofplOQ6eHEcZOGWeHo4nWBAaHpYUQfUxvhH0
-         o2xg4+az52MTCRy+f7e5iGSXFc4KVBQJCqyc/DS0BKmi6yL0QUi9XbLImcaIbp+5zwyL
-         lhyX2i5D83xOH357TpcClDYG0XVfaLJvjvfFfksOlT7GqpQ4v6bDO2II04MWvTMQtXnU
-         aCDk1IqIie6LIlUJals6beb7uxFtH+Ll1ahhrOhwaM0gYfc8DEgCZkE77ZMuJf1AYfPV
-         soJQ==
-X-Gm-Message-State: APjAAAU+1YTcdunIfPJpSd4pevscuCJnL6K8S71YJiMZXwr8pGSCDpmh
-        GwBQyG0QdMwAMVtYOIIWScCvGAMQ9BYUj/hnQoRlOw==
-X-Google-Smtp-Source: APXvYqxRl0m6R5tyypODQDLX5ZwoNGI0xsocAUQ1JRoVVkexFRxjj6K1/Odu3+aEPQS9ZHP7Elcf+U+H3Mj9DB3einjMDw==
-X-Received: by 2002:a63:1310:: with SMTP id i16mr48823144pgl.187.1563479133401;
- Thu, 18 Jul 2019 12:45:33 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 12:44:15 -0700
-In-Reply-To: <20190718194415.108476-1-matthewgarrett@google.com>
-Message-Id: <20190718194415.108476-30-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20190718194415.108476-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-Subject: [PATCH V36 29/29] lockdown: Print current->comm in restriction messages
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64556 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404101AbfGRTp3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 15:45:29 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IJi7IK092753;
+        Thu, 18 Jul 2019 15:44:58 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttxs8rye1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 15:44:58 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6IJinwF099302;
+        Thu, 18 Jul 2019 15:44:57 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttxs8ryc6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 15:44:57 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6IJhquN009613;
+        Thu, 18 Jul 2019 19:44:56 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04dal.us.ibm.com with ESMTP id 2trtmrj0u3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 19:44:56 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IJis3C60424544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 19:44:54 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76B66BE056;
+        Thu, 18 Jul 2019 19:44:54 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1210BE051;
+        Thu, 18 Jul 2019 19:44:49 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.186.82])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 18 Jul 2019 19:44:49 +0000 (GMT)
+References: <20190718032858.28744-1-bauerman@linux.ibm.com> <680bb92e-66eb-8959-88a5-3447a6a282c8@amd.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     "Lendacky\, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "x86\@kernel.org" <x86@kernel.org>,
+        "iommu\@lists.linux-foundation.org" 
+        <iommu@lists.linux-foundation.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390\@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH v3 0/6] Remove x86-specific code from generic headers
+In-reply-to: <680bb92e-66eb-8959-88a5-3447a6a282c8@amd.com>
+Date:   Thu, 18 Jul 2019 16:44:47 -0300
+Message-ID: <87a7db3z68.fsf@morokweng.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print the content of current->comm in messages generated by lockdown to
-indicate a restriction that was hit.  This makes it a bit easier to find
-out what caused the message.
 
-The message now patterned something like:
+Lendacky, Thomas <Thomas.Lendacky@amd.com> writes:
 
-        Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
+> On 7/17/19 10:28 PM, Thiago Jung Bauermann wrote:
+>> Hello,
+>> 
+>> This version is mostly about splitting up patch 2/3 into three separate
+>> patches, as suggested by Christoph Hellwig. Two other changes are a fix in
+>> patch 1 which wasn't selecting ARCH_HAS_MEM_ENCRYPT for s390 spotted by
+>> Janani and removal of sme_active and sev_active symbol exports as suggested
+>> by Christoph Hellwig.
+>> 
+>> These patches are applied on top of today's dma-mapping/for-next.
+>> 
+>> I don't have a way to test SME, SEV, nor s390's PEF so the patches have only
+>> been build tested.
+>
+> I'll try and get this tested quickly to be sure everything works for SME
+> and SEV.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- fs/proc/kcore.c              | 5 +++--
- security/lockdown/lockdown.c | 8 ++++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+Thanks! And thanks for reviewing the patches.
 
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index ee2c576cc94e..e2ed8e08cc7a 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -548,11 +548,12 @@ static int open_kcore(struct inode *inode, struct file *filp)
- {
- 	int ret = security_locked_down(LOCKDOWN_KCORE);
- 
--	if (ret)
--		return ret;
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
- 
-+	if (ret)
-+		return ret;
-+
- 	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
- 	if (!filp->private_data)
- 		return -ENOMEM;
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 173191562047..f6c74cf6a798 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -81,10 +81,14 @@ early_param("lockdown", lockdown_param);
-  */
- static int lockdown_is_locked_down(enum lockdown_reason what)
- {
-+	if (WARN(what >= LOCKDOWN_CONFIDENTIALITY_MAX,
-+		 "Invalid lockdown reason"))
-+		return -EPERM;
-+
- 	if (kernel_locked_down >= what) {
- 		if (lockdown_reasons[what])
--			pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
--				  lockdown_reasons[what]);
-+			pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
-+				  current->comm, lockdown_reasons[what]);
- 		return -EPERM;
- 	}
- 
 -- 
-2.22.0.510.g264f2c817a-goog
-
+Thiago Jung Bauermann
+IBM Linux Technology Center
