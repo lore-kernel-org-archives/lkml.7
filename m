@@ -2,52 +2,53 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BF4C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11FAC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC56621851
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE62C21851
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419716;
-	bh=tF80hbKqnnsdHN8PLM6yB9syN274WwkXVuBEAAZ5IHA=;
+	s=default; t=1563419719;
+	bh=6Dysk/4iZUohz3iNa9jNhsoWZrOBbYmkX0UlJECQaR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEJxnrc2XAJKaQjlVR2xGz80rw/tuI00fai6amEN6wxo42bfpON+sqWmYWY04TVwN
-	 sq3oAxnZxZrx/M6r2UQghZiCpgiM+ZawWfcIrTGojtOL9JIriJA7WYJtBCvg1IvdOJ
-	 j9npQJyRh0FCehmgAtuS8TpgCDkLDUM/4oVm65Xo=
+	b=SQiX7ixZu7HpcLs+jI9ym3WZxjqRseGmJndcOrgptZeIVJUMZUWBmXomppfub5JdK
+	 FcTObn7MalJFi0prn5N8HeWwX5aOWHFUd/k/YxK7cqy1kESZgSQyP7Jv8MJzMACaFd
+	 EKt4jWh11pp38yn5S/Qolny4477N+VNerFgOs3w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389851AbfGRDPP (ORCPT
+        id S2391997AbfGRDPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391900AbfGRDO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:58 -0400
+        id S2391478AbfGRDPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:00 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A6521851;
-        Thu, 18 Jul 2019 03:14:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B54221855;
+        Thu, 18 Jul 2019 03:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419697;
-        bh=tF80hbKqnnsdHN8PLM6yB9syN274WwkXVuBEAAZ5IHA=;
+        s=default; t=1563419699;
+        bh=6Dysk/4iZUohz3iNa9jNhsoWZrOBbYmkX0UlJECQaR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xwWK1609RXrXu5v+7800EuCPlozGxlDfvXfEQ5vDQsPtSIgzi0TmJipisWTG523ge
-         Akvt4tWMJYKXHN8em7Z4u8xt7aDsuyhezFVVO34WzFHw0RbpRmWN+oXKW+y+dLNZx3
-         SpCNBT1xVmoipZp1CDcu7fU/puDHwkHco1k27Aa0=
+        b=jxdXETLwCX8X0Q6Kf9u/yOqbI2Sodm1RWnAVTYAZopUTrYSBfNNQA9A7DtTzEOmev
+         C32gjvNT4O0s/ksOA+zexCJ5rcPkD7usX243SVm2NwUQcl50f12D7EpvYcqo1SjGta
+         q/yPI52t1zHlAunNJD9CjjFWEVwfDDgbj80A1uKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.4 13/40] x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
-Date:   Thu, 18 Jul 2019 12:02:09 +0900
-Message-Id: <20190718030043.255008862@linuxfoundation.org>
+        stable@vger.kernel.org, huangwen <huangwen@venustech.com.cn>,
+        Takashi Iwai <tiwai@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/40] mwifiex: Fix possible buffer overflows at parsing bss descriptor
+Date:   Thu, 18 Jul 2019 12:02:00 +0900
+Message-Id: <20190718030040.494013626@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -60,54 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+[ Upstream commit 13ec7f10b87f5fc04c4ccbd491c94c7980236a74 ]
 
-commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
+mwifiex_update_bss_desc_with_ie() calls memcpy() unconditionally in
+a couple places without checking the destination size.  Since the
+source is given from user-space, this may trigger a heap buffer
+overflow.
 
-The index to access the threads ptrace_bps is controlled by userspace via
-syscall: sys_ptrace(), hence leading to a potential exploitation of the
-Spectre variant 1 vulnerability.
+Fix it by putting the length check before performing memcpy().
 
-The index can be controlled from:
-    ptrace -> arch_ptrace -> ptrace_get_debugreg.
+This fix addresses CVE-2019-3846.
 
-Fix this by sanitizing the user supplied index before using it access
-thread->ptrace_bps.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: huangwen <huangwen@venustech.com.cn>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mwifiex/scan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -23,6 +23,7 @@
- #include <linux/rcupdate.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-+#include <linux/nospec.h>
+diff --git a/drivers/net/wireless/mwifiex/scan.c b/drivers/net/wireless/mwifiex/scan.c
+index fb98f42cb5e7..6f789899c888 100644
+--- a/drivers/net/wireless/mwifiex/scan.c
++++ b/drivers/net/wireless/mwifiex/scan.c
+@@ -1219,6 +1219,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 		}
+ 		switch (element_id) {
+ 		case WLAN_EID_SSID:
++			if (element_len > IEEE80211_MAX_SSID_LEN)
++				return -EINVAL;
+ 			bss_entry->ssid.ssid_len = element_len;
+ 			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
+ 			       element_len);
+@@ -1228,6 +1230,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
  
- #include <asm/uaccess.h>
- #include <asm/pgtable.h>
-@@ -697,9 +698,11 @@ static unsigned long ptrace_get_debugreg
- {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
-+	int index = n;
- 
- 	if (n < HBP_NUM) {
--		struct perf_event *bp = thread->ptrace_bps[n];
-+		struct perf_event *bp = thread->ptrace_bps[index];
-+		index = array_index_nospec(index, HBP_NUM);
- 
- 		if (bp)
- 			val = bp->hw.info.address;
+ 		case WLAN_EID_SUPP_RATES:
++			if (element_len > MWIFIEX_SUPPORTED_RATES)
++				return -EINVAL;
+ 			memcpy(bss_entry->data_rates, current_ptr + 2,
+ 			       element_len);
+ 			memcpy(bss_entry->supported_rates, current_ptr + 2,
+-- 
+2.20.1
+
 
 
