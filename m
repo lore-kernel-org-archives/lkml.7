@@ -2,55 +2,52 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8C9C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B798C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F792173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A37121848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419045;
-	bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+	s=default; t=1563419050;
+	bh=368xgV5chnlIR6TMjaRLKtO91K1HD/zbeVNzTu8LWMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBIbuane9wz8x+lLUnrISKz9pGEzqXnB3Wd1jcsRUmofUfcxsWHxhKB4kFj206/c3
-	 N2OqNPfkbQthpfDVZ3uG1EmslmH+T7MaNqCVqYJbGPeJd4aE2Cs+UP/aPXwmU8HaIv
-	 c7OsVTSOVhhdczCYtydJkL64vOHKEv3WvEWW0psw=
+	b=Qpqjm7x+Ew1LD8AB1YfAcis5l4H8J3epCNwq2KOQv2TEXO6JWXprNEi4tC2PEMVyp
+	 dl0/6pLdQVnushDMKvwXC68xo8FON0ECaEUCfUvapSzTBH9DJdOtmMkPilOyFz/oAQ
+	 FNXYO5lfMEuY8cHXxVHQAYPlh9MNVFveb63+nPF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbfGRDEE (ORCPT
+        id S2389637AbfGRDEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389558AbfGRDEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:04:00 -0400
+        id S2389593AbfGRDED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:04:03 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7349121849;
-        Thu, 18 Jul 2019 03:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC2C621880;
+        Thu, 18 Jul 2019 03:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419040;
-        bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+        s=default; t=1563419042;
+        bh=368xgV5chnlIR6TMjaRLKtO91K1HD/zbeVNzTu8LWMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwmKOhHKO53gGFg+mx/Cux+7R9Za7ouezchFHl0LGAmosUN2tVuXCb1S9JI96aT3W
-         B/4vXhOOiiisVfyMWQWw12dlBEx+9J24Bp1TnbFAVfnwK4ypuPQVFJN23xzo4Ybikv
-         V1iHApVPGihb1VmbpJnq8Wx6KurodvA8h8mhuTVI=
+        b=IbSDAFGeD2CbzZ2W9maTwMb9/Tpo9shA05XcprhHPlQl6y9R+uLcrK7qyWTBgZ9zH
+         /3hlNx3miaxRQULRURfe5zH1n5MgSBK/zS2VZkfjCrxRWDNZ0LbWYvSDzVXWDp6R05
+         iYYdQLoEgRDz3J8t2onsQvMGWyDIY5zynTJsJ2b8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 04/54] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
-Date:   Thu, 18 Jul 2019 12:00:59 +0900
-Message-Id: <20190718030053.703927050@linuxfoundation.org>
+        stable@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 13/54] arm64: dts: ls1028a: Fix CPU idle fail.
+Date:   Thu, 18 Jul 2019 12:01:08 +0900
+Message-Id: <20190718030054.411412190@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -63,129 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+[ Upstream commit 53f2ac9d3aa881ed419054076042898b77c27ee4 ]
 
-commit c32cc30c0544f13982ee0185d55f4910319b1a79 upstream.
+PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
+indicate CPU State Type: 0 for standby, 1 for power down. In this
+case, we want to select standby for CPU idle feature. But current
+setting wrongly select power down and cause CPU SUSPEND fail every
+time. Need this fix.
 
-cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
-which is not exported to user-space.
-
-UAPI headers must use the ones prefixed with double-underscore.
-
-Detected by compile-testing exported headers:
-
-  include/linux/nilfs2_ondisk.h: In function `nilfs_checkpoint_set_snapshot':
-  include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function `cpu_to_le32' [-Werror=implicit-function-declaration]
-    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
-                   ^
-  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
-   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
-   ^~~~~~~~~~~~~~~~~~~~
-  include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function `le32_to_cpu' [-Werror=implicit-function-declaration]
-    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
-                               ^
-  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
-   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
-   ^~~~~~~~~~~~~~~~~~~~
-  include/linux/nilfs2_ondisk.h: In function `nilfs_segment_usage_set_clean':
-  include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function `cpu_to_le64' [-Werror=implicit-function-declaration]
-    su->su_lastmod = cpu_to_le64(0);
-                     ^~~~~~~~~~~
-
-Link: http://lkml.kernel.org/r/20190605053006.14332-1-yamada.masahiro@socionext.com
-Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to uapi separately")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: <stable@vger.kernel.org>	[4.9+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/nilfs2_ondisk.h |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/include/uapi/linux/nilfs2_ondisk.h
-+++ b/include/uapi/linux/nilfs2_ondisk.h
-@@ -29,7 +29,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2896bbcfa3bb..228872549f01 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -28,7 +28,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+-			cpu-idle-states = <&CPU_PH20>;
++			cpu-idle-states = <&CPU_PW20>;
+ 		};
  
- #include <linux/types.h>
- #include <linux/magic.h>
--
-+#include <asm/byteorder.h>
+ 		cpu1: cpu@1 {
+@@ -38,7 +38,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+-			cpu-idle-states = <&CPU_PH20>;
++			cpu-idle-states = <&CPU_PW20>;
+ 		};
  
- #define NILFS_INODE_BMAP_SIZE	7
+ 		l2: l2-cache {
+@@ -53,13 +53,13 @@
+ 		 */
+ 		entry-method = "arm,psci";
  
-@@ -533,19 +533,19 @@ enum {
- static inline void							\
- nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
- {									\
--	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
--				   (1UL << NILFS_CHECKPOINT_##flag));	\
-+	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
-+				     (1UL << NILFS_CHECKPOINT_##flag));	\
- }									\
- static inline void							\
- nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
- {									\
--	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
-+	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
- 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
- }									\
- static inline int							\
- nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
- {									\
--	return !!(le32_to_cpu(cp->cp_flags) &				\
-+	return !!(__le32_to_cpu(cp->cp_flags) &				\
- 		  (1UL << NILFS_CHECKPOINT_##flag));			\
- }
+-		CPU_PH20: cpu-ph20 {
+-			compatible = "arm,idle-state";
+-			idle-state-name = "PH20";
+-			arm,psci-suspend-param = <0x00010000>;
+-			entry-latency-us = <1000>;
+-			exit-latency-us = <1000>;
+-			min-residency-us = <3000>;
++		CPU_PW20: cpu-pw20 {
++			  compatible = "arm,idle-state";
++			  idle-state-name = "PW20";
++			  arm,psci-suspend-param = <0x0>;
++			  entry-latency-us = <2000>;
++			  exit-latency-us = <2000>;
++			  min-residency-us = <6000>;
+ 		};
+ 	};
  
-@@ -595,20 +595,20 @@ enum {
- static inline void							\
- nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
- {									\
--	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
-+	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
- 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
- }									\
- static inline void							\
- nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
- {									\
- 	su->su_flags =							\
--		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
-+		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
- 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
- }									\
- static inline int							\
- nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
- {									\
--	return !!(le32_to_cpu(su->su_flags) &				\
-+	return !!(__le32_to_cpu(su->su_flags) &				\
- 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
- }
- 
-@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
- static inline void
- nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
- {
--	su->su_lastmod = cpu_to_le64(0);
--	su->su_nblocks = cpu_to_le32(0);
--	su->su_flags = cpu_to_le32(0);
-+	su->su_lastmod = __cpu_to_le64(0);
-+	su->su_nblocks = __cpu_to_le32(0);
-+	su->su_flags = __cpu_to_le32(0);
- }
- 
- static inline int
- nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
- {
--	return !le32_to_cpu(su->su_flags);
-+	return !__le32_to_cpu(su->su_flags);
- }
- 
- /**
+-- 
+2.20.1
+
 
 
