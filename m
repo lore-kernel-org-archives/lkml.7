@@ -2,108 +2,223 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08E7C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E2BC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C6B2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137F42173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:35:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389214AbfGRIeI (ORCPT
+        id S2389221AbfGRIfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:34:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54488 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbfGRIeI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:34:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p74so24654059wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 01:34:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oyQnxgvW48MflIIGvDKgphM3U+A4nQhpaY8n8J3JEU8=;
-        b=IGlNY68r6mjDPg5fK/Fzlt8tpPoBZn1wFWpmDjNzUY96U07/D5JH4jqsfuEqATIPAW
-         WD/hZzFuM++6rpCppgArb3MMYB02ykee9lCu/F+6/gVXMbM8e9H/FyNJbYLbFSvsxFt3
-         4k/wHVOdL/5+98T1o2flFctTZMh2+M1wbtW6WvUxRCUSiv3jDAjAsOvB5lPa8QlAZw5Z
-         8KwTIIUOv2tRf9H+drjmnISF/B48tXWa1pT5AcrKjgvbXas9ReCi6C3I8a0RdzjvgQs2
-         aSUR1R4zAMw/BZpK5mSj8X0CPoRfCq3BvUUhCxbAoz5K125cu6HSmtRcLkYA0fcii0fd
-         /yTQ==
-X-Gm-Message-State: APjAAAUu1jojVFJ6Pwcy8kDf6Gsuk/exkM869bv+GrVKqV5hBg7mZnzY
-        KGg+UkeVmF3qTLPEn0FVBvHkHXJgTunwzw==
-X-Google-Smtp-Source: APXvYqxkdaslaXuIOrStTxZXg88Np8F8FRCcSBEQh5L+2SsEztfofLT+uhyL1VDV8EDLffiZ4NpMUg==
-X-Received: by 2002:a1c:44d7:: with SMTP id r206mr42116191wma.164.1563438846134;
-        Thu, 18 Jul 2019 01:34:06 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
-        by smtp.gmail.com with ESMTPSA id p18sm24776435wrm.16.2019.07.18.01.34.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 01:34:05 -0700 (PDT)
-Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
- <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com>
- <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <e31024e4-f437-becd-a9e3-e1ea8cd2e0c7@redhat.com>
-Date:   Thu, 18 Jul 2019 10:34:04 +0200
+        Thu, 18 Jul 2019 04:35:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56048 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726423AbfGRIfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:35:45 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DC06159465;
+        Thu, 18 Jul 2019 08:35:44 +0000 (UTC)
+Received: from [10.36.116.38] (ovpn-116-38.ams2.redhat.com [10.36.116.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 83BB260C44;
+        Thu, 18 Jul 2019 08:35:39 +0000 (UTC)
+Subject: Re: [PATCH v4 21/22] iommu/vt-d: Support flushing more translation
+ cache types
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1560087862-57608-22-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9d678164-219c-80f9-c1be-121c097c691a@redhat.com>
+Date:   Thu, 18 Jul 2019 10:35:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
+In-Reply-To: <1560087862-57608-22-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 18 Jul 2019 08:35:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/19 10:15, Christian Borntraeger wrote:
-> 
-> 
-> On 18.07.19 09:59, Paolo Bonzini wrote:
->> On 12/07/19 09:15, Wanpeng Li wrote:
->>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->>> index b4ab59d..2c46705 100644
->>> --- a/virt/kvm/kvm_main.c
->>> +++ b/virt/kvm/kvm_main.c
->>> @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
->>>  	int me;
->>>  	int cpu = vcpu->cpu;
->>>  
->>> -	if (kvm_vcpu_wake_up(vcpu))
->>> +	if (kvm_vcpu_wake_up(vcpu)) {
->>> +		vcpu->preempted = true;
->>>  		return;
->>> +	}
->>>  
->>>  	me = get_cpu();
->>>  	if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
->>>
->>
->> Who is resetting vcpu->preempted to false in this case?  This also
->> applies to s390 in fact.
-> 
-> Isnt that done by the sched_in handler?
+Hi Jacob,
 
-I am a bit confused because, if it is done by the sched_in later, I
-don't understand why the sched_out handler hasn't set vcpu->preempted
-already.
+On 6/9/19 3:44 PM, Jacob Pan wrote:
+> When Shared Virtual Memory is exposed to a guest via vIOMMU, scalable
+> IOTLB invalidation may be passed down from outside IOMMU subsystems.
+> This patch adds invalidation functions that can be used for additional
+> translation cache types.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/dmar.c        | 50 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/intel-iommu.h | 21 +++++++++++++++----
+>  2 files changed, 67 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> index 6d969a1..0cda6fb 100644
+> --- a/drivers/iommu/dmar.c
+> +++ b/drivers/iommu/dmar.c
+> @@ -1357,6 +1357,21 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+>  	qi_submit_sync(&desc, iommu);
+>  }
+>  
+> +/* PASID-based IOTLB Invalidate */
+> +void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr, u32 pasid,
+> +		unsigned int size_order, u64 granu, int ih)
+> +{
+> +	struct qi_desc desc;
+nit: you could also init to {};
+> +
+> +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
+> +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
+> +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(ih) |
+> +		QI_EIOTLB_AM(size_order);
+> +	desc.qw2 = 0;
+> +	desc.qw3 = 0;
+> +	qi_submit_sync(&desc, iommu);
+> +}
+> +
+>  void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  			u16 qdep, u64 addr, unsigned mask)
+>  {
+> @@ -1380,6 +1395,41 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  	qi_submit_sync(&desc, iommu);
+>  }
+>  
+> +/* PASID-based device IOTLB Invalidate */
+> +void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+> +		u32 pasid,  u16 qdep, u64 addr, unsigned size, u64 granu)
+s/size/size_order
+> +{
+> +	struct qi_desc desc;
+> +
+> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) | QI_DEV_EIOTLB_SID(sid) |
+> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
+> +		QI_DEV_IOTLB_PFSID(pfsid);
+maybe add a comment to remind MIP hint is sent to 0 as of now.
+> +	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
+> +
+> +	/* If S bit is 0, we only flush a single page. If S bit is set,
+> +	 * The least significant zero bit indicates the size. VT-d spec
+> +	 * 6.5.2.6
+> +	 */
+> +	if (!size)
+> +		desc.qw0 |= QI_DEV_EIOTLB_ADDR(addr) & ~QI_DEV_EIOTLB_SIZE;
+this is qw1.
+> +	else {
+> +		unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size);
+don't you miss a "- 1 " here?
+> +
+> +		desc.qw1 |= QI_DEV_EIOTLB_ADDR(addr & ~mask) | QI_DEV_EIOTLB_SIZE;
+desc.qw1 |= addr & ~mask | QI_DEV_EIOTLB_SIZE;
+ie. I don't think QI_DEV_EIOTLB_ADDR is useful here?
 
-The s390 commit message is not very clear, but it talks about "a former
-sleeping cpu" that "gave up the cpu voluntarily".  Does "voluntarily"
-that mean it is in kvm_vcpu_block?  But then at least for x86 it would
-be after vcpu_load so the preempt notifiers have been registered, and
-for s390 too (kvm_arch_vcpu_ioctl_run -> __vcpu_run -> vcpu_post_run ->
-kvm_handle_sie_intercept etc.).
 
-Paolo
+So won't the following lines do the job?
+
+unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size) -1;
+desc.qw1 |= addr & ~mask;
+if (size)
+    desc.qw1 |= QI_DEV_EIOTLB_SIZE
+> +	}
+> +	qi_submit_sync(&desc, iommu);
+> +}
+> +
+> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid)
+> +{
+> +	struct qi_desc desc;
+> +
+> +	desc.qw0 = QI_PC_TYPE | QI_PC_DID(did) | QI_PC_GRAN(granu) | QI_PC_PASID(pasid);
+nit: reorder the fields according to the spec, easier to check if any is
+missing.
+> +	desc.qw1 = 0;
+> +	desc.qw2 = 0;
+> +	desc.qw3 = 0;
+> +	qi_submit_sync(&desc, iommu);
+> +}
+>  /*
+>   * Disable Queued Invalidation interface.
+>   */
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 94d3a9a..1cdb35b 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -339,7 +339,7 @@ enum {
+>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >> (DMA_TLB_FLUSH_GRANU_OFFSET-4))
+>  #define QI_IOTLB_ADDR(addr)	(((u64)addr) & VTD_PAGE_MASK)
+>  #define QI_IOTLB_IH(ih)		(((u64)ih) << 6)
+> -#define QI_IOTLB_AM(am)		(((u8)am))
+> +#define QI_IOTLB_AM(am)		(((u8)am) & 0x3f)
+>  
+>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
+>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
+> @@ -357,17 +357,22 @@ enum {
+>  #define QI_PC_DID(did)		(((u64)did) << 16)
+>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
+>  
+> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
+> -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
+> +/* PASID cache invalidation granu */
+> +#define QI_PC_ALL_PASIDS	0
+> +#define QI_PC_PASID_SEL		1
+>  
+>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+>  #define QI_EIOTLB_GL(gl)	(((u64)gl) << 7)
+>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
+> -#define QI_EIOTLB_AM(am)	(((u64)am))
+> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
+>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
+>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
+>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
+>  
+> +/* QI Dev-IOTLB inv granu */
+> +#define QI_DEV_IOTLB_GRAN_ALL		1
+> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0
+> +
+>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+> @@ -658,8 +663,16 @@ extern void qi_flush_context(struct intel_iommu *iommu, u16 did, u16 sid,
+>  			     u8 fm, u64 type);
+>  extern void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+>  			  unsigned int size_order, u64 type);
+> +extern void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+> +			u32 pasid, unsigned int size_order, u64 type, int ih);
+>  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+>  			u16 qdep, u64 addr, unsigned mask);
+> +
+> +extern void qi_flush_dev_piotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+> +			u32 pasid, u16 qdep, u64 addr, unsigned size, u64 granu);
+s/size/size_order
+> +
+> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu, int pasid);
+> +
+>  extern int qi_submit_sync(struct qi_desc *desc, struct intel_iommu *iommu);
+>  
+>  extern int dmar_ir_support(void);
+> 
+
+Thanks
+
+Eric
