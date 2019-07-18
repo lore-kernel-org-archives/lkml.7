@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0761BC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4373DC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DCF21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EE321849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419253;
-	bh=+aLMt1fy/uI6haRV10yA2RxZH9dLBlZq0WeY9Fm1h5Q=;
+	s=default; t=1563419257;
+	bh=bE2enI5xvjxZALLm1U9tjjHIdAb7DAaS0QTXeC3g0oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fI+06oKkh/D4frDre/XLuvjPNBmFe8epMPJ0hxe0jx1mRqFaz4uLv/urBZMKZf7Pd
-	 KafFE5WO5KkoeWK4Mr61P7QSgSr48m0Be4pMI1u7exZyo3ngLYuvTmVhNVSZsU4fSr
-	 vDfCCZUAIYA2+FrNHRmCirEph7v7KhL1SLD61hpw=
+	b=G3CeTFJKnjQZlbaL8WZdOOW/uQFSZUEwAlGi7CdUi4H8wZLuRGD5OzBQ8jh0mPq60
+	 jb9FG22sxvR2eFJHLk4qyLcyzHXnQoEpiW/fW/vvXUmb5g+kdPumofphE0W26j1Yi+
+	 UYVUQFv2KJUPF9A88Nby7HwWCO8BbXhhiUSqrpOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390475AbfGRDHd (ORCPT
+        id S2389759AbfGRDHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39094 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390444AbfGRDH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:29 -0400
+        id S2390460AbfGRDHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:31 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 331CC205F4;
-        Thu, 18 Jul 2019 03:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41BDC2173E;
+        Thu, 18 Jul 2019 03:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419248;
-        bh=+aLMt1fy/uI6haRV10yA2RxZH9dLBlZq0WeY9Fm1h5Q=;
+        s=default; t=1563419250;
+        bh=bE2enI5xvjxZALLm1U9tjjHIdAb7DAaS0QTXeC3g0oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFajYKcpBXgImxldw7VLLOEs+tJOiNKnwec7XVR0LQA44w6qPF8p8dwtS1LiGJk46
-         yym7W5dfQYGloo9h07fzFufF3RnpHTa2BNWHKbiq/b7IrjLsH2wknoh1qsFBgHl1ZU
-         2Km3JFIRkcKcaxkXl+bls47DZx23dXfErIJ5GbOU=
+        b=RA0YNxGCMyeBO/dyRTvJinfdhTM/LjCIaY28qha16ACYxVQbUQcivse06p9f65JS/
+         +U2/GG/1dObhoGsrD5YKxgDLifpZXbzOX2GN/4qZvdUXdfpn0K5Y3aaYxdpIK6DgmS
+         F9GCWZsR4XgtdsKFjfwm5qXLTlLchXVw63GAc32s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, kernel-janitors@vger.kernel.org,
+        stable@vger.kernel.org, Petr Oros <poros@redhat.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/47] x86/apic: Fix integer overflow on 10 bit left shift of cpu_khz
-Date:   Thu, 18 Jul 2019 12:01:28 +0900
-Message-Id: <20190718030049.850839591@linuxfoundation.org>
+Subject: [PATCH 4.19 15/47] be2net: fix link failure after ethtool offline test
+Date:   Thu, 18 Jul 2019 12:01:29 +0900
+Message-Id: <20190718030049.933115197@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -62,39 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea136a112d89bade596314a1ae49f748902f4727 ]
+[ Upstream commit 2e5db6eb3c23e5dc8171eb8f6af7a97ef9fcf3a9 ]
 
-The left shift of unsigned int cpu_khz will overflow for large values of
-cpu_khz, so cast it to a long long before shifting it to avoid overvlow.
-For example, this can happen when cpu_khz is 4194305, i.e. ~4.2 GHz.
+Certain cards in conjunction with certain switches need a little more
+time for link setup that results in ethtool link test failure after
+offline test. Patch adds a loop that waits for a link setup finish.
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: kernel-janitors@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190619181446.13635-1-colin.king@canonical.com
+Changes in v2:
+- added fixes header
+
+Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
+Signed-off-by: Petr Oros <poros@redhat.com>
+Reviewed-by: Ivan Vecera <ivecera@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 84132eddb5a8..2646234380cc 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1452,7 +1452,8 @@ static void apic_pending_intr_clear(void)
- 		if (queued) {
- 			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
- 				ntsc = rdtsc();
--				max_loops = (cpu_khz << 10) - (ntsc - tsc);
-+				max_loops = (long long)cpu_khz << 10;
-+				max_loops -= ntsc - tsc;
- 			} else {
- 				max_loops--;
- 			}
+diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+index bfb16a474490..d1905d50c26c 100644
+--- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
++++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+@@ -895,7 +895,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+ 			 u64 *data)
+ {
+ 	struct be_adapter *adapter = netdev_priv(netdev);
+-	int status;
++	int status, cnt;
+ 	u8 link_status = 0;
+ 
+ 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
+@@ -906,6 +906,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+ 
+ 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
+ 
++	/* check link status before offline tests */
++	link_status = netif_carrier_ok(netdev);
++
+ 	if (test->flags & ETH_TEST_FL_OFFLINE) {
+ 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
+ 			test->flags |= ETH_TEST_FL_FAILED;
+@@ -926,13 +929,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+ 		test->flags |= ETH_TEST_FL_FAILED;
+ 	}
+ 
+-	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
+-	if (status) {
+-		test->flags |= ETH_TEST_FL_FAILED;
+-		data[4] = -1;
+-	} else if (!link_status) {
++	/* link status was down prior to test */
++	if (!link_status) {
+ 		test->flags |= ETH_TEST_FL_FAILED;
+ 		data[4] = 1;
++		return;
++	}
++
++	for (cnt = 10; cnt; cnt--) {
++		status = be_cmd_link_status_query(adapter, NULL, &link_status,
++						  0);
++		if (status) {
++			test->flags |= ETH_TEST_FL_FAILED;
++			data[4] = -1;
++			break;
++		}
++
++		if (link_status)
++			break;
++
++		msleep_interruptible(500);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
