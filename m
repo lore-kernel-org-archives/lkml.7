@@ -2,132 +2,123 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22F7C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E967C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59BA2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4814420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k/fa1LPx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2jcOh1bP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390985AbfGRSAK (ORCPT
+        id S1732718AbfGRSDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:00:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43279 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390368AbfGRSAK (ORCPT
+        Thu, 18 Jul 2019 14:03:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60360 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbfGRSDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:00:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so12970863pfg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 11:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=1vjr89rXvmdf0wB/WdMQsMyhKQE9yJLVmO3GYLtPVv8=;
-        b=k/fa1LPxqJnclVt5GEioxr9RW7EbyJfYV5piMXPIZSTxtcvwm46SxOoXf6cZQjrbY6
-         bca4y1KZQKYwRAbFL7TF/0F3GjkjQ40o8BsRAOQWVUU2JLRYfaXohx1zuUR6O0+L0yQF
-         jjMXcPRZYvsl4H0NfBYJirfflhQ5+wTsGrZMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=1vjr89rXvmdf0wB/WdMQsMyhKQE9yJLVmO3GYLtPVv8=;
-        b=V0kc8ZLUHoKdb15Yc36xYEJDG/ZNcVIp8RrndIvKJja51/J+wJKQkfALy6rqG1Glm0
-         Fm984GxTafMsM+fJtK87e8Jv82lTGAW6/xVn31kVQPk5Ac2mohCiyBNma5fyTtTwESMm
-         dBDjIWduQ1R3+n61a2S/IxCh1ICh59VudMbnH8Q0zUXI6MUEAvEv71lxlMW4CRHCSx37
-         oHWOxhBWOo/skOxW+iktmJ2Go4F+CGT8P8Q5q0inYz21t/SgEcONCx2rMGyYwMErwCPy
-         dZ19ppiaHmJIvty+mbD9nSQcy/hTgMU5Ey9HaLJUOVLEABSbLecw1PT3CvvPRC23FHSW
-         gYaA==
-X-Gm-Message-State: APjAAAWxlpQTYjbhhptQ/WgDq3m85ExyVsC/lXlMGBUNLU54XVj7gfQ/
-        9MwgX7jd4BX/pY/OEzdjmE0aSw==
-X-Google-Smtp-Source: APXvYqxv3xo0LgfN2UblAdH0u++DeJ6HbfKAf0knXIKRJ+c6voucqKn+e+cPziHQVF1JO9OzN+TkJA==
-X-Received: by 2002:a63:eb51:: with SMTP id b17mr47673373pgk.384.1563472809305;
-        Thu, 18 Jul 2019 11:00:09 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id d2sm25585057pjs.21.2019.07.18.11.00.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 11:00:08 -0700 (PDT)
-Message-ID: <5d30b3a8.1c69fb81.8c54.63a6@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
-References: <20190614203717.75479-1-swboyd@chromium.org> <20190614203717.75479-4-swboyd@chromium.org> <20190710141433.7ama3gncss3y6dcx@willie-the-truck>
-Subject: Re: [PATCH v2 3/5] memremap: Add support for read-only memory mappings
-To:     Will Deacon <will@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 18 Jul 2019 11:00:07 -0700
+        Thu, 18 Jul 2019 14:03:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6IHx7EU122228;
+        Thu, 18 Jul 2019 18:03:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=nGM+TFa+P/Arh/z0uyq1lS3KstmUHzzsTf+kS9cTjgw=;
+ b=2jcOh1bP4oMsf+o5Nsm6lFPpxuU9ZFtzXXe2uHDj+l0jawSetIxSJOpl05ENnI8Xrlm1
+ jwnzWcqdfppKEzDeh6ryh+5TBDtDJx1dJvMEVtgBYBlq3JOjGsNTiEmEkEseanVBSA0h
+ Q0mD8kUEih2GedLWzWV2FduxdZ6PzgrosqTZBTK/mFRlimSi8mH8ZemIk4N/P5IBXdQP
+ iYjtRVHdffxu7TlGLWR54EVNFzMYbT8OeRzD4Bletwxa9VNLdfvpGrDHKY2hS8Sg/Q/j
+ WnygGSg7xpqWZizPRRUqB1k9IqXt18E6x/ehH84BrlPVSxzsE2XHdQmgUtnGrr+GBxbG xQ== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by aserp2120.oracle.com with ESMTP id 2tq78q2e5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 18:03:11 +0000
+Received: from localhost.us.oracle.com ([10.129.136.207])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x6II3562031079;
+        Thu, 18 Jul 2019 18:03:05 GMT
+From:   Thomas Tai <thomas.tai@oracle.com>
+To:     thomas.tai@oracle.com, pjones@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     konrad@kernel.org
+Subject: iscsi_ibft: change ISCSI_IBFT depends on ACPI instead of ISCSI_IBFT_FIND
+Date:   Thu, 18 Jul 2019 18:37:34 +0000
+Message-Id: <1563475054-10680-1-git-send-email-thomas.tai@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9322 signatures=668688
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=907 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1907180187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Will Deacon (2019-07-10 07:14:34)
-> On Fri, Jun 14, 2019 at 01:37:15PM -0700, Stephen Boyd wrote:
-> > @@ -84,7 +91,10 @@ void *memremap(resource_size_t offset, size_t size, =
-unsigned long flags)
-> >       }
-> > =20
-> >       /* Try all mapping types requested until one returns non-NULL */
-> > -     if (flags & MEMREMAP_WB) {
-> > +     if ((flags & MEMREMAP_RO) && is_ram !=3D REGION_INTERSECTS)
-> > +             addr =3D arch_memremap_ro(offset, size);
-> > +
-> > +     if (!addr && (flags & MEMREMAP_WB)) {
-> >               /*
-> >                * MEMREMAP_WB is special in that it can be satisfied
-> >                * from the direct map.  Some archs depend on the
-> > @@ -103,7 +113,8 @@ void *memremap(resource_size_t offset, size_t size,=
- unsigned long flags)
-> >        * address mapping.  Enforce that this mapping is not aliasing
-> >        * System RAM.
-> >        */
-> > -     if (!addr && is_ram =3D=3D REGION_INTERSECTS && flags !=3D MEMREM=
-AP_WB) {
-> > +     if (!addr && is_ram =3D=3D REGION_INTERSECTS &&
-> > +         (flags !=3D MEMREMAP_WB || flags !=3D MEMREMAP_RO)) {
-> >               WARN_ONCE(1, "memremap attempted on ram %pa size: %#lx\n",
-> >                               &offset, (unsigned long) size);
-> >               return NULL;
->=20
-> This function seems a little confused about whether 'flags' is really a
-> bitmap of flags, or whether it is equal to exactly one entry in the enum.
-> Given that I think it's sensible for somebody to specify 'MEMREMAP_RO |
-> MEMREMAP_WT', then we probably need to start checking these things a bit
-> more thoroughly so we can reject unsupported combinations at the very lea=
-st.
->=20
+iscsi_ibft can use ACPI to find the iBFT entry during bootup,
+currently, ISCSI_IBFT depends on ISCSI_IBFT_FIND which is
+a X86 legacy way to find the iBFT by searching through the
+low memory. This patch changes the dependency so that other
+arch like ARM64 can use ISCSI_IBFT as long as the arch supports
+ACPI.
 
-I'm also confused about the same thing. I thought it was a "getting
-worse via best effort" type of thing based on the comment above the
-function.
+ibft_init() needs to use the global variable ibft_addr declared
+in iscsi_ibft_find.c. A #ifndef CONFIG_ISCSI_IBFT_FIND is needed
+to declare the variable if CONFIG_ISCSI_IBFT_FIND is not selected.
+Moving ibft_addr into the iscsi_ibft.c does not work because if
+ISCSI_IBFT is selected as a module, the arch/x86/kernel/setup.c won't
+be able to find the variable at compile time.
 
- * In the case of multiple flags, the different
- * mapping types will be attempted in the order listed below until one of
- * them succeeds.
+Signed-off-by: Thomas Tai <thomas.tai@oracle.com>
 
-(I now realize I should have documented the new flag so that this order
-would be known. I'll resend this series again with the documentation
-fix.)
+---
+ drivers/firmware/Kconfig      | 5 +++--
+ drivers/firmware/iscsi_ibft.c | 4 ++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-I also thought that the combination of read-only and write through would
-be OK because the flags are more of a best effort approach to making a
-mapping. Given that, is there anything to reject? Or do we just keep
-trying until we can't try anymore?
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 1f6633b..8237863 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -164,7 +164,7 @@ config DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+ 
+ config ISCSI_IBFT_FIND
+ 	bool "iSCSI Boot Firmware Table Attributes"
+-	depends on X86 && ACPI
++	depends on X86 && ISCSI_IBFT
+ 	default n
+ 	help
+ 	  This option enables the kernel to find the region of memory
+@@ -175,7 +175,8 @@ config ISCSI_IBFT_FIND
+ config ISCSI_IBFT
+ 	tristate "iSCSI Boot Firmware Table Attributes module"
+ 	select ISCSI_BOOT_SYSFS
+-	depends on ISCSI_IBFT_FIND && SCSI && SCSI_LOWLEVEL
++	select ISCSI_IBFT_FIND if X86
++	depends on ACPI && SCSI && SCSI_LOWLEVEL
+ 	default	n
+ 	help
+ 	  This option enables support for detection and exposing of iSCSI
+diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+index 132b9ba..220bbc9 100644
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -93,6 +93,10 @@
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION(IBFT_ISCSI_VERSION);
+ 
++#ifndef CONFIG_ISCSI_IBFT_FIND
++struct acpi_table_ibft *ibft_addr;
++#endif
++
+ struct ibft_hdr {
+ 	u8 id;
+ 	u8 version;
+-- 
+1.8.3.1
 
