@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7EAC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB7DC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F5020873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631E121851
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 00:02:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzADRtkO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S8Yba5Km"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfGRACn (ORCPT
+        id S1731291AbfGRACx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 20:02:43 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:54373 "EHLO
+        Wed, 17 Jul 2019 20:02:53 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:48289 "EHLO
         mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbfGRACn (ORCPT
+        with ESMTP id S1728538AbfGRACx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 20:02:43 -0400
-Received: by mail-pl1-f202.google.com with SMTP id u10so12882776plq.21
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 17:02:43 -0700 (PDT)
+        Wed, 17 Jul 2019 20:02:53 -0400
+Received: by mail-pl1-f202.google.com with SMTP id i33so12887955pld.15
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 17:02:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=d2opEawD5+UpjHd3NqyX+5wHPW1XJIxl9MSYmfk275Q=;
-        b=JzADRtkOw2096YFXxVSMAzsSWjQX8A9aoK4y1dNuoORdeMgF6K2He4c4O4zv+SvN1C
-         UNqNMY/GIiooHoE15NvVgxlMs/qpJxGGW8RFAoHq/wQ6szsqmG6LnRHB4dULrMiW4Vzg
-         IUj4LTC/4PLSbvqJwgooz1Mlzhu1UhCeAzoMilvUyGj/7izvs3+tWqOjcFQR2KUg25Si
-         omfLoHXCTMhlrVNQEY9J5rCa7XG2EOcD+J5GGbnvSsBg6GUf8Gelz5fbj6EqKMRp7c0Y
-         L5YSYp3s7fpOT6STKRp3YIixv/u1jSSDhY/5h3ag4LEIAN3yGLS7G6GAXS9ckGFD8wu0
-         1tmQ==
+        bh=L/78IskbmRc+SAnYRdHcj67j75qZnnMK6y2VOBnfvrk=;
+        b=S8Yba5KmalqdPks1VNH9Uyedt6+Y0i8sR5GaZllNlSzySnf0g7KcoIn18+QvPtf/WD
+         MM5Mg0oIBJuvXHnYUYYmRhp8YmbmiRc8jWCfu+WjoGaWtBjA7HVQcBvT9p8RTOVA2CHA
+         TrQMZkRmwvtTgWXBQP9clKU1DLLCKnxp8Wdb6CGLX+c9GN0KFiEX6dM5dDTUEfh1PhY/
+         mcJpXHhxb0jFOlv4MFKCbUnDNhzPhM9oqsPzNzcAwZX4aGB5Xz3Vym6xL34fBePCXP1e
+         6/Z0Ppls3PoFbzBk1QA6O924jzTypnc7pko3pScKOISaEdoQ1VhUb3HR6nqMZQ0/TikG
+         g/EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=d2opEawD5+UpjHd3NqyX+5wHPW1XJIxl9MSYmfk275Q=;
-        b=T1fOldl6iJ6NekwKGsyqDKex6rmZ6WjkBX8djz3yXVrVa14FB4wxcJ2HSltb38+/M0
-         naz2FeN9Qofi7uPfQ9VCZsAAx94fLGimIcOGuxSUG+dx1/7ad1yIxy2a/FIYtZbon2If
-         TsoLwQgKPivr3qL3nMlkpd+yLJnVy2ryTE9xeQLNZIKABSvn2mTfTRVRKhfMmM6rrC+1
-         PBvcZ7nc/m1M9X/UBvZO/2IHa/3Z2N+saKOAkvS7EmeoAlv1xIko4LUOOg6TMNyqD+3U
-         RMiZfCG3+0LWXKANsPpLw1RfRuOZtiRGc+iVcJB5/TNFVZXaAD+st3BYfMTy2ZeFO9VT
-         ZYWg==
-X-Gm-Message-State: APjAAAXq6GqhWXB53TeeVhadKTRZO5DOnxy34GbcYDuNRc3v9liYuIev
-        xt7YuCibDtwW15fTNerOrjP7LW0tgZuK/Am42DEJvQ==
-X-Google-Smtp-Source: APXvYqx8C+Hy6Xs2urAbdNvACQ68TCh4KNRmJw+r8zbsjI0Iz08oehTCqQsB2iYjkYZRoMBdYUgYRrzMAIY59zdjl7ZMAQ==
-X-Received: by 2002:a63:a35c:: with SMTP id v28mr728662pgn.144.1563408162493;
- Wed, 17 Jul 2019 17:02:42 -0700 (PDT)
-Date:   Wed, 17 Jul 2019 17:02:05 -0700
+        bh=L/78IskbmRc+SAnYRdHcj67j75qZnnMK6y2VOBnfvrk=;
+        b=nrNraLpSzdAo4/6A4ZvSEgJtSiGIIO0Oyahyl8rN/R5Mr75Iops+phjARJwt6ah16/
+         Ufyya/WcuTWbs7ZMMv0Sh9MnioHdk2OS24rQNEAHg8jAtLGDIb+kQKhCOSSIECMXnL6d
+         FepLnACZ/xerFQMy9hlvD0HRRvrMfh6/j3804OtU2EHoV7i1y/kVO1cF88eiRnQ9SN6N
+         Q0FcKRR9q6XHQ1gJaf6K1etNCsbqBaRfgkV6FA0V9VE6XcvgYmL0ezit1GEaCE0lYjAH
+         3QrwLYgfNn9Yauc0T/JjClzTko/jFz6h39wotALltTTiYWHea9x7dqgdwl0EixZA4Ycr
+         E9tA==
+X-Gm-Message-State: APjAAAV/hajZ7SFvYmns872N3d4oofFbxttdlP2B5FFwC7h9yJv108N+
+        Oz8xZ/tHdHinSGyLNkzhj4tqZdsnEshhUg98+tWJ9w==
+X-Google-Smtp-Source: APXvYqwVE0HkM/l3O7QFSf8aW9eANsYMwJv8OSxTZYlAHNH9xFe7SxqEaIpQv935uuZ5aOz9IdAbsGGTjA1FKAfLQdzgfQ==
+X-Received: by 2002:a63:714a:: with SMTP id b10mr9682287pgn.25.1563408172263;
+ Wed, 17 Jul 2019 17:02:52 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 17:02:06 -0700
 In-Reply-To: <20190718000206.121392-1-vaibhavrustagi@google.com>
-Message-Id: <20190718000206.121392-2-vaibhavrustagi@google.com>
+Message-Id: <20190718000206.121392-3-vaibhavrustagi@google.com>
 Mime-Version: 1.0
 References: <20190718000206.121392-1-vaibhavrustagi@google.com>
 X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
-Subject: [PATCH 1/2] x86/purgatory: add -mno-sse, -mno-mmx, -mno-sse2 to Makefile
+Subject: [PATCH 2/2] x86/purgatory: do not use __builtin_memcpy and __builtin_memset.
 From:   Vaibhav Rustagi <vaibhavrustagi@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -67,42 +67,113 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         Vivek Goyal <vgoyal@redhat.com>,
         Vaibhav Rustagi <vaibhavrustagi@google.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org
+        stable@vger.kernel.org, Manoj Gupta <manojgupta@google.com>,
+        Alistair Delva <adelva@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiling the purgatory code with clang results in using of mmx
-registers.
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-$ objdump -d arch/x86/purgatory/purgatory.ro | grep xmm
+Implementing memcpy and memset in terms of __builtin_memcpy and
+__builtin_memset is problematic.
 
-     112:	0f 28 00             	movaps (%rax),%xmm0
-     115:	0f 11 07             	movups %xmm0,(%rdi)
-     122:	0f 28 00             	movaps (%rax),%xmm0
-     125:	0f 11 47 10          	movups %xmm0,0x10(%rdi)
+GCC at -O2 will replace calls to the builtins with calls to memcpy and
+memset (but will generate an inline implementation at -Os).  Clang will
+replace the builtins with these calls regardless of optimization level.
 
-Add -mno-sse, -mno-mmx, -mno-sse2 to avoid generating SSE instructions.
+$ llvm-objdump -dr arch/x86/purgatory/string.o | tail
 
+0000000000000339 memcpy:
+     339: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
+                000000000000033b:  R_X86_64_64  memcpy
+     343: ff e0                         jmpq    *%rax
+
+0000000000000345 memset:
+     345: 48 b8 00 00 00 00 00 00 00 00 movabsq $0, %rax
+                0000000000000347:  R_X86_64_64  memset
+     34f: ff e0
+
+Such code results in infinite recursion at runtime. This is observed
+when doing kexec.
+
+Instead, reuse an implementation from arch/x86/boot/compressed/string.c
+if we define warn as a symbol.
+
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=984056
+Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Debugged-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Debugged-by: Manoj Gupta <manojgupta@google.com>
+Suggested-by: Alistair Delva <adelva@google.com>
 Signed-off-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/x86/purgatory/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/purgatory/Makefile    |  3 +++
+ arch/x86/purgatory/purgatory.c |  6 ++++++
+ arch/x86/purgatory/string.c    | 23 -----------------------
+ 3 files changed, 9 insertions(+), 23 deletions(-)
+ delete mode 100644 arch/x86/purgatory/string.c
 
 diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 3cf302b26332..3589ec4a28c7 100644
+index 3589ec4a28c7..84b8314ddb2d 100644
 --- a/arch/x86/purgatory/Makefile
 +++ b/arch/x86/purgatory/Makefile
-@@ -20,6 +20,7 @@ KCOV_INSTRUMENT := n
- # sure how to relocate those. Like kexec-tools, use custom flags.
+@@ -6,6 +6,9 @@ purgatory-y := purgatory.o stack.o setup-x86_$(BITS).o sha256.o entry64.o string
+ targets += $(purgatory-y)
+ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
  
- KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
-+KBUILD_CFLAGS += -mno-mmx -mno-sse -mno-sse2
- KBUILD_CFLAGS += -m$(BITS)
- KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
++$(obj)/string.o: $(srctree)/arch/x86/boot/compressed/string.c FORCE
++	$(call if_changed_rule,cc_o_c)
++
+ $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
  
+diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
+index 6d8d5a34c377..b607bda786f6 100644
+--- a/arch/x86/purgatory/purgatory.c
++++ b/arch/x86/purgatory/purgatory.c
+@@ -68,3 +68,9 @@ void purgatory(void)
+ 	}
+ 	copy_backup_region();
+ }
++
++/*
++ * Defined in order to reuse memcpy() and memset() from
++ * arch/x86/boot/compressed/string.c
++ */
++void warn(const char *msg) {}
+diff --git a/arch/x86/purgatory/string.c b/arch/x86/purgatory/string.c
+deleted file mode 100644
+index 01ad43873ad9..000000000000
+--- a/arch/x86/purgatory/string.c
++++ /dev/null
+@@ -1,23 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Simple string functions.
+- *
+- * Copyright (C) 2014 Red Hat Inc.
+- *
+- * Author:
+- *       Vivek Goyal <vgoyal@redhat.com>
+- */
+-
+-#include <linux/types.h>
+-
+-#include "../boot/string.c"
+-
+-void *memcpy(void *dst, const void *src, size_t len)
+-{
+-	return __builtin_memcpy(dst, src, len);
+-}
+-
+-void *memset(void *dst, int c, size_t len)
+-{
+-	return __builtin_memset(dst, c, len);
+-}
 -- 
 2.22.0.510.g264f2c817a-goog
 
