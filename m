@@ -2,52 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C360C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47C5C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA14221872
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982BB2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419727;
-	bh=6wmrga3ZcLr1yMrWaBJLuMHhuIkPguBpD00SQX/+ps0=;
+	s=default; t=1563419735;
+	bh=jY1uNb29JuAHey2oC14DUoyYA1XrOaBi+7fcKeyogOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIbdC4TMVwL+SWsV2LTG9HHqbvyZQEFfRSa2ZlaGmFdsjDgK9cL8NLFpJZ7/uk/It
-	 kIvWCJfGvbAXCQRoUj8aMr6yxmrxrIoxcNY3i89Ina/r4YKXblQyEMQpHznEANzEZU
-	 xPGTo1boNqGMTiYjHJ+XrreC6j+iPJ3l18T53TKg=
+	b=KOZdGpchSk/M5VZ6s1FEdC04+befb3SWqXeBChbV2fbBBJzswLcRLfsb0Hr/7l05T
+	 aCTSl9wARVGLT+wutBLhBovgJJIsD5yFPGHd8GTVVYotIKlasWRGt9VH8Aox52YfAU
+	 4jmOj+/i2nZsQxGLf07lKCVOG6uI6jOJyjhKISjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392046AbfGRDP0 (ORCPT
+        id S2392071AbfGRDPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391955AbfGRDPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:07 -0400
+        id S2391972AbfGRDPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:12 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B48A72173E;
-        Thu, 18 Jul 2019 03:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B668821851;
+        Thu, 18 Jul 2019 03:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419707;
-        bh=6wmrga3ZcLr1yMrWaBJLuMHhuIkPguBpD00SQX/+ps0=;
+        s=default; t=1563419712;
+        bh=jY1uNb29JuAHey2oC14DUoyYA1XrOaBi+7fcKeyogOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Inc9eW14W1pCbelnpUkfpQF4o9UhmGmBJvXDEZ6dAx0C86UDcSCKw04W63UnTxWEE
-         1PPGua2tQr+pcQkT6AC4aP6dzC1qzCLxNllD5me9TMUMkhXzajFA/8JB0IZfjkqMV+
-         sj9Sf3DfqIFX7blMJ/tsBuWCGiDgzHLp6nPkpCcY=
+        b=ybvrKRAAlQEE84ERjiBbdM7ahJZqgBc47hi+UY5bBVrP82HwtfKRbIvrcNvDfEnfZ
+         z00nQfqkx3AjgJkYX0dVvp7sojUfreNiz86SvhLVmjl3wfSACfrpO9w0tHyy+DGL0c
+         FkWtWvg/dsgT7FFVm1fecpNgeUGp5sqlIDRWDDAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 34/40] dm verity: use message limit for data block corruption message
-Date:   Thu, 18 Jul 2019 12:02:30 +0900
-Message-Id: <20190718030050.031337379@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH 4.4 37/40] s390: fix stfle zero padding
+Date:   Thu, 18 Jul 2019 12:02:33 +0900
+Message-Id: <20190718030050.315217243@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -60,35 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2eba4e640b2c4161e31ae20090a53ee02a518657 ]
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-DM verity should also use DMERR_LIMIT to limit repeat data block
-corruption messages.
+commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
 
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The stfle inline assembly returns the number of double words written
+(condition code 0) or the double words it would have written
+(condition code 3), if the memory array it got as parameter would have
+been large enough.
+
+The current stfle implementation assumes that the array is always
+large enough and clears those parts of the array that have not been
+written to with a subsequent memset call.
+
+If however the array is not large enough memset will get a negative
+length parameter, which means that memset clears memory until it gets
+an exception and the kernel crashes.
+
+To fix this simply limit the maximum length. Move also the inline
+assembly to an extra function to avoid clobbering of register 0, which
+might happen because of the added min_t invocation together with code
+instrumentation.
+
+The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
+facility list handling") but was rather harmless, since it would only
+write to a rather large array. It became a potential problem with
+commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
+then it writes to an array with only four double words, while some
+machines already deliver three double words. As soon as machines have
+a facility bit within the fifth double a crash on IPL would happen.
+
+Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
+Cc: <stable@vger.kernel.org> # v2.6.37+
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/dm-verity.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/dm-verity.c b/drivers/md/dm-verity.c
-index ccf41886ebcf..7054afd49f82 100644
---- a/drivers/md/dm-verity.c
-+++ b/drivers/md/dm-verity.c
-@@ -221,8 +221,8 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
- 		BUG();
+--- a/arch/s390/include/asm/facility.h
++++ b/arch/s390/include/asm/facility.h
+@@ -51,6 +51,18 @@ static inline int test_facility(unsigned
+ 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
+ }
+ 
++static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
++{
++	register unsigned long reg0 asm("0") = size - 1;
++
++	asm volatile(
++		".insn s,0xb2b00000,0(%1)" /* stfle */
++		: "+d" (reg0)
++		: "a" (stfle_fac_list)
++		: "memory", "cc");
++	return reg0;
++}
++
+ /**
+  * stfle - Store facility list extended
+  * @stfle_fac_list: array where facility list can be stored
+@@ -70,13 +82,8 @@ static inline void stfle(u64 *stfle_fac_
+ 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
+ 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
+ 		/* More facility bits available with stfle */
+-		register unsigned long reg0 asm("0") = size - 1;
+-
+-		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
+-			     : "+d" (reg0)
+-			     : "a" (stfle_fac_list)
+-			     : "memory", "cc");
+-		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
++		nr = __stfle_asm(stfle_fac_list, size);
++		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
  	}
- 
--	DMERR("%s: %s block %llu is corrupted", v->data_dev->name, type_str,
--		block);
-+	DMERR_LIMIT("%s: %s block %llu is corrupted", v->data_dev->name,
-+		    type_str, block);
- 
- 	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
- 		DMERR("%s: reached maximum errors", v->data_dev->name);
--- 
-2.20.1
-
+ 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
+ 	preempt_enable();
 
 
