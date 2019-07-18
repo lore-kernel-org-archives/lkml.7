@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76CDC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F49FC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7915F21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E052621848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419382;
-	bh=yJogoXBpcjBa6AO5CZZqhpVywHbgffy+wvzCLukLJwM=;
+	s=default; t=1563419385;
+	bh=HzoVKaeU0K7PaWefxAW4JNM4kk/S7e41tfZFV/SlCqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TeL14eHc29IAqZ2v6yD9YmWzGR4UV+xDyN9Nvfogdwl85nqRP/wkJgZhOC++tWYVz
-	 tUgkItuPppYCWE1pusQomu8ycmyz5jg9dUXuRSzjq4gyxDE3HBnWLl/2MS+dRtmk4L
-	 MAhaRxy/eDVSk3hQ56+JuDPvMhLDG2NTSw3t4ffA=
+	b=G6140717OzpJXeNO1Q0lxRl3eIQJU8+Idzs4ZfxuPvYOveFtMLJEP9Gwr476IAsLb
+	 poxCai9SZ+1NbB7Q25PVpd2+53DuVyeyPOAd6Q3UqHq/wSF2sp0n4x4qdgPNJdnBqd
+	 fpSvMqUQbOSSIEOt6TmLHyOcMW037wRVFeIFNgAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403822AbfGRDJl (ORCPT
+        id S2391041AbfGRDJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391027AbfGRDJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:09:40 -0400
+        id S2390234AbfGRDJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:09:41 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3FDF205F4;
-        Thu, 18 Jul 2019 03:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9013D20818;
+        Thu, 18 Jul 2019 03:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419379;
-        bh=yJogoXBpcjBa6AO5CZZqhpVywHbgffy+wvzCLukLJwM=;
+        s=default; t=1563419380;
+        bh=HzoVKaeU0K7PaWefxAW4JNM4kk/S7e41tfZFV/SlCqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fW2VIp0StpdwnpHLDIi6BRHBM+NU1F5CuKb6CVe2VbH6HGzUzTWNEcuhfuDhre+xd
-         krLBuuoz69IvYaeepJgoOR+kWN0mkPjaWdMHM+5vIv5HeqObdGIRR9Ubn4E+OSeh7J
-         RK1BYhpP5wehfQ/nzN25tqKANTMRicmvSEgaFwW4=
+        b=2JBo6KONT22SKSvymtBl6hkcx1N69FRN2CDKiWFyuEc7fpFEKF5yIsM7xECMJX6Cq
+         nznSQHM/ZYMrojGTf5dalfo0J82M47SUEiGRTfZgrYo4+3ysQDdBcP7apFV0poP6SU
+         37a9+x5E4yzAvy1k8akcczIyuwJrBRTpO8KHclPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/80] Input: imx_keypad - make sure keyboard can always wake up system
-Date:   Thu, 18 Jul 2019 12:01:14 +0900
-Message-Id: <20190718030100.602321612@linuxfoundation.org>
+Subject: [PATCH 4.14 24/80] KVM: arm/arm64: vgic: Fix kvm_device leak in vgic_its_destroy
+Date:   Thu, 18 Jul 2019 12:01:15 +0900
+Message-Id: <20190718030100.661792292@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,84 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce9a53eb3dbca89e7ad86673d94ab886e9bea704 ]
+[ Upstream commit 4729ec8c1e1145234aeeebad5d96d77f4ccbb00a ]
 
-There are several scenarios that keyboard can NOT wake up system
-from suspend, e.g., if a keyboard is depressed between system
-device suspend phase and device noirq suspend phase, the keyboard
-ISR will be called and both keyboard depress and release interrupts
-will be disabled, then keyboard will no longer be able to wake up
-system. Another scenario would be, if a keyboard is kept depressed,
-and then system goes into suspend, the expected behavior would be
-when keyboard is released, system will be waked up, but current
-implementation can NOT achieve that, because both depress and release
-interrupts are disabled in ISR, and the event check is still in
-progress.
+kvm_device->destroy() seems to be supposed to free its kvm_device
+struct, but vgic_its_destroy() is not currently doing this,
+resulting in a memory leak, resulting in kmemleak reports such as
+the following:
 
-To fix these issues, need to make sure keyboard's depress or release
-interrupt is enabled after noirq device suspend phase, this patch
-moves the suspend/resume callback to noirq suspend/resume phase, and
-enable the corresponding interrupt according to current keyboard status.
+unreferenced object 0xffff800aeddfe280 (size 128):
+  comm "qemu-system-aar", pid 13799, jiffies 4299827317 (age 1569.844s)
+  [...]
+  backtrace:
+    [<00000000a08b80e2>] kmem_cache_alloc+0x178/0x208
+    [<00000000dcad2bd3>] kvm_vm_ioctl+0x350/0xbc0
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fix it.
+
+Cc: Andre Przywara <andre.przywara@arm.com>
+Fixes: 1085fdc68c60 ("KVM: arm64: vgic-its: Introduce new KVM ITS device")
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ virt/kvm/arm/vgic/vgic-its.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
-index 2165f3dd328b..842c0235471d 100644
---- a/drivers/input/keyboard/imx_keypad.c
-+++ b/drivers/input/keyboard/imx_keypad.c
-@@ -530,11 +530,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index dc06f5e40041..526d808ecbbd 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -1677,6 +1677,7 @@ static void vgic_its_destroy(struct kvm_device *kvm_dev)
+ 	mutex_unlock(&its->its_lock);
+ 
+ 	kfree(its);
++	kfree(kvm_dev);/* alloc by kvm_ioctl_create_device, free by .destroy */
  }
  
--static int __maybe_unused imx_kbd_suspend(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
- 	struct input_dev *input_dev = kbd->input_dev;
-+	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
- 
- 	/* imx kbd can wake up system even clock is disabled */
- 	mutex_lock(&input_dev->mutex);
-@@ -544,13 +545,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
- 
- 	mutex_unlock(&input_dev->mutex);
- 
--	if (device_may_wakeup(&pdev->dev))
-+	if (device_may_wakeup(&pdev->dev)) {
-+		if (reg_val & KBD_STAT_KPKD)
-+			reg_val |= KBD_STAT_KRIE;
-+		if (reg_val & KBD_STAT_KPKR)
-+			reg_val |= KBD_STAT_KDIE;
-+		writew(reg_val, kbd->mmio_base + KPSR);
-+
- 		enable_irq_wake(kbd->irq);
-+	}
- 
- 	return 0;
- }
- 
--static int __maybe_unused imx_kbd_resume(struct device *dev)
-+static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
-@@ -574,7 +582,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
- 	return ret;
- }
- 
--static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
-+static const struct dev_pm_ops imx_kbd_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
-+};
- 
- static struct platform_driver imx_keypad_driver = {
- 	.driver		= {
+ int vgic_its_has_attr_regs(struct kvm_device *dev,
 -- 
 2.20.1
 
