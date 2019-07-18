@@ -2,94 +2,107 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C37C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B74C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D245C2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420091;
-	bh=b7p+RJ6o2UgJrYQh8sPvZ0pKkdFTOBgNmJhKU2wALJk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QQswFXz6TKlkIaAWKwp/eATapf2hwW2EdK9LA1bz02EUxEgK3fRS4F2HmfLj8VjcY
-	 GJ08Kvkc3Mtehyxz0wgO+gb4EOIbkLZGcXXjvG1tTZf8osvMzWriBAEgCYKkL/5Yzh
-	 nCTJy/0+Tj521GUN+H67eC9qBzjmNdrdzv7lr9og=
+	by mail.kernel.org (Postfix) with ESMTP id 8EC592053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kA006oxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389966AbfGRDJr (ORCPT
+        id S2392177AbfGRDVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42486 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:21:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33349 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403824AbfGRDJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:09:43 -0400
-Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2392297AbfGRDVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:21:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49351205F4;
-        Thu, 18 Jul 2019 03:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419382;
-        bh=b7p+RJ6o2UgJrYQh8sPvZ0pKkdFTOBgNmJhKU2wALJk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OERGpW2qRjIBS2LXRdZGggFmPAcI/Ouu+mUZ13S80OpJ9tbK2WnGp9wYkXkICYzdA
-         ZeWr+buQ1IjzTgjbHFuYgfFNaOYE8u1NTQSdc7XyGe6NmFEwNTKmCoYh9xXydbcy5G
-         SvwiTH92q/+Z8ILMi4BstFMp+uw1leBNMZ2of2mY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/80] mlxsw: spectrum: Disallow prio-tagged packets when PVID is removed
-Date:   Thu, 18 Jul 2019 12:01:16 +0900
-Message-Id: <20190718030100.721989850@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
-References: <20190718030058.615992480@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45pztt4f7mz9sNr;
+        Thu, 18 Jul 2019 13:21:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563420086;
+        bh=onp2VmPiELbvIvkg2tf00xZcG6KP/CQLzKyAEZzDib4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kA006oxQfewIgA9PWNvgcNJ9JvzlF26mMPNUPdKr70a7iDhrLEsAq/As3QzuSrgeZ
+         +hLFNtgTLS9LvJCEVCMByH+InBq7/ul40/FzhhXCLvxeZEiheUDeK2Mn7I+XeVGtfA
+         T7z7uhHkrsfr1sDu3ktsndOKtVhzYpT4lrQywk++uGd+KViY69ioJOZXB07KPePr+j
+         8+3gB8VHfXkr5vX8cTsSoilu+hjP0X2D5YqNClpj8E5Uu/O7OlI3VIgw6iT0CAB4YQ
+         PMPWCaytNPerKOgfI0c9JKbQMCoRqHPGb5cL1QOPdDDJq14hD03oc4RwHQAirU9u4f
+         qzN3cyznabT6g==
+Date:   Thu, 18 Jul 2019 13:21:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     akpm@linux-foundation.org
+Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: mmotm 2019-07-17-16-05 uploaded
+Message-ID: <20190718132111.1f55f46f@canb.auug.org.au>
+In-Reply-To: <20190717230610.zvRfipNL4%akpm@linux-foundation.org>
+References: <20190717230610.zvRfipNL4%akpm@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/JOd2f8N3wfkBrruihbRJymm"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4b14cc313f076c37b646cee06a85f0db59cf216c ]
+--Sig_/JOd2f8N3wfkBrruihbRJymm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When PVID is removed from a bridge port, the Linux bridge drops both
-untagged and prio-tagged packets. Align mlxsw with this behavior.
+Hi Andrew,
 
-Fixes: 148f472da5db ("mlxsw: reg: Add the Switch Port Acceptable Frame Types register")
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mellanox/mlxsw/reg.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, 17 Jul 2019 16:06:10 -0700 akpm@linux-foundation.org wrote:
+>
+> * mm-migrate-remove-unused-mode-argument.patch
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index 5acfbe5b8b9d..8ab7a4f98a07 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -911,7 +911,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
- 	MLXSW_REG_ZERO(spaft, payload);
- 	mlxsw_reg_spaft_local_port_set(payload, local_port);
- 	mlxsw_reg_spaft_allow_untagged_set(payload, allow_untagged);
--	mlxsw_reg_spaft_allow_prio_tagged_set(payload, true);
-+	mlxsw_reg_spaft_allow_prio_tagged_set(payload, allow_untagged);
- 	mlxsw_reg_spaft_allow_tagged_set(payload, true);
- }
- 
--- 
-2.20.1
+This patch needs updating due to changes in the iomap tree.
 
+The section that updated fs/iomap/migrate.c should be replaced by:
 
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index da4d958f9dc8..e25901ae3ff4 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -489,7 +489,7 @@ iomap_migrate_page(struct address_space *mapping, struc=
+t page *newpage,
+ {
+ 	int ret;
+=20
+-	ret =3D migrate_page_move_mapping(mapping, newpage, page, mode, 0);
++	ret =3D migrate_page_move_mapping(mapping, newpage, page, 0);
+ 	if (ret !=3D MIGRATEPAGE_SUCCESS)
+ 		return ret;
+=20
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/JOd2f8N3wfkBrruihbRJymm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0v5acACgkQAVBC80lX
+0Gy4Fgf/e9X65fZvCbB0Nhqw4PpeHOAdJvQRDvZA84FLdP/vsEKnLjFlFir0togF
+JgD4OAYOQvGeZqhbFOfSFETsraF4HOvu0CWObY7pHuDrizRDl4GX9ZKPGx/9+VkV
+dLoS2uFuV0tMC9fvyT/o+kLJE/r/zZNcXOJs/E5Fpzx8R7EN4nmS71quPkhezPeb
+/joItlo6DtsauVnTtUnrYqlDieWVOMCb0Xa+nHF3IzbQR/afTyoWxIYkCWhCS6/D
+muCE72/kFn5C5/9A637Xtffweis6aS4t47HVEesWFh5BZoFrOzYUN7AJGLoQ9tzm
+GPh337OUHu0D+XgyPiI4kazKcLXWRg==
+=HJt9
+-----END PGP SIGNATURE-----
+
+--Sig_/JOd2f8N3wfkBrruihbRJymm--
