@@ -2,125 +2,74 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0933AC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A0BC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C1F217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E0D21783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563430549;
+	bh=RdebAFINFwGRd3fswkfBur49ClSa/w8Ovi61pshm760=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pTy/kBGoy1qiwifGLgMBlT+2xNffCBW2FNhyt6i9Pr3qkg9HoL2x1w/juvEyc3OeJ
+	 3SCQjgkvBTTNuYDurk/uI31pyXWtEND8dU9DliE9bLZkDUS/TdXPwuL1mOev//9Dp2
+	 1800R2aGqpDkNJAF4qjagrL0u1KxfSf7PHCUHDi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfGRGMh (ORCPT
+        id S1726740AbfGRGPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:12:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47014 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725959AbfGRGMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:12:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DC940AFEC;
-        Thu, 18 Jul 2019 06:12:35 +0000 (UTC)
-Message-ID: <1563430353.3077.1.camel@suse.de>
-Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in
- ZONE_MOVABLE
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Date:   Thu, 18 Jul 2019 08:12:33 +0200
-In-Reply-To: <20190718024133.3873-1-leonardo@linux.ibm.com>
-References: <20190718024133.3873-1-leonardo@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jul 2019 02:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726376AbfGRGPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 02:15:47 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8EFA21019;
+        Thu, 18 Jul 2019 06:15:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563430546;
+        bh=RdebAFINFwGRd3fswkfBur49ClSa/w8Ovi61pshm760=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ljYbDYhJ4xVqrCpTFJY/3ishKDOVoQHHBW2ZDakxhOFV94K9Tu0lc5iewNEo4Ch8S
+         2gtRRThD7GNxs9XpLHD7c0hqVRT9LZsNhUoop53dJgoZqPJUA49FyMbwUYOQELe2AH
+         fed0iMZuQCFKEmqik+7Gsty3wvmLcTLEj+EaNZkc=
+Date:   Thu, 18 Jul 2019 14:15:30 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: imx8mm: Init rates and parents configs
+ for clocks
+Message-ID: <20190718061529.GH3738@dragon>
+References: <1562155702-29809-1-git-send-email-abel.vesa@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562155702-29809-1-git-send-email-abel.vesa@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-17 at 23:41 -0300, Leonardo Bras wrote:
-> Adds an option on kernel config to make hot-added memory online in
-> ZONE_MOVABLE by default.
+On Wed, Jul 03, 2019 at 03:08:22PM +0300, Abel Vesa wrote:
+> Add the initial configuration for clocks that need default parent and rate
+> setting. This is based on the vendor tree clock provider parents and rates
+> configuration except this is doing the setup in dts rather than using clock
+> consumer API in a clock provider driver.
 > 
-> This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y
-> by
-> allowing to choose which zone it will be auto-onlined
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 
-We do already have "movable_node" boot option, which exactly has that
-effect.
-Any hotplugged range will be placed in ZONE_MOVABLE.
-
-Why do we need yet another option to achieve the same? Was not that
-enough for your case?
-
-> 
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->  drivers/base/memory.c |  3 +++
->  mm/Kconfig            | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index f180427e48f4..378b585785c1 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block
-> **memory,
->  	mem->state = state;
->  	start_pfn = section_nr_to_pfn(mem->start_section_nr);
->  	mem->phys_device = arch_get_memory_phys_device(start_pfn);
-> +#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
-> +	mem->online_type = MMOP_ONLINE_MOVABLE;
-> +#endif
->  
->  	ret = register_memory(mem);
->  
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f0c76ba47695..74e793720f43 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
->  	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
->  	depends on MIGRATION
->  
-> +config MEMORY_HOTPLUG_MOVABLE
-> +	bool "Enhance the likelihood of hot-remove"
-> +	depends on MEMORY_HOTREMOVE
-> +	help
-> +	  This option sets the hot-added memory zone to MOVABLE
-> which
-> +	  drastically reduces the chance of a hot-remove to fail due
-> to
-> +	  unmovable memory segments. Kernel memory can't be
-> allocated in
-> +	  this zone.
-> +
-> +	  Say Y here if you want to have better chance to hot-remove 
-> memory
-> +	  that have been previously hot-added.
-> +	  Say N here if you want to make all hot-added memory
-> available to
-> +	  kernel space.
-> +
->  # Heavily threaded applications may benefit from splitting the mm-
-> wide
->  # page_table_lock, so that faults on different parts of the user
-> address
->  # space can be handled with less contention: split it at this
-> NR_CPUS.
--- 
-Oscar Salvador
-SUSE L3
+Applied, thanks.
