@@ -2,117 +2,53 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB48C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3376BC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0008A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1040F21783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbfGRGwG (ORCPT
+        id S2389173AbfGRGw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:52:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42148 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbfGRGwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:52:06 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A54388E24F;
-        Thu, 18 Jul 2019 06:52:05 +0000 (UTC)
-Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E894160D7C;
-        Thu, 18 Jul 2019 06:51:52 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 02:51:51 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, xdeguillard@vmware.com, namit@vmware.com,
-        akpm@linux-foundation.org, pagupta@redhat.com, riel@surriel.com,
-        dave.hansen@intel.com, david@redhat.com, konrad.wilk@oracle.com,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, lcapitulino@redhat.com,
-        aarcange@redhat.com, pbonzini@redhat.com,
-        alexander.h.duyck@linux.intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v1] mm/balloon_compaction: avoid duplicate page removal
-Message-ID: <20190718024822-mutt-send-email-mst@kernel.org>
-References: <1563416610-11045-1-git-send-email-wei.w.wang@intel.com>
- <20190718001605-mutt-send-email-mst@kernel.org>
- <5D301232.7080808@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D301232.7080808@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 18 Jul 2019 06:52:05 +0000 (UTC)
+        Thu, 18 Jul 2019 02:52:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53732 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726090AbfGRGw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 02:52:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9CA31ACBA;
+        Thu, 18 Jul 2019 06:52:26 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH 0/2] xen/gntdev: sanitize user interface handling
+Date:   Thu, 18 Jul 2019 08:52:20 +0200
+Message-Id: <20190718065222.31310-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 02:31:14PM +0800, Wei Wang wrote:
-> On 07/18/2019 12:31 PM, Michael S. Tsirkin wrote:
-> > On Thu, Jul 18, 2019 at 10:23:30AM +0800, Wei Wang wrote:
-> > > Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
-> > > 
-> > > A #GP is reported in the guest when requesting balloon inflation via
-> > > virtio-balloon. The reason is that the virtio-balloon driver has
-> > > removed the page from its internal page list (via balloon_page_pop),
-> > > but balloon_page_enqueue_one also calls "list_del"  to do the removal.
-> > I would add here "this is necessary when it's used from
-> > balloon_page_enqueue_list but not when it's called
-> > from balloon_page_enqueue".
-> > 
-> > > So remove the list_del in balloon_page_enqueue_one, and have the callers
-> > > do the page removal from their own page lists.
-> > > 
-> > > Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-> > Patch is good but comments need some work.
-> > 
-> > > ---
-> > >   mm/balloon_compaction.c | 3 ++-
-> > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-> > > index 83a7b61..1a5ddc4 100644
-> > > --- a/mm/balloon_compaction.c
-> > > +++ b/mm/balloon_compaction.c
-> > > @@ -11,6 +11,7 @@
-> > >   #include <linux/export.h>
-> > >   #include <linux/balloon_compaction.h>
-> > > +/* Callers ensure that @page has been removed from its original list. */
-> > This comment does not make sense. E.g. balloon_page_enqueue
-> > does nothing to ensure this. And drivers are not supposed
-> > to care how the page lists are managed. Pls drop.
-> > 
-> > Instead please add the following to balloon_page_enqueue:
-> > 
-> > 
-> > 	Note: drivers must not call balloon_page_list_enqueue on
-> 
-> Probably, you meant balloon_page_enqueue here.
+The Xen gntdev driver's checking of the number of allowed mapped pages
+is in need of some sanitizing work.
 
-yes
+Juergen Gross (2):
+  xen/gntdev: replace global limit of mapped pages by limit per call
+  xen/gntdev: switch from kcalloc() to kvcalloc()
 
-> The description for balloon_page_enqueue also seems incorrect:
-> "allocates a new page and inserts it into the balloon page list."
-> This function doesn't do any allocation itself.
-> Plan to reword it: inserts a new page into the balloon page list."
+ drivers/xen/gntdev-common.h |  2 +-
+ drivers/xen/gntdev-dmabuf.c | 11 +++-------
+ drivers/xen/gntdev.c        | 52 ++++++++++++++++++---------------------------
+ 3 files changed, 25 insertions(+), 40 deletions(-)
 
-And maybe
-" Page must have been allocated with balloon_page_alloc.".
+-- 
+2.16.4
 
-
-Also
- * Driver must call it to properly enqueue a balloon pages before definitively
-
-should be
- * Driver must call it to properly enqueue balloon pages before definitively
-
-
-> 
-> Best,
-> Wei
