@@ -2,101 +2,168 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D500C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC359C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3AC217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiMYx+uQ"
+	by mail.kernel.org (Postfix) with ESMTP id AD7082173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 05:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfGRFgx (ORCPT
+        id S1727577AbfGRFhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 01:36:53 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32807 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfGRFgx (ORCPT
+        Thu, 18 Jul 2019 01:37:36 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:55784 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726304AbfGRFhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 01:36:53 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f20so3087018pgj.0;
-        Wed, 17 Jul 2019 22:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jC4D69AaHKiU01d7qFnc/fZ3zEU1QVgvQY/VIPGj8fs=;
-        b=OiMYx+uQoiqfAIuRs1BkDfkiKxpLpCvH5rmrgKbGyd4lIsF+fTsxlQRkC+BbDKKsHv
-         FJ0Hrktu2DYsruxJC9i4L1pgbivp//qE02Ut1IDB1rEPFEIv0m6y5+13c9QMHgFRTVDU
-         9fndjehhNI5WMPq4zdNJ9OeBC6E8/OvlT5UGXeJGyk3LJUmRB39sI/XyvOr+zfU0Sb9Q
-         pDSPiBhbPUR0N12XqioGJN505EcZ/BaVfnsvs1VseSzesm+cy9pm7REhmH4TRmxRyMdd
-         MXFwuLq2a9wyoLbM8nXwHqZgcoZJm/99mW9AP7EZ73vDp0QLIxsh/2uRSsRzMxk8Z4Op
-         ClEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jC4D69AaHKiU01d7qFnc/fZ3zEU1QVgvQY/VIPGj8fs=;
-        b=PsMgjySn94OULopa4ViwaVY/1Gcrz0brczzhIyOIl3MiFdv6bEx6gpDhud+YhKP+Ei
-         ws0kwoAHDtVN0nDR68W4WEanbmNLsN//mOwsoBAF/GCg6eZ1QV7mzmolB+z3iu/nHpq6
-         YAVheeJQs/D9LnMNmlZDTPy18dI04E0mr5/TzBLHr4GvuEUfv7YLXOq58OBCtP6bv+8n
-         ufVOH8Sp/p3eA05yNMkKD/TheYTvXCednx/liqJfuzuHQECagV3w2WJv7jlWrRHQgFQ0
-         VE+5RIdtPZ+iU8+KrRz7sPxJoTK58u6EjbrVJfnRkri/YWILlAIFNE1JLlISB5VQSwHs
-         iS/Q==
-X-Gm-Message-State: APjAAAXnXKv45laYBR5VSg7yAOVlTt0yVDZ9nv0DYviapoFfh4YHFY8H
-        8MIuoszFbMOg+3b8Vz3YZOk=
-X-Google-Smtp-Source: APXvYqyfQNsVq9I3JkdZD8K8qiRpeSAp1KmjMTBLzAfcCN3dep9z9aXaFcEpuE+mBxtjxjnQZk9K+g==
-X-Received: by 2002:a63:f312:: with SMTP id l18mr46240260pgh.440.1563428212326;
-        Wed, 17 Jul 2019 22:36:52 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id q126sm29822432pfq.123.2019.07.17.22.36.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Jul 2019 22:36:51 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH] clk: sprd: Select REGMAP_MMIO to avoid compile errors
-Date:   Thu, 18 Jul 2019 13:36:16 +0800
-Message-Id: <20190718053616.27042-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 18 Jul 2019 01:37:35 -0400
+X-UUID: 56b8101c485841a88775199fbb1b285b-20190718
+X-UUID: 56b8101c485841a88775199fbb1b285b-20190718
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 208262468; Thu, 18 Jul 2019 13:37:29 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 18 Jul
+ 2019 13:37:24 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 18 Jul 2019 13:37:23 +0800
+Message-ID: <1563428243.31342.39.camel@mhfsdcap03>
+Subject: Re: [PATCH v8 07/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Will Deacon <will@kernel.org>
+CC:     <youlin.pei@mediatek.com>, <devicetree@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
+        <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>,
+        "Tomasz Figa" <tfiga@google.com>,
+        <iommu@lists.linux-foundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <yingjoe.chen@mediatek.com>, <anan.sun@mediatek.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Matthias Kaehlcke" <mka@chromium.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 18 Jul 2019 13:37:23 +0800
+In-Reply-To: <20190717142339.wltamw6wktwixqqn@willie-the-truck>
+References: <1561774167-24141-1-git-send-email-yong.wu@mediatek.com>
+         <1561774167-24141-8-git-send-email-yong.wu@mediatek.com>
+         <20190710143649.w5dplhzdpi3bxp7e@willie-the-truck>
+         <1562846036.31342.10.camel@mhfsdcap03>
+         <20190711123129.da4rg35b54u4svfw@willie-the-truck>
+         <1563079280.31342.22.camel@mhfsdcap03>
+         <20190715095156.xczfkbm6zpjueq32@willie-the-truck>
+         <1563367459.31342.34.camel@mhfsdcap03>
+         <20190717142339.wltamw6wktwixqqn@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: FCC812B93959C45D6AFBE2DE9BA4C64EE9C5BF014909D9D18086284D23A8FC762000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On Wed, 2019-07-17 at 15:23 +0100, Will Deacon wrote:
+> On Wed, Jul 17, 2019 at 08:44:19PM +0800, Yong Wu wrote:
+> > On Mon, 2019-07-15 at 10:51 +0100, Will Deacon wrote:
+> > > On Sun, Jul 14, 2019 at 12:41:20PM +0800, Yong Wu wrote:
+> > > > @@ -742,7 +763,9 @@ static struct io_pgtable
+> > > > *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+> > > >  {
+> > > >  	struct arm_v7s_io_pgtable *data;
+> > > >  
+> > > > -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
+> > > > +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
+> > > > +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
+> > > > +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
+> > > >  		return NULL;
+> > > 
+> > > I think you can rework this to do something like:
+> > > 
+> > > 	if (cfg->ias > ARM_V7S_ADDR_BITS)
+> > > 		return NULL;
+> > > 
+> > > 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
+> > > 		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+> > > 			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
+> > > 		else if (cfg->oas > 34)
+> > > 			return NULL;
+> > > 	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
+> > > 		return NULL;
+> > > 	}
+> > > 
+> > > so that we clamp the oas when phys_addr_t is 32-bit for you. That should
+> > > allow you to remove lots of the checking from iopte_to_paddr() too if you
+> > > check against oas in the map() function.
+> > > 
+> > > Does that make sense?
+> > 
+> > Of course I'm ok for this. I'm only afraid that this function has
+> > already 3 checking "if (x) return NULL", Here we add a new one and so
+> > many lines... Maybe the user should guarantee the right value of oas.
+> > How about move it into mtk_iommu.c?
+> > 
+> > About the checking of iopte_to_paddr, I can not remove them. I know it
+> > may be a bit special and not readable. Hmm, I guess I should use a MACRO
+> > instead of the hard code 33 for the special 4GB mode case.
+> 
+> Why can't you just do something like:
+> 
+> 	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT))
+> 		return paddr;
+> 
+> 	if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
+> 		paddr |= BIT_ULL(33);
 
-Make REGMAP_MMIO selected to avoid undefined reference to regmap symbols.
+OK here.
 
-Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- drivers/clk/sprd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> 	if (pte & ARM_V&S_ATTR_MTK_PA_BIT32)
+> 		paddr |= BIT_ULL(32);
 
-diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
-index b422ceaa709f..12e9a7fd746a 100644
---- a/drivers/clk/sprd/Kconfig
-+++ b/drivers/clk/sprd/Kconfig
-@@ -2,6 +2,7 @@ config SPRD_COMMON_CLK
- 	tristate "Clock support for Spreadtrum SoCs"
- 	depends on ARCH_SPRD || COMPILE_TEST
- 	default ARCH_SPRD
-+	select REGMAP_MMIO
- 
- if SPRD_COMMON_CLK
- 
--- 
-2.20.1
+No here, The flow is a bit special for 4GB mode here.
+
+This is the detailed remap relationship for our 4GB mode.
+           CPU PA               ->    HW PA
+register: 0x0 ~ 0x3fff_ffff
+dram 1G:0x4000_0000~0x7fff_ffff ->0x1_4000_0000~0x1_7fff_ffff(Add bit32)
+dram 2G:0x8000_0000~0xbfff_ffff ->0x1_8000_0000~0x1_bfff_ffff(Add bit32)
+dram 3G:0xc000_0000~0xffff_ffff ->0x1_c000_0000~0x1_ffff_ffff(Add bit32)
+dram 4G:0x1_0000_0000~0x1_3fff_ffff->0x1_0000_0000~0x1_3fff_ffff
+
+Thus, in the 4GB mode, we should add always add bit9 in pte(for bit32
+PA). But we can not always add bit32 in the iova_to_phys. The valid PA
+range should be 0x4000_0000 - 0x1_3fff_ffff. Thus, we can only add bit32
+when the PA in pte < 0x4000_0000, keep it as-is if the PA in pte located
+from 0x4000_0000 to 0xffff_ffff.
+
+This issue exist all the time after we added 4GB mode for mt8173.
+
+Thus, I have to add a special flow for 4gb mode here:
+
+	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
+	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
+		paddr |= BIT_ULL(32);
+	else if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
+		paddr |= BIT_ULL(32);
+
+> 
+> 	return paddr;
+> 
+> The diff I sent previously sanitises the oas at init time, and then you
+> can just enforce it in map().
+> 
+> Will
+
 
