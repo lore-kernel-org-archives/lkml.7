@@ -2,55 +2,55 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A8CC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD9DC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1676020578
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1922053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420190;
-	bh=j982ZNen7fZJSe+VCv8jDFdTG+k/yWiL0j+VKm6MQhc=;
+	s=default; t=1563420194;
+	bh=uwB4vb3z/m1k+bVykQxmfhxl1uup4a6Q5Lxogz7dBKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnjpMkQmP45eweqZtWjfvl42wSxq8DIT1X7lbcg3MuWEspOPnMOrDgyE0tv1T46Jk
-	 KnN8YuQF+4G+0YoxqIlFFKWR/heJQOP4DXpBUiNat48fscgIGv0R7IGZpVzc+nZZHv
-	 cikvwbvJEbkNl/fKcf/P4+q6GuEiTHSCY1h9ZPHA=
+	b=pKB9aV51qsVa0us8x06mc30SqZ1/qW2fawPefJt6C+3YsQLUZIbEzn7OCg36EaVC5
+	 PkpPx423FDdleWT4EQMCcNtdPlsHrRte2xFVCb1sGt04dei0fn9QBPRsKr/yF3Mszx
+	 Bjg+wleHfV4vhMvjj+IjKid6Bf8uAhkidrPR1iXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391308AbfGRDXF (ORCPT
+        id S2390704AbfGRDIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389520AbfGRDXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:23:04 -0400
+        id S2390665AbfGRDIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:16 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 413EC21841;
-        Thu, 18 Jul 2019 03:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D75082173B;
+        Thu, 18 Jul 2019 03:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419615;
-        bh=j982ZNen7fZJSe+VCv8jDFdTG+k/yWiL0j+VKm6MQhc=;
+        s=default; t=1563419295;
+        bh=uwB4vb3z/m1k+bVykQxmfhxl1uup4a6Q5Lxogz7dBKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozY5X6J7Zu1kiwEQIBwbfx7Yd2YziCiri6f+f/sOCyfGpdVgte/xmBA+DSYUB3TOH
-         RFpqQaSUVhtekpFSKruWgHdJOW/T+q7vP6HKF6xzmuUg9zBngS2T3L4Ss4eNSfhsBo
-         iV8NjvhNjvJLe4EIi7m7vkMxmtIxl0uatCnaMv78=
+        b=YEdnVRGsO9GYQAGTdvoz7RLWbHtqYdprglbgWhgm3pDOgU7e/lKvNTCRqD8/NT+CK
+         vJesO8L3hgQj+QaPq2svuc23tcvsCe+ZTv5/vjgT892oUEZZBe0vPXC0uqhXKQMaqN
+         QBnPrttXDQsk5OGNOVZ+A0Qa7DZgSrzl1ZMKqB7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/54] ARM: davinci: da850-evm: call regulator_has_full_constraints()
-Date:   Thu, 18 Jul 2019 12:01:45 +0900
-Message-Id: <20190718030050.453509943@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 4.19 32/47] genirq: Add optional hardware synchronization for shutdown
+Date:   Thu, 18 Jul 2019 12:01:46 +0900
+Message-Id: <20190718030051.450770137@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
-References: <20190718030048.392549994@linuxfoundation.org>
+In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
+References: <20190718030045.780672747@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,38 +60,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0c0c9b5753cd04601b17de09da1ed2885a3b42fe ]
+From: Thomas Gleixner tglx@linutronix.de
 
-The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
-the board doesn't set has_full_constraints to true in the regulator
-API.
+commit 62e0468650c30f0298822c580f382b16328119f6 upstream
 
-Call regulator_has_full_constraints() at the end of board registration
-just like we do in da850-lcdk and da830-evm.
+free_irq() ensures that no hardware interrupt handler is executing on a
+different CPU before actually releasing resources and deactivating the
+interrupt completely in a domain hierarchy.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+But that does not catch the case where the interrupt is on flight at the
+hardware level but not yet serviced by the target CPU. That creates an
+interesing race condition:
+
+   CPU 0                  CPU 1               IRQ CHIP
+
+                                              interrupt is raised
+                                              sent to CPU1
+			  Unable to handle
+			  immediately
+			  (interrupts off,
+			   deep idle delay)
+   mask()
+   ...
+   free()
+     shutdown()
+     synchronize_irq()
+     release_resources()
+                          do_IRQ()
+                            -> resources are not available
+
+That might be harmless and just trigger a spurious interrupt warning, but
+some interrupt chips might get into a wedged state.
+
+Utilize the existing irq_get_irqchip_state() callback for the
+synchronization in free_irq().
+
+synchronize_hardirq() is not using this mechanism as it might actually
+deadlock unter certain conditions, e.g. when called with interrupts
+disabled and the target CPU is the one on which the synchronization is
+invoked. synchronize_irq() uses it because that function cannot be called
+from non preemtible contexts as it might sleep.
+
+No functional change intended and according to Marc the existing GIC
+implementations where the driver supports the callback should be able
+to cope with that core change. Famous last words.
+
+Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
+Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Tested-by: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://lkml.kernel.org/r/20190628111440.279463375@linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- arch/arm/mach-davinci/board-da850-evm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/irq/internals.h |    4 ++
+ kernel/irq/manage.c    |   75 ++++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 60 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 8e4539f69fdc..3bdf0d588238 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1479,6 +1479,8 @@ static __init void da850_evm_init(void)
- 	if (ret)
- 		pr_warn("%s: dsp/rproc registration failed: %d\n",
- 			__func__, ret);
-+
-+	regulator_has_full_constraints();
- }
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -95,6 +95,10 @@ static inline void irq_mark_irq(unsigned
+ extern void irq_mark_irq(unsigned int irq);
+ #endif
  
- #ifdef CONFIG_SERIAL_8250_CONSOLE
--- 
-2.20.1
-
++extern int __irq_get_irqchip_state(struct irq_data *data,
++				   enum irqchip_irq_state which,
++				   bool *state);
++
+ extern void init_kstat_irqs(struct irq_desc *desc, int node, int nr);
+ 
+ irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags);
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -35,8 +35,9 @@ static int __init setup_forced_irqthread
+ early_param("threadirqs", setup_forced_irqthreads);
+ #endif
+ 
+-static void __synchronize_hardirq(struct irq_desc *desc)
++static void __synchronize_hardirq(struct irq_desc *desc, bool sync_chip)
+ {
++	struct irq_data *irqd = irq_desc_get_irq_data(desc);
+ 	bool inprogress;
+ 
+ 	do {
+@@ -52,6 +53,20 @@ static void __synchronize_hardirq(struct
+ 		/* Ok, that indicated we're done: double-check carefully. */
+ 		raw_spin_lock_irqsave(&desc->lock, flags);
+ 		inprogress = irqd_irq_inprogress(&desc->irq_data);
++
++		/*
++		 * If requested and supported, check at the chip whether it
++		 * is in flight at the hardware level, i.e. already pending
++		 * in a CPU and waiting for service and acknowledge.
++		 */
++		if (!inprogress && sync_chip) {
++			/*
++			 * Ignore the return code. inprogress is only updated
++			 * when the chip supports it.
++			 */
++			__irq_get_irqchip_state(irqd, IRQCHIP_STATE_ACTIVE,
++						&inprogress);
++		}
+ 		raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 
+ 		/* Oops, that failed? */
+@@ -74,13 +89,18 @@ static void __synchronize_hardirq(struct
+  *	Returns: false if a threaded handler is active.
+  *
+  *	This function may be called - with care - from IRQ context.
++ *
++ *	It does not check whether there is an interrupt in flight at the
++ *	hardware level, but not serviced yet, as this might deadlock when
++ *	called with interrupts disabled and the target CPU of the interrupt
++ *	is the current CPU.
+  */
+ bool synchronize_hardirq(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+ 
+ 	if (desc) {
+-		__synchronize_hardirq(desc);
++		__synchronize_hardirq(desc, false);
+ 		return !atomic_read(&desc->threads_active);
+ 	}
+ 
+@@ -98,13 +118,17 @@ EXPORT_SYMBOL(synchronize_hardirq);
+  *
+  *	Can only be called from preemptible code as it might sleep when
+  *	an interrupt thread is associated to @irq.
++ *
++ *	It optionally makes sure (when the irq chip supports that method)
++ *	that the interrupt is not pending in any CPU and waiting for
++ *	service.
+  */
+ void synchronize_irq(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+ 
+ 	if (desc) {
+-		__synchronize_hardirq(desc);
++		__synchronize_hardirq(desc, true);
+ 		/*
+ 		 * We made sure that no hardirq handler is
+ 		 * running. Now verify that no threaded handlers are
+@@ -1650,8 +1674,12 @@ static struct irqaction *__free_irq(stru
+ 
+ 	unregister_handler_proc(irq, action);
+ 
+-	/* Make sure it's not being used on another CPU: */
+-	synchronize_hardirq(irq);
++	/*
++	 * Make sure it's not being used on another CPU and if the chip
++	 * supports it also make sure that there is no (not yet serviced)
++	 * interrupt in flight at the hardware level.
++	 */
++	__synchronize_hardirq(desc, true);
+ 
+ #ifdef CONFIG_DEBUG_SHIRQ
+ 	/*
+@@ -2184,6 +2212,28 @@ int __request_percpu_irq(unsigned int ir
+ }
+ EXPORT_SYMBOL_GPL(__request_percpu_irq);
+ 
++int __irq_get_irqchip_state(struct irq_data *data, enum irqchip_irq_state which,
++			    bool *state)
++{
++	struct irq_chip *chip;
++	int err = -EINVAL;
++
++	do {
++		chip = irq_data_get_irq_chip(data);
++		if (chip->irq_get_irqchip_state)
++			break;
++#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
++		data = data->parent_data;
++#else
++		data = NULL;
++#endif
++	} while (data);
++
++	if (data)
++		err = chip->irq_get_irqchip_state(data, which, state);
++	return err;
++}
++
+ /**
+  *	irq_get_irqchip_state - returns the irqchip state of a interrupt.
+  *	@irq: Interrupt line that is forwarded to a VM
+@@ -2202,7 +2252,6 @@ int irq_get_irqchip_state(unsigned int i
+ {
+ 	struct irq_desc *desc;
+ 	struct irq_data *data;
+-	struct irq_chip *chip;
+ 	unsigned long flags;
+ 	int err = -EINVAL;
+ 
+@@ -2212,19 +2261,7 @@ int irq_get_irqchip_state(unsigned int i
+ 
+ 	data = irq_desc_get_irq_data(desc);
+ 
+-	do {
+-		chip = irq_data_get_irq_chip(data);
+-		if (chip->irq_get_irqchip_state)
+-			break;
+-#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+-		data = data->parent_data;
+-#else
+-		data = NULL;
+-#endif
+-	} while (data);
+-
+-	if (data)
+-		err = chip->irq_get_irqchip_state(data, which, state);
++	err = __irq_get_irqchip_state(data, which, state);
+ 
+ 	irq_put_desc_busunlock(desc, flags);
+ 	return err;
 
 
