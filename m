@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF02FC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D2C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3C720880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DBF20880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="CruZoqk2";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="hM8Vs6RC"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="L6aEGF+E";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="GEHKC0Bt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390084AbfGRLPr (ORCPT
+        id S2390116AbfGRLPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:15:47 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:54062 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726665AbfGRLPl (ORCPT
+        Thu, 18 Jul 2019 07:15:53 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:56902 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727692AbfGRLPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:15:41 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IB4dt3015820;
-        Thu, 18 Jul 2019 04:15:31 -0700
+        Thu, 18 Jul 2019 07:15:40 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IB1jgM002154;
+        Thu, 18 Jul 2019 04:15:28 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=proofpoint;
- bh=qBCdHWi5ZY2oOZDt9gutmPFJ9fOuA8bEFvu8kgu55aw=;
- b=CruZoqk27jhcZs3ksZNxfl58KjvvBEFTXk4BPzkoQESLvaYlvM63J2mbfFMEONyk7UlS
- Rmq8AJ6K91peGlqctaoSP9KGcE57zD3HK2SJ66f/9mh5GD8nxaGBUZHQA0ENh55mjgFB
- XyqyI3mVCAUSoWabbVoalHLkNSmb7bveRlTnZQb4aVOamg4AJ1yVMztpoxmDsIebW/gb
- ub+d3XfW5sQh6wgfJHbKePmg9vvMQ7QlPcNBdo9V3wSR6JwZ4x3qF3ZCdrPimJMPDoxF
- vz4BXVrqX9rRYUR6nVr73awzeALlP9FgGtyqHhWwI1wZz8tzXNDk4CR5V8akiKTeIi7M dw== 
+ bh=NVDfzCzQ3lVqe+00bZH7dJJOrAvOD5pmcX6YMI8FP1g=;
+ b=L6aEGF+EW+/22z3l36SjO0ZYIAslPbShcjXe9kLlp/g2lu3oxEOtYjqTJoKt4QguEDyP
+ yIMQVPkH+lV4LT7I1l4lzEMsw7/ugq1bVT+cGvlB16saOtykwZzSRcxZBsxWTjclXQ2U
+ ykdQpg69a5i4nFgMO4qVjgWVC13N29T7E6XcN04bR6emYcrnZ1XZABDu6on9FFvfGzpU
+ fv0JnBkf7rqN4yJuiFIrGkKijtxmuiAjdmeOv9BlKmNfbzAaXV4mOUdjbhDSGEb/xY6U
+ E0LVyJRx+8nyqb7dXpCk4QCJ9TUgmEsEVMdsr99YdMniKblGesi2zGmfUU9BLg+zzLBK DQ== 
 Authentication-Results: cadence.com;
         spf=pass smtp.mailfrom=jank@cadence.com
-Received: from nam05-by2-obe.outbound.protection.outlook.com (mail-by2nam05lp2057.outbound.protection.outlook.com [104.47.50.57])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2tqavwv1su-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 04:15:30 -0700
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2054.outbound.protection.outlook.com [104.47.49.54])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2ttm8u0pbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 04:15:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WLrLsFAqpmsfQCgPuUmpjQ9BQop52qGMWkmjeUZBoxnPWjr5hvQuxt31UZANhI+B6FBx//oHrWNmiCt4hKGu/Lj7/NMOLUCBVdgYBHhgA6G/R6Pam4wQbs9BDBzTER1Mcl0s6QQhUUrYlD0sWnI8N+8EZXBhRZl7oM8eOl86SR+S7A44bby4f3tFeMOZuFk/lSwz79QEMiuNSnM/JYhsK9nsogPzA329iBxh/nhU7jUH9gnIG+S+fEbx+T+7ZyzEnr4OlmwBVznc8bRMpz8wH5tltaVy26W33ltgmTzr/+IoK9heoLEyYGfBZv7mussZ4OQbZwzEq1gWhynL3SAEnA==
+ b=kfPDlrykjpTHBZXV+rjMX9Uglg5vZaZYmBBK77w+pPlXA8F7mCL9J/U3Z4enG1TrGzEBuTK1Og4Jl9ZcHOqzJMrJkBC6yhtgorogZP5JX9ZNlil407M4nj3aKjnK1mweeTv71baCrXDejutkotniXKFX6MVJ/fSooTLXlaxCrP4Q4JCgyzjXxzo1/9LekK98tV1AEHhpCXySIrQzvWIPEWEYyOjCWM2cn1Pzm7tt3JqXm04R0E/XXDRDbeGn3jWVsIWIuS5qaHEO7iTCtsh/g81xBFPFY+DSZFvy5UxHLJkP0WtQhQu2Plt55O2Slrm5YHi6jWhBFXX0ttkbShsanA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qBCdHWi5ZY2oOZDt9gutmPFJ9fOuA8bEFvu8kgu55aw=;
- b=UGznZI/B+YDuUVu9RFUNdV/gTf1lvd/lY/dAOLd02HGMX43lFBgOZora9Z7RAY3HaJ4uCIwa3WxE0NWsUYpSWza3VNEWHscFAIqrshhuruCiSkslZO5buw7ZQFuUI/yz7nnbRtpBWjcIIVDrKrF8I4755vRpj6yHfhLC+6whT2nw+UyMFn3vpgALYZH1r3VNsaH5SBKEzyCbR6u8gpgslxF+o0o98wEM+HdYyac/+Wf9oQgcxW2PkhOY9xl6Yd7rYME5iRUotQgnxKXulNHeJ7pZfIShl+za2NOhmNd+bYhBoNOg/WQAQUZ5lzBqfgvd6Ga1hANpAjblmV7eZJuLXw==
+ bh=NVDfzCzQ3lVqe+00bZH7dJJOrAvOD5pmcX6YMI8FP1g=;
+ b=PerHBeZIG+5FNN35ljg0hrdB6a1fq86LCrWXk12HjUwYU5FtXcudPCay0dwt+MjiNM4unl2HrYJC6k0Bowa2wr1kW8q6tuSopnTELiHvnviWVHPJOJk9HouyvNzTMe6se0vFWflXn/FpodtwkKp/7TyBD8GShQCbVQwX6lil9deWXO1NMqKmd73e4T+xqdnjQU262cbaaRNQmcKge+PZRtmzSvPN0VYWZofXp/oXLt+MOqMaAPVo1NeQjFKvyAz7NNLigHxlHGvaWFOY0CUK0Am2gOW7ydB3d/wNwkr7Y/MNisANbDuBjebtYkbg+89YSLbs6Zv2Utj4+U4rrVtV3w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=softfail (sender ip is
  158.140.1.28) smtp.rcpttodomain=kernel.org
  smtp.mailfrom=cadence.com;dmarc=fail (p=none sp=none pct=100) action=none
@@ -56,49 +56,48 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=softfail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qBCdHWi5ZY2oOZDt9gutmPFJ9fOuA8bEFvu8kgu55aw=;
- b=hM8Vs6RClq6fsgC3I/YHG4XfhwZTYP1kz0vq5SrVMlEpvbgUpYLNY+4iJKPQYHOfFWeAnvIWoHLB/UUR32ClIqAf1FBNrpsDL/Q+3dmUR/Pdu/35yPIIHbImbOucJDgM02iyWdOt9ofCEfirrCZZ/0Jj6C4KcRtKZWiLY0TbItY=
-Received: from MN2PR07CA0029.namprd07.prod.outlook.com (2603:10b6:208:1a0::39)
- by BYAPR07MB4791.namprd07.prod.outlook.com (2603:10b6:a02:f0::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2073.14; Thu, 18 Jul
- 2019 11:15:27 +0000
-Received: from BY2NAM05FT010.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e52::208) by MN2PR07CA0029.outlook.office365.com
- (2603:10b6:208:1a0::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2094.12 via Frontend
- Transport; Thu, 18 Jul 2019 11:15:26 +0000
+ bh=NVDfzCzQ3lVqe+00bZH7dJJOrAvOD5pmcX6YMI8FP1g=;
+ b=GEHKC0BtKv9jDr5AbMHwOptBi4BhSIx4H94WDHm8DrO3FUsuwKqmpofjBhPNVdxP2ojxHXhejMSlJ+CcKRCm9iB8w+pEqkBmHLYXAKTnhUIK2UuVYqVgSuQpxAJmBVrEotC61ycmfa9CFRuR/MJWz1D9FW8wjlQhhz7PpnUwpE0=
+Received: from DM5PR07CA0031.namprd07.prod.outlook.com (2603:10b6:3:16::17) by
+ SN6PR07MB5102.namprd07.prod.outlook.com (2603:10b6:805:6b::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.11; Thu, 18 Jul 2019 11:15:26 +0000
+Received: from DM3NAM05FT016.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e51::202) by DM5PR07CA0031.outlook.office365.com
+ (2603:10b6:3:16::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2094.11 via Frontend
+ Transport; Thu, 18 Jul 2019 11:15:25 +0000
 Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
  cadence.com discourages use of 158.140.1.28 as permitted sender)
 Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- BY2NAM05FT010.mail.protection.outlook.com (10.152.100.147) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2115.4 via Frontend Transport; Thu, 18 Jul 2019 11:15:26 +0000
+ DM3NAM05FT016.mail.protection.outlook.com (10.152.98.125) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.4 via Frontend Transport; Thu, 18 Jul 2019 11:15:25 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x6IBFMvF021080
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x6IBFMvC021080
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 18 Jul 2019 04:15:25 -0700
+        Thu, 18 Jul 2019 04:15:23 -0700
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Thu, 18 Jul 2019 13:15:22 +0200
+ 15.0.1367.3; Thu, 18 Jul 2019 13:15:21 +0200
 Received: from lvloginb.cadence.com (10.165.177.11) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 18 Jul 2019 13:15:22 +0200
+ 15.0.1367.3 via Frontend Transport; Thu, 18 Jul 2019 13:15:21 +0200
 Received: from lvloginb.cadence.com (localhost [127.0.0.1])
-        by lvloginb.cadence.com (8.14.4/8.14.4) with ESMTP id x6IBFLid030014;
+        by lvloginb.cadence.com (8.14.4/8.14.4) with ESMTP id x6IBFL7d030005;
         Thu, 18 Jul 2019 12:15:21 +0100
 Received: (from jank@localhost)
-        by lvloginb.cadence.com (8.14.4/8.14.4/Submit) id x6IBFL4C030013;
+        by lvloginb.cadence.com (8.14.4/8.14.4/Submit) id x6IBFLrI030004;
         Thu, 18 Jul 2019 12:15:21 +0100
 From:   Jan Kotas <jank@cadence.com>
 To:     <maxime.ripard@bootlin.com>, <mchehab@kernel.org>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Jan Kotas <jank@cadence.com>
-Subject: [PATCH 3/3] media: Add support for Cadence CSI2TX 2.1
-Date:   Thu, 18 Jul 2019 12:15:09 +0100
-Message-ID: <20190718111509.29924-4-jank@cadence.com>
+Subject: [PATCH 1/3] media: dt-bindings: Update bindings for Cadence CSI2TX version 2.1
+Date:   Thu, 18 Jul 2019 12:15:07 +0100
+Message-ID: <20190718111509.29924-2-jank@cadence.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20190718111509.29924-1-jank@cadence.com>
 References: <20190718111509.29924-1-jank@cadence.com>
@@ -106,24 +105,24 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(2980300002)(36092001)(199004)(189003)(2616005)(486006)(107886003)(11346002)(476003)(126002)(246002)(76176011)(2906002)(186003)(26826003)(16586007)(51416003)(87636003)(47776003)(316002)(8676002)(4326008)(426003)(42186006)(8936002)(6666004)(336012)(86362001)(48376002)(50466002)(446003)(54906003)(110136005)(70206006)(26005)(70586007)(478600001)(50226002)(7636002)(5660300002)(305945005)(36756003)(1076003)(76130400001)(356004)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB4791;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(396003)(346002)(2980300002)(36092001)(189003)(199004)(24433001)(7636002)(305945005)(8676002)(26826003)(87636003)(6666004)(478600001)(356004)(2616005)(51416003)(14444005)(446003)(186003)(26005)(76176011)(11346002)(246002)(126002)(50226002)(486006)(426003)(336012)(8936002)(54906003)(110136005)(16586007)(316002)(42186006)(47776003)(2906002)(476003)(5660300002)(50466002)(4326008)(76130400001)(86362001)(70206006)(70586007)(1076003)(107886003)(48376002)(36756003)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR07MB5102;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4f0e5f47-8a95-49e4-2d73-08d70b713c27
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:BYAPR07MB4791;
-X-MS-TrafficTypeDiagnostic: BYAPR07MB4791:
-X-Microsoft-Antispam-PRVS: <BYAPR07MB47912276CA81F46F79987EBCD0C80@BYAPR07MB4791.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Office365-Filtering-Correlation-Id: f59e65dd-48dd-46e7-8caa-08d70b713bcd
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:SN6PR07MB5102;
+X-MS-TrafficTypeDiagnostic: SN6PR07MB5102:
+X-Microsoft-Antispam-PRVS: <SN6PR07MB510293CD28DA25B28B05B305D0C80@SN6PR07MB5102.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-Forefront-PRVS: 01026E1310
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: O5+6MevBRcE3uQqXPB7arwfrzHltEW+SLOGMwfP5NC74wzTe1y4UD9CPjWcn8D4ZBKVB0OdNdlffoS2D913rnhMCbgSn9yCBwXFhkrZer/rS3Bx9BaoBlRpOVahKcEfrxwC1fWIHaRhmYn/ksyAXWd+bPrBdEHXtRTJIk2EAj/jIBYuvGnw9EqacgvRvu+hW4d+xjFy0MddvEF4pgVpsJclgoCUfpSAPqCoOEKzaxyvPX2oQsccbtYqwb6yWgqqj60Gr5JBpmS6K1No4wAPvfIIKQxPeeJTZ5yujcJiIDtTDVpE2v7EW66aiuMXGJQ2XgXz8D0zMtWLTuObKb44IVQsUSoATEpdSryQumRJyj5QHZJcDVOIg3m3WMti0MrRNr3CGdvNWGy+NZsdMmy7+UxKZrU97zZyOIBKEBiGLLlI=
+X-Microsoft-Antispam-Message-Info: yRacILCp9SK6Zv4z+jBNssgKKFK5wTKrk4/gW0CBLGmIHdfi6KF6NLNIl0aNaf/aCcdeO+IMdoGDseth/WelWhb1BZR4CJ+dBN0OFOYdrzJFXOmpPCV8b8z+p8wGpOhdTMODo/V0ysTW/EJ7rUrcC+mXX1oDZBrA/mmfoT3rQZGvwCE28vPHSZk5TFbq/pNceiFQf6F5lbKL8UktoGkoXC3In5ea8oX2wrG+4jdGdS9D4g1rW5bY+TWqwgx7ZTqAlTQyKjYpBu+CUvOND9zT18IxkNBbF+q23GGL0re6PE2VRT44sVa4p1altAwZl8buhABiSCi3HpNVCrzD4ju5iJ5Agif4iLuYlYJjrtee9bQ3tVC69L9I4HN5rcfEG5dcp+K8IQgR3KzvAXZ9GSNJL+m/W2heTtGbCnumqp/0Nd4=
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2019 11:15:26.4024
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2019 11:15:25.4387
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f0e5f47-8a95-49e4-2d73-08d70b713c27
+X-MS-Exchange-CrossTenant-Network-Message-Id: f59e65dd-48dd-46e7-8caa-08d70b713bcd
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4791
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB5102
 X-Proofpoint-SPF-Result: pass
 X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
  include:mktomail.com include:spf-0014ca01.pphosted.com
@@ -132,243 +131,37 @@ X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=883 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1907180122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for CSI2TX v2.1 version of the controller.
+This patch adds a DT bindings documentation for
+Cadence CSI2TX v2.1 controller.
 
 Signed-off-by: Jan Kotas <jank@cadence.com>
 ---
- drivers/media/platform/cadence/cdns-csi2tx.c | 142 +++++++++++++++++++++------
- 1 file changed, 112 insertions(+), 30 deletions(-)
+ Documentation/devicetree/bindings/media/cdns,csi2tx.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
-index 232259c71..e4d08acfb 100644
---- a/drivers/media/platform/cadence/cdns-csi2tx.c
-+++ b/drivers/media/platform/cadence/cdns-csi2tx.c
-@@ -52,6 +52,17 @@
- #define CSI2TX_STREAM_IF_CFG_REG(n)	(0x100 + (n) * 4)
- #define CSI2TX_STREAM_IF_CFG_FILL_LEVEL(n)	((n) & 0x1f)
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+index 459c6e332..751b9edf1 100644
+--- a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
++++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+@@ -5,7 +5,8 @@ The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
+ 4 CSI lanes in output, and up to 4 different pixel streams in input.
  
-+/* CSI2TX V2 Registers */
-+#define CSI2TX_V2_DPHY_CFG_REG			0x28
-+#define CSI2TX_V2_DPHY_CFG_RESET		BIT(16)
-+#define CSI2TX_V2_DPHY_CFG_CLOCK_MODE		BIT(10)
-+#define CSI2TX_V2_DPHY_CFG_MODE_MASK		GENMASK(9, 8)
-+#define CSI2TX_V2_DPHY_CFG_MODE_LPDT		(2 << 8)
-+#define CSI2TX_V2_DPHY_CFG_MODE_HS		(1 << 8)
-+#define CSI2TX_V2_DPHY_CFG_MODE_ULPS		(0 << 8)
-+#define CSI2TX_V2_DPHY_CFG_CLK_ENABLE		BIT(4)
-+#define CSI2TX_V2_DPHY_CFG_LANE_ENABLE(n)	BIT(n)
-+
- #define CSI2TX_LANES_MAX	4
- #define CSI2TX_STREAMS_MAX	4
- 
-@@ -70,6 +81,13 @@ struct csi2tx_fmt {
- 	u32	bpp;
- };
- 
-+struct csi2tx_priv;
-+
-+/* CSI2TX Variant Operations */
-+struct csi2tx_vops {
-+	void (*dphy_setup)(struct csi2tx_priv *csi2tx);
-+};
-+
- struct csi2tx_priv {
- 	struct device			*dev;
- 	unsigned int			count;
-@@ -82,6 +100,8 @@ struct csi2tx_priv {
- 
- 	void __iomem			*base;
- 
-+	struct csi2tx_vops		*vops;
-+
- 	struct clk			*esc_clk;
- 	struct clk			*p_clk;
- 	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
-@@ -209,53 +229,92 @@ static const struct v4l2_subdev_pad_ops csi2tx_pad_ops = {
- 	.set_fmt	= csi2tx_set_pad_format,
- };
- 
--static void csi2tx_reset(struct csi2tx_priv *csi2tx)
-+/* Set Wake Up value in the D-PHY */
-+static void csi2tx_dphy_set_wakeup(struct csi2tx_priv *csi2tx)
- {
--	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
--
--	udelay(10);
-+	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
-+	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
- }
- 
--static int csi2tx_start(struct csi2tx_priv *csi2tx)
-+/*
-+ * Finishes the D-PHY initialization
-+ * reg dphy cfg value to be used
-+ */
-+static void csi2tx_dphy_init_finish(struct csi2tx_priv *csi2tx, u32 reg)
- {
--	struct media_entity *entity = &csi2tx->subdev.entity;
--	struct media_link *link;
- 	unsigned int i;
--	u32 reg;
- 
--	csi2tx_reset(csi2tx);
-+	udelay(10);
- 
--	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-+	/* Enable our (clock and data) lanes */
-+	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
-+	for (i = 0; i < csi2tx->num_lanes; i++)
-+		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i] - 1);
-+	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
- 
- 	udelay(10);
- 
--	/* Configure our PPI interface with the D-PHY */
--	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
--	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
-+	/* Switch to HS mode */
-+	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
-+	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
-+	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
-+}
-+
-+/* Configures D-PHY in CSIv1.3 */
-+static void csi2tx_dphy_setup(struct csi2tx_priv *csi2tx)
-+{
-+	u32 reg;
-+	unsigned int i;
-+
-+	csi2tx_dphy_set_wakeup(csi2tx);
- 
- 	/* Put our lanes (clock and data) out of reset */
- 	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
- 	for (i = 0; i < csi2tx->num_lanes; i++)
--		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i]);
-+		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i] - 1);
- 	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
- 
--	udelay(10);
-+	csi2tx_dphy_init_finish(csi2tx, reg);
-+}
- 
--	/* Enable our (clock and data) lanes */
--	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
--	for (i = 0; i < csi2tx->num_lanes; i++)
--		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i]);
--	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-+/* Configures D-PHY in CSIv2 */
-+static void csi2tx_v2_dphy_setup(struct csi2tx_priv *csi2tx)
-+{
-+	u32 reg;
-+
-+	csi2tx_dphy_set_wakeup(csi2tx);
-+
-+	/* Put our lanes (clock and data) out of reset */
-+	reg = CSI2TX_V2_DPHY_CFG_RESET | CSI2TX_V2_DPHY_CFG_MODE_LPDT;
-+	writel(reg, csi2tx->base + CSI2TX_V2_DPHY_CFG_REG);
-+
-+	csi2tx_dphy_init_finish(csi2tx, reg);
-+}
-+
-+static void csi2tx_reset(struct csi2tx_priv *csi2tx)
-+{
-+	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
- 
- 	udelay(10);
-+}
- 
--	/* Switch to HS mode */
--	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
--	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
--	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
-+static int csi2tx_start(struct csi2tx_priv *csi2tx)
-+{
-+	struct media_entity *entity = &csi2tx->subdev.entity;
-+	struct media_link *link;
-+	unsigned int i;
-+
-+	csi2tx_reset(csi2tx);
-+
-+	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
- 
- 	udelay(10);
- 
-+	if (csi2tx->vops && csi2tx->vops->dphy_setup) {
-+		csi2tx->vops->dphy_setup(csi2tx);
-+		udelay(10);
-+	}
-+
- 	/*
- 	 * Create a static mapping between the CSI virtual channels
- 	 * and the input streams.
-@@ -478,9 +537,35 @@ static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
- 	return ret;
- }
- 
-+static const struct csi2tx_vops csi2tx_vops = {
-+	.dphy_setup = csi2tx_dphy_setup,
-+};
-+
-+static const struct csi2tx_vops csi2tx_v2_vops = {
-+	.dphy_setup = csi2tx_v2_dphy_setup,
-+};
-+
-+static const struct of_device_id csi2tx_of_table[] = {
-+	{
-+		.compatible = "cdns,csi2tx",
-+		.data = &csi2tx_vops
-+	},
-+	{
-+		.compatible = "cdns,csi2tx-1.3",
-+		.data = &csi2tx_vops
-+	},
-+	{
-+		.compatible = "cdns,csi2tx-2.1",
-+		.data = &csi2tx_v2_vops
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, csi2tx_of_table);
-+
- static int csi2tx_probe(struct platform_device *pdev)
- {
- 	struct csi2tx_priv *csi2tx;
-+	const struct of_device_id *of_id;
- 	unsigned int i;
- 	int ret;
- 
-@@ -495,6 +580,9 @@ static int csi2tx_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_free_priv;
- 
-+	of_id = of_match_node(csi2tx_of_table, pdev->dev.of_node);
-+	csi2tx->vops = (struct csi2tx_vops *)of_id->data;
-+
- 	v4l2_subdev_init(&csi2tx->subdev, &csi2tx_subdev_ops);
- 	csi2tx->subdev.owner = THIS_MODULE;
- 	csi2tx->subdev.dev = &pdev->dev;
-@@ -552,12 +640,6 @@ static int csi2tx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id csi2tx_of_table[] = {
--	{ .compatible = "cdns,csi2tx" },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, csi2tx_of_table);
--
- static struct platform_driver csi2tx_driver = {
- 	.probe	= csi2tx_probe,
- 	.remove	= csi2tx_remove,
+ Required properties:
+-  - compatible: must be set to "cdns,csi2tx"
++  - compatible: must be set to "cdns,csi2tx" or "cdns,csi2tx-1.3"
++    for version 1.3 of the controller, "cdns,csi2tx-2.1" for v2.1
+   - reg: base address and size of the memory mapped region
+   - clocks: phandles to the clocks driving the controller
+   - clock-names: must contain:
 -- 
 2.15.0
 
