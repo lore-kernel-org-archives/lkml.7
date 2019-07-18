@@ -2,157 +2,160 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27307C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E193C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4D721019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD9521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oRSy/SbH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UStSy+lE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pqmyfLvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfGRRla (ORCPT
+        id S1732370AbfGRRmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:41:30 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48302 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRRla (ORCPT
+        Thu, 18 Jul 2019 13:42:00 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14640 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728111AbfGRRl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:41:30 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7569260E3F; Thu, 18 Jul 2019 17:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563471689;
-        bh=lVFlEoflCmqI7DqZxWRv5iAXmSD3G5OYiXbXrkCxEFU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oRSy/SbHGcih031VmvFWuJks1y4W3MRcNyoFlAqk01JnMbs9SOXSQ5KC333CiV9+s
-         qsPzyOmpYFZrbuJ1mZgzaMOkXcmMXUjhHjnB2Y+JE6olm2ndKCviw/vdfhGCF2fWbL
-         0kR9i/6LHiWeVT0UBrbULzYMmR42G6eCO4Ahpnwc=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E4EA607EB;
-        Thu, 18 Jul 2019 17:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563471678;
-        bh=lVFlEoflCmqI7DqZxWRv5iAXmSD3G5OYiXbXrkCxEFU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UStSy+lE4QoOupgj89GwC6zwlpy9wpMu4KsRTMBxdS31Av8x+wNEx0G5CfGDBFqDd
-         abivphmpwVS3fvrc0a4fxuustkhZ6mUiZLzl/83ejm12D93tZOOK1dXnF/XJt8UYdL
-         tBKlVf1faL3xnetIEwsr6ynYGjkTdyry5G/wtLiU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6E4EA607EB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 18 Jul 2019 11:41:16 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 14/18] drivers: firmware: psci: Manage runtime PM in the
- idle path for CPUs
-Message-ID: <20190718174116.GD25567@codeaurora.org>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-15-ulf.hansson@linaro.org>
- <20190716155317.GB32490@e121166-lin.cambridge.arm.com>
- <CAPDyKFrJ75mo+s6GuUCTQ-nVv7C+9YJyTVmwuBZ2RKFOvOi3Nw@mail.gmail.com>
- <20190718133053.GA27222@e121166-lin.cambridge.arm.com>
- <CAPDyKFr4NmichQk4uf+Wgbanh=5idKYY=37WCb6U_hNFDVYg=w@mail.gmail.com>
+        Thu, 18 Jul 2019 13:41:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d30af630001>; Thu, 18 Jul 2019 10:41:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 18 Jul 2019 10:41:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 10:41:57 -0700
+Received: from [10.110.103.56] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
+ 2019 17:41:56 +0000
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+CC:     Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <a5e1a6df-dff7-9e0c-9551-f78103a5462f@gmail.com>
+ <16f8b146-2581-a842-4997-53ab05b62c70@gmail.com>
+ <d7892bfc-2cbf-27af-518d-dc7e243815b8@nvidia.com>
+ <71272e9a-0f2a-c20d-6532-7e9057ad985c@gmail.com>
+ <78fd19b9-b652-8ac3-1f57-3b4adadee03f@nvidia.com>
+ <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
+ <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
+ <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
+ <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
+ <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
+ <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
+ <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
+ <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
+ <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
+ <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
+ <c759d71b-1549-2562-f0cf-db5f9e51329e@nvidia.com>
+ <ef7928ad-239d-eca8-41bf-f76e72a9841d@nvidia.com>
+ <4141181d-7162-0321-71b6-33abf11f631c@gmail.com>
+ <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
+Message-ID: <419e1b16-683e-1b56-7334-50d87368c1b9@nvidia.com>
+Date:   Thu, 18 Jul 2019 10:41:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFr4NmichQk4uf+Wgbanh=5idKYY=37WCb6U_hNFDVYg=w@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <ab8f2441-8f4b-3a2b-5bcd-1a889555176a@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563471715; bh=QDI5IqDp9suDRjNaAkUm8piJMHGnuMn5yRUtK5Yo2lI=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=pqmyfLvxFnfQ1aktHQK/J4AcWiSwU2R+a0KUdxArWu+4aFuEhJ0+cMjBL4vne6j7N
+         BruO6PUAtR/Coz64r22DvkTXeSDlJ9rySclJ/lWtpY+RTwKemflJv5YKTd3tooz10V
+         mkT49WPy0DlDRQiXX7Q7Sn7W4F/6VFLznxSc3yyektij5D6JVy/npmshn3kVId1LK4
+         8lQA7j6tOn/pL2oa6ZA/h2k/HPtWeHWXeb0cj12w+MK2AS/AG3iF63AVBx94tUX9az
+         h1JPxGQnub4ozmyGa3gdASyEeinSrJWBVPNlW1a/RKiqmrk0qxLmBDMpJmzQaSjZZI
+         b6TF+5P/SojHw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18 2019 at 10:55 -0600, Ulf Hansson wrote:
->On Thu, 18 Jul 2019 at 15:31, Lorenzo Pieralisi
-><lorenzo.pieralisi@arm.com> wrote:
->>
->> On Thu, Jul 18, 2019 at 12:35:07PM +0200, Ulf Hansson wrote:
->> > On Tue, 16 Jul 2019 at 17:53, Lorenzo Pieralisi
->> > <lorenzo.pieralisi@arm.com> wrote:
->> > >
->> > > On Mon, May 13, 2019 at 09:22:56PM +0200, Ulf Hansson wrote:
->> > > > When the hierarchical CPU topology layout is used in DT, let's allow the
->> > > > CPU to be power managed through its PM domain, via deploying runtime PM
->> > > > support.
->> > > >
->> > > > To know for which idle states runtime PM reference counting is needed,
->> > > > let's store the index of deepest idle state for the CPU, in a per CPU
->> > > > variable. This allows psci_cpu_suspend_enter() to compare this index with
->> > > > the requested idle state index and then act accordingly.
->> > >
->> > > I do not see why a system with two CPU CPUidle states, say CPU retention
->> > > and CPU shutdown, should not be calling runtime PM on CPU retention
->> > > entry.
->> >
->> > If the CPU idle governor did select the CPU retention for the CPU, it
->> > was probably because the target residency for the CPU shutdown state
->> > could not be met.
->>
->> The kernel does not know what those cpu states represent, so, this is an
->> assumption you are making and it must be made clear that this code works
->> as long as your assumption is valid.
->>
->> If eg a "cluster" retention state has lower target_residency than
->> the deepest CPU idle state this assumption is wrong.
->
->Good point, you are right. I try to find a place to document this assumption.
->
->>
->> And CPUidle and genPD governor decisions are not synced anyway so,
->> again, this is an assumption, not a certainty.
->>
->> > In this case, there is no point in allowing any other deeper idle
->> > states for cluster/package/system, since those have even greater
->> > residencies, hence calling runtime PM doesn't make sense.
->>
->> On the systems you are testing on.
->
->So what you are saying typically means, that if all CPUs in the same
->cluster have entered the CPU retention state, on some system the
->cluster may also put into a cluster retention state (assuming the
->target residency is met)?
->
->Do you know of any systems that has these characteristics?
->
-Many QCOM SoCs can do that. But with the hardware improving, the
-power-performance benefits skew the results in favor of powering off
-the cluster than keeping the CPU and cluster in retention.
 
-Kevin H and I thought of this problem earlier on. But that is a second
-level problem to solve and definitely to be thought of after we have the
-support for the deepest states in the kernel. We left that out for a
-later date. The idea would have been to setup the allowable state(s) in
-the DT for CPU and cluster state definitions and have the genpd take
-that into consideration when deciding the idle state for the domain.
+On 7/18/19 10:22 AM, Sowjanya Komatineni wrote:
+>
+> On 7/18/19 9:34 AM, Dmitry Osipenko wrote:
+>> 18.07.2019 4:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> [snip]
+>>
+>>>>> Please try to fix all missing dependencies and orderings.
+>>>> Peter,
+>>>>
+>>>> dfllCPU_OUT is the first one to go thru restore when
+>>>> clk_restore_context traverses thru the list.
+>>>>
+>>>> dfllCPU_OUT has dependency on DFLL_ref and DFLL_SOC but this
+>>>> dependency is unknown to clock-tree.
+>>>>
+>>>> We can add DFLL_REF and DFLL_SOC as parents to dfllCPU_OUT during
+>>>> register so dfllCPU_OUT save/restore happens after their parents are
+>>>> restored.
+>>>>
+>>>> But DFLL needs both of these to be restored before DFLLCPU_Out and as
+>>>> DFLL_SOC restore always happens after the REF, thinking to add
+>>>> DFLL_SOC as parent to dfllCPU_OUT so save/restore follows after their
+>>>> dependencies.
+>>>>
+>>>> Please comment.
+>>>>
+>>> Did quick try and I see by adding dfll-soc as parent to dfllCPU_OUT,=20
+>>> its
+>>> in proper order after all its dependencies.
+>>>
+>>> Can now add dfll save/restore to do dfll reinit during restore..
+>>>
+>> If dfllCPU_OUT can work properly with dfll-soc being disabled, then this
+>> kind of dependency isn't very correct and just papers over the real
+>> problem, which is that there should be a way for CCF to specify multiple
+>> dependencies for the clock or the reverse ordering should be used for
+>> the restoring.
+>
+> dfll will not work without dfll-soc enabled.
+>
+> CLDVFS control logic is split into 2 clock domains. dvfs_ref_clk and=20
+> dvfs_soc_clk.
+>
+> Majority of the control logic is clocked from dvfs_soc_clk for=20
+> interfacing control registers.
+>
+Note on reverse ordering for restore. Currently restore order goes thru=20
+clock list and for each root goes thru parent -> child restore.
 
-Thanks,
-Lina
+this order is correct and also all clocks are parented properly so they=20
+follow proper order.
+
+dfllCPU is the only one where current driver doesn't take care of=20
+dependency in dfll_soc which gets enabled only after dfll_ref.
+
+
+Based on dfllCPU control logic module design, dfll_ref and dfll_soc=20
+should be enabled prior to dfll init/enable.
+
+So parenting dfll_soc to dfllCPU keeps proper order.
 
