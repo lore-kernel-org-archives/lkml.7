@@ -2,120 +2,101 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4693C76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472A3C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBFC208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176A220873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DKzzyJpg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nW6kgwO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391519AbfGRTv4 (ORCPT
+        id S2391543AbfGRTxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:51:56 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41923 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391329AbfGRTv4 (ORCPT
+        Thu, 18 Jul 2019 15:53:04 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43058 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbfGRTxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:51:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so3012061pgg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:51:55 -0700 (PDT)
+        Thu, 18 Jul 2019 15:53:04 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w79so22503475oif.10;
+        Thu, 18 Jul 2019 12:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=zfYhBy8rXbE//COaxouGyZdN8XuohHpGRV5GXewnrg0=;
-        b=DKzzyJpgwrlpAymFb04FfC77Rz/8v2x2vMt97Uo5AbdJL5GOULus42XL9FeHmoaRKU
-         63iDopVnfj/IHyacy+pTTzrtu2JsX/GIkaMVxiVuO9aQob2DW/xay1dZuqkLoDJlE19X
-         clXgrN9nBoB9+m3VTyBOgFl4dyyN77fIsnv98=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/BAco0qTgyfJ8ndZzbhvqz94T+T1pPPU3Fqjw/cFLps=;
+        b=nW6kgwO+5AOfTm3FSkl7N9sJcwHTCEUPlrvRBDc5G3FKn1LbLB2gxabP98tb6/y72o
+         dtc0GCjblMnHKYEAf8ATrDoknCDAQ9NTFUnMXCNe5aqGRp/US3zz2Bnz9pPUYdSCPXig
+         LrZ01aFRxs50n5MBeBhgBWPGMWGabpgUHzczWiVP5FtC4Ryx8Fq+z7y9KYdeFM7e7zH+
+         tnLDTGFsYh1DJmccfxnLSdb6awxms4+S77W0IbzAZObFxNP9z8HtJMuCQwL3V5B//XYm
+         jWmyKBUof/ICQZF4UTWwVEAp/UYVsvoVUzicuq3nP1Ghl4NjQCIfR7blvqnoaubm1fcI
+         MjNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=zfYhBy8rXbE//COaxouGyZdN8XuohHpGRV5GXewnrg0=;
-        b=XomWcxhMNdrFK2Ku5QItdZzlkI6o0RSZfCaSa6Ub8o2CAEIuOPrU5Ajp9hJNSZNXxM
-         gs4kH/SNOgB+iwDTdC0NQV0D5e375u303NhmlnB0yxmKW94Bg2i3mYB0a3PpR18jNhJV
-         Oq0QHm9h+gHm9AQqhZG0dQT9DGHgAmFf+oDrW1ccBtY07DZW+2XDBajWiI+dYt10mk5j
-         iOqj3WoRXVlzVUMyzvi/31i8f2kNd6NX99UyC5PBYTF8GCtodMZ/qWS5lt4zuQyVoAOA
-         IR3GxjJD10nMmN+mpr5e+epTcoBOHbF0MLGPlFUTk0SSnh1ZoFwmm4TEV0bEmnIdypTn
-         CnOw==
-X-Gm-Message-State: APjAAAUvu5mYmw50YAgb0KhBkfTGCdZsqlgrs4T13gx6Wa7s8HLB2VE5
-        AB9jZ+9kwvKy5QTS9fP+/zzyoA==
-X-Google-Smtp-Source: APXvYqzX3YfqRbUFuVRr8VkMWQFTqQ6b7l4FMXcRmJo8G3y5rS4fIdQe2lsE0s0MX+8ly1O9es6xBg==
-X-Received: by 2002:a63:205f:: with SMTP id r31mr49503340pgm.159.1563479515402;
-        Thu, 18 Jul 2019 12:51:55 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y23sm30556546pfo.106.2019.07.18.12.51.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 12:51:54 -0700 (PDT)
-Message-ID: <5d30cdda.1c69fb81.de220.1f10@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/BAco0qTgyfJ8ndZzbhvqz94T+T1pPPU3Fqjw/cFLps=;
+        b=oVGj7S5ThggeeQruWBNUdewcTu9a1MIXc3uQ/96THhZiAlsfVZJ1d7S80WIQs5k0tT
+         2yAWEVEnmR/GRFkZ3NloE9b+3Efn8ga6xB46wdvKeQYzyHdg463fb1TTW74bD4Bbz60k
+         21ixuBx+hzzAZUefuI01j5mQYhk7g8G/Cl8trFAxeJKIRpRIilbItAZ6Ubq5a22V1Vt8
+         1kLdaTa6yKagOPQLEjHF24bdbsJ1oXWbQj0CqtcHpvPhDdCL+7BZDUeBbMmGUNKvi2P+
+         Zj+TxnCih4neIJR52TJ/a7l0QN3dK9Nid+IGgEvqYze9FgjHo+ukefYnPkx0KSppeJmx
+         pciQ==
+X-Gm-Message-State: APjAAAU0TdGrC9wFo9i8LmZzCMYjfyxX8TXIn/Z057SlShzTh6njzdxh
+        twMtThvrAZTDbmFm0+fgYw6uwrYW0GLYfLOGTRs=
+X-Google-Smtp-Source: APXvYqwTBPzyPhPjB0VaBnbsiYOrGI3rkLFZrwgDaKK3LTDTHNYYlEPvOYwHkit/SyzUnkQw3nflcqZiU86SaVW9do4=
+X-Received: by 2002:aca:75c2:: with SMTP id q185mr25667268oic.103.1563479583204;
+ Thu, 18 Jul 2019 12:53:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190630124735.27786-1-robdclark@gmail.com>
-References: <20190630124735.27786-1-robdclark@gmail.com>
-Subject: Re: [PATCH] drm/msm: stop abusing dma_map/unmap for cache
-To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 18 Jul 2019 12:51:53 -0700
+References: <20190718143428.2392-1-TheSven73@gmail.com> <1563468471.2676.36.camel@pengutronix.de>
+ <CAOMZO5A_BuWMr1n_fFv4veyaXdcfjxO+9nFAgGfCrmAhNmzV5g@mail.gmail.com>
+ <CAGngYiULAjXwwxmUyHxEXhv1WzSeE_wE3idOLSnD5eEaZg3xDw@mail.gmail.com> <20190718194131.GK25635@lunn.ch>
+In-Reply-To: <20190718194131.GK25635@lunn.ch>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Thu, 18 Jul 2019 15:52:52 -0400
+Message-ID: <CAGngYiWESbg6uq4pdtb5--YSzatwAwXiGnRjiAfAQj8nRYPMqw@mail.gmail.com>
+Subject: Re: [PATCH] net: fec: generate warning when using deprecated phy reset
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Clark (2019-06-30 05:47:22)
-> From: Rob Clark <robdclark@chromium.org>
->=20
-> Recently splats like this started showing up:
->=20
->    WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_=
-unmap+0xb8/0xc0
->    Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvi=
-deo cfg80211 videobuf2_vmalloc videobuf2_memops vide
->    CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-=
-rc5-next-20190619+ #2317
->    Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
->    Workqueue: msm msm_gem_free_work [msm]
->    pstate: 80c00005 (Nzcv daif +PAN +UAO)
->    pc : __iommu_dma_unmap+0xb8/0xc0
->    lr : __iommu_dma_unmap+0x54/0xc0
->    sp : ffff0000119abce0
->    x29: ffff0000119abce0 x28: 0000000000000000
->    x27: ffff8001f9946648 x26: ffff8001ec271068
->    x25: 0000000000000000 x24: ffff8001ea3580a8
->    x23: ffff8001f95ba010 x22: ffff80018e83ba88
->    x21: ffff8001e548f000 x20: fffffffffffff000
->    x19: 0000000000001000 x18: 00000000c00001fe
->    x17: 0000000000000000 x16: 0000000000000000
->    x15: ffff000015b70068 x14: 0000000000000005
->    x13: 0003142cc1be1768 x12: 0000000000000001
->    x11: ffff8001f6de9100 x10: 0000000000000009
->    x9 : ffff000015b78000 x8 : 0000000000000000
->    x7 : 0000000000000001 x6 : fffffffffffff000
->    x5 : 0000000000000fff x4 : ffff00001065dbc8
->    x3 : 000000000000000d x2 : 0000000000001000
->    x1 : fffffffffffff000 x0 : 0000000000000000
->    Call trace:
->     __iommu_dma_unmap+0xb8/0xc0
->     iommu_dma_unmap_sg+0x98/0xb8
->     put_pages+0x5c/0xf0 [msm]
->     msm_gem_free_work+0x10c/0x150 [msm]
->     process_one_work+0x1e0/0x330
->     worker_thread+0x40/0x438
->     kthread+0x12c/0x130
->     ret_from_fork+0x10/0x18
->    ---[ end trace afc0dc5ab81a06bf ]---
+Hi Andrew,
 
-Tested-by: Stephen Boyd <swboyd@chromium.org>
+On Thu, Jul 18, 2019 at 3:41 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> Hi Sven
+>
+> One option would be to submit a patch or a patchset changing all
+> existing device tree files to make use of the core method. Anybody
+> cut/pasting will then automatically use the correct core way of doing
+> it.
+>
+> There is also a move towards using YAML to verify the correctness of
+> DT files. It should be possible to mark the old property as
+> deprecated, so there will be a build time warning, not a boot time
+> warning.
+>
 
+Thanks for the helpful suggestions, that makes sense.
+
+What I keep forgetting in my little arm-imx6 world, is that devicetrees
+aren't in-kernel apis, but that they have out-of-kernel
+dependencies. It makes more sense to to see them as userspace
+apis, albeit directed at firmware/bootloaders, right?
+
+So if bootloaders were as varied/uncontrollable as userspace,
+then deprecated properties would have to be supported forever...
