@@ -2,196 +2,106 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A52C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45FAC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFD42173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 775D6217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttbeDTZW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jKN4G9K8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfGRLEl (ORCPT
+        id S2390062AbfGRLEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:04:41 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46282 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbfGRLEk (ORCPT
+        Thu, 18 Jul 2019 07:04:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59400 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfGRLEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:04:40 -0400
-Received: by mail-vs1-f68.google.com with SMTP id r3so18774423vsr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0wwbY2e6RbRH4G1F2pGlnS3oUwQ5tYaheKqHK1+rAU=;
-        b=ttbeDTZWonMsXhhF6MKJjUbS9xB63ArZlyQGS0QGDUinoAJno6rTVe45koBlUp/Qjh
-         NQVkV3+Uhr8LVEmlJkoTd3j1VUjoTle0yuSKtRst+PQkt/gZVYtUy6lqHTEGXjhT/c+g
-         IQGDz/tqooHxFmm+bsy+QWxFnl/gJ3yFFGgnAhEwcoQT9j9yKAE847bZbd1nj2DTVUjQ
-         4Eym5SbEmuUMvs4Bez2aMkN9joceM718Uj77COGoAbpsJLZM8viL9KtrIwGx7UFskjyi
-         pLZSUBIJjDLvyPPpTNjVox8LYn55p7hVHfYjzWOLJ8OD+D/+a5uRfl9hwqYR1RVKk0l5
-         gVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0wwbY2e6RbRH4G1F2pGlnS3oUwQ5tYaheKqHK1+rAU=;
-        b=h55uXY2AFAZHaCMuoxLEmJtOhYGmXxPbSySqr5YTSYp51fRzIIgCGr2O/mQamaM8tQ
-         MfSfPqfiKBgw2trGvPZdaaQAliZYaTesS5pH4u0A55NL4Yhu2VfoVwmWpZH3D3N5RE4d
-         bQ+1OkZwG8infCwMabBFI7we7ECkYs1qeqILfq1FycWx7XPNyUnoQdk9qc7qmlMuelW3
-         84lEukyenWkHgA5BQr3zIAc43KDXxKzmKEq59VzHsOmfutw/ZOqzZSxdFdVGpARIE+DO
-         VawhUCP3ChKIXuzhZcTHNeMOWlxQc3jXN2ahKIOukh2epl1/OEoPyvmZ1vksv9G96JXF
-         1TxQ==
-X-Gm-Message-State: APjAAAWkrF9KmbinfHbiLrHszGfc/N5dyE0NWY3dxcjGYYTMzCsaMzTh
-        siXnCAvvDXDaBxYxHJbQsvZ+ZSDwRdfb26wspGT57g==
-X-Google-Smtp-Source: APXvYqySoFX2rcy6+ZHMwG7nItFm59GgexC/++PhaOS4J9XEwThQRKUsU9BuTaLZC+JTYiMmN5ylobCku0JfERVc6Vg=
-X-Received: by 2002:a67:ee16:: with SMTP id f22mr28613664vsp.191.1563447879628;
- Thu, 18 Jul 2019 04:04:39 -0700 (PDT)
+        Thu, 18 Jul 2019 07:04:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Mu6JgufiifeVCl5ahdzNFF6iFcPalKmCtlVpF9MQKr8=; b=jKN4G9K8EwPrqjC/8/JSP/m5S
+        TcLMiwu4DvM/TqjWUr4BtZbfSEy0MjVH/ZTsf1dj+GBuHNoi9r6GoymAmvrVuL4RWPpnn7H+WVyay
+        rCK4Y1pfOJH1jfPbRAY4kAS2Q3bVbOeA/eHxqhE47maCBr2kbFAvIZwB/7gsA4ZtGrELeouczRWsa
+        4J+6bKQ87LVxMn5Qfiwyia/jOs7bfCVOnDI3K4S0xiw8eTJ4N51Xld0jg8vq1EHsoETd5yIwGTpIr
+        Lrfr/gT8b1WS7TqOkefy9ygY7HhrKYB/QGeUrbU6VX6ZuI6auNysqLKCLN0rCBA5kOLCGlLhKWaDt
+        1sz9FC9lQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1ho4DQ-0001yJ-8K; Thu, 18 Jul 2019 11:04:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1687B20197A71; Thu, 18 Jul 2019 13:04:46 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 13:04:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+        linux-kernel@vger.kernel.org, dbueso@suse.de, mingo@redhat.com,
+        jade alglave <jade.alglave@arm.com>, paulmck@linux.vnet.ibm.com
+Subject: Re: [PATCH v2] locking/rwsem: add acquire barrier to read_slowpath
+ exit when queue is empty
+Message-ID: <20190718110446.GC3419@hirez.programming.kicks-ass.net>
+References: <20190716185807.GJ3402@hirez.programming.kicks-ass.net>
+ <a524cf95ab0dbdd1eb65e9decb9283e73d416b1d.1563352912.git.jstancek@redhat.com>
+ <20190717131335.b2ry43t2ov7ba4t4@willie-the-truck>
+ <21ff5905-198b-6ea5-6c2a-9fb10cb48ea7@redhat.com>
+ <20190717192200.GA17687@dustball.usersys.redhat.com>
+ <20190718092640.52oliw3sid7gxyh6@willie-the-truck>
+ <79224323.853324.1563447052432.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <20190513192300.653-10-ulf.hansson@linaro.org>
- <20190716150533.GD7250@e107155-lin>
-In-Reply-To: <20190716150533.GD7250@e107155-lin>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 18 Jul 2019 13:04:03 +0200
-Message-ID: <CAPDyKFqaE2L419siFY=LGDsotAnpBt+H_vpmG62AqQw8UQJZJA@mail.gmail.com>
-Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM domains
- using genpd
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lina Iyer <lina.iyer@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79224323.853324.1563447052432.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jul 2019 at 17:05, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
-> > When the hierarchical CPU topology layout is used in DT, we need to setup
-> > the corresponding PM domain data structures, as to allow a CPU and a group
-> > of CPUs to be power managed accordingly. Let's enable this by deploying
-> > support through the genpd interface.
-> >
-> > Additionally, when the OS initiated mode is supported by the PSCI FW, let's
-> > also parse the domain idle states DT bindings as to make genpd responsible
-> > for the state selection, when the states are compatible with
-> > "domain-idle-state". Otherwise, when only Platform Coordinated mode is
-> > supported, we rely solely on the state selection to be managed through the
-> > regular cpuidle framework.
-> >
-> > If the initialization of the PM domain data structures succeeds and the OS
-> > initiated mode is supported, we try to switch to it. In case it fails,
-> > let's fall back into a degraded mode, rather than bailing out and returning
-> > an error code.
-> >
-> > Due to that the OS initiated mode may become enabled, we need to adjust to
-> > maintain backwards compatibility for a kernel started through a kexec call.
-> > Do this by explicitly switch to Platform Coordinated mode during boot.
-> >
-> > Finally, the actual initialization of the PM domain data structures, is
-> > done via calling the new shared function, psci_dt_init_pm_domains().
-> > However, this is implemented by subsequent changes.
-> >
-> > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > ---
-> >
-> > Changes:
-> >       - Simplify code setting domain_state at power off.
-> >       - Use the genpd ->free_state() callback to manage freeing of states.
-> >       - Fixup a bogus while loop.
-> >
-> > ---
-> >  drivers/firmware/psci/Makefile         |   2 +-
-> >  drivers/firmware/psci/psci.c           |   7 +-
-> >  drivers/firmware/psci/psci.h           |   5 +
-> >  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
-> >  4 files changed, 280 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
-> >
->
-> [...]
->
-> >  #endif /* __PSCI_H */
-> > diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
-> > new file mode 100644
-> > index 000000000000..3c6ca846caf4
-> > --- /dev/null
-> > +++ b/drivers/firmware/psci/psci_pm_domain.c
-> > @@ -0,0 +1,268 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * PM domains for CPUs via genpd - managed by PSCI.
-> > + *
-> > + * Copyright (C) 2019 Linaro Ltd.
-> > + * Author: Ulf Hansson <ulf.hansson@linaro.org>
-> > + *
-> > + */
-> > +
->
-> [...]
->
-> > +static int psci_pd_power_off(struct generic_pm_domain *pd)
-> > +{
-> > +     struct genpd_power_state *state = &pd->states[pd->state_idx];
-> > +     u32 *pd_state;
-> > +
-> > +     /* If we have failed to enable OSI mode, then abort power off. */
-> > +     if (psci_has_osi_support() && !osi_mode_enabled)
-> > +             return -EBUSY;
-> > +
-> > +     if (!state->data)
-> > +             return 0;
-> > +
-> > +     /* When OSI mode is enabled, set the corresponding domain state. */
-> > +     pd_state = state->data;
-> > +     psci_set_domain_state(*pd_state);
->
-> I trying to understand how would this scale to level 2(cluster of
-> clusters or for simply system). The current code for psci_set_domain_state
-> just stores the value @pd_state into per-cpu domain_state. E.g.: Now if
-> the system level pd is getting called after cluster PD, it will set the
-> domain state to system level PD state. It won't work with original
-> format and it may work with extended format if it's carefully crafted.
-> In short, the point is just over-writing domain_state is asking for
-> troubles IMO.
+On Thu, Jul 18, 2019 at 06:50:52AM -0400, Jan Stancek wrote:
+> > In writing this, I also noticed that we don't have any explicit ordering
+> > at the end of the reader slowpath when we wait on the queue but get woken
+> > immediately:
+> > 
+> > 	if (!waiter.task)
+> > 		break;
+> > 
+> > Am I missing something?
+> 
+> I'm assuming this isn't problem, because set_current_state() on line above
+> is using smp_store_mb().
 
-Thanks for spotting this!
 
-While walking upwards in the PM domain topology, I thought I was ORing
-the domain states, but clearly the code isn't doing that.
+X = 0;
 
-In principle we need to do the below instead.
+								X = 1;
+	rwsem_down_read()					rwsem_up_write();
 
-pd_state = state->data;
-composite_pd_state = *pd_state | psci_get_domain_state();
-psci_set_domain_state(composite_pd_state);
+	  for (;;) {
+	    set_current_state(TASK_UNINTERRUPTIBLE);
 
-Kind regards
-Uffe
+								  rwsem_mark_wake()
+								    atomic_long_add(adjustment, &sem->count);
+								    smp_store_release(&waiter->task, NULL);
+
+	    if (!waiter.task)
+	      break;
+
+	    ...
+	  }
+
+
+	r = X;
+
+
+can I think result in r==0 just fine, because there's nothing ordering
+the load of waiter.task with the store of X.
+
+It is exceedingly unlikely, but not impossible afaict.
