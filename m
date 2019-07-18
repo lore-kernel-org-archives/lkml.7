@@ -2,169 +2,128 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D566C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C6CC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4F4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420445;
-	bh=Qh0YRFtQcJQ3oyBkgK7BsdNywupxtSKO5Szl4RbhAaI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kA8ApNUWK4cq41r1FuY5SwOSuuPNm7zPfoyYxbxfLm3nR2zqS1OvjzIhF30QW960j
-	 bq7VMJ9J7G9YSjQIeNxtSGbY5H7jQ80Bx6n9nPomdy1iKJvxxqjJaMvh8KzgI45k1k
-	 IQqh7+lw6ex8UmCmedCdD3o+DDZ3TFxSKXSIy/dc=
+	by mail.kernel.org (Postfix) with ESMTP id 8003C205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HPBlUKWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389462AbfGRDDo (ORCPT
+        id S2389261AbfGRD3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389412AbfGRDDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:40 -0400
-Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7AEA2053B;
-        Thu, 18 Jul 2019 03:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419019;
-        bh=Qh0YRFtQcJQ3oyBkgK7BsdNywupxtSKO5Szl4RbhAaI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O88b+WTgu2gdHvI+rglmTNdoihUAJ0PEs2wANNfK7rZWKgHCaXCiX617yLzE3P4KQ
-         LyY7wMgwc+bJ11nSPnY1LeE4KISbxzg0wsYY9mwgm9wTz4BoEUaez2BJVyItXqEx+P
-         gfixKLITw9Pb4Eqp6ww/OI2JWNvr+FfCoZ1/cT7M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.2 11/21] x86/irq: Handle spurious interrupt after shutdown gracefully
-Date:   Thu, 18 Jul 2019 12:01:29 +0900
-Message-Id: <20190718030032.865813866@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
-References: <20190718030030.456918453@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 17 Jul 2019 23:29:10 -0400
+Received: from mail-eopbgr150083.outbound.protection.outlook.com ([40.107.15.83]:18986
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727601AbfGRD3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:29:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RzRlR4+SZKWYSLt3cpDa3RAE801nw64Wfrjr/cVsCeqffV3yZ2XZTHXqYF4kCy83vu+/XV5BDcvetg3fe5iLNGp9T+gCL2mg2aJsoyefifGLY8meOpS9nOAitsrgOsRaUAJiP5f/ez/iyxGXpD1M+/rP8mcXQ+3CvDhT749HNFsFCGD0DGDKCI2l6MmJ+WXV6jzKl9jbIorOooxak9TqLEaQwol1E/rTXejpiuWi9KkOFXyhu8McKhWURlAwCDFrG5VMJc0JUNavAyVdxBORDSESfhUKl4ZUdS3D+O5tOfu5tppE2Id3uUWGhFmRFojPCKbH3oIr2gJPQncQLVL8nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8TbgJrcGw4l5ov7UeLUe0ybC+oqv2tlXgAe/QEPk/v4=;
+ b=fRma4TBGVhZ8kg6FMWgx6uTmn1RrXbPGNzVvhxot9kXHwyFgSTiBTUXn1yQ1O0EsAn4AKZMODKkpGHd8ubDjjs7Y2mt5I1j0R8RqLUJdFQ/w2LdAhhfw1qBHVmhWte+y42YNmhWFaGncanS7pD9cKP+W6c22fEilv5m3Lx6+P44vqsP7t0XNf0c5hFBNL3HQeGkhSkE7crrvsY942DrY8CgswPJDKLAQJjeaebnmlqeWr8wFAsOAlcFHkKVXYUzZpHcZCVJXIb1fwscXv20jR4O7GQ9cZpm4d0nfOufS5rRRn8oVdAoYTsX6D6GQ5pAFtCY6vOmFDZOqBU889IC4hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8TbgJrcGw4l5ov7UeLUe0ybC+oqv2tlXgAe/QEPk/v4=;
+ b=HPBlUKWCZzayI66zY54X1ITmI43eu891fjFYVWiNEmfy+B4gxpSQrzF42Hd63qluKDoYV3odB1vFN1dWomX45yn/X2hvoSo/YLWVSVWMshCtbyCNsfAL7IUWXaDPVXfPRqaE/9rbpy75q9shBvj28WksfyjWRyp0ccbfmktyS54=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB6291.eurprd04.prod.outlook.com (20.179.33.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Thu, 18 Jul 2019 03:29:06 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::7882:51:e491:8431]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::7882:51:e491:8431%7]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
+ 03:29:06 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: RE: [PATCH 2/3] firmware: imx: scu-pd: Add mu_b side PD range
+Thread-Topic: [PATCH 2/3] firmware: imx: scu-pd: Add mu_b side PD range
+Thread-Index: AQHVMdIf/A/Nl6mgYkmorW+PMBHFi6bPyyMA
+Date:   Thu, 18 Jul 2019 03:29:06 +0000
+Message-ID: <AM0PR04MB42114DD325C5DB2E06011A4A80C80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190703190404.21136-1-daniel.baluta@nxp.com>
+ <20190703190404.21136-3-daniel.baluta@nxp.com>
+In-Reply-To: <20190703190404.21136-3-daniel.baluta@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e10935ee-66f1-4d68-19fb-08d70b301698
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6291;
+x-ms-traffictypediagnostic: AM0PR04MB6291:
+x-microsoft-antispam-prvs: <AM0PR04MB6291AD87C88E0C62CC9DE13380C80@AM0PR04MB6291.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:268;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(66476007)(102836004)(53546011)(6116002)(256004)(478600001)(71200400001)(68736007)(25786009)(33656002)(2906002)(55016002)(8936002)(8676002)(6246003)(99286004)(81156014)(54906003)(7736002)(4326008)(26005)(76176011)(3846002)(14454004)(53936002)(74316002)(11346002)(6506007)(64756008)(86362001)(316002)(66946007)(71190400001)(44832011)(7696005)(446003)(6436002)(66556008)(305945005)(76116006)(186003)(476003)(81166006)(486006)(110136005)(9686003)(52536014)(66066001)(229853002)(5660300002)(2501003)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6291;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ep4IcrbBfoT3mdMvO7IfpQUCXMwN3lphUIihIgKkVWJlBw3Hm6MqOsp7TbV38OpBG/yot2zJii+M4NGAlcJYMZ30w3ukV1DteCBt9wOwmQL01G0uh17me5DPZnbnV7ZS5/ec+oM6ldizsFVj2Li9nGnMtg154iqs5OSD6CJpW0njWbJTLUINwN8uQCyj0UmZdE/s/EDVuNYGuruLyjOH5/xUDZL6CtJf6n4XLNOD6CEWFt56Wl7RIlV2cvfaQJnBGl/ci8lxgwo/gtEQIwNMhS0AMlnOLX4ClXWfNqs8+2FcXyCtWCrkviGn1YWza8cUfEc9wQL+5QGXvMO/a82T5wg+MOy87GOEROuHCqhkg4RkIltmCGQ4VSB481JesG2P+wWz+1J0QKqDTi2mV+3D0wYNUgA3LkOzDNmlDvaxK80=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e10935ee-66f1-4d68-19fb-08d70b301698
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 03:29:06.0467
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aisheng.dong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6291
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
-
-commit b7107a67f0d125459fe41f86e8079afd1a5e0b15 upstream.
-
-Since the rework of the vector management, warnings about spurious
-interrupts have been reported. Robert provided some more information and
-did an initial analysis. The following situation leads to these warnings:
-
-   CPU 0                  CPU 1               IO_APIC
-
-                                              interrupt is raised
-                                              sent to CPU1
-			  Unable to handle
-			  immediately
-			  (interrupts off,
-			   deep idle delay)
-   mask()
-   ...
-   free()
-     shutdown()
-     synchronize_irq()
-     clear_vector()
-                          do_IRQ()
-                            -> vector is clear
-
-Before the rework the vector entries of legacy interrupts were statically
-assigned and occupied precious vector space while most of them were
-unused. Due to that the above situation was handled silently because the
-vector was handled and the core handler of the assigned interrupt
-descriptor noticed that it is shut down and returned.
-
-While this has been usually observed with legacy interrupts, this situation
-is not limited to them. Any other interrupt source, e.g. MSI, can cause the
-same issue.
-
-After adding proper synchronization for level triggered interrupts, this
-can only happen for edge triggered interrupts where the IO-APIC obviously
-cannot provide information about interrupts in flight.
-
-While the spurious warning is actually harmless in this case it worries
-users and driver developers.
-
-Handle it gracefully by marking the vector entry as VECTOR_SHUTDOWN instead
-of VECTOR_UNUSED when the vector is freed up.
-
-If that above late handling happens the spurious detector will not complain
-and switch the entry to VECTOR_UNUSED. Any subsequent spurious interrupt on
-that line will trigger the spurious warning as before.
-
-Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
-Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>-
-Tested-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/20190628111440.459647741@linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/include/asm/hw_irq.h |    3 ++-
- arch/x86/kernel/apic/vector.c |    4 ++--
- arch/x86/kernel/irq.c         |    2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
-
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -151,7 +151,8 @@ extern char irq_entries_start[];
- #endif
- 
- #define VECTOR_UNUSED		NULL
--#define VECTOR_RETRIGGERED	((void *)~0UL)
-+#define VECTOR_SHUTDOWN		((void *)~0UL)
-+#define VECTOR_RETRIGGERED	((void *)~1UL)
- 
- typedef struct irq_desc* vector_irq_t[NR_VECTORS];
- DECLARE_PER_CPU(vector_irq_t, vector_irq);
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -340,7 +340,7 @@ static void clear_irq_vector(struct irq_
- 	trace_vector_clear(irqd->irq, vector, apicd->cpu, apicd->prev_vector,
- 			   apicd->prev_cpu);
- 
--	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_UNUSED;
-+	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_SHUTDOWN;
- 	irq_matrix_free(vector_matrix, apicd->cpu, vector, managed);
- 	apicd->vector = 0;
- 
-@@ -349,7 +349,7 @@ static void clear_irq_vector(struct irq_
- 	if (!vector)
- 		return;
- 
--	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_UNUSED;
-+	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_SHUTDOWN;
- 	irq_matrix_free(vector_matrix, apicd->prev_cpu, vector, managed);
- 	apicd->prev_vector = 0;
- 	apicd->move_in_progress = 0;
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -247,7 +247,7 @@ __visible unsigned int __irq_entry do_IR
- 	if (!handle_irq(desc, regs)) {
- 		ack_APIC_irq();
- 
--		if (desc != VECTOR_RETRIGGERED) {
-+		if (desc != VECTOR_RETRIGGERED && desc != VECTOR_SHUTDOWN) {
- 			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
- 					     __func__, smp_processor_id(),
- 					     vector);
-
-
+PiBGcm9tOiBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRhQG54cC5jb20+DQo+IFNlbnQ6IFRo
+dXJzZGF5LCBKdWx5IDQsIDIwMTkgMzowNCBBTQ0KPiBTdWJqZWN0OiBbUEFUQ0ggMi8zXSBmaXJt
+d2FyZTogaW14OiBzY3UtcGQ6IEFkZCBtdV9iIHNpZGUgUEQgcmFuZ2UNCj4gDQo+IExTSU8gc3Vi
+c3lzdGVtIGNvbnRhaW5zIDE0IE1VIGluc3RhbmNlcy4NCj4gDQo+IDUgTVVzIHRvIGNvbW11bmlj
+YXRlIGJldHdlZW4gQVAgPC0+IFNDVQ0KPiAgIC0gc2lkZS1BIFBEIHJhbmdlIG1hbmFnZWQgYnkg
+QVANCj4gICAtIHNpZGUtQiBQRCByYW5nZSBtYW5hZ2VkIGJ5IFNDVQ0KPiANCj4gOSBNVXMgdG8g
+Y29tbXVuaWNhdGUgYmV0d2VlbiBBUCA8LT4gTTQNCg0KVGhlIGxlZnQgOU1VcyBhcmUgZ2VuZXJh
+bCBhbmQgY2FuIGJlIHVzZWQgYnkgYWxsIGNvcmVzLA0KZS5nIEFQL000L0RTUC4NClNvIGJlbG93
+IGRlc2NyaXB0aW9uIGlzIG5vdCBjb3JyZWN0Lg0KDQo+ICAgLSBzaWRlLUEgUEQgcmFuZ2UgbWFu
+YWdlZCBieSBBUA0KPiAgIC0gc2lkZS1CIFBEIHJhbmdlIG1hbmFnZWQgYnkgQVANCj4gDQo+IFNp
+Z25lZC1vZmYtYnk6IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCj4gLS0t
+DQo+ICBkcml2ZXJzL2Zpcm13YXJlL2lteC9zY3UtcGQuYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS9p
+bXgvc2N1LXBkLmMgYi9kcml2ZXJzL2Zpcm13YXJlL2lteC9zY3UtcGQuYw0KPiBpbmRleCA5NTBk
+MzAyMzgxODYuLjMwYWRjMzEwNDM0NyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9maXJtd2FyZS9p
+bXgvc2N1LXBkLmMNCj4gKysrIGIvZHJpdmVycy9maXJtd2FyZS9pbXgvc2N1LXBkLmMNCj4gQEAg
+LTkzLDYgKzkzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpbXhfc2NfcGRfcmFuZ2UNCj4gaW14
+OHF4cF9zY3VfcGRfcmFuZ2VzW10gPSB7DQo+ICAJeyAia3BwIiwgSU1YX1NDX1JfS1BQLCAxLCBm
+YWxzZSwgMCB9LA0KPiAgCXsgImZzcGkiLCBJTVhfU0NfUl9GU1BJXzAsIDIsIHRydWUsIDAgfSwN
+Cj4gIAl7ICJtdV9hIiwgSU1YX1NDX1JfTVVfMEEsIDE0LCB0cnVlLCAwIH0sDQo+ICsJeyAibXVf
+YiIsIElNWF9TQ19SX01VXzVCLCA5LCB0cnVlLCAwIH0sDQoNClNob3VsZCBzdGFydCBmcm9tIDU/
+DQp7ICJtdV9iIiwgSU1YX1NDX1JfTVVfNUIsIDksIHRydWUsIDUgfSwNCg0KUmVnYXJkcw0KQWlz
+aGVuZw0KDQo+IA0KPiAgCS8qIENPTk4gU1MgKi8NCj4gIAl7ICJ1c2IiLCBJTVhfU0NfUl9VU0Jf
+MCwgMiwgdHJ1ZSwgMCB9LA0KPiAtLQ0KPiAyLjE3LjENCg0K
