@@ -2,100 +2,160 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3975EC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACD7C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D32D208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA6F208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 15:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWn8WF88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390692AbfGRPqb (ORCPT
+        id S2390745AbfGRPrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 11:46:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35522 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728120AbfGRPqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 11:46:31 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B1FFE30ADC81;
-        Thu, 18 Jul 2019 15:46:30 +0000 (UTC)
-Received: from laptop.jcline.org (unknown [10.13.105.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45B2110021B2;
-        Thu, 18 Jul 2019 15:46:28 +0000 (UTC)
-Received: from laptop.jcline.org (localhost [IPv6:::1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by laptop.jcline.org (Postfix) with ESMTPS id 9FCF6704C8E5;
-        Thu, 18 Jul 2019 11:46:27 -0400 (EDT)
-Date:   Thu, 18 Jul 2019 11:46:26 -0400
-From:   Jeremy Cline <jcline@redhat.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     wbauer1@a1.net, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jiri Kosina <jikos@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] HID: input: fix a4tech horizontal wheel custom usage
-Message-ID: <20190718154626.GC25351@laptop.jcline.org>
-References: <20190611121320.30267-1-nsaenzjulienne@suse.de>
- <CAO-hwJLAiC1o-kZ5epZHtO2GK+zc5x28pYbZH-XsY4yAuBmHWw@mail.gmail.com>
- <5346893.KeHrH3GHoD@linux-lf90.site>
- <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
+        Thu, 18 Jul 2019 11:47:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45061 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfGRPri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 11:47:38 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so14088229plr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 08:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=560PSkF5dpA+2PC3MPuVU9QamTae65D5mdIYq7VhBIY=;
+        b=nWn8WF88sGLEvnb9ZAUWfxOrZrBijsDaLNjzEI37z6o1PMe1syCzFJjND489Yc6+ou
+         aVo7+CR6iQQ96mDwliLCqsSjegPmbtIDdNhpeI3ea7KXgmpnSjHA4vcaGA2m/Rr84uV0
+         9eSKIotIn4R+piPaKAR5DA5aP8DXUpoOME4bUODykpR7rYft9hAXH9px3AqDkyn7sR9d
+         V1IbuNQS1Ht1/R5Y14LlHlIfsbhgoKeTOUBG5ig4YH3t86kCHkw2UN2suZv4xDGQGKhp
+         iDyLapqZz5RLFl50jSV9imMDVllyL94z1u+Dypr+q+Xi8zGJgowlVGDUrJiOnmRnbxDM
+         J7Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=560PSkF5dpA+2PC3MPuVU9QamTae65D5mdIYq7VhBIY=;
+        b=JW7jJkRjbVm0xyljMcsE3wJiizcDmh7iJMA7LxcxHJRp14v0CuhddNuB08+datjzGl
+         xcXhZuXhQNOkTsgKW/Taz12rPj7MfPPfDNEDKA1ixXf34seb8MRhW0v+AF+sctpAfKh9
+         aGb1hHKONgN/UyJFlGARjursIbZtGyA9EQaSU5mIAoGz5SkEberiKSeTUM5LrzJb0ZKX
+         unbKrJKWHG8R9L0KyJahv5R2K18hHPP6SPY33qizRX8FoXEsqvz85/picJdRgxvLzucc
+         RnNHcIBDCHLtCy7jKojt49C3u2vPe5+2feOOZONgJmy5UrAE+lTDXqbAStkvXdb0MBSU
+         ijOg==
+X-Gm-Message-State: APjAAAXClnOpISo+35M8hBofDTqUmET8GdkOf9Ys9JW2f5ZVHRSUlRCs
+        FoR3KfFl1GZOoFNeCOFajrPoMg==
+X-Google-Smtp-Source: APXvYqzrkSMa3rD3Yn3FdqMZT++R/bJ0PBNWrljxysyHeNXu8HhFYIihfsp9bFamug8U81UUhmEQDA==
+X-Received: by 2002:a17:902:2ac7:: with SMTP id j65mr51319606plb.242.1563464857764;
+        Thu, 18 Jul 2019 08:47:37 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f197sm28101015pfa.161.2019.07.18.08.47.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 08:47:37 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 08:48:54 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: Re: [PATCHv8 3/5] arm64: dts: qcom: msm8996: Add Coresight support
+Message-ID: <20190718154854.GB7234@tuxbook-pro>
+References: <cover.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <2fa725fbc09306f1a95befc62715a708b4c0fad0.1562940244.git.saiprakash.ranjan@codeaurora.org>
+ <20190717170050.GB4271@xps15>
+ <f28d9c8f-017c-c990-2f00-0ef5a62f3b40@codeaurora.org>
+ <CANLsYkx9X36OJmczNK1255y8fKJfkyVq1zyQUDihqMewcU6Kxw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 18 Jul 2019 15:46:30 +0000 (UTC)
+In-Reply-To: <CANLsYkx9X36OJmczNK1255y8fKJfkyVq1zyQUDihqMewcU6Kxw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 03:36:03PM +0200, Benjamin Tissoires wrote:
-> Hi Wolfgang,
-> 
-> On Thu, Jun 13, 2019 at 1:49 PM Wolfgang Bauer <wbauer@tmo.at> wrote:
+On Thu 18 Jul 08:31 PDT 2019, Mathieu Poirier wrote:
+
+> On Wed, 17 Jul 2019 at 23:47, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
 > >
-> > On Tuesday, 11. Juni 2019, 16:42:37 Benjamin Tissoires wrote:
-> > > On Tue, Jun 11, 2019 at 2:13 PM Nicolas Saenz Julienne
+> > Hi Mathieu,
+> >
+> > On 7/17/2019 10:30 PM, Mathieu Poirier wrote:
+> > > On Fri, Jul 12, 2019 at 07:46:25PM +0530, Sai Prakash Ranjan wrote:
+> > >> From: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > >>
+> > >> Enable coresight support by adding device nodes for the
+> > >> available source, sinks and channel blocks on msm8996.
+> > >>
+> > >> This also adds coresight cpu debug nodes.
+> > >>
+> > >> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > >> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > >> Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > >> ---
+> > >>   arch/arm64/boot/dts/qcom/msm8996.dtsi | 434 ++++++++++++++++++++++++++
+> > >>   1 file changed, 434 insertions(+)
+> > >>
 > > >
-> > > <nsaenzjulienne@suse.de> wrote:
-> > > > NOTE: I CC'd Wolfgang as he's the one who can test this.
+> > > We've gone trhough 8 iteration of this set and I'm still finding checkpatch
+> > > problems, and I'm not referring to lines over 80 characters.
 > > >
-> > > I'll wait for Wolfram to confirm that the patch works before pushing then.
 > >
-> > My name is Wolfgang, not Wolfram... ;-)
-> 
-> ouch, sorry for that (I am more used to talk to the I2C maintainer apparently)
-> 
-> > But never mind.
+> > I only get below 2 checkpatch warnings:
 > >
-> > I tested the patch meanwhile on top of kernel 5.2.rc4, where the mouse wheel
-> > actually worked.
+> > If you are talking about the below one, then it was not added manually.
+> > It was taken automatically when I pulled in the v7. Should I be
+> > resending this patch for this?
 > 
-> Actually, I am a little bit lost here.
-> 
-> The patch mentions a fix of c01908a14bf73, which is in 5.1 final.
-> So if your mouse works in 5.2.rc4, I am not sure how
-> HID-a4tech-fix-horizontal-scrolling.patch could break it.
-> 
-> Could you be slightly more specific in what "works" and what doesn't?
+> That depends if you want David and Andy to pickup your patches - I am
+> sure they'll point out exactly the same thing.
 > 
 
-For what it's worth, at least one user has hit this issue in Fedora
-starting on stable kernel v5.1.17[0] which has commit abf82e8f7e9a
-("HID: a4tech: fix horizontal scrolling"). Applying this patch on top of
-v5.1.18 fixed the issue for them.
+If it's only the capitalization of "By" then I'll just fix it up as I
+apply the patches (thanks for pointing it out though!).
 
-[0] https://bugzilla.redhat.com/show_bug.cgi?id=1730762
-
+But it seems the discussion on patch 2 needs to settle(?) (And the merge
+window has to close).
 
 Regards,
-Jeremy
+Bjorn
+
+> >
+> > $ ./scripts/checkpatch.pl -g 2fa725fbc09306f1a95befc62715a708b4c0fad0
+> > WARNING: 'Acked-by:' is the preferred signature form
+> > #14:
+> > Acked-By: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >
+> > WARNING: line over 80 characters
+> > #154: FILE: arch/arm64/boot/dts/qcom/msm8996.dtsi:763:
+> > +                       compatible = "arm,coresight-dynamic-replicator",
+> > "arm,primecell";
+> >
+> > total: 0 errors, 2 warnings, 440 lines checked
+> >
+> >
+> > -Sai
+> >
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
