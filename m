@@ -8,101 +8,173 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B828C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C88DC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FC521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E230421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOso9T90"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7WxGo3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390844AbfGRSXB (ORCPT
+        id S2390897AbfGRSYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:23:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39050 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbfGRSXB (ORCPT
+        Thu, 18 Jul 2019 14:24:24 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36588 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727762AbfGRSYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:23:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so13258626pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 11:23:01 -0700 (PDT)
+        Thu, 18 Jul 2019 14:24:24 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i21so28326844ljj.3;
+        Thu, 18 Jul 2019 11:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NfeU7C+4cQYfAuh2am+KuzQ3c0bYfoeWeqp96pcMW98=;
-        b=AOso9T90+nC8FC7UpIKhHVQNz/XM9XiXEx3kny7xcy3c0FhyOB/ZkcjLeiEC6QnMEy
-         MQuSLHlhIpCTGc3NzkFU5FoqEsR5QGxFrKSygOfnkPDVgrot0bWeJKJbxO4xTKWpca/0
-         srDMPgL6ACS+cNYSNeRph5lGocRvlP4LMfdbvpeXqzvriNg7XRSimJZf7ITwJnAtKRih
-         pPOVo846YmHDQnttO5KHw46sfT2Q0FuO3K1q0luJ7JhLgEJb5x+6TcdVF3hLGzFCSUI+
-         EMxTQYFPbn2kxYPW/dHBUjnutwYlKdvYA6ymcB6tdmNkNe7Gt6Ukmwz11nP5NZKbeD+k
-         yr3A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zi0v22VFx/F+B7JLRqGKl/zXkfUz0hlM2pIpm9EwL00=;
+        b=O7WxGo3DHdSzzJAaIaLhjlZAI2oCBe9joEOOWjGAx2mDOYaMkPwqfcf4vHn1MXvKmp
+         +ceYMYOhWXHsdaTVR6IIKECcFEYob2nYwynq8JWTIEQz3R1lPU7SAwRa1FSdLnY6uBRR
+         97VOPmnLl/au8hRXqoR7cI2l8mAEvu6DXu6k8Zjl8NKRIBbqfzkQLQjOykp4SW359Mv3
+         5ZNctyHVlZ/bJ4qh0YM8e6ERx5KnKmpGFNa57C/u0q4ua0Jutwb41B235WlJuL/BSi5k
+         yGksDJ0QcGIcheds0dDNgxTOxBt228DO3p6fBUh/bZQ5i/J3441sKr6Kzh3rxXns5Jet
+         y7sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NfeU7C+4cQYfAuh2am+KuzQ3c0bYfoeWeqp96pcMW98=;
-        b=ld63Quzbq01ve/QTRpp0JMbLrHqQasW4dqnrzFlTKt+pRkQLr0sScWZWTNWBaheknv
-         Qg0dJkel50UxMuiniOTARqQSrrAxJXuCQyxheY4FvHwCL8tXo1TmO8QQeXkOp87PE4h5
-         BOM4xtLAMbgl1hZXYtvykwByOg3rsrp5KMXi3s1aJTuhNcr/bLS0aASFCF88uZkrEE+D
-         1pkup7inYq2Q8qsY5IbcZH38FTl+gXS8MU5dPrHeNSQMZixT4dWc3J17duSf7Fs0TYw/
-         CYa0t1kGOm5N0/Jm3eR0oOPzVHKsIWT9/uHuwg7HaJZPOYQOi6WHV6MzUb9jF2qhBb+8
-         BwlA==
-X-Gm-Message-State: APjAAAXC+/oyyxHFrh4Qm3jPZyX6iAmnn2Nhr9DDy7nI+G/hhBt12kHM
-        4D1N1mqcoTwYSXL20teMRko=
-X-Google-Smtp-Source: APXvYqym0j3JZFUtP4NlY1qtgqBml4ehvMqrjvgbUNRrnZdAUGNjPrRAqaxDD+nNvbnD/zBvgEjw3w==
-X-Received: by 2002:a65:5144:: with SMTP id g4mr49111581pgq.202.1563474180700;
-        Thu, 18 Jul 2019 11:23:00 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.86.126])
-        by smtp.gmail.com with ESMTPSA id k8sm28351747pgm.14.2019.07.18.11.22.54
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zi0v22VFx/F+B7JLRqGKl/zXkfUz0hlM2pIpm9EwL00=;
+        b=dwHzGHVCI1IcEb5RJLHL9MwPfYEwQrVM7F/ZOEmwdV8hhJk3oyW0754642Iz7pIbc7
+         hLOueY4PfvOvsTNfpqHvZnV+VfJisd5mkZO5acuWhTnH2JMmDNtyZGAVvuZm/YWWYt3P
+         DZ5ikckTecgDvgWkRm0zWJyM+zwRo8uMGWfSZMwhueu/7z6CaDDyAzzcjWVGae1Fs6iM
+         FfY+cskkG9k9ICyGuf2+WzI3OflCWWFlSd73ixI81Gk3L69eINFlQYe8mBs4bYz571pQ
+         qNocfYkXG88r68bLR5vNiZoYHOyq2XueTtEnTTa0xSGLFUpcq4YEkQFZUfFiQm3KX6JA
+         aHjQ==
+X-Gm-Message-State: APjAAAXnznh5UDSFyDQeUkhPcbVeaT5iLZPIiJ60O+fJ7Oq1JSwBFJPz
+        XfGDwI5ZfH0RODPdsv9ah/qB2hXR
+X-Google-Smtp-Source: APXvYqylgVnbbmG1ZShaVSYw+pueYT0PQJw6yJDWGOexh/J96R3yrjpdbugyKtFDLHkJtnlhxUNAXA==
+X-Received: by 2002:a2e:9a13:: with SMTP id o19mr25760065lji.102.1563474261113;
+        Thu, 18 Jul 2019 11:24:21 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id o17sm5252400ljg.71.2019.07.18.11.24.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 11:22:57 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 23:52:50 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geordan Neukum <gneukum1@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Michael Scheiderer <michael.scheiderer@fau.de>,
-        Fabian Krueger <fabian.krueger@fau.de>,
-        Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>,
-        Jeremy Sowden <jeremy@azazel.net>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: kpc2000: Remove null check before kfree
-Message-ID: <20190718182250.GA3011@hari-Inspiron-1545>
+        Thu, 18 Jul 2019 11:24:20 -0700 (PDT)
+Subject: Re: [PATCH v1] soc/tegra: pmc: Query PCLK clock rate at probe time
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190707230843.11224-1-digetx@gmail.com>
+ <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
+ <aa12115c-bf1c-f50b-f38a-97fb398d1af0@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d9b64f71-a91d-be34-1f36-28727c4beff6@gmail.com>
+Date:   Thu, 18 Jul 2019 21:24:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <aa12115c-bf1c-f50b-f38a-97fb398d1af0@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As kfree already has NULL check we may not need null check before
-calling same.
+18.07.2019 12:53, Jon Hunter пишет:
+> 
+> On 18/07/2019 10:45, Jon Hunter wrote:
+>>
+>> On 08/07/2019 00:08, Dmitry Osipenko wrote:
+>>> The PCLK clock is running off SCLK, which is a critical clock that is
+>>> very unlikely to randomly change its rate. It's also a bit clumsy (and
+>>> apparently incorrect) to query the clock's rate with interrupts being
+>>> disabled because clk_get_rate() takes a mutex and that's the case during
+>>> suspend/cpuidle entering. Lastly, it's better to always fully reprogram
+>>> PMC state because it's not obvious whether it could be changed after SC7.
+>>
+>> I agree with the first part, but I would drop the last sentence because
+>> I see no evidence of this. Maybe Peter can confirm.
+>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/soc/tegra/pmc.c | 26 +++++++++++---------------
+>>>  1 file changed, 11 insertions(+), 15 deletions(-)
+>>>
+>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>> index 9f9c1c677cf4..532e0ada012b 100644
+>>> --- a/drivers/soc/tegra/pmc.c
+>>> +++ b/drivers/soc/tegra/pmc.c
+>>> @@ -1433,6 +1433,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
+>>>  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>>>  {
+>>>  	unsigned long long rate = 0;
+>>> +	u64 ticks;
+>>>  	u32 value;
+>>>  
+>>>  	switch (mode) {
+>>> @@ -1441,7 +1442,7 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>>>  		break;
+>>>  
+>>>  	case TEGRA_SUSPEND_LP2:
+>>> -		rate = clk_get_rate(pmc->clk);
+>>> +		rate = pmc->rate;
+>>
+>> There is another call to clk_get_rate() that could be removed as well.
+>>
+>>>  		break;
+>>>  
+>>>  	default:
+>>> @@ -1451,26 +1452,20 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>>>  	if (WARN_ON_ONCE(rate == 0))
+>>>  		rate = 100000000;
+>>>  
+>>> -	if (rate != pmc->rate) {
+>>> -		u64 ticks;
+>>> -
+>>> -		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+>>> -		do_div(ticks, USEC_PER_SEC);
+>>> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+>>> -
+>>> -		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+>>> -		do_div(ticks, USEC_PER_SEC);
+>>> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>>> +	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+>>> +	do_div(ticks, USEC_PER_SEC);
+>>> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+>>
+>> You could go a step further and update the cpu_good_time/cpu_off_time to
+>> be ticks and calculated once during probe and recalculated if
+>> tegra_pmc_set_suspend_mode is called. I am not sure why we really need
+>> to pass mode to tegra_pmc_enter_suspend_mode() seeing as the mode is
+>> stored in the pmc struct.
+>>
+>>>  
+>>> -		wmb();
+>>> -
+>>> -		pmc->rate = rate;
+>>> -	}
+>>> +	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+>>> +	do_div(ticks, USEC_PER_SEC);
+>>> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>>>  
+>>>  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>>>  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
+>>>  	value |= PMC_CNTRL_CPU_PWRREQ_OE;
+>>>  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>> +
+>>> +	wmb();
+> 
+> I would not move the barrier unless there is a good reason. Maybe it is
+> intentional that this happens before the other writes.
 
-Issue found with coccicheck
+Looking at 'git blame', the barrier was copied by Thierry while he moved
+PMC driver form mach-tegra/ to soc/. Originally the barrier appeared in
+d552920a02759cdc45d8507868de10ac2f5b9a18 (ARM: tegra30: cpuidle: add
+powered-down state for CPU0).
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/kpc2000/kpc2000_spi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
-index 35ac1d7..c07d2fc 100644
---- a/drivers/staging/kpc2000/kpc2000_spi.c
-+++ b/drivers/staging/kpc2000/kpc2000_spi.c
-@@ -411,9 +411,7 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
- kp_spi_cleanup(struct spi_device *spidev)
- {
- 	struct kp_spi_controller_state *cs = spidev->controller_state;
--
--	if (cs)
--		kfree(cs);
-+	kfree(cs);
- }
- 
- /******************
--- 
-2.7.4
-
+But really there is no good justification for that barrier at all
+because PMC logic kicks-in when CPU enters power-gated state and at that
+point all CPU accesses guaranteed to be finished no matter what, hence
+this barrier just doesn't make much sense and can be removed safely.
+I'll make a separate commit for that.
