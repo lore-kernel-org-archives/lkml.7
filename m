@@ -2,134 +2,167 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABBBC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDD0C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4AE20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAF42173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTVCASN/"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VRUxJVZ/";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="WX6Z740h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfGRHVl (ORCPT
+        id S1727840AbfGRHad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 03:21:41 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40917 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfGRHVl (ORCPT
+        Thu, 18 Jul 2019 03:30:33 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:33330 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726304AbfGRHac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:21:41 -0400
-Received: by mail-yw1-f67.google.com with SMTP id b143so11857401ywb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:21:40 -0700 (PDT)
+        Thu, 18 Jul 2019 03:30:32 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 496A1C2967;
+        Thu, 18 Jul 2019 07:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563435031; bh=wi3lbCFurWzNllCa1BfsB65zzLLkVvSCZbPfv/dPEsM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=VRUxJVZ/Ql90IIPd5yzyp496IXiUKTYdHXnxi3XQNm6w8IAqnolbXvH+5q70s3Zld
+         6vlygFQ459cka6ZR18RSIYACoEgRoI75wDk1hXi49TG0hTWqdpoMQ6x6d9jy4uoQK7
+         8TA3FRYT2manlySf6Ajfvm4PrR3ENf9RVlAzeToa8VUEop8B6cBP+5BCCe5zfLm7aI
+         dBeL1vcdrBHqP6lAS5a+V+QTBGR2JxPd+cgrFj75bxLKASRkG5eszgKsgzV/EQuw8n
+         FLDqaVX/SrTN/kmvE1mUoTlJUu5nfvOS3eGODZWyd3GWg0CA/cHvyOTUmlFelsOGms
+         k9D5l3L9ZGLDg==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id A6FE0A0067;
+        Thu, 18 Jul 2019 07:30:14 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 18 Jul 2019 00:29:53 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 18 Jul 2019 00:29:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L6LFzSNTAljBwh+svyvpYFeRruDHEcrD0gTquyNV8YR2NyO907iUwl5mXAAydScFVV49cNc2ZQOn2xBLoQQSpaoVHXMwI4aOy55nAo/sMAfI+dMQktydaPAMuCmrwWlXBlQ2BvFMQ6tCJMOWhyedBOog5s8p1h1sSeFqneICyqujn9RkeJV/tJtT6Gc23SNbvStqrlsOjxwttPHj/gsT4Gne+Kiu1vktsAt1k26kMW8XUT7Ne90Ai0snJqub5QGkme2eRB3kblT4SHkhB84q/pelcV2HVbQ/2BdceSf+UdyiRUNWor4yhpKnwTpEXpXW+MPDg5v/xyRTr4NCOWKfew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wi3lbCFurWzNllCa1BfsB65zzLLkVvSCZbPfv/dPEsM=;
+ b=O1Bgx62AZTIKJl4V0cyAryHAGha51C1itCcEK1pKG6L8/KBV9PmKw4kXyhmC+5udDYCgefGLcW4fQmM8A8wxY0StK5NPN+VFH6K4hLvGX2+vOgPqRvf4zs7aOMUGBIYS4QWqlMSn8wQk0LZZilNUtygF0LpO44DIWqldL219hMW53cCjxaenJpMR9l6ivVx4ByjhszYfoW3Eb/Aj4Qf/V9Bby5hLsOy3iwWexoXg9IGrPMb544eHhUthg3xKwumv8dnWGcTVMAA1liMTHenfHFq0BAFPiXCLjhf4iWtB9ai3kgOiEDVWo8uxZoiRd5FJ7p1ERE7k2G9rUEmMf3U/Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=synopsys.com;dmarc=pass action=none
+ header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=I7RxY7r3Jgx1B32VLDVMayLONGfb/45rCMfF68XdUAg=;
-        b=eTVCASN/nT7UvlP4b2X/hXHaLQJXMUscbQC9BC69DYGyPbL5539AeuPk0d0lVuNnFB
-         94C85zw3keVa0UWRcTL7/iGcxD2GoaJLbsEOeuzl7SzOaXTXuuSkatIwiqUUkz0Ct9xE
-         mGjy62wdb3x1vH6IxM68zd3oFq5NJ7lL4c6N1qGUMn49oUG7bagRqGf2qPFEb2IEzUe3
-         koODk1TdrlZk8rfnxf3R1i1527woiDDZn1VyNTHdATm+EqtapeyaDGfXCotryhLL6zl8
-         dXugt/fxJlPXUHWrvY1Fiwv4s6ZgoH08QSVOMRsPpumfPgdGQPiNKaQWD/oHCyK1xxCa
-         rtxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=I7RxY7r3Jgx1B32VLDVMayLONGfb/45rCMfF68XdUAg=;
-        b=IjxenuSEBqIxr/hcVHb0t9bR9rqmPXeYJcHm6JV+VKEWq6KGWOS6A1wVsLbsQggzG2
-         AZZzyTDg80m/TtYS0avhM+k7OqAg+Ip8WWgh9CZgpqLwpx61NBSml7Nh7Cx4/xMNg/NL
-         BFCUY2t1ZS7VoE+aFtmwVTrRCz/4u/p7lz+JvOgPgGoeF/qF9o0Jyz11SCOBFliMOzGf
-         TIjcMJiU/W7kBJIIndGa+mSMmejYQHQeAo26Frj6f+ln0S1QmIrl7Z4x3tehQ7uowYom
-         YzJiPlYbe6jSkn5Lt4BM89UIUc4n3LbUGLzDX7jVxTsqV2fA7G3h8PJpm6SXx/K6l8KO
-         6pLA==
-X-Gm-Message-State: APjAAAVGgv7xvsjuY0EWxFwyjeZtB3ZXojYVj2G045WrXMu+bS5ro6Cv
-        DO0FKCkt3JIuHrGSUXtUFWEm7sHUL1clIqgHPpOWaJcP
-X-Google-Smtp-Source: APXvYqzyn24R75IvV9NOa9XZXY2XO7T0KL4m6uKnklrU5aFhxWobVyBsowaxjq35Rnfl9y9O3v18nyMMlKx/oST5D10=
-X-Received: by 2002:a0d:f2c4:: with SMTP id b187mr27527652ywf.103.1563434500147;
- Thu, 18 Jul 2019 00:21:40 -0700 (PDT)
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wi3lbCFurWzNllCa1BfsB65zzLLkVvSCZbPfv/dPEsM=;
+ b=WX6Z740hX39PnryaEh3UwALDIfosigkP0xIc7l2RXc90bP9YHzoTmAo5XkqegOR1zVKuhtX2W47JYgwbzo+24KTHGH7Lz2kBsy6Yh+JeA8J6c3LKnUrJoS8tFIso0lvYKpbhE+JgcSoIJARkOyCps4bTayxf+mcBjl55PpZXPb4=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3364.namprd12.prod.outlook.com (20.178.211.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.12; Thu, 18 Jul 2019 07:29:49 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::61ef:5598:59e0:fc9d%5]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
+ 07:29:49 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/abPQEOAgADRbnA=
+Date:   Thu, 18 Jul 2019 07:29:49 +0000
+Message-ID: <BN8PR12MB3266311B8D76DABE8448E3E3D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+In-Reply-To: <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fc230020-b5b4-4d5c-4a6c-08d70b51b76f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3364;
+x-ms-traffictypediagnostic: BN8PR12MB3364:
+x-microsoft-antispam-prvs: <BN8PR12MB3364C246A25174B24636121CD3C80@BN8PR12MB3364.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1091;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(39860400002)(366004)(376002)(199004)(189003)(316002)(55016002)(9686003)(4326008)(2906002)(3846002)(5660300002)(52536014)(6246003)(6116002)(486006)(305945005)(66066001)(446003)(53936002)(11346002)(99286004)(229853002)(6436002)(2201001)(54906003)(110136005)(66476007)(71200400001)(71190400001)(66446008)(64756008)(66946007)(66556008)(7416002)(7696005)(76116006)(68736007)(8676002)(76176011)(186003)(86362001)(26005)(256004)(8936002)(81156014)(7736002)(476003)(2501003)(74316002)(81166006)(14454004)(25786009)(6506007)(14444005)(478600001)(33656002)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3364;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tsvOF5zZoAV0KWydtKBrDCH2COPGDLauOQwdoJeVZWtpOlDwonT3R5dpHexLKl3hPjUHteJtkOP2gBLINa3Ps5LNWRlUTNX8AZqbCFUSsUngJGg7LTmNawrArwJzOIQTNnhadkv7T8wEAFwrJsHkiVWS7AdxW3l7TO/clCPrEW2cMhIFtBRWt3Hfqnb/MbL2ln38w+FeWc2jIpwh1lNa1SUfsjhCD0gPfdcVDK1GjgFOB5+fAQ2jbLWP0rh8XoTKKAo+Z8gZQN8dNpA+H1plcSYpvkbX+SFV/sMttEyERYogIP4/2RNakdeQtcRGRMqETsJeUzUquiVJqWW5VjDMZcbyQNaTyiEfhaFCWOMNxlTTH5Ubrf1OapiRZ2H5+jbw3150o+oihjy5Eey9ge7eRBl+HfvbXjD4yhTTSTquhzE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190711031021.23512-1-huangfq.daxian@gmail.com> <6f28e750-02e4-438a-3680-a4697014689d@amd.com>
-In-Reply-To: <6f28e750-02e4-438a-3680-a4697014689d@amd.com>
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Date:   Thu, 18 Jul 2019 15:21:29 +0800
-Message-ID: <CABXRUiTG4=isYUHkoha9dYX0P=k6AuQAnrZkcWHT=-Yf2gk6Vg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/ttm: use the same attributes when freeing d_page->vaddr
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "Huang, Ray" <Ray.Huang@amd.com>,
-        Junwei Zhang <Jerry.Zhang@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc230020-b5b4-4d5c-4a6c-08d70b51b76f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 07:29:49.2376
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3364
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Koenig, Christian <Christian.Koenig@amd.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=
-=8816=E6=97=A5=E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=889:38=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Am 11.07.19 um 05:10 schrieb Fuqian Huang:
-> > In function __ttm_dma_alloc_page(), d_page->addr is allocated
-> > by dma_alloc_attrs() but freed with use dma_free_coherent() in
-> > __ttm_dma_free_page().
-> > Use the correct dma_free_attrs() to free d_page->vaddr.
-> >
-> > Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> How do you want to upstream that? Should I pull it into our tree?
-
-I just came across this misuse case accidentally.
-I am not very clear about 'How to upstream that'.
-Are there more than one way to upstream the code and fix the problem?
-
-From my side, it is ok that you pull it into your tree and fix it or
-fix it in other way.
-:) It will be fine if the problem is fixed.
-
-Thanks.
-
->
-> Thanks,
-> Christian.
->
-> > ---
-> >   drivers/gpu/drm/ttm/ttm_page_alloc_dma.c | 6 +++++-
-> >   1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c b/drivers/gpu/drm=
-/ttm/ttm_page_alloc_dma.c
-> > index d594f7520b7b..7d78e6deac89 100644
-> > --- a/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c
-> > +++ b/drivers/gpu/drm/ttm/ttm_page_alloc_dma.c
-> > @@ -285,9 +285,13 @@ static int ttm_set_pages_caching(struct dma_pool *=
-pool,
-> >
-> >   static void __ttm_dma_free_page(struct dma_pool *pool, struct dma_pag=
-e *d_page)
-> >   {
-> > +     unsigned long attrs =3D 0;
-> >       dma_addr_t dma =3D d_page->dma;
-> >       d_page->vaddr &=3D ~VADDR_FLAG_HUGE_POOL;
-> > -     dma_free_coherent(pool->dev, pool->size, (void *)d_page->vaddr, d=
-ma);
-> > +     if (pool->type & IS_HUGE)
-> > +             attrs =3D DMA_ATTR_NO_WARN;
-> > +
-> > +     dma_free_attrs(pool->dev, pool->size, (void *)d_page->vaddr, dma,=
- attrs);
-> >
-> >       kfree(d_page);
-> >       d_page =3D NULL;
->
+RnJvbTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQpEYXRlOiBKdWwvMTcvMjAx
+OSwgMTk6NTg6NTMgKFVUQyswMDowMCkNCg0KPiBJIGFtIHNlZWluZyBhIGJvb3QgcmVncmVzc2lv
+biBvbiBvbmUgb2Ygb3VyIFRlZ3JhIGJvYXJkcyB3aXRoIGJvdGgNCj4gbWFpbmxpbmUgYW5kIC1u
+ZXh0LiBCaXNlY3RpbmcgaXMgcG9pbnRpbmcgdG8gdGhpcyBjb21taXQgYW5kIHJldmVydGluZw0K
+PiB0aGlzIGNvbW1pdCBvbiB0b3Agb2YgbWFpbmxpbmUgZml4ZXMgdGhlIHByb2JsZW0uIFVuZm9y
+dHVuYXRlbHksIHRoZXJlDQo+IGlzIG5vdCBtdWNoIG9mIGEgYmFja3RyYWNlIGJ1dCB3aGF0IEkg
+aGF2ZSBjYXB0dXJlZCBpcyBiZWxvdy4gDQo+IA0KPiBQbGVhc2Ugbm90ZSB0aGF0IHRoaXMgaXMg
+c2VlbiBvbiBhIHN5c3RlbSB0aGF0IGlzIHVzaW5nIE5GUyB0byBtb3VudA0KPiB0aGUgcm9vdGZz
+IGFuZCB0aGUgY3Jhc2ggb2NjdXJzIHJpZ2h0IGFyb3VuZCB0aGUgcG9pbnQgdGhlIHJvb3RmcyBp
+cw0KPiBtb3VudGVkLg0KPiANCj4gTGV0IG1lIGtub3cgaWYgeW91IGhhdmUgYW55IHRob3VnaHRz
+Lg0KPiANCj4gQ2hlZXJzDQo+IEpvbiANCj4gDQo+IFsgICAxMi4yMjE4NDNdIEtlcm5lbCBwYW5p
+YyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbCBpbml0ISBleGl0Y29kZT0weDAwMDAw
+MDBiDQo+IFsgICAxMi4yMjk0ODVdIENQVTogNSBQSUQ6IDEgQ29tbTogaW5pdCBUYWludGVkOiBH
+IFMgICAgICAgICAgICAgICAgNS4yLjAtMTE1MDAtZzkxNmY1NjJmYjI4YSAjMTgNCj4gWyAgIDEy
+LjIzODA3Nl0gSGFyZHdhcmUgbmFtZTogTlZJRElBIFRlZ3JhMTg2IFAyNzcxLTAwMDAgRGV2ZWxv
+cG1lbnQgQm9hcmQgKERUKQ0KPiBbICAgMTIuMjQ1MTA1XSBDYWxsIHRyYWNlOg0KPiBbICAgMTIu
+MjQ3NTQ4XSAgZHVtcF9iYWNrdHJhY2UrMHgwLzB4MTUwDQo+IFsgICAxMi4yNTExOTldICBzaG93
+X3N0YWNrKzB4MTQvMHgyMA0KPiBbICAgMTIuMjU0NTA1XSAgZHVtcF9zdGFjaysweDljLzB4YzQN
+Cj4gWyAgIDEyLjI1NzgwOV0gIHBhbmljKzB4MTNjLzB4MzJjDQo+IFsgICAxMi4yNjA4NTNdICBj
+b21wbGV0ZV9hbmRfZXhpdCsweDAvMHgyMA0KPiBbICAgMTIuMjY0Njc2XSAgZG9fZ3JvdXBfZXhp
+dCsweDM0LzB4OTgNCj4gWyAgIDEyLjI2ODI0MV0gIGdldF9zaWduYWwrMHgxMDQvMHg2NjgNCj4g
+WyAgIDEyLjI3MTcxOF0gIGRvX25vdGlmeV9yZXN1bWUrMHgyYWMvMHgzODANCj4gWyAgIDEyLjI3
+NTcxNl0gIHdvcmtfcGVuZGluZysweDgvMHgxMA0KPiBbICAgMTIuMjc5MTA5XSBTTVA6IHN0b3Bw
+aW5nIHNlY29uZGFyeSBDUFVzDQo+IFsgICAxMi4yODMwMjVdIEtlcm5lbCBPZmZzZXQ6IGRpc2Fi
+bGVkDQo+IFsgICAxMi4yODY1MDJdIENQVSBmZWF0dXJlczogMHgwMDAyLDIwODA2MDAwDQo+IFsg
+ICAxMi4yOTA0OTldIE1lbW9yeSBMaW1pdDogbm9uZQ0KPiBbICAgMTIuMjkzNTQ4XSAtLS1bIGVu
+ZCBLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogQXR0ZW1wdGVkIHRvIGtpbGwgaW5pdCEgZXhp
+dGNvZGU9MHgwMDAwMDAwYiBdLS0tDQo+IA0KPiAtLSANCj4gbnZwdWJsaWMNCg0KWW91IGRvbid0
+IGhhdmUgYW55IG1vcmUgZGF0YSA/IENhbiB5b3UgYWN0aXZhdGUgRE1BLUFQSSBkZWJ1ZyBhbmQg
+Y2hlY2sgDQppZiB0aGVyZSBpcyBhbnkgbW9yZSBpbmZvIG91dHB1dHRlZCA/DQoNCi0tLQ0KVGhh
+bmtzLA0KSm9zZSBNaWd1ZWwgQWJyZXUNCg==
