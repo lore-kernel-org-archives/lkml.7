@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE94C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ADCC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA153204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62F3204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390299AbfGRMSI (ORCPT
+        id S2390251AbfGRMSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:18:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37630 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727813AbfGRMSI (ORCPT
+        Thu, 18 Jul 2019 08:18:14 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:37630 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390216AbfGRMSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jul 2019 08:18:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id v3so30735112ios.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:18:07 -0700 (PDT)
+Received: by mail-io1-f69.google.com with SMTP id v3so30735129ios.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 05:18:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=P37V7g1ilZLvMKuYYt4IQej0o6/UvzFQGZC5ukrNMIA=;
-        b=tNUZlg4jjY6YjuWIC9wx1qsRJHZPhtl4SK4B5iLvMlLVsXNF05GRzsyaeJGYpLAfik
-         Y75K0wwtfN+Nt+4Rcfz6DeKQhW/zY6DqUnj990Tt+ymGlJ3gAboJhI3Gq9/nNDW1VKGg
-         9hF7yK4SnTAqh7PkxxlOuUJWaVLIzr5+QR7GLB5oumhg8XwScRcvyQ39hA9Mv/4DFhaQ
-         EGekWoD6iR45QY6NugJNa2lJkavD0K0UTLc3ysi5Fm3dND0J8k1jkFFiqHJlFBmL66Tl
-         luvqD1FE11wkPDpIdz4EDUM+6sX+ibdJuTmNujBlIS1FToU6dWeP7VBiWi9vk4SGYMJV
-         8v/A==
-X-Gm-Message-State: APjAAAWBh5WzcLx6uW9FYpFhacT7gp6VzMi15/xPcFdh+T6JVk+SbGv0
-        BQMoNBThTOttUZPIRiOjI64eknGnnTr5qBYBWKRKeSqamGOz
-X-Google-Smtp-Source: APXvYqxwfXaPGbiaVaPMOCDgxL4Cb3HWOLvagdS0PGniB53GHXEOOXOrNxmjYBFlxx8F7DgW7RfcT+VmDbzLSbQADRqj+f7pTiPr
+        bh=puUKYuR94Cgk2/T1XPn1EMT/4tNJCdW6qsdq1yUHLPk=;
+        b=aRjBW4PgmeEqSgKW8doIoPSW5E4ffxsmC2hr6WT2M9dHfJYaU+SgNhN6cIgHbpCcrb
+         MxrBtRxCdYnMh+5k4cQclF7S1HI4c5NNZfJVVdUsap1x7DdpIy91AfdbLMzo4d+Y4AWp
+         x3+OmZta1pRDcVSou2caZaQuH5qm8QPrJhX2twTNmN/qUpNEP1Lt1h4XgYhGhV9uyvDJ
+         FsfvvTUXqPD9/m9Bq/+82QqJlhyw3h6DIJ6knxzX/Ju+dsD8Tf4GjMp+zxYGgCezcteK
+         bjVWGQNShhhZadNLWHbuZUWrvCxW/5XFA9D08Cm8B2Ga3EpLJipCD1mwC2UgDZy6wCw9
+         UyBQ==
+X-Gm-Message-State: APjAAAV5VeEcCCyLnwcB0UXn7jFHyk4rRjyG/dTHUPMLy6Aahspn6gfS
+        Lbz1rZe5aAzPfJfXnSJ9eqUZsEZm1mW85WdthKCJh7VozPSo
+X-Google-Smtp-Source: APXvYqzpb126gAYM0q5d9sGeWgsi5RdaaYOBkwEpvaRLsmmbpPAguaHkeevyjBhoItW0sHseKgNBYlm+R6hNeULNAhYL6s/4crNy
 MIME-Version: 1.0
-X-Received: by 2002:a02:ccd2:: with SMTP id k18mr48043620jaq.3.1563452287347;
+X-Received: by 2002:a5d:8a06:: with SMTP id w6mr24846003iod.267.1563452287622;
  Thu, 18 Jul 2019 05:18:07 -0700 (PDT)
 Date:   Thu, 18 Jul 2019 05:18:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000035f65d058df39aed@google.com>
-Subject: KASAN: use-after-free Read in nr_insert_socket
-From:   syzbot <syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-hams@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ralf@linux-mips.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+Message-ID: <0000000000003a2aeb058df39a3c@google.com>
+Subject: general protection fault in kstrtouint (2)
+From:   syzbot <syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com>
+To:     dhowells@redhat.com, gregkh@linuxfoundation.org,
+        kstewart@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, miklos@szeredi.hu,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,157 +59,96 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    a5b64700 fix: taprio: Change type of txtime-delay paramete..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1588b458600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87305c3ca9c25c70
-dashboard link: https://syzkaller.appspot.com/bug?extid=9399c158fcc09b21d0d2
+HEAD commit:    e40115c0 Add linux-next specific files for 20190717
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11d51b70600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+dashboard link: https://syzkaller.appspot.com/bug?extid=398343b7c1b1b989228d
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=105a61a4600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153ef948600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164e7434600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1399554c600000
 
 The bug was bisected to:
 
-commit c8c8218ec5af5d2598381883acbefbf604e56b5e
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Jun 27 21:30:58 2019 +0000
+commit 71cbb7570a9a0b830125163c20125a8b5e65ac45
+Author: David Howells <dhowells@redhat.com>
+Date:   Mon Mar 25 16:38:31 2019 +0000
 
-     netrom: fix a memory leak in nr_rx_frame()
+     vfs: Move the subtype parameter into fuse
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=159ef948600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=179ef948600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=139ef948600000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14323078600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16323078600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12323078600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9399c158fcc09b21d0d2@syzkaller.appspotmail.com
-Fixes: c8c8218ec5af ("netrom: fix a memory leak in nr_rx_frame()")
+Reported-by: syzbot+398343b7c1b1b989228d@syzkaller.appspotmail.com
+Fixes: 71cbb7570a9a ("vfs: Move the subtype parameter into fuse")
 
-==================================================================
-BUG: KASAN: use-after-free in atomic_read  
-/./include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in refcount_inc_not_zero_checked+0x81/0x200  
-/lib/refcount.c:123
-Read of size 4 at addr ffff8880a5d3f380 by task swapper/1/0
-
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.2.0+ #89
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9017 Comm: syz-executor410 Not tainted 5.2.0-next-20190717 #40
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+RIP: 0010:kstrtoull lib/kstrtox.c:123 [inline]
+RIP: 0010:kstrtouint+0x85/0x1a0 lib/kstrtox.c:222
+Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6c 35  
+35 fe 4c 89 e2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 4c  
+89 e2 83 e2 07 38 d0 7f 08 84 c0 0f 85 db 00 00 00
+RSP: 0018:ffff8880997a79e0 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff8880997a7b38 RCX: ffffffff81c482dc
+RDX: 0000000000000000 RSI: ffffffff833d4f84 RDI: 0000000000000000
+RBP: ffff8880997a7a70 R08: ffff8880a17ce100 R09: ffffed1015d06c84
+R10: ffffed1015d06c83 R11: ffff8880ae83641b R12: 0000000000000000
+R13: 1ffff110132f4f3d R14: ffff8880997a7a48 R15: 0000000000000000
+FS:  0000555556585880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000455340 CR3: 0000000095a49000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  <IRQ>
-  __dump_stack /lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 /lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 /mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 /mm/kasan/report.c:482
-  kasan_report+0x12/0x20 /mm/kasan/common.c:612
-  check_memory_region_inline /mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 /mm/kasan/generic.c:192
-  __kasan_check_read+0x11/0x20 /mm/kasan/common.c:92
-  atomic_read /./include/asm-generic/atomic-instrumented.h:26 [inline]
-  refcount_inc_not_zero_checked+0x81/0x200 /lib/refcount.c:123
-  refcount_inc_checked+0x17/0x70 /lib/refcount.c:156
-  sock_hold /./include/net/sock.h:649 [inline]
-  sk_add_node /./include/net/sock.h:701 [inline]
-  nr_insert_socket+0x2d/0xe0 /net/netrom/af_netrom.c:137
-  nr_rx_frame+0x1605/0x1e80 /net/netrom/af_netrom.c:1023
-  nr_loopback_timer+0x7b/0x170 /net/netrom/nr_loopback.c:59
-  call_timer_fn+0x1ac/0x780 /kernel/time/timer.c:1322
-  expire_timers /kernel/time/timer.c:1366 [inline]
-  __run_timers /kernel/time/timer.c:1685 [inline]
-  __run_timers /kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x697/0x17a0 /kernel/time/timer.c:1698
-  __do_softirq+0x262/0x98c /kernel/softirq.c:292
-  invoke_softirq /kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 /kernel/softirq.c:413
-  exiting_irq /./arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 /arch/x86/kernel/apic/apic.c:1095
-  apic_timer_interrupt+0xf/0x20 /arch/x86/entry/entry_64.S:828
-  </IRQ>
-RIP: 0010:native_safe_halt+0xe/0x10 /./arch/x86/include/asm/irqflags.h:61
-Code: e8 2b 7b fa eb 8a 90 90 90 90 90 90 e9 07 00 00 00 0f 00 2d d4 0e 57  
-00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d c4 0e 57 00 fb f4 <c3> 90 55 48 89  
-e5 41 57 41 56 41 55 41 54 53 e8 7e 27 2f fa e8 59
-RSP: 0018:ffff8880a98e7d68 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5ca5 RBX: ffff8880a98ce340 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a98cebcc
-RBP: ffff8880a98e7d98 R08: ffff8880a98ce340 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffffffff89a29778 R14: 0000000000000000 R15: 0000000000000001
-  arch_cpu_idle+0xa/0x10 /arch/x86/kernel/process.c:571
-  default_idle_call+0x84/0xb0 /kernel/sched/idle.c:94
-  cpuidle_idle_call /kernel/sched/idle.c:154 [inline]
-  do_idle+0x413/0x760 /kernel/sched/idle.c:263
-  cpu_startup_entry+0x1b/0x20 /kernel/sched/idle.c:354
-  start_secondary+0x315/0x430 /arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 /arch/x86/kernel/head_64.S:243
-
-Allocated by task 0:
-  save_stack+0x23/0x90 /mm/kasan/common.c:69
-  set_track /mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc /mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 /mm/kasan/common.c:460
-  kasan_kmalloc+0x9/0x10 /mm/kasan/common.c:501
-  __do_kmalloc /mm/slab.c:3655 [inline]
-  __kmalloc+0x163/0x780 /mm/slab.c:3664
-  kmalloc /./include/linux/slab.h:557 [inline]
-  sk_prot_alloc+0x23a/0x310 /net/core/sock.c:1603
-  sk_alloc+0x39/0xf70 /net/core/sock.c:1657
-  nr_make_new /net/netrom/af_netrom.c:476 [inline]
-  nr_rx_frame+0x733/0x1e80 /net/netrom/af_netrom.c:959
-  nr_loopback_timer+0x7b/0x170 /net/netrom/nr_loopback.c:59
-  call_timer_fn+0x1ac/0x780 /kernel/time/timer.c:1322
-  expire_timers /kernel/time/timer.c:1366 [inline]
-  __run_timers /kernel/time/timer.c:1685 [inline]
-  __run_timers /kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x697/0x17a0 /kernel/time/timer.c:1698
-  __do_softirq+0x262/0x98c /kernel/softirq.c:292
-
-Freed by task 11342:
-  save_stack+0x23/0x90 /mm/kasan/common.c:69
-  set_track /mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x102/0x150 /mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 /mm/kasan/common.c:457
-  __cache_free /mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 /mm/slab.c:3756
-  sk_prot_free /net/core/sock.c:1640 [inline]
-  __sk_destruct+0x4f7/0x6e0 /net/core/sock.c:1726
-  sk_destruct+0x86/0xa0 /net/core/sock.c:1734
-  __sk_free+0xfb/0x360 /net/core/sock.c:1745
-  sk_free+0x42/0x50 /net/core/sock.c:1756
-  sock_put /./include/net/sock.h:1725 [inline]
-  sock_efree+0x61/0x80 /net/core/sock.c:2042
-  skb_release_head_state+0xeb/0x260 /net/core/skbuff.c:652
-  skb_release_all+0x16/0x60 /net/core/skbuff.c:663
-  __kfree_skb /net/core/skbuff.c:679 [inline]
-  kfree_skb /net/core/skbuff.c:697 [inline]
-  kfree_skb+0x101/0x3c0 /net/core/skbuff.c:691
-  nr_accept+0x570/0x720 /net/netrom/af_netrom.c:819
-  __sys_accept4+0x34e/0x6a0 /net/socket.c:1750
-  __do_sys_accept4 /net/socket.c:1785 [inline]
-  __se_sys_accept4 /net/socket.c:1782 [inline]
-  __x64_sys_accept4+0x97/0xf0 /net/socket.c:1782
-  do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
+  fs_parse+0xde1/0x1080 fs/fs_parser.c:209
+  fuse_parse_param+0xac/0x750 fs/fuse/inode.c:491
+  vfs_parse_fs_param+0x2ca/0x540 fs/fs_context.c:145
+  vfs_parse_fs_string+0x105/0x170 fs/fs_context.c:188
+  generic_parse_monolithic+0x181/0x200 fs/fs_context.c:228
+  parse_monolithic_mount_data+0x69/0x90 fs/fs_context.c:708
+  do_new_mount fs/namespace.c:2779 [inline]
+  do_mount+0x1369/0x1c30 fs/namespace.c:3103
+  ksys_mount+0xdb/0x150 fs/namespace.c:3312
+  __do_sys_mount fs/namespace.c:3326 [inline]
+  __se_sys_mount fs/namespace.c:3323 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3323
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a5d3f300
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 128 bytes inside of
-  2048-byte region [ffff8880a5d3f300, ffff8880a5d3fb00)
-The buggy address belongs to the page:
-page:ffffea0002974f80 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea00021bf808 ffffea000282a708 ffff8880aa400e00
-raw: 0000000000000000 ffff8880a5d3e200 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a5d3f280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a5d3f300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8880a5d3f380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff8880a5d3f400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a5d3f480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+RIP: 0033:0x440299
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff19b997e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007fff19b997f0 RCX: 0000000000440299
+RDX: 0000000020000080 RSI: 00000000200000c0 RDI: 0000000000000000
+RBP: 00000000006cb018 R08: 00000000200002c0 R09: 65732f636f72702f
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401b80
+R13: 0000000000401c10 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 8c219e63b0160ea4 ]---
+RIP: 0010:kstrtoull lib/kstrtox.c:123 [inline]
+RIP: 0010:kstrtouint+0x85/0x1a0 lib/kstrtox.c:222
+Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6c 35  
+35 fe 4c 89 e2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 4c  
+89 e2 83 e2 07 38 d0 7f 08 84 c0 0f 85 db 00 00 00
+RSP: 0018:ffff8880997a79e0 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff8880997a7b38 RCX: ffffffff81c482dc
+RDX: 0000000000000000 RSI: ffffffff833d4f84 RDI: 0000000000000000
+RBP: ffff8880997a7a70 R08: ffff8880a17ce100 R09: ffffed1015d06c84
+R10: ffffed1015d06c83 R11: ffff8880ae83641b R12: 0000000000000000
+R13: 1ffff110132f4f3d R14: ffff8880997a7a48 R15: 0000000000000000
+FS:  0000555556585880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000455340 CR3: 0000000095a49000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
