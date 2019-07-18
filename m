@@ -2,267 +2,363 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D69CC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB4DC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3457E21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tumYPmG5"
+	by mail.kernel.org (Postfix) with ESMTP id 7F9DA21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389490AbfGRLUY (ORCPT
+        id S2390077AbfGRLVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:20:24 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35180 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbfGRLUX (ORCPT
+        Thu, 18 Jul 2019 07:21:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3576 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726495AbfGRLVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:20:23 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so13731081plp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 04:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=D0sC1W3UjMhqj0FoOAEO96bnRmwdpJEmPkuk0v2kCeA=;
-        b=tumYPmG56ZJ/LFrQQi9L0UidP/ddDIj9kZYBqjkSuEj/vQhCfMwuYSHpehEFLSPqf8
-         JYt/N6G1kXby8TiEANKXUocjKxt7OBGPThfJdXy3/auOdkOSiQponkHwV4cEmLbXRmuf
-         D3N1Eq7gwE8KRYxvpkDeq7xx191CKiOZUZDtJerl/tI0VybAkJsXyg2f5FkFXEwwXkRn
-         JfEnLho7ymlirE5LIlhc2FT1zBLmFkUfjSQ2P7At0N4IzUdzdIxSeYESCvuUAGtY6oBO
-         A0nHNndeAx4BrOxoWy/fSGbcR8yhpv1jEh1CWHhVo3jjursHhKQUxZ8h4XQOplkP9TnX
-         Eluw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=D0sC1W3UjMhqj0FoOAEO96bnRmwdpJEmPkuk0v2kCeA=;
-        b=KLiGPyohhUemQIp4ZjiJZjgLYTth7LxeGaF/N3fYWt1K3CQFAD3pQpKP1JuByHmh4b
-         gSEGjpzyO+Zs6W8FvpKkbjpKzX4XpQuMC7LTc0KAHoCDS7QdLEDuL0Rv2Wdl4GjUfsN8
-         aUWIzNkp5tzu2xHsJMidd2RRoNLmjJsGVx9bkVWu6lI3HY82L7Tneq2jmbYrrf3o7+49
-         y7s6HxNwntjS4BdxMj3oKNvGsFgw3d9Sxa3TDzNSF+lY6dilMbdlJoopZhaEpOENhWkm
-         cHwbJzZa1tkEjuNSuzSLnJfaBLB8Rp1mtX4m0Vco+JsVaEBjRhXb8XTpXjR0J1/3X3qu
-         M4mg==
-X-Gm-Message-State: APjAAAX6dgRo8RIBkcl/9PmQTKvOHqCmLX+W87y836l69rOS1fU786fP
-        c/dwhGbkaJXOily8PWCIy0o=
-X-Google-Smtp-Source: APXvYqwcsmd01CkW73NHBtOcPJARk1r/1diBdA9D4n5Ojjs50SBUrfxub+oCciohBwqdZ6JTIN1sHg==
-X-Received: by 2002:a17:902:2be8:: with SMTP id l95mr45384001plb.231.1563448822864;
-        Thu, 18 Jul 2019 04:20:22 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.150.158])
-        by smtp.gmail.com with ESMTPSA id 135sm26382426pfb.137.2019.07.18.04.20.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 04:20:22 -0700 (PDT)
-From:   Muchun Song <smuchun@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org
-Cc:     benh@kernel.crashing.org, prsood@codeaurora.org,
-        mojha@codeaurora.org, gkohli@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] driver core: Fix use-after-free and double free on glue directory
-Date:   Thu, 18 Jul 2019 19:19:58 +0800
-Message-Id: <20190718111958.17336-1-smuchun@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 18 Jul 2019 07:21:11 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IB4Hnc108851
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:21:09 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttn0mprdy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:21:09 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 18 Jul 2019 12:21:07 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 18 Jul 2019 12:21:02 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IBL0lK56098986
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 11:21:00 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92BAC11C058;
+        Thu, 18 Jul 2019 11:21:00 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37D5711C04C;
+        Thu, 18 Jul 2019 11:21:00 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.219])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jul 2019 11:21:00 +0000 (GMT)
+Date:   Thu, 18 Jul 2019 13:20:49 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-nvdimm@lists.01.org, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, swhiteho@redhat.com,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 18/30] virtio_fs, dax: Set up virtio_fs dax_device
+In-Reply-To: <20190718110417.561f6475.cohuck@redhat.com>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
+        <20190515192715.18000-19-vgoyal@redhat.com>
+        <20190717192725.25c3d146.pasic@linux.ibm.com>
+        <20190718110417.561f6475.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071811-0008-0000-0000-000002FEA506
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071811-0009-0000-0000-0000226C22D8
+Message-Id: <20190718132049.37bea675.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race condition between removing glue directory and adding a new
-device under the glue directory. It can be reproduced in following test:
+On Thu, 18 Jul 2019 11:04:17 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-path 1: Add the child device under glue dir
-device_add()
-    get_device_parent()
-        mutex_lock(&gdp_mutex);
-        ....
-        /*find parent from glue_dirs.list*/
-        list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
-            if (k->parent == parent_kobj) {
-                kobj = kobject_get(k);
-                break;
-            }
-        ....
-        mutex_unlock(&gdp_mutex);
-        ....
-    ....
-    kobject_add()
-        kobject_add_internal()
-            create_dir()
-                sysfs_create_dir_ns()
-                    if (kobj->parent)
-                        parent = kobj->parent->sd;
-                    ....
-                    kernfs_create_dir_ns(parent)
-                        kernfs_new_node()
-                            kernfs_get(parent)
-                        ....
-                        /* link in */
-                        rc = kernfs_add_one(kn);
-                        if (!rc)
-                            return kn;
+> On Wed, 17 Jul 2019 19:27:25 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
+> > On Wed, 15 May 2019 15:27:03 -0400
+> > Vivek Goyal <vgoyal@redhat.com> wrote:
+> > 
+> > > From: Stefan Hajnoczi <stefanha@redhat.com>
+> > > 
+> > > Setup a dax device.
+> > > 
+> > > Use the shm capability to find the cache entry and map it.
+> > > 
+> > > The DAX window is accessed by the fs/dax.c infrastructure and must have
+> > > struct pages (at least on x86).  Use devm_memremap_pages() to map the
+> > > DAX window PCI BAR and allocate struct page.
+> > >  
+> > 
+> > Sorry for being this late. I don't see any more recent version so I will
+> > comment here.
+> 
+> [Yeah, this one has been sitting in my to-review queue far too long as
+> well :(]
+> 
+> > 
+> > I'm trying to figure out how is this supposed to work on s390. My concern
+> > is, that on s390 PCI memory needs to be accessed by special
+> > instructions. This is taken care of by the stuff defined in
+> > arch/s390/include/asm/io.h. E.g. we 'override' __raw_writew so it uses
+> > the appropriate s390 instruction. However if the code does not use the
+> > linux abstractions for accessing PCI memory, but assumes it can be
+> > accessed like RAM, we have a problem.
+> > 
+> > Looking at this patch, it seems to me, that we might end up with exactly
+> > the case described. For example AFAICT copy_to_iter() (3) resolves to
+> > the function in lib/iov_iter.c which does not seem to cater for s390
+> > oddities.
+> 
+> What about the new pci instructions recently introduced? Not sure how
+> they differ from the old ones (which are currently the only ones
+> supported in QEMU...), but I'm pretty sure they are supposed to solve
+> an issue :)
+> 
 
-                        kernfs_put(kn)
-                            ....
-                            repeat:
-                            kmem_cache_free(kn)
-                            kn = parent;
+I'm struggling to find the connection between this topic and the new pci
+instructions. Can you please explain in more detail?
 
-                            if (kn) {
-                                if (atomic_dec_and_test(&kn->count))
-                                    goto repeat;
-                            }
-                        ....
+> > 
+> > I didn't have the time to investigate this properly, and since virtio-fs
+> > is virtual, we may be able to get around what is otherwise a
+> > limitation on s390. My understanding of these areas is admittedly
+> > shallow, and since I'm not sure I'll have much more time to
+> > invest in the near future I decided to raise concern.
+> > 
+> > Any opinions?
+> 
+> Let me point to the thread starting at
+> https://marc.info/?l=linux-s390&m=155048406205221&w=2 as well. That
+> memory region stuff is still unsolved for ccw, and I'm not sure if we
+> need to do something for zpci as well.
+> 
 
-path2: Remove last child device under glue dir
-device_del()
-    cleanup_glue_dir()
-        mutex_lock(&gdp_mutex);
-        if (!kobject_has_children(glue_dir))
-            kobject_del(glue_dir);
-        kobject_put(glue_dir);
-        mutex_unlock(&gdp_mutex);
+Right virtio-ccw is another problem, but at least there we don't have the
+need to limit ourselves to a very specific set of instructions (for
+accessing memory).
 
-Before path2 remove last child device under glue dir, If path1 add a new
-device under glue dir, the glue_dir kobject reference count will be
-increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
-been called kernfs_new_node(), but not call kernfs_get(parent).
-Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
-kobject_has_children(). This result in glue_dir->sd is freed and it's
-reference count will be 0. Then path1 call kernfs_get(parent) will trigger
-a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
-it's reference count to 1. Because glue_dir->sd is freed by path2, the next
-call kernfs_add_one() by path1 will fail(This is also use-after-free)
-and call atomic_dec_and_test() to decrease reference count. Because the
-reference count is decremented to 0, it will also call kmem_cache_free()
-to free glue_dir->sd again. This will result in double free.
+zPCI i.e. virtio-pci on z should require much less dedicated love if any
+at all. Unfortunately I'm not very knowledgeable on either PCI in general
+or its s390 variant.
 
-In order to avoid this happening, we also should make sure that kernfs_node
-for glue_dir is released in path2 only when refcount for glue_dir kobj is
-1 to fix this race.
+> Does s390 work with DAX at all? ISTR that DAX evolved from XIP, so I
+> thought it did?
+> 
 
-The following calltrace is captured in kernel 4.14 with the following patch
-applied:
+Documentation/filesystems/dax.txt even mentions dcssblk: s390 dcss block
+device driver as a source of inspiration. So I suppose it does work.
 
-commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+Regards,
+Halil
 
---------------------------------------------------------------------------
-[    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
-                Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
-....
-[    3.633986] Call trace:
-[    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
-[    3.633994]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634001]  kobject_add_internal+0x22c/0x3f0
-[    3.634005]  kobject_add+0xe4/0x118
-[    3.634011]  device_add+0x200/0x870
-[    3.634017]  _request_firmware+0x958/0xc38
-[    3.634020]  request_firmware_into_buf+0x4c/0x70
-....
-[    3.634064] kernel BUG at .../mm/slub.c:294!
-                Here is BUG_ON(object == fp) in set_freepointer().
-....
-[    3.634346] Call trace:
-[    3.634351]  kmem_cache_free+0x504/0x6b8
-[    3.634355]  kernfs_put+0x14c/0x1d8
-[    3.634359]  kernfs_create_dir_ns+0x88/0xb0
-[    3.634362]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634366]  kobject_add_internal+0x22c/0x3f0
-[    3.634370]  kobject_add+0xe4/0x118
-[    3.634374]  device_add+0x200/0x870
-[    3.634378]  _request_firmware+0x958/0xc38
-[    3.634381]  request_firmware_into_buf+0x4c/0x70
---------------------------------------------------------------------------
-
-Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
-Signed-off-by: Muchun Song <smuchun@gmail.com>
----
-
-Change in v5:
-       1. Revert to the v1 fix.
-       2. Add some comment to explain why we need do this in
-          cleanup_glue_dir().
-Change in v4:
-       1. Add some kerneldoc comment.
-       2. Remove unlock_if_glue_dir().
-       3. Rename get_device_parent_locked_if_glue_dir() to
-          get_device_parent_locked.
-       4. Update commit message.
-Change in v3:
-       Add change log.
-Change in v2:
-       Fix device_move() also.
-
- drivers/base/core.c | 54 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c92bda..1a67ee325584 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1825,7 +1825,59 @@ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
- 		return;
- 
- 	mutex_lock(&gdp_mutex);
--	if (!kobject_has_children(glue_dir))
-+	/**
-+	 * There is a race condition between removing glue directory
-+	 * and adding a new device under the glue directory.
-+	 *
-+	 * path 1: Add the child device under glue dir
-+	 * device_add()
-+	 *	get_device_parent()
-+	 *		mutex_lock(&gdp_mutex);
-+	 *		....
-+	 *		list_for_each_entry(k, &dev->class->p->glue_dirs.list,
-+	 *				    entry)
-+	 *		if (k->parent == parent_kobj) {
-+	 *			kobj = kobject_get(k);
-+	 *			break;
-+	 *		}
-+	 *		....
-+	 *		mutex_unlock(&gdp_mutex);
-+	 *		....
-+	 *	....
-+	 *	kobject_add()
-+	 *		kobject_add_internal()
-+	 *		create_dir()
-+	 *			....
-+	 *			if (kobj->parent)
-+	 *				parent = kobj->parent->sd;
-+	 *			....
-+	 *			kernfs_create_dir_ns(parent)
-+	 *				....
-+	 *
-+	 * path2: Remove last child device under glue dir
-+	 * device_del()
-+	 *	cleanup_glue_dir()
-+	 *		....
-+	 *		mutex_lock(&gdp_mutex);
-+	 *		if (!kobject_has_children(glue_dir))
-+	 *			kobject_del(glue_dir);
-+	 *		....
-+	 *		mutex_unlock(&gdp_mutex);
-+	 *
-+	 * Before path2 remove last child device under glue dir, if path1 add
-+	 * a new device under glue dir, the glue_dir kobject reference count
-+	 * will be increase to 2 via kobject_get(k) in get_device_parent().
-+	 * And path1 has been called kernfs_create_dir_ns(). Meanwhile,
-+	 * path2 call kobject_del(glue_dir) beacause 0 is returned by
-+	 * kobject_has_children(). This result in glue_dir->sd is freed.
-+	 * Then the path1 will see a stale "empty" but still potentially used
-+	 * glue dir around.
-+	 *
-+	 * In order to avoid this happening, we also should make sure that
-+	 * kernfs_node for glue_dir is released in path2 only when refcount
-+	 * for glue_dir kobj is 1.
-+	 */
-+	if (!kobject_has_children(glue_dir) && kref_read(&glue_dir->kref) == 1)
- 		kobject_del(glue_dir);
- 	kobject_put(glue_dir);
- 	mutex_unlock(&gdp_mutex);
--- 
-2.17.1
+> > 
+> > [CCing some s390 people who are probably more knowledgeable than my
+> > on these matters.]
+> > 
+> > Regards,
+> > Halil
+> > 
+> > 
+> > > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > > Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> > > Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+> > > ---  
+> > 
+> > [..]
+> >   
+> > > +/* Map a window offset to a page frame number.  The window offset
+> > > will have
+> > > + * been produced by .iomap_begin(), which maps a file offset to a
+> > > window
+> > > + * offset.
+> > > + */
+> > > +static long virtio_fs_direct_access(struct dax_device *dax_dev,
+> > > pgoff_t pgoff,
+> > > +				    long nr_pages, void **kaddr,
+> > > pfn_t *pfn) +{
+> > > +	struct virtio_fs *fs = dax_get_private(dax_dev);
+> > > +	phys_addr_t offset = PFN_PHYS(pgoff);
+> > > +	size_t max_nr_pages = fs->window_len/PAGE_SIZE - pgoff;
+> > > +
+> > > +	if (kaddr)
+> > > +		*kaddr = fs->window_kaddr + offset;  
+> > 
+> > (2) Here we use fs->window_kaddr, basically directing the access to
+> > the virtio shared memory region.
+> > 
+> > > +	if (pfn)
+> > > +		*pfn = phys_to_pfn_t(fs->window_phys_addr +
+> > > offset,
+> > > +					PFN_DEV | PFN_MAP);
+> > > +	return nr_pages > max_nr_pages ? max_nr_pages : nr_pages;
+> > > +}
+> > > +
+> > > +static size_t virtio_fs_copy_from_iter(struct dax_device *dax_dev,
+> > > +				       pgoff_t pgoff, void *addr,
+> > > +				       size_t bytes, struct
+> > > iov_iter *i) +{
+> > > +	return copy_from_iter(addr, bytes, i);
+> > > +}
+> > > +
+> > > +static size_t virtio_fs_copy_to_iter(struct dax_device *dax_dev,
+> > > +				       pgoff_t pgoff, void *addr,
+> > > +				       size_t bytes, struct
+> > > iov_iter *i) +{
+> > > +	return copy_to_iter(addr, bytes, i);  
+> > 
+> > (3) And this should be the access to it. Which does not seem to use.
+> > 
+> > > +}
+> > > +
+> > > +static const struct dax_operations virtio_fs_dax_ops = {
+> > > +	.direct_access = virtio_fs_direct_access,
+> > > +	.copy_from_iter = virtio_fs_copy_from_iter,
+> > > +	.copy_to_iter = virtio_fs_copy_to_iter,
+> > > +};
+> > > +
+> > > +static void virtio_fs_percpu_release(struct percpu_ref *ref)
+> > > +{
+> > > +	struct virtio_fs_memremap_info *mi =
+> > > +		container_of(ref, struct virtio_fs_memremap_info,
+> > > ref); +
+> > > +	complete(&mi->completion);
+> > > +}
+> > > +
+> > > +static void virtio_fs_percpu_exit(void *data)
+> > > +{
+> > > +	struct virtio_fs_memremap_info *mi = data;
+> > > +
+> > > +	wait_for_completion(&mi->completion);
+> > > +	percpu_ref_exit(&mi->ref);
+> > > +}
+> > > +
+> > > +static void virtio_fs_percpu_kill(struct percpu_ref *ref)
+> > > +{
+> > > +	percpu_ref_kill(ref);
+> > > +}
+> > > +
+> > > +static void virtio_fs_cleanup_dax(void *data)
+> > > +{
+> > > +	struct virtio_fs *fs = data;
+> > > +
+> > > +	kill_dax(fs->dax_dev);
+> > > +	put_dax(fs->dax_dev);
+> > > +}
+> > > +
+> > > +static int virtio_fs_setup_dax(struct virtio_device *vdev, struct
+> > > virtio_fs *fs) +{
+> > > +	struct virtio_shm_region cache_reg;
+> > > +	struct virtio_fs_memremap_info *mi;
+> > > +	struct dev_pagemap *pgmap;
+> > > +	bool have_cache;
+> > > +	int ret;
+> > > +
+> > > +	if (!IS_ENABLED(CONFIG_DAX_DRIVER))
+> > > +		return 0;
+> > > +
+> > > +	/* Get cache region */
+> > > +	have_cache = virtio_get_shm_region(vdev,
+> > > +					   &cache_reg,
+> > > +
+> > > (u8)VIRTIO_FS_SHMCAP_ID_CACHE);
+> > > +	if (!have_cache) {
+> > > +		dev_err(&vdev->dev, "%s: No cache capability\n",
+> > > __func__);
+> > > +		return -ENXIO;
+> > > +	} else {
+> > > +		dev_notice(&vdev->dev, "Cache len: 0x%llx @
+> > > 0x%llx\n",
+> > > +			   cache_reg.len, cache_reg.addr);
+> > > +	}
+> > > +
+> > > +	mi = devm_kzalloc(&vdev->dev, sizeof(*mi), GFP_KERNEL);
+> > > +	if (!mi)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	init_completion(&mi->completion);
+> > > +	ret = percpu_ref_init(&mi->ref, virtio_fs_percpu_release,
+> > > 0,
+> > > +			      GFP_KERNEL);
+> > > +	if (ret < 0) {
+> > > +		dev_err(&vdev->dev, "%s: percpu_ref_init failed
+> > > (%d)\n",
+> > > +			__func__, ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = devm_add_action(&vdev->dev, virtio_fs_percpu_exit,
+> > > mi);
+> > > +	if (ret < 0) {
+> > > +		percpu_ref_exit(&mi->ref);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	pgmap = &mi->pgmap;
+> > > +	pgmap->altmap_valid = false;
+> > > +	pgmap->ref = &mi->ref;
+> > > +	pgmap->kill = virtio_fs_percpu_kill;
+> > > +	pgmap->type = MEMORY_DEVICE_FS_DAX;
+> > > +
+> > > +	/* Ideally we would directly use the PCI BAR resource but
+> > > +	 * devm_memremap_pages() wants its own copy in pgmap.  So
+> > > +	 * initialize a struct resource from scratch (only the
+> > > start
+> > > +	 * and end fields will be used).
+> > > +	 */
+> > > +	pgmap->res = (struct resource){
+> > > +		.name = "virtio-fs dax window",
+> > > +		.start = (phys_addr_t) cache_reg.addr,
+> > > +		.end = (phys_addr_t) cache_reg.addr +
+> > > cache_reg.len - 1,
+> > > +	};
+> > > +
+> > > +	fs->window_kaddr = devm_memremap_pages(&vdev->dev,
+> > > pgmap);  
+> > 
+> > (1) Here we assign fs->window_kaddr basically from the virtio shm
+> > region.
+> > 
+> > > +	if (IS_ERR(fs->window_kaddr))
+> > > +		return PTR_ERR(fs->window_kaddr);
+> > > +
+> > > +	fs->window_phys_addr = (phys_addr_t) cache_reg.addr;
+> > > +	fs->window_len = (phys_addr_t) cache_reg.len;
+> > > +
+> > > +	dev_dbg(&vdev->dev, "%s: window kaddr 0x%px phys_addr
+> > > 0x%llx"
+> > > +		" len 0x%llx\n", __func__, fs->window_kaddr,
+> > > cache_reg.addr,
+> > > +		cache_reg.len);
+> > > +
+> > > +	fs->dax_dev = alloc_dax(fs, NULL, &virtio_fs_dax_ops);
+> > > +	if (!fs->dax_dev)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	return devm_add_action_or_reset(&vdev->dev,
+> > > virtio_fs_cleanup_dax, fs); +}
+> > > +  
+> > 
+> > [..]
+> > 
+> 
 
