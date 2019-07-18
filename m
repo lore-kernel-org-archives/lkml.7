@@ -2,112 +2,348 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06607C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790EEC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D485A2173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC0021849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM9MWHGs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oGY8omtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391399AbfGRTWf (ORCPT
+        id S2391424AbfGRTWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:22:35 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35137 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391376AbfGRTWe (ORCPT
+        Thu, 18 Jul 2019 15:22:48 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34487 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391195AbfGRTWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:22:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so28502091ljh.2;
-        Thu, 18 Jul 2019 12:22:33 -0700 (PDT)
+        Thu, 18 Jul 2019 15:22:47 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so7100533pgc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 12:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MPOypPN7ES0HfrHOEJDZEvTo/LO4/CTjZDQyk4lr3t0=;
-        b=YM9MWHGsPnDHX7Mv99dr0tlsFi5P7oTEzIcDA+oIRobemnxvVR6kl+HVRUPCzPzWrJ
-         kYIbsOuJcrOQkIhN2Q9Xuad5MSrtvqFdi+S2fsKIrFMkSMxHpkHxriYxPUKVMJrFuAoC
-         M341gtwHCiCQsWIePgsOcCVDhjUmI0KUX4gSr07dhQ0YJGA0hnoDxOe3By2hlOIbBt6w
-         RrEsacL+fR8pQMsnwS0fxb74fylv6ug4Wpb5HMF9lRMrN94w1TidGoEGxU3GWfblXIck
-         AYy+/jx48NSF2IMc7H6Z4U6M8+oHrbkPAh/rmeNBOMNF/ee7tYpa2aD4KmlA7nVJJfGN
-         6obg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hBFy7EH0mw2SK7uI8qKF1fHgdf6f9ZNwoqzuqnBlZ8E=;
+        b=oGY8omtQvGoYcD+e34Yt9qr3X14EjkzXByvA7RTwGiQJZnWtAqL1Qgc9RC1Ce18u1a
+         RbnrZ+mwJ+Bd8LTzYPwSiYFHCs8WowxKvwQUvizOSSbKQR7rkEx4fLIQ3xMzqPziBnTB
+         BOlPaD8daje4roDr7mPrXuRrfUOUe3Qy+FoHEEHzHmWCQHlcCWyX/ktBi+iFcu6AWcMO
+         6n009uLLGTzTGqdQJGOllwp42KObteDH+Y426amI5Qk8U7+eGVut6T5jhIZ7z0uwcv+G
+         HL84r54w1Ns/ePAwAPEKi53cTkoAYcjquhAlYy4zKce3KZYEU04o3BUwIDhQJF9RtK/h
+         UZ9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MPOypPN7ES0HfrHOEJDZEvTo/LO4/CTjZDQyk4lr3t0=;
-        b=W8uB46AXP3KcQIUNAAA6Rc+3T4rN9Qpawrh6QCMm+sr5rTGm/R1y4Q1ANKTv/7MB6L
-         mAMKT6r1yzP7FHlI4xQ84VQ8D3av5fz+QkzxrZiv+Q0d65p+M8oz4vk2u4E3FiAFPG6f
-         5QxeFwyEvCu7fggPmsMJmxqC9tYINguUO8M7i7TTGiJoO2nrv00XE3FNEPp0L5pBh+vA
-         wxn70jvhT2WhjC6eYjfnkNAtwkY1Ji+xUz8I3Qt1GWNHl3Z2s3p/+eoI6AI5ZdYYfWrQ
-         2LlKwyY6O57ncrGSwNlDkZ59+xEwQ4GyJt2enMcsPcCZXCQu+mXka7ZSH2kC9mNhDBhc
-         ppNA==
-X-Gm-Message-State: APjAAAVDhXYerIFbgFI6PbvhHzWum16ySyzTBairmfRw9Pw3DSQgq5TI
-        VPcs26B9E5vJhdKxif/g7YM=
-X-Google-Smtp-Source: APXvYqwL2MHCOiSjNvUiBBlpDkZGWrJxYFRv6K3r/k53MVqrEx7+Vb397Z/B5mM5Y4Hr69R7uKUHkw==
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr25946476ljg.167.1563477752556;
-        Thu, 18 Jul 2019 12:22:32 -0700 (PDT)
-Received: from ul001888.eu.tieto.com ([91.90.160.140])
-        by smtp.gmail.com with ESMTPSA id o8sm3545512lfi.15.2019.07.18.12.22.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 12:22:31 -0700 (PDT)
-From:   Vasyl Gomonovych <gomonovych@gmail.com>
-To:     linuxdrivers@attotech.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org
-Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [SCSI] esas2r: remove casting dma_alloc_coherent
-Date:   Thu, 18 Jul 2019 21:22:15 +0200
-Message-Id: <20190718192215.17248-1-gomonovych@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hBFy7EH0mw2SK7uI8qKF1fHgdf6f9ZNwoqzuqnBlZ8E=;
+        b=XKeJOesGBGDUIfOFTGMTdJcK7wJg6AHOd/aAVAW28Lzm+5Z64Jm4ASM2x0nr7yDuUJ
+         eRhHYUzpjZZi6PDNotHKZub43bkkGSakTELCV8fHWa7DHh6NeAmR7mzL52eVqhb54QgK
+         mJgbYO7VjTV5qT8uYKxKefBIr+0t0Bs2vQpJIeb0xIMUIdlwTroJlT5ZbidsLl0TFsU/
+         OWJOfnPQUEEwgYzXGCZjRo3lzJTaIJtbwiS3UYTRS9j7suN+qfGZxTa4kiLN8HHeVZod
+         5xRQkQ/DBioiGdB9axzzEUyKeR0eyEsxazTC4VLeLXcgMZ7o468OohWsHWq83xE4fnOt
+         ttew==
+X-Gm-Message-State: APjAAAV0jgOqhmjvQmbGke5nmrr/KvL2HEPNC/uTjqzVp8XJ+uWbFEYu
+        aZrXXxAdxMv7W1f5PbQkD49blSCFVHffUqerDQg8og==
+X-Google-Smtp-Source: APXvYqwEX6bf+N7IshMHyf6Ka9VvTGGohf11maoUS2kqSaEKH7rjYoGxlweVxaB2rT0fUBlD3BQp3PamQk99u/yqGyM=
+X-Received: by 2002:a17:90a:ab0d:: with SMTP id m13mr50453432pjq.84.1563477765258;
+ Thu, 18 Jul 2019 12:22:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190712081744.87097-1-brendanhiggins@google.com>
+ <20190712081744.87097-5-brendanhiggins@google.com> <20190715221554.8417320665@mail.kernel.org>
+ <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+ <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+ <20190716175021.9CA412173C@mail.kernel.org> <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+ <20190718175024.C3EC421019@mail.kernel.org>
+In-Reply-To: <20190718175024.C3EC421019@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 18 Jul 2019 12:22:33 -0700
+Message-ID: <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like logger
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix allocation style
-Generated by:  alloc_cast.cocci
+On Thu, Jul 18, 2019 at 10:50 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-07-16 11:52:01)
+> > On Tue, Jul 16, 2019 at 10:50 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> >
+> > > The only hypothetical case where this can't be done is a complicated
+> > > assertion or expectation that does more than one check and can't be
+> > > written as a function that dumps out what went wrong. Is this a real
+> > > problem? Maybe such an assertion should just open code that logic so we
+> > > don't have to build up a string for all the other simple cases.
+> >
+> > I have some expectations in follow up patchsets for which I created a
+> > set of composable matchers for matching structures and function calls
+> > that by their nature cannot be written as a single function. The
+> > matcher thing is a bit speculative, I know, but for any kind of
+> > function call matching, you need to store a record of functions you
+> > are expecting to have called and then each one needs to have a set of
+> > expectations defined by the user; I don't think there is a way to do
+> > that that doesn't involve having multiple separate functions each
+> > having some information useful to constructing the message.
+> >
+> > I know the code in question isn't in this patchset; the function
+> > matching code was in one of the earlier versions of the RFC, but I
+> > dropped it to make this patchset smaller and more manageable. So I get
+> > it if you would like me to drop it and add it back in when I try to
+> > get the function and structure matching stuff in, but I would really
+> > prefer to keep it as is if you don't care too much.
+>
+> Do you have a link to those earlier patches?
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
- drivers/scsi/esas2r/esas2r_ioctl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This is the first patchset:
 
-diff --git a/drivers/scsi/esas2r/esas2r_ioctl.c b/drivers/scsi/esas2r/esas2r_ioctl.c
-index 3d130523c288..eece7e80cb59 100644
---- a/drivers/scsi/esas2r/esas2r_ioctl.c
-+++ b/drivers/scsi/esas2r/esas2r_ioctl.c
-@@ -1552,7 +1552,7 @@ static int allocate_fw_buffers(struct esas2r_adapter *a, u32 length)
- 
- 	a->firmware.orig_len = length;
- 
--	a->firmware.data = (u8 *)dma_alloc_coherent(&a->pcid->dev,
-+	a->firmware.data = dma_alloc_coherent(&a->pcid->dev,
- 						    (size_t)length,
- 						    (dma_addr_t *)&a->firmware.
- 						    phys,
-@@ -1899,7 +1899,7 @@ int esas2r_write_vda(struct esas2r_adapter *a, const char *buf, long off,
- 
- 	if (!a->vda_buffer) {
- 		dma_addr_t dma_addr;
--		a->vda_buffer = (u8 *)dma_alloc_coherent(&a->pcid->dev,
-+		a->vda_buffer = dma_alloc_coherent(&a->pcid->dev,
- 							 (size_t)
- 							 VDA_MAX_BUFFER_SIZE,
- 							 &dma_addr,
-@@ -2068,7 +2068,7 @@ int esas2r_write_fs(struct esas2r_adapter *a, const char *buf, long off,
- re_allocate_buffer:
- 			a->fs_api_buffer_size = length;
- 
--			a->fs_api_buffer = (u8 *)dma_alloc_coherent(
-+			a->fs_api_buffer = dma_alloc_coherent(
- 				&a->pcid->dev,
- 				(size_t)a->fs_api_buffer_size,
- 				(dma_addr_t *)&a->ppfs_api_buffer,
--- 
-2.17.1
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1788057.html
 
+In particular you can see the code for matching functions here:
+
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1788073.html
+
+And parameter matching code here:
+
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1788072.html
+
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1788086.html
+
+My apologies in advance, but the code at this early stage had not
+adopted the kunit_* prefix and was still using the test_* and mock_*
+prefix. (Hence, struct kunit_stream was known as struct test_stream).
+
+> > > It seems far simpler to get rid of the string stream API and just have a
+> > > struct for this.
+> > >
+> > >         struct kunit_fail_msg {
+> > >                 const char *line;
+> > >                 const char *file;
+> > >                 const char *func;
+> > >                 const char *msg;
+> > >         };
+> > >
+> > > Then you can have the assertion macros create this on the stack (with
+> > > another macro?).
+> > >
+> > >         #define DEFINE_KUNIT_FAIL_MSG(name, _msg) \
+> > >                 struct kunit_fail_msg name = { \
+> > >                         .line =  __LINE__, \
+> > >                         .file = __FILE__, \
+> > >                         .func = __func__, \
+> > >                         .msg = _msg, \
+> > >                 }
+> > >
+> > > I don't want to derail this whole series on this topic, but it seems
+> > > like a bunch of code is there to construct this same set of information
+> > > over and over again into a buffer a little bit at a time and then throw
+> > > it away when nothing fails just because we may want to support the case
+> > > where we have some unstructured data to inform the user about.
+> >
+> > Yeah, that's fair. I think there are a number of improvements to be
+> > made with how the expectations are defined other than that, but I was
+> > hoping I could do that after this patchset is merged. I just figured
+> > with the kinds of things I would like to do, it would lead to a whole
+> > new round of discussion.
+> >
+> > In either case, I think I would still like to use the `struct
+> > kunit_stream` as part of the interface to share the failure message
+> > with the test case runner code in test.c, at least eventually, so that
+> > I only have to have one way to receive data from expectations, but I
+> > think I can do that and still do what you suggest by just constructing
+> > the kunit_stream at the end of expectations where it is feasible.
+> >
+> > All in all I agree with what you are saying, but I would rather do it
+> > as a follow up possibly once we have some more code on the table. I
+> > could just see this opening up a whole new can of worms where we
+> > debate about exactly how expectations and assertions work for another
+> > several months, only to rip it all out shortly there after. I know
+> > that's how these things go, but that's my preference.
+> >
+> > I can do what you suggest if you feel strongly about it, but I would
+> > prefer to hold off until later. It's your call.
+> >
+>
+> The crux of my complaint is that the string stream API is too loosely
+> defined to be usable. It allows tests to build up a string of
+> unstructured information, but with certain calling constraints so we
+> have to tread carefully. If there was more structure to the data that's
+> being recorded then the test case runner could operate on the data
+> without having to do string/stream operations, allocations, etc. This
+> would make the assertion logic much more concrete and specific to kunit,
+> instead of this small kunit wrapper that's been placed on top of string
+> stream.
+
+Yeah, I can see the point of wanting something that provides more
+structure than the raw `struct kunit_stream` interface. In fact, it is
+something I had already started working on, when I had determined it
+would be a large effort to capture all the variations. I was further
+put off from the idea when I had been asked to convert the KUnit
+intermediate format from what I was using to TAP, because, as it is,
+the current data printed out by KUnit doesn't contain all the data I
+would like to put in it in a way that best takes advantage of the TAP
+specification. One problematic area in particular: TAP already
+provides a way to present a lot of the data I would like to export,
+but it involves JSON serialization which was an idea that some of the
+other reviewers understandably weren't too keen on. TAP also wants to
+report data some time after it is available, which is generally not a
+good idea for test debug information; you want to make it available as
+soon as you can or you risk crashing with the data still inside.
+
+Hence, I decided we could probably spend a good long while debating
+how I present the information. So the idea of having a loose
+definition seemed attractive to me in its own right since it would
+likely conform to whatever we ended up deciding in the long run. Also,
+all the better that it was what I already had and no one seemed to
+mind too much.
+
+The only constant I expect is that `struct kunit` will likely need to
+take an abstract object with a `commit` method, or a `format` method
+or whatever so it could control when data was going to be printed out
+to the user. We will probably also use a string builder in there
+somewhere.
+
+> TL;DR: If we can get rid of the string stream API I'd view that as an
+> improvement because building arbitrary strings in the kernel is complex,
+> error prone and has calling context concerns.
+
+True. No argument there.
+
+> Is the intention that other code besides unit tests will use this string
+> stream API to build up strings? Any targets in mind? This would be a
+> good way to get the API merged upstream given that its 2019 and we
+> haven't had such an API in the kernel so far.
+
+Someone, (was it you?) asked about code sharing with a string builder
+thingy that was used for creating structured human readable files, but
+that seemed like a pretty massive undertaking.
+
+Aside from that, no. I would kind of prefered that nobody used it for
+anything else because I the issues you described.
+
+Nevertheless, I think the debate over the usefulness of the
+string_stream and kunit_stream are separate topics. Even if we made
+kunit_stream more structured, I am pretty sure I would want to use
+string_stream or some variation for constructing the message.
+
+> An "object oriented" (strong quotes!) approach where kunit_fail_msg is
+> the innermost struct in some assertion specific structure might work
+> nicely and allow the test runner to call a generic 'format' function to
+> print out the message based on the type of assertion/expectation it is.
+> It probably would mean less code size too because the strings that are
+> common will be in the common printing function instead of created twice,
+> in the macros/code and then copied to the heap for the string stream.
+>
+>         struct kunit_assert {
+>                 const char *line;
+>                 const char *file;
+>                 const char *func;
+>                 void (*format)(struct kunit_assert *assert);
+>         };
+>
+>         struct kunit_comparison_assert {
+>                 enum operator operator;
+>                 const char *left;
+>                 const char *right;
+>                 struct kunit_assert assert;
+>         };
+>
+>         struct kunit_bool_assert {
+>                 const char *truth;
+>                 const char *statement;
+>                 struct kunit_assert assert;
+>         };
+>
+>         void kunit_format_comparison(struct kunit_assert *assert)
+>         {
+>                 struct kunit_comparison_assert *comp = container_of(assert, ...)
+>
+>                 kunit_printk(...)
+>         }
+
+I started working on something similarish, but by the time I ended up
+coming up with a parent object whose definition was loose enough to
+satisfy all the properties required by the child classes it ended up
+basically being the same as what I have now just with a more complex
+hierarchy of message manipulation logic.
+
+On the other hand, I didn't have the idea of doing the parent object
+quite the way you did and that would clean up a lot of the duplicated
+first line logic.
+
+I would like to give it a try, but I am afraid I am going to get
+sucked down a really deep rabbit hole.
+
+> Maybe other people have opinions here on if you should do it now or
+> later. Future coding is not a great argument because it's hard to
+> predict the future. On the other hand, this patchset is in good shape to
+
+Yeah, that's kind of why I am afraid to go down this road when I have
+something that works now and I know works with the mocking stuff I
+want to do.
+
+I would like to try your suggestion, but I want to try to make it work
+with my mocking patches before I commit to it because otherwise I am
+just going to have to back it out in a follow up patchset.
+
+> merge and I'd like to use it to write unit tests for code I maintain so
+> I don't want to see this stall out. Sorry if I'm opening the can of
+> worms you're talking about.
+
+Don't be sorry. I agree with you that the kunit_stream stuff is not very pretty.
+
+Shuah, have we missed the merge window for 5.3?
+
+I saw you only sent one PR out so far for this release, and there
+wasn't much in it; I imagine you are going to send at least one more?
+
+I figure, if we still got time to try out your suggestion, Stephen, no
+harm in trying.
+
+Also if we missed it, then I have another couple months to play around with it.
+
+What do you think?
