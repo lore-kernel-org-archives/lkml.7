@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13203C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15900C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D190720578
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BC92053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420238;
-	bh=a5sgTZ72/I4FO9orhxbPhNpD9S17BaVxk/dNjKE3foQ=;
+	s=default; t=1563420242;
+	bh=JNmnvDPMdyjpXwlIPvXfoBh6zAcM6I6OFKdO/kIsPkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWWizrLeI9JH8sbt9+IqeIkmuqj0BrOU0iN5o8Tsn6bDUjpNGokksw2ngZVlxDatd
-	 2cuKCxYmXrstqN71Y2jZ/3jGWmwBBdMc9B+tSCGz6E+W67371tVGpvenAQvs3FE0uF
-	 Rp6M8A8RE3mwGplIAbczjeBBOFn/zgLpK1rhHJ8k=
+	b=qzj+qTCV5+WjqaJu2phQTvNOnm98NC0JIi2F6qWJ25n5A5heO3NL/b1UuV3SS7sjF
+	 7Gl5do3qWEuHCPDvMcaFbt5fNJf+jDol2pSA9UcDIR/WMYL5CrlcvGSkGnzlLqGHox
+	 3HY/z0KuJge/UC6aUi0OOKQa07FGc+nFFGHTlVl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391631AbfGRDX5 (ORCPT
+        id S2389944AbfGRDHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390476AbfGRDHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:07:33 -0400
+        id S2390418AbfGRDHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:25 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 813BD2173E;
-        Thu, 18 Jul 2019 03:07:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 550E42173E;
+        Thu, 18 Jul 2019 03:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419252;
-        bh=a5sgTZ72/I4FO9orhxbPhNpD9S17BaVxk/dNjKE3foQ=;
+        s=default; t=1563419244;
+        bh=JNmnvDPMdyjpXwlIPvXfoBh6zAcM6I6OFKdO/kIsPkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAtees6YOZrJzGNyFj2e2sgBHqbwTZg4/zbXkKasEiVqyfYRHQi+weev93ABteyb/
-         3dp5Fe6gBn77hZ1zAPju9cWXkyE0fid4kYPLjszMrqzcuSYNxwA1lhe7L+sWZzQC3g
-         grIPYL5FnEx614Tq7nkKWEDDZp5WfgbqcZcNEA50=
+        b=O4OfQHayfiVCY6ROPlK5TGXdxKN/VzwiAuR08H+P9bnedvVUTT6Nujy7+Tjn/LuGN
+         gOVaKfP0FvX5GYBDW/Bpe8V55j7bYfDDbjH+LTPcCtshb31Np2JiEyyCnqi2xLpSX+
+         HpeL8GElIUuSV9TAarcHUdZPtmpK7ZPC4OE4PybQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/47] ppp: mppe: Add softdep to arc4
-Date:   Thu, 18 Jul 2019 12:01:30 +0900
-Message-Id: <20190718030050.034722781@linuxfoundation.org>
+Subject: [PATCH 4.19 12/47] ARM: omap2: remove incorrect __init annotation
+Date:   Thu, 18 Jul 2019 12:01:26 +0900
+Message-Id: <20190718030049.664088966@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -60,32 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aad1dcc4f011ea409850e040363dff1e59aa4175 ]
+[ Upstream commit 27e23d8975270df6999f8b5b3156fc0c04927451 ]
 
-The arc4 crypto is mandatory at ppp_mppe probe time, so let's put a
-softdep line, so that the corresponding module gets prepared
-gracefully.  Without this, a simple inclusion to initrd via dracut
-failed due to the missing dependency, for example.
+omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
+we get a warning with clang-8:
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
+The function omap3xxx_prm_late_init() references
+the function __init omap3xxx_prm_enable_io_wakeup().
+This is often because omap3xxx_prm_late_init lacks a __init
+annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+
+When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
+inlined, so we never noticed in the past.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/ppp_mppe.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-omap2/prm3xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
-index a205750b431b..8609c1a0777b 100644
---- a/drivers/net/ppp/ppp_mppe.c
-+++ b/drivers/net/ppp/ppp_mppe.c
-@@ -63,6 +63,7 @@ MODULE_AUTHOR("Frank Cusack <fcusack@fcusack.com>");
- MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
-+MODULE_SOFTDEP("pre: arc4");
- MODULE_VERSION("1.0.2");
- 
- static unsigned int
+diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
+index 05858f966f7d..dfa65fc2c82b 100644
+--- a/arch/arm/mach-omap2/prm3xxx.c
++++ b/arch/arm/mach-omap2/prm3xxx.c
+@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
+  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
+  * No return value.
+  */
+-static void __init omap3xxx_prm_enable_io_wakeup(void)
++static void omap3xxx_prm_enable_io_wakeup(void)
+ {
+ 	if (prm_features & PRM_HAS_IO_WAKEUP)
+ 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
 -- 
 2.20.1
 
