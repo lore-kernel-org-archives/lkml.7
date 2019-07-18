@@ -2,216 +2,150 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99763C76196
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E898C76191
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715CA21783
+	by mail.kernel.org (Postfix) with ESMTP id 4EE4D204FD
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M7r4CJrN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dansnQKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfGRGYS (ORCPT
+        id S1727654AbfGRGWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:24:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44240 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfGRGYS (ORCPT
+        Thu, 18 Jul 2019 02:22:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54326 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbfGRGWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:24:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DC788615E6; Thu, 18 Jul 2019 06:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563431056;
-        bh=/QI8ucl9LYpJopinminlJ9+z32qpUYhGxQmZgFux1Bc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=M7r4CJrN70QQLKwwswaPy8ChFTskWmqVNKn8odnzcaaJh4b5T+zVPVFf8tFcvf42M
-         zrLkdvEtKjoo71tTFP1TvgP7IxhDtNcegka6e8EIcmMq++J0TSIgsoejcGkV4phIuu
-         8A23B0KJNdGRrj4HZY06ChAhm/xWZvNESHke/fkA=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id BAB43609CD;
-        Thu, 18 Jul 2019 06:24:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563431055;
-        bh=/QI8ucl9LYpJopinminlJ9+z32qpUYhGxQmZgFux1Bc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dansnQKB4/NEh6yA2vt+5WYGis1xntQJbFIFhA9OoJ8bt4AVFLiuD95c4aQBAFen3
-         OyydVtJ4kCcOiX86hbcp6PNA0NnK8kZLAJVOAAKc34Baruax9ML2+nmqOP3AZ9xfZN
-         iX3MLgjSZUwqNe5oxiodHJ8eYaQI2bVrCA2sf2aQ=
+        Thu, 18 Jul 2019 02:22:51 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I6Mend041227;
+        Thu, 18 Jul 2019 02:22:40 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tthu4418h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 02:22:39 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6I6B77g003381;
+        Thu, 18 Jul 2019 06:22:16 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 2tq6x6dfft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jul 2019 06:22:16 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I6MFNg11600468
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jul 2019 06:22:16 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8CA7B2065;
+        Thu, 18 Jul 2019 06:22:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B70A6B2064;
+        Thu, 18 Jul 2019 06:22:15 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.167.28])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jul 2019 06:22:15 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id BC45B16C998C; Wed, 17 Jul 2019 23:22:15 -0700 (PDT)
+Date:   Wed, 17 Jul 2019 23:22:15 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Dan Rue <dan.rue@linaro.org>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Daniel Diaz <daniel.diaz@linaro.org>
+Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
+ exception
+Message-ID: <20190718062215.GG14271@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <156342860634.8565.14804606041960884732.stgit@devnote2>
+ <156342863822.8565.7624877983728871995.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 18 Jul 2019 11:54:15 +0530
-From:   gokulsri@codeaurora.org
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org, devicetree@vger.kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org,
-        sricharan@codeaurora.org
-Subject: Re: [PATCH 12/12] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
-In-Reply-To: <20190717201326.DCEB520880@mail.kernel.org>
-References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
- <1562859668-14209-13-git-send-email-gokulsri@codeaurora.org>
- <20190717201326.DCEB520880@mail.kernel.org>
-Message-ID: <d818af556d18808301e12beeb8427e6e@codeaurora.org>
-X-Sender: gokulsri@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156342863822.8565.7624877983728871995.stgit@devnote2>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907180072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-18 01:43, Stephen Boyd wrote:
-> Quoting Gokul Sriram Palanisamy (2019-07-11 08:41:08)
->> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi 
->> b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
->> index 6a61a63..c24e3f6 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
->> @@ -10,6 +10,22 @@
->>         model = "Qualcomm Technologies, Inc. IPQ8074";
->>         compatible = "qcom,ipq8074";
->> 
->> +       reserved-memory {
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               ranges;
->> +
->> +               smem_region:smem@4ab00000 {
-> 
-> Put a space between the colon and the node name. Also, just call it
-> memory@4ab00000.
+On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
+> Remove rcu_read_lock()/rcu_read_unlock() from debug exception
+> handlers since the software breakpoint can be hit on idle task.
 
-  ok, will fix.
-> 
-> 		smem_region: memory@4ab00000 {
-> 
->> +                       no-map;
->> +                       reg = <0x0 0x4ab00000 0x0 0x00100000>;
->> +               };
->> +
->> +               q6_region: q6@4b000000 {
-> 
-> memory@
+The exception entry and exit use irq_enter() and irq_exit(), in this
+case, correct?  Otherwise RCU will be ignoring this CPU.
 
-  ok, will fix.
-> 
->> +                       no-map;
->> +                       reg = <0x0 0x4b000000 0x0 0x05f00000>;
->> +               };
->> +       };
->> +
->>         firmware {
->>                 scm {
->>                         compatible = "qcom,scm-ipq8074", "qcom,scm";
->> @@ -431,6 +447,115 @@
->>                                       "axi_m_sticky";
->>                         status = "disabled";
->>                 };
->> +               apcs: syscon@b111000 {
-> 
-> Add a newline between nodes please.
+							Thanx, Paul
 
-  ok, will fix.
+> Actually, we don't need it because those handlers run in exception
+> context where the interrupts are disabled. This means those are never
+> preempted.
 > 
->> +                       compatible = "syscon";
->> +                       reg = <0x0B111000 0x1000>;
->> +               };
->> +
->> +               wcss: smp2p-wcss {
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  arch/arm64/kernel/debug-monitors.c |   14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 > 
-> This node should be outside the soc node because it doesn't have a reg
-> property
-
-  ok, will fix.
+> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+> index f8719bd30850..48222a4760c2 100644
+> --- a/arch/arm64/kernel/debug-monitors.c
+> +++ b/arch/arm64/kernel/debug-monitors.c
+> @@ -207,16 +207,16 @@ static int call_step_hook(struct pt_regs *regs, unsigned int esr)
+>  
+>  	list = user_mode(regs) ? &user_step_hook : &kernel_step_hook;
+>  
+> -	rcu_read_lock();
+> -
+> +	/*
+> +	 * Since single-step exception disables interrupt, this function is
+> +	 * entirely not preemptible, and we can use rcu list safely here.
+> +	 */
+>  	list_for_each_entry_rcu(hook, list, node)	{
+>  		retval = hook->fn(regs, esr);
+>  		if (retval == DBG_HOOK_HANDLED)
+>  			break;
+>  	}
+>  
+> -	rcu_read_unlock();
+> -
+>  	return retval;
+>  }
+>  NOKPROBE_SYMBOL(call_step_hook);
+> @@ -305,14 +305,16 @@ static int call_break_hook(struct pt_regs *regs, unsigned int esr)
+>  
+>  	list = user_mode(regs) ? &user_break_hook : &kernel_break_hook;
+>  
+> -	rcu_read_lock();
+> +	/*
+> +	 * Since brk exception disables interrupt, this function is
+> +	 * entirely not preemptible, and we can use rcu list safely here.
+> +	 */
+>  	list_for_each_entry_rcu(hook, list, node) {
+>  		unsigned int comment = esr & ESR_ELx_BRK64_ISS_COMMENT_MASK;
+>  
+>  		if ((comment & ~hook->mask) == hook->imm)
+>  			fn = hook->fn;
+>  	}
+> -	rcu_read_unlock();
+>  
+>  	return fn ? fn(regs, esr) : DBG_HOOK_ERROR;
+>  }
 > 
->> +                       compatible = "qcom,smp2p";
->> +                       qcom,smem = <435>, <428>;
->> +
->> +                       interrupt-parent = <&intc>;
->> +                       interrupts = <0 322 1>;
->> +
->> +                       qcom,ipc = <&apcs 8 9>;
->> +
->> +                       qcom,local-pid = <0>;
->> +                       qcom,remote-pid = <1>;
->> +
->> +                       wcss_smp2p_out: master-kernel {
->> +                               qcom,entry-name = "master-kernel";
->> +                               qcom,smp2p-feature-ssr-ack;
->> +                               #qcom,smem-state-cells = <1>;
->> +                       };
->> +
->> +                       wcss_smp2p_in: slave-kernel {
->> +                               qcom,entry-name = "slave-kernel";
->> +
->> +                               interrupt-controller;
->> +                               #interrupt-cells = <2>;
->> +                       };
->> +               };
->> +
->> +               tcsr_q6_block: syscon@1945000 {
-> 
-> Do you really need _block in these aliases?
-
-  ok, will fix it to "tcsr_q6"
-> 
->> +                       compatible = "syscon";
->> +                       reg = <0x1945000 0xE000>;
->> +               };
->> +
->> +               tcsr_mutex_block: syscon@193d000 {
->> +                       compatible = "syscon";
->> +                       reg = <0x1905000 0x8000>;
->> +               };
->> +
->> +               tcsr_mutex: hwlock@193d000 {
->> +                       compatible = "qcom,tcsr-mutex";
->> +                       syscon = <&tcsr_mutex_block 0 0x80>;
->> +                       #hwlock-cells = <1>;
->> +               };
->> +
->> +               smem: qcom,smem@4AB00000 {
-> 
-> lowercase please. And just 'smem' I guess.
-
-  ok, will fix.
-> 
->> +                       compatible = "qcom,smem";
->> +                       memory-region = <&smem_region>;
->> +                       hwlocks = <&tcsr_mutex 0>;
->> +               };
->> +
->> +               apcs_glb: mailbox@b111000 {
->> +                       compatible = "qcom,ipq8074-apcs-apps-global";
->> +                       reg = <0xb111000 0x1000>;
-> 
-> These addresses should be padded out to 8 digits for the address part
-> (not the size).
-
-  ok, will fix.
-> 
->> +
->> +                       #mbox-cells = <1>;
->> +               };
->> +
->> +               q6v5_wcss: q6v5_wcss@CD00000 {
-> 
-> lowercase.
-
-  ok, will fix.
-> 
->> +                       compatible = "qcom,ipq8074-wcss-pil";
->> +                       reg = <0xCD00000 0x4040>,
->> +                             <0x4AB000 0x20>;
-
-Regards,
-  Gokul
