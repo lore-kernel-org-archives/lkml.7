@@ -2,132 +2,78 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C67AC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F1C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245282173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="a44Ogx8y"
+	by mail.kernel.org (Postfix) with ESMTP id B3E0E21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403787AbfGROCt (ORCPT
+        id S2403795AbfGRODX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:02:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34345 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390571AbfGROCs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:02:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so51668632iot.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 07:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N24J+jmdN0lKgcrjm3AxPIDQpb2nNWH2GoBgCJq2grY=;
-        b=a44Ogx8yhBjHD7qABQSqkr5enznNXtYgqI1iXd2mCVVKPh1tpLJni/TI0ZojQtJYz5
-         +EfkjSyqcJCg8lrRYizJs6mn+x1tS5LM9/E7mSXhvm7vC9I94o9IfQ0+ZstKc7zZ5Bii
-         l834vuoPlUIFmBpyYeMOiMiX8CR5daXKWDJBg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N24J+jmdN0lKgcrjm3AxPIDQpb2nNWH2GoBgCJq2grY=;
-        b=PcbF+lOdcjDDBaC7fOpMKvPVjjnJKvVYYTG8abwyitJhTDksYLA7wgFWCTvNKly35u
-         rFxe4Oz1CaS+MIRkY3HBZKiFlijpuTinatbG1U1ty67+Wk1DODgF3rn9wOCSxtz9KOme
-         EKF386fZz5zpfUN/WroilVsVhfO2VZ6DkDR6S5aHODRJzNjFtkbxby93M8yRor/8jfiZ
-         XU1JlkQ2WmpLJaON1wvoT8BmZxel/GNaFOKXT94R2jlb8QKaICvoMI2QDOtlvkM5BdDC
-         /nZG/sCDsdwjA8D6r56nR0utEhm8NdeF165SiHNIFMLZk9d6fuBTib4x0ezw8CAcZIfH
-         t3JQ==
-X-Gm-Message-State: APjAAAVzAYmcmX2RgeadNFUYYqpKSMXmo5G47p1N9F5RZsVOldBjk3Pb
-        bVjOA5j+lXFELUZQEOkkjDqUhzqLG2w=
-X-Google-Smtp-Source: APXvYqzbPH7wSI0MnT9Mx4FrGE2zoAB/gDPIi+LM9imGGFG3EsRABb3Yx2dGWfJKo2lwgTwmADNM7Q==
-X-Received: by 2002:a5e:d618:: with SMTP id w24mr7995031iom.73.1563458567767;
-        Thu, 18 Jul 2019 07:02:47 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:54f6:cf0:7185:650f? ([2601:282:800:fd80:54f6:cf0:7185:650f])
-        by smtp.googlemail.com with ESMTPSA id i4sm39896096iog.31.2019.07.18.07.02.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 Jul 2019 07:02:46 -0700 (PDT)
-Subject: Re: [PATCH] Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
-To:     Peter Kosyh <p.kosyh@gmail.com>
-Cc:     davem@davemloft.net, Shrijeet Mukherjee <shrijeet@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190718094114.13718-1-p.kosyh@gmail.com>
-From:   David Ahern <dsa@cumulusnetworks.com>
-Message-ID: <213bada2-fe81-3c14-1506-11abf0f3ca22@cumulusnetworks.com>
-Date:   Thu, 18 Jul 2019 08:02:45 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Thu, 18 Jul 2019 10:03:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:6312 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbfGRODX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:03:23 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3F631C024AF4;
+        Thu, 18 Jul 2019 14:03:23 +0000 (UTC)
+Received: from treble (ovpn-122-211.rdu2.redhat.com [10.10.122.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1ABF160F94;
+        Thu, 18 Jul 2019 14:03:17 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 09:03:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v2 04/22] x86/kvm: Don't call kvm_spurious_fault() from
+ .fixup
+Message-ID: <20190718140314.24d6ygm7khvcno6m@treble>
+References: <cover.1563413318.git.jpoimboe@redhat.com>
+ <64a9b64d127e87b6920a97afde8e96ea76f6524e.1563413318.git.jpoimboe@redhat.com>
+ <65bbf58d-f88b-c7d6-523b-6e35f4972bf2@redhat.com>
+ <20190718131654.GE28096@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190718094114.13718-1-p.kosyh@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190718131654.GE28096@linux.intel.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 18 Jul 2019 14:03:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-your subject line needs a proper Subject - a one-line summary of the
-change starting with 'vrf:'. See examples from 'git log drivers/net/vrf.c'
-
-
-On 7/18/19 3:41 AM, Peter Kosyh wrote:
-> vrf_process_v4_outbound() and vrf_process_v6_outbound() do routing
-> using ip/ipv6 addresses, but don't make sure the header is available in
-> skb->data[] (skb_headlen() is less then header size).
+On Thu, Jul 18, 2019 at 06:16:54AM -0700, Sean Christopherson wrote:
+> > > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > > index 0cc5b611a113..8282b8d41209 100644
+> > > --- a/arch/x86/include/asm/kvm_host.h
+> > > +++ b/arch/x86/include/asm/kvm_host.h
+> > > @@ -1496,25 +1496,29 @@ enum {
+> > >  #define kvm_arch_vcpu_memslots_id(vcpu) ((vcpu)->arch.hflags & HF_SMM_MASK ? 1 : 0)
+> > >  #define kvm_memslots_for_spte_role(kvm, role) __kvm_memslots(kvm, (role).smm)
+> > >  
+> > > +asmlinkage void __noreturn kvm_spurious_fault(void);
 > 
-> The situation may occures while forwarding from MPLS layer to vrf, for
-> example.
+> With __noreturn added, can the entry in __dead_end_function() in
+> tools/objtool/check.c be removed?
 
-so the use case is a label pop with the nexthop as the VRF device?
+No, that's actually still needed because objtool can't see the
+__noreturn annotation.  So it still needs to know that the "call
+kvm_spurious_fault" doesn't return.
 
-> 
-> So, this patch adds pskb_may_pull() calls in is_ip_tx_frame(), just before
-> call to vrf_process_... functions.
-> 
-> Signed-off-by: Peter Kosyh <p.kosyh@gmail.com>
-> ---
->  drivers/net/vrf.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-> index 54edf8956a25..d552f29a58d1 100644
-> --- a/drivers/net/vrf.c
-> +++ b/drivers/net/vrf.c
-> @@ -292,13 +292,16 @@ static netdev_tx_t is_ip_tx_frame(struct sk_buff *skb, struct net_device *dev)
->  {
->  	switch (skb->protocol) {
->  	case htons(ETH_P_IP):
-> +		if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct iphdr))
-> +			break;
-
-that check goes in vrf_process_v4_outbound.
-
->  		return vrf_process_v4_outbound(skb, dev);
->  	case htons(ETH_P_IPV6):
-> +		if (!pskb_may_pull(skb, ETH_HLEN + sizeof(struct ipv6hdr))
-> +			break;
-
-that check goes in vrf_process_v6_outbound
-
-leave this higher level sorter untouched.
-
->  		return vrf_process_v6_outbound(skb, dev);
-> -	default:
-> -		vrf_tx_error(dev, skb);
-> -		return NET_XMIT_DROP;
->  	}
-> +	vrf_tx_error(dev, skb);
-> +	return NET_XMIT_DROP;
->  }
->  
->  static netdev_tx_t vrf_xmit(struct sk_buff *skb, struct net_device *dev)
-> 
-
+-- 
+Josh
