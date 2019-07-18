@@ -6,42 +6,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E362C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE7CC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757B02184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A992173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 22:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391669AbfGRWvy (ORCPT
+        id S2391598AbfGRWvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 18 Jul 2019 18:51:54 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:47544 "EHLO ale.deltatee.com"
+Received: from ale.deltatee.com ([207.54.116.67]:47542 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbfGRWvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727972AbfGRWvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jul 2019 18:51:53 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hoFFf-0001to-Bh; Thu, 18 Jul 2019 16:51:53 -0600
+        id 1hoFFf-0001tp-Bh; Thu, 18 Jul 2019 16:51:52 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hoFFc-0001XK-AT; Thu, 18 Jul 2019 16:51:48 -0600
+        id 1hoFFc-0001XM-FE; Thu, 18 Jul 2019 16:51:48 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
         Christoph Hellwig <hch@lst.de>,
         Sagi Grimberg <sagi@grimberg.me>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 18 Jul 2019 16:51:31 -0600
-Message-Id: <20190718225132.5865-1-logang@deltatee.com>
+Date:   Thu, 18 Jul 2019 16:51:32 -0600
+Message-Id: <20190718225132.5865-2-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190718225132.5865-1-logang@deltatee.com>
+References: <20190718225132.5865-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 1/2] nvme-core: Fix extra device_put() call on error path
+Subject: [PATCH 2/2] nvme-core: Fix deadlock when deleting the ctrl while scanning
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,138 +51,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the error path for nvme_init_subsystem(), nvme_put_subsystem()
-will call device_put(), but it will get called again after the
-mutex_unlock().
+With multipath enabled, nvme_scan_work() can read from the
+device (through nvme_mpath_add_disk()). However, with fabrics,
+once ctrl->state is set to NVME_CTRL_DELETING, the reads will hang
+(see nvmf_check_ready()).
 
-The device_put() only needs to be called if device_add() fails.
+After setting the state to deleting, nvme_remove_namespaces() will
+hang waiting for scan_work to flush and these tasks will hang.
 
-This bug caused a KASAN use-after-free error when adding and
-removing subsytems in a loop:
+To fix this, ensure we take scan_lock before changing the ctrl-state.
+Also, ensure the state is checked while the lock is held
+in nvme_scan_lock_work().
 
-  BUG: KASAN: use-after-free in device_del+0x8d9/0x9a0
-  Read of size 8 at addr ffff8883cdaf7120 by task multipathd/329
-
-  CPU: 0 PID: 329 Comm: multipathd Not tainted 5.2.0-rc6-vmlocalyes-00019-g70a2b39005fd-dirty #314
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  INFO: task kworker/u4:3:166 blocked for more than 120 seconds.
+        Not tainted 5.2.0-rc6-vmlocalyes-00005-g808c8c2dc0cf #316
+  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  kworker/u4:3    D    0   166      2 0x80004000
+  Workqueue: nvme-wq nvme_scan_work
   Call Trace:
-   dump_stack+0x7b/0xb5
-   print_address_description+0x6f/0x280
-   ? device_del+0x8d9/0x9a0
-   __kasan_report+0x148/0x199
-   ? device_del+0x8d9/0x9a0
-   ? class_release+0x100/0x130
-   ? device_del+0x8d9/0x9a0
-   kasan_report+0x12/0x20
-   __asan_report_load8_noabort+0x14/0x20
-   device_del+0x8d9/0x9a0
-   ? device_platform_notify+0x70/0x70
-   nvme_destroy_subsystem+0xf9/0x150
-   nvme_free_ctrl+0x280/0x3a0
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   nvme_free_ns+0xc4/0x100
-   nvme_release+0xb3/0xe0
-   __blkdev_put+0x549/0x6e0
-   ? kasan_check_write+0x14/0x20
-   ? bd_set_size+0xb0/0xb0
-   ? kasan_check_write+0x14/0x20
-   ? mutex_lock+0x8f/0xe0
-   ? __mutex_lock_slowpath+0x20/0x20
-   ? locks_remove_file+0x239/0x370
-   blkdev_put+0x72/0x2c0
-   blkdev_close+0x8d/0xd0
-   __fput+0x256/0x770
-   ? _raw_read_lock_irq+0x40/0x40
-   ____fput+0xe/0x10
-   task_work_run+0x10c/0x180
-   ? filp_close+0xf7/0x140
-   exit_to_usermode_loop+0x151/0x170
-   do_syscall_64+0x240/0x2e0
-   ? prepare_exit_to_usermode+0xd5/0x190
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f5a79af05d7
-  Code: 00 00 0f 05 48 3d 00 f0 ff ff 77 3f c3 66 0f 1f 44 00 00 53 89 fb 48 83 ec 10 e8 c4 fb ff ff 89 df 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2b 89 d7 89 44 24 0c e8 06 fc ff ff 8b 44 24
-  RSP: 002b:00007f5a7799c810 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-  RAX: 0000000000000000 RBX: 0000000000000008 RCX: 00007f5a79af05d7
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000008
-  RBP: 00007f5a58000f98 R08: 0000000000000002 R09: 00007f5a7935ee80
-  R10: 0000000000000000 R11: 0000000000000293 R12: 000055e432447240
-  R13: 0000000000000000 R14: 0000000000000001 R15: 000055e4324a9cf0
+   __schedule+0x851/0x1400
+   schedule+0x99/0x210
+   io_schedule+0x21/0x70
+   do_read_cache_page+0xa57/0x1330
+   read_cache_page+0x4a/0x70
+   read_dev_sector+0xbf/0x380
+   amiga_partition+0xc4/0x1230
+   check_partition+0x30f/0x630
+   rescan_partitions+0x19a/0x980
+   __blkdev_get+0x85a/0x12f0
+   blkdev_get+0x2a5/0x790
+   __device_add_disk+0xe25/0x1250
+   device_add_disk+0x13/0x20
+   nvme_mpath_set_live+0x172/0x2b0
+   nvme_update_ns_ana_state+0x130/0x180
+   nvme_set_ns_ana_state+0x9a/0xb0
+   nvme_parse_ana_log+0x1c3/0x4a0
+   nvme_mpath_add_disk+0x157/0x290
+   nvme_validate_ns+0x1017/0x1bd0
+   nvme_scan_work+0x44d/0x6a0
+   process_one_work+0x7d7/0x1240
+   worker_thread+0x8e/0xff0
+   kthread+0x2c3/0x3b0
+   ret_from_fork+0x35/0x40
 
-  Allocated by task 1236:
-   save_stack+0x21/0x80
-   __kasan_kmalloc.constprop.6+0xab/0xe0
-   kasan_kmalloc+0x9/0x10
-   kmem_cache_alloc_trace+0x102/0x210
-   nvme_init_identify+0x13c3/0x3820
-   nvme_loop_configure_admin_queue+0x4fa/0x5e0
-   nvme_loop_create_ctrl+0x469/0xf40
-   nvmf_dev_write+0x19a3/0x21ab
-   __vfs_write+0x66/0x120
-   vfs_write+0x154/0x490
-   ksys_write+0x104/0x240
-   __x64_sys_write+0x73/0xb0
-   do_syscall_64+0xa5/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+   INFO: task kworker/u4:1:1034 blocked for more than 120 seconds.
+        Not tainted 5.2.0-rc6-vmlocalyes-00005-g808c8c2dc0cf #316
+  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  kworker/u4:1    D    0  1034      2 0x80004000
+  Workqueue: nvme-delete-wq nvme_delete_ctrl_work
+  Call Trace:
+   __schedule+0x851/0x1400
+   schedule+0x99/0x210
+   schedule_timeout+0x390/0x830
+   wait_for_completion+0x1a7/0x310
+   __flush_work+0x241/0x5d0
+   flush_work+0x10/0x20
+   nvme_remove_namespaces+0x85/0x3d0
+   nvme_do_delete_ctrl+0xb4/0x1e0
+   nvme_delete_ctrl_work+0x15/0x20
+   process_one_work+0x7d7/0x1240
+   worker_thread+0x8e/0xff0
+   kthread+0x2c3/0x3b0
+   ret_from_fork+0x35/0x40
 
-  Freed by task 329:
-   save_stack+0x21/0x80
-   __kasan_slab_free+0x129/0x190
-   kasan_slab_free+0xe/0x10
-   kfree+0xa7/0x200
-   nvme_release_subsystem+0x49/0x60
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   klist_class_dev_put+0x31/0x40
-   klist_put+0x8f/0xf0
-   klist_del+0xe/0x10
-   device_del+0x3a7/0x9a0
-   nvme_destroy_subsystem+0xf9/0x150
-   nvme_free_ctrl+0x280/0x3a0
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   nvme_free_ns+0xc4/0x100
-   nvme_release+0xb3/0xe0
-   __blkdev_put+0x549/0x6e0
-   blkdev_put+0x72/0x2c0
-   blkdev_close+0x8d/0xd0
-   __fput+0x256/0x770
-   ____fput+0xe/0x10
-   task_work_run+0x10c/0x180
-   exit_to_usermode_loop+0x151/0x170
-   do_syscall_64+0x240/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index cc09b81fc7f4..3ca33a2714e5 100644
+index 3ca33a2714e5..0a7b46066fe3 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -2489,6 +2489,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 		if (ret) {
- 			dev_err(ctrl->device,
- 				"failed to register subsystem device.\n");
-+			put_device(&subsys->dev);
- 			goto out_unlock;
- 		}
- 		ida_init(&subsys->ns_ida);
-@@ -2511,7 +2512,6 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	nvme_put_subsystem(subsys);
- out_unlock:
- 	mutex_unlock(&nvme_subsystems_lock);
--	put_device(&subsys->dev);
- 	return ret;
- }
+@@ -301,6 +301,9 @@ bool nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
+ 	unsigned long flags;
+ 	bool changed = false;
  
++	/* Ensure a scan isn't in progress when we change the state */
++	mutex_lock(&ctrl->scan_lock);
++
+ 	spin_lock_irqsave(&ctrl->lock, flags);
+ 
+ 	old_state = ctrl->state;
+@@ -375,6 +378,8 @@ bool nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
+ 		ctrl->state = new_state;
+ 
+ 	spin_unlock_irqrestore(&ctrl->lock, flags);
++	mutex_unlock(&ctrl->scan_lock);
++
+ 	if (changed && ctrl->state == NVME_CTRL_LIVE)
+ 		nvme_kick_requeue_lists(ctrl);
+ 	return changed;
+@@ -3534,6 +3539,8 @@ static void nvme_scan_work(struct work_struct *work)
+ 	struct nvme_id_ctrl *id;
+ 	unsigned nn;
+ 
++	mutex_lock(&ctrl->scan_lock);
++
+ 	if (ctrl->state != NVME_CTRL_LIVE)
+ 		return;
+ 
+@@ -3547,7 +3554,6 @@ static void nvme_scan_work(struct work_struct *work)
+ 	if (nvme_identify_ctrl(ctrl, &id))
+ 		return;
+ 
+-	mutex_lock(&ctrl->scan_lock);
+ 	nn = le32_to_cpu(id->nn);
+ 	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
+ 	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
 -- 
 2.20.1
 
