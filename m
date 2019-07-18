@@ -2,93 +2,129 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5DBC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381C5C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB722173B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D812053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563419228;
+	bh=dQwsRVBmoXuusJyqVdFUhRdWuy0a4VgWH2/aUY0GhS0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hj50TclBysCPzfvRowq7InLCzamkGP873jrsTqP7a5N5zL/wthf0XYMgoZ3Dr/eHw
+	 lmGTTAlH9Q2dIqvJEJOzQhP5J2DTBfnzi5gJE/yvU9Xl69c1758DYH/v6PVwqb93i5
+	 TcuTZQbc8kRBcUBg/C2sFGe7Axufr/sdLeruMQ0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390331AbfGRDG7 (ORCPT
+        id S2389839AbfGRDHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:06:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:49738 "EHLO mga12.intel.com"
+        Wed, 17 Jul 2019 23:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390322AbfGRDGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 20:06:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="175892069"
-Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jul 2019 20:06:49 -0700
-From:   Wei Wang <wei.w.wang@intel.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, mst@redhat.com, xdeguillard@vmware.com,
-        namit@vmware.com
-Cc:     akpm@linux-foundation.org, pagupta@redhat.com, riel@surriel.com,
-        dave.hansen@intel.com, david@redhat.com, konrad.wilk@oracle.com,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, lcapitulino@redhat.com,
-        aarcange@redhat.com, pbonzini@redhat.com,
-        alexander.h.duyck@linux.intel.com, dan.j.williams@intel.com
-Subject: [PATCH v1] mm/balloon_compaction: avoid duplicate page removal
-Date:   Thu, 18 Jul 2019 10:23:30 +0800
-Message-Id: <1563416610-11045-1-git-send-email-wei.w.wang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S2389507AbfGRDHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:07:04 -0400
+Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 952F52173B;
+        Thu, 18 Jul 2019 03:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563419224;
+        bh=dQwsRVBmoXuusJyqVdFUhRdWuy0a4VgWH2/aUY0GhS0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Le5fOJSStdCdXZfSIFaxeIfIKjGszMe+X0nDD+swQZ4HJYw9QfaQmvzabsDSWC4d9
+         5DcEqziq7EgUE2Wo28VvNHwY4BUg6bOVaiJIo1I4/vSh58dUjxOMfy0WOUO9EuNZy3
+         hipHe634Rm2GTuZqIHweJuFxmUUnzx1LSIanlrQw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Phil Reid <preid@electromag.com.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 19/47] pinctrl: mcp23s08: Fix add_data and irqchip_add_nested call order
+Date:   Thu, 18 Jul 2019 12:01:33 +0900
+Message-Id: <20190718030050.288562738@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
+References: <20190718030045.780672747@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes: 418a3ab1e778 (mm/balloon_compaction: List interfaces)
+[ Upstream commit 6dbc6e6f58556369bf999cd7d9793586f1b0e4b4 ]
 
-A #GP is reported in the guest when requesting balloon inflation via
-virtio-balloon. The reason is that the virtio-balloon driver has
-removed the page from its internal page list (via balloon_page_pop),
-but balloon_page_enqueue_one also calls "list_del"  to do the removal.
-So remove the list_del in balloon_page_enqueue_one, and have the callers
-do the page removal from their own page lists.
+Currently probing of the mcp23s08 results in an error message
+"detected irqchip that is shared with multiple gpiochips:
+please fix the driver"
 
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+This is due to the following:
+
+Call to mcp23s08_irqchip_setup() with call hierarchy:
+mcp23s08_irqchip_setup()
+  gpiochip_irqchip_add_nested()
+    gpiochip_irqchip_add_key()
+      gpiochip_set_irq_hooks()
+
+Call to devm_gpiochip_add_data() with call hierarchy:
+devm_gpiochip_add_data()
+  gpiochip_add_data_with_key()
+    gpiochip_add_irqchip()
+      gpiochip_set_irq_hooks()
+
+The gpiochip_add_irqchip() returns immediately if there isn't a irqchip
+but we added a irqchip due to the previous mcp23s08_irqchip_setup()
+call. So it calls gpiochip_set_irq_hooks() a second time.
+
+Fix this by moving the call to devm_gpiochip_add_data before
+the call to mcp23s08_irqchip_setup
+
+Fixes: 02e389e63e35 ("pinctrl: mcp23s08: fix irq setup order")
+Suggested-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Phil Reid <preid@electromag.com.au>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/balloon_compaction.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-mcp23s08.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-index 83a7b61..1a5ddc4 100644
---- a/mm/balloon_compaction.c
-+++ b/mm/balloon_compaction.c
-@@ -11,6 +11,7 @@
- #include <linux/export.h>
- #include <linux/balloon_compaction.h>
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index cecbce21d01f..33c3eca0ece9 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -889,6 +889,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	if (ret < 0)
+ 		goto fail;
  
-+/* Callers ensure that @page has been removed from its original list. */
- static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
- 				     struct page *page)
- {
-@@ -21,7 +22,6 @@ static void balloon_page_enqueue_one(struct balloon_dev_info *b_dev_info,
- 	 * memory corruption is possible and we should stop execution.
- 	 */
- 	BUG_ON(!trylock_page(page));
--	list_del(&page->lru);
- 	balloon_page_insert(b_dev_info, page);
- 	unlock_page(page);
- 	__count_vm_event(BALLOON_INFLATE);
-@@ -47,6 +47,7 @@ size_t balloon_page_list_enqueue(struct balloon_dev_info *b_dev_info,
- 
- 	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
- 	list_for_each_entry_safe(page, tmp, pages, lru) {
-+		list_del(&page->lru);
- 		balloon_page_enqueue_one(b_dev_info, page);
- 		n_pages++;
++	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
++	if (ret < 0)
++		goto fail;
++
+ 	mcp->irq_controller =
+ 		device_property_read_bool(dev, "interrupt-controller");
+ 	if (mcp->irq && mcp->irq_controller) {
+@@ -930,10 +934,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 			goto fail;
  	}
+ 
+-	ret = devm_gpiochip_add_data(dev, &mcp->chip, mcp);
+-	if (ret < 0)
+-		goto fail;
+-
+ 	if (one_regmap_config) {
+ 		mcp->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
+ 				"mcp23xxx-pinctrl.%d", raw_chip_address);
 -- 
-2.7.4
+2.20.1
+
+
 
