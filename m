@@ -2,140 +2,109 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1706AC76197
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1651C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12CF20880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5660620880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 13:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbfGRNML (ORCPT
+        id S2389875AbfGRNPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 09:12:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:58224 "EHLO foss.arm.com"
+        Thu, 18 Jul 2019 09:15:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38656 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfGRNMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 09:12:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF528344;
-        Thu, 18 Jul 2019 06:12:09 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09D7C3F71F;
-        Thu, 18 Jul 2019 06:12:06 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 14:11:42 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH 18/18] arm64: dts: hikey: Convert to the hierarchical CPU
- topology layout
-Message-ID: <20190718131142.GA28633@e107155-lin>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-19-ulf.hansson@linaro.org>
- <20190716144744.GB7250@e107155-lin>
- <CAPDyKFpc26yL6rOnfwawL=eL649NsgTMrF1WrMHZv7AVd=3PCA@mail.gmail.com>
+        id S1726513AbfGRNPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 09:15:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6F0EA3086222;
+        Thu, 18 Jul 2019 13:15:35 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB9395E7C0;
+        Thu, 18 Jul 2019 13:15:32 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 76ADD2238A7; Thu, 18 Jul 2019 09:15:32 -0400 (EDT)
+Date:   Thu, 18 Jul 2019 09:15:32 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-nvdimm@lists.01.org, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>
+Subject: Re: [PATCH v2 18/30] virtio_fs, dax: Set up virtio_fs dax_device
+Message-ID: <20190718131532.GA13883@redhat.com>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
+ <20190515192715.18000-19-vgoyal@redhat.com>
+ <20190717192725.25c3d146.pasic@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFpc26yL6rOnfwawL=eL649NsgTMrF1WrMHZv7AVd=3PCA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190717192725.25c3d146.pasic@linux.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 18 Jul 2019 13:15:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:48:14PM +0200, Ulf Hansson wrote:
-> On Tue, 16 Jul 2019 at 16:47, Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Wed, Jul 17, 2019 at 07:27:25PM +0200, Halil Pasic wrote:
+> On Wed, 15 May 2019 15:27:03 -0400
+> Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> > From: Stefan Hajnoczi <stefanha@redhat.com>
+> > 
+> > Setup a dax device.
+> > 
+> > Use the shm capability to find the cache entry and map it.
+> > 
+> > The DAX window is accessed by the fs/dax.c infrastructure and must have
+> > struct pages (at least on x86).  Use devm_memremap_pages() to map the
+> > DAX window PCI BAR and allocate struct page.
 > >
-> > On Mon, May 13, 2019 at 09:23:00PM +0200, Ulf Hansson wrote:
-> > > To enable the OS to manage last-man standing activities for a CPU, while an
-> > > idle state for a group of CPUs is selected, let's convert the Hikey
-> > > platform into using the hierarchical CPU topology layout.
-> > >
-> > > Cc: Wei Xu <xuwei5@hisilicon.com>
-> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > ---
-> > >
-> > > Changes:
-> > >       - None.
-> > >
-> > > ---
-> > >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 87 ++++++++++++++++++++---
-> > >  1 file changed, 76 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > > index 108e2a4227f6..36ff460f428f 100644
-> > > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > >       cpus {
-> >
-> > [...]
-> >
-> > > @@ -70,9 +128,8 @@
-> > >                       };
-> > >
-> > >                       CLUSTER_SLEEP: cluster-sleep {
-> > > -                             compatible = "arm,idle-state";
-> > > -                             local-timer-stop;
-> > > -                             arm,psci-suspend-param = <0x1010000>;
-> > > +                             compatible = "domain-idle-state";
-> > > +                             arm,psci-suspend-param = <0x1000000>;
-> > >                               entry-latency-us = <1000>;
-> > >                               exit-latency-us = <700>;
-> > >                               min-residency-us = <2700>;
-> >
-> > Again this must be original format and as per PSCI spec, your patch
-> > changes this cluster sleep state into cluster retention state which I
-> > think is not what you intended.
->
-> If the hierarchical topology is used, the parameter for cluster states
-> are ORed with the deepest idle state for the CPU.
->
-> CPU_SLEEP: 0x0010000
-> CLUSTER_SLEEP: 0x1000000
->
-> After the ORed operation
-> CLUSTER_SLEEP: 0x1010000
->
-> So, this indeed works as expected.
->
+> 
+> Sorry for being this late. I don't see any more recent version so I will
+> comment here.
+> 
+> I'm trying to figure out how is this supposed to work on s390. My concern
+> is, that on s390 PCI memory needs to be accessed by special
+> instructions. This is taken care of by the stuff defined in
+> arch/s390/include/asm/io.h. E.g. we 'override' __raw_writew so it uses
+> the appropriate s390 instruction. However if the code does not use the
+> linux abstractions for accessing PCI memory, but assumes it can be
+> accessed like RAM, we have a problem.
+> 
+> Looking at this patch, it seems to me, that we might end up with exactly
+> the case described. For example AFAICT copy_to_iter() (3) resolves to
+> the function in lib/iov_iter.c which does not seem to cater for s390
+> oddities.
+> 
+> I didn't have the time to investigate this properly, and since virtio-fs
+> is virtual, we may be able to get around what is otherwise a
+> limitation on s390. My understanding of these areas is admittedly
+> shallow, and since I'm not sure I'll have much more time to
+> invest in the near future I decided to raise concern.
+> 
+> Any opinions?
 
-Yes, it works. But we are not XOR-ing so what's wrong in keeping the
-StateType as required and be compliant to specification. Why do we need
-to make the state param on it's own non-complaint.
+Hi Halil,
 
-What's wrong in retaining CLUSTER_SLEEP as 0x1010000 so that it reflects
-the state level and type correctly on it's own ?
+I don't understand s390 and how PCI works there as well. Is there any
+other transport we can use there to map IO memory directly and access
+using DAX?
 
-> However, are you saying that ORing the state parameters like above has
-> other problems? I am reading your other replies...
->
+BTW, is DAX supported for s390.
 
-Yes OR-ing may have other problems but the point I made here was more on
-PSCI spec compliance for each suspend parameter values independently.
+I am also hoping somebody who knows better can chip in. Till that time,
+we could still use virtio-fs on s390 without DAX.
 
---
-Regards,
-Sudeep
+Thanks
+Vivek
