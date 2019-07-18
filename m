@@ -2,136 +2,135 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BBBC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81403C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA2E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA2F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="em0188wf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s5g1Dyon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfGRR0I (ORCPT
+        id S1732305AbfGRR0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:26:08 -0400
-Received: from mail-eopbgr740043.outbound.protection.outlook.com ([40.107.74.43]:5584
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726715AbfGRR0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:26:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NDOqJF02kqb+emk5Y2/iGaAP4q9BUSEmLdbfBCo1jsJRc6ekJw0/iFV8OKvaj9G5GiKDoU6F6NNleV9Pq6FwkZiC/RK45z1rEcpF5V93HbDpK/J3mQAlpn5ZLD/V4yzGQtrSIThk+xdW5fiF26XScooUh8AK+ZyVntBxdHRkA6cd8K1gAJ75MkDg9vW875wFJolg6Wv8jZ4wmslaT4qSBcUnhiVWOjYw04lRUqCckKX/4j3H4IU60isfhcbqJ3d+LmkYXk3Mv7HHGC7Bkt8mTy1kAeY9e8daFTgzoioFvxiaYCdHZ08JzRuFI0e81FByj0jOzFM8wuqxEcb5iwQdPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nNL9q5hnBoygndJR8ey0WtGHNhEHzH+qT9L2S+bFBcY=;
- b=V9aAkTZn4buQQYR4owGu46YeximctY3uvZQKPxc13npNK/1vzdwKxJLOr+kQ2gUJ5ml6+0lNtRGtqJG3xom3hbYf1aLR14Ws2uhX4MGBh0c884CMtoyOBRjfUgLGF+mPdjdcl7tSkvXMUrO+uLglZcVlXp/H9Vetrz/JuUAVReulJQQW30l2DoM8rQ9iL2dD5pwBcUG2/RGcaTghC4n27lWM1xZAPpppweBI+B/ymb8CA+GUNI1RIjdvkPU+klpYXwekowoGadgRXusP5Mfsv5ppyk7IaQQU4cov3okDacH0iZWtVgowK5W+4H1ettJrt/BZ13Yd7LlyCJqloCCoOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
+        Thu, 18 Jul 2019 13:26:51 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41171 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727742AbfGRR0u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:26:50 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o101so29884624ota.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 10:26:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nNL9q5hnBoygndJR8ey0WtGHNhEHzH+qT9L2S+bFBcY=;
- b=em0188wfhZaK6eJecR3sefSeZ1dn++fQw+tgxMHFtCA7ILG3sumWAJz1vVye5S5zOIFPbNHpbi+AdHgdf0wy3K6NYT+L4ZT64ldXX7acGWsDDNjdWWPUGxDxaDj+I8cmVsnRe/Z4rq7jYF8G8yflbMgR2RKCpDFSMEqhSsPW4q0=
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
- DM6PR12MB3452.namprd12.prod.outlook.com (20.178.198.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.12; Thu, 18 Jul 2019 17:26:02 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Thu, 18 Jul 2019
- 17:26:02 +0000
-From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 2/6] swiotlb: Remove call to sme_active()
-Thread-Topic: [PATCH v3 2/6] swiotlb: Remove call to sme_active()
-Thread-Index: AQHVPRkEwUtZWv2UAU29jYa98DzoIKbQoYiA
-Date:   Thu, 18 Jul 2019 17:26:02 +0000
-Message-ID: <7708048b-cc92-debc-54ba-6b3ad353c5bb@amd.com>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com>
- <20190718032858.28744-3-bauerman@linux.ibm.com>
-In-Reply-To: <20190718032858.28744-3-bauerman@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0601CA0015.namprd06.prod.outlook.com
- (2603:10b6:803:2f::25) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:182::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0602e1f5-b632-4d76-031a-08d70ba50194
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3452;
-x-ms-traffictypediagnostic: DM6PR12MB3452:
-x-microsoft-antispam-prvs: <DM6PR12MB34520EDD0EA3C25DC3ED802BECC80@DM6PR12MB3452.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 01026E1310
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(396003)(376002)(366004)(199004)(189003)(8936002)(3846002)(6116002)(305945005)(7416002)(6512007)(6246003)(31686004)(4326008)(316002)(7736002)(2906002)(8676002)(110136005)(6486002)(54906003)(186003)(53936002)(68736007)(6436002)(26005)(102836004)(36756003)(66476007)(71190400001)(71200400001)(66556008)(486006)(478600001)(53546011)(6506007)(66446008)(66946007)(66066001)(81166006)(81156014)(5660300002)(76176011)(25786009)(386003)(52116002)(14454004)(256004)(476003)(86362001)(11346002)(31696002)(446003)(2501003)(64756008)(229853002)(99286004)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3452;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3AuUs6/FSKIZa7VmcvIO61u/oLDAtemCXC40CxRR4QY3IUtZEQ0ghcxMBnzXjApv1XCl23eR/oRhIPydtTsgDNroBxoZbqNEm0CmEAmDxraxHYq33k1758CSGC2b9BsVfNmGwvJ26xvBwhg+3Z2WfmxfZHwBNtXPRoSiPXZOhyLUZFoVtDqwkhS9re31cQKz8pu3Ch8FLiz9/9pMN7GM7RszX7lKofhcCsNxNLpTHqip+UKNjF7lgJnJgJx4AJk5fS28ypSnnawCES7ngxP7oeN+yw8Fwh6YrSHlbq5lU59z+EG8YPL2vdkyZFuJvYE+ior7Pd1gFIxvx5gnRKOPWvfV3P9dk7909E1SSoDLWN8Vb3CVwVkhgSRO1+Vyd4ykAf4f/WMKdztWOWAPKJ+SGJ/mw+X4u6wwgCzAbWNu6ps=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A98D6908BDCEF34790FCA6C994A418C8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kHot347YLWE5nkm+ELe1ZYMvJsx/cZ07S4YDS0ZiX4U=;
+        b=s5g1DyonFBqTLhJwl7Sl2aNMuX3Z9Tb6oahSwY6QyEWQmcNZ2SWhH8/MhiOzWgra4W
+         n7tWEqkN7/dEqVLquoLllVRJtb3X27VKoRq7T5bGOrwjBRnia4Gt8kZdFSKfuAZ5n0s/
+         5hRS9hcVjmm4FDGkJmXutN9jM+rb/7SxCj8SdLOW2JSn20yN2y4B72kvSn67Y0aISFZO
+         K156I4nEPJMmpFMFfyyu6lQbwq5N1FVSFcYd107uvw9huZmEu150LjM3Nuexp41b/NO0
+         XVwPCVMQXsRSWoeWr+e2c+KBMJO1tF8M1B/VFMSSw6gQMmhLWEFmXaSpUH9+eta7vS0l
+         uuhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kHot347YLWE5nkm+ELe1ZYMvJsx/cZ07S4YDS0ZiX4U=;
+        b=O8j1NXrBgIT42BRtl3alpv8bBER80Fbu6zrlRHmovGUmIkEH7Hbk/s9Er53Ttfg9rJ
+         LXUFX3Y+sDTXNw1toMYXL/c9TUJJLPI7odWZVz3koc1O5IiaKQ+q938TW3cSxJF+M+AA
+         xLAaBDBYweBP+KLA9UOKnzWfh2quJyy6mbx2L/Y5zGSsU0sabfVYHNqZk3vvX/djAg6w
+         a/aBIck433h+1I/5dlQGOzKKv1/8jPBpdl/8NxVZvaUR15JCQ38uJhYa95JcvHtP+uO0
+         eTsqQx4OSZZOtBlrXZsdN0YAWFGHfgyeEFMWK6WamqtNdO5t/Ms3yo6Qrnl2r0DBHpIE
+         WaZQ==
+X-Gm-Message-State: APjAAAWxIadiUUSS9kBcETXbD0LaMd1N5Lvk6Gy+iW0AmY+Tbzzg97Cm
+        pHfZg+x9z616EXNdbDtps0XHoELRYhymUb4sxvFC0Q==
+X-Google-Smtp-Source: APXvYqxx0wUv2PcQOeCnA7yH8Brpx911ipQxgRjsUz11FM8fMvCQ8Z/c5zcaSYTzAc9Lky0K9vcLBi7grFvfvHSwzro=
+X-Received: by 2002:a05:6830:12d6:: with SMTP id a22mr7109834otq.236.1563470809129;
+ Thu, 18 Jul 2019 10:26:49 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0602e1f5-b632-4d76-031a-08d70ba50194
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:26:02.2579
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3452
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
+ <20190717075448.xlyg2ddewlci3abg@vireshk-i7> <CAGETcx-kUM7MqNYowwNAL1Q0bnFzxPEO6yMg0YTkk16=OnPdmg@mail.gmail.com>
+ <20190718043558.roi4j6jw5n4zkwky@vireshk-i7>
+In-Reply-To: <20190718043558.roi4j6jw5n4zkwky@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 18 Jul 2019 10:26:13 -0700
+Message-ID: <CAGETcx_XtA_-cjU6Ra1Jh4zgWJXBpHY+g_FdWvnFTW84e46D_w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNy8xNy8xOSAxMDoyOCBQTSwgVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIHdyb3RlOg0KPiBzbWVf
-YWN0aXZlKCkgaXMgYW4geDg2LXNwZWNpZmljIGZ1bmN0aW9uIHNvIGl0J3MgYmV0dGVyIG5vdCB0
-byBjYWxsIGl0IGZyb20NCj4gZ2VuZXJpYyBjb2RlLg0KPiANCj4gVGhlcmUncyBubyBuZWVkIHRv
-IG1lbnRpb24gd2hpY2ggbWVtb3J5IGVuY3J5cHRpb24gZmVhdHVyZSBpcyBhY3RpdmUsIHNvDQo+
-IGp1c3QgdXNlIGEgbW9yZSBnZW5lcmljIG1lc3NhZ2UuIEJlc2lkZXMsIG90aGVyIGFyY2hpdGVj
-dHVyZXMgd2lsbCBoYXZlDQo+IGRpZmZlcmVudCBuYW1lcyBmb3Igc2ltaWxhciB0ZWNobm9sb2d5
-Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIDxiYXVlcm1hbkBs
-aW51eC5pYm0uY29tPg0KDQpSZXZpZXdlZC1ieTogVG9tIExlbmRhY2t5IDx0aG9tYXMubGVuZGFj
-a3lAYW1kLmNvbT4NCg0KPiAtLS0NCj4gIGtlcm5lbC9kbWEvc3dpb3RsYi5jIHwgMyArLS0NCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9rZXJuZWwvZG1hL3N3aW90bGIuYyBiL2tlcm5lbC9kbWEvc3dpb3RsYi5jDQo+
-IGluZGV4IDYyZmE1YTgyYTA2NS4uZTUyNDAxZjk0ZTkxIDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwv
-ZG1hL3N3aW90bGIuYw0KPiArKysgYi9rZXJuZWwvZG1hL3N3aW90bGIuYw0KPiBAQCAtNDU5LDgg
-KzQ1OSw3IEBAIHBoeXNfYWRkcl90IHN3aW90bGJfdGJsX21hcF9zaW5nbGUoc3RydWN0IGRldmlj
-ZSAqaHdkZXYsDQo+ICAJCXBhbmljKCJDYW4gbm90IGFsbG9jYXRlIFNXSU9UTEIgYnVmZmVyIGVh
-cmxpZXIgYW5kIGNhbid0IG5vdyBwcm92aWRlIHlvdSB3aXRoIHRoZSBETUEgYm91bmNlIGJ1ZmZl
-ciIpOw0KPiAgDQo+ICAJaWYgKG1lbV9lbmNyeXB0X2FjdGl2ZSgpKQ0KPiAtCQlwcl93YXJuX29u
-Y2UoIiVzIGlzIGFjdGl2ZSBhbmQgc3lzdGVtIGlzIHVzaW5nIERNQSBib3VuY2UgYnVmZmVyc1xu
-IiwNCj4gLQkJCSAgICAgc21lX2FjdGl2ZSgpID8gIlNNRSIgOiAiU0VWIik7DQo+ICsJCXByX3dh
-cm5fb25jZSgiTWVtb3J5IGVuY3J5cHRpb24gaXMgYWN0aXZlIGFuZCBzeXN0ZW0gaXMgdXNpbmcg
-RE1BIGJvdW5jZSBidWZmZXJzXG4iKTsNCj4gIA0KPiAgCW1hc2sgPSBkbWFfZ2V0X3NlZ19ib3Vu
-ZGFyeShod2Rldik7DQo+ICANCj4gDQo=
+On Wed, Jul 17, 2019 at 9:36 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 17-07-19, 13:29, Saravana Kannan wrote:
+> > On Wed, Jul 17, 2019 at 12:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 02-07-19, 18:10, Saravana Kannan wrote:
+> > > > Interconnects often quantify their performance points in terms of
+> > > > bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
+> > > > allow specifying Bandwidth OPP tables in DT.
+> > > >
+> > > > opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
+> > > > tables.
+> > > >
+> > > > opp-avg-KBps is an optional property that can be used in Bandwidth OPP
+> > > > tables.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
+> > > >  1 file changed, 12 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > > > index 76b6c79604a5..c869e87caa2a 100644
+> > > > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > > > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > > > @@ -83,9 +83,14 @@ properties.
+> > > >
+> > > >  Required properties:
+> > > >  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> > > > -  required property for all device nodes but devices like power domains. The
+> > > > -  power domain nodes must have another (implementation dependent) property which
+> > > > -  uniquely identifies the OPP nodes.
+> > > > +  required property for all device nodes but for devices like power domains or
+> > > > +  bandwidth opp tables. The power domain nodes must have another (implementation
+> > > > +  dependent) property which uniquely identifies the OPP nodes. The interconnect
+> > > > +  opps are required to have the opp-peak-bw property.
+> > >
+> > >                                    ??
+> >
+> > Sorry, what's the question? Was this an accidental email?
+>
+> Too much smartness is too bad sometimes, sorry about that :)
+>
+> I placed the ?? right below "opp-peak-bw", there is no property like
+> that. You failed to update it :)
+
+Ah, "typo". I'll fix it.
+
+-Saravana
