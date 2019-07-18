@@ -2,110 +2,108 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC9CC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3300C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFB420665
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:29:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPwd0NHI"
+	by mail.kernel.org (Postfix) with ESMTP id A5A1D20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389703AbfGRJ33 (ORCPT
+        id S2389708AbfGRJbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:29:29 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33076 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfGRJ32 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:29:28 -0400
-Received: by mail-ot1-f68.google.com with SMTP id q20so28256992otl.0;
-        Thu, 18 Jul 2019 02:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NpasdpGQ+k5k5hCl+7N6bXO3B/SAFa/2qIIRqxZLH2k=;
-        b=EPwd0NHIgUF5z1lJ4D0bV1b32GqgQ8BaowK4v4Z9r5Aim+npx7WLCJQTMJtCsmzWyc
-         OR7tKFCW6AAquA/cyG90tXUJFnA2Yoj7q2HLuUE8TM979Z451SE17/LiaIy1ILKMhyEW
-         Dw+JC54KPWNOJTvxUNNg98EVVaGkqGpnttu7dAQHmnQ20F3yoVy7Mw9vLTuHxbwkocmV
-         1wvoOHCNjuUw2TWfbJV2DifziYLllFfvI1fBpH4lSgFJy4E/TvrJEISioaOkUBmi246K
-         s7j7RwW2ZRIt6JN1pROCnMCT+PNKbkOPE/d7bV1yQj8XOshVzri4zicMVDVpcBUKB4D7
-         AAkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NpasdpGQ+k5k5hCl+7N6bXO3B/SAFa/2qIIRqxZLH2k=;
-        b=QpIDbd6ysLDpYyEAJqqOvxjHWMmdAXkj0S4fobxV+TZ0eHtSbiVqi1krlTEOkHEqZm
-         vYNzUqr87MFF0vp+L0P/A2d7Iha/I9MI46VpNEDgPgA81OJyex+arXlF5/vlpYXzLM7h
-         m0EIlVdm9JzKWt8ecAcMnW2/f6XRblJGi8zmrwDhNozZplFIUAGEgeEeHVeGo86+Zq68
-         bT5bFFIph0eAK+yo5rZs8qiylPENlBnDQ4vgm8ZvPd688Vhar3oWdX3B0I++YtC8fabp
-         NaGjJB/0HhWudcX+TwbDt59GkqlSZdivsDc4BPHi5cORnvKQ6Qng19bZih9rgaQfv8DJ
-         M6UA==
-X-Gm-Message-State: APjAAAUwOzpJUwoZEmxfdPlM5nkBQylULNNIiWbdilEdkfwD2tCyAxWp
-        jnPvlqzEWupLbYAPrYXUUBPnfUpwcb+ZABmUq3Tg4hqZ
-X-Google-Smtp-Source: APXvYqz/cWRn5R55kKWuILJDwaGqioXzFn+iU7ibeLIuE7V6kDlJtr/zLoHWxeSnK2gz//Je7OTAbTcRq9DGNrvdLUg=
-X-Received: by 2002:a9d:4590:: with SMTP id x16mr30910465ote.254.1563442167790;
- Thu, 18 Jul 2019 02:29:27 -0700 (PDT)
+        Thu, 18 Jul 2019 05:31:08 -0400
+Received: from relay.sw.ru ([185.231.240.75]:54274 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727474AbfGRJbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:31:08 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ho2ke-0005VV-9n; Thu, 18 Jul 2019 12:31:00 +0300
+Subject: Re: [PATCH] mm: vmscan: check if mem cgroup is disabled or not before
+ calling memcg slab shrinker
+To:     Yang Shi <yang.shi@linux.alibaba.com>, shakeelb@google.com,
+        vdavydov.dev@gmail.com, hannes@cmpxchg.org, mhocko@suse.com,
+        guro@fb.com, hughd@google.com, cai@lca.pw,
+        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org
+Cc:     stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1563385526-20805-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <fca59732-cd98-7e44-8c92-49ebafc6f41c@virtuozzo.com>
+Date:   Thu, 18 Jul 2019 12:30:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
- <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com> <db74a3a8-290e-edff-10ad-f861c60fbf8e@de.ibm.com>
- <e31024e4-f437-becd-a9e3-e1ea8cd2e0c7@redhat.com> <CANRm+Cw43DKqD17U+7-OPX3BmeNBThSe9-uWP2Atob+A0ApzLA@mail.gmail.com>
- <bc210153-fbae-25d4-bf6b-e31ceef36aa5@redhat.com>
-In-Reply-To: <bc210153-fbae-25d4-bf6b-e31ceef36aa5@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 18 Jul 2019 17:29:19 +0800
-Message-ID: <CANRm+CxV0c3RSidV_GQtVuQ5fUUCT8vM=5LpodgDg+dFWhkH3w@mail.gmail.com>
-Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1563385526-20805-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 at 17:07, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 18/07/19 10:43, Wanpeng Li wrote:
-> >>> Isnt that done by the sched_in handler?
-> >>
-> >> I am a bit confused because, if it is done by the sched_in later, I
-> >> don't understand why the sched_out handler hasn't set vcpu->preempted
-> >> already.
-> >>
-> >> The s390 commit message is not very clear, but it talks about "a former
-> >> sleeping cpu" that "gave up the cpu voluntarily".  Does "voluntarily"
-> >> that mean it is in kvm_vcpu_block?  But then at least for x86 it would
-> >
-> > see the prepare_to_swait_exlusive() in kvm_vcpu_block(), the task will
-> > be set in TASK_INTERRUPTIBLE state, kvm_sched_out will set
-> > vcpu->preempted to true iff current->state == TASK_RUNNING.
->
-> Ok, I was totally blind to that "if" around vcpu->preempted = true, it's
-> obvious now.
->
-> I think we need two flags then, for example vcpu->preempted and vcpu->ready:
->
-> - kvm_sched_out sets both of them to true iff current->state == TASK_RUNNING
->
-> - kvm_vcpu_kick sets vcpu->ready to true
->
-> - kvm_sched_in clears both of them
->
-> This way, vmx_vcpu_pi_load can keep looking at preempted only (it
-> handles voluntary preemption in pi_pre_block/pi_post_block).
->
-> Also, kvm_s390_vcpu_wakeup can be changed to use kvm_vcpu_wake_up, which
-> is nice.
+On 17.07.2019 20:45, Yang Shi wrote:
+> Shakeel Butt reported premature oom on kernel with
+> "cgroup_disable=memory" since mem_cgroup_is_root() returns false even
+> though memcg is actually NULL.  The drop_caches is also broken.
+> 
+> It is because commit aeed1d325d42 ("mm/vmscan.c: generalize shrink_slab()
+> calls in shrink_node()") removed the !memcg check before
+> !mem_cgroup_is_root().  And, surprisingly root memcg is allocated even
+> though memory cgroup is disabled by kernel boot parameter.
+> 
+> Add mem_cgroup_disabled() check to make reclaimer work as expected.
+> 
+> Fixes: aeed1d325d42 ("mm/vmscan.c: generalize shrink_slab() calls in shrink_node()")
+> Reported-by: Shakeel Butt <shakeelb@google.com>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Cc: Roman Gushchin <guro@fb.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: stable@vger.kernel.org  4.19+
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Will do. :)
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
-Wanpeng
+Surprise really.
+
+We have mem_cgroup as not early inited, so all of these boundary
+cases and checks has to be supported. But it looks like it's not
+possible to avoid that in any way.
+
+> ---
+>  mm/vmscan.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index f8e3dcd..c10dc02 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -684,7 +684,14 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+>  	unsigned long ret, freed = 0;
+>  	struct shrinker *shrinker;
+>  
+> -	if (!mem_cgroup_is_root(memcg))
+> +	/*
+> +	 * The root memcg might be allocated even though memcg is disabled
+> +	 * via "cgroup_disable=memory" boot parameter.  This could make
+> +	 * mem_cgroup_is_root() return false, then just run memcg slab
+> +	 * shrink, but skip global shrink.  This may result in premature
+> +	 * oom.
+> +	 */
+> +	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+>  		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+>  
+>  	if (!down_read_trylock(&shrinker_rwsem))
+> 
+
