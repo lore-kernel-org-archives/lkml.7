@@ -2,217 +2,147 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECEDC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04778C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE6320873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C727420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 17:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Be3xx1B4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="R5vFgv+T"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="UX1od561"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388887AbfGRR5v (ORCPT
+        id S2390340AbfGRR7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 13:57:51 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33654 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRR5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 13:57:50 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3736B6044E; Thu, 18 Jul 2019 17:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563472669;
-        bh=KKMAgVLpi8fqilBpe9pVydnrrpeC1pms96hKdG3hV9w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Be3xx1B4ss23WzbsoFzIS7rnfeb1prsQ463auRnyyVrGEnziUy3UVnf7oca9QRIjf
-         NFc37Nlg4YJupLH3BhqP5VJBFgLbb3BSjnCehEWGKnQXOPGTYujHgHeYZTj0syCtJU
-         sqxbcco7YlGD7UH4jN4FSurmg+YLuZgwfx9IapOc=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54E166044E;
-        Thu, 18 Jul 2019 17:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563472667;
-        bh=KKMAgVLpi8fqilBpe9pVydnrrpeC1pms96hKdG3hV9w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R5vFgv+TLCawxt+GhEHgdsaP9W2LnbSY3tF3m2Ddr8VXoBVS6lM2alhBNxLV0FoQH
-         dm0HJ54MTaQyPm+wSxsEoavrybOqTkT6H5Jl5CpViRADO3FZhMB58RYf58dt9k+141
-         bETuYMzUtA25+djC7VWtRFREGjOSmNgUYxedhyoU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54E166044E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 18 Jul 2019 11:57:46 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH 09/18] drivers: firmware: psci: Add support for PM
- domains using genpd
-Message-ID: <20190718175746.GE25567@codeaurora.org>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
- <20190513192300.653-10-ulf.hansson@linaro.org>
- <20190716150533.GD7250@e107155-lin>
- <CAPDyKFqaE2L419siFY=LGDsotAnpBt+H_vpmG62AqQw8UQJZJA@mail.gmail.com>
- <20190718131913.GB28633@e107155-lin>
+        Thu, 18 Jul 2019 13:59:12 -0400
+Received: from mail-eopbgr760054.outbound.protection.outlook.com ([40.107.76.54]:33768
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726040AbfGRR7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 13:59:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e4sLcr+ROmKyPYZKhlPUoWji3lvm1b+i77jyQ3fik6uXfF462CsRR7UWwFH0coZgOxn2qaop3WayM5rZIdTmbHaf/8/e0Tp47Mf36z0pympsSnjwde/nfFfCpslX99fr+3vQYPSS0XmLKJzQwwpuk16BLKBUU9vwFXbM6RvCxmjf1hLWr0QbWEMydecLUp42CFZwxVLpdIZ3Ec3Rpdl5xNSsEjD16X1Q7vWvqnzEV7bZx7NjzPovDjMSuW1w1ZalLAHpk6L+ibyyGx9dX2BZklIq9aqPn7Ijor1MOhSVeiwZZ9K8XLgZ4+IMqPxVWvLVRsugz0cIgGV0bGAiHIAbsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oVft7SUf77CIAqjbISltIoHdkkuLS5K/dy3N0XuXvg8=;
+ b=PEKaAvcFWx7DOG7VXtwefCJMkKZeDnR8/7o1lRlsgjEbZDHdoxRo1AwE8YcYpeDF2xRA8mEjQ+S8mNJ1B64ta/ZIlryyv8n4Rqq73gQjLuJkY6Mh6bqOaQhCBVRiKkPqIR0ir1qGWKCGyidSQ5baRzr7FfuFIjVke1IiIsJNup8tn7nmuMbPC5FS0PhPS2im7BIYXldfSQGaZEAv7pvF6d9WPNp9Lq0U9WUYYcoyRGiFRYqF+YSbvY8FHPVcfmnyoCvG7ntye+NZ9doTp2HUVADXog7QFklyi/hspm53n5cH1LVLaoexEZ/lRYNaZXd/CpN6epSyse6Urhtpfhf+qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=vmware.com;dmarc=pass action=none
+ header.from=vmware.com;dkim=pass header.d=vmware.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oVft7SUf77CIAqjbISltIoHdkkuLS5K/dy3N0XuXvg8=;
+ b=UX1od561fFs8uAICOWWywpVE6cPWHygBLrNn5H7AncnAYtTboY5hN7iypRRTe5cmVEDGgC2TVKLBpd1JmenzhNfpcGOBFQ+YJ6myQKZapPpFarY+Yw5lLTCATKeucO0koSlu0mGQuEYUlJBEz/em2bqtwEL2/vs0SPmzaEZYhe8=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB6101.namprd05.prod.outlook.com (20.178.54.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.8; Thu, 18 Jul 2019 17:59:09 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::e00b:cb41:8ed6:b718%2]) with mapi id 15.20.2094.009; Thu, 18 Jul 2019
+ 17:59:09 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     kernel test robot <rong.a.chen@intel.com>
+CC:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>, "lkp@01.org" <lkp@01.org>
+Subject: Re: [x86/modules]  f2c65fb322:  will-it-scale.per_process_ops -2.9%
+ regression
+Thread-Topic: [x86/modules]  f2c65fb322:  will-it-scale.per_process_ops -2.9%
+ regression
+Thread-Index: AQHVPU5F6lYNjXgCiU+to6YdZcl0X6bQqmEA
+Date:   Thu, 18 Jul 2019 17:59:08 +0000
+Message-ID: <52D013BF-9B4B-4D03-B56F-3F378E4A2BA4@vmware.com>
+References: <20190718095037.GC27250@shao2-debian>
+In-Reply-To: <20190718095037.GC27250@shao2-debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 30315812-cc51-45b5-6b3e-08d70ba9a1f5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB6101;
+x-ms-traffictypediagnostic: BYAPR05MB6101:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <BYAPR05MB6101C9E3F74B03C9D1678997D0C80@BYAPR05MB6101.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01026E1310
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(189003)(199004)(11346002)(76116006)(26005)(316002)(476003)(14444005)(66946007)(66446008)(66556008)(66476007)(64756008)(2616005)(446003)(256004)(66066001)(486006)(186003)(7416002)(305945005)(71190400001)(54906003)(86362001)(8936002)(99286004)(76176011)(68736007)(71200400001)(81166006)(36756003)(81156014)(229853002)(102836004)(6486002)(45080400002)(7736002)(478600001)(53936002)(6506007)(8676002)(33656002)(4326008)(53546011)(14454004)(2906002)(6916009)(6512007)(6306002)(966005)(6246003)(25786009)(6116002)(3846002)(5660300002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6101;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TuMCkWNxnllCxLlsBJMGV0T+9ZQYqJtstJlmLcBhH3orGbQ5rNmrJU0+EDjIM0DD0HeJtU+K5RNioz0gMLzYjUKDQd/MmlHkUraYUqXQMTjcHXFf5wgmfYxb5N7bQKuzZf30dqllE3Lj/l5+zdSDAf3rT5zym1RPFyWqRpIj5TnE9648YBhq6d89TNmCfsOfV/QmFPNhTXQL+lX7f03vzuDMrQsaI6MZ8+2MAz7ea0lcE1Cg49rtpKQQP/EtK20U7Qg7Vlfs/4Ea31uZXbbzMfOiMge/yq/1/Sob3NbZQW2o8aRN6SU5t5qrTHw62Y3NhJyX+6SXIEg5BUw/Lzn7G7QAQFLmX4ASHu6v3DeDwAUaCwPon5xzn5A12oPi98+i9/F/pH/e6Tpv9C4L0tDVDAEQb9GOGI4gEHZqcSxLZwU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6A0A6162A2C4E941977A3C1E4DEA879B@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190718131913.GB28633@e107155-lin>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30315812-cc51-45b5-6b3e-08d70ba9a1f5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2019 17:59:08.9369
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18 2019 at 07:19 -0600, Sudeep Holla wrote:
->On Thu, Jul 18, 2019 at 01:04:03PM +0200, Ulf Hansson wrote:
->> On Tue, 16 Jul 2019 at 17:05, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> >
->> > On Mon, May 13, 2019 at 09:22:51PM +0200, Ulf Hansson wrote:
->> > > When the hierarchical CPU topology layout is used in DT, we need to setup
->> > > the corresponding PM domain data structures, as to allow a CPU and a group
->> > > of CPUs to be power managed accordingly. Let's enable this by deploying
->> > > support through the genpd interface.
->> > >
->> > > Additionally, when the OS initiated mode is supported by the PSCI FW, let's
->> > > also parse the domain idle states DT bindings as to make genpd responsible
->> > > for the state selection, when the states are compatible with
->> > > "domain-idle-state". Otherwise, when only Platform Coordinated mode is
->> > > supported, we rely solely on the state selection to be managed through the
->> > > regular cpuidle framework.
->> > >
->> > > If the initialization of the PM domain data structures succeeds and the OS
->> > > initiated mode is supported, we try to switch to it. In case it fails,
->> > > let's fall back into a degraded mode, rather than bailing out and returning
->> > > an error code.
->> > >
->> > > Due to that the OS initiated mode may become enabled, we need to adjust to
->> > > maintain backwards compatibility for a kernel started through a kexec call.
->> > > Do this by explicitly switch to Platform Coordinated mode during boot.
->> > >
->> > > Finally, the actual initialization of the PM domain data structures, is
->> > > done via calling the new shared function, psci_dt_init_pm_domains().
->> > > However, this is implemented by subsequent changes.
->> > >
->> > > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
->> > > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->> > > ---
->> > >
->> > > Changes:
->> > >       - Simplify code setting domain_state at power off.
->> > >       - Use the genpd ->free_state() callback to manage freeing of states.
->> > >       - Fixup a bogus while loop.
->> > >
->> > > ---
->> > >  drivers/firmware/psci/Makefile         |   2 +-
->> > >  drivers/firmware/psci/psci.c           |   7 +-
->> > >  drivers/firmware/psci/psci.h           |   5 +
->> > >  drivers/firmware/psci/psci_pm_domain.c | 268 +++++++++++++++++++++++++
->> > >  4 files changed, 280 insertions(+), 2 deletions(-)
->> > >  create mode 100644 drivers/firmware/psci/psci_pm_domain.c
->> > >
->> >
->> > [...]
->> >
->> > >  #endif /* __PSCI_H */
->> > > diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
->> > > new file mode 100644
->> > > index 000000000000..3c6ca846caf4
->> > > --- /dev/null
->> > > +++ b/drivers/firmware/psci/psci_pm_domain.c
->> > > @@ -0,0 +1,268 @@
->> > > +// SPDX-License-Identifier: GPL-2.0
->> > > +/*
->> > > + * PM domains for CPUs via genpd - managed by PSCI.
->> > > + *
->> > > + * Copyright (C) 2019 Linaro Ltd.
->> > > + * Author: Ulf Hansson <ulf.hansson@linaro.org>
->> > > + *
->> > > + */
->> > > +
->> >
->> > [...]
->> >
->> > > +static int psci_pd_power_off(struct generic_pm_domain *pd)
->> > > +{
->> > > +     struct genpd_power_state *state = &pd->states[pd->state_idx];
->> > > +     u32 *pd_state;
->> > > +
->> > > +     /* If we have failed to enable OSI mode, then abort power off. */
->> > > +     if (psci_has_osi_support() && !osi_mode_enabled)
->> > > +             return -EBUSY;
->> > > +
->> > > +     if (!state->data)
->> > > +             return 0;
->> > > +
->> > > +     /* When OSI mode is enabled, set the corresponding domain state. */
->> > > +     pd_state = state->data;
->> > > +     psci_set_domain_state(*pd_state);
->> >
->> > I trying to understand how would this scale to level 2(cluster of
->> > clusters or for simply system). The current code for psci_set_domain_state
->> > just stores the value @pd_state into per-cpu domain_state. E.g.: Now if
->> > the system level pd is getting called after cluster PD, it will set the
->> > domain state to system level PD state. It won't work with original
->> > format and it may work with extended format if it's carefully crafted.
->> > In short, the point is just over-writing domain_state is asking for
->> > troubles IMO.
->>
->> Thanks for spotting this!
->>
->> While walking upwards in the PM domain topology, I thought I was ORing
->> the domain states, but clearly the code isn't doing that.
->>
->> In principle we need to do the below instead.
->>
->> pd_state = state->data;
->> composite_pd_state = *pd_state | psci_get_domain_state();
->> psci_set_domain_state(composite_pd_state);
->>
->
->Yes 2 different issues here:
->1. The direct assignment overwriting the value is problem which you agree.
->2. The OR logic on it's own is bit not so clear from the specification.
->   Since firmware authors need to be aware of this to make all these
->   work. So it's not implicit, either we set this requirement in form
->   of binding. We were also thinking of stating composite state in the
->   DT, still just a thought, need to come up with examples/illustrations.
->
-It is generally very obvious to firmware authors to map hardware
-definitions to specific bits in the state param. If a cluster component
-has more than on/off state, more bits are assigned to the define the
-idle states of the component.
-Addition is also an option, but there are enough bits compared to the
-hardware components that we have in each state, that it hasn't been a
-problem.
-
---Lina
-
+PiBPbiBKdWwgMTgsIDIwMTksIGF0IDI6NTAgQU0sIGtlcm5lbCB0ZXN0IHJvYm90IDxyb25nLmEu
+Y2hlbkBpbnRlbC5jb20+IHdyb3RlOg0KPiANCj4gR3JlZXRpbmcsDQo+IA0KPiBGWUksIHdlIG5v
+dGljZWQgYSAtMi45JSByZWdyZXNzaW9uIG9mIHdpbGwtaXQtc2NhbGUucGVyX3Byb2Nlc3Nfb3Bz
+IGR1ZSB0byBjb21taXQ6DQo+IA0KPiANCj4gY29tbWl0OiBmMmM2NWZiMzIyMWFkYzZiNzNiMDU0
+OWZjN2JhODkyMDIyZGI5Nzk3ICgieDg2L21vZHVsZXM6IEF2b2lkIGJyZWFraW5nIFdeWCB3aGls
+ZSBsb2FkaW5nIG1vZHVsZXMiKQ0KPiBodHRwczovL25hbTA0LnNhZmVsaW5rcy5wcm90ZWN0aW9u
+Lm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZrZXJuZWwuZ29vZ2xlc291cmNlLmNvbSUy
+RnB1YiUyRnNjbSUyRmxpbnV4JTJGa2VybmVsJTJGZ2l0JTJGdG9ydmFsZHMlMkZsaW51eC5naXQm
+YW1wO2RhdGE9MDIlN0MwMSU3Q25hbWl0JTQwdm13YXJlLmNvbSU3Q2RmZTE5ZDcyZWVjZDQ2YTkz
+ZmM1MDhkNzBiNjU2NTJiJTdDYjM5MTM4Y2EzY2VlNGI0YWE0ZDZjZDgzZDlkZDYyZjAlN0MwJTdD
+MCU3QzYzNjk5MDQwMjQ2MDMyOTM2NyZhbXA7c2RhdGE9OU1IUGxoYTBNSWtEV0tlJTJCdXJERHIw
+UVJETXRKM3BQQUNnRHRWWHk4cEw0JTNEJmFtcDtyZXNlcnZlZD0wIG1hc3Rlcg0KPiANCj4gaW4g
+dGVzdGNhc2U6IHdpbGwtaXQtc2NhbGUNCj4gb24gdGVzdCBtYWNoaW5lOiAxOTIgdGhyZWFkcyBJ
+bnRlbChSKSBYZW9uKFIpIENQVSBAIDIuMjBHSHogd2l0aCAxOTJHIG1lbW9yeQ0KPiB3aXRoIGZv
+bGxvd2luZyBwYXJhbWV0ZXJzOg0KPiANCj4gCW5yX3Rhc2s6IDEwMCUNCj4gCW1vZGU6IHByb2Nl
+c3MNCj4gCXRlc3Q6IHBvbGwxDQo+IAljcHVmcmVxX2dvdmVybm9yOiBwZXJmb3JtYW5jZQ0KPiAN
+Cj4gdGVzdC1kZXNjcmlwdGlvbjogV2lsbCBJdCBTY2FsZSB0YWtlcyBhIHRlc3RjYXNlIGFuZCBy
+dW5zIGl0IGZyb20gMSB0aHJvdWdoIHRvIG4gcGFyYWxsZWwgY29waWVzIHRvIHNlZSBpZiB0aGUg
+dGVzdGNhc2Ugd2lsbCBzY2FsZS4gSXQgYnVpbGRzIGJvdGggYSBwcm9jZXNzIGFuZCB0aHJlYWRz
+IGJhc2VkIHRlc3QgaW4gb3JkZXIgdG8gc2VlIGFueSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSB0
+d28uDQo+IHRlc3QtdXJsOiBodHRwczovL25hbTA0LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
+b2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZnaXRodWIuY29tJTJGYW50b25ibGFuY2hhcmQlMkZ3
+aWxsLWl0LXNjYWxlJmFtcDtkYXRhPTAyJTdDMDElN0NuYW1pdCU0MHZtd2FyZS5jb20lN0NkZmUx
+OWQ3MmVlY2Q0NmE5M2ZjNTA4ZDcwYjY1NjUyYiU3Q2IzOTEzOGNhM2NlZTRiNGFhNGQ2Y2Q4M2Q5
+ZGQ2MmYwJTdDMCU3QzAlN0M2MzY5OTA0MDI0NjAzMjkzNjcmYW1wO3NkYXRhPVltc0plYmYwdDN5
+eW83S01DZFV1NlZJT3lzZWJtQiUyRmM3aHV4a09lNWNWMCUzRCZhbXA7cmVzZXJ2ZWQ9MA0KDQpJ
+IGRvbuKAmXQgdW5kZXJzdGFuZCBob3cgdGhpcyBwYXRjaCBoYXMgYW55IGltcGFjdCBvbiB0aGlz
+IHdvcmtsb2FkLg0KDQpJIHJhbiBpdCBhbmQgc2V0IGEgZnVuY3Rpb24gdHJhY2VyIGZvciBhbnkg
+ZnVuY3Rpb24gdGhhdCBpcyBpbXBhY3RlZCBieSB0aGlzDQpwYXRjaDoNCg0KICAjIGNkIC9zeXMv
+a2VybmVsL2RlYnVnL3RyYWNpbmcNCiAgIyBlY2hvIHRleHRfcG9rZV9lYXJseSA+IHNldF9mdHJh
+Y2VfZmlsdGVyDQogICMgZWNobyBtb2R1bGVfYWxsb2MgPj4gc2V0X2Z0cmFjZV9maWx0ZXINCiAg
+IyBlY2hvIGJwZl9pbnRfaml0X2NvbXBpbGUgPj4gc2V0X2Z0cmFjZV9maWx0ZXINCiAgIyB0YWls
+IC1mIHRyYWNlDQoNCk5vdGhpbmcgY2FtZSB1cC4gQ2FuIHlvdSBwbGVhc2UgY2hlY2sgaWYgeW91
+IHNlZSBhbnkgb2YgdGhlbSBpbnZva2VkIG9uIHlvdXINCnNldHVwPyBQZXJoYXBzIHlvdSBoYXZl
+IHNvbWUgYnBmIGZpbHRlcnMgYmVpbmcgaW5zdGFsbGVkLCBhbHRob3VnaCBldmVuIHRoZW4NCnRo
+aXMgaXMgYSBvbmUtdGltZSAoc21hbGwpIG92ZXJoZWFkIGZvciBlYWNoIHByb2Nlc3MgaW52b2Nh
+dGlvbi4NCg0K
