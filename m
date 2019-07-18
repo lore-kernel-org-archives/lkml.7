@@ -2,94 +2,145 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FFAC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E710C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCF621019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBFE21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 20:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByuNj8jV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YButNhpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403921AbfGRUbB (ORCPT
+        id S2391468AbfGRUce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 16:31:01 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43282 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfGRUbA (ORCPT
+        Thu, 18 Jul 2019 16:32:34 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41697 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbfGRUcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 16:31:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y17so4063675ljk.10;
-        Thu, 18 Jul 2019 13:30:58 -0700 (PDT)
+        Thu, 18 Jul 2019 16:32:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id d24so28635832ljg.8;
+        Thu, 18 Jul 2019 13:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5uFK7MqKRb+oFVKD89Io/malOAroV84oVCRoYwQTVLs=;
-        b=ByuNj8jVyAGVVYdET8ktdlDqRCowxA9phMWJ7m0Sg/hw15WKOcetKCoYWFrQQJQRKo
-         LtEcfREetsclcT4WkgGXcEBP0H8PXdH/UinOi0mrnbXCaG1uU7JZ/TSnEnww/R4X/mTz
-         oY9MWuFdVzOuJB5eaML5omcF2fQwGzk4Q2mCo4iQ+VdUEQ8P4ArKNmYpxQn4VQnZcBIm
-         tZibUPoWhfIJRuQA9XBnVICH4JPqmb7LBSilxOxr8Kol1LQFKxRHzVLNBPcYd0GBe9qK
-         UJK5HYVWYrK9uQ2rjRIQICntWRhJ/+09hxemcPaQHi7E/J8jQ2HvL+W709oR5yYvVCaO
-         1FkQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HwI/a5Cgs3FeMDik7cEBcTQmX22SU/+HDKO5amu4FvQ=;
+        b=YButNhpMmXwgmkALyaBYai1v+KxNU1ZRLqTxWqvCr39JGQfj0vpPwbAGVSUZBjOBb+
+         I00rIQBgZvTFcj2VNSWsvMbHIZw8r1zOI7HPEERTgE4kVYGnGt3J0fRpCDTZjZW2/8yx
+         ItZMd16jwGiJlWJ5GvpzsxMfGOvAeTQfoojgfriBmsSQNZggnfac+JeVMFToRjjdWR4B
+         pYsSNzO0YT7Hbu0u2WzCU5TEkjohFb+nEpECj+bCHUQP14JBs8toLF1fmts0T6h/HoZd
+         6G4jTd7xd/N/MfJWnDCjWGLTywiWhXLTIoxyU4D3uZo3OuCIj2rYRpv91ypTCSdzdw0i
+         phTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5uFK7MqKRb+oFVKD89Io/malOAroV84oVCRoYwQTVLs=;
-        b=Wd/ttAEyMjnAWJmG6cpWJ5G0iiigr1Dp59imj/LLlHB/+T6lDyJeDmoe+mvsApnNZf
-         up5B7z0ITJFd5ElYDH9CCbsIdooeDg4AFGu3Eiixcxv3GAXOlYOBS6Mb7kd2oFGsgecB
-         QlQvOkzM6tPNyba0jVreclm4TwnCF6dmxjDiYGivoxTopmj0ET7vOfnDyxAFprREMO9V
-         lXnKKyQqt8tSgRZdR5BVmUzfbUPIrSmO1nS8W2Ggt5qmdMWGCjXj0Cr65ohBYh4YL0NL
-         11K0/2Bx68R/lywTNoH/90+lgVYJSomS2arS02Zx/ngPzlz+R3yfKJNOjcqUflI0by4C
-         HFTA==
-X-Gm-Message-State: APjAAAX23c6cw6DfX54srxA1ajs+a+btBb05ze+0QbCSkw7nupvqFXJH
-        lcdOyCHuBNop1jOcyd2NAys=
-X-Google-Smtp-Source: APXvYqzYOuKKYg4wEuoB/Wrmt94ndQPSqKVzWpoKOkFOelXaVESsDwy8xn8HcjyigaNiphMBNBSVag==
-X-Received: by 2002:a2e:9a13:: with SMTP id o19mr26037315lji.102.1563481858169;
-        Thu, 18 Jul 2019 13:30:58 -0700 (PDT)
-Received: from ul001888.eu.tieto.com ([91.90.160.140])
-        by smtp.gmail.com with ESMTPSA id d16sm5229387ljc.96.2019.07.18.13.30.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 18 Jul 2019 13:30:57 -0700 (PDT)
-From:   Vasyl Gomonovych <gomonovych@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org
-Cc:     Vasyl Gomonovych <gomonovych@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ath10k: Use ARRAY_SIZE
-Date:   Thu, 18 Jul 2019 22:30:32 +0200
-Message-Id: <20190718203032.15528-1-gomonovych@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HwI/a5Cgs3FeMDik7cEBcTQmX22SU/+HDKO5amu4FvQ=;
+        b=YDZBM3aIAXvXKa1zH50gRcSCGmzBHwsm/shjVEB/g7A+WqejL6XyatFx9Fw+rpuBQ1
+         nQ7g71sftMVToclCOF+QWTmK+y7x+vh+I3+1LiHmDyIkutEvZp4maavGb1vs8wuKDN2j
+         vh6QwgCfBT3K9CI7pKN9Go22OrK2OmVwLOPKxQrO0YMMqx8pbKPQSjAWIZ8q7YxhdWgV
+         jxDav9L0PpP7Sj+R/3fBpSZmWxhapbksdvB+t2lb1QCGuoOz5wgUhn8T3r9UtL5OGYox
+         Zg2oLiib0ffV9bgFZGixMU6jKaSzXAzZbGxDFWju3E23CU79bfylS5elIdb1KCa1BDBl
+         JPPA==
+X-Gm-Message-State: APjAAAU8dJvbuSDrOc6PVlFeJzj4Zdk0slDYzq2NAhbFA/k0dmJryfNz
+        sckIwPyJPphITQw/4AELqemwXcCC
+X-Google-Smtp-Source: APXvYqxxPcB7tkrFt0uUr6AgTcnUfiv+NEcLpntuupHzrvN91QLVboMtMOHpWZzk5aBQdP8Sk6PX9g==
+X-Received: by 2002:a2e:a16c:: with SMTP id u12mr24291144ljl.59.1563481950293;
+        Thu, 18 Jul 2019 13:32:30 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id z23sm4115943lfq.77.2019.07.18.13.32.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 13:32:29 -0700 (PDT)
+Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Joseph Lo <josephl@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20190716083701.225f0fd9@dimatab>
+ <21266e4f-16b1-4c87-067a-16c07c803b6e@nvidia.com>
+ <c5853e1a-d812-2dbd-3bec-0a9b0b0f6f3e@nvidia.com>
+ <20190716080610.GE12715@pdeschrijver-desktop.Nvidia.com>
+ <d908d3a2-3013-7f92-0852-115f428d1c5f@gmail.com>
+ <72b5df8c-8acb-d0d0-ebcf-b406e8404973@nvidia.com>
+ <2b701832-5548-7c83-7c17-05cc2f1470c8@nvidia.com>
+ <76e341be-6f38-2bc1-048e-1aa6883f9b88@gmail.com>
+ <0706576a-ce61-1cf3-bed1-05f54a1e2489@nvidia.com>
+ <5b2945c5-fcb2-2ac0-2bf2-df869dc9c713@gmail.com>
+ <20190718191820.GG12715@pdeschrijver-desktop.Nvidia.com>
+ <2274fccb-59d3-824c-cb97-55c23a4eaa75@nvidia.com>
+ <5c6e17ed-bdbd-fa27-87e7-aa95dfa7c591@gmail.com>
+Message-ID: <cc358525-eeca-129e-183c-e0627447c9a8@gmail.com>
+Date:   Thu, 18 Jul 2019 23:32:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <5c6e17ed-bdbd-fa27-87e7-aa95dfa7c591@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix coccinelle warning, use ARRAY_SIZE
+18.07.2019 23:11, Dmitry Osipenko пишет:
+> 18.07.2019 22:24, Sowjanya Komatineni пишет:
+>>
+>> On 7/18/19 12:18 PM, Peter De Schrijver wrote:
+>>> On Tue, Jul 16, 2019 at 09:43:16PM +0300, Dmitry Osipenko wrote:
+>>>>> CPU parents are PLL_X, PLL_P, and dfll. PLL_X always runs at higher
+>>>>> rate
+>>>>> so switching to PLL_P during CPUFreq probe prior to dfll clock enable
+>>>>> should be safe.
+>>>> AFAIK, PLLX could run at ~200MHz. There is also a divided output of PLLP
+>>>> which CCLKG supports, the PLLP_OUT4.
+>>>>
+>>>> Probably, realistically, CPU is always running off a fast PLLX during
+>>>> boot, but I'm wondering what may happen on KEXEC. I guess ideally
+>>>> CPUFreq driver should also have a 'shutdown' callback to teardown DFLL
+>>>> on a reboot, but likely that there are other clock-related problems as
+>>>> well that may break KEXEC and thus it is not very important at the
+>>>> moment.
+>>>>
+>>> If you turn off the DFLL, you have to be aware that the voltage margins
+>>> for DFLL use are lower than for PLL use. So you either need to be sure
+>>> to switch to a frequency below fmax @ Vmin or you program the boot
+>>> voltage and then you can use PLLX as setup by the bootloader. For OVR
+>>> regulators you can't program a voltage without the DFLL, so you have to
+>>> tristate the PWM output which will give you a hardwired boot voltage.
+>>>
+>>> Peter.
+>>
+>> Yes, we switch CPU to PLLP and then disable DFLL during suspend.
+> 
+> I'm wondering what happens to T124 on resume from suspend, given that it
+> switches CPU to PLLX [1]. I imagine that CPU voltage could be lower than
+> needed if suspend happened on DFLL. I'm also now vaguely recalling that
+> CPUFreq driver was disabled for T124 because of some problems.
+> 
+> Or maybe warmboot code is actually touching the voltage regulators?
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
- drivers/net/wireless/ath/ath10k/snoc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Oh wait, warmboot is even irrelevant LP1.
 
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index b491361e6ed4..49fc04412e9b 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -976,8 +976,7 @@ static int ath10k_snoc_wlan_enable(struct ath10k *ar,
- 				  sizeof(struct ath10k_svc_pipe_cfg);
- 	cfg.ce_svc_cfg = (struct ath10k_svc_pipe_cfg *)
- 		&target_service_to_ce_map_wlan;
--	cfg.num_shadow_reg_cfg = sizeof(target_shadow_reg_cfg_map) /
--					sizeof(struct ath10k_shadow_reg_cfg);
-+	cfg.num_shadow_reg_cfg = ARRAY_SIZE(target_shadow_reg_cfg_map);
- 	cfg.shadow_reg_cfg = (struct ath10k_shadow_reg_cfg *)
- 		&target_shadow_reg_cfg_map;
- 
--- 
-2.17.1
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm/mach-tegra/sleep-tegra30.S#n389
+> 
+> That is also should be a problem for T30 if voltage scaling is happening
+> and I have some patches in works that are switching CPU to PLLP instead
+> of PLLX on suspend/resume.
+> 
 
