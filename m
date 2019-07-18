@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67432C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AB7C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3342621871
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F4F21851
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419649;
-	bh=KKKMov8CfIyqKpdpy8gKJhF3FLqYcO/YSEMQo+fuiiI=;
+	s=default; t=1563419652;
+	bh=jB7PymmLkolLCH1USMHpKnu0PBPMiW8Zvxe8g1tbe0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v715W4urvBjGCqQkGJ1LLKFruO/KclKXXF8maPdu8z0MH1vO5Kwb95Qvr2hwtNR2e
-	 IrhtEW6m2mLhshQQ4yjBP4MFOUI0yfPvrULyTlEyPSYb9O60RmHnCgIrH5PpiX7tfo
-	 JahVbQNya5IGVC/8Z5bymazkCIVmGZp7Nlej9ZjM=
+	b=KtQiAPnZgTjui5swUozhHtcY0CxlGbJYT61Wd2FpCJv3mHA0dxuXn3jylTdkE639f
+	 hp3TrztEjCcro8DVHRoCra6C6eyUUDw1Wd2MM816uG2b0MmLY9KNzDSCXNoJhbnrdO
+	 jJoFjh0DUGrklF4wdHjhOkOFdlAVNLlP6rFT3e3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391674AbfGRDOI (ORCPT
+        id S2391697AbfGRDOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391212AbfGRDOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:14:00 -0400
+        id S2389298AbfGRDOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:14:07 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F0E21850;
-        Thu, 18 Jul 2019 03:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00F4205F4;
+        Thu, 18 Jul 2019 03:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419639;
-        bh=KKKMov8CfIyqKpdpy8gKJhF3FLqYcO/YSEMQo+fuiiI=;
+        s=default; t=1563419646;
+        bh=jB7PymmLkolLCH1USMHpKnu0PBPMiW8Zvxe8g1tbe0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kraskuiMOMnN+7HRR06r5SY6IsjhnKMRk0L3lnWK9XzwTaIIbchVVth+bW6H3pu3f
-         Q/j7iyRumupbhCjO8RlQniFqWySmXLH8SJQGjsjHIdVHeDTm5Za2oRlHrDO6yspU/a
-         Ec3E9ebiwfmj0MTq6kYJH8t5kNWvYPoim9lcEc+M=
+        b=VSdrMhW50UZcTahCVGKWylXHlf3s9yVbiTUQoCCeAeQcFU8g+66qJ2Ot2hG4Qs0xT
+         2YUEZ0mNmkZKb1xApZ+RwZz+fp2Q/Rf7ig7fm6YZYLHAjHXFhENlqMskSmSBAAWJh3
+         axx15T68rKqqGD5T3Yv1WkaXGnByoq05GSaNS+xM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 35/54] staging: comedi: dt282x: fix a null pointer deref on interrupt
-Date:   Thu, 18 Jul 2019 12:02:05 +0900
-Message-Id: <20190718030052.160246123@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.9 53/54] s390/qdio: (re-)initialize tiqdio list entries
+Date:   Thu, 18 Jul 2019 12:02:23 +0900
+Message-Id: <20190718030053.747106260@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -58,50 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-commit b8336be66dec06bef518030a0df9847122053ec5 upstream.
+commit e54e4785cb5cb4896cf4285964aeef2125612fb2 upstream.
 
-The interrupt handler `dt282x_interrupt()` causes a null pointer
-dereference for those supported boards that have no analog output
-support.  For these boards, `dev->write_subdev` will be `NULL` and
-therefore the `s_ao` subdevice pointer variable will be `NULL`.  In that
-case, the following call near the end of the interrupt handler results
-in a null pointer dereference:
+When tiqdio_remove_input_queues() removes a queue from the tiq_list as
+part of qdio_shutdown(), it doesn't re-initialize the queue's list entry
+and the prev/next pointers go stale.
 
-	comedi_handle_events(dev, s_ao);
+If a subsequent qdio_establish() fails while sending the ESTABLISH cmd,
+it calls qdio_shutdown() again in QDIO_IRQ_STATE_ERR state and
+tiqdio_remove_input_queues() will attempt to remove the queue entry a
+second time. This dereferences the stale pointers, and bad things ensue.
+Fix this by re-initializing the list entry after removing it from the
+list.
 
-Fix it by only calling the above function if `s_ao` is valid.
+For good practice also initialize the list entry when the queue is first
+allocated, and remove the quirky checks that papered over this omission.
+Note that prior to
+commit e521813468f7 ("s390/qdio: fix access to uninitialized qdio_q fields"),
+these checks were bogus anyway.
 
-(There are other uses of `s_ao` by the interrupt handler that may or may
-not be reached depending on values of hardware registers.  Trust that
-they are reliable for now.)
+setup_queues_misc() clears the whole queue struct, and thus needs to
+re-init the prev/next pointers as well.
 
-Note:
-commit 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
-propagates an earlier error from
-commit f21c74fa4cfe ("staging: comedi: dt282x: use cfc_handle_events()").
-
-Fixes: 4f6f009b204f ("staging: comedi: dt282x: use comedi_handle_events()")
-Cc: <stable@vger.kernel.org> # v3.19+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt282x.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/s390/cio/qdio_setup.c   |    2 ++
+ drivers/s390/cio/qdio_thinint.c |    4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt282x.c
-+++ b/drivers/staging/comedi/drivers/dt282x.c
-@@ -566,7 +566,8 @@ static irqreturn_t dt282x_interrupt(int
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -150,6 +150,7 @@ static int __qdio_allocate_qs(struct qdi
+ 			return -ENOMEM;
+ 		}
+ 		irq_ptr_qs[i] = q;
++		INIT_LIST_HEAD(&q->entry);
  	}
- #endif
- 	comedi_handle_events(dev, s);
--	comedi_handle_events(dev, s_ao);
-+	if (s_ao)
-+		comedi_handle_events(dev, s_ao);
- 
- 	return IRQ_RETVAL(handled);
+ 	return 0;
  }
+@@ -178,6 +179,7 @@ static void setup_queues_misc(struct qdi
+ 	q->mask = 1 << (31 - i);
+ 	q->nr = i;
+ 	q->handler = handler;
++	INIT_LIST_HEAD(&q->entry);
+ }
+ 
+ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -88,14 +88,14 @@ void tiqdio_remove_input_queues(struct q
+ 	struct qdio_q *q;
+ 
+ 	q = irq_ptr->input_qs[0];
+-	/* if establish triggered an error */
+-	if (!q || !q->entry.prev || !q->entry.next)
++	if (!q)
+ 		return;
+ 
+ 	mutex_lock(&tiq_list_lock);
+ 	list_del_rcu(&q->entry);
+ 	mutex_unlock(&tiq_list_lock);
+ 	synchronize_rcu();
++	INIT_LIST_HEAD(&q->entry);
+ }
+ 
+ static inline int has_multiple_inq_on_dsci(struct qdio_irq *irq_ptr)
 
 
