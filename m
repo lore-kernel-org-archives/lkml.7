@@ -2,53 +2,53 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C97EC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26ABC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0560205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74822053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419585;
-	bh=WHvY5Cz+pgA9vaRQy2Ye+g0t67s/zZ5GMTSqSjvljgQ=;
+	s=default; t=1563419590;
+	bh=M7Zv/hXgbNZ6b29ppMzhEGpUIWbOcuOeN09VB5Nio68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAgp8eutFRDOlvl32r7AST0hfbZan1Jv7uu+q+9dM7LXlKNQp+sIhP7TgEOA0493c
-	 epW6giAZn7kIMU2iqHE92unsA1buSThq2R4WVUBVVwk9PA4uz2Vl8+q3Y/t5BrBOwq
-	 CmexQwEN6GcR7zS1pPtTs7bs6h3yxvHJPAmtAwpg=
+	b=W9qbuKVUiKeueit9QjIGM7ToOU603FXIm2e6zaODrVZuyL9VXzCV7b65+6ANbfz+v
+	 N7gg77f8t7LMa8PyEbW0KjlDiM9NnjX2rqqrETKEOVVbNkEqbh5iKW605zrOwM2XNu
+	 onFjj40/WTD5MWxkzaa1nP9pan4ZTV4fZp9nxg6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390850AbfGRDND (ORCPT
+        id S2391595AbfGRDNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47828 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391556AbfGRDNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:13:01 -0400
+        id S2391574AbfGRDNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:13:05 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308952053B;
-        Thu, 18 Jul 2019 03:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713222053B;
+        Thu, 18 Jul 2019 03:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419579;
-        bh=WHvY5Cz+pgA9vaRQy2Ye+g0t67s/zZ5GMTSqSjvljgQ=;
+        s=default; t=1563419583;
+        bh=M7Zv/hXgbNZ6b29ppMzhEGpUIWbOcuOeN09VB5Nio68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IRA1OCryDqIJtpURplWiHMZbr3J0w27FJC5hENu0e50+BDKsoFNJLlBnky4JTyepy
-         hMvbzIaS/zRGxGxRIJpOkguXA1EqovmYyfmx4bhOOgdD1Ujh79HXuF76m7zIUzdZwM
-         4hEkAp/6/RlbTkJhWNaUj2590O46CSbqiD3C0iqQ=
+        b=GUwy/TIREscNKAfh9U6egeyRAduSnqbn+QuNPVlMT9/wUsn5X7yJhChbseY0rpnFP
+         RD2Yd/AL62Fm5FHKc1HHm1LEnndRhggAseHc67JHtmHOvBqa6bZTvRqwjYDrCGaj1c
+         lexaaYS1+B7Yc4KFnCl1meW9J+f8PJhR1KfZC8Cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 32/54] p54usb: Fix race between disconnect and firmware loading
-Date:   Thu, 18 Jul 2019 12:02:02 +0900
-Message-Id: <20190718030051.928189458@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/54] md: fix for divide error in status_resync
+Date:   Thu, 18 Jul 2019 12:01:48 +0900
+Message-Id: <20190718030050.726875165@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030048.392549994@linuxfoundation.org>
 References: <20190718030048.392549994@linuxfoundation.org>
@@ -61,174 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+[ Upstream commit 9642fa73d073527b0cbc337cc17a47d545d82cd2 ]
 
-commit 6e41e2257f1094acc37618bf6c856115374c6922 upstream.
+Stopping external metadata arrays during resync/recovery causes
+retries, loop of interrupting and starting reconstruction, until it
+hit at good moment to stop completely. While these retries
+curr_mark_cnt can be small- especially on HDD drives, so subtraction
+result can be smaller than 0. However it is casted to uint without
+checking. As a result of it the status bar in /proc/mdstat while stopping
+is strange (it jumps between 0% and 99%).
 
-The syzbot fuzzer found a bug in the p54 USB wireless driver.  The
-issue involves a race between disconnect and the firmware-loader
-callback routine, and it has several aspects.
+The real problem occurs here after commit 72deb455b5ec ("block: remove
+CONFIG_LBDAF"). Sector_div() macro has been changed, now the
+divisor is casted to uint32. For db = -8 the divisior(db/32-1) becomes 0.
 
-One big problem is that when the firmware can't be loaded, the
-callback routine tries to unbind the driver from the USB _device_ (by
-calling device_release_driver) instead of from the USB _interface_ to
-which it is actually bound (by calling usb_driver_release_interface).
+Check if db value can be really counted and replace these macro by
+div64_u64() inline.
 
-The race involves access to the private data structure.  The driver's
-disconnect handler waits for a completion that is signalled by the
-firmware-loader callback routine.  As soon as the completion is
-signalled, you have to assume that the private data structure may have
-been deallocated by the disconnect handler -- even if the firmware was
-loaded without errors.  However, the callback routine does access the
-private data several times after that point.
-
-Another problem is that, in order to ensure that the USB device
-structure hasn't been freed when the callback routine runs, the driver
-takes a reference to it.  This isn't good enough any more, because now
-that the callback routine calls usb_driver_release_interface, it has
-to ensure that the interface structure hasn't been freed.
-
-Finally, the driver takes an unnecessary reference to the USB device
-structure in the probe function and drops the reference in the
-disconnect handler.  This extra reference doesn't accomplish anything,
-because the USB core already guarantees that a device structure won't
-be deallocated while a driver is still bound to any of its interfaces.
-
-To fix these problems, this patch makes the following changes:
-
-	Call usb_driver_release_interface() rather than
-	device_release_driver().
-
-	Don't signal the completion until after the important
-	information has been copied out of the private data structure,
-	and don't refer to the private data at all thereafter.
-
-	Lock udev (the interface's parent) before unbinding the driver
-	instead of locking udev->parent.
-
-	During the firmware loading process, take a reference to the
-	USB interface instead of the USB device.
-
-	Don't take an unnecessary reference to the device during probe
-	(and then don't drop it during disconnect).
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intersil/p54/p54usb.c |   43 ++++++++++++-----------------
- 1 file changed, 18 insertions(+), 25 deletions(-)
+ drivers/md/md.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
---- a/drivers/net/wireless/intersil/p54/p54usb.c
-+++ b/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -33,6 +33,8 @@ MODULE_ALIAS("prism54usb");
- MODULE_FIRMWARE("isl3886usb");
- MODULE_FIRMWARE("isl3887usb");
- 
-+static struct usb_driver p54u_driver;
-+
- /*
-  * Note:
-  *
-@@ -921,9 +923,9 @@ static void p54u_load_firmware_cb(const
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 21698eb671d7..765a16dab2e5 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7296,9 +7296,9 @@ static void status_unused(struct seq_file *seq)
+ static int status_resync(struct seq_file *seq, struct mddev *mddev)
  {
- 	struct p54u_priv *priv = context;
- 	struct usb_device *udev = priv->udev;
-+	struct usb_interface *intf = priv->intf;
- 	int err;
+ 	sector_t max_sectors, resync, res;
+-	unsigned long dt, db;
+-	sector_t rt;
+-	int scale;
++	unsigned long dt, db = 0;
++	sector_t rt, curr_mark_cnt, resync_mark_cnt;
++	int scale, recovery_active;
+ 	unsigned int per_milli;
  
--	complete(&priv->fw_wait_load);
- 	if (firmware) {
- 		priv->fw = firmware;
- 		err = p54u_start_ops(priv);
-@@ -932,26 +934,22 @@ static void p54u_load_firmware_cb(const
- 		dev_err(&udev->dev, "Firmware not found.\n");
- 	}
+ 	if (test_bit(MD_RECOVERY_SYNC, &mddev->recovery) ||
+@@ -7368,22 +7368,30 @@ static int status_resync(struct seq_file *seq, struct mddev *mddev)
+ 	 * db: blocks written from mark until now
+ 	 * rt: remaining time
+ 	 *
+-	 * rt is a sector_t, so could be 32bit or 64bit.
+-	 * So we divide before multiply in case it is 32bit and close
+-	 * to the limit.
+-	 * We scale the divisor (db) by 32 to avoid losing precision
+-	 * near the end of resync when the number of remaining sectors
+-	 * is close to 'db'.
+-	 * We then divide rt by 32 after multiplying by db to compensate.
+-	 * The '+1' avoids division by zero if db is very small.
++	 * rt is a sector_t, which is always 64bit now. We are keeping
++	 * the original algorithm, but it is not really necessary.
++	 *
++	 * Original algorithm:
++	 *   So we divide before multiply in case it is 32bit and close
++	 *   to the limit.
++	 *   We scale the divisor (db) by 32 to avoid losing precision
++	 *   near the end of resync when the number of remaining sectors
++	 *   is close to 'db'.
++	 *   We then divide rt by 32 after multiplying by db to compensate.
++	 *   The '+1' avoids division by zero if db is very small.
+ 	 */
+ 	dt = ((jiffies - mddev->resync_mark) / HZ);
+ 	if (!dt) dt++;
+-	db = (mddev->curr_mark_cnt - atomic_read(&mddev->recovery_active))
+-		- mddev->resync_mark_cnt;
++
++	curr_mark_cnt = mddev->curr_mark_cnt;
++	recovery_active = atomic_read(&mddev->recovery_active);
++	resync_mark_cnt = mddev->resync_mark_cnt;
++
++	if (curr_mark_cnt >= (recovery_active + resync_mark_cnt))
++		db = curr_mark_cnt - (recovery_active + resync_mark_cnt);
  
--	if (err) {
--		struct device *parent = priv->udev->dev.parent;
--
--		dev_err(&udev->dev, "failed to initialize device (%d)\n", err);
--
--		if (parent)
--			device_lock(parent);
-+	complete(&priv->fw_wait_load);
-+	/*
-+	 * At this point p54u_disconnect may have already freed
-+	 * the "priv" context. Do not use it anymore!
-+	 */
-+	priv = NULL;
+ 	rt = max_sectors - resync;    /* number of remaining sectors */
+-	sector_div(rt, db/32+1);
++	rt = div64_u64(rt, db/32+1);
+ 	rt *= dt;
+ 	rt >>= 5;
  
--		device_release_driver(&udev->dev);
--		/*
--		 * At this point p54u_disconnect has already freed
--		 * the "priv" context. Do not use it anymore!
--		 */
--		priv = NULL;
-+	if (err) {
-+		dev_err(&intf->dev, "failed to initialize device (%d)\n", err);
- 
--		if (parent)
--			device_unlock(parent);
-+		usb_lock_device(udev);
-+		usb_driver_release_interface(&p54u_driver, intf);
-+		usb_unlock_device(udev);
- 	}
- 
--	usb_put_dev(udev);
-+	usb_put_intf(intf);
- }
- 
- static int p54u_load_firmware(struct ieee80211_hw *dev,
-@@ -972,14 +970,14 @@ static int p54u_load_firmware(struct iee
- 	dev_info(&priv->udev->dev, "Loading firmware file %s\n",
- 	       p54u_fwlist[i].fw);
- 
--	usb_get_dev(udev);
-+	usb_get_intf(intf);
- 	err = request_firmware_nowait(THIS_MODULE, 1, p54u_fwlist[i].fw,
- 				      device, GFP_KERNEL, priv,
- 				      p54u_load_firmware_cb);
- 	if (err) {
- 		dev_err(&priv->udev->dev, "(p54usb) cannot load firmware %s "
- 					  "(%d)!\n", p54u_fwlist[i].fw, err);
--		usb_put_dev(udev);
-+		usb_put_intf(intf);
- 	}
- 
- 	return err;
-@@ -1011,8 +1009,6 @@ static int p54u_probe(struct usb_interfa
- 	skb_queue_head_init(&priv->rx_queue);
- 	init_usb_anchor(&priv->submitted);
- 
--	usb_get_dev(udev);
--
- 	/* really lazy and simple way of figuring out if we're a 3887 */
- 	/* TODO: should just stick the identification in the device table */
- 	i = intf->altsetting->desc.bNumEndpoints;
-@@ -1053,10 +1049,8 @@ static int p54u_probe(struct usb_interfa
- 		priv->upload_fw = p54u_upload_firmware_net2280;
- 	}
- 	err = p54u_load_firmware(dev, intf);
--	if (err) {
--		usb_put_dev(udev);
-+	if (err)
- 		p54_free_common(dev);
--	}
- 	return err;
- }
- 
-@@ -1072,7 +1066,6 @@ static void p54u_disconnect(struct usb_i
- 	wait_for_completion(&priv->fw_wait_load);
- 	p54_unregister_common(dev);
- 
--	usb_put_dev(interface_to_usbdev(intf));
- 	release_firmware(priv->fw);
- 	p54_free_common(dev);
- }
+-- 
+2.20.1
+
 
 
