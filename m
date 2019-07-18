@@ -2,189 +2,89 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877AEC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A322DC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E26208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EDB420880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389556AbfGRH6B (ORCPT
+        id S2389279AbfGRH7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 03:58:01 -0400
-Received: from mga12.intel.com ([192.55.52.136]:15298 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfGRH6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 03:58:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 00:58:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="158713127"
-Received: from gvt-optiplex-7060.bj.intel.com ([10.238.158.89])
-  by orsmga007.jf.intel.com with ESMTP; 18 Jul 2019 00:57:57 -0700
-From:   Kechen Lu <kechen.lu@intel.com>
-To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Kechen Lu <kechen.lu@intel.com>, kraxel@redhat.com,
-        zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
-        alex.williamson@redhat.com
-Subject: [RFC PATCH v4 6/6] drm/i915/gvt: Add cursor plane reg update trap emulation handler
-Date:   Thu, 18 Jul 2019 23:56:40 +0800
-Message-Id: <20190718155640.25928-7-kechen.lu@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190718155640.25928-1-kechen.lu@intel.com>
-References: <20190718155640.25928-1-kechen.lu@intel.com>
+        Thu, 18 Jul 2019 03:59:23 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43337 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfGRH7X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 03:59:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so27530754wru.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 00:59:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YU7xn75zhWNLYZOYfhl/a8jSpCY374NewaLRikXTmDo=;
+        b=iB7F/QQfzIfmg2lc9Uv9N2aB086fDVQ1Qv0QIffj9ZNuMO12aB+UCnU5VWE+zBczUk
+         R05u0TfmWJMX5wgrwnXA0H9V1oRBRXc4H+Ik++bRG2GiU0eot1jEgxsu+1CHPpkv07a/
+         aPT2a9N4MVTmd0Oq7CloIB9earImWxE3Yp8afJghb9qYYbcTbULksYqpqE+toPLVqYKb
+         sQETayVcFJD7ippUutx486NSALqj4xZq6nykBqAAu4vd1CLGl6gbUVrYF7KAWRMqgcaU
+         ISKczCrxFmR4Ac+p4Z/xYJMSkjXhA+FsTMTZhlousmJ7zWsX68r5zUVZjrlRPTQPojVN
+         H7Yg==
+X-Gm-Message-State: APjAAAUG1WsAnx6YWYdKjt52UWlIoys4uwhFBc10gZ0Jkrze5XUvvqzu
+        xT1tTMxeARyFpmGO76WDsO+EOQ==
+X-Google-Smtp-Source: APXvYqzWOySTek5F18g1Rk+88tPU7Ltg9YyBhOWSMynJ49lXZcAstzow7qtQj3uQua/BgR9A1MHXIA==
+X-Received: by 2002:a5d:4941:: with SMTP id r1mr46108607wrs.225.1563436761296;
+        Thu, 18 Jul 2019 00:59:21 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e427:3beb:1110:dda2? ([2001:b07:6468:f312:e427:3beb:1110:dda2])
+        by smtp.gmail.com with ESMTPSA id q18sm27264015wrw.36.2019.07.18.00.59.19
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 00:59:20 -0700 (PDT)
+Subject: Re: [PATCH RESEND] KVM: Boosting vCPUs that are delivering interrupts
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f95fbf72-090f-fb34-3c20-64508979f251@redhat.com>
+Date:   Thu, 18 Jul 2019 09:59:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1562915730-9490-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the cursor plane CURBASE reg update trap handler
-in order to :
+On 12/07/19 09:15, Wanpeng Li wrote:
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index b4ab59d..2c46705 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2404,8 +2404,10 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
+>  	int me;
+>  	int cpu = vcpu->cpu;
+>  
+> -	if (kvm_vcpu_wake_up(vcpu))
+> +	if (kvm_vcpu_wake_up(vcpu)) {
+> +		vcpu->preempted = true;
+>  		return;
+> +	}
+>  
+>  	me = get_cpu();
+>  	if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
+> 
 
-- Deliver the cursor refresh event at each vblank emulation,
-the flip_done_event bit check is supposed to do here. If cursor
-plane updates happen, deliver the cursor refresh events.
+Who is resetting vcpu->preempted to false in this case?  This also
+applies to s390 in fact.
 
-- Support the sync and async cursor plane updates and
-corresponding cursor plane flip interrupts reporting.
-
-Signed-off-by: Kechen Lu <kechen.lu@intel.com>
----
- drivers/gpu/drm/i915/gvt/display.c   | 11 +++++++++++
- drivers/gpu/drm/i915/gvt/handlers.c  | 27 ++++++++++++++++++++++++---
- drivers/gpu/drm/i915/gvt/interrupt.c |  7 +++++++
- drivers/gpu/drm/i915/gvt/interrupt.h |  3 +++
- 4 files changed, 45 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gvt/display.c b/drivers/gpu/drm/i915/gvt/display.c
-index df52e4b4c1b0..a0accc51d44f 100644
---- a/drivers/gpu/drm/i915/gvt/display.c
-+++ b/drivers/gpu/drm/i915/gvt/display.c
-@@ -399,6 +399,7 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
- 		[PIPE_C] = PIPE_C_VBLANK,
- 	};
- 	int pri_flip_event = SKL_FLIP_EVENT(pipe, PLANE_PRIMARY);
-+	int cur_flip_event = CURSOR_A_FLIP_DONE + pipe;
- 	int event;
- 	u64 eventfd_signal_val = 0;
- 	static int pageflip_count;
-@@ -417,6 +418,11 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
- 			pageflip_count += PAGEFLIP_INC_COUNT;
- 		}
- 
-+		if (event == cur_flip_event) {
-+			eventfd_signal_val += DISPLAY_CUR_REFRESH_EVENT_INC;
-+			pageflip_count += PAGEFLIP_INC_COUNT;
-+		}
-+
- 		intel_vgpu_trigger_virtual_event(vgpu, event);
- 	}
- 
-@@ -430,6 +436,11 @@ static void emulate_vblank_on_pipe(struct intel_vgpu *vgpu, int pipe)
- 			eventfd_signal_val += DISPLAY_PRI_REFRESH_EVENT_INC;
- 			pageflip_count += PAGEFLIP_INC_COUNT;
- 		}
-+
-+		if (event == PLANE_CURSOR) {
-+			eventfd_signal_val += DISPLAY_CUR_REFRESH_EVENT_INC;
-+			pageflip_count += PAGEFLIP_INC_COUNT;
-+		}
- 	}
- 
- 	if (--pageflip_count < 0) {
-diff --git a/drivers/gpu/drm/i915/gvt/handlers.c b/drivers/gpu/drm/i915/gvt/handlers.c
-index 6ad29c4f08e5..821ff88977d8 100644
---- a/drivers/gpu/drm/i915/gvt/handlers.c
-+++ b/drivers/gpu/drm/i915/gvt/handlers.c
-@@ -767,6 +767,27 @@ static int pri_surf_mmio_write(struct intel_vgpu *vgpu, unsigned int offset,
- 	return 0;
- }
- 
-+#define CURBASE_TO_PIPE(reg) \
-+	calc_index(offset, _CURABASE, _CURBBASE, 0, CURBASE(PIPE_C))
-+
-+static int cur_surf_mmio_write(struct intel_vgpu *vgpu, unsigned int offset,
-+		void *p_data, unsigned int bytes)
-+{
-+	struct drm_i915_private *dev_priv = vgpu->gvt->dev_priv;
-+	u32 pipe = CURBASE_TO_PIPE(offset);
-+	int event = CURSOR_A_FLIP_DONE + pipe;
-+
-+	write_vreg(vgpu, offset, p_data, bytes);
-+
-+	if (vgpu_vreg_t(vgpu, CURCNTR(pipe)) & PLANE_CTL_ASYNC_FLIP) {
-+		intel_vgpu_trigger_virtual_event(vgpu, event);
-+		set_bit(PLANE_CURSOR, vgpu->display.async_flip_event[pipe]);
-+	} else
-+		set_bit(event, vgpu->irq.flip_done_event[pipe]);
-+
-+	return 0;
-+}
-+
- #define SPRSURF_TO_PIPE(offset) \
- 	calc_index(offset, _SPRA_SURF, _SPRB_SURF, 0, SPRSURF(PIPE_C))
- 
-@@ -1955,9 +1976,9 @@ static int init_generic_mmio_info(struct intel_gvt *gvt)
- 	MMIO_D(CURPOS(PIPE_B), D_ALL);
- 	MMIO_D(CURPOS(PIPE_C), D_ALL);
- 
--	MMIO_D(CURBASE(PIPE_A), D_ALL);
--	MMIO_D(CURBASE(PIPE_B), D_ALL);
--	MMIO_D(CURBASE(PIPE_C), D_ALL);
-+	MMIO_DH(CURBASE(PIPE_A), D_ALL, NULL, cur_surf_mmio_write);
-+	MMIO_DH(CURBASE(PIPE_B), D_ALL, NULL, cur_surf_mmio_write);
-+	MMIO_DH(CURBASE(PIPE_C), D_ALL, NULL, cur_surf_mmio_write);
- 
- 	MMIO_D(CUR_FBC_CTL(PIPE_A), D_ALL);
- 	MMIO_D(CUR_FBC_CTL(PIPE_B), D_ALL);
-diff --git a/drivers/gpu/drm/i915/gvt/interrupt.c b/drivers/gpu/drm/i915/gvt/interrupt.c
-index 951681813230..9c2b9d2e1529 100644
---- a/drivers/gpu/drm/i915/gvt/interrupt.c
-+++ b/drivers/gpu/drm/i915/gvt/interrupt.c
-@@ -113,6 +113,9 @@ static const char * const irq_name[INTEL_GVT_EVENT_MAX] = {
- 	[SPRITE_A_FLIP_DONE] = "Sprite Plane A flip done",
- 	[SPRITE_B_FLIP_DONE] = "Sprite Plane B flip done",
- 	[SPRITE_C_FLIP_DONE] = "Sprite Plane C flip done",
-+	[CURSOR_A_FLIP_DONE] = "Cursor Plane A flip done",
-+	[CURSOR_B_FLIP_DONE] = "Cursor Plane B flip done",
-+	[CURSOR_C_FLIP_DONE] = "Cursor Plane C flip done",
- 
- 	[PCU_THERMAL] = "PCU Thermal Event",
- 	[PCU_PCODE2DRIVER_MAILBOX] = "PCU pcode2driver mailbox event",
-@@ -593,6 +596,10 @@ static void gen8_init_irq(
- 		SET_BIT_INFO(irq, 4, SPRITE_A_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_A);
- 		SET_BIT_INFO(irq, 4, SPRITE_B_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_B);
- 		SET_BIT_INFO(irq, 4, SPRITE_C_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_C);
-+
-+		SET_BIT_INFO(irq, 6, CURSOR_A_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_A);
-+		SET_BIT_INFO(irq, 6, CURSOR_B_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_B);
-+		SET_BIT_INFO(irq, 6, CURSOR_C_FLIP_DONE, INTEL_GVT_IRQ_INFO_DE_PIPE_C);
- 	}
- 
- 	/* GEN8 interrupt PCU events */
-diff --git a/drivers/gpu/drm/i915/gvt/interrupt.h b/drivers/gpu/drm/i915/gvt/interrupt.h
-index 5313fb1b33e1..158f1c7a23f2 100644
---- a/drivers/gpu/drm/i915/gvt/interrupt.h
-+++ b/drivers/gpu/drm/i915/gvt/interrupt.h
-@@ -92,6 +92,9 @@ enum intel_gvt_event_type {
- 	SPRITE_A_FLIP_DONE,
- 	SPRITE_B_FLIP_DONE,
- 	SPRITE_C_FLIP_DONE,
-+	CURSOR_A_FLIP_DONE,
-+	CURSOR_B_FLIP_DONE,
-+	CURSOR_C_FLIP_DONE,
- 
- 	PCU_THERMAL,
- 	PCU_PCODE2DRIVER_MAILBOX,
--- 
-2.17.1
-
+Paolo
