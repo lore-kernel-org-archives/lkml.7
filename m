@@ -2,55 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EECC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4798AC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601452053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B4721841
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419294;
-	bh=Rco+cMlzC9IAhIErmrGsZyUHE87YUacoyF9rlYIfRL8=;
+	s=default; t=1563419298;
+	bh=Yqt/LllpGzMStVbT4HLxLYhzgZMPXuawn64z9mAi6yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F0kI1bhRTF55TpENGuNN3p2iHHu8e/14nbarMRGLSCm2y+3LmtV3dypYlEtMUMaxd
-	 N7Mx0Z/PAwrlSiPniGYG4xldpahX+HdFTRlnjFScR1dwZqYca8LfhXlsgOX+8dRPfz
-	 rhJ1S5bKiMOKKs/dD3QLlyDNKZw4Bn/VFz7XvfBk=
+	b=gVnJ86h0cy0RIpvSOnVgknFmIF5fSqBQ7LrhLP8+9grfQF0e0r423Bl8m+KHXogqm
+	 P8EYX4DJsxcr/EK7kjydZ5/fN/N9U67THYa3G++P3wdHlIB9ahpngKpBFHkZ3gIVf2
+	 GC/WjIl87LdjW3vEeMSszXbOWq/PuX34EdHFXLao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390149AbfGRDIM (ORCPT
+        id S2390683AbfGRDIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:08:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390648AbfGRDIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:09 -0400
+        id S2390648AbfGRDIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:14 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D412077C;
-        Thu, 18 Jul 2019 03:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A71232077C;
+        Thu, 18 Jul 2019 03:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419288;
-        bh=Rco+cMlzC9IAhIErmrGsZyUHE87YUacoyF9rlYIfRL8=;
+        s=default; t=1563419293;
+        bh=Yqt/LllpGzMStVbT4HLxLYhzgZMPXuawn64z9mAi6yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpYFFwfS1Y4BbTtszo8nu71hnaZ1AWl/bv9nZziJCW1Ps0qQMGnJY1jT8rs+5Rkr6
-         Kaz+G1MZBU+B+bzbb0dg6Cu2hm/Ef6d34rwkcTVXlCx1KY/GMxz4eEi/M0Nm8WPNA4
-         lQOqd8UIVlTMG7qJPPx1ZfDY6tkCJoRJ7wVpjWFs=
+        b=Is/xcaxX6+84JRZSoA8mlNo7dR7sEImaBdESTPdulxOjm9COBF1+DwvfYRb0iz5Fn
+         poz8ah2on+D9DskZJPSJKkgC0987vKGoAEjog/AUK1C142YUuIX9stxLXYWvH+tfXx
+         79u5suhh9GcJnOyVucJyK3jFtnO/O6j/pDjFaK3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/47] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
-Date:   Thu, 18 Jul 2019 12:01:43 +0900
-Message-Id: <20190718030051.200640741@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 4.19 31/47] genirq: Fix misleading synchronize_irq() documentation
+Date:   Thu, 18 Jul 2019 12:01:45 +0900
+Message-Id: <20190718030051.369338137@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
 References: <20190718030045.780672747@linuxfoundation.org>
@@ -63,43 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8f9fab480c7a87b10bb5440b5555f370272a5d59 ]
+From: Thomas Gleixner tglx@linutronix.de
 
-DIV_ROUND_UP_ULL adds the two arguments and then invokes
-DIV_ROUND_DOWN_ULL.  But on a 32bit system the addition of two 32 bit
-values can overflow.  DIV_ROUND_DOWN_ULL does it correctly and stashes
-the addition into a unsigned long long so cast the result to unsigned
-long long here to avoid the overflow condition.
+commit 1d21f2af8571c6a6a44e7c1911780614847b0253 upstream
 
-[akpm@linux-foundation.org: DIV_ROUND_UP_ULL must be an rval]
-Link: http://lkml.kernel.org/r/20190625100518.30753-1-vkoul@kernel.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The function might sleep, so it cannot be called from interrupt
+context. Not even with care.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://lkml.kernel.org/r/20190628111440.189241552@linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- include/linux/kernel.h | 3 ++-
+ kernel/irq/manage.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 3d83ebb302cf..f6f94e54ab96 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -118,7 +118,8 @@
- #define DIV_ROUND_DOWN_ULL(ll, d) \
- 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
- 
--#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
-+#define DIV_ROUND_UP_ULL(ll, d) \
-+	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
- 
- #if BITS_PER_LONG == 32
- # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
--- 
-2.20.1
-
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -96,7 +96,8 @@ EXPORT_SYMBOL(synchronize_hardirq);
+  *	to complete before returning. If you use this function while
+  *	holding a resource the IRQ handler may need you will deadlock.
+  *
+- *	This function may be called - with care - from IRQ context.
++ *	Can only be called from preemptible code as it might sleep when
++ *	an interrupt thread is associated to @irq.
+  */
+ void synchronize_irq(unsigned int irq)
+ {
 
 
