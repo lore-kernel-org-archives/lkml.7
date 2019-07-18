@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE4C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26F8C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAB42077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C821B2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419738;
-	bh=jB7PymmLkolLCH1USMHpKnu0PBPMiW8Zvxe8g1tbe0g=;
+	s=default; t=1563419741;
+	bh=RqHs4PD78dqw4xd7ttlwOYA6we00lDzzgKgXO/uJ2ME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zFFXMo58B0IVYh34RqJJ/ZCBUF9P1aHaNh4KHQyYYD+sx4oFvf8kJy3MA8Vzl+eNe
-	 VgWH3fzG0hF2M5o+n5OoOO/Lc1bLgZ9rZx0EvtsjO/t5fn7qnRCMTR98ceVbr4DBw0
-	 thCYIp1ddddpZ5kfehSNvd7rwiDJW93nin2S7xb4=
+	b=avw5Yd7Vs9LacExecw7x5bYYfEBhOQNZw6CLONXE1JATqAkRhwEiEl47WM76ZevAP
+	 tPYqafmFwrAK3tfQhoIBEzLPNcRPcJJjgyG3FRdoEgiT8ItARUZ8Ut98qx7KJAs/Po
+	 6WQ+/g+JdYvk7wpXnELOsqpAYHR8DseXvqAxrxqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392096AbfGRDPh (ORCPT
+        id S2392110AbfGRDPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403969AbfGRDPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:15:14 -0400
+        id S2391985AbfGRDPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:15:18 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8B421855;
-        Thu, 18 Jul 2019 03:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0189D21849;
+        Thu, 18 Jul 2019 03:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419713;
-        bh=jB7PymmLkolLCH1USMHpKnu0PBPMiW8Zvxe8g1tbe0g=;
+        s=default; t=1563419717;
+        bh=RqHs4PD78dqw4xd7ttlwOYA6we00lDzzgKgXO/uJ2ME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYOLWIVGaaxsAXUE+UBIz/3ZmAAOx/501jDGl430SIlHEHe+T1SatBRKimHxKrGYZ
-         51WPINh0R3R8/Gw5DIYAyQTy8FKJk5qP31Qp5nxbyrwVMI0kd+eNrXHhkUxe1g7WX3
-         TsaFEOnRn7HHXudaExAUO5Ra6uxCrBA63WOYoNro=
+        b=Eq8QFYq6S9xQNOgP5Dl4sKunvUd+MwmmET8eJ01WzV73DSC7qlUMWiBXlxfZBpOAo
+         r8fpFtTS032MMRJcYYMNLUsFOza5BHh8EleuO6FRlVy4Xf/XJNCvAC1o7CWSHrTjMU
+         tD1HzKIvrxa2I3gH+plmyZmfKtgEMeK+qmzZefOk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.4 38/40] s390/qdio: (re-)initialize tiqdio list entries
-Date:   Thu, 18 Jul 2019 12:02:34 +0900
-Message-Id: <20190718030050.437104182@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Zubin Mithra <zsm@google.com>
+Subject: [PATCH 4.4 40/40] KVM: x86: protect KVM_CREATE_PIT/KVM_CREATE_PIT2 with kvm->lock
+Date:   Thu, 18 Jul 2019 12:02:36 +0900
+Message-Id: <20190718030050.616694335@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030039.676518610@linuxfoundation.org>
 References: <20190718030039.676518610@linuxfoundation.org>
@@ -59,77 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit e54e4785cb5cb4896cf4285964aeef2125612fb2 upstream.
+commit 250715a6171a076748be8ab88b274e72f0cfb435 upstream.
 
-When tiqdio_remove_input_queues() removes a queue from the tiq_list as
-part of qdio_shutdown(), it doesn't re-initialize the queue's list entry
-and the prev/next pointers go stale.
+The syzkaller folks reported a NULL pointer dereference that seems
+to be cause by a race between KVM_CREATE_IRQCHIP and KVM_CREATE_PIT2.
+The former takes kvm->lock (except when registering the devices,
+which needs kvm->slots_lock); the latter takes kvm->slots_lock only.
+Change KVM_CREATE_PIT2 to follow the same model as KVM_CREATE_IRQCHIP.
 
-If a subsequent qdio_establish() fails while sending the ESTABLISH cmd,
-it calls qdio_shutdown() again in QDIO_IRQ_STATE_ERR state and
-tiqdio_remove_input_queues() will attempt to remove the queue entry a
-second time. This dereferences the stale pointers, and bad things ensue.
-Fix this by re-initializing the list entry after removing it from the
-list.
+Testcase:
 
-For good practice also initialize the list entry when the queue is first
-allocated, and remove the quirky checks that papered over this omission.
-Note that prior to
-commit e521813468f7 ("s390/qdio: fix access to uninitialized qdio_q fields"),
-these checks were bogus anyway.
+    #include <pthread.h>
+    #include <linux/kvm.h>
+    #include <fcntl.h>
+    #include <sys/ioctl.h>
+    #include <stdint.h>
+    #include <string.h>
+    #include <stdlib.h>
+    #include <sys/syscall.h>
+    #include <unistd.h>
 
-setup_queues_misc() clears the whole queue struct, and thus needs to
-re-init the prev/next pointers as well.
+    long r[23];
 
-Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+    void* thr1(void* arg)
+    {
+        struct kvm_pit_config pitcfg = { .flags = 4 };
+        switch ((long)arg) {
+        case 0: r[2]  = open("/dev/kvm", O_RDONLY|O_ASYNC);    break;
+        case 1: r[3]  = ioctl(r[2], KVM_CREATE_VM, 0);         break;
+        case 2: r[4]  = ioctl(r[3], KVM_CREATE_IRQCHIP, 0);    break;
+        case 3: r[22] = ioctl(r[3], KVM_CREATE_PIT2, &pitcfg); break;
+        }
+        return 0;
+    }
+
+    int main(int argc, char **argv)
+    {
+        long i;
+        pthread_t th[4];
+
+        memset(r, -1, sizeof(r));
+        for (i = 0; i < 4; i++) {
+            pthread_create(&th[i], 0, thr, (void*)i);
+            if (argc > 1 && rand()%2) usleep(rand()%1000);
+        }
+        usleep(20000);
+        return 0;
+    }
+
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Zubin Mithra <zsm@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/s390/cio/qdio_setup.c   |    2 ++
- drivers/s390/cio/qdio_thinint.c |    4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/kvm/i8254.c |    5 +++--
+ arch/x86/kvm/x86.c   |    4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -150,6 +150,7 @@ static int __qdio_allocate_qs(struct qdi
- 			return -ENOMEM;
- 		}
- 		irq_ptr_qs[i] = q;
-+		INIT_LIST_HEAD(&q->entry);
+--- a/arch/x86/kvm/i8254.c
++++ b/arch/x86/kvm/i8254.c
+@@ -678,7 +678,6 @@ static const struct kvm_io_device_ops sp
+ 	.write    = speaker_ioport_write,
+ };
+ 
+-/* Caller must hold slots_lock */
+ struct kvm_pit *kvm_create_pit(struct kvm *kvm, u32 flags)
+ {
+ 	struct kvm_pit *pit;
+@@ -733,6 +732,7 @@ struct kvm_pit *kvm_create_pit(struct kv
+ 	pit->mask_notifier.func = pit_mask_notifer;
+ 	kvm_register_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+ 
++	mutex_lock(&kvm->slots_lock);
+ 	kvm_iodevice_init(&pit->dev, &pit_dev_ops);
+ 	ret = kvm_io_bus_register_dev(kvm, KVM_PIO_BUS, KVM_PIT_BASE_ADDRESS,
+ 				      KVM_PIT_MEM_LENGTH, &pit->dev);
+@@ -747,13 +747,14 @@ struct kvm_pit *kvm_create_pit(struct kv
+ 		if (ret < 0)
+ 			goto fail_unregister;
  	}
- 	return 0;
- }
-@@ -178,6 +179,7 @@ static void setup_queues_misc(struct qdi
- 	q->mask = 1 << (31 - i);
- 	q->nr = i;
- 	q->handler = handler;
-+	INIT_LIST_HEAD(&q->entry);
- }
++	mutex_unlock(&kvm->slots_lock);
  
- static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
---- a/drivers/s390/cio/qdio_thinint.c
-+++ b/drivers/s390/cio/qdio_thinint.c
-@@ -88,14 +88,14 @@ void tiqdio_remove_input_queues(struct q
- 	struct qdio_q *q;
+ 	return pit;
  
- 	q = irq_ptr->input_qs[0];
--	/* if establish triggered an error */
--	if (!q || !q->entry.prev || !q->entry.next)
-+	if (!q)
- 		return;
- 
- 	mutex_lock(&tiq_list_lock);
- 	list_del_rcu(&q->entry);
- 	mutex_unlock(&tiq_list_lock);
- 	synchronize_rcu();
-+	INIT_LIST_HEAD(&q->entry);
- }
- 
- static inline int has_multiple_inq_on_dsci(struct qdio_irq *irq_ptr)
+ fail_unregister:
+ 	kvm_io_bus_unregister_dev(kvm, KVM_PIO_BUS, &pit->dev);
+-
+ fail:
++	mutex_unlock(&kvm->slots_lock);
+ 	kvm_unregister_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+ 	kvm_unregister_irq_ack_notifier(kvm, &pit_state->irq_ack_notifier);
+ 	kvm_free_irq_source_id(kvm, pit->irq_source_id);
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3867,7 +3867,7 @@ long kvm_arch_vm_ioctl(struct file *filp
+ 				   sizeof(struct kvm_pit_config)))
+ 			goto out;
+ 	create_pit:
+-		mutex_lock(&kvm->slots_lock);
++		mutex_lock(&kvm->lock);
+ 		r = -EEXIST;
+ 		if (kvm->arch.vpit)
+ 			goto create_pit_unlock;
+@@ -3876,7 +3876,7 @@ long kvm_arch_vm_ioctl(struct file *filp
+ 		if (kvm->arch.vpit)
+ 			r = 0;
+ 	create_pit_unlock:
+-		mutex_unlock(&kvm->slots_lock);
++		mutex_unlock(&kvm->lock);
+ 		break;
+ 	case KVM_GET_IRQCHIP: {
+ 		/* 0: PIC master, 1: PIC slave, 2: IOAPIC */
 
 
