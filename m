@@ -2,203 +2,132 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1BDC76196
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F9AC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81692173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A818F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 08:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389488AbfGRIzT (ORCPT
+        id S2389411AbfGRI5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 04:55:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55684 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfGRIzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:55:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jul 2019 01:55:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="366852128"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jul 2019 01:55:15 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     fei.yang@intel.com, john.stultz@linaro.org,
-        andrzej.p@collabora.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH V2] usb: dwc3: gadget: trb_dequeue is not updated properly
-In-Reply-To: <1563396788-126034-1-git-send-email-fei.yang@intel.com>
-References: <1563396788-126034-1-git-send-email-fei.yang@intel.com>
-Date:   Thu, 18 Jul 2019 11:55:14 +0300
-Message-ID: <87o91riux9.fsf@linux.intel.com>
+        Thu, 18 Jul 2019 04:57:14 -0400
+Received: from outbound-smtp25.blacknight.com ([81.17.249.193]:46660 "EHLO
+        outbound-smtp25.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726383AbfGRI5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 04:57:14 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp25.blacknight.com (Postfix) with ESMTPS id 113A3B879F
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:57:11 +0100 (IST)
+Received: (qmail 15222 invoked from network); 18 Jul 2019 08:57:10 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 18 Jul 2019 08:57:10 -0000
+Date:   Thu, 18 Jul 2019 09:57:08 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     howaboutsynergy@protonmail.com, Vlastimil Babka <vbabka@suse.cz>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm: compaction: Avoid 100% CPU usage during compaction when
+ a task is killed
+Message-ID: <20190718085708.GE24383@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"howaboutsynergy" reported via kernel buzilla number 204165 that
+compact_zone_order was consuming 100% CPU during a stress test for
+prolonged periods of time. Specifically the following command, which
+should exit in 10 seconds, was taking an excessive time to finish while
+the CPU was pegged at 100%.
 
-Hi,
+  stress -m 220 --vm-bytes 1000000000 --timeout 10
 
-Let's look at the relevant code:
+Tracing indicated a pattern as follows
 
-fei.yang@intel.com writes:
+          stress-3923  [007]   519.106208: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106212: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106216: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106219: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106223: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106227: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106231: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106235: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106238: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
+          stress-3923  [007]   519.106242: mm_compaction_isolate_migratepages: range=(0x70bb80 ~ 0x70bb80) nr_scanned=0 nr_taken=0
 
-> From: Fei Yang <fei.yang@intel.com>
->
-> If scatter-gather operation is allowed, a large USB request would be split
-> into multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN
-> bit except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
-> Since only the last TRB has IOC set, dwc3_gadget_ep_reclaim_completed_trb()
-> would be called only once for the whole USB request, thus all the TRBs need
-> to be reclaimed within this single call. However that is not what the current
-> code does.
->
-> This patch addresses the issue by checking each TRB in function
-> dwc3_gadget_ep_reclaim_trb_sg() and reclaiming the chained ones right there.
-> Only the last TRB gets passed to dwc3_gadget_ep_reclaim_completed_trb(). This
-> would guarantee all TRBs are reclaimed and trb_dequeue/num_trbs are updated
-> properly.
->
-> Signed-off-by: Fei Yang <fei.yang@intel.com>
-> Cc: stable <stable@vger.kernel.org>
-> ---
->
-> V2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_trb_sg()
->     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
->
-> ---
->
->  drivers/usb/dwc3/gadget.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 173f532..c0662c2 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -2404,7 +2404,7 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
->  		struct dwc3_request *req, const struct dwc3_event_depevt *event,
->  		int status)
+Note that compaction is entered in rapid succession while scanning and
+isolating nothing. The problem is that when a task that is compacting
+receives a fatal signal, it retries indefinitely instead of exiting while
+making no progress as a fatal signal is pending.
 
-Here's the full function:
+It's not easy to trigger this condition although enabling zswap helps on
+the basis that the timing is altered. A very small window has to be hit
+for the problem to occur (signal delivered while compacting and isolating
+a PFN for migration that is not aligned to SWAP_CLUSTER_MAX).
 
-| static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
-| 		struct dwc3_request *req, const struct dwc3_event_depevt *event,
-| 		int status)
-| {
-| 	struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
-| 	struct scatterlist *sg = req->sg;
-| 	struct scatterlist *s;
-| 	unsigned int pending = req->num_pending_sgs;
-| 	unsigned int i;
-| 	int ret = 0;
-| 
-| 	for_each_sg(sg, s, pending, i) {
+This was reproduced locally -- 16G single socket system, 8G swap, 30% zswap
+configured, vm-bytes 22000000000 using Colin Kings stress-ng implementation
+from github running in a loop until the problem hits). Tracing recorded the
+problem occurring almost 200K times in a short window. With this patch, the
+problem hit 4 times but the task existed normally instead of consuming CPU.
 
-iterate over each scatterlist member for the current request...
+This problem has existed for some time but it was made worse by
+cf66f0700c8f ("mm, compaction: do not consider a need to reschedule as
+contention"). Before that commit, if the same condition was hit then
+locks would be quickly contended and compaction would exit that way.
 
-| 		trb = &dep->trb_pool[dep->trb_dequeue];
-| 
-| 		if (trb->ctrl & DWC3_TRB_CTRL_HWO)
-| 			break;
-| 
-| 		req->sg = sg_next(s);
-| 		req->num_pending_sgs--;
-| 
-| 		ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
-| 				trb, event, status, true);
+I haven't included a Reported-and-tested-by as the reporters real name
+is unknown but this was caught and repaired due to their testing and
+tracing.  If they want a tag added then hopefully they'll say so before
+this gets merged.
 
-... and reclaim its TRB.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204165
+Fixes: cf66f0700c8f ("mm, compaction: do not consider a need to reschedule as contention")
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+CC: stable@vger.kernel.org # v5.1+
+---
+ mm/compaction.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Now, looking dwc3_gadget_ep_reclaim_compmleted_trb() we have:
-
-| static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
-| 		struct dwc3_request *req, struct dwc3_trb *trb,
-| 		const struct dwc3_event_depevt *event, int status, int chain)
-| {
-| 	unsigned int		count;
-| 
-| 	dwc3_ep_inc_deq(dep);
-
-unconditionally increment the dequeue pointer. What Are we missing here?
-
-[...]
-
-| 	return 0;
-| }
-
-
-Now, looking at what your patch does we will have:
-
->  {
-> -	struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
-> +	struct dwc3_trb *trb;
-
-small cleanup, should be part of its own patch.
-
->  	struct scatterlist *sg = req->sg;
->  	struct scatterlist *s;
->  	unsigned int pending = req->num_pending_sgs;
-> @@ -2419,7 +2419,15 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
->  
->  		req->sg = sg_next(s);
->  		req->num_pending_sgs--;
-> +		if (!(trb->ctrl & DWC3_TRB_CTRL_IOC)) {
-> +			/* reclaim the TRB without calling
-> +			 * dwc3_gadget_ep_reclaim_completed_trb */
-
-why do you have to skip dwc3_gadget_ep_reclaim_completed_trb()? Also,
-your patch description claims that we're NOT incrementing the TRBs,
-which is wrong. I fail to see what problem you're trying to solve here,
-really.
-
-Could it be that we're, simply. returning 1 when we should return 0 for
-the previous SG list members? If that's the case, then that's the bug
-that should be fixed. Still, you shouldn't avoid calling
-dwc3_gadget_ep_reclaim_completed_trb() and should, instead, fix the bug
-it contains.
-
-Looking at the cases where dwc3_gadget_ep_reclaim_completed_trb()
-returns 1, I can't see how that would be the case either:
-
-| 	if (chain && (trb->ctrl & DWC3_TRB_CTRL_HWO))
-| 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
-
-if CHN bit it set and HWO is bit, clear HWO
-
-| 	if (req->needs_extra_trb && !(trb->ctrl & DWC3_TRB_CTRL_CHN)) {
-| 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
-| 		return 1;
-| 	}
-
-if *not* CHN and needs_extra_trb, return 1. This can only be true for
-the last TRB in the SG list.
-
-| 	if ((trb->ctrl & DWC3_TRB_CTRL_HWO) && status != -ESHUTDOWN)
-| 		return 1;
-
-This can't be true because we cleared HWO up above
-
-| 	if (event->status & DEPEVT_STATUS_SHORT && !chain)
-| 		return 1;
-
-can only be true for last TRB
-
-| 	if (event->status & DEPEVT_STATUS_IOC)
-| 		return 1;
-
-If we have a short packet, then we may fall here. Is that the case?
-
-Please share dwc3 tracepoints of the problem happening so I can verify
-what's going on.
-
--- 
-balbi
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 9e1b9acb116b..952dc2fb24e5 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -842,13 +842,15 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 
+ 		/*
+ 		 * Periodically drop the lock (if held) regardless of its
+-		 * contention, to give chance to IRQs. Abort async compaction
+-		 * if contended.
++		 * contention, to give chance to IRQs. Abort completely if
++		 * a fatal signal is pending.
+ 		 */
+ 		if (!(low_pfn % SWAP_CLUSTER_MAX)
+ 		    && compact_unlock_should_abort(&pgdat->lru_lock,
+-					    flags, &locked, cc))
+-			break;
++					    flags, &locked, cc)) {
++			low_pfn = 0;
++			goto fatal_pending;
++		}
+ 
+ 		if (!pfn_valid_within(low_pfn))
+ 			goto isolate_fail;
+@@ -1060,6 +1062,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 	trace_mm_compaction_isolate_migratepages(start_pfn, low_pfn,
+ 						nr_scanned, nr_isolated);
+ 
++fatal_pending:
+ 	cc->total_migrate_scanned += nr_scanned;
+ 	if (nr_isolated)
+ 		count_compact_events(COMPACTISOLATED, nr_isolated);
