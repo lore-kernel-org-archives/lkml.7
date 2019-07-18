@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4DFC76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3691EC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E930B21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F3B2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419015;
-	bh=rku9e+gLZXd0cXvofkio1Hv3SFZniVvGJAakdWxEiW0=;
+	s=default; t=1563419018;
+	bh=o2Kr2eyw/O6JKnMps8ZPt7nNdeWLgNXBUuzb704FtCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r9BiCOTVioI7GWIaa5I5QL+RiEYOwpXJduWcDFi8VFJrlr+/w5lyLZ5syXHJgq1U5
-	 f3qSyBrI3ia5T+/jPzckhe3HMXe1xM8352vUwVffslJuM9Ov2mXUzofvzDdDQoHjgY
-	 H3rKVsdNL/LzlP+1jPLWntEu8/nKpc5e2yadTSEY=
+	b=zRHDaT7rux+njfgp8QuAvqM8P+DCs6kTD/pfHV7I7pGpOkuqlCR098EDHatC8wrVx
+	 vLxi7KqohcPNNQ+5BNJd3+9D5JUMgjpNc/MpdDpeZTKJJYlPMDKBmYlHzRPMUpquSr
+	 zEheNvvakHNvQFGdtv8TZvRToNCl0Stc2C8GvDuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbfGRDDe (ORCPT
+        id S2389369AbfGRDDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389356AbfGRDDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jul 2019 23:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389318AbfGRDDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:03:30 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3EA621849;
-        Thu, 18 Jul 2019 03:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A680D2173B;
+        Thu, 18 Jul 2019 03:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419011;
-        bh=rku9e+gLZXd0cXvofkio1Hv3SFZniVvGJAakdWxEiW0=;
+        s=default; t=1563419009;
+        bh=o2Kr2eyw/O6JKnMps8ZPt7nNdeWLgNXBUuzb704FtCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBf6j1Jd9BjeM5ArR6Dy8YGnLIeOgMju66PHtwOl2n0j4lguamAh+ey0xdqigJi8A
-         l0xzfedEXwKvSP0B05Yrq2H2bFzZ/F6j23PBSkeyG/+sGKPRqQpTrOK3TpDge+8bc1
-         JO+FkjfXI/osxpdJQTcELBJGN1yp4/U0d3wSBu20=
+        b=X1OtsdwORL/rYZ9KUqc+qSVRvlUuhN0SkPTURrgYE1iDgWZTqYlR89PFSSYv2woag
+         ob/m7Ljxhp3sgSIMGHKD11UpX3JhHtmFzuUebAE2STAYRJoquDfZktJ5PqhAvMaEKs
+         ZbKRScS9NGG5Eu7yE7nCsVY2zYBKZGb1CcxudmyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 5.2 08/21] genirq: Fix misleading synchronize_irq() documentation
-Date:   Thu, 18 Jul 2019 12:01:26 +0900
-Message-Id: <20190718030032.145247589@linuxfoundation.org>
+Subject: [PATCH 5.2 07/21] genirq: Delay deactivation in free_irq()
+Date:   Thu, 18 Jul 2019 12:01:25 +0900
+Message-Id: <20190718030031.976038290@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -61,31 +62,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 1d21f2af8571c6a6a44e7c1911780614847b0253 upstream.
+commit 4001d8e8762f57d418b66e4e668601791900a1dd upstream.
 
-The function might sleep, so it cannot be called from interrupt
-context. Not even with care.
+When interrupts are shutdown, they are immediately deactivated in the
+irqdomain hierarchy. While this looks obviously correct there is a subtle
+issue:
 
+There might be an interrupt in flight when free_irq() is invoking the
+shutdown. This is properly handled at the irq descriptor / primary handler
+level, but the deactivation might completely disable resources which are
+required to acknowledge the interrupt.
+
+Split the shutdown code and deactivate the interrupt after synchronization
+in free_irq(). Fixup all other usage sites where this is not an issue to
+invoke the combined shutdown_and_deactivate() function instead.
+
+This still might be an issue if the interrupt in flight servicing is
+delayed on a remote CPU beyond the invocation of synchronize_irq(), but
+that cannot be handled at that level and needs to be handled in the
+synchronize_irq() context.
+
+Fixes: f8264e34965a ("irqdomain: Introduce new interfaces to support hierarchy irqdomains")
+Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/20190628111440.189241552@linutronix.de
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://lkml.kernel.org/r/20190628111440.098196390@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/manage.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/irq/autoprobe.c  |    6 +++---
+ kernel/irq/chip.c       |    6 ++++++
+ kernel/irq/cpuhotplug.c |    2 +-
+ kernel/irq/internals.h  |    1 +
+ kernel/irq/manage.c     |   12 +++++++++++-
+ 5 files changed, 22 insertions(+), 5 deletions(-)
 
+--- a/kernel/irq/autoprobe.c
++++ b/kernel/irq/autoprobe.c
+@@ -90,7 +90,7 @@ unsigned long probe_irq_on(void)
+ 			/* It triggered already - consider it spurious. */
+ 			if (!(desc->istate & IRQS_WAITING)) {
+ 				desc->istate &= ~IRQS_AUTODETECT;
+-				irq_shutdown(desc);
++				irq_shutdown_and_deactivate(desc);
+ 			} else
+ 				if (i < 32)
+ 					mask |= 1 << i;
+@@ -127,7 +127,7 @@ unsigned int probe_irq_mask(unsigned lon
+ 				mask |= 1 << i;
+ 
+ 			desc->istate &= ~IRQS_AUTODETECT;
+-			irq_shutdown(desc);
++			irq_shutdown_and_deactivate(desc);
+ 		}
+ 		raw_spin_unlock_irq(&desc->lock);
+ 	}
+@@ -169,7 +169,7 @@ int probe_irq_off(unsigned long val)
+ 				nr_of_irqs++;
+ 			}
+ 			desc->istate &= ~IRQS_AUTODETECT;
+-			irq_shutdown(desc);
++			irq_shutdown_and_deactivate(desc);
+ 		}
+ 		raw_spin_unlock_irq(&desc->lock);
+ 	}
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -314,6 +314,12 @@ void irq_shutdown(struct irq_desc *desc)
+ 		}
+ 		irq_state_clr_started(desc);
+ 	}
++}
++
++
++void irq_shutdown_and_deactivate(struct irq_desc *desc)
++{
++	irq_shutdown(desc);
+ 	/*
+ 	 * This must be called even if the interrupt was never started up,
+ 	 * because the activation can happen before the interrupt is
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -116,7 +116,7 @@ static bool migrate_one_irq(struct irq_d
+ 		 */
+ 		if (irqd_affinity_is_managed(d)) {
+ 			irqd_set_managed_shutdown(d);
+-			irq_shutdown(desc);
++			irq_shutdown_and_deactivate(desc);
+ 			return false;
+ 		}
+ 		affinity = cpu_online_mask;
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -82,6 +82,7 @@ extern int irq_activate_and_startup(stru
+ extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
+ 
+ extern void irq_shutdown(struct irq_desc *desc);
++extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
+ extern void irq_enable(struct irq_desc *desc);
+ extern void irq_disable(struct irq_desc *desc);
+ extern void irq_percpu_enable(struct irq_desc *desc, unsigned int cpu);
 --- a/kernel/irq/manage.c
 +++ b/kernel/irq/manage.c
-@@ -96,7 +96,8 @@ EXPORT_SYMBOL(synchronize_hardirq);
-  *	to complete before returning. If you use this function while
-  *	holding a resource the IRQ handler may need you will deadlock.
-  *
-- *	This function may be called - with care - from IRQ context.
-+ *	Can only be called from preemptible code as it might sleep when
-+ *	an interrupt thread is associated to @irq.
-  */
- void synchronize_irq(unsigned int irq)
- {
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/random.h>
+ #include <linux/interrupt.h>
++#include <linux/irqdomain.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/rt.h>
+@@ -1699,6 +1700,7 @@ static struct irqaction *__free_irq(stru
+ 	/* If this was the last handler, shut down the IRQ line: */
+ 	if (!desc->action) {
+ 		irq_settings_clr_disable_unlazy(desc);
++		/* Only shutdown. Deactivate after synchronize_hardirq() */
+ 		irq_shutdown(desc);
+ 	}
+ 
+@@ -1768,6 +1770,14 @@ static struct irqaction *__free_irq(stru
+ 		 * require it to deallocate resources over the slow bus.
+ 		 */
+ 		chip_bus_lock(desc);
++		/*
++		 * There is no interrupt on the fly anymore. Deactivate it
++		 * completely.
++		 */
++		raw_spin_lock_irqsave(&desc->lock, flags);
++		irq_domain_deactivate_irq(&desc->irq_data);
++		raw_spin_unlock_irqrestore(&desc->lock, flags);
++
+ 		irq_release_resources(desc);
+ 		chip_bus_sync_unlock(desc);
+ 		irq_remove_timings(desc);
+@@ -1855,7 +1865,7 @@ static const void *__cleanup_nmi(unsigne
+ 	}
+ 
+ 	irq_settings_clr_disable_unlazy(desc);
+-	irq_shutdown(desc);
++	irq_shutdown_and_deactivate(desc);
+ 
+ 	irq_release_resources(desc);
+ 
 
 
