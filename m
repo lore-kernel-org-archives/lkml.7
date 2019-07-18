@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0FFC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6B0C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A738F21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5781204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563418986;
-	bh=VZRbkZ6kretyBIwPDNjNMe1O0/KGopWD1k+pBXBkUdg=;
+	s=default; t=1563418989;
+	bh=sWK4i+p/35T5hB/RVRHRHVv3oqwIeJXgGkvOV38q0UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zk1RsObMxsHVYZV7zF4dWjotyIVmTdCBjN57ga8iCSa5/6+x6UVAOdJTgx3PoKkTw
-	 Wx+YrF9HFWR6+7eeMPHghbK4/+FoQczam5fu4GBRpJ1bsvI366hRXQnaD4oZ9f0xsl
-	 p1gvEncXZjtc3dLir/hGUhp+AkqNTNk9JmkUqnqM=
+	b=vEmGv/IzttZ5l7r/V1fT5BZfkFHn9+Gwkr0wNJzFJNwTCHQwO8ug8l8/OSFdcIN+J
+	 LKVEc4hhYZ3a9Gqicwr5++zspUT6xU6eHP4WSHVnK1SkHE6CPd1ITmAZImGCN4qTvS
+	 j9O20n0+EmR6+XVuB2KKBGdK8cMkDXQ4UFcGUxrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389131AbfGRDDF (ORCPT
+        id S2389186AbfGRDDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:03:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfGRDDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:01 -0400
+        id S2389086AbfGRDDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:03:04 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2EE21849;
-        Thu, 18 Jul 2019 03:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D18204EC;
+        Thu, 18 Jul 2019 03:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563418980;
-        bh=VZRbkZ6kretyBIwPDNjNMe1O0/KGopWD1k+pBXBkUdg=;
+        s=default; t=1563418983;
+        bh=sWK4i+p/35T5hB/RVRHRHVv3oqwIeJXgGkvOV38q0UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gUnGMh+IMOXxSw3RCttBebQHgbkfZI+x927GFvHwJTlprkiBzLf1xJRIXAQcINP8W
-         WDYYMWMEAk5zO6YnyVp4yCg0vXqbyWFW/J4pYfqRuBvV1x9hIk9YJjV4SRUbd0q5WP
-         IT6F8dceG0lDQfzP3O6CsS7J2n8SA3oJGLZb9uys=
+        b=a1yKN7d9P2FsU908KylvdPMwAIazKEQgXftuLJN1RwpkHqCEb60KQ0PQ+9/rApOv2
+         dd9AMxWS086tdv9XbkOzPtXpxukfvySe9+AhvT4saI/0S4kJ/sQB3zRzDU+4ryY7uQ
+         EhdNenQxuddK2de7vbFrs8OFwHgxyGX1dKADqNSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.2 14/21] s390/ipl: Fix detection of has_secure attribute
-Date:   Thu, 18 Jul 2019 12:01:32 +0900
-Message-Id: <20190718030034.170275687@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH 5.2 15/21] s390: fix stfle zero padding
+Date:   Thu, 18 Jul 2019 12:01:33 +0900
+Message-Id: <20190718030034.641243890@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -61,64 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-commit 1b2be2071aca9aab22e3f902bcb0fca46a1d3b00 upstream.
+commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
 
-Use the correct bit for detection of the machine capability associated
-with the has_secure attribute. It is expected that the underlying
-platform (including hypervisors) unsets the bit when they don't provide
-secure ipl for their guests.
+The stfle inline assembly returns the number of double words written
+(condition code 0) or the double words it would have written
+(condition code 3), if the memory array it got as parameter would have
+been large enough.
 
-Fixes: c9896acc7851 ("s390/ipl: Provide has_secure sysfs attribute")
-Cc: stable@vger.kernel.org # 5.2
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+The current stfle implementation assumes that the array is always
+large enough and clears those parts of the array that have not been
+written to with a subsequent memset call.
+
+If however the array is not large enough memset will get a negative
+length parameter, which means that memset clears memory until it gets
+an exception and the kernel crashes.
+
+To fix this simply limit the maximum length. Move also the inline
+assembly to an extra function to avoid clobbering of register 0, which
+might happen because of the added min_t invocation together with code
+instrumentation.
+
+The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
+facility list handling") but was rather harmless, since it would only
+write to a rather large array. It became a potential problem with
+commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
+then it writes to an array with only four double words, while some
+machines already deliver three double words. As soon as machines have
+a facility bit within the fifth double a crash on IPL would happen.
+
+Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
+Cc: <stable@vger.kernel.org> # v2.6.37+
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/sclp.h   |    1 -
- arch/s390/kernel/ipl.c         |    7 +------
- drivers/s390/char/sclp_early.c |    1 -
- 3 files changed, 1 insertion(+), 8 deletions(-)
+ arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/arch/s390/include/asm/sclp.h
-+++ b/arch/s390/include/asm/sclp.h
-@@ -80,7 +80,6 @@ struct sclp_info {
- 	unsigned char has_gisaf : 1;
- 	unsigned char has_diag318 : 1;
- 	unsigned char has_sipl : 1;
--	unsigned char has_sipl_g2 : 1;
- 	unsigned char has_dirq : 1;
- 	unsigned int ibc;
- 	unsigned int mtid;
---- a/arch/s390/kernel/ipl.c
-+++ b/arch/s390/kernel/ipl.c
-@@ -286,12 +286,7 @@ static struct kobj_attribute sys_ipl_sec
- static ssize_t ipl_has_secure_show(struct kobject *kobj,
- 				   struct kobj_attribute *attr, char *page)
- {
--	if (MACHINE_IS_LPAR)
--		return sprintf(page, "%i\n", !!sclp.has_sipl);
--	else if (MACHINE_IS_VM)
--		return sprintf(page, "%i\n", !!sclp.has_sipl_g2);
--	else
--		return sprintf(page, "%i\n", 0);
-+	return sprintf(page, "%i\n", !!sclp.has_sipl);
+--- a/arch/s390/include/asm/facility.h
++++ b/arch/s390/include/asm/facility.h
+@@ -59,6 +59,18 @@ static inline int test_facility(unsigned
+ 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
  }
  
- static struct kobj_attribute sys_ipl_has_secure_attr =
---- a/drivers/s390/char/sclp_early.c
-+++ b/drivers/s390/char/sclp_early.c
-@@ -41,7 +41,6 @@ static void __init sclp_early_facilities
- 	sclp.has_hvs = !!(sccb->fac119 & 0x80);
- 	sclp.has_kss = !!(sccb->fac98 & 0x01);
- 	sclp.has_sipl = !!(sccb->cbl & 0x02);
--	sclp.has_sipl_g2 = !!(sccb->cbl & 0x04);
- 	if (sccb->fac85 & 0x02)
- 		S390_lowcore.machine_flags |= MACHINE_FLAG_ESOP;
- 	if (sccb->fac91 & 0x40)
++static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
++{
++	register unsigned long reg0 asm("0") = size - 1;
++
++	asm volatile(
++		".insn s,0xb2b00000,0(%1)" /* stfle */
++		: "+d" (reg0)
++		: "a" (stfle_fac_list)
++		: "memory", "cc");
++	return reg0;
++}
++
+ /**
+  * stfle - Store facility list extended
+  * @stfle_fac_list: array where facility list can be stored
+@@ -75,13 +87,8 @@ static inline void __stfle(u64 *stfle_fa
+ 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
+ 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
+ 		/* More facility bits available with stfle */
+-		register unsigned long reg0 asm("0") = size - 1;
+-
+-		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
+-			     : "+d" (reg0)
+-			     : "a" (stfle_fac_list)
+-			     : "memory", "cc");
+-		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
++		nr = __stfle_asm(stfle_fac_list, size);
++		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
+ 	}
+ 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
+ }
 
 
