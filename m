@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AABF7C76192
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A27CC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797152077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128572053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420129;
-	bh=4iMVqVrHJo2Qq/QTvK41nGzObPJNAUoY1NkAtrRIkWk=;
+	s=default; t=1563420136;
+	bh=gTLamAertdUfFmmFQXCK2qgVQ0eh0U9806nXMovzEcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k0e8YiKaaNl/vBY6JBRYIwOUmB5zdi9jM64942hYLtBvF183e9sznC3ojnhYFBDCO
-	 FAqg8DstkurvSu5Su+Oj7/jcYEuC/n/HBZh4DtEcaatY9bF7HNGE0a6NnWENjMd2E7
-	 fPbwpcG0Gd+EJWxjwN4/FVI0na2B01ktYM2OLzG4=
+	b=laGeP3uGrtX9t6n2amCioE89nJe5ozB2wHXkFrwoJ+JoylFTnIzqZpUyBDfGejplb
+	 tcaQsbKT5jmn1o31yJ6VRLpmQBvzBsYqUHaXVCO5hIe0fiWvwtHRT5Rh/ledwjipfI
+	 ThDzPE4b/x0ZsumB4ENU+porf8vSh4yAkZU0ulGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389718AbfGRDWI (ORCPT
+        id S2390958AbfGRDJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403777AbfGRDJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:09:17 -0400
+        id S2390308AbfGRDJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:09:07 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60AC921841;
-        Thu, 18 Jul 2019 03:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496FA2173E;
+        Thu, 18 Jul 2019 03:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419356;
-        bh=4iMVqVrHJo2Qq/QTvK41nGzObPJNAUoY1NkAtrRIkWk=;
+        s=default; t=1563419346;
+        bh=gTLamAertdUfFmmFQXCK2qgVQ0eh0U9806nXMovzEcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KSDtUrEmAO5AnZjEtpG3DHReZJDgJvDzOeNsqfu9WS6KbRK4NpKuuqtQS5RIbjGUD
-         0S7TJa7ses6J8vXSsg2eJoUcd1PBt32Vdbt0sjK3Rzw/oM7fYy7s1zcmJ5HGpP+GYL
-         l/tjh9TCGAjWOYon+IjgXIBgTQzavA0S1SgK3hHk=
+        b=LW3PdvIRpXyDa7Kikr2TqbWopffZ04Hvc2x60elztEHfGEXiCCw3JckzNZXcfRrwg
+         pnFfNmcV6nbUSG9i1KepzGBlFs+2VU67+6h4fOxoxIPaKP3zWB8EZrVqA5o0nw4Il/
+         FpHO3fVWQCG3lEaer7dQxU+KUaLoWYOTQyysxpEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Reinhard Speyerer <rspmn@arcor.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/80] qmi_wwan: add support for QMAP padding in the RX path
-Date:   Thu, 18 Jul 2019 12:01:20 +0900
-Message-Id: <20190718030100.978612315@linuxfoundation.org>
+Subject: [PATCH 4.14 09/80] bpf: sockmap, fix use after free from sleep in psock backlog workqueue
+Date:   Thu, 18 Jul 2019 12:01:00 +0900
+Message-Id: <20190718030059.584523247@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -61,62 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 61356088ace1866a847a727d4d40da7bf00b67fc ]
+[ Upstream commit bd95e678e0f6e18351ecdc147ca819145db9ed7b ]
 
-The QMAP code in the qmi_wwan driver is based on the CodeAurora GobiNet
-driver which does not process QMAP padding in the RX path correctly.
-Add support for QMAP padding to qmimux_rx_fixup() according to the
-description of the rmnet driver.
+Backlog work for psock (sk_psock_backlog) might sleep while waiting
+for memory to free up when sending packets. However, while sleeping
+the socket may be closed and removed from the map by the user space
+side.
 
-Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
-Cc: Daniele Palmas <dnlplm@gmail.com>
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This breaks an assumption in sk_stream_wait_memory, which expects the
+wait queue to be still there when it wakes up resulting in a
+use-after-free shown below. To fix his mark sendmsg as MSG_DONTWAIT
+to avoid the sleep altogether. We already set the flag for the
+sendpage case but we missed the case were sendmsg is used.
+Sockmap is currently the only user of skb_send_sock_locked() so only
+the sockmap paths should be impacted.
+
+==================================================================
+BUG: KASAN: use-after-free in remove_wait_queue+0x31/0x70
+Write of size 8 at addr ffff888069a0c4e8 by task kworker/0:2/110
+
+CPU: 0 PID: 110 Comm: kworker/0:2 Not tainted 5.0.0-rc2-00335-g28f9d1a3d4fe-dirty #14
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+Workqueue: events sk_psock_backlog
+Call Trace:
+ print_address_description+0x6e/0x2b0
+ ? remove_wait_queue+0x31/0x70
+ kasan_report+0xfd/0x177
+ ? remove_wait_queue+0x31/0x70
+ ? remove_wait_queue+0x31/0x70
+ remove_wait_queue+0x31/0x70
+ sk_stream_wait_memory+0x4dd/0x5f0
+ ? sk_stream_wait_close+0x1b0/0x1b0
+ ? wait_woken+0xc0/0xc0
+ ? tcp_current_mss+0xc5/0x110
+ tcp_sendmsg_locked+0x634/0x15d0
+ ? tcp_set_state+0x2e0/0x2e0
+ ? __kasan_slab_free+0x1d1/0x230
+ ? kmem_cache_free+0x70/0x140
+ ? sk_psock_backlog+0x40c/0x4b0
+ ? process_one_work+0x40b/0x660
+ ? worker_thread+0x82/0x680
+ ? kthread+0x1b9/0x1e0
+ ? ret_from_fork+0x1f/0x30
+ ? check_preempt_curr+0xaf/0x130
+ ? iov_iter_kvec+0x5f/0x70
+ ? kernel_sendmsg_locked+0xa0/0xe0
+ skb_send_sock_locked+0x273/0x3c0
+ ? skb_splice_bits+0x180/0x180
+ ? start_thread+0xe0/0xe0
+ ? update_min_vruntime.constprop.27+0x88/0xc0
+ sk_psock_backlog+0xb3/0x4b0
+ ? strscpy+0xbf/0x1e0
+ process_one_work+0x40b/0x660
+ worker_thread+0x82/0x680
+ ? process_one_work+0x660/0x660
+ kthread+0x1b9/0x1e0
+ ? __kthread_create_on_node+0x250/0x250
+ ret_from_fork+0x1f/0x30
+
+Fixes: 20bf50de3028c ("skbuff: Function to send an skbuf on a socket")
+Reported-by: Jakub Sitnicki <jakub@cloudflare.com>
+Tested-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ net/core/skbuff.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 063daa3435e4..75fe5c5abec4 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -153,7 +153,7 @@ static bool qmimux_has_slaves(struct usbnet *dev)
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 2b3b0307dd89..6d9fd7d4bdfa 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -2299,6 +2299,7 @@ int skb_send_sock_locked(struct sock *sk, struct sk_buff *skb, int offset,
+ 		kv.iov_base = skb->data + offset;
+ 		kv.iov_len = slen;
+ 		memset(&msg, 0, sizeof(msg));
++		msg.msg_flags = MSG_DONTWAIT;
  
- static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- {
--	unsigned int len, offset = 0;
-+	unsigned int len, offset = 0, pad_len, pkt_len;
- 	struct qmimux_hdr *hdr;
- 	struct net_device *net;
- 	struct sk_buff *skbn;
-@@ -171,10 +171,16 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		if (hdr->pad & 0x80)
- 			goto skip;
- 
-+		/* extract padding length and check for valid length info */
-+		pad_len = hdr->pad & 0x3f;
-+		if (len == 0 || pad_len >= len)
-+			goto skip;
-+		pkt_len = len - pad_len;
-+
- 		net = qmimux_find_dev(dev, hdr->mux_id);
- 		if (!net)
- 			goto skip;
--		skbn = netdev_alloc_skb(net, len);
-+		skbn = netdev_alloc_skb(net, pkt_len);
- 		if (!skbn)
- 			return 0;
- 		skbn->dev = net;
-@@ -191,7 +197,7 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 			goto skip;
- 		}
- 
--		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, len);
-+		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, pkt_len);
- 		if (netif_rx(skbn) != NET_RX_SUCCESS)
- 			return 0;
- 
+ 		ret = kernel_sendmsg_locked(sk, &msg, &kv, 1, slen);
+ 		if (ret <= 0)
 -- 
 2.20.1
 
