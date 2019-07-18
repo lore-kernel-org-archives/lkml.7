@@ -2,193 +2,183 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD33C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9FEC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8DC21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9991B21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 23:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a8Kaxm/L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A2OQZovN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391534AbfGRXIx (ORCPT
+        id S2391652AbfGRXK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 19:08:53 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10327 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728040AbfGRXIw (ORCPT
+        Thu, 18 Jul 2019 19:10:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36372 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbfGRXK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 19:08:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d30fc020001>; Thu, 18 Jul 2019 16:08:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 18 Jul 2019 16:08:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 18 Jul 2019 16:08:49 -0700
-Received: from [10.110.103.56] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
- 2019 23:08:49 +0000
-Subject: Re: [PATCH V5 11/18] clk: tegra210: Add support for Tegra210 clocks
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-CC:     <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pgaikwad@nvidia.com>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <351a07d4-ba90-4793-129b-b1a733f95531@nvidia.com>
- <e3e9beaf-b195-305e-4010-66e824813472@gmail.com>
- <9271ae75-5663-e26e-df26-57cba94dab75@nvidia.com>
- <7ae3df9a-c0e9-cf71-8e90-4284db8df82f@nvidia.com>
- <b01e37aa-f14e-e628-ceef-b25a845c6359@gmail.com>
- <46b55527-da5d-c0b7-1c14-43b5c6d49dfa@nvidia.com>
- <2de9a608-cf38-f56c-b192-7ffed65092f8@nvidia.com>
- <bff3e9c0-727d-9aef-a0e2-583e53c39afd@gmail.com>
- <5eedd224-77b0-1fc9-4e5e-d884b41a64ed@nvidia.com>
- <89f23878-d4b2-2305-03e5-8a3e781c2b02@gmail.com>
- <20190718194222.GH12715@pdeschrijver-desktop.Nvidia.com>
- <056496ed-9abf-6907-c61c-a99ccf23b834@gmail.com>
- <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
-Message-ID: <f664f161-9b6b-6446-e2f9-6373e654dfc3@nvidia.com>
-Date:   Thu, 18 Jul 2019 16:08:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <1c85cb35-ce7c-1dd1-f637-0c91b2b36db3@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563491330; bh=yLNZVYwQNwd5XjOkoTIzWL1zxas+oOtZJ/BsjgXV7AI=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=a8Kaxm/LRSqgEimsZBmmEtKiZ4LIzoimQxncG6SF5K5+xsSUGMAUjobMvHfIRVggu
-         3HbgXotNjEh1Zr728hQP2Y+AchtU9PgZLW97Dto8vkSAphlAWjuMJyWhw9wS/nr3P3
-         Xh64WmNpes/FjeCR097eeRTwucLfTTN85qWtOO5unnpBiBXqxRsGGJ0NMZIqUByj67
-         ZecHPfr8cBPfzbStxLdAMNSovcUUkIznF6Fh35hfVI+FRxF3KPmWFMDES+qxxdKPrr
-         mIrZcEwOb2MQZtCt5CZfxk1ImvG94rY4mSgWgD+weDzWx5pe9E92QiDWH+qOmMvsKN
-         cU9hk69fJ5wRA==
+        Thu, 18 Jul 2019 19:10:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so13291148pfl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 16:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=4Bh3i6WETjmo2gyscMLqDfoKBlO0O1C7LBrFVC3WzwM=;
+        b=A2OQZovNRceZTr0qvqRWA+vvSU0W8aBl7wly3yLkbkIHZUeYJAtJQTzRAPjfB0QiP7
+         BLkaNNWPXS38CuOrGw7tP/rIX2i/CahcuukE3O/+iiFAUg+tNY431SacXuFB3Z0NqQxv
+         Qt/x6dIoS+nu0xB2FIOh0Leo/ZlL3/JJTE1ff84W2a1l/BUsslte3rSOxOh6yy4fI52E
+         fYbcMoaWmQayMWjLXTaR+OqTe/GUawChy0OTfdcdZ5dFGXkR8e7QocydqMkoK71VfJ73
+         u6of+gYDyfkxe60FwCZOoNQnHg907/TdQdliWws+9Pc28mWdRcIvQxPAYrwlQ7Lu/1uD
+         oLAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4Bh3i6WETjmo2gyscMLqDfoKBlO0O1C7LBrFVC3WzwM=;
+        b=rBWHcC4NqPXoPFRnhxclan8B3BWTV+TnojDj/BgUPe2KvADE+jYhHpoxVGuvxP11A2
+         3utnmD/QhdRYHnm4lRu9GERTeCKPNt/4cJsZ8tKOG0MYOZB/uw9g5IdKn9Bm5JPQWgq3
+         aukVfdkQt/se3+FYHQEA5ltGMoM+19GuJiJNZinHBEwHJf+LntltJZgF4rK8adYpfUyP
+         KRICdRzTzYv/xDyw6qZEvqB9AanOXFVpnJHIYuUqafOM4r3OntYsAL7KiBoNqk/rK9md
+         mjakl4Libm0cxPXYJC7Wt7pyIeMOYlLYWkZvmVLuXN2wIUQsplr298jZlrhxzPgzY65c
+         mPpg==
+X-Gm-Message-State: APjAAAUOXyg28BwRXv8S1gV3v+qHd1+wDMHTSJDZHplTr+ndln48M/T1
+        MJ9VXzMN6L3Dr4bPwHwBF1iAwA==
+X-Google-Smtp-Source: APXvYqw/bJd5fIdOZX8VM/Gc828lajZHC2R/8+xosrp/+5HCYJ+Mwj3/LYfDYZc5xg/XWCxPKMcZeg==
+X-Received: by 2002:a65:4844:: with SMTP id i4mr51178039pgs.113.1563491458290;
+        Thu, 18 Jul 2019 16:10:58 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id w14sm32502763pfn.47.2019.07.18.16.10.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 16:10:57 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Benjamin LaHaise <bcrl@kvack.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] aio: Support read/write with non-iter file-ops
+Date:   Thu, 18 Jul 2019 16:10:54 -0700
+Message-Id: <20190718231054.8175-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Implement a wrapper for aio_read()/write() to allow async IO on files
+not implementing the iter version of read/write, such as sysfs. This
+mimics how readv/writev uses non-iter ops in do_loop_readv_writev().
 
-On 7/18/19 1:36 PM, Sowjanya Komatineni wrote:
->
-> On 7/18/19 1:26 PM, Dmitry Osipenko wrote:
->> 18.07.2019 22:42, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On Thu, Jul 18, 2019 at 02:44:56AM +0300, Dmitry Osipenko wrote:
->>>>> dependencies I am referring are dfll_ref, dfll_soc, and DVFS=20
->>>>> peripheral
->>>>> clocks which need to be restored prior to DFLL reinit.
->>>> Okay, but that shouldn't be a problem if clock dependencies are set up
->>>> properly.
->>>>
->>>>>>> reverse list order during restore might not work as all other=20
->>>>>>> clocks are
->>>>>>> in proper order no with any ref clocks for plls getting restored=20
->>>>>>> prior
->>>>>>> to their clients
->>>>>> Why? The ref clocks should be registered first and be the roots=20
->>>>>> for PLLs
->>>>>> and the rest. If it's not currently the case, then this need to be
->>>>>> fixed. You need to ensure that each clock is modeled properly. If=20
->>>>>> some
->>>>>> child clock really depends on multiple parents, then the parents=20
->>>>>> need to
->>>>>> in the correct order or CCF need to be taught about such
->>>>>> multi-dependencies.
->>>>>>
->>>>>> If some required feature is missed, then you have to implement it
->>>>>> properly and for all, that's how things are done in upstream.=20
->>>>>> Sometimes
->>>>>> it's quite a lot of extra work that everyone are benefiting from in
->>>>>> the end.
->>>>>>
->>>>>> [snip]
->>>>> Yes, we should register ref/parents before their clients.
->>>>>
->>>>> cclk_g clk is registered last after all pll and peripheral clocks are
->>>>> registers during clock init.
->>>>>
->>>>> dfllCPU_out clk is registered later during dfll-fcpu driver probe and
->>>>> gets added to the clock list.
->>>>>
->>>>> Probably the issue seems to be not linking dfll_ref and dfll_soc
->>>>> dependencies for dfllCPU_out thru clock list.
->>>>>
->>>>> clk-dfll driver during dfll_init_clks gets ref_clk and soc_clk=20
->>>>> reference
->>>>> thru DT.
->>> The dfll does not have any parents. It has some clocks which are needed
->>> for the logic part of the dfll to function, but there's no parent clock
->>> as such unlike for peripheral clocks or PLLs where the parent is at
->>> least used as a reference. The I2C controller of the DFLL shares the
->>> lines with a normal I2C controller using some arbitration logic. That
->>> logic only works if the clock for the normal I2C controller is enabled.
->>> So you need probably 3 clocks enabled to initialize the dfll in that
->>> case. I don't think it makes sense to add complicated logic to the=20
->>> clock
->>> core to deal with this rather strange case. To me it makes more=20
->>> sense to
->>> use pmops and open code the sequence there.
->> It looks to me that dfllCPU is a PLL and dfll_ref is its reference
->> parent, while dfll_soc clocks the logic that dynamically reconfigures
->> dfllCPU in background. I see that PLLP is defined as a parent for
->> dfll_ref and dfll_soc in the code. Hence seems dfll_ref should be set as
->> a parent for dfllCPU, no?
->
-> dfll_soc will not be restored by the time dfllCPU resume happens after=20
-> dfll_ref.
->
-> without dfll_soc, dfllCPU cannot be resumed either. So if we decide to=20
-> use parent we should use dfll_soc.
->
->> Either way is good to me, given that DFLL will be disabled during
->> suspend. Resetting DFLL on DFLL's driver resume using PM ops should be
->> good. And then it also will be better to error out if DFLL is active
->> during suspend on the DFLL's driver suspend.
->
-> Doing in dfll-fcpu pm_ops is much better as it happens right after all=20
-> clocks are restored and unlike other clock enables, dfll need dfll=20
-> controller programming as well and is actually registered in dfll-fcpu=20
-> driver.
->
-> With this, below is the sequence:
->
-> CPUFreq suspend switches CPU to PLLP and disables dfll
->
-> Will add dfll_suspend/resume in dfll-fcpu driver and in dfll suspend=20
-> will check for dfll active and will error out suspend.
->
-> dfll resume does dfll reinit.
->
-> CPUFreq resume enables dfll and switches CPU to dfll.
->
->
-> Will go with doing in dfll-fcpu pm_ops rather than parenting=20
-> dfllCPU_OUT...
->
-Does is make sense to return error EBUSY if dfll is not disabled by the=20
-time dfll-fcpu suspend happens?
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ fs/aio.c | 52 +++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 45 insertions(+), 7 deletions(-)
 
-Or should I use ETIMEOUT?
+diff --git a/fs/aio.c b/fs/aio.c
+index f9f441b59966..0137a1a9bef1 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1514,12 +1514,44 @@ static inline void aio_rw_done(struct kiocb *req, ssize_t ret)
+ 	}
+ }
+ 
++static ssize_t aio_iter_readv_writev(struct file *file, struct kiocb *req,
++				     struct iov_iter *iter, int type)
++{
++	ssize_t ret = 0;
++	ssize_t nr;
++
++	while (iov_iter_count(iter)) {
++		struct iovec iovec = iov_iter_iovec(iter);
++
++		if (type == READ) {
++			nr = file->f_op->read(file, iovec.iov_base,
++					      iovec.iov_len, &req->ki_pos);
++		} else {
++			nr = file->f_op->write(file, iovec.iov_base,
++					       iovec.iov_len, &req->ki_pos);
++		}
++
++		if (nr < 0) {
++			ret = nr;
++			break;
++		}
++
++		ret += nr;
++		if (nr != iovec.iov_len)
++			break;
++		iov_iter_advance(iter, nr);
++	}
++
++	return ret;
++}
++
+ static int aio_read(struct kiocb *req, const struct iocb *iocb,
+ 			bool vectored, bool compat)
+ {
+ 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+ 	struct iov_iter iter;
+ 	struct file *file;
++	ssize_t count;
+ 	int ret;
+ 
+ 	ret = aio_prep_rw(req, iocb);
+@@ -1529,15 +1561,18 @@ static int aio_read(struct kiocb *req, const struct iocb *iocb,
+ 	if (unlikely(!(file->f_mode & FMODE_READ)))
+ 		return -EBADF;
+ 	ret = -EINVAL;
+-	if (unlikely(!file->f_op->read_iter))
+-		return -EINVAL;
+ 
+ 	ret = aio_setup_rw(READ, iocb, &iovec, vectored, compat, &iter);
+ 	if (ret < 0)
+ 		return ret;
+ 	ret = rw_verify_area(READ, file, &req->ki_pos, iov_iter_count(&iter));
+-	if (!ret)
+-		aio_rw_done(req, call_read_iter(file, req, &iter));
++	if (!ret) {
++		if (likely(file->f_op->read_iter))
++			count = call_read_iter(file, req, &iter);
++		else
++			count = aio_iter_readv_writev(file, req, &iter, READ);
++		aio_rw_done(req, count);
++	}
+ 	kfree(iovec);
+ 	return ret;
+ }
+@@ -1548,6 +1583,7 @@ static int aio_write(struct kiocb *req, const struct iocb *iocb,
+ 	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+ 	struct iov_iter iter;
+ 	struct file *file;
++	ssize_t count;
+ 	int ret;
+ 
+ 	ret = aio_prep_rw(req, iocb);
+@@ -1557,8 +1593,6 @@ static int aio_write(struct kiocb *req, const struct iocb *iocb,
+ 
+ 	if (unlikely(!(file->f_mode & FMODE_WRITE)))
+ 		return -EBADF;
+-	if (unlikely(!file->f_op->write_iter))
+-		return -EINVAL;
+ 
+ 	ret = aio_setup_rw(WRITE, iocb, &iovec, vectored, compat, &iter);
+ 	if (ret < 0)
+@@ -1577,7 +1611,11 @@ static int aio_write(struct kiocb *req, const struct iocb *iocb,
+ 			__sb_writers_release(file_inode(file)->i_sb, SB_FREEZE_WRITE);
+ 		}
+ 		req->ki_flags |= IOCB_WRITE;
+-		aio_rw_done(req, call_write_iter(file, req, &iter));
++		if (likely(file->f_op->write_iter))
++			count = call_write_iter(file, req, &iter);
++		else
++			count = aio_iter_readv_writev(file, req, &iter, WRITE);
++		aio_rw_done(req, count);
+ 	}
+ 	kfree(iovec);
+ 	return ret;
+-- 
+2.18.0
 
