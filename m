@@ -2,108 +2,102 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3300C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9812AC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A1D20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A79920693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:36:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XIc39DhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389708AbfGRJbI (ORCPT
+        id S2389247AbfGRJg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:31:08 -0400
-Received: from relay.sw.ru ([185.231.240.75]:54274 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbfGRJbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:31:08 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ho2ke-0005VV-9n; Thu, 18 Jul 2019 12:31:00 +0300
-Subject: Re: [PATCH] mm: vmscan: check if mem cgroup is disabled or not before
- calling memcg slab shrinker
-To:     Yang Shi <yang.shi@linux.alibaba.com>, shakeelb@google.com,
-        vdavydov.dev@gmail.com, hannes@cmpxchg.org, mhocko@suse.com,
-        guro@fb.com, hughd@google.com, cai@lca.pw,
-        kirill.shutemov@linux.intel.com, akpm@linux-foundation.org
-Cc:     stable@vger.kernel.org, linux-mm@kvack.org,
+        Thu, 18 Jul 2019 05:36:28 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39559 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfGRJg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:36:28 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u25so14567235wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 02:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rcydOW70nVBt2WhrQ5MEx1NUU78KyQhLgGrKfsLYnKE=;
+        b=XIc39DhVV6wP9pHG9VdjrepeAIErmxbaSyrZIDZWBwL2cz/IkGTEpnmmzos7L58uon
+         S0C1WwcM2PDrmVrjm05LUQqZ/53FWr5txzGmzl/Euuxd/vHpJeD5Z2K3tQlgfJGG96Ew
+         RMGf/MvvYrS9hLAbChxZYRxtDFcoQlcb9nnAX20CT5fznZMTzpfDhJyx/R0RoJf0+nOH
+         uZWVYazu+ITWtlRdHFKbrl4l1dwjkpA4VPmoxdEqc1actQGG++eYRT9HktMSDf59Y8zq
+         IEu3BwAcpvvH9pH/jZADQim8AynqAbPZ/8NF+//UdFPN+jjWw4+B2NYzFV8rLzM2O/B7
+         2/Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rcydOW70nVBt2WhrQ5MEx1NUU78KyQhLgGrKfsLYnKE=;
+        b=cvkRN//cLC5iN31ESAnK85qEB0KAqkDOhD+RsR3Ds58FnSFPvcmtp58BfM8aqc9uka
+         wKwm1/HQA5WvD1+WvFNLB79xD5hL5VNg7cnzvFlsqwTAE3y7ZB/Ph9Kg+AYfKPHUxulc
+         pg0t9h9r77y3rM2JFVCmkiNjf7gaXGnU41F/3bOqPGXOz0myuTRJIX4YgnjW/MCEyvbW
+         RQLFQPsxrrI894hWPWWHZV9n9UgQqJyqVF6XvobykxjeWOh4jOVvMUvlib5HbZQ/i6rH
+         ASvZSDrBvKNzjQSNaSH72uHEIkXwCw0crQzdohlCu2jGncRQMtLig7MQFxtCVkUtt+Tt
+         n3Qw==
+X-Gm-Message-State: APjAAAWzRsvLE3v+ACDlGkYkEYU4HCH9le+59EyDNRiQjaPgOHQCA4C1
+        LWO56rSHxd6lT/3rphcmss5sZw==
+X-Google-Smtp-Source: APXvYqxi617JdD5W+kC67+u9HU0QK3FbZtBaYU7SVdRiq0lXyfDfYn7ExO0wqjFAymUs/5beoqERcQ==
+X-Received: by 2002:a7b:c106:: with SMTP id w6mr43693379wmi.80.1563442585757;
+        Thu, 18 Jul 2019 02:36:25 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id u13sm31569350wrq.62.2019.07.18.02.36.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 18 Jul 2019 02:36:25 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1563385526-20805-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <fca59732-cd98-7e44-8c92-49ebafc6f41c@virtuozzo.com>
-Date:   Thu, 18 Jul 2019 12:30:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+Subject: [PATCH] ARM: dts: meson8b: add ethernet fifo sizes
+Date:   Thu, 18 Jul 2019 11:36:23 +0200
+Message-Id: <20190718093623.23598-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1563385526-20805-1-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.07.2019 20:45, Yang Shi wrote:
-> Shakeel Butt reported premature oom on kernel with
-> "cgroup_disable=memory" since mem_cgroup_is_root() returns false even
-> though memcg is actually NULL.  The drop_caches is also broken.
-> 
-> It is because commit aeed1d325d42 ("mm/vmscan.c: generalize shrink_slab()
-> calls in shrink_node()") removed the !memcg check before
-> !mem_cgroup_is_root().  And, surprisingly root memcg is allocated even
-> though memory cgroup is disabled by kernel boot parameter.
-> 
-> Add mem_cgroup_disabled() check to make reclaimer work as expected.
-> 
-> Fixes: aeed1d325d42 ("mm/vmscan.c: generalize shrink_slab() calls in shrink_node()")
-> Reported-by: Shakeel Butt <shakeelb@google.com>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: stable@vger.kernel.org  4.19+
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+If unspecified in DT, the fifo sizes are not automatically detected by
+the dwmac1000 dma driver and the reported fifo sizes default to 0.
+Because of this, flow control will be turned off on the device.
 
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Add the fifo sizes provided by the datasheet in the SoC in DT so
+flow control may be enabled if necessary.
 
-Surprise really.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-We have mem_cgroup as not early inited, so all of these boundary
-cases and checks has to be supported. But it looks like it's not
-possible to avoid that in any way.
-
-> ---
->  mm/vmscan.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index f8e3dcd..c10dc02 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -684,7 +684,14 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
->  	unsigned long ret, freed = 0;
->  	struct shrinker *shrinker;
->  
-> -	if (!mem_cgroup_is_root(memcg))
-> +	/*
-> +	 * The root memcg might be allocated even though memcg is disabled
-> +	 * via "cgroup_disable=memory" boot parameter.  This could make
-> +	 * mem_cgroup_is_root() return false, then just run memcg slab
-> +	 * shrink, but skip global shrink.  This may result in premature
-> +	 * oom.
-> +	 */
-> +	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
->  		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
->  
->  	if (!down_read_trylock(&shrinker_rwsem))
-> 
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index fba2c70c2fda..b044ad78b475 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -410,6 +410,8 @@
+ 		 <&clkc CLKID_MPLL2>,
+ 		 <&clkc CLKID_MPLL2>;
+ 	clock-names = "stmmaceth", "clkin0", "clkin1";
++	rx-fifo-depth = <4096>;
++	tx-fifo-depth = <2048>;
+ 
+ 	resets = <&reset RESET_ETHERNET>;
+ 	reset-names = "stmmaceth";
+-- 
+2.21.0
 
