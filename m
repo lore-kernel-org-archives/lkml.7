@@ -2,132 +2,143 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB64AC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED970C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC9B21783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA8421848
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389909AbfGRJ64 (ORCPT
+        id S2389945AbfGRJ7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:58:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56724 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfGRJ6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:58:54 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ho3BY-0007Fy-6S; Thu, 18 Jul 2019 11:58:48 +0200
-Date:   Thu, 18 Jul 2019 11:58:47 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     luferry <luferry@163.com>
-cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH v2] smp: avoid generic_exec_single cause system
- lockup
-In-Reply-To: <5f5fbd7.1073c.16c0446ea63.Coremail.luferry@163.com>
-Message-ID: <alpine.DEB.2.21.1907181122240.1984@nanos.tec.linutronix.de>
-References: <20190718080308.48381-1-luferry@163.com> <alpine.DEB.2.21.1907181007340.1778@nanos.tec.linutronix.de> <5f5fbd7.1073c.16c0446ea63.Coremail.luferry@163.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 18 Jul 2019 05:59:01 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:35456 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfGRJ7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 05:59:00 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 812141A0047;
+        Thu, 18 Jul 2019 11:58:57 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 802091A00EE;
+        Thu, 18 Jul 2019 11:58:51 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 479FE402D5;
+        Thu, 18 Jul 2019 17:58:44 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH 2/2] gpio: mpc8xxx: Add ls1028a device specify function.
+Date:   Thu, 18 Jul 2019 17:49:02 +0800
+Message-Id: <20190718094902.15562-2-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190718094902.15562-1-hui.song_1@nxp.com>
+References: <20190718094902.15562-1-hui.song_1@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019, luferry wrote:
-> At 2019-07-18 16:07:58, "Thomas Gleixner" <tglx@linutronix.de> wrote:
-> >On Thu, 18 Jul 2019, luferry@163.com wrote:
-> >
-> >> From: luferry <luferry@163.com>
-> >> 
-> >> The race can reproduced by sending wait enabled IPI in softirq/irq env
-> >
-> >Which code path is doing that?
->
-> I checked kernel and found no code path can run into this.
+From: Song Hui <hui.song_1@nxp.com>
 
-For a good reason.
+There is a device specify register(named GPIO_IBE)
+on ls1028a need to enable in initial stage.
 
-> Actually , i encounter with this problem by my own code.
-> I need to do some specific urgent work periodicity and these 
-> work may run for quite a while. So i can't disable irq during these work 
-> which stops me from using hrtimer to do this. So i did add an extra 
-> sofitrq action which may invoke smp_call.
-
-Well, from softirq handling context the only allowed interface is
-smp_call_function_single_async().
-
-The code is actually missing a warning to that effect. See below.
-
-Vs. your proposed change. It's broken in various ways and no, we are not
-going to support that and definitely we are not going to disable interrupts
-around a loop over all cpus in a mask.
-
-Thanks,
-
-	tglx
-
-8<--------------
-Subject: smp: Warn on function calls from softirq context
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Thu, 18 Jul 2019 11:20:09 +0200
-
-It's clearly documented that smp function calls cannot be invoked from
-softirq handling context. Unfortunately nothing enforces that or emits a
-warning.
-
-A single function call can be invoked from softirq context only via
-smp_call_function_single_async().
-
-Reported-by: luferry <luferry@163.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- kernel/smp.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/gpio/gpio-mpc8xxx.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -291,6 +291,15 @@ int smp_call_function_single(int cpu, sm
- 	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
- 		     && !oops_in_progress);
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index c8673a5..1a680aa 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -32,6 +32,7 @@
+ #define GPIO_IMR		0x10
+ #define GPIO_ICR		0x14
+ #define GPIO_ICR2		0x18
++#define GPIO_IBE		0x18
  
-+	/*
-+	 * Can deadlock when the softirq is executed on return from
-+	 * interrupt and the interrupt hit between llist_add() and
-+	 * arch_send_call_function_single_ipi() because then this
-+	 * invocation sees the list non-empty, skips the IPI send
-+	 * and waits forever.
-+	 */
-+	WARN_ON_ONCE(is_serving_softirq() && wait);
-+
- 	csd = &csd_stack;
- 	if (!wait) {
- 		csd = this_cpu_ptr(&csd_data);
-@@ -416,6 +425,13 @@ void smp_call_function_many(const struct
- 	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
- 		     && !oops_in_progress && !early_boot_irqs_disabled);
+ struct mpc8xxx_gpio_chip {
+ 	struct gpio_chip	gc;
+@@ -45,6 +46,27 @@ struct mpc8xxx_gpio_chip {
+ 	unsigned int irqn;
+ };
  
-+	/*
-+	 * Bottom half handlers are not allowed to call this as they might
-+	 * corrupt cfd_data when the interrupt which triggered softirq
-+	 * processing hit this function.
-+	 */
-+	WARN_ON_ONCE(is_serving_softirq());
++/* The GPIO Input Buffer Enable register(GPIO_IBE) is used to
++ * control the input enable of each individual GPIO port.
++ * When an individual GPIO port’s direction is set to
++ * input (GPIO_GPDIR[DRn=0]), the associated input enable must be
++ * set (GPIOxGPIE[IEn]=1) to propagate the port value to the GPIO
++ * Data Register.
++ */
++static int ls1028a_gpio_dir_in_init(struct gpio_chip *gc)
++{
++	unsigned long flags;
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = gpiochip_get_data(gc);
 +
- 	/* Try to fastpath.  So, what's a CPU they want? Ignoring this one. */
- 	cpu = cpumask_first_and(mask, cpu_online_mask);
- 	if (cpu == this_cpu)
-
++	spin_lock_irqsave(&gc->bgpio_lock, flags);
++
++	gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
++
++	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
++
++	return 0;
++}
++
+ /*
+  * This hardware has a big endian bit assignment such that GPIO line 0 is
+  * connected to bit 31, line 1 to bit 30 ... line 31 to bit 0.
+@@ -261,6 +283,7 @@ static const struct irq_domain_ops mpc8xxx_gpio_irq_ops = {
+ };
+ 
+ struct mpc8xxx_gpio_devtype {
++	int (*gpio_dir_in_init)(struct gpio_chip *chip);
+ 	int (*gpio_dir_out)(struct gpio_chip *, unsigned int, int);
+ 	int (*gpio_get)(struct gpio_chip *, unsigned int);
+ 	int (*irq_set_type)(struct irq_data *, unsigned int);
+@@ -271,6 +294,10 @@ static const struct mpc8xxx_gpio_devtype mpc512x_gpio_devtype = {
+ 	.irq_set_type = mpc512x_irq_set_type,
+ };
+ 
++static const struct mpc8xxx_gpio_devtype ls1028a_gpio_devtype = {
++	.gpio_dir_in_init = ls1028a_gpio_dir_in_init,
++};
++
+ static const struct mpc8xxx_gpio_devtype mpc5125_gpio_devtype = {
+ 	.gpio_dir_out = mpc5125_gpio_dir_out,
+ 	.irq_set_type = mpc512x_irq_set_type,
+@@ -291,6 +318,7 @@ static const struct of_device_id mpc8xxx_gpio_ids[] = {
+ 	{ .compatible = "fsl,mpc5121-gpio", .data = &mpc512x_gpio_devtype, },
+ 	{ .compatible = "fsl,mpc5125-gpio", .data = &mpc5125_gpio_devtype, },
+ 	{ .compatible = "fsl,pq3-gpio",     },
++	{ .compatible = "fsl,ls1028a-gpio", .data = &ls1028a_gpio_devtype, },
+ 	{ .compatible = "fsl,qoriq-gpio",   },
+ 	{}
+ };
+@@ -376,6 +404,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	/* ack and mask all irqs */
+ 	gc->write_reg(mpc8xxx_gc->regs + GPIO_IER, 0xffffffff);
+ 	gc->write_reg(mpc8xxx_gc->regs + GPIO_IMR, 0);
++	/* enable input buffer  */
++	if (devtype->gpio_dir_in_init)
++		devtype->gpio_dir_in_init(gc);
+ 
+ 	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+ 					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
+-- 
+2.9.5
 
