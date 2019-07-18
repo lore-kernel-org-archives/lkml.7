@@ -4,63 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F7AC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144F9C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012BC2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A7A21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563468621;
-	bh=YmJhX/tMxM3yDYef/MStj63pU5kcSA7S06sIfI4oBP0=;
+	s=default; t=1563468624;
+	bh=kYwUc7H92PsudVECq4mHUyluC1VcRyqDzW3fRYa/hvY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2LX1tBVUpZttwg7mUDCme4yzkoy7T+Fw6h/oFNId0lwh6Wj0HSZH82lwsgDOEBv6X
-	 T6T6pWPi7ilMYV6Vbdm4CcFUH8A1+TlShtFw60S8gOPifcEwwwJ3yYR48hghpIkKLM
-	 WS195Sxq64iPk9xqtR9vPeMv4xw0QOixW0CeLpVM=
+	b=EOWd9QLqfY2mJNF6tCmoQOubMvZFoVTQ+VqsTMasnzFhaoKTN6h6/AUcG0ePb2TAr
+	 0V0muQUVX3q5BEUskIC2ZO9G/1PalrbCx/UT54J78XanCd1VzJbo5UdteqTu58y5cj
+	 C7yHXtjZYTcuMJGxs8x3yjXSTextQ6d4MCM3pMgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390961AbfGRQuU (ORCPT
+        id S2390856AbfGRQuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33220 "EHLO mail.kernel.org"
+        Thu, 18 Jul 2019 12:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390323AbfGRQuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:50:18 -0400
-Subject: Re: [GIT PULL] sound fixes for 5.3-rc1
+        id S1726040AbfGRQuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:50:17 -0400
+Subject: Re: [GIT PULL] More power management updates for v5.3-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563468617;
-        bh=YmJhX/tMxM3yDYef/MStj63pU5kcSA7S06sIfI4oBP0=;
+        s=default; t=1563468616;
+        bh=kYwUc7H92PsudVECq4mHUyluC1VcRyqDzW3fRYa/hvY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OvhGCLeBaiNncrrQsyRFnW5WEGcdX1Vsih2aR+0iWnnthoA9G9vwU7c0BUYP00IiD
-         dAtuT+t+jOc+OXyt1gauqa+glfxGlGN6+S04Zjsq1yV5R262A30TkISwyOixu+FFzX
-         VLT1BfX3A3NPtGyxDRhIEFX0N4bFm41Ayg/jCi28=
+        b=ylus85Fc0o04qFLZx9LmFWXZlBlUtCVItLcKUyDytG5n/h3wGlOB5I+CliqmLd50b
+         jIJJ4BmM9X/ixCzIxIzo+x63wGjPE730b9vluxW3od+sKBNVwV/lBBY8jopiKJ9xlL
+         9fAEkUtbW2RQCEnvZLBAepORKDhFroEgThSOv8zM=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <s5hblxrpsl7.wl-tiwai@suse.de>
-References: <s5hblxrpsl7.wl-tiwai@suse.de>
+In-Reply-To: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
+References: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <s5hblxrpsl7.wl-tiwai@suse.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
- tags/sound-fix-5.3-rc1
-X-PR-Tracked-Commit-Id: 4914da2fb0c89205790503f20dfdde854f3afdd8
+X-PR-Tracked-Message-Id: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+ pm-5.3-rc1-2
+X-PR-Tracked-Commit-Id: 918e162e6a71e924a343b41f71789ad14e1e3229
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2ae048e16636afd7521270acacb08d9c42fd23f0
-Message-Id: <156346861733.19804.1983223122027489541.pr-tracker-bot@kernel.org>
-Date:   Thu, 18 Jul 2019 16:50:17 +0000
-To:     Takashi Iwai <tiwai@suse.de>
+X-PR-Merge-Commit-Id: d0411ec8ca6b98061023873e334323ef102100cc
+Message-Id: <156346861620.19804.11274811882223588044.pr-tracker-bot@kernel.org>
+Date:   Thu, 18 Jul 2019 16:50:16 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 18 Jul 2019 12:03:48 +0200:
+The pull request you sent on Thu, 18 Jul 2019 11:06:18 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-fix-5.3-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc1-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2ae048e16636afd7521270acacb08d9c42fd23f0
+https://git.kernel.org/torvalds/c/d0411ec8ca6b98061023873e334323ef102100cc
 
 Thank you!
 
