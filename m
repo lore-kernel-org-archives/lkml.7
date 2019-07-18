@@ -7,161 +7,254 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B78C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77F0C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E7020693
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A24A20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FqQjLLrU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ugx20yte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389679AbfGRJpf (ORCPT
+        id S2389808AbfGRJpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:45:35 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7436 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfGRJpf (ORCPT
+        Thu, 18 Jul 2019 05:45:40 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:48530 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfGRJpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:45:35 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d303fbc0000>; Thu, 18 Jul 2019 02:45:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 18 Jul 2019 02:45:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 02:45:34 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
- 2019 09:45:32 +0000
-Subject: Re: [PATCH v1] soc/tegra: pmc: Query PCLK clock rate at probe time
+        Thu, 18 Jul 2019 05:45:39 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190718094537epoutp0325fa53f8ca90d0a0158aae7cfe764240~ydz-2krC91399113991epoutp03l
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:45:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190718094537epoutp0325fa53f8ca90d0a0158aae7cfe764240~ydz-2krC91399113991epoutp03l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563443137;
+        bh=IUzvKwiihCCaFbylXw8HFyTv0vnTNdT51WeEMszXPSE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ugx20yte6JtYUGLCxDMrTFOij3pujkW/1Pc2lVP3skqrbbc4KTeinhgSsh6yVbOrr
+         T+YpPKQH2kWQF0Dj6Nqd15AYpOiODCYKxyhdBPT2ixh/qVq5XnRc5IVIf8gtsHCPkr
+         FjRVgK+zNiOVxR4fYSGBDOidzrMAeRsOVkc9xN9I=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190718094536epcas1p27d8cfb2336fd295199f678ee09f03edb~ydz-jbd721698816988epcas1p2d;
+        Thu, 18 Jul 2019 09:45:36 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 45q8Q61ffFzMqYkY; Thu, 18 Jul
+        2019 09:45:34 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        11.88.04085.EBF303D5; Thu, 18 Jul 2019 18:45:34 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190718094533epcas1p45c6a0eb2630f8e002f47005cc7e3d2c5~ydz8cklBE2108621086epcas1p49;
+        Thu, 18 Jul 2019 09:45:33 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190718094533epsmtrp1fd51ee266c5a3392f477652fc8ca0588~ydz8arDzk1411314113epsmtrp1X;
+        Thu, 18 Jul 2019 09:45:33 +0000 (GMT)
+X-AuditID: b6c32a39-d03ff70000000ff5-da-5d303fbe62a0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        94.2C.03638.DBF303D5; Thu, 18 Jul 2019 18:45:33 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190718094533epsmtip19d0271ae4d8ce3ef31a341598b702929~ydz8RqNZX1887418874epsmtip1p;
+        Thu, 18 Jul 2019 09:45:33 +0000 (GMT)
+Subject: Re: [PATCH v4 18/24] PM / devfreq: tegra30: Optimize CPUFreq
+ notifier
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190707230843.11224-1-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
-Date:   Thu, 18 Jul 2019 10:45:31 +0100
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <ce18694a-4281-a245-7bdf-299fedc3c724@samsung.com>
+Date:   Thu, 18 Jul 2019 18:48:42 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190707230843.11224-1-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190707223303.6755-19-digetx@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563443132; bh=u8c0NlynrGVUWsDz/CzhhNNqyF1INsuspIBnpJ+/lfM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FqQjLLrUQDHOoHPei66yOGo/ApxHwTZYRLuLLCBYe2NpwB41A6HqrYEwTAjykjaDN
-         CzPZDIz/LbBfnHKgF97S6ooUw9OJvot5vtle6+d1BXkTFIR+6ZEGex4uCW/e3GBhFn
-         RXxyzr43f7zwAsukSwJiUAz/cvgDlHXrf4ymfWM1H5ls9hEnajUQSUmfVARmklfdQe
-         2jgko4hiAppZQwDqt2iSnqQJza+iU/IF5lsPakDy/rSWGTBMOQVUSq2vE4QW9tCn4x
-         xTb4pY/pyWWLvjAGsPS6rnmGY5vBRpCrZT0A8Rmq7XmUsjt5K46gpqi5d9VTlzaeX1
-         Vx+otw0CWkyAA==
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTURzHO9u8m9HyNrN+LjJ3w0JB3XXOrpE9yGJQhGHBKmxd3PGBe7W7
+        hdU/mlFqLyUiWr6wLFNiJlo6Mksts7euF5olGFESRllRWdLd7iL/+5zf7/s73/M958jECjeh
+        lOVaHNhuYU0UMVNytTs6LvbGKnWG+l3HLKbx8yhiDrpqJczDAx+ljNdTQTATx3oQU/LVRTBD
+        hfUE89NTJWGOXx4gVgfr2obPI127a1iqO1Y0TuiOtzQg3URzRFrQ9rwVOZg1YnsktmRajbmW
+        7BRqQ7phrUGbpKZj6WRmGRVpYc04hUrdmBa7PtfEH4iK3MOanHwpjeU4Kn7lCrvV6cCROVbO
+        kUJhm9FkS7bFcayZc1qy4zKt5uW0Wp2g5YW78nJ+TRlsdVH5T71vRAVoYmEpCpYBmQgd76tF
+        PlaQbQhO/U4tRTN5/oLguadOLCy+IxjoLUP/JgrvXyCERgeC1sHRwOITgr7aUr8qlEyD4qEH
+        El9jLjmFoORnEeFriMlt0N3e6DckyBjofP/SXw8hVfDsx6h/WE6uhAtN9/wsIaPAe/Ox1Mdh
+        pB7u9VRJBM0c6Dvz1s/BZBKcrhgQCfvPh8G31QFeBEWtZ/0ZgJwkoPraYCBDKrzu/RPgUBjr
+        bZEKrIQPJw4FeD9c6ushhOFiBC2dT4KEhgY6607yDjLeIRrcnnihrIL2yUokGM+G8W9Hg3wS
+        IOVQfEghSBaDd2RYJHA4nDtcQpQhyjUtjmtaBNe0CK7/ZjVI0oDmYRtnzsYcbdNOf+1m5P+s
+        Mclt6M6jjV2IlCFqlvwlFZ+hCGL3cHvNXQhkYmqufOgDX5Ib2b37sN1qsDtNmOtCWv62y8XK
+        sEwr//UtDgOtTdBoNEwinaSlaWq+vOp3dIaCzGYdOA9jG7b/mxPJgpUFqL16uHvptcYXesZq
+        bPg8EuL8c7oA93eXdW4dI2+1ORdMjm7ismYY1qn6r/bPiBgrnxA36bJCQyovPq25ibz0zkT9
+        yK07+SpP7YvNV/K33NYkPMpyV+6Qhp+Jbb6b525p1R9It+lOKo5UJRmfXV9Sv3vh0OtF+8ZN
+        WD61RlOoJF5REi6HpWPEdo79C6j+tpvCAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnO5ee4NYg3ldCharPz5mtGiZtYjF
+        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
+        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZv/7FFyxVrbhy+T5TA+Nn2S5GTg4JAROJxtPL
+        2EBsIYHdjBKvn9ZCxCUlpl08ytzFyAFkC0scPlzcxcgFVPKWUeLsprvMIDXCAn4SvadvMYMk
+        RASamCQ29V5gB0kwC0RK9MzdwgbRsYVR4vapNrAONgEtif0vboBt4xdQlLj64zEjiM0rYCex
+        bMMpMJtFQFXi8oHzYINEBSIkJl3byQJRIyhxcuYTMJtTwExi+pxLTBDL1CX+zLvEDGGLS9x6
+        Mh8qLi/RvHU28wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1
+        kvNzNzGCI0xLawfjiRPxhxgFOBiVeHhvKOnHCrEmlhVX5h5ilOBgVhLhvf0SKMSbklhZlVqU
+        H19UmpNafIhRmoNFSZxXPv9YpJBAemJJanZqakFqEUyWiYNTqoEx+dTeF//2iFcwfw3/d95F
+        cbOJr3sB9xnmzl8qpwUf8pR0W+v9UO17OY/5178f0//n1jrb+Rd69F7b9dOK69ri4g0XbsT4
+        lOyZe15i9W/lf6UFVcc0F368cUllr5Rh5bZ7p/Xm+6wo/JS6Zk3xndm/bql+suNacSNMo+HD
+        QaPY5TlKtvG8nqszlFiKMxINtZiLihMBMdrP66wCAAA=
+X-CMS-MailID: 20190718094533epcas1p45c6a0eb2630f8e002f47005cc7e3d2c5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190707223618epcas4p48e1e2ae7af04775ac50c68b7636f1a56
+References: <20190707223303.6755-1-digetx@gmail.com>
+        <CGME20190707223618epcas4p48e1e2ae7af04775ac50c68b7636f1a56@epcas4p4.samsung.com>
+        <20190707223303.6755-19-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 08/07/2019 00:08, Dmitry Osipenko wrote:
-> The PCLK clock is running off SCLK, which is a critical clock that is
-> very unlikely to randomly change its rate. It's also a bit clumsy (and
-> apparently incorrect) to query the clock's rate with interrupts being
-> disabled because clk_get_rate() takes a mutex and that's the case during
-> suspend/cpuidle entering. Lastly, it's better to always fully reprogram
-> PMC state because it's not obvious whether it could be changed after SC7.
-
-I agree with the first part, but I would drop the last sentence because
-I see no evidence of this. Maybe Peter can confirm.
-
+On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
+> When CPU's memory activity is low or memory activity is high such that
+> CPU's frequency contribution to the boosting is not taken into account,
+> then there is no need to schedule devfreq's update. This eliminates
+> unnecessary CPU activity during of idling caused by the scheduled work.
+> 
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/soc/tegra/pmc.c | 26 +++++++++++---------------
->  1 file changed, 11 insertions(+), 15 deletions(-)
+>  drivers/devfreq/tegra30-devfreq.c | 73 +++++++++++++++++++++++++++----
+>  1 file changed, 64 insertions(+), 9 deletions(-)
+
+Patch4 add the 'cpufreq notifier' and this patch optimize the cpufreq notifier.
+I think t hat you can combine two patches.
+
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 9f9c1c677cf4..532e0ada012b 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -1433,6 +1433,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
->  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
->  {
->  	unsigned long long rate = 0;
-> +	u64 ticks;
->  	u32 value;
->  
->  	switch (mode) {
-> @@ -1441,7 +1442,7 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
->  		break;
->  
->  	case TEGRA_SUSPEND_LP2:
-> -		rate = clk_get_rate(pmc->clk);
-> +		rate = pmc->rate;
-
-There is another call to clk_get_rate() that could be removed as well.
-
->  		break;
->  
->  	default:
-> @@ -1451,26 +1452,20 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
->  	if (WARN_ON_ONCE(rate == 0))
->  		rate = 100000000;
->  
-> -	if (rate != pmc->rate) {
-> -		u64 ticks;
-> -
-> -		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
-> -		do_div(ticks, USEC_PER_SEC);
-> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
-> -
-> -		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
-> -		do_div(ticks, USEC_PER_SEC);
-> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
-> +	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
-> +	do_div(ticks, USEC_PER_SEC);
-> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
-
-You could go a step further and update the cpu_good_time/cpu_off_time to
-be ticks and calculated once during probe and recalculated if
-tegra_pmc_set_suspend_mode is called. I am not sure why we really need
-to pass mode to tegra_pmc_enter_suspend_mode() seeing as the mode is
-stored in the pmc struct.
-
->  
-> -		wmb();
-> -
-> -		pmc->rate = rate;
-> -	}
-> +	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
-> +	do_div(ticks, USEC_PER_SEC);
-> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
->  
->  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
->  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
->  	value |= PMC_CNTRL_CPU_PWRREQ_OE;
->  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
-> +
-> +	wmb();
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 43c9c5fbfe91..8d6bf6e9f1ae 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -216,10 +216,10 @@ static inline unsigned long do_percent(unsigned long val, unsigned int pct)
+>  	return val * pct / 100;
 >  }
->  #endif
 >  
-> @@ -2082,6 +2077,7 @@ static int tegra_pmc_probe(struct platform_device *pdev)
->  		pmc->clk = NULL;
->  	}
+> -static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra)
+> +static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+> +					    unsigned int cpu_freq)
+>  {
+>  	const struct tegra_actmon_emc_ratio *ratio = actmon_emc_ratios;
+> -	unsigned int cpu_freq = cpufreq_get(0);
+>  	unsigned int i;
 >  
-> +	pmc->rate = clk_get_rate(pmc->clk);
+>  	for (i = 0; i < ARRAY_SIZE(actmon_emc_ratios); i++, ratio++) {
+> @@ -239,15 +239,15 @@ tegra_actmon_account_cpu_freq(struct tegra_devfreq *tegra,
+>  			      struct tegra_devfreq_device *dev,
+>  			      unsigned long target_freq)
+>  {
+> -	unsigned long static_cpu_emc_freq;
+> +	unsigned long cpu_emc_freq = 0;
+>  
+> -	if (dev->config->avg_dependency_threshold &&
+> -	    dev->config->avg_dependency_threshold < dev->avg_freq) {
+> -		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra);
+> -		target_freq = max(target_freq, static_cpu_emc_freq);
+> -	}
+> +	if (!dev->config->avg_dependency_threshold)
+> +		return target_freq;
+>  
+> -	return target_freq;
+> +	if (dev->avg_freq > dev->config->avg_dependency_threshold)
+> +		cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpufreq_get(0));
+> +
+> +	return max(target_freq, cpu_emc_freq);
+>  }
+>  
+>  static unsigned long tegra_actmon_lower_freq(struct tegra_devfreq *tegra,
+> @@ -531,16 +531,71 @@ static void tegra_actmon_delayed_update(struct work_struct *work)
+>  	mutex_unlock(&tegra->devfreq->lock);
+>  }
+>  
+> +static unsigned long
+> +tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
+> +				  unsigned int cpu_freq)
+> +{
+> +	unsigned long freq, static_cpu_emc_freq;
+> +
+> +	/* check whether CPU's freq is taken into account at all */
+> +	if (tegra->devices[MCCPU].avg_freq <=
+> +	    tegra->devices[MCCPU].config->avg_dependency_threshold)
+> +		return 0;
+> +
+> +	static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+> +
+> +	/* compare static CPU-EMC freq with MCALL */
+> +	freq = tegra->devices[MCALL].avg_freq +
+> +	       tegra->devices[MCALL].boost_freq;
+> +
+> +	freq = tegra_actmon_upper_freq(tegra, freq);
+> +
+> +	if (freq == tegra->max_freq || freq >= static_cpu_emc_freq)
+> +		return 0;
+> +
+> +	/* compare static CPU-EMC freq with MCCPU */
+> +	freq = tegra->devices[MCCPU].avg_freq +
+> +	       tegra->devices[MCCPU].boost_freq;
+> +
+> +	freq = tegra_actmon_upper_freq(tegra, freq);
+> +
+> +	if (freq == tegra->max_freq || freq >= static_cpu_emc_freq)
+> +		return 0;
+> +
+> +	return static_cpu_emc_freq;
+> +}
+> +
+>  static int tegra_actmon_cpu_notify_cb(struct notifier_block *nb,
+>  				      unsigned long action, void *ptr)
+>  {
+> +	struct cpufreq_freqs *freqs = ptr;
+>  	struct tegra_devfreq *tegra;
+> +	unsigned long old, new;
+>  
+>  	if (action != CPUFREQ_POSTCHANGE)
+>  		return NOTIFY_OK;
+>  
+>  	tegra = container_of(nb, struct tegra_devfreq, cpu_rate_change_nb);
+>  
+> +	/*
+> +	 * Quickly check whether CPU frequency should be taken into account
+> +	 * at all, without blocking CPUFreq's core.
+> +	 */
+> +	if (mutex_trylock(&tegra->devfreq->lock)) {
+> +		old = tegra_actmon_cpufreq_contribution(tegra, freqs->old);
+> +		new = tegra_actmon_cpufreq_contribution(tegra, freqs->new);
+> +		mutex_unlock(&tegra->devfreq->lock);
+> +
+> +		/*
+> +		 * If CPU's frequency shouldn't be taken into account at
+> +		 * the moment, then there is no need to update the devfreq's
+> +		 * state because ISR will re-check CPU's frequency on the
+> +		 * next interrupt.
+> +		 */
+> +		if (old == new)
+> +			return NOTIFY_OK;
+> +	}
+> +
+>  	/*
+>  	 * CPUFreq driver should support CPUFREQ_ASYNC_NOTIFICATION in order
+>  	 * to allow asynchronous notifications. This means we can't block
+> 
 
-You should check the value returned is not 0 here.
-
-Cheers
-Jon
 
 -- 
-nvpublic
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
