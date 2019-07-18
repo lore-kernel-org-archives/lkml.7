@@ -2,155 +2,109 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63264C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFC5C76198
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E217208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86FEE208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:30:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XGlyw6Q8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391553AbfGRVaK (ORCPT
+        id S2391606AbfGRVaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:30:10 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35212 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfGRVaJ (ORCPT
+        Thu, 18 Jul 2019 17:30:12 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35078 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391556AbfGRVaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:30:09 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r21so21732487qke.2;
-        Thu, 18 Jul 2019 14:30:07 -0700 (PDT)
+        Thu, 18 Jul 2019 17:30:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u14so13206073pfn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Kg4e7WJhopl3gfQ88VPQnEvXn0fCE4TNc6Qi8excrA=;
+        b=XGlyw6Q8ysBBtTHOOum9BHjDmPSc1sI8WLNMUrICUYMGmrsPez8FFPxmSwfvUqUFVT
+         fKCDRQp2fLC+FniwHviGGwD6ys/rDQhiy9Q6Vzl0TSVZnuWgtg9rB/BN3RAjo0IvUG15
+         uJnWwS0ATKe3d+RGYew8jbtLXtwjIO78vyz+YbvaCuVeMqmCrUZ9EI6G6VSChiBxYwUH
+         9jc5Cy9BDQMr4BOqXkp4rmsB4U+ImgqOf9zpYVygOEqUhOtup4FuvV1k27/1VjBGxJaS
+         V9wCPaRfptfw7vKmU9KJk9eXz6Q/YFDXIXDdDVEq/C80XPvnPc8uw1jXZEVRG8Z/KkjP
+         /rMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gXA3fCzwUc7S8+pRMyyFoXYQ6Lxj2094nm3NP6Me1pg=;
-        b=uCH2vUxrfcr6142uAaV9WcXORBKH/D7E4P4NiRuyJaE8kui154F7hapgGZCVK4V5oV
-         h1KnYS8zB5WGcRW0yhYqz6ThOCVt0oV80LAGfoSFKRtZfNXUcqq4Vkc98WyzSf5MEfhC
-         ChJWDCasnRmyjbS9ZdJ1VIkfY5G1MVa9zaR2pgCczj6oOHsD73sgibeBSKVPZopGXvDM
-         xY7mk5kdPJ2hzmYK77+wvt1X8GlX5DuOJeI7mCZMAvHFwnVsvpfPZ56B86qqTVg8XPES
-         7Uk5MUGfBIJqa4SUJOhaEv7m8ueBN492aEPpsSidYIuqRP6htYAWtO8+oyTfmZ0jeCe8
-         JWVw==
-X-Gm-Message-State: APjAAAVWFgTKNxdz5VJMuDG74/oEsWc7zg83gF05rrI4hZNlp1YwqMUs
-        1xmowdKoxZ9t80vjXWPDDaUz1du0yDU5c5Rfqb8=
-X-Google-Smtp-Source: APXvYqwAnwmqNY3PBxWPuNJix5kLy4PEG765j1QyxyCKOemfTtTG+YSbK8sHn1TSB6/emkF2O/3aVUhdKFw2Cxuzrg4=
-X-Received: by 2002:a37:5f45:: with SMTP id t66mr32747316qkb.286.1563485406992;
- Thu, 18 Jul 2019 14:30:06 -0700 (PDT)
+        bh=8Kg4e7WJhopl3gfQ88VPQnEvXn0fCE4TNc6Qi8excrA=;
+        b=oX1AlUSCKA9hKTsVSINWQDU/lNuFPBGB6WS8qKEEjPlNNzCB68u3JQrmOjoIWZ2XFS
+         82Kl1tHqSc4bQMr2wtBuYUxn7YoVu411W5Pbx6R5dJuT3sAi3dP7QRgt+wqtl8AAWRUO
+         41iUJd3QBQTNi5VNBtTUpr3E6qfXBgIn9isvqaO1Xk1vYeYaQhpuft6222qe3V2/FDEf
+         kAClQxfMtG1D1RmZ7E5bg2xSwzYPLcbw0xPixSaxdRowQcK1l9zDjt4jrx/yUuh8eLqc
+         H+VByR41JzIcF1EiZg29j5R7by3E6WkCg8eRrMlmowOyolAx3ol5iJ+nhYScQoC5flIC
+         lsVQ==
+X-Gm-Message-State: APjAAAUlF1h8dNwXB1ce72nvKpYIx0qu3SeJF8nV/nlkKYgF8gbb1tEU
+        0aww5nWnC7Kgpzbqvbh3HFlk/271Whh47iNW/Zdljg==
+X-Google-Smtp-Source: APXvYqx8k89qmHUDy6zioXETxvVwoCx81KNoNX8Y5A8x1AMK1kTaZwhrNuMPCtzQJ+jSQATFEDc69e9BwaH91rPEBm8=
+X-Received: by 2002:a63:60a:: with SMTP id 10mr19112038pgg.381.1563485409250;
+ Thu, 18 Jul 2019 14:30:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190706145737.5299-1-cyphar@cyphar.com> <20190706145737.5299-9-cyphar@cyphar.com>
- <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com> <20190718161231.xcno272nvqpln3wj@yavin>
-In-Reply-To: <20190718161231.xcno272nvqpln3wj@yavin>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 18 Jul 2019 23:29:50 +0200
-Message-ID: <CAK8P3a3MiYK4bJiA3G_m5H-TpfN5__--b+=szsJBhG7_it+NQg@mail.gmail.com>
-Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        sparclinux <sparclinux@vger.kernel.org>
+References: <20190718000206.121392-1-vaibhavrustagi@google.com>
+In-Reply-To: <20190718000206.121392-1-vaibhavrustagi@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jul 2019 14:29:58 -0700
+Message-ID: <CAKwvOdm_D1RnbzP6ZSuyOjm5DuNFrST4s8ihwVfOyAXm6wOc_g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Support kexec/kdump for clang built kernel
+To:     Vaibhav Rustagi <vaibhavrustagi@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "# 3.4.x" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 6:12 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-07-18, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Sat, Jul 6, 2019 at 5:00 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >
-> > In fact, that seems similar enough to the existing openat() that I think
-> > you could also just add the fifth argument to the existing call when
-> > a newly defined flag is set, similarly to how we only use the 'mode'
-> > argument when O_CREAT or O_TMPFILE are set.
+On Wed, Jul 17, 2019 at 5:02 PM Vaibhav Rustagi
+<vaibhavrustagi@google.com> wrote:
 >
-> I considered doing this (and even had a preliminary version of it), but
-> I discovered that I was not in favour of this idea -- once I started to
-> write tests using it -- for a few reasons:
+> This patch series includes the following:
 >
->   1. It doesn't really allow for clean extension for a future 6th
->          argument (because you are using up O_* flags to signify "use the
->          next argument", and O_* flags don't give -EINVAL if they're
->          unknown). Now, yes you can do the on-start runtime check that
->          everyone does -- but I've never really liked having to do it.
+> 1. Adding compiler options to not use XMM registers in the purgatory code.
+> 2. Reuse the implementation of memcpy and memset instead of relying on
+> __builtin_memcpy and __builtin_memset as it causes infinite recursion
+> in clang.
+
+Thanks for the series, and debugging and finding the issue.  These
+would explain why I couldn't get kexec to work with Clang built
+kernels.  Comments/reviews inbound on the individual patches.
+
 >
->          Having reserved padding for later extensions (that is actually
->          checked and gives -EINVAL) matches more modern syscall designs.
+> Nick Desaulniers (1):
+>   x86/purgatory: do not use __builtin_memcpy and __builtin_memset.
 >
->   2. I really was hoping that the variadic openat(2) could be done away
->      using this union setup (Linus said he didn't like it, and suggested
->          using something like 'struct stat' as an argument for openat(2) --
->          though personally I am not sure I would personally like to use an
->          interface like that).
+> Vaibhav Rustagi (1):
+>   x86/purgatory: add -mno-sse, -mno-mmx, -mno-sse2 to Makefile
 >
->   3. In order to avoid wasting a syscall argument for mode/mask you need
->          to either have something like your suggested mode_mask (which makes
->          the syscall arguments less consistent) or have some sort of
->          mode-like argument that is treated specially (which is really awful
->          on multiple levels -- this one I also tried and even wrote my
->          original tests using). And in both cases, the shims for
->          open{,at}(2) are somewhat less clean.
+>  arch/x86/purgatory/Makefile    |  4 ++++
+>  arch/x86/purgatory/purgatory.c |  6 ++++++
+>  arch/x86/purgatory/string.c    | 23 -----------------------
+>  3 files changed, 10 insertions(+), 23 deletions(-)
+>  delete mode 100644 arch/x86/purgatory/string.c
+>
+> --
+> 2.22.0.510.g264f2c817a-goog
+>
 
-These are all good reasons, thanks for providing the background.
 
-> All of that being said, I'd be happy to switch to whatever you think
-> makes the most sense. As long as it's possible to get an O_PATH with
-> RESOLVE_IN_ROOT set, I'm happy.
-
-I don't feel I should be in charge of making the decision. I'd still
-prefer avoiding the indirect argument structure because
-
-4. it's inconsistent with most other syscalls
-
-5. you get the same problem with seccomp and strace that
-   clone3() has -- these and others only track the register
-   arguments by default.
-
-6. copying the structure adds a small overhead compared to
-   passing registers
-
-7. the calling conventions may be inconvenient for  a user space
-   library, so you end up with different prototypes for the low-level
-   syscall and the libc abstraction.
-
-I don't see any of the above seven points as a showstopper
-either way, so I hope someone else has a strong opinion
-and can make the decision easier for you.
-
-In the meantime just keep what you have, so you don't have
-to change it multiple times.
-
-       Arnd
+-- 
+Thanks,
+~Nick Desaulniers
