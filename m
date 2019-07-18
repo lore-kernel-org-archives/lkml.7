@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4015C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE07CC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B628721019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8484C21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JPGM7XsR"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KvxArwRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391132AbfGRTQh (ORCPT
+        id S2391234AbfGRTRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:16:37 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38681 "EHLO
+        Thu, 18 Jul 2019 15:17:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55947 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbfGRTQh (ORCPT
+        with ESMTP id S1727950AbfGRTRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:16:37 -0400
+        Thu, 18 Jul 2019 15:17:17 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJGKKH2125202
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJH3eA2125268
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:16:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJGKKH2125202
+        Thu, 18 Jul 2019 12:17:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJH3eA2125268
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477380;
-        bh=T+IXuzDIw9YQGbnGWuy3UCysTLAiLf1XKXf+zmgXcoc=;
+        s=2019061801; t=1563477423;
+        bh=Lru04ggB+q+jtzDE7jyxC2o5FPl/tZz9AqQl3Z43C0s=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=JPGM7XsR9z7ChFK1AbVu4na1iwhocpLUK4y+XbSx9KB4DUty6lmvhb4sq33SfJVDC
-         WT9gz10l02Acl1WdU/jLqYtlPWy+vaBEU3274QbN+63gkVrsm1N54onqlq9KxmLWgZ
-         PI2rWCGU3Wxv5TwdBsrqbHlVZ2RK7jQeOXiPZoiIhKBbMUExezYg2g+HjHlJl5E67I
-         AwMH2TrpJks6aiyXCzDJ+hJf3JEfB8jVALNainBQot9Zvjs0y3JeRabvK85wIKE2I0
-         56t7/M6SxU2eXW6T7WkxmUKlZ1nMbrID+Uj257ND5rzX6DQYqx6Rgl5fkd4O3iO+eg
-         dQl5ifxfwSLEA==
+        b=KvxArwRlfI1OUcfFi/Ri0PFXsbpazXgoDF4a5cosrM9bqmdJ4dZLMxLJj12wNIItu
+         sm4aAOROluC1EQgzepx8V73VIEV0N82Ilw+AbL0k7bXttVbdJ63qN1ReVWwKg+qtTu
+         A/n+X1G+AgilCdpSpp6JSdiGqsWrfa1NPX83l0MZBMS5yK8VNQJnxKZsuTWmKOZgl8
+         A1hmGitZm4+IZdAOx1lU2jN4EE+H/FRkAl7tIHkdOFgaAVE2Ak/ANPO+MMoTXUPcSq
+         dbfJHA4rzyjkxkqvWXc81UyVS0d8H1ranRBoeMoacAA4eb8wnvQn4mV+N+Jt5Tk09Z
+         CZupXEtVyQDAA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJGJS22125199;
-        Thu, 18 Jul 2019 12:16:19 -0700
-Date:   Thu, 18 Jul 2019 12:16:19 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJH27R2125264;
+        Thu, 18 Jul 2019 12:17:02 -0700
+Date:   Thu, 18 Jul 2019 12:17:02 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a@git.kernel.org>
-Cc:     tglx@linutronix.de, jpoimboe@redhat.com, hpa@zytor.com,
-        ndesaulniers@google.com, peterz@infradead.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: tglx@linutronix.de, ndesaulniers@google.com, jpoimboe@redhat.com,
-          hpa@zytor.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, mingo@kernel.org
-In-Reply-To: <26a99c31426540f19c9a58b9e10727c385a147bc.1563413318.git.jpoimboe@redhat.com>
-References: <26a99c31426540f19c9a58b9e10727c385a147bc.1563413318.git.jpoimboe@redhat.com>
+Message-ID: <tip-61e9b75a0ccf1fecacc28a2d77ea4a19aa404e39@git.kernel.org>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        ndesaulniers@google.com, hpa@zytor.com, mingo@kernel.org,
+        tglx@linutronix.de, jpoimboe@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com,
+          peterz@infradead.org, jpoimboe@redhat.com, tglx@linutronix.de,
+          ndesaulniers@google.com, mingo@kernel.org
+In-Reply-To: <03d429c4fa87829c61c5dc0e89652f4d9efb62f1.1563413318.git.jpoimboe@redhat.com>
+References: <03d429c4fa87829c61c5dc0e89652f4d9efb62f1.1563413318.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Refactor function alias logic
-Git-Commit-ID: e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a
+Subject: [tip:core/urgent] objtool: Warn on zero-length functions
+Git-Commit-ID: 61e9b75a0ccf1fecacc28a2d77ea4a19aa404e39
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,107 +69,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a
-Gitweb:     https://git.kernel.org/tip/e10cd8fe8ddfd28a172d2be57ae0e90c7f752e6a
+Commit-ID:  61e9b75a0ccf1fecacc28a2d77ea4a19aa404e39
+Gitweb:     https://git.kernel.org/tip/61e9b75a0ccf1fecacc28a2d77ea4a19aa404e39
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:48 -0500
+AuthorDate: Wed, 17 Jul 2019 20:36:49 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 18 Jul 2019 21:01:07 +0200
 
-objtool: Refactor function alias logic
+objtool: Warn on zero-length functions
 
-- Add an alias check in validate_functions().  With this change, aliases
-  no longer need uaccess_safe set.
-
-- Add an alias check in decode_instructions().  With this change, the
-  "if (!insn->func)" check is no longer needed.
-
-- Don't create aliases for zero-length functions, as it can have
-  unexpected results.  The next patch will spit out a warning for
-  zero-length functions anyway.
+All callable functions should have an ELF size.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/26a99c31426540f19c9a58b9e10727c385a147bc.1563413318.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/03d429c4fa87829c61c5dc0e89652f4d9efb62f1.1563413318.git.jpoimboe@redhat.com
 
 ---
- tools/objtool/check.c | 16 +++++++++-------
- tools/objtool/elf.c   |  2 +-
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ tools/objtool/check.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index d8a1ce80fded..3f8664b0e3f9 100644
+index 3f8664b0e3f9..dece3253ff6a 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -276,7 +276,7 @@ static int decode_instructions(struct objtool_file *file)
- 		}
- 
- 		list_for_each_entry(func, &sec->symbol_list, list) {
--			if (func->type != STT_FUNC)
-+			if (func->type != STT_FUNC || func->alias != func)
+@@ -2357,6 +2357,12 @@ static int validate_functions(struct objtool_file *file)
+ 			if (func->type != STT_FUNC)
  				continue;
  
- 			if (!find_insn(file, sec, func->offset)) {
-@@ -286,8 +286,7 @@ static int decode_instructions(struct objtool_file *file)
- 			}
- 
- 			func_for_each_insn(file, func, insn)
--				if (!insn->func)
--					insn->func = func;
-+				insn->func = func;
- 		}
- 	}
- 
-@@ -508,7 +507,7 @@ static void add_uaccess_safe(struct objtool_file *file)
- 		if (!func)
- 			continue;
- 
--		func->alias->uaccess_safe = true;
-+		func->uaccess_safe = true;
- 	}
- }
- 
-@@ -1887,7 +1886,7 @@ static bool insn_state_match(struct instruction *insn, struct insn_state *state)
- static inline bool func_uaccess_safe(struct symbol *func)
- {
- 	if (func)
--		return func->alias->uaccess_safe;
-+		return func->uaccess_safe;
- 
- 	return false;
- }
-@@ -2355,14 +2354,17 @@ static int validate_functions(struct objtool_file *file)
- 
- 	for_each_sec(file, sec) {
- 		list_for_each_entry(func, &sec->symbol_list, list) {
--			if (func->type != STT_FUNC || func->pfunc != func)
-+			if (func->type != STT_FUNC)
-+				continue;
++			if (!func->len) {
++				WARN("%s() is missing an ELF size annotation",
++				     func->name);
++				warnings++;
++			}
 +
-+			if (func->pfunc != func || func->alias != func)
+ 			if (func->pfunc != func || func->alias != func)
  				continue;
  
- 			insn = find_insn(file, sec, func->offset);
- 			if (!insn || insn->ignore || insn->visited)
- 				continue;
- 
--			state.uaccess = func->alias->uaccess_safe;
-+			state.uaccess = func->uaccess_safe;
- 
- 			ret = validate_branch(file, func, insn, state);
- 			if (ret && backtrace)
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index e18698262837..9194732a673d 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -278,7 +278,7 @@ static int read_symbols(struct elf *elf)
- 			}
- 
- 			if (sym->offset == s->offset) {
--				if (sym->len == s->len && alias == sym)
-+				if (sym->len && sym->len == s->len && alias == sym)
- 					alias = s;
- 
- 				if (sym->len >= s->len) {
