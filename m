@@ -2,142 +2,87 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DCBC76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA99C21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC30217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 02:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733059AbfGRCmi (ORCPT
+        id S1732999AbfGRCrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 22:42:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727804AbfGRCmi (ORCPT
+        Wed, 17 Jul 2019 22:47:39 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:45094 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbfGRCri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 22:42:38 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6I2bkH8014658
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 22:42:37 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttd9adag3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 22:42:36 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
-        Thu, 18 Jul 2019 03:42:35 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 03:42:30 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6I2gT4Q42598804
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 02:42:29 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6C30AE062;
-        Thu, 18 Jul 2019 02:42:29 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE5C0AE05C;
-        Thu, 18 Jul 2019 02:42:17 +0000 (GMT)
-Received: from LeoBras.ibmuc.com (unknown [9.85.131.254])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 02:42:16 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in ZONE_MOVABLE
-Date:   Wed, 17 Jul 2019 23:41:34 -0300
-X-Mailer: git-send-email 2.20.1
+        Wed, 17 Jul 2019 22:47:38 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x6I2jKju025492, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x6I2jKju025492
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 18 Jul 2019 10:45:20 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 18 Jul
+ 2019 10:45:19 +0800
+From:   Pkshih <pkshih@realtek.com>
+To:     "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "natechancellor@gmail.com" <natechancellor@gmail.com>,
+        "hariprasad.kelam@gmail.com" <hariprasad.kelam@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH] rtlwifi: btcoex: fix issue possible condition with no effect (if == else)
+Thread-Topic: [PATCH] rtlwifi: btcoex: fix issue possible condition with no
+ effect (if == else)
+Thread-Index: AQHVOOY1W6hVhmptY0OYy+EIYozmE6bPLcOA
+Date:   Thu, 18 Jul 2019 02:45:19 +0000
+Message-ID: <1563417919.4276.0.camel@realtek.com>
+References: <20190712191535.GA4215@hari-Inspiron-1545>
+In-Reply-To: <20190712191535.GA4215@hari-Inspiron-1545>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.69.114]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8A9B338587918D4EA57C625C3531B5C5@realtek.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071802-2213-0000-0000-000003B290F7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011449; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01233723; UDB=6.00650096; IPR=6.01015051;
- MB=3.00027769; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 02:42:33
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071802-2214-0000-0000-00005F49F2FE
-Message-Id: <20190718024133.3873-1-leonardo@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds an option on kernel config to make hot-added memory online in
-ZONE_MOVABLE by default.
-
-This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=y by
-allowing to choose which zone it will be auto-onlined
-
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- drivers/base/memory.c |  3 +++
- mm/Kconfig            | 14 ++++++++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index f180427e48f4..378b585785c1 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -670,6 +670,9 @@ static int init_memory_block(struct memory_block **memory,
- 	mem->state = state;
- 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
- 	mem->phys_device = arch_get_memory_phys_device(start_pfn);
-+#ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
-+	mem->online_type = MMOP_ONLINE_MOVABLE;
-+#endif
- 
- 	ret = register_memory(mem);
- 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index f0c76ba47695..74e793720f43 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -180,6 +180,20 @@ config MEMORY_HOTREMOVE
- 	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
- 	depends on MIGRATION
- 
-+config MEMORY_HOTPLUG_MOVABLE
-+	bool "Enhance the likelihood of hot-remove"
-+	depends on MEMORY_HOTREMOVE
-+	help
-+	  This option sets the hot-added memory zone to MOVABLE which
-+	  drastically reduces the chance of a hot-remove to fail due to
-+	  unmovable memory segments. Kernel memory can't be allocated in
-+	  this zone.
-+
-+	  Say Y here if you want to have better chance to hot-remove memory
-+	  that have been previously hot-added.
-+	  Say N here if you want to make all hot-added memory available to
-+	  kernel space.
-+
- # Heavily threaded applications may benefit from splitting the mm-wide
- # page_table_lock, so that faults on different parts of the user address
- # space can be handled with less contention: split it at this NR_CPUS.
--- 
-2.20.1
-
+T24gRnJpLCAyMDE5LTA3LTEyIGF0IDE5OjE1ICswMDAwLCBIYXJpcHJhc2FkIEtlbGFtIHdyb3Rl
+Og0KPiBmaXggYmVsb3cgaXNzdWUgcmVwb3J0ZWQgYnkgY29jY2ljaGVjaw0KPiBkcml2ZXJzL25l
+dC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvYnRjb2V4aXN0L2hhbGJ0Y291dHNyYy5jOjUxNDox
+LTM6DQo+IFdBUk5JTkc6IHBvc3NpYmxlIGNvbmRpdGlvbiB3aXRoIG5vIGVmZmVjdCAoaWYgPT0g
+ZWxzZSkNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEhhcmlwcmFzYWQgS2VsYW0gPGhhcmlwcmFzYWQu
+a2VsYW1AZ21haWwuY29tPg0KPiAtLS0NCj4gwqBkcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVr
+L3J0bHdpZmkvYnRjb2V4aXN0L2hhbGJ0Y291dHNyYy5jIHwgOCArLS0tLS0tLQ0KPiDCoDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgNyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvYnRjb2V4aXN0L2hhbGJ0
+Y291dHNyYy5jDQo+IGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL2J0Y29l
+eGlzdC9oYWxidGNvdXRzcmMuYw0KPiBpbmRleCAxNTIyNDJhLi4xOTFkYWZkMCAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL2J0Y29leGlzdC9oYWxi
+dGNvdXRzcmMuYw0KPiArKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkv
+YnRjb2V4aXN0L2hhbGJ0Y291dHNyYy5jDQo+IEBAIC01MDksMTMgKzUwOSw3IEBAIHN0YXRpYyB1
+MzIgaGFsYnRjX2dldF93aWZpX2xpbmtfc3RhdHVzKHN0cnVjdCBidGNfY29leGlzdA0KPiAqYnRj
+b2V4aXN0KQ0KPiDCoA0KPiDCoHN0YXRpYyBzMzIgaGFsYnRjX2dldF93aWZpX3Jzc2koc3RydWN0
+IHJ0bF9wcml2ICpydGxwcml2KQ0KPiDCoHsNCj4gLQlpbnQgdW5kZWNfc21fcHdkYiA9IDA7DQo+
+IC0NCj4gLQlpZiAocnRscHJpdi0+bWFjODAyMTEubGlua19zdGF0ZSA+PSBNQUM4MDIxMV9MSU5L
+RUQpDQo+IC0JCXVuZGVjX3NtX3B3ZGIgPSBydGxwcml2LT5kbS51bmRlY19zbV9wd2RiOw0KPiAt
+CWVsc2UgLyogYXNzb2NpYXRlZCBlbnRyeSBwd2RiICovDQo+IC0JCXVuZGVjX3NtX3B3ZGIgPSBy
+dGxwcml2LT5kbS51bmRlY19zbV9wd2RiOw0KPiAtCXJldHVybiB1bmRlY19zbV9wd2RiOw0KPiAr
+CXJldHVybiBydGxwcml2LT5kbS51bmRlY19zbV9wd2RiOw0KPiDCoH0NCj4gwqANCj4gwqBzdGF0
+aWMgYm9vbCBoYWxidGNfZ2V0KHZvaWQgKnZvaWRfYnRjb2V4aXN0LCB1OCBnZXRfdHlwZSwgdm9p
+ZCAqb3V0X2J1ZikNCg0KSXQgbG9va3MgZ29vZCB0byBtZS4gVGhhbmsgeW91Lg0KDQpBY2tlZC1i
+eTogUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+DQoNCg0K
