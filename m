@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B6C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31AFC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6343521019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7864421849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:12:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="d0nBMDxw"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XIi8auNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391154AbfGRTMK (ORCPT
+        id S2391077AbfGRTMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:12:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59793 "EHLO
+        Thu, 18 Jul 2019 15:12:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44041 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRTMK (ORCPT
+        with ESMTP id S1726040AbfGRTMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:12:10 -0400
+        Thu, 18 Jul 2019 15:12:52 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJBwca2124343
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJCgBP2124635
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 18 Jul 2019 12:11:58 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJBwca2124343
+        Thu, 18 Jul 2019 12:12:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJCgBP2124635
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1563477119;
-        bh=6Rj46KtNRyDo8ybnIo8yan74dq7igiRGR7khPhDutHA=;
+        s=2019061801; t=1563477162;
+        bh=XeELLpANJD7y2xcl8rQltNZA6wli/dVIt+REvEssjrM=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=d0nBMDxwilpe7clO/W/qJK5Cg4+qTgZh6NA6k3llk4o06shA7daRCvbpVu/tfhMhZ
-         x2dcn0CQPq71iGejXCcwY/DEP9LmNL/+iED194D8yy0vAJrJJxhzj6czmv8FIqsQru
-         On8hCDMrcHWjnNaEmTWtmCvbZVLGK7m2uwfEOHw/O+aRH7m4YHmG+18RaEaoULfgC6
-         Xwx6+IkW+38X6TqDfu+a2gAirdR2cZYxhDFqzNmLlydpsj8zng3adjYJpdrN59mfpE
-         Q9seV/8hJxN0Yw3QXYgc1Kr43vxhT+kPTa70yDhioUbtmOqkLHr7MFnDKsu9MPd2EX
-         ti2pNGPU+2DPg==
+        b=XIi8auNdw8+mRudSKCslJRaNrY2zme4/vySEtV5BL4OWbTbhHCEn2x2Z3wfOngSdc
+         SnLYAC4Yoj9oNqEUT0lpLxW07qKezpGMBNZuxVr37L30+zrDamvWTD2KktdShvcpjn
+         g9pV7FG+cItV+L1kqnVty/86nIjRSIwN+Yh+d3RyffK0j4KXXq+Ixs14P6KfV/9ncU
+         oXP+ZbcBxqNa1s7Bo8loy5L2rHCkYIJsdaZSfVmh5TTVZ3kv14THfctIVC7C8/dlOy
+         d+6ZjWb7oT7/VHDzsi3qAQIm8C/Q/gJCYdfG2eKLb7JcjT8MMOMERex1eFMbtn3jB1
+         DtfpCwciAs62A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJBvFe2124337;
-        Thu, 18 Jul 2019 12:11:57 -0700
-Date:   Thu, 18 Jul 2019 12:11:57 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJCfsg2124632;
+        Thu, 18 Jul 2019 12:12:41 -0700
+Date:   Thu, 18 Jul 2019 12:12:41 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-3a6ab4bcc52263dd5b1d2fd2e4ce95a38c798b4d@git.kernel.org>
-Cc:     peterz@infradead.org, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+Message-ID: <tip-5e307a6bc7b600999742675dd182bcb8a6fe308e@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, jpoimboe@redhat.com, tglx@linutronix.de,
         hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
-          jpoimboe@redhat.com
-In-Reply-To: <6b6e436774678b4b9873811ff023bd29935bee5b.1563413318.git.jpoimboe@redhat.com>
-References: <6b6e436774678b4b9873811ff023bd29935bee5b.1563413318.git.jpoimboe@redhat.com>
+Reply-To: tglx@linutronix.de, hpa@zytor.com, jpoimboe@redhat.com,
+          peterz@infradead.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <8e13d6f0da1c8a3f7603903da6cbf6d582bbfe10.1563413318.git.jpoimboe@redhat.com>
+References: <8e13d6f0da1c8a3f7603903da6cbf6d582bbfe10.1563413318.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] x86/uaccess: Remove ELF function annotation from
- copy_user_handle_tail()
-Git-Commit-ID: 3a6ab4bcc52263dd5b1d2fd2e4ce95a38c798b4d
+Subject: [tip:core/urgent] x86/uaccess: Don't leak AC flag into fentry from
+ mcsafe_handle_tail()
+Git-Commit-ID: 5e307a6bc7b600999742675dd182bcb8a6fe308e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,50 +70,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3a6ab4bcc52263dd5b1d2fd2e4ce95a38c798b4d
-Gitweb:     https://git.kernel.org/tip/3a6ab4bcc52263dd5b1d2fd2e4ce95a38c798b4d
+Commit-ID:  5e307a6bc7b600999742675dd182bcb8a6fe308e
+Gitweb:     https://git.kernel.org/tip/5e307a6bc7b600999742675dd182bcb8a6fe308e
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 17 Jul 2019 20:36:42 -0500
+AuthorDate: Wed, 17 Jul 2019 20:36:43 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Thu, 18 Jul 2019 21:01:05 +0200
 
-x86/uaccess: Remove ELF function annotation from copy_user_handle_tail()
+x86/uaccess: Don't leak AC flag into fentry from mcsafe_handle_tail()
 
-After an objtool improvement, it's complaining about the CLAC in
-copy_user_handle_tail():
+After adding mcsafe_handle_tail() to the objtool uaccess safe list,
+objtool reports:
 
-  arch/x86/lib/copy_user_64.o: warning: objtool: .altinstr_replacement+0x12: redundant UACCESS disable
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x6: (alt)
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x2: (alt)
-  arch/x86/lib/copy_user_64.o: warning: objtool:   copy_user_handle_tail()+0x0: <=== (func)
+  arch/x86/lib/usercopy_64.o: warning: objtool: mcsafe_handle_tail()+0x0: call to __fentry__() with UACCESS enabled
 
-copy_user_handle_tail() is incorrectly marked as a callable function, so
-objtool is rightfully concerned about the CLAC with no corresponding
-STAC.
-
-Remove the ELF function annotation.  The copy_user_handle_tail() code
-path is already verified by objtool because it's jumped to by other
-callable asm code (which does the corresponding STAC).
+With SMAP, this function is called with AC=1, so it needs to be careful
+about which functions it calls.  Disable the ftrace entry hook, which
+can potentially pull in a lot of extra code.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6b6e436774678b4b9873811ff023bd29935bee5b.1563413318.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/8e13d6f0da1c8a3f7603903da6cbf6d582bbfe10.1563413318.git.jpoimboe@redhat.com
 
 ---
- arch/x86/lib/copy_user_64.S | 2 +-
+ arch/x86/lib/usercopy_64.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
-index 378a1f70ae7d..4fe1601dbc5d 100644
---- a/arch/x86/lib/copy_user_64.S
-+++ b/arch/x86/lib/copy_user_64.S
-@@ -239,7 +239,7 @@ copy_user_handle_tail:
- 	ret
- 
- 	_ASM_EXTABLE_UA(1b, 2b)
--ENDPROC(copy_user_handle_tail)
-+END(copy_user_handle_tail)
- 
- /*
-  * copy_user_nocache - Uncached memory copy with exception handling
+diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+index e0e006f1624e..fff28c6f73a2 100644
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -60,7 +60,7 @@ EXPORT_SYMBOL(clear_user);
+  * but reuse __memcpy_mcsafe in case a new read error is encountered.
+  * clac() is handled in _copy_to_iter_mcsafe().
+  */
+-__visible unsigned long
++__visible notrace unsigned long
+ mcsafe_handle_tail(char *to, char *from, unsigned len)
+ {
+ 	for (; len; --len, to++, from++) {
