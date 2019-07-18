@@ -2,52 +2,56 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2E0C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9530BC76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5255E21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA6F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419329;
-	bh=+3pnNI24UcgqddC+16lnH/sPlaUZ2koWchHGt+Hx0XE=;
+	s=default; t=1563419332;
+	bh=Shp4REY26jTKijwg6f6zgPTs3rXQ4FboKvg3as5AnNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAgtvvXLhxV3N0J4MD2PAyTD8vVxqTsYwHeXQSOnDSfbxT1FOBM9W/y04Fx0q0v6j
-	 u+Lz6kdxPz2GGP90j9CHNhVMIJHMOdZRSzt9ZZSwPJjLcgI0o69na/9+kkwbLIH04r
-	 AXROMaIX+X8+Nf7STVIDiswLj231TVwoh1qVzJI0=
+	b=hM3kKd6xlGxlu9Hue0gE0jZd5x/IQGDvsg5iNwLbcCUnUbTgQ2dUIWYIHEgkp21MS
+	 k/hCDsHLSQA0yFyYQfMzT0olQGzwlQSmQCz9nROL9gET23f0iyg7CAa7H3/d07ropB
+	 1nXh7H3zZ/wuVg3Jvxd/VzHh9XXgPsknowucUnsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390870AbfGRDIs (ORCPT
+        id S2390884AbfGRDIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40918 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390311AbfGRDIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:08:46 -0400
+        id S2390864AbfGRDIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:08:48 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD81421850;
-        Thu, 18 Jul 2019 03:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5278205F4;
+        Thu, 18 Jul 2019 03:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419325;
-        bh=+3pnNI24UcgqddC+16lnH/sPlaUZ2koWchHGt+Hx0XE=;
+        s=default; t=1563419327;
+        bh=Shp4REY26jTKijwg6f6zgPTs3rXQ4FboKvg3as5AnNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vrmXpMfsawVtRyfDHpASXi6rJwgG7E12kt0+Ujq99nXvGBfgpo9fSpY9chuqUKeuG
-         Ti/osyuElCe9v9ckGkIlgEVZWQGyj59HZ15MY8TDbdxoBtjVUVVUO09yZGTn8xYNGe
-         //xkerB3cvbvpWY7MIVuFlaR+7yqPosXwc3v/7RA=
+        b=rIw415yeSPqCHusa8uY4oS5jZVd6nsU0xDur8y+AhaLrAk77DpW0I1SaplG4grG5Q
+         j/YotmvLoetw6Qp9aYdSdANHYpkpVKb3YKGVyJQOF1e4d2xhB/30t/8uWOwHsqVxxt
+         aPvHg4kg+BD2uo+EDbl+2lhA3EjLuhFcUwh1nbUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/80] netfilter: ipv6: nf_defrag: accept duplicate fragments again
-Date:   Thu, 18 Jul 2019 12:01:07 +0900
-Message-Id: <20190718030100.095937583@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Joseph Yasi <joe.yasi@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.14 02/80] e1000e: start network tx queue only when link is up
+Date:   Thu, 18 Jul 2019 12:00:53 +0900
+Message-Id: <20190718030058.799580364@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030058.615992480@linuxfoundation.org>
 References: <20190718030058.615992480@linuxfoundation.org>
@@ -60,59 +64,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a3dca632538c550930ce8bafa8c906b130d35cf ]
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-When fixing the skb leak introduced by the conversion to rbtree, I
-forgot about the special case of duplicate fragments. The condition
-under the 'insert_error' label isn't effective anymore as
-nf_ct_frg6_gather() doesn't override the returned value anymore. So
-duplicate fragments now get NF_DROP verdict.
+commit d17ba0f616a08f597d9348c372d89b8c0405ccf3 upstream.
 
-To accept duplicate fragments again, handle them specially as soon as
-inet_frag_queue_insert() reports them. Return -EINPROGRESS which will
-translate to NF_STOLEN verdict, like any accepted fragment. However,
-such packets don't carry any new information and aren't queued, so we
-just drop them immediately.
+Driver does not want to keep packets in Tx queue when link is lost.
+But present code only reset NIC to flush them, but does not prevent
+queuing new packets. Moreover reset sequence itself could generate
+new packets via netconsole and NIC falls into endless reset loop.
 
-Fixes: a0d56cb911ca ("netfilter: ipv6: nf_defrag: fix leakage of unqueued fragments")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch wakes Tx queue only when NIC is ready to send packets.
+
+This is proper fix for problem addressed by commit 0f9e980bf5ee
+("e1000e: fix cyclic resets at link up with active tx").
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Tested-by: Joseph Yasi <joe.yasi@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv6/netfilter/nf_conntrack_reasm.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 73c29ddcfb95..35d5a76867d0 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -265,8 +265,14 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -4228,7 +4228,7 @@ void e1000e_up(struct e1000_adapter *ada
+ 		e1000_configure_msix(adapter);
+ 	e1000_irq_enable(adapter);
  
- 	prev = fq->q.fragments_tail;
- 	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
--	if (err)
-+	if (err) {
-+		if (err == IPFRAG_DUP) {
-+			/* No error for duplicates, pretend they got queued. */
-+			kfree_skb(skb);
-+			return -EINPROGRESS;
-+		}
- 		goto insert_error;
-+	}
+-	netif_start_queue(adapter->netdev);
++	/* Tx queue started by watchdog timer when link is up */
  
- 	if (dev)
- 		fq->iif = dev->ifindex;
-@@ -304,8 +310,6 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 	return -EINPROGRESS;
+ 	e1000e_trigger_lsc(adapter);
+ }
+@@ -4604,6 +4604,7 @@ int e1000e_open(struct net_device *netde
+ 	pm_runtime_get_sync(&pdev->dev);
  
- insert_error:
--	if (err == IPFRAG_DUP)
--		goto err;
- 	inet_frag_kill(&fq->q);
- err:
- 	skb_dst_drop(skb);
--- 
-2.20.1
-
+ 	netif_carrier_off(netdev);
++	netif_stop_queue(netdev);
+ 
+ 	/* allocate transmit descriptors */
+ 	err = e1000e_setup_tx_resources(adapter->tx_ring);
+@@ -4664,7 +4665,6 @@ int e1000e_open(struct net_device *netde
+ 	e1000_irq_enable(adapter);
+ 
+ 	adapter->tx_hang_recheck = false;
+-	netif_start_queue(netdev);
+ 
+ 	hw->mac.get_link_status = true;
+ 	pm_runtime_put(&pdev->dev);
+@@ -5286,6 +5286,7 @@ static void e1000_watchdog_task(struct w
+ 			if (phy->ops.cfg_on_link_up)
+ 				phy->ops.cfg_on_link_up(hw);
+ 
++			netif_wake_queue(netdev);
+ 			netif_carrier_on(netdev);
+ 
+ 			if (!test_bit(__E1000_DOWN, &adapter->state))
+@@ -5299,6 +5300,7 @@ static void e1000_watchdog_task(struct w
+ 			/* Link status message must follow this format */
+ 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
+ 			netif_carrier_off(netdev);
++			netif_stop_queue(netdev);
+ 			if (!test_bit(__E1000_DOWN, &adapter->state))
+ 				mod_timer(&adapter->phy_info_timer,
+ 					  round_jiffies(jiffies + 2 * HZ));
 
 
