@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39B2C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428B4C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF7820818
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C1C20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420292;
-	bh=5La0qRrvICGFYOZh00pZoEO9HCwNjut63ExzoTxuqwA=;
+	s=default; t=1563420298;
+	bh=mV5teUn+3qRhaigH+wulIqmPjLqPh/jUeac6KggzE2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VjsYsCFGTGgT7IWGPCjN4oLbpltcb6pl2HL4VmugFZXuikVESz+MGiZp5t3mzfCgL
-	 nKhSzkwWDJHd3gmGypQpwGVDXBI4nyRMvzSUcqKs3pG4HcDsxepZxOpNmM49fDvhzZ
-	 5CpgCgAV0R9levhp5WyGzhk3F+Gom+S3xqiZARtc=
+	b=T2LfbNfawC9wNvuEec1cvTgTdu7sct8CTuDAN/OL2FyDAesgJDVjtEMizoG77P8hf
+	 Lh1zUKIB7DxIaNlmTbXTZMFVlGkc0R6uOrv94m+3XM88qAO4fPfx8+h6Jr5jgwLubj
+	 HX7VjOVoWNUQ3tmcGYHadXQhOwTVkeeto4gxOtok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389544AbfGRDGT (ORCPT
+        id S2390964AbfGRDY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390180AbfGRDGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:15 -0400
+        id S2390163AbfGRDGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:11 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 047D22173E;
-        Thu, 18 Jul 2019 03:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1551121852;
+        Thu, 18 Jul 2019 03:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419174;
-        bh=5La0qRrvICGFYOZh00pZoEO9HCwNjut63ExzoTxuqwA=;
+        s=default; t=1563419170;
+        bh=mV5teUn+3qRhaigH+wulIqmPjLqPh/jUeac6KggzE2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IdzEKEdK4F9jg5P0703d6Yxdm1JMZX8m0TsCLMZJjoLaH9YXHpM/Kpz0Gcr9mRtXe
-         qn1GpR4YglzkJ4gz6JoQezI5eHZhPmraUQg4BZA3UnMBook8PAf0UbS2NQ7uEU0mwL
-         gbQWq3lwEcjlgxrEZ3UT1IBE3iRH1TXlrh82Y06A=
+        b=dO94hztjQWi8ALfQ+/n8mxWKaEQeiVzd25hTSlhpoAwB56hQM2SBc3wfqmxYOod1p
+         WBbuGbYi6eXYnPUaMvtZEKVciyoPiEnyW/1qsSUXaRjDbC0MiLmVM4h5oMep6C75+8
+         dQb7CO6M4v0MOh5yaB5pfxxzKH+Hv/exrZsqLB6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.1 45/54] x86/irq: Handle spurious interrupt after shutdown gracefully
-Date:   Thu, 18 Jul 2019 12:01:40 +0900
-Message-Id: <20190718030056.656558427@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 5.1 44/54] x86/ioapic: Implement irq_get_irqchip_state() callback
+Date:   Thu, 18 Jul 2019 12:01:39 +0900
+Message-Id: <20190718030056.570448637@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -62,109 +62,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit b7107a67f0d125459fe41f86e8079afd1a5e0b15 upstream.
+commit dfe0cf8b51b07e56ded571e3de0a4a9382517231 upstream.
 
-Since the rework of the vector management, warnings about spurious
-interrupts have been reported. Robert provided some more information and
-did an initial analysis. The following situation leads to these warnings:
+When an interrupt is shut down in free_irq() there might be an inflight
+interrupt pending in the IO-APIC remote IRR which is not yet serviced. That
+means the interrupt has been sent to the target CPUs local APIC, but the
+target CPU is in a state which delays the servicing.
 
-   CPU 0                  CPU 1               IO_APIC
+So free_irq() would proceed to free resources and to clear the vector
+because synchronize_hardirq() does not see an interrupt handler in
+progress.
 
-                                              interrupt is raised
-                                              sent to CPU1
-			  Unable to handle
-			  immediately
-			  (interrupts off,
-			   deep idle delay)
-   mask()
-   ...
-   free()
-     shutdown()
-     synchronize_irq()
-     clear_vector()
-                          do_IRQ()
-                            -> vector is clear
+That can trigger a spurious interrupt warning, which is harmless and just
+confuses users, but it also can leave the remote IRR in a stale state
+because once the handler is invoked the interrupt resources might be freed
+already and therefore acknowledgement is not possible anymore.
 
-Before the rework the vector entries of legacy interrupts were statically
-assigned and occupied precious vector space while most of them were
-unused. Due to that the above situation was handled silently because the
-vector was handled and the core handler of the assigned interrupt
-descriptor noticed that it is shut down and returned.
+Implement the irq_get_irqchip_state() callback for the IO-APIC irq chip. The
+callback is invoked from free_irq() via __synchronize_hardirq(). Check the
+remote IRR bit of the interrupt and return 'in flight' if it is set and the
+interrupt is configured in level mode. For edge mode the remote IRR has no
+meaning.
 
-While this has been usually observed with legacy interrupts, this situation
-is not limited to them. Any other interrupt source, e.g. MSI, can cause the
-same issue.
-
-After adding proper synchronization for level triggered interrupts, this
-can only happen for edge triggered interrupts where the IO-APIC obviously
-cannot provide information about interrupts in flight.
-
-While the spurious warning is actually harmless in this case it worries
-users and driver developers.
-
-Handle it gracefully by marking the vector entry as VECTOR_SHUTDOWN instead
-of VECTOR_UNUSED when the vector is freed up.
-
-If that above late handling happens the spurious detector will not complain
-and switch the entry to VECTOR_UNUSED. Any subsequent spurious interrupt on
-that line will trigger the spurious warning as before.
+As this is only meaningful for level triggered interrupts this won't cure
+the potential spurious interrupt warning for edge triggered interrupts, but
+the edge trigger case does not result in stale hardware state. This has to
+be addressed at the vector/interrupt entry level seperately.
 
 Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
 Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>-
-Tested-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/20190628111440.459647741@linutronix.de
+Link: https://lkml.kernel.org/r/20190628111440.370295517@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/hw_irq.h |    3 ++-
- arch/x86/kernel/apic/vector.c |    4 ++--
- arch/x86/kernel/irq.c         |    2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/io_apic.c |   46 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -151,7 +151,8 @@ extern char irq_entries_start[];
- #endif
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1893,6 +1893,50 @@ static int ioapic_set_affinity(struct ir
+ 	return ret;
+ }
  
- #define VECTOR_UNUSED		NULL
--#define VECTOR_RETRIGGERED	((void *)~0UL)
-+#define VECTOR_SHUTDOWN		((void *)~0UL)
-+#define VECTOR_RETRIGGERED	((void *)~1UL)
++/*
++ * Interrupt shutdown masks the ioapic pin, but the interrupt might already
++ * be in flight, but not yet serviced by the target CPU. That means
++ * __synchronize_hardirq() would return and claim that everything is calmed
++ * down. So free_irq() would proceed and deactivate the interrupt and free
++ * resources.
++ *
++ * Once the target CPU comes around to service it it will find a cleared
++ * vector and complain. While the spurious interrupt is harmless, the full
++ * release of resources might prevent the interrupt from being acknowledged
++ * which keeps the hardware in a weird state.
++ *
++ * Verify that the corresponding Remote-IRR bits are clear.
++ */
++static int ioapic_irq_get_chip_state(struct irq_data *irqd,
++				   enum irqchip_irq_state which,
++				   bool *state)
++{
++	struct mp_chip_data *mcd = irqd->chip_data;
++	struct IO_APIC_route_entry rentry;
++	struct irq_pin_list *p;
++
++	if (which != IRQCHIP_STATE_ACTIVE)
++		return -EINVAL;
++
++	*state = false;
++	raw_spin_lock(&ioapic_lock);
++	for_each_irq_pin(p, mcd->irq_2_pin) {
++		rentry = __ioapic_read_entry(p->apic, p->pin);
++		/*
++		 * The remote IRR is only valid in level trigger mode. It's
++		 * meaning is undefined for edge triggered interrupts and
++		 * irrelevant because the IO-APIC treats them as fire and
++		 * forget.
++		 */
++		if (rentry.irr && rentry.trigger) {
++			*state = true;
++			break;
++		}
++	}
++	raw_spin_unlock(&ioapic_lock);
++	return 0;
++}
++
+ static struct irq_chip ioapic_chip __read_mostly = {
+ 	.name			= "IO-APIC",
+ 	.irq_startup		= startup_ioapic_irq,
+@@ -1902,6 +1946,7 @@ static struct irq_chip ioapic_chip __rea
+ 	.irq_eoi		= ioapic_ack_level,
+ 	.irq_set_affinity	= ioapic_set_affinity,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
+ 	.flags			= IRQCHIP_SKIP_SET_WAKE,
+ };
  
- typedef struct irq_desc* vector_irq_t[NR_VECTORS];
- DECLARE_PER_CPU(vector_irq_t, vector_irq);
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -343,7 +343,7 @@ static void clear_irq_vector(struct irq_
- 	trace_vector_clear(irqd->irq, vector, apicd->cpu, apicd->prev_vector,
- 			   apicd->prev_cpu);
+@@ -1914,6 +1959,7 @@ static struct irq_chip ioapic_ir_chip __
+ 	.irq_eoi		= ioapic_ir_ack_level,
+ 	.irq_set_affinity	= ioapic_set_affinity,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
++	.irq_get_irqchip_state	= ioapic_irq_get_chip_state,
+ 	.flags			= IRQCHIP_SKIP_SET_WAKE,
+ };
  
--	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_UNUSED;
-+	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_SHUTDOWN;
- 	irq_matrix_free(vector_matrix, apicd->cpu, vector, managed);
- 	apicd->vector = 0;
- 
-@@ -352,7 +352,7 @@ static void clear_irq_vector(struct irq_
- 	if (!vector)
- 		return;
- 
--	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_UNUSED;
-+	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_SHUTDOWN;
- 	irq_matrix_free(vector_matrix, apicd->prev_cpu, vector, managed);
- 	apicd->prev_vector = 0;
- 	apicd->move_in_progress = 0;
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -246,7 +246,7 @@ __visible unsigned int __irq_entry do_IR
- 	if (!handle_irq(desc, regs)) {
- 		ack_APIC_irq();
- 
--		if (desc != VECTOR_RETRIGGERED) {
-+		if (desc != VECTOR_RETRIGGERED && desc != VECTOR_SHUTDOWN) {
- 			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
- 					     __func__, smp_processor_id(),
- 					     vector);
 
 
