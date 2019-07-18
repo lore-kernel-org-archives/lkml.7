@@ -2,942 +2,178 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C915C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA8AC7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17936217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469D420873
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 01:23:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="NoIcq9Pg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387395AbfGRBWs (ORCPT
+        id S2387488AbfGRBXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 21:22:48 -0400
-Received: from mga02.intel.com ([134.134.136.20]:13221 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfGRBWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 21:22:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 18:22:45 -0700
-X-IronPort-AV: E=Sophos;i="5.64,276,1559545200"; 
-   d="scan'208";a="191449211"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jul 2019 18:22:44 -0700
-Subject: [PATCH v2 7/7] driver-core,
- libnvdimm: Let device subsystems add local lockdep coverage
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 17 Jul 2019 18:08:26 -0700
-Message-ID: <156341210661.292348.7014034644265455704.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <156341206785.292348.1660822720191643298.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156341206785.292348.1660822720191643298.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Wed, 17 Jul 2019 21:23:25 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39298 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbfGRBXY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 21:23:24 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so12953408pls.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jul 2019 18:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:openpgp:autocrypt:cc:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lbzCvZDGyPKPq8F4BmEKa3ahl7R/ac02jNKU8Fy5zIM=;
+        b=NoIcq9Pgg0Mfv0npWnMHoeU/qnF5lhl58eJALtFrY84Tu8TfmO9RHdQwTjDDQon+3O
+         IZwynXowSYhjoIWJ7IRb+A3ryQ+8+M91j+jgC/OsuhfefUuU9X4dmBbOeMX8czCgeemB
+         pmIGtVa5MMqEbHHhK87yCZgXSS+j6c9FMHVEMvzlS2heMTLsbGVqwe9ungZesfcOKALG
+         8fwuZrM+XKAjSzFcalCpC9IlaHU2bQNfe5u+wt4curcf3jzCR8jTsYHKWn+2QDB8ucdr
+         w+AGJufr+djipqAfO2CwGyimGSgtPoD+piJy5F06vXeR0H1a3Kp1geJqYXimsspyCIXI
+         Lv0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt:cc
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lbzCvZDGyPKPq8F4BmEKa3ahl7R/ac02jNKU8Fy5zIM=;
+        b=Wc7dmJKe5BGMrpLMH7R+s2gAF1tOe3fsBCxyod6/ZMIx9TPsCgdeMSAtbPrFCwZsWH
+         wsPd2ESiqEfQvJk8feHaudmnaszAyxNijktKNbCWJTkTdG040h2scqaa1Nvs/sqEcHtl
+         LydYFiEIvN3uB1K0ziiQnv2hqP/3s6JD7VisVz0bdvHhq2wMTGI5Q0ggTpK1L8gJAFBu
+         PEv5UCAx8dgxnojmhTa5GKtY3s7gwTDbtFALrEIG/28BRDIvUimVvPFC0Y+ZjZ3YeYGp
+         KNwicJnhwELiwteplTsjT0tns001otMgR/UR0jQrImybDc0Z7K8uxwUyRU0HZ7URuYWc
+         gBgQ==
+X-Gm-Message-State: APjAAAXK6/kXSBUKYBzhFQZ2pxR14/XmabJdKGzuM+zESOPQcG2zY3JJ
+        i4dmlhEW6jqxbEBBfKlVmtU=
+X-Google-Smtp-Source: APXvYqzo9Mjrx3jocSYveWg/mRnuvBro4ngyRW7hHhE5Yq2BZRUaHGtNZCoeYv81ZflKvWgw8mIQRQ==
+X-Received: by 2002:a17:902:f301:: with SMTP id gb1mr46176551plb.292.1563413003548;
+        Wed, 17 Jul 2019 18:23:23 -0700 (PDT)
+Received: from etsukata.local (fs76eecbcd.tkyc008.ap.nuro.jp. [118.238.203.205])
+        by smtp.gmail.com with ESMTPSA id r6sm17765963pgl.74.2019.07.17.18.23.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jul 2019 18:23:22 -0700 (PDT)
+Subject: Re: [PATCH] tracing: Fix user stack trace "??" output
+To:     rostedt@goodmis.org, linux-kernel@vger.kernel.org
+References: <20190630085438.25545-1-devel@etsukata.com>
+From:   Eiichi Tsukata <devel@etsukata.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=devel@etsukata.com; keydata=
+ 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
+Cc:     tglx@linutronix.de, peterz@infradead.org, mingo@redhat.com
+Message-ID: <1789efd4-1108-64e8-a6aa-39ca5d5595dc@etsukata.com>
+Date:   Thu, 18 Jul 2019 10:23:19 +0900
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190630085438.25545-1-devel@etsukata.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For good reason, the standard device_lock() is marked
-lockdep_set_novalidate_class() because there is simply no sane way to
-describe the myriad ways the device_lock() ordered with other locks.
-However, that leaves subsystems that know their own local device_lock()
-ordering rules to find lock ordering mistakes manually. Instead,
-introduce an optional / additional lockdep-enabled lock that a subsystem
-can acquire in all the same paths that the device_lock() is acquired.
+Hello Steven
 
-A conversion of the NFIT driver and NVDIMM subsystem to a
-lockdep-validate device_lock() scheme is included. The
-debug_nvdimm_lock() implementation implements the correct lock-class and
-stacking order for the libnvdimm device topology hierarchy.
+Would you review the patch?
 
-Yes, this is a hack, but hopefully it is a useful hack for other
-subsystems device_lock() debug sessions. Quoting Greg:
-
-    "Yeah, it feels a bit hacky but it's really up to a subsystem to mess up
-     using it as much as anything else, so user beware :)
-
-     I don't object to it if it makes things easier for you to debug."
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/acpi/nfit/core.c        |   28 ++++++++--------
- drivers/acpi/nfit/nfit.h        |   24 ++++++++++++++
- drivers/base/core.c             |    3 ++
- drivers/nvdimm/btt_devs.c       |   16 +++++----
- drivers/nvdimm/bus.c            |   28 ++++++++++------
- drivers/nvdimm/core.c           |   10 +++---
- drivers/nvdimm/dimm_devs.c      |    4 +-
- drivers/nvdimm/namespace_devs.c |   36 ++++++++++-----------
- drivers/nvdimm/nd-core.h        |   68 +++++++++++++++++++++++++++++++++++++++
- drivers/nvdimm/pfn_devs.c       |   24 +++++++-------
- drivers/nvdimm/pmem.c           |    4 +-
- drivers/nvdimm/region.c         |    2 +
- drivers/nvdimm/region_devs.c    |   16 +++++----
- include/linux/device.h          |    5 +++
- 14 files changed, 187 insertions(+), 81 deletions(-)
-
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 23022cf20d26..f22139458ce1 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -1282,7 +1282,7 @@ static ssize_t hw_error_scrub_store(struct device *dev,
- 	if (rc)
- 		return rc;
- 
--	device_lock(dev);
-+	nfit_device_lock(dev);
- 	nd_desc = dev_get_drvdata(dev);
- 	if (nd_desc) {
- 		struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-@@ -1299,7 +1299,7 @@ static ssize_t hw_error_scrub_store(struct device *dev,
- 			break;
- 		}
- 	}
--	device_unlock(dev);
-+	nfit_device_unlock(dev);
- 	if (rc)
- 		return rc;
- 	return size;
-@@ -1319,7 +1319,7 @@ static ssize_t scrub_show(struct device *dev,
- 	ssize_t rc = -ENXIO;
- 	bool busy;
- 
--	device_lock(dev);
-+	nfit_device_lock(dev);
- 	nd_desc = dev_get_drvdata(dev);
- 	if (!nd_desc) {
- 		device_unlock(dev);
-@@ -1339,7 +1339,7 @@ static ssize_t scrub_show(struct device *dev,
- 	}
- 
- 	mutex_unlock(&acpi_desc->init_mutex);
--	device_unlock(dev);
-+	nfit_device_unlock(dev);
- 	return rc;
- }
- 
-@@ -1356,14 +1356,14 @@ static ssize_t scrub_store(struct device *dev,
- 	if (val != 1)
- 		return -EINVAL;
- 
--	device_lock(dev);
-+	nfit_device_lock(dev);
- 	nd_desc = dev_get_drvdata(dev);
- 	if (nd_desc) {
- 		struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
- 
- 		rc = acpi_nfit_ars_rescan(acpi_desc, ARS_REQ_LONG);
- 	}
--	device_unlock(dev);
-+	nfit_device_unlock(dev);
- 	if (rc)
- 		return rc;
- 	return size;
-@@ -1749,9 +1749,9 @@ static void acpi_nvdimm_notify(acpi_handle handle, u32 event, void *data)
- 	struct acpi_device *adev = data;
- 	struct device *dev = &adev->dev;
- 
--	device_lock(dev->parent);
-+	nfit_device_lock(dev->parent);
- 	__acpi_nvdimm_notify(dev, event);
--	device_unlock(dev->parent);
-+	nfit_device_unlock(dev->parent);
- }
- 
- static bool acpi_nvdimm_has_method(struct acpi_device *adev, char *method)
-@@ -3457,8 +3457,8 @@ static int acpi_nfit_flush_probe(struct nvdimm_bus_descriptor *nd_desc)
- 	struct device *dev = acpi_desc->dev;
- 
- 	/* Bounce the device lock to flush acpi_nfit_add / acpi_nfit_notify */
--	device_lock(dev);
--	device_unlock(dev);
-+	nfit_device_lock(dev);
-+	nfit_device_unlock(dev);
- 
- 	/* Bounce the init_mutex to complete initial registration */
- 	mutex_lock(&acpi_desc->init_mutex);
-@@ -3602,8 +3602,8 @@ void acpi_nfit_shutdown(void *data)
- 	 * acpi_nfit_ars_rescan() submissions have had a chance to
- 	 * either submit or see ->cancel set.
- 	 */
--	device_lock(bus_dev);
--	device_unlock(bus_dev);
-+	nfit_device_lock(bus_dev);
-+	nfit_device_unlock(bus_dev);
- 
- 	flush_workqueue(nfit_wq);
- }
-@@ -3746,9 +3746,9 @@ EXPORT_SYMBOL_GPL(__acpi_nfit_notify);
- 
- static void acpi_nfit_notify(struct acpi_device *adev, u32 event)
- {
--	device_lock(&adev->dev);
-+	nfit_device_lock(&adev->dev);
- 	__acpi_nfit_notify(&adev->dev, adev->handle, event);
--	device_unlock(&adev->dev);
-+	nfit_device_unlock(&adev->dev);
- }
- 
- static const struct acpi_device_id acpi_nfit_ids[] = {
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 6ee2b02af73e..24241941181c 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -312,6 +312,30 @@ static inline struct acpi_nfit_desc *to_acpi_desc(
- 	return container_of(nd_desc, struct acpi_nfit_desc, nd_desc);
- }
- 
-+#ifdef CONFIG_PROVE_LOCKING
-+static inline void nfit_device_lock(struct device *dev)
-+{
-+	device_lock(dev);
-+	mutex_lock(&dev->lockdep_mutex);
-+}
-+
-+static inline void nfit_device_unlock(struct device *dev)
-+{
-+	mutex_unlock(&dev->lockdep_mutex);
-+	device_unlock(dev);
-+}
-+#else
-+static inline void nfit_device_lock(struct device *dev)
-+{
-+	device_lock(dev);
-+}
-+
-+static inline void nfit_device_unlock(struct device *dev)
-+{
-+	device_unlock(dev);
-+}
-+#endif
-+
- const guid_t *to_nfit_uuid(enum nfit_uuids id);
- int acpi_nfit_init(struct acpi_nfit_desc *acpi_desc, void *nfit, acpi_size sz);
- void acpi_nfit_shutdown(void *data);
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index eaf3aa0cb803..4825949d6547 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1663,6 +1663,9 @@ void device_initialize(struct device *dev)
- 	kobject_init(&dev->kobj, &device_ktype);
- 	INIT_LIST_HEAD(&dev->dma_pools);
- 	mutex_init(&dev->mutex);
-+#ifdef CONFIG_PROVE_LOCKING
-+	mutex_init(&dev->lockdep_mutex);
-+#endif
- 	lockdep_set_novalidate_class(&dev->mutex);
- 	spin_lock_init(&dev->devres_lock);
- 	INIT_LIST_HEAD(&dev->devres_head);
-diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
-index 62d00fffa4af..3508a79110c7 100644
---- a/drivers/nvdimm/btt_devs.c
-+++ b/drivers/nvdimm/btt_devs.c
-@@ -62,14 +62,14 @@ static ssize_t sector_size_store(struct device *dev,
- 	struct nd_btt *nd_btt = to_nd_btt(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	rc = nd_size_select_store(dev, buf, &nd_btt->lbasize,
- 			btt_lbasize_supported);
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc ? rc : len;
- }
-@@ -91,11 +91,11 @@ static ssize_t uuid_store(struct device *dev,
- 	struct nd_btt *nd_btt = to_nd_btt(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	rc = nd_uuid_store(dev, &nd_btt->uuid, buf, len);
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc ? rc : len;
- }
-@@ -120,13 +120,13 @@ static ssize_t namespace_store(struct device *dev,
- 	struct nd_btt *nd_btt = to_nd_btt(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	rc = nd_namespace_store(dev, &nd_btt->ndns, buf, len);
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-@@ -138,14 +138,14 @@ static ssize_t size_show(struct device *dev,
- 	struct nd_btt *nd_btt = to_nd_btt(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	if (dev->driver)
- 		rc = sprintf(buf, "%llu\n", nd_btt->size);
- 	else {
- 		/* no size to convey if the btt instance is disabled */
- 		rc = -ENXIO;
- 	}
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index df41f3571dc9..798c5c4aea9c 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -26,7 +26,7 @@
- 
- int nvdimm_major;
- static int nvdimm_bus_major;
--static struct class *nd_class;
-+struct class *nd_class;
- static DEFINE_IDA(nd_ida);
- 
- static int to_nd_device_type(struct device *dev)
-@@ -91,7 +91,10 @@ static int nvdimm_bus_probe(struct device *dev)
- 			dev->driver->name, dev_name(dev));
- 
- 	nvdimm_bus_probe_start(nvdimm_bus);
-+	debug_nvdimm_lock(dev);
- 	rc = nd_drv->probe(dev);
-+	debug_nvdimm_unlock(dev);
-+
- 	if (rc == 0)
- 		nd_region_probe_success(nvdimm_bus, dev);
- 	else
-@@ -113,8 +116,11 @@ static int nvdimm_bus_remove(struct device *dev)
- 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
- 	int rc = 0;
- 
--	if (nd_drv->remove)
-+	if (nd_drv->remove) {
-+		debug_nvdimm_lock(dev);
- 		rc = nd_drv->remove(dev);
-+		debug_nvdimm_unlock(dev);
-+	}
- 	nd_region_disable(nvdimm_bus, dev);
- 
- 	dev_dbg(&nvdimm_bus->dev, "%s.remove(%s) = %d\n", dev->driver->name,
-@@ -140,7 +146,7 @@ static void nvdimm_bus_shutdown(struct device *dev)
- 
- void nd_device_notify(struct device *dev, enum nvdimm_event event)
- {
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	if (dev->driver) {
- 		struct nd_device_driver *nd_drv;
- 
-@@ -148,7 +154,7 @@ void nd_device_notify(struct device *dev, enum nvdimm_event event)
- 		if (nd_drv->notify)
- 			nd_drv->notify(dev, event);
- 	}
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- }
- EXPORT_SYMBOL(nd_device_notify);
- 
-@@ -296,7 +302,7 @@ static void nvdimm_bus_release(struct device *dev)
- 	kfree(nvdimm_bus);
- }
- 
--static bool is_nvdimm_bus(struct device *dev)
-+bool is_nvdimm_bus(struct device *dev)
- {
- 	return dev->release == nvdimm_bus_release;
- }
-@@ -575,9 +581,9 @@ void nd_device_unregister(struct device *dev, enum nd_async_mode mode)
- 		 * or otherwise let the async path handle it if the
- 		 * unregistration was already queued.
- 		 */
--		device_lock(dev);
-+		nd_device_lock(dev);
- 		killed = kill_device(dev);
--		device_unlock(dev);
-+		nd_device_unlock(dev);
- 
- 		if (!killed)
- 			return;
-@@ -888,10 +894,10 @@ void wait_nvdimm_bus_probe_idle(struct device *dev)
- 		if (nvdimm_bus->probe_active == 0)
- 			break;
- 		nvdimm_bus_unlock(dev);
--		device_unlock(dev);
-+		nd_device_unlock(dev);
- 		wait_event(nvdimm_bus->wait,
- 				nvdimm_bus->probe_active == 0);
--		device_lock(dev);
-+		nd_device_lock(dev);
- 		nvdimm_bus_lock(dev);
- 	} while (true);
- }
-@@ -1107,7 +1113,7 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		goto out;
- 	}
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	rc = nd_cmd_clear_to_send(nvdimm_bus, nvdimm, func, buf);
- 	if (rc)
-@@ -1129,7 +1135,7 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 
- out_unlock:
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- out:
- 	kfree(in_env);
- 	kfree(out_env);
-diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
-index 5e1f060547bf..9204f1e9fd14 100644
---- a/drivers/nvdimm/core.c
-+++ b/drivers/nvdimm/core.c
-@@ -246,7 +246,7 @@ static int nd_uuid_parse(struct device *dev, u8 *uuid_out, const char *buf,
-  *
-  * Enforce that uuids can only be changed while the device is disabled
-  * (driver detached)
-- * LOCKING: expects device_lock() is held on entry
-+ * LOCKING: expects nd_device_lock() is held on entry
-  */
- int nd_uuid_store(struct device *dev, u8 **uuid_out, const char *buf,
- 		size_t len)
-@@ -347,15 +347,15 @@ static DEVICE_ATTR_RO(provider);
- 
- static int flush_namespaces(struct device *dev, void *data)
- {
--	device_lock(dev);
--	device_unlock(dev);
-+	nd_device_lock(dev);
-+	nd_device_unlock(dev);
- 	return 0;
- }
- 
- static int flush_regions_dimms(struct device *dev, void *data)
- {
--	device_lock(dev);
--	device_unlock(dev);
-+	nd_device_lock(dev);
-+	nd_device_unlock(dev);
- 	device_for_each_child(dev, NULL, flush_namespaces);
- 	return 0;
- }
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index dfecd6e17043..29a065e769ea 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -484,12 +484,12 @@ static ssize_t security_store(struct device *dev,
- 	 * done while probing is idle and the DIMM is not in active use
- 	 * in any region.
- 	 */
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	rc = __security_store(dev, buf, len);
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index a434a5964cb9..92cd809d7e43 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -410,7 +410,7 @@ static ssize_t alt_name_store(struct device *dev,
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	rc = __alt_name_store(dev, buf, len);
-@@ -418,7 +418,7 @@ static ssize_t alt_name_store(struct device *dev,
- 		rc = nd_namespace_label_update(nd_region, dev);
- 	dev_dbg(dev, "%s(%zd)\n", rc < 0 ? "fail " : "", rc);
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc < 0 ? rc : len;
- }
-@@ -1077,7 +1077,7 @@ static ssize_t size_store(struct device *dev,
- 	if (rc)
- 		return rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	rc = __size_store(dev, val);
-@@ -1103,7 +1103,7 @@ static ssize_t size_store(struct device *dev,
- 	dev_dbg(dev, "%llx %s (%d)\n", val, rc < 0 ? "fail" : "success", rc);
- 
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc < 0 ? rc : len;
- }
-@@ -1286,7 +1286,7 @@ static ssize_t uuid_store(struct device *dev,
- 	} else
- 		return -ENXIO;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	if (to_ndns(dev)->claim)
-@@ -1302,7 +1302,7 @@ static ssize_t uuid_store(struct device *dev,
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc < 0 ? rc : len;
- }
-@@ -1376,7 +1376,7 @@ static ssize_t sector_size_store(struct device *dev,
- 	} else
- 		return -ENXIO;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	if (to_ndns(dev)->claim)
- 		rc = -EBUSY;
-@@ -1387,7 +1387,7 @@ static ssize_t sector_size_store(struct device *dev,
- 	dev_dbg(dev, "result: %zd %s: %s%s", rc, rc < 0 ? "tried" : "wrote",
- 			buf, buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc ? rc : len;
- }
-@@ -1502,9 +1502,9 @@ static ssize_t holder_show(struct device *dev,
- 	struct nd_namespace_common *ndns = to_ndns(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	rc = sprintf(buf, "%s\n", ndns->claim ? dev_name(ndns->claim) : "");
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-@@ -1541,7 +1541,7 @@ static ssize_t holder_class_store(struct device *dev,
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	rc = __holder_class_store(dev, buf);
-@@ -1549,7 +1549,7 @@ static ssize_t holder_class_store(struct device *dev,
- 		rc = nd_namespace_label_update(nd_region, dev);
- 	dev_dbg(dev, "%s(%zd)\n", rc < 0 ? "fail " : "", rc);
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc < 0 ? rc : len;
- }
-@@ -1560,7 +1560,7 @@ static ssize_t holder_class_show(struct device *dev,
- 	struct nd_namespace_common *ndns = to_ndns(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	if (ndns->claim_class == NVDIMM_CCLASS_NONE)
- 		rc = sprintf(buf, "\n");
- 	else if ((ndns->claim_class == NVDIMM_CCLASS_BTT) ||
-@@ -1572,7 +1572,7 @@ static ssize_t holder_class_show(struct device *dev,
- 		rc = sprintf(buf, "dax\n");
- 	else
- 		rc = sprintf(buf, "<unknown>\n");
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-@@ -1586,7 +1586,7 @@ static ssize_t mode_show(struct device *dev,
- 	char *mode;
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	claim = ndns->claim;
- 	if (claim && is_nd_btt(claim))
- 		mode = "safe";
-@@ -1599,7 +1599,7 @@ static ssize_t mode_show(struct device *dev,
- 	else
- 		mode = "raw";
- 	rc = sprintf(buf, "%s\n", mode);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-@@ -1703,8 +1703,8 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
- 		 * Flush any in-progess probes / removals in the driver
- 		 * for the raw personality of this namespace.
- 		 */
--		device_lock(&ndns->dev);
--		device_unlock(&ndns->dev);
-+		nd_device_lock(&ndns->dev);
-+		nd_device_unlock(&ndns->dev);
- 		if (ndns->dev.driver) {
- 			dev_dbg(&ndns->dev, "is active, can't bind %s\n",
- 					dev_name(dev));
-diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
-index 6cd470547106..0ac52b6eb00e 100644
---- a/drivers/nvdimm/nd-core.h
-+++ b/drivers/nvdimm/nd-core.h
-@@ -9,6 +9,7 @@
- #include <linux/sizes.h>
- #include <linux/mutex.h>
- #include <linux/nd.h>
-+#include "nd.h"
- 
- extern struct list_head nvdimm_bus_list;
- extern struct mutex nvdimm_bus_list_mutex;
-@@ -182,4 +183,71 @@ ssize_t nd_namespace_store(struct device *dev,
- 		struct nd_namespace_common **_ndns, const char *buf,
- 		size_t len);
- struct nd_pfn *to_nd_pfn_safe(struct device *dev);
-+bool is_nvdimm_bus(struct device *dev);
-+
-+#ifdef CONFIG_PROVE_LOCKING
-+extern struct class *nd_class;
-+
-+enum {
-+	LOCK_BUS,
-+	LOCK_NDCTL,
-+	LOCK_REGION,
-+	LOCK_DIMM = LOCK_REGION,
-+	LOCK_NAMESPACE,
-+	LOCK_CLAIM,
-+};
-+
-+static inline void debug_nvdimm_lock(struct device *dev)
-+{
-+	if (is_nd_region(dev))
-+		mutex_lock_nested(&dev->lockdep_mutex, LOCK_REGION);
-+	else if (is_nvdimm(dev))
-+		mutex_lock_nested(&dev->lockdep_mutex, LOCK_DIMM);
-+	else if (is_nd_btt(dev) || is_nd_pfn(dev) || is_nd_dax(dev))
-+		mutex_lock_nested(&dev->lockdep_mutex, LOCK_CLAIM);
-+	else if (dev->parent && (is_nd_region(dev->parent)))
-+		mutex_lock_nested(&dev->lockdep_mutex, LOCK_NAMESPACE);
-+	else if (is_nvdimm_bus(dev))
-+		mutex_lock_nested(&dev->lockdep_mutex, LOCK_BUS);
-+	else if (dev->class && dev->class == nd_class)
-+		mutex_lock_nested(&dev->lockdep_mutex, LOCK_NDCTL);
-+	else
-+		dev_WARN(dev, "unknown lock level\n");
-+}
-+
-+static inline void debug_nvdimm_unlock(struct device *dev)
-+{
-+	mutex_unlock(&dev->lockdep_mutex);
-+}
-+
-+static inline void nd_device_lock(struct device *dev)
-+{
-+	device_lock(dev);
-+	debug_nvdimm_lock(dev);
-+}
-+
-+static inline void nd_device_unlock(struct device *dev)
-+{
-+	debug_nvdimm_unlock(dev);
-+	device_unlock(dev);
-+}
-+#else
-+static inline void nd_device_lock(struct device *dev)
-+{
-+	device_lock(dev);
-+}
-+
-+static inline void nd_device_unlock(struct device *dev)
-+{
-+	device_unlock(dev);
-+}
-+
-+static inline void debug_nvdimm_lock(struct device *dev)
-+{
-+}
-+
-+static inline void debug_nvdimm_unlock(struct device *dev)
-+{
-+}
-+#endif
- #endif /* __ND_CORE_H__ */
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index 0f81fc56bbfd..9b09fe18e666 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -67,7 +67,7 @@ static ssize_t mode_store(struct device *dev,
- 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
- 	ssize_t rc = 0;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	if (dev->driver)
- 		rc = -EBUSY;
-@@ -89,7 +89,7 @@ static ssize_t mode_store(struct device *dev,
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc ? rc : len;
- }
-@@ -132,14 +132,14 @@ static ssize_t align_store(struct device *dev,
- 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	rc = nd_size_select_store(dev, buf, &nd_pfn->align,
- 			nd_pfn_supported_alignments());
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc ? rc : len;
- }
-@@ -161,11 +161,11 @@ static ssize_t uuid_store(struct device *dev,
- 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	rc = nd_uuid_store(dev, &nd_pfn->uuid, buf, len);
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc ? rc : len;
- }
-@@ -190,13 +190,13 @@ static ssize_t namespace_store(struct device *dev,
- 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	rc = nd_namespace_store(dev, &nd_pfn->ndns, buf, len);
- 	dev_dbg(dev, "result: %zd wrote: %s%s", rc, buf,
- 			buf[len - 1] == '\n' ? "" : "\n");
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-@@ -208,7 +208,7 @@ static ssize_t resource_show(struct device *dev,
- 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	if (dev->driver) {
- 		struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
- 		u64 offset = __le64_to_cpu(pfn_sb->dataoff);
-@@ -222,7 +222,7 @@ static ssize_t resource_show(struct device *dev,
- 		/* no address to convey if the pfn instance is disabled */
- 		rc = -ENXIO;
- 	}
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-@@ -234,7 +234,7 @@ static ssize_t size_show(struct device *dev,
- 	struct nd_pfn *nd_pfn = to_nd_pfn_safe(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	if (dev->driver) {
- 		struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
- 		u64 offset = __le64_to_cpu(pfn_sb->dataoff);
-@@ -250,7 +250,7 @@ static ssize_t size_show(struct device *dev,
- 		/* no size to convey if the pfn instance is disabled */
- 		rc = -ENXIO;
- 	}
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 28cb44c61d4a..53797e7be18a 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -520,8 +520,8 @@ static int nd_pmem_remove(struct device *dev)
- 		nvdimm_namespace_detach_btt(to_nd_btt(dev));
- 	else {
- 		/*
--		 * Note, this assumes device_lock() context to not race
--		 * nd_pmem_notify()
-+		 * Note, this assumes nd_device_lock() context to not
-+		 * race nd_pmem_notify()
- 		 */
- 		sysfs_put(pmem->bb_state);
- 		pmem->bb_state = NULL;
-diff --git a/drivers/nvdimm/region.c b/drivers/nvdimm/region.c
-index 488c47ac4c4a..37bf8719a2a4 100644
---- a/drivers/nvdimm/region.c
-+++ b/drivers/nvdimm/region.c
-@@ -102,7 +102,7 @@ static int nd_region_remove(struct device *dev)
- 	nvdimm_bus_unlock(dev);
- 
- 	/*
--	 * Note, this assumes device_lock() context to not race
-+	 * Note, this assumes nd_device_lock() context to not race
- 	 * nd_region_notify()
- 	 */
- 	sysfs_put(nd_region->bb_state);
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index a15276cdec7d..91b5a7ade0d5 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -329,7 +329,7 @@ static ssize_t set_cookie_show(struct device *dev,
- 	 * the v1.1 namespace label cookie definition. To read all this
- 	 * data we need to wait for probing to settle.
- 	 */
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	if (nd_region->ndr_mappings) {
-@@ -346,7 +346,7 @@ static ssize_t set_cookie_show(struct device *dev,
- 		}
- 	}
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	if (rc)
- 		return rc;
-@@ -422,12 +422,12 @@ static ssize_t available_size_show(struct device *dev,
- 	 * memory nvdimm_bus_lock() is dropped, but that's userspace's
- 	 * problem to not race itself.
- 	 */
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	available = nd_region_available_dpa(nd_region);
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return sprintf(buf, "%llu\n", available);
- }
-@@ -439,12 +439,12 @@ static ssize_t max_available_extent_show(struct device *dev,
- 	struct nd_region *nd_region = to_nd_region(dev);
- 	unsigned long long available = 0;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	nvdimm_bus_lock(dev);
- 	wait_nvdimm_bus_probe_idle(dev);
- 	available = nd_region_allocatable_dpa(nd_region);
- 	nvdimm_bus_unlock(dev);
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return sprintf(buf, "%llu\n", available);
- }
-@@ -563,12 +563,12 @@ static ssize_t region_badblocks_show(struct device *dev,
- 	struct nd_region *nd_region = to_nd_region(dev);
- 	ssize_t rc;
- 
--	device_lock(dev);
-+	nd_device_lock(dev);
- 	if (dev->driver)
- 		rc = badblocks_show(&nd_region->bb, buf, 0);
- 	else
- 		rc = -ENXIO;
--	device_unlock(dev);
-+	nd_device_unlock(dev);
- 
- 	return rc;
- }
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 0da5c67f6be1..9237b857b598 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -909,6 +909,8 @@ struct dev_links_info {
-  * 		This identifies the device type and carries type-specific
-  * 		information.
-  * @mutex:	Mutex to synchronize calls to its driver.
-+ * @lockdep_mutex: An optional debug lock that a subsystem can use as a
-+ * 		peer lock to gain localized lockdep coverage of the device_lock.
-  * @bus:	Type of bus device is on.
-  * @driver:	Which driver has allocated this
-  * @platform_data: Platform data specific to the device.
-@@ -991,6 +993,9 @@ struct device {
- 					   core doesn't touch it */
- 	void		*driver_data;	/* Driver data, set and get with
- 					   dev_set_drvdata/dev_get_drvdata */
-+#ifdef CONFIG_PROVE_LOCKING
-+	struct mutex		lockdep_mutex;
-+#endif
- 	struct mutex		mutex;	/* mutex to synchronize calls to
- 					 * its driver.
- 					 */
-
+On 2019/06/30 17:54, Eiichi Tsukata wrote:
+> Commit c5c27a0a5838 ("x86/stacktrace: Remove the pointless ULONG_MAX
+> marker") removes ULONG_MAX marker from user stack trace entries but
+> trace_user_stack_print() still uses the marker and it outputs unnecessary
+> "??".
+> 
+> For example:
+> 
+>             less-1911  [001] d..2    34.758944: <user stack trace>
+>    =>  <00007f16f2295910>
+>    => ??
+>    => ??
+>    => ??
+>    => ??
+>    => ??
+>    => ??
+>    => ??
+> 
+> The user stack trace code zeroes the storage before saving the stack, so if
+> the trace is shorter than the maximum number of entries it can terminate
+> the print loop if a zero entry is detected.
+> 
+> Fixes: 4285f2fcef80 ("tracing: Remove the ULONG_MAX stack trace hackery")
+> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+> ---
+>  kernel/trace/trace_output.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index ba751f993c3b..cab4a5398f1d 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -1109,17 +1109,10 @@ static enum print_line_t trace_user_stack_print(struct trace_iterator *iter,
+>  	for (i = 0; i < FTRACE_STACK_ENTRIES; i++) {
+>  		unsigned long ip = field->caller[i];
+>  
+> -		if (ip == ULONG_MAX || trace_seq_has_overflowed(s))
+> +		if (!ip || trace_seq_has_overflowed(s))
+>  			break;
+>  
+>  		trace_seq_puts(s, " => ");
+> -
+> -		if (!ip) {
+> -			trace_seq_puts(s, "??");
+> -			trace_seq_putc(s, '\n');
+> -			continue;
+> -		}
+> -
+>  		seq_print_user_ip(s, mm, ip, flags);
+>  		trace_seq_putc(s, '\n');
+>  	}
+> 
