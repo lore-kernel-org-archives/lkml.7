@@ -2,140 +2,129 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E33C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD84FC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E58C21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DFE21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/A6ZSXF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gihIi9b7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391043AbfGRVJX (ORCPT
+        id S2391312AbfGRVKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:09:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37193 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbfGRVJW (ORCPT
+        Thu, 18 Jul 2019 17:10:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39816 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfGRVKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:09:22 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so28761525qto.4;
-        Thu, 18 Jul 2019 14:09:21 -0700 (PDT)
+        Thu, 18 Jul 2019 17:10:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id f17so9183622pfn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Dyup3V+7x6vR5f0mEdgXHm4ad/gxVODy2UYvXjZtm38=;
-        b=g/A6ZSXFBVZwZkYYxAc6/240ZOw/nl+fyU7BjnEptzhSBtU1aTXriTXck/+BG1DVOY
-         EV7nAttQx1wz7J9GFiiRlu0+0fpCDFuK708Veu0VrtQUKch3fKT7QXOYuBgA8ioW/L8g
-         2yZ0VeWPfE0VAB52AKfusR8k1B+mH6sY1xsE/zS6Lw2e7m1ItUaud6iua3qpHdSKDx8W
-         +J+F5QDBMqMYtZmLIUaPCxV6mlxG/HcVbe7ITBXceI3phQoSF7h/u01JzOVR0mj3Kh2y
-         H9GcUErP1w0nbrRy6K7wnuPkIyOSttzXPL1P2OKYyjOOPeZvocpNWmgMp6FzpqRmFiHN
-         SOfQ==
+        bh=XIOGrPriZRTmOk8GSJmi3uegRPz7ninV7z+aZhuIkLg=;
+        b=gihIi9b7oPxy1tx75Cls+nO0enXj3oB8QkxlUTVV/M/G1/kEp22DkodSzf3/LK9W4m
+         mrExFCM2INBQTjJInN/mL7aYxr/XE1J0aSWUSEzZ6chI5k21XlvoiuF8jTcs9cGTMMEe
+         ZZQgWS+bVdOWdNd61wmtYFWLE76+nk4kkZKYkP6PJisk4aY87RRKIhDpkfvWQiEDfh6X
+         enpUlUxRZQMHKwAZ1Z6UHOmbszX37eaNNM88mwbmHA48dD89o2cXynr58EWMw7up6l0f
+         K211ghgxv57iC9d2FVVlVKXwS6OGUhUo13tdxlRtalgfxDcc7C6fXxcr9HaLNjhqivyE
+         ueIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Dyup3V+7x6vR5f0mEdgXHm4ad/gxVODy2UYvXjZtm38=;
-        b=NGHzAZu8riSRlZtN2VE8iL/AYp3oMgBD6wMr6OoatI8aSeApYuCcgM3+6nSTy0Fcv9
-         cbda8P5jLWwDHNhwpdIkf21ybWnd/tYiFwMohmSiM3GgPvU+hFVhgF1+2dUzqBwAIfVi
-         ktjOXLGEmEFADG7rQfkm3bLaKUXvKDbG/rJetveAak67x7itc7amn97Es0wX1S7xfd6z
-         N30791N4g/k8lCPR1cw/8NTnVgmxw/mWf72tJ4J87Zx5uSzA2yz67COuoDQZjOJ1jCpT
-         dBW+jmcMUixl7jMiv9lwEFR8iM695XToDDUXUhdDMHwzcB7/wm8d4ftIf2wUskJPyvlV
-         Lpaw==
-X-Gm-Message-State: APjAAAXcvfMFP7FTvP0p/taVZ/zfO9hX1oL7SbHteVz/pvKlKf0PIhw/
-        aSLWHFTFsSO7zIcFI1EfKJw5dTA48wo0IWoX9Mc=
-X-Google-Smtp-Source: APXvYqx/Xj+iAj6ZhkMjTX1Z+74RGCpbHhz221hQ/4tFr/eSNb0ZRWjxjhZdyPpTxY3WuORbyCrdGEBMm+KsiHIPG48=
-X-Received: by 2002:a0c:b095:: with SMTP id o21mr35480609qvc.73.1563484161439;
- Thu, 18 Jul 2019 14:09:21 -0700 (PDT)
+        bh=XIOGrPriZRTmOk8GSJmi3uegRPz7ninV7z+aZhuIkLg=;
+        b=orDTc/twjSVpeKDfRnS3A1IjcKE4F7fTaFlc+HS1ZfHDei+dFKprv0x/Yslf/pecsQ
+         1pMmo7N7VYKs75qQ+ct2OgBperzTL6ZlE7gux4jgGdpFjfSd6J1WBVUOy/uIebLe/1Cf
+         h+r2COInFfyiKfKTEvdZT9R18TPyoRJYtmkAuX6hO1yawC6cBk4aT2PK2Qmv8BzmMsdU
+         9G3lq1cja6Z9pC7xbuOKdUWDisBqmLIVg1xXWR+vVbEH/cUpdAfp5kDrkKIcgS5uysoy
+         VaocyTcZM/lwVkEiNzgpNFOhuKnZFUXtdmt3ZE4YpoR9iCVXyovHh5oMF1NyXQFyAwUW
+         sa0w==
+X-Gm-Message-State: APjAAAXIfgdaJDoy8XOSMgn1uVHefYNORRbsJuw5/+OHDfn3KMAgES1D
+        3qEwjcSo74Xkr4hA5tpNnATuf6iGWV6CrSAfwptQsw==
+X-Google-Smtp-Source: APXvYqyfxbJyTy2CnYB4Y3JUva+s3RCza7Yed+0y2RO6CUA/IuyJ9wTiHjUtaSTz2/RvIQ4XBi0RHjtQiQXH47XyKfU=
+X-Received: by 2002:a63:2cd1:: with SMTP id s200mr46254603pgs.10.1563484217895;
+ Thu, 18 Jul 2019 14:10:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190716115535-mutt-send-email-mst@kernel.org>
- <CAKgT0Ud47-cWu9VnAAD_Q2Fjia5gaWCz_L9HUF6PBhbugv6tCQ@mail.gmail.com>
- <20190716125845-mutt-send-email-mst@kernel.org> <CAKgT0UfgPdU1H5ZZ7GL7E=_oZNTzTwZN60Q-+2keBxDgQYODfg@mail.gmail.com>
- <20190717055804-mutt-send-email-mst@kernel.org> <CAKgT0Uf4iJxEx+3q_Vo9L1QPuv9PhZUv1=M9UCsn6_qs7rG4aw@mail.gmail.com>
- <20190718003211-mutt-send-email-mst@kernel.org> <CAKgT0UfQ3dtfjjm8wnNxX1+Azav6ws9zemH6KYc7RuyvyFo3fQ@mail.gmail.com>
- <20190718162040-mutt-send-email-mst@kernel.org> <CAKgT0UcKTzSYZnYsMQoG6pXhpDS7uLbDd31dqfojCSXQWSsX_A@mail.gmail.com>
- <20190718164656-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190718164656-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 18 Jul 2019 14:09:10 -0700
-Message-ID: <CAKgT0UchVPRuM1pNnsuxcJrTg1-tWQWzW1+q=_v7VuEDS3pL5g@mail.gmail.com>
-Subject: Re: [PATCH v1 6/6] virtio-balloon: Add support for aerating memory
- via hinting
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
+References: <1562959401-19815-1-git-send-email-cai@lca.pw> <20190712.154606.493382088615011132.davem@davemloft.net>
+ <EFD25845-097A-46B1-9C1A-02458883E4DA@lca.pw> <20190712.175038.755685144649934618.davem@davemloft.net>
+ <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw>
+In-Reply-To: <D7E57421-A6F4-4453-878A-8F173A856296@lca.pw>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jul 2019 14:10:06 -0700
+Message-ID: <CAKwvOdkCfqfpJYYX+iu2nLCUUkeDorDdVP3e7koB9NYsRwgCNw@mail.gmail.com>
+Subject: Re: [PATCH] be2net: fix adapter->big_page_size miscaculation
+To:     Qian Cai <cai@lca.pw>, Bill Wendling <morbo@google.com>,
+        James Y Knight <jyknight@google.com>
+Cc:     David Miller <davem@davemloft.net>, sathya.perla@broadcom.com,
+        ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        somnath.kotur@broadcom.com, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, netdev@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Zhang <yang.zhang.wz@gmail.com>, pagupta@redhat.com,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lcapitulino@redhat.com, wei.w.wang@intel.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, dan.j.williams@intel.com,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+        Nathan Chancellor <natechancellor@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 1:49 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+On Thu, Jul 18, 2019 at 2:01 PM Qian Cai <cai@lca.pw> wrote:
 >
-> On Thu, Jul 18, 2019 at 01:34:03PM -0700, Alexander Duyck wrote:
-> > On Thu, Jul 18, 2019 at 1:24 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Thu, Jul 18, 2019 at 08:34:37AM -0700, Alexander Duyck wrote:
-> > > > > > > For example we allocate pages until shrinker kicks in.
-> > > > > > > Fair enough but in fact many it would be better to
-> > > > > > > do the reverse: trigger shrinker and then send as many
-> > > > > > > free pages as we can to host.
-> > > > > >
-> > > > > > I'm not sure I understand this last part.
-> > > > >
-> > > > > Oh basically what I am saying is this: one of the reasons to use page
-> > > > > hinting is when host is short on memory.  In that case, why don't we use
-> > > > > shrinker to ask kernel drivers to free up memory? Any memory freed could
-> > > > > then be reported to host.
-> > > >
-> > > > Didn't the balloon driver already have a feature like that where it
-> > > > could start shrinking memory if the host was under memory pressure? If
-> > > > so how would adding another one add much value.
-> > >
-> > > Well fundamentally the basic balloon inflate kind of does this, yes :)
-> > >
-> > > The difference with what I am suggesting is that balloon inflate tries
-> > > to aggressively achieve a specific goal of freed memory. We could have a
-> > > weaker "free as much as you can" that is still stronger than free page
-> > > hint which as you point out below does not try to free at all, just
-> > > hints what is already free.
+>
+>
+> > On Jul 12, 2019, at 8:50 PM, David Miller <davem@davemloft.net> wrote:
 > >
-> > Yes, but why wait until the host is low on memory?
+> > From: Qian Cai <cai@lca.pw>
+> > Date: Fri, 12 Jul 2019 20:27:09 -0400
+> >
+> >> Actually, GCC would consider it a const with -O2 optimized level because it found that it was never modified and it does not understand it is a module parameter. Considering the following code.
+> >>
+> >> # cat const.c
+> >> #include <stdio.h>
+> >>
+> >> static int a = 1;
+> >>
+> >> int main(void)
+> >> {
+> >>      if (__builtin_constant_p(a))
+> >>              printf("a is a const.\n");
+> >>
+> >>      return 0;
+> >> }
+> >>
+> >> # gcc -O2 const.c -o const
+> >
+> > That's not a complete test case, and with a proper test case that
+> > shows the externalization of the address of &a done by the module
+> > parameter macros, gcc should not make this optimization or we should
+> > define the module parameter macros in a way that makes this properly
+> > clear to the compiler.
+> >
+> > It makes no sense to hack around this locally in drivers and other
+> > modules.
 >
-> It can come about for a variety of reasons, such as
-> other VMs being aggressive, or ours aggressively caching
-> stuff in memory.
+> If you see the warning in the original patch,
 >
-> > With my
-> > implementation we can perform the hints in the background for a low
-> > cost already. So why should we wait to free up memory when we could do
-> > it immediately. Why let things get to the state where the host is
-> > under memory pressure when the guests can be proactively freeing up
-> > the pages and improving performance as a result be reducing swap
-> > usage?
+> https://lore.kernel.org/netdev/1562959401-19815-1-git-send-email-cai@lca.pw/
 >
-> You are talking about sending free memory to host.
-> Fair enough but if you have drivers that aggressively
-> allocate memory then there won't be that much free guest
-> memory without invoking a shrinker.
+> GCC definitely optimize rx_frag_size  to be a constant while I just confirmed clang
+> -O2 does not. The problem is that I have no clue about how to let GCC not to
+> optimize a module parameter.
+>
+> Though, I have added a few people who might know more of compilers than myself.
 
-So then what we really need is a way for the host to trigger the
-shrinker via a call to drop_slab() on the guest don't we? Then we
-could automatically hint the free pages to the host.
++ Bill and James, who probably knows more than they'd like to about
+__builtin_constant_p and more than other LLVM folks at this point.
+
+-- 
+Thanks,
+~Nick Desaulniers
