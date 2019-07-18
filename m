@@ -2,118 +2,205 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369CDC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87BDC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1679D20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F4C2173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 18:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OKg+YDsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390941AbfGRShT (ORCPT
+        id S2390942AbfGRSiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 14:37:19 -0400
-Received: from smtprelay0099.hostedemail.com ([216.40.44.99]:40318 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726649AbfGRShT (ORCPT
+        Thu, 18 Jul 2019 14:38:22 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:45693 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727623AbfGRSiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 14:37:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E6E7A100E86C1;
-        Thu, 18 Jul 2019 18:37:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: story87_557edf194a62
-X-Filterd-Recvd-Size: 3234
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 18 Jul 2019 18:37:16 +0000 (UTC)
-Message-ID: <649403d7dbf2e4e21a96bd9a20b7cb659b97fe38.camel@perches.com>
-Subject: Re: [PATCH] scsi: pmcraid: Use dma_pool_zalloc rather than
- dma_pool_alloc
-From:   Joe Perches <joe@perches.com>
-To:     Vasyl Gomonovych <gomonovych@gmail.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 18 Jul 2019 11:37:14 -0700
-In-Reply-To: <20190718181051.22882-1-gomonovych@gmail.com>
-References: <20190718181051.22882-1-gomonovych@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jul 2019 14:38:22 -0400
+Received: by mail-pg1-f201.google.com with SMTP id n3so7307586pgh.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 11:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=n8VorecpPGmR7cZwCga8Jqx3nBBTF8cHAFyZf3z5/Dc=;
+        b=OKg+YDslZgql7NzppycnzhnaaEHSefuv6GvCgntPJSplHAjZc3Wj2+Akp5UvKETYp1
+         T95Eqc0Yasu59LBHw+0leU9b3aeA25+xjGThT62o0QUFVDhsg8mkcJLFc2UkvYeHU0xT
+         T0MQWY0cbXxMWiww9TDF4UxcgRMmcqOcdHl/kdvRtuqgAg5uLKYmBSFps3EvfrY90UkK
+         TObrzh8/82mfVxce6YozV1BoeMpA7KBT+H6bCnsdVijB6UUUNe5EtRnZrOFdmrIGp52h
+         dV4qy52Rh+nnaH2Lrrvg+oU8dAybxCIS9itOR2snqSJCazsi7y7Zdn/LAKMdiqRF2s3V
+         AhtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=n8VorecpPGmR7cZwCga8Jqx3nBBTF8cHAFyZf3z5/Dc=;
+        b=Xmddy9WYpmnu6YTw9VzTn1jRWyRStf00ddPnRvUKQfVx2Di40Eb7ljly+iEHWE9+2F
+         NHwY7GLRXVJmzuoz1H0p78sTMgWMIPhSCFherczN3cRXPrFzTRje38szGAb+KRB7QkF+
+         SBlWwIv5DaHH6V7ODQ2MFHD9IAcZnocdNTL9rG6oV2qpIXDeVBe2HSXwqtBoZGsNddiF
+         JYJQc5AKRKBOBVzsWQfYpKifbcmIezZvF/olFeUWED0X/0j1W1b1X39uoz8WbTKTyQp9
+         RsakYcLO7NRNppVLwpviSidK1Lsx1yYrnuB54RyfUNnVIlay9MpBBk8oYbhg1+0eU5NV
+         TB2Q==
+X-Gm-Message-State: APjAAAXg8si8AdkDtnj3IGzDCBQL9Mg1mqCJ9ZeD4kxfgHfjOVa11s0w
+        v0HgD3G8ZAKhy5TSKyn72v+bp5sXE8+OGYk=
+X-Google-Smtp-Source: APXvYqwW4ad1ldW7ulsb5U6WAMuDEcP6FnqUzvb+QMVND8OUDZGmfLBJdLJmNttOYZYKkh8hw/ddZU7cMQ+RCiQ=
+X-Received: by 2002:a63:e5a:: with SMTP id 26mr47410389pgo.3.1563475101281;
+ Thu, 18 Jul 2019 11:38:21 -0700 (PDT)
+Date:   Thu, 18 Jul 2019 11:38:18 -0700
+Message-Id: <20190718183818.190051-1-ehankland@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.510.g264f2c817a-goog
+Subject: [PATCH] KVM: x86: Add fixed counters to PMU filter
+From:   Eric Hankland <ehankland@google.com>
+To:     Wei Wang <wei.w.wang@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        ehankland <ehankland@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-18 at 20:10 +0200, Vasyl Gomonovych wrote:
-> Use *_pool_zalloc rather than *_pool_alloc followed by memset with 0
-> The semantic patch that makes this change is available
-> in scripts/coccinelle/api/alloc/pool_zalloc-simple.cocci.
-[]
-> diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-[]
-> @@ -4653,9 +4653,7 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
->  		return -ENOMEM;
->  
->  	for (i = 0; i < PMCRAID_MAX_CMD; i++) {
-> -		pinstance->cmd_list[i]->ioa_cb =
-> -			dma_pool_alloc(
-> -				pinstance->control_pool,
-> +		pinstance->cmd_list[i]->ioa_cb = dma_pool_zalloc(pinstance->control_pool,
->  				GFP_KERNEL,
->  				&(pinstance->cmd_list[i]->ioa_cb_bus_addr));
->  
-> @@ -4663,8 +4661,6 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
->  			pmcraid_release_control_blocks(pinstance, i);
->  			return -ENOMEM;
->  		}
-> -		memset(pinstance->cmd_list[i]->ioa_cb, 0,
-> -			sizeof(struct pmcraid_control_block));
->  	}
->  	return 0;
->  }
+From: ehankland <ehankland@google.com>
 
-While this change is somewhat overdone as only
-dma_pool_alloc could be changed to dma_pool_zalloc
-on the same line without rewrapping other arguments,
-I'd generally write this with a temporary like:
+Updates KVM_CAP_PMU_EVENT_FILTER so it can also whitelist or blacklist
+fixed counters.
+
+Signed-off-by: ehankland <ehankland@google.com>
 ---
- drivers/scsi/pmcraid.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ Documentation/virtual/kvm/api.txt | 13 ++++++++-----
+ arch/x86/include/uapi/asm/kvm.h   |  9 ++++++---
+ arch/x86/kvm/pmu.c                | 30 +++++++++++++++++++++++++-----
+ 3 files changed, 39 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-index 71ff3936da4f..88e7b18ad44d 100644
---- a/drivers/scsi/pmcraid.c
-+++ b/drivers/scsi/pmcraid.c
-@@ -4653,19 +4653,17 @@ static int pmcraid_allocate_control_blocks(struct pmcraid_instance *pinstance)
- 		return -ENOMEM;
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index 2cd6250b2896..96bcf1aa1931 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -4090,17 +4090,20 @@ Parameters: struct kvm_pmu_event_filter (in)
+ Returns: 0 on success, -1 on error
  
- 	for (i = 0; i < PMCRAID_MAX_CMD; i++) {
--		pinstance->cmd_list[i]->ioa_cb =
--			dma_pool_alloc(
--				pinstance->control_pool,
--				GFP_KERNEL,
--				&(pinstance->cmd_list[i]->ioa_cb_bus_addr));
-+		struct pmcraid_cmd *cmd = pinstance->cmd_list[i];
+ struct kvm_pmu_event_filter {
+-       __u32 action;
+-       __u32 nevents;
+-       __u64 events[0];
++	__u32 action;
++	__u32 nevents;
++	__u32 fixed_counter_bitmap;
++	__u32 flags;
++	__u32 pad[4];
++	__u64 events[0];
+ };
  
--		if (!pinstance->cmd_list[i]->ioa_cb) {
-+		cmd->ioa_cb = dma_pool_zalloc(pinstance->control_pool,
-+					      GFP_KERNEL,
-+					      &cmd->ioa_cb_bus_addr);
-+		if (!cmd->ioa_cb) {
- 			pmcraid_release_control_blocks(pinstance, i);
- 			return -ENOMEM;
- 		}
--		memset(pinstance->cmd_list[i]->ioa_cb, 0,
--			sizeof(struct pmcraid_control_block));
- 	}
+ This ioctl restricts the set of PMU events that the guest can program.
+ The argument holds a list of events which will be allowed or denied.
+ The eventsel+umask of each event the guest attempts to program is compared
+ against the events field to determine whether the guest should have access.
+-This only affects general purpose counters; fixed purpose counters can
+-be disabled by changing the perfmon CPUID leaf.
++The events field only controls general purpose counters; fixed purpose
++counters are controlled by the fixed_counter_bitmap.
+ 
+ Valid values for 'action':
+ #define KVM_PMU_EVENT_ALLOW 0
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index e901b0ab116f..503d3f42da16 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -435,9 +435,12 @@ struct kvm_nested_state {
+ 
+ /* for KVM_CAP_PMU_EVENT_FILTER */
+ struct kvm_pmu_event_filter {
+-       __u32 action;
+-       __u32 nevents;
+-       __u64 events[0];
++	__u32 action;
++	__u32 nevents;
++	__u32 fixed_counter_bitmap;
++	__u32 flags;
++	__u32 pad[4];
++	__u64 events[0];
+ };
+ 
+ #define KVM_PMU_EVENT_ALLOW 0
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index aa5a2597305a..ae5cd1b02086 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -19,8 +19,8 @@
+ #include "lapic.h"
+ #include "pmu.h"
+ 
+-/* This keeps the total size of the filter under 4k. */
+-#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 63
++/* This is enough to filter the vast majority of currently defined events. */
++#define KVM_PMU_EVENT_FILTER_MAX_EVENTS 300
+ 
+ /* NOTE:
+  * - Each perf counter is defined as "struct kvm_pmc";
+@@ -206,12 +206,25 @@ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int idx)
+ {
+ 	unsigned en_field = ctrl & 0x3;
+ 	bool pmi = ctrl & 0x8;
++	struct kvm_pmu_event_filter *filter;
++	struct kvm *kvm = pmc->vcpu->kvm;
 +
- 	return 0;
- }
  
-
+ 	pmc_stop_counter(pmc);
+ 
+ 	if (!en_field || !pmc_is_enabled(pmc))
+ 		return;
+ 
++	filter = srcu_dereference(kvm->arch.pmu_event_filter, &kvm->srcu);
++	if (filter) {
++		if (filter->action == KVM_PMU_EVENT_DENY &&
++		    test_bit(idx, (ulong *)&filter->fixed_counter_bitmap))
++			return;
++		if (filter->action == KVM_PMU_EVENT_ALLOW &&
++		    !test_bit(idx, (ulong *)&filter->fixed_counter_bitmap))
++			return;
++	}
++
+ 	pmc_reprogram_counter(pmc, PERF_TYPE_HARDWARE,
+ 			      kvm_x86_ops->pmu_ops->find_fixed_event(idx),
+ 			      !(en_field & 0x2), /* exclude user */
+@@ -376,7 +389,7 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_pmu_event_filter tmp, *filter;
+ 	size_t size;
+-	int r;
++	int r, i;
+ 
+ 	if (copy_from_user(&tmp, argp, sizeof(tmp)))
+ 		return -EFAULT;
+@@ -385,6 +398,13 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+ 	    tmp.action != KVM_PMU_EVENT_DENY)
+ 		return -EINVAL;
+ 
++	if (tmp.flags != 0)
++		return -EINVAL;
++
++	for (i = 0; i < ARRAY_SIZE(tmp.pad); i++)
++		if (tmp.pad[i] != 0)
++			return -EINVAL;
++
+ 	if (tmp.nevents > KVM_PMU_EVENT_FILTER_MAX_EVENTS)
+ 		return -E2BIG;
+ 
+@@ -406,8 +426,8 @@ int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp)
+ 	mutex_unlock(&kvm->lock);
+ 
+ 	synchronize_srcu_expedited(&kvm->srcu);
+- 	r = 0;
++	r = 0;
+ cleanup:
+ 	kfree(filter);
+- 	return r;
++	return r;
+ }
