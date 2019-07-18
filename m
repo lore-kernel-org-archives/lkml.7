@@ -2,70 +2,86 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144F9C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A74C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A7A21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563468624;
-	bh=kYwUc7H92PsudVECq4mHUyluC1VcRyqDzW3fRYa/hvY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=EOWd9QLqfY2mJNF6tCmoQOubMvZFoVTQ+VqsTMasnzFhaoKTN6h6/AUcG0ePb2TAr
-	 0V0muQUVX3q5BEUskIC2ZO9G/1PalrbCx/UT54J78XanCd1VzJbo5UdteqTu58y5cj
-	 C7yHXtjZYTcuMJGxs8x3yjXSTextQ6d4MCM3pMgs=
+	by mail.kernel.org (Postfix) with ESMTP id B161321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9OTgOWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390856AbfGRQuT (ORCPT
+        id S2388564AbfGRQwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGRQuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:50:17 -0400
-Subject: Re: [GIT PULL] More power management updates for v5.3-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563468616;
-        bh=kYwUc7H92PsudVECq4mHUyluC1VcRyqDzW3fRYa/hvY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ylus85Fc0o04qFLZx9LmFWXZlBlUtCVItLcKUyDytG5n/h3wGlOB5I+CliqmLd50b
-         jIJJ4BmM9X/ixCzIxIzo+x63wGjPE730b9vluxW3od+sKBNVwV/lBBY8jopiKJ9xlL
-         9fAEkUtbW2RQCEnvZLBAepORKDhFroEgThSOv8zM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
-References: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0irbFa5E=UZ+1XiiuoXC9zD0qc7vx3NtTCmB88h3_U4hw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
- pm-5.3-rc1-2
-X-PR-Tracked-Commit-Id: 918e162e6a71e924a343b41f71789ad14e1e3229
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d0411ec8ca6b98061023873e334323ef102100cc
-Message-Id: <156346861620.19804.11274811882223588044.pr-tracker-bot@kernel.org>
-Date:   Thu, 18 Jul 2019 16:50:16 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Thu, 18 Jul 2019 12:52:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38047 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRQwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:52:37 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h28so19697282lfj.5;
+        Thu, 18 Jul 2019 09:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=msbWUMjaCYaeI+P4QPRR4G+PLwfYrUtOEdjRRhRs8og=;
+        b=W9OTgOWhyZ7CZ+ZkvnsG1LJ0eXh+ID7kS7urAeOAzeQWiyE6XD8i38jHVyeNT0q2Z2
+         nOclhxk4LztvqoroRO0hn+sd0fYbhYbMhoedaaX9YZx2MAYKb3Y7flfXimD8UdPSuV9g
+         KeGjuGLYLHhFiNv1lsbPXzxwh+3TZWLJbgtlLUyaBpH90s085clpNJrI4Od+dqTwDKxc
+         /TNx6CwOUV0R2yh8AHYQTaE4K916DLo29Rs+whWjMfug6WyNJ9bdtGxifl8H05DLQAhv
+         Y5fCWODDxQa4a/F/PcokY/O5i4zx5F6WdzJKGcq0QoLTHYuM1IkehuHTyVnEHC7ymwUV
+         rfkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=msbWUMjaCYaeI+P4QPRR4G+PLwfYrUtOEdjRRhRs8og=;
+        b=F9lV7OVcjDGIgxnpoAtgb2qeVUh9vKvV5xN40iluDzcNRHJxwStMKa5BbsBjQgvOUh
+         8LF+Y7pghk5pSivgNqPDec3k75zvxYSY6WlCvbLdmmd02+8XNgQPy/1vL0DfH/NnmOQc
+         jKIbW9nG9/nOwviRgli624t1+bsrxjhs1cH2HJfCjNmae1KOrJP9BhrkVXReIBVIKz1C
+         CUVTDhkUGMOOqHPe8kOKVjmOExI5NCKwEjleXygEDU/dzRw9zAQnVsd/EQsFCywNgL/K
+         yB2XTj+gFZ+UteAw0hBOhnATbEu1rBiGEUseepq+zrDQdbNWwqQ/tsW1i4q126ehLnAq
+         bxEw==
+X-Gm-Message-State: APjAAAW0hZfba1SuE/hibUctqAHGUdu7OdVjWmzjAXhHRiXrfknKYs0Z
+        /lWBMx7OHNj0u7CMGToVc0tcLaj4IFmByhwbAjs=
+X-Google-Smtp-Source: APXvYqykUCdgoXyNEBAmDUL8YztRIX9tovJrHvYZtEhZmx25YAGdLqPvUOFBKjN4aW4qJn8POWC1aDXCVzUONyoVht0=
+X-Received: by 2002:a19:cbd3:: with SMTP id b202mr21894063lfg.185.1563468755252;
+ Thu, 18 Jul 2019 09:52:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190718143428.2392-1-TheSven73@gmail.com> <1563468471.2676.36.camel@pengutronix.de>
+In-Reply-To: <1563468471.2676.36.camel@pengutronix.de>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 18 Jul 2019 13:52:23 -0300
+Message-ID: <CAOMZO5A_BuWMr1n_fFv4veyaXdcfjxO+9nFAgGfCrmAhNmzV5g@mail.gmail.com>
+Subject: Re: [PATCH] net: fec: generate warning when using deprecated phy reset
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 18 Jul 2019 11:06:18 +0200:
+On Thu, Jul 18, 2019 at 1:49 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Am Donnerstag, den 18.07.2019, 10:34 -0400 schrieb Sven Van Asbroeck:
+> > Allowing the fec to reset its PHY via the phy-reset-gpios
+> > devicetree property is deprecated. To improve developer
+> > awareness, generate a warning whenever the deprecated
+> > property is used.
+>
+> Not really a fan of this. This will cause existing DTs, which are
+> provided by the firmware in an ideal world and may not change at the
+> same rate as the kernel, to generate a warning with new kernels. Not
+> really helpful from the user experience point of view.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.3-rc1-2
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d0411ec8ca6b98061023873e334323ef102100cc
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+I agree. I don't think this warning is useful.
