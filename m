@@ -2,156 +2,119 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4D1C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6694AC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71AA208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2EE21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 21:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYSGf+r6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfGRVe1 (ORCPT
+        id S2391376AbfGRVe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 17:34:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30328 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727767AbfGRVe0 (ORCPT
+        Thu, 18 Jul 2019 17:34:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36158 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfGRVe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 17:34:26 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6ILVwCO105300
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:34:24 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tu0s302cp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 17:34:24 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 18 Jul 2019 22:34:23 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 22:34:21 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6ILYKks38011172
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 21:34:20 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0F98BB205F;
-        Thu, 18 Jul 2019 21:34:20 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC7C8B2066;
-        Thu, 18 Jul 2019 21:34:19 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.219.160])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jul 2019 21:34:19 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id AA0E916C0E4B; Thu, 18 Jul 2019 14:34:19 -0700 (PDT)
-Date:   Thu, 18 Jul 2019 14:34:19 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Byungchul Park <max.byungchul.park@gmail.com>,
-        Byungchul Park <byungchul.park@lge.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@lge.com
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-Reply-To: paulmck@linux.ibm.com
-References: <20190711164818.GA260447@google.com>
- <20190711195839.GA163275@google.com>
- <20190712063240.GD7702@X58A-UD3R>
- <20190712125116.GB92297@google.com>
- <CANrsvRMh6L_sEmoF_K3Mx=1VcuGSwQAT8CZHep69aSZUTBvwpA@mail.gmail.com>
- <CAEXW_YTeAUuVqViBfiOTQhckMDH229oQdPXG6SNqGK0xYm-yzA@mail.gmail.com>
- <20190713151330.GE26519@linux.ibm.com>
- <20190713154257.GE133650@google.com>
- <20190713174111.GG26519@linux.ibm.com>
- <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
+        Thu, 18 Jul 2019 17:34:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k8so14539647plt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 14:34:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rq6ZXaexVOr1g5rKeqsc4reNWPARrrLFOhCOfoYVB1A=;
+        b=JYSGf+r6eqoqQXX0LxoRCLQDVYXbMATf/dpdcE8ADt32cleMWPhkS3t8ujcPp/F8L0
+         ARA/T0eJ8YG7/V3eto9Oku1wbLM0q1/7v64O7YrF2pG1UGKmaEs6dKYavTv1gxh4K4Sd
+         hvb0+ujdaFBp2ez+/CFo23PINM0BaOD7YPAa1MQN1+ZA3NWnzV4lKASRcqB/9N/R0sDJ
+         omrdWuCFXV6uec9Xbs/JlzrKhcefsdWp4qB3G+KvmRJfPuu91EXML6M8XYQBjj9kkAe2
+         8VcbdSBEdoYA3S5tKGsdtVXvNmpbZvxuNC1V/Wkxc+kTjckG/kN/VZ0xSa4VyUZX2PLh
+         D1Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rq6ZXaexVOr1g5rKeqsc4reNWPARrrLFOhCOfoYVB1A=;
+        b=JU9UXNjJN3+7jo9pLOdTCSdF3a1/LXcRjqr34vJfsi1aNJiV7jhTdx9NuVLIggIrg8
+         9bYHIgZAYTZ+z4g8AmHIIabDIjzcz9s3H4/zLZyODQaBhwGLpY6L24kJ2gZxdZL7RY5k
+         DW4nP6o4lR6b+GTe7fLnHZNp3x+aUVOrYkt5hw51LEcdVXTlu5JPlzr15uNSSLsXi1AM
+         CV1M6IwuBzmJC3OyVcq8UKiBmaaof5boH86k7D2WxGVoYKIEdZNDpLKJL0IXYNh9mi9J
+         mDRTgrdHeVoYg6Ls6NqqQO+5OFiWkOrieHStFB/XPHxAjvVYvhz0IMhOpRld0HM04Xnt
+         1F4Q==
+X-Gm-Message-State: APjAAAVI9sWol/sJbfkbFHc8k0RM78i2X/uaBvd/wgqxVxKOuRLpy5bV
+        vY5DuVBxQkmlP53zg4D73bSgiN1r0bp+oiYtFUcvqA==
+X-Google-Smtp-Source: APXvYqzepu9AlsPIvI969TgZ5nsQiSeZ9SiaxA4mD7hWWMjIhA7AV4zKxe75qx/Skek8PAJwZVprrnGOEcloIamJ3ok=
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr50406455pld.119.1563485695394;
+ Thu, 18 Jul 2019 14:34:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19071821-0052-0000-0000-000003E2EA26
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011454; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01234098; UDB=6.00650323; IPR=6.01015426;
- MB=3.00027787; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 21:34:22
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071821-0053-0000-0000-000061C09707
-Message-Id: <20190718213419.GV14271@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180218
+References: <20190718000206.121392-1-vaibhavrustagi@google.com> <20190718000206.121392-2-vaibhavrustagi@google.com>
+In-Reply-To: <20190718000206.121392-2-vaibhavrustagi@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jul 2019 14:34:44 -0700
+Message-ID: <CAKwvOdkHHNR7utufOcDwAOgBEA9MnOLh713Gaq01R=n26EyjZw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/purgatory: add -mno-sse, -mno-mmx, -mno-sse2 to Makefile
+To:     Vaibhav Rustagi <vaibhavrustagi@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 12:14:22PM -0400, Joel Fernandes wrote:
-> Trimming the list a bit to keep my noise level low,
-> 
-> On Sat, Jul 13, 2019 at 1:41 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> [snip]
-> > > It still feels like you guys are hyperfocusing on this one particular
-> > > > knob.  I instead need you to look at the interrelating knobs as a group.
-> > >
-> > > Thanks for the hints, we'll do that.
-> > >
-> > > > On the debugging side, suppose someone gives you an RCU bug report.
-> > > > What information will you need?  How can you best get that information
-> > > > without excessive numbers of over-and-back interactions with the guy
-> > > > reporting the bug?  As part of this last question, what information is
-> > > > normally supplied with the bug?  Alternatively, what information are
-> > > > bug reporters normally expected to provide when asked?
-> > >
-> > > I suppose I could dig out some of our Android bug reports of the past where
-> > > there were RCU issues but if there's any fires you are currently fighting do
-> > > send it our way as debugging homework ;-)
-> >
-> >   Suppose that you were getting RCU CPU stall
-> > warnings featuring multi_cpu_stop() called from cpu_stopper_thread().
-> > Of course, this really means that some other CPU/task is holding up
-> > multi_cpu_stop() without also blocking the current grace period.
-> >
-> 
-> So I took a shot at this trying to learn how CPU stoppers work in
-> relation to this problem.
-> 
-> I am assuming here say CPU X has entered MULTI_STOP_DISABLE_IRQ state
-> in multi_cpu_stop() but another CPU Y has not yet entered this state.
-> So CPU X is stalling RCU but it is really because of CPU Y. Now in the
-> problem statement, you mentioned CPU Y is not holding up the grace
-> period, which means Y doesn't have any of IRQ, BH or preemption
-> disabled ; but is still somehow stalling RCU indirectly by troubling
-> X.
-> 
-> This can only happen if :
-> - CPU Y has a thread executing on it that is higher priority than CPU
-> X's stopper thread which prevents it from getting scheduled. - but the
-> CPU stopper thread (migration/..) is highest priority RT so this would
-> be some kind of an odd scheduler bug.
-> - There is a bug in the CPU stopper machinery itself preventing it
-> from scheduling the stopper on Y. Even though Y is not holding up the
-> grace period.
+On Wed, Jul 17, 2019 at 5:02 PM Vaibhav Rustagi
+<vaibhavrustagi@google.com> wrote:
+>
+> Compiling the purgatory code with clang results in using of mmx
+> registers.
+>
+> $ objdump -d arch/x86/purgatory/purgatory.ro | grep xmm
+>
+>      112:       0f 28 00                movaps (%rax),%xmm0
+>      115:       0f 11 07                movups %xmm0,(%rdi)
+>      122:       0f 28 00                movaps (%rax),%xmm0
+>      125:       0f 11 47 10             movups %xmm0,0x10(%rdi)
+>
+> Add -mno-sse, -mno-mmx, -mno-sse2 to avoid generating SSE instructions.
+>
+> Signed-off-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+> ---
+>  arch/x86/purgatory/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+> index 3cf302b26332..3589ec4a28c7 100644
+> --- a/arch/x86/purgatory/Makefile
+> +++ b/arch/x86/purgatory/Makefile
+> @@ -20,6 +20,7 @@ KCOV_INSTRUMENT := n
+>  # sure how to relocate those. Like kexec-tools, use custom flags.
+>
+>  KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
+> +KBUILD_CFLAGS += -mno-mmx -mno-sse -mno-sse2
 
-- CPU Y might have already passed through its quiescent state for
-  the current grace period, then disabled IRQs indefinitely.
-  Now, CPU Y would block a later grace period, but CPU X is
-  preventing the current grace period from ending, so no such
-  later grace period can start.
+Yep, this is a commonly recurring bug in the kernel, observed again
+and again for Clang builds.  The top level Makefile carefully sets
+KBUILD_CFLAGS, then lower subdirs in the kernel wipe them away with
+`:=` assignment. Invariably important flags don't always get re-added.
+In this case, these flags are used in arch/x86/Makefile, but not here
+and should be IMO.  Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> Did I get that right? Would be exciting to run the rcutorture test
-> once Paul has it available to reproduce this problem.
-
-Working on it!  Slow, I know!
-
-							Thanx, Paul
-
+(Note that arch/x86/Makefile additionally sets -mno-3dnow and -mno-avx
+(if supported by the compiler).  Not sure if the maintainers would
+like a v2 with those added, and we don't strictly need them yet, but
+we may someday).
+-- 
+Thanks,
+~Nick Desaulniers
