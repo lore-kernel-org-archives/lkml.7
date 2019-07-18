@@ -2,173 +2,134 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23408C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06507C76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EAC21849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FB72184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="PzoghoiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390860AbfGRQny (ORCPT
+        id S1730256AbfGRQpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:43:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38242 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388249AbfGRQnx (ORCPT
+        Thu, 18 Jul 2019 12:45:49 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39166 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfGRQpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:43:53 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IGgbET049742;
-        Thu, 18 Jul 2019 12:43:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttustsud7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 12:43:31 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6IGhVX0052246;
-        Thu, 18 Jul 2019 12:43:31 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ttustsucm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 12:43:31 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6IGeMfn002703;
-        Thu, 18 Jul 2019 16:43:30 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04dal.us.ibm.com with ESMTP id 2trtmrh27j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jul 2019 16:43:30 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IGhSeD59507006
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 16:43:28 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6053EBE058;
-        Thu, 18 Jul 2019 16:43:28 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED650BE053;
-        Thu, 18 Jul 2019 16:43:23 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.186.82])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Jul 2019 16:43:23 +0000 (GMT)
-References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-7-bauerman@linux.ibm.com> <20190718084456.GE24562@lst.de> <20190718150123.4230a00c.pasic@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 6/6] s390/mm: Remove sev_active() function
-In-reply-to: <20190718150123.4230a00c.pasic@linux.ibm.com>
-Date:   Thu, 18 Jul 2019 13:43:20 -0300
-Message-ID: <87blxr47kn.fsf@morokweng.localdomain>
+        Thu, 18 Jul 2019 12:45:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m10so31002323edv.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KgRfHejv/zIzuUta64QTdW+DJVmqS0zjC4X90cCy9QI=;
+        b=PzoghoiUeT+cfTCoJNBcMdcHj4lUEnnKPdIB0RIR7UfIhBNExY45DGUWwEb6VInVhX
+         cdfKfmcchZblLxSSZF5AFrMDhwPcAlqFPUCLjsX8x8+8Zcs2u2GmFaiF1ECh4v8PQ2F8
+         j4HhGExKdqzRvuS2Dl4OmXpajh5psO9uuIZTpdM7O5nZPeYs4yVRzt8mIMiynp96OWiC
+         uDolhH6hlq7pA1VxLsr2gjfo3hvLExYypRB7JfUrW4J1IQdRCAoGrAG5ih/r8aFRnlxJ
+         PBn48/MCV1UMTY8QGKa/jew7xYNxn6sUpCvfRcBqSKGRUcEPnUkv/zraQfpIgkIpixCd
+         ortg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KgRfHejv/zIzuUta64QTdW+DJVmqS0zjC4X90cCy9QI=;
+        b=Utv7ARdTlmo/K15qiJuyPbjzYIs4tbXvsMlZpeOxTqDeNhXkhY0GuIbZsW6Zezd+UO
+         t55mmn/Q1/ddZRzSo+ReCgb2im4MouyjWK8uOvLEkALGwAMuBIzEoZpVPfK/p7xD0+LD
+         FkMI0y568YRYArMWmm9ltU13f4D+U5GODc883tNWbNgs8Kt1DqKrW0tzAbskgk/YzB/S
+         fSERuEs7vIHEKt/yJRj8lo5VlHWn0DPvQtmzg+GoE0oPgDSZn4plWFn2+uDM/9H1D3Wb
+         wKmM73Ua+fltEI1JHdGEgbnIsObgUzx/JdpOgPhf6XpRQZmdjgSPydtV2mvQWUTLYIxO
+         bx6w==
+X-Gm-Message-State: APjAAAUo7/qHqxm2pj67NPhRWFMfx4Cmc2XKA49YiIu87IWxtWMvYG7O
+        Gjo1++clzPmx5YGjn1YOukezjd++/GsnmkD9hKc=
+X-Google-Smtp-Source: APXvYqxFDf5VCS9acxFCu5q7BESVni3L/MJZz4NoBB7LBP3pSJFBG6PopXkq/zkj8QMkeiPsyBwKVx67bKcjyYdDtg4=
+X-Received: by 2002:a17:906:9447:: with SMTP id z7mr37111939ejx.165.1563468347812;
+ Thu, 18 Jul 2019 09:45:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180175
+References: <20190718024133.3873-1-leonardo@linux.ibm.com> <CA+CK2bBu7DnG73SaBDwf9cBceNvKnZDEqA-gBJmKC9K_rqgO+A@mail.gmail.com>
+ <6cd8f8f753881aa14d9dfec9a018326abc1e3847.camel@linux.ibm.com>
+In-Reply-To: <6cd8f8f753881aa14d9dfec9a018326abc1e3847.camel@linux.ibm.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 18 Jul 2019 12:45:36 -0400
+Message-ID: <CA+CK2bA9_B8siPCSSdrN_yecGZZy82UNx7P=QK8N5GuPjto1HQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in ZONE_MOVABLE
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Halil Pasic <pasic@linux.ibm.com> writes:
-
-> On Thu, 18 Jul 2019 10:44:56 +0200
-> Christoph Hellwig <hch@lst.de> wrote:
+On Thu, Jul 18, 2019 at 12:04 PM Leonardo Bras <leonardo@linux.ibm.com> wro=
+te:
 >
->> > -/* are we a protected virtualization guest? */
->> > -bool sev_active(void)
->> > -{
->> > -	return is_prot_virt_guest();
->> > -}
->> > -
->> >  bool force_dma_unencrypted(struct device *dev)
->> >  {
->> > -	return sev_active();
->> > +	return is_prot_virt_guest();
->> >  }
->> 
->> Do we want to keep the comment for force_dma_unencrypted?
+> On Thu, 2019-07-18 at 08:19 -0400, Pavel Tatashin wrote:
+> > On Wed, Jul 17, 2019 at 10:42 PM Leonardo Bras <leonardo@linux.ibm.com>=
+ wrote:
+> > > Adds an option on kernel config to make hot-added memory online in
+> > > ZONE_MOVABLE by default.
+> > >
+> > > This would be great in systems with MEMORY_HOTPLUG_DEFAULT_ONLINE=3Dy=
+ by
+> > > allowing to choose which zone it will be auto-onlined
+> >
+> > This is a desired feature. From reading the code it looks to me that
+> > auto-selection of online method type should be done in
+> > memory_subsys_online().
+> >
+> > When it is called from device online, mem->online_type should be -1:
+> >
+> > if (mem->online_type < 0)
+> >      mem->online_type =3D MMOP_ONLINE_KEEP;
+> >
+> > Change it to:
+> > if (mem->online_type < 0)
+> >      mem->online_type =3D MMOP_DEFAULT_ONLINE_TYPE;
+> >
+> > And in "linux/memory_hotplug.h"
+> > #ifdef CONFIG_MEMORY_HOTPLUG_MOVABLE
+> > #define MMOP_DEFAULT_ONLINE_TYPE MMOP_ONLINE_MOVABLE
+> > #else
+> > #define MMOP_DEFAULT_ONLINE_TYPE MMOP_ONLINE_KEEP
+> > #endif
+> >
+> > Could be expanded to support MMOP_ONLINE_KERNEL as well.
+> >
+> > Pasha
 >
-> Yes we do. With the comment transferred:
+> Thanks for the suggestions Pasha,
 >
-> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+> I was made aware there is a kernel boot option "movable_node" that
+> already creates the behavior I was trying to reproduce.
 
-Thanks for your review.
+I agree with others, no need to duplicate this functionality in a
+config, and Michal in a separate e-mail explained the reasons why we
+have MEMORY_HOTPLUG_DEFAULT_ONLINE.
 
-Here is the new version. Should I send a new patch series with this
-patch and the Reviewed-by on the other ones?
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
-
-From 1726205c73fb9e29feaa3d8909c5a1b0f2054c04 Mon Sep 17 00:00:00 2001
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Date: Mon, 15 Jul 2019 20:50:43 -0300
-Subject: [PATCH v4] s390/mm: Remove sev_active() function
-
-All references to sev_active() were moved to arch/x86 so we don't need to
-define it for s390 anymore.
-
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
----
- arch/s390/include/asm/mem_encrypt.h | 1 -
- arch/s390/mm/init.c                 | 7 +------
- 2 files changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/arch/s390/include/asm/mem_encrypt.h b/arch/s390/include/asm/mem_encrypt.h
-index ff813a56bc30..2542cbf7e2d1 100644
---- a/arch/s390/include/asm/mem_encrypt.h
-+++ b/arch/s390/include/asm/mem_encrypt.h
-@@ -5,7 +5,6 @@
- #ifndef __ASSEMBLY__
- 
- static inline bool mem_encrypt_active(void) { return false; }
--extern bool sev_active(void);
- 
- int set_memory_encrypted(unsigned long addr, int numpages);
- int set_memory_decrypted(unsigned long addr, int numpages);
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 78c319c5ce48..6c43a1ed1beb 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -156,14 +156,9 @@ int set_memory_decrypted(unsigned long addr, int numpages)
- }
- 
- /* are we a protected virtualization guest? */
--bool sev_active(void)
--{
--	return is_prot_virt_guest();
--}
--
- bool force_dma_unencrypted(struct device *dev)
- {
--	return sev_active();
-+	return is_prot_virt_guest();
- }
- 
- /* protected virtualization */
+>
+> I was thinking of changing my patch in order to add a config option
+> that makes this behavior default (i.e. not need to pass it as a boot
+> parameter.
+>
+> Do you think that it would still be a desired feature?
+>
+> Regards,
+>
+> Leonardo Br=C3=A1s
