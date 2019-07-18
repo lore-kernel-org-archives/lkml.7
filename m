@@ -5,363 +5,163 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A39C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B78C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1C020693
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E7020693
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 09:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZqfauW9o"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FqQjLLrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389678AbfGRJoH (ORCPT
+        id S2389679AbfGRJpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 05:44:07 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:54754 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfGRJoH (ORCPT
+        Thu, 18 Jul 2019 05:45:35 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7436 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfGRJpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 05:44:07 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190718094403epoutp021214fa90c3b83e7b36bc1ac6b81765c4~ydyos53g51767317673epoutp02K
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:44:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190718094403epoutp021214fa90c3b83e7b36bc1ac6b81765c4~ydyos53g51767317673epoutp02K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563443043;
-        bh=YSL5yKEP9EwGOhrB6Xc1FHRbPp1eEqaxJe0hPuyLF7M=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ZqfauW9oA7hEGJ+HQjQV8QQwEZBEsRVwSJ+7FTULKM9auRrzHVpMyOoPofoS8H1FT
-         mrFCfDMfQdzxUJWYE+ysyagQCM2YyMzlVh8f6E3AjIVQciTiSbEjtZj6gKoxRX+HiK
-         EtdNA31hlVcNLh6dpBP5j0qkmwL9ZMtlwbndycPw=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190718094403epcas1p40679e867128a1a9f03940d8a56bfb113~ydyoXFD2E1964619646epcas1p41;
-        Thu, 18 Jul 2019 09:44:03 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 45q8NK0jzCzMqYkd; Thu, 18 Jul
-        2019 09:44:01 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        88.48.04085.06F303D5; Thu, 18 Jul 2019 18:44:00 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190718094400epcas1p4ee3099a605cd7345181215bc02a6ac0c~ydyly1P0L1440814408epcas1p4h;
-        Thu, 18 Jul 2019 09:44:00 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190718094400epsmtrp2bf7a1eca8b66b2e426c9492fb82ef4c7~ydylyG3To0651806518epsmtrp2U;
-        Thu, 18 Jul 2019 09:44:00 +0000 (GMT)
-X-AuditID: b6c32a39-d03ff70000000ff5-f0-5d303f602a65
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A7.1C.03638.06F303D5; Thu, 18 Jul 2019 18:44:00 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190718094400epsmtip1851c65f0b6bf173971eea9deab645e1a~ydylmuTgI1996219962epsmtip1O;
-        Thu, 18 Jul 2019 09:44:00 +0000 (GMT)
-Subject: Re: [PATCH v4 17/24] PM / devfreq: tegra30: Use tracepoints for
- debugging
+        Thu, 18 Jul 2019 05:45:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d303fbc0000>; Thu, 18 Jul 2019 02:45:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 18 Jul 2019 02:45:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 18 Jul 2019 02:45:34 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jul
+ 2019 09:45:32 +0000
+Subject: Re: [PATCH v1] soc/tegra: pmc: Query PCLK clock rate at probe time
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <209220ec-b677-3500-0e55-6cad57e97f88@samsung.com>
-Date:   Thu, 18 Jul 2019 18:47:09 +0900
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190707230843.11224-1-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c9bd6dd3-7a03-6e2c-db9f-fefa059a428f@nvidia.com>
+Date:   Thu, 18 Jul 2019 10:45:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190707223303.6755-18-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTURzmbHd3V2t1XFm/DGreiFAwd9XZtVJ7WA0sEDN6IXabN2fu1e4m
-        PaGyh0qLIpJcPnpYliFRWKhRCx+9rJRWES0jsGBpKWn2Mqrd3SL/+34f33d+33fOoeTqejKC
-        yrc4eLuFM9FkKHG9NUobw6Vqs7XvaPbSpx7E7nOfIdhHez8oWW9zBckOudoQW/LZTbK+PRdI
-        9ntzFcEern9CLgjRN3bXIH2Tu1updxX1k/rDDXVIP3R1WoZiXcF8I8/l8nYNbzFYc/Mtecl0
-        +sqcxTm6RC0TwySxc2iNhTPzyXTa8oyYpfmmQB5aU8iZnAEqgxMEOjZlvt3qdPAao1VwJNO8
-        LddkS7LNFjiz4LTkzTZYzXMZrTZOFxBuKDB2/qwkbMeXbD2/Z5DcjZ6zpSiEApwAV8r7FKUo
-        lFLjRgSny14R0jAYGH54SWn4gqD64Xnin6WvrBOJWI1vInjiS5dEAwge9g0qSxFFTcBZcKNs
-        mchPxL8QlHwvIkWDHK+F1qZLMhGTOBo8/hdBfjyOhGffepDoVeEU8NdPEWkCz4SPd9qCu8Lx
-        GnjQVhXMoMJhcL/8bRCH4ES45Xopl46fDC/fVsskPB2Krp2UixkA/yah1/dbIRVIg6eek3/x
-        BOi926CUcAQM9d8kJbwDLt5vIyVzMYIGT9dfQzx4zh2TiUHlOAouN8dKdCQ0jVQiafE46B8+
-        pBAlgFVQfEAtSWaA9023TMJT4OzBEvIIot2j6rhHVXCPquD+v+wUIurQJN4mmPN4gbHpRj/2
-        VRT8qtFJjejO4+UtCFOIHqt6QcdmqxVcobDN3IKAktMTVb73AUqVy23bztutOXaniRdakC5w
-        20flEeEGa+DjWxw5jC4uPj6eTWASdQxDT1ZV/YzKVuM8zsEX8LyNt//zyaiQiN3IWTvi88aM
-        kaWc6d3ylekZ8DRFpu2r8N/WPLoX6Xq9cFwYGrv2QlpXe+aK9TWV9bMKjfOKaytW+UOTUsM7
-        Li/qbtfop2b2DO8f7hg64eVSOzaxezOMI61zE/wdYbsMm1cf2JjvPWibNKBcVl7NtLs6a3f+
-        MuwsTd6+tdqU9f4Dl76FJgQjx0TL7QL3B5zIqnrAAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnG6CvUGswZ6HMharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZ5//MZSmY6lqxrPETWwPjNYsuRk4OCQETidfT
-        zjN2MXJxCAnsZpT4uOQQM0RCUmLaxaNANgeQLSxx+HAxRM1bRon7H7awgMSFBUIkdk9zB4mL
-        CDQxSWzqvcAO0sssECnRM3cLG0TDFkaJU49bGEESbAJaEvtf3GADsfkFFCWu/njMCDKIV8BO
-        4sVaSZAwi4CqxNtjR8DKRQUiJCZd28kCYvMKCEqcnPkEzOYUMJPY13uLGWKXusSfeZegbHGJ
-        W0/mM0HY8hLNW2czT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0
-        L10vOT93EyM4wrS0djCeOBF/iFGAg1GJh/eGkn6sEGtiWXFl7iFGCQ5mJRHe2y+BQrwpiZVV
-        qUX58UWlOanFhxilOViUxHnl849FCgmkJ5akZqemFqQWwWSZODilGhgnfRKL3tn90eTyqZD8
-        3YdZnv93sVT8+2Imj+a3V5c+z2k5Krtb75CsetpHSZeWrz1TJtTMfn46aIfIqu0GVxRPJDl3
-        Ws/5Y+n2bOrt6OKlib+7F7858mS5bORsjgnqHybImkte4TbYVLV4zWaJe3mn4h95TzpXrS65
-        XD3v9/fDNT2Ogioq2mHzlFiKMxINtZiLihMBHsOxxqwCAAA=
-X-CMS-MailID: 20190718094400epcas1p4ee3099a605cd7345181215bc02a6ac0c
-X-Msg-Generator: CA
+In-Reply-To: <20190707230843.11224-1-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190707223623epcas4p13d01a60ae2b88dde4c4f7fdba04da170
-References: <20190707223303.6755-1-digetx@gmail.com>
-        <CGME20190707223623epcas4p13d01a60ae2b88dde4c4f7fdba04da170@epcas4p1.samsung.com>
-        <20190707223303.6755-18-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563443132; bh=u8c0NlynrGVUWsDz/CzhhNNqyF1INsuspIBnpJ+/lfM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FqQjLLrUQDHOoHPei66yOGo/ApxHwTZYRLuLLCBYe2NpwB41A6HqrYEwTAjykjaDN
+         CzPZDIz/LbBfnHKgF97S6ooUw9OJvot5vtle6+d1BXkTFIR+6ZEGex4uCW/e3GBhFn
+         RXxyzr43f7zwAsukSwJiUAz/cvgDlHXrf4ymfWM1H5ls9hEnajUQSUmfVARmklfdQe
+         2jgko4hiAppZQwDqt2iSnqQJza+iU/IF5lsPakDy/rSWGTBMOQVUSq2vE4QW9tCn4x
+         xTb4pY/pyWWLvjAGsPS6rnmGY5vBRpCrZT0A8Rmq7XmUsjt5K46gpqi5d9VTlzaeX1
+         Vx+otw0CWkyAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 8. 오전 7:32, Dmitry Osipenko wrote:
-> Debug messages create too much CPU and memory activity by themselves,
-> so it's difficult to debug lower rates and catch unwanted interrupts
-> that happen rarely. Tracepoints are ideal in that regards because they
-> do not contribute to the sampled date at all. This allowed me to catch
-> few problems which are fixed by the followup patches, without tracepoints
-> it would be much harder to do.
-> 
+
+On 08/07/2019 00:08, Dmitry Osipenko wrote:
+> The PCLK clock is running off SCLK, which is a critical clock that is
+> very unlikely to randomly change its rate. It's also a bit clumsy (and
+> apparently incorrect) to query the clock's rate with interrupts being
+> disabled because clk_get_rate() takes a mutex and that's the case during
+> suspend/cpuidle entering. Lastly, it's better to always fully reprogram
+> PMC state because it's not obvious whether it could be changed after SC7.
+
+I agree with the first part, but I would drop the last sentence because
+I see no evidence of this. Maybe Peter can confirm.
+
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/devfreq/tegra30-devfreq.c      |  43 +++-------
->  include/trace/events/tegra30_devfreq.h | 105 +++++++++++++++++++++++++
->  2 files changed, 117 insertions(+), 31 deletions(-)
->  create mode 100644 include/trace/events/tegra30_devfreq.h
-
-As I knew, 'include/trace/events' don't include the header file
-for only one device driver. Usually, the trace event is provided
-by framework instead of each devic driver.
-
+>  drivers/soc/tegra/pmc.c | 26 +++++++++++---------------
+>  1 file changed, 11 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-> index 6ebf0f505767..43c9c5fbfe91 100644
-> --- a/drivers/devfreq/tegra30-devfreq.c
-> +++ b/drivers/devfreq/tegra30-devfreq.c
-> @@ -19,6 +19,9 @@
->  #include <linux/reset.h>
->  #include <linux/workqueue.h>
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 9f9c1c677cf4..532e0ada012b 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -1433,6 +1433,7 @@ void tegra_pmc_set_suspend_mode(enum tegra_suspend_mode mode)
+>  void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  {
+>  	unsigned long long rate = 0;
+> +	u64 ticks;
+>  	u32 value;
 >  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/tegra30_devfreq.h>
+>  	switch (mode) {
+> @@ -1441,7 +1442,7 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  		break;
+>  
+>  	case TEGRA_SUSPEND_LP2:
+> -		rate = clk_get_rate(pmc->clk);
+> +		rate = pmc->rate;
+
+There is another call to clk_get_rate() that could be removed as well.
+
+>  		break;
+>  
+>  	default:
+> @@ -1451,26 +1452,20 @@ void tegra_pmc_enter_suspend_mode(enum tegra_suspend_mode mode)
+>  	if (WARN_ON_ONCE(rate == 0))
+>  		rate = 100000000;
+>  
+> -	if (rate != pmc->rate) {
+> -		u64 ticks;
+> -
+> -		ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+> -		do_div(ticks, USEC_PER_SEC);
+> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+> -
+> -		ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+> -		do_div(ticks, USEC_PER_SEC);
+> -		tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+> +	ticks = pmc->cpu_good_time * rate + USEC_PER_SEC - 1;
+> +	do_div(ticks, USEC_PER_SEC);
+> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWRGOOD_TIMER);
+
+You could go a step further and update the cpu_good_time/cpu_off_time to
+be ticks and calculated once during probe and recalculated if
+tegra_pmc_set_suspend_mode is called. I am not sure why we really need
+to pass mode to tegra_pmc_enter_suspend_mode() seeing as the mode is
+stored in the pmc struct.
+
+>  
+> -		wmb();
+> -
+> -		pmc->rate = rate;
+> -	}
+> +	ticks = pmc->cpu_off_time * rate + USEC_PER_SEC - 1;
+> +	do_div(ticks, USEC_PER_SEC);
+> +	tegra_pmc_writel(pmc, ticks, PMC_CPUPWROFF_TIMER);
+>  
+>  	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>  	value &= ~PMC_CNTRL_SIDE_EFFECT_LP0;
+>  	value |= PMC_CNTRL_CPU_PWRREQ_OE;
+>  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
 > +
->  #include "governor.h"
->  
->  #define ACTMON_GLB_STATUS					0x0
-> @@ -283,9 +286,6 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
->  					 unsigned long *lower,
->  					 unsigned long *upper)
->  {
-> -	struct device *ddev = tegra->devfreq->dev.parent;
-> -	u32 offset = dev->config->offset;
-> -
->  	/*
->  	 * Memory frequencies are guaranteed to have 1MHz granularity
->  	 * and thus we need this rounding down to get a proper watermarks
-> @@ -298,8 +298,8 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
->  	*lower = tegra_actmon_lower_freq(tegra, target_freq);
->  	*upper = tegra_actmon_upper_freq(tegra, target_freq);
->  
-> -	dev_dbg(ddev, "%03x: target_freq %lu lower freq %lu upper freq %lu\n",
-> -		offset, target_freq, *lower, *upper);
-> +	trace_device_lower_upper(dev->config->offset, target_freq,
-> +				 *lower, *upper);
->  
->  	/*
->  	 * The upper watermark should take into account CPU's frequency
-> @@ -377,30 +377,13 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
->  	device_writel(dev, lower + delta, ACTMON_DEV_LOWER_WMARK);
+> +	wmb();
 >  }
+>  #endif
 >  
-> -static void actmon_device_debug(struct tegra_devfreq *tegra,
-> -				struct tegra_devfreq_device *dev,
-> -				const char *prefix)
-> -{
-> -	dev_dbg(tegra->devfreq->dev.parent,
-> -		"%03x: %s: 0x%08x 0x%08x a %u %u %u c %u %u %u b %lu cpu %u\n",
-> -		dev->config->offset, prefix,
-> -		device_readl(dev, ACTMON_DEV_INTR_STATUS),
-> -		device_readl(dev, ACTMON_DEV_CTRL),
-> -		device_readl(dev, ACTMON_DEV_AVG_COUNT),
-> -		device_readl(dev, ACTMON_DEV_AVG_LOWER_WMARK),
-> -		device_readl(dev, ACTMON_DEV_AVG_UPPER_WMARK),
-> -		device_readl(dev, ACTMON_DEV_COUNT),
-> -		device_readl(dev, ACTMON_DEV_LOWER_WMARK),
-> -		device_readl(dev, ACTMON_DEV_UPPER_WMARK),
-> -		dev->boost_freq, cpufreq_get(0));
-> -}
-> -
->  static void actmon_isr_device(struct tegra_devfreq *tegra,
->  			      struct tegra_devfreq_device *dev)
->  {
->  	u32 intr_status, dev_ctrl, avg_intr_mask, avg_count;
->  
-> -	actmon_device_debug(tegra, dev, "isr+");
-> +	trace_device_isr_enter(tegra->regs, dev->config->offset,
-> +			       dev->boost_freq, cpufreq_get(0));
->  
->  	intr_status = device_readl(dev, ACTMON_DEV_INTR_STATUS);
->  	avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
-> @@ -455,7 +438,8 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
->  	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
->  	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
->  
-> -	actmon_device_debug(tegra, dev, "isr-");
-> +	trace_device_isr_exit(tegra->regs, dev->config->offset,
-> +			      dev->boost_freq, cpufreq_get(0));
->  }
->  
->  static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
-> @@ -749,7 +733,6 @@ static struct devfreq_dev_profile tegra_devfreq_profile = {
->  static int tegra_governor_get_target(struct devfreq *devfreq,
->  				     unsigned long *freq)
->  {
-> -	struct device *ddev = devfreq->dev.parent;
->  	struct devfreq_dev_status *stat;
->  	struct tegra_devfreq *tegra;
->  	struct tegra_devfreq_device *dev;
-> @@ -770,13 +753,11 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
->  		dev = &tegra->devices[i];
->  
->  		dev_target_freq = actmon_update_target(tegra, dev);
-> -
->  		target_freq = max(target_freq, dev_target_freq);
->  
-> -		dev_dbg(ddev, "%03x: upd: dev_target_freq %lu\n",
-> -			dev->config->offset, dev_target_freq);
-> -
-> -		actmon_device_debug(tegra, dev, "upd");
-> +		trace_device_target_freq(dev->config->offset, dev_target_freq);
-> +		trace_device_target_update(tegra->regs, dev->config->offset,
-> +					   dev->boost_freq, cpufreq_get(0));
+> @@ -2082,6 +2077,7 @@ static int tegra_pmc_probe(struct platform_device *pdev)
+>  		pmc->clk = NULL;
 >  	}
 >  
->  	*freq = target_freq;
-> diff --git a/include/trace/events/tegra30_devfreq.h b/include/trace/events/tegra30_devfreq.h
-> new file mode 100644
-> index 000000000000..8f264a489daf
-> --- /dev/null
-> +++ b/include/trace/events/tegra30_devfreq.h
-> @@ -0,0 +1,105 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM tegra30_devfreq
-> +
-> +#if !defined(_TRACE_TEGRA30_DEVFREQ_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_TEGRA30_DEVFREQ_H
-> +
-> +#include <linux/io.h>
-> +#include <linux/tracepoint.h>
-> +#include <linux/types.h>
-> +
-> +DECLARE_EVENT_CLASS(device_state,
-> +	TP_PROTO(void __iomem *base, u32 offset, u32 boost, u32 cpufreq),
-> +	TP_ARGS(base, offset, boost, cpufreq),
-> +	TP_STRUCT__entry(
-> +		__field(u32, offset)
-> +		__field(u32, intr_status)
-> +		__field(u32, ctrl)
-> +		__field(u32, avg_count)
-> +		__field(u32, avg_lower)
-> +		__field(u32, avg_upper)
-> +		__field(u32, count)
-> +		__field(u32, lower)
-> +		__field(u32, upper)
-> +		__field(u32, boost_freq)
-> +		__field(u32, cpu_freq)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->offset		= offset;
-> +		__entry->intr_status	= readl_relaxed(base + offset + 0x24);
-> +		__entry->ctrl		= readl_relaxed(base + offset + 0x0);
-> +		__entry->avg_count	= readl_relaxed(base + offset + 0x20);
-> +		__entry->avg_lower	= readl_relaxed(base + offset + 0x14);
-> +		__entry->avg_upper	= readl_relaxed(base + offset + 0x10);
-> +		__entry->count		= readl_relaxed(base + offset + 0x1c);
-> +		__entry->lower		= readl_relaxed(base + offset + 0x8);
-> +		__entry->upper		= readl_relaxed(base + offset + 0x4);
-> +		__entry->boost_freq	= boost;
-> +		__entry->cpu_freq	= cpufreq;
-> +	),
-> +	TP_printk("%03x: intr 0x%08x ctrl 0x%08x avg %010u %010u %010u cnt %010u %010u %010u boost %010u cpu %u",
-> +		__entry->offset,
-> +		__entry->intr_status,
-> +		__entry->ctrl,
-> +		__entry->avg_count,
-> +		__entry->avg_lower,
-> +		__entry->avg_upper,
-> +		__entry->count,
-> +		__entry->lower,
-> +		__entry->upper,
-> +		__entry->boost_freq,
-> +		__entry->cpu_freq)
-> +);
-> +
-> +DEFINE_EVENT(device_state, device_isr_enter,
-> +	TP_PROTO(void __iomem *base, u32 offset, u32 boost, u32 cpufreq),
-> +	TP_ARGS(base, offset, boost, cpufreq));
-> +
-> +DEFINE_EVENT(device_state, device_isr_exit,
-> +	TP_PROTO(void __iomem *base, u32 offset, u32 boost, u32 cpufreq),
-> +	TP_ARGS(base, offset, boost, cpufreq));
-> +
-> +DEFINE_EVENT(device_state, device_target_update,
-> +	TP_PROTO(void __iomem *base, u32 offset, u32 boost, u32 cpufreq),
-> +	TP_ARGS(base, offset, boost, cpufreq));
-> +
-> +TRACE_EVENT(device_lower_upper,
-> +	TP_PROTO(u32 offset, u32 target, u32 lower, u32 upper),
-> +	TP_ARGS(offset, target, lower, upper),
-> +	TP_STRUCT__entry(
-> +		__field(u32, offset)
-> +		__field(u32, target)
-> +		__field(u32, lower)
-> +		__field(u32, upper)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->offset = offset;
-> +		__entry->target = target;
-> +		__entry->lower = lower;
-> +		__entry->upper = upper;
-> +	),
-> +	TP_printk("%03x: freq %010u lower freq %010u upper freq %010u",
-> +		__entry->offset,
-> +		__entry->target,
-> +		__entry->lower,
-> +		__entry->upper)
-> +);
-> +
-> +TRACE_EVENT(device_target_freq,
-> +	TP_PROTO(u32 offset, u32 target),
-> +	TP_ARGS(offset, target),
-> +	TP_STRUCT__entry(
-> +		__field(u32, offset)
-> +		__field(u32, target)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->offset = offset;
-> +		__entry->target = target;
-> +	),
-> +	TP_printk("%03x: freq %010u", __entry->offset, __entry->target)
-> +);
-> +#endif /* _TRACE_TEGRA30_DEVFREQ_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> 
+> +	pmc->rate = clk_get_rate(pmc->clk);
 
+You should check the value returned is not 0 here.
+
+Cheers
+Jon
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+nvpublic
