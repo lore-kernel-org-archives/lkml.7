@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8231DC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A01C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547F4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE134205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420277;
-	bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+	s=default; t=1563420286;
+	bh=YfICFsESOvdQZDGiHscJVaj94R0uz2pITiwXWI9h5k4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OLpYePZsgyIJN+NzTFIddIYMwG1XFLWL+Tdx/2yXIVFRMGl2HdoYh+/YutfLcTpP5
-	 srRJ97LncmqD3u+SrMdlEbOOwz5CEy46/K8kYRgYX+JbMuNBws2HDnAHwZIDFjBsPR
-	 Ajbi3EAfG4im+wmfxjdUqSoxwVU6NH02f+fnxwng=
+	b=oo7PwzwUxLEl0t5YQna3+2u6GlnWRioGeCgldnK7RrINhjRyRDxPhTrOr+BYQtKeA
+	 gZo7mQ7Bsj1Iqe64d0HwAK3slWWkZsZcgkMKGvBoL0yoFHMv/BHu6ACVHbSJC+o8W/
+	 HXfUleYANSrJz+yW8+/kQcFeOK4TDfCwnnM33sdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390793AbfGRDYg (ORCPT
+        id S2390842AbfGRDYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:24:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37948 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389193AbfGRDGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:40 -0400
+        id S2388725AbfGRDGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:24 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396C3204EC;
-        Thu, 18 Jul 2019 03:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A928C2053B;
+        Thu, 18 Jul 2019 03:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419198;
-        bh=EOqjTyZARP8Mz1ivHyEMBzL8+5UqiihTHldWS5cAR2A=;
+        s=default; t=1563419184;
+        bh=YfICFsESOvdQZDGiHscJVaj94R0uz2pITiwXWI9h5k4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DULQb40Wa5sSt4PLsVnNQUfpDkne3gWjCgcet6WMaUANYrQmmEmGf2W4dgdYsOIOM
-         hBbDrf0pXrgK0zYR4fdi700NrIyD5j/OXw2n4IwjcW+xg+1UIiFlgOXjsX8Gg2cLX5
-         ZMSM1VEtvsPS+9E8y7ELITFK/NUkY3IXYV+xegS0=
+        b=Tgo68skdWyDkDjeiqqH9k+xU3NHzoCQBeDyukwRruDd34Nuj95RSjLJam3kRm2LCQ
+         Dho8kyYlIkH7bBkPY6VTI97YwvdNeuc9MlRDYZwiQj8CMms8B0Pkoa9SjC1UdFvort
+         8gx1hBQtLJVRupuL1Jv8NYKnGem0iy3dfR/nUXKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 04/47] nilfs2: do not use unexported cpu_to_le32()/le32_to_cpu() in uapi header
-Date:   Thu, 18 Jul 2019 12:01:18 +0900
-Message-Id: <20190718030047.398047851@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.1 49/54] s390/qdio: (re-)initialize tiqdio list entries
+Date:   Thu, 18 Jul 2019 12:01:44 +0900
+Message-Id: <20190718030056.989876091@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
-References: <20190718030045.780672747@linuxfoundation.org>
+In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
+References: <20190718030053.287374640@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,129 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-commit c32cc30c0544f13982ee0185d55f4910319b1a79 upstream.
+commit e54e4785cb5cb4896cf4285964aeef2125612fb2 upstream.
 
-cpu_to_le32/le32_to_cpu is defined in include/linux/byteorder/generic.h,
-which is not exported to user-space.
+When tiqdio_remove_input_queues() removes a queue from the tiq_list as
+part of qdio_shutdown(), it doesn't re-initialize the queue's list entry
+and the prev/next pointers go stale.
 
-UAPI headers must use the ones prefixed with double-underscore.
+If a subsequent qdio_establish() fails while sending the ESTABLISH cmd,
+it calls qdio_shutdown() again in QDIO_IRQ_STATE_ERR state and
+tiqdio_remove_input_queues() will attempt to remove the queue entry a
+second time. This dereferences the stale pointers, and bad things ensue.
+Fix this by re-initializing the list entry after removing it from the
+list.
 
-Detected by compile-testing exported headers:
+For good practice also initialize the list entry when the queue is first
+allocated, and remove the quirky checks that papered over this omission.
+Note that prior to
+commit e521813468f7 ("s390/qdio: fix access to uninitialized qdio_q fields"),
+these checks were bogus anyway.
 
-  include/linux/nilfs2_ondisk.h: In function `nilfs_checkpoint_set_snapshot':
-  include/linux/nilfs2_ondisk.h:536:17: error: implicit declaration of function `cpu_to_le32' [-Werror=implicit-function-declaration]
-    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
-                   ^
-  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
-   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
-   ^~~~~~~~~~~~~~~~~~~~
-  include/linux/nilfs2_ondisk.h:536:29: error: implicit declaration of function `le32_to_cpu' [-Werror=implicit-function-declaration]
-    cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |  \
-                               ^
-  include/linux/nilfs2_ondisk.h:552:1: note: in expansion of macro `NILFS_CHECKPOINT_FNS'
-   NILFS_CHECKPOINT_FNS(SNAPSHOT, snapshot)
-   ^~~~~~~~~~~~~~~~~~~~
-  include/linux/nilfs2_ondisk.h: In function `nilfs_segment_usage_set_clean':
-  include/linux/nilfs2_ondisk.h:622:19: error: implicit declaration of function `cpu_to_le64' [-Werror=implicit-function-declaration]
-    su->su_lastmod = cpu_to_le64(0);
-                     ^~~~~~~~~~~
+setup_queues_misc() clears the whole queue struct, and thus needs to
+re-init the prev/next pointers as well.
 
-Link: http://lkml.kernel.org/r/20190605053006.14332-1-yamada.masahiro@socionext.com
-Fixes: e63e88bc53ba ("nilfs2: move ioctl interface and disk layout to uapi separately")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: <stable@vger.kernel.org>	[4.9+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/nilfs2_ondisk.h |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/s390/cio/qdio_setup.c   |    2 ++
+ drivers/s390/cio/qdio_thinint.c |    4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/include/uapi/linux/nilfs2_ondisk.h
-+++ b/include/uapi/linux/nilfs2_ondisk.h
-@@ -29,7 +29,7 @@
- 
- #include <linux/types.h>
- #include <linux/magic.h>
--
-+#include <asm/byteorder.h>
- 
- #define NILFS_INODE_BMAP_SIZE	7
- 
-@@ -533,19 +533,19 @@ enum {
- static inline void							\
- nilfs_checkpoint_set_##name(struct nilfs_checkpoint *cp)		\
- {									\
--	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) |		\
--				   (1UL << NILFS_CHECKPOINT_##flag));	\
-+	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) |	\
-+				     (1UL << NILFS_CHECKPOINT_##flag));	\
- }									\
- static inline void							\
- nilfs_checkpoint_clear_##name(struct nilfs_checkpoint *cp)		\
- {									\
--	cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) &		\
-+	cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) &	\
- 				   ~(1UL << NILFS_CHECKPOINT_##flag));	\
- }									\
- static inline int							\
- nilfs_checkpoint_##name(const struct nilfs_checkpoint *cp)		\
- {									\
--	return !!(le32_to_cpu(cp->cp_flags) &				\
-+	return !!(__le32_to_cpu(cp->cp_flags) &				\
- 		  (1UL << NILFS_CHECKPOINT_##flag));			\
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -150,6 +150,7 @@ static int __qdio_allocate_qs(struct qdi
+ 			return -ENOMEM;
+ 		}
+ 		irq_ptr_qs[i] = q;
++		INIT_LIST_HEAD(&q->entry);
+ 	}
+ 	return 0;
+ }
+@@ -178,6 +179,7 @@ static void setup_queues_misc(struct qdi
+ 	q->mask = 1 << (31 - i);
+ 	q->nr = i;
+ 	q->handler = handler;
++	INIT_LIST_HEAD(&q->entry);
  }
  
-@@ -595,20 +595,20 @@ enum {
- static inline void							\
- nilfs_segment_usage_set_##name(struct nilfs_segment_usage *su)		\
- {									\
--	su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) |		\
-+	su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) |	\
- 				   (1UL << NILFS_SEGMENT_USAGE_##flag));\
- }									\
- static inline void							\
- nilfs_segment_usage_clear_##name(struct nilfs_segment_usage *su)	\
- {									\
- 	su->su_flags =							\
--		cpu_to_le32(le32_to_cpu(su->su_flags) &			\
-+		__cpu_to_le32(__le32_to_cpu(su->su_flags) &		\
- 			    ~(1UL << NILFS_SEGMENT_USAGE_##flag));      \
- }									\
- static inline int							\
- nilfs_segment_usage_##name(const struct nilfs_segment_usage *su)	\
- {									\
--	return !!(le32_to_cpu(su->su_flags) &				\
-+	return !!(__le32_to_cpu(su->su_flags) &				\
- 		  (1UL << NILFS_SEGMENT_USAGE_##flag));			\
+ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -87,14 +87,14 @@ void tiqdio_remove_input_queues(struct q
+ 	struct qdio_q *q;
+ 
+ 	q = irq_ptr->input_qs[0];
+-	/* if establish triggered an error */
+-	if (!q || !q->entry.prev || !q->entry.next)
++	if (!q)
+ 		return;
+ 
+ 	mutex_lock(&tiq_list_lock);
+ 	list_del_rcu(&q->entry);
+ 	mutex_unlock(&tiq_list_lock);
+ 	synchronize_rcu();
++	INIT_LIST_HEAD(&q->entry);
  }
  
-@@ -619,15 +619,15 @@ NILFS_SEGMENT_USAGE_FNS(ERROR, error)
- static inline void
- nilfs_segment_usage_set_clean(struct nilfs_segment_usage *su)
- {
--	su->su_lastmod = cpu_to_le64(0);
--	su->su_nblocks = cpu_to_le32(0);
--	su->su_flags = cpu_to_le32(0);
-+	su->su_lastmod = __cpu_to_le64(0);
-+	su->su_nblocks = __cpu_to_le32(0);
-+	su->su_flags = __cpu_to_le32(0);
- }
- 
- static inline int
- nilfs_segment_usage_clean(const struct nilfs_segment_usage *su)
- {
--	return !le32_to_cpu(su->su_flags);
-+	return !__le32_to_cpu(su->su_flags);
- }
- 
- /**
+ static inline int has_multiple_inq_on_dsci(struct qdio_irq *irq_ptr)
 
 
