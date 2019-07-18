@@ -2,106 +2,127 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E50C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67072C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B292085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="QxWCrGsR"
+	by mail.kernel.org (Postfix) with ESMTP id 43B0B217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 11:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390225AbfGRLkh (ORCPT
+        id S2390152AbfGRLlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 07:40:37 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:59668 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfGRLkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 07:40:37 -0400
-Date:   Thu, 18 Jul 2019 04:40:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 9CF5C640133
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1563450036;
-        bh=/Gd8UQZ1mrsbeFBwUzjuWBFXOklRWeccLWlERV4HCYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QxWCrGsREfcpGjSPjb6uZmuVfvnYglXNoI1h6LgYGvF6xZucl7XZdI+nQgBlwDJDG
-         TN2qGDXqYc9tIvRAcesBm2273zbWB7oeoA/z/UbSUti7j7YPSWzcFdFNEatm2ks1PC
-         R248Lzr6LEJlKe+aLHz4KV2XBsAPH+w3l6mB7IAyaOEF8in/NOoL8QDkc+PUzM/bcN
-         KecaUybx3wUzj1N+H1+SmluHtWrCaikhOTZuGS+lWzZTrhsV5uOLJWacMQygEeRBmj
-         j4GdUI6HIWDLGwjpQovMNtdNAevRfI4sHmrBBEFh56p1SNAZ8RJgNeZ6gDTuyHM3ZB
-         brM9HGDYtwn7A==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     dmitry.torokhov@gmail.com, hsweeten@visionengravers.com,
-        robh@kernel.org, arnd@arndb.de, andriy.shevchenko@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH] Input: applespi: Fix build error without CONFIG_PCI
-Message-ID: <20190718114036.GA2872@innovation.ch>
-References: <20190718020654.39860-1-yuehaibing@huawei.com>
+        Thu, 18 Jul 2019 07:41:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:57362 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfGRLlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 07:41:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C87B72B;
+        Thu, 18 Jul 2019 04:41:34 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CBFD3F71A;
+        Thu, 18 Jul 2019 04:41:32 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
+        linux@armlinux.org.uk, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, salyzyn@android.com, pcc@google.com,
+        0x7f454c46@gmail.com, linux@rasmusvillemoes.dk,
+        huw@codeweavers.com, sthotton@marvell.com, andre.przywara@arm.com,
+        luto@kernel.org, john.stultz@linaro.org, naohiro.aota@wdc.com,
+        yamada.masahiro@socionext.com, Will Deacon <will@kernel.org>
+Subject: [PATCH] arm64: vdso: Cleanup Makefiles.
+Date:   Thu, 18 Jul 2019 12:41:21 +0100
+Message-Id: <20190718114121.33024-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190712153746.5dwwptgrle3z25m7@willie-the-truck>
+References: <20190712153746.5dwwptgrle3z25m7@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20190718020654.39860-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The recent changes to the vdso library for arm64 and the introduction of
+the compat vdso library have generated some misalignment in the
+Makefiles.
 
-On Thu, Jul 18, 2019 at 10:06:54AM +0800, YueHaibing wrote:
-> If CONFIG_KEYBOARD_APPLESPI is set to y, but
-> CONFIG_PCI is not set, building will fails:
-> 
-> drivers/spi/spi-pxa2xx-pci.c: In function pxa2xx_spi_pci_probe:
-> drivers/spi/spi-pxa2xx-pci.c:208:8: error: implicit declaration of function pcim_enable_device;
->  did you mean pci_enable_device? [-Werror=implicit-function-declaration]
->   ret = pcim_enable_device(dev);
->         ^~~~~~~~~~~~~~~~~~
->         pci_enable_device
-> drivers/spi/spi-pxa2xx-pci.c:239:8: error: implicit declaration of function pci_alloc_irq_vectors;
->  did you mean pci_alloc_consistent? [-Werror=implicit-function-declaration]
->   ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_ALL_TYPES);
->         ^~~~~~~~~~~~~~~~~~~~~
-> 
-> Make CONFIG_KEYBOARD_APPLESPI depends on CONFIG_PCI
-> to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: b426ac045209 ("Input: add Apple SPI keyboard and trackpad driver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/input/keyboard/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index dd934c4..fefcc46 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -74,7 +74,7 @@ config ATARI_KBD_CORE
->  config KEYBOARD_APPLESPI
->  	tristate "Apple SPI keyboard and trackpad"
->  	depends on ACPI && EFI
-> -	depends on SPI
-> +	depends on SPI && PCI
->  	depends on X86 || COMPILE_TEST
->  	imply SPI_PXA2XX
->  	imply SPI_PXA2XX_PCI
-> -- 
-> 2.7.4
+Cleanup the Makefiles for vdso and vdso32 libraries:
+  * Removing unused rules.
+  * Unifying the displayed compilation messages.
+  * Simplifying the generic library inclusion path for
+    arm64 vdso.
 
-I think this is more properly fixed by Dmitry's suggestion of making
-SPI_PXA2XX_PCI depend on PCI, since it's that module, not applespi,
-that actually needs PCI - see
-https://www.spinics.net/lists/linux-input/msg62351.html
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ arch/arm64/kernel/vdso/Makefile   | 11 ++++-------
+ arch/arm64/kernel/vdso32/Makefile | 10 +++++-----
+ 2 files changed, 9 insertions(+), 12 deletions(-)
 
-
-  Cheers,
-
-  Ronald
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index 75d25679d879..aa5a12325a3c 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -32,10 +32,10 @@ UBSAN_SANITIZE			:= n
+ OBJECT_FILES_NON_STANDARD	:= y
+ KCOV_INSTRUMENT			:= n
+ 
+-ifeq ($(c-gettimeofday-y),)
+ CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny
+-else
+-CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -include $(c-gettimeofday-y)
++
++ifneq ($(c-gettimeofday-y),)
++  CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
+ endif
+ 
+ # Clang versions less than 8 do not support -mcmodel=tiny
+@@ -73,10 +73,7 @@ include/generated/vdso-offsets.h: $(obj)/vdso.so.dbg FORCE
+ 	$(call if_changed,vdsosym)
+ 
+ # Actual build commands
+-quiet_cmd_vdsocc = VDSOCC   $@
+-      cmd_vdsocc = $(CC) $(a_flags) $(c_flags) -c -o $@ $<
+-
+-quiet_cmd_vdsold_and_vdso_check = LD      $@
++quiet_cmd_vdsold_and_vdso_check = VDSOLIB $@
+       cmd_vdsold_and_vdso_check = $(cmd_ld); $(cmd_vdso_check)
+ 
+ # Install commands for the unstripped file
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 21009ed5a755..6c4e496309c4 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -155,17 +155,17 @@ $(asm-obj-vdso): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdsoas)
+ 
+ # Actual build commands
+-quiet_cmd_vdsold_and_vdso_check = LD      $@
++quiet_cmd_vdsold_and_vdso_check = VDSOLIB $@
+       cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
+ 
+-quiet_cmd_vdsold = VDSOL   $@
++quiet_cmd_vdsold = VDSOLD  $@
+       cmd_vdsold = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_LDFLAGS) \
+                    -Wl,-T $(filter %.lds,$^) $(filter %.o,$^) -o $@
+-quiet_cmd_vdsocc = VDSOC   $@
++quiet_cmd_vdsocc = CC      $@
+       cmd_vdsocc = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_CFLAGS) -c -o $@ $<
+-quiet_cmd_vdsocc_gettimeofday = VDSOC_GTD   $@
++quiet_cmd_vdsocc_gettimeofday = CC      $@
+       cmd_vdsocc_gettimeofday = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_CFLAGS) $(VDSO_CFLAGS_gettimeofday_o) -c -o $@ $<
+-quiet_cmd_vdsoas = VDSOA   $@
++quiet_cmd_vdsoas = AS      $@
+       cmd_vdsoas = $(COMPATCC) -Wp,-MD,$(depfile) $(VDSO_AFLAGS) -c -o $@ $<
+ 
+ quiet_cmd_vdsomunge = MUNGE   $@
+-- 
+2.22.0
 
