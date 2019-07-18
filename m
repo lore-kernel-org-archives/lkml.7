@@ -2,156 +2,116 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,TRACKER_ID autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BF7C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FBEC76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B840021849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2012C21849
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 16:11:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="nnb8r1VU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfGRQLf (ORCPT
+        id S1730818AbfGRQLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 12:11:35 -0400
-Received: from relay.sw.ru ([185.231.240.75]:40706 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbfGRQLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 12:11:34 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1ho902-00080M-Ln; Thu, 18 Jul 2019 19:11:18 +0300
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
- <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
- <1560447999.15814.15.camel@mtksdccf07> <1560479520.15814.34.camel@mtksdccf07>
- <1560744017.15814.49.camel@mtksdccf07>
- <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
- <1560774735.15814.54.camel@mtksdccf07> <1561974995.18866.1.camel@mtksdccf07>
- <CACT4Y+aMXTBE0uVkeZz+MuPx3X1nESSBncgkScWvAkciAxP1RA@mail.gmail.com>
- <ebc99ee1-716b-0b18-66ab-4e93de02ce50@virtuozzo.com>
- <1562640832.9077.32.camel@mtksdccf07>
- <d9fd1d5b-9516-b9b9-0670-a1885e79f278@virtuozzo.com>
- <1562839579.5846.12.camel@mtksdccf07>
- <37897fb7-88c1-859a-dfcc-0a5e89a642e0@virtuozzo.com>
- <1563160001.4793.4.camel@mtksdccf07>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <9ab1871a-2605-ab34-3fd3-4b44a0e17ab7@virtuozzo.com>
-Date:   Thu, 18 Jul 2019 19:11:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 18 Jul 2019 12:11:39 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:47056 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRQLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 12:11:38 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so30872604edr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jul 2019 09:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3obEXF97WrsMpoUnrYdgG1Tyxfg+JoWnkuCsTAUEfHc=;
+        b=nnb8r1VUxoT6Rh7UeZIiyvzQQn0SURlNnsdRcOMXX44NSPsaHqRzm9+BeyWexTq/oK
+         98G5MVKnJIUPNWlSW8LoCOppPVI1fyXgjw5MSgUIrawtI1raTD5tKRhgZSMmE1UJromJ
+         JREvbh0Pub5P6qZwdP8UlTPAVo8NsB6Ycrw7u2aDcUEaNSRh0gTllpY7sBURLVHjg9+e
+         vLMXQz1To95LrzSRCyx7wgBwAb40UW1Sx+H/KUFdPi2alc6fxxUiXC1N2xS0o6KMM0MR
+         1J5XUiJ8pwJjJk5G10IHEWpfRfXIbnqd8BFcqGMOAHG+lTa4Xjr6sOR7Omu7U8OIPGry
+         jF2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3obEXF97WrsMpoUnrYdgG1Tyxfg+JoWnkuCsTAUEfHc=;
+        b=JGyXMGCOweZfH1pvbUNYpsPZsLLfXbSwk2D5G4PES1S48hpHnkr3RnRBPJmxX21f++
+         wwPz3oBbLUwKKh6U+cEL6QFXuFM+aUAlc/VlI5C8sX6rfSLu4RqMA657eLJDnI1xoniK
+         BzqxdWnPZjdLbj6H5JFGhy6LItpG/yQ6iYVl10ykCzGZyGGrygVOSvXj6RwcCrtuJ6DK
+         IRxjMPslQ8ycuH4f7OobLGfc9jyrM/+FEGYANRfvzWVQfunv3rDghrd/dr8R/nwlw5UM
+         REmrbqeLey6TuAw5Hd0otb+KthSWJklqbWZ9SFwOT0s3YPqiwa7KBs7OdJvM3fcHtXvu
+         QaGw==
+X-Gm-Message-State: APjAAAUZlEw5mOIlrTzo3tZ4uW9vJr8ch9iAMYPpdgBVvdQZU28hTmiw
+        SWgIDUY8AePeRlUXC9+oRM0VIb53m5CjWx2JcSg=
+X-Google-Smtp-Source: APXvYqw2EEs0Sl3L+PvArw6obe2M4a4Esh+Ohl1Z2Anp/tQxrPnwrWF0NvTuCVtLVZYl71EJ+CdQj7ghlr5+XD6jjJ4=
+X-Received: by 2002:a50:922a:: with SMTP id i39mr41307612eda.219.1563466296738;
+ Thu, 18 Jul 2019 09:11:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1563160001.4793.4.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190718024133.3873-1-leonardo@linux.ibm.com> <1563430353.3077.1.camel@suse.de>
+ <0e67afe465cbbdf6ec9b122f596910cae77bc734.camel@linux.ibm.com> <20190718155704.GD30461@dhcp22.suse.cz>
+In-Reply-To: <20190718155704.GD30461@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 18 Jul 2019 12:11:25 -0400
+Message-ID: <CA+CK2bBU72owYSXH10LTU8NttvCASPNTNOqFfzA3XweXR3gOTw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/memory_hotplug: Adds option to hot-add memory in ZONE_MOVABLE
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 18, 2019 at 11:57 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 18-07-19 12:50:29, Leonardo Bras wrote:
+> > On Thu, 2019-07-18 at 08:12 +0200, Oscar Salvador wrote:
+> > > We do already have "movable_node" boot option, which exactly has that
+> > > effect.
+> > > Any hotplugged range will be placed in ZONE_MOVABLE.
+> > Oh, I was not aware of it.
+> >
+> > > Why do we need yet another option to achieve the same? Was not that
+> > > enough for your case?
+> > Well, another use of this config could be doing this boot option a
+> > default on any given kernel.
+> > But in the above case I agree it would be wiser to add the code on
+> > movable_node_is_enabled() directly, and not where I did put.
+> >
+> > What do you think about it?
+>
+> No further config options please. We do have means a more flexible way
+> to achieve movable node onlining so let's use it. Or could you be more
+> specific about cases which cannot use the command line option and really
+> need a config option to workaround that?
 
+Hi Michal,
 
-On 7/15/19 6:06 AM, Walter Wu wrote:
-> On Fri, 2019-07-12 at 13:52 +0300, Andrey Ryabinin wrote:
->>
->> On 7/11/19 1:06 PM, Walter Wu wrote:
->>> On Wed, 2019-07-10 at 21:24 +0300, Andrey Ryabinin wrote:
->>>>
->>>> On 7/9/19 5:53 AM, Walter Wu wrote:
->>>>> On Mon, 2019-07-08 at 19:33 +0300, Andrey Ryabinin wrote:
->>>>>>
->>>>>> On 7/5/19 4:34 PM, Dmitry Vyukov wrote:
->>>>>>> On Mon, Jul 1, 2019 at 11:56 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->>>>
->>>>>>>
->>>>>>> Sorry for delays. I am overwhelm by some urgent work. I afraid to
->>>>>>> promise any dates because the next week I am on a conference, then
->>>>>>> again a backlog and an intern starting...
->>>>>>>
->>>>>>> Andrey, do you still have concerns re this patch? This change allows
->>>>>>> to print the free stack.
->>>>>>
->>>>>> I 'm not sure that quarantine is a best way to do that. Quarantine is made to delay freeing, but we don't that here.
->>>>>> If we want to remember more free stacks wouldn't be easier simply to remember more stacks in object itself?
->>>>>> Same for previously used tags for better use-after-free identification.
->>>>>>
->>>>>
->>>>> Hi Andrey,
->>>>>
->>>>> We ever tried to use object itself to determine use-after-free
->>>>> identification, but tag-based KASAN immediately released the pointer
->>>>> after call kfree(), the original object will be used by another
->>>>> pointer, if we use object itself to determine use-after-free issue, then
->>>>> it has many false negative cases. so we create a lite quarantine(ring
->>>>> buffers) to record recent free stacks in order to avoid those false
->>>>> negative situations.
->>>>
->>>> I'm telling that *more* than one free stack and also tags per object can be stored.
->>>> If object reused we would still have information about n-last usages of the object.
->>>> It seems like much easier and more efficient solution than patch you proposing.
->>>>
->>> To make the object reused, we must ensure that no other pointers uses it
->>> after kfree() release the pointer.
->>> Scenario:
->>> 1). The object reused information is valid when no another pointer uses
->>> it.
->>> 2). The object reused information is invalid when another pointer uses
->>> it.
->>> Do you mean that the object reused is scenario 1) ?
->>> If yes, maybe we can change the calling quarantine_put() location. It
->>> will be fully use that quarantine, but at scenario 2) it looks like to
->>> need this patch.
->>> If no, maybe i miss your meaning, would you tell me how to use invalid
->>> object information? or?
->>>
->>
->>
->> KASAN keeps information about object with the object, right after payload in the kasan_alloc_meta struct.
->> This information is always valid as long as slab page allocated. Currently it keeps only one last free stacktrace.
->> It could be extended to record more free stacktraces and also record previously used tags which will allow you
->> to identify use-after-free and extract right free stacktrace.
-> 
-> Thanks for your explanation.
-> 
-> For extend slub object, if one record is 9B (sizeof(u8)+ sizeof(struct
-> kasan_track)) and add five records into slub object, every slub object
-> may add 45B usage after the system runs longer. 
-> Slub object number is easy more than 1,000,000(maybe it may be more
-> bigger), then the extending object memory usage should be 45MB, and
-> unfortunately it is no limit. The memory usage is more bigger than our
-> patch.
+Just trying to understand, if kernel parameters is the preferable
+method, why do we even have
 
-No, it's not necessarily more.
-And there are other aspects to consider such as performance, how simple reliable the code is.
+MEMORY_HOTPLUG_DEFAULT_ONLINE
 
-> 
-> We hope tag-based KASAN advantage is smaller memory usage. If it’s
-> possible, we should spend less memory in order to identify
-> use-after-free. Would you accept our patch after fine tune it?
+It is just strange that we have a config to online memory by default
+without kernel parameter, but no way to specify how to online it. It
+just looks as incomplete interface to me. Perhaps this config should
+be removed as well?
 
-Sure, if you manage to fix issues and demonstrate that performance penalty of your
-patch is close to zero.
+Pasha
