@@ -2,103 +2,76 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D95CC7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553C6C7618F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B01F208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26BBB208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="M1mdM+DL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391417AbfGRT7S (ORCPT
+        id S2391541AbfGRT7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:59:18 -0400
-Received: from gate.crashing.org ([63.228.1.57]:52801 "EHLO gate.crashing.org"
+        Thu, 18 Jul 2019 15:59:53 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50932 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727780AbfGRT7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:59:17 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x6IJwpXD009323;
-        Thu, 18 Jul 2019 14:58:52 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x6IJwou7009319;
-        Thu, 18 Jul 2019 14:58:50 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Thu, 18 Jul 2019 14:58:50 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 03/13] powerpc/prom_init: Add the ESM call to prom_init
-Message-ID: <20190718195850.GU20882@gate.crashing.org>
-References: <20190713060023.8479-1-bauerman@linux.ibm.com> <20190713060023.8479-4-bauerman@linux.ibm.com> <70f8097f-7222-fe18-78b4-9372c21bfc9d@ozlabs.ru>
-Mime-Version: 1.0
+        id S1727687AbfGRT7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 15:59:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=R7O5LP/5Ym00KWv7HG9gFcq8IIB8ZOQ/FMTwFy1ifdg=; b=M1mdM+DLgSvZed+ZFt8f3/ZFkl
+        nuhpiL9qV1pIcRRB5dP2Kc/Gw05xN5FqwBWRLf7AkuCGk70khNSU24swBaggDsftwMx9doClqPF4D
+        8sA2aFROBc5IZS3yB52zh02onqmwG+dxfDLUvt0+QgnWf65hgzzKxGGJu3SzNfsxYKzE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hoCZB-00037X-NR; Thu, 18 Jul 2019 21:59:49 +0200
+Date:   Thu, 18 Jul 2019 21:59:49 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: fec: generate warning when using deprecated phy
+ reset
+Message-ID: <20190718195949.GM25635@lunn.ch>
+References: <20190718143428.2392-1-TheSven73@gmail.com>
+ <1563468471.2676.36.camel@pengutronix.de>
+ <CAOMZO5A_BuWMr1n_fFv4veyaXdcfjxO+9nFAgGfCrmAhNmzV5g@mail.gmail.com>
+ <CAGngYiULAjXwwxmUyHxEXhv1WzSeE_wE3idOLSnD5eEaZg3xDw@mail.gmail.com>
+ <20190718194131.GK25635@lunn.ch>
+ <CAGngYiWESbg6uq4pdtb5--YSzatwAwXiGnRjiAfAQj8nRYPMqw@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <70f8097f-7222-fe18-78b4-9372c21bfc9d@ozlabs.ru>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <CAGngYiWESbg6uq4pdtb5--YSzatwAwXiGnRjiAfAQj8nRYPMqw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Sorry to hijack your reply).
+> What I keep forgetting in my little arm-imx6 world, is that devicetrees
+> aren't in-kernel apis, but that they have out-of-kernel
+> dependencies. It makes more sense to to see them as userspace
+> apis, albeit directed at firmware/bootloaders, right?
 
-On Thu, Jul 18, 2019 at 06:11:48PM +1000, Alexey Kardashevskiy wrote:
-> On 13/07/2019 16:00, Thiago Jung Bauermann wrote:
-> >From: Ram Pai <linuxram@us.ibm.com>
-> >+static int enter_secure_mode(unsigned long kbase, unsigned long fdt)
-> >+{
-> >+	register uint64_t func asm("r3") = UV_ESM;
-> >+	register uint64_t arg1 asm("r4") = (uint64_t)kbase;
-> >+	register uint64_t arg2 asm("r5") = (uint64_t)fdt;
-> 
-> What does UV do with kbase and fdt precisely? Few words in the commit 
-> log will do.
-> 
-> >+
-> >+	asm volatile("sc 2\n"
-> >+		     : "=r"(func)
-> >+		     : "0"(func), "r"(arg1), "r"(arg2)
-> >+		     :);
-> >+
-> >+	return (int)func;
-> 
-> And why "func"? Is it "function"? Weird name. Thanks,
+It is an ongoing debate, but generally they should be considered ABI
+and follow the ABI rules about not breaking backwards compatibility.
 
-Maybe the three vars should just be called "r3", "r4", and "r5" --
-r3 is used as return value as well, so "func" isn't a great name for it.
+However, there is also an argument that something like a NAS box
+running Debian is going to use the DT blob which came with the kernel,
+so deprecated DT properties and the code to support them could be
+removed after a period of time.
 
-Some other comments about this inline asm:
-
-The "\n" makes the generated asm look funny and has no other function.
-Instead of using backreferences you can use a "+" constraint, "inout".
-Empty clobber list is strange.
-Casts to the return type, like most other casts, are an invitation to
-bugs and not actually useful.
-
-So this can be written
-
-static int enter_secure_mode(unsigned long kbase, unsigned long fdt)
-{
-	register uint64_t r3 asm("r3") = UV_ESM;
-	register uint64_t r4 asm("r4") = kbase;
-	register uint64_t r4 asm("r5") = fdt;
-
-	asm volatile("sc 2" : "+r"(r3) : "r"(r4), "r"(r5));
-
-	return r3;
-}
-
-(and it probably should use u64 instead of both uint64_t and unsigned long?)
-
-
-Segher
+	Andrew
