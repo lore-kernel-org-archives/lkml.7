@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573EAC76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D566C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25018205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4F4205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563420398;
-	bh=ZDMqeg5t2LKoO8WRVLKUiZYeta3X5hoq5Vc3vtlnqZM=;
+	s=default; t=1563420445;
+	bh=Qh0YRFtQcJQ3oyBkgK7BsdNywupxtSKO5Szl4RbhAaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=meyD8Htl1uQRd8iUNSc29jbS+gDzx+EZ/PAUzQld+n8IBoLjgel5pOQI9hv7418rx
-	 Se27OArFr+kXfDdvw76B6pUNEOqtuJgI0WTaIDL5cMgZf7g9CIrhAqVZp2lX8NxUdh
-	 i5ZifmN+K4+jCvrg5/WELmazd4oXBlL7KyBW3cKA=
+	b=kA8ApNUWK4cq41r1FuY5SwOSuuPNm7zPfoyYxbxfLm3nR2zqS1OvjzIhF30QW960j
+	 bq7VMJ9J7G9YSjQIeNxtSGbY5H7jQ80Bx6n9nPomdy1iKJvxxqjJaMvh8KzgI45k1k
+	 IQqh7+lw6ex8UmCmedCdD3o+DDZ3TFxSKXSIy/dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389264AbfGRDDW (ORCPT
+        id S2389462AbfGRDDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33970 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389210AbfGRDDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:03:20 -0400
+        id S2389412AbfGRDDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:03:40 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55761204EC;
-        Thu, 18 Jul 2019 03:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7AEA2053B;
+        Thu, 18 Jul 2019 03:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563418998;
-        bh=ZDMqeg5t2LKoO8WRVLKUiZYeta3X5hoq5Vc3vtlnqZM=;
+        s=default; t=1563419019;
+        bh=Qh0YRFtQcJQ3oyBkgK7BsdNywupxtSKO5Szl4RbhAaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DQmP9X2+GfvN0hojYUWzrIlfZg9ftqP1qLmWtDrlfYl1FePay7/zU0W211oIXv9E
-         XcsG0fvNJo/YparQEN2jjYHzOMJhQu46yS1oJs+gn9LqdKZkX7KVuxcRgRtr9YLsnt
-         1JEvHok9IjN0nfEvg9zpgYI9E8r3kr4/cyXXSQvE=
+        b=O88b+WTgu2gdHvI+rglmTNdoihUAJ0PEs2wANNfK7rZWKgHCaXCiX617yLzE3P4KQ
+         LyY7wMgwc+bJ11nSPnY1LeE4KISbxzg0wsYY9mwgm9wTz4BoEUaez2BJVyItXqEx+P
+         gfixKLITw9Pb4Eqp6ww/OI2JWNvr+FfCoZ1/cT7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 18/21] crypto: talitos - move struct talitos_edesc into talitos.h
-Date:   Thu, 18 Jul 2019 12:01:36 +0900
-Message-Id: <20190718030035.566029914@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.2 11/21] x86/irq: Handle spurious interrupt after shutdown gracefully
+Date:   Thu, 18 Jul 2019 12:01:29 +0900
+Message-Id: <20190718030032.865813866@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030030.456918453@linuxfoundation.org>
 References: <20190718030030.456918453@linuxfoundation.org>
@@ -59,103 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit d44769e4ccb636e8238adbc151f25467a536711b upstream.
+commit b7107a67f0d125459fe41f86e8079afd1a5e0b15 upstream.
 
-Moves struct talitos_edesc into talitos.h so that it can be used
-from any place in talitos.c
+Since the rework of the vector management, warnings about spurious
+interrupts have been reported. Robert provided some more information and
+did an initial analysis. The following situation leads to these warnings:
 
-It will be required for next patch ("crypto: talitos - fix hash
-on SEC1")
+   CPU 0                  CPU 1               IO_APIC
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: stable@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+                                              interrupt is raised
+                                              sent to CPU1
+			  Unable to handle
+			  immediately
+			  (interrupts off,
+			   deep idle delay)
+   mask()
+   ...
+   free()
+     shutdown()
+     synchronize_irq()
+     clear_vector()
+                          do_IRQ()
+                            -> vector is clear
+
+Before the rework the vector entries of legacy interrupts were statically
+assigned and occupied precious vector space while most of them were
+unused. Due to that the above situation was handled silently because the
+vector was handled and the core handler of the assigned interrupt
+descriptor noticed that it is shut down and returned.
+
+While this has been usually observed with legacy interrupts, this situation
+is not limited to them. Any other interrupt source, e.g. MSI, can cause the
+same issue.
+
+After adding proper synchronization for level triggered interrupts, this
+can only happen for edge triggered interrupts where the IO-APIC obviously
+cannot provide information about interrupts in flight.
+
+While the spurious warning is actually harmless in this case it worries
+users and driver developers.
+
+Handle it gracefully by marking the vector entry as VECTOR_SHUTDOWN instead
+of VECTOR_UNUSED when the vector is freed up.
+
+If that above late handling happens the spurious detector will not complain
+and switch the entry to VECTOR_UNUSED. Any subsequent spurious interrupt on
+that line will trigger the spurious warning as before.
+
+Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
+Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>-
+Tested-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://lkml.kernel.org/r/20190628111440.459647741@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |   30 ------------------------------
- drivers/crypto/talitos.h |   30 ++++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 30 deletions(-)
+ arch/x86/include/asm/hw_irq.h |    3 ++-
+ arch/x86/kernel/apic/vector.c |    4 ++--
+ arch/x86/kernel/irq.c         |    2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -948,36 +948,6 @@ badkey:
- 	goto out;
- }
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -151,7 +151,8 @@ extern char irq_entries_start[];
+ #endif
  
--/*
-- * talitos_edesc - s/w-extended descriptor
-- * @src_nents: number of segments in input scatterlist
-- * @dst_nents: number of segments in output scatterlist
-- * @icv_ool: whether ICV is out-of-line
-- * @iv_dma: dma address of iv for checking continuity and link table
-- * @dma_len: length of dma mapped link_tbl space
-- * @dma_link_tbl: bus physical address of link_tbl/buf
-- * @desc: h/w descriptor
-- * @link_tbl: input and output h/w link tables (if {src,dst}_nents > 1) (SEC2)
-- * @buf: input and output buffeur (if {src,dst}_nents > 1) (SEC1)
-- *
-- * if decrypting (with authcheck), or either one of src_nents or dst_nents
-- * is greater than 1, an integrity check value is concatenated to the end
-- * of link_tbl data
-- */
--struct talitos_edesc {
--	int src_nents;
--	int dst_nents;
--	bool icv_ool;
--	dma_addr_t iv_dma;
--	int dma_len;
--	dma_addr_t dma_link_tbl;
--	struct talitos_desc desc;
--	union {
--		struct talitos_ptr link_tbl[0];
--		u8 buf[0];
--	};
--};
--
- static void talitos_sg_unmap(struct device *dev,
- 			     struct talitos_edesc *edesc,
- 			     struct scatterlist *src,
---- a/drivers/crypto/talitos.h
-+++ b/drivers/crypto/talitos.h
-@@ -65,6 +65,36 @@ struct talitos_desc {
+ #define VECTOR_UNUSED		NULL
+-#define VECTOR_RETRIGGERED	((void *)~0UL)
++#define VECTOR_SHUTDOWN		((void *)~0UL)
++#define VECTOR_RETRIGGERED	((void *)~1UL)
  
- #define TALITOS_DESC_SIZE	(sizeof(struct talitos_desc) - sizeof(__be32))
+ typedef struct irq_desc* vector_irq_t[NR_VECTORS];
+ DECLARE_PER_CPU(vector_irq_t, vector_irq);
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -340,7 +340,7 @@ static void clear_irq_vector(struct irq_
+ 	trace_vector_clear(irqd->irq, vector, apicd->cpu, apicd->prev_vector,
+ 			   apicd->prev_cpu);
  
-+/*
-+ * talitos_edesc - s/w-extended descriptor
-+ * @src_nents: number of segments in input scatterlist
-+ * @dst_nents: number of segments in output scatterlist
-+ * @icv_ool: whether ICV is out-of-line
-+ * @iv_dma: dma address of iv for checking continuity and link table
-+ * @dma_len: length of dma mapped link_tbl space
-+ * @dma_link_tbl: bus physical address of link_tbl/buf
-+ * @desc: h/w descriptor
-+ * @link_tbl: input and output h/w link tables (if {src,dst}_nents > 1) (SEC2)
-+ * @buf: input and output buffeur (if {src,dst}_nents > 1) (SEC1)
-+ *
-+ * if decrypting (with authcheck), or either one of src_nents or dst_nents
-+ * is greater than 1, an integrity check value is concatenated to the end
-+ * of link_tbl data
-+ */
-+struct talitos_edesc {
-+	int src_nents;
-+	int dst_nents;
-+	bool icv_ool;
-+	dma_addr_t iv_dma;
-+	int dma_len;
-+	dma_addr_t dma_link_tbl;
-+	struct talitos_desc desc;
-+	union {
-+		struct talitos_ptr link_tbl[0];
-+		u8 buf[0];
-+	};
-+};
-+
- /**
-  * talitos_request - descriptor submission request
-  * @desc: descriptor pointer (kernel virtual)
+-	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_UNUSED;
++	per_cpu(vector_irq, apicd->cpu)[vector] = VECTOR_SHUTDOWN;
+ 	irq_matrix_free(vector_matrix, apicd->cpu, vector, managed);
+ 	apicd->vector = 0;
+ 
+@@ -349,7 +349,7 @@ static void clear_irq_vector(struct irq_
+ 	if (!vector)
+ 		return;
+ 
+-	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_UNUSED;
++	per_cpu(vector_irq, apicd->prev_cpu)[vector] = VECTOR_SHUTDOWN;
+ 	irq_matrix_free(vector_matrix, apicd->prev_cpu, vector, managed);
+ 	apicd->prev_vector = 0;
+ 	apicd->move_in_progress = 0;
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -247,7 +247,7 @@ __visible unsigned int __irq_entry do_IR
+ 	if (!handle_irq(desc, regs)) {
+ 		ack_APIC_irq();
+ 
+-		if (desc != VECTOR_RETRIGGERED) {
++		if (desc != VECTOR_RETRIGGERED && desc != VECTOR_SHUTDOWN) {
+ 			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
+ 					     __func__, smp_processor_id(),
+ 					     vector);
 
 
