@@ -2,84 +2,88 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0607BC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C287C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B220880
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1292173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 12:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390344AbfGRMdx (ORCPT
+        id S2390355AbfGRMe1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 08:33:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51384 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbfGRMdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 08:33:53 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43D52307D941;
-        Thu, 18 Jul 2019 12:33:53 +0000 (UTC)
-Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AD1EA5D720;
-        Thu, 18 Jul 2019 12:33:47 +0000 (UTC)
-Date:   Thu, 18 Jul 2019 08:33:40 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] vsock/virtio: change the maximum packet size
- allowed
-Message-ID: <20190718083105-mutt-send-email-mst@kernel.org>
-References: <20190717113030.163499-1-sgarzare@redhat.com>
- <20190717113030.163499-6-sgarzare@redhat.com>
- <20190717105703-mutt-send-email-mst@kernel.org>
- <CAGxU2F5ybg1_8VhS=COMnxSKC4AcW4ZagYwNMi==d6-rNPgzsg@mail.gmail.com>
+        Thu, 18 Jul 2019 08:34:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43912 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727692AbfGRMe1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 08:34:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w17so26913575qto.10;
+        Thu, 18 Jul 2019 05:34:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YgDPxY1huva0NBQK8HCG0oQDr7LxpI+h7zIUm7eJfoE=;
+        b=XVEpPCf9gWpce3B7VSyzxQONG0+GXtgb5NCdA8zfSgiMDK/RvwlzJibBuhhyxG6pUW
+         Ei+e/V4CcVOq4Z3vMKTMdAgaRYo0usq+wZKimuXG55TGOyYsyeAvNA9aOGKLOglmmSOc
+         qOodX+TFjQAqso2KsUDjcr4iiiWcjVnwxscSeh2aDgB4hMyaDrhIG+0vWpdyQ8S0gAwa
+         UZWO5nJ7qVJAdMuyGyhhqtCGKr38bc3eLLWjJvsmTFYSLFM2YtmrEGe1e2SO27rVUjPh
+         fKSE9VYdAQAmT151KdRKWqeEec49+y98Zt7glWG/GtRdhwOabc8uiaTeptmPoeWz4C1S
+         SM7g==
+X-Gm-Message-State: APjAAAUdQjRe3L+PlOS9oC/X5XVACKfQNlN6NV3d52M07z/GidUHQzS4
+        gTzy9e0TZ00DU7zkqopVRkEtpEq3aySMbxi8shenI/HSs/E=
+X-Google-Smtp-Source: APXvYqzg5939ggftWax9rA8+LigDbV1C/i0RooF5/1N++M5M083sFjZXh/MKlbsUanzpLd4BZx56GxaBopTP8IPqhYY=
+X-Received: by 2002:aed:3e7c:: with SMTP id m57mr32163623qtf.204.1563453266382;
+ Thu, 18 Jul 2019 05:34:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGxU2F5ybg1_8VhS=COMnxSKC4AcW4ZagYwNMi==d6-rNPgzsg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 18 Jul 2019 12:33:53 +0000 (UTC)
+References: <20190718020654.39860-1-yuehaibing@huawei.com> <CAK8P3a2H0o+_3Y_J3r=D5_hGCArTYeHPfPPjY3dJ+ArmqYrOfQ@mail.gmail.com>
+ <20190718115827.GB2872@innovation.ch>
+In-Reply-To: <20190718115827.GB2872@innovation.ch>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 18 Jul 2019 14:34:09 +0200
+Message-ID: <CAK8P3a2Bi4xChuQH+buFtw+ODeDHPiPX=KqOuRNb9L2Koy8yYA@mail.gmail.com>
+Subject: Re: [PATCH] Input: applespi: Fix build error without CONFIG_PCI
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 09:52:41AM +0200, Stefano Garzarella wrote:
-> On Wed, Jul 17, 2019 at 5:00 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+On Thu, Jul 18, 2019 at 1:58 PM Life is hard, and then you die
+<ronald@innovation.ch> wrote:
+> On Thu, Jul 18, 2019 at 09:15:59AM +0200, Arnd Bergmann wrote:
+> > On Thu, Jul 18, 2019 at 4:07 AM YueHaibing <yuehaibing@huawei.com> wrote:
+> > Your patch correctly solves the spi_pxa2xx issue, but I'd prefer to instead
+> > drop the three 'imply' statements altogether, they seem to do more harm
+> > than good.
 > >
-> > On Wed, Jul 17, 2019 at 01:30:30PM +0200, Stefano Garzarella wrote:
-> > > Since now we are able to split packets, we can avoid limiting
-> > > their sizes to VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE.
-> > > Instead, we can use VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max
-> > > packet size.
-> > >
-> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> >
-> >
-> > OK so this is kind of like GSO where we are passing
-> > 64K packets to the vsock and then split at the
-> > low level.
-> 
-> Exactly, something like that in the Host->Guest path, instead in the
-> Guest->Host we use the entire 64K packet.
-> 
-> Thanks,
-> Stefano
+> > (the circular dependency I saw might only happen when applying the
+> > arm32 KASAN patches, but I expect to see them merged for linux-5.4)
+>
+> Isn't there more generally a problem here that this is selecting
+> MFD_INTEL_LPSS_PCI even though that depends on X86? I.e. are both ARM
+> and X86 selected at the same time? (sorry if I'm being naïve, but I
+> assumed only one arch can be selected at a time)
 
-btw two allocations for each packet isn't great. How about
-allocating the struct linearly with the data?
-And all buffers are same length for you - so you can actually
-do alloc_pages.
-Allocating/freeing pages in a batch should also be considered.
+You can't have ARM and X86 defined at the same time, but Kconfig does
+not know that, it just sees X86 as an undefined symbol, and ARM as
+as always-enabled symbol when building for ARM.
 
--- 
-MST
+In theory, 'imply' should deal with that and have no effect when there
+are missing dependencies, but it appears that this only works for
+deciding whether to turn on MFD_INTEL_LPSS_PCI, not for figuring
+out loops in the dependency chain.
+
+       Arnd
