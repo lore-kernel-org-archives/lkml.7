@@ -2,144 +2,68 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC5C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5213CC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C401217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF0320880
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 10:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfGRKYV (ORCPT
+        id S2389931AbfGRKZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 06:24:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2284 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726482AbfGRKYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 06:24:20 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C55CBDD3F6F9763A5C94;
-        Thu, 18 Jul 2019 18:24:18 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 18 Jul 2019 18:24:09 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: separate NOCoW and pinfile semantics
-Date:   Thu, 18 Jul 2019 18:24:06 +0800
-Message-ID: <20190718102406.55774-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 18 Jul 2019 06:25:23 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40524 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726482AbfGRKZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 06:25:23 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1E1A41A0047;
+        Thu, 18 Jul 2019 12:25:22 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 121221A0009;
+        Thu, 18 Jul 2019 12:25:22 +0200 (CEST)
+Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7CCC9205C7;
+        Thu, 18 Jul 2019 12:25:21 +0200 (CEST)
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     shawnguo@kernel.org
+Cc:     s.hauer@pengutronix.de, =kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shengjiu.wang@nxp.com, paul.olaru@nxp.com,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/3] Add power domain range for MU13 side b / IRQSTR_DSP
+Date:   Thu, 18 Jul 2019 13:25:16 +0300
+Message-Id: <20190718102519.31855-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pinning a file is heavy, because skipping pinned files make GC
-running with heavy load or no effect.
+This patch adds power domain range for MU13 side b and irqsteer in
+preparation for adding support for DSP <-> AP IPC communication.
 
-So that this patch propose to separate nocow and pinfile semantics:
-- NOCoW flag can only be set on regular file.
-- NOCoW file will only trigger IPU at common writeback/flush.
-- NOCow file will do OPU during GC.
+Changes since v1:
+	- fixed typo in patch 1/3 commit message
+	- enhance commit message for patch 2/3 as per Aisheng's comments
+	- only add PD range for mu 13 side B
+	
+Daniel Baluta (3):
+  firmware: imx: scu-pd: Rename mu PD range to mu_a
+  firmware: imx: scu-pd: Add mu13 b side PD range
+  firmware: imx: scu-pd: Add IRQSTR_DSP PD range
 
-For the demand of 1) avoid fragment of file's physical block and
-2) userspace don't care about file's specific physical address,
-tagging file as NOCoW will be cheaper than pinned one.
+ drivers/firmware/imx/scu-pd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/data.c |  3 ++-
- fs/f2fs/f2fs.h |  1 +
- fs/f2fs/file.c | 20 +++++++++++++++++---
- 3 files changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index a2a28bb269bf..15fb8954c363 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
- 
- bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
- {
--	if (f2fs_is_pinned_file(inode))
-+	if (f2fs_is_pinned_file(inode) ||
-+			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
- 		return true;
- 
- 	/* if this is cold file, we should overwrite to avoid fragmentation */
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 596ab3e1dd7b..f6c5a3d2e659 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
- #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
- #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
- #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
-+#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
- #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
- 
- /* Flags that should be inherited by new inodes from their parent. */
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 7ca545874060..ed6556f4cba7 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1659,6 +1659,20 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
- 	if (IS_NOQUOTA(inode))
- 		return -EPERM;
- 
-+	if ((iflags ^ oldflags) & F2FS_NOCOW_FL) {
-+		int err;
-+
-+		if (!S_ISREG(inode->i_mode))
-+			return -EINVAL;
-+
-+		if (f2fs_should_update_outplace(inode, NULL))
-+			return -EINVAL;
-+
-+		err = f2fs_convert_inline_inode(inode);
-+		if (err)
-+			return err;
-+	}
-+
- 	fi->i_flags = iflags | (fi->i_flags & ~mask);
- 
- 	if (fi->i_flags & F2FS_PROJINHERIT_FL)
-@@ -1692,6 +1706,7 @@ static const struct {
- 	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
- 	{ F2FS_INDEX_FL,	FS_INDEX_FL },
- 	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
-+	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
- 	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
- };
- 
-@@ -1715,7 +1730,8 @@ static const struct {
- 		FS_NODUMP_FL |		\
- 		FS_NOATIME_FL |		\
- 		FS_DIRSYNC_FL |		\
--		FS_PROJINHERIT_FL)
-+		FS_PROJINHERIT_FL |	\
-+		FS_NOCOW_FL)
- 
- /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
- static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
-@@ -1753,8 +1769,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
- 		fsflags |= FS_ENCRYPT_FL;
- 	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
- 		fsflags |= FS_INLINE_DATA_FL;
--	if (is_inode_flag_set(inode, FI_PIN_FILE))
--		fsflags |= FS_NOCOW_FL;
- 
- 	fsflags &= F2FS_GETTABLE_FS_FL;
- 
 -- 
-2.18.0.rc1
+2.17.1
 
