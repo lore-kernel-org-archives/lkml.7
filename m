@@ -2,109 +2,166 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622E0C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7766C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481DE21783
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9653321783
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390641AbfGRORD (ORCPT
+        id S2390667AbfGRORX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:17:03 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:59357 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390605AbfGRORC (ORCPT
+        Thu, 18 Jul 2019 10:17:23 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:2113 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390356AbfGRORX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:17:02 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MdNHa-1iNS2127Qe-00ZLMK; Thu, 18 Jul 2019 16:16:53 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Johan Korsnes <johan.korsnes@gmail.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Gabriel Francisco Mandaji <gfmandaji@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] media: vivid: work around high stack usage with clang
-Date:   Thu, 18 Jul 2019 16:16:43 +0200
-Message-Id: <20190718141652.3323402-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:pQKRRjSAwPvJe/DxyiorcFmR6g4THfSDWMYc4p1kZ8aLckuM0qr
- xiClQ7AIVuxhBy+lGsPSBjcs77ak3SReRcHc5Am7mqZgcmrz9f4AoLd3JloLdNFEQglNegX
- 6jdTth3eX4T4XaZYZZVQjYzBNeckqyHawmVjOWSrwzLGx4S2Tp/SgN1edqnon9OwZxy0rr+
- ftQgSnAn9XDmMOCvB2ebA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8NGldS+p5eQ=:By0jRMiqfFn2SYMphKkJGN
- i3yDPSR68JLDHktBXZ/qviTIEXWjHGJIdnA1VW72vr/hIz3WOnGbh7uZdJqfKdg5W5XuegFHI
- CjIkleZu201NWQ+tOktdMjcBbsF8z7rAOJvJd0rM7BXwi3fayjvf8l7SVubOp3GgyiqE9akGY
- KwzerfPyAtao1W+byoBidehfl987Lw4pHrMLUv7d5lru4Qg5Rxwcs0EM1yaUUMp52PI0R9oEg
- L+WvO2ty8u789v/03RE9d/S1OgvvOIGsj8dun2hMJ04PHuPnbj5+h6uKlhohhxfffam01eYT8
- 9kKMawa1wwQ28ZB0wQtX1QaakIsJ+xDEL63P54/GxBsGNrVINo8NT/2gc0MpkproSgjZ6SCWS
- h5lJOb5BVBClB3WcPG5+8U2SM3oV8m/oZJSIZ3ewHFCPImc5ulF1iJP6a2xGssg2yzPbP25+a
- d/S7rlHcj+CxpFnLBqMKthxqafWyqaud59fXGcSTybzxX+Fc38wWBiYu0rjynB1/6wUEUok9d
- QBdwA7Pl6CjsbMpH8SarPDXByn6sQs7cSZt2u3bpIGfsOOm2KC/kwn2EDjDhY9KgStKqyX/sM
- Fae6snP4LKzacTQ6bqMOe/8a1LfqWfS/5eH+ijSfqkslnL7hpZ0nHeZFdA/Pa1Glrb7NM+xjr
- nIdJuXqpjFhUmg3rj+0cf8okhl6YlHouWlE/0mBoF4mQ1GXOO69SEcd5TJGhIJ91ltRZvYb9q
- Xc7tFuIOp6ppiw+kpl1+2E7ACbzQatv09fxO6A==
+        Thu, 18 Jul 2019 10:17:23 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.1]) by rmmx-syy-dmz-app12-12012 (RichMail) with SMTP id 2eec5d307f28e2e-a11f6; Thu, 18 Jul 2019 22:16:09 +0800 (CST)
+X-RM-TRANSID: 2eec5d307f28e2e-a11f6
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [10.0.0.249] (unknown[112.22.251.180])
+        by rmsmtp-syy-appsvr01-12001 (RichMail) with SMTP id 2ee15d307f26c3f-095a6;
+        Thu, 18 Jul 2019 22:16:09 +0800 (CST)
+X-RM-TRANSID: 2ee15d307f26c3f-095a6
+Content-Type: text/plain; charset=gb2312
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [net-next 1/2] ipvs: batch __ip_vs_cleanup
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+In-Reply-To: <alpine.LFD.2.21.1907152333300.5700@ja.home.ssi.bg>
+Date:   Thu, 18 Jul 2019 22:16:05 +0800
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Simon Horman <horms@verge.net.au>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8441EA26-E197-4F40-A6D7-5B7D59AA7F7F@cmss.chinamobile.com>
+References: <1563031186-2101-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <1563031186-2101-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
+ <alpine.LFD.2.21.1907152333300.5700@ja.home.ssi.bg>
+To:     Julian Anastasov <ja@ssi.bg>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building a KASAN-enabled kernel with clang ends up in a case where too
-much is inlined into vivid_thread_vid_cap() and the stack usage grows
-a lot, possibly when the register allocation fails to produce efficient
-code and spills a lot of temporaries to the stack. This uses more
-than twice the amount of stack than the sum of the individual functions
-when they are not inlined:
 
-drivers/media/platform/vivid/vivid-kthread-cap.c:766:12: error: stack frame size of 2208 bytes in function 'vivid_thread_vid_cap' [-Werror,-Wframe-larger-than=]
+> On 2019年7月16日, at 上午4:39, Julian Anastasov <ja@ssi.bg> wrote:
+> 
+> 
+> 	Hello,
+> 
+> On Sat, 13 Jul 2019, Haishuang Yan wrote:
+> 
+>> It's better to batch __ip_vs_cleanup to speedup ipvs
+>> connections dismantle.
+>> 
+>> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+>> ---
+>> include/net/ip_vs.h             |  2 +-
+>> net/netfilter/ipvs/ip_vs_core.c | 29 +++++++++++++++++------------
+>> net/netfilter/ipvs/ip_vs_ctl.c  | 13 ++++++++++---
+>> 3 files changed, 28 insertions(+), 16 deletions(-)
+>> 
+>> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+>> index 3759167..93e7a25 100644
+>> --- a/include/net/ip_vs.h
+>> +++ b/include/net/ip_vs.h
+>> @@ -1324,7 +1324,7 @@ static inline void ip_vs_control_del(struct ip_vs_conn *cp)
+>> void ip_vs_control_net_cleanup(struct netns_ipvs *ipvs);
+>> void ip_vs_estimator_net_cleanup(struct netns_ipvs *ipvs);
+>> void ip_vs_sync_net_cleanup(struct netns_ipvs *ipvs);
+>> -void ip_vs_service_net_cleanup(struct netns_ipvs *ipvs);
+>> +void ip_vs_service_nets_cleanup(struct list_head *net_list);
+>> 
+>> /* IPVS application functions
+>>  * (from ip_vs_app.c)
+>> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+>> index 46f06f9..b4d79b7 100644
+>> --- a/net/netfilter/ipvs/ip_vs_core.c
+>> +++ b/net/netfilter/ipvs/ip_vs_core.c
+>> @@ -2402,18 +2402,23 @@ static int __net_init __ip_vs_init(struct net *net)
+>> 	return -ENOMEM;
+>> }
+>> 
+>> -static void __net_exit __ip_vs_cleanup(struct net *net)
+>> +static void __net_exit __ip_vs_cleanup_batch(struct list_head *net_list)
+>> {
+>> -	struct netns_ipvs *ipvs = net_ipvs(net);
+>> -
+>> -	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
+>> -	ip_vs_conn_net_cleanup(ipvs);
+>> -	ip_vs_app_net_cleanup(ipvs);
+>> -	ip_vs_protocol_net_cleanup(ipvs);
+>> -	ip_vs_control_net_cleanup(ipvs);
+>> -	ip_vs_estimator_net_cleanup(ipvs);
+>> -	IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
+>> -	net->ipvs = NULL;
+>> +	struct netns_ipvs *ipvs;
+>> +	struct net *net;
+>> +	LIST_HEAD(list);
+>> +
+>> +	ip_vs_service_nets_cleanup(net_list);	/* ip_vs_flush() with locks */
+>> +	list_for_each_entry(net, net_list, exit_list) {
+> 
+> 	How much faster is to replace list_for_each_entry in
+> ops_exit_list() with this one. IPVS can waste time in calls
+> such as kthread_stop() and del_timer_sync() but I'm not sure
+> we can solve it easily. What gain do you see in benchmarks?
 
-Marking two of the key functions in here as 'noinline_for_stack' avoids
-the pathological case in clang without any apparent downside for gcc.
+Hi, 
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-Not sure how much effort we want to put into fixing clang to not
-get into this case. I could open an llvm bug report if something
-thinks this has a chance of getting fixed there.
----
- drivers/media/platform/vivid/vivid-kthread-cap.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+As the following benchmark testing results show, there is a little performance improvement:
 
-diff --git a/drivers/media/platform/vivid/vivid-kthread-cap.c b/drivers/media/platform/vivid/vivid-kthread-cap.c
-index 6cf495a7d5cc..4f94897e6303 100644
---- a/drivers/media/platform/vivid/vivid-kthread-cap.c
-+++ b/drivers/media/platform/vivid/vivid-kthread-cap.c
-@@ -232,8 +232,8 @@ static void *plane_vaddr(struct tpg_data *tpg, struct vivid_buffer *buf,
- 	return vbuf;
- }
- 
--static int vivid_copy_buffer(struct vivid_dev *dev, unsigned p, u8 *vcapbuf,
--		struct vivid_buffer *vid_cap_buf)
-+static noinline_for_stack int vivid_copy_buffer(struct vivid_dev *dev, unsigned p,
-+		u8 *vcapbuf, struct vivid_buffer *vid_cap_buf)
- {
- 	bool blank = dev->must_blank[vid_cap_buf->vb.vb2_buf.index];
- 	struct tpg_data *tpg = &dev->tpg;
-@@ -670,7 +670,8 @@ static void vivid_cap_update_frame_period(struct vivid_dev *dev)
- 	dev->cap_frame_period = f_period;
- }
- 
--static void vivid_thread_vid_cap_tick(struct vivid_dev *dev, int dropped_bufs)
-+static noinline_for_stack void vivid_thread_vid_cap_tick(struct vivid_dev *dev,
-+							 int dropped_bufs)
- {
- 	struct vivid_buffer *vid_cap_buf = NULL;
- 	struct vivid_buffer *vbi_cap_buf = NULL;
--- 
-2.20.0
+$  cat add_del_unshare.sh
+#!/bin/bash
+
+for i in `seq 1 100`
+    do
+     (for j in `seq 1 40` ; do  unshare -n ipvsadm -A -t 172.16.$i.$j:80 >/dev/null ; done) &
+    done
+wait; grep net_namespace /proc/slabinfo
+
+Befor patch:
+$  time sh add_del_unshare.sh
+net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+
+real    0m8.086s
+user    0m2.025s
+sys     0m36.956s
+
+After patch:
+$  time sh add_del_unshare.sh
+net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
+
+real    0m7.623s
+user    0m2.003s
+sys     0m32.935s
+
+
+> 
+>> +		ipvs = net_ipvs(net);
+>> +		ip_vs_conn_net_cleanup(ipvs);
+>> +		ip_vs_app_net_cleanup(ipvs);
+>> +		ip_vs_protocol_net_cleanup(ipvs);
+>> +		ip_vs_control_net_cleanup(ipvs);
+>> +		ip_vs_estimator_net_cleanup(ipvs);
+>> +		IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
+>> +		net->ipvs = NULL;
+>> +	}
+>> }
+> 
+> Regards
+> 
+> --
+> Julian Anastasov <ja@ssi.bg>
+> 
+
+
 
