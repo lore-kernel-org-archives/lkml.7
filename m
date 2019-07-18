@@ -2,87 +2,136 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D256C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A2CC76196
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D572173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5C82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 14:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390696AbfGROtC (ORCPT
+        id S2390786AbfGROtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 10:49:02 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40105 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727685AbfGROtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:49:02 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so27440143qtn.7;
-        Thu, 18 Jul 2019 07:49:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lmArtbMu3sH1yAvRJHLIrPo6/n/cdKCsdBCmd5C2IQ8=;
-        b=mSN6ncgMFo/8r5zIY/lyYALuPXEcATDLCzexMTZDwpsMfCi3W9C2Sb2w1r8zYXyaNQ
-         VHxRRn+5RdOhbcejU44W9PO1/vJxujEQjGD3LG0BHyvk1QTIcqCh9wUSJtjb44ObQHT6
-         HSoPPdBcxJVqCscuYAVe3PENyxDNXGOus7HgO/UjX/guEb72QL/Y/7qaEJlC554N9ij6
-         gBrFm+W20tT4E4CBJysKqRmLEzU8N6QNvB5fh/PvgnZEsaj3erMVtAD4nTKvJ3atGoDJ
-         5AbkHZ9wrC+wyaKj9NSc4NUfS+jva6kAmktW8Zy3ZoGS8L1gQD075ZVzUh4YfVrO9SSd
-         UGGg==
-X-Gm-Message-State: APjAAAVOAFWmxhyCXNGCZAgIKA3RIDDxzij76aLklLerCReKZtnGhekX
-        w5Q+qQGPTA7AIbK6wN8d1VQtOwqmUxY5HPQxeV8=
-X-Google-Smtp-Source: APXvYqyGTHPe5PQabqcn621tJ6BN0Z+rTWvQOrhBq6i3Ye7JuAJJMajo35a5aTa4MEeNTV7DL/W1Kw/ZK6MtC+9UODk=
-X-Received: by 2002:a0c:ba2c:: with SMTP id w44mr32963580qvf.62.1563461340817;
- Thu, 18 Jul 2019 07:49:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190718125509.775525-1-arnd@arndb.de> <20190718125703.GA28332@lst.de>
- <CAK8P3a2k3ddUD-b+OskpDfAkm6KGAGAOBabkXk3Uek1dShTiUA@mail.gmail.com> <20190718130835.GA28520@lst.de>
-In-Reply-To: <20190718130835.GA28520@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 18 Jul 2019 16:48:44 +0200
-Message-ID: <CAK8P3a1W03RiWmUmgprAODeUBXZOF-OUyCBJKmufadpKivbQWg@mail.gmail.com>
-Subject: Re: [PATCH] iomap: hide iomap_sector with CONFIG_BLOCK=n
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jul 2019 10:49:18 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43098 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390345AbfGROtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:49:18 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1744C2000AC;
+        Thu, 18 Jul 2019 16:49:16 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A22E200009;
+        Thu, 18 Jul 2019 16:49:16 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B3F1F205C7;
+        Thu, 18 Jul 2019 16:49:15 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] crypto: caam - move shared symbols in a common location
+Date:   Thu, 18 Jul 2019 17:49:09 +0300
+Message-Id: <1563461349-24876-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 3:08 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Thu, Jul 18, 2019 at 03:03:15PM +0200, Arnd Bergmann wrote:
-> > The inclusion comes from the recently added header check in commit
-> > c93a0368aaa2 ("kbuild: do not create wrappers for header-test-y").
-> >
-> > This just tries to include every header by itself to see if there are build
-> > failures from missing indirect includes. We probably don't want to
-> > add an exception for iomap.h there.
->
-> I very much disagree with that check.  We don't need to make every
-> header compilable with a setup where it should not be included.
+Moved to a common location the symbols shared by all CAAM drivers (jr,
+qi, qi2).
 
-I do like the extra check there, and it did not seem to need too many
-fixes to get it working in the first place.
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+---
+This patch depends on series:
+https://patchwork.kernel.org/project/linux-crypto/list/?series=147479
 
-> That being said if you feel this is worth fixing I'd rather define
-> SECTOR_SIZE/SECTOR_SHIFT unconditionally.
+ drivers/crypto/caam/common_if.c | 7 +++++++
+ drivers/crypto/caam/common_if.h | 7 +++++++
+ drivers/crypto/caam/error.c     | 6 ------
+ drivers/crypto/caam/error.h     | 5 -----
+ 4 files changed, 14 insertions(+), 11 deletions(-)
 
-I'll give that a try and send a replacement patch after build testing
-succeeds for a number of randconfig builds.
+diff --git a/drivers/crypto/caam/common_if.c b/drivers/crypto/caam/common_if.c
+index 1291d3d..071b08d 100644
+--- a/drivers/crypto/caam/common_if.c
++++ b/drivers/crypto/caam/common_if.c
+@@ -7,6 +7,13 @@
+ 
+ #include "compat.h"
+ #include "common_if.h"
++#include <linux/types.h>
++
++bool caam_little_end;
++EXPORT_SYMBOL(caam_little_end);
++
++bool caam_imx;
++EXPORT_SYMBOL(caam_imx);
+ 
+ /*
+  * validate key length for AES algorithms
+diff --git a/drivers/crypto/caam/common_if.h b/drivers/crypto/caam/common_if.h
+index 61d5516..5fb8840 100644
+--- a/drivers/crypto/caam/common_if.h
++++ b/drivers/crypto/caam/common_if.h
+@@ -8,6 +8,8 @@
+ #ifndef CAAM_COMMON_LOCATION_H
+ #define CAAM_COMMON_LOCATION_H
+ 
++#include "desc.h"
++
+ int check_aes_keylen(unsigned int keylen);
+ 
+ int check_gcm_authsize(unsigned int authsize);
+@@ -16,4 +18,9 @@ int check_rfc4106_authsize(unsigned int authsize);
+ 
+ int check_ipsec_assoclen(unsigned int assoclen);
+ 
++static inline bool is_mdha(u32 algtype)
++{
++	return (algtype & OP_ALG_ALGSEL_MASK & ~OP_ALG_ALGSEL_SUBMASK) ==
++	       OP_ALG_CHA_MDHA;
++}
+ #endif /* CAAM_COMMON_LOCATION_H */
+diff --git a/drivers/crypto/caam/error.c b/drivers/crypto/caam/error.c
+index b7fbf1b..b901872 100644
+--- a/drivers/crypto/caam/error.c
++++ b/drivers/crypto/caam/error.c
+@@ -50,12 +50,6 @@ void caam_dump_sg(const char *prefix_str, int prefix_type,
+ #endif /* DEBUG */
+ EXPORT_SYMBOL(caam_dump_sg);
+ 
+-bool caam_little_end;
+-EXPORT_SYMBOL(caam_little_end);
+-
+-bool caam_imx;
+-EXPORT_SYMBOL(caam_imx);
+-
+ static const struct {
+ 	u8 value;
+ 	const char *error_text;
+diff --git a/drivers/crypto/caam/error.h b/drivers/crypto/caam/error.h
+index 16809fa..e2f6ed8 100644
+--- a/drivers/crypto/caam/error.h
++++ b/drivers/crypto/caam/error.h
+@@ -21,9 +21,4 @@ void caam_dump_sg(const char *prefix_str, int prefix_type,
+ 		  int rowsize, int groupsize, struct scatterlist *sg,
+ 		  size_t tlen, bool ascii);
+ 
+-static inline bool is_mdha(u32 algtype)
+-{
+-	return (algtype & OP_ALG_ALGSEL_MASK & ~OP_ALG_ALGSEL_SUBMASK) ==
+-	       OP_ALG_CHA_MDHA;
+-}
+ #endif /* CAAM_ERROR_H */
+-- 
+2.1.0
 
-      Arnd
