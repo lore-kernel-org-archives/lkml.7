@@ -2,98 +2,119 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DC8C7618F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24880C76195
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C612321849
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F279521019
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 19:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nPt7a8/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391204AbfGRTIw (ORCPT
+        id S2391210AbfGRTJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 15:08:52 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40444 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbfGRTIw (ORCPT
+        Thu, 18 Jul 2019 15:09:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49007 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726040AbfGRTJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:08:52 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B0487802B0; Thu, 18 Jul 2019 21:08:38 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 21:08:49 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH] Enable backlight when trigger is activated
-Message-ID: <20190718190849.GA11409@amd>
+        Thu, 18 Jul 2019 15:09:08 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6IJ8ukV2123756
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 18 Jul 2019 12:08:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6IJ8ukV2123756
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1563476937;
+        bh=GcovEUfk//4KrFFre87CBIZf3wyaATwToKKe+uiUpLk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=nPt7a8/uggJi+aj2x6lCb7a7wETRT+o1Gmn7yyoM+reUkbiy/Qnp4MunZ5+UJwYot
+         Pmr/zfj7cqn0zJ5VanlGFu6WZzmZ53pFn6mWpGMnCyAEP3CLS4wWVtx9IoZsAaZ8mF
+         J/r102Q5NJ0VwxWUurLIpFdYMcVc8vvT9lxawKNTuxGiSIItvozdXSPfQ//4UuMX9t
+         22nDPFlPZBePF1Cf3TnXE82eCnN3Uqh6W31h30VxPwVqQU0AmM7Iq+3cVRf3HXysUt
+         ywYrpOBBm5xhD6MwmtE09tIsPdVxD1vow7lcypsYULr5wz8j8lSnbQaNOYH0U30jmo
+         p3yuWAzGM/l6w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6IJ8ueC2123753;
+        Thu, 18 Jul 2019 12:08:56 -0700
+Date:   Thu, 18 Jul 2019 12:08:56 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-19f2d8fa98644c7b78845b1d66abeae4e3d9dfa8@git.kernel.org>
+Cc:     hpa@zytor.com, tglx@linutronix.de, pbonzini@redhat.com,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, peterz@infradead.org
+Reply-To: peterz@infradead.org, jpoimboe@redhat.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          pbonzini@redhat.com, tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
+References: <9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/urgent] x86/kvm: Replace vmx_vmenter()'s call to
+ kvm_spurious_fault() with UD2
+Git-Commit-ID: 19f2d8fa98644c7b78845b1d66abeae4e3d9dfa8
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  19f2d8fa98644c7b78845b1d66abeae4e3d9dfa8
+Gitweb:     https://git.kernel.org/tip/19f2d8fa98644c7b78845b1d66abeae4e3d9dfa8
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Wed, 17 Jul 2019 20:36:38 -0500
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 18 Jul 2019 21:01:03 +0200
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+x86/kvm: Replace vmx_vmenter()'s call to kvm_spurious_fault() with UD2
 
-Configuring backlight trigger from dts results in backlight off during
-boot. Machine looks dead upon boot, which is not good.
+Objtool reports the following:
 
-Fix that by enabling LED on trigger activation.
+  arch/x86/kvm/vmx/vmenter.o: warning: objtool: vmx_vmenter()+0x14: call without frame pointer save/setup
 
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+But frame pointers are necessarily broken anyway, because
+__vmx_vcpu_run() clobbers RBP with the guest's value before calling
+vmx_vmenter().  So calling without a frame pointer doesn't make things
+any worse.
 
-diff --git a/drivers/leds/trigger/ledtrig-backlight.c b/drivers/leds/trigge=
-r/ledtrig-backlight.c
-index 487577d..6e6bc78 100644
---- a/drivers/leds/trigger/ledtrig-backlight.c
-+++ b/drivers/leds/trigger/ledtrig-backlight.c
-@@ -114,6 +114,8 @@ static int bl_trig_activate(struct led_classdev *led)
- 	n->old_status =3D UNBLANK;
- 	n->notifier.notifier_call =3D fb_notifier_callback;
-=20
-+	led_set_brightness(led, LED_ON);
-+
- 	ret =3D fb_register_client(&n->notifier);
- 	if (ret)
- 		dev_err(led->dev, "unable to register backlight trigger\n");
-@@ -126,6 +128,7 @@ static void bl_trig_deactivate(struct led_classdev *led)
- 	struct bl_trig_notifier *n =3D led_get_trigger_data(led);
-=20
- 	fb_unregister_client(&n->notifier);
-+	led_set_brightness(led, LED_OFF);
- 	kfree(n);
- }
-=20
+Make objtool happy by changing the call to a UD2.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lkml.kernel.org/r/9fc2216c9dc972f95bb65ce2966a682c6bda1cb0.1563413318.git.jpoimboe@redhat.com
 
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+---
+ arch/x86/kvm/vmx/vmenter.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0ww8EACgkQMOfwapXb+vI/hQCeO9FNCL2TmO9oZ8A7L2jg1y1R
-jvQAn1C6VabsEY2RJJWCWLOK9CshUbyu
-=aKee
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
+diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+index d4cb1945b2e3..4010d519eb8c 100644
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -54,9 +54,9 @@ ENTRY(vmx_vmenter)
+ 	ret
+ 
+ 3:	cmpb $0, kvm_rebooting
+-	jne 4f
+-	call kvm_spurious_fault
+-4:	ret
++	je 4f
++	ret
++4:	ud2
+ 
+ 	.pushsection .fixup, "ax"
+ 5:	jmp 3b
