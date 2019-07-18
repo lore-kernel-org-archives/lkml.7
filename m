@@ -2,146 +2,165 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14816C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49216C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FF421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 06:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJHwK/Eg"
+	by mail.kernel.org (Postfix) with ESMTP id 2DE402173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 07:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfGRG6S (ORCPT
+        id S1727802AbfGRHBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jul 2019 02:58:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37355 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfGRG6S (ORCPT
+        Thu, 18 Jul 2019 03:01:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56267 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfGRHBE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jul 2019 02:58:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so2301888wrr.4;
-        Wed, 17 Jul 2019 23:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w67IyN95gTj3RhuSrYGK7BpCk3sEigKFRh3/KoBI/NE=;
-        b=uJHwK/EgcZHsa6kff9Sy1oZ16ko0nFwEXzf0ubk5VI4cztgO78V+srFXNy8EB9pmfX
-         0+VZOCav2hb+JXUPl32b+O8sHyRSC6MqDiwG9j8/DM04+KnKB0O/17yIcRv5SSW7A8AW
-         PTKBjilwpUGZuHnxzH7QYIytGoHcmw03ijfMgdMfrC4Lu7N4WbdVNE382zpFa/N7mY3c
-         MmZbFhiH9D/ugT1JglzrHrL8fYiIAv9qn/NLVbF09nOV1ippcyvxrmiwBQRl0PKfBN91
-         fDME7IyFA8YsE3Sd4kaaBHe7W7S3cuD6jeDaBc1S803DSJGmB7e3YubWHd8/Wh6oX2Xo
-         GX7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w67IyN95gTj3RhuSrYGK7BpCk3sEigKFRh3/KoBI/NE=;
-        b=HlgcXvh1hXL7hQXB/bAhIpet5NQxAjMY3FSFs2z6c99Ymv+lR77QnnSCHGyqGt/h36
-         8uOyNymMihhcAHH6dTyUgUiFOf0Momc3DUHqWWbPqprf8XNYqw1O549sGChbdqWWqwki
-         Km/InUC/PUTAWk6D1zbIyfxBt4iNNEASkkrOuK6MbWJsIcv+Owgp80qCI75odS96c44l
-         OYaRreWqHrlPb6TiRn6pdsDyOXiLVgvp59PM+AI8GbjqocvECPKdpJFVG9NUEx623WJP
-         Sx4OqrZfW97/pA1xa3nh79Ci8KdxFBqeMiozB9ysUSX6ydZlCPFHW1x4fBZKF22DJytT
-         amKA==
-X-Gm-Message-State: APjAAAX60aEfh33nWExkk2tinKkhkq0KyAbIhj1n9V3ildeiaIxRBlyq
-        V/4DBUK2XuUOk3uyW1FN029AcQp9
-X-Google-Smtp-Source: APXvYqzmc6/F56Fq9sryYZ2gARiMxs2u5uBNxaObAYp3kGcq3TAxeeeMzWN5fkaYchYAdDNh+ydzgQ==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr9437678wrv.219.1563433096040;
-        Wed, 17 Jul 2019 23:58:16 -0700 (PDT)
-Received: from [192.168.8.147] (72.160.185.81.rev.sfr.net. [81.185.160.72])
-        by smtp.gmail.com with ESMTPSA id g19sm27357652wmg.10.2019.07.17.23.58.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jul 2019 23:58:15 -0700 (PDT)
-Subject: Re: regression with napi/softirq ?
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190717201925.fur57qfs2x3ha6aq@debian>
- <alpine.DEB.2.21.1907172238490.1778@nanos.tec.linutronix.de>
- <CADVatmO_m-NYotb9Htd7gS0d2-o0DeEWeDJ1uYKE+oj_HjoN0Q@mail.gmail.com>
- <alpine.DEB.2.21.1907172345360.1778@nanos.tec.linutronix.de>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <052e43b6-26f8-3e46-784e-dc3c6a82bdf0@gmail.com>
-Date:   Thu, 18 Jul 2019 08:58:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 18 Jul 2019 03:01:04 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ho0PM-00009E-Bd; Thu, 18 Jul 2019 09:00:52 +0200
+Date:   Thu, 18 Jul 2019 09:00:50 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dexuan Cui <decui@microsoft.com>
+cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>, vkuznets <vkuznets@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>
+Subject: RE: [PATCH] x86/hyper-v: Zero out the VP assist page to fix CPU
+ offlining
+In-Reply-To: <PU1P153MB01693AB444C4A432FBA2507BBFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Message-ID: <alpine.DEB.2.21.1907180846290.1778@nanos.tec.linutronix.de>
+References: <PU1P153MB01697CBE66649B4BA91D8B48BFFA0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <alpine.DEB.2.21.1907180058210.1778@nanos.tec.linutronix.de> <PU1P153MB01693AB444C4A432FBA2507BBFC80@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1907172345360.1778@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 18 Jul 2019, Dexuan Cui wrote:
+> > On Thu, 4 Jul 2019, Dexuan Cui wrote:
+> > This is the allocation when the CPU is brought online for the first
+> > time. So what effect has zeroing at allocation time vs. offlining and
+> > potentially receiving IPIs? That allocation is never freed.
+> > 
+> > Neither the comment nor the changelog make any sense to me.
+> > 	tglx
+> 
+> That allocation was introduced by the commit
+> a46d15cc1ae5 ("x86/hyper-v: allocate and use Virtual Processor Assist Pages").
+> 
+> I think it's ok to not free the page when a CPU is offlined: every
+> CPU uses only 1 page and CPU offlining is not really a very usual
+> operation except for the scenario of hibernation (and suspend-to-memory), 
+> where the CPUs are quickly onlined again, when we resume from hibernation.
+> IMO Vitaly intentionally decided to not free the page for simplicity of the
+> code.
+> 
+> When a CPU (e.g. CPU1) is being onlined, in hv_cpu_init(), we allocate the
+> VP_ASSIST_PAGE page and enable the PV EOI optimization for this CPU by
+> writing the MSR HV_X64_MSR_VP_ASSIST_PAGE. From now on, this CPU
+> *always* uses hvp->apic_assist (which is updated by the hypervisor) to
+> decide if it needs to write the EOI MSR:
+> 
+> static void hv_apic_eoi_write(u32 reg, u32 val)
+> {
+>         struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
+> 
+>         if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
+>                 return;
+> 
+>         wrmsr(HV_X64_MSR_EOI, val, 0);
+> }
+> 
+> When a CPU (e.g. CPU1) is being offlined, on this CPU, we do:
+> 1. in hv_cpu_die(), we disable the PV EOI optimizaton for this CPU;
+> 2. we finish the remaining work of stopping this CPU;
+> 3. this CPU is completed stopped.
+> 
+> Between 1 and 3, this CPU can still receive interrupts (e.g. IPIs from CPU0,
+> and Local APIC timer interrupts), and this CPU *must* write the EOI MSR for
+> every interrupt received, otherwise the hypervisor may not deliver further
+> interrupts, which may be needed to stop this CPU completely.
+> 
+> So we need to make sure hvp->apic_assist.bit0 is zero, after we run the line
+> "wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);" in hv_cpu_die(). The easiest
+> way is what I do in this patch. Alternatively, we can use the below patch:
+> 
+> @@ -188,8 +188,12 @@ static int hv_cpu_die(unsigned int cpu)
+>         local_irq_restore(flags);
+>         free_page((unsigned long)input_pg);
+> 
+> -       if (hv_vp_assist_page && hv_vp_assist_page[cpu])
+> +       if (hv_vp_assist_page && hv_vp_assist_page[cpu]) {
+> +               local_irq_save(flags);
+>                 wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
+> +               hvp->apic_assist &= ~1;
+> +               local_irq_restore(flags);
+> +       }
+> 
+>         if (hv_reenlightenment_cb == NULL)
+>                 return 0;
+> 
+> This second version needs 3+ lines, so I prefer the one-line version. :-)
 
+Those are two different things. The GPF_ZERO allocation makes sense on it's
+own but it _cannot_ prevent the following scenario:
 
-On 7/17/19 11:52 PM, Thomas Gleixner wrote:
-> Sudip,
-> 
-> On Wed, 17 Jul 2019, Sudip Mukherjee wrote:
->> On Wed, Jul 17, 2019 at 9:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>> You can hack ksoftirq_running() to return always false to avoid this, but
->>> that might cause application starvation and a huge packet buffer backlog
->>> when the amount of incoming packets makes the CPU do nothing else than
->>> softirq processing.
->>
->> I tried that now, it is better but still not as good as v3.8
->> Now I am getting 375.9usec as the maximum time between raising the softirq
->> and it starting to execute and packet drops still there.
->>
->> And just a thought, do you think there should be a CONFIG_ option for
->> this feature of ksoftirqd_running() so that it can be disabled if needed
->> by users like us?
-> 
-> If at all then a sysctl to allow runtime control.
->  
->> Can you please think of anything else that might have changed which I still need
->> to change to make the time comparable to v3.8..
-> 
-> Something with in that small range of:
-> 
->  63592 files changed, 13783320 insertions(+), 5155492 deletions(-)
-> 
-> :)
-> 
-> Seriously, that can be anything.
-> 
-> Can you please test with Linus' head of tree and add some more
-> instrumentation, so we can see what holds off softirqs from being
-> processed. If the ksoftirqd enforcement is disabled, then the only reason
-> can be a long lasting softirq disabled region. Tracing should tell.
+    cpu_init()
+      if (!hvp)
+      	 hvp = vmalloc(...., GFP_ZERO);
+    ...
 
-ksoftirqd might be spuriously scheduled from tx path, when
-__qdisc_run() also reacts to need_resched().
+    hvp->apic_assist |= 1;
 
-By raising NET_TX while we are processing NET_RX (say we send a TCP ACK packet
-in response to incoming packet), we force __do_softirq() to perform
-another loop, but before doing an other round, it will also check need_resched()
-and eventually call wakeup_softirqd()
+#1   cpu_die()
+      if (....)
+           wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, 0);
 
-I wonder if following patch makes any difference.
+   ---> IPI
+   	if (!(hvp->apic_assist & 1))	
+	   wrmsr(APIC_EOI);    <- PATH not taken
 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 11c03cf4aa74b44663c74e0e3284140b0c75d9c4..ab736e974396394ae6ba409868aaea56a50ad57b 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -377,6 +377,8 @@ void __qdisc_run(struct Qdisc *q)
-        int packets;
- 
-        while (qdisc_restart(q, &packets)) {
-+               if (qdisc_is_empty(q))
-+                       break;
-                /*
-                 * Ordered by possible occurrence: Postpone processing if
-                 * 1. we've exceeded packet quota
+#3   cpu is dead
+
+    cpu_init()
+       if (!hvp)
+          hvp = vmalloc(....m, GFP_ZERO);  <- NOT TAKEN because hvp != NULL
+
+So you have to come up with a better fairy tale why GFP_ZERO 'fixes' this.
+
+Allocating hvp with GFP_ZERO makes sense on it's own so the allocated
+memory has a defined state, but that's a different story.
+
+The 3 liner patch above makes way more sense and you can spare the
+local_irq_save/restore by moving the whole condition into the
+irq_save/restore region above.
+
+Thanks,
+
+	tglx
 
