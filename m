@@ -2,52 +2,51 @@ Return-Path: <SRS0=Pa1K=VP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5818C76186
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D1C76186
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0EE21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2102173B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419169;
-	bh=Pom6zniGyxl8/HYZs4fQE7yGxjsc/qKFhJ0/Mcga28g=;
+	s=default; t=1563419173;
+	bh=rku9e+gLZXd0cXvofkio1Hv3SFZniVvGJAakdWxEiW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DCaPweOivzgDLPVIeHavOSI4ElFJ1tzQPRoscyZU6sSMj/TRPOSYMCYpjtkmz5EvM
-	 Vsw0/cacr+iFxVCDDu92p8kWTwCOLu2BNZVKQ/ewL4qq/+vUrFy9h22JtukURAxiyo
-	 SnBvRizi8Ts8cNNVuIpZwYJsK44h+kTZay+qWrLY=
+	b=u0NMMsbI3llIXhvEyTNHSrYA1Co0KOMlXjP02LSMEFdkbdajJedvSSVLqwCrkaOHS
+	 I2+mvbqUkuFW4qGkRt0f3KPxdAM8INIxUm6XZXEYrOTAK02zgcoOaTRINwPai+oVS2
+	 wvVK1bzu64UekBAsOZMPLQwnZx9fdOTjzBHHYLVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390155AbfGRDGI (ORCPT
+        id S2390174AbfGRDGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389630AbfGRDGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:03 -0400
+        id S2387984AbfGRDGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:05 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B2E2173B;
-        Thu, 18 Jul 2019 03:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB442173E;
+        Thu, 18 Jul 2019 03:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419163;
-        bh=Pom6zniGyxl8/HYZs4fQE7yGxjsc/qKFhJ0/Mcga28g=;
+        s=default; t=1563419165;
+        bh=rku9e+gLZXd0cXvofkio1Hv3SFZniVvGJAakdWxEiW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FcYYfisVeyxBdGAeJwUevhvI3BWwQpiWSuYg2B2KNLDgNk3oXfVvWwKDTlBTncnT4
-         UCkZyedmzoUh+v5rARqY/8zDdhvAnNj10MgCjfUdcvjMjPuMiZarzOYRjNpl+wfQx3
-         lQf1l5eX9dHF4Eeum0q3lKcOhtrhpcUltMH5/cSQ=
+        b=Ewvq96FT4GIlGrPnCFhIHFBP1voOn+iIo8j76NtXLQ614+ILJ386cdPzHdLpg3xMQ
+         vmTAJaI81jXLgisr0QyQC8MP4P/v+uFtHUhvRzd9Kl9vMbBpL8ky8oRaOX73IteN+G
+         ar97C1ZyGWd9TJpN2kdKZuPFhaC9aP8xp7jEVWx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 54/54] x86/entry/32: Fix ENDPROC of common_spurious
-Date:   Thu, 18 Jul 2019 12:01:49 +0900
-Message-Id: <20190718030057.370736739@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 5.1 42/54] genirq: Fix misleading synchronize_irq() documentation
+Date:   Thu, 18 Jul 2019 12:01:37 +0900
+Message-Id: <20190718030056.406978855@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
 References: <20190718030053.287374640@linuxfoundation.org>
@@ -60,37 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1cbec37b3f9cff074a67bef4fc34b30a09958a0a ]
+From: Thomas Gleixner <tglx@linutronix.de>
 
-common_spurious is currently ENDed erroneously. common_interrupt is used
-in its ENDPROC. So fix this mistake.
+commit 1d21f2af8571c6a6a44e7c1911780614847b0253 upstream.
 
-Found by my asm macros rewrite patchset.
+The function might sleep, so it cannot be called from interrupt
+context. Not even with care.
 
-Fixes: f8a8fe61fec8 ("x86/irq: Seperate unused system vectors from spurious entry again")
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190709063402.19847-1-jslaby@suse.cz
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://lkml.kernel.org/r/20190628111440.189241552@linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/entry/entry_32.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/irq/manage.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index ce60893bc8c8..f4afacfd40bb 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1126,7 +1126,7 @@ common_spurious:
- 	movl	%esp, %eax
- 	call	smp_spurious_interrupt
- 	jmp	ret_from_intr
--ENDPROC(common_interrupt)
-+ENDPROC(common_spurious)
- #endif
- 
- /*
--- 
-2.20.1
-
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -96,7 +96,8 @@ EXPORT_SYMBOL(synchronize_hardirq);
+  *	to complete before returning. If you use this function while
+  *	holding a resource the IRQ handler may need you will deadlock.
+  *
+- *	This function may be called - with care - from IRQ context.
++ *	Can only be called from preemptible code as it might sleep when
++ *	an interrupt thread is associated to @irq.
+  */
+ void synchronize_irq(unsigned int irq)
+ {
 
 
