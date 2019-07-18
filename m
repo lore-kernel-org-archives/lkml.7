@@ -4,53 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A28C76195
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08D6C76192
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40BC121841
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA37B204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jul 2019 03:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563419188;
-	bh=sWK4i+p/35T5hB/RVRHRHVv3oqwIeJXgGkvOV38q0UY=;
+	s=default; t=1563419194;
+	bh=hoooPKZxvTjINFyFI5RRGC3c4QkG+G40R3yt+6m+l3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zoIq97hkIl9qNUJN1hf6zy8+DwkHFeEszoGan+oF6b9lZwEr4z2tV5OSkn1wDb5Y0
-	 s3Erm/JLnhvK6ygLPAF+1pSV6TU8Q92Ev6pY32oig+0CDwu+P3RydYFzn1eOI/Zowm
-	 Syd/SF08/cMUtePmdob0fUVUIRXrvgvMe6HThZI0=
+	b=V8qXdNvh83idCJYZ184t5g+geSknoePTRt4NGKKuoWcshCpxRW8pdpXMZHbY7y6gO
+	 uil+8lLejW2T5jGQgquxIVk9y3LdBsRWrZj6lFi8zWZD6Yb/z/4jIsF/a4ISoSM8EK
+	 l+uaRATXS1EcuLpi+PA1Lv7yt72f3zj/QduEn1r4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390215AbfGRDG0 (ORCPT
+        id S2390243AbfGRDGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jul 2019 23:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37600 "EHLO mail.kernel.org"
+        Wed, 17 Jul 2019 23:06:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390204AbfGRDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jul 2019 23:06:23 -0400
+        id S2390224AbfGRDGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jul 2019 23:06:30 -0400
 Received: from localhost (115.42.148.210.bf.2iij.net [210.148.42.115])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3C9D2173E;
-        Thu, 18 Jul 2019 03:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACA8B21841;
+        Thu, 18 Jul 2019 03:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563419182;
-        bh=sWK4i+p/35T5hB/RVRHRHVv3oqwIeJXgGkvOV38q0UY=;
+        s=default; t=1563419190;
+        bh=hoooPKZxvTjINFyFI5RRGC3c4QkG+G40R3yt+6m+l3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxgCm66L9bYn3Ze8Ye4hez6Y6d2KyZaEhaL+lersMU92mLFmJP8Pouy3F1iZSo4Cp
-         GBS37j/jT6qk90I0CvtEgYO9qXBILsA2/9aSMGFIMCzpr/cPSY6l4VLOAo7syVNrQk
-         /omRM4sNoiG0IEiyECo2I0bKraHo7LOPsrNBp1Qg=
+        b=l1AfxI43UAPmNkdQwIKoc6SnslRYHHY6f7UCn+C9AZWkpKjCrOpsYHt04zaYbXaEw
+         /7qzG22OE+v9yYqne1OGWULyfNMfJGSBbOoeSRY4jNdNJMcj3liVY/iEeie+21yvDQ
+         9GZS+89qkspeu8kpGN+gNqSTjvgl79amoofMYKts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 5.1 48/54] s390: fix stfle zero padding
-Date:   Thu, 18 Jul 2019 12:01:43 +0900
-Message-Id: <20190718030056.913035326@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Joseph Yasi <joe.yasi@gmail.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.19 01/47] Revert "e1000e: fix cyclic resets at link up with active tx"
+Date:   Thu, 18 Jul 2019 12:01:15 +0900
+Message-Id: <20190718030046.473694109@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190718030053.287374640@linuxfoundation.org>
-References: <20190718030053.287374640@linuxfoundation.org>
+In-Reply-To: <20190718030045.780672747@linuxfoundation.org>
+References: <20190718030045.780672747@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,83 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
+commit caff422ea81e144842bc44bab408d85ac449377b upstream.
 
-The stfle inline assembly returns the number of double words written
-(condition code 0) or the double words it would have written
-(condition code 3), if the memory array it got as parameter would have
-been large enough.
+This reverts commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61.
 
-The current stfle implementation assumes that the array is always
-large enough and clears those parts of the array that have not been
-written to with a subsequent memset call.
+That change cased false-positive warning about hardware hang:
 
-If however the array is not large enough memset will get a negative
-length parameter, which means that memset clears memory until it gets
-an exception and the kernel crashes.
+e1000e: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
+IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+e1000e 0000:00:1f.6 eth0: Detected Hardware Unit Hang:
+   TDH                  <0>
+   TDT                  <1>
+   next_to_use          <1>
+   next_to_clean        <0>
+buffer_info[next_to_clean]:
+   time_stamp           <fffba7a7>
+   next_to_watch        <0>
+   jiffies              <fffbb140>
+   next_to_watch.status <0>
+MAC Status             <40080080>
+PHY Status             <7949>
+PHY 1000BASE-T Status  <0>
+PHY Extended Status    <3000>
+PCI Status             <10>
+e1000e: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
 
-To fix this simply limit the maximum length. Move also the inline
-assembly to an extra function to avoid clobbering of register 0, which
-might happen because of the added min_t invocation together with code
-instrumentation.
+Besides warning everything works fine.
+Original issue will be fixed property in following patch.
 
-The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
-facility list handling") but was rather harmless, since it would only
-write to a rather large array. It became a potential problem with
-commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
-then it writes to an array with only four double words, while some
-machines already deliver three double words. As soon as machines have
-a facility bit within the fifth double a crash on IPL would happen.
-
-Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
-Cc: <stable@vger.kernel.org> # v2.6.37+
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reported-by: Joseph Yasi <joe.yasi@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203175
+Tested-by: Joseph Yasi <joe.yasi@gmail.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Tested-by: Oleksandr Natalenko <oleksandr@redhat.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/facility.h |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/arch/s390/include/asm/facility.h
-+++ b/arch/s390/include/asm/facility.h
-@@ -59,6 +59,18 @@ static inline int test_facility(unsigned
- 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
- }
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5286,13 +5286,8 @@ static void e1000_watchdog_task(struct w
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
+-			 *
+-			 * If the link is lost the controller stops DMA, but
+-			 * if there is queued Tx work it cannot be done.  So
+-			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
+-			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
++			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5315,6 +5310,14 @@ link_up:
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
-+static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
-+{
-+	register unsigned long reg0 asm("0") = size - 1;
++	/* If the link is lost the controller stops DMA, but
++	 * if there is queued Tx work it cannot be done.  So
++	 * reset the controller to flush the Tx packet buffers.
++	 */
++	if (!netif_carrier_ok(netdev) &&
++	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
++		adapter->flags |= FLAG_RESTART_NOW;
 +
-+	asm volatile(
-+		".insn s,0xb2b00000,0(%1)" /* stfle */
-+		: "+d" (reg0)
-+		: "a" (stfle_fac_list)
-+		: "memory", "cc");
-+	return reg0;
-+}
-+
- /**
-  * stfle - Store facility list extended
-  * @stfle_fac_list: array where facility list can be stored
-@@ -75,13 +87,8 @@ static inline void __stfle(u64 *stfle_fa
- 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
- 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
- 		/* More facility bits available with stfle */
--		register unsigned long reg0 asm("0") = size - 1;
--
--		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
--			     : "+d" (reg0)
--			     : "a" (stfle_fac_list)
--			     : "memory", "cc");
--		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
-+		nr = __stfle_asm(stfle_fac_list, size);
-+		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
- 	}
- 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
- }
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
 
 
